@@ -32,6 +32,7 @@
  */
 
 #define CHAR_TYPE wchar_t
+#define FUNCTION_NAME __vfwprintf
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -91,8 +92,7 @@ static int __grow_type_table(unsigned char** typetable, int* tablesize);
  * temporary buffer.  We only work on write-only files; this avoids
  * worries about ungetc buffers and so forth.
  */
-static int __sbprintf(FILE* fp, const wchar_t* fmt, va_list ap) {
-  int ret;
+static int __sbprintf(FILE* fp, const CHAR_TYPE* fmt, va_list ap) {
   FILE fake;
   struct __sfileext fakeext;
   unsigned char buf[BUFSIZ];
@@ -110,7 +110,7 @@ static int __sbprintf(FILE* fp, const wchar_t* fmt, va_list ap) {
   fake._lbfsize = 0; /* not actually used, but Just In Case */
 
   /* do the work, then copy any error status */
-  ret = __vfwprintf(&fake, fmt, ap);
+  int ret = FUNCTION_NAME(&fake, fmt, ap);
   if (ret >= 0 && __sflush(&fake)) ret = EOF;
   if (fake._flags & __SERR) fp->_flags |= __SERR;
   return (ret);
@@ -276,15 +276,15 @@ static int exponent(CharT* p0, int exp, int fmtch) {
 #define CHARINT 0x0800  /* 8 bit integer */
 #define MAXINT 0x1000   /* largest integer size (intmax_t) */
 
-int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list ap) {
+int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, __va_list ap) {
   wchar_t ch;    /* character from fmt */
   int n, n2, n3; /* handy integers (short term usage) */
-  wchar_t* cp;   /* handy char pointer (short term usage) */
+  CHAR_TYPE* cp;   /* handy char pointer (short term usage) */
+  CHAR_TYPE sign;  /* sign prefix (' ', '+', '-', or \0) */
   int flags;     /* flags as above */
   int ret;       /* return value accumulator */
   int width;     /* width from format (%8d), or 0 */
   int prec;      /* precision from format; <0 for N/A */
-  wchar_t sign;  /* sign prefix (' ', '+', '-', or \0) */
   /*
    * We can decompose the printed representation of floating
    * point numbers into several parts, some of which may be empty:
@@ -311,7 +311,7 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
   int expsize;                   /* character count for expstr */
   int lead;                      /* sig figs before decimal or group sep */
   int ndig;                      /* actual number of digits returned by dtoa */
-  wchar_t expstr[MAXEXPDIG + 2]; /* buffer for exponent string: e+ZZZ */
+  CHAR_TYPE expstr[MAXEXPDIG + 2]; /* buffer for exponent string: e+ZZZ */
   char* dtoaresult = NULL;
 
   uintmax_t _umax;             /* integer arguments %[diouxX] */
@@ -320,14 +320,14 @@ int __vfwprintf(FILE* __restrict fp, const wchar_t* __restrict fmt0, __va_list a
   int realsz;                  /* field size expanded by dprec */
   int size;                    /* size of converted field or string */
   const char* xdigs;           /* digits for %[xX] conversion */
-  wchar_t buf[BUF];            /* buffer with space for digits of uintmax_t */
-  wchar_t ox[2];               /* space for 0x; ox[1] is either x, X, or \0 */
+  CHAR_TYPE buf[BUF];            /* buffer with space for digits of uintmax_t */
+  CHAR_TYPE ox[2];               /* space for 0x; ox[1] is either x, X, or \0 */
   union arg* argtable;         /* args, built due to positional arg */
   union arg statargtable[STATIC_ARG_TBL_SIZE];
   size_t argtablesiz;
   int nextarg;      /* 1-based argument index */
   va_list orgap;    /* original argument pointer */
-  wchar_t* convbuf; /* buffer for multibyte to wide conversion */
+  CHAR_TYPE* convbuf; /* buffer for wide/multibyte conversion */
 
   /*
    * Choose PADSIZE to trade efficiency vs. size.  If larger printf
@@ -1271,10 +1271,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         flags |= LONGINT;
         /*FALLTHROUGH*/
       case 's':
-        if (flags & LONGINT)
-          ADDTYPE(TP_CHAR);
-        else
-          ADDTYPE(TP_WCHAR);
+        ADDTYPE((flags & LONGINT) ? TP_WCHAR : TP_CHAR);
         break;
       case 'U':
         flags |= LONGINT;
