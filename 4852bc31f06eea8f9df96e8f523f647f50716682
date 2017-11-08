@@ -16,6 +16,24 @@
       "revId": "4852bc31f06eea8f9df96e8f523f647f50716682",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b6dafd81_c4ebe392",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-08T17:35:50Z",
+      "side": 1,
+      "message": "I had thought about that, and flipped a coin on using a known in-range value worried that some assembler on some esoteric arch would blow up if I used 127 or 32767 for example ... knowing that CLOCK_TAI managed to speed through the vdso is also a signal.\n\nI am willing to change my ways ;-} the decision to use CLOCK_TAI was made more than a year ago in my private tests.",
+      "parentUuid": "564451e2_4849fa47",
+      "revId": "4852bc31f06eea8f9df96e8f523f647f50716682",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
