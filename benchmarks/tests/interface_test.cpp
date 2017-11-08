@@ -71,7 +71,8 @@ static void GetExe(std::string* exe_name) {
   char path[PATH_MAX];
   ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
   ASSERT_TRUE(path_len >= 0);
-  *exe_name = std::string(std::regex_replace(path, std::regex("-tests"), ""));
+  *exe_name = std::string(std::regex_replace(path, std::regex("nativetest"), "benchmarktest"));
+  *exe_name = std::regex_replace(*exe_name, std::regex("-tests"), "");
 }
 
 void SystemTests::Exec(std::vector<const char*> args) {
@@ -289,6 +290,10 @@ TEST_F(SystemTests, full_suite) {
     "BM_stdio_fopen_fgetc_fclose_no_locking/1024/iterations:1\n"
     "BM_stdio_fopen_getline_fclose_locking/iterations:1\n"
     "BM_stdio_fopen_getline_fclose_no_locking/iterations:1\n"
+    "BM_stdio_printf_literal/iterations:1\n"
+    "BM_stdio_printf_s/iterations:1\n"
+    "BM_stdio_printf_d/iterations:1\n"
+    "BM_stdio_printf_1$s/iterations:1\n"
     "BM_string_memcmp/8/0/0/iterations:1\n"
     "BM_string_memcmp/64/0/0/iterations:1\n"
     "BM_string_memcmp/512/0/0/iterations:1\n"
