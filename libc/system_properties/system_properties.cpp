@@ -60,7 +60,7 @@
 #include "contexts_split.h"
 #include "prop_area.h"
 #include "prop_info.h"
-#include "system_property_globals.h"
+#include "property_filename.h"
 
 // We don't want to use new or malloc in properties (b/31659220), and since these classes are
 // small enough and don't have non-trivial constructors, it's easier to just statically declare
@@ -76,11 +76,11 @@ static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
 
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
+// It is set to nullptr and never modified.
 __BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 prop_area* __system_property_area__ = nullptr;
 
 char property_filename[PROP_FILENAME_MAX] = PROP_FILENAME;
-size_t pa_size;
 
 class PropertyServiceConnection {
  public:
@@ -314,10 +314,15 @@ int __system_property_area_init() {
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 uint32_t __system_property_area_serial() {
-  prop_area* pa = __system_property_area__;
+  if (contexts == nullptr) {
+    return -1;
+  }
+
+  prop_area* pa = contexts->GetSerialPropArea();
   if (!pa) {
     return -1;
   }
+
   // Make sure this read fulfilled before __system_property_serial
   return atomic_load_explicit(pa->serial(), memory_order_acquire);
 }
@@ -521,8 +526,11 @@ int __system_property_update(prop_info* pi, const char* value, unsigned int len)
     return -1;
   }
 
-  prop_area* pa = __system_property_area__;
+  if (contexts == nullptr) {
+    return -1;
+  }
 
+  prop_area* pa = contexts->GetSerialPropArea();
   if (!pa) {
     return -1;
   }
@@ -557,12 +565,16 @@ int __system_property_add(const char* name, unsigned int namelen, const char* va
     return -1;
   }
 
-  if (__system_property_area__ == nullptr || contexts == nullptr) {
+  if (contexts == nullptr) {
+    return -1;
+  }
+
+  prop_area* serial_pa = contexts->GetSerialPropArea();
+  if (serial_pa == nullptr) {
     return -1;
   }
 
   prop_area* pa = contexts->GetPropAreaForName(name);
-
   if (!pa) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
     return -1;
@@ -575,11 +587,10 @@ int __system_property_add(const char* name, unsigned int namelen, const char* va
 
   // There is only a single mutator, but we want to make sure that
   // updates are visible to a reader waiting for the update.
-  atomic_store_explicit(
-      __system_property_area__->serial(),
-      atomic_load_explicit(__system_property_area__->serial(), memory_order_relaxed) + 1,
-      memory_order_release);
-  __futex_wake(__system_property_area__->serial(), INT32_MAX);
+  atomic_store_explicit(serial_pa->serial(),
+                        atomic_load_explicit(serial_pa->serial(), memory_order_relaxed) + 1,
+                        memory_order_release);
+  __futex_wake(serial_pa->serial(), INT32_MAX);
   return 0;
 }
 
@@ -607,8 +618,16 @@ bool __system_property_wait(const prop_info* pi, uint32_t old_serial, uint32_t* 
   // Are we waiting on the global serial or a specific serial?
   atomic_uint_least32_t* serial_ptr;
   if (pi == nullptr) {
-    if (__system_property_area__ == nullptr) return -1;
-    serial_ptr = __system_property_area__->serial();
+    if (contexts == nullptr) {
+      return -1;
+    }
+
+    prop_area* serial_pa = contexts->GetSerialPropArea();
+    if (serial_pa == nullptr) {
+      return -1;
+    }
+
+    serial_ptr = serial_pa->serial();
   } else {
     serial_ptr = const_cast<atomic_uint_least32_t*>(&pi->serial);
   }

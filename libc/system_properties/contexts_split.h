@@ -41,16 +41,21 @@ class ContextsSplit : public Contexts {
 
   virtual bool Initialize(bool writable) override;
   virtual prop_area* GetPropAreaForName(const char* name) override;
+  virtual prop_area* GetSerialPropArea() override {
+    return serial_prop_area_;
+  }
   virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override;
   virtual void ResetAccess() override;
   virtual void FreeAndUnmap() override;
 
  private:
+  bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
   bool InitializePropertiesFromFile(const char* filename);
   bool InitializeProperties();
 
   PrefixNode* prefixes_ = nullptr;
   ContextListNode* contexts_ = nullptr;
+  prop_area* serial_prop_area_ = nullptr;
 };
 
 #endif

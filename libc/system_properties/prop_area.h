@@ -29,6 +29,7 @@
 #include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/mman.h>
 
 #include "private/bionic_macros.h"
 
@@ -94,6 +95,12 @@ class prop_area {
   static prop_area* map_prop_area_rw(const char* filename, const char* context,
                                      bool* fsetxattr_failed);
   static prop_area* map_prop_area(const char* filename);
+  static void unmap_prop_area(prop_area** pa) {
+    if (*pa) {
+      munmap(*pa, pa_size_);
+      *pa = nullptr;
+    }
+  }
 
   prop_area(const uint32_t magic, const uint32_t version) : magic_(magic), version_(version) {
     atomic_init(&serial_, 0);
@@ -137,6 +144,13 @@ class prop_area {
 
   bool foreach_property(prop_bt* const trie, void (*propfn)(const prop_info* pi, void* cookie),
                         void* cookie);
+
+  // The original design doesn't include pa_size or pa_data_size in the prop_area struct itself.
+  // Since we'll need to be backwards compatible with that design, we don't gain much by adding it
+  // now, especially since we don't have any plans to make different property areas different sizes,
+  // and thus we share these two variables among all instances.
+  static size_t pa_size_;
+  static size_t pa_data_size_;
 
   uint32_t bytes_used_;
   atomic_uint_least32_t serial_;

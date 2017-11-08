@@ -29,12 +29,10 @@
 #ifndef SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
 #define SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
 
-#include <sys/mman.h>
-
 #include "contexts.h"
 #include "prop_area.h"
 #include "prop_info.h"
-#include "system_property_globals.h"
+#include "property_filename.h"
 
 class ContextsPreSplit : public Contexts {
  public:
@@ -43,16 +41,20 @@ class ContextsPreSplit : public Contexts {
 
   // We'll never initialize this legacy option as writable, so don't even check the arg.
   virtual bool Initialize(bool) override {
-    __system_property_area__ = prop_area::map_prop_area(property_filename);
-    return __system_property_area__ != nullptr;
+    pre_split_prop_area_ = prop_area::map_prop_area(property_filename);
+    return pre_split_prop_area_ != nullptr;
   }
 
   virtual prop_area* GetPropAreaForName(const char*) override {
-    return __system_property_area__;
+    return pre_split_prop_area_;
+  }
+
+  virtual prop_area* GetSerialPropArea() override {
+    return pre_split_prop_area_;
   }
 
   virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override {
-    __system_property_area__->foreach (propfn, cookie);
+    pre_split_prop_area_->foreach (propfn, cookie);
   }
 
   // This is a no-op for pre-split properties as there is only one property file and it is
@@ -61,11 +63,11 @@ class ContextsPreSplit : public Contexts {
   }
 
   virtual void FreeAndUnmap() override {
-    if (__system_property_area__ != nullptr) {
-      munmap(__system_property_area__, pa_size);
-      __system_property_area__ = nullptr;
-    }
+    prop_area::unmap_prop_area(&pre_split_prop_area_);
   }
+
+ private:
+  prop_area* pre_split_prop_area_ = nullptr;
 };
 
 #endif

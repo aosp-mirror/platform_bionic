@@ -31,13 +31,12 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 
 #include <async_safe/log.h>
 
 #include "context_node.h"
-#include "system_property_globals.h"
+#include "property_filename.h"
 
 class ContextListNode : public ContextNode {
  public:
@@ -193,22 +192,22 @@ static int read_spec_entries(char* line_buf, int num_args, ...) {
   return items;
 }
 
-static bool MapSystemPropertyArea(bool access_rw, bool* fsetxattr_failed) {
+bool ContextsSplit::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
   int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial",
                                      property_filename);
   if (len < 0 || len > PROP_FILENAME_MAX) {
-    __system_property_area__ = nullptr;
+    serial_prop_area_ = nullptr;
     return false;
   }
 
   if (access_rw) {
-    __system_property_area__ =
+    serial_prop_area_ =
         prop_area::map_prop_area_rw(filename, "u:object_r:properties_serial:s0", fsetxattr_failed);
   } else {
-    __system_property_area__ = prop_area::map_prop_area(filename);
+    serial_prop_area_ = prop_area::map_prop_area(filename);
   }
-  return __system_property_area__;
+  return serial_prop_area_;
 }
 
 bool ContextsSplit::InitializePropertiesFromFile(const char* filename) {
@@ -300,14 +299,14 @@ bool ContextsSplit::Initialize(bool writable) {
         open_failed = true;
       }
     });
-    if (open_failed || !MapSystemPropertyArea(true, &fsetxattr_failed)) {
+    if (open_failed || !MapSerialPropertyArea(true, &fsetxattr_failed)) {
       FreeAndUnmap();
       return false;
     }
 
     return !fsetxattr_failed;
   } else {
-    if (!MapSystemPropertyArea(false, nullptr)) {
+    if (!MapSerialPropertyArea(false, nullptr)) {
       FreeAndUnmap();
       return false;
     }
@@ -348,8 +347,5 @@ void ContextsSplit::ResetAccess() {
 void ContextsSplit::FreeAndUnmap() {
   ListFree(&prefixes_);
   ListFree(&contexts_);
-  if (__system_property_area__) {
-    munmap(__system_property_area__, pa_size);
-    __system_property_area__ = nullptr;
-  }
+  prop_area::unmap_prop_area(&serial_prop_area_);
 }

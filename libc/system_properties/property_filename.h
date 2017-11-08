@@ -26,18 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_SYSTEM_PROPERTY_GLOBALS_H
-#define SYSTEM_PROPERTIES_SYSTEM_PROPERTY_GLOBALS_H
+#ifndef SYSTEM_PROPERTIES_PROPERTY_FILENAME_H
+#define SYSTEM_PROPERTIES_PROPERTY_FILENAME_H
 
-#include "prop_area.h"
-
-// These were essentially globals before the refactoring.
-
+// These are globals set by __system_property_set_filename().
+// There isn't huge benefit in refactoring them, so they're alone in this header.
 constexpr int PROP_FILENAME_MAX = 1024;
-
 extern char property_filename[PROP_FILENAME_MAX];
-extern size_t pa_size;
-
-extern prop_area* __system_property_area__;
 
 #endif

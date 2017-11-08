@@ -28,12 +28,11 @@
 
 #include "context_node.h"
 
-#include <sys/mman.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
 
-#include "system_property_globals.h"
+#include "property_filename.h"
 
 // pthread_mutex_lock() calls into system_properties in the case of contention.
 // This creates a risk of dead lock if any system_properties functions
@@ -96,10 +95,5 @@ bool ContextNode::CheckAccess() {
 }
 
 void ContextNode::Unmap() {
-  if (!pa_) {
-    return;
-  }
-
-  munmap(pa_, pa_size);
-  pa_ = nullptr;
+  prop_area::unmap_prop_area(&pa_);
 }

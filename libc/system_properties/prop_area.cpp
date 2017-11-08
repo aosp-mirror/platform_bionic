@@ -29,7 +29,6 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/cdefs.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/xattr.h>
@@ -40,13 +39,13 @@
 #include <async_safe/log.h>
 
 #include "prop_area.h"
-#include "system_property_globals.h"
 
 constexpr size_t PA_SIZE = 128 * 1024;
 constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;
 constexpr uint32_t PROP_AREA_VERSION = 0xfc6ed0ab;
 
-static size_t pa_data_size;
+size_t prop_area::pa_size_ = 0;
+size_t prop_area::pa_data_size_ = 0;
 
 prop_area* prop_area::map_prop_area_rw(const char* filename, const char* context,
                                        bool* fsetxattr_failed) {
@@ -89,10 +88,10 @@ prop_area* prop_area::map_prop_area_rw(const char* filename, const char* context
     return nullptr;
   }
 
-  pa_size = PA_SIZE;
-  pa_data_size = pa_size - sizeof(prop_area);
+  pa_size_ = PA_SIZE;
+  pa_data_size_ = pa_size_ - sizeof(prop_area);
 
-  void* const memory_area = mmap(nullptr, pa_size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+  void* const memory_area = mmap(nullptr, pa_size_, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
   if (memory_area == MAP_FAILED) {
     close(fd);
     return nullptr;
@@ -116,17 +115,17 @@ prop_area* prop_area::map_fd_ro(const int fd) {
     return nullptr;
   }
 
-  pa_size = fd_stat.st_size;
-  pa_data_size = pa_size - sizeof(prop_area);
+  pa_size_ = fd_stat.st_size;
+  pa_data_size_ = pa_size_ - sizeof(prop_area);
 
-  void* const map_result = mmap(nullptr, pa_size, PROT_READ, MAP_SHARED, fd, 0);
+  void* const map_result = mmap(nullptr, pa_size_, PROT_READ, MAP_SHARED, fd, 0);
   if (map_result == MAP_FAILED) {
     return nullptr;
   }
 
   prop_area* pa = reinterpret_cast<prop_area*>(map_result);
   if ((pa->magic() != PROP_AREA_MAGIC) || (pa->version() != PROP_AREA_VERSION)) {
-    munmap(pa, pa_size);
+    munmap(pa, pa_size_);
     return nullptr;
   }
 
@@ -145,7 +144,7 @@ prop_area* prop_area::map_prop_area(const char* filename) {
 
 void* prop_area::allocate_obj(const size_t size, uint_least32_t* const off) {
   const size_t aligned = __BIONIC_ALIGN(size, sizeof(uint_least32_t));
-  if (bytes_used_ + aligned > pa_data_size) {
+  if (bytes_used_ + aligned > pa_data_size_) {
     return nullptr;
   }
 
@@ -195,7 +194,7 @@ prop_info* prop_area::new_prop_info(const char* name, uint32_t namelen, const ch
 }
 
 void* prop_area::to_prop_obj(uint_least32_t off) {
-  if (off > pa_data_size) return nullptr;
+  if (off > pa_data_size_) return nullptr;
 
   return (data_ + off);
 }
