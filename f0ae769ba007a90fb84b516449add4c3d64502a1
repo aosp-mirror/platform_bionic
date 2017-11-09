@@ -22,6 +22,30 @@
       "revId": "f0ae769ba007a90fb84b516449add4c3d64502a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce4bfa20_718daba6",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-09T23:47:20Z",
+      "side": 1,
+      "message": "yeah, you\u0027re right. fixed.",
+      "parentUuid": "a8b86b59_cc75642b",
+      "range": {
+        "startLine": 227,
+        "startChar": 46,
+        "endLine": 227,
+        "endChar": 50
+      },
+      "revId": "f0ae769ba007a90fb84b516449add4c3d64502a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
