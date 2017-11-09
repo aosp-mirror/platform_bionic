@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8b86b59_cc75642b",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2017-11-09T19:09:23Z",
+      "side": 1,
+      "message": "nit: is the [10] necessary? i think memrchr takes a pointer to the start of the buffer.",
+      "range": {
+        "startLine": 227,
+        "startChar": 46,
+        "endLine": 227,
+        "endChar": 50
+      },
+      "revId": "f0ae769ba007a90fb84b516449add4c3d64502a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
