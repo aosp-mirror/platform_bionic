@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bd8a1778_da1a28ca",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-09T23:37:30Z",
+      "side": 1,
+      "message": "or just sscanf?",
+      "revId": "0c4b447e9812068855e1327853c736998cc4045e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1198fd1d_4b48c838",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-09T23:37:30Z",
+      "side": 1,
+      "message": "i think we should probably rethink these tests. i\u0027m not sure what they\u0027re usefully testing...\n\na test that needs to be updated any time we make any change doesn\u0027t seem like a great idea.\n\ncan\u0027t we just make simpler more focused claims? so maybe pick on fwrite and assert that we see all these variants, but not encode the exact list.",
+      "revId": "0c4b447e9812068855e1327853c736998cc4045e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
