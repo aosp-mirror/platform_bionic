@@ -24,6 +24,9 @@
 // that call the regular "double" function.
 
 long double copysignl(long double a1, long double a2) { return copysign(a1, a2); }
+#if defined(__arm__) // See builtins.cpp.
+long double fmal(long double a1, long double a2, long double a3) { return fma(a1, a2, a3); }
+#endif
 long double fmaxl(long double a1, long double a2) { return fmax(a1, a2); }
 long double fmodl(long double a1, long double a2) { return fmod(a1, a2); }
 long double fminl(long double a1, long double a2) { return fmin(a1, a2); }
