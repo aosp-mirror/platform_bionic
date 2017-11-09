@@ -16,6 +16,24 @@
       "revId": "728cde5be92f65a70f1b4c5afc4494ab169ee95d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0abfd37e_e441d5da",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-09T17:19:26Z",
+      "side": 1,
+      "message": "yeah, we don\u0027t seem to use unique_fd in our tests (except in one place). i did consider filing a cleanup bug to rewrite them all, but we don\u0027t really care --- we mess with enough global state that we only really support running isolated anyway (and letting child death deal with cleanup). [though we do at least try \"best effort\" rather than just dropping all cleanup code.]\n\ni would probably +2 a global unique_fd cleanup, but i\u0027m struggling to motivate anyone actually taking the time to do it...",
+      "parentUuid": "cd2e882f_c564f8a9",
+      "revId": "728cde5be92f65a70f1b4c5afc4494ab169ee95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
