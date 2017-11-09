@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db6bfd6b_e67ecdc7",
+        "filename": "libc/system_properties/system_property_globals.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-09T23:27:46Z",
+      "side": 1,
+      "message": "that\u0027s only true of __system_property_area__, no?",
+      "revId": "aa250c744996a1ab766a1fe893bf8bcaa2f12a33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
