@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd2e882f_c564f8a9",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-09T17:12:17Z",
+      "side": 1,
+      "message": "I\u0027m guessing we don\u0027t actually care since we run these tests forked, but this close() is never called if the above ASSERT fails, right?  Either EXPECT_STREQ() or unique_fd would be better?",
+      "revId": "728cde5be92f65a70f1b4c5afc4494ab169ee95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
