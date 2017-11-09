@@ -16,8 +16,8 @@ cc_binary_host {
     ],
 
     shared_libs: [
-        "libclang",
-        "libLLVM",
+        "libclang_android",
+        "libLLVM_android",
         "libbase",
     ],
 
