@@ -1,0 +1,20 @@
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_ONEBUF_MANUAL_ALIGN_0_SIZE_115</args>
+</fn>
+<fn>
+  <name>BM_string_memset</name>
+  <iterations>1</iterations>
+  <args>AT_ONEBUF_MANUAL_ALIGN_1_SIZE_1024</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <iterations>1</iterations>
+  <args>AT_ONEBUF_MANUAL_ALIGN_4_SIZE_2048</args>
+</fn>
+<fn>
+  <name>BM_string_memset</name>
+  <iterations>1</iterations>
+  <args>AT_ONEBUF_MANUAL_ALIGN_32_SIZE_4000</args>
+</fn>
