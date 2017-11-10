@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e282cf7b_0d97fac5",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T16:25:26Z",
+      "side": 1,
+      "message": "that sounds like you\u0027re confusing unit tests and benchmarks. there\u0027s no continuous running of benchmarks.\n\noptimizing the failure case might make sense for something like open or access, but a failure with clock_* is a logic error. we may as well abort.\n\nbut adding a clock_gettime unit test for an invalid clock sgtm.",
+      "parentUuid": "be271f03_9b0c5a38",
+      "revId": "c7bebc811607118f156719f5e510fa92bbbc0c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96b4322d_339479f4",
         "filename": "benchmarks/time_benchmark.cpp",
         "patchSetId": 3
