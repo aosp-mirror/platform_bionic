@@ -16,6 +16,24 @@
       "revId": "aa250c744996a1ab766a1fe893bf8bcaa2f12a33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93e45b02_93fa463d",
+        "filename": "libc/system_properties/system_property_globals.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-10T00:35:13Z",
+      "side": 1,
+      "message": "I guess we\u0027re only really stuck with __system_property_area__ permanently.\n\nWe\u0027re mostly stuck with pa_size too, but I can probably factor that out to be a static in prop_area.cpp.\n\nproperty_filename wouldn\u0027t give great gains to clean up, so I\u0027m just leaving that for the time being.",
+      "parentUuid": "db6bfd6b_e67ecdc7",
+      "revId": "aa250c744996a1ab766a1fe893bf8bcaa2f12a33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
