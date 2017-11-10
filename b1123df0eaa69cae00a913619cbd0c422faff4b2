@@ -22,6 +22,30 @@
       "revId": "b1123df0eaa69cae00a913619cbd0c422faff4b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40dac54b_cb7e4272",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T18:50:26Z",
+      "side": 1,
+      "message": "Anything other than the current reserved set will do of course. Just picked a number that is _positive_.\n\nI chose 0x7F7F for implementations that does bad stuff, masks the value (except for CLOCK_MASK, but one of %MAX_CLOCKS, byte or word) it still lands as unsupported positive. Only last week was one of the assembler implementations (aarch64 vdso) fixed with regards to masking an address to 32 bits (breaking vdso for calls where the return data aligns on a 4GB boundary), so plausible mistake. This value in my mind was the best chance of not hitting one of those mistakes and truly being unsupported giving me a useful benchmark number.",
+      "parentUuid": "4036c056_01b5a975",
+      "range": {
+        "startLine": 68,
+        "startChar": 18,
+        "endLine": 68,
+        "endChar": 23
+      },
+      "revId": "b1123df0eaa69cae00a913619cbd0c422faff4b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
