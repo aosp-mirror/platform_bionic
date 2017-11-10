@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fd43f89_8865d9db",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T15:57:36Z",
+      "side": 1,
+      "message": "i meant to remove this one and just use an always-invalid clock id.",
+      "revId": "c7bebc811607118f156719f5e510fa92bbbc0c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "96b4322d_339479f4",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T15:57:36Z",
+      "side": 1,
+      "message": "don\u0027t invent constants that are only used once.",
+      "revId": "c7bebc811607118f156719f5e510fa92bbbc0c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
