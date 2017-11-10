@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4036c056_01b5a975",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T18:33:24Z",
+      "side": 1,
+      "message": "is there a reason you chose this rather than the typical \"invalid int\" -1?",
+      "range": {
+        "startLine": 68,
+        "startChar": 18,
+        "endLine": 68,
+        "endChar": 23
+      },
+      "revId": "b1123df0eaa69cae00a913619cbd0c422faff4b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
