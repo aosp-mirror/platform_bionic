@@ -22,6 +22,30 @@
       "revId": "c69340f3ebbb0a4b6988116a43d96834c2429633",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7341fa70_c10d8d3c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T19:28:27Z",
+      "side": 1,
+      "message": "I did not _plan_ on interpreting the data details, merely supplying it. I also only ran the tests three times for consensus with no cold boots between or any other refinements to ensure reliable data. It is, however, very indicative of the performance improvement with this vdso handler.\n\nI did not collect data for wo/arm,cpu-registers-not-fw-configured on the baseline (you could consider this an oops). Thanks for noticing this tiny detail pedantically requiring a 45 minute build (because bionic path has to be reverted, and _everything_ has to be rebuilt) in order to rectify. I do not believe it is worth the trouble though.\n\nNot entirely bogus, comparative for below. We can intuit that 2ns is shaved off of the syscall if physical timers are available. AFAIK this is a direct result of the difference between physical and virtual timers and their effect on the benchmarking by about 2%. GREAT TO KNOW. \n\nIf there was a continuous dashboard showing these numbers on a device I could determine if a kernel alteration affected/regressed any one of the unique paths. \n\nexplanation:\n\ngetres \u003d\u003d getres_syscall \u003ccheck\u003e\n\n_before_ the library change, all supported clock_ids are the same +/- 1.5% \u003ccheck\u003e\n\nunsupported in both vdso _and_ syscall is faster as both paths go directly to error. \u003ccheck\u003e\n\na WAG of the values if physical timer were available in the first baseline test would be:\n\nBM_time_clock_getres                      14        341\nBM_time_clock_getres_syscall              14        335\nBM_time_clock_getres_REALTIME             15        350\nBM_time_clock_getres_BOOTTIME             15        341\nBM_time_clock_getres_TAI                  14        350\nBM_time_clock_getres_unsupported          13        284\n\nGiven the pattern evident by both of the before and after figures. Knowing this all can help determine what kind of regression had occurred and we can tell in what way a kernel and device tree is misconfigured and go directly to the fix.",
+      "parentUuid": "a6325ece_5d8905cc",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 66
+      },
+      "revId": "c69340f3ebbb0a4b6988116a43d96834c2429633",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
