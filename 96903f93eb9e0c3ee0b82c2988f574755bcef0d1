@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "48a2cc49_ebcc37f6",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T18:58:54Z",
+      "side": 1,
+      "message": "mmma bionic/benchmarks build failed, so not guaranteed _everywhere_ :-(.\n\nFAILED: out/soong/.intermediates/bionic/benchmarks/bionic-benchmarks-glibc/linux_glibc_x86/obj/bionic/benchmarks/time_benchmark.o \nPWD\u003d/proc/self/cwd prebuilts/misc/linux-x86/ccache/ccache prebuilts/clang/host/linux-x86/clang-4393122/bin/clang++ -c -Ibionic/benchmarks  -Wa,--noexecstack -fPIC -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE\u003d2 -fstack-protector -D__STDC_FORMAT_MACROS -D__STDC_CONSTANT_MACROS --gcc-toolchain\u003dprebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8 --sysroot prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8/sysroot -fstack-protector-strong -msse3 -m32 -march\u003dprescott -D_FILE_OFFSET_BITS\u003d64 -D_LARGEFILE_SOURCE\u003d1 -DANDROID -fmessage-length\u003d0 -W -Wall -Wno-unused -Winit-self -Wpointer-arith -no-canonical-prefixes -DNDEBUG -UDEBUG -fno-exceptions -Wno-multichar -O2 -g -fno-strict-aliasing -fdebug-prefix-map\u003d/proc/self/cwd\u003d -D__compiler_offsetof\u003d__builtin_offsetof -Werror\u003dint-conversion -Wno-reserved-id-macro -Wno-format-pedantic -Wno-unused-command-line-argument -fcolor-diagnostics -Wno-expansion-to-defined -Wno-zero-as-null-pointer-constant -Wno-unknown-warning-option -fdebug-prefix-map\u003d$PWD/\u003d   -Isystem/core/base/include -Iexternal/google-benchmark/include -Iexternal/tinyxml2 -Iexternal/libcxx/include -Iexternal/libcxxabi/include -Isystem/core/include -Isystem/media/audio/include -Ihardware/libhardware/include -Ihardware/libhardware_legacy/include -Ihardware/ril/include -Ilibnativehelper/include -Iframeworks/native/include -Iframeworks/native/opengl/include -Iframeworks/av/include  -Ilibnativehelper/include_jni -O2 -fno-builtin -Wall -Wextra -Werror -Wunused -target i686-linux-gnu -Bprebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8/x86_64-linux/bin -DANDROID_STRICT -fPIE -D_USING_LIBCXX -std\u003dgnu++14 -Wsign-promo -Wno-inconsistent-missing-override -Wno-null-dereference -D_LIBCPP_ENABLE_THREAD_SAFETY_ANNOTATIONS -Wno-thread-safety-negative -isystem prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8/x86_64-linux/include/c++/4.8 -isystem prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8/x86_64-linux/include/c++/4.8/backward -isystem prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.15-4.8/x86_64-linux/include/c++/4.8/x86_64-linux/32 -nostdinc++ -Werror\u003dint-to-pointer-cast -Werror\u003dpointer-to-int-cast -Werror\u003daddress-of-temporary -Werror\u003dreturn-type -MD -MF out/soong/.intermediates/bionic/benchmarks/bionic-benchmarks-glibc/linux_glibc_x86/obj/bionic/benchmarks/time_benchmark.o.d -o out/soong/.intermediates/bionic/benchmarks/bionic-benchmarks-glibc/linux_glibc_x86/obj/bionic/benchmarks/time_benchmark.o bionic/benchmarks/time_benchmark.cpp\nbionic/benchmarks/time_benchmark.cpp:62:19: error: use of undeclared identifier \u0027CLOCK_TAI\u0027\n    clock_gettime(CLOCK_TAI, \u0026t);\n                  ^\nbionic/benchmarks/time_benchmark.cpp:110:18: error: use of undeclared identifier \u0027CLOCK_TAI\u0027\n    clock_getres(CLOCK_TAI, \u0026t);\n                 ^\n2 errors generated.",
+      "parentUuid": "2930f80d_da37e8dd",
+      "revId": "96903f93eb9e0c3ee0b82c2988f574755bcef0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed87af23_5f03a96e",
         "filename": "benchmarks/time_benchmark.cpp",
         "patchSetId": 4
