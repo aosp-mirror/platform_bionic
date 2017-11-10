@@ -44,3 +44,17 @@ long double fabsl(long double x) {
   return fabs(x);
 }
 #endif
+
+#if defined(__aarch64__)
+float fmaf(float x, float y, float z) { return __builtin_fmaf(x, y, z); }
+double fma(double x, double y, double z) { return __builtin_fma(x, y, z); }
+
+float fmaxf(float x, float y) { return __builtin_fmaxf(x, y); }
+double fmax(double x, double y) { return __builtin_fmax(x, y); }
+
+float fminf(float x, float y) { return __builtin_fminf(x, y); }
+double fmin(double x, double y) { return __builtin_fmin(x, y); }
+
+float roundf(float x) { return __builtin_roundf(x); }
+double round(double x) { return __builtin_round(x); }
+#endif
