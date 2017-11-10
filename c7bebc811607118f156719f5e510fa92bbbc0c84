@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "be271f03_9b0c5a38",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T16:18:59Z",
+      "side": 1,
+      "message": "I re-discovered why I chose this when I removed it (temporarily, replacing it with 32639). There is a subtle difference between the overhead of vdso not supporting the reference, and the syscall supporting it, as compared to a completely invalid one. This measures the overhead of the vdso that has to switch to fallback to get a successful result.\n\n_I_ might be the only customer for this value, as it tests the vdso, and will help catch regressions (where it is also possible that vdso could behave _much_ worse than if we made a direct call). This will be part of the health testing.\n\nThe completely invalid value (below) has failure in vdso, failure in callback, and a possible bug making a direct syscall to get yet another failure (doubt it, but it is another corner).",
+      "parentUuid": "7fd43f89_8865d9db",
+      "revId": "c7bebc811607118f156719f5e510fa92bbbc0c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96b4322d_339479f4",
         "filename": "benchmarks/time_benchmark.cpp",
         "patchSetId": 3
