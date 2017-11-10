@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1ef29fd9_bb899b0e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T16:51:53Z",
+      "side": 1,
+      "message": "Not supported with __vdso_time yet, next CL. Yes, __vdso_time is exported by the kernel (noted above) but not _used_.\n\nIn this case it is using gettimeofday vdso (which has the burdensome quadruple access atomic interlock loop in the vdso code), then returning one of the values (seconds).\n\nI can not explain the overhead issues for gettimeofday -\u003e time in bionic. How does aarch32, aarch64, thumb/thumb2 etc enter into this?",
+      "parentUuid": "9d8c666d_cebf6d0f",
+      "revId": "295559a1806fa0a41d5f56f022f68e4c91137127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e7fe80ea_a7a94ffe",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-11-10T16:11:42Z",
       "side": 1,
       "message": "...than without? did you get these the wrong way round? the vdso32 numbers look plausible for \"gettimeofday vdso plus some indirection overhead\", which is what you\u0027d get without the time vdso.",
+      "revId": "295559a1806fa0a41d5f56f022f68e4c91137127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a079799a_04053ff1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T16:51:53Z",
+      "side": 1,
+      "message": "These tests (because of IOT) are based on nyc-dev version of the benchmarks. The CPU and Time columns appear to have a different meaning between the test(s)\n\n59/47 \u003d 1.2\n123/73 \u003d 1.7\n497/444 \u003d 1.1\n\nYes, not entirely consistent, but also not quite apples and oranges as I added these test results today. Not the same thing, v7a (gcc cross compiler) !\u003d v8a aarch32 (clang cross compiler). I suspect that v8a did not make sure aarch32 was as efficient as a Cortex A7. Also might actually point to a bug in the vdso32 compilation flags, which I will look into. But part of the blame will be in bionic for incurring overhead too (?)\n\nie: For clang, it did not support -mcmodel\u003dtiny for vdso64, and complained about not supporting a couple of the gcc optimization flags being handed to it for vdso32.\n\nI went to a lot of trouble to ensure that the arm and aarch32 vdso implementation used the smallest transfer sizes, however the aarch32 path had to read 64-bit values from the internal kernel structures, whereas arm only had to read 32-bit values from similarly named elements. This translates to gettimeofday vdso performance only though ... not the overhead of the gettimeofday -\u003e time translation.",
+      "parentUuid": "e7fe80ea_a7a94ffe",
       "revId": "295559a1806fa0a41d5f56f022f68e4c91137127",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
