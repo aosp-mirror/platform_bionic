@@ -70,6 +70,30 @@
       "revId": "b1123df0eaa69cae00a913619cbd0c422faff4b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "22683376_eeeded9e",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-10T19:43:23Z",
+      "side": 1,
+      "message": "What about (INT8_MAX + (INT8_MAX \u003c\u003c 8)) instead to signal the clear intentions (out of range, stay positive)?\n\nI do not care. It is a minor nit. In my tests I did try -1 and works on arm and arm64 with no surprises. I did not expect a surprise as I know the code it is hitting. But I am thinking in a broader sense about _all_ CPUs and their private implementations.\n\nThis number was chosen to _reduce_ the chances of code differences and implementations affecting the desired comparable results. Selected on a hunch (and only a hunch mind you) to make the test stand the test of time, bugs and architectural changes.\n\n-1 will could, for example, trigger a branch less than path on a switch or if statement which will not compare 1:1 against any of the other positive numbers. INT16_MAX could still hit it on a byte mask, INT32_MAX on word mask.",
+      "parentUuid": "83928567_c837e689",
+      "range": {
+        "startLine": 68,
+        "startChar": 18,
+        "endLine": 68,
+        "endChar": 23
+      },
+      "revId": "b1123df0eaa69cae00a913619cbd0c422faff4b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
