@@ -219,6 +219,18 @@ TEST_F(DEATHTEST, memchr_fortified2) {
 #endif // __BIONIC__
 }
 
+TEST_F(DEATHTEST, memrchr_fortified2) {
+#if defined(__BIONIC__)
+  foo myfoo;
+  volatile int asize = sizeof(myfoo.a) + 1;
+  memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
+  ASSERT_FORTIFY(printf("%s", memrchr(myfoo.a, 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", memrchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif // __BIONIC__
+}
+
 TEST_F(DEATHTEST, strlcpy_fortified2) {
 #if defined(__BIONIC__)
   foo myfoo;
