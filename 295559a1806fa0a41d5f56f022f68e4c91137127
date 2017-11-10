@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d8c666d_cebf6d0f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T16:11:42Z",
+      "side": 1,
+      "message": "why is it slower with the vdso...",
+      "revId": "295559a1806fa0a41d5f56f022f68e4c91137127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7fe80ea_a7a94ffe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-10T16:11:42Z",
+      "side": 1,
+      "message": "...than without? did you get these the wrong way round? the vdso32 numbers look plausible for \"gettimeofday vdso plus some indirection overhead\", which is what you\u0027d get without the time vdso.",
+      "revId": "295559a1806fa0a41d5f56f022f68e4c91137127",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
