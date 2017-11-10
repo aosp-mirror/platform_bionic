@@ -681,3 +681,148 @@ static int __grow_type_table(unsigned char** typetable, int* tablesize) {
   *tablesize = new_size;
   return 0;
 }
+
+struct helpers {
+  // Flush out all the vectors defined by the given uio,
+  // then reset it so that it can be reused.
+  static int sprint(FILE* fp, struct __suio* uio) {
+    if (uio->uio_resid == 0) {
+      uio->uio_iovcnt = 0;
+      return 0;
+    }
+    int result = __sfvwrite(fp, uio);
+    uio->uio_resid = 0;
+    uio->uio_iovcnt = 0;
+    return result;
+  }
+
+  // Convert a wide character string argument for the %ls format to a multibyte
+  // string representation. If not -1, prec specifies the maximum number of
+  // bytes to output, and also means that we can't assume that the wide char
+  // string is null-terminated.
+  static char* wcsconv(wchar_t* wcsarg, int prec) {
+    mbstate_t mbs;
+    char buf[MB_LEN_MAX];
+    wchar_t* p;
+    char* convbuf;
+    size_t clen, nbytes;
+
+    // Allocate space for the maximum number of bytes we could output.
+    if (prec < 0) {
+      memset(&mbs, 0, sizeof(mbs));
+      p = wcsarg;
+      nbytes = wcsrtombs(NULL, (const wchar_t**)&p, 0, &mbs);
+      if (nbytes == (size_t)-1) return NULL;
+    } else {
+      // Optimisation: if the output precision is small enough,
+      // just allocate enough memory for the maximum instead of
+      // scanning the string.
+      if (prec < 128) {
+        nbytes = prec;
+      } else {
+        nbytes = 0;
+        p = wcsarg;
+        memset(&mbs, 0, sizeof(mbs));
+        for (;;) {
+          clen = wcrtomb(buf, *p++, &mbs);
+          if (clen == 0 || clen == (size_t)-1 || nbytes + clen > (size_t)prec) break;
+          nbytes += clen;
+        }
+        if (clen == (size_t)-1) return NULL;
+      }
+    }
+    if ((convbuf = static_cast<char*>(malloc(nbytes + 1))) == NULL) return NULL;
+
+    // Fill the output buffer.
+    p = wcsarg;
+    memset(&mbs, 0, sizeof(mbs));
+    if ((nbytes = wcsrtombs(convbuf, (const wchar_t**)&p, nbytes, &mbs)) == (size_t)-1) {
+      free(convbuf);
+      return NULL;
+    }
+    convbuf[nbytes] = '\0';
+    return convbuf;
+  }
+
+  // Like __fputwc_unlock, but handles fake string (__SSTR) files properly.
+  // File must already be locked.
+  static wint_t xfputwc(wchar_t wc, FILE* fp) {
+    if ((fp->_flags & __SSTR) == 0) return __fputwc_unlock(wc, fp);
+
+    char buf[MB_LEN_MAX];
+    mbstate_t mbs = {};
+    size_t len = wcrtomb(buf, wc, &mbs);
+    if (len == (size_t)-1) {
+      fp->_flags |= __SERR;
+      errno = EILSEQ;
+      return WEOF;
+    }
+
+    struct __siov iov;
+    iov.iov_base = buf;
+    iov.iov_len = len;
+    struct __suio uio;
+    uio.uio_iov = &iov;
+    uio.uio_resid = len;
+    uio.uio_iovcnt = 1;
+    return (__sfvwrite(fp, &uio) != EOF ? (wint_t)wc : WEOF);
+  }
+
+  // Convert a multibyte character string argument for the %s format to a wide
+  // string representation. ``prec'' specifies the maximum number of bytes
+  // to output. If ``prec'' is greater than or equal to zero, we can't assume
+  // that the multibyte character string ends in a null character.
+  //
+  // Returns NULL on failure.
+  // To find out what happened check errno for ENOMEM, EILSEQ and EINVAL.
+  static wchar_t* mbsconv(char* mbsarg, int prec) {
+    mbstate_t mbs;
+    const char* p;
+    size_t insize, nchars, nconv;
+
+    if (mbsarg == NULL) return NULL;
+
+    // Supplied argument is a multibyte string; convert it to wide characters first.
+    if (prec >= 0) {
+      // String is not guaranteed to be NUL-terminated. Find the number of characters to print.
+      p = mbsarg;
+      insize = nchars = nconv = 0;
+      bzero(&mbs, sizeof(mbs));
+      while (nchars != (size_t)prec) {
+        nconv = mbrlen(p, MB_CUR_MAX, &mbs);
+        if (nconv == (size_t)0 || nconv == (size_t)-1 || nconv == (size_t)-2) break;
+        p += nconv;
+        nchars++;
+        insize += nconv;
+      }
+      if (nconv == (size_t)-1 || nconv == (size_t)-2) return (NULL);
+    } else {
+      insize = strlen(mbsarg);
+    }
+
+    // Allocate buffer for the result and perform the conversion,
+    // converting at most `size' bytes of the input multibyte string to
+    // wide characters for printing.
+    wchar_t* convbuf = static_cast<wchar_t*>(calloc(insize + 1, sizeof(*convbuf)));
+    if (convbuf == NULL) return NULL;
+    wchar_t* wcp = convbuf;
+    p = mbsarg;
+    bzero(&mbs, sizeof(mbs));
+    nconv = 0;
+    while (insize != 0) {
+      nconv = mbrtowc(wcp, p, insize, &mbs);
+      if (nconv == 0 || nconv == (size_t)-1 || nconv == (size_t)-2) break;
+      wcp++;
+      p += nconv;
+      insize -= nconv;
+    }
+    if (nconv == (size_t)-1 || nconv == (size_t)-2) {
+      free(convbuf);
+      return NULL;
+    }
+    *wcp = '\0';
+
+    return convbuf;
+  }
+
+};

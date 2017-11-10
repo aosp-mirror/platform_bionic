@@ -33,102 +33,14 @@
 
 #define CHAR_TYPE wchar_t
 #define FUNCTION_NAME __vfwprintf
+#define CHAR_TYPE_STRLEN wcslen
+#define CHAR_TYPE_STRNLEN wcsnlen
+#define CHAR_TYPE_INF L"INF"
+#define CHAR_TYPE_inf L"inf"
+#define CHAR_TYPE_NAN L"NAN"
+#define CHAR_TYPE_nan L"nan"
+#define CHAR_TYPE_ORIENTATION 1
 #include "printf_common.h"
-
-/*
- * Like __fputwc_unlock, but handles fake string (__SSTR) files properly.
- * File must already be locked.
- */
-static wint_t __xfputwc(wchar_t wc, FILE* fp) {
-  mbstate_t mbs;
-  char buf[MB_LEN_MAX];
-  struct __suio uio;
-  struct __siov iov;
-  size_t len;
-
-  if ((fp->_flags & __SSTR) == 0) return (__fputwc_unlock(wc, fp));
-
-  bzero(&mbs, sizeof(mbs));
-  len = wcrtomb(buf, wc, &mbs);
-  if (len == (size_t)-1) {
-    fp->_flags |= __SERR;
-    errno = EILSEQ;
-    return (WEOF);
-  }
-  uio.uio_iov = &iov;
-  uio.uio_resid = len;
-  uio.uio_iovcnt = 1;
-  iov.iov_base = buf;
-  iov.iov_len = len;
-  return (__sfvwrite(fp, &uio) != EOF ? (wint_t)wc : WEOF);
-}
-
-/*
- * Convert a multibyte character string argument for the %s format to a wide
- * string representation. ``prec'' specifies the maximum number of bytes
- * to output. If ``prec'' is greater than or equal to zero, we can't assume
- * that the multibyte character string ends in a null character.
- *
- * Returns NULL on failure.
- * To find out what happened check errno for ENOMEM, EILSEQ and EINVAL.
- */
-static wchar_t* __mbsconv(char* mbsarg, int prec) {
-  mbstate_t mbs;
-  wchar_t *convbuf, *wcp;
-  const char* p;
-  size_t insize, nchars, nconv;
-
-  if (mbsarg == NULL) return (NULL);
-
-  /*
-   * Supplied argument is a multibyte string; convert it to wide
-   * characters first.
-   */
-  if (prec >= 0) {
-    /*
-     * String is not guaranteed to be NUL-terminated. Find the
-     * number of characters to print.
-     */
-    p = mbsarg;
-    insize = nchars = nconv = 0;
-    bzero(&mbs, sizeof(mbs));
-    while (nchars != (size_t)prec) {
-      nconv = mbrlen(p, MB_CUR_MAX, &mbs);
-      if (nconv == (size_t)0 || nconv == (size_t)-1 || nconv == (size_t)-2) break;
-      p += nconv;
-      nchars++;
-      insize += nconv;
-    }
-    if (nconv == (size_t)-1 || nconv == (size_t)-2) return (NULL);
-  } else
-    insize = strlen(mbsarg);
-
-  /*
-   * Allocate buffer for the result and perform the conversion,
-   * converting at most `size' bytes of the input multibyte string to
-   * wide characters for printing.
-   */
-  convbuf = static_cast<wchar_t*>(calloc(insize + 1, sizeof(*convbuf)));
-  if (convbuf == NULL) return (NULL);
-  wcp = convbuf;
-  p = mbsarg;
-  bzero(&mbs, sizeof(mbs));
-  nconv = 0;
-  while (insize != 0) {
-    nconv = mbrtowc(wcp, p, insize, &mbs);
-    if (nconv == 0 || nconv == (size_t)-1 || nconv == (size_t)-2) break;
-    wcp++;
-    p += nconv;
-    insize -= nconv;
-  }
-  if (nconv == (size_t)-1 || nconv == (size_t)-2) {
-    free(convbuf);
-    return (NULL);
-  }
-  *wcp = '\0';
-
-  return (convbuf);
-}
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   wchar_t ch;    /* character from fmt */
@@ -206,11 +118,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 #define PRINT(ptr, len)                                   \
   do {                                                    \
     for (n3 = 0; n3 < (len); n3++) {                      \
-      if ((__xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
+      if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
     }                                                     \
   } while (0)
 
-  _SET_ORIENTATION(fp, 1);
+  _SET_ORIENTATION(fp, CHAR_TYPE_ORIENTATION);
 
   // Writing "" to a read only file returns EOF, not 0.
   if (cantwrite(fp)) {
@@ -431,7 +343,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (prec < 0) prec = dtoaend - dtoaresult;
         if (expt == INT_MAX) ox[1] = '\0';
         free(convbuf);
-        cp = convbuf = __mbsconv(dtoaresult, -1);
+        cp = convbuf = helpers::mbsconv(dtoaresult, -1);
         if (cp == NULL) goto error;
         ndig = dtoaend - dtoaresult;
         goto fp_common;
@@ -471,16 +383,16 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           if (expt == 9999) expt = INT_MAX;
         }
         free(convbuf);
-        cp = convbuf = __mbsconv(dtoaresult, -1);
+        cp = convbuf = helpers::mbsconv(dtoaresult, -1);
         if (cp == NULL) goto error;
         ndig = dtoaend - dtoaresult;
       fp_common:
         if (signflag) sign = '-';
         if (expt == INT_MAX) { /* inf or nan */
           if (*cp == 'N') {
-            cp = const_cast<wchar_t*>((ch >= 'a') ? L"nan" : L"NAN");
+            cp = const_cast<CHAR_TYPE*>((ch >= 'a') ? CHAR_TYPE_nan : CHAR_TYPE_NAN);
           } else {
-            cp = const_cast<wchar_t*>((ch >= 'a') ? L"inf" : L"INF");
+            cp = const_cast<CHAR_TYPE*>((ch >= 'a') ? CHAR_TYPE_inf : CHAR_TYPE_INF);
           }
           size = 3;
           flags &= ~ZEROPAD;
@@ -569,7 +481,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           char* mbsarg;
           if ((mbsarg = GETARG(char*)) == NULL) mbsarg = const_cast<char*>("(null)");
           free(convbuf);
-          convbuf = __mbsconv(mbsarg, prec);
+          convbuf = helpers::mbsconv(mbsarg, prec);
           if (convbuf == NULL) {
             fp->_flags |= __SERR;
             goto error;
@@ -578,11 +490,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           }
         }
         if (prec >= 0) {
-          size = wcsnlen(cp, prec);
+          size = CHAR_TYPE_STRNLEN(cp, prec);
         } else {
           size_t len;
 
-          if ((len = wcslen(cp)) > INT_MAX) goto overflow;
+          if ((len = CHAR_TYPE_STRLEN(cp)) > INT_MAX) goto overflow;
           size = (int)len;
         }
         sign = '\0';
