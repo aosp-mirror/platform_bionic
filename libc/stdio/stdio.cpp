@@ -581,7 +581,7 @@ __strong_alias(fseek, fseeko);
 
 int fseeko64(FILE* fp, off64_t offset, int whence) {
   CHECK_FP(fp);
-  return __fseeko64(fp, offset, whence, 8*sizeof(off_t));
+  return __fseeko64(fp, offset, whence, 8*sizeof(off64_t));
 }
 
 int fsetpos(FILE* fp, const fpos_t* pos) {
@@ -933,6 +933,16 @@ int swprintf(wchar_t* s, size_t n, const wchar_t* fmt, ...) {
 
 int swscanf(const wchar_t* s, const wchar_t* fmt, ...) {
   PRINTF_IMPL(vswscanf(s, fmt, ap));
+}
+
+int vfprintf(FILE* fp, const char* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __vfprintf(fp, fmt, ap);
+}
+
+int vfwprintf(FILE* fp, const wchar_t* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __vfwprintf(fp, fmt, ap);
 }
 
 int vprintf(const char* fmt, va_list ap) {

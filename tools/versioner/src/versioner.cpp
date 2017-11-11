@@ -36,6 +36,7 @@
 #include <set>
 #include <sstream>
 #include <string>
+#include <string_view>
 #include <thread>
 #include <unordered_map>
 #include <vector>
@@ -82,18 +83,28 @@ static int getCpuCount() {
 
 namespace {
 struct HeaderLocationInformation {
-  std::string header_dir;
+  std::string header_path;
   std::string dependency_dir;
   // Absolute paths to ignore all children -- including subdirectories -- of.
   std::unordered_set<std::string> ignored_directories;
 };
 }
 
+static bool is_dir(const std::string& path) {
+  struct stat st;
+  return stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
 static CompilationRequirements collectRequirements(const Arch& arch,
                                                    const HeaderLocationInformation& location) {
   std::vector<std::string> headers =
-      collectHeaders(location.header_dir, location.ignored_directories);
-  std::vector<std::string> dependencies = { location.header_dir };
+      collectHeaders(location.header_path, location.ignored_directories);
+  std::vector<std::string> dependencies;
+
+  if (is_dir(location.header_path)) {
+    dependencies.emplace_back(location.header_path);
+  }
+
   if (!location.dependency_dir.empty()) {
     auto collect_children = [&dependencies](const std::string& dir_path) {
       DIR* dir = opendir(dir_path.c_str());
@@ -159,10 +170,12 @@ static std::set<CompilationType> generateCompilationTypes(const std::set<Arch> s
       }
 
       for (int file_offset_bits : { 32, 64 }) {
-        CompilationType type = {
-          .arch = arch, .api_level = api_level, .file_offset_bits = file_offset_bits
-        };
-        result.insert(type);
+        for (bool cpp : { true, false }) {
+          CompilationType type = {
+            .arch = arch, .cpp = cpp, .api_level = api_level, .file_offset_bits = file_offset_bits
+          };
+          result.insert(type);
+        }
       }
     }
   }
@@ -175,7 +188,7 @@ static std::unique_ptr<HeaderDatabase> compileHeaders(const std::set<Compilation
     errx(1, "compileHeaders received no CompilationTypes");
   }
 
-  auto vfs = createCommonVFS(location.header_dir, location.dependency_dir, add_include);
+  auto vfs = createCommonVFS(location.header_path, location.dependency_dir, add_include);
 
   size_t thread_count = max_thread_count;
   std::vector<std::thread> threads;
@@ -282,7 +295,8 @@ static bool checkSymbol(const Symbol& symbol) {
       for (const auto& inline_def_it : inline_definitions) {
         auto intersection = Intersection(compilation_types, inline_def_it.second);
         if (!intersection.empty()) {
-          fprintf(stderr, "versioner: conflicting inline definitions:\n");
+          fprintf(stderr, "versioner: conflicting inline definitions for symbol %s:\n",
+                  symbol.name.c_str());
           fprintf(stderr, "  declarations visible in: %s\n", Join(intersection, ", ").c_str());
           decl->dump(cwd, stderr, 4);
           inline_def_it.first->dump(cwd, stderr, 4);
@@ -526,8 +540,8 @@ int main(int argc, char** argv) {
         if (stat(platform_dir.c_str(), &st) != 0) {
           err(1, "failed to stat platform directory '%s'", platform_dir.c_str());
         }
-        if (!S_ISDIR(st.st_mode)) {
-          errx(1, "'%s' is not a directory", optarg);
+        if (!S_ISDIR(st.st_mode) && !S_ISREG(st.st_mode)) {
+          errx(1, "'%s' is not a file or directory", optarg);
         }
         break;
       }
@@ -598,13 +612,13 @@ int main(int argc, char** argv) {
   if (optind == argc) {
     // Neither HEADER_PATH nor DEPS_PATH were specified, so try to figure them out.
     std::string versioner_dir = to_string(top) + "/bionic/tools/versioner";
-    location.header_dir = versioner_dir + "/current";
+    location.header_path = versioner_dir + "/current";
     location.dependency_dir = versioner_dir + "/dependencies";
     if (platform_dir.empty()) {
       platform_dir = versioner_dir + "/platforms";
     }
   } else {
-    if (!android::base::Realpath(argv[optind], &location.header_dir)) {
+    if (!android::base::Realpath(argv[optind], &location.header_path)) {
       err(1, "failed to get realpath for path '%s'", argv[optind]);
     }
 
@@ -616,8 +630,8 @@ int main(int argc, char** argv) {
   // Every file that lives in bits/fortify is logically a part of a header outside of bits/fortify.
   // This makes the files there impossible to build on their own.
   if (ignore_fortify_headers) {
-    std::string fortify_path = location.header_dir;
-    if (!android::base::EndsWith(location.header_dir, "/")) {
+    std::string fortify_path = location.header_path;
+    if (!android::base::EndsWith(location.header_path, "/")) {
       fortify_path += '/';
     }
     fortify_path += "bits/fortify";
@@ -634,10 +648,8 @@ int main(int argc, char** argv) {
 
 
   struct stat st;
-  if (const char *dir = location.header_dir.c_str(); stat(dir, &st) != 0) {
-    err(1, "failed to stat '%s'", dir);
-  } else if (!S_ISDIR(st.st_mode)) {
-    errx(1, "'%s' is not a directory", dir);
+  if (const char *path = location.header_path.c_str(); stat(path, &st) != 0) {
+    err(1, "failed to stat '%s'", path);
   }
 
   std::set<CompilationType> compilation_types;
@@ -663,7 +675,7 @@ int main(int argc, char** argv) {
 
   bool failed = false;
   if (dump) {
-    declaration_database->dump(location.header_dir + "/");
+    declaration_database->dump(location.header_path + "/");
   } else {
     if (!sanityCheck(declaration_database.get())) {
       printf("versioner: sanity check failed\n");
@@ -679,7 +691,8 @@ int main(int argc, char** argv) {
   }
 
   if (!preprocessor_output_path.empty() && (force || !failed)) {
-    failed = !preprocessHeaders(preprocessor_output_path, location.header_dir, declaration_database.get());
+    failed = !preprocessHeaders(preprocessor_output_path, location.header_path,
+                                declaration_database.get());
   }
   return failed;
 }

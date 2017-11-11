@@ -446,7 +446,7 @@ cc_test_library {
     name: "libtestshared",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["empty.cpp"],
-    relative_install_path: "/inaccessible_libs",
+    relative_install_path: "bionic-loader-test-libs/inaccessible_libs",
 }
 
 // -----------------------------------------------------------------------------
@@ -629,7 +629,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["ld_config_test_helper_lib1.cpp"],
     shared_libs: ["ld_config_test_helper_lib2"],
-    relative_install_path: "/ns2",
+    relative_install_path: "bionic-loader-test-libs/ns2",
 }
 
 cc_test_library {
@@ -637,7 +637,7 @@ cc_test_library {
     host_supported: false,
     defaults: ["bionic_testlib_defaults"],
     srcs: ["ld_config_test_helper_lib2.cpp"],
-    relative_install_path: "/ns2",
+    relative_install_path: "bionic-loader-test-libs/ns2",
 }
 
 cc_test_library {

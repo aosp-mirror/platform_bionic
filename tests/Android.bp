@@ -96,7 +96,6 @@ cc_test_library {
         "nl_types_test.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
-        "qsort_test.cpp",
         "regex_test.cpp",
         "resolv_test.cpp",
         "sched_test.cpp",
@@ -194,7 +193,6 @@ cc_test_library {
 cc_defaults {
     name: "bionic_fortify_tests_defaults",
     cflags: [
-        "-Wno-error",
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["fortify_test_main.cpp"],
