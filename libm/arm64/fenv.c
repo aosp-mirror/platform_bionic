@@ -29,9 +29,6 @@
 #include <stdint.h>
 #include <fenv.h>
 
-#define FPCR_EXCEPT_SHIFT 8
-#define FPCR_EXCEPT_MASK  (FE_ALL_EXCEPT << FPCR_EXCEPT_SHIFT)
-
 #define FPCR_RMODE_SHIFT 22
 
 const fenv_t __fe_dfl_env = { 0 /* control */, 0 /* status */};
@@ -137,21 +134,12 @@ int fesetround(int round) {
 }
 
 int feholdexcept(fenv_t* envp) {
-  fenv_t env;
   fpu_status_t fpsr;
-  fpu_control_t fpcr, new_fpcr;
-
   __get_fpsr(fpsr);
+  fpu_control_t fpcr;
   __get_fpcr(fpcr);
-  env.__status = fpsr;
-  env.__control = fpcr;
+  fenv_t env = { .__status = fpsr, .__control = fpcr };
   *envp = env;
-
-  // Set exceptions to untrapped.
-  new_fpcr = fpcr & ~(FE_ALL_EXCEPT << FPCR_EXCEPT_SHIFT);
-  if (new_fpcr != fpcr) {
-    __set_fpcr(new_fpcr);
-  }
 
   // Clear all exceptions.
   fpsr &= ~FE_ALL_EXCEPT;
@@ -176,31 +164,14 @@ int feupdateenv(const fenv_t* envp) {
   return 0;
 }
 
-int feenableexcept(int mask) {
-  fpu_control_t old_fpcr, new_fpcr;
-
-  __get_fpcr(old_fpcr);
-  new_fpcr = old_fpcr | ((mask & FE_ALL_EXCEPT) << FPCR_EXCEPT_SHIFT);
-  if (new_fpcr != old_fpcr) {
-    __set_fpcr(new_fpcr);
-  }
-  return ((old_fpcr >> FPCR_EXCEPT_SHIFT) & FE_ALL_EXCEPT);
+int feenableexcept(int mask __unused) {
+  return -1;
 }
 
-int fedisableexcept(int mask) {
-  fpu_control_t old_fpcr, new_fpcr;
-
-  __get_fpcr(old_fpcr);
-  new_fpcr = old_fpcr & ~((mask & FE_ALL_EXCEPT) << FPCR_EXCEPT_SHIFT);
-  if (new_fpcr != old_fpcr) {
-    __set_fpcr(new_fpcr);
-  }
-  return ((old_fpcr >> FPCR_EXCEPT_SHIFT) & FE_ALL_EXCEPT);
+int fedisableexcept(int mask __unused) {
+  return 0;
 }
 
 int fegetexcept(void) {
-  fpu_control_t fpcr;
-
-  __get_fpcr(fpcr);
-  return ((fpcr & FPCR_EXCEPT_MASK) >> FPCR_EXCEPT_SHIFT);
+  return 0;
 }

@@ -28,9 +28,6 @@
 
 #include <fenv.h>
 
-#define FPSCR_ENABLE_SHIFT 8
-#define FPSCR_ENABLE_MASK  (FE_ALL_EXCEPT << FPSCR_ENABLE_SHIFT)
-
 #define FPSCR_RMODE_SHIFT 22
 
 const fenv_t __fe_dfl_env = 0;
@@ -103,7 +100,7 @@ int feholdexcept(fenv_t* __envp) {
   fenv_t __env;
   fegetenv(&__env);
   *__envp = __env;
-  __env &= ~(FE_ALL_EXCEPT | FPSCR_ENABLE_MASK);
+  __env &= ~FE_ALL_EXCEPT;
   fesetenv(&__env);
   return 0;
 }
@@ -116,24 +113,14 @@ int feupdateenv(const fenv_t* __envp) {
   return 0;
 }
 
-int feenableexcept(int __mask) {
-  fenv_t __old_fpscr, __new_fpscr;
-  fegetenv(&__old_fpscr);
-  __new_fpscr = __old_fpscr | (__mask & FE_ALL_EXCEPT) << FPSCR_ENABLE_SHIFT;
-  fesetenv(&__new_fpscr);
-  return ((__old_fpscr >> FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
+int feenableexcept(int __mask __unused) {
+  return -1;
 }
 
-int fedisableexcept(int __mask) {
-  fenv_t __old_fpscr, __new_fpscr;
-  fegetenv(&__old_fpscr);
-  __new_fpscr = __old_fpscr & ~((__mask & FE_ALL_EXCEPT) << FPSCR_ENABLE_SHIFT);
-  fesetenv(&__new_fpscr);
-  return ((__old_fpscr >> FPSCR_ENABLE_SHIFT) & FE_ALL_EXCEPT);
+int fedisableexcept(int __mask __unused) {
+  return 0;
 }
 
 int fegetexcept(void) {
-  fenv_t __fpscr;
-  fegetenv(&__fpscr);
-  return ((__fpscr & FPSCR_ENABLE_MASK) >> FPSCR_ENABLE_SHIFT);
+  return 0;
 }

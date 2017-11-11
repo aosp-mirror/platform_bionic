@@ -199,9 +199,11 @@ class SpinFunctionHelper {
   SpinFunctionHelper() {
     SpinFunctionHelper::spin_flag_ = true;
   }
+
   ~SpinFunctionHelper() {
     UnSpin();
   }
+
   auto GetFunction() -> void* (*)(void*) {
     return SpinFunctionHelper::SpinFn;
   }
@@ -2233,12 +2235,14 @@ TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
   ASSERT_EQ(0, pthread_attr_init(&attr));
   ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
 
+  SpinFunctionHelper spin_helper;
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  ASSERT_EQ(0, pthread_create(&t, &attr, spin_helper.GetFunction(), nullptr));
   int actual_policy;
   sched_param actual_param;
   ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
   ASSERT_EQ(SCHED_FIFO, actual_policy);
+  spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
@@ -2256,12 +2260,14 @@ TEST(pthread, pthread_attr_setinheritsched_PTHREAD_EXPLICIT_SCHED_takes_effect) 
   ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_EXPLICIT_SCHED));
   ASSERT_EQ(0, pthread_attr_setschedpolicy(&attr, SCHED_OTHER));
 
+  SpinFunctionHelper spin_helper;
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  ASSERT_EQ(0, pthread_create(&t, &attr, spin_helper.GetFunction(), nullptr));
   int actual_policy;
   sched_param actual_param;
   ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
   ASSERT_EQ(SCHED_OTHER, actual_policy);
+  spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
@@ -2278,11 +2284,13 @@ TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_
   ASSERT_EQ(0, pthread_attr_init(&attr));
   ASSERT_EQ(0, pthread_attr_setinheritsched(&attr, PTHREAD_INHERIT_SCHED));
 
+  SpinFunctionHelper spin_helper;
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, &attr, IdFn, nullptr));
+  ASSERT_EQ(0, pthread_create(&t, &attr, spin_helper.GetFunction(), nullptr));
   int actual_policy;
   sched_param actual_param;
   ASSERT_EQ(0, pthread_getschedparam(t, &actual_policy, &actual_param));
   ASSERT_EQ(SCHED_FIFO  | SCHED_RESET_ON_FORK, actual_policy);
+  spin_helper.UnSpin();
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }

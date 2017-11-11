@@ -24,6 +24,7 @@
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>
 #endif
+#include <sys/user.h>
 
 #include <string>
 #include <thread>
@@ -824,6 +825,21 @@ TEST(dlfcn, dlopen_failure) {
 #endif
 }
 
+TEST(dlfcn, dlclose_unload) {
+  void* handle = dlopen("libtest_simple.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  uint32_t* taxicab_number = static_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+  ASSERT_TRUE(taxicab_number != nullptr) << dlerror();
+  EXPECT_EQ(1729U, *taxicab_number);
+  dlclose(handle);
+  // Making sure that the library has been unmapped as part of library unload
+  // process. Note that mprotect somewhat counter-intuitively returns ENOMEM in
+  // this case.
+  uintptr_t page_start = reinterpret_cast<uintptr_t>(taxicab_number) & ~(PAGE_SIZE - 1);
+  ASSERT_TRUE(mprotect(reinterpret_cast<void*>(page_start), PAGE_SIZE, PROT_NONE) != 0);
+  ASSERT_EQ(ENOMEM, errno) << strerror(errno);
+}
+
 static void ConcurrentDlErrorFn(std::string& error) {
   ASSERT_TRUE(dlerror() == nullptr);
 
@@ -1102,17 +1118,17 @@ TEST(dlfcn, rtld_next_known_symbol) {
 
 // Check that RTLD_NEXT of a libc symbol works in dlopened library
 TEST(dlfcn, rtld_next_from_library) {
-  void* library_with_close = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
-  ASSERT_TRUE(library_with_close != nullptr) << dlerror();
-  void* expected_addr = dlsym(RTLD_DEFAULT, "close");
+  void* library_with_fclose = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
+  ASSERT_TRUE(library_with_fclose != nullptr) << dlerror();
+  void* expected_addr = dlsym(RTLD_DEFAULT, "fclose");
   ASSERT_TRUE(expected_addr != nullptr) << dlerror();
-  typedef void* (*get_libc_close_ptr_fn_t)();
-  get_libc_close_ptr_fn_t get_libc_close_ptr =
-      reinterpret_cast<get_libc_close_ptr_fn_t>(dlsym(library_with_close, "get_libc_close_ptr"));
-  ASSERT_TRUE(get_libc_close_ptr != nullptr) << dlerror();
-  ASSERT_EQ(expected_addr, get_libc_close_ptr());
+  typedef void* (*get_libc_fclose_ptr_fn_t)();
+  get_libc_fclose_ptr_fn_t get_libc_fclose_ptr =
+      reinterpret_cast<get_libc_fclose_ptr_fn_t>(dlsym(library_with_fclose, "get_libc_fclose_ptr"));
+  ASSERT_TRUE(get_libc_fclose_ptr != nullptr) << dlerror();
+  ASSERT_EQ(expected_addr, get_libc_fclose_ptr());
 
-  dlclose(library_with_close);
+  dlclose(library_with_fclose);
 }
 
 
