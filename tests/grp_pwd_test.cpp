@@ -42,20 +42,20 @@ enum uid_type_t {
 
 static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type) {
   ASSERT_TRUE(pwd != NULL);
-  ASSERT_STREQ(username, pwd->pw_name);
-  ASSERT_EQ(uid, pwd->pw_uid);
-  ASSERT_EQ(uid, pwd->pw_gid);
-  ASSERT_EQ(NULL, pwd->pw_passwd);
+  EXPECT_STREQ(username, pwd->pw_name);
+  EXPECT_EQ(uid, pwd->pw_uid);
+  EXPECT_EQ(uid, pwd->pw_gid);
+  EXPECT_EQ(NULL, pwd->pw_passwd);
 #ifdef __LP64__
-  ASSERT_EQ(NULL, pwd->pw_gecos);
+  EXPECT_EQ(NULL, pwd->pw_gecos);
 #endif
 
   if (uid_type == TYPE_SYSTEM) {
-    ASSERT_STREQ("/", pwd->pw_dir);
+    EXPECT_STREQ("/", pwd->pw_dir);
   } else {
-    ASSERT_STREQ("/data", pwd->pw_dir);
+    EXPECT_STREQ("/data", pwd->pw_dir);
   }
-  ASSERT_STREQ("/system/bin/sh", pwd->pw_shell);
+  EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type) {
@@ -196,24 +196,24 @@ TEST(pwd, getpwent_iterate) {
   setpwent();
   while ((pwd = getpwent()) != NULL) {
     ASSERT_TRUE(NULL != pwd->pw_name);
-    ASSERT_EQ(pwd->pw_gid, pwd->pw_uid);
-    ASSERT_EQ(NULL, pwd->pw_passwd);
+    EXPECT_EQ(pwd->pw_gid, pwd->pw_uid) << "pwd->pw_uid: " << pwd->pw_uid;
+    EXPECT_EQ(NULL, pwd->pw_passwd) << "pwd->pw_uid: " << pwd->pw_uid;
 #ifdef __LP64__
-    ASSERT_TRUE(NULL == pwd->pw_gecos);
+    EXPECT_TRUE(NULL == pwd->pw_gecos) << "pwd->pw_uid: " << pwd->pw_uid;
 #endif
-    ASSERT_TRUE(NULL != pwd->pw_shell);
+    EXPECT_TRUE(NULL != pwd->pw_shell);
     if (pwd->pw_uid >= exist.size()) {
-      ASSERT_STREQ("/data", pwd->pw_dir);
+      EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
       application = true;
     } else {
-      ASSERT_STREQ("/", pwd->pw_dir);
+      EXPECT_STREQ("/", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
       // TODO(b/27999086): fix this check with the OEM range
       // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
       // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
       // yet, so therefore we do not check for uid's in the OEM range.
       if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
           !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
-        ASSERT_FALSE(exist[pwd->pw_uid]);
+        EXPECT_FALSE(exist[pwd->pw_uid]) << "pwd->pw_uid: " << pwd->pw_uid;
       }
       exist[pwd->pw_uid] = true;
     }
@@ -222,24 +222,24 @@ TEST(pwd, getpwent_iterate) {
 
   // Required content
   for (size_t n = 0; n < android_id_count; ++n) {
-    ASSERT_TRUE(exist[android_ids[n].aid]);
+    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
   }
   for (size_t n = 2900; n < 2999; ++n) {
-    ASSERT_TRUE(exist[n]);
+    EXPECT_TRUE(exist[n]) << "n: " << n;
   }
   for (size_t n = 5000; n < 5999; ++n) {
-    ASSERT_TRUE(exist[n]);
+    EXPECT_TRUE(exist[n]) << "n: " << n;
   }
-  ASSERT_TRUE(application);
+  EXPECT_TRUE(application);
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
   ASSERT_TRUE(grp != NULL);
-  ASSERT_STREQ(group_name, grp->gr_name);
-  ASSERT_EQ(gid, grp->gr_gid);
+  EXPECT_STREQ(group_name, grp->gr_name);
+  EXPECT_EQ(gid, grp->gr_gid);
   ASSERT_TRUE(grp->gr_mem != NULL);
-  ASSERT_STREQ(group_name, grp->gr_mem[0]);
-  ASSERT_TRUE(grp->gr_mem[1] == NULL);
+  EXPECT_STREQ(group_name, grp->gr_mem[0]);
+  EXPECT_TRUE(grp->gr_mem[1] == NULL);
 }
 
 #if defined(__BIONIC__)
@@ -453,10 +453,10 @@ TEST(grp, getgrent_iterate) {
 
   setgrent();
   while ((grp = getgrent()) != NULL) {
-    ASSERT_TRUE(grp->gr_name != NULL);
-    ASSERT_TRUE(grp->gr_mem != NULL);
-    ASSERT_STREQ(grp->gr_name, grp->gr_mem[0]);
-    ASSERT_TRUE(grp->gr_mem[1] == NULL);
+    ASSERT_TRUE(grp->gr_name != NULL) << "grp->gr_gid: " << grp->gr_gid;
+    ASSERT_TRUE(grp->gr_mem != NULL) << "grp->gr_gid: " << grp->gr_gid;
+    EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
+    EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
     if (grp->gr_gid >= exist.size()) {
       application = true;
     } else {
@@ -466,7 +466,7 @@ TEST(grp, getgrent_iterate) {
       // yet, so therefore we do not check for gid's in the OEM range.
       if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
           !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
-        ASSERT_FALSE(exist[grp->gr_gid]);
+        EXPECT_FALSE(exist[grp->gr_gid]) << "grp->gr_gid: " << grp->gr_gid;
       }
       exist[grp->gr_gid] = true;
     }
@@ -475,13 +475,13 @@ TEST(grp, getgrent_iterate) {
 
   // Required content
   for (size_t n = 0; n < android_id_count; ++n) {
-    ASSERT_TRUE(exist[android_ids[n].aid]);
+    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
   }
   for (size_t n = 2900; n < 2999; ++n) {
-    ASSERT_TRUE(exist[n]);
+    EXPECT_TRUE(exist[n]) << "n: " << n;
   }
   for (size_t n = 5000; n < 5999; ++n) {
-    ASSERT_TRUE(exist[n]);
+    EXPECT_TRUE(exist[n]) << "n: " << n;
   }
-  ASSERT_TRUE(application);
+  EXPECT_TRUE(application);
 }

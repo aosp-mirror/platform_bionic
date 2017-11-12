@@ -42,3 +42,19 @@ TEST(resolv, b64_pton_28035006) {
   uint8_t buf[128];
   ASSERT_EQ(128, b64_pton(data, buf, sizeof(buf)));
 }
+
+TEST(resolv, b64_ntop) {
+  char buf[128];
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_EQ(static_cast<int>(strlen("aGVsbG8=")),
+            b64_ntop(reinterpret_cast<u_char const*>("hello"), strlen("hello"),
+                     buf, sizeof(buf)));
+  ASSERT_STREQ(buf, "aGVsbG8=");
+}
+
+TEST(resolv, b64_pton) {
+  u_char buf[128];
+  memset(buf, 'x', sizeof(buf));
+  ASSERT_EQ(static_cast<int>(strlen("hello")), b64_pton("aGVsbG8=", buf, sizeof(buf)));
+  ASSERT_STREQ(reinterpret_cast<char*>(buf), "hello");
+}

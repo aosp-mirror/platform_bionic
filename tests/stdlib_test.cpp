@@ -508,6 +508,16 @@ TEST(stdlib, ptsname_r_ERANGE) {
   close(fd);
 }
 
+TEST(stdlib, ttyname) {
+  int fd = getpt();
+  ASSERT_NE(-1, fd);
+
+  // ttyname returns "/dev/ptmx" for a pty.
+  ASSERT_STREQ("/dev/ptmx", ttyname(fd));
+
+  close(fd);
+}
+
 TEST(stdlib, ttyname_r) {
   int fd = getpt();
   ASSERT_NE(-1, fd);
