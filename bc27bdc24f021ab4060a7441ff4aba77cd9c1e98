@@ -173,6 +173,30 @@
     },
     {
       "key": {
+        "uuid": "81ab1a63_19a98d18",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:55:02Z",
+      "side": 1,
+      "message": "(i thought the same, but then the fact that there are *three* calls to memset -- and there\u0027s not currently anything we can do about the third -- made me not want to mix the styles.)",
+      "parentUuid": "3a5cf760_c58102c4",
+      "range": {
+        "startLine": 704,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 24
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7082895f_2d708a22",
         "filename": "libc/stdio/printf_common.h",
         "patchSetId": 1
@@ -208,6 +232,30 @@
       "side": 1,
       "message": "Makes sense.  Going with my typical theory about other formatting, perhaps it\u0027s better to leave this as a direct copy/paste as an indication that it\u0027s legacy code and still needs attention.",
       "parentUuid": "7082895f_2d708a22",
+      "range": {
+        "startLine": 710,
+        "startChar": 0,
+        "endLine": 733,
+        "endChar": 5
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75451383_91256914",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:55:02Z",
+      "side": 1,
+      "message": "yeah, sorry. i\u0027ve been _trying_ to resist \"trivial\" cleanup, but obviously not doing a great job. i\u0027ll try harder to only make changes necessary for compilation until we\u0027re in a position for real cleanup...",
+      "parentUuid": "093f3df1_c253f050",
       "range": {
         "startLine": 710,
         "startChar": 0,
