@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d95f066f_25004667",
+        "filename": "libc/stdio/vfwprintf.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T21:07:21Z",
+      "side": 1,
+      "message": "But this isn\u0027t actually used by the PRINT macro.  Will that macro be combined with the non-wide version too?",
+      "revId": "b70576b04869ae85b2f79e072efd40f792a16baf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
