@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "76c7492f_145a6562",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:51:33Z",
+      "side": 1,
+      "message": "Right, since this whole file is #include\u0027d.  sgtm.",
+      "parentUuid": "f454af43_84202e4f",
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ff354e2_8158726c",
         "filename": "libc/stdio/printf_common.h",
         "patchSetId": 1
@@ -48,6 +66,30 @@
       "writtenOn": "2017-11-13T17:42:32Z",
       "side": 1,
       "message": "(i also didn\u0027t remove the unnecessary `struct` here, because it seems like it might be more valuable to improve the name, but then you start thinking \"maybe __suio should actually be a class with PRINT and FLUSH belonging there\" but it still feels too early to be doing real rewriting.)",
+      "range": {
+        "startLine": 688,
+        "startChar": 30,
+        "endLine": 688,
+        "endChar": 43
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "461c8b5d_f36ded0c",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:51:33Z",
+      "side": 1,
+      "message": "sgtm; the extra \u0027struct\u0027 is one of the least concerns imo.",
+      "parentUuid": "1ff354e2_8158726c",
       "range": {
         "startLine": 688,
         "startChar": 30,
@@ -107,6 +149,30 @@
     },
     {
       "key": {
+        "uuid": "3a5cf760_c58102c4",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:51:33Z",
+      "side": 1,
+      "message": "Yes; I\u0027d checked and the clen was the one I found.  mbs \u003d {} is prettier than the memset() appearing twice too.  Not important of course, but I thought I\u0027d point it out since you did this for one but not the other function.",
+      "parentUuid": "c6254bf4_6d9b78c9",
+      "range": {
+        "startLine": 704,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 24
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7082895f_2d708a22",
         "filename": "libc/stdio/printf_common.h",
         "patchSetId": 1
@@ -118,6 +184,30 @@
       "writtenOn": "2017-11-13T17:42:32Z",
       "side": 1,
       "message": "example: shouldn\u0027t all this just be\n\n      size_t limit \u003d (prec \u003c 0) ? 0 : prec;\n      memset(\u0026mbs, 0, sizeof(mbs));\n      p \u003d wcsarg;\n      nbytes \u003d wcsrtombs(NULL, (const wchar_t**)\u0026p, limit, \u0026mbs);\n      if (nbytes \u003d\u003d (size_t)-1) return NULL;\n\ninstead? there are plenty of ratholes we could go down, so i\u0027m not doing anything non-trivial until we have the full picture.\n\n(the good news is that we\u0027re down to \"only\" a 250-line diff now.)",
+      "range": {
+        "startLine": 710,
+        "startChar": 0,
+        "endLine": 733,
+        "endChar": 5
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "093f3df1_c253f050",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:51:33Z",
+      "side": 1,
+      "message": "Makes sense.  Going with my typical theory about other formatting, perhaps it\u0027s better to leave this as a direct copy/paste as an indication that it\u0027s legacy code and still needs attention.",
+      "parentUuid": "7082895f_2d708a22",
       "range": {
         "startLine": 710,
         "startChar": 0,
