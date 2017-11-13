@@ -19,6 +19,47 @@
     },
     {
       "key": {
+        "uuid": "f454af43_84202e4f",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:42:32Z",
+      "side": 1,
+      "message": "because the char/wchar_t variants use one or the other. this is my workaround for unused function warnings.\n\nbut, yes, once i\u0027ve got everything unified in brutal macro fashion, i want to look at improving this code, and i\u0027m expecting that will look something like a traits class. but it still seems too early to tell, so i\u0027m still just doing the easiest possible thing at each step.",
+      "parentUuid": "1963ca54_35d8f0ad",
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1ff354e2_8158726c",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:42:32Z",
+      "side": 1,
+      "message": "(i also didn\u0027t remove the unnecessary `struct` here, because it seems like it might be more valuable to improve the name, but then you start thinking \"maybe __suio should actually be a class with PRINT and FLUSH belonging there\" but it still feels too early to be doing real rewriting.)",
+      "range": {
+        "startLine": 688,
+        "startChar": 30,
+        "endLine": 688,
+        "endChar": 43
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "623d67a0_b6125f12",
         "filename": "libc/stdio/printf_common.h",
         "patchSetId": 1
@@ -35,6 +76,53 @@
         "startChar": 0,
         "endLine": 708,
         "endChar": 24
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c6254bf4_6d9b78c9",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:42:32Z",
+      "side": 1,
+      "message": "i was going to say all of these need function scope anyway, but i see now that strictly `clen` could have its scope reduced. even so i\u0027d rather try to rewrite this mess more thoroughly later when we can see the problem more clearly (one of the major remaining differences between the two variants is the caller of this --- the %s/%ls handler).",
+      "parentUuid": "623d67a0_b6125f12",
+      "range": {
+        "startLine": 704,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 24
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7082895f_2d708a22",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-13T17:42:32Z",
+      "side": 1,
+      "message": "example: shouldn\u0027t all this just be\n\n      size_t limit \u003d (prec \u003c 0) ? 0 : prec;\n      memset(\u0026mbs, 0, sizeof(mbs));\n      p \u003d wcsarg;\n      nbytes \u003d wcsrtombs(NULL, (const wchar_t**)\u0026p, limit, \u0026mbs);\n      if (nbytes \u003d\u003d (size_t)-1) return NULL;\n\ninstead? there are plenty of ratholes we could go down, so i\u0027m not doing anything non-trivial until we have the full picture.\n\n(the good news is that we\u0027re down to \"only\" a 250-line diff now.)",
+      "range": {
+        "startLine": 710,
+        "startChar": 0,
+        "endLine": 733,
+        "endChar": 5
       },
       "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
