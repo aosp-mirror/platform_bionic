@@ -654,12 +654,3 @@ match_failure:
   return (nassigned);
 }
 #pragma GCC diagnostic pop
-
-int vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap) {
-  int r;
-
-  FLOCKFILE(fp);
-  r = __vfwscanf(fp, fmt, ap);
-  FUNLOCKFILE(fp);
-  return (r);
-}
