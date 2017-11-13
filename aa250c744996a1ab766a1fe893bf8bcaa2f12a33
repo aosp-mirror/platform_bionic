@@ -34,6 +34,24 @@
       "revId": "aa250c744996a1ab766a1fe893bf8bcaa2f12a33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "051fa7dd_47c7a64a",
+        "filename": "libc/system_properties/system_property_globals.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T21:49:02Z",
+      "side": 1,
+      "message": "I got rid of pa_size and __system_property_area__ with https://android-review.googlesource.com/#/c/platform/bionic/+/536358/\n\nThe __system_property_area__ symbol will stick around, but it won\u0027t be used for anything.",
+      "parentUuid": "93e45b02_93fa463d",
+      "revId": "aa250c744996a1ab766a1fe893bf8bcaa2f12a33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
