@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1963ca54_35d8f0ad",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:02:07Z",
+      "side": 1,
+      "message": "Why a struct?  Is this ever going to have state?\n\nAlso, will you want to use templates ever instead of the #define?  In theory there\u0027d be added type checking, which could be a positive?  You could have a templated Printf struct with the above functions and templates for CHAR_TYPE, etc.",
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "623d67a0_b6125f12",
+        "filename": "libc/stdio/printf_common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-13T17:02:07Z",
+      "side": 1,
+      "message": "In two functions you stop the C style define variables up front and use C++ 0 initialization but not in the other two.  Let\u0027s do it for all?",
+      "range": {
+        "startLine": 704,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 24
+      },
+      "revId": "bc27bdc24f021ab4060a7441ff4aba77cd9c1e98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
