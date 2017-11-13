@@ -838,12 +838,3 @@ static u_char* __sccl(char* tab, u_char* fmt) {
   }
   /* NOTREACHED */
 }
-
-int vfscanf(FILE* fp, const char* fmt0, __va_list ap) {
-  int r;
-
-  FLOCKFILE(fp);
-  r = __svfscanf(fp, fmt0, ap);
-  FUNLOCKFILE(fp);
-  return (r);
-}
