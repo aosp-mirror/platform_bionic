@@ -23,6 +23,7 @@
 #include <libgen.h>
 #include <limits.h>
 #include <signal.h>
+#include <spawn.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -34,6 +35,10 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+
+#include <android-base/file.h>
+#include <android-base/strings.h>
+#include <android-base/unique_fd.h>
 
 #ifndef TEMP_FAILURE_RETRY
 
@@ -269,49 +274,60 @@ static int64_t NanoTime() {
 }
 
 static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
-  std::string command;
-  for (int i = 0; i < argc; ++i) {
-    command += argv[i];
-    command += " ";
-  }
-  command += "--gtest_list_tests";
-  FILE* fp = popen(command.c_str(), "r");
-  if (fp == NULL) {
-    perror("popen");
+  std::vector<const char*> args;
+  for (int i = 0; i < argc; ++i) args.push_back(argv[i]);
+  args.push_back("--gtest_list_tests");
+  args.push_back(nullptr);
+
+  // We use posix_spawn(3) rather than the simpler popen(3) because we don't want an intervening
+  // surprise shell invocation making quoting interesting for --gtest_filter (http://b/68949647).
+
+  android::base::unique_fd read_fd;
+  android::base::unique_fd write_fd;
+  if (!android::base::Pipe(&read_fd, &write_fd)) {
+    perror("pipe");
     return false;
   }
 
-  char buf[200];
-  while (fgets(buf, sizeof(buf), fp) != NULL) {
-    char* p = buf;
+  posix_spawn_file_actions_t fa;
+  posix_spawn_file_actions_init(&fa);
+  posix_spawn_file_actions_addclose(&fa, read_fd);
+  posix_spawn_file_actions_adddup2(&fa, write_fd, 1);
+  posix_spawn_file_actions_adddup2(&fa, write_fd, 2);
+  posix_spawn_file_actions_addclose(&fa, write_fd);
 
-    while (*p != '\0' && isspace(*p)) {
-      ++p;
-    }
-    if (*p == '\0') continue;
-    char* start = p;
-    while (*p != '\0' && !isspace(*p)) {
-      ++p;
-    }
-    char* end = p;
-    while (*p != '\0' && isspace(*p)) {
-      ++p;
-    }
-    if (*p != '\0' && *p != '#') {
-      // This is not we want, gtest must meet with some error when parsing the arguments.
-      fprintf(stderr, "argument error, check with --help\n");
-      return false;
-    }
-    *end = '\0';
-    if (*(end - 1) == '.') {
-      *(end - 1) = '\0';
-      testcase_list.push_back(TestCase(start));
+  pid_t pid;
+  int result = posix_spawnp(&pid, argv[0], &fa, nullptr, const_cast<char**>(args.data()), nullptr);
+  posix_spawn_file_actions_destroy(&fa);
+  if (result == -1) {
+    perror("posix_spawn");
+    return false;
+  }
+  write_fd.reset();
+
+  std::string content;
+  if (!android::base::ReadFdToString(read_fd, &content)) {
+    perror("ReadFdToString");
+    return false;
+  }
+
+  for (auto& line : android::base::Split(content, "\n")) {
+    line = android::base::Trim(line);
+    if (line.empty()) continue;
+    if (android::base::EndsWith(line, ".")) {
+      line.pop_back();
+      testcase_list.push_back(TestCase(line.c_str()));
     } else {
-      testcase_list.back().AppendTest(start);
+      testcase_list.back().AppendTest(line.c_str());
     }
   }
-  int result = pclose(fp);
-  return (result != -1 && WEXITSTATUS(result) == 0);
+
+  int status;
+  if (waitpid(pid, &status, 0) != pid) {
+    perror("waitpid");
+    return false;
+  }
+  return (WIFEXITED(status) && WEXITSTATUS(status) == 0);
 }
 
 // Part of the following *Print functions are copied from external/gtest/src/gtest.cc:
