@@ -940,9 +940,19 @@ int vfprintf(FILE* fp, const char* fmt, va_list ap) {
   return __vfprintf(fp, fmt, ap);
 }
 
+int vfscanf(FILE* fp, const char* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __svfscanf(fp, fmt, ap);
+}
+
 int vfwprintf(FILE* fp, const wchar_t* fmt, va_list ap) {
   ScopedFileLock sfl(fp);
   return __vfwprintf(fp, fmt, ap);
+}
+
+int vfwscanf(FILE* fp, const wchar_t* fmt, va_list ap) {
+  ScopedFileLock sfl(fp);
+  return __vfwscanf(fp, fmt, ap);
 }
 
 int vprintf(const char* fmt, va_list ap) {
