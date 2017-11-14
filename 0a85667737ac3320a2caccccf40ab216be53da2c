@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf1234c7_31c9053b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T22:37:30Z",
+      "side": 1,
+      "message": "Don\u0027t bother with the fdopen() if you\u0027re not using fp?",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 309,
+        "endChar": 3
+      },
+      "revId": "0a85667737ac3320a2caccccf40ab216be53da2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
