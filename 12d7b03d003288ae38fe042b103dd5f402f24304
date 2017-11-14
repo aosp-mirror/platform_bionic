@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0a7dd8c_d0c777c6",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T21:26:02Z",
+      "side": 1,
+      "message": "fclose() somewhere?",
+      "revId": "12d7b03d003288ae38fe042b103dd5f402f24304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
