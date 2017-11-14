@@ -16,6 +16,29 @@
       "revId": "12d7b03d003288ae38fe042b103dd5f402f24304",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2bc8f5_91e4708b",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-11-14T21:26:49Z",
+      "side": 1,
+      "message": "It looks like you are missing fclose(fp) and close(fds[0]). Do they get closed some other way?",
+      "range": {
+        "startLine": 337,
+        "startChar": 2,
+        "endLine": 337,
+        "endChar": 3
+      },
+      "revId": "12d7b03d003288ae38fe042b103dd5f402f24304",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
