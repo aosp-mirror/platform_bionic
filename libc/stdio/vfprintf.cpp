@@ -43,10 +43,8 @@
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
-  int ch;              /* character from fmt */
-  int n, n2;           /* handy integers (short term usage) */
+  int n, n2;
   CHAR_TYPE* cp;            /* handy char pointer (short term usage) */
-  struct __siov* iovp; /* for PRINT macro */
   CHAR_TYPE sign;           /* sign prefix (' ', '+', '-', or \0) */
   int flags;           /* flags as above */
   int ret;             /* return value accumulator */
@@ -90,6 +88,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 #define NIOV 8
   struct __suio uio;       /* output information: summary */
   struct __siov iov[NIOV]; /* ... and individual io vectors */
+  struct __siov* iovp; /* for PRINT macro */
   CHAR_TYPE buf[BUF];           /* buffer with space for digits of uintmax_t */
   CHAR_TYPE ox[2];              /* space for 0x; ox[1] is either x, X, or \0 */
   union arg* argtable;     /* args, built due to positional arg */
@@ -115,9 +114,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
 
-  /*
-   * BEWARE, these `goto error' on error, and PAD uses `n'.
-   */
 #define PRINT(ptr, len)                   \
   do {                                    \
     iovp->iov_base = (ptr);               \
@@ -163,6 +159,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
+    int ch;
     for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
     if (fmt != cp) {
       ptrdiff_t m = fmt - cp;
