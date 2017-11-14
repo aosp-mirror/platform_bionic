@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "121cc6c1_b9bf6a2b",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T23:52:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93109503_4360dd3c",
+      "range": {
+        "startLine": 198,
+        "startChar": 37,
+        "endLine": 198,
+        "endChar": 38
+      },
+      "revId": "f6b1eec9c7f2b61e9271d1f3ccd2a1beb8bc76ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bdd37389_b918f2ac",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-14T21:05:56Z",
       "side": 1,
       "message": "subroutine? next_aid(current_aid)?\n\nThe not-awful could be a switch statement, identity with last entry in each group, would return the next group\u0027s first number; otherwise increment. But since the groups  and their number ranges are in-effect abstracted this will do.\n\nI am not averse to this loop because getpwent/getgrent are not fast in the first place, and they used to loop through all of them before, you are skipping quickly ...",
+      "range": {
+        "startLine": 543,
+        "startChar": 0,
+        "endLine": 548,
+        "endChar": 5
+      },
+      "revId": "f6b1eec9c7f2b61e9271d1f3ccd2a1beb8bc76ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca7fb23e_19d6088f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T23:52:48Z",
+      "side": 1,
+      "message": "Yup, that was the plan.  Done now.",
+      "parentUuid": "bdd37389_b918f2ac",
       "range": {
         "startLine": 543,
         "startChar": 0,

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "77dca2e3_edbd843e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T23:52:48Z",
+      "side": 1,
+      "message": "Turns out these are all just one range from AID_APP_START (10000) to AID_SHARED_GID_END (59999), so I could just check that and the AID_ISOLATED range, but it also does seem cleaner to enumerate them all.",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 203,
+        "endChar": 47
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a14b603_894f0959",
+        "filename": "tests/grp_pwd_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-14T23:52:48Z",
+      "side": 1,
+      "message": "Should these be returned by getpwent() and interpreted by getpwnam() or strictly the group functions?  Currently we do, but perhaps we shouldn\u0027t?",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 57
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
