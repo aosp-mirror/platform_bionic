@@ -43,8 +43,7 @@
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
-  wchar_t ch;    /* character from fmt */
-  int n, n2, n3; /* handy integers (short term usage) */
+  int n, n2;
   CHAR_TYPE* cp;   /* handy char pointer (short term usage) */
   CHAR_TYPE sign;  /* sign prefix (' ', '+', '-', or \0) */
   int flags;     /* flags as above */
@@ -86,6 +85,10 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int realsz;                  /* field size expanded by dprec */
   int size;                    /* size of converted field or string */
   const char* xdigs;           /* digits for %[xX] conversion */
+#define NIOV 8
+  struct __suio uio;       /* output information: summary */
+  struct __siov iov[NIOV]; /* ... and individual io vectors */
+  struct __siov* iovp; /* for PRINT macro */
   CHAR_TYPE buf[BUF];            /* buffer with space for digits of uintmax_t */
   CHAR_TYPE ox[2];               /* space for 0x; ox[1] is either x, X, or \0 */
   union arg* argtable;         /* args, built due to positional arg */
@@ -111,13 +114,9 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
 
-  /*
-   * BEWARE, these `goto error' on error, PRINT uses 'n3',
-   * PAD uses `n' and 'n3', and PRINTANDPAD uses 'n', 'n2', and 'n3'.
-   */
 #define PRINT(ptr, len)                                   \
   do {                                                    \
-    for (n3 = 0; n3 < (len); n3++) {                      \
+    for (int n3 = 0; n3 < (len); n3++) {                      \
       if ((helpers::xfputwc((ptr)[n3], fp)) == WEOF) goto error; \
     }                                                     \
   } while (0)
@@ -139,6 +138,9 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   argtable = NULL;
   nextarg = 1;
   va_copy(orgap, ap);
+  uio.uio_iov = iovp = iov;
+  uio.uio_resid = 0;
+  uio.uio_iovcnt = 0;
   ret = 0;
   convbuf = NULL;
 
@@ -146,6 +148,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
+    int ch;
     for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
     if (fmt != cp) {
       ptrdiff_t m = fmt - cp;
