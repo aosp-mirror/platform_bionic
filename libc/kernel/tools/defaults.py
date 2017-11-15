@@ -58,8 +58,6 @@ kernel_arch_token_replacements = {
 
 # Replace tokens in the output according to this mapping.
 kernel_token_replacements = {
-    # The kernel's ARG_MAX is actually the "minimum" maximum (see fs/exec.c).
-    "ARG_MAX": "_KERNEL_ARG_MAX",
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
     "__unused": "__linux_unused",
     # The kernel usage of C++ keywords causes problems for C++ code so rename.
