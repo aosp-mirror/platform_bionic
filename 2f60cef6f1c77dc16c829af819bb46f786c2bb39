@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "759e9b15_8507661e",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "const: yes\n\nanonymous namespace: I would if this file were new, but everything is already using the static keyword, so I\u0027m just matching the existing style.",
+      "parentUuid": "5dd3f2a7_da530cc6",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 6
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77dca2e3_edbd843e",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "ab236604_9155b63f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done.  Hooray C++14 constexpr functions.",
+      "parentUuid": "080abaf8_89ac3bf3",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 203,
+        "endChar": 47
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbbfcc7b_3b315cf3",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -83,6 +131,30 @@
       "writtenOn": "2017-11-15T15:46:34Z",
       "side": 1,
       "message": "Do we want to blacklist 165534 for user 1 etc? (my answer is no, but I do not know what happens when user 0 is removed, do we drop user 1 to user 0?)",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 30
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4097ff74_39d10987",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "I originally didn\u0027t since it\u0027s only a special number in user 0, but for symmetry, we should blacklist it for all users.",
+      "parentUuid": "cbbfcc7b_3b315cf3",
       "range": {
         "startLine": 209,
         "startChar": 0,
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "a2440901_67ceebab",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb5391d7_2ab25326",
+      "range": {
+        "startLine": 217,
+        "startChar": 14,
+        "endLine": 217,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "690d82e8_ac7032c0",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -129,6 +225,30 @@
       "writtenOn": "2017-11-15T15:46:34Z",
       "side": 1,
       "message": "nit: could this have been an array of struct { uid_t start; uid_t end; } for element clarity?",
+      "range": {
+        "startLine": 223,
+        "startChar": 31,
+        "endLine": 223,
+        "endChar": 34
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "499769b6_f3adeb99",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "690d82e8_ac7032c0",
       "range": {
         "startLine": 223,
         "startChar": 31,
@@ -164,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "93ab76d0_2bd7721f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e85e8f97_1685240a",
+      "range": {
+        "startLine": 231,
+        "startChar": 1,
+        "endLine": 231,
+        "endChar": 48
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3fe114a5_c6329b00",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -175,6 +319,30 @@
       "writtenOn": "2017-11-15T15:46:34Z",
       "side": 1,
       "message": "assumption that no one has futz\u0027d with the values, inserted out-of-order ranges in the future, resulting in an ordering and this algorithm\u0027s problems.\n\nWish for hardening. I would be more comfortable if the user_range was an object that guaranteed it was sorted, or this algorithm deals handily with a surprise out-of-order entry.",
+      "range": {
+        "startLine": 243,
+        "startChar": 4,
+        "endLine": 243,
+        "endChar": 87
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dedbd00_156cce00",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "The above static_assert takes care of this.",
+      "parentUuid": "3fe114a5_c6329b00",
       "range": {
         "startLine": 243,
         "startChar": 4,
@@ -210,6 +378,30 @@
     },
     {
       "key": {
+        "uuid": "03ab0526_f4efd73f",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e87c3b42_c7acbbb4",
+      "range": {
+        "startLine": 591,
+        "startChar": 2,
+        "endLine": 591,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51393f25_09069d16",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -233,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "19138e18_a530a530",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51393f25_09069d16",
+      "range": {
+        "startLine": 721,
+        "startChar": 2,
+        "endLine": 721,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3b0fbe4a_35bbdfa0",
         "filename": "libc/private/bionic_macros.h",
         "patchSetId": 2
@@ -244,6 +460,30 @@
       "writtenOn": "2017-11-15T15:46:34Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 87,
+        "startChar": 56,
+        "endLine": 88,
+        "endChar": 68
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14023434_72a44d7c",
+        "filename": "libc/private/bionic_macros.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-11-15T18:35:48Z",
+      "side": 1,
+      "message": "Copy/paste from libbase.  I\u0027ve removed it as I\u0027m not bringing over that macro.",
+      "parentUuid": "3b0fbe4a_35bbdfa0",
       "range": {
         "startLine": 87,
         "startChar": 56,
