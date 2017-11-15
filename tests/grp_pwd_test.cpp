@@ -26,12 +26,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <bitset>
+#include <set>
+#include <vector>
 
+#include <android-base/strings.h>
 #include <private/android_filesystem_config.h>
 
 // Generated android_ids array
 #include "generated_android_ids.h"
+
+using android::base::Join;
 
 enum uid_type_t {
   TYPE_SYSTEM,
@@ -186,51 +190,86 @@ TEST(pwd, getpwnam_app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
 }
 
+template <typename T>
+static void expect_ids(const T& ids) {
+  std::set<typename T::key_type> expected_ids;
+  // Ensure that all android_ids are iterated through.
+  for (size_t n = 0; n < android_id_count; ++n) {
+    EXPECT_EQ(1U, ids.count(android_ids[n].aid)) << "android_ids[n].aid: " << android_ids[n].aid;
+    expected_ids.emplace(android_ids[n].aid);
+  }
+
+  auto expect_range = [&ids, &expected_ids](uid_t start, uid_t end) {
+    for (size_t n = start; n <= end; ++n) {
+      EXPECT_EQ(1U, ids.count(n)) << "n: " << n;
+      expected_ids.emplace(n);
+    }
+  };
+
+  // Ensure that all reserved ranges are iterated through.
+  expect_range(AID_OEM_RESERVED_START, AID_OEM_RESERVED_END);
+  expect_range(AID_OEM_RESERVED_2_START, AID_OEM_RESERVED_2_END);
+  expect_range(AID_APP_START, AID_APP_END);
+  expect_range(AID_CACHE_GID_START, AID_CACHE_GID_END);
+  expect_range(AID_EXT_GID_START, AID_EXT_GID_END);
+  expect_range(AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END);
+  expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
+  expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
+
+  // Ensure that no other ids were returned.
+  auto return_differences = [&ids, &expected_ids] {
+    std::vector<typename T::key_type> missing_from_ids;
+    std::set_difference(expected_ids.begin(), expected_ids.end(), ids.begin(), ids.end(),
+                        std::inserter(missing_from_ids, missing_from_ids.begin()));
+    std::vector<typename T::key_type> extra_in_ids;
+    std::set_difference(ids.begin(), ids.end(), expected_ids.begin(), expected_ids.end(),
+                        std::inserter(extra_in_ids, extra_in_ids.begin()));
+    std::string result;
+    if (!missing_from_ids.empty()) {
+      result += "Missing ids from results: " + Join(missing_from_ids, " ");
+    }
+    if (!extra_in_ids.empty()) {
+      if (!result.empty()) result += ", ";
+      result += "Extra ids in results: " + Join(extra_in_ids, " ");
+    }
+    return result;
+  };
+  EXPECT_EQ(expected_ids, ids) << return_differences();
+}
+
 TEST(pwd, getpwent_iterate) {
   passwd* pwd;
-  std::bitset<10000> exist;
-  bool application = false;
-
-  exist.reset();
+  std::set<uid_t> uids;
 
   setpwent();
   while ((pwd = getpwent()) != NULL) {
     ASSERT_TRUE(NULL != pwd->pw_name);
+
     EXPECT_EQ(pwd->pw_gid, pwd->pw_uid) << "pwd->pw_uid: " << pwd->pw_uid;
     EXPECT_EQ(NULL, pwd->pw_passwd) << "pwd->pw_uid: " << pwd->pw_uid;
 #ifdef __LP64__
     EXPECT_TRUE(NULL == pwd->pw_gecos) << "pwd->pw_uid: " << pwd->pw_uid;
 #endif
     EXPECT_TRUE(NULL != pwd->pw_shell);
-    if (pwd->pw_uid >= exist.size()) {
-      EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
-      application = true;
-    } else {
+    if (pwd->pw_uid < AID_APP_START || pwd->pw_uid == AID_OVERFLOWUID) {
       EXPECT_STREQ("/", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
-      // TODO(b/27999086): fix this check with the OEM range
-      // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-      // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-      // yet, so therefore we do not check for uid's in the OEM range.
-      if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
-          !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
-        EXPECT_FALSE(exist[pwd->pw_uid]) << "pwd->pw_uid: " << pwd->pw_uid;
-      }
-      exist[pwd->pw_uid] = true;
+    } else {
+      EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
     }
+
+    // TODO(b/27999086): fix this check with the OEM range
+    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
+    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
+    // yet, so therefore we do not check for uid's in the OEM range.
+    if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
+        !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
+      EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
+    }
+    uids.emplace(pwd->pw_uid);
   }
   endpwent();
 
-  // Required content
-  for (size_t n = 0; n < android_id_count; ++n) {
-    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
-  }
-  for (size_t n = 2900; n < 2999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
-  }
-  for (size_t n = 5000; n < 5999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
-  }
-  EXPECT_TRUE(application);
+  expect_ids(uids);
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
@@ -446,10 +485,7 @@ TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
 
 TEST(grp, getgrent_iterate) {
   group* grp;
-  std::bitset<10000> exist;
-  bool application = false;
-
-  exist.reset();
+  std::set<gid_t> gids;
 
   setgrent();
   while ((grp = getgrent()) != NULL) {
@@ -457,31 +493,18 @@ TEST(grp, getgrent_iterate) {
     ASSERT_TRUE(grp->gr_mem != NULL) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
-    if (grp->gr_gid >= exist.size()) {
-      application = true;
-    } else {
-      // TODO(b/27999086): fix this check with the OEM range
-      // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-      // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-      // yet, so therefore we do not check for gid's in the OEM range.
-      if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
-          !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
-        EXPECT_FALSE(exist[grp->gr_gid]) << "grp->gr_gid: " << grp->gr_gid;
-      }
-      exist[grp->gr_gid] = true;
+
+    // TODO(b/27999086): fix this check with the OEM range
+    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
+    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
+    // yet, so therefore we do not check for gid's in the OEM range.
+    if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
+        !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
+      EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
     }
+    gids.emplace(grp->gr_gid);
   }
   endgrent();
 
-  // Required content
-  for (size_t n = 0; n < android_id_count; ++n) {
-    EXPECT_TRUE(exist[android_ids[n].aid]) << "android_ids[n].aid: " << android_ids[n].aid;
-  }
-  for (size_t n = 2900; n < 2999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
-  }
-  for (size_t n = 5000; n < 5999; ++n) {
-    EXPECT_TRUE(exist[n]) << "n: " << n;
-  }
-  EXPECT_TRUE(application);
+  expect_ids(gids);
 }
