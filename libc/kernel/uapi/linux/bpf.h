@@ -31,8 +31,12 @@
 #define BPF_FROM_LE BPF_TO_LE
 #define BPF_FROM_BE BPF_TO_BE
 #define BPF_JNE 0x50
+#define BPF_JLT 0xa0
+#define BPF_JLE 0xb0
 #define BPF_JSGT 0x60
 #define BPF_JSGE 0x70
+#define BPF_JSLT 0xc0
+#define BPF_JSLE 0xd0
 #define BPF_CALL 0x80
 #define BPF_EXIT 0x90
 enum {
@@ -73,6 +77,11 @@ enum bpf_cmd {
   BPF_PROG_ATTACH,
   BPF_PROG_DETACH,
   BPF_PROG_TEST_RUN,
+  BPF_PROG_GET_NEXT_ID,
+  BPF_MAP_GET_NEXT_ID,
+  BPF_PROG_GET_FD_BY_ID,
+  BPF_MAP_GET_FD_BY_ID,
+  BPF_OBJ_GET_INFO_BY_FD,
 };
 enum bpf_map_type {
   BPF_MAP_TYPE_UNSPEC,
@@ -89,6 +98,8 @@ enum bpf_map_type {
   BPF_MAP_TYPE_LPM_TRIE,
   BPF_MAP_TYPE_ARRAY_OF_MAPS,
   BPF_MAP_TYPE_HASH_OF_MAPS,
+  BPF_MAP_TYPE_DEVMAP,
+  BPF_MAP_TYPE_SOCKMAP,
 };
 enum bpf_prog_type {
   BPF_PROG_TYPE_UNSPEC,
@@ -104,11 +115,16 @@ enum bpf_prog_type {
   BPF_PROG_TYPE_LWT_IN,
   BPF_PROG_TYPE_LWT_OUT,
   BPF_PROG_TYPE_LWT_XMIT,
+  BPF_PROG_TYPE_SOCK_OPS,
+  BPF_PROG_TYPE_SK_SKB,
 };
 enum bpf_attach_type {
   BPF_CGROUP_INET_INGRESS,
   BPF_CGROUP_INET_EGRESS,
   BPF_CGROUP_INET_SOCK_CREATE,
+  BPF_CGROUP_SOCK_OPS,
+  BPF_SK_SKB_STREAM_PARSER,
+  BPF_SK_SKB_STREAM_VERDICT,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
@@ -120,6 +136,7 @@ enum bpf_attach_type {
 #define BPF_EXIST 2
 #define BPF_F_NO_PREALLOC (1U << 0)
 #define BPF_F_NO_COMMON_LRU (1U << 1)
+#define BPF_F_NUMA_NODE (1U << 2)
 union bpf_attr {
   struct {
     __u32 map_type;
@@ -128,6 +145,7 @@ union bpf_attr {
     __u32 max_entries;
     __u32 map_flags;
     __u32 inner_map_fd;
+    __u32 numa_node;
   };
   struct {
     __u32 map_fd;
@@ -169,8 +187,21 @@ union bpf_attr {
     __u32 repeat;
     __u32 duration;
   } test;
+  struct {
+    union {
+      __u32 start_id;
+      __u32 prog_id;
+      __u32 map_id;
+    };
+    __u32 next_id;
+  };
+  struct {
+    __u32 bpf_fd;
+    __u32 info_len;
+    __aligned_u64 info;
+  } info;
 } __attribute__((aligned(8)));
-#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head), FN(probe_read_str), FN(get_socket_cookie), FN(get_socket_uid),
+#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head), FN(probe_read_str), FN(get_socket_cookie), FN(get_socket_uid), FN(set_hash), FN(setsockopt), FN(skb_adjust_room), FN(redirect_map), FN(sk_redirect_map), FN(sock_map_update),
 #define __BPF_ENUM_FN(x) BPF_FUNC_ ##x
 enum bpf_func_id {
   __BPF_FUNC_MAPPER(__BPF_ENUM_FN) __BPF_FUNC_MAX_ID,
@@ -193,6 +224,9 @@ enum bpf_func_id {
 #define BPF_F_INDEX_MASK 0xffffffffULL
 #define BPF_F_CURRENT_CPU BPF_F_INDEX_MASK
 #define BPF_F_CTXLEN_MASK (0xfffffULL << 32)
+enum bpf_adj_room_mode {
+  BPF_ADJ_ROOM_NET,
+};
 struct __sk_buff {
   __u32 len;
   __u32 pkt_type;
@@ -212,6 +246,13 @@ struct __sk_buff {
   __u32 data;
   __u32 data_end;
   __u32 napi_id;
+  __u32 family;
+  __u32 remote_ip4;
+  __u32 local_ip4;
+  __u32 remote_ip6[4];
+  __u32 local_ip6[4];
+  __u32 remote_port;
+  __u32 local_port;
 };
 struct bpf_tunnel_key {
   __u32 tunnel_id;
@@ -234,6 +275,8 @@ struct bpf_sock {
   __u32 family;
   __u32 type;
   __u32 protocol;
+  __u32 mark;
+  __u32 priority;
 };
 #define XDP_PACKET_HEADROOM 256
 enum xdp_action {
@@ -241,9 +284,57 @@ enum xdp_action {
   XDP_DROP,
   XDP_PASS,
   XDP_TX,
+  XDP_REDIRECT,
 };
 struct xdp_md {
   __u32 data;
   __u32 data_end;
 };
+enum sk_action {
+  SK_DROP = 0,
+  SK_PASS,
+};
+#define BPF_TAG_SIZE 8
+struct bpf_prog_info {
+  __u32 type;
+  __u32 id;
+  __u8 tag[BPF_TAG_SIZE];
+  __u32 jited_prog_len;
+  __u32 xlated_prog_len;
+  __aligned_u64 jited_prog_insns;
+  __aligned_u64 xlated_prog_insns;
+} __attribute__((aligned(8)));
+struct bpf_map_info {
+  __u32 type;
+  __u32 id;
+  __u32 key_size;
+  __u32 value_size;
+  __u32 max_entries;
+  __u32 map_flags;
+} __attribute__((aligned(8)));
+struct bpf_sock_ops {
+  __u32 op;
+  union {
+    __u32 reply;
+    __u32 replylong[4];
+  };
+  __u32 family;
+  __u32 remote_ip4;
+  __u32 local_ip4;
+  __u32 remote_ip6[4];
+  __u32 local_ip6[4];
+  __u32 remote_port;
+  __u32 local_port;
+};
+enum {
+  BPF_SOCK_OPS_VOID,
+  BPF_SOCK_OPS_TIMEOUT_INIT,
+  BPF_SOCK_OPS_RWND_INIT,
+  BPF_SOCK_OPS_TCP_CONNECT_CB,
+  BPF_SOCK_OPS_ACTIVE_ESTABLISHED_CB,
+  BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB,
+  BPF_SOCK_OPS_NEEDS_ECN,
+};
+#define TCP_BPF_IW 1001
+#define TCP_BPF_SNDCWND_CLAMP 1002
 #endif

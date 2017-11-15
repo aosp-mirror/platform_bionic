@@ -95,6 +95,7 @@ struct serial_rs485 {
 #define SER_RS485_RTS_ON_SEND (1 << 1)
 #define SER_RS485_RTS_AFTER_SEND (1 << 2)
 #define SER_RS485_RX_DURING_TX (1 << 4)
+#define SER_RS485_TERMINATE_BUS (1 << 5)
   __u32 delay_rts_before_send;
   __u32 delay_rts_after_send;
   __u32 padding[5];

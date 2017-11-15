@@ -50,6 +50,7 @@ enum {
 #define NTF_MASTER 0x04
 #define NTF_PROXY 0x08
 #define NTF_EXT_LEARNED 0x10
+#define NTF_OFFLOADED 0x20
 #define NTF_ROUTER 0x80
 #define NUD_INCOMPLETE 0x01
 #define NUD_REACHABLE 0x02

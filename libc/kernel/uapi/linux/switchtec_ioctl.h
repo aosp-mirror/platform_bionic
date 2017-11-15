@@ -38,6 +38,8 @@ struct switchtec_ioctl_flash_info {
   __u32 num_partitions;
   __u32 padding;
 };
+#define SWITCHTEC_IOCTL_PART_ACTIVE 1
+#define SWITCHTEC_IOCTL_PART_RUNNING 2
 struct switchtec_ioctl_flash_part_info {
   __u32 flash_partition;
   __u32 address;

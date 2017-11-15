@@ -418,6 +418,24 @@ struct ethtool_per_queue_op {
   __u32 queue_mask[__KERNEL_DIV_ROUND_UP(MAX_NUM_QUEUE, 32)];
   char data[];
 };
+struct ethtool_fecparam {
+  __u32 cmd;
+  __u32 active_fec;
+  __u32 fec;
+  __u32 reserved;
+};
+enum ethtool_fec_config_bits {
+  ETHTOOL_FEC_NONE_BIT,
+  ETHTOOL_FEC_AUTO_BIT,
+  ETHTOOL_FEC_OFF_BIT,
+  ETHTOOL_FEC_RS_BIT,
+  ETHTOOL_FEC_BASER_BIT,
+};
+#define ETHTOOL_FEC_NONE (1 << ETHTOOL_FEC_NONE_BIT)
+#define ETHTOOL_FEC_AUTO (1 << ETHTOOL_FEC_AUTO_BIT)
+#define ETHTOOL_FEC_OFF (1 << ETHTOOL_FEC_OFF_BIT)
+#define ETHTOOL_FEC_RS (1 << ETHTOOL_FEC_RS_BIT)
+#define ETHTOOL_FEC_BASER (1 << ETHTOOL_FEC_BASER_BIT)
 #define ETHTOOL_GSET 0x00000001
 #define ETHTOOL_SSET 0x00000002
 #define ETHTOOL_GDRVINFO 0x00000003
@@ -496,6 +514,8 @@ struct ethtool_per_queue_op {
 #define ETHTOOL_SLINKSETTINGS 0x0000004d
 #define ETHTOOL_PHY_GTUNABLE 0x0000004e
 #define ETHTOOL_PHY_STUNABLE 0x0000004f
+#define ETHTOOL_GFECPARAM 0x00000050
+#define ETHTOOL_SFECPARAM 0x00000051
 #define SPARC_ETH_GSET ETHTOOL_GSET
 #define SPARC_ETH_SSET ETHTOOL_SSET
 enum ethtool_link_mode_bit_indices {
@@ -548,7 +568,10 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_10000baseER_Full_BIT = 46,
   ETHTOOL_LINK_MODE_2500baseT_Full_BIT = 47,
   ETHTOOL_LINK_MODE_5000baseT_Full_BIT = 48,
-  __ETHTOOL_LINK_MODE_LAST = ETHTOOL_LINK_MODE_5000baseT_Full_BIT,
+  ETHTOOL_LINK_MODE_FEC_NONE_BIT = 49,
+  ETHTOOL_LINK_MODE_FEC_RS_BIT = 50,
+  ETHTOOL_LINK_MODE_FEC_BASER_BIT = 51,
+  __ETHTOOL_LINK_MODE_LAST = ETHTOOL_LINK_MODE_FEC_BASER_BIT,
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))
 #define SUPPORTED_10baseT_Half __ETHTOOL_LINK_MODE_LEGACY_MASK(10baseT_Half)
@@ -721,7 +744,9 @@ struct ethtool_link_settings {
   __u8 eth_tp_mdix;
   __u8 eth_tp_mdix_ctrl;
   __s8 link_mode_masks_nwords;
-  __u32 reserved[8];
+  __u8 transceiver;
+  __u8 reserved1[3];
+  __u32 reserved[7];
   __u32 link_mode_masks[0];
 };
 #endif
