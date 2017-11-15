@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc5b127f_fb7052d6",
+        "filename": "libc/kernel/uapi/asm-generic/mman-common.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-15T22:34:55Z",
+      "side": 1,
+      "message": "nice!",
+      "revId": "1308ad3ab33294c3abfd96da12b6df58b381ce52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
