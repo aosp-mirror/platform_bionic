@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "5dd3f2a7_da530cc6",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "anonymous namespace?\n\nconst?",
+      "range": {
+        "startLine": 198,
+        "startChar": 0,
+        "endLine": 198,
+        "endChar": 6
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77dca2e3_edbd843e",
         "filename": "libc/bionic/grp_pwd.cpp",
         "patchSetId": 2
@@ -18,6 +41,214 @@
         "startChar": 0,
         "endLine": 203,
         "endChar": 47
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "080abaf8_89ac3bf3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "Should comment here that user_ranges is based on id modulo AID_USER_OFFSET. (A confused future self may be tempted to add { 0, AID_APP_START } otherwise ...).\n\nThe issue that arises from this list, is that the enumerated ranges must be in sorted order for some of the algorithms below to function and the values are too abstract to be \u0027sure\u0027.\n\nMaybe add some build errors to protect us, or to clearly notify us, about assumptions or future alterations in the AID ordering or fences?\n\n#if AID_CACHE_GID_START \u003c AID_APP_END\n. . .\n\nHmm, you would know more than I, is there a std::\u003csomething\u003e that can be efficiently initialized that guarantees retrieval (begin() -\u003e end()) from it is in numerical sorted order?",
+      "parentUuid": "77dca2e3_edbd843e",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 203,
+        "endChar": 47
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbbfcc7b_3b315cf3",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "Do we want to blacklist 165534 for user 1 etc? (my answer is no, but I do not know what happens when user 0 is removed, do we drop user 1 to user 0?)",
+      "range": {
+        "startLine": 209,
+        "startChar": 0,
+        "endLine": 209,
+        "endChar": 30
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bb5391d7_2ab25326",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "user_ranges[0][0]",
+      "range": {
+        "startLine": 217,
+        "startChar": 14,
+        "endLine": 217,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "690d82e8_ac7032c0",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "nit: could this have been an array of struct { uid_t start; uid_t end; } for element clarity?",
+      "range": {
+        "startLine": 223,
+        "startChar": 31,
+        "endLine": 223,
+        "endChar": 34
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e85e8f97_1685240a",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "Not purely a next id function if you think about it. comment here that it is capped, this only iterates through the first user\u0027s app ids, everything between AID_APP_START and AID_USER_OFFSET.",
+      "range": {
+        "startLine": 231,
+        "startChar": 1,
+        "endLine": 231,
+        "endChar": 48
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fe114a5_c6329b00",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "assumption that no one has futz\u0027d with the values, inserted out-of-order ranges in the future, resulting in an ordering and this algorithm\u0027s problems.\n\nWish for hardening. I would be more comfortable if the user_range was an object that guaranteed it was sorted, or this algorithm deals handily with a surprise out-of-order entry.",
+      "range": {
+        "startLine": 243,
+        "startChar": 4,
+        "endLine": 243,
+        "endChar": 87
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e87c3b42_c7acbbb4",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "getpwend_idx is already -1 as guaranteed by eqn above.",
+      "range": {
+        "startLine": 591,
+        "startChar": 2,
+        "endLine": 591,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51393f25_09069d16",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 721,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "getgrent_idx is already -1 as guaranteed by the branch equation above.",
+      "range": {
+        "startLine": 721,
+        "startChar": 2,
+        "endLine": 721,
+        "endChar": 27
+      },
+      "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3b0fbe4a_35bbdfa0",
+        "filename": "libc/private/bionic_macros.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-15T15:46:34Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 87,
+        "startChar": 56,
+        "endLine": 88,
+        "endChar": 68
       },
       "revId": "2f60cef6f1c77dc16c829af819bb46f786c2bb39",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
