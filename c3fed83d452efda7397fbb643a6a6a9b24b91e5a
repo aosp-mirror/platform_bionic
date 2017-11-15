@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67a01053_2f351194",
+        "filename": "tests/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-15T06:19:09Z",
+      "side": 1,
+      "message": "without the \"whole_\" i have to add libbase dependencies all around the tree :-(",
+      "revId": "c3fed83d452efda7397fbb643a6a6a9b24b91e5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
