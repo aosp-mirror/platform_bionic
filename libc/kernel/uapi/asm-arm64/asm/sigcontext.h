@@ -43,4 +43,11 @@ struct esr_context {
   struct _aarch64_ctx head;
   __u64 esr;
 };
+#define EXTRA_MAGIC 0x45585401
+struct extra_context {
+  struct _aarch64_ctx head;
+  __u64 datap;
+  __u32 size;
+  __u32 __reserved[3];
+};
 #endif

@@ -72,6 +72,7 @@ struct nlmsghdr {
 #define NLM_F_EXCL 0x200
 #define NLM_F_CREATE 0x400
 #define NLM_F_APPEND 0x800
+#define NLM_F_NONREC 0x100
 #define NLM_F_CAPPED 0x100
 #define NLM_F_ACK_TLVS 0x200
 #define NLMSG_ALIGNTO 4U
@@ -153,4 +154,8 @@ struct nlattr {
 #define NLA_ALIGNTO 4
 #define NLA_ALIGN(len) (((len) + NLA_ALIGNTO - 1) & ~(NLA_ALIGNTO - 1))
 #define NLA_HDRLEN ((int) NLA_ALIGN(sizeof(struct nlattr)))
+struct nla_bitfield32 {
+  __u32 value;
+  __u32 selector;
+};
 #endif

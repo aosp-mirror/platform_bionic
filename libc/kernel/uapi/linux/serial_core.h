@@ -50,16 +50,17 @@
 #define PORT_ALTR_16550_F128 28
 #define PORT_RT2880 29
 #define PORT_16550A_FSL64 30
-#define PORT_DA830 31
-#define PORT_MAX_8250 31
 #define PORT_PXA 31
 #define PORT_AMBA 32
 #define PORT_CLPS711X 33
 #define PORT_SA1100 34
 #define PORT_UART00 35
+#define PORT_OWL 36
 #define PORT_21285 37
 #define PORT_SUNZILOG 38
 #define PORT_SUNSAB 39
+#define PORT_PCH_8LINE 44
+#define PORT_PCH_2LINE 45
 #define PORT_DZ 46
 #define PORT_ZS 47
 #define PORT_MUX 48
@@ -109,7 +110,7 @@
 #define PORT_ALTERA_UART 92
 #define PORT_SCIFB 93
 #define PORT_MAX310X 94
-#define PORT_MFD 95
+#define PORT_DA830 95
 #define PORT_OMAP 96
 #define PORT_VT8500 97
 #define PORT_XUARTPS 98
@@ -131,4 +132,5 @@
 #define PORT_MVEBU 114
 #define PORT_PIC32 115
 #define PORT_MPS2UART 116
+#define PORT_MTK_BTIF 117
 #endif

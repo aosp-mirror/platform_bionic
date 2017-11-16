@@ -59,11 +59,13 @@ enum blktrace_act {
   __BLK_TA_REMAP,
   __BLK_TA_ABORT,
   __BLK_TA_DRV_DATA,
+  __BLK_TA_CGROUP = 1 << 8,
 };
 enum blktrace_notify {
   __BLK_TN_PROCESS = 0,
   __BLK_TN_TIMESTAMP,
   __BLK_TN_MESSAGE,
+  __BLK_TN_CGROUP = __BLK_TA_CGROUP,
 };
 #define BLK_TA_QUEUE (__BLK_TA_QUEUE | BLK_TC_ACT(BLK_TC_QUEUE))
 #define BLK_TA_BACKMERGE (__BLK_TA_BACKMERGE | BLK_TC_ACT(BLK_TC_QUEUE))
