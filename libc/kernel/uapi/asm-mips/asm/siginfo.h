@@ -95,6 +95,6 @@ typedef struct siginfo {
 #undef SI_TIMER
 #undef SI_MESGQ
 #define SI_ASYNCIO - 2
-#define SI_TIMER __SI_CODE(__SI_TIMER, - 3)
-#define SI_MESGQ __SI_CODE(__SI_MESGQ, - 4)
+#define SI_TIMER - 3
+#define SI_MESGQ - 4
 #endif

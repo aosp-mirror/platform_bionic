@@ -112,6 +112,20 @@ struct mlx5_packet_pacing_caps {
   __u32 supported_qpts;
   __u32 reserved;
 };
+enum mlx5_ib_mpw_caps {
+  MPW_RESERVED = 1 << 0,
+  MLX5_IB_ALLOW_MPW = 1 << 1,
+  MLX5_IB_SUPPORT_EMPW = 1 << 2,
+};
+enum mlx5_ib_sw_parsing_offloads {
+  MLX5_IB_SW_PARSING = 1 << 0,
+  MLX5_IB_SW_PARSING_CSUM = 1 << 1,
+  MLX5_IB_SW_PARSING_LSO = 1 << 2,
+};
+struct mlx5_ib_sw_parsing_caps {
+  __u32 sw_parsing_offloads;
+  __u32 supported_qpts;
+};
 struct mlx5_ib_query_device_resp {
   __u32 comp_mask;
   __u32 response_length;
@@ -121,6 +135,7 @@ struct mlx5_ib_query_device_resp {
   struct mlx5_packet_pacing_caps packet_pacing_caps;
   __u32 mlx5_ib_support_multi_pkt_send_wqes;
   __u32 reserved;
+  struct mlx5_ib_sw_parsing_caps sw_parsing_caps;
 };
 struct mlx5_ib_create_cq {
   __u64 buf_addr;

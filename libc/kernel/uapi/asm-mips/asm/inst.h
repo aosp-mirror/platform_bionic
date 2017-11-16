@@ -414,9 +414,12 @@ enum lx_func {
 };
 enum bshfl_func {
   wsbh_op = 0x2,
-  dshd_op = 0x5,
   seb_op = 0x10,
   seh_op = 0x18,
+};
+enum dbshfl_func {
+  dsbh_op = 0x2,
+  dshd_op = 0x5,
 };
 enum msa_func {
   msa_elm_op = 0x19,
@@ -798,6 +801,10 @@ struct msa_mi10_format {
   __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(signed int s10 : 10, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int wd : 5, __BITFIELD_FIELD(unsigned int func : 4, __BITFIELD_FIELD(unsigned int df : 2,;
  ))))))
 };
+struct dsp_format {
+  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int base : 5, __BITFIELD_FIELD(unsigned int index : 5, __BITFIELD_FIELD(unsigned int rd : 5, __BITFIELD_FIELD(unsigned int op : 5, __BITFIELD_FIELD(unsigned int func : 6,;
+ ))))))
+};
 struct spec3_format {
   __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rs : 5, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(signed int simmediate : 9, __BITFIELD_FIELD(unsigned int func : 7,;
  )))))
@@ -883,7 +890,7 @@ struct mm16_r3_format {
  ))))
 };
 struct mm16_r5_format {
-  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(signed int simmediate : 5, __BITFIELD_FIELD(unsigned int : 16,;
+  __BITFIELD_FIELD(unsigned int opcode : 6, __BITFIELD_FIELD(unsigned int rt : 5, __BITFIELD_FIELD(unsigned int imm : 5, __BITFIELD_FIELD(unsigned int : 16,;
  ))))
 };
 struct m16e_rr {
@@ -933,6 +940,7 @@ union mips_instruction {
   struct b_format b_format;
   struct ps_format ps_format;
   struct v_format v_format;
+  struct dsp_format dsp_format;
   struct spec3_format spec3_format;
   struct fb_format fb_format;
   struct fp0_format fp0_format;
