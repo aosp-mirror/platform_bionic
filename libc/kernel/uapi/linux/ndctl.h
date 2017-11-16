@@ -98,7 +98,8 @@ struct nd_cmd_ars_cap {
   __u32 status;
   __u32 max_ars_out;
   __u32 clear_err_unit;
-  __u32 reserved;
+  __u16 flags;
+  __u16 reserved;
 } __packed;
 struct nd_cmd_ars_start {
   __u64 address;
@@ -153,6 +154,7 @@ enum {
 enum {
   ND_ARS_VOLATILE = 1,
   ND_ARS_PERSISTENT = 2,
+  ND_ARS_RETURN_PREV_DATA = 1 << 1,
   ND_CONFIG_LOCKED = 1,
 };
 #define ND_IOCTL 'N'

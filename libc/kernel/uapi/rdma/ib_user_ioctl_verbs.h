@@ -16,33 +16,46 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _XT_BPF_H
-#define _XT_BPF_H
-#include <linux/filter.h>
-#include <linux/limits.h>
-#include <linux/types.h>
-#define XT_BPF_MAX_NUM_INSTR 64
-#define XT_BPF_PATH_MAX (XT_BPF_MAX_NUM_INSTR * sizeof(struct sock_filter))
-struct bpf_prog;
-struct xt_bpf_info {
-  __u16 bpf_program_num_elem;
-  struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
-  struct bpf_prog * filter __attribute__((aligned(8)));
+#ifndef IB_USER_IOCTL_VERBS_H
+#define IB_USER_IOCTL_VERBS_H
+#include <rdma/rdma_user_ioctl.h>
+#define UVERBS_UDATA_DRIVER_DATA_NS 1
+#define UVERBS_UDATA_DRIVER_DATA_FLAG (1UL << UVERBS_ID_NS_SHIFT)
+enum uverbs_default_objects {
+  UVERBS_OBJECT_DEVICE,
+  UVERBS_OBJECT_PD,
+  UVERBS_OBJECT_COMP_CHANNEL,
+  UVERBS_OBJECT_CQ,
+  UVERBS_OBJECT_QP,
+  UVERBS_OBJECT_SRQ,
+  UVERBS_OBJECT_AH,
+  UVERBS_OBJECT_MR,
+  UVERBS_OBJECT_MW,
+  UVERBS_OBJECT_FLOW,
+  UVERBS_OBJECT_XRCD,
+  UVERBS_OBJECT_RWQ_IND_TBL,
+  UVERBS_OBJECT_WQ,
+  UVERBS_OBJECT_LAST,
 };
-enum xt_bpf_modes {
-  XT_BPF_MODE_BYTECODE,
-  XT_BPF_MODE_FD_PINNED,
-  XT_BPF_MODE_FD_ELF,
+enum {
+  UVERBS_UHW_IN = UVERBS_UDATA_DRIVER_DATA_FLAG,
+  UVERBS_UHW_OUT,
 };
-#define XT_BPF_MODE_PATH_PINNED XT_BPF_MODE_FD_PINNED
-struct xt_bpf_info_v1 {
-  __u16 mode;
-  __u16 bpf_program_num_elem;
-  __s32 fd;
-  union {
-    struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
-    char path[XT_BPF_PATH_MAX];
-  };
-  struct bpf_prog * filter __attribute__((aligned(8)));
+enum uverbs_create_cq_cmd_attr_ids {
+  CREATE_CQ_HANDLE,
+  CREATE_CQ_CQE,
+  CREATE_CQ_USER_HANDLE,
+  CREATE_CQ_COMP_CHANNEL,
+  CREATE_CQ_COMP_VECTOR,
+  CREATE_CQ_FLAGS,
+  CREATE_CQ_RESP_CQE,
+};
+enum uverbs_destroy_cq_cmd_attr_ids {
+  DESTROY_CQ_HANDLE,
+  DESTROY_CQ_RESP,
+};
+enum uverbs_actions_cq_ops {
+  UVERBS_CQ_CREATE,
+  UVERBS_CQ_DESTROY,
 };
 #endif

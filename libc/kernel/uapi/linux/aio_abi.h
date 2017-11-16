@@ -19,6 +19,7 @@
 #ifndef __LINUX__AIO_ABI_H
 #define __LINUX__AIO_ABI_H
 #include <linux/types.h>
+#include <linux/fs.h>
 #include <asm/byteorder.h>
 typedef __kernel_ulong_t aio_context_t;
 enum {
@@ -37,16 +38,17 @@ struct io_event {
   __s64 res;
   __s64 res2;
 };
+struct iocb {
+  __u64 aio_data;
 #if defined(__BYTE_ORDER) ? __BYTE_ORDER == __LITTLE_ENDIAN : defined(__LITTLE_ENDIAN)
-#define PADDED(x,y) x, y
+  __u32 aio_key;
+  __kernel_rwf_t aio_rw_flags;
 #elif defined(__BYTE_ORDER)?__BYTE_ORDER==__BIG_ENDIAN:defined(__BIG_ENDIAN)
-#define PADDED(x,y) y, x
+  __kernel_rwf_t aio_rw_flags;
+  __u32 aio_key;
 #else
 #error edit for your odd byteorder .
 #endif
-struct iocb {
-  __u64 aio_data;
-  __u32 PADDED(aio_key, aio_reserved1);
   __u16 aio_lio_opcode;
   __s16 aio_reqprio;
   __u32 aio_fildes;

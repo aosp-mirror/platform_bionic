@@ -29,6 +29,9 @@
 #define DRM_VC4_CREATE_SHADER_BO 0x05
 #define DRM_VC4_GET_HANG_STATE 0x06
 #define DRM_VC4_GET_PARAM 0x07
+#define DRM_VC4_SET_TILING 0x08
+#define DRM_VC4_GET_TILING 0x09
+#define DRM_VC4_LABEL_BO 0x0a
 #define DRM_IOCTL_VC4_SUBMIT_CL DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_SUBMIT_CL, struct drm_vc4_submit_cl)
 #define DRM_IOCTL_VC4_WAIT_SEQNO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_WAIT_SEQNO, struct drm_vc4_wait_seqno)
 #define DRM_IOCTL_VC4_WAIT_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_WAIT_BO, struct drm_vc4_wait_bo)
@@ -37,6 +40,9 @@
 #define DRM_IOCTL_VC4_CREATE_SHADER_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_CREATE_SHADER_BO, struct drm_vc4_create_shader_bo)
 #define DRM_IOCTL_VC4_GET_HANG_STATE DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_GET_HANG_STATE, struct drm_vc4_get_hang_state)
 #define DRM_IOCTL_VC4_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_GET_PARAM, struct drm_vc4_get_param)
+#define DRM_IOCTL_VC4_SET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_SET_TILING, struct drm_vc4_set_tiling)
+#define DRM_IOCTL_VC4_GET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_GET_TILING, struct drm_vc4_get_tiling)
+#define DRM_IOCTL_VC4_LABEL_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_LABEL_BO, struct drm_vc4_label_bo)
 struct drm_vc4_submit_rcl_surface {
   __u32 hindex;
   __u32 offset;
@@ -71,6 +77,9 @@ struct drm_vc4_submit_cl {
   __u8 clear_s;
   __u32 pad : 24;
 #define VC4_SUBMIT_CL_USE_CLEAR_COLOR (1 << 0)
+#define VC4_SUBMIT_CL_FIXED_RCL_ORDER (1 << 1)
+#define VC4_SUBMIT_CL_RCL_ORDER_INCREASING_X (1 << 2)
+#define VC4_SUBMIT_CL_RCL_ORDER_INCREASING_Y (1 << 3)
   __u32 flags;
   __u64 seqno;
 };
@@ -132,10 +141,26 @@ struct drm_vc4_get_hang_state {
 #define DRM_VC4_PARAM_SUPPORTS_BRANCHES 3
 #define DRM_VC4_PARAM_SUPPORTS_ETC1 4
 #define DRM_VC4_PARAM_SUPPORTS_THREADED_FS 5
+#define DRM_VC4_PARAM_SUPPORTS_FIXED_RCL_ORDER 6
 struct drm_vc4_get_param {
   __u32 param;
   __u32 pad;
   __u64 value;
+};
+struct drm_vc4_get_tiling {
+  __u32 handle;
+  __u32 flags;
+  __u64 modifier;
+};
+struct drm_vc4_set_tiling {
+  __u32 handle;
+  __u32 flags;
+  __u64 modifier;
+};
+struct drm_vc4_label_bo {
+  __u32 handle;
+  __u32 len;
+  __u64 name;
 };
 #ifdef __cplusplus
 #endif
