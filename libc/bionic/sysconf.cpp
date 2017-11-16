@@ -52,9 +52,16 @@ long sysconf(int name) {
     // Things we actually have to calculate...
     //
     case _SC_ARG_MAX:
-      // Not a constant since Linux 2.6.23; see fs/exec.c for details.
-      // At least 32 pages, otherwise a quarter of the stack limit.
-      return MAX(__sysconf_rlimit(RLIMIT_STACK) / 4, _KERNEL_ARG_MAX);
+      // https://lkml.org/lkml/2017/11/15/813...
+      //
+      // I suspect a 128kB sysconf(_SC_ARG_MAX) is the sanest bet, simply
+      // because of that "conservative is better than aggressive".
+      //
+      // Especially since _technically_ we're still limiting things to that
+      // 128kB due to the single-string limit.
+      //
+      //               Linus
+      return ARG_MAX;
 
     case _SC_AVPHYS_PAGES:      return get_avphys_pages();
     case _SC_CHILD_MAX:         return __sysconf_rlimit(RLIMIT_NPROC);

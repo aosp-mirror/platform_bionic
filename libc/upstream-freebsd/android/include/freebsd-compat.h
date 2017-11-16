@@ -50,6 +50,4 @@ void* reallocarray(void*, size_t, size_t);
 /* FreeBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
 
-#define ARG_MAX sysconf(_SC_ARG_MAX)
-
 #endif
