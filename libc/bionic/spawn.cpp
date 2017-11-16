@@ -91,19 +91,13 @@ struct __posix_spawnattr {
   sigset_t sigdefault;
 
   void Do() {
-    bool use_sigdefault = ((flags & POSIX_SPAWN_SETSIGDEF) != 0);
-
-    for (int s = 1; s < _NSIG; ++s) {
-      struct sigaction sa;
-      if (sigaction(s, nullptr, &sa) == -1) _exit(127);
-      if (sa.sa_handler == SIG_DFL) continue;
-      // POSIX: "Signals set to be caught by the calling process shall be set to the default
-      // action in the child process."
+    if ((flags & POSIX_SPAWN_SETSIGDEF) != 0) {
       // POSIX: "If POSIX_SPAWN_SETSIGDEF is set ... signals in sigdefault ... shall be set to
       // their default actions in the child process."
-      if (sa.sa_handler != SIG_IGN || (use_sigdefault && sigismember(&sigdefault, s))) {
-        sa.sa_handler = SIG_DFL;
-        if (sigaction(s, &sa, nullptr) == -1) _exit(127);
+      struct sigaction sa = {};
+      sa.sa_handler = SIG_DFL;
+      for (int s = 1; s < _NSIG; ++s) {
+        if (sigismember(&sigdefault, s) && sigaction(s, &sa, nullptr) == -1) _exit(127);
       }
     }
 

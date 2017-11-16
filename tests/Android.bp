@@ -286,8 +286,9 @@ cc_test_library {
         "gtest_main.cpp",
         "gtest_globals.cpp",
     ],
-    static_libs: [
+    whole_static_libs: [
         "libbase",
+        "liblog",
     ],
     include_dirs: [
         "bionic/libc",
@@ -353,6 +354,9 @@ cc_test_library {
     srcs: [
         "gtest_main.cpp",
         "gtest_globals_cts.cpp",
+    ],
+    static_libs: [
+        "libbase",
     ],
     cppflags: ["-DUSING_GTEST_OUTPUT_FORMAT"],
     shared: {
