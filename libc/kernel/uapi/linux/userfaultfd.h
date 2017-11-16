@@ -20,7 +20,7 @@
 #define _LINUX_USERFAULTFD_H
 #include <linux/types.h>
 #define UFFD_API ((__u64) 0xAA)
-#define UFFD_API_FEATURES (UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM)
+#define UFFD_API_FEATURES (UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM | UFFD_FEATURE_SIGBUS | UFFD_FEATURE_THREAD_ID)
 #define UFFD_API_IOCTLS ((__u64) 1 << _UFFDIO_REGISTER | (__u64) 1 << _UFFDIO_UNREGISTER | (__u64) 1 << _UFFDIO_API)
 #define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE)
 #define UFFD_API_RANGE_IOCTLS_BASIC ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY)
@@ -46,6 +46,9 @@ struct uffd_msg {
     struct {
       __u64 flags;
       __u64 address;
+      union {
+        __u32 ptid;
+      } feat;
     } pagefault;
     struct {
       __u32 ufd;
@@ -82,6 +85,8 @@ struct uffdio_api {
 #define UFFD_FEATURE_MISSING_HUGETLBFS (1 << 4)
 #define UFFD_FEATURE_MISSING_SHMEM (1 << 5)
 #define UFFD_FEATURE_EVENT_UNMAP (1 << 6)
+#define UFFD_FEATURE_SIGBUS (1 << 7)
+#define UFFD_FEATURE_THREAD_ID (1 << 8)
   __u64 features;
   __u64 ioctls;
 };

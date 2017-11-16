@@ -85,6 +85,8 @@ enum {
 #define TCP_SAVED_SYN 28
 #define TCP_REPAIR_WINDOW 29
 #define TCP_FASTOPEN_CONNECT 30
+#define TCP_ULP 31
+#define TCP_MD5SIG_EXT 32
 struct tcp_repair_opt {
   __u32 opt_code;
   __u32 opt_val;
@@ -175,13 +177,29 @@ enum {
   TCP_NLA_SNDBUF_LIMITED,
   TCP_NLA_DATA_SEGS_OUT,
   TCP_NLA_TOTAL_RETRANS,
+  TCP_NLA_PACING_RATE,
+  TCP_NLA_DELIVERY_RATE,
+  TCP_NLA_SND_CWND,
+  TCP_NLA_REORDERING,
+  TCP_NLA_MIN_RTT,
+  TCP_NLA_RECUR_RETRANS,
+  TCP_NLA_DELIVERY_RATE_APP_LMT,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
+#define TCP_MD5SIG_FLAG_PREFIX 1
 struct tcp_md5sig {
   struct __kernel_sockaddr_storage tcpm_addr;
-  __u16 __tcpm_pad1;
+  __u8 tcpm_flags;
+  __u8 tcpm_prefixlen;
   __u16 tcpm_keylen;
-  __u32 __tcpm_pad2;
+  __u32 __tcpm_pad;
+  __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
+};
+struct tcp_diag_md5sig {
+  __u8 tcpm_family;
+  __u8 tcpm_prefixlen;
+  __u16 tcpm_keylen;
+  __be32 tcpm_addr[4];
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
 #endif

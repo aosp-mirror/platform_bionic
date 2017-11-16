@@ -32,6 +32,7 @@ enum {
   XT_HASHLIMIT_HASH_SPT = 1 << 3,
   XT_HASHLIMIT_INVERT = 1 << 4,
   XT_HASHLIMIT_BYTES = 1 << 5,
+  XT_HASHLIMIT_RATE_MATCH = 1 << 6,
 };
 struct hashlimit_cfg {
   __u32 mode;
@@ -71,6 +72,17 @@ struct hashlimit_cfg2 {
   __u32 expire;
   __u8 srcmask, dstmask;
 };
+struct hashlimit_cfg3 {
+  __u64 avg;
+  __u64 burst;
+  __u32 mode;
+  __u32 size;
+  __u32 max;
+  __u32 gc_interval;
+  __u32 expire;
+  __u32 interval;
+  __u8 srcmask, dstmask;
+};
 struct xt_hashlimit_mtinfo1 {
   char name[IFNAMSIZ];
   struct hashlimit_cfg1 cfg;
@@ -79,6 +91,11 @@ struct xt_hashlimit_mtinfo1 {
 struct xt_hashlimit_mtinfo2 {
   char name[NAME_MAX];
   struct hashlimit_cfg2 cfg;
+  struct xt_hashlimit_htable * hinfo __attribute__((aligned(8)));
+};
+struct xt_hashlimit_mtinfo3 {
+  char name[NAME_MAX];
+  struct hashlimit_cfg3 cfg;
   struct xt_hashlimit_htable * hinfo __attribute__((aligned(8)));
 };
 #endif

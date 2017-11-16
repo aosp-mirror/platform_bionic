@@ -56,12 +56,49 @@ struct mlx4_ib_create_srq_resp {
   __u32 srqn;
   __u32 reserved;
 };
+struct mlx4_ib_create_qp_rss {
+  __u64 rx_hash_fields_mask;
+  __u8 rx_hash_function;
+  __u8 reserved[7];
+  __u8 rx_hash_key[40];
+  __u32 comp_mask;
+  __u32 reserved1;
+};
 struct mlx4_ib_create_qp {
   __u64 buf_addr;
   __u64 db_addr;
   __u8 log_sq_bb_count;
   __u8 log_sq_stride;
   __u8 sq_no_prefetch;
-  __u8 reserved[5];
+  __u8 reserved;
+  __u32 inl_recv_sz;
+};
+struct mlx4_ib_create_wq {
+  __u64 buf_addr;
+  __u64 db_addr;
+  __u8 log_range_size;
+  __u8 reserved[3];
+  __u32 comp_mask;
+};
+struct mlx4_ib_modify_wq {
+  __u32 comp_mask;
+  __u32 reserved;
+};
+struct mlx4_ib_create_rwq_ind_tbl_resp {
+  __u32 response_length;
+  __u32 reserved;
+};
+enum mlx4_ib_rx_hash_function_flags {
+  MLX4_IB_RX_HASH_FUNC_TOEPLITZ = 1 << 0,
+};
+enum mlx4_ib_rx_hash_fields {
+  MLX4_IB_RX_HASH_SRC_IPV4 = 1 << 0,
+  MLX4_IB_RX_HASH_DST_IPV4 = 1 << 1,
+  MLX4_IB_RX_HASH_SRC_IPV6 = 1 << 2,
+  MLX4_IB_RX_HASH_DST_IPV6 = 1 << 3,
+  MLX4_IB_RX_HASH_SRC_PORT_TCP = 1 << 4,
+  MLX4_IB_RX_HASH_DST_PORT_TCP = 1 << 5,
+  MLX4_IB_RX_HASH_SRC_PORT_UDP = 1 << 6,
+  MLX4_IB_RX_HASH_DST_PORT_UDP = 1 << 7
 };
 #endif

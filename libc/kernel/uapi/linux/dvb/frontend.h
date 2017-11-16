@@ -19,12 +19,6 @@
 #ifndef _DVBFRONTEND_H_
 #define _DVBFRONTEND_H_
 #include <linux/types.h>
-enum fe_type {
-  FE_QPSK,
-  FE_QAM,
-  FE_OFDM,
-  FE_ATSC
-};
 enum fe_caps {
   FE_IS_STUPID = 0,
   FE_CAN_INVERSION_AUTO = 0x1,
@@ -57,6 +51,12 @@ enum fe_caps {
   FE_NEEDS_BENDING = 0x20000000,
   FE_CAN_RECOVER = 0x40000000,
   FE_CAN_MUTE_TS = 0x80000000
+};
+enum fe_type {
+  FE_QPSK,
+  FE_QAM,
+  FE_OFDM,
+  FE_ATSC
 };
 struct dvb_frontend_info {
   char name[128];
@@ -94,6 +94,7 @@ enum fe_sec_mini_cmd {
   SEC_MINI_B
 };
 enum fe_status {
+  FE_NONE = 0x00,
   FE_HAS_SIGNAL = 0x01,
   FE_HAS_CARRIER = 0x02,
   FE_HAS_VITERBI = 0x04,
@@ -308,13 +309,6 @@ enum atscmh_rs_code_mode {
 };
 #define NO_STREAM_ID_FILTER (~0U)
 #define LNA_AUTO (~0U)
-struct dtv_cmds_h {
-  char * name;
-  __u32 cmd;
-  __u32 set : 1;
-  __u32 buffer : 1;
-  __u32 reserved : 30;
-};
 enum fecap_scale_params {
   FE_SCALE_NOT_AVAILABLE = 0,
   FE_SCALE_DECIBEL,
@@ -353,6 +347,25 @@ struct dtv_properties {
   __u32 num;
   struct dtv_property * props;
 };
+#define FE_TUNE_MODE_ONESHOT 0x01
+#define FE_GET_INFO _IOR('o', 61, struct dvb_frontend_info)
+#define FE_DISEQC_RESET_OVERLOAD _IO('o', 62)
+#define FE_DISEQC_SEND_MASTER_CMD _IOW('o', 63, struct dvb_diseqc_master_cmd)
+#define FE_DISEQC_RECV_SLAVE_REPLY _IOR('o', 64, struct dvb_diseqc_slave_reply)
+#define FE_DISEQC_SEND_BURST _IO('o', 65)
+#define FE_SET_TONE _IO('o', 66)
+#define FE_SET_VOLTAGE _IO('o', 67)
+#define FE_ENABLE_HIGH_LNB_VOLTAGE _IO('o', 68)
+#define FE_READ_STATUS _IOR('o', 69, fe_status_t)
+#define FE_READ_BER _IOR('o', 70, __u32)
+#define FE_READ_SIGNAL_STRENGTH _IOR('o', 71, __u16)
+#define FE_READ_SNR _IOR('o', 72, __u16)
+#define FE_READ_UNCORRECTED_BLOCKS _IOR('o', 73, __u32)
+#define FE_SET_FRONTEND_TUNE_MODE _IO('o', 81)
+#define FE_GET_EVENT _IOR('o', 78, struct dvb_frontend_event)
+#define FE_DISHNETWORK_SEND_LEGACY_CMD _IO('o', 80)
+#define FE_SET_PROPERTY _IOW('o', 82, struct dtv_properties)
+#define FE_GET_PROPERTY _IOR('o', 83, struct dtv_properties)
 enum fe_bandwidth {
   BANDWIDTH_8_MHZ,
   BANDWIDTH_7_MHZ,
@@ -413,25 +426,6 @@ struct dvb_frontend_event {
   fe_status_t status;
   struct dvb_frontend_parameters parameters;
 };
-#define FE_SET_PROPERTY _IOW('o', 82, struct dtv_properties)
-#define FE_GET_PROPERTY _IOR('o', 83, struct dtv_properties)
-#define FE_TUNE_MODE_ONESHOT 0x01
-#define FE_GET_INFO _IOR('o', 61, struct dvb_frontend_info)
-#define FE_DISEQC_RESET_OVERLOAD _IO('o', 62)
-#define FE_DISEQC_SEND_MASTER_CMD _IOW('o', 63, struct dvb_diseqc_master_cmd)
-#define FE_DISEQC_RECV_SLAVE_REPLY _IOR('o', 64, struct dvb_diseqc_slave_reply)
-#define FE_DISEQC_SEND_BURST _IO('o', 65)
-#define FE_SET_TONE _IO('o', 66)
-#define FE_SET_VOLTAGE _IO('o', 67)
-#define FE_ENABLE_HIGH_LNB_VOLTAGE _IO('o', 68)
-#define FE_READ_STATUS _IOR('o', 69, fe_status_t)
-#define FE_READ_BER _IOR('o', 70, __u32)
-#define FE_READ_SIGNAL_STRENGTH _IOR('o', 71, __u16)
-#define FE_READ_SNR _IOR('o', 72, __u16)
-#define FE_READ_UNCORRECTED_BLOCKS _IOR('o', 73, __u32)
 #define FE_SET_FRONTEND _IOW('o', 76, struct dvb_frontend_parameters)
 #define FE_GET_FRONTEND _IOR('o', 77, struct dvb_frontend_parameters)
-#define FE_SET_FRONTEND_TUNE_MODE _IO('o', 81)
-#define FE_GET_EVENT _IOR('o', 78, struct dvb_frontend_event)
-#define FE_DISHNETWORK_SEND_LEGACY_CMD _IO('o', 80)
 #endif

@@ -258,6 +258,7 @@ enum xfrm_attr_type_t {
   XFRMA_ADDRESS_FILTER,
   XFRMA_PAD,
   XFRMA_OFFLOAD_DEV,
+  XFRMA_OUTPUT_MARK,
   __XFRMA_MAX
 #define XFRMA_MAX (__XFRMA_MAX - 1)
 };

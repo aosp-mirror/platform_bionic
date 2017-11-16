@@ -105,11 +105,16 @@
 #define DRM_FORMAT_MOD_VENDOR_SAMSUNG 0x04
 #define DRM_FORMAT_MOD_VENDOR_QCOM 0x05
 #define DRM_FORMAT_MOD_VENDOR_VIVANTE 0x06
+#define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
+#define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | (val & 0x00ffffffffffffffULL))
+#define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
 #define DRM_FORMAT_MOD_LINEAR fourcc_mod_code(NONE, 0)
 #define I915_FORMAT_MOD_X_TILED fourcc_mod_code(INTEL, 1)
 #define I915_FORMAT_MOD_Y_TILED fourcc_mod_code(INTEL, 2)
 #define I915_FORMAT_MOD_Yf_TILED fourcc_mod_code(INTEL, 3)
+#define I915_FORMAT_MOD_Y_TILED_CCS fourcc_mod_code(INTEL, 4)
+#define I915_FORMAT_MOD_Yf_TILED_CCS fourcc_mod_code(INTEL, 5)
 #define DRM_FORMAT_MOD_SAMSUNG_64_32_TILE fourcc_mod_code(SAMSUNG, 1)
 #define DRM_FORMAT_MOD_VIVANTE_TILED fourcc_mod_code(VIVANTE, 1)
 #define DRM_FORMAT_MOD_VIVANTE_SUPER_TILED fourcc_mod_code(VIVANTE, 2)
@@ -121,6 +126,7 @@
 #define fourcc_mod_tegra_param(m) (m & ((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
 #define NV_FORMAT_MOD_TEGRA_TILED fourcc_mod_tegra_code(1, 0)
 #define NV_FORMAT_MOD_TEGRA_16BX2_BLOCK(v) fourcc_mod_tegra_code(2, v)
+#define DRM_FORMAT_MOD_BROADCOM_VC4_T_TILED fourcc_mod_code(BROADCOM, 1)
 #ifdef __cplusplus
 #endif
 #endif

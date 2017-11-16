@@ -45,4 +45,6 @@
 #define N_TRACESINK 23
 #define N_TRACEROUTER 24
 #define N_NCI 25
+#define N_SPEAKUP 26
+#define N_NULL 27
 #endif

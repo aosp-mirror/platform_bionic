@@ -22,7 +22,7 @@
 #include <linux/string.h>
 #define AUTOFS_DEVICE_NAME "autofs"
 #define AUTOFS_DEV_IOCTL_VERSION_MAJOR 1
-#define AUTOFS_DEV_IOCTL_VERSION_MINOR 0
+#define AUTOFS_DEV_IOCTL_VERSION_MINOR 1
 #define AUTOFS_DEV_IOCTL_SIZE sizeof(struct autofs_dev_ioctl)
 struct args_protover {
   __u32 version;

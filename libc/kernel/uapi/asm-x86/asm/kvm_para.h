@@ -61,6 +61,7 @@ struct kvm_clock_pairing {
 #define KVM_MAX_MMU_OP_BATCH 32
 #define KVM_ASYNC_PF_ENABLED (1 << 0)
 #define KVM_ASYNC_PF_SEND_ALWAYS (1 << 1)
+#define KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT (1 << 2)
 #define KVM_MMU_OP_WRITE_PTE 1
 #define KVM_MMU_OP_FLUSH_TLB 2
 #define KVM_MMU_OP_RELEASE_PT 3

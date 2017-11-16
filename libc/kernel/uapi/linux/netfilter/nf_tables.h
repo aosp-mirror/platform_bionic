@@ -18,10 +18,11 @@
  ****************************************************************************/
 #ifndef _LINUX_NF_TABLES_H
 #define _LINUX_NF_TABLES_H
-#define NFT_TABLE_MAXNAMELEN 32
-#define NFT_CHAIN_MAXNAMELEN 32
-#define NFT_SET_MAXNAMELEN 32
-#define NFT_OBJ_MAXNAMELEN 32
+#define NFT_NAME_MAXLEN 256
+#define NFT_TABLE_MAXNAMELEN NFT_NAME_MAXLEN
+#define NFT_CHAIN_MAXNAMELEN NFT_NAME_MAXLEN
+#define NFT_SET_MAXNAMELEN NFT_NAME_MAXLEN
+#define NFT_OBJ_MAXNAMELEN NFT_NAME_MAXLEN
 #define NFT_USERDATA_MAXLEN 256
 enum nft_registers {
   NFT_REG_VERDICT,
@@ -374,6 +375,7 @@ enum nft_exthdr_attributes {
   NFTA_EXTHDR_LEN,
   NFTA_EXTHDR_FLAGS,
   NFTA_EXTHDR_OP,
+  NFTA_EXTHDR_SREG,
   __NFTA_EXTHDR_MAX
 };
 #define NFTA_EXTHDR_MAX (__NFTA_EXTHDR_MAX - 1)
@@ -408,6 +410,7 @@ enum nft_rt_keys {
   NFT_RT_CLASSID,
   NFT_RT_NEXTHOP4,
   NFT_RT_NEXTHOP6,
+  NFT_RT_TCPMSS,
 };
 enum nft_hash_types {
   NFT_HASH_JENKINS,
@@ -610,6 +613,8 @@ enum nft_objref_attributes {
 enum nft_gen_attributes {
   NFTA_GEN_UNSPEC,
   NFTA_GEN_ID,
+  NFTA_GEN_PROC_PID,
+  NFTA_GEN_PROC_NAME,
   __NFTA_GEN_MAX
 };
 #define NFTA_GEN_MAX (__NFTA_GEN_MAX - 1)
@@ -649,7 +654,8 @@ enum nft_ct_helper_attributes {
 #define NFT_OBJECT_COUNTER 1
 #define NFT_OBJECT_QUOTA 2
 #define NFT_OBJECT_CT_HELPER 3
-#define __NFT_OBJECT_MAX 4
+#define NFT_OBJECT_LIMIT 4
+#define __NFT_OBJECT_MAX 5
 #define NFT_OBJECT_MAX (__NFT_OBJECT_MAX - 1)
 enum nft_object_attributes {
   NFTA_OBJ_UNSPEC,
