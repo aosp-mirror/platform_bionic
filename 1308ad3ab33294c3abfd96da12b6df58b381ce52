@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "30cd91db_08c96ff8",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2017-11-16T01:03:39Z",
+      "side": 1,
+      "message": "If you wanted, we could export this as part of our host toolchain. In that case, it should be able to pick up our host libclang.so, rather than the one in prebuilts/sdk that was mainly put there for RenderScript\u0027s toolchain.",
+      "revId": "1308ad3ab33294c3abfd96da12b6df58b381ce52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bc5b127f_fb7052d6",
         "filename": "libc/kernel/uapi/asm-generic/mman-common.h",
         "patchSetId": 3
