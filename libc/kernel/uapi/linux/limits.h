@@ -20,7 +20,7 @@
 #define _LINUX_LIMITS_H
 #define NR_OPEN 1024
 #define NGROUPS_MAX 65536
-#define _KERNEL_ARG_MAX 131072
+#define ARG_MAX 131072
 #define LINK_MAX 127
 #define MAX_CANON 255
 #define MAX_INPUT 255
