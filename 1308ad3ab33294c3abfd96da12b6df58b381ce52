@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "446896b9_cde4759e",
+        "filename": "libc/kernel/tools/cpp.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-11-16T01:24:36Z",
+      "side": 1,
+      "message": "It would be nice to export this kind of thing. I think the only worry is if the interface changes between clang updates. Unfortunately, this script isn\u0027t run all the time, so we might need to add some automatic testing of this to verify that it doesn\u0027t break.",
+      "parentUuid": "30cd91db_08c96ff8",
+      "revId": "1308ad3ab33294c3abfd96da12b6df58b381ce52",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bc5b127f_fb7052d6",
         "filename": "libc/kernel/uapi/asm-generic/mman-common.h",
         "patchSetId": 3
