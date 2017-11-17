@@ -312,6 +312,7 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   }
 
   for (auto& line : android::base::Split(content, "\n")) {
+    line = android::base::Split(line, "#")[0];
     line = android::base::Trim(line);
     if (line.empty()) continue;
     if (android::base::EndsWith(line, ".")) {
@@ -1264,4 +1265,25 @@ static void deathtest_helper_fail() {
 
 TEST_F(bionic_selftest_DeathTest, fail) {
   ASSERT_EXIT(deathtest_helper_fail(), ::testing::ExitedWithCode(0), "");
+}
+
+class BionicSelfTest : public ::testing::TestWithParam<bool> {
+};
+
+TEST_P(BionicSelfTest, test_success) {
+  ASSERT_EQ(GetParam(), GetParam());
+}
+
+INSTANTIATE_TEST_CASE_P(bionic_selftest, BionicSelfTest, ::testing::Values(true, false));
+
+template <typename T>
+class bionic_selftest_TestT : public ::testing::Test {
+};
+
+typedef ::testing::Types<char, int> MyTypes;
+
+TYPED_TEST_CASE(bionic_selftest_TestT, MyTypes);
+
+TYPED_TEST(bionic_selftest_TestT, test_success) {
+  ASSERT_EQ(true, true);
 }
