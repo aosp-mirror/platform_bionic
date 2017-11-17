@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fc27299_984ca293",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-17T23:01:41Z",
+      "side": 1,
+      "message": "nit: full path is not necessary",
+      "range": {
+        "startLine": 109,
+        "startChar": 21,
+        "endLine": 109,
+        "endChar": 66
+      },
+      "revId": "d9113ac3644e9ca3452921356ce6483cb9d6da4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4d3773f_9454c2d1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-17T23:01:41Z",
+      "side": 1,
+      "message": "nit: replace tab with spaces",
+      "range": {
+        "startLine": 110,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 1
+      },
+      "revId": "d9113ac3644e9ca3452921356ce6483cb9d6da4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
