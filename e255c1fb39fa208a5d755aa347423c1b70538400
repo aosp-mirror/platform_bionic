@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96f23de7_c0662be6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-17T23:00:45Z",
+      "side": 1,
+      "message": "nit: full path is not required --bionic_xml\u003dvdso.xml works",
+      "range": {
+        "startLine": 18,
+        "startChar": 21,
+        "endLine": 18,
+        "endChar": 66
+      },
+      "revId": "e255c1fb39fa208a5d755aa347423c1b70538400",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
