@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97a9dd5d_7410002b",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-17T22:44:07Z",
+      "side": 1,
+      "message": "Is there a way to _stub_ in a test that reports no results? This way we can add them to the xml file without incurring an error, but not produce any results on the continuous testing?",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 16
+      },
+      "revId": "5ca8b46e58aee56a57e3a959983669bddd6cf2e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
