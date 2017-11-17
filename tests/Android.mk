@@ -75,7 +75,7 @@ LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx \
 
 LOCAL_CLANG := false
 LOCAL_MODULE := bionic-compile-time-tests-g++
-LOCAL_CPPFLAGS := -Wall
+LOCAL_CPPFLAGS := -Wall -Werror
 # Disable color diagnostics so the warnings output matches the source
 LOCAL_CPPFLAGS += -fdiagnostics-color=never
 LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
@@ -94,7 +94,7 @@ LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
 
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests-clang++
-LOCAL_CPPFLAGS := -Wall
+LOCAL_CPPFLAGS := -Wall -Werror
 LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000
 LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
 include $(BUILD_STATIC_LIBRARY)
