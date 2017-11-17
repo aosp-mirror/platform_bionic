@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8de2720f_eafa35c9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-17T23:03:03Z",
+      "side": 1,
+      "message": "nit: replace tab with spaces, full path not required \u0027--bionic_xml\u003dvdso.xml\u0027",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 67
+      },
+      "revId": "17f3e239266f18a180902ae49f64fb884d49fa85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
