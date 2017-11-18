@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94c3c211_ebdefad2",
+        "filename": "libc/SECCOMP_WHITELIST.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2017-11-18T00:29:48Z",
+      "side": 1,
+      "message": "This isn\u0027t the right signature according to the manpage?",
+      "range": {
+        "startLine": 132,
+        "startChar": 17,
+        "endLine": 132,
+        "endChar": 30
+      },
+      "revId": "e06a32ba75f256e692de4192d627cc3645a80e7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
