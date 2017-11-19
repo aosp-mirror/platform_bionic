@@ -305,6 +305,7 @@ struct usb_interface_assoc_descriptor {
   __u8 bFunctionProtocol;
   __u8 iFunction;
 } __attribute__((packed));
+#define USB_DT_INTERFACE_ASSOCIATION_SIZE 8
 struct usb_security_descriptor {
   __u8 bLength;
   __u8 bDescriptorType;

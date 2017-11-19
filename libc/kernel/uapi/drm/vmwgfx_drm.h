@@ -104,6 +104,8 @@ union drm_vmw_surface_reference_arg {
   struct drm_vmw_surface_arg req;
 };
 #define DRM_VMW_EXECBUF_VERSION 2
+#define DRM_VMW_EXECBUF_FLAG_IMPORT_FENCE_FD (1 << 0)
+#define DRM_VMW_EXECBUF_FLAG_EXPORT_FENCE_FD (1 << 1)
 struct drm_vmw_execbuf_arg {
   __u64 commands;
   __u32 command_size;
@@ -112,14 +114,14 @@ struct drm_vmw_execbuf_arg {
   __u32 version;
   __u32 flags;
   __u32 context_handle;
-  __u32 pad64;
+  __s32 imported_fence_fd;
 };
 struct drm_vmw_fence_rep {
   __u32 handle;
   __u32 mask;
   __u32 seqno;
   __u32 passed_seqno;
-  __u32 pad64;
+  __s32 fd;
   __s32 error;
 };
 struct drm_vmw_alloc_dmabuf_req {

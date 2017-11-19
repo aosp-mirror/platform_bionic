@@ -40,8 +40,10 @@ enum {
 #define NBD_FLAG_HAS_FLAGS (1 << 0)
 #define NBD_FLAG_READ_ONLY (1 << 1)
 #define NBD_FLAG_SEND_FLUSH (1 << 2)
+#define NBD_FLAG_SEND_FUA (1 << 3)
 #define NBD_FLAG_SEND_TRIM (1 << 5)
 #define NBD_FLAG_CAN_MULTI_CONN (1 << 8)
+#define NBD_CMD_FLAG_FUA (1 << 16)
 #define NBD_CFLAG_DESTROY_ON_DISCONNECT (1 << 0)
 #define NBD_REQUEST_MAGIC 0x25609513
 #define NBD_REPLY_MAGIC 0x67446698

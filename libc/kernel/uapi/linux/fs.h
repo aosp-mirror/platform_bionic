@@ -193,6 +193,8 @@ struct fsxattr {
 #define FS_ENCRYPTION_MODE_AES_256_GCM 2
 #define FS_ENCRYPTION_MODE_AES_256_CBC 3
 #define FS_ENCRYPTION_MODE_AES_256_CTS 4
+#define FS_ENCRYPTION_MODE_AES_128_CBC 5
+#define FS_ENCRYPTION_MODE_AES_128_CTS 6
 struct fscrypt_policy {
   __u8 version;
   __u8 contents_encryption_mode;
@@ -243,7 +245,10 @@ struct fscrypt_key {
 #define SYNC_FILE_RANGE_WAIT_BEFORE 1
 #define SYNC_FILE_RANGE_WRITE 2
 #define SYNC_FILE_RANGE_WAIT_AFTER 4
-#define RWF_HIPRI 0x00000001
-#define RWF_DSYNC 0x00000002
-#define RWF_SYNC 0x00000004
+typedef int __bitwise __kernel_rwf_t;
+#define RWF_HIPRI ((__force __kernel_rwf_t) 0x00000001)
+#define RWF_DSYNC ((__force __kernel_rwf_t) 0x00000002)
+#define RWF_SYNC ((__force __kernel_rwf_t) 0x00000004)
+#define RWF_NOWAIT ((__force __kernel_rwf_t) 0x00000008)
+#define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT)
 #endif

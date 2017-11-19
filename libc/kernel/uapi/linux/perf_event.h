@@ -98,7 +98,8 @@ enum perf_event_sample_format {
   PERF_SAMPLE_IDENTIFIER = 1U << 16,
   PERF_SAMPLE_TRANSACTION = 1U << 17,
   PERF_SAMPLE_REGS_INTR = 1U << 18,
-  PERF_SAMPLE_MAX = 1U << 19,
+  PERF_SAMPLE_PHYS_ADDR = 1U << 19,
+  PERF_SAMPLE_MAX = 1U << 20,
 };
 enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_USER_SHIFT = 0,
@@ -117,6 +118,7 @@ enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_CALL_SHIFT = 13,
   PERF_SAMPLE_BRANCH_NO_FLAGS_SHIFT = 14,
   PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT = 15,
+  PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT = 16,
   PERF_SAMPLE_BRANCH_MAX_SHIFT
 };
 enum perf_branch_sample_type {
@@ -136,7 +138,22 @@ enum perf_branch_sample_type {
   PERF_SAMPLE_BRANCH_CALL = 1U << PERF_SAMPLE_BRANCH_CALL_SHIFT,
   PERF_SAMPLE_BRANCH_NO_FLAGS = 1U << PERF_SAMPLE_BRANCH_NO_FLAGS_SHIFT,
   PERF_SAMPLE_BRANCH_NO_CYCLES = 1U << PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT,
+  PERF_SAMPLE_BRANCH_TYPE_SAVE = 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
   PERF_SAMPLE_BRANCH_MAX = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+};
+enum {
+  PERF_BR_UNKNOWN = 0,
+  PERF_BR_COND = 1,
+  PERF_BR_UNCOND = 2,
+  PERF_BR_IND = 3,
+  PERF_BR_CALL = 4,
+  PERF_BR_IND_CALL = 5,
+  PERF_BR_RET = 6,
+  PERF_BR_SYSCALL = 7,
+  PERF_BR_SYSRET = 8,
+  PERF_BR_COND_CALL = 9,
+  PERF_BR_COND_RET = 10,
+  PERF_BR_MAX,
 };
 #define PERF_SAMPLE_BRANCH_PLM_ALL (PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANCH_KERNEL | PERF_SAMPLE_BRANCH_HV)
 enum perf_sample_regs_abi {
@@ -320,14 +337,14 @@ enum perf_callchain_context {
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_rsvd : 31;
+    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_rsvd : 24;
   };
 };
 #elif defined(__BIG_ENDIAN_BITFIELD)
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_rsvd : 31, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
+    __u64 mem_rsvd : 24, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
   };
 };
 #else
@@ -354,12 +371,26 @@ union perf_mem_data_src {
 #define PERF_MEM_LVL_IO 0x1000
 #define PERF_MEM_LVL_UNC 0x2000
 #define PERF_MEM_LVL_SHIFT 5
+#define PERF_MEM_REMOTE_REMOTE 0x01
+#define PERF_MEM_REMOTE_SHIFT 37
+#define PERF_MEM_LVLNUM_L1 0x01
+#define PERF_MEM_LVLNUM_L2 0x02
+#define PERF_MEM_LVLNUM_L3 0x03
+#define PERF_MEM_LVLNUM_L4 0x04
+#define PERF_MEM_LVLNUM_ANY_CACHE 0x0b
+#define PERF_MEM_LVLNUM_LFB 0x0c
+#define PERF_MEM_LVLNUM_RAM 0x0d
+#define PERF_MEM_LVLNUM_PMEM 0x0e
+#define PERF_MEM_LVLNUM_NA 0x0f
+#define PERF_MEM_LVLNUM_SHIFT 33
 #define PERF_MEM_SNOOP_NA 0x01
 #define PERF_MEM_SNOOP_NONE 0x02
 #define PERF_MEM_SNOOP_HIT 0x04
 #define PERF_MEM_SNOOP_MISS 0x08
 #define PERF_MEM_SNOOP_HITM 0x10
 #define PERF_MEM_SNOOP_SHIFT 19
+#define PERF_MEM_SNOOPX_FWD 0x01
+#define PERF_MEM_SNOOPX_SHIFT 37
 #define PERF_MEM_LOCK_NA 0x01
 #define PERF_MEM_LOCK_LOCKED 0x02
 #define PERF_MEM_LOCK_SHIFT 24
@@ -375,6 +406,6 @@ union perf_mem_data_src {
 struct perf_branch_entry {
   __u64 from;
   __u64 to;
-  __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, reserved : 44;
+  __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, reserved : 40;
 };
 #endif

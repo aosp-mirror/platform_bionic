@@ -16,33 +16,38 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _XT_BPF_H
-#define _XT_BPF_H
-#include <linux/filter.h>
-#include <linux/limits.h>
-#include <linux/types.h>
-#define XT_BPF_MAX_NUM_INSTR 64
-#define XT_BPF_PATH_MAX (XT_BPF_MAX_NUM_INSTR * sizeof(struct sock_filter))
-struct bpf_prog;
-struct xt_bpf_info {
-  __u16 bpf_program_num_elem;
-  struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
-  struct bpf_prog * filter __attribute__((aligned(8)));
+#ifndef _UAPI_LINUX_SEG6_LOCAL_H
+#define _UAPI_LINUX_SEG6_LOCAL_H
+#include <linux/seg6.h>
+enum {
+  SEG6_LOCAL_UNSPEC,
+  SEG6_LOCAL_ACTION,
+  SEG6_LOCAL_SRH,
+  SEG6_LOCAL_TABLE,
+  SEG6_LOCAL_NH4,
+  SEG6_LOCAL_NH6,
+  SEG6_LOCAL_IIF,
+  SEG6_LOCAL_OIF,
+  __SEG6_LOCAL_MAX,
 };
-enum xt_bpf_modes {
-  XT_BPF_MODE_BYTECODE,
-  XT_BPF_MODE_FD_PINNED,
-  XT_BPF_MODE_FD_ELF,
+#define SEG6_LOCAL_MAX (__SEG6_LOCAL_MAX - 1)
+enum {
+  SEG6_LOCAL_ACTION_UNSPEC = 0,
+  SEG6_LOCAL_ACTION_END = 1,
+  SEG6_LOCAL_ACTION_END_X = 2,
+  SEG6_LOCAL_ACTION_END_T = 3,
+  SEG6_LOCAL_ACTION_END_DX2 = 4,
+  SEG6_LOCAL_ACTION_END_DX6 = 5,
+  SEG6_LOCAL_ACTION_END_DX4 = 6,
+  SEG6_LOCAL_ACTION_END_DT6 = 7,
+  SEG6_LOCAL_ACTION_END_DT4 = 8,
+  SEG6_LOCAL_ACTION_END_B6 = 9,
+  SEG6_LOCAL_ACTION_END_B6_ENCAP = 10,
+  SEG6_LOCAL_ACTION_END_BM = 11,
+  SEG6_LOCAL_ACTION_END_S = 12,
+  SEG6_LOCAL_ACTION_END_AS = 13,
+  SEG6_LOCAL_ACTION_END_AM = 14,
+  __SEG6_LOCAL_ACTION_MAX,
 };
-#define XT_BPF_MODE_PATH_PINNED XT_BPF_MODE_FD_PINNED
-struct xt_bpf_info_v1 {
-  __u16 mode;
-  __u16 bpf_program_num_elem;
-  __s32 fd;
-  union {
-    struct sock_filter bpf_program[XT_BPF_MAX_NUM_INSTR];
-    char path[XT_BPF_PATH_MAX];
-  };
-  struct bpf_prog * filter __attribute__((aligned(8)));
-};
+#define SEG6_LOCAL_ACTION_MAX (__SEG6_LOCAL_ACTION_MAX - 1)
 #endif
