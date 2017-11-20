@@ -22,6 +22,30 @@
       "revId": "e06a32ba75f256e692de4192d627cc3645a80e7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "192eddc5_da8c664b",
+        "filename": "libc/SECCOMP_WHITELIST.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1121354
+      },
+      "writtenOn": "2017-11-20T03:38:40Z",
+      "side": 1,
+      "message": "Oh, I see. I thought this is the function where the syscall(__NR_bpf....) is implemented. Will change it to the same as function to the manpage.",
+      "parentUuid": "94c3c211_ebdefad2",
+      "range": {
+        "startLine": 132,
+        "startChar": 17,
+        "endLine": 132,
+        "endChar": 30
+      },
+      "revId": "e06a32ba75f256e692de4192d627cc3645a80e7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
