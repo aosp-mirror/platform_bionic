@@ -45,6 +45,29 @@
       "revId": "d9113ac3644e9ca3452921356ce6483cb9d6da4d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a40e477_e1bf247c",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-11-21T21:43:00Z",
+      "side": 1,
+      "message": "opened b/69626243 because clock_gettime is not propagating errno correctly. Similar changes would be required in all the vdso handlers to deal with this.",
+      "range": {
+        "startLine": 38,
+        "startChar": 1,
+        "endLine": 45,
+        "endChar": 1
+      },
+      "revId": "d9113ac3644e9ca3452921356ce6483cb9d6da4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
