@@ -112,7 +112,7 @@ TEST(pty, bug_28979140) {
     GTEST_LOG_(INFO) << "This test tests bug happens only on multiprocessors.";
     return;
   }
-  constexpr uint32_t TEST_DATA_COUNT = 200000;
+  constexpr uint32_t TEST_DATA_COUNT = 2000000;
 
   // 1. Open raw pty.
   int master;
@@ -149,11 +149,16 @@ TEST(pty, bug_28979140) {
   ASSERT_EQ(0, sched_setaffinity(0, sizeof(cpu_set_t), &cpus));
 
   // 4. Send data to slave.
+  // Send a bunch of data at a time, so it is easier to catch the bug that some data isn't seen
+  // by the reader thread on another cpu.
+  uint32_t counter_buf[100];
   uint32_t counter = 0;
   while (counter <= TEST_DATA_COUNT) {
-    ASSERT_TRUE(android::base::WriteFully(master, &counter, sizeof(counter)));
+    for (size_t i = 0; i < sizeof(counter_buf) / sizeof(counter_buf[0]); ++i) {
+      counter_buf[i] = counter++;
+    }
+    ASSERT_TRUE(android::base::WriteFully(master, &counter_buf, sizeof(counter_buf)));
     ASSERT_TRUE(arg.matched) << "failed at count = " << counter;
-    counter++;
   }
   ASSERT_EQ(0, pthread_join(thread, nullptr));
   ASSERT_TRUE(arg.finished);
