@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15a0ddf8_e4f44226",
+        "filename": "libc/system_properties/contexts_serialized.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-27T21:14:29Z",
+      "side": 1,
+      "message": "\u003d\u003d -1?",
+      "range": {
+        "startLine": 46,
+        "startChar": 26,
+        "endLine": 46,
+        "endChar": 29
+      },
+      "revId": "4d594e361eb434db799ec667dd4ee371b74d6ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b5fb6330_0e2d6177",
+        "filename": "libc/system_properties/contexts_serialized.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-27T21:14:29Z",
+      "side": 1,
+      "message": "no check?",
+      "revId": "4d594e361eb434db799ec667dd4ee371b74d6ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7acac04_a5359229",
+        "filename": "libc/system_properties/system_properties.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-27T21:14:29Z",
+      "side": 1,
+      "message": "can we just optimistically try the new scheme instead?",
+      "range": {
+        "startLine": 281,
+        "startChar": 0,
+        "endLine": 282,
+        "endChar": 51
+      },
+      "revId": "4d594e361eb434db799ec667dd4ee371b74d6ef7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
