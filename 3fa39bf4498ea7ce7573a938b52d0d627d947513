@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff494eba_2885e297",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-27T08:49:38Z",
+      "side": 1,
+      "message": "This looks really ugly and ignores file\u0027s extension.\n\nThe path should be something like..\n\n1) /system/etc/vndk-$VER/ld.config.txt or\n2) /system/etc/ld.config.$VER.txt",
+      "range": {
+        "startLine": 10,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "3fa39bf4498ea7ce7573a938b52d0d627d947513",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
