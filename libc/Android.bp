@@ -2037,6 +2037,22 @@ ndk_headers {
 }
 
 ndk_headers {
+    name: "libc_asm_mips",
+    from: "kernel/uapi/asm-mips",
+    to: "mipsel-linux-android",
+    srcs: ["kernel/uapi/asm-mips/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
+    name: "libc_asm_mips64",
+    from: "kernel/uapi/asm-mips",
+    to: "mips64el-linux-android",
+    srcs: ["kernel/uapi/asm-mips/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
     name: "libc_asm_x86",
     from: "kernel/uapi/asm-x86",
     to: "i686-linux-android",
