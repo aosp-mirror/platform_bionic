@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5859f04_ca63bc31",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 663,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-27T21:00:03Z",
+      "side": 1,
+      "message": "maybe `if (reason)` L663 and L668 instead of the `dummy`, and avoid creating the std::string in the caller if we\u0027re not actually tracing?\n\nor perhaps we don\u0027t care since this is only on the dlclose path, which doesn\u0027t matter anyway?",
+      "revId": "f04858b7fc350a692c77e247be6d3b648981e521",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
