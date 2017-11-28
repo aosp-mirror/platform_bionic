@@ -328,9 +328,7 @@ static void soinfo_free(soinfo* si) {
   TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
 
   if (!solist_remove_soinfo(si)) {
-    // TODO (dimitry): revisit this - for now preserving the logic
-    // but it does not look right, abort if soinfo is not in the list instead?
-    return;
+    async_safe_fatal("soinfo=%p is not in soinfo_list (double unload?)", si);
   }
 
   // clear links to/from si
@@ -718,13 +716,11 @@ enum walk_action_result_t : uint32_t {
 // walk_dependencies_tree returns false if walk was terminated
 // by the action and true otherwise.
 template<typename F>
-static bool walk_dependencies_tree(soinfo* root_soinfos[], size_t root_soinfos_size, F action) {
+static bool walk_dependencies_tree(soinfo* root_soinfo, F action) {
   SoinfoLinkedList visit_list;
   SoinfoLinkedList visited;
 
-  for (size_t i = 0; i < root_soinfos_size; ++i) {
-    visit_list.push_back(root_soinfos[i]);
-  }
+  visit_list.push_back(root_soinfo);
 
   soinfo* si;
   while ((si = visit_list.pop_front()) != nullptr) {
@@ -760,7 +756,7 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
   const ElfW(Sym)* result = nullptr;
   bool skip_lookup = skip_until != nullptr;
 
-  walk_dependencies_tree(&root, 1, [&](soinfo* current_soinfo) {
+  walk_dependencies_tree(root, [&](soinfo* current_soinfo) {
     if (skip_lookup) {
       skip_lookup = current_soinfo != skip_until;
       return kWalkContinue;
@@ -1478,7 +1474,6 @@ static bool find_library_internal(android_namespace_t* ns,
           if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks, rtld_flags, false)) {
             return true;
           }
-          // lib was not found in the namespace. Try next linked namespace.
         } else {
           // lib is already loaded
           return true;
@@ -1491,7 +1486,6 @@ static bool find_library_internal(android_namespace_t* ns,
 }
 
 static void soinfo_unload(soinfo* si);
-static void soinfo_unload(soinfo* soinfos[], size_t count);
 
 static void shuffle(std::vector<LoadTask*>* v) {
   for (size_t i = 0, size = v->size(); i < size; ++i) {
@@ -1516,9 +1510,9 @@ bool find_libraries(android_namespace_t* ns,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
                     bool search_linked_namespaces,
-                    std::unordered_map<const soinfo*, ElfReader>& readers_map,
                     std::vector<android_namespace_t*>* namespaces) {
   // Step 0: prepare.
+  std::unordered_map<const soinfo*, ElfReader> readers_map;
   LoadTaskList load_tasks;
 
   for (size_t i = 0; i < library_names_count; ++i) {
@@ -1548,11 +1542,6 @@ bool find_libraries(android_namespace_t* ns,
     }
   });
 
-  auto failure_guard = android::base::make_scope_guard([&]() {
-    // Housekeeping
-    soinfo_unload(soinfos, soinfos_count);
-  });
-
   ZipArchiveCache zip_archive_cache;
 
   // Step 1: expand the list of load_tasks to include
@@ -1565,7 +1554,6 @@ bool find_libraries(android_namespace_t* ns,
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
     task->set_dt_needed(is_dt_needed);
 
-    // try to find the load.
     // Note: start from the namespace that is stored in the LoadTask. This namespace
     // is different from the current namespace when the LoadTask is for a transitive
     // dependency and the lib that created the LoadTask is not found in the
@@ -1583,10 +1571,6 @@ bool find_libraries(android_namespace_t* ns,
 
     if (is_dt_needed) {
       needed_by->add_child(si);
-
-      if (si->is_linked()) {
-        si->increment_ref_count();
-      }
     }
 
     // When ld_preloads is not null, the first
@@ -1662,77 +1646,116 @@ bool find_libraries(android_namespace_t* ns,
     }
   }
 
-  // Step 5: link libraries that are not destined to this namespace.
-  // Do this by recursively calling find_libraries on the namespace where the lib
-  // was found during Step 1.
+  // Step 5: Collect roots of local_groups.
+  // Whenever needed_by->si link crosses a namespace boundary it forms its own local_group.
+  // Here we collect new roots to link them separately later on. Note that we need to avoid
+  // collecting duplicates. Also the order is important. They need to be linked in the same
+  // BFS order we link individual libraries.
+  std::vector<soinfo*> local_group_roots;
+  if (start_with != nullptr && add_as_children) {
+    local_group_roots.push_back(start_with);
+  } else {
+    CHECK(soinfos_count == 1);
+    local_group_roots.push_back(soinfos[0]);
+  }
+
   for (auto&& task : load_tasks) {
     soinfo* si = task->get_soinfo();
-    if (si->get_primary_namespace() != ns) {
-      const char* name = task->get_name();
-      if (find_libraries(si->get_primary_namespace(), task->get_needed_by(), &name, 1,
-                         nullptr /* soinfos */, nullptr /* ld_preloads */, 0 /* ld_preload_count */,
-                         rtld_flags, nullptr /* extinfo */, false /* add_as_children */,
-                         false /* search_linked_namespaces */, readers_map, namespaces)) {
-        // If this lib is directly needed by one of the libs in this namespace,
-        // then increment the count
-        soinfo* needed_by = task->get_needed_by();
-        if (needed_by != nullptr && needed_by->get_primary_namespace() == ns && si->is_linked()) {
-          si->increment_ref_count();
-        }
-      } else {
-        return false;
+    soinfo* needed_by = task->get_needed_by();
+    bool is_dt_needed = needed_by != nullptr && (needed_by != start_with || add_as_children);
+    android_namespace_t* needed_by_ns =
+        is_dt_needed ? needed_by->get_primary_namespace() : ns;
+
+    if (!si->is_linked() && si->get_primary_namespace() != needed_by_ns) {
+      auto it = std::find(local_group_roots.begin(), local_group_roots.end(), si);
+      LD_LOG(kLogDlopen,
+             "Crossing namespace boundary (si=%s@%p, si_ns=%s@%p, needed_by=%s@%p, ns=%s@%p, needed_by_ns=%s@%p) adding to local_group_roots: %s",
+             si->get_realpath(),
+             si,
+             si->get_primary_namespace()->get_name(),
+             si->get_primary_namespace(),
+             needed_by == nullptr ? "(nullptr)" : needed_by->get_realpath(),
+             needed_by,
+             ns->get_name(),
+             ns,
+             needed_by_ns->get_name(),
+             needed_by_ns,
+             it == local_group_roots.end() ? "yes" : "no");
+
+      if (it == local_group_roots.end()) {
+        local_group_roots.push_back(si);
       }
     }
   }
 
-  // Step 6: link libraries in this namespace
-  soinfo_list_t local_group;
-  walk_dependencies_tree(
-      (start_with != nullptr && add_as_children) ? &start_with : soinfos,
-      (start_with != nullptr && add_as_children) ? 1 : soinfos_count,
+  // Step 6: Link all local groups
+  for (auto root : local_group_roots) {
+    soinfo_list_t local_group;
+    android_namespace_t* local_group_ns = root->get_primary_namespace();
+
+    walk_dependencies_tree(root,
       [&] (soinfo* si) {
-    if (ns->is_accessible(si)) {
-      local_group.push_back(si);
-      return kWalkContinue;
-    } else {
-      return kWalkSkip;
-    }
-  });
+        if (local_group_ns->is_accessible(si)) {
+          local_group.push_back(si);
+          return kWalkContinue;
+        } else {
+          return kWalkSkip;
+        }
+      });
 
-  soinfo_list_t global_group = ns->get_global_group();
-  bool linked = local_group.visit([&](soinfo* si) {
-    if (!si->is_linked()) {
-      if (!si->link_image(global_group, local_group, extinfo) ||
-          !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
-        return false;
+    soinfo_list_t global_group = local_group_ns->get_global_group();
+    bool linked = local_group.visit([&](soinfo* si) {
+      // Even though local group may contain accessible soinfos from other namesapces
+      // we should avoid linking them (because if they are not linked -> they
+      // are in the local_group_roots and will be linked later).
+      if (!si->is_linked() && si->get_primary_namespace() == local_group_ns) {
+        if (!si->link_image(global_group, local_group, extinfo) ||
+            !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
+          return false;
+        }
       }
-    }
 
-    return true;
-  });
-
-  if (linked) {
-    local_group.for_each([](soinfo* si) {
-      if (!si->is_linked()) {
-        si->set_linked();
-      }
+      return true;
     });
 
-    failure_guard.Disable();
+    if (!linked) {
+      return false;
+    }
   }
 
-  return linked;
+  // Step 7: Mark all load_tasks as linked and increment refcounts
+  // for references between load_groups (at this point it does not matter if
+  // referenced load_groups were loaded by previous dlopen or as part of this
+  // one on step 6)
+  if (start_with != nullptr && add_as_children) {
+    start_with->set_linked();
+  }
+
+  for (auto&& task : load_tasks) {
+    soinfo* si = task->get_soinfo();
+    si->set_linked();
+  }
+
+  for (auto&& task : load_tasks) {
+    soinfo* si = task->get_soinfo();
+    soinfo* needed_by = task->get_needed_by();
+    if (needed_by != nullptr &&
+        needed_by != start_with &&
+        needed_by->get_local_group_root() != si->get_local_group_root()) {
+      si->increment_ref_count();
+    }
+  }
+
+
+  return true;
 }
 
 static soinfo* find_library(android_namespace_t* ns,
                             const char* name, int rtld_flags,
                             const android_dlextinfo* extinfo,
                             soinfo* needed_by) {
-  soinfo* si;
+  soinfo* si = nullptr;
 
-  // readers_map is shared across recursive calls to find_libraries.
-  // However, the map is not shared across different threads.
-  std::unordered_map<const soinfo*, ElfReader> readers_map;
   if (name == nullptr) {
     si = solist_get_somain();
   } else if (!find_libraries(ns,
@@ -1745,8 +1768,10 @@ static soinfo* find_library(android_namespace_t* ns,
                              rtld_flags,
                              extinfo,
                              false /* add_as_children */,
-                             true /* search_linked_namespaces */,
-                             readers_map)) {
+                             true /* search_linked_namespaces */)) {
+    if (si != nullptr) {
+      soinfo_unload(si);
+    }
     return nullptr;
   }
 
@@ -1755,18 +1780,26 @@ static soinfo* find_library(android_namespace_t* ns,
   return si;
 }
 
-static void soinfo_unload(soinfo* si) {
-  soinfo* root = si->is_linked() ? si->get_local_group_root() : si;
+static void soinfo_unload(soinfo* unload_si) {
+  // Note that the library can be loaded but not linked;
+  // in which case there is no root but we still need
+  // to walk the tree and unload soinfos involved.
+  //
+  // This happens on unsuccessful dlopen, when one of
+  // the DT_NEEDED libraries could not be linked/found.
+  bool is_linked = unload_si->is_linked();
+  soinfo* root = is_linked ? unload_si->get_local_group_root() : unload_si;
 
   LD_LOG(kLogDlopen,
          "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
-         si->get_realpath(),
-         si,
+         unload_si->get_realpath(),
+         unload_si,
          root->get_realpath(),
          root);
 
   ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
 
+  size_t ref_count = is_linked ? root->decrement_ref_count() : 0;
   if (!root->can_unload()) {
     LD_LOG(kLogDlopen,
            "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
@@ -1775,48 +1808,17 @@ static void soinfo_unload(soinfo* si) {
     return;
   }
 
-  soinfo_unload(&root, 1);
-}
-
-static void soinfo_unload(soinfo* soinfos[], size_t count) {
-  // Note that the library can be loaded but not linked;
-  // in which case there is no root but we still need
-  // to walk the tree and unload soinfos involved.
-  //
-  // This happens on unsuccessful dlopen, when one of
-  // the DT_NEEDED libraries could not be linked/found.
-  if (count == 0) {
+  if (ref_count > 0) {
+    LD_LOG(kLogDlopen,
+           "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
+           root->get_realpath(),
+           root,
+           ref_count);
     return;
   }
 
   soinfo_list_t unload_list;
-  for (size_t i = 0; i < count; ++i) {
-    soinfo* si = soinfos[i];
-
-    if (si->can_unload()) {
-      size_t ref_count = si->is_linked() ? si->decrement_ref_count() : 0;
-      if (ref_count == 0) {
-        unload_list.push_back(si);
-      } else {
-        LD_LOG(kLogDlopen,
-               "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
-               si->get_realpath(),
-               si,
-               ref_count);
-      }
-    } else {
-      LD_LOG(kLogDlopen,
-             "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
-             si->get_realpath(),
-             si);
-      return;
-    }
-  }
-
-  // This is used to identify soinfos outside of the load-group
-  // note that we cannot have > 1 in the array and have any of them
-  // linked. This is why we can safely use the first one.
-  soinfo* root = soinfos[0];
+  unload_list.push_back(root);
 
   soinfo_list_t local_unload_list;
   soinfo_list_t external_unload_list;
@@ -1900,12 +1902,17 @@ static void soinfo_unload(soinfo* soinfos[], size_t count) {
     soinfo_free(si);
   }
 
-  while ((si = external_unload_list.pop_front()) != nullptr) {
-    LD_LOG(kLogDlopen,
-           "... dlclose: unloading external reference \"%s\"@%p ...",
-           si->get_realpath(),
-           si);
-    soinfo_unload(si);
+  if (is_linked) {
+    while ((si = external_unload_list.pop_front()) != nullptr) {
+      LD_LOG(kLogDlopen,
+             "... dlclose: unloading external reference \"%s\"@%p ...",
+             si->get_realpath(),
+             si);
+      soinfo_unload(si);
+    }
+  } else {
+      LD_LOG(kLogDlopen,
+             "... dlclose: unload_si was not linked - not unloading external references ...");
   }
 }
 
@@ -3368,6 +3375,10 @@ bool soinfo::prelink_image() {
 
 bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
                         const android_dlextinfo* extinfo) {
+  if (is_image_linked()) {
+    // already linked.
+    return true;
+  }
 
   local_group_root_ = local_group.front();
   if (local_group_root_ == nullptr) {
@@ -3510,6 +3521,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 
   notify_gdb_of_load(this);
+  set_image_linked();
   return true;
 }
 
