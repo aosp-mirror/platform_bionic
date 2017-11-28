@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "622cfece_819b82c4",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-11-28T23:31:42Z",
+      "side": 1,
+      "message": "`_FILE_OFFSET_BITS\u003d64` ?",
+      "revId": "ebaf6cf6c5b3c9c4c42e54c311f0b247ec0ed5b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fd29230_f60b13b6",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-11-28T23:31:42Z",
+      "side": 1,
+      "message": "`_FILE_OFFSET_BITS\u003d64` ?\n\nGerrit is showing the _FILE_ part of the identifier as italicized.",
+      "revId": "ebaf6cf6c5b3c9c4c42e54c311f0b247ec0ed5b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
