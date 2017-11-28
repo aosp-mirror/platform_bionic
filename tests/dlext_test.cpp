@@ -1051,6 +1051,46 @@ TEST(dlext, ns_unload_between_namespaces) {
             "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
 }
 
+TEST(dlext, ns_unload_between_namespaces_missing_symbol) {
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  const std::string public_ns_search_path =  get_testlib_root() + "/public_namespace_libs";
+  const std::string private_ns_search_path = get_testlib_root() + "/private_namespace_libs";
+
+  android_namespace_t* ns_public =
+          android_create_namespace("public",
+                                   nullptr,
+                                   public_ns_search_path.c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_TRUE(android_link_namespaces(ns_public, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_namespace_t* ns_private =
+          android_create_namespace("private",
+                                   nullptr,
+                                   private_ns_search_path.c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+
+  ASSERT_TRUE(android_link_namespaces(ns_private, ns_public, "libtest_missing_symbol.so")) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_private, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_private;
+
+  void* handle = android_dlopen_ext((public_ns_search_path + "/libtest_missing_symbol.so").c_str(),
+                                    RTLD_NOW,
+                                    &extinfo);
+  ASSERT_TRUE(handle == nullptr);
+  ASSERT_EQ(std::string("dlopen failed: cannot locate symbol \"dlopen_testlib_missing_symbol\" referenced by \"") +
+            public_ns_search_path + "/libtest_missing_symbol.so\"...",
+            dlerror());
+}
+
 TEST(dlext, ns_greylist_enabled) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
