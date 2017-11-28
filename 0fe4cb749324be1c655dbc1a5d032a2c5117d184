@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ecc1b9d_85e19174",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3530,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-28T02:45:30Z",
+      "side": 1,
+      "message": "rfind(\".txt\") ?",
+      "range": {
+        "startLine": 3530,
+        "startChar": 36,
+        "endLine": 3530,
+        "endChar": 55
+      },
+      "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e48a732_0ca7f18b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3533,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-28T02:45:30Z",
+      "side": 1,
+      "message": "this shouldn\u0027t happen. how about asserting?",
+      "range": {
+        "startLine": 3531,
+        "startChar": 0,
+        "endLine": 3533,
+        "endChar": 3
+      },
+      "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3d9fb50_3344ad91",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3534,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-28T02:45:30Z",
+      "side": 1,
+      "message": "instead of letting get_vndk_version_string to prepend the delimiter, you can do as follows.\n\nld_config_vndk.insert(insert_pos, \".\" + Config::get_vndk_version_string());",
+      "range": {
+        "startLine": 3534,
+        "startChar": 36,
+        "endLine": 3534,
+        "endChar": 72
+      },
+      "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87438c50_9b944442",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-28T02:45:30Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem to be a good design. get_vndk_version_string should return the version string itself. Prepending the delimiter should be the responsibility of the callers.",
+      "range": {
+        "startLine": 501,
+        "startChar": 0,
+        "endLine": 501,
+        "endChar": 36
+      },
+      "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
