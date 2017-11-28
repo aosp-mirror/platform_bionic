@@ -678,7 +678,13 @@ TEST(time, clock_getcpuclockid) {
   // For invalid process.
   // We can't use -1 for invalid pid here, because clock_getcpuclockid() can't detect it.
   errno = 0;
-  ASSERT_EQ(ESRCH, clock_getcpuclockid(GetInvalidPid(), &clockid));
+  // If this fails, your kernel needs commit e1b6b6ce to be backported.
+  ASSERT_EQ(ESRCH, clock_getcpuclockid(GetInvalidPid(), &clockid)) << "\n"
+    << "Please ensure that the following kernel patches or their replacements have been applied:\n"
+    << "* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/"
+    << "commit/?id=e1b6b6ce55a0a25c8aa8af019095253b2133a41a\n"
+    << "* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/"
+    << "commit/?id=c80ed088a519da53f27b798a69748eaabc66aadf\n";
   ASSERT_EQ(0, errno);
 }
 
