@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f36c3246_fefc598a",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T04:41:18Z",
+      "side": 1,
+      "message": "ps2 clears errno in tests that want to check an errno value...",
+      "revId": "6a5a99faf35d176e8ee4c6fbd5d148d6eaea91d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "58d55e16_6360e577",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T04:41:18Z",
+      "side": 1,
+      "message": "...tests return values directly...",
+      "revId": "6a5a99faf35d176e8ee4c6fbd5d148d6eaea91d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0613bfd2_5a1c5731",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T04:41:18Z",
+      "side": 1,
+      "message": "...doesn\u0027t introduce unnecessary locals...",
+      "revId": "6a5a99faf35d176e8ee4c6fbd5d148d6eaea91d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62f56a1f_6e8379ac",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T04:41:18Z",
+      "side": 1,
+      "message": "...and is anal about either\n\n  t v{};\n\nor\n\n  t v \u003d {};\n\nnot allowing\n\n  t v {};\n\n(resolved in favor of the former, since it\u0027s more common in bionic, though tomcherry would doubtless have gone with the former :-) )",
+      "revId": "6a5a99faf35d176e8ee4c6fbd5d148d6eaea91d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
