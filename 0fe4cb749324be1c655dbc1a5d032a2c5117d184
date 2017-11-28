@@ -163,6 +163,30 @@
       "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "445859b2_7a13ad60",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-11-28T03:23:40Z",
+      "side": 1,
+      "message": "This function returns \"-$VER\" or \"\".\nIf it returns \"$VER\" or \"\", every caller must have this conditional code in it.",
+      "parentUuid": "87438c50_9b944442",
+      "range": {
+        "startLine": 501,
+        "startChar": 0,
+        "endLine": 501,
+        "endChar": 36
+      },
+      "revId": "0fe4cb749324be1c655dbc1a5d032a2c5117d184",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
