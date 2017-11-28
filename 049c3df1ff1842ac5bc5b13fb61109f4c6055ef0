@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bdd098fd_deff531b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T17:06:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8b04a0a_c75bf266",
+      "range": {
+        "startLine": 7,
+        "startChar": 4,
+        "endLine": 7,
+        "endChar": 8
+      },
+      "revId": "049c3df1ff1842ac5bc5b13fb61109f4c6055ef0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e59a3fb_a78f240c",
         "filename": "libc/bionic/vdso.cpp",
         "patchSetId": 1
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "57be3bc8_768ec7a7",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T17:06:06Z",
+      "side": 1,
+      "message": "i was tempted (since this is strictly duplication), but it seemed less clear (and invalidates the \"this is for assembler, don\u0027t use this from C\" comment at the top of __set_errno_internal :-) ).\n\nassembler uses __set_errno_internal because fiddling with errno from assembler is such a pain. (it\u0027s only a few instructions, but -- except for x86 -- they\u0027re weird special ones.)",
+      "parentUuid": "5e59a3fb_a78f240c",
+      "range": {
+        "startLine": 29,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 14
+      },
+      "revId": "049c3df1ff1842ac5bc5b13fb61109f4c6055ef0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5991ae50_e6b7794c",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T17:06:06Z",
+      "side": 1,
+      "message": "bionic uses static. (fewer source characters, shorter symbols, no weird indentation rules exception.)",
+      "parentUuid": "96cd8beb_d80580c8",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 7
+      },
+      "revId": "049c3df1ff1842ac5bc5b13fb61109f4c6055ef0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "218bc78f_0d7db603",
         "filename": "libc/bionic/vdso.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2017-11-28T15:38:29Z",
       "side": 1,
       "message": "default value landing in __libc_globals-\u003evdso[VDSO_CLOCK_GETTIME], and this agent returns a result that has already been evaluated by a creature like vdso_return.\n\n\nIn essence on error, the errno would always report EPERM if the vdso is not present or enabled b/c of the call to __clock_gettime().\n\nA) rewrite __clock_gettime() and __gettimeofday to drop the call to __set_errno_internal and wrap accordingly here?\nB) Use nullptr as default?",
+      "range": {
+        "startLine": 57,
+        "startChar": 31,
+        "endLine": 57,
+        "endChar": 71
+      },
+      "revId": "049c3df1ff1842ac5bc5b13fb61109f4c6055ef0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f058e92e_e17b8532",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-28T17:06:06Z",
+      "side": 1,
+      "message": "oh, yeah, that\u0027s weird --- the code above is written to assume that these are null. looks like we changed our mind about how to implement this somewhere along the way, but ended up with two mismatching halves.\n\ngood catch!",
+      "parentUuid": "218bc78f_0d7db603",
       "range": {
         "startLine": 57,
         "startChar": 31,
