@@ -599,6 +599,53 @@ TEST(time, clock_gettime_CLOCK_BOOTTIME) {
   ASSERT_EQ(0, clock_gettime(CLOCK_BOOTTIME, &ts));
 }
 
+TEST(time, clock_gettime_unknown) {
+  errno = 0;
+  timespec ts;
+  ASSERT_EQ(-1, clock_gettime(-1, &ts));
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(time, clock_getres_CLOCK_REALTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_getres(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(1, ts.tv_nsec);
+  ASSERT_EQ(0, ts.tv_sec);
+}
+
+TEST(time, clock_getres_CLOCK_MONOTONIC) {
+  timespec ts;
+  ASSERT_EQ(0, clock_getres(CLOCK_MONOTONIC, &ts));
+  ASSERT_EQ(1, ts.tv_nsec);
+  ASSERT_EQ(0, ts.tv_sec);
+}
+
+TEST(time, clock_getres_CLOCK_PROCESS_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_getres(CLOCK_PROCESS_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_getres_CLOCK_THREAD_CPUTIME_ID) {
+  timespec ts;
+  ASSERT_EQ(0, clock_getres(CLOCK_THREAD_CPUTIME_ID, &ts));
+}
+
+TEST(time, clock_getres_CLOCK_BOOTTIME) {
+  timespec ts;
+  ASSERT_EQ(0, clock_getres(CLOCK_BOOTTIME, &ts));
+  ASSERT_EQ(1, ts.tv_nsec);
+  ASSERT_EQ(0, ts.tv_sec);
+}
+
+TEST(time, clock_getres_unknown) {
+  errno = 0;
+  timespec ts = { -1, -1 };
+  ASSERT_EQ(-1, clock_getres(-1, &ts));
+  ASSERT_EQ(EINVAL, errno);
+  ASSERT_EQ(-1, ts.tv_nsec);
+  ASSERT_EQ(-1, ts.tv_sec);
+}
+
 TEST(time, clock) {
   // clock(3) is hard to test, but a 1s sleep should cost less than 1ms.
   clock_t t0 = clock();
