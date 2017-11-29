@@ -271,18 +271,8 @@ static void watchpoint_imprecise_child(Uint128_t& data) {
 // test fail on arm64, you will likely need to cherry-pick fdfeff0f into your
 // kernel.
 TEST(sys_ptrace, watchpoint_imprecise) {
-  // Make sure we get interrupted in case a buggy kernel does not report the
-  // watchpoint hit correctly.
-  struct sigaction action, oldaction;
-  action.sa_handler = [](int) {};
-  sigemptyset(&action.sa_mask);
-  action.sa_flags = 0;
-  ASSERT_EQ(0, sigaction(SIGALRM, &action, &oldaction)) << strerror(errno);
-  alarm(5);
-
+  // This test relies on the infrastructure to timeout if the test hangs.
   run_watchpoint_test<Uint128_t>(watchpoint_imprecise_child, 8, sizeof(void*));
-
-  ASSERT_EQ(0, sigaction(SIGALRM, &oldaction, nullptr)) << strerror(errno);
 }
 
 static void __attribute__((noinline)) breakpoint_func() {
