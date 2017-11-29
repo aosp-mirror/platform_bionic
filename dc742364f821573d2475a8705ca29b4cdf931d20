@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ced31a2_549e397b",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-11-29T19:03:17Z",
+      "side": 1,
+      "message": "You should add a comment that this test relies on the infrastructure to timeout if the test hangs.",
+      "range": {
+        "startLine": 274,
+        "startChar": 2,
+        "endLine": 274,
+        "endChar": 21
+      },
+      "revId": "dc742364f821573d2475a8705ca29b4cdf931d20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
