@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "193c79c4_4a1bb34d",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-11-29T06:21:38Z",
+      "side": 1,
+      "message": "If a signal is omitted from the sigdefault set, but it\u0027s set to be caught in the parent process, then AFAICT it should still be set to the default action in the child. This code wouldn\u0027t reset it until exec were called.\n\ne.g. I think the stress test would still fail if the spawn attributes specified POSIX_SPAWN_SIGSETDEF with an empty sigdefault.\n\nI think the intent of POSIX_SPAWN_SIGSETDEF is to specify which ignored signals should be reset to the default action.\n\nI think this fixes it:\n\n  for (int s \u003d 1; s \u003c _NSIG; ++s) {\n    if (use_sigdefault \u0026\u0026 sigismember(\u0026(*attr)-\u003esigdefault, s)) {\n      if (sigaction(s, \u0026default_sa, nullptr) \u003d\u003d -1) _exit(127);\n      continue;\n    }\n    struct sigaction current;\n    if (sigaction(s, nullptr, \u0026current) \u003d\u003d -1) _exit(127);\n    if (current.sa_handler \u003d\u003d SIG_IGN || current.sa_handler \u003d\u003d SIG_DFL) continue;\n    if (sigaction(s, \u0026default_sa, nullptr) \u003d\u003d -1) _exit(127);\n  }\n\nThe reset-to-default line gets duplicated.",
+      "revId": "4949df1dce873fe578b1b4e424ed13461de6df01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
