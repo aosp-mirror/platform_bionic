@@ -22,6 +22,30 @@
       "revId": "dc742364f821573d2475a8705ca29b4cdf931d20",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "732bbbdb_fe5fa309",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2017-11-29T19:07:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ced31a2_549e397b",
+      "range": {
+        "startLine": 274,
+        "startChar": 2,
+        "endLine": 274,
+        "endChar": 21
+      },
+      "revId": "dc742364f821573d2475a8705ca29b4cdf931d20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
