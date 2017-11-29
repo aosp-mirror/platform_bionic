@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c0e50b6_3d7fc145",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-29T15:55:09Z",
+      "side": 1,
+      "message": "this seems weird because it doesn\u0027t match how \\ usually behaves. did you actually want to implement +\u003d instead? trimming would be more natural in that case.",
+      "revId": "09d896ef13215d734544c17781f2ff71e697869a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
