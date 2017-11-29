@@ -16,6 +16,24 @@
       "revId": "09d896ef13215d734544c17781f2ff71e697869a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e84a413_8f9a1300",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-11-29T16:25:52Z",
+      "side": 1,
+      "message": "\u003e it doesn\u0027t match how \\ usually behaves\nBecause I allowed comment to be after \\ ? I can fix that, but well this also looks weird.\n\n/system/${LIB}: # search path for system libs \\\n\nOr, will it be okay if I disallow comment in the wrapped lines (as gnumake)?\n\n\u003e did you actually want to implement +\u003d instead\nYeah, I thought about it, but it incurs repeated property names which requires much more typing, isn\u0027t it? \n\nnamespace.default.search.path \u003d /system/${LIB}\nnamespace.default.search.path +\u003d :/vendor/${LIB}\n\nBut, yes, I can do both; \\ and +\u003d",
+      "parentUuid": "4c0e50b6_3d7fc145",
+      "revId": "09d896ef13215d734544c17781f2ff71e697869a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
