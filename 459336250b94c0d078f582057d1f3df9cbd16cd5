@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9c33c32_b9b80d49",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-11-29T22:11:46Z",
+      "side": 1,
+      "message": "Should clang be capitalized?",
+      "revId": "459336250b94c0d078f582057d1f3df9cbd16cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e11cca19_55d5b003",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-11-29T22:11:46Z",
+      "side": 1,
+      "message": "FWIW: There was a recent report of trouble building minizip[1], which defines `_FILE_OFFSET_BIT\u003d64` (a misspelling), but also defines `__USE_FILE_OFFSET64`, which configures Bionic to call the 64-bit suffixed functions, even on 64-bit Android where they don\u0027t exist until API 24.\n\nMaybe it\u0027s worth mentioning `__USE_FILE_OFFSET64`?\n\n[1] https://github.com/android-ndk/ndk/issues/480#issuecomment-347726687",
+      "revId": "459336250b94c0d078f582057d1f3df9cbd16cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
