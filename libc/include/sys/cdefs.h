@@ -205,25 +205,28 @@
  * In our header files we test against __USE_BSD and __USE_GNU.
  */
 #if defined(_GNU_SOURCE)
-# define __USE_BSD 1
-# define __USE_GNU 1
+#  define __USE_BSD 1
+#  define __USE_GNU 1
 #endif
 
 #if defined(_BSD_SOURCE)
-# define __USE_BSD 1
+#  define __USE_BSD 1
 #endif
 
-/* _FILE_OFFSET_BITS 64 support. */
+/*
+ * _FILE_OFFSET_BITS 64 support.
+ * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ */
 #if !defined(__LP64__) && defined(_FILE_OFFSET_BITS) && _FILE_OFFSET_BITS == 64
-#define __USE_FILE_OFFSET64 1
+#  define __USE_FILE_OFFSET64 1
 /*
  * Note that __RENAME_IF_FILE_OFFSET64 is only valid if the off_t and off64_t
  * functions were both added at the same API level because if you use this,
  * you only have one declaration to attach __INTRODUCED_IN to.
  */
-#define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
+#  define __RENAME_IF_FILE_OFFSET64(func) __RENAME(func)
 #else
-#define __RENAME_IF_FILE_OFFSET64(func)
+#  define __RENAME_IF_FILE_OFFSET64(func)
 #endif
 
 /*
