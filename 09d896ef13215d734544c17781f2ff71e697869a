@@ -34,6 +34,24 @@
       "revId": "09d896ef13215d734544c17781f2ff71e697869a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ae35f7fc_def489ca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-29T16:39:53Z",
+      "side": 1,
+      "message": "no, i meant that usually\n\n  abc \\\n  def\n\nwould be \"abc def\", not \"abcdef\". you\u0027d need\n\n  abc\\\n  def\n\nfor what you want.\n\nwhereas +\u003d always works the way you want anyway, so no surprises.\n\n(no-one\u0027s going to re-type the line anyway. they\u0027ll just have their editor duplicate it.)",
+      "parentUuid": "0e84a413_8f9a1300",
+      "revId": "09d896ef13215d734544c17781f2ff71e697869a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
