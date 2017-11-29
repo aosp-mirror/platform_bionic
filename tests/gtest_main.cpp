@@ -324,7 +324,7 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   }
 
   int status;
-  if (waitpid(pid, &status, 0) != pid) {
+  if (TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)) != pid) {
     perror("waitpid");
     return false;
   }
