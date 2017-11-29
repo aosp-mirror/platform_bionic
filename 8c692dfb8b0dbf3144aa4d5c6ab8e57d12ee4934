@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "16ab1f49_fb542896",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-11-29T02:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f9ac140_aef9fa8b",
+      "range": {
+        "startLine": 503,
+        "startChar": 3,
+        "endLine": 503,
+        "endChar": 10
+      },
+      "revId": "8c692dfb8b0dbf3144aa4d5c6ab8e57d12ee4934",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b510e74c_f06d18be",
         "filename": "linker/linker_config.h",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-11-29T01:06:55Z",
       "side": 1,
       "message": "don\u0027t use default parameters for a single caller",
+      "range": {
+        "startLine": 150,
+        "startChar": 65,
+        "endLine": 150,
+        "endChar": 71
+      },
+      "revId": "8c692dfb8b0dbf3144aa4d5c6ab8e57d12ee4934",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f794aeea_1a51a3b5",
+        "filename": "linker/linker_config.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-11-29T02:03:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b510e74c_f06d18be",
       "range": {
         "startLine": 150,
         "startChar": 65,
