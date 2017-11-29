@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1133e010_0cc32578",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-11-29T02:14:55Z",
+      "side": 1,
+      "message": "For clang only, according to the diagnostic I added.",
+      "range": {
+        "startLine": 36,
+        "startChar": 7,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "a34817457feee026e8702a1d2dffe9e92b51d7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90b93b45_ebdae204",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-11-29T02:14:55Z",
+      "side": 1,
+      "message": "mmap... and nothing else that would have this problem.",
+      "range": {
+        "startLine": 38,
+        "startChar": 39,
+        "endLine": 38,
+        "endChar": 70
+      },
+      "revId": "a34817457feee026e8702a1d2dffe9e92b51d7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac596fc0_6cc0db50",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-11-29T02:14:55Z",
+      "side": 1,
+      "message": "every",
+      "range": {
+        "startLine": 40,
+        "startChar": 73,
+        "endLine": 40,
+        "endChar": 76
+      },
+      "revId": "a34817457feee026e8702a1d2dffe9e92b51d7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
