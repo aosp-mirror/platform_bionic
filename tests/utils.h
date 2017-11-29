@@ -140,7 +140,7 @@ static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
 
 static inline void AssertChildExited(int pid, int expected_exit_status) {
   int status;
-  ASSERT_EQ(pid, waitpid(pid, &status, 0));
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)));
   if (expected_exit_status >= 0) {
     ASSERT_TRUE(WIFEXITED(status));
     ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
