@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7651728f_b684a1cf",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-11-30T00:15:27Z",
+      "side": 1,
+      "message": "Maybe useful to include the #ifdef/#error block for people to use to prove that I\u0027m wrong: https://github.com/android-ndk/ndk/issues/480#issuecomment-347718405",
+      "revId": "743ce7d204efe5a58da1b2f3e89beb4b39c35f69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
