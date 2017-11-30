@@ -654,31 +654,32 @@ TEST(time, clock) {
   ASSERT_LT(t1 - t0, CLOCKS_PER_SEC / 1000);
 }
 
-pid_t GetInvalidPid() {
-  FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
+static pid_t GetInvalidPid() {
+  std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/proc/sys/kernel/pid_max", "r"), fclose};
   long pid_max;
-  fscanf(fp, "%ld", &pid_max);
-  pid_t invalid_pid = static_cast<pid_t>(pid_max + 1);
-  fclose(fp);
-  return invalid_pid;
+  fscanf(fp.get(), "%ld", &pid_max);
+  return static_cast<pid_t>(pid_max + 1);
 }
 
-TEST(time, clock_getcpuclockid) {
-  // For current process.
+TEST(time, clock_getcpuclockid_current) {
   clockid_t clockid;
   ASSERT_EQ(0, clock_getcpuclockid(getpid(), &clockid));
-
   timespec ts;
   ASSERT_EQ(0, clock_gettime(clockid, &ts));
+}
 
-  // For parent process.
+TEST(time, clock_getcpuclockid_parent) {
+  clockid_t clockid;
   ASSERT_EQ(0, clock_getcpuclockid(getppid(), &clockid));
+  timespec ts;
   ASSERT_EQ(0, clock_gettime(clockid, &ts));
+}
 
-  // For invalid process.
+TEST(time, clock_getcpuclockid_ESRCH) {
   // We can't use -1 for invalid pid here, because clock_getcpuclockid() can't detect it.
   errno = 0;
   // If this fails, your kernel needs commit e1b6b6ce to be backported.
+  clockid_t clockid;
   ASSERT_EQ(ESRCH, clock_getcpuclockid(GetInvalidPid(), &clockid)) << "\n"
     << "Please ensure that the following kernel patches or their replacements have been applied:\n"
     << "* https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/"
