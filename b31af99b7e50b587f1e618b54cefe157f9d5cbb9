@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7886ef6_a14599db",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1146974
+      },
+      "writtenOn": "2017-11-30T05:15:38Z",
+      "side": 1,
+      "message": "It means kPropertyAssign, now.",
+      "range": {
+        "startLine": 65,
+        "startChar": 30,
+        "endLine": 65,
+        "endChar": 39
+      },
+      "revId": "b31af99b7e50b587f1e618b54cefe157f9d5cbb9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
