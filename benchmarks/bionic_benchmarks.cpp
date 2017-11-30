@@ -23,6 +23,7 @@
 #include <mutex>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <android-base/file.h>
@@ -31,13 +32,7 @@
 #include <tinyxml2.h>
 #include "util.h"
 
-#if defined(__ANDROID__)
-static constexpr const char* kDefaultSuite="full.xml";
-#else
-static constexpr const char* kDefaultSuite="host.xml";
-#endif
-
-std::map<std::string, benchmark_func_t> g_str_to_func;
+std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
 
 std::mutex g_map_lock;
 
@@ -213,9 +208,10 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
     cpu_to_use = secondary_opts.cpu_to_lock;
   }
 
+  benchmark_func_t benchmark_function = g_str_to_func.at(fn_name).first;
   for (std::vector<int> args : (*run_args)) {
     auto registration = benchmark::RegisterBenchmark(fn_name.c_str(), LockAndRun,
-                                                     g_str_to_func.at(fn_name),
+                                                     benchmark_function,
                                                      cpu_to_use)->Args(args);
     if (iterations_to_use > 0) {
       registration->Iterations(iterations_to_use);
@@ -372,6 +368,33 @@ static bool FileExists(const std::string& file) {
   return stat(file.c_str(), &st) != -1 && S_ISREG(st.st_mode);
 }
 
+void RegisterAllBenchmarks(const bench_opts_t& opts,
+                           std::map<std::string, args_vector_t>& args_shorthand) {
+  // Add the property tests at the end since they might cause segfaults in
+  // tests running afterwards (b/62197783).
+  std::vector<std::string> prop_tests;
+
+  for (auto& entry : g_str_to_func) {
+    if (android::base::StartsWith(entry.first, "BM_property_")) {
+      prop_tests.push_back(entry.first);
+    } else {
+      auto& function_info = entry.second;
+      args_vector_t arg_vector;
+      args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
+                                            args_shorthand);
+      RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
+    }
+  }
+
+  for (auto& prop_name : prop_tests) {
+    auto& function_info = g_str_to_func.at(prop_name);
+    args_vector_t arg_vector;
+    args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
+                                          args_shorthand);
+    RegisterGoogleBenchmarks(bench_opts_t(), opts, prop_name, run_args);
+  }
+}
+
 int main(int argc, char** argv) {
   std::map<std::string, args_vector_t> args_shorthand = GetShorthand();
   bench_opts_t opts = ParseOpts(argc, argv);
@@ -381,12 +404,7 @@ int main(int argc, char** argv) {
   if (opts.xmlpath.empty()) {
     // Don't add the default xml file if a user is specifying the tests to run.
     if (opts.extra_benchmarks.empty()) {
-      // Try and use the default.
-      opts.xmlpath = android::base::GetExecutableDirectory() + "/suites/" + kDefaultSuite;
-      if (!FileExists(opts.xmlpath)) {
-        printf("Cannot find default xml file %s\n", kDefaultSuite);
-        return 1;
-      }
+      RegisterAllBenchmarks(opts, args_shorthand);
     }
   } else if (!FileExists(opts.xmlpath)) {
     // See if this is a file in the suites directory.

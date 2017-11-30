@@ -45,14 +45,14 @@ volatile unsigned sink;
 
 std::mutex mtx;
 
-void BM_empty(benchmark::State& state) {
+void BM_atomic_empty(benchmark::State& state) {
   while (state.KeepRunning()) {
     ++counter;
   }
 }
-BIONIC_BENCHMARK(BM_empty);
+BIONIC_BENCHMARK(BM_atomic_empty);
 
-static void BM_load_relaxed(benchmark::State& state) {
+static void BM_atomic_load_relaxed(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
@@ -60,9 +60,9 @@ static void BM_load_relaxed(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_load_relaxed);
+BIONIC_BENCHMARK(BM_atomic_load_relaxed);
 
-static void BM_load_acquire(benchmark::State& state) {
+static void BM_atomic_load_acquire(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_acquire);
@@ -70,27 +70,27 @@ static void BM_load_acquire(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_load_acquire);
+BIONIC_BENCHMARK(BM_atomic_load_acquire);
 
-static void BM_store_release(benchmark::State& state) {
+static void BM_atomic_store_release(benchmark::State& state) {
   int i = counter;
   while (state.KeepRunning()) {
     test_loc.store(++i, std::memory_order_release);
     ++counter;
   }
 }
-BIONIC_BENCHMARK(BM_store_release);
+BIONIC_BENCHMARK(BM_atomic_store_release);
 
-static void BM_store_seq_cst(benchmark::State& state) {
+static void BM_atomic_store_seq_cst(benchmark::State& state) {
   int i = counter;
   while (state.KeepRunning()) {
     test_loc.store(++i, std::memory_order_seq_cst);
     ++counter;
   }
 }
-BIONIC_BENCHMARK(BM_store_seq_cst);
+BIONIC_BENCHMARK(BM_atomic_store_seq_cst);
 
-static void BM_fetch_add_relaxed(benchmark::State& state) {
+static void BM_atomic_fetch_add_relaxed(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.fetch_add(1, std::memory_order_relaxed);
@@ -98,9 +98,9 @@ static void BM_fetch_add_relaxed(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_fetch_add_relaxed);
+BIONIC_BENCHMARK(BM_atomic_fetch_add_relaxed);
 
-static void BM_fetch_add_seq_cst(benchmark::State& state) {
+static void BM_atomic_fetch_add_seq_cst(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.fetch_add(1, std::memory_order_seq_cst);
@@ -108,12 +108,12 @@ static void BM_fetch_add_seq_cst(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_fetch_add_seq_cst);
+BIONIC_BENCHMARK(BM_atomic_fetch_add_seq_cst);
 
 // The fence benchmarks include a relaxed load to make it much harder to optimize away
 // the fence.
 
-static void BM_acquire_fence(benchmark::State& state) {
+static void BM_atomic_acquire_fence(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
@@ -122,9 +122,9 @@ static void BM_acquire_fence(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_acquire_fence);
+BIONIC_BENCHMARK(BM_atomic_acquire_fence);
 
-static void BM_seq_cst_fence(benchmark::State& state) {
+static void BM_atomic_seq_cst_fence(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     result += test_loc.load(std::memory_order_relaxed);
@@ -133,11 +133,11 @@ static void BM_seq_cst_fence(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_seq_cst_fence);
+BIONIC_BENCHMARK(BM_atomic_seq_cst_fence);
 
 // For comparison, also throw in a critical section version:
 
-static void BM_fetch_add_cs(benchmark::State& state) {
+static void BM_atomic_fetch_add_cs(benchmark::State& state) {
   unsigned result = 0;
   while (state.KeepRunning()) {
     {
@@ -147,4 +147,4 @@ static void BM_fetch_add_cs(benchmark::State& state) {
   }
   sink = result;
 }
-BIONIC_BENCHMARK(BM_fetch_add_cs);
+BIONIC_BENCHMARK(BM_atomic_fetch_add_cs);
