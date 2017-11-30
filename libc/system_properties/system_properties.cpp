@@ -46,6 +46,8 @@
 #include <sys/_system_properties.h>
 #include <sys/system_properties.h>
 
+#include <new>
+
 #include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
@@ -63,10 +65,15 @@
 #include "property_filename.h"
 
 // We don't want to use new or malloc in properties (b/31659220), and since these classes are
-// small enough and don't have non-trivial constructors, it's easier to just statically declare
-// them than anything else.
-static ContextsSplit contexts_split;
-static ContextsPreSplit contexts_pre_split;
+// small enough and we place them in a static union.  Note that system properties are initialized
+// before static initializers are called, so using a Constructor here is an error.  Even a
+// Constructor that zero initializes a class will clobber the previous property initialization.
+static union ContextsUnion {
+  ContextsUnion() {}
+  ~ContextsUnion() {}
+  ContextsSplit contexts_split;
+  ContextsPreSplit contexts_pre_split;
+} contexts_union;
 static Contexts* contexts = nullptr;
 
 #define SERIAL_DIRTY(serial) ((serial)&1)
@@ -276,15 +283,17 @@ int __system_properties_init() {
   }
   contexts = nullptr;
   if (is_dir(property_filename)) {
-    if (!contexts_split.Initialize(false)) {
+    new (&contexts_union.contexts_split) ContextsSplit();
+    if (!contexts_union.contexts_split.Initialize(false)) {
       return -1;
     }
-    contexts = &contexts_split;
+    contexts = &contexts_union.contexts_split;
   } else {
-    if (!contexts_pre_split.Initialize(false)) {
+    new (&contexts_union.contexts_pre_split) ContextsPreSplit();
+    if (!contexts_union.contexts_pre_split.Initialize(false)) {
       return -1;
     }
-    contexts = &contexts_pre_split;
+    contexts = &contexts_union.contexts_pre_split;
   }
   return 0;
 }
@@ -305,8 +314,9 @@ int __system_property_area_init() {
   }
   // We set this unconditionally as we want tests to continue on regardless of if this failed
   // and property_service will abort on an error condition, so no harm done.
-  contexts = &contexts_split;
-  if (!contexts_split.Initialize(true)) {
+  new (&contexts_union.contexts_split) ContextsSplit;
+  contexts = &contexts_union.contexts_split;
+  if (!contexts_union.contexts_split.Initialize(true)) {
     return -1;
   }
   return 0;
