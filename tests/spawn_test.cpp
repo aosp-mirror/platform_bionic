@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <gtest/gtest.h>
 
+#include "ScopedSignalHandler.h"
 #include "utils.h"
 
 #include <android-base/file.h>
@@ -385,4 +386,42 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
   EXPECT_EQ(static_cast<uint64_t>(1 << (SIGCONT - 1)), ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+}
+
+TEST(spawn, signal_stress) {
+  // Ensure that posix_spawn doesn't restore the caller's signal mask in the
+  // child without first defaulting any caught signals (http://b/68707996).
+  static pid_t parent = getpid();
+
+  pid_t pid = fork();
+  ASSERT_NE(-1, pid);
+
+  if (pid == 0) {
+    for (size_t i = 0; i < 1024; ++i) {
+      kill(0, SIGWINCH);
+      usleep(10);
+    }
+    return;
+  }
+
+  // We test both with and without attributes, because they used to be
+  // different codepaths. We also test with an empty `sigdefault` set.
+  posix_spawnattr_t attr1;
+  posix_spawnattr_init(&attr1);
+
+  sigset_t empty_mask = {};
+  posix_spawnattr_t attr2;
+  posix_spawnattr_init(&attr2);
+  posix_spawnattr_setflags(&attr2, POSIX_SPAWN_SETSIGDEF);
+  posix_spawnattr_setsigdefault(&attr2, &empty_mask);
+
+  posix_spawnattr_t* attrs[] = { nullptr, &attr1, &attr2 };
+
+  ScopedSignalHandler ssh(SIGWINCH, [](int) { ASSERT_EQ(getpid(), parent); });
+
+  ExecTestHelper eth;
+  eth.SetArgs({"true", nullptr});
+  for (size_t i = 0; i < 128; ++i) {
+    posix_spawn(nullptr, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr);
+  }
 }
