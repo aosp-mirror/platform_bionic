@@ -16,6 +16,24 @@
       "revId": "743ce7d204efe5a58da1b2f3e89beb4b39c35f69",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0da43e4d_d7d48661",
+        "filename": "docs/32-bit-abi.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T00:30:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7651728f_b684a1cf",
+      "revId": "743ce7d204efe5a58da1b2f3e89beb4b39c35f69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
