@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b902dde_f94c6c76",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T17:40:26Z",
+      "side": 1,
+      "message": "(i still think this test should just check for the presence of a few particularly interesting representative cases rather than literally everything...)",
+      "revId": "858e33698d947a686fa59ed0206ce7c6656d3439",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
