@@ -33,13 +33,29 @@ increase your target API level, you'll have more and more of the functions
 available. API 12 adds some of the `<unistd.h>` functions, API 21 adds `mmap`,
 and by API 24 you have everything including `<stdio.h>`. See the
 [linker map](libc/libc.map.txt) for full details. Note also that in NDK r16 and
-later, we inline an mmap64 implementation in the headers when you target an API
-before 21 because it's an easy special case that's often needed. This means
-that code using `_FILE_OFFSET_BITS=64` and `mmap` will always compile.
+later, if you're using Clang we'll inline an `mmap64` implementation in the
+headers when you target an API before 21 because it's an easy special case
+that's often needed. This means that code using `_FILE_OFFSET_BITS=64`
+and `mmap` (but no other functions that are unavailable at your target
+API level) will always compile.
 
-If your code stops compiling when you move to NDK r15 or later, removing any
+If your code stops compiling when you move to NDK r15 or later, removing every
 definition of `_FILE_OFFSET_BITS=64` will restore the behavior you used to have:
-you'll have a 32-bit `off_t` and use the 32-bit functions.
+you'll have a 32-bit `off_t` and use the 32-bit functions. Make sure you
+grep thoroughly in both your source and your build system: many people
+aren't aware that `_FILE_OFFSET_BITS` is set. You might also have to
+remove references to `__USE_FILE_OFFSET64` --- this is the internal
+flag that should never be set by user code but sometimes is (by zlib,
+for example). If you think you have removed these but your code still
+doesn't compile, you can insert this just before the line that's failing
+to double check:
+```
+#if _FILE_OFFSET_BITS == 64
+#error "oops, file _FILE_OFFSET_BITS == 64"
+#elif defined(__USE_FILE_OFFSET64)
+#error "oops, __USE_FILE_OFFSET64 is defined"
+#endif
+```
 
 In the 64-bit ABI, `off_t` is always 64-bit.
 
