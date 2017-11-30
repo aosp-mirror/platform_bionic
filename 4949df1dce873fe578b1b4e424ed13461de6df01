@@ -16,6 +16,24 @@
       "revId": "4949df1dce873fe578b1b4e424ed13461de6df01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a37c084e_f5208d70",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T02:38:28Z",
+      "side": 1,
+      "message": "yeah, you\u0027re right. extended the test and fixed this. (i went with a bool because the `continue` was already making me uncomfortable and `continue` *and* duplication seemed a bridge too far...)",
+      "parentUuid": "193c79c4_4a1bb34d",
+      "revId": "4949df1dce873fe578b1b4e424ed13461de6df01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
