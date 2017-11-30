@@ -29,6 +29,7 @@
 #include <regex>
 
 #include <android-base/file.h>
+#include <android-base/macros.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
 

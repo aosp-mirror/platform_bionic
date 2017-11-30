@@ -173,6 +173,7 @@ int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const c
 int fseek(FILE* __fp, long __offset, int __whence);
 long ftell(FILE* __fp);
 
+/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 int fgetpos(FILE* __fp, fpos_t* __pos) __RENAME(fgetpos64) __INTRODUCED_IN(24);
 int fsetpos(FILE* __fp, const fpos_t* __pos) __RENAME(fsetpos64) __INTRODUCED_IN(24);

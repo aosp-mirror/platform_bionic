@@ -1,8 +1,6 @@
-32-bit ABI bugs
-===============
+# 32-bit ABI bugs
 
-`off_t` is 32-bit
------------------
+## 32-bit `off_t` and `_FILE_OFFSET_BITS=64`
 
 On 32-bit Android, `off_t` is a signed 32-bit integer. This limits functions
 that use `off_t` to working on files no larger than 2GiB.
@@ -34,13 +32,35 @@ all functions that take an `off_t` become unavailable. You've asked for their
 increase your target API level, you'll have more and more of the functions
 available. API 12 adds some of the `<unistd.h>` functions, API 21 adds `mmap`,
 and by API 24 you have everything including `<stdio.h>`. See the
-[linker map](libc/libc.map.txt) for full details.
+[linker map](libc/libc.map.txt) for full details. Note also that in NDK r16 and
+later, if you're using Clang we'll inline an `mmap64` implementation in the
+headers when you target an API before 21 because it's an easy special case
+that's often needed. This means that code using `_FILE_OFFSET_BITS=64`
+and `mmap` (but no other functions that are unavailable at your target
+API level) will always compile.
+
+If your code stops compiling when you move to NDK r15 or later, removing every
+definition of `_FILE_OFFSET_BITS=64` will restore the behavior you used to have:
+you'll have a 32-bit `off_t` and use the 32-bit functions. Make sure you
+grep thoroughly in both your source and your build system: many people
+aren't aware that `_FILE_OFFSET_BITS` is set. You might also have to
+remove references to `__USE_FILE_OFFSET64` --- this is the internal
+flag that should never be set by user code but sometimes is (by zlib,
+for example). If you think you have removed these but your code still
+doesn't compile, you can insert this just before the line that's failing
+to double check:
+```
+#if _FILE_OFFSET_BITS == 64
+#error "oops, file _FILE_OFFSET_BITS == 64"
+#elif defined(__USE_FILE_OFFSET64)
+#error "oops, __USE_FILE_OFFSET64 is defined"
+#endif
+```
 
 In the 64-bit ABI, `off_t` is always 64-bit.
 
 
-`sigset_t` is too small for real-time signals
----------------------------------------------
+## `sigset_t` is too small for real-time signals
 
 On 32-bit Android, `sigset_t` is too small for ARM and x86 (but correct for
 MIPS). This means that there is no support for real-time signals in 32-bit
@@ -49,8 +69,7 @@ code.
 In the 64-bit ABI, `sigset_t` is the correct size for every architecture.
 
 
-`time_t` is 32-bit
-------------------
+## `time_t` is 32-bit
 
 On 32-bit Android, `time_t` is 32-bit. The header `<time64.h>` and type
 `time64_t` exist as a workaround, but the kernel interfaces exposed on 32-bit
@@ -58,8 +77,7 @@ Android all use the 32-bit `time_t`.
 
 In the 64-bit ABI, `time_t` is 64-bit.
 
-`pthread_mutex_t` is too small for large pids
----------------------------------------------
+## `pthread_mutex_t` is too small for large pids
 
 This doesn't generally affect Android devices, because on devices
 `/proc/sys/kernel/pid_max` is usually too small to hit the 16-bit limit,
