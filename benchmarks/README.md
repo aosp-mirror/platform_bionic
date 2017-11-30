@@ -16,35 +16,23 @@ Running the benchmarks
     $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
     $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
 
-When operated without specifying an xml file, the default is to use the
-xml file called full.xml found in the directory `suites/` bound in the
-same directory as the bionic-benchmarks executable.
-
-To use a different xml file, use the `--bionic_xml=FILE.XML` option. By
-default, this option searches for the xml file in the `suites/`
-directory. If it doesn't exist in that directory then the file will be
-found as relative to the current directory. If the option specifies the
-full path to an xml file such as `/data/nativetest/suites/example.xml`,
-it will be used as is.
+When operated without specifying an xml file, the default is to run all
+of the benchmarks in alphabetical order.
 
 You can use `--benchmark_filter=getpid` to just run benchmarks with "getpid"
 in their name.
 
 ### Host benchmarks
 
-See the benchmarks/run-on-host.sh script. The default for host tests is
-to use the `host.xml` file in the suites directory instead of `full.xml`.
-The host benchmarks can be run with 32- or 64-bit bionic, or the host glibc.
-
+See the benchmarks/run-on-host.sh script. The host benchmarks can be run
+with 32 bit or 64 bit bionic, or the host glibc.
 
 ## Suites
 
 Suites are stored in the `suites/` directory and can be chosen with the command line flag
-'--bionic_xml'. When operated without specifying an xml file, the default is to use the
-file called `full.xml` found in the directory `suites/` bound in the same directory
-as the bionic-benchmarks executable.
+'--bionic_xml'.
 
-To use a different xml file, use the `--bionic_xml=FILE.XML` option. By default, this
+To choose a specific xml file, use the `--bionic_xml=FILE.XML` option. By default, this
 option searches for the xml file in the `suites/` directory. If it doesn't exist
 in that directory then the file will be found as relative to the current
 directory. If the option specifies the full path to an xml file such as
