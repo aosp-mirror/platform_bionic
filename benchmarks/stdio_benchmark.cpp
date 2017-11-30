@@ -59,22 +59,22 @@ void ReadWriteTest(benchmark::State& state, Fn f, bool buffered) {
 void BM_stdio_fread(benchmark::State& state) {
   ReadWriteTest(state, fread, true);
 }
-BIONIC_BENCHMARK(BM_stdio_fread);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fread, "AT_COMMON_SIZES");
 
 void BM_stdio_fwrite(benchmark::State& state) {
   ReadWriteTest(state, fwrite, true);
 }
-BIONIC_BENCHMARK(BM_stdio_fwrite);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fwrite, "AT_COMMON_SIZES");
 
 void BM_stdio_fread_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fread, false);
 }
-BIONIC_BENCHMARK(BM_stdio_fread_unbuffered);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fread_unbuffered, "AT_COMMON_SIZES");
 
 void BM_stdio_fwrite_unbuffered(benchmark::State& state) {
   ReadWriteTest(state, fwrite, false);
 }
-BIONIC_BENCHMARK(BM_stdio_fwrite_unbuffered);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fwrite_unbuffered, "AT_COMMON_SIZES");
 
 #if !defined(__GLIBC__)
 static void FopenFgetlnFclose(benchmark::State& state, bool no_locking) {
@@ -165,12 +165,12 @@ static void FopenFgetcFclose(benchmark::State& state, bool no_locking) {
 static void BM_stdio_fopen_fgetc_fclose_locking(benchmark::State& state) {
   FopenFgetcFclose(state, false);
 }
-BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_locking);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fopen_fgetc_fclose_locking, "1024");
 
 void BM_stdio_fopen_fgetc_fclose_no_locking(benchmark::State& state) {
   FopenFgetcFclose(state, true);
 }
-BIONIC_BENCHMARK(BM_stdio_fopen_fgetc_fclose_no_locking);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdio_fopen_fgetc_fclose_no_locking, "1024");
 
 static void BM_stdio_printf_literal(benchmark::State& state) {
   while (state.KeepRunning()) {

@@ -20,23 +20,28 @@
 #include <map>
 #include <mutex>
 #include <string>
+#include <utility>
 #include <vector>
 
 typedef void (*benchmark_func_t) (void);
 
 extern std::mutex g_map_lock;
 
-extern std::map<std::string, benchmark_func_t> g_str_to_func;
+extern std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
 
-static int  __attribute__((unused)) EmplaceBenchmark (std::string fn_name, benchmark_func_t fn_ptr) {
+static int  __attribute__((unused)) EmplaceBenchmark (std::string fn_name, benchmark_func_t fn_ptr, std::string arg = "") {
   g_map_lock.lock();
-  g_str_to_func.emplace(std::string(fn_name), fn_ptr);
+  g_str_to_func.emplace(std::string(fn_name), std::make_pair(fn_ptr, arg));
   g_map_lock.unlock();
   return 0;
 }
 
 #define BIONIC_BENCHMARK(n) \
   int _bionic_benchmark_##n __attribute__((unused)) = EmplaceBenchmark(std::string(#n), reinterpret_cast<benchmark_func_t>(n))
+
+#define BIONIC_BENCHMARK_WITH_ARG(n, arg) \
+  int _bionic_benchmark_##n __attribute__((unused)) = EmplaceBenchmark(std::string(#n), reinterpret_cast<benchmark_func_t>(n), arg)
+
 
 constexpr auto KB = 1024;
 
