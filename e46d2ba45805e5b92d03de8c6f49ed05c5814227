@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddc14787_176e6c99",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T16:46:30Z",
+      "side": 1,
+      "message": "do you want to warn, or do you want to also allow that style? it\u0027s not uncommon in makefiles to just always use +\u003d, but i\u0027m not sure whether this is a likely mistake.\n\n(and should L277 be stronger than just a warning? that seems like the most likely bug?)",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03240683_0d410370",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T16:46:30Z",
+      "side": 1,
+      "message": "that was unfortunate. pity we need to be backwards compatible...",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eb9b5fa9_67912f6a",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-11-30T16:46:30Z",
+      "side": 1,
+      "message": "test links too? (and maybe in each case have something like \"a:b\" +\u003d \"c:d\" +\u003d \"e\" for the various possibilities, rather than one on each line?) and test the plain string concatenation you also have? (or disallow it?)\n\nseems like nowhere actually tests that these get the expected values?",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
