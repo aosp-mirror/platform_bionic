@@ -89,38 +89,46 @@ struct __posix_spawnattr {
   int schedpolicy;
   sigset_t sigmask;
   sigset_t sigdefault;
-
-  void Do() {
-    if ((flags & POSIX_SPAWN_SETSIGDEF) != 0) {
-      // POSIX: "If POSIX_SPAWN_SETSIGDEF is set ... signals in sigdefault ... shall be set to
-      // their default actions in the child process."
-      struct sigaction sa = {};
-      sa.sa_handler = SIG_DFL;
-      for (int s = 1; s < _NSIG; ++s) {
-        if (sigismember(&sigdefault, s) && sigaction(s, &sa, nullptr) == -1) _exit(127);
-      }
-    }
-
-    if ((flags & POSIX_SPAWN_SETPGROUP) != 0 && setpgid(0, pgroup) == -1) _exit(127);
-    if ((flags & POSIX_SPAWN_SETSID) != 0 && setsid() == -1) _exit(127);
-
-    // POSIX_SPAWN_SETSCHEDULER overrides POSIX_SPAWN_SETSCHEDPARAM, but it is not an error
-    // to set both.
-    if ((flags & POSIX_SPAWN_SETSCHEDULER) != 0) {
-      if (sched_setscheduler(0, schedpolicy, &schedparam) == -1) _exit(127);
-    } else if ((flags & POSIX_SPAWN_SETSCHEDPARAM) != 0) {
-      if (sched_setparam(0, &schedparam) == -1) _exit(127);
-    }
-
-    if ((flags & POSIX_SPAWN_RESETIDS) != 0) {
-      if (seteuid(getuid()) == -1 || setegid(getgid()) == -1) _exit(127);
-    }
-
-    if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
-      if (sigprocmask(SIG_SETMASK, &sigmask, nullptr)) _exit(127);
-    }
-  }
 };
+
+static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
+  // POSIX: "If POSIX_SPAWN_SETSIGDEF is set ... signals in sigdefault ...
+  // shall be set to their default actions in the child process."
+  // POSIX: "Signals set to be caught by the calling process shall be
+  // set to the default action in the child process."
+  bool use_sigdefault = ((flags & POSIX_SPAWN_SETSIGDEF) != 0);
+  const struct sigaction default_sa = { .sa_handler = SIG_DFL };
+  for (int s = 1; s < _NSIG; ++s) {
+    bool reset = false;
+    if (use_sigdefault && sigismember(&(*attr)->sigdefault, s)) {
+      reset = true;
+    } else {
+      struct sigaction current;
+      if (sigaction(s, nullptr, &current) == -1) _exit(127);
+      reset = (current.sa_handler != SIG_IGN && current.sa_handler != SIG_DFL);
+    }
+    if (reset && sigaction(s, &default_sa, nullptr) == -1) _exit(127);
+  }
+
+  if ((flags & POSIX_SPAWN_SETPGROUP) != 0 && setpgid(0, (*attr)->pgroup) == -1) _exit(127);
+  if ((flags & POSIX_SPAWN_SETSID) != 0 && setsid() == -1) _exit(127);
+
+  // POSIX_SPAWN_SETSCHEDULER overrides POSIX_SPAWN_SETSCHEDPARAM, but it is not an error
+  // to set both.
+  if ((flags & POSIX_SPAWN_SETSCHEDULER) != 0) {
+    if (sched_setscheduler(0, (*attr)->schedpolicy, &(*attr)->schedparam) == -1) _exit(127);
+  } else if ((flags & POSIX_SPAWN_SETSCHEDPARAM) != 0) {
+    if (sched_setparam(0, &(*attr)->schedparam) == -1) _exit(127);
+  }
+
+  if ((flags & POSIX_SPAWN_RESETIDS) != 0) {
+    if (seteuid(getuid()) == -1 || setegid(getgid()) == -1) _exit(127);
+  }
+
+  if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
+    if (sigprocmask(SIG_SETMASK, &(*attr)->sigmask, nullptr)) _exit(127);
+  }
+}
 
 static int posix_spawn(pid_t* pid_ptr,
                        const char* path,
@@ -142,7 +150,7 @@ static int posix_spawn(pid_t* pid_ptr,
 
   if (pid == 0) {
     // Child.
-    if (attr) (*attr)->Do();
+    ApplyAttrs(flags, attr);
     if (actions) (*actions)->Do();
     if ((flags & POSIX_SPAWN_SETSIGMASK) == 0) ssb.reset();
     exec_fn(path, argv, env ? env : environ);
