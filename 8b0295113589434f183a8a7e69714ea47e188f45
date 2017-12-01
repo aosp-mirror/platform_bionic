@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b62375f_00e99abc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-01T17:12:53Z",
+      "side": 1,
+      "message": "e",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 8
+      },
+      "revId": "8b0295113589434f183a8a7e69714ea47e188f45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f400ff6_a2c6b3da",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-01T17:12:53Z",
+      "side": 1,
+      "message": "for",
+      "range": {
+        "startLine": 301,
+        "startChar": 53,
+        "endLine": 301,
+        "endChar": 55
+      },
+      "revId": "8b0295113589434f183a8a7e69714ea47e188f45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64a9c64c_3e739580",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-01T17:12:53Z",
+      "side": 1,
+      "message": "trailing ws",
+      "revId": "8b0295113589434f183a8a7e69714ea47e188f45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
