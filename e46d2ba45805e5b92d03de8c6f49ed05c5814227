@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2ea8e3f5_f7448293",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 286,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-12-01T01:59:28Z",
+      "side": 1,
+      "message": "L277 is tricky. Yes redefinition here is most likely a bug, but if we kill the linker (or return false so that the default ns config is used as a fallback) is worse than just allowing this.\n\n\u003e it\u0027s not uncommon in makefiles to just always use +\u003d\n\nYeah, I know, but I think it is a really bad practice. I\u0027ve seen many hard-to-find bugs due to that (it\u0027s just a single character difference). So, I at least want to give warning here.",
+      "parentUuid": "ddc14787_176e6c99",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03240683_0d410370",
         "filename": "linker/linker_config.cpp",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b77beab2_8f2e9503",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-12-01T01:59:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "03240683_0d410370",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb9b5fa9_67912f6a",
         "filename": "linker/tests/linker_config_test.cpp",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2017-11-30T16:46:30Z",
       "side": 1,
       "message": "test links too? (and maybe in each case have something like \"a:b\" +\u003d \"c:d\" +\u003d \"e\" for the various possibilities, rather than one on each line?) and test the plain string concatenation you also have? (or disallow it?)\n\nseems like nowhere actually tests that these get the expected values?",
+      "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4158a521_8f1a3afc",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-12-01T01:59:28Z",
+      "side": 1,
+      "message": "- tests for .links, .paths, and .namespaces added.\n\n- a:b +\u003d c:d +\u003d e case added each with varying length of whitespaces\n\n- I think I\u0027d better disallow plain string concat (e.g. \"tr\" +\u003d \"ue\"). Done in linker_config.cpp and added a test for that.\n\n- expected values are checked below in run_linker_config_smoke_test() with ASSERT_*",
+      "parentUuid": "eb9b5fa9_67912f6a",
       "revId": "e46d2ba45805e5b92d03de8c6f49ed05c5814227",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
