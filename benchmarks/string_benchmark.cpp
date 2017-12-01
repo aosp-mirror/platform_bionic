@@ -187,6 +187,11 @@ static void BM_string_strcat_half_copy_half_seek(benchmark::State& state) {
   const size_t src_alignment = state.range(1);
   const size_t dst_alignment = state.range(2);
 
+  // Skip sizes that don't make sense.
+  if ((nbytes / 2) == 0) {
+    return;
+  }
+
   std::vector<char> src;
   std::vector<char> dst;
   char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes / 2, 'x');

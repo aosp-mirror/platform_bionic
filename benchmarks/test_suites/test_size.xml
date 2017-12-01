@@ -1,0 +1,25 @@
+<fn>
+  <name>BM_stdio_fwrite</name>
+  <iterations>1</iterations>
+  <args>AT_COMMON_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fread</name>
+  <iterations>1</iterations>
+  <args>AT_SMALL_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fwrite</name>
+  <iterations>1</iterations>
+  <args>AT_MEDIUM_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fread</name>
+  <iterations>1</iterations>
+  <args>AT_LARGE_SIZES</args>
+</fn>
+<fn>
+  <name>BM_stdio_fwrite</name>
+  <iterations>1</iterations>
+  <args>AT_ALL_SIZES</args>
+</fn>

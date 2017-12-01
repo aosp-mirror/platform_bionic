@@ -1,0 +1,30 @@
+<fn>
+  <name>BM_string_strcpy</name>
+  <iterations>1</iterations>
+  <args>AT_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <iterations>1</iterations>
+  <args>AT_ALIGNED_TWOBUF_SMALL</args>
+</fn>
+<fn>
+  <name>BM_string_strcpy</name>
+  <iterations>1</iterations>
+  <args>AT_ALIGNED_TWOBUF_MEDIUM</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <iterations>1</iterations>
+  <args>AT_ALIGNED_TWOBUF_LARGE</args>
+</fn>
+<fn>
+  <name>BM_string_strcpy</name>
+  <iterations>1</iterations>
+  <args>AT_ALIGNED_TWOBUF_ALL</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <iterations>1</iterations>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
