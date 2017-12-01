@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1aec4688_a182d4a1",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2017-12-01T09:45:01Z",
+      "side": 1,
+      "message": "typo. s/in/bin/\n\nPlease place /odm/bin in front of /vendor/bin\n\nI have no idea on /odm/xbin, but I think we have no reason not to have it. Elliott, do you think differently?",
+      "range": {
+        "startLine": 41,
+        "startChar": 92,
+        "endLine": 41,
+        "endChar": 100
+      },
+      "revId": "645587e5590f5ca42dc3ceecd0085cc446e92ccb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
