@@ -146,6 +146,8 @@ class Config {
                                  bool is_asan,
                                  const Config** config,
                                  std::string* error_msg);
+
+  static std::string get_vndk_version_string(const char delimiter);
  private:
   void clear();
 
