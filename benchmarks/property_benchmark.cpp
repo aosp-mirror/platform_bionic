@@ -141,7 +141,7 @@ static void BM_property_get(benchmark::State& state) {
     __system_property_get(pa.names[random() % nprops], value);
   }
 }
-BIONIC_BENCHMARK(BM_property_get);
+BIONIC_BENCHMARK_WITH_ARG(BM_property_get, "NUM_PROPS");
 
 static void BM_property_find(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -153,7 +153,7 @@ static void BM_property_find(benchmark::State& state) {
     __system_property_find(pa.names[random() % nprops]);
   }
 }
-BIONIC_BENCHMARK(BM_property_find);
+BIONIC_BENCHMARK_WITH_ARG(BM_property_find, "NUM_PROPS");
 
 static void BM_property_read(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -176,7 +176,7 @@ static void BM_property_read(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BIONIC_BENCHMARK(BM_property_read);
+BIONIC_BENCHMARK_WITH_ARG(BM_property_read, "NUM_PROPS");
 
 static void BM_property_serial(benchmark::State& state) {
   const size_t nprops = state.range(0);
@@ -197,6 +197,6 @@ static void BM_property_serial(benchmark::State& state) {
 
   delete[] pinfo;
 }
-BIONIC_BENCHMARK(BM_property_serial);
+BIONIC_BENCHMARK_WITH_ARG(BM_property_serial, "NUM_PROPS");
 
 #endif  // __BIONIC__

@@ -23,21 +23,55 @@
 #include <mutex>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/stringprintf.h>
 #include <android-base/strings.h>
 #include <benchmark/benchmark.h>
 #include <tinyxml2.h>
 #include "util.h"
 
-#if defined(__ANDROID__)
-static constexpr const char* kDefaultSuite="full.xml";
-#else
-static constexpr const char* kDefaultSuite="host.xml";
-#endif
+static const std::vector<int> kCommonSizes{
+  8,
+  64,
+  512,
+  1 * KB,
+  8 * KB,
+  16 * KB,
+  32 * KB,
+  64 * KB,
+  128 * KB,
+};
 
-std::map<std::string, benchmark_func_t> g_str_to_func;
+static const std::vector<int> kSmallSizes{
+  // Increment by 1
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+  // Increment by 8
+  24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144,
+  // Increment by 16
+  160, 176, 192, 208, 224, 240, 256,
+};
+
+static const std::vector<int> kMediumSizes{
+  512,
+  1 * KB,
+  8 * KB,
+  16 * KB,
+  32 * KB,
+  64 * KB,
+  128 * KB,
+};
+
+static const std::vector<int> kLargeSizes{
+  256 * KB,
+  512 * KB,
+  1024 * KB,
+  2048 * KB,
+};
+
+std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
 
 std::mutex g_map_lock;
 
@@ -177,13 +211,85 @@ void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, long cp
   reinterpret_cast<void(*) (benchmark::State&)>(func_to_bench)(state);
 }
 
+static constexpr char kOnebufManualStr[] = "AT_ONEBUF_MANUAL_ALIGN_";
+static constexpr char kTwobufManualStr[] = "AT_TWOBUF_MANUAL_ALIGN1_";
+
+static bool ParseOnebufManualStr(std::string& arg, std::vector<int>* values) {
+  // The format of this is:
+  //   AT_ONEBUF_MANUAL_ALIGN_XX_SIZE_YY
+  // Where:
+  //   XX is the alignment
+  //   YY is the size
+  int align;
+  int size;
+  if (sscanf(arg.c_str(), "AT_ONEBUF_MANUAL_ALIGN_%d_SIZE_%d" , &align, &size) != 2) {
+    return false;
+  }
+
+  if (align != 0 && (align & (align - 1)) != 0) {
+    return false;
+  }
+
+  values->push_back(static_cast<int>(size));
+  values->push_back(static_cast<int>(align));
+  return true;
+}
+
+static bool ParseTwobufManualStr(std::string& arg, std::vector<int>* values) {
+  // The format of this is:
+  //   AT_TWOBUF_MANUAL_ALIGN1_XX_ALIGN2_YY_SIZE_ZZ
+  // Where:
+  //   XX is the alignment of the first argument
+  //   YY is the alignment of the second argument
+  //   ZZ is the size
+  int align1;
+  int align2;
+  int size;
+  if (sscanf(arg.c_str(), "AT_TWOBUF_MANUAL_ALIGN1_%d_ALIGN2_%d_SIZE_%d" ,
+             &align1, &align2, &size) != 3) {
+    return false;
+  }
+
+  // Verify the alignments are powers of 2.
+  if ((align1 != 0 && (align1 & (align1 - 1)) != 0)
+      || (align2 != 0 && (align2 & (align2 - 1)) != 0)) {
+    return false;
+  }
+
+  values->push_back(static_cast<int>(size));
+  values->push_back(static_cast<int>(align1));
+  values->push_back(static_cast<int>(align2));
+  return true;
+}
+
 args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
                            std::map<std::string, args_vector_t>& args_shorthand) {
-  // args is either a space-separated list of ints or a macro name.
+  // args is either a space-separated list of ints, a macro name, or
+  // special free form macro.
   // To ease formatting in XML files, args is left and right trimmed.
   if (args_shorthand.count(args)) {
     return &args_shorthand[args];
   }
+  // Check for free form macro.
+  if (android::base::StartsWith(args, kOnebufManualStr)) {
+    std::vector<int> values;
+    if (!ParseOnebufManualStr(args, &values)) {
+      errx(1, "ERROR: Bad format of macro %s, should be AT_ONEBUF_MANUAL_ALIGN_XX_SIZE_YY",
+           args.c_str());
+    }
+    to_populate->push_back(std::move(values));
+    return to_populate;
+  } else if (android::base::StartsWith(args, kTwobufManualStr)) {
+    std::vector<int> values;
+    if (!ParseTwobufManualStr(args, &values)) {
+      errx(1,
+           "ERROR: Bad format of macro %s, should be AT_TWOBUF_MANUAL_ALIGN1_XX_ALIGNE2_YY_SIZE_ZZ",
+           args.c_str());
+    }
+    to_populate->push_back(std::move(values));
+    return to_populate;
+  }
+
   to_populate->push_back(std::vector<int>());
   std::stringstream sstream(args);
   std::string argstr;
@@ -213,9 +319,10 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
     cpu_to_use = secondary_opts.cpu_to_lock;
   }
 
+  benchmark_func_t benchmark_function = g_str_to_func.at(fn_name).first;
   for (std::vector<int> args : (*run_args)) {
     auto registration = benchmark::RegisterBenchmark(fn_name.c_str(), LockAndRun,
-                                                     g_str_to_func.at(fn_name),
+                                                     benchmark_function,
                                                      cpu_to_use)->Args(args);
     if (iterations_to_use > 0) {
       registration->Iterations(iterations_to_use);
@@ -310,27 +417,66 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
   return 0;
 }
 
-std::map<std::string, args_vector_t> GetShorthand() {
-  std::map<std::string, args_vector_t> args_shorthand {
-    {"AT_ALIGNED_TWOBUF", args_vector_t{ {8, 0, 0},
-                                         {64, 0, 0},
-                                         {512, 0, 0},
-                                         {1 * KB, 0, 0},
-                                         {8 * KB, 0, 0},
-                                         {16 * KB, 0, 0},
-                                         {32 * KB, 0, 0},
-                                         {64 * KB, 0, 0} }},
-    {"AT_ALIGNED_ONEBUF", args_vector_t{ {(8), 0},
-                                         {(64), 0},
-                                         {(512), 0},
-                                         {(1*KB), 0},
-                                         {(8*KB), 0},
-                                         {(16*KB), 0},
-                                         {(32*KB), 0},
-                                         {(64*KB), 0}}},
+static void SetArgs(const std::vector<int>& sizes, args_vector_t* args) {
+  for (int size : sizes) {
+    args->push_back({size});
+  }
+}
 
-    {"AT_COMMON_SIZES", args_vector_t{ {8}, {64}, {512}, {1*KB}, {8*KB}, {16*KB},
-                                                       {32*KB}, {64*KB}}},
+static void SetArgs(const std::vector<int>& sizes, int align, args_vector_t* args) {
+  for (int size : sizes) {
+    args->push_back({size, align});
+  }
+}
+
+
+static void SetArgs(const std::vector<int>& sizes, int align1, int align2, args_vector_t* args) {
+  for (int size : sizes) {
+    args->push_back({size, align1, align2});
+  }
+}
+
+static args_vector_t GetArgs(const std::vector<int>& sizes) {
+  args_vector_t args;
+  SetArgs(sizes, &args);
+  return args;
+}
+
+static args_vector_t GetArgs(const std::vector<int>& sizes, int align) {
+  args_vector_t args;
+  SetArgs(sizes, align, &args);
+  return args;
+}
+
+static args_vector_t GetArgs(const std::vector<int>& sizes, int align1, int align2) {
+  args_vector_t args;
+  SetArgs(sizes, align1, align2, &args);
+  return args;
+}
+
+std::map<std::string, args_vector_t> GetShorthand() {
+  std::vector<int> all_sizes(kSmallSizes);
+  all_sizes.insert(all_sizes.end(), kMediumSizes.begin(), kMediumSizes.end());
+  all_sizes.insert(all_sizes.end(), kLargeSizes.begin(), kLargeSizes.end());
+
+  std::map<std::string, args_vector_t> args_shorthand {
+    {"AT_COMMON_SIZES", GetArgs(kCommonSizes)},
+    {"AT_SMALL_SIZES", GetArgs(kSmallSizes)},
+    {"AT_MEDIUM_SIZES", GetArgs(kMediumSizes)},
+    {"AT_LARGE_SIZES", GetArgs(kLargeSizes)},
+    {"AT_ALL_SIZES", GetArgs(all_sizes)},
+
+    {"AT_ALIGNED_ONEBUF", GetArgs(kCommonSizes, 0)},
+    {"AT_ALIGNED_ONEBUF_SMALL", GetArgs(kSmallSizes, 0)},
+    {"AT_ALIGNED_ONEBUF_MEDIUM", GetArgs(kMediumSizes, 0)},
+    {"AT_ALIGNED_ONEBUF_LARGE", GetArgs(kLargeSizes, 0)},
+    {"AT_ALIGNED_ONEBUF_ALL", GetArgs(all_sizes, 0)},
+
+    {"AT_ALIGNED_TWOBUF", GetArgs(kCommonSizes, 0, 0)},
+    {"AT_ALIGNED_TWOBUF_SMALL", GetArgs(kSmallSizes, 0, 0)},
+    {"AT_ALIGNED_TWOBUF_MEDIUM", GetArgs(kMediumSizes, 0, 0)},
+    {"AT_ALIGNED_TWOBUF_LARGE", GetArgs(kLargeSizes, 0, 0)},
+    {"AT_ALIGNED_TWOBUF_ALL", GetArgs(all_sizes, 0, 0)},
 
     // Do not exceed 512. that is about the largest number of properties
     // that can be created with the current property area size.
@@ -338,38 +484,59 @@ std::map<std::string, args_vector_t> GetShorthand() {
 
     {"MATH_COMMON", args_vector_t{ {0}, {1}, {2}, {3} }}
   };
-  for (int i = 1; i < 15; i++) {
-    int align = pow(2, i);
-    std::stringstream sstream;
-    sstream << "AT_" << align << "_ALIGN_TWOBUF";
-    args_shorthand.emplace(sstream.str(),
-                           args_vector_t{ {8, align, align},
-                                          {64, align, align},
-                                          {512, align, align},
-                                          {1 * KB, align, align},
-                                          {8 * KB, align, align},
-                                          {16 * KB, align, align},
-                                          {32 * KB, align, align},
-                                          {64 * KB, align, align} });
-    sstream.str("");
-    sstream << "AT_" << align << "_ALIGN_ONEBUF";
-    args_shorthand.emplace(sstream.str(),
-                            args_vector_t{ {(8), align},
-                                           {(64), align},
-                                           {(512), align},
-                                           {(1*KB), align},
-                                           {(8*KB), align},
-                                           {(16*KB), align},
-                                           {(32*KB), align},
-                                           {(64*KB), align} });
-    sstream.str("");
+
+  args_vector_t args_onebuf;
+  args_vector_t args_twobuf;
+  for (int size : all_sizes) {
+    args_onebuf.push_back({size, 0});
+    args_twobuf.push_back({size, 0, 0});
+    // Skip alignments on zero sizes.
+    if (size == 0) {
+      continue;
+    }
+    for (int align1 = 1; align1 <= 32; align1 <<= 1) {
+      args_onebuf.push_back({size, align1});
+      for (int align2 = 1; align2 <= 32; align2 <<= 1) {
+        args_twobuf.push_back({size, align1, align2});
+      }
+    }
   }
+  args_shorthand.emplace("AT_MANY_ALIGNED_ONEBUF", args_onebuf);
+  args_shorthand.emplace("AT_MANY_ALIGNED_TWOBUF", args_twobuf);
+
   return args_shorthand;
 }
 
 static bool FileExists(const std::string& file) {
   struct stat st;
   return stat(file.c_str(), &st) != -1 && S_ISREG(st.st_mode);
+}
+
+void RegisterAllBenchmarks(const bench_opts_t& opts,
+                           std::map<std::string, args_vector_t>& args_shorthand) {
+  // Add the property tests at the end since they might cause segfaults in
+  // tests running afterwards (b/62197783).
+  std::vector<std::string> prop_tests;
+
+  for (auto& entry : g_str_to_func) {
+    if (android::base::StartsWith(entry.first, "BM_property_")) {
+      prop_tests.push_back(entry.first);
+    } else {
+      auto& function_info = entry.second;
+      args_vector_t arg_vector;
+      args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
+                                            args_shorthand);
+      RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
+    }
+  }
+
+  for (auto& prop_name : prop_tests) {
+    auto& function_info = g_str_to_func.at(prop_name);
+    args_vector_t arg_vector;
+    args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
+                                          args_shorthand);
+    RegisterGoogleBenchmarks(bench_opts_t(), opts, prop_name, run_args);
+  }
 }
 
 int main(int argc, char** argv) {
@@ -381,12 +548,7 @@ int main(int argc, char** argv) {
   if (opts.xmlpath.empty()) {
     // Don't add the default xml file if a user is specifying the tests to run.
     if (opts.extra_benchmarks.empty()) {
-      // Try and use the default.
-      opts.xmlpath = android::base::GetExecutableDirectory() + "/suites/" + kDefaultSuite;
-      if (!FileExists(opts.xmlpath)) {
-        printf("Cannot find default xml file %s\n", kDefaultSuite);
-        return 1;
-      }
+      RegisterAllBenchmarks(opts, args_shorthand);
     }
   } else if (!FileExists(opts.xmlpath)) {
     // See if this is a file in the suites directory.
