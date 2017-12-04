@@ -50,7 +50,8 @@
 class ConfigParser {
  public:
   enum {
-    kProperty,
+    kPropertyAssign,
+    kPropertyAppend,
     kSection,
     kEndOfFile,
     kError,
@@ -61,7 +62,8 @@ class ConfigParser {
 
   /*
    * Possible return values
-   * kProperty: name is set to property name and value is set to property value
+   * kPropertyAssign: name is set to property name and value is set to property value
+   * kPropertyAppend: same as kPropertyAssign, but the value should be appended
    * kSection: name is set to section name.
    * kEndOfFile: reached end of file.
    * kError: error_msg is set.
@@ -81,17 +83,24 @@ class ConfigParser {
         return kSection;
       }
 
-      found = line.find('=');
-      if (found == std::string::npos) {
-        *error_msg = std::string("invalid format: ") +
-                    line +
-                    ", expected \"name = property\" or \"[section]\"";
-        return kError;
+      size_t found_assign = line.find('=');
+      size_t found_append = line.find("+=");
+      if (found_assign != std::string::npos && found_append == std::string::npos) {
+        *name = android::base::Trim(line.substr(0, found_assign));
+        *value = android::base::Trim(line.substr(found_assign + 1));
+        return kPropertyAssign;
       }
 
-      *name = android::base::Trim(line.substr(0, found));
-      *value = android::base::Trim(line.substr(found + 1));
-      return kProperty;
+      if (found_append != std::string::npos) {
+        *name = android::base::Trim(line.substr(0, found_append));
+        *value = android::base::Trim(line.substr(found_append + 2));
+        return kPropertyAppend;
+      }
+
+      *error_msg = std::string("invalid format: ") +
+                   line +
+                   ", expected \"name = property\", \"name += property\", or \"[section]\"";
+      return kError;
     }
 
     // to avoid infinite cycles when programmer makes a mistake
@@ -140,6 +149,14 @@ class PropertyValue {
 
   const std::string& value() const {
     return value_;
+  }
+
+  void append_value(std::string&& value) {
+    value_ = value_ + value;
+    // lineno isn't updated as we might have cases like this:
+    // property.x = blah
+    // property.y = blah
+    // property.x += blah
   }
 
   size_t lineno() const {
@@ -195,7 +212,7 @@ static bool parse_config_file(const char* ld_config_file_path,
       return false;
     }
 
-    if (result == ConfigParser::kProperty) {
+    if (result == ConfigParser::kPropertyAssign) {
       if (!android::base::StartsWith(name, "dir.")) {
         DL_WARN("error parsing %s:%zd: unexpected property name \"%s\", "
                 "expected format dir.<section_name> (ignoring this line)",
@@ -256,7 +273,7 @@ static bool parse_config_file(const char* ld_config_file_path,
       break;
     }
 
-    if (result == ConfigParser::kProperty) {
+    if (result == ConfigParser::kPropertyAssign) {
       if (properties->find(name) != properties->end()) {
         DL_WARN("%s:%zd: warning: property \"%s\" redefinition",
                 ld_config_file_path,
@@ -265,6 +282,29 @@ static bool parse_config_file(const char* ld_config_file_path,
       }
 
       (*properties)[name] = PropertyValue(std::move(value), cp.lineno());
+    } else if (result == ConfigParser::kPropertyAppend) {
+      if (properties->find(name) == properties->end()) {
+        DL_WARN("%s:%zd: warning: appending to property \"%s\" which isn't defined",
+                ld_config_file_path,
+                cp.lineno(),
+                name.c_str());
+        (*properties)[name] = PropertyValue(std::move(value), cp.lineno());
+      } else {
+        if (android::base::EndsWith(name, ".links") ||
+            android::base::EndsWith(name, ".namespaces")) {
+          value = "," + value;
+          (*properties)[name].append_value(std::move(value));
+        } else if (android::base::EndsWith(name, ".paths") ||
+                   android::base::EndsWith(name, ".shared_libs")) {
+          value = ":" + value;
+          (*properties)[name].append_value(std::move(value));
+        } else {
+          DL_WARN("%s:%zd: warning: += isn't allowed to property \"%s\". Ignoring.",
+                  ld_config_file_path,
+                  cp.lineno(),
+                  name.c_str());
+        }
+      }
     }
 
     if (result == ConfigParser::kError) {
