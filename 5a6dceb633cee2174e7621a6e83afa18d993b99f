@@ -16,6 +16,24 @@
       "revId": "5a6dceb633cee2174e7621a6e83afa18d993b99f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4757371_fad25111",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-04T22:39:10Z",
+      "side": 1,
+      "message": "It is not defined when I compile arm64 or arm (marked as __ARCH_WANT_SYSCALL_DEPRECATED)\n\nIt is only defined in the kernel for x86 and mips.",
+      "parentUuid": "507e8c0e_192bc839",
+      "revId": "5a6dceb633cee2174e7621a6e83afa18d993b99f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
