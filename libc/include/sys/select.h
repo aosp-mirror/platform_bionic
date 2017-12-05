@@ -37,39 +37,40 @@
 
 __BEGIN_DECLS
 
+typedef unsigned long fd_mask;
+
 #define FD_SETSIZE 1024
-#define NFDBITS (8 * sizeof(unsigned long))
-#define __FDSET_LONGS (FD_SETSIZE/NFDBITS)
+#define NFDBITS (8 * sizeof(fd_mask))
 
 typedef struct {
-  unsigned long fds_bits[__FDSET_LONGS];
+  fd_mask fds_bits[FD_SETSIZE/NFDBITS];
 } fd_set;
 
 #define __FDELT(fd) ((fd) / NFDBITS)
 #define __FDMASK(fd) (1UL << ((fd) % NFDBITS))
-#define __FDS_BITS(set) (__BIONIC_CAST(static_cast, fd_set*, set)->fds_bits)
+#define __FDS_BITS(type,set) (__BIONIC_CAST(static_cast, type, set)->fds_bits)
 
 /* Inline loop so we don't have to declare memset. */
 #define FD_ZERO(set) \
   do { \
     size_t __i; \
-    for (__i = 0; __i < __FDSET_LONGS; ++__i) { \
+    for (__i = 0; __i < sizeof(fd_set)/sizeof(fd_mask); ++__i) { \
       (set)->fds_bits[__i] = 0; \
     } \
   } while (0)
 
 void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
-int __FD_ISSET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
+int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
 
 #if defined(__BIONIC_FORTIFY) && __ANDROID_API__ >= __ANDROID_API_L__
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
 #define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 #else
-#define FD_CLR(fd, set) (__FDS_BITS(set)[__FDELT(fd)] &= ~__FDMASK(fd))
-#define FD_SET(fd, set) (__FDS_BITS(set)[__FDELT(fd)] |= __FDMASK(fd))
-#define FD_ISSET(fd, set) ((__FDS_BITS(set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
+#define FD_CLR(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd))
+#define FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))
+#define FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 #endif /* defined(__BIONIC_FORTIFY) && __ANDROID_API >= 21 */
 
 int select(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, struct timeval* __timeout);
