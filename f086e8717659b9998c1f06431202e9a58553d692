@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67b3efd6_d5371aba",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-05T16:33:00Z",
+      "side": 1,
+      "message": "Or do we want ksh/bash/sh glob matching (::fnmatch(fn_name.c_str(), func.first.c_str(), FNM_EXTMATCH)? OR \u003cghasp\u003e both (check fnmatch first, then try regex_match)?",
+      "range": {
+        "startLine": 315,
+        "startChar": 10,
+        "endLine": 315,
+        "endChar": 92
+      },
+      "revId": "f086e8717659b9998c1f06431202e9a58553d692",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c8ba498_ca54f6b7",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-05T16:33:00Z",
+      "side": 1,
+      "message": "func.first.c_str()? more flexible/hardened because works with alternate matching algorithms regex_match or fnmatch.",
+      "range": {
+        "startLine": 316,
+        "startChar": 63,
+        "endLine": 316,
+        "endChar": 79
+      },
+      "revId": "f086e8717659b9998c1f06431202e9a58553d692",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
