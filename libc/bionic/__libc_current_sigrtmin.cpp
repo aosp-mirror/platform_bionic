@@ -28,10 +28,11 @@
 
 #include <signal.h>
 
-// POSIX timers use __SIGRTMIN + 0.
-// libbacktrace uses __SIGRTMIN + 1.
-// libcore uses __SIGRTMIN + 2.
-// __SIGRTMIN + 3 is reserved for triggering native stack dumps.
+// Realtime signals reserved for internal use:
+//   32 (__SIGRTMIN + 0)        POSIX timers
+//   33 (__SIGRTMIN + 1)        libbacktrace
+//   34 (__SIGRTMIN + 2)        libcore
+//   35 (__SIGRTMIN + 3)        debuggerd -b
 
 int __libc_current_sigrtmin(void) {
   // If you change this, also change __ndk_legacy___libc_current_sigrtmin
