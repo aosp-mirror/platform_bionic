@@ -179,3 +179,8 @@ TEST(sys_select, pselect_smoke) {
 
   DelayedWriteCleanup(pid, fd);
 }
+
+TEST(sys_select, FD_ISSET_const) {
+  const fd_set none = {};
+  ASSERT_FALSE(FD_ISSET(atoi("0"), &none));
+}
