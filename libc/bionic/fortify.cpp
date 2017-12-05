@@ -78,7 +78,7 @@
 //   http://gcc.gnu.org/ml/gcc-patches/2004-09/msg02055.html
 //
 
-int __FD_ISSET_chk(int fd, fd_set* set, size_t set_size) {
+int __FD_ISSET_chk(int fd, const fd_set* set, size_t set_size) {
   __check_fd_set("FD_ISSET", fd, set_size);
   return FD_ISSET(fd, set);
 }
