@@ -41,6 +41,7 @@
 #include <linux/elf-em.h>
 
 /* http://www.sco.com/developers/gabi/latest/ch4.intro.html */
+typedef __u64 Elf32_Xword;
 typedef __s64 Elf32_Sxword;
 
 typedef struct {
@@ -70,8 +71,63 @@ typedef struct {
   Elf64_Xword ch_addralign;
 } Elf64_Chdr;
 
+typedef struct {
+  Elf32_Word l_name;
+  Elf32_Word l_time_stamp;
+  Elf32_Word l_checksum;
+  Elf32_Word l_version;
+  Elf32_Word l_flags;
+} Elf32_Lib;
+typedef struct {
+  Elf64_Word l_name;
+  Elf64_Word l_time_stamp;
+  Elf64_Word l_checksum;
+  Elf64_Word l_version;
+  Elf64_Word l_flags;
+} Elf64_Lib;
+/* ElfW(Lib)::l_flags values. */
+#define LL_NONE 0x0
+#define LL_EXACT_MATCH 0x1
+#define LL_IGNORE_INT_VER 0x2
+#define LL_REQUIRE_MINOR 0x4
+#define LL_EXPORTS 0x8
+#define LL_DELAY_LOAD 0x10
+#define LL_DELTA 0x20
+
+typedef struct {
+  Elf32_Xword m_value;
+  Elf32_Word m_info;
+  Elf32_Word m_poffset;
+  Elf32_Half m_repeat;
+  Elf32_Half m_stride;
+} Elf32_Move;
+typedef struct {
+  Elf64_Xword m_value;
+  Elf64_Xword m_info;
+  Elf64_Xword m_poffset;
+  Elf64_Half m_repeat;
+  Elf64_Half m_stride;
+} Elf64_Move;
+
 typedef __u16 Elf32_Section;
 typedef __u16 Elf64_Section;
+
+typedef struct {
+  Elf32_Half si_boundto;
+  Elf32_Half si_flags;
+} Elf32_Syminfo;
+typedef struct {
+  Elf64_Half si_boundto;
+  Elf64_Half si_flags;
+} Elf64_Syminfo;
+/* ElfW(Syminfo)::si_boundto values. */
+#define SYMINFO_BT_SELF 0xffff
+#define SYMINFO_BT_PARENT 0xfffe
+/* ElfW(Syminfo)::si_flags values. */
+#define SYMINFO_FLG_DIRECT 0x1
+#define SYMINFO_FLG_PASSTHRU 0x2
+#define SYMINFO_FLG_COPY 0x4
+#define SYMINFO_FLG_LAZYLOAD 0x8
 
 typedef Elf32_Half Elf32_Versym;
 typedef Elf64_Half Elf64_Versym;
