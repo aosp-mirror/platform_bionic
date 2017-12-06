@@ -1270,29 +1270,49 @@ TEST(dlext, ns_shared) {
 
   std::string shared_libs = g_core_shared_libs + ":" + g_public_lib;
 
+  // create a parent namespace to use instead of the default namespace. This is
+  // to make this test be independent from the configuration of the default
+  // namespace.
+  android_namespace_t* ns_parent =
+          android_create_namespace("parent",
+                                   nullptr,
+                                   nullptr,
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns_parent != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_parent, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_parent;
+
   const std::string lib_public_path = get_testlib_root() + "/public_namespace_libs/" + g_public_lib;
-  void* handle_public = dlopen(lib_public_path.c_str(), RTLD_NOW);
+  void* handle_public = android_dlopen_ext(lib_public_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_public != nullptr) << dlerror();
 
   android_set_application_target_sdk_version(42U); // something > 23
 
   ASSERT_TRUE(android_init_anonymous_namespace(shared_libs.c_str(), nullptr)) << dlerror();
 
-  // preload this library to the default namespace to check if it
+  // preload this library to the parent namespace to check if it
   // is shared later on.
   void* handle_dlopened =
-          dlopen((get_testlib_root() + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW);
+          android_dlopen_ext((get_testlib_root() + "/private_namespace_libs/libnstest_dlopened.so").c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_dlopened != nullptr) << dlerror();
 
+  // create two child namespaces of 'ns_parent'. One with regular, the other
+  // with isolated & shared.
   android_namespace_t* ns_not_isolated =
           android_create_namespace("private",
                                    nullptr,
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_REGULAR,
                                    nullptr,
-                                   nullptr);
+                                   ns_parent);
   ASSERT_TRUE(ns_not_isolated != nullptr) << dlerror();
-  ASSERT_TRUE(android_link_namespaces(ns_not_isolated, nullptr, shared_libs.c_str())) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_not_isolated, ns_parent, g_public_lib)) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_not_isolated, nullptr, g_core_shared_libs.c_str())) << dlerror();
 
   android_namespace_t* ns_isolated_shared =
           android_create_namespace("private_isolated_shared",
@@ -1300,23 +1320,22 @@ TEST(dlext, ns_shared) {
                                    (get_testlib_root() + "/private_namespace_libs").c_str(),
                                    ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_SHARED,
                                    nullptr,
-                                   nullptr);
+                                   ns_parent);
   ASSERT_TRUE(ns_isolated_shared != nullptr) << dlerror();
-  ASSERT_TRUE(android_link_namespaces(ns_isolated_shared, nullptr, shared_libs.c_str())) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_isolated_shared, ns_parent, g_public_lib)) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_isolated_shared, nullptr, g_core_shared_libs.c_str())) << dlerror();
 
-  ASSERT_TRUE(dlopen(root_lib, RTLD_NOW) == nullptr);
+  ASSERT_TRUE(android_dlopen_ext(root_lib, RTLD_NOW, &extinfo) == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnstest_root_not_isolated.so\" not found", dlerror());
 
   std::string lib_private_external_path =
       get_testlib_root() + "/private_namespace_libs_external/libnstest_private_external.so";
 
-  // Load lib_private_external_path to default namespace
+  // Load lib_private_external_path to the parent namespace
   // (it should remain invisible for the isolated namespaces after this)
-  void* handle = dlopen(lib_private_external_path.c_str(), RTLD_NOW);
+  void* handle = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns_not_isolated;
 
   void* handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
