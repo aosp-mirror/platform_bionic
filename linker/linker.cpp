@@ -90,13 +90,17 @@ static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir     = "/system/lib64";
+static const char* const kOdmLibDir        = "/odm/lib64";
 static const char* const kVendorLibDir     = "/vendor/lib64";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib64";
+static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib64";
 #else
 static const char* const kSystemLibDir     = "/system/lib";
+static const char* const kOdmLibDir        = "/odm/lib";
 static const char* const kVendorLibDir     = "/vendor/lib";
 static const char* const kAsanSystemLibDir = "/data/asan/system/lib";
+static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
 #endif
 
@@ -104,6 +108,7 @@ static const char* const kAsanLibDirPrefix = "/data/asan";
 
 static const char* const kDefaultLdPaths[] = {
   kSystemLibDir,
+  kOdmLibDir,
   kVendorLibDir,
   nullptr
 };
@@ -111,6 +116,8 @@ static const char* const kDefaultLdPaths[] = {
 static const char* const kAsanDefaultLdPaths[] = {
   kAsanSystemLibDir,
   kSystemLibDir,
+  kAsanOdmLibDir,
+  kOdmLibDir,
   kAsanVendorLibDir,
   kVendorLibDir,
   nullptr
