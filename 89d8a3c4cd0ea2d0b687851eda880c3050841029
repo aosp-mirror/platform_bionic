@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae7681e2_fa0fdd4d",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-06T01:41:24Z",
+      "side": 1,
+      "message": "Is there a canonical place to find these definitions? I didn\u0027t see them in the url above.",
+      "range": {
+        "startLine": 80,
+        "startChar": 2,
+        "endLine": 80,
+        "endChar": 11
+      },
+      "revId": "89d8a3c4cd0ea2d0b687851eda880c3050841029",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
