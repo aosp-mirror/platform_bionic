@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_getres)
+ENTRY(__clock_getres)
     .set noreorder
     .cpload $t9
     li $v0, __NR_clock_getres
@@ -16,4 +16,5 @@ ENTRY(clock_getres)
     j $t9
     nop
     .set reorder
-END(clock_getres)
+END(__clock_getres)
+.hidden __clock_getres

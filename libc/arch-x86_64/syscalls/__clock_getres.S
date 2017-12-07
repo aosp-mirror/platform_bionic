@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_getres)
+ENTRY(__clock_getres)
     movl    $__NR_clock_getres, %eax
     syscall
     cmpq    $-MAX_ERRNO, %rax
@@ -12,4 +12,5 @@ ENTRY(clock_getres)
     call    __set_errno_internal
 1:
     ret
-END(clock_getres)
+END(__clock_getres)
+.hidden __clock_getres

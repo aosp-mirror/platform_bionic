@@ -42,6 +42,15 @@ int clock_gettime(int clock_id, timespec* tp) {
   return __clock_gettime(clock_id, tp);
 }
 
+int clock_getres(int clock_id, timespec* tp) {
+  auto vdso_clock_getres = reinterpret_cast<decltype(&clock_getres)>(
+    __libc_globals->vdso[VDSO_CLOCK_GETRES].fn);
+  if (__predict_true(vdso_clock_getres)) {
+    return vdso_return(vdso_clock_getres(clock_id, tp));
+  }
+  return __clock_getres(clock_id, tp);
+}
+
 int gettimeofday(timeval* tv, struct timezone* tz) {
   auto vdso_gettimeofday = reinterpret_cast<decltype(&gettimeofday)>(
     __libc_globals->vdso[VDSO_GETTIMEOFDAY].fn);
@@ -54,6 +63,7 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
 void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
   auto&& vdso = globals->vdso;
   vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, nullptr };
+  vdso[VDSO_CLOCK_GETRES] = { VDSO_CLOCK_GETRES_SYMBOL, nullptr };
   vdso[VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, nullptr };
 
   // Do we have a vdso?
