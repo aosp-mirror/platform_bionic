@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a61ffad_3f5628b7",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-07T22:29:22Z",
+      "side": 1,
+      "message": "X must be some char less than \u0027-\u0027, and Y must be some char after \u0027-\u0027. Literally, X--Y is [X] + [-] + [--Y]. (I\u0027m not sure there\u0027s a better way to write this.)",
+      "revId": "0d3ba1f04701e8ba0f8bd0cd6a0f4c8bb9d558b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
