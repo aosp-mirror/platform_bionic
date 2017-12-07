@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e21bd8fd_36793541",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-07T18:57:34Z",
+      "side": 1,
+      "message": "Are we happy that this is out of the way for the known FNM_* flags, or should we add a \u0027nested\u0027 boolean to fnmatch_ch and extmatch so there is no doubt?",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 38
+      },
+      "revId": "08bc8bbcd2277f49acb0d684d0f01954e1ba96d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19068b0b_15d8dd6e",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-07T18:57:34Z",
+      "side": 1,
+      "message": "Tempered by the following comment about moving \u0027*\u0027 checking into fnmatch_ch: speed is not an issue here, allow this to be dynamically allocated, the buffer pointer itself replacing set_pattern for the associated logic.",
+      "range": {
+        "startLine": 312,
+        "startChar": 0,
+        "endLine": 312,
+        "endChar": 21
+      },
+      "revId": "08bc8bbcd2277f49acb0d684d0f01954e1ba96d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97883310_854ef253",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-07T18:57:34Z",
+      "side": 1,
+      "message": "We only add this because fnmatch_ch does not process \u0027*\u0027 as it does not need to because fnmatch() does the wild card handling, it may be easier to maintain and understand to make it do so (gated by FNM_EXTMATCH if we must) rather than converting \u0027*\u0027 to \u0027*(?)\u0027 at this level.",
+      "range": {
+        "startLine": 323,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 19
+      },
+      "revId": "08bc8bbcd2277f49acb0d684d0f01954e1ba96d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
