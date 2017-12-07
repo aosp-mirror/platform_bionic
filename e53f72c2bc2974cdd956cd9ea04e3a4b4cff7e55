@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7d8140f_d81cdd9a",
+        "filename": "libc/upstream-openbsd/lib/libc/gen/fnmatch.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-07T22:52:03Z",
+      "side": 1,
+      "message": "We need to add a policy to deal with FNM_NOESCAPE\n\n*\\( - correct (does not trigger extended matching, do not adjust nesting level when peeking)\n\\) - partial (does not close extended matching, but will reduce nesting level when peeking ahead)\n\\*( - partial (will increase nesting level when peeking ahead if escape is enabled)\n\\\\*( - correct, but beware (peeking code fix must recognize this separately).",
+      "range": {
+        "startLine": 343,
+        "startChar": 0,
+        "endLine": 344,
+        "endChar": 45
+      },
+      "revId": "e53f72c2bc2974cdd956cd9ea04e3a4b4cff7e55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
