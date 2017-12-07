@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a5d31594_e22106fa",
+        "filename": "libc/stdio/vfwscanf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-07T08:33:52Z",
+      "side": 1,
+      "message": "Suggestion:\n\n    if (wc \u003e\u003d first \u0026\u0026 wc \u003c\u003d last) return member_result;\n\nThe loop could be slow with large ranges.",
+      "parentUuid": "cd5b5e82_fde29e95",
+      "revId": "896e985a25efd95acce297caa8a4c9f09981f0d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "010251b7_c69ee94d",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
