@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3825043_e2e13ad3",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 991,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-07T01:03:35Z",
+      "side": 1,
+      "message": "Let\u0027s add?\n\nCheckScanf(swscanf, L\"-d\", L\"%[a-c]\", 1, \"\");\n\nI think it might be returning \"-\" though haven\u0027t tried.",
+      "revId": "96d1f4fe41a0db7a554df9ec15524c766a482820",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
