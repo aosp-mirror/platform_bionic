@@ -923,31 +923,97 @@ TEST(STDIO_TEST, putc) {
 TEST(STDIO_TEST, sscanf_swscanf) {
   struct stuff {
     char s1[123];
-    int i1;
+    int i1, i2;
+    char cs1[3];
+    char s2[3];
+    char c1;
     double d1;
     float f1;
-    char s2[123];
+    char s3[123];
 
     void Check() {
-      ASSERT_STREQ("hello", s1);
-      ASSERT_EQ(123, i1);
-      ASSERT_DOUBLE_EQ(1.23, d1);
-      ASSERT_FLOAT_EQ(9.0f, f1);
-      ASSERT_STREQ("world", s2);
+      EXPECT_STREQ("hello", s1);
+      EXPECT_EQ(123, i1);
+      EXPECT_EQ(456, i2);
+      EXPECT_EQ('a', cs1[0]);
+      EXPECT_EQ('b', cs1[1]);
+      EXPECT_EQ('x', cs1[2]); // No terminating NUL.
+      EXPECT_STREQ("AB", s2); // Terminating NUL.
+      EXPECT_EQ('!', c1);
+      EXPECT_DOUBLE_EQ(1.23, d1);
+      EXPECT_FLOAT_EQ(9.0f, f1);
+      EXPECT_STREQ("world", s3);
     }
   } s;
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, sscanf("  hello 123 1.23 0x1.2p3 world",
-                      "%s %i %lf %f %s",
-                      s.s1, &s.i1, &s.d1, &s.f1, s.s2));
+  memset(&s, 'x', sizeof(s));
+  ASSERT_EQ(9, sscanf("  hello 123 456abAB! 1.23 0x1.2p3 world",
+                      "%s %i%i%2c%[A-Z]%c %lf %f %s",
+                      s.s1, &s.i1, &s.i2, s.cs1, s.s2, &s.c1, &s.d1, &s.f1, s.s3));
   s.Check();
 
-  memset(&s, 0, sizeof(s));
-  ASSERT_EQ(5, swscanf(L"  hello 123 1.23 0x1.2p3 world",
-                       L"%s %i %lf %f %s",
-                       s.s1, &s.i1, &s.d1, &s.f1, s.s2));
+  memset(&s, 'x', sizeof(s));
+  ASSERT_EQ(9, swscanf(L"  hello 123 456abAB! 1.23 0x1.2p3 world",
+                       L"%s %i%i%2c%[A-Z]%c %lf %f %s",
+                       s.s1, &s.i1, &s.i2, s.cs1, s.s2, &s.c1, &s.d1, &s.f1, s.s3));
   s.Check();
+}
+
+template <typename T>
+static void CheckScanf(int sscanf_fn(const T*, const T*, ...),
+                       const T* input, const T* fmt,
+                       int expected_count, const char* expected_string) {
+  char buf[256] = {};
+  ASSERT_EQ(expected_count, sscanf_fn(input, fmt, &buf)) << fmt;
+  ASSERT_STREQ(expected_string, buf) << fmt;
+}
+
+TEST(STDIO_TEST, sscanf_ccl) {
+  // `abc` is just those characters.
+  CheckScanf(sscanf, "abcd", "%[abc]", 1, "abc");
+  // `a-c` is the range 'a' .. 'c'.
+  CheckScanf(sscanf, "abcd", "%[a-c]", 1, "abc");
+  CheckScanf(sscanf, "-d", "%[a-c]", 0, "");
+  CheckScanf(sscanf, "ac-bAd", "%[a--c]", 1, "ac-bA");
+  // `a-c-e` is equivalent to `a-e`.
+  CheckScanf(sscanf, "abcdefg", "%[a-c-e]", 1, "abcde");
+  // `e-a` is equivalent to `ae-` (because 'e' > 'a').
+  CheckScanf(sscanf, "-a-e-b", "%[e-a]", 1, "-a-e-");
+  // An initial '^' negates the set.
+  CheckScanf(sscanf, "abcde", "%[^d]", 1, "abc");
+  CheckScanf(sscanf, "abcdefgh", "%[^c-d]", 1, "ab");
+  CheckScanf(sscanf, "hgfedcba", "%[^c-d]", 1, "hgfe");
+  // The first character may be ']' or '-' without being special.
+  CheckScanf(sscanf, "[[]]x", "%[][]", 1, "[[]]");
+  CheckScanf(sscanf, "-a-x", "%[-a]", 1, "-a-");
+  // The last character may be '-' without being special.
+  CheckScanf(sscanf, "-a-x", "%[a-]", 1, "-a-");
+  // X--Y is [X--] + Y, not [X--] + [--Y] (a bug in my initial implementation).
+  CheckScanf(sscanf, "+,-/.", "%[+--/]", 1, "+,-/");
+}
+
+TEST(STDIO_TEST, swscanf_ccl) {
+  // `abc` is just those characters.
+  CheckScanf(swscanf, L"abcd", L"%[abc]", 1, "abc");
+  // `a-c` is the range 'a' .. 'c'.
+  CheckScanf(swscanf, L"abcd", L"%[a-c]", 1, "abc");
+  CheckScanf(swscanf, L"-d", L"%[a-c]", 0, "");
+  CheckScanf(swscanf, L"ac-bAd", L"%[a--c]", 1, "ac-bA");
+  // `a-c-e` is equivalent to `a-e`.
+  CheckScanf(swscanf, L"abcdefg", L"%[a-c-e]", 1, "abcde");
+  // `e-a` is equivalent to `ae-` (because 'e' > 'a').
+  CheckScanf(swscanf, L"-a-e-b", L"%[e-a]", 1, "-a-e-");
+  // An initial '^' negates the set.
+  CheckScanf(swscanf, L"abcde", L"%[^d]", 1, "abc");
+  CheckScanf(swscanf, L"abcdefgh", L"%[^c-d]", 1, "ab");
+  CheckScanf(swscanf, L"hgfedcba", L"%[^c-d]", 1, "hgfe");
+  // The first character may be ']' or '-' without being special.
+  CheckScanf(swscanf, L"[[]]x", L"%[][]", 1, "[[]]");
+  CheckScanf(swscanf, L"-a-x", L"%[-a]", 1, "-a-");
+  // The last character may be '-' without being special.
+  CheckScanf(swscanf, L"-a-x", L"%[a-]", 1, "-a-");
+  // X--Y is [X--] + Y, not [X--] + [--Y] (a bug in my initial implementation).
+  CheckScanf(swscanf, L"+,-/.", L"%[+--/]", 1, "+,-/");
 }
 
 TEST(STDIO_TEST, cantwrite_EBADF) {
