@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "980bc6bf_92ee8305",
+        "filename": "tests/inttypes_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T19:31:04Z",
+      "side": 1,
+      "message": "yes, but i\u0027m just trying to salvage the non-useless bits from a couple of 3-year-old intel changes...",
+      "parentUuid": "c2c45453_59f9645e",
+      "range": {
+        "startLine": 114,
+        "startChar": 23,
+        "endLine": 114,
+        "endChar": 32
+      },
+      "revId": "608b4514cb37170349bc3bf8936f18bdb0d35054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3d21469_842b6eaf",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -36,6 +60,24 @@
       "writtenOn": "2017-12-08T19:16:51Z",
       "side": 1,
       "message": "There are no changes in this file, was it included on accident?",
+      "revId": "608b4514cb37170349bc3bf8936f18bdb0d35054",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9170b264_30e6ab38",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T19:31:04Z",
+      "side": 1,
+      "message": "it\u0027s currently checked in a+x. i noticed this because the new intel files were executable too, and my chmod caught this old mistake.",
+      "parentUuid": "e3d21469_842b6eaf",
       "revId": "608b4514cb37170349bc3bf8936f18bdb0d35054",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
