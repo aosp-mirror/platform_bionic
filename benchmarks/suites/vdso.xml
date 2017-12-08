@@ -1,0 +1,51 @@
+<fn>
+  <name>BM_time_clock_getres</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_BOOTTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_MONOTONIC_COARSE</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_MONOTONIC_RAW</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_REALTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_REALTIME_COARSE</name>
+</fn>
+<fn>
+  <name>BM_time_clock_getres_syscall</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_BOOTTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_MONOTONIC_COARSE</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_MONOTONIC_RAW</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_REALTIME</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_REALTIME_COARSE</name>
+</fn>
+<fn>
+  <name>BM_time_clock_gettime_syscall</name>
+</fn>
+<fn>
+  <name>BM_time_gettimeofday</name>
+</fn>
+<fn>
+  <name>BM_time_gettimeofday_syscall</name>
+</fn>
+<fn>
+  <name>BM_time_time</name>
+</fn>

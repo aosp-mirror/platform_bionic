@@ -2,7 +2,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(clock_getres)
+ENTRY(__clock_getres)
     mov     ip, r7
     .cfi_register r7, ip
     ldr     r7, =__NR_clock_getres
@@ -13,4 +13,5 @@ ENTRY(clock_getres)
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
-END(clock_getres)
+END(__clock_getres)
+.hidden __clock_getres
