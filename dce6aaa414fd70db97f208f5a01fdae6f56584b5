@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8614acef_db412db1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T17:50:45Z",
+      "side": 1,
+      "message": "its",
+      "range": {
+        "startLine": 1622,
+        "startChar": 71,
+        "endLine": 1622,
+        "endChar": 75
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b73845c9_99a5fbf5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1624,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T17:50:45Z",
+      "side": 1,
+      "message": "They",
+      "range": {
+        "startLine": 1624,
+        "startChar": 57,
+        "endLine": 1624,
+        "endChar": 61
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9f7e10f8_546f57e0",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T17:50:45Z",
+      "side": 1,
+      "message": "will you need to log the name and/or pointer to be able to debug?",
+      "range": {
+        "startLine": 1887,
+        "startChar": 27,
+        "endLine": 1887,
+        "endChar": 36
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f6bd196_8bc43edc",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-08T17:50:45Z",
+      "side": 1,
+      "message": "does adding a new flag break Kindle?",
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
