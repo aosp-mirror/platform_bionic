@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e99f48b_41695c69",
+        "filename": "benchmarks/time_benchmark.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-08T22:10:26Z",
+      "side": 1,
+      "message": "We should switch to a means to let BM_time_time_syscall exist in the test suite, but report no results in the case __NR_time does not exist.",
+      "range": {
+        "startLine": 174,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 6
+      },
+      "revId": "dc2b8aaa458a15ec2d71923cab82d290a3ba3569",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
