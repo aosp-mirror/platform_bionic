@@ -43,6 +43,19 @@ TEST(time, gmtime) {
   ASSERT_EQ(1970, broken_down->tm_year + 1900);
 }
 
+TEST(time, gmtime_r) {
+  struct tm tm = {};
+  time_t t = 0;
+  struct tm* broken_down = gmtime_r(&t, &tm);
+  ASSERT_EQ(broken_down, &tm);
+  ASSERT_EQ(0, broken_down->tm_sec);
+  ASSERT_EQ(0, broken_down->tm_min);
+  ASSERT_EQ(0, broken_down->tm_hour);
+  ASSERT_EQ(1, broken_down->tm_mday);
+  ASSERT_EQ(0, broken_down->tm_mon);
+  ASSERT_EQ(1970, broken_down->tm_year + 1900);
+}
+
 static void* gmtime_no_stack_overflow_14313703_fn(void*) {
   const char* original_tz = getenv("TZ");
   // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
@@ -789,4 +802,30 @@ TEST(time, bug_31339449) {
 #else
   // The BSDs agree with us, but glibc gets this wrong.
 #endif
+}
+
+TEST(time, asctime) {
+  const struct tm tm = {};
+  ASSERT_STREQ("Sun Jan  0 00:00:00 1900\n", asctime(&tm));
+}
+
+TEST(time, asctime_r) {
+  const struct tm tm = {};
+  char buf[256];
+  ASSERT_EQ(buf, asctime_r(&tm, buf));
+  ASSERT_STREQ("Sun Jan  0 00:00:00 1900\n", buf);
+}
+
+TEST(time, ctime) {
+  setenv("TZ", "UTC", 1);
+  const time_t t = 0;
+  ASSERT_STREQ("Thu Jan  1 00:00:00 1970\n", ctime(&t));
+}
+
+TEST(time, ctime_r) {
+  setenv("TZ", "UTC", 1);
+  const time_t t = 0;
+  char buf[256];
+  ASSERT_EQ(buf, ctime_r(&t, buf));
+  ASSERT_STREQ("Thu Jan  1 00:00:00 1970\n", buf);
 }
