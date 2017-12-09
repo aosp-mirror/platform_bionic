@@ -51,11 +51,13 @@ cc_test_library {
     name: "libBionicStandardTests",
     defaults: ["bionic_tests_defaults"],
     srcs: [
+        "alloca_test.cpp",
         "arpa_inet_test.cpp",
         "async_safe_test.cpp",
         "assert_test.cpp",
         "buffer_tests.cpp",
         "bug_26110743_test.cpp",
+        "byteswap_test.cpp",
         "complex_test.cpp",
         "complex_force_long_double_test.cpp",
         "ctype_test.cpp",
