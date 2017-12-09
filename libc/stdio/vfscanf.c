@@ -83,9 +83,6 @@
 #define CT_INT 3    /* integer, i.e., strtoimax or strtoumax */
 #define CT_FLOAT 4  /* floating, i.e., strtod */
 
-#define u_char unsigned char
-#define u_long unsigned long
-
 static u_char* __sccl(char*, u_char*);
 
 /*
@@ -192,9 +189,6 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
       /*
        * Conversions.
        * Those marked `compat' are for 4.[123]BSD compatibility.
-       *
-       * (According to ANSI, E and X formats are supposed
-       * to the same as e and x.  Sorry about that.)
        */
       case 'D': /* compat */
         flags |= LONG;
