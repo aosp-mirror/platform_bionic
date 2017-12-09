@@ -109,6 +109,18 @@ TEST(inttypes, wcstoumax) {
   EXPECT_EQ(L'x', *end);
 }
 
+TEST(inttypes, strtoimax_dec) {
+  char* p;
+  EXPECT_EQ(-18737357, strtoimax("-18737357foobar12", &p, 10));
+  EXPECT_STREQ("foobar12", p);
+}
+
+TEST(inttypes, strtoimax_hex) {
+  char* p;
+  EXPECT_EQ(-0x18737357f, strtoimax("-18737357foobar12", &p, 16));
+  EXPECT_STREQ("oobar12", p);
+}
+
 TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
   strtoimax("123", NULL, -1);
@@ -119,6 +131,24 @@ TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
   strtoimax("123", NULL, 37);
   ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(inttypes, strtoumax_dec) {
+  char* p;
+  EXPECT_EQ(18737357U, strtoumax("18737357foobar12", &p, 10));
+  EXPECT_STREQ("foobar12", p);
+}
+
+TEST(inttypes, strtoumax_hex) {
+  char* p;
+  EXPECT_EQ(0x18737357fU, strtoumax("18737357foobar12", &p, 16));
+  EXPECT_STREQ("oobar12", p);
+}
+
+TEST(inttypes, strtoumax_negative) {
+  char* p;
+  EXPECT_EQ(UINTMAX_MAX - 18737357 + 1, strtoumax("-18737357foobar12", &p, 10));
+  EXPECT_STREQ("foobar12", p);
 }
 
 TEST(inttypes, strtoumax_EINVAL) {
@@ -158,30 +188,88 @@ TEST(inttypes, wcstoumax_EINVAL) {
 }
 
 TEST(inttypes, div) {
-  div_t r = div(-5, 3);
-  ASSERT_EQ(-1, r.quot);
-  ASSERT_EQ(-2, r.rem);
+  div_t r;
+
+  r = div(5, 3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = div(5, -3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = div(-5, 3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(-2, r.rem);
+
+  r = div(-5, -3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(-2, r.rem);
 }
 
 TEST(inttypes, ldiv) {
-  ldiv_t r = ldiv(-5, 3);
-  ASSERT_EQ(-1, r.quot);
-  ASSERT_EQ(-2, r.rem);
+  ldiv_t r;
+
+  r = ldiv(5, 3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = ldiv(5, -3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = ldiv(-5, 3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(-2, r.rem);
+
+  r = ldiv(-5, -3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(-2, r.rem);
 }
 
 TEST(inttypes, lldiv) {
-  lldiv_t r = lldiv(-5, 3);
-  ASSERT_EQ(-1, r.quot);
-  ASSERT_EQ(-2, r.rem);
+  lldiv_t r;
+
+  r = lldiv(5, 3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = lldiv(5, -3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = lldiv(-5, 3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(-2, r.rem);
+
+  r = lldiv(-5, -3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(-2, r.rem);
 }
 
 TEST(inttypes, imaxdiv) {
-  imaxdiv_t r = imaxdiv(-5, 3);
-  ASSERT_EQ(-1, r.quot);
-  ASSERT_EQ(-2, r.rem);
+  imaxdiv_t r;
+
+  r = imaxdiv(5, 3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = imaxdiv(5, -3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(2, r.rem);
+
+  r = imaxdiv(-5, 3);
+  EXPECT_EQ(-1, r.quot);
+  EXPECT_EQ(-2, r.rem);
+
+  r = imaxdiv(-5, -3);
+  EXPECT_EQ(1, r.quot);
+  EXPECT_EQ(-2, r.rem);
 }
 
 TEST(inttypes, imaxabs) {
-  ASSERT_EQ(INTMAX_MAX, imaxabs(-INTMAX_MAX));
-  ASSERT_EQ(INTMAX_MAX, imaxabs(INTMAX_MAX));
+  EXPECT_EQ(672423489, imaxabs(672423489));
+  EXPECT_EQ(672423489, imaxabs(-672423489));
+  EXPECT_EQ(INTMAX_MAX, imaxabs(-INTMAX_MAX));
+  EXPECT_EQ(INTMAX_MAX, imaxabs(INTMAX_MAX));
 }
