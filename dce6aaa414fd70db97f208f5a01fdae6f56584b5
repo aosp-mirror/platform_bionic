@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "39803e5f_67543c4d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1622,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-10T21:03:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8614acef_db412db1",
+      "range": {
+        "startLine": 1622,
+        "startChar": 71,
+        "endLine": 1622,
+        "endChar": 75
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b73845c9_99a5fbf5",
         "filename": "linker/linker.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-12-08T17:50:45Z",
       "side": 1,
       "message": "They",
+      "range": {
+        "startLine": 1624,
+        "startChar": 57,
+        "endLine": 1624,
+        "endChar": 61
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2c1b18a_36f15b46",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1624,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-10T21:03:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b73845c9_99a5fbf5",
       "range": {
         "startLine": 1624,
         "startChar": 57,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a14e095a_b979d60f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-10T21:03:41Z",
+      "side": 1,
+      "message": "It is not quite available at this point (the soinfo was already unloaded and freed).. But I think it should be clear enough from log at L1675.",
+      "parentUuid": "9f7e10f8_546f57e0",
+      "range": {
+        "startLine": 1887,
+        "startChar": 27,
+        "endLine": 1887,
+        "endChar": 36
+      },
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f6bd196_8bc43edc",
         "filename": "linker/linker_soinfo.h",
         "patchSetId": 6
@@ -82,6 +154,24 @@
       "writtenOn": "2017-12-08T17:50:45Z",
       "side": 1,
       "message": "does adding a new flag break Kindle?",
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7e757ea_dbac68c0",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-10T21:03:41Z",
+      "side": 1,
+      "message": "I am sure it is not. But I will double check anyways before submitting this change.",
+      "parentUuid": "2f6bd196_8bc43edc",
       "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
