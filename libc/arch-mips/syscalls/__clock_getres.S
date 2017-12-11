@@ -17,4 +17,3 @@ ENTRY(__clock_getres)
     nop
     .set reorder
 END(__clock_getres)
-.hidden __clock_getres

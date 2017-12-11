@@ -212,7 +212,6 @@ int           settimeofday(const struct timeval*, const struct timezone*)   all
 clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
 int           clock_settime(clockid_t, const struct timespec*)  all
-int           clock_getres(clockid_t, struct timespec*)   all
 int           ___clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
 int           getitimer(int, const struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
@@ -351,6 +350,7 @@ int     __set_tls:set_thread_area(void*) mips,mips64
 int     __set_thread_area:set_thread_area(void*) x86
 
 # vdso stuff.
+int __clock_getres:clock_getres(clockid_t, struct timespec*) all
 int __clock_gettime:clock_gettime(clockid_t, timespec*) all
 int __gettimeofday:gettimeofday(timeval*, timezone*) all
 
