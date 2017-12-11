@@ -2036,6 +2036,7 @@ ndk_headers {
     license: "NOTICE",
 }
 
+// Not actually used in the NDK, but needed to build AOSP for mips.
 ndk_headers {
     name: "libc_asm_mips",
     from: "kernel/uapi/asm-mips",
@@ -2044,6 +2045,7 @@ ndk_headers {
     license: "NOTICE",
 }
 
+// Not actually used in the NDK, but needed to build AOSP for mips64.
 ndk_headers {
     name: "libc_asm_mips64",
     from: "kernel/uapi/asm-mips",
