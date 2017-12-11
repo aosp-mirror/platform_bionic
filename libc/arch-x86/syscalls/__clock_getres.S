@@ -32,4 +32,3 @@ ENTRY(__clock_getres)
     popl    %ebx
     ret
 END(__clock_getres)
-.hidden __clock_getres
