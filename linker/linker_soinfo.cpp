@@ -657,6 +657,10 @@ bool soinfo::is_linked() const {
   return (flags_ & FLAG_LINKED) != 0;
 }
 
+bool soinfo::is_image_linked() const {
+  return (flags_ & FLAG_IMAGE_LINKED) != 0;
+}
+
 bool soinfo::is_main_executable() const {
   return (flags_ & FLAG_EXE) != 0;
 }
@@ -669,6 +673,10 @@ void soinfo::set_linked() {
   flags_ |= FLAG_LINKED;
 }
 
+void soinfo::set_image_linked() {
+  flags_ |= FLAG_IMAGE_LINKED;
+}
+
 void soinfo::set_linker_flag() {
   flags_ |= FLAG_LINKER;
 }
@@ -677,8 +685,8 @@ void soinfo::set_main_executable() {
   flags_ |= FLAG_EXE;
 }
 
-void soinfo::increment_ref_count() {
-  local_group_root_->ref_count_++;
+size_t soinfo::increment_ref_count() {
+  return ++local_group_root_->ref_count_;
 }
 
 size_t soinfo::decrement_ref_count() {
