@@ -113,6 +113,62 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library used by dlext direct unload on the namespace boundary tests
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_missing_symbol",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_missing_symbol.cpp"],
+    allow_undefined_symbols: true,
+    relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
+}
+
+
+// -----------------------------------------------------------------------------
+// Library used by dlext indirect unload on the namespace boundary tests
+//
+// These libraries produce following dependency graph:
+// libtest_missing_symbol_root (private ns)
+// +-> libbnstest_public (public ns)
+// +-> libtest_missing_symbol_child_public (public ns)
+//     +-> libnstest_public (public ns)
+// +-> libtest_missing_symbol_child_private (private_ns)
+//     +-> libnstest_public (public_ns)
+//
+// All libraries except libtest_missing_symbol are located in
+// private_namespace_libs/
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_missing_symbol_child_public",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
+    shared_libs: ["libnstest_public"],
+}
+
+cc_test_library {
+    name: "libtest_missing_symbol_child_private",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+    shared_libs: ["libnstest_public"],
+}
+
+cc_test_library {
+    name: "libtest_missing_symbol_root",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_missing_symbol.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+    allow_undefined_symbols: true,
+    shared_libs: [
+        "libnstest_public",
+        "libtest_missing_symbol_child_public",
+        "libtest_missing_symbol_child_private",
+    ],
+}
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 // Library used by dlfcn nodelete tests
 // -----------------------------------------------------------------------------
 cc_test_library {
@@ -142,8 +198,65 @@ cc_test_library {
 
 // -----------------------------------------------------------------------------
 // Build test helper libraries for linker namespaces
+//
+// This set of libraries is used to verify linker namespaces.
+//
+// Test cases
+// 1. Check that private libraries loaded in different namespaces are
+//    different. Check that dlsym does not confuse them.
+// 2. Check that public libraries loaded in different namespaces are shared
+//    between them.
+// 3. Check that namespace sticks on dlopen
+// 4. Check that having access to shared library (libnstest_public.so)
+//    does not expose symbols from dependent library (libnstest_public_internal.so)
+//
+// Dependency tree (visibility)
+// libnstest_root.so (this should be local to the namespace)
+// +-> libnstest_public.so
+//     +-> libnstest_public_internal.so
+// +-> libnstest_private.so
+//
+// libnstest_dlopened.so (library in private namespace dlopened from libnstest_root.so)
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.linker_namespaces.mk
+cc_test_library {
+    name: "libnstest_root",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["namespaces_root.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+    shared_libs: [
+        "libnstest_public",
+        "libnstest_private",
+    ],
+}
+
+cc_test_library {
+    name: "libnstest_public_internal",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["namespaces_public_internal.cpp"],
+    relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
+}
+
+cc_test_library {
+    name: "libnstest_public",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["namespaces_public.cpp"],
+    relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
+    shared_libs: ["libnstest_public_internal"],
+}
+
+cc_test_library {
+    name: "libnstest_private",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["namespaces_private.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+}
+
+cc_test_library {
+    name: "libnstest_dlopened",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["namespaces_dlopened.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+}
 
 // -----------------------------------------------------------------------------
 // Build DT_RUNPATH test helper libraries

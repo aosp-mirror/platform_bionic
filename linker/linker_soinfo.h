@@ -41,6 +41,17 @@
 #define FLAG_GNU_HASH         0x00000040 // uses gnu hash
 #define FLAG_MAPPED_BY_CALLER 0x00000080 // the map is reserved by the caller
                                          // and should not be unmapped
+#define FLAG_IMAGE_LINKED     0x00000100 // Is image linked - this is a guard on link_image.
+                                         // The difference between this flag and
+                                         // FLAG_LINKED is that FLAG_LINKED
+                                         // means is set when load_group is
+                                         // successfully loaded whereas this
+                                         // flag is set to avoid linking image
+                                         // when link_image called for the
+                                         // second time. This situation happens
+                                         // when load group is crossing
+                                         // namespace boundary twice and second
+                                         // local group depends on the same libraries.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 3
@@ -243,7 +254,7 @@ struct soinfo {
   void set_main_executable();
   void set_nodelete();
 
-  void increment_ref_count();
+  size_t increment_ref_count();
   size_t decrement_ref_count();
 
   soinfo* get_local_group_root() const;
@@ -273,6 +284,9 @@ struct soinfo {
   void* to_handle();
 
  private:
+  bool is_image_linked() const;
+  void set_image_linked();
+
   bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
   ElfW(Sym)* elf_addr_lookup(const void* addr);
   bool gnu_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
