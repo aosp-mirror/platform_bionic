@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d3c8629_7b97e43e",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-11T05:09:41Z",
+      "side": 1,
+      "message": "So this test requires root if I add these lines.  Do we expect bionic-unit-tests to pass without root?  I assume I\u0027m far from the only test to require this.\n\nOtherwise, we don\u0027t really have many good options.  I don\u0027t want to relax the requirement that property_info is root owned read only and I want to have it point to a generic location for future testing.",
+      "revId": "dea41cec83f904d0e68e105920a560e3214e2990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
