@@ -175,6 +175,24 @@
       "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c1d37b0_62f3bfa8",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-11T13:14:13Z",
+      "side": 1,
+      "message": "checked - it doesn\u0027t.",
+      "parentUuid": "c7e757ea_dbac68c0",
+      "revId": "dce6aaa414fd70db97f208f5a01fdae6f56584b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
