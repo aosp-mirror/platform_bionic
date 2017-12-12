@@ -173,7 +173,10 @@ cc_test_library {
 
     target: {
         bionic: {
-            whole_static_libs: ["libasync_safe"],
+            whole_static_libs: [
+                "libasync_safe",
+                "libsystemproperties",
+            ],
         },
     },
 
