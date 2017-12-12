@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "0649d765_6a5d4d72",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 414,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T05:02:52Z",
+      "side": 1,
+      "message": "The behavior here is also a little strange (but it\u0027s not new behavior for Bionic). Any non-ASCII wide character is always a match.\n\nIt looks like glibc/musl\u0027s behavior is:\n\n - matching is done only on the narrow chars, which are converted to wide chars for output\n\nFreeBSD, OTOH:\n\n - a non-ASCII character is never a match\n\nTest: https://gist.github.com/rprichard/600107e4eeeac3849ba0cf2b43e866d9",
+      "revId": "3316bb08245423c6a747076428fe6e8ec5078a10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7cc379a2_f32e5a1d",
         "filename": "libc/stdio/vfscanf.c",
         "patchSetId": 1
