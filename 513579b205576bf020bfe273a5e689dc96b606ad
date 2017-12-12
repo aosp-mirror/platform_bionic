@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0361fdca_37795c60",
+        "filename": "libc/stdio/vfwscanf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T23:04:01Z",
+      "side": 1,
+      "message": "This line can be removed now that it\u0027s been factored out to the bottom...",
+      "revId": "513579b205576bf020bfe273a5e689dc96b606ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da52c41c_415e18fd",
+        "filename": "libc/stdio/vfwscanf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T23:04:01Z",
+      "side": 1,
+      "message": "Perhaps this line should be removed to be consistent with the other change? The NUL termination below makes it unnecessary.\n\nIt\u0027s a swscanf + narrow-specifier version of the scanf_no_match_no_termination problem. e.g. this test case:\n\n    char buf[4] \u003d \"x\";\n    EXPECT_EQ(0, swscanf(L\"d\", L\"%[abc]\", buf));\n    EXPECT_EQ(\u0027x\u0027, buf[0]);\n\nThis test doesn\u0027t pass on FreeBSD or Bionic, though. wcrtomb writes directly to the output buffer if there\u0027s at least MB_CUR_MAX bytes free.",
+      "revId": "513579b205576bf020bfe273a5e689dc96b606ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae45bd8b_8b91d2d9",
+        "filename": "libc/stdio/vfwscanf.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T23:04:01Z",
+      "side": 1,
+      "message": "This line makes the one line unnecessary.",
+      "revId": "513579b205576bf020bfe273a5e689dc96b606ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
