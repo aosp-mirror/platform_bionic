@@ -65,7 +65,6 @@ bool find_libraries(android_namespace_t* ns,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
                     bool search_linked_namespaces,
-                    std::unordered_map<const soinfo*, ElfReader>& readers_map,
                     std::vector<android_namespace_t*>* namespaces = nullptr);
 
 void solist_add_soinfo(soinfo* si);

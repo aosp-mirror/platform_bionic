@@ -15,6 +15,7 @@
  */
 
 #include <err.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -205,3 +206,33 @@ static void BM_stdio_printf_1$s(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_stdio_printf_1$s);
+
+static void BM_stdio_scanf_s(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    char s[BUFSIZ];
+    if (sscanf("file /etc/passwd", "file %s", s) != 1) abort();
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_scanf_s);
+
+static void BM_stdio_scanf_d(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    int i;
+    if (sscanf("size 12345", "size %d", &i) != 1) abort();
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_scanf_d);
+
+static void BM_stdio_scanf_maps(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    uintptr_t start;
+    uintptr_t end;
+    uintptr_t offset;
+    char permissions[5];
+    int name_pos;
+    if (sscanf("6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so",
+               "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n",
+               &start, &end, permissions, &offset, &name_pos) != 4) abort();
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_scanf_maps);
