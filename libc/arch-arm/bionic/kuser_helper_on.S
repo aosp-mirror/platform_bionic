@@ -25,14 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-	.section	.note.android.kuser_helper_on,"a",%note
-	.align	2
-	.type	kuser_helper_on, %object
+
+  .section .note.android.kuser_helper_on,"a",%note
+  .balign 4
+  .type kuser_helper_on, %object
 kuser_helper_on:
-	.long	2f-1f			/* int32_t namesz */
-	.long	3f-2f			/* int32_t descsz */
-	.long	3			/* int32_t type */
-1:	.ascii	"Android\0"		/* char name[] */
-2:	.long	1	/* int32_t on */
+  .long 2f-1f         // int32_t namesz
+  .long 3f-2f         // int32_t descsz
+  .long 3             // int32_t type
+1:.ascii "Android\0"  // char name[]
+2:.long 1             // int32_t on
 3:
-	.size	kuser_helper_on, .-kuser_helper_on
+  .size kuser_helper_on, .-kuser_helper_on

@@ -27,12 +27,6 @@ enum {
   MPOL_LOCAL,
   MPOL_MAX,
 };
-enum mpol_rebind_step {
-  MPOL_REBIND_ONCE,
-  MPOL_REBIND_STEP1,
-  MPOL_REBIND_STEP2,
-  MPOL_REBIND_NSTEP,
-};
 #define MPOL_F_STATIC_NODES (1 << 15)
 #define MPOL_F_RELATIVE_NODES (1 << 14)
 #define MPOL_MODE_FLAGS (MPOL_F_STATIC_NODES | MPOL_F_RELATIVE_NODES)
@@ -47,7 +41,6 @@ enum mpol_rebind_step {
 #define MPOL_MF_VALID (MPOL_MF_STRICT | MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)
 #define MPOL_F_SHARED (1 << 0)
 #define MPOL_F_LOCAL (1 << 1)
-#define MPOL_F_REBINDING (1 << 2)
 #define MPOL_F_MOF (1 << 3)
 #define MPOL_F_MORON (1 << 4)
 #endif

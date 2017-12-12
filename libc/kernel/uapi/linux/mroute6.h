@@ -94,4 +94,14 @@ struct mrt6msg {
   __u32 im6_pad;
   struct in6_addr im6_src, im6_dst;
 };
+enum {
+  IP6MRA_CREPORT_UNSPEC,
+  IP6MRA_CREPORT_MSGTYPE,
+  IP6MRA_CREPORT_MIF_ID,
+  IP6MRA_CREPORT_SRC_ADDR,
+  IP6MRA_CREPORT_DST_ADDR,
+  IP6MRA_CREPORT_PKT,
+  __IP6MRA_CREPORT_MAX
+};
+#define IP6MRA_CREPORT_MAX (__IP6MRA_CREPORT_MAX - 1)
 #endif

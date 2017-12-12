@@ -1,5 +1,5 @@
 <fn>
-  <name>BM_empty</name>
+  <name>BM_atomic_empty</name>
 </fn>
 <fn>
   <name>BM_math_sqrt</name>

@@ -195,6 +195,89 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
   return NULL;
 }
 
+// These are a list of the reserved app ranges, and should never contain anything below
+// AID_APP_START.  They exist per user, so a given uid/gid modulo AID_USER_OFFSET will map
+// to these ranges.
+static constexpr struct {
+  uid_t start;
+  uid_t end;
+} user_ranges[] = {
+  { AID_APP_START, AID_APP_END },
+  { AID_CACHE_GID_START, AID_CACHE_GID_END },
+  { AID_EXT_GID_START, AID_EXT_GID_END },
+  { AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END },
+  { AID_SHARED_GID_START, AID_SHARED_GID_END },
+  { AID_ISOLATED_START, AID_ISOLATED_END },
+};
+
+static constexpr bool verify_user_ranges_ascending() {
+  auto array_size = arraysize(user_ranges);
+  if (array_size < 2) return false;
+
+  if (user_ranges[0].start > user_ranges[0].end) return false;
+
+  for (size_t i = 1; i < array_size; ++i) {
+    if (user_ranges[i].start > user_ranges[i].end) return false;
+    if (user_ranges[i - 1].end > user_ranges[i].start) return false;
+  }
+  return true;
+}
+
+static_assert(verify_user_ranges_ascending(), "user_ranges must have ascending ranges");
+
+static bool is_valid_app_id(id_t id) {
+  id_t appid = id % AID_USER_OFFSET;
+
+  // AID_OVERFLOWUID is never a valid app id, so we explicitly return false to ensure this.
+  // This is true across all users, as there is no reason to ever map this id into any user range.
+  if (appid == AID_OVERFLOWUID) {
+    return false;
+  }
+
+  // If we've resolved to something before app_start, we have already checked against
+  // android_ids, so no need to check again.
+  if (appid < user_ranges[0].start) {
+    return true;
+  }
+
+  // Otherwise check that the appid is in one of the reserved ranges.
+  for (size_t i = 0; i < arraysize(user_ranges); ++i) {
+    if (appid >= user_ranges[i].start && appid <= user_ranges[i].end) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// This provides an iterater for app_ids within the first user's app id's.
+static uid_t get_next_app_id(uid_t current_id) {
+  // If current_id is below the first of the user_ranges, then we're uninitialized, and return the
+  // first valid id.
+  if (current_id < user_ranges[0].start) {
+    return user_ranges[0].start;
+  }
+
+  uid_t incremented_id = current_id + 1;
+
+  // Check to see if our incremented_id is between two ranges, and if so, return the beginning of
+  // the next valid range.
+  for (size_t i = 1; i < arraysize(user_ranges); ++i) {
+    if (incremented_id > user_ranges[i - 1].end && incremented_id < user_ranges[i].start) {
+      return user_ranges[i].start;
+    }
+  }
+
+  // Check to see if our incremented_id is above final range, and return -1 to indicate that we've
+  // completed if so.
+  if (incremented_id > user_ranges[arraysize(user_ranges) - 1].end) {
+    return -1;
+  }
+
+  // Otherwise the incremented_id is valid, so return it.
+  return incremented_id;
+}
+
 // Translate a user/group name to the corresponding user/group id.
 // all_a1234 -> 0 * AID_USER_OFFSET + AID_SHARED_GID_START + 1234 (group name only)
 // u0_a1234_cache -> 0 * AID_USER_OFFSET + AID_CACHE_GID_START + 1234 (group name only)
@@ -377,7 +460,7 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 // AID_USER_OFFSET+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_APP_START) {
+  if (uid < AID_APP_START || !is_valid_app_id(uid)) {
     errno = ENOENT;
     return NULL;
   }
@@ -405,7 +488,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
 // Translate a gid into the corresponding app_<gid>
 // group structure (sets errno to ENOENT on failure).
 static group* app_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_APP_START) {
+  if (gid < AID_APP_START || !is_valid_app_id(gid)) {
     errno = ENOENT;
     return NULL;
   }
@@ -521,15 +604,13 @@ passwd* getpwent() {
         state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
   }
 
-  start = end;
-  end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher users
+  state->getpwent_idx = get_next_app_id(state->getpwent_idx);
 
-  if (state->getpwent_idx < end) {
-    return app_id_to_passwd(state->getpwent_idx++ - start + AID_APP_START, state);
+  if (state->getpwent_idx != -1) {
+    return app_id_to_passwd(state->getpwent_idx, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
-  state->getpwent_idx = -1;
   return NULL;
 }
 
@@ -652,12 +733,12 @@ group* getgrent() {
   start = end;
   end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher groups
 
-  if (state->getgrent_idx < end) {
-    init_group_state(state);
-    return app_id_to_group(state->getgrent_idx++ - start + AID_APP_START, state);
+  state->getgrent_idx = get_next_app_id(state->getgrent_idx);
+
+  if (state->getgrent_idx != -1) {
+    return app_id_to_group(state->getgrent_idx, state);
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
-  state->getgrent_idx = -1;
   return NULL;
 }

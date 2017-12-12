@@ -1,0 +1,8 @@
+<!--
+ Small example file.
+-->
+<fn>
+  <name>BM_stdio_fread</name>
+  <iterations>20</iterations>
+  <args>AT_COMMON_SIZES</args>
+</fn>

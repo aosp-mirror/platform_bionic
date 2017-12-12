@@ -1385,7 +1385,7 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
     exit(0);
   }
   ASSERT_NE(-1, pid);
-  ASSERT_EQ(pid, waitpid(pid, nullptr, 0));
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
 
   // Read all of the contents.
   std::string actual;

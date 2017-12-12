@@ -51,8 +51,8 @@ struct drm_qxl_reloc {
   __u32 pad;
 };
 struct drm_qxl_command {
-  __u64 __user command;
-  __u64 __user relocs;
+  __u64 command;
+  __u64 relocs;
   __u32 type;
   __u32 command_size;
   __u32 relocs_num;
@@ -61,7 +61,7 @@ struct drm_qxl_command {
 struct drm_qxl_execbuffer {
   __u32 flags;
   __u32 commands_num;
-  __u64 __user commands;
+  __u64 commands;
 };
 struct drm_qxl_update_area {
   __u32 handle;

@@ -32,10 +32,10 @@ cc_defaults {
         "pthread_benchmark.cpp",
         "semaphore_benchmark.cpp",
         "stdio_benchmark.cpp",
+        "stdlib_benchmark.cpp",
         "string_benchmark.cpp",
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
-        "stdlib_benchmark.cpp",
     ],
     shared_libs: ["libtinyxml2"],
     static_libs: [
