@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ffeaf30_6fad9076",
+        "filename": "libc/system_properties/system_properties.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-12T17:10:56Z",
+      "side": 1,
+      "message": "try again in English? :-)",
+      "revId": "e15edee8f782bc9bbedc7a4d3c14b4a71eb61efe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
