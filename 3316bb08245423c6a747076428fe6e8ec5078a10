@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cc379a2_f32e5a1d",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T02:34:41Z",
+      "side": 1,
+      "message": "AFAICT, this code is unreachable before and after.\n\nAside: the behavior for sscanf(\"\\xC0 foo\", \"%ls %s\", \u0026wbuf, \u0026buf) is weird. I think Bionic sscanf successfully scans \"\", \"foo\". It\u0027s quietly discarding truncated multi-byte sequences.",
+      "revId": "3316bb08245423c6a747076428fe6e8ec5078a10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e36e816_830fc162",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-12T02:34:41Z",
+      "side": 1,
+      "message": "I think factoring out the (CT_CCL \u0026\u0026 n \u003d\u003d 0) match failure changes the behavior of this code:\n\n    char buf[4] \u003d \"x\";\n    sscanf(\"d\", \"%[abc]\", buf); // match failure\n    printf(\"\u0027%s\u0027\\n\", buf);\n\nPreviously, it would print \u0027x\u0027, but I think it will now print \u0027\u0027.\n\nI don\u0027t know whether a standard defines the behavior. It prints \u0027x\u0027 with glibc, musl, and FreeBSD.",
+      "revId": "3316bb08245423c6a747076428fe6e8ec5078a10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
