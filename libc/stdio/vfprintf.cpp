@@ -33,82 +33,18 @@
 
 #define CHAR_TYPE char
 #define FUNCTION_NAME __vfprintf
+#define CHAR_TYPE_STRLEN strlen
+#define CHAR_TYPE_STRNLEN strnlen
+#define CHAR_TYPE_INF "INF"
+#define CHAR_TYPE_inf "inf"
+#define CHAR_TYPE_NAN "NAN"
+#define CHAR_TYPE_nan "nan"
+#define CHAR_TYPE_ORIENTATION -1
 #include "printf_common.h"
 
-/*
- * Flush out all the vectors defined by the given uio,
- * then reset it so that it can be reused.
- */
-static int __sprint(FILE* fp, struct __suio* uio) {
-  int err;
-
-  if (uio->uio_resid == 0) {
-    uio->uio_iovcnt = 0;
-    return (0);
-  }
-  err = __sfvwrite(fp, uio);
-  uio->uio_resid = 0;
-  uio->uio_iovcnt = 0;
-  return (err);
-}
-
-/*
- * Convert a wide character string argument for the %ls format to a multibyte
- * string representation. If not -1, prec specifies the maximum number of
- * bytes to output, and also means that we can't assume that the wide char
- * string is null-terminated.
- */
-static char* __wcsconv(wchar_t* wcsarg, int prec) {
-  mbstate_t mbs;
-  char buf[MB_LEN_MAX];
-  wchar_t* p;
-  char* convbuf;
-  size_t clen, nbytes;
-
-  /* Allocate space for the maximum number of bytes we could output. */
-  if (prec < 0) {
-    memset(&mbs, 0, sizeof(mbs));
-    p = wcsarg;
-    nbytes = wcsrtombs(NULL, (const wchar_t**)&p, 0, &mbs);
-    if (nbytes == (size_t)-1) return (NULL);
-  } else {
-    /*
-     * Optimisation: if the output precision is small enough,
-     * just allocate enough memory for the maximum instead of
-     * scanning the string.
-     */
-    if (prec < 128)
-      nbytes = prec;
-    else {
-      nbytes = 0;
-      p = wcsarg;
-      memset(&mbs, 0, sizeof(mbs));
-      for (;;) {
-        clen = wcrtomb(buf, *p++, &mbs);
-        if (clen == 0 || clen == (size_t)-1 || nbytes + clen > (size_t)prec) break;
-        nbytes += clen;
-      }
-      if (clen == (size_t)-1) return (NULL);
-    }
-  }
-  if ((convbuf = static_cast<char*>(malloc(nbytes + 1))) == NULL) return NULL;
-
-  /* Fill the output buffer. */
-  p = wcsarg;
-  memset(&mbs, 0, sizeof(mbs));
-  if ((nbytes = wcsrtombs(convbuf, (const wchar_t**)&p, nbytes, &mbs)) == (size_t)-1) {
-    free(convbuf);
-    return (NULL);
-  }
-  convbuf[nbytes] = '\0';
-  return (convbuf);
-}
-
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
-  int ch;              /* character from fmt */
-  int n, n2;           /* handy integers (short term usage) */
+  int n, n2;
   CHAR_TYPE* cp;            /* handy char pointer (short term usage) */
-  struct __siov* iovp; /* for PRINT macro */
   CHAR_TYPE sign;           /* sign prefix (' ', '+', '-', or \0) */
   int flags;           /* flags as above */
   int ret;             /* return value accumulator */
@@ -152,6 +88,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
 #define NIOV 8
   struct __suio uio;       /* output information: summary */
   struct __siov iov[NIOV]; /* ... and individual io vectors */
+  struct __siov* iovp; /* for PRINT macro */
   CHAR_TYPE buf[BUF];           /* buffer with space for digits of uintmax_t */
   CHAR_TYPE ox[2];              /* space for 0x; ox[1] is either x, X, or \0 */
   union arg* argtable;     /* args, built due to positional arg */
@@ -177,9 +114,6 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   static const char xdigs_lower[] = "0123456789abcdef";
   static const char xdigs_upper[] = "0123456789ABCDEF";
 
-  /*
-   * BEWARE, these `goto error' on error, and PAD uses `n'.
-   */
 #define PRINT(ptr, len)                   \
   do {                                    \
     iovp->iov_base = (ptr);               \
@@ -187,18 +121,18 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
     uio.uio_resid += (len);               \
     iovp++;                               \
     if (++uio.uio_iovcnt >= NIOV) {       \
-      if (__sprint(fp, &uio)) goto error; \
+      if (helpers::sprint(fp, &uio)) goto error; \
       iovp = iov;                         \
     }                                     \
   } while (0)
 #define FLUSH()                                          \
   do {                                                   \
-    if (uio.uio_resid && __sprint(fp, &uio)) goto error; \
+    if (uio.uio_resid && helpers::sprint(fp, &uio)) goto error; \
     uio.uio_iovcnt = 0;                                  \
     iovp = iov;                                          \
   } while (0)
 
-  _SET_ORIENTATION(fp, -1);
+  _SET_ORIENTATION(fp, CHAR_TYPE_ORIENTATION);
 
   // Writing "" to a read only file returns EOF, not 0.
   if (cantwrite(fp)) {
@@ -225,6 +159,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
    * Scan the format for conversions (`%' character).
    */
   for (;;) {
+    int ch;
     for (cp = fmt; (ch = *fmt) != '\0' && ch != '%'; fmt++) continue;
     if (fmt != cp) {
       ptrdiff_t m = fmt - cp;
@@ -430,7 +365,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
             goto error;
           }
         }
-        if (prec < 0) prec = dtoaend - cp;
+        if (prec < 0) prec = dtoaend - dtoaresult;
         if (expt == INT_MAX) ox[1] = '\0';
         goto fp_common;
       case 'e':
@@ -472,9 +407,9 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (signflag) sign = '-';
         if (expt == INT_MAX) { /* inf or nan */
           if (*cp == 'N') {
-            cp = const_cast<char*>((ch >= 'a') ? "nan" : "NAN");
+            cp = const_cast<CHAR_TYPE*>((ch >= 'a') ? CHAR_TYPE_nan : CHAR_TYPE_NAN);
           } else {
-            cp = const_cast<char*>((ch >= 'a') ? "inf" : "INF");
+            cp = const_cast<CHAR_TYPE*>((ch >= 'a') ? CHAR_TYPE_inf : CHAR_TYPE_INF);
           }
           size = 3;
           flags &= ~ZEROPAD;
@@ -566,7 +501,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           if ((wcp = GETARG(wchar_t*)) == NULL) {
             cp = const_cast<char*>("(null)");
           } else {
-            convbuf = __wcsconv(wcp, prec);
+            convbuf = helpers::wcsconv(wcp, prec);
             if (convbuf == NULL) {
               ret = -1;
               goto error;
@@ -577,11 +512,11 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
           cp = const_cast<char*>("(null)");
         }
         if (prec >= 0) {
-          size = strnlen(cp, prec);
+          size = CHAR_TYPE_STRNLEN(cp, prec);
         } else {
           size_t len;
 
-          if ((len = strlen(cp)) > INT_MAX) goto overflow;
+          if ((len = CHAR_TYPE_STRLEN(cp)) > INT_MAX) goto overflow;
           size = (int)len;
         }
         sign = '\0';

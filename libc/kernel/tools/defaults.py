@@ -58,8 +58,6 @@ kernel_arch_token_replacements = {
 
 # Replace tokens in the output according to this mapping.
 kernel_token_replacements = {
-    # The kernel's ARG_MAX is actually the "minimum" maximum (see fs/exec.c).
-    "ARG_MAX": "_KERNEL_ARG_MAX",
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
     "__unused": "__linux_unused",
     # The kernel usage of C++ keywords causes problems for C++ code so rename.
@@ -84,8 +82,6 @@ kernel_token_replacements = {
     "epoll_event": "__kernel_uapi_epoll_event",
     # This causes problems when trying to export the headers for the ndk.
     "__attribute_const__": "__attribute__((__const__))",
-    # There is a mismatch between upstream and our kernels for this structure.
-    "binder_fd_array_object": "__kernel_binder_fd_array_object",
     }
 
 # This is the set of known static inline functions that we want to keep

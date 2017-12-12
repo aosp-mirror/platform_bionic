@@ -33,7 +33,7 @@ static void BM_stdlib_malloc_free(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BIONIC_BENCHMARK(BM_stdlib_malloc_free);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_free, "AT_COMMON_SIZES");
 
 static void BM_stdlib_mbstowcs(benchmark::State& state) {
   const size_t buf_alignment = state.range(0);
@@ -76,7 +76,7 @@ static void BM_stdlib_mbstowcs(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));
 }
-BIONIC_BENCHMARK(BM_stdlib_mbstowcs);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbstowcs, "0 0");
 
 static void BM_stdlib_mbrtowc(benchmark::State& state) {
   const size_t buf_alignment = state.range(0);
@@ -117,4 +117,4 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));
 }
-BIONIC_BENCHMARK(BM_stdlib_mbrtowc);
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc, "0");

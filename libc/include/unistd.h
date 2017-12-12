@@ -168,16 +168,10 @@ int dup3(int __old_fd, int __new_fd, int __flags) __INTRODUCED_IN(21);
 int fsync(int __fd);
 int fdatasync(int __fd) __INTRODUCED_IN(9);
 
-#if defined(__USE_FILE_OFFSET64)
-off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
-#else
-off_t lseek(int __fd, off_t __offset, int __whence);
-#endif
-
-off64_t lseek64(int __fd, off64_t __offset, int __whence);
-
+/* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
+off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
 ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
   __overloadable __RENAME(pread64) __INTRODUCED_IN(12);
 ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
@@ -185,6 +179,7 @@ ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
 int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64) __INTRODUCED_IN(12);
 #else
 int truncate(const char* __path, off_t __length);
+off_t lseek(int __fd, off_t __offset, int __whence);
 ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
     __overloadable __RENAME_CLANG(pread);
 ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
@@ -193,6 +188,7 @@ int ftruncate(int __fd, off_t __length);
 #endif
 
 int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
+off64_t lseek64(int __fd, off64_t __offset, int __whence);
 ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset)
     __INTRODUCED_IN(12) __overloadable __RENAME_CLANG(pread64);
 ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset)

@@ -67,7 +67,7 @@ static void BM_math_isfinite_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isfinite_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isfinite_macro, "MATH_COMMON");
 
 static void BM_math_isfinite(benchmark::State& state) {
   d = 0.0;
@@ -77,7 +77,7 @@ static void BM_math_isfinite(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isfinite);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isfinite, "MATH_COMMON");
 
 static void BM_math_isinf_macro(benchmark::State& state) {
   d = 0.0;
@@ -87,7 +87,7 @@ static void BM_math_isinf_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isinf_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isinf_macro, "MATH_COMMON");
 
 static void BM_math_isinf(benchmark::State& state) {
   d = 0.0;
@@ -97,7 +97,7 @@ static void BM_math_isinf(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isinf);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isinf, "MATH_COMMON");
 
 static void BM_math_isnan_macro(benchmark::State& state) {
   d = 0.0;
@@ -107,7 +107,7 @@ static void BM_math_isnan_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isnan_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isnan_macro, "MATH_COMMON");
 
 static void BM_math_isnan(benchmark::State& state) {
   d = 0.0;
@@ -117,7 +117,7 @@ static void BM_math_isnan(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isnan);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isnan, "MATH_COMMON");
 
 static void BM_math_isnormal_macro(benchmark::State& state) {
   d = 0.0;
@@ -127,7 +127,7 @@ static void BM_math_isnormal_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isnormal_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isnormal_macro, "MATH_COMMON");
 
 static void BM_math_isnormal(benchmark::State& state) {
   d = 0.0;
@@ -137,7 +137,7 @@ static void BM_math_isnormal(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_isnormal);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_isnormal, "MATH_COMMON");
 
 static void BM_math_sin_fast(benchmark::State& state) {
   d = 1.0;
@@ -179,7 +179,7 @@ static void BM_math_fpclassify(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_fpclassify);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_fpclassify, "MATH_COMMON");
 
 static void BM_math_signbit_macro(benchmark::State& state) {
   d = 0.0;
@@ -189,7 +189,7 @@ static void BM_math_signbit_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_signbit_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_signbit_macro, "MATH_COMMON");
 
 static void BM_math_signbit(benchmark::State& state) {
   d = 0.0;
@@ -199,7 +199,7 @@ static void BM_math_signbit(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_signbit);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_signbit, "MATH_COMMON");
 
 static void BM_math_fabs_macro(benchmark::State& state) {
   d = 0.0;
@@ -209,7 +209,7 @@ static void BM_math_fabs_macro(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_fabs_macro);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_fabs_macro, "MATH_COMMON");
 
 static void BM_math_fabs(benchmark::State& state) {
   d = 0.0;
@@ -219,4 +219,4 @@ static void BM_math_fabs(benchmark::State& state) {
   }
   SetLabel(state);
 }
-BIONIC_BENCHMARK(BM_math_fabs);
+BIONIC_BENCHMARK_WITH_ARG(BM_math_fabs, "MATH_COMMON");

@@ -1,0 +1,52 @@
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memcpy</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_non_overlapping</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_overlap_dst_before_src</name>
+  <args>AT_MANY_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memmove_overlap_src_before_dst</name>
+  <args>AT_MANY_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_memset</name>
+  <args>AT_MANY_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_copy_only</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_half_copy_half_seek</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcat_seek_only</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strchr</name>
+  <args>AT_MANY_ALIGNED_ONEBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcmp</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strcpy</name>
+  <args>AT_MANY_ALIGNED_TWOBUF</args>
+</fn>
+<fn>
+  <name>BM_string_strlen</name>
+  <args>AT_MANY_ALIGNED_ONEBUF</args>
+</fn>

@@ -56,19 +56,31 @@ static const char* config_str =
   "\n"
   "enable.target.sdk.version = true\n"
   "additional.namespaces=system\n"
+  "additional.namespaces+=vndk\n"
   "namespace.default.isolated = true\n"
   "namespace.default.search.paths = /vendor/${LIB}\n"
   "namespace.default.permitted.paths = /vendor/${LIB}\n"
-  "namespace.default.asan.search.paths = /data:/vendor/${LIB}\n"
+  "namespace.default.asan.search.paths = /data\n"
+  "namespace.default.asan.search.paths += /vendor/${LIB}\n"
   "namespace.default.asan.permitted.paths = /data:/vendor\n"
   "namespace.default.links = system\n"
-  "namespace.default.link.system.shared_libs = libc.so:libm.so:libdl.so:libstdc++.so\n"
+  "namespace.default.links += vndk\n"
+  // irregular whitespaces are added intentionally for testing purpose
+  "namespace.default.link.system.shared_libs=  libc.so\n"
+  "namespace.default.link.system.shared_libs +=   libm.so:libdl.so\n"
+  "namespace.default.link.system.shared_libs   +=libstdc++.so\n"
+  "namespace.default.link.vndk.shared_libs = libcutils.so:libbase.so\n"
   "namespace.system.isolated = true\n"
   "namespace.system.visible = true\n"
   "namespace.system.search.paths = /system/${LIB}\n"
   "namespace.system.permitted.paths = /system/${LIB}\n"
   "namespace.system.asan.search.paths = /data:/system/${LIB}\n"
   "namespace.system.asan.permitted.paths = /data:/system\n"
+  "namespace.vndk.isolated = tr\n"
+  "namespace.vndk.isolated += ue\n" // should be ignored and return as 'false'.
+  "namespace.vndk.search.paths = /system/${LIB}/vndk\n"
+  "namespace.vndk.asan.search.paths = /data\n"
+  "namespace.vndk.asan.search.paths += /system/${LIB}/vndk\n"
   "\n";
 
 static bool write_version(const std::string& path, uint32_t version) {
@@ -98,6 +110,10 @@ static void run_linker_config_smoke_test(bool is_asan) {
   const std::vector<std::string> kExpectedSystemPermittedPath =
       resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system" }) :
                               std::vector<std::string>({ "/system/lib" ARCH_SUFFIX }));
+
+  const std::vector<std::string> kExpectedVndkSearchPath =
+      resolve_paths(is_asan ? std::vector<std::string>({ "/data", "/system/lib" ARCH_SUFFIX "/vndk"}) :
+                              std::vector<std::string>({ "/system/lib" ARCH_SUFFIX "/vndk"}));
 
   TemporaryFile tmp_file;
   close(tmp_file.fd);
@@ -137,22 +153,27 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_EQ(kExpectedDefaultPermittedPath, default_ns_config->permitted_paths());
 
   const auto& default_ns_links = default_ns_config->links();
-  ASSERT_EQ(1U, default_ns_links.size());
+  ASSERT_EQ(2U, default_ns_links.size());
   ASSERT_EQ("system", default_ns_links[0].ns_name());
   ASSERT_EQ("libc.so:libm.so:libdl.so:libstdc++.so", default_ns_links[0].shared_libs());
+  ASSERT_EQ("vndk", default_ns_links[1].ns_name());
+  ASSERT_EQ("libcutils.so:libbase.so", default_ns_links[1].shared_libs());
 
   auto& ns_configs = config->namespace_configs();
-  ASSERT_EQ(2U, ns_configs.size());
+  ASSERT_EQ(3U, ns_configs.size());
 
   // find second namespace
   const NamespaceConfig* ns_system = nullptr;
+  const NamespaceConfig* ns_vndk = nullptr;
   for (auto& ns : ns_configs) {
     std::string ns_name = ns->name();
-    ASSERT_TRUE(ns_name == "system" || ns_name == "default")
+    ASSERT_TRUE(ns_name == "system" || ns_name == "default" || ns_name == "vndk")
         << "unexpected ns name: " << ns->name();
 
     if (ns_name == "system") {
       ns_system = ns.get();
+    } else if (ns_name == "vndk") {
+      ns_vndk = ns.get();
     }
   }
 
@@ -162,6 +183,12 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(ns_system->visible());
   ASSERT_EQ(kExpectedSystemSearchPath, ns_system->search_paths());
   ASSERT_EQ(kExpectedSystemPermittedPath, ns_system->permitted_paths());
+
+  ASSERT_TRUE(ns_vndk != nullptr) << "vndk namespace was not found";
+
+  ASSERT_FALSE(ns_vndk->isolated()); // malformed bool property
+  ASSERT_FALSE(ns_vndk->visible()); // undefined bool property 
+  ASSERT_EQ(kExpectedVndkSearchPath, ns_vndk->search_paths());
 }
 
 TEST(linker_config, smoke) {
