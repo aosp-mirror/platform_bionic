@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f9db3d6b_17ff594a",
+        "filename": "libc/system_properties/contexts_serialized.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-12T00:55:47Z",
+      "side": 1,
+      "message": "PROP_FILENAME_MAX predates me, but I did try to change it to PATH_MAX before and it caused a stack size check enabled across bionic to fail.  We really only change the path to properties for testing, so I haven\u0027t found it worthwhile to increase the size.",
+      "parentUuid": "4bafa2e9_55ab51bd",
+      "range": {
+        "startLine": 68,
+        "startChar": 16,
+        "endLine": 68,
+        "endChar": 33
+      },
+      "revId": "dea41cec83f904d0e68e105920a560e3214e2990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d3c8629_7b97e43e",
         "filename": "tests/system_properties_test.cpp",
         "patchSetId": 7
@@ -57,6 +81,24 @@
       "revId": "dea41cec83f904d0e68e105920a560e3214e2990",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c3a1b3b_f72ae049",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-12T00:55:47Z",
+      "side": 1,
+      "message": "In retrospect, let me just drop the whole idea of loading the property_info file from this directory.  It\u0027d only be useful if there were a big end-to-end test where a custom property info file is generated and it\u0027s tested.  But since we already have tests for property_info mappings, and this test as is tests the mappings currently present on a device, I don\u0027t think we\u0027re going to get anything out of adding that test.",
+      "parentUuid": "b8da034b_a4c0b2da",
+      "revId": "dea41cec83f904d0e68e105920a560e3214e2990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
