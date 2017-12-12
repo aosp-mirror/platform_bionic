@@ -50,6 +50,24 @@
       "revId": "3316bb08245423c6a747076428fe6e8ec5078a10",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "906fcbb6_119a2cd5",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-12T18:36:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e36e816_830fc162",
+      "revId": "3316bb08245423c6a747076428fe6e8ec5078a10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
