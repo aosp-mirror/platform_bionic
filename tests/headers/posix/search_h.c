@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <search.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void search_h() {
+  TYPE(ENTRY);
+  TYPE(struct entry);
+  STRUCT_MEMBER(ENTRY, char*, key);
+  STRUCT_MEMBER(ENTRY, void*, data);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  ACTION a;
+  a = FIND;
+  a = ENTER;
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  VISIT v;
+  v = preorder;
+  v = postorder;
+  v = endorder;
+  v = leaf;
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+  TYPE(size_t);
 
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(hcreate, int (*f)(size_t));
+  FUNCTION(hdestroy, void (*f)(void));
+  FUNCTION(hsearch, ENTRY* (*f)(ENTRY, ACTION));
+  FUNCTION(insque, void (*f)(void*, void*));
+  FUNCTION(lfind, void* (*f)(const void*, const void*, size_t*, size_t,
+                             int (*)(const void*, const void*)));
+  FUNCTION(lsearch, void* (*f)(const void*, void*, size_t*, size_t,
+                               int (*)(const void*, const void*)));
+  FUNCTION(remque, void (*f)(void*));
+  FUNCTION(tdelete, void* (*f)(const void*, void**, int (*)(const void*, const void*)));
+  FUNCTION(tfind, void* (*f)(const void*, void* const*, int (*)(const void*, const void*)));
+  FUNCTION(tsearch, void* (*f)(const void*, void**, int (*)(const void*, const void*)));
+  FUNCTION(twalk, void (*f)(const void*, void (*)(const void*, VISIT, int)));
+}

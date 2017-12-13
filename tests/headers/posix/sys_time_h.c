@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,49 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <sys/time.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void sys_time_h() {
+  TYPE(struct timeval);
+  STRUCT_MEMBER(struct timeval, time_t, tv_sec);
+  STRUCT_MEMBER(struct timeval, suseconds_t, tv_usec);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
+  TYPE(struct itimerval);
+  STRUCT_MEMBER(struct itimerval, struct timeval, it_interval);
+  STRUCT_MEMBER(struct itimerval, struct timeval, it_value);
+
+  TYPE(time_t);
+  TYPE(suseconds_t);
+
+  TYPE(fd_set);
+
+  MACRO(ITIMER_REAL);
+  MACRO(ITIMER_VIRTUAL);
+  MACRO(ITIMER_PROF);
+
+#if !defined(FD_CLR)
+#error FD_CLR
+#endif
+#if !defined(FD_ISSET)
+#error FD_ISSET
+#endif
+#if !defined(FD_SET)
+#error FD_SET
+#endif
+#if !defined(FD_ZERO)
+#error FD_ZERO
+#endif
+  MACRO(FD_SETSIZE);
+
+  FUNCTION(getitimer, int (*f)(int, struct itimerval*));
+#if defined(__BIONIC__)
+  FUNCTION(gettimeofday, int (*f)(struct timeval*, struct timezone*));
 #else
-// Implemented as a static inline before 18.
+  FUNCTION(gettimeofday, int (*f)(struct timeval*, void*));
 #endif
-
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(setitimer, int (*f)(int, const struct itimerval*, struct itimerval*));
+  FUNCTION(select, int (*f)(int, fd_set*, fd_set*, fd_set*, struct timeval*));
+  FUNCTION(utimes, int (*f)(const char*, const struct timeval[2]));
+}
