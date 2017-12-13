@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,29 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <glob.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void glob_h() {
+  TYPE(glob_t);
+  STRUCT_MEMBER(glob_t, size_t, gl_pathc);
+  STRUCT_MEMBER(glob_t, char**, gl_pathv);
+  STRUCT_MEMBER(glob_t, size_t, gl_offs);
+  TYPE(size_t);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  MACRO(GLOB_APPEND);
+  MACRO(GLOB_DOOFFS);
+  MACRO(GLOB_ERR);
+  MACRO(GLOB_MARK);
+  MACRO(GLOB_NOCHECK);
+  MACRO(GLOB_NOESCAPE);
+  MACRO(GLOB_NOSORT);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  MACRO(GLOB_ABORTED);
+  MACRO(GLOB_NOMATCH);
+  MACRO(GLOB_NOSPACE);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(glob, int (*f)(const char*, int, int (*)(const char*, int), glob_t*));
+  FUNCTION(globfree, void (*f)(glob_t*));
+}

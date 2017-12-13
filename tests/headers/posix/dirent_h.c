@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <dirent.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void dirent_h() {
+  INCOMPLETE_TYPE(DIR);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
+  TYPE(struct dirent);
+#if defined(__BIONIC__) && !defined(__LP64__)
+  STRUCT_MEMBER(struct dirent, uint64_t, d_ino); // Historical ABI accident.
 #else
-// Implemented as a static inline before 18.
+  STRUCT_MEMBER(struct dirent, ino_t, d_ino);
 #endif
+  STRUCT_MEMBER_ARRAY(struct dirent, char/*[]*/, d_name);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  TYPE(ino_t);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(alphasort, int (*f)(const struct dirent**, const struct dirent**));
+  FUNCTION(closedir, int (*f)(DIR*));
+  FUNCTION(dirfd, int (*f)(DIR*));
+  FUNCTION(fdopendir, DIR* (*f)(int));
+  FUNCTION(opendir, DIR* (*f)(const char*));
+  FUNCTION(readdir, struct dirent* (*f)(DIR*));
+  FUNCTION(readdir_r, int (*f)(DIR*, struct dirent*, struct dirent**));
+  FUNCTION(rewinddir, void (*f)(DIR*));
+  FUNCTION(scandir, int (*f)(const char*, struct dirent***,
+                             int (*)(const struct dirent*),
+                             int (*)(const struct dirent**, const struct dirent**)));
+  FUNCTION(seekdir, void (*f)(DIR*, long));
+  FUNCTION(telldir, long (*f)(DIR*));
+}

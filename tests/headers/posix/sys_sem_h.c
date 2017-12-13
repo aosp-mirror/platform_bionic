@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,41 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <sys/sem.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void sys_sem_h() {
+  MACRO(SEM_UNDO);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
+  MACRO(GETNCNT);
+  MACRO(GETPID);
+  MACRO(GETVAL);
+  MACRO(GETALL);
+  MACRO(GETZCNT);
+  MACRO(SETVAL);
+  MACRO(SETALL);
+
+  TYPE(struct semid_ds);
+  STRUCT_MEMBER(struct semid_ds, struct ipc_perm, sem_perm);
+#if defined(__linux__) // POSIX says short, Linux says long.
+  STRUCT_MEMBER(struct semid_ds, unsigned long, sem_nsems);
 #else
-// Implemented as a static inline before 18.
+  STRUCT_MEMBER(struct semid_ds, unsigned short, sem_nsems);
 #endif
+  STRUCT_MEMBER(struct semid_ds, time_t, sem_otime);
+  STRUCT_MEMBER(struct semid_ds, time_t, sem_ctime);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  TYPE(pid_t);
+  TYPE(size_t);
+  TYPE(time_t);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+  TYPE(struct sembuf);
+  STRUCT_MEMBER(struct sembuf, unsigned short, sem_num);
+  STRUCT_MEMBER(struct sembuf, short, sem_op);
+  STRUCT_MEMBER(struct sembuf, short, sem_flg);
 
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(semctl, int (*f)(int, int, int, ...));
+  FUNCTION(semget, int (*f)(key_t, int, int));
+  FUNCTION(semop, int (*f)(int, struct sembuf*, size_t));
+}
