@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcc1bec8_a985e891",
+        "filename": "libc/include/android/legacy_termios_inlines.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-13T00:54:58Z",
+      "side": 1,
+      "message": "\u003cbits/termios_inlines.h\u003e includes this. (and the other two, actually.)",
+      "revId": "55878c3718d2c310d661c8d207d0b27a2e199a42",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
