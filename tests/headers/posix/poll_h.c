@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <poll.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void poll_h() {
+  TYPE(struct pollfd);
+  STRUCT_MEMBER(struct pollfd, int, fd);
+  STRUCT_MEMBER(struct pollfd, short, events);
+  STRUCT_MEMBER(struct pollfd, short, revents);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  TYPE(nfds_t);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  MACRO(POLLIN);
+  MACRO(POLLRDNORM);
+  MACRO(POLLRDBAND);
+  MACRO(POLLPRI);
+  MACRO(POLLOUT);
+  MACRO(POLLWRNORM);
+  MACRO(POLLWRBAND);
+  MACRO(POLLERR);
+  MACRO(POLLHUP);
+  MACRO(POLLNVAL);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(poll, int (*f)(struct pollfd[], nfds_t, int));
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <cpio.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void cpio_h() {
+  MACRO_VALUE(C_IRUSR, 0400);
+  MACRO_VALUE(C_IWUSR, 0200);
+  MACRO_VALUE(C_IXUSR, 0100);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
+  MACRO_VALUE(C_IRGRP, 040);
+  MACRO_VALUE(C_IWGRP, 020);
+  MACRO_VALUE(C_IXGRP, 010);
+
+  MACRO_VALUE(C_IROTH, 04);
+  MACRO_VALUE(C_IWOTH, 02);
+  MACRO_VALUE(C_IXOTH, 01);
+
+  MACRO_VALUE(C_ISUID, 04000);
+  MACRO_VALUE(C_ISGID, 02000);
+  MACRO_VALUE(C_ISVTX, 01000);
+
+  MACRO_VALUE(C_ISDIR, 040000);
+  MACRO_VALUE(C_ISFIFO, 010000);
+  MACRO_VALUE(C_ISREG, 0100000);
+  MACRO_VALUE(C_ISBLK, 060000);
+  MACRO_VALUE(C_ISCHR, 020000);
+
+  MACRO_VALUE(C_ISCTG, 0110000);
+  MACRO_VALUE(C_ISLNK, 0120000);
+  MACRO_VALUE(C_ISSOCK, 0140000);
+
+#if !defined(MAGIC)
+#error MAGIC
 #endif
-
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+}

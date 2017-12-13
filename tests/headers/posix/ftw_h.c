@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <ftw.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void ftw_h() {
+  TYPE(struct FTW);
+  STRUCT_MEMBER(struct FTW, int, base);
+  STRUCT_MEMBER(struct FTW, int, level);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  MACRO(FTW_F);
+  MACRO(FTW_D);
+  MACRO(FTW_DNR);
+  MACRO(FTW_DP);
+  MACRO(FTW_NS);
+  MACRO(FTW_SL);
+  MACRO(FTW_SLN);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  MACRO(FTW_PHYS);
+  MACRO(FTW_MOUNT);
+  MACRO(FTW_DEPTH);
+  MACRO(FTW_CHDIR);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+  FUNCTION(ftw, int (*f)(const char*, int (*)(const char*, const struct stat*, int), int));
 
-__END_DECLS
+  TYPE(struct stat);
 
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  // POSIX: "The <ftw.h> header shall define the ... the symbolic names for
+  // st_mode and the file type test macros as described in <sys/stat.h>."
+#include "sys_stat_h_mode_constants.h"
+#include "sys_stat_h_file_type_test_macros.h"
+}
