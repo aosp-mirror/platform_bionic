@@ -40,7 +40,7 @@ static const char* init_sh_path() {
    * in $PATH for the vendor shell, simply return the system shell.
    */
 
-#ifdef __ANDROID_TREBLE__
+#ifdef TREBLE_LINKER_NAMESPACES
   /* look for /system or /vendor prefix */
   char exe_path[strlen(VENDOR_PREFIX)];
   ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
