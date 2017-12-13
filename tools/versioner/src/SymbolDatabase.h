@@ -32,5 +32,3 @@ enum class NdkSymbolType {
 };
 
 using NdkSymbolDatabase = std::map<std::string, std::map<CompilationType, NdkSymbolType>>;
-NdkSymbolDatabase parsePlatforms(const std::set<CompilationType>& types,
-                                 const std::string& platform_dir);
