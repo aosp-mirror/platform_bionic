@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,46 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXT_NODE_H
-#define SYSTEM_PROPERTIES_CONTEXT_NODE_H
+#ifndef SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
+#define SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
 
-#include "private/bionic_lock.h"
+#include <property_info_parser/property_info_parser.h>
 
-#include "prop_area.h"
+#include "context_node.h"
+#include "contexts.h"
 
-class ContextNode {
+class ContextsSerialized : public Contexts {
  public:
-  ContextNode(const char* context) : context_(context), pa_(nullptr), no_access_(false) {
-    lock_.init(false);
-  }
-  ~ContextNode() {
-    Unmap();
+  virtual ~ContextsSerialized() override {
   }
 
-  ContextNode(const ContextNode&) = delete;
-  ContextNode(ContextNode&&) = delete;
-  void operator=(const ContextNode&) = delete;
-  void operator=(const ContextNode&&) = delete;
-
-  bool Open(bool access_rw, bool* fsetxattr_failed);
-  bool CheckAccessAndOpen();
-  void ResetAccess();
-  void Unmap();
-
-  const char* context() const {
-    return context_;
+  virtual bool Initialize(bool writable) override;
+  virtual prop_area* GetPropAreaForName(const char* name) override;
+  virtual prop_area* GetSerialPropArea() override {
+    return serial_prop_area_;
   }
-  prop_area* pa() {
-    return pa_;
-  }
+  virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override;
+  virtual void ResetAccess() override;
+  virtual void FreeAndUnmap() override;
 
  private:
-  bool CheckAccess();
+  bool InitializeContextNodes();
+  bool InitializeProperties();
+  bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
 
-  Lock lock_;
-  const char* context_;
-  prop_area* pa_;
-  bool no_access_;
+  android::properties::PropertyInfoAreaFile property_info_area_file_;
+  ContextNode* context_nodes_ = nullptr;
+  size_t num_context_nodes_ = 0;
+  size_t context_nodes_mmap_size_ = 0;
+  prop_area* serial_prop_area_ = nullptr;
 };
 
 #endif
