@@ -324,10 +324,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
         /* scan arbitrary characters (sets NOSKIP) */
         if (width == 0) width = 1;
         if (flags & LONG) {
-          if ((flags & SUPPRESS) == 0)
-            wcp = va_arg(ap, wchar_t*);
-          else
-            wcp = NULL;
+          wcp = ((flags & SUPPRESS) == 0) ? va_arg(ap, wchar_t*) : NULL;
           n = 0;
           while (width != 0) {
             if (n == (int)MB_CUR_MAX) {
@@ -388,20 +385,17 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
         break;
 
       case CT_CCL:
-        /* scan a (nonempty) character class (sets NOSKIP) */
-        if (width == 0) width = (size_t)~0; /* `infinity' */
-        /* take only those things in the class */
+      case CT_STRING:
+        // CT_CCL: scan a (nonempty) character class (sets NOSKIP).
+        // CT_STRING: like CCL, but zero-length string OK, & no NOSKIP.
+        if (width == 0) width = (size_t)~0; // 'infinity'.
         if (flags & LONG) {
           wchar_t twc;
-          int nchars;
+          int nchars = 0;
 
-          if ((flags & SUPPRESS) == 0)
-            wcp = va_arg(ap, wchar_t*);
-          else
-            wcp = &twc;
+          wcp = (flags & SUPPRESS) == 0 ? va_arg(ap, wchar_t*) : &twc;
           n = 0;
-          nchars = 0;
-          while (width != 0) {
+          while ((c == CT_CCL || !isspace(*fp->_p)) && width != 0) {
             if (n == (int)MB_CUR_MAX) {
               fp->_flags |= __SERR;
               goto input_failure;
@@ -417,7 +411,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
             }
             if (nconv == 0) *wcp = L'\0';
             if (nconv != (size_t)-2) {
-              if (wctob(*wcp) != EOF && !ccltab[wctob(*wcp)]) {
+              if ((c == CT_CCL && wctob(*wcp) != EOF && !ccltab[wctob(*wcp)]) || (c == CT_STRING && iswspace(*wcp))) {
                 while (n != 0) {
                   n--;
                   ungetc(buf[n], fp);
@@ -438,120 +432,45 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
               break;
             }
           }
-          if (n != 0) {
+          if (c == CT_CCL && n != 0) {
             fp->_flags |= __SERR;
             goto input_failure;
           }
           n = nchars;
-          if (n == 0) goto match_failure;
-          if (!(flags & SUPPRESS)) {
-            *wcp = L'\0';
-            nassigned++;
-          }
-        } else
-            /* take only those things in the class */
-            if (flags & SUPPRESS) {
+        } else if (flags & SUPPRESS) {
           n = 0;
-          while (ccltab[*fp->_p]) {
+          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !isspace(*fp->_p))) {
             n++, fp->_r--, fp->_p++;
             if (--width == 0) break;
             if (fp->_r <= 0 && __srefill(fp)) {
-              if (n == 0) goto input_failure;
+              if (c == CT_CCL && n == 0) goto input_failure;
               break;
             }
           }
-          if (n == 0) goto match_failure;
         } else {
           p0 = p = va_arg(ap, char*);
-          while (ccltab[*fp->_p]) {
+          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !isspace(*fp->_p))) {
             fp->_r--;
             *p++ = *fp->_p++;
             if (--width == 0) break;
             if (fp->_r <= 0 && __srefill(fp)) {
-              if (p == p0) goto input_failure;
+              if (c == CT_CCL && p == p0) goto input_failure;
               break;
             }
           }
           n = p - p0;
-          if (n == 0) goto match_failure;
-          *p = '\0';
-          nassigned++;
+        }
+        if (c == CT_CCL && n == 0) goto match_failure;
+        if (!(flags & SUPPRESS)) {
+          if (flags & LONG) {
+            *wcp = L'\0';
+          } else {
+            *p = '\0';
+          }
+          ++nassigned;
         }
         nread += n;
         break;
-
-      case CT_STRING:
-        /* like CCL, but zero-length string OK, & no NOSKIP */
-        if (width == 0) width = (size_t)~0;
-        if (flags & LONG) {
-          wchar_t twc;
-
-          if ((flags & SUPPRESS) == 0)
-            wcp = va_arg(ap, wchar_t*);
-          else
-            wcp = &twc;
-          n = 0;
-          while (!isspace(*fp->_p) && width != 0) {
-            if (n == (int)MB_CUR_MAX) {
-              fp->_flags |= __SERR;
-              goto input_failure;
-            }
-            buf[n++] = *fp->_p;
-            fp->_p++;
-            fp->_r--;
-            memset(&mbs, 0, sizeof(mbs));
-            nconv = mbrtowc(wcp, buf, n, &mbs);
-            if (nconv == (size_t)-1) {
-              fp->_flags |= __SERR;
-              goto input_failure;
-            }
-            if (nconv == 0) *wcp = L'\0';
-            if (nconv != (size_t)-2) {
-              if (iswspace(*wcp)) {
-                while (n != 0) {
-                  n--;
-                  ungetc(buf[n], fp);
-                }
-                break;
-              }
-              nread += n;
-              width--;
-              if (!(flags & SUPPRESS)) wcp++;
-              n = 0;
-            }
-            if (fp->_r <= 0 && __srefill(fp)) {
-              if (n != 0) {
-                fp->_flags |= __SERR;
-                goto input_failure;
-              }
-              break;
-            }
-          }
-          if (!(flags & SUPPRESS)) {
-            *wcp = L'\0';
-            nassigned++;
-          }
-        } else if (flags & SUPPRESS) {
-          n = 0;
-          while (!isspace(*fp->_p)) {
-            n++, fp->_r--, fp->_p++;
-            if (--width == 0) break;
-            if (fp->_r <= 0 && __srefill(fp)) break;
-          }
-          nread += n;
-        } else {
-          p0 = p = va_arg(ap, char*);
-          while (!isspace(*fp->_p)) {
-            fp->_r--;
-            *p++ = *fp->_p++;
-            if (--width == 0) break;
-            if (fp->_r <= 0 && __srefill(fp)) break;
-          }
-          *p = '\0';
-          nread += p - p0;
-          nassigned++;
-        }
-        continue;
 
       case CT_INT:
         /* scan an integer as if by strtoimax/strtoumax */
