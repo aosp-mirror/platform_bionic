@@ -1016,6 +1016,95 @@ TEST(STDIO_TEST, swscanf_ccl) {
   CheckScanf(swscanf, L"+,-/.", L"%[+--/]", 1, "+,-/");
 }
 
+// https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=202240
+TEST(STDIO_TEST, scanf_wscanf_EOF) {
+  EXPECT_EQ(0, sscanf("b", "ab"));
+  EXPECT_EQ(EOF, sscanf("", "a"));
+  EXPECT_EQ(0, swscanf(L"b", L"ab"));
+  EXPECT_EQ(EOF, swscanf(L"", L"a"));
+}
+
+TEST(STDIO_TEST, scanf_invalid_UTF8) {
+#if 0 // TODO: more tests invented during code review; no regressions, so fix later.
+  char buf[BUFSIZ];
+  wchar_t wbuf[BUFSIZ];
+
+  memset(buf, 0, sizeof(buf));
+  memset(wbuf, 0, sizeof(wbuf));
+  EXPECT_EQ(0, sscanf("\xc0" " foo", "%ls %s", wbuf, buf));
+#endif
+}
+
+TEST(STDIO_TEST, scanf_no_match_no_termination) {
+  char buf[4] = "x";
+  EXPECT_EQ(0, sscanf("d", "%[abc]", buf));
+  EXPECT_EQ('x', buf[0]);
+  EXPECT_EQ(0, swscanf(L"d", L"%[abc]", buf));
+  EXPECT_EQ('x', buf[0]);
+
+  wchar_t wbuf[4] = L"x";
+  EXPECT_EQ(0, swscanf(L"d", L"%l[abc]", wbuf));
+  EXPECT_EQ(L'x', wbuf[0]);
+
+  EXPECT_EQ(EOF, sscanf("", "%s", buf));
+  EXPECT_EQ('x', buf[0]);
+
+  EXPECT_EQ(EOF, swscanf(L"", L"%ls", wbuf));
+  EXPECT_EQ(L'x', wbuf[0]);
+}
+
+TEST(STDIO_TEST, scanf_wscanf_wide_character_class) {
+#if 0 // TODO: more tests invented during code review; no regressions, so fix later.
+  wchar_t buf[BUFSIZ];
+
+  // A wide character shouldn't match an ASCII-only class for scanf or wscanf.
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, sscanf("xĀyz", "%l[xy]", buf));
+  EXPECT_EQ(L"x"s, std::wstring(buf));
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, swscanf(L"xĀyz", L"%l[xy]", buf));
+  EXPECT_EQ(L"x"s, std::wstring(buf));
+
+  // Even if scanf has wide characters in a class, they won't match...
+  // TODO: is that a bug?
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, sscanf("xĀyz", "%l[xĀy]", buf));
+  EXPECT_EQ(L"x"s, std::wstring(buf));
+  // ...unless you use wscanf.
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, swscanf(L"xĀyz", L"%l[xĀy]", buf));
+  EXPECT_EQ(L"xĀy"s, std::wstring(buf));
+
+  // Negation only covers ASCII for scanf...
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, sscanf("xĀyz", "%l[^ab]", buf));
+  EXPECT_EQ(L"x"s, std::wstring(buf));
+  // ...but covers wide characters for wscanf.
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, swscanf(L"xĀyz", L"%l[^ab]", buf));
+  EXPECT_EQ(L"xĀyz"s, std::wstring(buf));
+
+  // We already determined that non-ASCII characters are ignored in scanf classes.
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, sscanf("x"
+                      "\xc4\x80" // Matches a byte from each wide char in the class.
+                      "\xc6\x82" // Neither byte is in the class.
+                      "yz",
+                      "%l[xy" "\xc5\x80" "\xc4\x81" "]", buf));
+  EXPECT_EQ(L"x", std::wstring(buf));
+  // bionic and glibc both behave badly for wscanf, so let's call it right for now...
+  memset(buf, 0, sizeof(buf));
+  EXPECT_EQ(1, swscanf(L"x"
+                       L"\xc4\x80"
+                       L"\xc6\x82"
+                       L"yz",
+                       L"%l[xy" L"\xc5\x80" L"\xc4\x81" L"]", buf));
+  // Note that this isn't L"xĀ" --- although the *bytes* matched, they're
+  // not put back together as a wide character.
+  EXPECT_EQ(L"x" L"\xc4" L"\x80", std::wstring(buf));
+#endif
+}
+
 TEST(STDIO_TEST, cantwrite_EBADF) {
   // If we open a file read-only...
   FILE* fp = fopen("/proc/version", "r");
