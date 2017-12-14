@@ -76,3 +76,11 @@ TEST(netinet_in, ntohq_macro) {
   UNUSED(le64);
 #endif
 }
+
+TEST(netinet_in, ip_mreq_source_fields) {
+  // https://issuetracker.google.com/36987220
+  ip_mreq_source mreq;
+  mreq.imr_interface.s_addr = htonl(INADDR_ANY);
+  mreq.imr_multiaddr.s_addr = htonl(INADDR_ANY);
+  mreq.imr_sourceaddr.s_addr = htonl(INADDR_ANY);
+}

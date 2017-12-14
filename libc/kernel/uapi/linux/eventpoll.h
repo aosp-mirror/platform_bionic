@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_EVENTPOLL_H
 #define _UAPI_LINUX_EVENTPOLL_H
+#include <bits/epoll_event.h>
 #include <linux/fcntl.h>
 #include <linux/types.h>
 #define EPOLL_CLOEXEC O_CLOEXEC
@@ -44,8 +45,4 @@
 #else
 #define EPOLL_PACKED
 #endif
-struct __kernel_uapi_epoll_event {
-  __u32 events;
-  __u64 data;
-} EPOLL_PACKED;
 #endif
