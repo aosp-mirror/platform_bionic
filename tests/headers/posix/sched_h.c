@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
-
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
-
-__BEGIN_DECLS
-
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
+#if !defined(DO_NOT_INCLUDE_SCHED_H)
+#include <sched.h>
 #endif
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+#include "header_checks.h"
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+static void sched_h() {
+  TYPE(pid_t);
+  TYPE(time_t);
+  TYPE(struct timespec);
 
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
+  TYPE(struct sched_param);
+  STRUCT_MEMBER(struct sched_param, int, sched_priority);
+#if !defined(__linux__)
+  STRUCT_MEMBER(struct sched_param, int, sched_ss_low_priority);
+  STRUCT_MEMBER(struct sched_param, struct timespec, sched_ss_repl_period);
+  STRUCT_MEMBER(struct sched_param, struct timespec, sched_ss_init_budget);
+  STRUCT_MEMBER(struct sched_param, int, sched_ss_max_repl);
 #endif
+
+  MACRO(SCHED_FIFO);
+  MACRO(SCHED_RR);
+#if !defined(__linux__)
+  MACRO(SCHED_SPORADIC);
+#endif
+  MACRO(SCHED_OTHER);
+
+  FUNCTION(sched_get_priority_max, int (*f)(int));
+  FUNCTION(sched_get_priority_min, int (*f)(int));
+  FUNCTION(sched_getparam, int (*f)(pid_t, struct sched_param*));
+  FUNCTION(sched_getscheduler, int (*f)(pid_t));
+  FUNCTION(sched_rr_get_interval, int (*f)(pid_t, struct timespec*));
+  FUNCTION(sched_setparam, int (*f)(pid_t, const struct sched_param*));
+  FUNCTION(sched_setscheduler, int (*f)(pid_t, int, const struct sched_param*));
+  FUNCTION(sched_yield, int (*f)(void));
+}

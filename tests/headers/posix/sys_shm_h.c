@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,33 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <sys/shm.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void sys_shm_h() {
+  MACRO(SHM_RDONLY);
+  MACRO(SHM_RND);
+  MACRO(SHMLBA);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  TYPE(shmatt_t);
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
+  TYPE(struct shmid_ds);
+  STRUCT_MEMBER(struct shmid_ds, struct ipc_perm, shm_perm);
+  STRUCT_MEMBER(struct shmid_ds, size_t, shm_segsz);
+  STRUCT_MEMBER(struct shmid_ds, pid_t, shm_lpid);
+  STRUCT_MEMBER(struct shmid_ds, pid_t, shm_cpid);
+  STRUCT_MEMBER(struct shmid_ds, shmatt_t, shm_nattch);
+  STRUCT_MEMBER(struct shmid_ds, time_t, shm_atime);
+  STRUCT_MEMBER(struct shmid_ds, time_t, shm_dtime);
+  STRUCT_MEMBER(struct shmid_ds, time_t, shm_ctime);
 
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
+  TYPE(pid_t);
+  TYPE(size_t);
+  TYPE(time_t);
 
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  FUNCTION(shmat, void* (*f)(int, const void*, int));
+  FUNCTION(shmctl, int (*f)(int, int, struct shmid_ds*));
+  FUNCTION(shmdt, int (*f)(const void*));
+  FUNCTION(shmget, int (*f)(key_t, size_t, int));
+}

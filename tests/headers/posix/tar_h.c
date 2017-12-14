@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#include <tar.h>
 
-#include <bits/wait.h>
-#include <sys/cdefs.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#include <linux/wait.h>
-#include <signal.h>
+#include "header_checks.h"
 
-__BEGIN_DECLS
+static void tar_h() {
+  MACRO(TMAGIC);
+  MACRO_VALUE(TMAGLEN, 6);
+  MACRO(TVERSION);
+  MACRO_VALUE(TVERSLEN, 2);
 
-pid_t wait(int* __status);
-pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
-pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
+  MACRO_VALUE(REGTYPE, '0');
+  MACRO_VALUE(AREGTYPE, '\0');
+  MACRO_VALUE(LNKTYPE, '1');
+  MACRO_VALUE(SYMTYPE, '2');
+  MACRO_VALUE(CHRTYPE, '3');
+  MACRO_VALUE(BLKTYPE, '4');
+  MACRO_VALUE(DIRTYPE, '5');
+  MACRO_VALUE(FIFOTYPE, '6');
+  MACRO_VALUE(CONTTYPE, '7');
 
-/* Posix states that idtype_t should be an enumeration type, but
- * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
- * instead.
- */
-typedef int idtype_t;
-
-int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
-
-__END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif
+  MACRO_VALUE(TSUID, 04000);
+  MACRO_VALUE(TSGID, 02000);
+  MACRO_VALUE(TSVTX, 01000);
+  MACRO_VALUE(TUREAD, 0400);
+  MACRO_VALUE(TUWRITE, 0200);
+  MACRO_VALUE(TUEXEC, 0100);
+  MACRO_VALUE(TGREAD, 040);
+  MACRO_VALUE(TGWRITE, 020);
+  MACRO_VALUE(TGEXEC, 010);
+  MACRO_VALUE(TOREAD, 04);
+  MACRO_VALUE(TOWRITE, 02);
+  MACRO_VALUE(TOEXEC, 01);
+}
