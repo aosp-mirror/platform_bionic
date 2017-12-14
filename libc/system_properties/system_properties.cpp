@@ -285,19 +285,11 @@ int __system_properties_init() {
   }
   contexts = nullptr;
   if (is_dir(property_filename)) {
-    if (access("/dev/__properties__/property_info", R_OK) == 0) {
-      new (&contexts_union.contexts_serialized) ContextsSerialized();
-      if (!contexts_union.contexts_serialized.Initialize(false)) {
-        return -1;
-      }
-      contexts = &contexts_union.contexts_serialized;
-    } else {
-      new (&contexts_union.contexts_split) ContextsSplit();
-      if (!contexts_union.contexts_split.Initialize(false)) {
-        return -1;
-      }
-      contexts = &contexts_union.contexts_split;
+    new (&contexts_union.contexts_split) ContextsSplit();
+    if (!contexts_union.contexts_split.Initialize(false)) {
+      return -1;
     }
+    contexts = &contexts_union.contexts_split;
   } else {
     new (&contexts_union.contexts_pre_split) ContextsPreSplit();
     if (!contexts_union.contexts_pre_split.Initialize(false)) {
@@ -324,9 +316,9 @@ int __system_property_area_init() {
   }
   // We set this unconditionally as we want tests to continue on regardless of if this failed
   // and property_service will abort on an error condition, so no harm done.
-  new (&contexts_union.contexts_serialized) ContextsSerialized;
-  contexts = &contexts_union.contexts_serialized;
-  if (!contexts_union.contexts_serialized.Initialize(true)) {
+  new (&contexts_union.contexts_split) ContextsSplit;
+  contexts = &contexts_union.contexts_split;
+  if (!contexts_union.contexts_split.Initialize(true)) {
     return -1;
   }
   return 0;
