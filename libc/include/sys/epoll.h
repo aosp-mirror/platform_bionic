@@ -37,22 +37,6 @@
 
 __BEGIN_DECLS
 
-typedef union epoll_data {
-  void* ptr;
-  int fd;
-  uint32_t u32;
-  uint64_t u64;
-} epoll_data_t;
-
-struct epoll_event {
-  uint32_t events;
-  epoll_data_t data;
-}
-#ifdef __x86_64__
-__packed
-#endif
-;
-
 int epoll_create(int __size);
 int epoll_create1(int __flags) __INTRODUCED_IN(21);
 
