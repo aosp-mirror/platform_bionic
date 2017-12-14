@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "562113be_78903fce",
+        "filename": "docs/status.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2017-12-14T23:59:22Z",
+      "side": 1,
+      "message": "Wouldn\u0027t we be better off doing these with versioned symbols?",
+      "revId": "2237b6b8ecd2ec45648b3dae07b98baa9ae27601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
