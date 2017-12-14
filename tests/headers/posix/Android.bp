@@ -25,4 +25,9 @@ cc_library_static {
       "-D_XOPEN_SOURCE=700",
     ],
     host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
 }
