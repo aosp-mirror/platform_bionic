@@ -22,6 +22,8 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 
+#include "utils.h"
+
 TEST(sys_epoll, smoke) {
   int epoll_fd = epoll_create(1);
   ASSERT_NE(-1, epoll_fd) << strerror(errno);
@@ -71,4 +73,19 @@ TEST(sys_epoll, epoll_event_data) {
 
   close(fds[0]);
   close(fds[1]);
+}
+
+TEST(sys_epoll, epoll_create1) {
+  int fd;
+  fd = epoll_create(1);
+  AssertCloseOnExec(fd, false);
+  close(fd);
+
+  fd = epoll_create1(0);
+  AssertCloseOnExec(fd, false);
+  close(fd);
+
+  fd = epoll_create1(EPOLL_CLOEXEC);
+  AssertCloseOnExec(fd, true);
+  close(fd);
 }

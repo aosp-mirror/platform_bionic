@@ -18,6 +18,7 @@
 #define __TEST_UTILS_H
 
 #include <dlfcn.h>
+#include <fcntl.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -149,6 +150,12 @@ static inline void AssertChildExited(int pid, int expected_exit_status) {
     ASSERT_TRUE(WIFSIGNALED(status));
     ASSERT_EQ(-expected_exit_status, WTERMSIG(status));
   }
+}
+
+static inline void AssertCloseOnExec(int fd, bool close_on_exec) {
+  int flags = fcntl(fd, F_GETFD);
+  ASSERT_NE(flags, -1);
+  ASSERT_EQ(close_on_exec ? FD_CLOEXEC : 0, flags & FD_CLOEXEC);
 }
 
 // The absolute path to the executable
