@@ -1420,8 +1420,8 @@ cc_library_static {
         },
     },
     product_variables: {
-        treble: {
-            cflags: ["-D__ANDROID_TREBLE__"],
+        treble_linker_namespaces: {
+            cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
     whole_static_libs: ["libpropertyinfoparser"],
