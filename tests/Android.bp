@@ -155,6 +155,7 @@ cc_test_library {
         "sys_xattr_test.cpp",
         "system_properties_test.cpp",
         "system_properties_test2.cpp",
+        "termios_test.cpp",
         "tgmath_test.c",
         "time_test.cpp",
         "uchar_test.cpp",
