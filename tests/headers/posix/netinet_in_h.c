@@ -62,7 +62,7 @@ static void netinet_in_h() {
 
   TYPE(struct ipv6_mreq);
   STRUCT_MEMBER(struct ipv6_mreq, struct in6_addr, ipv6mr_multiaddr);
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) // Currently comes from uapi header.
   STRUCT_MEMBER(struct ipv6_mreq, int, ipv6mr_interface);
 #else
   STRUCT_MEMBER(struct ipv6_mreq, unsigned, ipv6mr_interface);

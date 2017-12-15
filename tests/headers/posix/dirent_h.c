@@ -34,8 +34,8 @@ static void dirent_h() {
   INCOMPLETE_TYPE(DIR);
 
   TYPE(struct dirent);
-#if defined(__BIONIC__) && !defined(__LP64__)
-  STRUCT_MEMBER(struct dirent, uint64_t, d_ino); // Historical ABI accident.
+#if defined(__BIONIC__) && !defined(__LP64__) // Historical ABI accident.
+  STRUCT_MEMBER(struct dirent, uint64_t, d_ino);
 #else
   STRUCT_MEMBER(struct dirent, ino_t, d_ino);
 #endif
