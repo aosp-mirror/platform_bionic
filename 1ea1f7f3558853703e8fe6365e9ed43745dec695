@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "e49d954c_46acb48d",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T07:01:04Z",
+      "side": 1,
+      "message": "yeah, asking for _no_ limit is a bit weird. mentioning PATH_MAX in a comment sounds good too.",
+      "parentUuid": "90179b32_40a7860b",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d8a0a2e_17fc2ea1",
         "filename": "libc/system_properties/Android.bp",
         "patchSetId": 6
