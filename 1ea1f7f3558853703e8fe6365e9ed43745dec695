@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8141fb82_8a32e058",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T06:25:30Z",
+      "side": 1,
+      "message": "really?",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d8a0a2e_17fc2ea1",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T06:25:30Z",
+      "side": 1,
+      "message": "you don\u0027t want to have a proper include/ directory?",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07dbb701_577bb113",
+        "filename": "libc/system_properties/contexts_pre_split.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T06:25:30Z",
+      "side": 1,
+      "message": "why not bool?",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24451950_db314f16",
+        "filename": "libc/system_properties/contexts_serialized.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T06:25:30Z",
+      "side": 1,
+      "message": "especially if you\u0027re not going to change all the `return`s :-P",
+      "range": {
+        "startLine": 100,
+        "startChar": 11,
+        "endLine": 100,
+        "endChar": 16
+      },
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20bd26d8_2a125f35",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T06:25:30Z",
+      "side": 1,
+      "message": "isn\u0027t it better to leave the test names, now it\u0027s less obvious which test corresponds to which public API?",
+      "range": {
+        "startLine": 209,
+        "startChar": 17,
+        "endLine": 209,
+        "endChar": 42
+      },
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
