@@ -22,6 +22,30 @@
       "revId": "55316e28ad962cb1defa78e07314c1b1c0b72c6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dab730d_2fd61e9a",
+        "filename": "tests/headers/posix/signal_h.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T16:45:17Z",
+      "side": 1,
+      "message": "well, without this change _all_ architectures are :-)\n\nstrictly i can fix this, at the cost of some slight duplication. today\u0027s in_addr change, though, actually gives us a new mechanism to handle such things, so it\u0027s possible i can rewrite this CL in that style and fix all the architectures. i\u0027ll have a look... hmm, no, that doesn\u0027t work because our parser isn\u0027t smart enough to handle an #if inside a struct.\n\nthe old method isn\u0027t too bad though. i\u0027ll upload that. (i don\u0027t see us having the time to make the header parser sufficiently intelligent any time soon...)",
+      "parentUuid": "400f32f5_35e22532",
+      "range": {
+        "startLine": 107,
+        "startChar": 2,
+        "endLine": 107,
+        "endChar": 57
+      },
+      "revId": "55316e28ad962cb1defa78e07314c1b1c0b72c6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
