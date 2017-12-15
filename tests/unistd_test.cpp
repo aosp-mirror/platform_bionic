@@ -1043,6 +1043,17 @@ TEST(UNISTD_TEST, dup2_same) {
   ASSERT_EQ(EBADF, errno);
 }
 
+TEST(UNISTD_TEST, dup3) {
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_EQ(666, dup3(fd, 666, 0));
+  AssertCloseOnExec(666, false);
+  close(666);
+  ASSERT_EQ(667, dup3(fd, 667, O_CLOEXEC));
+  AssertCloseOnExec(667, true);
+  close(667);
+  close(fd);
+}
+
 TEST(UNISTD_TEST, lockf_smoke) {
   constexpr off64_t file_size = 32*1024LL;
 
