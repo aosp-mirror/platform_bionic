@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "362975a0_101fa1db",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-15T07:09:35Z",
+      "side": 1,
+      "message": "What\u0027s the default limit before bionic doesn\u0027t restrict it?\n\nOr maybe I just do an arbitrary PATH_MAX + x with a comment.",
+      "parentUuid": "e49d954c_46acb48d",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d8a0a2e_17fc2ea1",
         "filename": "libc/system_properties/Android.bp",
         "patchSetId": 6
