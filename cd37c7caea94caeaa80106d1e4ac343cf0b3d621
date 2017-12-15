@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfb841bb_fc9f8515",
+        "filename": "tests/headers/posix/sys_stat_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1238728
+      },
+      "writtenOn": "2017-12-15T15:10:11Z",
+      "side": 1,
+      "message": "If you agree this can be simplified to:\n#if defined(__BIONIC__) \u0026\u0026 !defined(__LP64__)",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 45
+      },
+      "revId": "cd37c7caea94caeaa80106d1e4ac343cf0b3d621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac718b64_7b409963",
+        "filename": "tests/headers/posix/sys_stat_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1238728
+      },
+      "writtenOn": "2017-12-15T15:10:11Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 45
+      },
+      "revId": "cd37c7caea94caeaa80106d1e4ac343cf0b3d621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52011ac2_eb576eeb",
+        "filename": "tests/headers/posix/sys_stat_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1238728
+      },
+      "writtenOn": "2017-12-15T15:10:11Z",
+      "side": 1,
+      "message": "If you agree this can be simplified to:\n#if defined(__LP64__)",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 91
+      },
+      "revId": "cd37c7caea94caeaa80106d1e4ac343cf0b3d621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
