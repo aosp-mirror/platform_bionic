@@ -16,6 +16,24 @@
       "revId": "2237b6b8ecd2ec45648b3dae07b98baa9ae27601",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2c03db4_6306bbbd",
+        "filename": "docs/status.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-15T00:10:57Z",
+      "side": 1,
+      "message": "maybe. the semantics aren\u0027t quite the same though, and i think in these two cases we do want to actively move people forward (which this style does).",
+      "parentUuid": "562113be_78903fce",
+      "revId": "2237b6b8ecd2ec45648b3dae07b98baa9ae27601",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
