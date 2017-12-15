@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "90179b32_40a7860b",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-15T06:57:20Z",
+      "side": 1,
+      "message": "We talked about this actually.  It\u0027s so I can use PATH_MAX instead of having the arbitrary PROP_FILENAME_MAX everywhere I use a path.\n\nUnless I can restrict this to a specific set of functions where I\u0027m using PATH_MAX.\n\nOr I can just go back to an arbitrary limit to stay below the bionic frame-size default.",
+      "parentUuid": "8141fb82_8a32e058",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d8a0a2e_17fc2ea1",
         "filename": "libc/system_properties/Android.bp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-15T06:25:30Z",
       "side": 1,
       "message": "you don\u0027t want to have a proper include/ directory?",
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a505103_26737f2d",
+        "filename": "libc/system_properties/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-15T06:57:20Z",
+      "side": 1,
+      "message": "I did originally.  I was going to have just system_properties.h in a proper include/ directory, but it has ContextsSerialized, etc as dependencies.  I would ideally hide these and just have a pointer to my implementation, but since I can\u0027t allocate memory, I can\u0027t allocate to create the pointer.\n\nI guess I could move all of my headers into a proper include/ directory; I\u0027ll do this.  I was thinking a bit all or nothing with the above goal of properly hiding the interface.",
+      "parentUuid": "5d8a0a2e_17fc2ea1",
       "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -76,6 +112,30 @@
     },
     {
       "key": {
+        "uuid": "f74ae42d_ef328df8",
+        "filename": "libc/system_properties/contexts_serialized.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-15T06:57:20Z",
+      "side": 1,
+      "message": "Heh.  Oops.\n\nSo, the original idea is that we returned -2 if fsetxattr failed, which indicates to init that it should abort since SELabels aren\u0027t applied, but tests should still run, since they\u0027ll never have permissions to set these labels and don\u0027t test that.\n\nThough, what I should do, and the point of this entire change, is to be able to change the implementation interface without worrying about the legacy one... so I can just have fsetxattr_failed as a parameter and make this cleanly return bool.",
+      "parentUuid": "24451950_db314f16",
+      "range": {
+        "startLine": 100,
+        "startChar": 11,
+        "endLine": 100,
+        "endChar": 16
+      },
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20bd26d8_2a125f35",
         "filename": "tests/system_properties_test.cpp",
         "patchSetId": 6
@@ -87,6 +147,30 @@
       "writtenOn": "2017-12-15T06:25:30Z",
       "side": 1,
       "message": "isn\u0027t it better to leave the test names, now it\u0027s less obvious which test corresponds to which public API?",
+      "range": {
+        "startLine": 209,
+        "startChar": 17,
+        "endLine": 209,
+        "endChar": 42
+      },
+      "revId": "1ea1f7f3558853703e8fe6365e9ed43745dec695",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee8dc115_e529d4f6",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-12-15T06:57:20Z",
+      "side": 1,
+      "message": "Yes, I\u0027ll swap them back.  These mostly got changed when I did find/replace of __system_property_ tosystem_properties.",
+      "parentUuid": "20bd26d8_2a125f35",
       "range": {
         "startLine": 209,
         "startChar": 17,
