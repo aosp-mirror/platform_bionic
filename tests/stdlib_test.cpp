@@ -325,16 +325,12 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
 
 TEST(stdlib, mkostemp64) {
   TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
-  int flags = fcntl(tf.fd, F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+  AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkostemp) {
   TemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
-  int flags = fcntl(tf.fd, F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+  AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkstemp64) {
