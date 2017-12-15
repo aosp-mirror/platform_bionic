@@ -1719,17 +1719,13 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
   ASSERT_TRUE(fd != -1);
 
   // This fd doesn't have O_CLOEXEC...
-  int flags = fcntl(fd, F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(0, flags & FD_CLOEXEC);
+  AssertCloseOnExec(fd, false);
 
   FILE* fp = fdopen(fd, "re");
   ASSERT_TRUE(fp != NULL);
 
   // ...but the new one does.
-  flags = fcntl(fileno(fp), F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+  AssertCloseOnExec(fileno(fp), true);
 
   fclose(fp);
   close(fd);
@@ -1740,16 +1736,12 @@ TEST(STDIO_TEST, freopen_CLOEXEC) {
   ASSERT_TRUE(fp != NULL);
 
   // This FILE* doesn't have O_CLOEXEC...
-  int flags = fcntl(fileno(fp), F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(0, flags & FD_CLOEXEC);
+  AssertCloseOnExec(fileno(fp), false);
 
   fp = freopen("/proc/version", "re", fp);
 
   // ...but the new one does.
-  flags = fcntl(fileno(fp), F_GETFD);
-  ASSERT_TRUE(flags != -1);
-  ASSERT_EQ(FD_CLOEXEC, flags & FD_CLOEXEC);
+  AssertCloseOnExec(fileno(fp), true);
 
   fclose(fp);
 }

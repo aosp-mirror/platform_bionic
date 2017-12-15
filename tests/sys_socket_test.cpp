@@ -22,6 +22,8 @@
 #include <sys/un.h>
 #include <fcntl.h>
 
+#include "utils.h"
+
 struct ConnectData {
   bool (*callback_fn)(int);
   const char* sock_path;
@@ -106,8 +108,8 @@ static void TestAccept4(struct sockaddr_un* addr, int fd) {
   int fd_acc = accept4(fd, reinterpret_cast<struct sockaddr*>(addr), &len, SOCK_CLOEXEC);
   ASSERT_NE(fd_acc, -1) << strerror(errno);
 
-  // Check that the flag was set properly.
-  ASSERT_EQ(FD_CLOEXEC, fcntl(fd_acc, F_GETFD) & FD_CLOEXEC);
+  // Check that SOCK_CLOEXEC was set properly.
+  AssertCloseOnExec(fd_acc, true);
 
   close(fd_acc);
 }
