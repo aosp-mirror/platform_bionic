@@ -37,17 +37,13 @@
 #include <bits/timespec.h>
 #include <limits.h>
 
-#if defined(__LP64__) || defined(__mips__)
-/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the POSIX one,
- * so we need to expose our own and translate behind the scenes. */
-#  define sigaction __kernel_sigaction
-#  include <linux/signal.h>
-#  undef sigaction
-#else
-/* For 32-bit, we're stuck with the definitions we already shipped,
+/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the
+ * POSIX one, so we need to expose our own and translate behind the scenes.
+ * For 32-bit, we're stuck with the definitions we already shipped,
  * even though they contain a sigset_t that's too small. */
-#  include <linux/signal.h>
-#endif
+#define sigaction __kernel_sigaction
+#include <linux/signal.h>
+#undef sigaction
 
 #include <sys/ucontext.h>
 #define __BIONIC_HAVE_UCONTEXT_T
@@ -87,7 +83,7 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 #if defined(__LP64__)
 
 struct sigaction {
-  unsigned int sa_flags;
+  int sa_flags;
   union {
     sighandler_t sa_handler;
     void (*sa_sigaction)(int, struct siginfo*, void*);
@@ -99,12 +95,24 @@ struct sigaction {
 #elif defined(__mips__)
 
 struct sigaction {
-  unsigned int sa_flags;
+  int sa_flags;
   union {
     sighandler_t sa_handler;
     void (*sa_sigaction) (int, struct siginfo*, void*);
   };
   sigset_t sa_mask;
+};
+
+#else
+
+struct sigaction {
+  union {
+    sighandler_t _sa_handler;
+    void (*_sa_sigaction)(int, struct siginfo*, void*);
+  } _u;
+  sigset_t sa_mask;
+  int sa_flags;
+  void (*sa_restorer)(void);
 };
 
 #endif
