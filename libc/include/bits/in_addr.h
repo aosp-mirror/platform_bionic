@@ -26,32 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <string.h>
+#ifndef _BITS_IN_ADDR_H_
+#define _BITS_IN_ADDR_H_
+
 #include <sys/cdefs.h>
-#include <unistd.h>
+#include <stdint.h>
 
-#define VENDOR_PREFIX "/vendor/"
+typedef uint32_t in_addr_t;
 
-static const char* init_sh_path() {
-  /* If the device is not treble enabled, return the path to the system shell.
-   * Vendor code, on non-treble enabled devices could use system() / popen()
-   * with relative paths for executables on /system. Since /system will not be
-   * in $PATH for the vendor shell, simply return the system shell.
-   */
+struct in_addr {
+  in_addr_t s_addr;
+};
 
-#ifdef TREBLE_LINKER_NAMESPACES
-  /* look for /system or /vendor prefix */
-  char exe_path[strlen(VENDOR_PREFIX)];
-  ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path));
-  if (len != -1 && !strncmp(exe_path, VENDOR_PREFIX, strlen(VENDOR_PREFIX))) {
-    return "/vendor/bin/sh";
-  }
 #endif
-  return "/system/bin/sh";
-}
-
-__LIBC_HIDDEN__ extern "C" const char* __bionic_get_shell_path() {
-  static const char* sh_path = init_sh_path();
-  return sh_path;
-}

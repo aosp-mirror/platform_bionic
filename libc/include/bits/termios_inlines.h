@@ -42,6 +42,9 @@
 
 __BEGIN_DECLS
 
+// Supporting separate input and output speeds would require an ABI
+// change for `struct termios`.
+
 static __inline speed_t cfgetspeed(const struct termios* s) {
   return __BIONIC_CAST(static_cast, speed_t, s->c_cflag & CBAUD);
 }
@@ -60,10 +63,16 @@ __BIONIC_TERMIOS_INLINE void cfmakeraw(struct termios* s) {
   s->c_lflag &= ~(ECHO|ECHONL|ICANON|ISIG|IEXTEN);
   s->c_cflag &= ~(CSIZE|PARENB);
   s->c_cflag |= CS8;
+  s->c_cc[VMIN] = 1;
+  s->c_cc[VTIME] = 0;
 }
 
 __BIONIC_TERMIOS_INLINE int cfsetspeed(struct termios* s, speed_t speed) {
-  // TODO: check 'speed' is valid.
+  // CBAUD is 0x100f, and every matching bit pattern has a Bxxx constant.
+  if ((speed & ~CBAUD) != 0) {
+    errno = EINVAL;
+    return -1;
+  }
   s->c_cflag = (s->c_cflag & ~CBAUD) | (speed & CBAUD);
   return 0;
 }
