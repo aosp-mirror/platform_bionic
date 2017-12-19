@@ -164,6 +164,30 @@
       "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55f1e2ad_e96814e3",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-19T20:52:07Z",
+      "side": 1,
+      "message": "isspace of negative values generally has UB. (Apparently isspace(EOF) is an exception, which I didn\u0027t know about.)\n\n\"The c argument is an int, the value of which the application shall ensure is a character representable as an unsigned char or equal to the value of the macro EOF. If the argument has any other value, the behavior is undefined.\"\n\nhttp://pubs.opengroup.org/onlinepubs/9699919799/functions/isspace.html",
+      "parentUuid": "ae995415_12a589c9",
+      "range": {
+        "startLine": 50,
+        "startChar": 20,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eec853d0_db70de44",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-19T20:52:07Z",
+      "side": 1,
+      "message": "These ULONG_MAX instances should be Max, right?",
+      "revId": "5c0b0e0e04bf12a8788a22134559547027050994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
