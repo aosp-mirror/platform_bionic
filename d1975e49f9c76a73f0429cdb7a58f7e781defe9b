@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af74a274_c22accf1",
+        "filename": "libc/bionic/vdso.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-19T23:45:12Z",
+      "side": 1,
+      "message": "Ooops, I should not have used vdso_return, I noticed this because I tried a test of time_t val \u003d time(nullptr) and got an unexpected result.\n\ntime(XXXX) also returns time_t which is not 0 on success as assumed by vdso_return().\n\nPedantically only if it returns a negative bounded value above the negative maximum error code, then we perform the vdso_return \"trick\". If we were to be pedantic about vdso_return we would rewrite it to something like:\n\nstatic inline int vdso_return(int result) {\n  if (__predict_true(result \u003e\u003d 0 || result \u003c -512)) return result;\n\n  errno \u003d -result;\n  return -1;\n}\n\nIt should be noted that the _actual_ vdso implementation(s) of time() have no negative return values associated with errors, perform no error checking, so we can do _without_ vdso_return and remain accurate.\n\nThe other subtlety is that an illegal address value does not return -EFAULT but actually performs the faulty access and crashes the caller.",
+      "range": {
+        "startLine": 67,
+        "startChar": 11,
+        "endLine": 67,
+        "endChar": 37
+      },
+      "revId": "d1975e49f9c76a73f0429cdb7a58f7e781defe9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
