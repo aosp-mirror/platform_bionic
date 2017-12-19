@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d0c6e0b8_89572034",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-19T19:14:01Z",
+      "side": 1,
+      "message": "Oops, forgot you can\u0027t use those kind of stl constructs in bionic.",
+      "parentUuid": "008fbcd1_93b58b74",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f5317c56_f1925a6d",
         "filename": "libc/bionic/strtol.cpp",
         "patchSetId": 1
