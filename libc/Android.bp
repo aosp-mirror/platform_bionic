@@ -1387,6 +1387,8 @@ cc_library_static {
         "bionic/sys_time.cpp",
         "bionic/sysinfo.cpp",
         "bionic/syslog.cpp",
+        "bionic/system_property_api.cpp",
+        "bionic/system_property_set.cpp",
         "bionic/tdestroy.cpp",
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
@@ -1400,13 +1402,6 @@ cc_library_static {
         "bionic/wctype.cpp",
         "bionic/wcwidth.cpp",
         "bionic/wmempcpy.cpp",
-        "system_properties/context_node.cpp",
-        "system_properties/contexts_split.cpp",
-        "system_properties/contexts_serialized.cpp",
-        "system_properties/prop_area.cpp",
-        "system_properties/prop_info.cpp",
-        "system_properties/system_properties.cpp",
-
 
         // This contains a weak stub implementation of __find_icu_symbol for wctype.cpp,
         // which will be overridden by the actual one in libc.so.
@@ -1424,7 +1419,7 @@ cc_library_static {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
-    whole_static_libs: ["libpropertyinfoparser"],
+    whole_static_libs: ["libsystemproperties"],
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],

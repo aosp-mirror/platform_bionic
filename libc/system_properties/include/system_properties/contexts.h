@@ -26,48 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
-#define SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
+#ifndef SYSTEM_PROPERTIES_CONTEXTS_H
+#define SYSTEM_PROPERTIES_CONTEXTS_H
 
-#include "contexts.h"
 #include "prop_area.h"
 #include "prop_info.h"
-#include "property_filename.h"
 
-class ContextsPreSplit : public Contexts {
+class Contexts {
  public:
-  virtual ~ContextsPreSplit() override {
+  virtual ~Contexts() {
   }
 
-  // We'll never initialize this legacy option as writable, so don't even check the arg.
-  virtual bool Initialize(bool) override {
-    pre_split_prop_area_ = prop_area::map_prop_area(property_filename);
-    return pre_split_prop_area_ != nullptr;
-  }
-
-  virtual prop_area* GetPropAreaForName(const char*) override {
-    return pre_split_prop_area_;
-  }
-
-  virtual prop_area* GetSerialPropArea() override {
-    return pre_split_prop_area_;
-  }
-
-  virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override {
-    pre_split_prop_area_->foreach (propfn, cookie);
-  }
-
-  // This is a no-op for pre-split properties as there is only one property file and it is
-  // accessible by all domains
-  virtual void ResetAccess() override {
-  }
-
-  virtual void FreeAndUnmap() override {
-    prop_area::unmap_prop_area(&pre_split_prop_area_);
-  }
-
- private:
-  prop_area* pre_split_prop_area_ = nullptr;
+  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) = 0;
+  virtual prop_area* GetPropAreaForName(const char* name) = 0;
+  virtual prop_area* GetSerialPropArea() = 0;
+  virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) = 0;
+  virtual void ResetAccess() = 0;
+  virtual void FreeAndUnmap() = 0;
 };
 
 #endif

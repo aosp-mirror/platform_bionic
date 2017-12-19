@@ -35,17 +35,15 @@
 
 class ContextNode {
  public:
-  ContextNode(const char* context) : context_(context), pa_(nullptr), no_access_(false) {
+  ContextNode(const char* context, const char* filename)
+      : context_(context), pa_(nullptr), no_access_(false), filename_(filename) {
     lock_.init(false);
   }
   ~ContextNode() {
     Unmap();
   }
 
-  ContextNode(const ContextNode&) = delete;
-  ContextNode(ContextNode&&) = delete;
-  void operator=(const ContextNode&) = delete;
-  void operator=(const ContextNode&&) = delete;
+  DISALLOW_COPY_AND_ASSIGN(ContextNode);
 
   bool Open(bool access_rw, bool* fsetxattr_failed);
   bool CheckAccessAndOpen();
@@ -66,6 +64,7 @@ class ContextNode {
   const char* context_;
   prop_area* pa_;
   bool no_access_;
+  const char* filename_;
 };
 
 #endif
