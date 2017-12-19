@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "prop_info.h"
+#include "system_properties/prop_info.h"
 
 #include <string.h>
 

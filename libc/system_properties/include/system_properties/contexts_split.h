@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,20 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
-#define SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
+#ifndef SYSTEM_PROPERTIES_CONTEXTS_SPLIT_H
+#define SYSTEM_PROPERTIES_CONTEXTS_SPLIT_H
 
-#include <property_info_parser/property_info_parser.h>
-
-#include "context_node.h"
 #include "contexts.h"
 
-class ContextsSerialized : public Contexts {
+struct PrefixNode;
+class ContextListNode;
+
+class ContextsSplit : public Contexts {
  public:
-  virtual ~ContextsSerialized() override {
+  virtual ~ContextsSplit() override {
   }
 
-  virtual bool Initialize(bool writable) override;
+  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) override;
   virtual prop_area* GetPropAreaForName(const char* name) override;
   virtual prop_area* GetSerialPropArea() override {
     return serial_prop_area_;
@@ -49,15 +49,14 @@ class ContextsSerialized : public Contexts {
   virtual void FreeAndUnmap() override;
 
  private:
-  bool InitializeContextNodes();
-  bool InitializeProperties();
   bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
+  bool InitializePropertiesFromFile(const char* filename);
+  bool InitializeProperties();
 
-  android::properties::PropertyInfoAreaFile property_info_area_file_;
-  ContextNode* context_nodes_ = nullptr;
-  size_t num_context_nodes_ = 0;
-  size_t context_nodes_mmap_size_ = 0;
+  PrefixNode* prefixes_ = nullptr;
+  ContextListNode* contexts_ = nullptr;
   prop_area* serial_prop_area_ = nullptr;
+  const char* filename_ = nullptr;
 };
 
 #endif
