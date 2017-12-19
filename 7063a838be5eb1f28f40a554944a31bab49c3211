@@ -22,6 +22,30 @@
       "revId": "7063a838be5eb1f28f40a554944a31bab49c3211",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e87942a_a9de9829",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-19T20:23:47Z",
+      "side": 1,
+      "message": "yeah, your benchmark is for the whole process, because you found that the allocations for reading the lines were a noticeable cost too. i\u0027m just interested in sscanf itself here, which doesn\u0027t allocate [with these inputs].",
+      "parentUuid": "d039bfb2_6b42df3b",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 31
+      },
+      "revId": "7063a838be5eb1f28f40a554944a31bab49c3211",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
