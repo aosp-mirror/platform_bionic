@@ -37,7 +37,7 @@ static void sys_stat_h() {
 #else
   STRUCT_MEMBER(struct stat, dev_t, st_dev);
 #endif
-#if defined(__BIONIC__) && (defined(__arm__) || defined(__i386__))
+#if defined(__BIONIC__) && !defined(__LP64__)
   STRUCT_MEMBER(struct stat, unsigned long long, st_ino);
 #else
   STRUCT_MEMBER(struct stat, ino_t, st_ino);
@@ -60,7 +60,7 @@ static void sys_stat_h() {
 #else
   STRUCT_MEMBER(struct stat, dev_t, st_rdev);
 #endif
-#if defined(__BIONIC__) && (defined(__arm__) || defined(__i386__))
+#if defined(__BIONIC__) && !defined(__LP64__)
   STRUCT_MEMBER(struct stat, long long, st_size);
 #else
   STRUCT_MEMBER(struct stat, off_t, st_size);
@@ -69,8 +69,10 @@ static void sys_stat_h() {
   STRUCT_MEMBER(struct stat, struct timespec, st_mtim);
   STRUCT_MEMBER(struct stat, struct timespec, st_ctim);
 #if defined(__BIONIC__)
-#if defined(__aarch64__)
+#if defined(__aarch64__) || (defined(__mips__) && defined(__LP64__))
   STRUCT_MEMBER(struct stat, int, st_blksize);
+#elif defined(__mips__) && !defined(__LP64__)
+  STRUCT_MEMBER(struct stat, unsigned int, st_blksize);
 #elif defined(__x86_64__)
   STRUCT_MEMBER(struct stat, long, st_blksize);
 #else
@@ -80,7 +82,7 @@ static void sys_stat_h() {
   STRUCT_MEMBER(struct stat, blksize_t, st_blksize);
 #endif
 #if defined(__BIONIC__)
-#if defined(__aarch64__) || defined(__x86_64__)
+#if defined(__LP64__)
   STRUCT_MEMBER(struct stat, long, st_blocks);
 #else
   STRUCT_MEMBER(struct stat, unsigned long long, st_blocks);
