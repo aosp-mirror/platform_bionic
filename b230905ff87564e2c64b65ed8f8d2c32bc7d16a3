@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eab3924f_2d9baced",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-19T19:01:52Z",
+      "side": 1,
+      "message": "Can\u0027t you use std::numeric_limits\u003cT\u003e::min() and std::numeric_limits\u003cT\u003e::max() for this? That way it can be derived instead of explicit.",
+      "range": {
+        "startLine": 36,
+        "startChar": 22,
+        "endLine": 36,
+        "endChar": 34
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5317c56_f1925a6d",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-19T19:01:52Z",
+      "side": 1,
+      "message": "nullptr?",
+      "range": {
+        "startLine": 39,
+        "startChar": 18,
+        "endLine": 39,
+        "endChar": 19
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40f83630_0133f468",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-19T19:01:52Z",
+      "side": 1,
+      "message": "Is there a reason this isn\u0027t casting directly to an int? Same with the cast below.",
+      "range": {
+        "startLine": 50,
+        "startChar": 20,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
