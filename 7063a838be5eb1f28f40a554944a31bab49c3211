@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d039bfb2_6b42df3b",
+        "filename": "benchmarks/stdio_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2017-12-19T19:10:26Z",
+      "side": 1,
+      "message": "The only issue I have with this is that the number of maps might not be the same between runs, or there might be very few maps.\n\nI don\u0027t think it matters too much, but I have a version in the backtrace benchmarks which creates an artificially large number of maps so that any differences are more pronounced.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 31
+      },
+      "revId": "7063a838be5eb1f28f40a554944a31bab49c3211",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
