@@ -16,6 +16,24 @@
       "revId": "5c0b0e0e04bf12a8788a22134559547027050994",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96cf7441_20706881",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-19T21:56:01Z",
+      "side": 1,
+      "message": "fixed, and new tests added that would have caught this (for 32-bit --- annoyingly, even if we\u0027d had tests i probably wouldn\u0027t have run them because i typically only remember to run the 64-bit tests).",
+      "parentUuid": "eec853d0_db70de44",
+      "revId": "5c0b0e0e04bf12a8788a22134559547027050994",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
