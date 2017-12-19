@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88b52aaa_d20edda9",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-19T23:28:36Z",
+      "side": 1,
+      "message": "auto min \u003d std::to_string(std::numeric_limits\u003cT\u003e::min()) ?",
+      "revId": "1921dce886c8ea17fb7958b59a18a71b6dc7ff96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
