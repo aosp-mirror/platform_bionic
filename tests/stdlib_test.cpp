@@ -32,6 +32,9 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <limits>
+#include <string>
+
 // The random number generator tests all set the seed, get four values, reset the seed and check
 // that they get the first two values repeated, and then reset the seed and check two more values
 // to rule out the possibility that we're just going round a cycle of four values.
@@ -672,6 +675,26 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   // If we see "0x" *not* followed by a hex digit, we shouldn't swallow the 'x'.
   ASSERT_EQ(T(0), fn("0xy", &end_p, 16));
   ASSERT_EQ('x', *end_p);
+
+  if (std::numeric_limits<T>::is_signed) {
+    // Minimum (such as -128).
+    std::string min{std::to_string(std::numeric_limits<T>::min())};
+    ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
+    // Too negative (such as -129).
+    min.back() = (min.back() + 1);
+    errno = 0;
+    ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
+    ASSERT_EQ(ERANGE, errno);
+  }
+
+  // Maximum (such as 127).
+  std::string max{std::to_string(std::numeric_limits<T>::max())};
+  ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
+  // Too positive (such as 128).
+  max.back() = (max.back() + 1);
+  errno = 0;
+  ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
+  ASSERT_EQ(ERANGE, errno);
 }
 
 TEST(stdlib, strtol_smoke) {

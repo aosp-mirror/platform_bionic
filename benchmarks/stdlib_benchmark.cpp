@@ -118,3 +118,45 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc, "0");
+
+void BM_stdlib_atoi(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(atoi(" -123"));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_atoi);
+
+void BM_stdlib_atol(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(atol(" -123"));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_atol);
+
+void BM_stdlib_strtol(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(strtol(" -123", nullptr, 0));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_strtol);
+
+void BM_stdlib_strtoll(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(strtoll(" -123", nullptr, 0));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_strtoll);
+
+void BM_stdlib_strtoul(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(strtoul(" -123", nullptr, 0));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_strtoul);
+
+void BM_stdlib_strtoull(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    benchmark::DoNotOptimize(strtoull(" -123", nullptr, 0));
+  }
+}
+BIONIC_BENCHMARK(BM_stdlib_strtoull);
