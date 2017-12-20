@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include "seccomp_bpfs.h"
-const sock_filter mips64_filter[] = {
+const sock_filter mips64_app_filter[] = {
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5000, 0, 84),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5164, 41, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5077, 21, 0),
@@ -92,4 +92,4 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5323, 1, 0), //mlock2|copy_file_range|preadv2|pw
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
 };
 
-const size_t mips64_filter_size = sizeof(mips64_filter) / sizeof(struct sock_filter);
+const size_t mips64_app_filter_size = sizeof(mips64_app_filter) / sizeof(struct sock_filter);
