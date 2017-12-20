@@ -31,7 +31,6 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
 #include <inttypes.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -40,6 +39,8 @@
 #include <string.h>
 #include <wctype.h>
 #include "local.h"
+
+#include <private/bionic_ctype.h>
 
 #define BUF 513 /* Maximum length of numeric string. */
 
@@ -116,8 +117,8 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
   for (;;) {
     c = *fmt++;
     if (c == 0) return (nassigned);
-    if (isspace(c)) {
-      while ((fp->_r > 0 || __srefill(fp) == 0) && isspace(*fp->_p)) nread++, fp->_r--, fp->_p++;
+    if (IsSpace(c)) {
+      while ((fp->_r > 0 || __srefill(fp) == 0) && IsSpace(*fp->_p)) nread++, fp->_r--, fp->_p++;
       continue;
     }
     if (c != '%') goto literal;
@@ -127,11 +128,11 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
      * switch on the format.  continue if done;
      * break once format type is derived.
      */
-  again:
+again:
     c = *fmt++;
     switch (c) {
       case '%':
-      literal:
+literal:
         if (fp->_r <= 0 && __srefill(fp)) goto input_failure;
         if (*fp->_p != c) goto match_failure;
         fp->_r--, fp->_p++;
@@ -286,7 +287,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
         return (EOF);
 
       default: /* compat */
-        if (isupper(c)) flags |= LONG;
+        if (IsUpper(c)) flags |= LONG;
         c = CT_INT;
         base = 10;
         break;
@@ -302,12 +303,13 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
      * that suppress this.
      */
     if ((flags & NOSKIP) == 0) {
-      while (isspace(*fp->_p)) {
+      while (IsSpace(*fp->_p)) {
         nread++;
-        if (--fp->_r > 0)
+        if (--fp->_r > 0) {
           fp->_p++;
-        else if (__srefill(fp))
+        } else if (__srefill(fp)) {
           goto input_failure;
+        }
       }
       /*
        * Note that there is at least one character in
@@ -395,7 +397,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
 
           wcp = (flags & SUPPRESS) == 0 ? va_arg(ap, wchar_t*) : &twc;
           n = 0;
-          while ((c == CT_CCL || !isspace(*fp->_p)) && width != 0) {
+          while ((c == CT_CCL || !IsSpace(*fp->_p)) && width != 0) {
             if (n == (int)MB_CUR_MAX) {
               fp->_flags |= __SERR;
               goto input_failure;
@@ -439,7 +441,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
           n = nchars;
         } else if (flags & SUPPRESS) {
           n = 0;
-          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !isspace(*fp->_p))) {
+          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !IsSpace(*fp->_p))) {
             n++, fp->_r--, fp->_p++;
             if (--width == 0) break;
             if (fp->_r <= 0 && __srefill(fp)) {
@@ -449,7 +451,7 @@ int __svfscanf(FILE* fp, const char* fmt0, __va_list ap) {
           }
         } else {
           p0 = p = va_arg(ap, char*);
-          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !isspace(*fp->_p))) {
+          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !IsSpace(*fp->_p))) {
             fp->_r--;
             *p++ = *fp->_p++;
             if (--width == 0) break;
