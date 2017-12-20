@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98c51f3a_f0fbc473",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-20T17:25:43Z",
+      "side": 1,
+      "message": "this introduces race condition with dlopen...",
+      "revId": "246553d2e5b93cf03f8328f7ad5c862c4a27868e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bffa6fdc_c9f0cad1",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2017-12-20T17:25:43Z",
+      "side": 1,
+      "message": "same here.",
+      "revId": "246553d2e5b93cf03f8328f7ad5c862c4a27868e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
