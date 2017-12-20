@@ -260,6 +260,30 @@
       "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6103dd1a_13c42289",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-20T00:13:14Z",
+      "side": 1,
+      "message": "where\u0027s the builtin implementation? i see the declaration, but no implementation(s).",
+      "parentUuid": "37df54cf_19c16b74",
+      "range": {
+        "startLine": 50,
+        "startChar": 20,
+        "endLine": 50,
+        "endChar": 33
+      },
+      "revId": "b230905ff87564e2c64b65ed8f8d2c32bc7d16a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
