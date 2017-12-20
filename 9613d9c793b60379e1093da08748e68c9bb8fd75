@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "449194b5_3f55f411",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-20T20:27:04Z",
+      "side": 1,
+      "message": "add these as code comments. (the fact that you have blank lines between groups of asserts suggests either \"missing comment\" or \"should be a separate test\".)",
+      "revId": "9613d9c793b60379e1093da08748e68c9bb8fd75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
