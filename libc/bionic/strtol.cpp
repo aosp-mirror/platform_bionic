@@ -27,11 +27,12 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
+
+#include <private/bionic_ctype.h>
 
 template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, int base) {
   // Ensure that base is between 2 and 36 inclusive, or the special value of 0.
@@ -47,8 +48,8 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   const char* s = nptr;
   int c;
   do {
-    c = static_cast<unsigned char>(*s++);
-  } while (isspace(c));
+    c = *s++;
+  } while (IsSpace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -58,7 +59,7 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
     if (c == '+') c = *s++;
   }
   if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && isxdigit(static_cast<unsigned char>(s[1]))) {
+      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
@@ -92,11 +93,11 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   // Set `any` if any digits consumed; make it negative to indicate overflow.
   int any = 0;
   T acc = 0;
-  for (; ; c = static_cast<unsigned char>(*s++)) {
-    if (isdigit(c)) {
+  for (; ; c = *s++) {
+    if (IsDigit(c)) {
       c -= '0';
-    } else if (isalpha(c)) {
-      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (IsAlpha(c)) {
+      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }
@@ -138,8 +139,8 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   const char* s = nptr;
   int c;
   do {
-    c = static_cast<unsigned char>(*s++);
-  } while (isspace(c));
+    c = *s++;
+  } while (IsSpace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -149,7 +150,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
     if (c == '+') c = *s++;
   }
   if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && isxdigit(static_cast<unsigned char>(s[1]))) {
+      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
@@ -160,11 +161,11 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   int cutlim = Max % static_cast<T>(base);
   T acc = 0;
   int any = 0;
-  for (; ; c = static_cast<unsigned char>(*s++)) {
-    if (isdigit(c)) {
+  for (; ; c = *s++) {
+    if (IsDigit(c)) {
       c -= '0';
-    } else if (isalpha(c)) {
-      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (IsAlpha(c)) {
+      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }
