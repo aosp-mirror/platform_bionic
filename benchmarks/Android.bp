@@ -61,6 +61,11 @@ cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
     data: ["suites/*"],
+    static_libs: [
+        "libsystemproperties",
+        "libasync_safe",
+    ],
+    include_dirs: ["bionic/libc",],
 }
 
 // We don't build a static benchmark executable because it's not usually
