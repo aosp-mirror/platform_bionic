@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9279e36e_486a8a52",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T06:26:51Z",
+      "side": 1,
+      "message": "why? i don\u0027t understand the value of this test: why would we expect fnmatch to be sensitive to alignment?\n\n(and even if persuaded that it\u0027s valuable, i\u0027d want to reuse rather than copy \u0026 paste the 138 lines above...)",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 29
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ef1d99_f5b61e36",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T06:26:51Z",
+      "side": 1,
+      "message": "using the opposite sense would seem more readable for folks just looking at the table below :-)",
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
