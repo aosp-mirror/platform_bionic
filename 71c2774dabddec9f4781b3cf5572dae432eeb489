@@ -34,6 +34,24 @@
       "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0a3ed733_ac9f4e67",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T21:52:36Z",
+      "side": 1,
+      "message": "hmm, i guess there\u0027s the potential for confusion either way. i _think_ blacklist first seems more obvious? (and isn\u0027t that what the comment at the top of this file implies?)",
+      "parentUuid": "3cecc57f_fad02f9f",
+      "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
