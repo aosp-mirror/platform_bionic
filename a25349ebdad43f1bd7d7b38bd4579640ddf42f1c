@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da9d9254_d1b6bd2d",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T06:18:04Z",
+      "side": 1,
+      "message": "(this isn\u0027t true of any of these files.)",
+      "revId": "a25349ebdad43f1bd7d7b38bd4579640ddf42f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f74d1a8e_537f7475",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T06:18:04Z",
+      "side": 1,
+      "message": "this is in the common file. why is it repeated here?",
+      "revId": "a25349ebdad43f1bd7d7b38bd4579640ddf42f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
