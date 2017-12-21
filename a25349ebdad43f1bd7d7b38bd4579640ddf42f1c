@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "76bf6f25_f2696522",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2017-12-21T17:44:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da9d9254_d1b6bd2d",
+      "revId": "a25349ebdad43f1bd7d7b38bd4579640ddf42f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f74d1a8e_537f7475",
         "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-12-21T06:18:04Z",
       "side": 1,
       "message": "this is in the common file. why is it repeated here?",
+      "revId": "a25349ebdad43f1bd7d7b38bd4579640ddf42f1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb606075_ee396d7b",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2017-12-21T17:44:35Z",
+      "side": 1,
+      "message": "It\u0027s merely because of the order of adding and removing the list.  In the script, I made it \"base + whitelist - blacklist\".  The global whitelist has swapon, and we don\u0027t want to remove it again by including the common blacklist.",
+      "parentUuid": "f74d1a8e_537f7475",
       "revId": "a25349ebdad43f1bd7d7b38bd4579640ddf42f1c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
