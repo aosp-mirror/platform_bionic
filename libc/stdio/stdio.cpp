@@ -170,7 +170,10 @@ found:
 
 	fp->_lb._base = nullptr;	/* no line buffer */
 	fp->_lb._size = 0;
-	_FILEEXT_INIT(fp);
+
+	memset(_EXT(fp), 0, sizeof(struct __sfileext));
+	_FLOCK(fp) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+	_EXT(fp)->_caller_handles_locking = false;
 
 	// Caller sets cookie, _read/_write etc.
 	// We explicitly clear _seek and _seek64 to prevent subtle bugs.
