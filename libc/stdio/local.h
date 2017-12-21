@@ -159,24 +159,12 @@ struct __sfileext {
 #define _UB(fp) _EXT(fp)->_ub
 #define _FLOCK(fp)  _EXT(fp)->_lock
 
-#define _FILEEXT_INIT(fp) \
-do { \
-	_UB(fp)._base = NULL; \
-	_UB(fp)._size = 0; \
-	WCIO_INIT(fp); \
-	pthread_mutexattr_t attr; \
-	pthread_mutexattr_init(&attr); \
-	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE); \
-	pthread_mutex_init(&_FLOCK(fp), &attr); \
-	pthread_mutexattr_destroy(&attr); \
-	_EXT(fp)->_caller_handles_locking = false; \
-} while (0)
-
-#define _FILEEXT_SETUP(f, fext) \
-do { \
-	(f)->_ext._base = __BIONIC_CAST(reinterpret_cast, unsigned char*, fext); \
-	_FILEEXT_INIT(f); \
-} while (0)
+#define _FILEEXT_SETUP(fp, fext) \
+  do { \
+    (fp)->_ext._base = __BIONIC_CAST(reinterpret_cast, unsigned char*, fext); \
+    memset(_EXT(fp), 0, sizeof(struct __sfileext)); \
+    _EXT(fp)->_caller_handles_locking = true; \
+  } while (0)
 
 /*
  * Android <= KitKat had getc/putc macros in <stdio.h> that referred
