@@ -79,9 +79,6 @@ do {\
 	} \
 } while (0)
 
-#define WCIO_INIT(fp) \
-	memset(&(_EXT(fp)->_wcio), 0, sizeof(struct wchar_io_data))
-
 __END_DECLS
 
 #endif /*_WCIO_H_*/
