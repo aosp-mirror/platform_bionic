@@ -52,6 +52,24 @@
       "revId": "777d7c791488c9c7be7ec3d6e47fd02b0baee8bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c19151d4_d8774d05",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2017-12-21T18:23:34Z",
+      "side": 0,
+      "message": "I would like to remove the candidates gradually after the mechanism is ready here.  I don\u0027t know if there is tests using them or something, so I\u0027m trying to be conservative.\n\nHere are syscall candidates to block, simply because they require privilege.  Please let me know if you have thoughts.\nhttps://docs.google.com/document/d/14V-ZQpPHRZBCmSLYtw9J00UMJzq0JtzeUsUsV8yeGJo/edit",
+      "parentUuid": "1814270b_88513d6e",
+      "revId": "777d7c791488c9c7be7ec3d6e47fd02b0baee8bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

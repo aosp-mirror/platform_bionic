@@ -16,6 +16,24 @@
       "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3cecc57f_fad02f9f",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2017-12-21T18:23:34Z",
+      "side": 1,
+      "message": "The global blacklist is applied AFTER the whitelists are applied.  Since the global whitelist includes swapon, I avoid using the common blacklist to avoid removing swapon again.\n\nAlternative, I could make the configuration in genseccomp.py looks like this, if it\u0027s better to you.\n\nANDROID_APP_SYSCALL_FILES \u003d {\n    \"SYSCALLS.TXT\",\n    \"-SECCOMP_BLACKLIST_COMMON.TXT\",\n    \"SECCOMP_WHITELIST_COMMON.TXT\",\n    \"SECCOMP_WHITELIST_APP.TXT\",\n}\nANDROID_GLOBAL_SYSCALL_FILES \u003d {\n    \"SYSCALLS.TXT\",\n    \"-SECCOMP_BLACKLIST_COMMON.TXT\",\n    \"SECCOMP_WHITELIST_COMMON.TXT\",\n    \"SECCOMP_WHITELIST_SYSTEM.TXT\",\n    \"SECCOMP_WHITELIST_APP.TXT\",\n    \"SECCOMP_WHITELIST_GLOBAL.TXT\",\n}",
+      "parentUuid": "a1939858_20f4543e",
+      "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
