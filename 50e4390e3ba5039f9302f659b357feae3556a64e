@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e30251c3_9aef0e19",
+        "filename": "libc/bionic/strtol.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2017-12-21T08:07:51Z",
+      "side": 1,
+      "message": "This is technically undefined behavior when acc \u003d\u003d Min, isn\u0027t it? \n\ne.g. https://godbolt.org/g/qpqxjq\n\nIf we build with -fwrapv, then it\u0027s OK. We could also do the negation in an unsigned type, or move the code around:\n\n    if (acc \u003d\u003d Min) {\n      errno \u003d ERANGE;\n      acc \u003d Max;\n    } else {\n      acc \u003d -acc;\n    }",
+      "revId": "50e4390e3ba5039f9302f659b357feae3556a64e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
