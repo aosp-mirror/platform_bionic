@@ -52,6 +52,24 @@
       "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "40e64bcb_e0cb77ad",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2017-12-21T22:03:16Z",
+      "side": 1,
+      "message": "I just realized I did apply blacklist first, so done ;)  I also needed to remove a sanity check, which hopefully is fine for now since .cpp changes are checked in.",
+      "parentUuid": "0a3ed733_ac9f4e67",
+      "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
