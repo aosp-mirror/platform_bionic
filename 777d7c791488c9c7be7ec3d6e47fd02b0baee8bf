@@ -34,6 +34,24 @@
       "revId": "777d7c791488c9c7be7ec3d6e47fd02b0baee8bf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1814270b_88513d6e",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T17:49:47Z",
+      "side": 0,
+      "message": "well, it looks like what i thought: there\u0027s no actual meat here. do we have any candidate system calls to block yet?",
+      "parentUuid": "b01ddb40_e6645824",
+      "revId": "777d7c791488c9c7be7ec3d6e47fd02b0baee8bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
