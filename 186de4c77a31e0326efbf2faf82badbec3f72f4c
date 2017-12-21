@@ -25,6 +25,99 @@
     },
     {
       "key": {
+        "uuid": "1dce31e6_435bceba",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "I can not defend it, especially since there is absolutely no alignment issues in fnmatch as it is truly a character at a time. Admittedly blind copy and paste purity to match exactly the set of strcmp tests (path of least resistance, and least effort to analyze). In practice I was annoyed at how long the trio of tests take to perform so would be pleased to drop this one.",
+      "parentUuid": "9279e36e_486a8a52",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 140,
+        "endChar": 29
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3039e584_d8654e7e",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "Just a thought, may be fleeting ... I am intrigued about re-use angle (stated for the above test) and should be explored here.\n\nThe _only_ differences between strcmp and fnmatch is this exclusion fragment and the function called. A regex test could also benefit?\n\nWill take a moment to see if RunCmpBuffer* could be adjusted to support something (a lambda?) to fulfill this?\n\nminimum, make the exclusion function a single static ...",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 5
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c214669_540d30ce",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "exclusion fragment",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 3
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe91e880_74f3471a",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "exclusion fragment",
+      "range": {
+        "startLine": 228,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 0
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "18ef1d99_f5b61e36",
         "filename": "tests/fnmatch_test.cpp",
         "patchSetId": 5
@@ -39,6 +132,47 @@
       "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52d650e2_a375d430",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "TBH it bothered me as well, mildly inspired by Fail callback above, momentum carried me forward after an errant choice ;-/ will switch to \u0027bool success\u0027",
+      "parentUuid": "18ef1d99_f5b61e36",
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c9aa0e6_676ce562",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-21T16:11:13Z",
+      "side": 1,
+      "message": "I still need to do this ... I feel the current set here as anemic.",
+      "range": {
+        "startLine": 291,
+        "startChar": 12,
+        "endLine": 291,
+        "endChar": 35
+      },
+      "revId": "186de4c77a31e0326efbf2faf82badbec3f72f4c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
