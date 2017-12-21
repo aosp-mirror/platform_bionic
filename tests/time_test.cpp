@@ -31,6 +31,31 @@
 
 #include "private/bionic_constants.h"
 
+TEST(time, time) {
+  // Acquire time
+  time_t p1, t1 = time(&p1);
+  // valid?
+  ASSERT_NE(static_cast<time_t>(0), t1);
+  ASSERT_NE(static_cast<time_t>(-1), t1);
+  ASSERT_EQ(p1, t1);
+
+  // Acquire time one+ second later
+  usleep(1010000);
+  time_t p2, t2 = time(&p2);
+  // valid?
+  ASSERT_NE(static_cast<time_t>(0), t2);
+  ASSERT_NE(static_cast<time_t>(-1), t2);
+  ASSERT_EQ(p2, t2);
+
+  // Expect time progression
+  ASSERT_LT(p1, p2);
+  ASSERT_LE(t2 - t1, static_cast<time_t>(2));
+
+  // Expect nullptr call to produce same results
+  ASSERT_LE(t2, time(nullptr));
+  ASSERT_LE(time(nullptr) - t2, static_cast<time_t>(1));
+}
+
 TEST(time, gmtime) {
   time_t t = 0;
   tm* broken_down = gmtime(&t);
