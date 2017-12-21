@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1939858_20f4543e",
+        "filename": "libc/SECCOMP_BLACKLIST_GLOBAL.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2017-12-21T17:52:11Z",
+      "side": 1,
+      "message": "?",
+      "revId": "71c2774dabddec9f4781b3cf5572dae432eeb489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
