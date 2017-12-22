@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f873252_e5699e14",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-22T19:24:31Z",
+      "side": 1,
+      "message": "Wrong:\n\n[[:alpha:]] is the correct form for a class",
+      "range": {
+        "startLine": 185,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 73
+      },
+      "revId": "162cb092577631fb321c624eae508cb7ae8f67b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
