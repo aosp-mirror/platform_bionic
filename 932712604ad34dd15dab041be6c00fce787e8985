@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41b13ef7_36a9561c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3529,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2017-12-22T18:54:46Z",
+      "side": 1,
+      "message": "Can you move this before rel_ / rela_ processing and try again?",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
