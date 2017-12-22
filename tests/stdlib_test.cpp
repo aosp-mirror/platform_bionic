@@ -679,22 +679,51 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   if (std::numeric_limits<T>::is_signed) {
     // Minimum (such as -128).
     std::string min{std::to_string(std::numeric_limits<T>::min())};
+    end_p = nullptr;
+    errno = 0;
     ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
+    ASSERT_EQ(0, errno);
+    ASSERT_EQ('\0', *end_p);
     // Too negative (such as -129).
     min.back() = (min.back() + 1);
+    end_p = nullptr;
     errno = 0;
     ASSERT_EQ(std::numeric_limits<T>::min(), fn(min.c_str(), &end_p, 0));
     ASSERT_EQ(ERANGE, errno);
+    ASSERT_EQ('\0', *end_p);
   }
 
   // Maximum (such as 127).
   std::string max{std::to_string(std::numeric_limits<T>::max())};
+  end_p = nullptr;
+  errno = 0;
   ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ('\0', *end_p);
   // Too positive (such as 128).
   max.back() = (max.back() + 1);
+  end_p = nullptr;
   errno = 0;
   ASSERT_EQ(std::numeric_limits<T>::max(), fn(max.c_str(), &end_p, 0));
   ASSERT_EQ(ERANGE, errno);
+  ASSERT_EQ('\0', *end_p);
+
+  // In case of overflow, strto* leaves us pointing past the end of the number,
+  // not at the digit that overflowed.
+  end_p = nullptr;
+  errno = 0;
+  ASSERT_EQ(std::numeric_limits<T>::max(),
+            fn("99999999999999999999999999999999999999999999999999999abc", &end_p, 0));
+  ASSERT_EQ(ERANGE, errno);
+  ASSERT_STREQ("abc", end_p);
+  if (std::numeric_limits<T>::is_signed) {
+      end_p = nullptr;
+      errno = 0;
+      ASSERT_EQ(std::numeric_limits<T>::min(),
+                fn("-99999999999999999999999999999999999999999999999999999abc", &end_p, 0));
+      ASSERT_EQ(ERANGE, errno);
+      ASSERT_STREQ("abc", end_p);
+  }
 }
 
 TEST(stdlib, strtol_smoke) {
