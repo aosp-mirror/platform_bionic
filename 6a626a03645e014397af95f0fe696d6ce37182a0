@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a83d42a_dc8fb3d3",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-22T00:05:45Z",
+      "side": 1,
+      "message": "These all fail on bionic\u0027s fnmatch, fix for this in dependent patch.",
+      "range": {
+        "startLine": 185,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 73
+      },
+      "revId": "6a626a03645e014397af95f0fe696d6ce37182a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
