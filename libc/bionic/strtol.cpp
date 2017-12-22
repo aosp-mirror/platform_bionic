@@ -66,31 +66,11 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   }
   if (base == 0) base = (c == '0') ? 8 : 10;
 
-  // Compute the cutoff value between legal numbers and illegal
-  // numbers.  That is the largest legal value, divided by the
-  // base.  An input number that is greater than this value, if
-  // followed by a legal input character, is too big.  One that
-  // is equal to this value may be valid or not; the limit
-  // between valid and invalid numbers is then based on the last
-  // digit.  For instance, if the range for intmax_t is
-  // [-9223372036854775808..9223372036854775807] and the input base
-  // is 10, cutoff will be set to 922337203685477580 and cutlim to
-  // either 7 (neg==0) or 8 (neg==1), meaning that if we have
-  // accumulated a value > 922337203685477580, or equal but the
-  // next digit is > 7 (or 8), the number is too big, and we will
-  // return a range error.
-  T cutoff = neg ? Min : Max;
-  int cutlim = cutoff % base;
-  cutoff /= base;
-  if (neg) {
-    if (cutlim > 0) {
-      cutlim -= base;
-      cutoff += 1;
-    }
-    cutlim = -cutlim;
-  }
-
-  // Set `any` if any digits consumed; make it negative to indicate overflow.
+  // We always work in the negative space because the most negative value has a
+  // larger magnitude than the most positive value.
+  T cutoff = Min / base;
+  int cutlim = -(Min % base);
+  // Non-zero if any digits consumed; negative to indicate overflow/underflow.
   int any = 0;
   T acc = 0;
   for (; ; c = *s++) {
@@ -103,29 +83,25 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
     }
     if (c >= base) break;
     if (any < 0) continue;
-    if (neg) {
-      if (acc < cutoff || (acc == cutoff && c > cutlim)) {
-        any = -1;
-        acc = Min;
-        errno = ERANGE;
-      } else {
-        any = 1;
-        acc *= base;
-        acc -= c;
-      }
+    if (acc < cutoff || (acc == cutoff && c > cutlim)) {
+      any = -1;
+      acc = Min;
+      errno = ERANGE;
     } else {
-      if (acc > cutoff || (acc == cutoff && c > cutlim)) {
-        any = -1;
-        acc = Max;
-        errno = ERANGE;
-      } else {
-        any = 1;
-        acc *= base;
-        acc += c;
-      }
+      any = 1;
+      acc *= base;
+      acc -= c;
     }
   }
   if (endptr != nullptr) *endptr = const_cast<char*>(any ? s - 1 : nptr);
+  if (!neg) {
+    if (acc == Min) {
+      errno = ERANGE;
+      acc = Max;
+    } else {
+      acc = -acc;
+    }
+  }
   return acc;
 }
 
@@ -177,7 +153,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
       errno = ERANGE;
     } else {
       any = 1;
-      acc *= static_cast<T>(base);
+      acc *= base;
       acc += c;
     }
   }
