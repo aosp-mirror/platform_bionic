@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "b63e7454_7075dc62",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-22T00:10:54Z",
+      "side": 1,
+      "message": "tab -\u003e space",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 1
+      },
+      "revId": "6a626a03645e014397af95f0fe696d6ce37182a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2da246b5_7778e7d2",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-22T00:10:54Z",
+      "side": 1,
+      "message": "actually, this test succeeds, just because ...",
+      "range": {
+        "startLine": 188,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 73
+      },
+      "revId": "6a626a03645e014397af95f0fe696d6ce37182a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a83d42a_dc8fb3d3",
         "filename": "tests/fnmatch_test.cpp",
         "patchSetId": 6
@@ -18,6 +64,29 @@
         "startChar": 0,
         "endLine": 196,
         "endChar": 73
+      },
+      "revId": "6a626a03645e014397af95f0fe696d6ce37182a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "070cbadb_f38b5910",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2017-12-22T00:10:54Z",
+      "side": 1,
+      "message": "drop reference to bash, most shells have this feature.",
+      "range": {
+        "startLine": 228,
+        "startChar": 19,
+        "endLine": 228,
+        "endChar": 29
       },
       "revId": "6a626a03645e014397af95f0fe696d6ce37182a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
