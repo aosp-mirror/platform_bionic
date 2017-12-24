@@ -27,11 +27,12 @@
  * SUCH DAMAGE.
  */
 
-#include <ctype.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
+
+#include <private/bionic_ctype.h>
 
 template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, int base) {
   // Ensure that base is between 2 and 36 inclusive, or the special value of 0.
@@ -47,8 +48,8 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   const char* s = nptr;
   int c;
   do {
-    c = static_cast<unsigned char>(*s++);
-  } while (isspace(c));
+    c = *s++;
+  } while (IsSpace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -58,73 +59,49 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
     if (c == '+') c = *s++;
   }
   if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && isxdigit(static_cast<unsigned char>(s[1]))) {
+      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
   }
   if (base == 0) base = (c == '0') ? 8 : 10;
 
-  // Compute the cutoff value between legal numbers and illegal
-  // numbers.  That is the largest legal value, divided by the
-  // base.  An input number that is greater than this value, if
-  // followed by a legal input character, is too big.  One that
-  // is equal to this value may be valid or not; the limit
-  // between valid and invalid numbers is then based on the last
-  // digit.  For instance, if the range for intmax_t is
-  // [-9223372036854775808..9223372036854775807] and the input base
-  // is 10, cutoff will be set to 922337203685477580 and cutlim to
-  // either 7 (neg==0) or 8 (neg==1), meaning that if we have
-  // accumulated a value > 922337203685477580, or equal but the
-  // next digit is > 7 (or 8), the number is too big, and we will
-  // return a range error.
-  T cutoff = neg ? Min : Max;
-  int cutlim = cutoff % base;
-  cutoff /= base;
-  if (neg) {
-    if (cutlim > 0) {
-      cutlim -= base;
-      cutoff += 1;
-    }
-    cutlim = -cutlim;
-  }
-
-  // Set `any` if any digits consumed; make it negative to indicate overflow.
+  // We always work in the negative space because the most negative value has a
+  // larger magnitude than the most positive value.
+  T cutoff = Min / base;
+  int cutlim = -(Min % base);
+  // Non-zero if any digits consumed; negative to indicate overflow/underflow.
   int any = 0;
   T acc = 0;
-  for (; ; c = static_cast<unsigned char>(*s++)) {
-    if (isdigit(c)) {
+  for (; ; c = *s++) {
+    if (IsDigit(c)) {
       c -= '0';
-    } else if (isalpha(c)) {
-      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (IsAlpha(c)) {
+      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }
     if (c >= base) break;
     if (any < 0) continue;
-    if (neg) {
-      if (acc < cutoff || (acc == cutoff && c > cutlim)) {
-        any = -1;
-        acc = Min;
-        errno = ERANGE;
-      } else {
-        any = 1;
-        acc *= base;
-        acc -= c;
-      }
+    if (acc < cutoff || (acc == cutoff && c > cutlim)) {
+      any = -1;
+      acc = Min;
+      errno = ERANGE;
     } else {
-      if (acc > cutoff || (acc == cutoff && c > cutlim)) {
-        any = -1;
-        acc = Max;
-        errno = ERANGE;
-      } else {
-        any = 1;
-        acc *= base;
-        acc += c;
-      }
+      any = 1;
+      acc *= base;
+      acc -= c;
     }
   }
   if (endptr != nullptr) *endptr = const_cast<char*>(any ? s - 1 : nptr);
+  if (!neg) {
+    if (acc == Min) {
+      errno = ERANGE;
+      acc = Max;
+    } else {
+      acc = -acc;
+    }
+  }
   return acc;
 }
 
@@ -138,8 +115,8 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   const char* s = nptr;
   int c;
   do {
-    c = static_cast<unsigned char>(*s++);
-  } while (isspace(c));
+    c = *s++;
+  } while (IsSpace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -149,7 +126,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
     if (c == '+') c = *s++;
   }
   if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && isxdigit(static_cast<unsigned char>(s[1]))) {
+      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
@@ -160,11 +137,11 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   int cutlim = Max % static_cast<T>(base);
   T acc = 0;
   int any = 0;
-  for (; ; c = static_cast<unsigned char>(*s++)) {
-    if (isdigit(c)) {
+  for (; ; c = *s++) {
+    if (IsDigit(c)) {
       c -= '0';
-    } else if (isalpha(c)) {
-      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (IsAlpha(c)) {
+      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }
@@ -176,7 +153,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
       errno = ERANGE;
     } else {
       any = 1;
-      acc *= static_cast<T>(base);
+      acc *= base;
       acc += c;
     }
   }
