@@ -33,6 +33,24 @@
       "revId": "246553d2e5b93cf03f8328f7ad5c862c4a27868e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e0ade67_73051cb9",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1188174
+      },
+      "writtenOn": "2017-12-25T05:51:00Z",
+      "side": 1,
+      "message": "we add the new lock g_solist_mutex at solist_remove_soinfo() in order to protect the solist is removed but somebody want to use it. we hope to synchronize the solist.",
+      "parentUuid": "bffa6fdc_c9f0cad1",
+      "revId": "246553d2e5b93cf03f8328f7ad5c862c4a27868e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
