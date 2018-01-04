@@ -130,6 +130,7 @@ cc_binary {
         "-shared",
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
+        "-Wl,-soname,ld-android.so",
     ],
 
     cflags: [
