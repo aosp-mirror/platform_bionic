@@ -236,14 +236,29 @@ cc_library {
 
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {
+        arm: {
+            version_script: "linker.arm.map",
+        },
+        arm64: {
+            version_script: "linker.generic.map",
+        },
         x86: {
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
         },
         x86_64: {
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
+        },
+        mips: {
+            version_script: "linker.generic.map",
+        },
+        mips64: {
+            version_script: "linker.generic.map",
         },
     },
-    srcs: ["ld_android.c"],
+
+    srcs: ["ld_android.cpp"],
     cflags: [
         "-Wall",
         "-Wextra",
