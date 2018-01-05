@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12f0f9e9_4a118305",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-05T11:25:20Z",
+      "side": 1,
+      "message": "It looks like glibc just ignores this dlclose here - because dlclose at L1373 does not trigger unload. It kind of looks like a bug to me. \n\nMaybe we should consider unloading on pthread_exit after all?",
+      "revId": "b1fe063710ffd0a32aec384c7f09a38e5add25dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
