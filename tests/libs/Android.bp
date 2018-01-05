@@ -636,6 +636,16 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library with non-trivial thread_local variable to test dlclose()
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_thread_local_dtor",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["thread_local_dtor.cpp"],
+}
+
+
+// -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
 // -----------------------------------------------------------------------------
 cc_binary_host {

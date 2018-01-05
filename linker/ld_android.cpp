@@ -59,6 +59,8 @@ __strong_alias(__loader_dlerror, __internal_linker_error);
 __strong_alias(__loader_dlopen, __internal_linker_error);
 __strong_alias(__loader_dlsym, __internal_linker_error);
 __strong_alias(__loader_dlvsym, __internal_linker_error);
+__strong_alias(__loader_add_thread_local_dtor, __internal_linker_error);
+__strong_alias(__loader_remove_thread_local_dtor, __internal_linker_error);
 #if defined(__arm__)
 __strong_alias(__loader_dl_unwind_find_exidx, __internal_linker_error);
 #endif
