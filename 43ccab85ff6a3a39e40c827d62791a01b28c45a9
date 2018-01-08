@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e292d080_e0865689",
+        "filename": "tests/complex_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T21:46:39Z",
+      "side": 1,
+      "message": "ah, thanks.",
+      "revId": "43ccab85ff6a3a39e40c827d62791a01b28c45a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ddb1f609_7dd079cf",
+        "filename": "tests/complex_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T21:46:39Z",
+      "side": 1,
+      "message": "reported upstream as https://github.com/google/googletest/issues/1391",
+      "revId": "43ccab85ff6a3a39e40c827d62791a01b28c45a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
