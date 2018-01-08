@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d93e515a_b03290e0",
+        "filename": "linker/linker_thread_local_support.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-08T16:07:44Z",
+      "side": 1,
+      "message": "glibc does not attempt to unload a library in the situation when last dtor is unregistered and the reference counter is 0 - but I am not sure there is good reason not to.\n\nWe can add code to upload soinfo in such situation.. What do you think?",
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
