@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include "seccomp_bpfs.h"
-const sock_filter arm64_filter[] = {
+const sock_filter arm64_app_filter[] = {
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 32),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 220, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 101, 7, 0),
@@ -40,4 +40,4 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 288, 1, 0), //mlock2|copy_file_range|preadv2|pwr
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
 };
 
-const size_t arm64_filter_size = sizeof(arm64_filter) / sizeof(struct sock_filter);
+const size_t arm64_app_filter_size = sizeof(arm64_app_filter) / sizeof(struct sock_filter);
