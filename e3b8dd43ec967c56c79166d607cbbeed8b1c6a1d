@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4767a798_c326ffe1",
+        "filename": "linker/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:02:06Z",
+      "side": 1,
+      "message": "there are several references to libdl in this comment and the other block comment near the bottom.",
+      "range": {
+        "startLine": 226,
+        "startChar": 65,
+        "endLine": 226,
+        "endChar": 73
+      },
+      "revId": "e3b8dd43ec967c56c79166d607cbbeed8b1c6a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
