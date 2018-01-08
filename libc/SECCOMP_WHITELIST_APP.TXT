@@ -1,9 +1,6 @@
 # This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
 # Note that the resultant policy is applied only to zygote spawned processes.
 #
-# The final seccomp whitelist is SYSCALLS.TXT - SECCOMP_BLACKLIST.TXT + SECCOMP_WHITELIST.TXT
-# Any entry in the blacklist must be in the syscalls file and not be in the whitelist file
-#
 # Each non-blank, non-comment line has the following format:
 #
 # return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
@@ -26,7 +23,4 @@
 #
 #      - Each parameter type is assumed to be stored in 32 bits.
 #
-# This file is processed by a python script named gensyscalls.py.
-
-int     swapon(const char*, int) all
-int     swapoff(const char*) all
+# This file is processed by a python script named genseccomp.py.

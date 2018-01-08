@@ -23,7 +23,7 @@
 #
 #      - Each parameter type is assumed to be stored in 32 bits.
 #
-# This file is processed by a python script named gensyscalls.py.
+# This file is processed by a python script named genseccomp.py.
 
 # syscalls needed to boot android
 int	pivot_root:pivot_root(const char *new_root, const char *put_old)	arm64,x86_64,mips64
