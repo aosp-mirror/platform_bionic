@@ -2,6 +2,115 @@
   "comments": [
     {
       "key": {
+        "uuid": "81a5e158_75171a0d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1709,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "libraries",
+      "range": {
+        "startLine": 1709,
+        "startChar": 25,
+        "endLine": 1709,
+        "endChar": 32
+      },
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cd5ec1d2_6ae253cc",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "the last",
+      "range": {
+        "startLine": 59,
+        "startChar": 60,
+        "endLine": 59,
+        "endChar": 64
+      },
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c57bf7c_63c483ca",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "destructor",
+      "range": {
+        "startLine": 60,
+        "startChar": 44,
+        "endLine": 60,
+        "endChar": 55
+      },
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "554c462c_45b161fd",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "flag",
+      "range": {
+        "startLine": 61,
+        "startChar": 72,
+        "endLine": 61,
+        "endChar": 76
+      },
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33a23807_b39738d1",
+        "filename": "linker/linker_thread_local_support.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "CHECK until proven otherwise?",
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d93e515a_b03290e0",
         "filename": "linker/linker_thread_local_support.cpp",
         "patchSetId": 6
@@ -16,6 +125,41 @@
       "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d5a0fbd_e4911b53",
+        "filename": "linker/linker_thread_local_support.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "i was the one conservative enough to say \"let\u0027s just *never* unload\", so this is fine by me :-)",
+      "parentUuid": "d93e515a_b03290e0",
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8e563c9_fd9e0732",
+        "filename": "linker/linker_thread_local_support.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:16:42Z",
+      "side": 1,
+      "message": "this one seems even more like a CHECK...",
+      "revId": "2b4f58600a8be02e7af64879ffc115c49a1ca8c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
