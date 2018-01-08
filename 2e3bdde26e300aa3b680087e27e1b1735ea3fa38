@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "262cc2ea_df472a7e",
+        "filename": "linker/ld_android.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-08T17:05:06Z",
+      "side": 1,
+      "message": "do we want to use a more intention-revealing name than \"fail\"? __unimplemented? __somehow_you_managed_to_not_get_the_actual_symbols_from_the_linker?\n\n(is there some plausible case -- not involving a linker bug -- where you could hit this? if not, __internal_linker_error?)",
+      "range": {
+        "startLine": 33,
+        "startChar": 16,
+        "endLine": 33,
+        "endChar": 22
+      },
+      "revId": "2e3bdde26e300aa3b680087e27e1b1735ea3fa38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
