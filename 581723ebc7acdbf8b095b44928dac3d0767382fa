@@ -16,6 +16,24 @@
       "revId": "581723ebc7acdbf8b095b44928dac3d0767382fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d3c90f3_ab6a611c",
+        "filename": "linker/ld_android.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-09T19:04:17Z",
+      "side": 1,
+      "message": "This library is not supposed to be loaded. You should always get the linker when requesting ld-android.so. \n\nNot sure I understand the infinite loop concern... This line will lead to linkage error on attempt to load this library.\n\nAnd if someone defines this symbol in the main executable - we have fallback in form of __internal_linker_error.",
+      "parentUuid": "64dbb126_cbff15df",
+      "revId": "581723ebc7acdbf8b095b44928dac3d0767382fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
