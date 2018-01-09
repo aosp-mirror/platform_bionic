@@ -514,28 +514,12 @@ static bool FileExists(const std::string& file) {
 
 void RegisterAllBenchmarks(const bench_opts_t& opts,
                            std::map<std::string, args_vector_t>& args_shorthand) {
-  // Add the property tests at the end since they might cause segfaults in
-  // tests running afterwards (b/62197783).
-  std::vector<std::string> prop_tests;
-
   for (auto& entry : g_str_to_func) {
-    if (android::base::StartsWith(entry.first, "BM_property_")) {
-      prop_tests.push_back(entry.first);
-    } else {
-      auto& function_info = entry.second;
-      args_vector_t arg_vector;
-      args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
-                                            args_shorthand);
-      RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
-    }
-  }
-
-  for (auto& prop_name : prop_tests) {
-    auto& function_info = g_str_to_func.at(prop_name);
+    auto& function_info = entry.second;
     args_vector_t arg_vector;
     args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
                                           args_shorthand);
-    RegisterGoogleBenchmarks(bench_opts_t(), opts, prop_name, run_args);
+    RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
   }
 }
 
