@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "459a7c35_37f7e915",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1965,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-09T21:52:31Z",
+      "side": 1,
+      "message": "deferred",
+      "range": {
+        "startLine": 1965,
+        "startChar": 19,
+        "endLine": 1965,
+        "endChar": 27
+      },
+      "revId": "802839af74c11c8e3bfdef28a86794ae8df0d5dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
