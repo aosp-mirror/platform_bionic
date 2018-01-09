@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64dbb126_cbff15df",
+        "filename": "linker/ld_android.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-09T17:05:16Z",
+      "side": 1,
+      "message": "i\u0027m confused: this isn\u0027t defined, so isn\u0027t this more likely to result in an infinite loop in the linker?",
+      "revId": "581723ebc7acdbf8b095b44928dac3d0767382fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
