@@ -484,15 +484,15 @@ Enable backtrace tracking for the zygote and zygote based processes:
     adb shell setprop libc.debug.malloc.options backtrace
     adb shell start
 
-Enable multiple options (backtrace and guards):
+Enable multiple options (backtrace and guard):
 
     adb shell stop
-    adb shell setprop libc.debug.malloc.options "\"backtrace guards\""
+    adb shell setprop libc.debug.malloc.options "\"backtrace guard\""
     adb shell start
 
 Note: The two levels of quoting in the adb shell command is necessary.
 The outer layer of quoting is for the shell on the host, to ensure that the
-inner layer of quoting is sent to the device, to make 'backtrace guards'
+inner layer of quoting is sent to the device, to make 'backtrace guard'
 a single argument.
 
 Enable malloc debug using an environment variable (pre-O Android release):
