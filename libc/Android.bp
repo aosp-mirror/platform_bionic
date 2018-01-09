@@ -2122,4 +2122,11 @@ ndk_library {
     first_version: "9",
 }
 
-subdirs = ["*"]
+// Export these headers for toolbox to process
+filegroup {
+    name: "kernel_input_headers",
+    srcs: [
+        "kernel/uapi/linux/input.h",
+        "kernel/uapi/linux/input-event-codes.h",
+    ],
+}
