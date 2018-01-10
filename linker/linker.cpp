@@ -75,6 +75,8 @@
 #undef ELF_ST_TYPE
 #define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
 
+static std::unordered_map<void*, size_t> g_dso_handle_counters;
+
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 static std::unordered_map<std::string, android_namespace_t*> g_exported_namespaces;
 
@@ -1780,26 +1782,10 @@ static soinfo* find_library(android_namespace_t* ns,
   return si;
 }
 
-static void soinfo_unload(soinfo* unload_si) {
-  // Note that the library can be loaded but not linked;
-  // in which case there is no root but we still need
-  // to walk the tree and unload soinfos involved.
-  //
-  // This happens on unsuccessful dlopen, when one of
-  // the DT_NEEDED libraries could not be linked/found.
-  bool is_linked = unload_si->is_linked();
-  soinfo* root = is_linked ? unload_si->get_local_group_root() : unload_si;
-
-  LD_LOG(kLogDlopen,
-         "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
-         unload_si->get_realpath(),
-         unload_si,
-         root->get_realpath(),
-         root);
-
+static void soinfo_unload_impl(soinfo* root) {
   ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
+  bool is_linked = root->is_linked();
 
-  size_t ref_count = is_linked ? root->decrement_ref_count() : 0;
   if (!root->can_unload()) {
     LD_LOG(kLogDlopen,
            "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
@@ -1808,14 +1794,6 @@ static void soinfo_unload(soinfo* unload_si) {
     return;
   }
 
-  if (ref_count > 0) {
-    LD_LOG(kLogDlopen,
-           "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
-           root->get_realpath(),
-           root,
-           ref_count);
-    return;
-  }
 
   soinfo_list_t unload_list;
   unload_list.push_back(root);
@@ -1913,6 +1891,86 @@ static void soinfo_unload(soinfo* unload_si) {
   } else {
       LD_LOG(kLogDlopen,
              "... dlclose: unload_si was not linked - not unloading external references ...");
+  }
+}
+
+static void soinfo_unload(soinfo* unload_si) {
+  // Note that the library can be loaded but not linked;
+  // in which case there is no root but we still need
+  // to walk the tree and unload soinfos involved.
+  //
+  // This happens on unsuccessful dlopen, when one of
+  // the DT_NEEDED libraries could not be linked/found.
+  bool is_linked = unload_si->is_linked();
+  soinfo* root = is_linked ? unload_si->get_local_group_root() : unload_si;
+
+  LD_LOG(kLogDlopen,
+         "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
+         unload_si->get_realpath(),
+         unload_si,
+         root->get_realpath(),
+         root);
+
+
+  size_t ref_count = is_linked ? root->decrement_ref_count() : 0;
+  if (ref_count > 0) {
+    LD_LOG(kLogDlopen,
+           "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
+           root->get_realpath(),
+           root,
+           ref_count);
+    return;
+  }
+
+  soinfo_unload_impl(root);
+}
+
+void increment_dso_handle_reference_counter(void* dso_handle) {
+  if (dso_handle == nullptr) {
+    return;
+  }
+
+  auto it = g_dso_handle_counters.find(dso_handle);
+  if (it != g_dso_handle_counters.end()) {
+    CHECK(++it->second != 0);
+  } else {
+    soinfo* si = find_containing_library(dso_handle);
+    if (si != nullptr) {
+      ProtectedDataGuard guard;
+      si->set_tls_nodelete();
+    } else {
+      async_safe_fatal(
+          "increment_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
+          dso_handle);
+    }
+    g_dso_handle_counters[dso_handle] = 1U;
+  }
+}
+
+void decrement_dso_handle_reference_counter(void* dso_handle) {
+  if (dso_handle == nullptr) {
+    return;
+  }
+
+  auto it = g_dso_handle_counters.find(dso_handle);
+  CHECK(it != g_dso_handle_counters.end());
+  CHECK(it->second != 0);
+
+  if (--it->second == 0) {
+    soinfo* si = find_containing_library(dso_handle);
+    if (si != nullptr) {
+      ProtectedDataGuard guard;
+      si->unset_tls_nodelete();
+      if (si->get_ref_count() == 0) {
+        // Perform deferred unload - note that soinfo_unload_impl does not decrement ref_count
+        soinfo_unload_impl(si);
+      }
+    } else {
+      async_safe_fatal(
+          "decrement_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
+          dso_handle);
+    }
+    g_dso_handle_counters.erase(it);
   }
 }
 
