@@ -130,6 +130,7 @@ cc_binary {
         "-shared",
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
+        "-Wl,-soname,ld-android.so",
     ],
 
     cflags: [
@@ -219,4 +220,65 @@ cc_binary {
     // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
     // looking up symbols in the linker by mistake.
     prefix_symbols: "__dl_",
+}
+
+cc_library {
+    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols ld-android.so pulls from
+    // libgcc.a are made static to ld-android.so.  This in turn ensures that libraries that
+    // a) pull symbols from libgcc.a and b) depend on ld-android.so will not rely on ld-android.so
+    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
+    // we use this property to make sure libc.so has its own copy of the code from
+    // libgcc.a it uses.
+    //
+    // DO NOT REMOVE --exclude-libs!
+
+    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
+
+    // for x86, exclude libgcc_eh.a for the same reasons as above
+    arch: {
+        arm: {
+            version_script: "linker.arm.map",
+        },
+        arm64: {
+            version_script: "linker.generic.map",
+        },
+        x86: {
+            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
+        },
+        x86_64: {
+            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
+        },
+        mips: {
+            version_script: "linker.generic.map",
+        },
+        mips64: {
+            version_script: "linker.generic.map",
+        },
+    },
+
+    srcs: ["ld_android.cpp"],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    stl: "none",
+
+    name: "ld-android",
+    defaults: ["linux_bionic_supported"],
+
+    // NOTE: ld-android.so needs __aeabi_unwind_cpp_pr0 from libgcc.a but libgcc.a
+    // needs a few symbols from libc. Using --no-undefined here results in having to
+    // link against libc creating a circular dependency which is removed and we end
+    // up with missing symbols. Since this library is just a bunch of stubs, we set
+    // allow_undefined_symbols to remove --no-undefined from the linker flags.
+    allow_undefined_symbols: true,
+    system_shared_libs: [],
+
+    sanitize: {
+        never: true,
+    },
 }
