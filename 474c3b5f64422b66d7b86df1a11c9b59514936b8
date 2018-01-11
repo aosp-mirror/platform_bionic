@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "939fc848_8ba0874e",
+        "filename": "libc/bionic/execve_hook.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-11T11:50:33Z",
+      "side": 1,
+      "message": "Try this:\n\n    int len \u003d snprintf(buf, sizeof(buf), \"\u003d %d %d: %s\\n\", getpid(), getppid(), name);\n    if (len \u003e\u003d sizeof(buf)) {\n      len \u003d sizeof(buf) - 1;\n    }\n    write(kmsg_fd, buf, len);",
+      "range": {
+        "startLine": 17,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 66
+      },
+      "revId": "474c3b5f64422b66d7b86df1a11c9b59514936b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "416f87ff_2ac98e9d",
+        "filename": "libc/bionic/openat_hook.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-11T11:50:33Z",
+      "side": 1,
+      "message": "Try this:\n\n    int len \u003d snprintf(buf, sizeof(buf), \"_ %d: 0x%llx %lld, %s\\n\", (int)getpid(), (unsigned long long)s.st_dev, (long long)s.st_ino, path);\n\n    if (len \u003e\u003d sizeof(buf)) {\n        len \u003d sizeof(buf) - 1;\n    }\n\n    write(kmsg_fd, buf, len);\n\np.s. snprintf() will add the \\0 for you.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 39
+      },
+      "revId": "474c3b5f64422b66d7b86df1a11c9b59514936b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
