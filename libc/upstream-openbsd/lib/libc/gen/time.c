@@ -28,11 +28,12 @@
  * SUCH DAMAGE.
  */
 
+#include <sys/cdefs.h>
 #include <sys/time.h>
 #include <time.h>
 
-time_t
-time(time_t *t)
+__LIBC_HIDDEN__ time_t
+__time(time_t *t)
 {
 	struct timeval tt;
 
@@ -42,4 +43,3 @@ time(time_t *t)
 		*t = (time_t)tt.tv_sec;
 	return (tt.tv_sec);
 }
-DEF_STRONG(time);
