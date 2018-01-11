@@ -35,3 +35,7 @@ void* __find_icu_symbol(const char* symbol_name __attribute__((__unused__))) {
 extern "C" int __cxa_type_match() {
   async_safe_fatal("__cxa_type_match is not implemented in the linker");
 }
+
+int posix_memalign(void**, size_t, size_t) {
+  async_safe_fatal("posix_memalign is not implemented in the linker");
+}
