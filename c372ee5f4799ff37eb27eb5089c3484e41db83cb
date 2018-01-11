@@ -123,6 +123,24 @@
       "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67250871_4e624fb0",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2018-01-11T01:05:50Z",
+      "side": 1,
+      "message": "You should never be writing to the source tree with an upload hook. You\u0027ve got no idea what local changes exist -- or whether we\u0027re actually uploading what\u0027s currently checked out into the worktree.\n\nYou also need to be using the prebuilt bpfmt, not one that may or may not be in $PATH.",
+      "parentUuid": "0d5da129_22f4c37a",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
