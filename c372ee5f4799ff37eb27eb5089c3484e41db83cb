@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ebd11b4_34c0805b",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-11T00:28:28Z",
+      "side": 1,
+      "message": "Maybe `git diff HEAD~ --name-only | egrep \"\\.bp$\"` instead, to only run bpfmt on bp files that changed?",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "132cdf62_7bae42a0",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-11T00:28:28Z",
+      "side": 1,
+      "message": "Use `bpfmt -l` instead of writing to the files and diffing?",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
