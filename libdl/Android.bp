@@ -4,7 +4,10 @@
 cc_library_static {
     name: "libdl_static",
 
-    srcs: ["libdl.cpp", "libdl_cfi.cpp"],
+    srcs: [
+        "libdl.cpp",
+        "libdl_cfi.cpp",
+    ],
 
     cflags: [
         "-Wall",
@@ -43,7 +46,6 @@ cc_library {
     arch: {
         arm: {
             version_script: "libdl.arm.map",
-            ldflags: ["-Wl,--hash-style=both"],
         },
         arm64: {
             version_script: "libdl.arm64.map",
@@ -57,7 +59,6 @@ cc_library {
         x86: {
             ldflags: [
                 "-Wl,--exclude-libs=libgcc_eh.a",
-                "-Wl,--hash-style=both",
             ],
             version_script: "libdl.x86.map",
         },
@@ -70,7 +71,7 @@ cc_library {
         whole_static_libs: ["libdl_static"],
     },
     static: {
-        srcs: [ "libdl_static.c" ],
+        srcs: ["libdl_static.c"],
     },
     cflags: [
         "-Wall",
@@ -90,7 +91,7 @@ cc_library {
 
     // This is placeholder library the actual implementation is (currently)
     // provided by the linker.
-    shared_libs: [ "ld-android" ],
+    shared_libs: ["ld-android"],
 
     sanitize: {
         never: true,
