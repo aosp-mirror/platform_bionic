@@ -105,6 +105,24 @@
       "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d5da129_22f4c37a",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-11T00:43:20Z",
+      "side": 1,
+      "message": "repohooks runs git clang-format with --diff to not apply the changes",
+      "parentUuid": "fcf058cb_9bdb9704",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
