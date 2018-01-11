@@ -69,6 +69,24 @@
       "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35e9e305_b68bb103",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-11T00:34:15Z",
+      "side": 1,
+      "message": "Doesn\u0027t this break down if you have multiple commits stacked? The way the preupload stuff works is by checking out each of the commits on your stack and running the hooks, right?",
+      "parentUuid": "5852e6c6_f8980c84",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
