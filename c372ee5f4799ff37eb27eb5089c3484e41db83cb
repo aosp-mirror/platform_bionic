@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a2522be5_f44c58a2",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-11T00:31:29Z",
+      "side": 1,
+      "message": "it\u0027s instantaneous anyway, so YAGNI.",
+      "parentUuid": "9ebd11b4_34c0805b",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "132cdf62_7bae42a0",
         "filename": "tools/bpfmt.sh",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-11T00:28:28Z",
       "side": 1,
       "message": "Use `bpfmt -l` instead of writing to the files and diffing?",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5852e6c6_f8980c84",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-11T00:31:29Z",
+      "side": 1,
+      "message": "this seems more useful, though, because all you have to do to fix it is `git commit -a --amend`. (which is the same as the clang-format hook.)",
+      "parentUuid": "132cdf62_7bae42a0",
       "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
