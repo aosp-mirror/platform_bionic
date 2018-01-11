@@ -35,15 +35,18 @@
 #define VDSO_CLOCK_GETTIME_SYMBOL "__kernel_clock_gettime"
 #define VDSO_CLOCK_GETRES_SYMBOL  "__kernel_clock_getres"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__kernel_gettimeofday"
+#define VDSO_TIME_SYMBOL          "__kernel_time"
 #else
 #define VDSO_CLOCK_GETTIME_SYMBOL "__vdso_clock_gettime"
 #define VDSO_CLOCK_GETRES_SYMBOL  "__vdso_clock_getres"
 #define VDSO_GETTIMEOFDAY_SYMBOL  "__vdso_gettimeofday"
+#define VDSO_TIME_SYMBOL          "__vdso_time"
 #endif
 
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __clock_getres(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
+extern "C" time_t __time(time_t*);
 
 struct vdso_entry {
   const char* name;
@@ -54,6 +57,7 @@ enum {
   VDSO_CLOCK_GETTIME = 0,
   VDSO_CLOCK_GETRES,
   VDSO_GETTIMEOFDAY,
+  VDSO_TIME,
   VDSO_END
 };
 
