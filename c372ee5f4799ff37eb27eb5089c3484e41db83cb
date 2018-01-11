@@ -87,6 +87,24 @@
       "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcf058cb_9bdb9704",
+        "filename": "tools/bpfmt.sh",
+        "patchSetId": 2
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-11T00:38:16Z",
+      "side": 1,
+      "message": "wouldn\u0027t that be true for clang-format too though?",
+      "parentUuid": "35e9e305_b68bb103",
+      "revId": "c372ee5f4799ff37eb27eb5089c3484e41db83cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
