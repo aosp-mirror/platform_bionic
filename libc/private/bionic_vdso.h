@@ -46,7 +46,6 @@
 extern "C" int __clock_gettime(int, timespec*);
 extern "C" int __clock_getres(int, timespec*);
 extern "C" int __gettimeofday(timeval*, struct timezone*);
-extern "C" time_t __time(time_t*);
 
 struct vdso_entry {
   const char* name;
