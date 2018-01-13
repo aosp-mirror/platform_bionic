@@ -402,7 +402,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/getprogname.c",
         "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
-        "upstream-openbsd/lib/libc/gen/time.c",
         "upstream-openbsd/lib/libc/gen/tolower_.c",
         "upstream-openbsd/lib/libc/gen/toupper_.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
