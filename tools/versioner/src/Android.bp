@@ -35,6 +35,8 @@ cc_binary_host {
 
         "-D__STDC_CONSTANT_MACROS",
         "-D__STDC_LIMIT_MACROS",
+
+        "-D_LIBCPP_ENABLE_CXX17_REMOVED_BINDERS",
     ],
 
     target: {

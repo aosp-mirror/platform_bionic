@@ -402,7 +402,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/getprogname.c",
         "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
-        "upstream-openbsd/lib/libc/gen/time.c",
         "upstream-openbsd/lib/libc/gen/tolower_.c",
         "upstream-openbsd/lib/libc/gen/toupper_.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
@@ -1724,9 +1723,6 @@ cc_library {
 
     arch: {
         arm: {
-            //TODO: This is to work around b/24465209. Remove after root cause is fixed
-            ldflags: ["-Wl,--hash-style=both"],
-
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.arm.map",
 
@@ -1757,9 +1753,6 @@ cc_library {
             version_script: "libc.mips64.map",
         },
         x86: {
-            //TODO: This is to work around b/24465209. Remove after root cause is fixed
-            ldflags: ["-Wl,--hash-style=both"],
-
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.x86.map",
         },
@@ -1785,10 +1778,8 @@ cc_library {
     system_shared_libs: ["libc"],
     static_libs: ["libasync_safe"],
 
-    //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: "libstdc++.arm.map",
         },
         arm64: {
@@ -1801,7 +1792,6 @@ cc_library {
             version_script: "libstdc++.mips64.map",
         },
         x86: {
-            ldflags: ["-Wl,--hash-style=both"],
             version_script: "libstdc++.x86.map",
         },
         x86_64: {
