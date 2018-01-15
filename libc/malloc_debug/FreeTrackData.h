@@ -57,6 +57,12 @@ class FreeTrackData : public OptionData {
 
   void LogBacktrace(const Header* header);
 
+  void PrepareFork() { pthread_mutex_lock(&mutex_); }
+
+  void PostForkParent() { pthread_mutex_unlock(&mutex_); }
+
+  void PostForkChild() { pthread_mutex_init(&mutex_, NULL); }
+
  private:
   void LogFreeError(const Header* header, const uint8_t* pointer);
   void VerifyAndFree(const Header* header);
