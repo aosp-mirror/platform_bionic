@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a0b7195_dcbe7356",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-15T01:55:01Z",
+      "side": 1,
+      "message": "Move this into `if (fstat(...) \u003d\u003d 0 \u0026\u0026 ...)` and just before write()?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e66a1fe_d0676867",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-15T01:55:01Z",
+      "side": 1,
+      "message": "Is this true in general?  Or only on a specific device?",
+      "range": {
+        "startLine": 46,
+        "startChar": 42,
+        "endLine": 46,
+        "endChar": 48
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9571de4_51fd0e55",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-15T01:55:01Z",
+      "side": 1,
+      "message": "Two whitespace",
+      "range": {
+        "startLine": 46,
+        "startChar": 51,
+        "endLine": 46,
+        "endChar": 52
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1451325d_f6aa7e3b",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-15T01:55:01Z",
+      "side": 1,
+      "message": "wrong indent",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 9
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87e27533_2fb7b3f1",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-15T01:55:01Z",
+      "side": 1,
+      "message": "wrong indent",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 7
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
