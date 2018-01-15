@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "355e531b_07d7eff8",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1087574
+      },
+      "writtenOn": "2018-01-15T19:19:34Z",
+      "side": 1,
+      "message": "DT_RELRSZ and  DT_RELR are reversed.",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "41b13ef7_36a9561c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
