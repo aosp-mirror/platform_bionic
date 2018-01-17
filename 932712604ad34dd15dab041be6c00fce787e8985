@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "74afefd5_15be71d4",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-17T18:14:54Z",
+      "side": 1,
+      "message": "This is intentional, as per the odd-even rule for DT tags here: http://www.sco.com/developers/gabi/latest/ch5.dynamic.html\n\n\"A tag whose value is an even number indicates a dynamic section entry that uses d_ptr. A tag whose value is an odd number indicates a dynamic section entry that uses d_val or that uses neither d_ptr nor d_val.\"",
+      "parentUuid": "355e531b_07d7eff8",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "41b13ef7_36a9561c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
