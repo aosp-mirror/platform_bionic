@@ -94,16 +94,25 @@ void DebugData::PrepareFork() {
   if (track != nullptr) {
     track->PrepareFork();
   }
+  if (free_track != nullptr) {
+    free_track->PrepareFork();
+  }
 }
 
 void DebugData::PostForkParent() {
   if (track != nullptr) {
     track->PostForkParent();
   }
+  if (free_track != nullptr) {
+    free_track->PostForkParent();
+  }
 }
 
 void DebugData::PostForkChild() {
   if (track != nullptr) {
     track->PostForkChild();
+  }
+  if (free_track != nullptr) {
+    free_track->PostForkChild();
   }
 }
