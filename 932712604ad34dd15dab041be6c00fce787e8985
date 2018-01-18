@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "9ec35acb_82ac6a06",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1087574
+      },
+      "writtenOn": "2018-01-18T18:45:02Z",
+      "side": 1,
+      "message": "Ah, lgtm them. The version I had patched into binutils has:\n\n  DT_RELRZ \u003d 35,                // Experimental\n  DT_RELRZSZ \u003d 36,              // Experimental\n  DT_RELRZENT \u003d 37,             // Experimental",
+      "parentUuid": "24e62dc1_cf17aad9",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "41b13ef7_36a9561c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
