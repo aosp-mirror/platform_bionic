@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "24e62dc1_cf17aad9",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-18T18:35:27Z",
+      "side": 1,
+      "message": "It has the same defines: https://android-review.googlesource.com/#/c/toolchain/binutils/+/572669/1/binutils-2.27/elfcpp/elfcpp.h",
+      "parentUuid": "dd381ac8_e06cd04e",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "41b13ef7_36a9561c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
