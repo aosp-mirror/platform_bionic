@@ -123,6 +123,24 @@
       "revId": "932712604ad34dd15dab041be6c00fce787e8985",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6a0d2ca_7a9038aa",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3529,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-18T23:19:56Z",
+      "side": 1,
+      "message": "what does it mean for a file to have RELA and RELR? isn\u0027t that an error?",
+      "parentUuid": "41b13ef7_36a9561c",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
