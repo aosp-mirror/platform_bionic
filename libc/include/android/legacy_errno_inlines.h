@@ -29,10 +29,11 @@
 #ifndef _ANDROID_LEGACY_ERRNO_INLINES_H
 #define _ANDROID_LEGACY_ERRNO_INLINES_H
 
-#include <errno.h>
 #include <sys/cdefs.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__
+
+#include <errno.h>
 
 __BEGIN_DECLS
 

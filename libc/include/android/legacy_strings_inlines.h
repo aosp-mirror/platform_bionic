@@ -29,16 +29,19 @@
 #ifndef _ANDROID_LEGACY_STRINGS_INLINES_H_
 #define _ANDROID_LEGACY_STRINGS_INLINES_H_
 
-#include <strings.h>
 #include <sys/cdefs.h>
+
+#if defined(__i386__) && __ANDROID_API__ < __ANDROID_API_J_MR2__
+
+#include <strings.h>
 
 __BEGIN_DECLS
 
-#if defined(__i386__) && __ANDROID_API__ < __ANDROID_API_J_MR2__
 /* Everyone except x86 had ffs since the beginning. */
 static __inline int ffs(int __n) { return __builtin_ffs(__n); }
-#endif
 
 __END_DECLS
+
+#endif
 
 #endif
