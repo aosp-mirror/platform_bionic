@@ -1,0 +1,68 @@
+# This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
+# Note that the resultant policy is applied only to zygote spawned processes.
+#
+# The final seccomp whitelist is SYSCALLS.TXT - SECCOMP_BLACKLIST.TXT + SECCOMP_WHITELIST.TXT
+# Any entry in the blacklist must be in the syscalls file and not be in the whitelist file
+#
+# Each non-blank, non-comment line has the following format:
+#
+# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
+#
+# where:
+#       arch_list ::= "all" | arch+
+#       arch      ::= "arm" | "arm64" | "mips" | "mips64" | "x86" | "x86_64"
+#
+# Note:
+#      - syscall_name corresponds to the name of the syscall, which may differ from
+#        the exported function name (example: the exit syscall is implemented by the _exit()
+#        function, which is not the same as the standard C exit() function which calls it)
+
+#      - alias_list is optional comma separated list of function aliases
+#
+#      - The call_id parameter, given that func_name and syscall_name have
+#        been provided, allows the user to specify dispatch style syscalls.
+#        For example, socket() syscall on i386 actually becomes:
+#          socketcall(__NR_socket, 1, *(rest of args on stack)).
+#
+#      - Each parameter type is assumed to be stored in 32 bits.
+#
+# This file is processed by a python script named genseccomp.py.
+
+# syscalls to modify IDs
+int     setgid:setgid32(gid_t)     arm,x86
+int     setgid:setgid(gid_t)       arm64,mips,mips64,x86_64
+int     setuid:setuid32(uid_t)    arm,x86
+int     setuid:setuid(uid_t)      arm64,mips,mips64,x86_64
+int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
+int     setreuid:setreuid(uid_t, uid_t)     arm64,mips,mips64,x86_64
+int     setresuid:setresuid32(uid_t, uid_t, uid_t)   arm,x86
+int     setresuid:setresuid(uid_t, uid_t, uid_t)     arm64,mips,mips64,x86_64
+int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
+int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
+int     setfsgid(gid_t)  all
+int     setfsuid(uid_t)  all
+int     setgroups:setgroups32(int, const gid_t*)   arm,x86
+int     setgroups:setgroups(int, const gid_t*)     arm64,mips,mips64,x86_64
+
+# syscalls to modify times
+int     adjtimex(struct timex*)   all
+int     clock_adjtime(clockid_t, struct timex*)   all
+int     clock_settime(clockid_t, const struct timespec*)  all
+int     settimeofday(const struct timeval*, const struct timezone*)   all
+
+int     acct(const char*  filepath)  all
+int     klogctl:syslog(int, char*, int)   all
+
+int     capset(cap_user_header_t header, const cap_user_data_t data) all
+int     chroot(const char*)  all
+
+# syscalls to change machine various configurations
+int     init_module(void*, unsigned long, const char*)  all
+int     delete_module(const char*, unsigned int)   all
+int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
+int     umount2(const char*, int)  all
+int     swapon(const char*, int) all
+int     swapoff(const char*) all
+int     setdomainname(const char*, size_t)  all
+int     sethostname(const char*, size_t)  all
+int     __reboot:reboot(int, int, int, void*)  all
