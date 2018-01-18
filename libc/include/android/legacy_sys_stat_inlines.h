@@ -30,9 +30,10 @@
 #define _ANDROID_LEGACY_SYS_STAT_INLINES_H_
 
 #include <sys/cdefs.h>
-#include <sys/stat.h>
 
 #if __ANDROID_API__ < __ANDROID_API_L__
+
+#include <sys/stat.h>
 
 __BEGIN_DECLS
 
