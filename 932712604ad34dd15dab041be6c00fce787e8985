@@ -141,6 +141,24 @@
       "revId": "932712604ad34dd15dab041be6c00fce787e8985",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88469301_acfc88c9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3529,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-18T23:50:22Z",
+      "side": 1,
+      "message": "It\u0027s not an error to have both RELA and RELR in the same binary.\n\nRELR is a new section that contains all relocations of type R_${ARCH}_RELATIVE, in a compact form (offsets only, delta encoded, etc.)\n\nAll other relocation types stay in the original REL / RELA sections. The remaining relocations in REL/RELA can even continue to be compressed by relocation_packer, although it won\u0027t be of much benefit now, since ~99% of the relocations in PIE binaries and shared objects are of type R_${ARCH}_RELATIVE and have therefore been moved to RELR.",
+      "parentUuid": "d6a0d2ca_7a9038aa",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
