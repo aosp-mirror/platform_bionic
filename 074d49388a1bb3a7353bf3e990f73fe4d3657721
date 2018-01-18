@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "71641a3d_a5a6bda0",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-18T18:37:17Z",
+      "side": 1,
+      "message": "Should we reject %mms? glibc seems to do so.",
+      "revId": "074d49388a1bb3a7353bf3e990f73fe4d3657721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
