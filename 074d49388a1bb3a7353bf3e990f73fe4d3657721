@@ -16,6 +16,24 @@
       "revId": "074d49388a1bb3a7353bf3e990f73fe4d3657721",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5777aa3_d478ed21",
+        "filename": "libc/stdio/vfscanf.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-18T22:41:50Z",
+      "side": 1,
+      "message": "glibc seems to only accept a very specific subset of possibilities where BSD is very lenient (including allowing things like \"%*jLs\"), so i\u0027m not excited about trying to be more strict there. repeating yourself seems fairly harmless anyway...",
+      "parentUuid": "71641a3d_a5a6bda0",
+      "revId": "074d49388a1bb3a7353bf3e990f73fe4d3657721",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
