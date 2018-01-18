@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "deeb69d1_5cc1ea1a",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2018-01-18T08:34:20Z",
+      "side": 1,
+      "message": "Moved into dedicated log function, logf.",
+      "parentUuid": "1a0b7195_dcbe7356",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 93
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9e66a1fe_d0676867",
         "filename": "libc/bionic/syscall_hook.cpp",
         "patchSetId": 3
@@ -64,6 +88,30 @@
         "startChar": 51,
         "endLine": 46,
         "endChar": 52
+      },
+      "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee75b158_fd6e3bbf",
+        "filename": "libc/bionic/syscall_hook.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1139803
+      },
+      "writtenOn": "2018-01-18T08:34:20Z",
+      "side": 1,
+      "message": "Now use get_sys_dev_id() to determine where /system resides.",
+      "parentUuid": "9e66a1fe_d0676867",
+      "range": {
+        "startLine": 46,
+        "startChar": 42,
+        "endLine": 46,
+        "endChar": 48
       },
       "revId": "e7dfda0dff7690f46c07fea2373af87ec0be76e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
