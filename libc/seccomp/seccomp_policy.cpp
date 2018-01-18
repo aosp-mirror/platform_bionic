@@ -206,10 +206,6 @@ bool _set_seccomp_filter(FilterType type) {
     return install_filter(f);
 }
 
-bool set_seccomp_filter() {
-    return _set_seccomp_filter(FilterType::APP);
-}
-
 bool set_app_seccomp_filter() {
     return _set_seccomp_filter(FilterType::APP);
 }
