@@ -84,14 +84,14 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 283, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 282, 12, 11), //utimensat|epoll_pwait
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 284, 11, 10), //timerfd_create
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 300, 10, 9), //fallocate|timerfd_settime|timerfd_gettime|accept4|signalfd4|eventfd2|epoll_create1|dup3|pipe2|inotify_init1|preadv|pwritev|rt_tgsigqueueinfo|perf_event_open|recvmmsg
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 322, 5, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 321, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 314, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 305, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 303, 6, 5), //prlimit64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 312, 5, 4), //clock_adjtime|syncfs|sendmmsg|setns|getcpu|process_vm_readv|process_vm_writev
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 320, 4, 3), //sched_setattr|sched_getattr|renameat2|seccomp|getrandom|memfd_create
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 325, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 323, 2, 1), //execveat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 323, 2, 1), //bpf|execveat
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 329, 1, 0), //mlock2|copy_file_range|preadv2|pwritev2
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
 };

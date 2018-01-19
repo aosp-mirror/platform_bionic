@@ -5,125 +5,123 @@
 
 #include "seccomp_bpfs.h"
 const sock_filter x86_global_filter[] = {
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 120),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 118),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 136, 59, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 66, 29, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 41, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 24, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 10, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 8, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 7, 113, 112), //restart_syscall|exit|fork|read|write|open|close
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 9, 112, 111), //creat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 7, 111, 110), //restart_syscall|exit|fork|read|write|open|close
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 9, 110, 109), //creat
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 19, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 13, 110, 109), //unlink|execve|chdir
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 22, 109, 108), //lseek|getpid|mount
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 13, 108, 107), //unlink|execve|chdir
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 22, 107, 106), //lseek|getpid|mount
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 33, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 26, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 25, 106, 105), //getuid
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 27, 105, 104), //ptrace
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 25, 104, 103), //getuid
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 27, 103, 102), //ptrace
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 36, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 34, 103, 102), //access
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 40, 102, 101), //sync|kill|rename|mkdir
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 34, 101, 100), //access
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 40, 100, 99), //sync|kill|rename|mkdir
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 57, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 51, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 45, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 44, 98, 97), //dup|pipe|times
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 46, 97, 96), //brk
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 44, 96, 95), //dup|pipe|times
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 46, 95, 94), //brk
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 54, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 53, 95, 94), //acct|umount2
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 56, 94, 93), //ioctl|fcntl
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 53, 93, 92), //acct|umount2
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 56, 92, 91), //ioctl|fcntl
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 63, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 60, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 58, 91, 90), //setpgid
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 62, 90, 89), //umask|chroot
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 65, 89, 88), //dup2|getppid
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 58, 89, 88), //setpgid
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 62, 88, 87), //umask|chroot
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 65, 87, 86), //dup2|getppid
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 102, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 87, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 77, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 74, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 68, 84, 83), //setsid|sigaction
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 76, 83, 82), //sethostname|setrlimit
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 68, 82, 81), //setsid|sigaction
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 76, 81, 80), //sethostname|setrlimit
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 85, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 80, 81, 80), //getrusage|gettimeofday|settimeofday
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 86, 80, 79), //readlink
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 80, 79, 78), //getrusage|gettimeofday|settimeofday
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 86, 78, 77), //readlink
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 94, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 90, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 89, 77, 76), //swapon|reboot
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 93, 76, 75), //mmap|munmap|truncate
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 89, 75, 74), //swapon|reboot
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 93, 74, 73), //mmap|munmap|truncate
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 96, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 95, 74, 73), //fchmod
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 98, 73, 72), //getpriority|setpriority
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 95, 72, 71), //fchmod
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 98, 71, 70), //getpriority|setpriority
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 124, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 116, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 114, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 106, 69, 68), //socketcall|syslog|setitimer|getitimer
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 115, 68, 67), //wait4
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 106, 67, 66), //socketcall|syslog|setitimer|getitimer
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 115, 66, 65), //wait4
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 118, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 117, 66, 65), //sysinfo
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 123, 65, 64), //fsync|sigreturn|clone|setdomainname|uname
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 117, 64, 63), //sysinfo
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 123, 63, 62), //fsync|sigreturn|clone|setdomainname|uname
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 131, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 128, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 126, 62, 61), //adjtimex|mprotect
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 130, 61, 60), //init_module|delete_module
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 134, 60, 59), //quotactl|getpgid|fchdir
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 126, 60, 59), //adjtimex|mprotect
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 130, 59, 58), //init_module|delete_module
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 134, 58, 57), //quotactl|getpgid|fchdir
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 284, 29, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 213, 15, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 172, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 150, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 138, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 137, 54, 53), //personality
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 149, 53, 52), //setfsuid|setfsgid|_llseek|getdents|_newselect|flock|msync|readv|writev|getsid|fdatasync
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 137, 52, 51), //personality
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 149, 51, 50), //setfsuid|setfsgid|_llseek|getdents|_newselect|flock|msync|readv|writev|getsid|fdatasync
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 168, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 164, 51, 50), //mlock|munlock|mlockall|munlockall|sched_setparam|sched_getparam|sched_setscheduler|sched_getscheduler|sched_yield|sched_get_priority_max|sched_get_priority_min|sched_rr_get_interval|nanosleep|mremap
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 169, 50, 49), //poll
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 164, 49, 48), //mlock|munlock|mlockall|munlockall|sched_setparam|sched_getparam|sched_setscheduler|sched_getscheduler|sched_yield|sched_get_priority_max|sched_get_priority_min|sched_rr_get_interval|nanosleep|mremap
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 169, 48, 47), //poll
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 190, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 183, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 182, 47, 46), //prctl|rt_sigreturn|rt_sigaction|rt_sigprocmask|rt_sigpending|rt_sigtimedwait|rt_sigqueueinfo|rt_sigsuspend|pread64|pwrite64
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 188, 46, 45), //getcwd|capget|capset|sigaltstack|sendfile
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 182, 45, 44), //prctl|rt_sigreturn|rt_sigaction|rt_sigprocmask|rt_sigpending|rt_sigtimedwait|rt_sigqueueinfo|rt_sigsuspend|pread64|pwrite64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 188, 44, 43), //getcwd|capget|capset|sigaltstack|sendfile
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 199, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 198, 44, 43), //vfork|ugetrlimit|mmap2|truncate64|ftruncate64|stat64|lstat64|fstat64
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 212, 43, 42), //getuid32|getgid32|geteuid32|getegid32|setreuid32|setregid32|getgroups32|setgroups32|fchown32|setresuid32|getresuid32|setresgid32|getresgid32
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 198, 42, 41), //vfork|ugetrlimit|mmap2|truncate64|ftruncate64|stat64|lstat64|fstat64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 212, 41, 40), //getuid32|getgid32|geteuid32|getegid32|setreuid32|setregid32|getgroups32|setgroups32|fchown32|setresuid32|getresuid32|setresgid32|getresgid32
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 252, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 224, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 218, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 215, 39, 38), //setuid32|setgid32
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 222, 38, 37), //mincore|madvise|getdents64|fcntl64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 215, 37, 36), //setuid32|setgid32
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 222, 36, 35), //mincore|madvise|getdents64|fcntl64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 245, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 244, 36, 35), //gettid|readahead|setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|tkill|sendfile64|futex|sched_setaffinity|sched_getaffinity|set_thread_area
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 250, 35, 34), //io_setup|io_destroy|io_getevents|io_submit|io_cancel
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 244, 34, 33), //gettid|readahead|setxattr|lsetxattr|fsetxattr|getxattr|lgetxattr|fgetxattr|listxattr|llistxattr|flistxattr|removexattr|lremovexattr|fremovexattr|tkill|sendfile64|futex|sched_setaffinity|sched_getaffinity|set_thread_area
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 250, 33, 32), //io_setup|io_destroy|io_getevents|io_submit|io_cancel
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 272, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 254, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 253, 32, 31), //exit_group
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 271, 31, 30), //epoll_create|epoll_ctl|epoll_wait|remap_file_pages|set_tid_address|timer_create|timer_settime|timer_gettime|timer_getoverrun|timer_delete|clock_settime|clock_gettime|clock_getres|clock_nanosleep|statfs64|fstatfs64|tgkill
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 273, 30, 29), //fadvise64_64
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 322, 15, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 253, 30, 29), //exit_group
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 271, 29, 28), //epoll_create|epoll_ctl|epoll_wait|remap_file_pages|set_tid_address|timer_create|timer_settime|timer_gettime|timer_getoverrun|timer_delete|clock_settime|clock_gettime|clock_getres|clock_nanosleep|statfs64|fstatfs64|tgkill
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 273, 28, 27), //fadvise64_64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 318, 13, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 295, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 288, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 286, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 285, 25, 24), //waitid
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 287, 24, 23), //add_key
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 285, 23, 22), //waitid
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 287, 22, 21), //add_key
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 291, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 289, 22, 21), //keyctl
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 294, 21, 20), //inotify_init|inotify_add_watch|inotify_rm_watch
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 289, 20, 19), //keyctl
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 294, 19, 18), //inotify_init|inotify_add_watch|inotify_rm_watch
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 313, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 300, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 299, 18, 17), //openat|mkdirat|mknodat|fchownat
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 311, 17, 16), //fstatat64|unlinkat|renameat|linkat|symlinkat|readlinkat|fchmodat|faccessat|pselect6|ppoll|unshare
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 318, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 317, 15, 14), //splice|sync_file_range|tee|vmsplice
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 321, 14, 13), //getcpu|epoll_pwait|utimensat
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 350, 7, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 343, 3, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 340, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 337, 10, 9), //timerfd_create|eventfd|fallocate|timerfd_settime|timerfd_gettime|signalfd4|eventfd2|epoll_create1|dup3|pipe2|inotify_init1|preadv|pwritev|rt_tgsigqueueinfo|perf_event_open
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 341, 9, 8), //prlimit64
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 346, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 345, 7, 6), //clock_adjtime|syncfs
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 349, 6, 5), //setns|process_vm_readv|process_vm_writev
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 299, 16, 15), //openat|mkdirat|mknodat|fchownat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 311, 15, 14), //fstatat64|unlinkat|renameat|linkat|symlinkat|readlinkat|fchmodat|faccessat|pselect6|ppoll|unshare
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 317, 14, 13), //splice|sync_file_range|tee|vmsplice
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 346, 7, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 340, 3, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 322, 1, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 321, 10, 9), //getcpu|epoll_pwait|utimensat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 337, 9, 8), //timerfd_create|eventfd|fallocate|timerfd_settime|timerfd_gettime|signalfd4|eventfd2|epoll_create1|dup3|pipe2|inotify_init1|preadv|pwritev|rt_tgsigqueueinfo|perf_event_open
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 343, 1, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 341, 7, 6), //prlimit64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 345, 6, 5), //clock_adjtime|syncfs
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 376, 3, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 358, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 357, 3, 2), //finit_module|sched_setattr|sched_getattr|renameat2|seccomp|getrandom|memfd_create
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 359, 2, 1), //execveat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 350, 1, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 349, 3, 2), //setns|process_vm_readv|process_vm_writev
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 359, 2, 1), //finit_module|sched_setattr|sched_getattr|renameat2|seccomp|getrandom|memfd_create|bpf|execveat
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 380, 1, 0), //mlock2|copy_file_range|preadv2|pwritev2
 BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW),
 };
