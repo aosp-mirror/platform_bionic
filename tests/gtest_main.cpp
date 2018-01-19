@@ -90,7 +90,6 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...);
 }  // namespace testing
 
 using testing::internal::GTestColor;
-using testing::internal::COLOR_DEFAULT;
 using testing::internal::COLOR_RED;
 using testing::internal::COLOR_GREEN;
 using testing::internal::COLOR_YELLOW;
@@ -274,8 +273,7 @@ static int64_t NanoTime() {
 }
 
 static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcase_list) {
-  std::vector<const char*> args;
-  for (int i = 0; i < argc; ++i) args.push_back(argv[i]);
+  std::vector<const char*> args(argv, argv + argc);
   args.push_back("--gtest_list_tests");
   args.push_back(nullptr);
 
@@ -543,7 +541,7 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
                                 const std::vector<TestCase>& testcase_list,
                                 time_t epoch_iteration_start_time,
                                 int64_t elapsed_time_ns) {
-  FILE* fp = fopen(xml_output_filename.c_str(), "w");
+  FILE* fp = fopen(xml_output_filename.c_str(), "we");
   if (fp == NULL) {
     fprintf(stderr, "failed to open '%s': %s\n", xml_output_filename.c_str(), strerror(errno));
     exit(1);
@@ -1185,10 +1183,7 @@ int main(int argc, char** argv, char** envp) {
   g_argc = argc;
   g_argv = argv;
   g_envp = envp;
-  std::vector<char*> arg_list;
-  for (int i = 0; i < argc; ++i) {
-    arg_list.push_back(argv[i]);
-  }
+  std::vector<char*> arg_list(argv, argv + argc);
 
   IsolationTestOptions options;
   if (PickOptions(arg_list, options) == false) {

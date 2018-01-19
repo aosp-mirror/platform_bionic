@@ -66,7 +66,7 @@ class ThreadCompleteEntry : public RecordEntry {
 
 class AllocEntry : public RecordEntry {
  public:
-  AllocEntry(void* pointer);
+  explicit AllocEntry(void* pointer);
   virtual ~AllocEntry() = default;
 
  protected:
@@ -92,7 +92,7 @@ class MallocEntry : public AllocEntry {
 
 class FreeEntry : public AllocEntry {
  public:
-  FreeEntry(void* pointer);
+  explicit FreeEntry(void* pointer);
   virtual ~FreeEntry() = default;
 
   std::string GetString() const override;
