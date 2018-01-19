@@ -1414,6 +1414,84 @@ TEST(dlfcn, RTLD_macros) {
 // Bionic specific tests
 #if defined(__BIONIC__)
 
+#if defined(__arm__)
+const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
+  return reinterpret_cast<const llvm::ELF::Elf32_Dyn*>(p);
+}
+
+// Duplicate these definitions here because they are android specific
+// note that we cannot include <elf.h> because #defines conflict with
+// enum names provided by LLVM.
+#define DT_ANDROID_REL (llvm::ELF::DT_LOOS + 2)
+#define DT_ANDROID_RELA (llvm::ELF::DT_LOOS + 4)
+
+template<typename ELFT>
+void validate_compatibility_of_native_library(const std::string& path, ELFT* elf) {
+  bool has_elf_hash = false;
+  bool has_android_rel = false;
+  bool has_rel = false;
+  // Find dynamic section and check that DT_HASH and there is no DT_ANDROID_REL
+  for (auto it = elf->section_begin(); it != elf->section_end(); ++it) {
+    const llvm::object::ELFSectionRef& section_ref = *it;
+    if (section_ref.getType() == llvm::ELF::SHT_DYNAMIC) {
+      llvm::StringRef data;
+      ASSERT_TRUE(!it->getContents(data)) << "unable to get SHT_DYNAMIC section data";
+      for (auto d = to_dynamic_table(data.data()); d->d_tag != llvm::ELF::DT_NULL; ++d) {
+        if (d->d_tag == llvm::ELF::DT_HASH) {
+          has_elf_hash = true;
+        } else if (d->d_tag == DT_ANDROID_REL || d->d_tag == DT_ANDROID_RELA) {
+          has_android_rel = true;
+        } else if (d->d_tag == llvm::ELF::DT_REL || d->d_tag == llvm::ELF::DT_RELA) {
+          has_rel = true;
+        }
+      }
+
+      break;
+    }
+  }
+
+  ASSERT_TRUE(has_elf_hash) << path.c_str() << ": missing elf hash (DT_HASH)";
+  ASSERT_TRUE(!has_android_rel) << path.c_str() << ": has packed relocations";
+  ASSERT_TRUE(has_rel) << path.c_str() << ": missing DT_REL/DT_RELA";
+}
+
+void validate_compatibility_of_native_library(const char* soname) {
+  // On the systems with emulation system libraries would be of different
+  // architecture.  Try to use alternate paths first.
+  std::string path = std::string(ALTERNATE_PATH_TO_SYSTEM_LIB) + soname;
+  auto binary_or_error = llvm::object::createBinary(path);
+  if (!binary_or_error) {
+    path = std::string(PATH_TO_SYSTEM_LIB) + soname;
+    binary_or_error = llvm::object::createBinary(path);
+  }
+  ASSERT_FALSE(!binary_or_error);
+
+  llvm::object::Binary* binary = binary_or_error.get().getBinary();
+
+  auto obj = llvm::dyn_cast<llvm::object::ObjectFile>(binary);
+  ASSERT_TRUE(obj != nullptr);
+
+  auto elf = llvm::dyn_cast<llvm::object::ELF32LEObjectFile>(obj);
+
+  ASSERT_TRUE(elf != nullptr);
+
+  validate_compatibility_of_native_library(path, elf);
+}
+
+// This is a test for app compatibility workaround for arm apps
+// affected by http://b/24465209
+TEST(dlext, compat_elf_hash_and_relocation_tables) {
+  validate_compatibility_of_native_library("libc.so");
+  validate_compatibility_of_native_library("liblog.so");
+  validate_compatibility_of_native_library("libstdc++.so");
+  validate_compatibility_of_native_library("libdl.so");
+  validate_compatibility_of_native_library("libm.so");
+  validate_compatibility_of_native_library("libz.so");
+  validate_compatibility_of_native_library("libjnigraphics.so");
+}
+
+#endif //  defined(__arm__)
+
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
   const std::string libpath = get_testlib_root() +
                               "/" + kPrebuiltElfDir +
