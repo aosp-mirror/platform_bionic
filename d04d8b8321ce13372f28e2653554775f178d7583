@@ -16,6 +16,24 @@
       "revId": "d04d8b8321ce13372f28e2653554775f178d7583",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac936e16_060fcc31",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-19T22:53:19Z",
+      "side": 1,
+      "message": "yeah, you\u0027re right: this is how i tested. will fix.",
+      "parentUuid": "8e1218c6_16473fb6",
+      "revId": "d04d8b8321ce13372f28e2653554775f178d7583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
