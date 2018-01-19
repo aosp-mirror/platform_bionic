@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e1218c6_16473fb6",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-01-19T22:47:39Z",
+      "side": 1,
+      "message": "Was the 32-\u003e3 change intentional? It will trigger more reallocations, which is good for testing, and probably bad for performance.",
+      "revId": "d04d8b8321ce13372f28e2653554775f178d7583",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
