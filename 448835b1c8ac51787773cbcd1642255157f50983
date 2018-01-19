@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e6ebb33e_9ced0f0e",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-01-19T05:49:53Z",
+      "side": 1,
+      "message": "Maybe rename this `n` to `bytes` and make it local to the CT_CHAR case? I think it means the same thing as `bytes` does for CT_STRING/CT_CCL.",
+      "revId": "448835b1c8ac51787773cbcd1642255157f50983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1baf25f_60fde1bd",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-01-19T05:49:53Z",
+      "side": 1,
+      "message": "Should there be a realloc call here when (n * sizeof(wchar_t) \u003d\u003d allocation_size)?\n\nAlso: isn\u0027t wcp null with (flags \u0026 SUPPRESS)? The previous behavior had wcp point to a single wchar, and SUPPRESS disabled the wcp++.\n\nSuggest:\n\n    if (wcp) wcp[n] \u003d wc;\n    n++;",
+      "revId": "448835b1c8ac51787773cbcd1642255157f50983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a68e220_5476b25f",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-01-19T05:49:53Z",
+      "side": 1,
+      "message": "This line looks indented differently.",
+      "revId": "448835b1c8ac51787773cbcd1642255157f50983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e29a414_56e424bf",
+        "filename": "libc/stdio/vfscanf.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-01-19T05:49:53Z",
+      "side": 1,
+      "message": "For LONG, it looks like n here is a count of output wchars, but nread is a count of input bytes.\n\nWe\u0027ve already incremented nread for the LONG case above. I think the fix is to increment nread in the SUPPRESS and default cases above too, and then remove this line.\n\nIt should break something like:\n\n    int main () {\n      setlocale(LC_ALL, \"\");\n      wchar_t buf[5] \u003d {};\n      int pos \u003d -1;\n      int cnt \u003d sscanf(\"\\xc4\\x80\", \"%ls%n\", buf, \u0026pos);\n      printf(\"cnt\u003d%d buf[0]\u003d%d pos\u003d%d\\n\", cnt, buf[0], pos);\n      return 0;\n    }\n\nglibc (and Oreo bionic):\n\n    cnt\u003d1 buf[0]\u003d256 pos\u003d2\n\nPPR1.180117.002:\n\n    cnt\u003d1 buf[0]\u003d256 pos\u003d3\n\nI think this bug was added in I3eec9b7dfce84f63c68426406224822c52551d64, not in this CL.",
+      "revId": "448835b1c8ac51787773cbcd1642255157f50983",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
