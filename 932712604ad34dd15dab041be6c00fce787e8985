@@ -127,6 +127,40 @@
     },
     {
       "key": {
+        "uuid": "46dd3474_a7b415b8",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-19T18:13:57Z",
+      "side": 1,
+      "message": "We should move the DT_RELR* over here and rename to DT_ANDROID_RELR* until there is agreement upstream about the new section.",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e0ef5be3_500b0822",
+        "filename": "libc/include/elf.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-19T18:13:57Z",
+      "side": 1,
+      "message": "Same here, move it to SHT_LOOS-SHT_HIOS range, rename to SHT_ANDROID_RELR.",
+      "revId": "932712604ad34dd15dab041be6c00fce787e8985",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41b13ef7_36a9561c",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
