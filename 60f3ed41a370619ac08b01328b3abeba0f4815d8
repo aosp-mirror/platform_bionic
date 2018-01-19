@@ -22,6 +22,30 @@
       "revId": "60f3ed41a370619ac08b01328b3abeba0f4815d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0110486d_e2c1c260",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-19T01:58:59Z",
+      "side": 1,
+      "message": "not all system calls have libc wrappers.",
+      "parentUuid": "17ba8c5e_49ad7fa8",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 7
+      },
+      "revId": "60f3ed41a370619ac08b01328b3abeba0f4815d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
