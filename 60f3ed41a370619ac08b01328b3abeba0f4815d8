@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17ba8c5e_49ad7fa8",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-01-19T00:50:29Z",
+      "side": 1,
+      "message": "It\u0027s unexpected to me that the script doesn\u0027t fail, because there is not in SYSCALLS.TXT.  Should we add the wrapper?  But the change itself looks fine to me.",
+      "range": {
+        "startLine": 28,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 7
+      },
+      "revId": "60f3ed41a370619ac08b01328b3abeba0f4815d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
