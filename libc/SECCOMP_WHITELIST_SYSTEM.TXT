@@ -24,3 +24,5 @@
 #      - Each parameter type is assumed to be stored in 32 bits.
 #
 # This file is processed by a python script named genseccomp.py.
+
+int bpf(int cmd, union bpf_attr *attr, unsigned int size) all
