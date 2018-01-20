@@ -46,7 +46,7 @@ class DebugData;
 
 class TrackData : public OptionData {
  public:
-  TrackData(DebugData* debug_data);
+  explicit TrackData(DebugData* debug_data);
   virtual ~TrackData() = default;
 
   void GetList(std::vector<const Header*>* list);

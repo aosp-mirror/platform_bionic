@@ -32,7 +32,7 @@ struct abort_msg_t;
 // constituents for easy access.
 class KernelArgumentBlock {
  public:
-  KernelArgumentBlock(void* raw_args) {
+  explicit KernelArgumentBlock(void* raw_args) {
     uintptr_t* args = reinterpret_cast<uintptr_t*>(raw_args);
     argc = static_cast<int>(*args);
     argv = reinterpret_cast<char**>(args + 1);
