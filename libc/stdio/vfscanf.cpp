@@ -235,6 +235,8 @@ literal:
         break;
 
       case 's':
+        memset(ccltab, 1, 256);
+        ccltab['\t'] = ccltab['\n'] = ccltab['\v'] = ccltab['\f'] = ccltab['\r'] = ccltab[' '] = 0;
         c = CT_STRING;
         break;
 
@@ -482,7 +484,7 @@ literal:
           }
         } else if (flags & SUPPRESS) {
           n = 0;
-          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !IsSpace(*fp->_p))) {
+          while (ccltab[*fp->_p]) {
             n++, fp->_r--, fp->_p++;
             if (--width == 0) break;
             if (fp->_r <= 0 && __srefill(fp)) {
@@ -500,7 +502,7 @@ literal:
             p = va_arg(ap, char*);
           }
           n = 0;
-          while ((c == CT_CCL && ccltab[*fp->_p]) || (c == CT_STRING && !IsSpace(*fp->_p))) {
+          while (ccltab[*fp->_p]) {
             fp->_r--;
             p[n++] = *fp->_p++;
             if (allocation != NULL && n == capacity) {
@@ -741,10 +743,10 @@ static const unsigned char* __sccl(char* tab, const unsigned char* fmt) {
   if (c == '^') {
     v = 1;      /* default => accept */
     c = *fmt++; /* get new first char */
-  } else
+  } else {
     v = 0; /* default => reject */
-  /* should probably use memset here */
-  for (n = 0; n < 256; n++) tab[n] = v;
+  }
+  memset(tab, v, 256);
   if (c == 0) return (fmt - 1); /* format ended before closing ] */
 
   /*
