@@ -1016,6 +1016,138 @@ TEST(STDIO_TEST, swscanf_ccl) {
   CheckScanf(swscanf, L"+,-/.", L"%[+--/]", 1, "+,-/");
 }
 
+template <typename T1, typename T2>
+static void CheckScanfM(int sscanf_fn(const T1*, const T1*, ...),
+                        const T1* input, const T1* fmt,
+                        int expected_count, const T2* expected_string) {
+  T2* result = nullptr;
+  ASSERT_EQ(expected_count, sscanf_fn(input, fmt, &result)) << fmt;
+  if (expected_string == nullptr) {
+    ASSERT_EQ(nullptr, result);
+  } else {
+    ASSERT_STREQ(expected_string, result) << fmt;
+  }
+  free(result);
+}
+
+TEST(STDIO_TEST, sscanf_mc) {
+  char* p1 = nullptr;
+  char* p2 = nullptr;
+  ASSERT_EQ(2, sscanf("hello", "%mc%mc", &p1, &p2));
+  ASSERT_EQ('h', *p1);
+  ASSERT_EQ('e', *p2);
+  free(p1);
+  free(p2);
+
+  p1 = nullptr;
+  ASSERT_EQ(1, sscanf("hello", "%4mc", &p1));
+  ASSERT_EQ('h', p1[0]);
+  ASSERT_EQ('e', p1[1]);
+  ASSERT_EQ('l', p1[2]);
+  ASSERT_EQ('l', p1[3]);
+  free(p1);
+
+  p1 = nullptr;
+  ASSERT_EQ(1, sscanf("hello world", "%30mc", &p1));
+  ASSERT_EQ('h', p1[0]);
+  ASSERT_EQ('e', p1[1]);
+  ASSERT_EQ('l', p1[2]);
+  ASSERT_EQ('l', p1[3]);
+  ASSERT_EQ('o', p1[4]);
+  free(p1);
+}
+
+
+TEST(STDIO_TEST, sscanf_mlc) {
+  // This is so useless that clang doesn't even believe it exists...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+
+  wchar_t* p1 = nullptr;
+  wchar_t* p2 = nullptr;
+  ASSERT_EQ(2, sscanf("hello", "%mlc%mlc", &p1, &p2));
+  ASSERT_EQ(L'h', *p1);
+  ASSERT_EQ(L'e', *p2);
+  free(p1);
+  free(p2);
+
+  p1 = nullptr;
+  ASSERT_EQ(1, sscanf("hello", "%4mlc", &p1));
+  ASSERT_EQ(L'h', p1[0]);
+  ASSERT_EQ(L'e', p1[1]);
+  ASSERT_EQ(L'l', p1[2]);
+  ASSERT_EQ(L'l', p1[3]);
+  free(p1);
+
+  p1 = nullptr;
+  ASSERT_EQ(1, sscanf("hello world", "%30mlc", &p1));
+  ASSERT_EQ(L'h', p1[0]);
+  ASSERT_EQ(L'e', p1[1]);
+  ASSERT_EQ(L'l', p1[2]);
+  ASSERT_EQ(L'l', p1[3]);
+  ASSERT_EQ(L'o', p1[4]);
+  free(p1);
+#pragma clang diagnostic pop
+}
+
+
+TEST(STDIO_TEST, sscanf_ms) {
+  CheckScanfM(sscanf, "hello", "%ms", 1, "hello");
+  CheckScanfM(sscanf, "hello", "%4ms", 1, "hell");
+  CheckScanfM(sscanf, "hello world", "%30ms", 1, "hello");
+}
+
+TEST(STDIO_TEST, sscanf_mls) {
+  CheckScanfM(sscanf, "hello", "%mls", 1, L"hello");
+  CheckScanfM(sscanf, "hello", "%4mls", 1, L"hell");
+  CheckScanfM(sscanf, "hello world", "%30mls", 1, L"hello");
+}
+
+TEST(STDIO_TEST, sscanf_m_ccl) {
+  CheckScanfM(sscanf, "hello", "%m[a-z]", 1, "hello");
+  CheckScanfM(sscanf, "hello", "%4m[a-z]", 1, "hell");
+  CheckScanfM(sscanf, "hello world", "%30m[a-z]", 1, "hello");
+}
+
+TEST(STDIO_TEST, sscanf_ml_ccl) {
+  CheckScanfM(sscanf, "hello", "%ml[a-z]", 1, L"hello");
+  CheckScanfM(sscanf, "hello", "%4ml[a-z]", 1, L"hell");
+  CheckScanfM(sscanf, "hello world", "%30ml[a-z]", 1, L"hello");
+}
+
+TEST(STDIO_TEST, sscanf_ls) {
+  wchar_t w[32] = {};
+  ASSERT_EQ(1, sscanf("hello world", "%ls", w));
+  ASSERT_EQ(L"hello", std::wstring(w));
+}
+
+TEST(STDIO_TEST, sscanf_ls_suppress) {
+  ASSERT_EQ(0, sscanf("hello world", "%*ls %*ls"));
+}
+
+TEST(STDIO_TEST, sscanf_ls_n) {
+  setlocale(LC_ALL, "C.UTF-8");
+  wchar_t w[32] = {};
+  int pos = 0;
+  ASSERT_EQ(1, sscanf("\xc4\x80", "%ls%n", w, &pos));
+  ASSERT_EQ(static_cast<wchar_t>(256), w[0]);
+  ASSERT_EQ(2, pos);
+}
+
+TEST(STDIO_TEST, sscanf_ls_realloc) {
+  // This is so useless that clang doesn't even believe it exists...
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  wchar_t* p1 = nullptr;
+  wchar_t* p2 = nullptr;
+  ASSERT_EQ(2, sscanf("1234567890123456789012345678901234567890 world", "%mls %mls", &p1, &p2));
+  ASSERT_EQ(L"1234567890123456789012345678901234567890", std::wstring(p1));
+  ASSERT_EQ(L"world", std::wstring(p2));
+#pragma clang diagnostic pop
+}
+
 // https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=202240
 TEST(STDIO_TEST, scanf_wscanf_EOF) {
   EXPECT_EQ(0, sscanf("b", "ab"));
