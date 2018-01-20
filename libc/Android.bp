@@ -18,7 +18,7 @@ libc_common_src_files = [
     "stdio/refill.c",
     "stdio/stdio.cpp",
     "stdio/stdio_ext.cpp",
-    "stdio/vfscanf.c",
+    "stdio/vfscanf.cpp",
     "stdio/vfwscanf.c",
     "stdlib/exit.c",
 ]
