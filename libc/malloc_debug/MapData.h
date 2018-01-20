@@ -41,7 +41,7 @@ struct MapEntry {
   MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len)
       : start(start), end(end), offset(offset), name(name, name_len) {}
 
-  MapEntry(uintptr_t pc) : start(pc), end(pc) {}
+  explicit MapEntry(uintptr_t pc) : start(pc), end(pc) {}
 
   uintptr_t start;
   uintptr_t end;

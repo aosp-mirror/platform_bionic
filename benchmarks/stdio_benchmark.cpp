@@ -29,7 +29,7 @@ static void FillFile(TemporaryFile& tf) {
   memset(line, 'x', sizeof(line));
   line[sizeof(line) - 1] = '\0';
 
-  FILE* fp = fopen(tf.path, "w");
+  FILE* fp = fopen(tf.path, "we");
   for (size_t i = 0; i < 4096; ++i) fputs(line, fp);
   fclose(fp);
 }

@@ -305,7 +305,7 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 }
 
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
-                         std::string fn_name, args_vector_t* run_args) {
+                              const std::string& fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
     errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
   }
@@ -320,7 +320,7 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
   }
 
   benchmark_func_t benchmark_function = g_str_to_func.at(fn_name).first;
-  for (std::vector<int> args : (*run_args)) {
+  for (const std::vector<int>& args : (*run_args)) {
     auto registration = benchmark::RegisterBenchmark(fn_name.c_str(), LockAndRun,
                                                      benchmark_function,
                                                      cpu_to_use)->Args(args);
@@ -335,13 +335,13 @@ void RegisterCliBenchmarks(bench_opts_t cmdline_opts,
   // Register any of the extra benchmarks that were specified in the options.
   args_vector_t arg_vector;
   args_vector_t* run_args = &arg_vector;
-  for (std::string extra_fn : cmdline_opts.extra_benchmarks) {
+  for (const std::string& extra_fn : cmdline_opts.extra_benchmarks) {
     android::base::Trim(extra_fn);
-    size_t first_space_pos = extra_fn.find(" ");
+    size_t first_space_pos = extra_fn.find(' ');
     std::string fn_name = extra_fn.substr(0, first_space_pos);
     std::string cmd_args;
     if (first_space_pos != std::string::npos) {
-      cmd_args = extra_fn.substr(extra_fn.find(" ") + 1);
+      cmd_args = extra_fn.substr(extra_fn.find(' ') + 1);
     } else {
       cmd_args = "";
     }
