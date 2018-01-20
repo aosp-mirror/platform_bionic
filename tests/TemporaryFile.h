@@ -22,7 +22,7 @@
 template <typename T = int (*)(char*)>
 class GenericTemporaryFile {
  public:
-  GenericTemporaryFile(T mk_fn = mkstemp) : mk_fn(mk_fn) {
+  explicit GenericTemporaryFile(T mk_fn = mkstemp) : mk_fn(mk_fn) {
     // Since we might be running on the host or the target, and if we're
     // running on the host we might be running under bionic or glibc,
     // let's just try both possible temporary directories and take the
@@ -33,7 +33,7 @@ class GenericTemporaryFile {
     }
   }
 
-  GenericTemporaryFile(const char* dirpath, T mk_fn = mkstemp) : mk_fn(mk_fn) {
+  explicit GenericTemporaryFile(const char* dirpath, T mk_fn = mkstemp) : mk_fn(mk_fn) {
     init(dirpath);
   }
 
