@@ -39,6 +39,7 @@ libc_common_flags = [
     "-Wall",
     "-Wextra",
     "-Wunused",
+    "-Wno-char-subscripts",
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
