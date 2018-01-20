@@ -425,7 +425,7 @@ protected:
   }
 
   void CreateRelroFile(const char* lib, const char* relro_file) {
-    int relro_fd = open(relro_file, O_RDWR | O_TRUNC);
+    int relro_fd = open(relro_file, O_RDWR | O_TRUNC | O_CLOEXEC);
     ASSERT_NOERROR(relro_fd);
 
     pid_t pid = fork();
@@ -447,7 +447,7 @@ protected:
     AssertChildExited(pid, 0);
 
     // reopen file for reading so it can be used
-    relro_fd = open(relro_file, O_RDONLY);
+    relro_fd = open(relro_file, O_RDONLY | O_CLOEXEC);
     ASSERT_NOERROR(relro_fd);
     extinfo_.flags |= ANDROID_DLEXT_USE_RELRO;
     extinfo_.relro_fd = relro_fd;

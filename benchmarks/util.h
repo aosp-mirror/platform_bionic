@@ -29,7 +29,7 @@ extern std::mutex g_map_lock;
 
 extern std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
 
-static int  __attribute__((unused)) EmplaceBenchmark (std::string fn_name, benchmark_func_t fn_ptr, std::string arg = "") {
+static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name, benchmark_func_t fn_ptr, const std::string& arg = "") {
   g_map_lock.lock();
   g_str_to_func.emplace(std::string(fn_name), std::make_pair(fn_ptr, arg));
   g_map_lock.unlock();

@@ -3631,7 +3631,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   std::string error_msg;
 
   std::string ld_config_vndk = kLdConfigFilePath;
-  size_t insert_pos = ld_config_vndk.find_last_of(".");
+  size_t insert_pos = ld_config_vndk.find_last_of('.');
   if (insert_pos == std::string::npos) {
     insert_pos = ld_config_vndk.length();
   }

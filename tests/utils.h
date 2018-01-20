@@ -180,10 +180,10 @@ class ExecTestHelper {
     return const_cast<char**>(env_.data());
   }
 
-  void SetArgs(const std::vector<const char*> args) {
+  void SetArgs(const std::vector<const char*>& args) {
     args_ = args;
   }
-  void SetEnv(const std::vector<const char*> env) {
+  void SetEnv(const std::vector<const char*>& env) {
     env_ = env;
   }
 

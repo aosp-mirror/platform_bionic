@@ -496,7 +496,6 @@ extern "C" const char* __asan_default_options() {
 
 int main(int argc, char** argv) {
   std::string cwd = getWorkingDir() + "/";
-  bool default_args = true;
   std::string platform_dir;
   std::set<Arch> selected_architectures;
   std::set<int> selected_levels;
@@ -507,7 +506,6 @@ int main(int argc, char** argv) {
 
   int c;
   while ((c = getopt(argc, argv, "a:r:p:so:fdj:vhFi")) != -1) {
-    default_args = false;
     switch (c) {
       case 'a': {
         char* end;
