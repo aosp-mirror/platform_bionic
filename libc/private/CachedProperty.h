@@ -38,7 +38,7 @@
 class CachedProperty {
  public:
   // The lifetime of `property_name` must be greater than that of this CachedProperty.
-  CachedProperty(const char* property_name)
+  explicit CachedProperty(const char* property_name)
     : property_name_(property_name),
       prop_info_(nullptr),
       cached_area_serial_(0),

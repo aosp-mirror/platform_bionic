@@ -102,21 +102,18 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       return true;
     }
 
-    DeclarationType declaration_type;
     std::string declaration_name = getDeclName(named_decl);
     bool is_extern = named_decl->getFormalLinkage() == ExternalLinkage;
     bool is_definition = false;
     bool no_guard = false;
 
     if (auto function_decl = dyn_cast<FunctionDecl>(decl)) {
-      declaration_type = DeclarationType::function;
       is_definition = function_decl->isThisDeclarationADefinition();
     } else if (auto var_decl = dyn_cast<VarDecl>(decl)) {
       if (!var_decl->isFileVarDecl()) {
         return true;
       }
 
-      declaration_type = DeclarationType::variable;
       switch (var_decl->isThisDeclarationADefinition()) {
         case VarDecl::DeclarationOnly:
           is_definition = false;

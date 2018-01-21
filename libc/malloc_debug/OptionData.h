@@ -34,7 +34,7 @@ class DebugData;
 
 class OptionData {
  public:
-  OptionData(DebugData* debug) : debug_(debug) {}
+  explicit OptionData(DebugData* debug) : debug_(debug) {}
   ~OptionData() = default;
 
  protected:

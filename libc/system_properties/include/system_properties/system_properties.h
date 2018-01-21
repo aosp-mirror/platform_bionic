@@ -48,7 +48,7 @@ class SystemProperties {
   SystemProperties() {
   }
   // Special constructor for testing that also zero initializes the important members.
-  SystemProperties(bool initialized) : initialized_(initialized) {
+  explicit SystemProperties(bool initialized) : initialized_(initialized) {
   }
 
   DISALLOW_COPY_AND_ASSIGN(SystemProperties);
