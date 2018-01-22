@@ -29,15 +29,15 @@
 #ifndef _ANDROID_LEGACY_SIGNAL_INLINES_H_
 #define _ANDROID_LEGACY_SIGNAL_INLINES_H_
 
+#include <sys/cdefs.h>
+
+#if __ANDROID_API__ < __ANDROID_API_L__
+
 #include <errno.h>
 #include <signal.h>
 #include <string.h>
-#include <sys/cdefs.h>
-
 
 __BEGIN_DECLS
-
-#if __ANDROID_API__ < __ANDROID_API_L__
 
 sighandler_t bsd_signal(int __signal, sighandler_t __handler) __REMOVED_IN(21);
 
@@ -117,8 +117,8 @@ static __inline sighandler_t signal(int s, sighandler_t f) {
   return bsd_signal(s, f);
 }
 
-#endif /* __ANDROID_API__ < __ANDROID_API_L__ */
-
 __END_DECLS
+
+#endif /* __ANDROID_API__ < __ANDROID_API_L__ */
 
 #endif /* _ANDROID_LEGACY_SIGNAL_INLINES_H_ */
