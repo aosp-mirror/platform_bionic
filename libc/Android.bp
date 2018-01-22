@@ -1670,6 +1670,7 @@ cc_library_static {
 cc_library {
     defaults: ["libc_defaults"],
     name: "libc",
+    static_ndk_lib: true,
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1782,6 +1783,7 @@ cc_library {
         "bionic/new.cpp",
     ],
     name: "libstdc++",
+    static_ndk_lib: true,
     system_shared_libs: ["libc"],
     static_libs: ["libasync_safe"],
 
