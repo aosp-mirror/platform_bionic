@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f0819325_28065d89",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-23T15:28:23Z",
+      "side": 1,
+      "message": "My comment is about the method parameter.\n\nHaving said that I think it is clearer to have allow_all_shared_libs \u003d true instead of using magic value in config file as well.",
+      "parentUuid": "2d448752_aecb5b25",
+      "range": {
+        "startLine": 1764,
+        "startChar": 50,
+        "endLine": 1764,
+        "endChar": 65
+      },
+      "revId": "a6ef67796405629f2c0ae752de2ff5d414b03a57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8143ca8b_98c18f94",
         "filename": "tests/libs/Android.bp",
         "patchSetId": 3
