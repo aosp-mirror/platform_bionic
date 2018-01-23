@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "705fe9a6_81755a46",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T21:44:50Z",
+      "side": 1,
+      "message": "the non-PI variant loads the old owner... explain the difference? (and add the comment about why we\u0027re doing anything in mutex_destroy at all?)",
+      "revId": "baf931d13ee991ac8a29ab8f2e40316deda61553",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d2d2cc8_0efe0568",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T21:44:50Z",
+      "side": 1,
+      "message": "move these up into alphabetical order?",
+      "revId": "baf931d13ee991ac8a29ab8f2e40316deda61553",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9889738c_38bba499",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T21:44:50Z",
+      "side": 1,
+      "message": "need __INTRODUCED_IN on these.",
+      "revId": "baf931d13ee991ac8a29ab8f2e40316deda61553",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f5580610_13598a54",
+        "filename": "libc/private/bionic_mbstate.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T21:44:50Z",
+      "side": 1,
+      "message": "already fixed.",
+      "revId": "baf931d13ee991ac8a29ab8f2e40316deda61553",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04e90ba6_83eaaf12",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1822,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T21:44:50Z",
+      "side": 1,
+      "message": "sched_getparam?",
+      "revId": "baf931d13ee991ac8a29ab8f2e40316deda61553",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
