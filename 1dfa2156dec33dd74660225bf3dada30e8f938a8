@@ -22,6 +22,30 @@
       "revId": "1dfa2156dec33dd74660225bf3dada30e8f938a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68c54794_89547986",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T01:14:26Z",
+      "side": 1,
+      "message": "i was conflicted about whether to just say readdir_r/readdir here (in case people don\u0027t understand that _FILE_OFFSET_BITS\u003d64 means their code says readdir_r but they\u0027re getting a warning about readdir64_r), and apparently was so undecided that i went half-and-half.\n\ni\u0027ll make them match, and i\u0027ll make them both admit to the 64. we can always change it if it does cause confusion...",
+      "parentUuid": "0726a94f_e5619456",
+      "range": {
+        "startLine": 84,
+        "startChar": 164,
+        "endLine": 84,
+        "endChar": 171
+      },
+      "revId": "1dfa2156dec33dd74660225bf3dada30e8f938a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
