@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "3670b956_f321ebe7",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-23T06:25:26Z",
+      "side": 1,
+      "message": "setsid seems reasonable?",
+      "revId": "3d1d216dc22629a965b1c9fb2494661022901dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05226363_403635b4",
         "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
         "patchSetId": 1
