@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6efb088_ad95943f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-23T10:39:04Z",
+      "side": 1,
+      "message": "add a test to dlext_tests.cpp demostrating problem you are trying to solve by this.",
+      "revId": "218e5031f21fb3ed2b51cd867821243b29a759a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc596eba_d3cdfd40",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-23T10:39:04Z",
+      "side": 1,
+      "message": "always run bionic-unit-tests when touching the linker.",
+      "revId": "218e5031f21fb3ed2b51cd867821243b29a759a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
