@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "88159269_1f3cf2da",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-23T14:51:24Z",
+      "side": 1,
+      "message": "Add as `dlext::ns_allow_all_shared_libs` in PS#3",
+      "parentUuid": "a6efb088_ad95943f",
+      "revId": "218e5031f21fb3ed2b51cd867821243b29a759a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bc596eba_d3cdfd40",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-23T10:39:04Z",
       "side": 1,
       "message": "always run bionic-unit-tests when touching the linker.",
+      "revId": "218e5031f21fb3ed2b51cd867821243b29a759a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd247a92_6545c3c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-23T14:51:24Z",
+      "side": 1,
+      "message": "Thanks.  I start running bionic-unit-tests now (PS#3).",
+      "parentUuid": "bc596eba_d3cdfd40",
       "revId": "218e5031f21fb3ed2b51cd867821243b29a759a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
