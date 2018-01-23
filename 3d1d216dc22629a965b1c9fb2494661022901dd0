@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4f98f714_e6809ece",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-01-23T06:31:56Z",
+      "side": 1,
+      "message": "Nice catch.  I actually didn\u0027t want to block this one.",
+      "parentUuid": "3670b956_f321ebe7",
+      "revId": "3d1d216dc22629a965b1c9fb2494661022901dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05226363_403635b4",
         "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
         "patchSetId": 1
