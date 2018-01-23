@@ -34,6 +34,24 @@
       "revId": "3d1d216dc22629a965b1c9fb2494661022901dd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bec24c94_33ae59eb",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1054468
+      },
+      "writtenOn": "2018-01-23T05:43:59Z",
+      "side": 1,
+      "message": "It is neverallowed to apps.",
+      "parentUuid": "27c2d5af_e49352d5",
+      "revId": "3d1d216dc22629a965b1c9fb2494661022901dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
