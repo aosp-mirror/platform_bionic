@@ -87,6 +87,24 @@
       "revId": "a6ef67796405629f2c0ae752de2ff5d414b03a57",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4d3859d_bb4a3051",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-01-23T18:08:17Z",
+      "side": 1,
+      "message": "Although I have a plan for this in the future, this is beyond the scope of this CL.  This CL only provides an option to skip the soname filter on the fallback links.  This CL does not change the search order.  The shared lib within the caller namespace always has higher priority.\n\nIf there are two public3.so (one in namespace a and the other in namespace b), then public1.so must link with the one in namespace a.  This is the behavior we have today.\n\nBTW, although writing a unit test to keep track of this behavior is desirable, to best of my knowledge we don\u0027t have a good way to build two shared libs with the same soname for testing (p.s. stem does not work on shared libs).  It may be difficult to be done in a short term.",
+      "parentUuid": "8143ca8b_98c18f94",
+      "revId": "a6ef67796405629f2c0ae752de2ff5d414b03a57",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
