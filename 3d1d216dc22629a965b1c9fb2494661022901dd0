@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05226363_403635b4",
+        "filename": "libc/SECCOMP_BLACKLIST_APP.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1054468
+      },
+      "writtenOn": "2018-01-23T04:35:49Z",
+      "side": 1,
+      "message": "Can we add bpf() here too?",
+      "revId": "3d1d216dc22629a965b1c9fb2494661022901dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
