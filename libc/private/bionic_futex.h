@@ -70,4 +70,11 @@ static inline int __futex_wait_ex(volatile void* ftx, bool shared, int value) {
 __LIBC_HIDDEN__ int __futex_wait_ex(volatile void* ftx, bool shared, int value,
                                     bool use_realtime_clock, const timespec* abs_timeout);
 
+static inline int __futex_pi_unlock(volatile void* ftx, bool shared) {
+  return __futex(ftx, shared ? FUTEX_UNLOCK_PI : FUTEX_UNLOCK_PI_PRIVATE, 0, nullptr, 0);
+}
+
+__LIBC_HIDDEN__ int __futex_pi_lock_ex(volatile void* ftx, bool shared, bool use_realtime_clock,
+                                       const timespec* abs_timeout);
+
 #endif /* _BIONIC_FUTEX_H */
