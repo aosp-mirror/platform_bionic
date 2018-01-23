@@ -62,7 +62,7 @@
                                          // unset.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 3
+#define SOINFO_VERSION 4
 
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
@@ -309,6 +309,7 @@ struct soinfo {
   template<typename ElfRelIteratorT>
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                 const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool relocate_relr();
 
  private:
   // This part of the structure is only available
@@ -365,6 +366,10 @@ struct soinfo {
   friend soinfo* get_libdl_info(const char* linker_path,
                                 const soinfo& linker_si,
                                 const link_map& linker_map);
+
+  // version >= 4
+  ElfW(Relr)* relr_;
+  size_t relr_count_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
