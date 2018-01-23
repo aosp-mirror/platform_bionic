@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0726a94f_e5619456",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-01-23T00:52:04Z",
+      "side": 1,
+      "message": "readdir64?",
+      "range": {
+        "startLine": 84,
+        "startChar": 164,
+        "endLine": 84,
+        "endChar": 171
+      },
+      "revId": "1dfa2156dec33dd74660225bf3dada30e8f938a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
