@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "977d9a59_e1a2e5fc",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-24T18:57:26Z",
+      "side": 1,
+      "message": "the printfs are #ifdef DEBUG elsewhere in this file.",
+      "revId": "4b9c295b420e6b71b0313610227eb244ecefd3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
