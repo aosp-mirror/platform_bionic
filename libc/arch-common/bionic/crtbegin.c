@@ -36,7 +36,7 @@ SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 #undef SECTION
 
-static void _start_main(void* raw_args) __used {
+__used static void _start_main(void* raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
