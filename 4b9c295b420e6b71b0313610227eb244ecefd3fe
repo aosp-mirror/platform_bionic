@@ -16,6 +16,24 @@
       "revId": "4b9c295b420e6b71b0313610227eb244ecefd3fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "84157dfe_984a4437",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 2226,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2018-01-24T19:37:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "977d9a59_e1a2e5fc",
+      "revId": "4b9c295b420e6b71b0313610227eb244ecefd3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
