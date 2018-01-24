@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a2ea556_3b0fd1fd",
+        "filename": "libdl/libdl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-01-24T16:59:18Z",
+      "side": 1,
+      "message": "Exposing this via libdl interface? No one except the test routine will be using this via libdl. Our intention was just to add an option in ld.config.txt file. I cannot imagine a valid use case of someone calling this function dynamically.\n\nI don\u0027t have a strong opinion since I don\u0027t own the dynamic linker, but IMHO, this seems to be an overkill.",
+      "range": {
+        "startLine": 215,
+        "startChar": 0,
+        "endLine": 222,
+        "endChar": 0
+      },
+      "revId": "a11dc2f4d14a344f69955bee90ae2ac0868305f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83ed8adc_4c3d1f59",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2404,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-01-24T16:59:18Z",
+      "side": 1,
+      "message": "This clearly shows that the two arguments are exclusive. Why can\u0027t we just have #define ANY_SONAME and use it as a special name that matches any soname?\n\nOr at least, why can\u0027t we have android_link_namespace_all_libs(from, to) which is much more intuitive than this?",
+      "range": {
+        "startLine": 2399,
+        "startChar": 0,
+        "endLine": 2404,
+        "endChar": 19
+      },
+      "revId": "a11dc2f4d14a344f69955bee90ae2ac0868305f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
