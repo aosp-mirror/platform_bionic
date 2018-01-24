@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "574c4299_4f274d9c",
+        "filename": "linker/linker_memory.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-01-24T23:01:03Z",
+      "side": 1,
+      "message": "Does this need to be protected by a mutex or made an atomic value? Can multiple threads wind up here at the same time?",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 14
+      },
+      "revId": "578800e69c9cff5df2e6a0d4ed0595b1a670a122",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
