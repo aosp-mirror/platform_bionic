@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f87f7d11_c20bd0cc",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T19:25:52Z",
+      "side": 1,
+      "message": "Any reason not to put this into the pad instead? It seems to be always accessed with the state. That would reduce the chance that they end up in different cache lines.\n\nI was hoping to find a way to get the additional load of the critical path for a normal mutex that doesn\u0027t use it. But I don\u0027t see how to do that either.",
+      "range": {
+        "startLine": 240,
+        "startChar": 2,
+        "endLine": 240,
+        "endChar": 20
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
