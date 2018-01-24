@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "031afdac_d7cdedd9",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2018-01-24T18:32:33Z",
+      "side": 1,
+      "message": "I don\u0027t oppose trying to unify this better with upstream, but I don\u0027t want to mix that in with this CL.",
+      "parentUuid": "90d35712_ea58d040",
+      "revId": "10387745b80731193d757d67f200e5be45214d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "82b21fa3_6a363973",
         "filename": "libc/dns/resolv/res_cache.c",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "62d00bf3_76619659",
+        "filename": "libc/dns/resolv/res_cache.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2018-01-24T18:32:33Z",
+      "side": 1,
+      "message": "Yes, it\u0027s deliberate.",
+      "parentUuid": "82b21fa3_6a363973",
+      "range": {
+        "startLine": 594,
+        "startChar": 38,
+        "endLine": 594,
+        "endChar": 42
+      },
+      "revId": "10387745b80731193d757d67f200e5be45214d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ccb439d_807b6009",
         "filename": "libc/dns/resolv/res_mkquery.c",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2017-10-03T00:00:04Z",
       "side": 1,
       "message": "do we want to just take the current upstream copy of this file? there\u0027s a missing line here that looks a bit scary?",
+      "revId": "10387745b80731193d757d67f200e5be45214d9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c488a5a3_3c0d2f6b",
+        "filename": "libc/dns/resolv/res_mkquery.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2018-01-24T18:32:33Z",
+      "side": 1,
+      "message": "It\u0027s a slightly unfortunate divergence, but I don\u0027t have reason to believe that it\u0027s a problem.",
+      "parentUuid": "7ccb439d_807b6009",
       "revId": "10387745b80731193d757d67f200e5be45214d9b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
