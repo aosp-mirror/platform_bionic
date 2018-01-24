@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a6fbd8c5_c3312a6f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "This seems wrong now? It really needs an update.\n\nSomewhat preexisting issue: The counter is really \u003cnumber of times we hold the lock\u003e - 1. That needs to be documented.\n\nNit: I suspect it\u0027s the case that bits 15-13 are constant during the lifetime of the mutex. If so, it would be great to document that.",
+      "range": {
+        "startLine": 142,
+        "startChar": 3,
+        "endLine": 142,
+        "endChar": 99
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f87f7d11_c20bd0cc",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 4
@@ -42,6 +65,122 @@
         "startChar": 2,
         "endLine": 240,
         "endChar": 20
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5504bf94_ce219732",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "That makes sense. I was worried about possible ABI implications. But there aren\u0027t any.",
+      "parentUuid": "8a1828cf_16d5e439",
+      "range": {
+        "startLine": 240,
+        "startChar": 2,
+        "endLine": 240,
+        "endChar": 20
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "862d24e1_8d5cf517",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "Document that this is not used with PI. It may make more sense to rename these old routines, and call them NonPI... instead.",
+      "range": {
+        "startLine": 325,
+        "startChar": 3,
+        "endLine": 325,
+        "endChar": 31
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32cd85d8_1c29ff1c",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "Preexisting issue: Should be \"already ... acquire\" instead of \"still ... release\"",
+      "range": {
+        "startLine": 426,
+        "startChar": 20,
+        "endLine": 426,
+        "endChar": 25
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c52ba49_488be6fb",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "Please document that this cannot be called on a PI mutex. Or add a debug assertion to that effect.",
+      "range": {
+        "startLine": 431,
+        "startChar": 0,
+        "endLine": 431,
+        "endChar": 71
+      },
+      "revId": "5cbc819b5436891ec237637046e6405bd521d195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "304a11ae_96f3f82d",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-01-24T22:23:14Z",
+      "side": 1,
+      "message": "Please document that this cannot be called on a PI mutex.\n\nIf we had some kind of debug assertion mechanism to enforce that during testing, that would be even better.",
+      "range": {
+        "startLine": 457,
+        "startChar": 0,
+        "endLine": 457,
+        "endChar": 77
       },
       "revId": "5cbc819b5436891ec237637046e6405bd521d195",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
