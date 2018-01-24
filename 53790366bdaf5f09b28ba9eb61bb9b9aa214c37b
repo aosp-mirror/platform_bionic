@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4fb7437_400a28af",
+        "filename": "libc/bionic/bionic_futex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-24T01:50:42Z",
+      "side": 1,
+      "message": "template rather than copy \u0026 paste?",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 1
+      },
+      "revId": "53790366bdaf5f09b28ba9eb61bb9b9aa214c37b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
