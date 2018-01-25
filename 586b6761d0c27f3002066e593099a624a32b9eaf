@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a47e574_5e04efe1",
+        "filename": "libc/arch-x86/bionic/__stack_chk_fail_local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T01:58:50Z",
+      "side": 1,
+      "message": "replace this with something making it clear it\u0027s GCC-only, so we remember to remove it again when GCC is gone from the NDK?",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 79
+      },
+      "revId": "586b6761d0c27f3002066e593099a624a32b9eaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
