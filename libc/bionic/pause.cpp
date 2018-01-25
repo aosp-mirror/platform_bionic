@@ -30,13 +30,8 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
-extern "C" int __rt_sigsuspend(const kernel_sigset_t*, size_t);
-
 int pause() {
   kernel_sigset_t mask;
-  if (__rt_sigprocmask(SIG_SETMASK, NULL, &mask, sizeof(mask)) == -1) {
-    return -1;
-  }
+  if (__rt_sigprocmask(SIG_SETMASK, nullptr, &mask, sizeof(mask)) == -1) return -1;
   return __rt_sigsuspend(&mask, sizeof(mask));
 }

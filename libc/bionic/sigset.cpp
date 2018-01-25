@@ -29,6 +29,8 @@
 #include <signal.h>
 #include <string.h>
 
+#include "private/kernel_sigset_t.h"
+
 sighandler_t sigset(int sig, sighandler_t disp) {
   struct sigaction new_sa;
   if (disp != SIG_HOLD) {
@@ -38,19 +40,16 @@ sighandler_t sigset(int sig, sighandler_t disp) {
   }
 
   struct sigaction old_sa;
-  if (sigaction(sig, disp == SIG_HOLD ? nullptr : &new_sa, &old_sa) == -1) {
+  if (sigaction(sig, (disp == SIG_HOLD) ? nullptr : &new_sa, &old_sa) == -1) {
     return SIG_ERR;
   }
 
-  sigset_t new_proc_mask;
-  sigemptyset(&new_proc_mask);
-  sigaddset(&new_proc_mask, sig);
-
-  sigset_t old_proc_mask;
-  if (sigprocmask(disp == SIG_HOLD ? SIG_BLOCK : SIG_UNBLOCK,
-                  &new_proc_mask, &old_proc_mask) == -1) {
+  kernel_sigset_t new_mask{sig};
+  kernel_sigset_t old_mask;
+  if (__rt_sigprocmask(disp == SIG_HOLD ? SIG_BLOCK : SIG_UNBLOCK, &new_mask, &old_mask,
+                       sizeof(new_mask)) == -1) {
     return SIG_ERR;
   }
 
-  return sigismember(&old_proc_mask, sig) ? SIG_HOLD : old_sa.sa_handler;
+  return old_mask.is_set(sig) ? SIG_HOLD : old_sa.sa_handler;
 }
