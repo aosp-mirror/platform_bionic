@@ -45,6 +45,30 @@
       "revId": "b0400f56d449f5a11ae98ca377d350668f6e634e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a760328f_1f760998",
+        "filename": "libc/dns/net/getaddrinfo.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 1161323
+      },
+      "writtenOn": "2018-01-25T21:42:19Z",
+      "side": 1,
+      "message": "Well, in that case, why not reduce the answer length?  Currently, the answer length is 65536 for getaddrinfo, and bionic actually allocates that for every call: https://android.googlesource.com/platform/bionic/+/master/libc/dns/net/getaddrinfo.c#205\n\nFor gethostbyname, it\u0027s 8192:\nhttps://android.googlesource.com/platform/bionic/+/master/libc/dns/include/resolv_static.h#21\n\nIf you don\u0027t want to support such large responses, I would rather reduce the constants there and let those values propagate through the code.",
+      "parentUuid": "682e389d_f544299e",
+      "range": {
+        "startLine": 2197,
+        "startChar": 42,
+        "endLine": 2197,
+        "endChar": 48
+      },
+      "revId": "b0400f56d449f5a11ae98ca377d350668f6e634e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
