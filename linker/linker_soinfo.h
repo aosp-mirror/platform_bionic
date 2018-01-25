@@ -310,6 +310,7 @@ struct soinfo {
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                 const soinfo_list_t& global_group, const soinfo_list_t& local_group);
   bool relocate_relr();
+  void apply_relr_reloc(ElfW(Addr) offset);
 
  private:
   // This part of the structure is only available

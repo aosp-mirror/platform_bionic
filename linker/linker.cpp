@@ -2595,31 +2595,46 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
+void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
+  ElfW(Addr) address = offset + load_bias;
+  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+}
+
 // Process relocations in SHT_RELR section (experimental).
-// See the original proposal for details of the encoding:
-// - https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg
+// Details of the encoding are described in this post:
+//   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
 bool soinfo::relocate_relr() {
   ElfW(Relr)* begin = relr_;
   ElfW(Relr)* end = relr_ + relr_count_;
+  constexpr size_t wordsize = sizeof(ElfW(Addr));
 
-  ElfW(Addr) offset = 0;
+  ElfW(Addr) base = 0;
   for (ElfW(Relr)* current = begin; current < end; ++current) {
-    ElfW(Addr) jump = ELFW(R_JUMP)(*current);
-    ElfW(Addr) bits = ELFW(R_BITS)(*current);
-    offset += jump * sizeof(ElfW(Addr));
-    if (jump == 0) {
-      ++current;
-      offset = *current;
+    ElfW(Relr) entry = *current;
+    ElfW(Addr) offset;
+
+    if ((entry&1) == 0) {
+      // Even entry: encodes the offset for next relocation.
+      offset = static_cast<ElfW(Addr)>(entry);
+      apply_relr_reloc(offset);
+      // Set base offset for subsequent bitmap entries.
+      base = offset + wordsize;
+      continue;
     }
-    ElfW(Addr) r_offset = offset;
-    for (; bits != 0; bits >>= 1) {
-      if ((bits&1) != 0) {
-        ElfW(Addr) reloc = static_cast<ElfW(Addr)>(r_offset + load_bias);
-        ElfW(Addr) addend = *reinterpret_cast<ElfW(Addr)*>(reloc);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
+
+    // Odd entry: encodes bitmap for relocations starting at base.
+    offset = base;
+    while (entry != 0) {
+      entry >>= 1;
+      if ((entry&1) != 0) {
+        apply_relr_reloc(offset);
       }
-      r_offset += sizeof(ElfW(Addr));
+      offset += wordsize;
     }
+
+    // Advance base offset by 63 words for 64-bit platforms,
+    // or 31 words for 32-bit platforms.
+    base += (8*wordsize - 1) * wordsize;
   }
   return true;
 }
