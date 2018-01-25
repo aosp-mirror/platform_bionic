@@ -300,6 +300,13 @@
  * inline` without making them available externally.
  */
 #    define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline
+/*
+ * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
+ * for variadic functions because compilers cannot inline them.
+ * The __always_inline attribute is useless, misleading, and could trigger
+ * clang compiler bug to incorrectly inline variadic functions.
+ */
+#    define __BIONIC_FORTIFY_VARIADIC static __inline__
 /* Error functions don't have bodies, so they can just be static. */
 #    define __BIONIC_ERROR_FUNCTION_VISIBILITY static
 #  else
@@ -311,6 +318,8 @@
 #    define __call_bypassing_fortify(fn) (fn)
 /* __BIONIC_FORTIFY_NONSTATIC_INLINE is pointless in GCC's FORTIFY */
 #    define __BIONIC_FORTIFY_INLINE extern __inline__ __always_inline __attribute__((gnu_inline)) __attribute__((__artificial__))
+/* __always_inline is probably okay and ignored by gcc in __BIONIC_FORTIFY_VARIADIC */
+#    define __BIONIC_FORTIFY_VARIADIC __BIONIC_FORTIFY_INLINE
 #  endif
 #else
 /* Further increase sharing for some inline functions */
