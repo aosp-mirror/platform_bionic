@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ee7949f_770cd72f",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "Should these be sizeof(sigset) instead? AFAIK google cpp style prefers that.",
+      "range": {
+        "startLine": 154,
+        "startChar": 59,
+        "endLine": 154,
+        "endChar": 74
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c5cea345_0c207cb9",
+        "filename": "libc/bionic/sighold.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "sizeof(set)?",
+      "range": {
+        "startLine": 37,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 74
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ef4467b_53aa5559",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "sizeof(new_mask)? (or old_mask, I guess?)",
+      "range": {
+        "startLine": 50,
+        "startChar": 30,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "26b9e502_0b5d6af7",
+        "filename": "libc/bionic/sigsuspend.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "Maybe we unify all of these trivial 2 line functions into one source file...",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc5e9228_1d08d514",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "you probably want this to be explicit\n\n(you could also be fancy and make this a std::initializer_list\u003cint\u003e to allow for `kernel_sigset_t foo { SIGHUP, SIGSEGV, SIGABRT }`, but that\u0027s probably overkill (and I\u0027m not sure where we would get \u003cinitializer_list\u003e))",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f481b33_521140af",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "Do you mean bool? (or just leave the cast out entirely, or check equality against 1?)",
+      "range": {
+        "startLine": 63,
+        "startChar": 11,
+        "endLine": 63,
+        "endChar": 28
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "51ee1c04_06cc55aa",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T05:02:34Z",
+      "side": 1,
+      "message": "This seems like it might be UB? Maybe remove the ifdef and just return \u0026kernel instead?",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
