@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "522c9cd5_efe2c00e",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ee7949f_770cd72f",
+      "range": {
+        "startLine": 154,
+        "startChar": 59,
+        "endLine": 154,
+        "endChar": 74
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5cea345_0c207cb9",
         "filename": "libc/bionic/sighold.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-01-25T05:02:34Z",
       "side": 1,
       "message": "sizeof(set)?",
+      "range": {
+        "startLine": 37,
+        "startChar": 59,
+        "endLine": 37,
+        "endChar": 74
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "524e9fbb_81600484",
+        "filename": "libc/bionic/sighold.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5cea345_0c207cb9",
       "range": {
         "startLine": 37,
         "startChar": 59,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "07502b4a_f2a53961",
+        "filename": "libc/bionic/sigset.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ef4467b_53aa5559",
+      "range": {
+        "startLine": 50,
+        "startChar": 30,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26b9e502_0b5d6af7",
         "filename": "libc/bionic/sigsuspend.cpp",
         "patchSetId": 1
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "c6b4b25c_8391f34b",
+        "filename": "libc/bionic/sigsuspend.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "yeah, every time i\u0027m here i want to do that, but i never want to obscure the actual reason i\u0027m here. i\u0027ll do that in a followup.",
+      "parentUuid": "26b9e502_0b5d6af7",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc5e9228_1d08d514",
         "filename": "libc/private/kernel_sigset_t.h",
         "patchSetId": 1
@@ -99,6 +189,24 @@
       "writtenOn": "2018-01-25T05:02:34Z",
       "side": 1,
       "message": "you probably want this to be explicit\n\n(you could also be fancy and make this a std::initializer_list\u003cint\u003e to allow for `kernel_sigset_t foo { SIGHUP, SIGSEGV, SIGABRT }`, but that\u0027s probably overkill (and I\u0027m not sure where we would get \u003cinitializer_list\u003e))",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3fcf50e7_766a62ff",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "made explicit. i didn\u0027t think of supporting multiple signals (because i\u0027ve yet to have a use case), but i did actually half-implement +ve \u003d\u003e just this signal, -ve \u003d\u003e every signal except this signal. but it wasn\u0027t very nice and there\u0027s currently only one user.\n\n(but that\u0027s the reason i removed the clear() from the default constructor: so that user doesn\u0027t pay to memset all-0 and then again all-0xff.)",
+      "parentUuid": "bc5e9228_1d08d514",
       "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "0fe72623_1b45fd8b",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f481b33_521140af",
+      "range": {
+        "startLine": 63,
+        "startChar": 11,
+        "endLine": 63,
+        "endChar": 28
+      },
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "51ee1c04_06cc55aa",
         "filename": "libc/private/kernel_sigset_t.h",
         "patchSetId": 1
@@ -139,6 +271,24 @@
       "writtenOn": "2018-01-25T05:02:34Z",
       "side": 1,
       "message": "This seems like it might be UB? Maybe remove the ifdef and just return \u0026kernel instead?",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20d48114_b92d5752",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-25T16:53:08Z",
+      "side": 1,
+      "message": "what\u0027s undefined about it?",
+      "parentUuid": "51ee1c04_06cc55aa",
       "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
