@@ -33,7 +33,9 @@
 #include <atomic>
 #include <vector>
 
+#include <android-base/parseint.h>
 #include <android-base/scopeguard.h>
+#include <android-base/strings.h>
 
 #include "private/bionic_constants.h"
 #include "private/bionic_macros.h"
@@ -1631,11 +1633,27 @@ TEST(pthread, pthread_mutexattr_gettype) {
   ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
 }
 
+TEST(pthread, pthread_mutexattr_protocol) {
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+
+  int protocol;
+  ASSERT_EQ(0, pthread_mutexattr_getprotocol(&attr, &protocol));
+  ASSERT_EQ(PTHREAD_PRIO_NONE, protocol);
+  for (size_t repeat = 0; repeat < 2; ++repeat) {
+    for (int set_protocol : {PTHREAD_PRIO_NONE, PTHREAD_PRIO_INHERIT}) {
+      ASSERT_EQ(0, pthread_mutexattr_setprotocol(&attr, set_protocol));
+      ASSERT_EQ(0, pthread_mutexattr_getprotocol(&attr, &protocol));
+      ASSERT_EQ(protocol, set_protocol);
+    }
+  }
+}
+
 struct PthreadMutex {
   pthread_mutex_t lock;
 
-  explicit PthreadMutex(int mutex_type) {
-    init(mutex_type);
+  explicit PthreadMutex(int mutex_type, int protocol = PTHREAD_PRIO_NONE) {
+    init(mutex_type, protocol);
   }
 
   ~PthreadMutex() {
@@ -1643,10 +1661,11 @@ struct PthreadMutex {
   }
 
  private:
-  void init(int mutex_type) {
+  void init(int mutex_type, int protocol) {
     pthread_mutexattr_t attr;
     ASSERT_EQ(0, pthread_mutexattr_init(&attr));
     ASSERT_EQ(0, pthread_mutexattr_settype(&attr, mutex_type));
+    ASSERT_EQ(0, pthread_mutexattr_setprotocol(&attr, protocol));
     ASSERT_EQ(0, pthread_mutex_init(&lock, &attr));
     ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
   }
@@ -1658,8 +1677,8 @@ struct PthreadMutex {
   DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
 };
 
-TEST(pthread, pthread_mutex_lock_NORMAL) {
-  PthreadMutex m(PTHREAD_MUTEX_NORMAL);
+static void TestPthreadMutexLockNormal(int protocol) {
+  PthreadMutex m(PTHREAD_MUTEX_NORMAL, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
@@ -1668,20 +1687,24 @@ TEST(pthread, pthread_mutex_lock_NORMAL) {
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
-TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
-  PthreadMutex m(PTHREAD_MUTEX_ERRORCHECK);
+static void TestPthreadMutexLockErrorCheck(int protocol) {
+  PthreadMutex m(PTHREAD_MUTEX_ERRORCHECK, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
   ASSERT_EQ(EDEADLK, pthread_mutex_lock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
-  ASSERT_EQ(EBUSY, pthread_mutex_trylock(&m.lock));
+  if (protocol == PTHREAD_PRIO_NONE) {
+    ASSERT_EQ(EBUSY, pthread_mutex_trylock(&m.lock));
+  } else {
+    ASSERT_EQ(EDEADLK, pthread_mutex_trylock(&m.lock));
+  }
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
 }
 
-TEST(pthread, pthread_mutex_lock_RECURSIVE) {
-  PthreadMutex m(PTHREAD_MUTEX_RECURSIVE);
+static void TestPthreadMutexLockRecursive(int protocol) {
+  PthreadMutex m(PTHREAD_MUTEX_RECURSIVE, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
@@ -1692,6 +1715,28 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(EPERM, pthread_mutex_unlock(&m.lock));
+}
+
+TEST(pthread, pthread_mutex_lock_NORMAL) {
+  TestPthreadMutexLockNormal(PTHREAD_PRIO_NONE);
+}
+
+TEST(pthread, pthread_mutex_lock_ERRORCHECK) {
+  TestPthreadMutexLockErrorCheck(PTHREAD_PRIO_NONE);
+}
+
+TEST(pthread, pthread_mutex_lock_RECURSIVE) {
+  TestPthreadMutexLockRecursive(PTHREAD_PRIO_NONE);
+}
+
+TEST(pthread, pthread_mutex_lock_pi) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
+  return;
+#endif
+  TestPthreadMutexLockNormal(PTHREAD_PRIO_INHERIT);
+  TestPthreadMutexLockErrorCheck(PTHREAD_PRIO_INHERIT);
+  TestPthreadMutexLockRecursive(PTHREAD_PRIO_INHERIT);
 }
 
 TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
@@ -1773,6 +1818,103 @@ TEST(pthread, pthread_mutex_RECURSIVE_wakeup) {
   helper.test();
 }
 
+static int GetThreadPriority(pid_t tid) {
+  // sched_getparam() returns the static priority of a thread, which can't reflect a thread's
+  // priority after priority inheritance. So read /proc/<pid>/stat to get the dynamic priority.
+  std::string filename = android::base::StringPrintf("/proc/%d/stat", tid);
+  std::string content;
+  int result = INT_MAX;
+  if (!android::base::ReadFileToString(filename, &content)) {
+    return result;
+  }
+  std::vector<std::string> strs = android::base::Split(content, " ");
+  if (strs.size() < 18) {
+    return result;
+  }
+  if (!android::base::ParseInt(strs[17], &result)) {
+    return INT_MAX;
+  }
+  return result;
+}
+
+class PIMutexWakeupHelper {
+private:
+  PthreadMutex m;
+  int protocol;
+  enum Progress {
+    LOCK_INITIALIZED,
+    LOCK_CHILD_READY,
+    LOCK_WAITING,
+    LOCK_RELEASED,
+  };
+  std::atomic<Progress> progress;
+  std::atomic<pid_t> main_tid;
+  std::atomic<pid_t> child_tid;
+  PthreadMutex start_thread_m;
+
+  static void thread_fn(PIMutexWakeupHelper* helper) {
+    helper->child_tid = gettid();
+    ASSERT_EQ(LOCK_INITIALIZED, helper->progress);
+    ASSERT_EQ(0, setpriority(PRIO_PROCESS, gettid(), 1));
+    ASSERT_EQ(21, GetThreadPriority(gettid()));
+    ASSERT_EQ(0, pthread_mutex_lock(&helper->m.lock));
+    helper->progress = LOCK_CHILD_READY;
+    ASSERT_EQ(0, pthread_mutex_lock(&helper->start_thread_m.lock));
+
+    ASSERT_EQ(0, pthread_mutex_unlock(&helper->start_thread_m.lock));
+    WaitUntilThreadSleep(helper->main_tid);
+    ASSERT_EQ(LOCK_WAITING, helper->progress);
+
+    if (helper->protocol == PTHREAD_PRIO_INHERIT) {
+      ASSERT_EQ(20, GetThreadPriority(gettid()));
+    } else {
+      ASSERT_EQ(21, GetThreadPriority(gettid()));
+    }
+    helper->progress = LOCK_RELEASED;
+    ASSERT_EQ(0, pthread_mutex_unlock(&helper->m.lock));
+  }
+
+public:
+  explicit PIMutexWakeupHelper(int mutex_type, int protocol)
+      : m(mutex_type, protocol), protocol(protocol), start_thread_m(PTHREAD_MUTEX_NORMAL) {
+  }
+
+  void test() {
+    ASSERT_EQ(0, pthread_mutex_lock(&start_thread_m.lock));
+    main_tid = gettid();
+    ASSERT_EQ(20, GetThreadPriority(main_tid));
+    progress = LOCK_INITIALIZED;
+    child_tid = 0;
+
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, NULL,
+              reinterpret_cast<void* (*)(void*)>(PIMutexWakeupHelper::thread_fn), this));
+
+    WaitUntilThreadSleep(child_tid);
+    ASSERT_EQ(LOCK_CHILD_READY, progress);
+    ASSERT_EQ(0, pthread_mutex_unlock(&start_thread_m.lock));
+    progress = LOCK_WAITING;
+    ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+
+    ASSERT_EQ(LOCK_RELEASED, progress);
+    ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+    ASSERT_EQ(0, pthread_join(thread, nullptr));
+  }
+};
+
+TEST(pthread, pthread_mutex_pi_wakeup) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
+  return;
+#endif
+  for (int type : {PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK}) {
+    for (int protocol : {PTHREAD_PRIO_INHERIT}) {
+      PIMutexWakeupHelper helper(type, protocol);
+      helper.test();
+    }
+  }
+}
+
 TEST(pthread, pthread_mutex_owner_tid_limit) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   FILE* fp = fopen("/proc/sys/kernel/pid_max", "r");
@@ -1814,6 +1956,34 @@ TEST(pthread, pthread_mutex_timedlock) {
 
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
+}
+
+TEST(pthread, pthread_mutex_timedlock_pi) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
+  return;
+#endif
+  PthreadMutex m(PTHREAD_MUTEX_NORMAL, PTHREAD_PRIO_INHERIT);
+  timespec ts;
+  clock_gettime(CLOCK_REALTIME, &ts);
+  ts.tv_sec += 1;
+  ASSERT_EQ(0, pthread_mutex_timedlock(&m.lock, &ts));
+
+  auto ThreadFn = [](void* arg) -> void* {
+    PthreadMutex& m = *static_cast<PthreadMutex*>(arg);
+    timespec ts;
+    clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += 1;
+    intptr_t result = pthread_mutex_timedlock(&m.lock, &ts);
+    return reinterpret_cast<void*>(result);
+  };
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, NULL, ThreadFn, &m));
+  void* result;
+  ASSERT_EQ(0, pthread_join(thread, &result));
+  ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
+  ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
 }
 
 class StrictAlignmentAllocator {
