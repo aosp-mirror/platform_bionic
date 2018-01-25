@@ -292,6 +292,24 @@
       "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0d27241a_4e50c94b",
+        "filename": "libc/private/kernel_sigset_t.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-25T20:50:22Z",
+      "side": 1,
+      "message": "It seems like it might violate strict aliasing, since sigset_t is a struct containing an unsigned long array, not an unsigned long array itself, but maybe this is okay?",
+      "parentUuid": "20d48114_b92d5752",
+      "revId": "c71d8845150ca2025b65e013cb085f9b4873e887",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
