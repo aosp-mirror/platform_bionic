@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+#include <android/api-level.h>
+
+// __register_atfork wasn't available until android-23. We need to build a
+// pre-23 and 23+ version of crtbegin.
+#if __ANDROID_API__ >= __ANDROID_API_M__
+
 extern void* __dso_handle;
 
 extern int __register_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(void), void* dso);
@@ -27,3 +33,4 @@ int pthread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(vo
   return __register_atfork(prepare, parent, child, &__dso_handle);
 }
 
+#endif  /* __ANDROID_API__ >= __ANDROID_API_M__ */
