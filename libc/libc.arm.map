@@ -1372,6 +1372,8 @@ LIBC_P { # introduced=P
     posix_spawnp;
     pthread_attr_getinheritsched;
     pthread_attr_setinheritsched;
+    pthread_mutexattr_getprotocol;
+    pthread_mutexattr_setprotocol;
     pthread_setschedprio;
     sethostent;
     setnetent;
