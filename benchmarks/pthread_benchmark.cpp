@@ -96,6 +96,57 @@ static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
+#if defined(__LP64__)
+namespace {
+struct PIMutex {
+  pthread_mutex_t mutex;
+
+  PIMutex(int type) {
+    pthread_mutexattr_t attr;
+    pthread_mutexattr_init(&attr);
+    pthread_mutexattr_settype(&attr, type);
+    pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT);
+    pthread_mutex_init(&mutex, &attr);
+    pthread_mutexattr_destroy(&attr);
+  }
+
+  ~PIMutex() {
+    pthread_mutex_destroy(&mutex);
+  }
+};
+}
+
+static void BM_pthread_mutex_lock_PI(benchmark::State& state) {
+  PIMutex m(PTHREAD_MUTEX_NORMAL);
+
+  while (state.KeepRunning()) {
+    pthread_mutex_lock(&m.mutex);
+    pthread_mutex_unlock(&m.mutex);
+  }
+}
+BIONIC_BENCHMARK(BM_pthread_mutex_lock_PI);
+
+static void BM_pthread_mutex_lock_ERRORCHECK_PI(benchmark::State& state) {
+  PIMutex m(PTHREAD_MUTEX_ERRORCHECK);
+
+  while (state.KeepRunning()) {
+    pthread_mutex_lock(&m.mutex);
+    pthread_mutex_unlock(&m.mutex);
+  }
+}
+BIONIC_BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK_PI);
+
+static void BM_pthread_mutex_lock_RECURSIVE_PI(benchmark::State& state) {
+  PIMutex m(PTHREAD_MUTEX_RECURSIVE);
+
+  while (state.KeepRunning()) {
+    pthread_mutex_lock(&m.mutex);
+    pthread_mutex_unlock(&m.mutex);
+  }
+}
+BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE_PI);
+#endif  // defined(__LP64__)
+
 static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
   pthread_rwlock_init(&lock, NULL);

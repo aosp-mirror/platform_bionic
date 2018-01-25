@@ -32,8 +32,9 @@
 
 #include "private/bionic_time_conversions.h"
 
-int __futex_wait_ex(volatile void* ftx, bool shared, int value, bool use_realtime_clock,
-                    const timespec* abs_timeout) {
+static inline __always_inline int FutexWithTimeout(volatile void* ftx, int op, int value,
+                                                   bool use_realtime_clock,
+                                                   const timespec* abs_timeout, int bitset) {
   const timespec* futex_abs_timeout = abs_timeout;
   // pthread's and semaphore's default behavior is to use CLOCK_REALTIME, however this behavior is
   // essentially never intended, as that clock is prone to change discontinuously.
@@ -54,6 +55,17 @@ int __futex_wait_ex(volatile void* ftx, bool shared, int value, bool use_realtim
     futex_abs_timeout = &converted_monotonic_abs_timeout;
   }
 
-  return __futex(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE), value,
-                 futex_abs_timeout, FUTEX_BITSET_MATCH_ANY);
+  return __futex(ftx, op, value, futex_abs_timeout, bitset);
+}
+
+int __futex_wait_ex(volatile void* ftx, bool shared, int value, bool use_realtime_clock,
+                    const timespec* abs_timeout) {
+  return FutexWithTimeout(ftx, (shared ? FUTEX_WAIT_BITSET : FUTEX_WAIT_BITSET_PRIVATE), value,
+                          use_realtime_clock, abs_timeout, FUTEX_BITSET_MATCH_ANY);
+}
+
+int __futex_pi_lock_ex(volatile void* ftx, bool shared, bool use_realtime_clock,
+                       const timespec* abs_timeout) {
+  return FutexWithTimeout(ftx, (shared ? FUTEX_LOCK_PI : FUTEX_LOCK_PI_PRIVATE), 0,
+                          use_realtime_clock, abs_timeout, 0);
 }
