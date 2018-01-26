@@ -489,12 +489,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
         return false;
       }
 
+      bool allow_all_shared_libs = properties.get_bool(property_name_prefix + ".link." +
+                                                       linked_ns_name + ".allow_all_shared_libs");
+
       std::string shared_libs = properties.get_string(property_name_prefix +
                                                       ".link." +
                                                       linked_ns_name +
                                                       ".shared_libs", &lineno);
 
-      if (shared_libs.empty()) {
+      if (!allow_all_shared_libs && shared_libs.empty()) {
         *error_msg = create_error_msg(ld_config_file_path,
                                       lineno,
                                       std::string("list of shared_libs for ") +
@@ -505,7 +508,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
         return false;
       }
 
-      ns_config->add_namespace_link(linked_ns_name, shared_libs);
+      if (allow_all_shared_libs && !shared_libs.empty()) {
+        *error_msg = create_error_msg(ld_config_file_path, lineno,
+                                      std::string("both shared_libs and allow_all_shared_libs "
+                                                  "are set for ") +
+                                      name + "->" + linked_ns_name + " link.");
+        return false;
+      }
+
+      ns_config->add_namespace_link(linked_ns_name, shared_libs, allow_all_shared_libs);
     }
 
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));

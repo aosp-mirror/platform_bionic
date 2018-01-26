@@ -1430,7 +1430,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   }
 
   // returning true with empty soinfo means that the library is okay to be
-  // loaded in the namespace buy has not yet been loaded there before.
+  // loaded in the namespace but has not yet been loaded there before.
   task->set_soinfo(nullptr);
   return true;
 }
@@ -2363,7 +2363,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
     // and copy parent namespace links
     for (auto& link : parent_namespace->linked_namespaces()) {
-      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames(),
+                               link.allow_all_shared_libs());
     }
   } else {
     // If not shared - copy only the shared group
@@ -2399,7 +2400,25 @@ bool link_namespaces(android_namespace_t* namespace_from,
   std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
+
+  return true;
+}
+
+bool link_namespaces_all_libs(android_namespace_t* namespace_from,
+                              android_namespace_t* namespace_to) {
+  if (namespace_from == nullptr) {
+    DL_ERR("error linking namespaces: namespace_from is null.");
+    return false;
+  }
+
+  if (namespace_to == nullptr) {
+    DL_ERR("error linking namespaces: namespace_to is null.");
+    return false;
+  }
+
+  ProtectedDataGuard guard;
+  namespace_from->add_linked_namespace(namespace_to, std::unordered_set<std::string>(), true);
 
   return true;
 }
@@ -3763,7 +3782,11 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
       auto it_to = namespaces.find(ns_link.ns_name());
       CHECK(it_to != namespaces.end());
       android_namespace_t* namespace_to = it_to->second;
-      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      if (ns_link.allow_all_shared_libs()) {
+        link_namespaces_all_libs(namespace_from, namespace_to);
+      } else {
+        link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      }
     }
   }
   // we can no longer rely on the fact that libdl.so is part of default namespace
