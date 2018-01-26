@@ -259,6 +259,58 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Build test helper libraries for linker namespaces for allow all shared libs
+//
+// This set of libraries is used to verify linker namespaces for allow all
+// shared libs.
+//
+// Test cases
+// 1. Check that namespace a exposes libnstest_ns_a_public1 to
+//    namespace b while keeping libnstest_ns_a_public1_internal as an
+//    internal lib.
+// 2. Check that namespace b exposes all libraries to namespace a.
+//
+// Dependency tree (visibility)
+// libnstest_ns_b_public2.so  (ns:b)
+// +-> libnstest_ns_a_public1.so  (ns:a)
+//     +-> libnstest_ns_a_public2_internal.so  (ns:a)
+//     +-> libnstest_ns_b_public3.so  (ns:b)
+//
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libnstest_ns_a_public1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_a_public1.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_a",
+    shared_libs: [
+        "libnstest_ns_a_public1_internal",
+        "libnstest_ns_b_public3",
+    ],
+}
+
+cc_test_library {
+    name: "libnstest_ns_a_public1_internal",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_a_public1_internal.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_a",
+}
+
+cc_test_library {
+    name: "libnstest_ns_b_public2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_b_public2.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_b",
+    shared_libs: ["libnstest_ns_a_public1"],
+}
+
+cc_test_library {
+    name: "libnstest_ns_b_public3",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_b_public3.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_b",
+}
+
+// -----------------------------------------------------------------------------
 // Build DT_RUNPATH test helper libraries
 // -----------------------------------------------------------------------------
 // include $(LOCAL_PATH)/Android.build.dt_runpath.mk

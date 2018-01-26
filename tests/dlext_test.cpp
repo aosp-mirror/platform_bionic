@@ -1737,6 +1737,123 @@ TEST(dlext, ns_inaccessible_error_message) {
   ASSERT_EQ(expected_dlerror, dlerror());
 }
 
+TEST(dlext, ns_link_namespaces_invalid_arguments) {
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  android_namespace_t* ns =
+          android_create_namespace("private",
+                                   nullptr,
+                                   (get_testlib_root() + "/private_namespace_libs").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_REGULAR,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns != nullptr) << dlerror();
+
+  // Test android_link_namespaces()
+  ASSERT_FALSE(android_link_namespaces(nullptr, nullptr, "libc.so"));
+  ASSERT_STREQ("android_link_namespaces failed: error linking namespaces: namespace_from is null.",
+               dlerror());
+
+  ASSERT_FALSE(android_link_namespaces(ns, nullptr, nullptr));
+  ASSERT_STREQ("android_link_namespaces failed: "
+               "error linking namespaces \"private\"->\"(default)\": "
+               "the list of shared libraries is empty.", dlerror());
+
+  ASSERT_FALSE(android_link_namespaces(ns, nullptr, ""));
+  ASSERT_STREQ("android_link_namespaces failed: "
+               "error linking namespaces \"private\"->\"(default)\": "
+               "the list of shared libraries is empty.", dlerror());
+
+  // Test android_link_namespaces_all_libs()
+  ASSERT_FALSE(android_link_namespaces_all_libs(nullptr, nullptr));
+  ASSERT_STREQ("android_link_namespaces_all_libs failed: "
+               "error linking namespaces: namespace_from is null.", dlerror());
+
+  ASSERT_FALSE(android_link_namespaces_all_libs(nullptr, ns));
+  ASSERT_STREQ("android_link_namespaces_all_libs failed: "
+               "error linking namespaces: namespace_from is null.", dlerror());
+
+  ASSERT_FALSE(android_link_namespaces_all_libs(ns, nullptr));
+  ASSERT_STREQ("android_link_namespaces_all_libs failed: "
+               "error linking namespaces: namespace_to is null.", dlerror());
+}
+
+TEST(dlext, ns_allow_all_shared_libs) {
+  ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
+
+  android_namespace_t* ns_a =
+          android_create_namespace("ns_a",
+                                   nullptr,
+                                   (get_testlib_root() + "/ns_a").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns_a != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_a, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  android_namespace_t* ns_b =
+          android_create_namespace("ns_b",
+                                   nullptr,
+                                   (get_testlib_root() + "/ns_b").c_str(),
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED,
+                                   nullptr,
+                                   nullptr);
+  ASSERT_TRUE(ns_b != nullptr) << dlerror();
+  ASSERT_TRUE(android_link_namespaces(ns_b, nullptr, g_core_shared_libs.c_str())) << dlerror();
+
+  ASSERT_TRUE(android_link_namespaces(ns_b, ns_a, "libnstest_ns_a_public1.so")) << dlerror();
+  ASSERT_TRUE(android_link_namespaces_all_libs(ns_a, ns_b)) << dlerror();
+
+  // Load libs with android_dlopen_ext() from namespace b
+  android_dlextinfo extinfo;
+  extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
+  extinfo.library_namespace = ns_b;
+
+  void* ns_b_handle1 = android_dlopen_ext("libnstest_ns_a_public1.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_b_handle1 != nullptr) << dlerror();
+
+  void* ns_b_handle1_internal =
+      android_dlopen_ext("libnstest_ns_a_public1_internal.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_b_handle1_internal == nullptr);
+
+  void* ns_b_handle2 = android_dlopen_ext("libnstest_ns_b_public2.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_b_handle2 != nullptr) << dlerror();
+
+  void* ns_b_handle3 = android_dlopen_ext("libnstest_ns_b_public3.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_b_handle3 != nullptr) << dlerror();
+
+  // Load libs with android_dlopen_ext() from namespace a
+  extinfo.library_namespace = ns_a;
+
+  void* ns_a_handle1 = android_dlopen_ext("libnstest_ns_a_public1.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_a_handle1 != nullptr) << dlerror();
+
+  void* ns_a_handle1_internal =
+      android_dlopen_ext("libnstest_ns_a_public1_internal.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_a_handle1_internal != nullptr) << dlerror();
+
+  void* ns_a_handle2 = android_dlopen_ext("libnstest_ns_b_public2.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_a_handle2 != nullptr) << dlerror();
+
+  void* ns_a_handle3 = android_dlopen_ext("libnstest_ns_b_public3.so", RTLD_NOW, &extinfo);
+  ASSERT_TRUE(ns_a_handle3 != nullptr) << dlerror();
+
+  // Compare the dlopen handle
+  ASSERT_EQ(ns_b_handle1, ns_a_handle1);
+  ASSERT_EQ(ns_b_handle2, ns_a_handle2);
+  ASSERT_EQ(ns_b_handle3, ns_a_handle3);
+
+  // Close libs
+  dlclose(ns_b_handle1);
+  dlclose(ns_b_handle2);
+  dlclose(ns_b_handle3);
+
+  dlclose(ns_a_handle1);
+  dlclose(ns_a_handle1_internal);
+  dlclose(ns_a_handle2);
+  dlclose(ns_a_handle3);
+}
+
 TEST(dlext, ns_anonymous) {
   static const char* root_lib = "libnstest_root.so";
   std::string shared_libs = g_core_shared_libs + ":" + g_public_lib;
