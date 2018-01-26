@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3a8340b_fdbbcbee",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1823,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-26T06:55:23Z",
+      "side": 1,
+      "message": "good comment. thanks!",
+      "revId": "6b9c85b36d2e69b45d780e6a0b27d64909311a7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
