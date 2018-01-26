@@ -32,6 +32,8 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#include "private/kernel_sigset_t.h"
+
 // We call tgkill(2) directly instead of raise (or even the libc tgkill wrapper), to reduce the
 // number of uninteresting stack frames at the top of a crash.
 static inline __always_inline void inline_tgkill(pid_t pid, pid_t tid, int sig) {
@@ -60,10 +62,10 @@ void abort() {
 
   // Don't block SIGABRT to give any signal handler a chance; we ignore
   // any errors -- X311J doesn't allow abort to return anyway.
-  sigset_t mask;
-  sigfillset(&mask);
-  sigdelset(&mask, SIGABRT);
-  sigprocmask(SIG_SETMASK, &mask, NULL);
+  kernel_sigset_t mask;
+  mask.fill();
+  mask.clear(SIGABRT);
+  __rt_sigprocmask(SIG_SETMASK, &mask, nullptr, sizeof(mask));
 
   inline_tgkill(pid, tid, SIGABRT);
 
@@ -74,7 +76,7 @@ void abort() {
   sa.sa_flags   = SA_RESTART;
   sigemptyset(&sa.sa_mask);
   sigaction(SIGABRT, &sa, &sa);
-  sigprocmask(SIG_SETMASK, &mask, NULL);
+  __rt_sigprocmask(SIG_SETMASK, &mask, nullptr, sizeof(mask));
 
   inline_tgkill(pid, tid, SIGABRT);
 

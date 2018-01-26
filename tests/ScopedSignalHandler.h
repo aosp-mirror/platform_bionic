@@ -53,13 +53,13 @@ class ScopedSignalHandler {
   const int signal_number_;
 };
 
-class ScopedSignalMask {
+class SignalMaskRestorer {
  public:
-  ScopedSignalMask() {
+  SignalMaskRestorer() {
     sigprocmask(SIG_SETMASK, nullptr, &old_mask_);
   }
 
-  ~ScopedSignalMask() {
+  ~SignalMaskRestorer() {
     sigprocmask(SIG_SETMASK, &old_mask_, nullptr);
   }
 

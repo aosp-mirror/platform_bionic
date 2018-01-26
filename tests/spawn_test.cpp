@@ -376,6 +376,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
   sigset_t just_SIGALRM;
   sigemptyset(&just_SIGALRM);
   sigaddset(&just_SIGALRM, SIGALRM);
+
   ASSERT_EQ(0, posix_spawnattr_setsigdefault(&sa, &just_SIGALRM));
   ASSERT_EQ(0, posix_spawnattr_setflags(&sa, POSIX_SPAWN_SETSIGDEF));
 
@@ -393,15 +394,18 @@ TEST(spawn, signal_stress) {
   // child without first defaulting any caught signals (http://b/68707996).
   static pid_t parent = getpid();
 
+  setpgid(0, 0);
+
   pid_t pid = fork();
   ASSERT_NE(-1, pid);
 
   if (pid == 0) {
+    signal(SIGRTMIN, SIG_IGN);
     for (size_t i = 0; i < 1024; ++i) {
-      kill(0, SIGWINCH);
+      kill(0, SIGRTMIN);
       usleep(10);
     }
-    return;
+    _exit(99);
   }
 
   // We test both with and without attributes, because they used to be
@@ -417,11 +421,15 @@ TEST(spawn, signal_stress) {
 
   posix_spawnattr_t* attrs[] = { nullptr, &attr1, &attr2 };
 
-  ScopedSignalHandler ssh(SIGWINCH, [](int) { ASSERT_EQ(getpid(), parent); });
+  // We use a real-time signal because that's a tricky case for LP32
+  // because our sigset_t was too small.
+  ScopedSignalHandler ssh(SIGRTMIN, [](int) { ASSERT_EQ(getpid(), parent); });
 
   ExecTestHelper eth;
   eth.SetArgs({"true", nullptr});
   for (size_t i = 0; i < 128; ++i) {
     posix_spawn(nullptr, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr);
   }
+
+  AssertChildExited(pid, 99);
 }

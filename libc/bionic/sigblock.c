@@ -25,26 +25,18 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <signal.h>
 
-/* this function is called from the ARM assembly setjmp fragments */
-int
-sigblock(int mask)
-{
-    int  n;
-    union {
-        int       the_mask;
-        sigset_t  the_sigset;
-    } in, out;
+int sigblock(int mask) {
+  union {
+    int mask;
+    sigset_t set;
+  } in, out;
 
-    sigemptyset(&in.the_sigset);
-    in.the_mask = mask;
+  sigemptyset(&in.set);
+  in.mask = mask;
 
-    n = sigprocmask(SIG_BLOCK, &in.the_sigset, &out.the_sigset);
-    if (n)
-        return n;
-
-    return out.the_mask;
+  if (sigprocmask(SIG_BLOCK, &in.set, &out.set) == -1) return -1;
+  return out.mask;
 }
-
-

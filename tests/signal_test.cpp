@@ -464,33 +464,45 @@ TEST(signal, sigrelse_EINVAL) {
   ASSERT_EQ(EINVAL, errno);
 }
 
-TEST(signal, sighold_sigpause_sigrelse) {
-  static int sigalrm_handler_call_count;
-  auto sigalrm_handler = [](int) { sigalrm_handler_call_count++; };
-  ScopedSignalHandler sigalrm{SIGALRM, sigalrm_handler};
-  ScopedSignalMask mask;
+static void TestSigholdSigpauseSigrelse(int sig) {
+  static int signal_handler_call_count = 0;
+  ScopedSignalHandler ssh{sig, [](int) { signal_handler_call_count++; }};
+  SignalMaskRestorer mask_restorer;
   sigset_t set;
 
-  // sighold(SIGALRM) should add SIGALRM to the signal mask ...
-  ASSERT_EQ(0, sighold(SIGALRM));
+  // sighold(SIGALRM/SIGRTMIN) should add SIGALRM/SIGRTMIN to the signal mask ...
+  ASSERT_EQ(0, sighold(sig));
   ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
-  EXPECT_TRUE(sigismember(&set, SIGALRM));
+  EXPECT_TRUE(sigismember(&set, sig));
 
-  // ... preventing our SIGALRM handler from running ...
-  raise(SIGALRM);
-  ASSERT_EQ(0, sigalrm_handler_call_count);
-  // ... until sigpause(SIGALRM) temporarily unblocks it.
-  ASSERT_EQ(-1, sigpause(SIGALRM));
+  // ... preventing our SIGALRM/SIGRTMIN handler from running ...
+  raise(sig);
+  ASSERT_EQ(0, signal_handler_call_count);
+  // ... until sigpause(SIGALRM/SIGRTMIN) temporarily unblocks it.
+  ASSERT_EQ(-1, sigpause(sig));
   ASSERT_EQ(EINTR, errno);
-  ASSERT_EQ(1, sigalrm_handler_call_count);
+  ASSERT_EQ(1, signal_handler_call_count);
 
-  // But sigpause(SIGALRM) shouldn't permanently unblock SIGALRM.
-  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
-  EXPECT_TRUE(sigismember(&set, SIGALRM));
+  if (sig >= SIGRTMIN && sizeof(void*) == 8) {
+    // But sigpause(SIGALRM/SIGRTMIN) shouldn't permanently unblock SIGALRM/SIGRTMIN.
+    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+    EXPECT_TRUE(sigismember(&set, sig));
 
-  ASSERT_EQ(0, sigrelse(SIGALRM));
-  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
-  EXPECT_FALSE(sigismember(&set, SIGALRM));
+    // Whereas sigrelse(SIGALRM/SIGRTMIN) should.
+    ASSERT_EQ(0, sigrelse(sig));
+    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+    EXPECT_FALSE(sigismember(&set, sig));
+  } else {
+    // sigismember won't work for SIGRTMIN on LP32.
+  }
+}
+
+TEST(signal, sighold_sigpause_sigrelse) {
+  TestSigholdSigpauseSigrelse(SIGALRM);
+}
+
+TEST(signal, sighold_sigpause_sigrelse_RT) {
+  TestSigholdSigpauseSigrelse(SIGRTMIN);
 }
 
 TEST(signal, sigset_EINVAL) {
@@ -499,23 +511,48 @@ TEST(signal, sigset_EINVAL) {
   ASSERT_EQ(EINVAL, errno);
 }
 
-TEST(signal, sigset) {
-  auto sigalrm_handler = [](int) { };
-  ScopedSignalHandler sigalrm{SIGALRM, sigalrm_handler};
-  ScopedSignalMask mask;
+TEST(signal, sigset_RT) {
+  static int signal_handler_call_count = 0;
+  auto signal_handler = [](int) { signal_handler_call_count++; };
+  ScopedSignalHandler ssh{SIGRTMIN, signal_handler};
+  SignalMaskRestorer mask_restorer;
 
-  // block SIGALRM so the next sigset(SIGARLM) call will return SIG_HOLD
-  sigset_t sigalrm_set;
-  sigemptyset(&sigalrm_set);
-  sigaddset(&sigalrm_set, SIGALRM);
-  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &sigalrm_set, nullptr));
-
+  ASSERT_EQ(signal_handler, sigset(SIGRTMIN, SIG_HOLD));
+#if defined(__LP64__)
   sigset_t set;
-  ASSERT_EQ(SIG_HOLD, sigset(SIGALRM, sigalrm_handler));
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
+  ASSERT_TRUE(sigismember(&set, SIGRTMIN));
+#endif
+
+  ASSERT_EQ(SIG_HOLD, sigset(SIGRTMIN, signal_handler));
+  ASSERT_EQ(signal_handler, sigset(SIGRTMIN, signal_handler));
+  ASSERT_EQ(0, signal_handler_call_count);
+  raise(SIGRTMIN);
+  ASSERT_EQ(1, signal_handler_call_count);
+}
+
+TEST(signal, sigset) {
+  static int signal_handler_call_count = 0;
+  auto signal_handler = [](int) { signal_handler_call_count++; };
+  ScopedSignalHandler ssh{SIGALRM, signal_handler};
+  SignalMaskRestorer mask_restorer;
+
+  ASSERT_EQ(0, signal_handler_call_count);
+  raise(SIGALRM);
+  ASSERT_EQ(1, signal_handler_call_count);
+
+  // Block SIGALRM so the next sigset(SIGARLM) call will return SIG_HOLD.
+  sigset_t set;
+  sigemptyset(&set);
+  sigaddset(&set, SIGALRM);
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &set, nullptr));
+
+  sigemptyset(&set);
+  ASSERT_EQ(SIG_HOLD, sigset(SIGALRM, signal_handler));
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
   EXPECT_FALSE(sigismember(&set, SIGALRM));
 
-  ASSERT_EQ(sigalrm_handler, sigset(SIGALRM, SIG_IGN));
+  ASSERT_EQ(signal_handler, sigset(SIGALRM, SIG_IGN));
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, nullptr, &set));
   EXPECT_FALSE(sigismember(&set, SIGALRM));
 
