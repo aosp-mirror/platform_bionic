@@ -28,9 +28,12 @@
 
 #include <signal.h>
 
+#include "private/kernel_sigset_t.h"
+
 int sigpause(int sig) {
-  sigset_t set;
-  if (sigprocmask(SIG_SETMASK, nullptr, &set) == -1) return -1;
-  if (sigdelset(&set, sig) == -1) return -1;
-  return sigsuspend(&set);
+  kernel_sigset_t set;
+  set.clear();
+  if (__rt_sigprocmask(SIG_SETMASK, nullptr, &set, sizeof(set)) == -1) return -1;
+  if (!set.clear(sig)) return -1;
+  return __rt_sigsuspend(&set, sizeof(set));
 }
