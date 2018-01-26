@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb5e4786_0bb39353",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-01-26T16:05:37Z",
+      "side": 1,
+      "message": "Is this specific to using tracing with init?  Or is this an issue you\u0027ve seen in other processes too?",
+      "revId": "2cb5f7f578ec682c2bf628f29ffe21de8ccbc917",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
