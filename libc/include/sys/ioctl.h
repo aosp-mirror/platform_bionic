@@ -36,8 +36,6 @@
  * terminal-related ioctl data structures such as struct winsize.
  */
 #include <linux/termios.h>
-#include <asm/ioctls.h>
-#include <asm/termbits.h>
 #include <linux/tty.h>
 
 #include <bits/ioctl.h>
