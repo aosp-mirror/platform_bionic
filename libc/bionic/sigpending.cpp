@@ -30,8 +30,6 @@
 
 #include "private/kernel_sigset_t.h"
 
-extern "C" int __rt_sigpending(const kernel_sigset_t*, size_t);
-
 int sigpending(sigset_t* bionic_set) {
   kernel_sigset_t set;
   int result = __rt_sigpending(&set, sizeof(set));

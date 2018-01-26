@@ -28,9 +28,11 @@
 
 #include <signal.h>
 
+#include "private/kernel_sigset_t.h"
+
 int sighold(int sig) {
-  sigset_t set;
-  if (sigemptyset(&set) == -1) return -1;
-  if (sigaddset(&set, sig) == -1) return -1;
-  return sigprocmask(SIG_BLOCK, &set, nullptr);
+  kernel_sigset_t set;
+  set.clear();
+  if (!set.set(sig)) return -1;
+  return __rt_sigprocmask(SIG_BLOCK, &set, nullptr, sizeof(set));
 }
