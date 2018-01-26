@@ -48,10 +48,12 @@ New libc functions in P:
   * `hcreate`/`hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
   * `pthread_attr_getinheritsched`/`pthread_attr_setinheritsched`/`pthread_setschedprio`
+  * `pthread_mutexattr_getprotocol`/`pthread_mutexattr_setprotocol` (mutex priority inheritance)
   * <spawn.h>
   * `swab`
   * `syncfs`
-  * %C and %S support in the printf family (previously only the wprintf family supported these).
+  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these).
+  * `%mc`/`%ms`/`%m[` support in the scanf family.
 
 New libc functions in O:
   * `sendto` FORTIFY support
