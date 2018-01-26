@@ -57,9 +57,9 @@ static void pthread_h() {
 
   MACRO(PTHREAD_ONCE_INIT);
 
-#if !defined(__BIONIC__) // No robust mutexes on Android.
   MACRO(PTHREAD_PRIO_INHERIT);
   MACRO(PTHREAD_PRIO_NONE);
+#if !defined(__BIONIC__)
   MACRO(PTHREAD_PRIO_PROTECT);
 #endif
 
@@ -158,8 +158,8 @@ static void pthread_h() {
   FUNCTION(pthread_mutexattr_destroy, int (*f)(pthread_mutexattr_t*));
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutexattr_getprioceiling, int (*f)(const pthread_mutexattr_t*, int*));
-  FUNCTION(pthread_mutexattr_getprotocol, int (*f)(const pthread_mutexattr_t*, int*));
 #endif
+  FUNCTION(pthread_mutexattr_getprotocol, int (*f)(const pthread_mutexattr_t*, int*));
   FUNCTION(pthread_mutexattr_getpshared, int (*f)(const pthread_mutexattr_t*, int*));
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutexattr_getrobust, int (*f)(const pthread_mutexattr_t*, int*));
@@ -168,8 +168,8 @@ static void pthread_h() {
   FUNCTION(pthread_mutexattr_init, int (*f)(pthread_mutexattr_t*));
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutexattr_setprioceiling, int (*f)(pthread_mutexattr_t*, int));
-  FUNCTION(pthread_mutexattr_setprotocol, int (*f)(pthread_mutexattr_t*, int));
 #endif
+  FUNCTION(pthread_mutexattr_setprotocol, int (*f)(pthread_mutexattr_t*, int));
   FUNCTION(pthread_mutexattr_setpshared, int (*f)(pthread_mutexattr_t*, int));
 #if !defined(__BIONIC__) // No robust mutexes on Android.
   FUNCTION(pthread_mutexattr_setrobust, int (*f)(pthread_mutexattr_t*, int));
