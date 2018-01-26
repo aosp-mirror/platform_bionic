@@ -25,26 +25,18 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
+
 #include <signal.h>
 
-/* called from setjmp assembly fragment */
-int
-sigsetmask(int mask)
-{
-    int  n;
+int sigsetmask(int mask) {
+  union {
+    int mask;
+    sigset_t set;
+  } in, out;
 
-    union {
-        int       the_mask;
-        sigset_t  the_sigset;
-    } in, out;
+  sigemptyset(&in.set);
+  in.mask = mask;
 
-    sigemptyset(&in.the_sigset);
-    in.the_mask = mask;
-
-    n = sigprocmask(SIG_SETMASK, &in.the_sigset, &out.the_sigset);
-    if (n)
-        return n;
-
-    return out.the_mask;
+  if (sigprocmask(SIG_SETMASK, &in.set, &out.set) == -1) return -1;
+  return out.mask;
 }
-

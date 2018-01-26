@@ -74,8 +74,7 @@ static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
 static void* __timer_thread_start(void* arg) {
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(arg);
 
-  kernel_sigset_t sigset;
-  sigaddset(sigset.get(), TIMER_SIGNAL);
+  kernel_sigset_t sigset{TIMER_SIGNAL};
 
   while (true) {
     // Wait for a signal...
@@ -150,14 +149,13 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
 
   // We start the thread with TIMER_SIGNAL blocked by blocking the signal here and letting it
   // inherit. If it tried to block the signal itself, there would be a race.
-  kernel_sigset_t sigset;
-  sigaddset(sigset.get(), TIMER_SIGNAL);
+  kernel_sigset_t sigset{TIMER_SIGNAL};
   kernel_sigset_t old_sigset;
-  pthread_sigmask(SIG_BLOCK, sigset.get(), old_sigset.get());
+  __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
 
   int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
 
-  pthread_sigmask(SIG_SETMASK, old_sigset.get(), NULL);
+  __rt_sigprocmask(SIG_SETMASK, &old_sigset, nullptr, sizeof(sigset));
 
   if (rc != 0) {
     free(timer);
