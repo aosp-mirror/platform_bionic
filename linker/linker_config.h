@@ -43,8 +43,10 @@
 class NamespaceLinkConfig {
  public:
   NamespaceLinkConfig() = default;
-  NamespaceLinkConfig(const std::string& ns_name, const std::string& shared_libs)
-      : ns_name_(ns_name), shared_libs_(shared_libs)  {}
+  NamespaceLinkConfig(const std::string& ns_name, const std::string& shared_libs,
+                      bool allow_all_shared_libs)
+      : ns_name_(ns_name), shared_libs_(shared_libs),
+        allow_all_shared_libs_(allow_all_shared_libs) {}
 
   const std::string& ns_name() const {
     return ns_name_;
@@ -54,9 +56,14 @@ class NamespaceLinkConfig {
     return shared_libs_;
   }
 
+  bool allow_all_shared_libs() const {
+    return allow_all_shared_libs_;
+  }
+
  private:
   std::string ns_name_;
   std::string shared_libs_;
+  bool allow_all_shared_libs_;
 };
 
 class NamespaceConfig {
@@ -89,8 +96,9 @@ class NamespaceConfig {
     return namespace_links_;
   }
 
-  void add_namespace_link(const std::string& ns_name, const std::string& shared_libs) {
-    namespace_links_.push_back(NamespaceLinkConfig(ns_name, shared_libs));
+  void add_namespace_link(const std::string& ns_name, const std::string& shared_libs,
+                          bool allow_all_shared_libs) {
+    namespace_links_.push_back(NamespaceLinkConfig(ns_name, shared_libs, allow_all_shared_libs));
   }
 
   void set_isolated(bool isolated) {

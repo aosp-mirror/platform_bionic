@@ -40,8 +40,10 @@ struct android_namespace_t;
 struct android_namespace_link_t {
  public:
   android_namespace_link_t(android_namespace_t* linked_namespace,
-                           const std::unordered_set<std::string>& shared_lib_sonames)
-      : linked_namespace_(linked_namespace), shared_lib_sonames_(shared_lib_sonames)
+                           const std::unordered_set<std::string>& shared_lib_sonames,
+                           bool allow_all_shared_libs)
+      : linked_namespace_(linked_namespace), shared_lib_sonames_(shared_lib_sonames),
+        allow_all_shared_libs_(allow_all_shared_libs)
   {}
 
   android_namespace_t* linked_namespace() const {
@@ -53,12 +55,17 @@ struct android_namespace_link_t {
   }
 
   bool is_accessible(const char* soname) const {
-    return shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
+    return allow_all_shared_libs_ || shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
+  }
+
+  bool allow_all_shared_libs() const {
+    return allow_all_shared_libs_;
   }
 
  private:
   android_namespace_t* const linked_namespace_;
   const std::unordered_set<std::string> shared_lib_sonames_;
+  bool allow_all_shared_libs_;
 };
 
 struct android_namespace_t {
@@ -105,8 +112,10 @@ struct android_namespace_t {
     return linked_namespaces_;
   }
   void add_linked_namespace(android_namespace_t* linked_namespace,
-                            const std::unordered_set<std::string>& shared_lib_sonames) {
-    linked_namespaces_.push_back(android_namespace_link_t(linked_namespace, shared_lib_sonames));
+                            const std::unordered_set<std::string>& shared_lib_sonames,
+                            bool allow_all_shared_libs) {
+    linked_namespaces_.push_back(
+        android_namespace_link_t(linked_namespace, shared_lib_sonames, allow_all_shared_libs));
   }
 
   void add_soinfo(soinfo* si) {
