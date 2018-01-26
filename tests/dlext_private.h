@@ -95,6 +95,9 @@ extern bool android_link_namespaces(android_namespace_t* from,
                                     android_namespace_t* to,
                                     const char* shared_libs_sonames);
 
+extern bool android_link_namespaces_all_libs(android_namespace_t* from,
+                                             android_namespace_t* to);
+
 extern void android_set_application_target_sdk_version(uint32_t target);
 
 __END_DECLS

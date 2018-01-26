@@ -180,6 +180,9 @@ bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
                      const char* shared_lib_sonames);
 
+bool link_namespaces_all_libs(android_namespace_t* namespace_from,
+                              android_namespace_t* namespace_to);
+
 android_namespace_t* get_exported_namespace(const char* name);
 
 void increment_dso_handle_reference_counter(void* dso_handle);
