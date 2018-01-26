@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "750c67ce_55b381fe",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2018-01-26T02:55:53Z",
+      "side": 1,
+      "message": "Sorry I have no upstream bug. The problem was introduced very recently and could be fixed soon. This change is more a clarification than a workaround of a bug.",
+      "parentUuid": "af781356_53a50c4f",
+      "revId": "43e17d17ebeac00fbea6114def2a2ebdc3ab31dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5299e2e3_883fb28d",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-01-26T00:02:24Z",
       "side": 1,
       "message": "Hmm... GCC depends heavily on inlining happening even for variadic functions. Maybe instead we could rename this __BIONIC_FORTIFY_VARIADIC (for both the clang and GCC paths), and just have a `#define __BIONIC_FORTIFY_VARIADIC __BIONIC_FORTIFY_INLINE` here?",
+      "revId": "43e17d17ebeac00fbea6114def2a2ebdc3ab31dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a046e249_820d4295",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2018-01-26T02:55:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5299e2e3_883fb28d",
       "revId": "43e17d17ebeac00fbea6114def2a2ebdc3ab31dd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
