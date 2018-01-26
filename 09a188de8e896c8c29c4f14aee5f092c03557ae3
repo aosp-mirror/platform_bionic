@@ -16,6 +16,24 @@
       "revId": "09a188de8e896c8c29c4f14aee5f092c03557ae3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7bc5cb85_cf184e38",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2609,
+      "author": {
+        "id": 1087718
+      },
+      "writtenOn": "2018-01-26T20:11:29Z",
+      "side": 1,
+      "message": "Done. Also added a missing static_cast\u003c\u003e from ElfW(Relr) to ElfW(Addr) below.",
+      "parentUuid": "2e3d0d1f_46592701",
+      "revId": "09a188de8e896c8c29c4f14aee5f092c03557ae3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
