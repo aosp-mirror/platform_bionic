@@ -16,6 +16,24 @@
       "revId": "2cb5f7f578ec682c2bf628f29ffe21de8ccbc917",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a5c7498_cf980ae7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1270047
+      },
+      "writtenOn": "2018-01-27T01:43:48Z",
+      "side": 1,
+      "message": "Hi, Tom,\n\nHere is the case:\n\nWe started a thread very early in init process to monitor fs mount, this works fine before O MR1, but after we move to MR1, we found device will stuck in init in reboot pressure tests, 1/5000.\n\nSo, we add some code in init to dump backtrace when init stuck and get this stack.\n\nThen, we analysised the difference between MR1 and before MR1, and find commit e4ddb3c587d07a8b8459d8202b31c0d9340ce8a1 may cause the difference. We tested with this commit reverted and no stuck observed. \n\nAnd Then, we analysised the code and found MR1 code add this static variable initialization in should_trace(). C++ provides thread protection for static variable initialization in functions and this matches the stack. So, I think move the static variable initialization out of the function maybe a good idea for this problem. So, we tested this patch and it works fine.\n\nFor now, no other process that blocked in this stack observed.",
+      "parentUuid": "bb5e4786_0bb39353",
+      "revId": "2cb5f7f578ec682c2bf628f29ffe21de8ccbc917",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
