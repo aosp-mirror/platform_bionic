@@ -1430,7 +1430,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   }
 
   // returning true with empty soinfo means that the library is okay to be
-  // loaded in the namespace buy has not yet been loaded there before.
+  // loaded in the namespace but has not yet been loaded there before.
   task->set_soinfo(nullptr);
   return true;
 }
@@ -2363,7 +2363,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
     // and copy parent namespace links
     for (auto& link : parent_namespace->linked_namespaces()) {
-      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames(),
+                               link.allow_all_shared_libs());
     }
   } else {
     // If not shared - copy only the shared group
@@ -2399,7 +2400,25 @@ bool link_namespaces(android_namespace_t* namespace_from,
   std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
+
+  return true;
+}
+
+bool link_namespaces_all_libs(android_namespace_t* namespace_from,
+                              android_namespace_t* namespace_to) {
+  if (namespace_from == nullptr) {
+    DL_ERR("error linking namespaces: namespace_from is null.");
+    return false;
+  }
+
+  if (namespace_to == nullptr) {
+    DL_ERR("error linking namespaces: namespace_to is null.");
+    return false;
+  }
+
+  ProtectedDataGuard guard;
+  namespace_from->add_linked_namespace(namespace_to, std::unordered_set<std::string>(), true);
 
   return true;
 }
@@ -2595,31 +2614,46 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
+void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
+  ElfW(Addr) address = offset + load_bias;
+  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+}
+
 // Process relocations in SHT_RELR section (experimental).
-// See the original proposal for details of the encoding:
-// - https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg
+// Details of the encoding are described in this post:
+//   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
 bool soinfo::relocate_relr() {
   ElfW(Relr)* begin = relr_;
   ElfW(Relr)* end = relr_ + relr_count_;
+  constexpr size_t wordsize = sizeof(ElfW(Addr));
 
-  ElfW(Addr) offset = 0;
+  ElfW(Addr) base = 0;
   for (ElfW(Relr)* current = begin; current < end; ++current) {
-    ElfW(Addr) jump = ELFW(R_JUMP)(*current);
-    ElfW(Addr) bits = ELFW(R_BITS)(*current);
-    offset += jump * sizeof(ElfW(Addr));
-    if (jump == 0) {
-      ++current;
-      offset = *current;
+    ElfW(Relr) entry = *current;
+    ElfW(Addr) offset;
+
+    if ((entry&1) == 0) {
+      // Even entry: encodes the offset for next relocation.
+      offset = static_cast<ElfW(Addr)>(entry);
+      apply_relr_reloc(offset);
+      // Set base offset for subsequent bitmap entries.
+      base = offset + wordsize;
+      continue;
     }
-    ElfW(Addr) r_offset = offset;
-    for (; bits != 0; bits >>= 1) {
-      if ((bits&1) != 0) {
-        ElfW(Addr) reloc = static_cast<ElfW(Addr)>(r_offset + load_bias);
-        ElfW(Addr) addend = *reinterpret_cast<ElfW(Addr)*>(reloc);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
+
+    // Odd entry: encodes bitmap for relocations starting at base.
+    offset = base;
+    while (entry != 0) {
+      entry >>= 1;
+      if ((entry&1) != 0) {
+        apply_relr_reloc(offset);
       }
-      r_offset += sizeof(ElfW(Addr));
+      offset += wordsize;
     }
+
+    // Advance base offset by 63 words for 64-bit platforms,
+    // or 31 words for 32-bit platforms.
+    base += (8*wordsize - 1) * wordsize;
   }
   return true;
 }
@@ -3763,7 +3797,11 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
       auto it_to = namespaces.find(ns_link.ns_name());
       CHECK(it_to != namespaces.end());
       android_namespace_t* namespace_to = it_to->second;
-      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      if (ns_link.allow_all_shared_libs()) {
+        link_namespaces_all_libs(namespace_from, namespace_to);
+      } else {
+        link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      }
     }
   }
   // we can no longer rely on the fact that libdl.so is part of default namespace

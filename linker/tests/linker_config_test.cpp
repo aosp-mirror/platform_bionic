@@ -81,6 +81,8 @@ static const char* config_str =
   "namespace.vndk.search.paths = /system/${LIB}/vndk\n"
   "namespace.vndk.asan.search.paths = /data\n"
   "namespace.vndk.asan.search.paths += /system/${LIB}/vndk\n"
+  "namespace.vndk.links = default\n"
+  "namespace.vndk.link.default.allow_all_shared_libs = true\n"
   "\n";
 
 static bool write_version(const std::string& path, uint32_t version) {
@@ -154,10 +156,14 @@ static void run_linker_config_smoke_test(bool is_asan) {
 
   const auto& default_ns_links = default_ns_config->links();
   ASSERT_EQ(2U, default_ns_links.size());
+
   ASSERT_EQ("system", default_ns_links[0].ns_name());
   ASSERT_EQ("libc.so:libm.so:libdl.so:libstdc++.so", default_ns_links[0].shared_libs());
+  ASSERT_FALSE(default_ns_links[0].allow_all_shared_libs());
+
   ASSERT_EQ("vndk", default_ns_links[1].ns_name());
   ASSERT_EQ("libcutils.so:libbase.so", default_ns_links[1].shared_libs());
+  ASSERT_FALSE(default_ns_links[1].allow_all_shared_libs());
 
   auto& ns_configs = config->namespace_configs();
   ASSERT_EQ(3U, ns_configs.size());
@@ -187,8 +193,13 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(ns_vndk != nullptr) << "vndk namespace was not found";
 
   ASSERT_FALSE(ns_vndk->isolated()); // malformed bool property
-  ASSERT_FALSE(ns_vndk->visible()); // undefined bool property 
+  ASSERT_FALSE(ns_vndk->visible()); // undefined bool property
   ASSERT_EQ(kExpectedVndkSearchPath, ns_vndk->search_paths());
+
+  const auto& ns_vndk_links = ns_vndk->links();
+  ASSERT_EQ(1U, ns_vndk_links.size());
+  ASSERT_EQ("default", ns_vndk_links[0].ns_name());
+  ASSERT_TRUE(ns_vndk_links[0].allow_all_shared_libs());
 }
 
 TEST(linker_config, smoke) {
@@ -197,4 +208,41 @@ TEST(linker_config, smoke) {
 
 TEST(linker_config, asan_smoke) {
   run_linker_config_smoke_test(true);
+}
+
+TEST(linker_config, ns_link_shared_libs_invalid_settings) {
+  // This unit test ensures an error is emitted when a namespace link in ld.config.txt specifies
+  // both shared_libs and allow_all_shared_libs.
+
+  static const char config_str[] =
+    "dir.test = /data/local/tmp\n"
+    "\n"
+    "[test]\n"
+    "additional.namespaces = system\n"
+    "namespace.default.links = system\n"
+    "namespace.default.link.system.shared_libs = libc.so:libm.so\n"
+    "namespace.default.link.system.allow_all_shared_libs = true\n"
+    "\n";
+
+  TemporaryFile tmp_file;
+  close(tmp_file.fd);
+  tmp_file.fd = -1;
+
+  android::base::WriteStringToFile(config_str, tmp_file.path);
+
+  TemporaryDir tmp_dir;
+
+  std::string executable_path = std::string(tmp_dir.path) + "/some-binary";
+
+  const Config* config = nullptr;
+  std::string error_msg;
+  ASSERT_FALSE(Config::read_binary_config(tmp_file.path,
+                                          executable_path.c_str(),
+                                          false,
+                                          &config,
+                                          &error_msg));
+  ASSERT_TRUE(config == nullptr);
+  ASSERT_EQ(std::string(tmp_file.path) + ":6: "
+            "error: both shared_libs and allow_all_shared_libs are set for default->system link.",
+            error_msg);
 }
