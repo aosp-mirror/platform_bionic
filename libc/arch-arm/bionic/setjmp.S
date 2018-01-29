@@ -218,8 +218,10 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   beq 1f
 
   // Restore the signal mask.
-  ldr r0, [r0, #(_JB_SIGMASK * 4)]
-  bl sigsetmask
+  mov r2, #0
+  add r1, r0, #(_JB_SIGMASK * 4)
+  mov r0, #2 // SIG_SETMASK
+  bl sigprocmask
 
 1:
   ldmfd sp!, {r0, r1, lr}
