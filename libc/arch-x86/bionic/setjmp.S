@@ -110,16 +110,17 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   testl $1,%eax
   jz 1f
 
-  // Get the current signal mask.
+  // Save the current signal mask.
+  pushl %ecx
   PIC_PROLOGUE
-  pushl $0
-  call PIC_PLT(sigblock)
-  addl $4,%esp
+  leal (_JB_SIGMASK * 4)(%ecx),%eax
+  pushl %eax
+  pushl $0 // NULL
+  pushl $2 // SIG_SETMASK
+  call PIC_PLT(sigprocmask)
+  addl $12,%esp
   PIC_EPILOGUE
-
-  // Save the signal mask.
-  movl 4(%esp),%ecx
-  movl %eax,(_JB_SIGMASK * 4)(%ecx)
+  popl %ecx
 
 1:
   // Fetch the setjmp cookie and clear the signal flag bit.
@@ -159,10 +160,13 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   jz 1f
 
   // Restore the signal mask.
+  leal (_JB_SIGMASK * 4)(%edx),%eax
   PIC_PROLOGUE
-  pushl (_JB_SIGMASK * 4)(%edx)
-  call PIC_PLT(sigsetmask)
-  addl $4,%esp
+  pushl $0 // NULL
+  pushl %eax
+  pushl $2 // SIG_SETMASK
+  call PIC_PLT(sigprocmask)
+  addl $12,%esp
   PIC_EPILOGUE
 
 1:
