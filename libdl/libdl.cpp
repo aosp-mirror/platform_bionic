@@ -93,11 +93,6 @@ bool __loader_android_link_namespaces(
                                 const char* shared_libs_sonames);
 
 __attribute__((__weak__, visibility("default")))
-bool __loader_android_link_namespaces_all_libs(
-                                struct android_namespace_t* namespace_from,
-                                struct android_namespace_t* namespace_to);
-
-__attribute__((__weak__, visibility("default")))
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*));
 
 __attribute__((__weak__, visibility("default")))
@@ -207,12 +202,6 @@ bool android_link_namespaces(struct android_namespace_t* namespace_from,
                              struct android_namespace_t* namespace_to,
                              const char* shared_libs_sonames) {
   return __loader_android_link_namespaces(namespace_from, namespace_to, shared_libs_sonames);
-}
-
-__attribute__((__weak__))
-bool android_link_namespaces_all_libs(struct android_namespace_t* namespace_from,
-                                      struct android_namespace_t* namespace_to) {
-  return __loader_android_link_namespaces_all_libs(namespace_from, namespace_to);
 }
 
 __attribute__((__weak__))
