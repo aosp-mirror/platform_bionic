@@ -40,11 +40,6 @@ LIBC_OMR1 { # introduced=27
     __cfi_slowpath_diag;
 } LIBC_N;
 
-LIBC_PRIVATE {
-  global:
-    android_link_namespaces_all_libs;
-} LIBC_OMR1;
-
 LIBC_PLATFORM {
   global:
     __cfi_init;
