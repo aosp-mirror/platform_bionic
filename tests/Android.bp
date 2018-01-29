@@ -413,6 +413,7 @@ cc_defaults {
     target: {
         android: {
             shared_libs: [
+                "ld-android",
                 "libdl",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
