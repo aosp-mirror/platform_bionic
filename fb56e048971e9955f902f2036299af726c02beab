@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1bc7a81b_f830808c",
+        "filename": "linker/ld_android.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-29T14:37:11Z",
+      "side": 0,
+      "message": "apparently ld.gold check these references in compile time when ld-android.so is being referenced by an executable.",
+      "revId": "fb56e048971e9955f902f2036299af726c02beab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
