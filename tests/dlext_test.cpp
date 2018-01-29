@@ -1737,6 +1737,9 @@ TEST(dlext, ns_inaccessible_error_message) {
   ASSERT_EQ(expected_dlerror, dlerror());
 }
 
+extern "C" bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
+                                                          android_namespace_t* namespace_to);
+
 TEST(dlext, ns_link_namespaces_invalid_arguments) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
@@ -1764,16 +1767,16 @@ TEST(dlext, ns_link_namespaces_invalid_arguments) {
                "error linking namespaces \"private\"->\"(default)\": "
                "the list of shared libraries is empty.", dlerror());
 
-  // Test android_link_namespaces_all_libs()
-  ASSERT_FALSE(android_link_namespaces_all_libs(nullptr, nullptr));
+  // Test __loader_android_link_namespaces_all_libs()
+  ASSERT_FALSE(__loader_android_link_namespaces_all_libs(nullptr, nullptr));
   ASSERT_STREQ("android_link_namespaces_all_libs failed: "
                "error linking namespaces: namespace_from is null.", dlerror());
 
-  ASSERT_FALSE(android_link_namespaces_all_libs(nullptr, ns));
+  ASSERT_FALSE(__loader_android_link_namespaces_all_libs(nullptr, ns));
   ASSERT_STREQ("android_link_namespaces_all_libs failed: "
                "error linking namespaces: namespace_from is null.", dlerror());
 
-  ASSERT_FALSE(android_link_namespaces_all_libs(ns, nullptr));
+  ASSERT_FALSE(__loader_android_link_namespaces_all_libs(ns, nullptr));
   ASSERT_STREQ("android_link_namespaces_all_libs failed: "
                "error linking namespaces: namespace_to is null.", dlerror());
 }
@@ -1802,7 +1805,7 @@ TEST(dlext, ns_allow_all_shared_libs) {
   ASSERT_TRUE(android_link_namespaces(ns_b, nullptr, g_core_shared_libs.c_str())) << dlerror();
 
   ASSERT_TRUE(android_link_namespaces(ns_b, ns_a, "libnstest_ns_a_public1.so")) << dlerror();
-  ASSERT_TRUE(android_link_namespaces_all_libs(ns_a, ns_b)) << dlerror();
+  ASSERT_TRUE(__loader_android_link_namespaces_all_libs(ns_a, ns_b)) << dlerror();
 
   // Load libs with android_dlopen_ext() from namespace b
   android_dlextinfo extinfo;
