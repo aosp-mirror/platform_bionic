@@ -29,14 +29,6 @@
 #include <stdlib.h>
 #include <sys/cdefs.h>
 
-extern "C" void __somehow_you_managed_to_not_get_the_actual_symbols_from_the_linker();
-
-extern "C" void __ld_android_init() __attribute__((constructor));
-
-void __ld_android_init() {
-  __somehow_you_managed_to_not_get_the_actual_symbols_from_the_linker();
-}
-
 extern "C" void __internal_linker_error() {
   abort();
 }
