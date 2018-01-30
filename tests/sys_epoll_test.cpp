@@ -35,6 +35,11 @@ TEST(sys_epoll, smoke) {
   // epoll_pwait without a sigset (which is equivalent to epoll_wait).
   ASSERT_EQ(0, epoll_pwait(epoll_fd, events, 1, 1, NULL));
 
+#if defined(__BIONIC__)
+  // epoll_pwait64 without a sigset (which is equivalent to epoll_wait).
+  ASSERT_EQ(0, epoll_pwait64(epoll_fd, events, 1, 1, NULL));
+#endif
+
   // epoll_pwait with a sigset.
   sigset_t ss;
   sigemptyset(&ss);

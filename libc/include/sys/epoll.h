@@ -58,6 +58,7 @@ int epoll_create1(int __flags) __INTRODUCED_IN(21);
 int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __event);
 int epoll_wait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms);
 int epoll_pwait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset_t* __mask) __INTRODUCED_IN(21);
+int epoll_pwait64(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset64_t* __mask) __INTRODUCED_IN(28);
 
 __END_DECLS
 

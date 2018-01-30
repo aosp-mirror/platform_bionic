@@ -26,8 +26,36 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <sys/epoll.h>
 
+#include "private/SigSetConverter.h"
+
+extern "C" int __epoll_pwait(int, epoll_event*, int, int, const sigset64_t*, size_t);
+
+int epoll_create(int size) {
+  if (size <= 0) {
+    errno = EINVAL;
+    return -1;
+  }
+  return epoll_create1(0);
+}
+
+int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {};
+    set.sigset = *ss;
+    ss_ptr = &set.sigset64;
+  }
+  return epoll_pwait64(fd, events, max_events, timeout, ss_ptr);
+}
+
+int epoll_pwait64(int fd, epoll_event* events, int max_events, int timeout, const sigset64_t* ss) {
+  return __epoll_pwait(fd, events, max_events, timeout, ss, sizeof(*ss));
+}
+
 int epoll_wait(int fd, struct epoll_event* events, int max_events, int timeout) {
-  return epoll_pwait(fd, events, max_events, timeout, NULL);
+  return epoll_pwait64(fd, events, max_events, timeout, nullptr);
 }

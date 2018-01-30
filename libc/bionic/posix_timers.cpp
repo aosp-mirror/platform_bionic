@@ -26,8 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#include "private/kernel_sigset_t.h"
-
 #include <errno.h>
 #include <malloc.h>
 #include <pthread.h>
@@ -37,7 +35,6 @@
 #include <time.h>
 
 // System calls.
-extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t);
 extern "C" int __timer_create(clockid_t, sigevent*, __kernel_timer_t*);
 extern "C" int __timer_delete(__kernel_timer_t);
 extern "C" int __timer_getoverrun(__kernel_timer_t);
@@ -74,16 +71,13 @@ static __kernel_timer_t to_kernel_timer_id(timer_t timer) {
 static void* __timer_thread_start(void* arg) {
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(arg);
 
-  kernel_sigset_t sigset{TIMER_SIGNAL};
+  sigset64_t sigset = {};
+  sigaddset64(&sigset, TIMER_SIGNAL);
 
   while (true) {
     // Wait for a signal...
-    siginfo_t si;
-    memset(&si, 0, sizeof(si));
-    int rc = __rt_sigtimedwait(sigset.get(), &si, NULL, sizeof(sigset));
-    if (rc == -1) {
-      continue;
-    }
+    siginfo_t si = {};
+    if (sigtimedwait64(&sigset, &si, nullptr) == -1) continue;
 
     if (si.si_code == SI_TIMER) {
       // This signal was sent because a timer fired, so call the callback.
@@ -149,13 +143,14 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
 
   // We start the thread with TIMER_SIGNAL blocked by blocking the signal here and letting it
   // inherit. If it tried to block the signal itself, there would be a race.
-  kernel_sigset_t sigset{TIMER_SIGNAL};
-  kernel_sigset_t old_sigset;
-  __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
+  sigset64_t sigset = {};
+  sigaddset64(&sigset, TIMER_SIGNAL);
+  sigset64_t old_sigset;
+  sigprocmask64(SIG_BLOCK, &sigset, &old_sigset);
 
   int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
 
-  __rt_sigprocmask(SIG_SETMASK, &old_sigset, nullptr, sizeof(sigset));
+  sigprocmask64(SIG_SETMASK, &old_sigset, nullptr);
 
   if (rc != 0) {
     free(timer);
