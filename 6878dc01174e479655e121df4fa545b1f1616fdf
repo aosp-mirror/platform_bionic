@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bc9e645_3dc304d3",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-30T16:37:49Z",
+      "side": 1,
+      "message": "guest?",
+      "range": {
+        "startLine": 1385,
+        "startChar": 33,
+        "endLine": 1385,
+        "endChar": 38
+      },
+      "revId": "6878dc01174e479655e121df4fa545b1f1616fdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
