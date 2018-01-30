@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e21bb5a6_86b01d5e",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1381,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-30T16:15:57Z",
+      "side": 1,
+      "message": ".\n\nadd another comment line saying why we don\u0027t look for \"[stack]\" so i don\u0027t come and clean this up again?",
+      "revId": "b84c798413d38ecefc9410f977fffdbad9cddef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "33e876b8_54509a8c",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1393,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-30T16:15:57Z",
+      "side": 1,
+      "message": "and change this to just \"stack\" so we\u0027re not encouraging that \"cleanup\"?",
+      "range": {
+        "startLine": 1393,
+        "startChar": 45,
+        "endLine": 1393,
+        "endChar": 52
+      },
+      "revId": "b84c798413d38ecefc9410f977fffdbad9cddef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
