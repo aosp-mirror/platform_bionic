@@ -29,12 +29,11 @@
 #define WRITE_OFFSET   32
 
 static Lock g_lock;
+static CachedProperty g_debug_atrace_tags_enableflags("debug.atrace.tags.enableflags");
+static uint64_t g_tags;
 static int g_trace_marker_fd = -1;
 
 static bool should_trace() {
-  static CachedProperty g_debug_atrace_tags_enableflags("debug.atrace.tags.enableflags");
-  static uint64_t g_tags;
-
   g_lock.lock();
   if (g_debug_atrace_tags_enableflags.DidChange()) {
     g_tags = strtoull(g_debug_atrace_tags_enableflags.Get(), nullptr, 0);
