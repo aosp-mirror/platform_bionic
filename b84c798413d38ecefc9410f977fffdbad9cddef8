@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d6fd3d19_5973154e",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1381,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-30T16:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e21bb5a6_86b01d5e",
+      "revId": "b84c798413d38ecefc9410f977fffdbad9cddef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "33e876b8_54509a8c",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2018-01-30T16:15:57Z",
       "side": 1,
       "message": "and change this to just \"stack\" so we\u0027re not encouraging that \"cleanup\"?",
+      "range": {
+        "startLine": 1393,
+        "startChar": 45,
+        "endLine": 1393,
+        "endChar": 52
+      },
+      "revId": "b84c798413d38ecefc9410f977fffdbad9cddef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "08dddebe_033018ce",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1393,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-30T16:26:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33e876b8_54509a8c",
       "range": {
         "startLine": 1393,
         "startChar": 45,
