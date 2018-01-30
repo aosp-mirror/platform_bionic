@@ -40,14 +40,14 @@ __BEGIN_DECLS
 void insque(void* __element, void* __previous) __INTRODUCED_IN(21);
 void remque(void* __element) __INTRODUCED_IN(21);
 
-int hcreate(size_t) __INTRODUCED_IN_FUTURE;
-void hdestroy(void) __INTRODUCED_IN_FUTURE;
-ENTRY* hsearch(ENTRY, ACTION) __INTRODUCED_IN_FUTURE;
+int hcreate(size_t) __INTRODUCED_IN(28);
+void hdestroy(void) __INTRODUCED_IN(28);
+ENTRY* hsearch(ENTRY, ACTION) __INTRODUCED_IN(28);
 
 #if defined(__USE_BSD) || defined(__USE_GNU)
-int hcreate_r(size_t, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
-void hdestroy_r(struct hsearch_data*) __INTRODUCED_IN_FUTURE;
-int hsearch_r(ENTRY, ACTION, ENTRY**, struct hsearch_data*) __INTRODUCED_IN_FUTURE;
+int hcreate_r(size_t, struct hsearch_data*) __INTRODUCED_IN(28);
+void hdestroy_r(struct hsearch_data*) __INTRODUCED_IN(28);
+int hsearch_r(ENTRY, ACTION, ENTRY**, struct hsearch_data*) __INTRODUCED_IN(28);
 #endif
 
 void* lfind(const void* __key, const void* __base, size_t* __count, size_t __size, int (*__comparator)(const void*, const void*))
