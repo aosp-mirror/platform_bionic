@@ -230,7 +230,7 @@ int pthread_getname_np(pthread_t __pthread, char* __buf, size_t __n) __INTRODUCE
 int pthread_setname_np(pthread_t __pthread, const char* __name);
 
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
-int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN_FUTURE;
+int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
 
 int pthread_setspecific(pthread_key_t __key, const void* __value);
 
