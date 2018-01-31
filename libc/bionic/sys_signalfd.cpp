@@ -28,11 +28,16 @@
 
 #include <sys/signalfd.h>
 
-#include "private/kernel_sigset_t.h"
+#include "private/SigSetConverter.h"
 
-extern "C" int __signalfd4(int fd, kernel_sigset_t* mask, size_t sizemask, int flags);
+extern "C" int __signalfd4(int, const sigset64_t*, size_t, int);
 
 int signalfd(int fd, const sigset_t* mask, int flags) {
-  kernel_sigset_t in_set(mask);
-  return __signalfd4(fd, &in_set, sizeof(in_set), flags);
+  SigSetConverter set = {};
+  set.sigset = *mask;
+  return signalfd64(fd, &set.sigset64, flags);
+}
+
+int signalfd64(int fd, const sigset64_t* mask, int flags) {
+  return __signalfd4(fd, mask, sizeof(*mask), flags);
 }

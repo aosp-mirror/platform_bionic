@@ -96,6 +96,25 @@ TEST(spawn, posix_spawnattr_setsigmask_posix_spawnattr_getsigmask) {
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
 
+TEST(spawn, posix_spawnattr_setsigmask64_posix_spawnattr_getsigmask64) {
+  posix_spawnattr_t sa;
+  ASSERT_EQ(0, posix_spawnattr_init(&sa));
+
+  sigset64_t sigs;
+  ASSERT_EQ(0, posix_spawnattr_getsigmask64(&sa, &sigs));
+  ASSERT_FALSE(sigismember64(&sigs, SIGRTMIN));
+
+  sigset64_t just_SIGRTMIN;
+  sigemptyset64(&just_SIGRTMIN);
+  sigaddset64(&just_SIGRTMIN, SIGRTMIN);
+  ASSERT_EQ(0, posix_spawnattr_setsigmask64(&sa, &just_SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_getsigmask64(&sa, &sigs));
+  ASSERT_TRUE(sigismember64(&sigs, SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+}
+
 TEST(spawn, posix_spawnattr_setsigdefault_posix_spawnattr_getsigdefault) {
   posix_spawnattr_t sa;
   ASSERT_EQ(0, posix_spawnattr_init(&sa));
@@ -111,6 +130,25 @@ TEST(spawn, posix_spawnattr_setsigdefault_posix_spawnattr_getsigdefault) {
 
   ASSERT_EQ(0, posix_spawnattr_getsigdefault(&sa, &sigs));
   ASSERT_TRUE(sigismember(&sigs, SIGALRM));
+
+  ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+}
+
+TEST(spawn, posix_spawnattr_setsigdefault64_posix_spawnattr_getsigdefault64) {
+  posix_spawnattr_t sa;
+  ASSERT_EQ(0, posix_spawnattr_init(&sa));
+
+  sigset64_t sigs;
+  ASSERT_EQ(0, posix_spawnattr_getsigdefault64(&sa, &sigs));
+  ASSERT_FALSE(sigismember64(&sigs, SIGRTMIN));
+
+  sigset64_t just_SIGRTMIN;
+  sigemptyset64(&just_SIGRTMIN);
+  sigaddset64(&just_SIGRTMIN, SIGRTMIN);
+  ASSERT_EQ(0, posix_spawnattr_setsigdefault64(&sa, &just_SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_getsigdefault64(&sa, &sigs));
+  ASSERT_TRUE(sigismember64(&sigs, SIGRTMIN));
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
