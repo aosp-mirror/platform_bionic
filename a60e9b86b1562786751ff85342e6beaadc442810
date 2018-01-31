@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34a3500b_54f4f461",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-31T01:50:21Z",
+      "side": 1,
+      "message": "__INTRODUCED_IN annotations for these?",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 36
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b022cdfe_f5c7c86f",
+        "filename": "tests/sys_signalfd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-31T01:50:21Z",
+      "side": 1,
+      "message": "any reason to spawn a thread for this instead of just raise(signal)?",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 5
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b8346eab_03ef90fe",
+        "filename": "tests/sys_signalfd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-01-31T01:50:21Z",
+      "side": 1,
+      "message": "should this be SIG_SETMASK instead, so we\u0027re not affected by whatever signal mask we\u0027ve inherited from the shell or whatever?",
+      "range": {
+        "startLine": 64,
+        "startChar": 27,
+        "endLine": 64,
+        "endChar": 36
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
