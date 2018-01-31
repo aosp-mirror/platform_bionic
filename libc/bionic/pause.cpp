@@ -26,12 +26,10 @@
  * SUCH DAMAGE.
  */
 
+#include <signal.h>
 #include <unistd.h>
 
-#include "private/kernel_sigset_t.h"
-
 int pause() {
-  kernel_sigset_t mask;
-  if (__rt_sigprocmask(SIG_SETMASK, nullptr, &mask, sizeof(mask)) == -1) return -1;
-  return __rt_sigsuspend(&mask, sizeof(mask));
+  sigset64_t mask = {};
+  return sigsuspend64(&mask);
 }

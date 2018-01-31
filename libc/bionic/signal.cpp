@@ -30,19 +30,36 @@
 #include <pthread.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/epoll.h>
+#include <sys/signalfd.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
 
-#include "private/kernel_sigset_t.h"
+#include "private/ErrnoRestorer.h"
+#include "private/SigSetConverter.h"
 
+extern "C" int __rt_sigpending(const sigset64_t*, size_t);
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 extern "C" int ___rt_sigqueueinfo(pid_t, int, siginfo_t*);
-extern "C" int __rt_sigtimedwait(const sigset_t*, siginfo_t*, const timespec*, size_t);
+extern "C" int __rt_sigsuspend(const sigset64_t*, size_t);
+extern "C" int __rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t);
 
-int sigaddset(sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+int pthread_sigmask(int how, const sigset_t* new_set, sigset_t* old_set) {
+  ErrnoRestorer errno_restorer;
+  return (sigprocmask(how, new_set, old_set) == -1) ? errno : 0;
+}
+
+int pthread_sigmask64(int how, const sigset64_t* new_set, sigset64_t* old_set) {
+  ErrnoRestorer errno_restorer;
+  return (sigprocmask64(how, new_set, old_set) == -1) ? errno : 0;
+}
+
+template <typename SigSetT>
+int SigAddSet(SigSetT* set, int sig) {
+  int bit = sig - 1; // Signal numbers start at 1, but bit positions start at 0.
   unsigned long* local_set = reinterpret_cast<unsigned long*>(set);
-  if (set == NULL || bit < 0 || bit >= static_cast<int>(8*sizeof(sigset_t))) {
+  if (set == nullptr || bit < 0 || bit >= static_cast<int>(8*sizeof(*set))) {
     errno = EINVAL;
     return -1;
   }
@@ -50,24 +67,28 @@ int sigaddset(sigset_t* set, int signum) {
   return 0;
 }
 
-// This isn't in our header files, but is exposed on all architectures.
-extern "C" int sigblock(int mask) {
-  union {
-    int mask;
-    sigset_t set;
-  } in, out;
-
-  sigemptyset(&in.set);
-  in.mask = mask;
-
-  if (sigprocmask(SIG_BLOCK, &in.set, &out.set) == -1) return -1;
-  return out.mask;
+int sigaddset(sigset_t* set, int sig) {
+  return SigAddSet(set, sig);
 }
 
-int sigdelset(sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+int sigaddset64(sigset64_t* set, int sig) {
+  return SigAddSet(set, sig);
+}
+
+// This isn't in our header files, but is exposed on all architectures.
+extern "C" int sigblock(int mask) {
+  SigSetConverter in, out;
+  sigemptyset(&in.sigset);
+  in.bsd = mask;
+  if (sigprocmask(SIG_BLOCK, &in.sigset, &out.sigset) == -1) return -1;
+  return out.bsd;
+}
+
+template <typename SigSetT>
+int SigDelSet(SigSetT* set, int sig) {
+  int bit = sig - 1; // Signal numbers start at 1, but bit positions start at 0.
   unsigned long* local_set = reinterpret_cast<unsigned long*>(set);
-  if (set == NULL || bit < 0 || bit >= static_cast<int>(8*sizeof(sigset_t))) {
+  if (set == nullptr || bit < 0 || bit >= static_cast<int>(8*sizeof(*set))) {
     errno = EINVAL;
     return -1;
   }
@@ -75,29 +96,54 @@ int sigdelset(sigset_t* set, int signum) {
   return 0;
 }
 
-int sigemptyset(sigset_t* set) {
-  if (set == NULL) {
+int sigdelset(sigset_t* set, int sig) {
+  return SigDelSet(set, sig);
+}
+
+int sigdelset64(sigset64_t* set, int sig) {
+  return SigDelSet(set, sig);
+}
+
+template <typename SigSetT>
+int SigEmptySet(SigSetT* set) {
+  if (set == nullptr) {
     errno = EINVAL;
     return -1;
   }
-  memset(set, 0, sizeof(sigset_t));
+  memset(set, 0, sizeof(*set));
+  return 0;
+}
+
+int sigemptyset(sigset_t* set) {
+  return SigEmptySet(set);
+}
+
+int sigemptyset64(sigset64_t* set) {
+  return SigEmptySet(set);
+}
+
+template <typename SigSetT>
+int SigFillSet(SigSetT* set) {
+  if (set == nullptr) {
+    errno = EINVAL;
+    return -1;
+  }
+  memset(set, 0xff, sizeof(*set));
   return 0;
 }
 
 int sigfillset(sigset_t* set) {
-  if (set == NULL) {
-    errno = EINVAL;
-    return -1;
-  }
-  memset(set, ~0, sizeof(sigset_t));
-  return 0;
+  return SigFillSet(set);
+}
+
+int sigfillset64(sigset64_t* set) {
+  return SigFillSet(set);
 }
 
 int sighold(int sig) {
-  kernel_sigset_t set;
-  set.clear();
-  if (!set.set(sig)) return -1;
-  return __rt_sigprocmask(SIG_BLOCK, &set, nullptr, sizeof(set));
+  sigset64_t set = {};
+  if (sigaddset64(&set, sig) == -1) return -1;
+  return sigprocmask64(SIG_BLOCK, &set, nullptr);
 }
 
 int sigignore(int sig) {
@@ -119,87 +165,100 @@ int siginterrupt(int sig, int flag) {
   return sigaction(sig, &act, nullptr);
 }
 
-int sigismember(const sigset_t* set, int signum) {
-  int bit = signum - 1; // Signal numbers start at 1, but bit positions start at 0.
+template <typename SigSetT>
+int SigIsMember(const SigSetT* set, int sig) {
+  int bit = sig - 1; // Signal numbers start at 1, but bit positions start at 0.
   const unsigned long* local_set = reinterpret_cast<const unsigned long*>(set);
-  if (set == NULL || bit < 0 || bit >= static_cast<int>(8*sizeof(sigset_t))) {
+  if (set == nullptr || bit < 0 || bit >= static_cast<int>(8*sizeof(*set))) {
     errno = EINVAL;
     return -1;
   }
   return static_cast<int>((local_set[bit / LONG_BIT] >> (bit % LONG_BIT)) & 1);
 }
 
-__LIBC_HIDDEN__ sighandler_t _signal(int signum, sighandler_t handler, int flags) {
+int sigismember(const sigset_t* set, int sig) {
+  return SigIsMember(set, sig);
+}
+
+int sigismember64(const sigset64_t* set, int sig) {
+  return SigIsMember(set, sig);
+}
+
+__LIBC_HIDDEN__ sighandler_t _signal(int sig, sighandler_t handler, int flags) {
   struct sigaction sa;
   sigemptyset(&sa.sa_mask);
   sa.sa_handler = handler;
   sa.sa_flags = flags;
 
-  if (sigaction(signum, &sa, &sa) == -1) {
+  if (sigaction(sig, &sa, &sa) == -1) {
     return SIG_ERR;
   }
 
   return sa.sa_handler;
 }
 
-sighandler_t signal(int signum, sighandler_t handler) {
-  return _signal(signum, handler, SA_RESTART);
+sighandler_t signal(int sig, sighandler_t handler) {
+  return _signal(sig, handler, SA_RESTART);
 }
 
 int sigpause(int sig) {
-  kernel_sigset_t set;
-  set.clear();
-  if (__rt_sigprocmask(SIG_SETMASK, nullptr, &set, sizeof(set)) == -1) return -1;
-  if (!set.clear(sig)) return -1;
-  return __rt_sigsuspend(&set, sizeof(set));
+  sigset64_t set = {};
+  if (sigprocmask64(SIG_SETMASK, nullptr, &set) == -1 || sigdelset64(&set, sig) == -1) return -1;
+  return sigsuspend64(&set);
 }
 
 int sigpending(sigset_t* bionic_set) {
-  kernel_sigset_t set;
-  int result = __rt_sigpending(&set, sizeof(set));
-  if (result != -1) {
-    *bionic_set = set.bionic;
-  }
-  return result;
+  SigSetConverter set = {};
+  set.sigset = *bionic_set;
+  if (__rt_sigpending(&set.sigset64, sizeof(set.sigset64)) == -1) return -1;
+  *bionic_set = set.sigset;
+  return 0;
+}
+
+int sigpending64(sigset64_t* set) {
+  return __rt_sigpending(set, sizeof(*set));
 }
 
 int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
-  kernel_sigset_t new_set;
-  kernel_sigset_t* new_set_ptr = NULL;
-  if (bionic_new_set != NULL) {
-    new_set.set(bionic_new_set);
-    new_set_ptr = &new_set;
+  SigSetConverter new_set;
+  sigset64_t* new_set_ptr = nullptr;
+  if (bionic_new_set != nullptr) {
+    sigemptyset64(&new_set.sigset64);
+    new_set.sigset = *bionic_new_set;
+    new_set_ptr = &new_set.sigset64;
   }
 
-  kernel_sigset_t old_set;
-  if (__rt_sigprocmask(how, new_set_ptr, &old_set, sizeof(old_set)) == -1) {
+  SigSetConverter old_set;
+  if (sigprocmask64(how, new_set_ptr, &old_set.sigset64) == -1) {
     return -1;
   }
 
-  if (bionic_old_set != NULL) {
-    *bionic_old_set = old_set.bionic;
+  if (bionic_old_set != nullptr) {
+    *bionic_old_set = old_set.sigset;
   }
 
   return 0;
 }
 
-int sigqueue(pid_t pid, int signo, const sigval value) {
+int sigprocmask64(int how, const sigset64_t* new_set, sigset64_t* old_set) {
+  return __rt_sigprocmask(how, new_set, old_set, sizeof(*new_set));
+}
+
+int sigqueue(pid_t pid, int sig, const sigval value) {
   siginfo_t info;
   memset(&info, 0, sizeof(siginfo_t));
-  info.si_signo = signo;
+  info.si_signo = sig;
   info.si_code = SI_QUEUE;
   info.si_pid = getpid();
   info.si_uid = getuid();
   info.si_value = value;
-
-  return ___rt_sigqueueinfo(pid, signo, &info);
+  return ___rt_sigqueueinfo(pid, sig, &info);
 }
 
 int sigrelse(int sig) {
-  kernel_sigset_t set;
-  set.clear();
-  if (!set.set(sig)) return -1;
-  return __rt_sigprocmask(SIG_UNBLOCK, &set, nullptr, sizeof(set));
+  sigset64_t set = {};
+  if (sigaddset64(&set, sig) == -1) return -1;
+  return sigprocmask64(SIG_UNBLOCK, &set, nullptr);
 }
 
 sighandler_t sigset(int sig, sighandler_t disp) {
@@ -215,57 +274,68 @@ sighandler_t sigset(int sig, sighandler_t disp) {
     return SIG_ERR;
   }
 
-  kernel_sigset_t new_mask{sig};
-  kernel_sigset_t old_mask;
-  if (__rt_sigprocmask(disp == SIG_HOLD ? SIG_BLOCK : SIG_UNBLOCK, &new_mask, &old_mask,
-                       sizeof(new_mask)) == -1) {
+  sigset64_t new_mask = {};
+  sigaddset64(&new_mask, sig);
+  sigset64_t old_mask;
+  if (sigprocmask64(disp == SIG_HOLD ? SIG_BLOCK : SIG_UNBLOCK, &new_mask, &old_mask) == -1) {
     return SIG_ERR;
   }
 
-  return old_mask.is_set(sig) ? SIG_HOLD : old_sa.sa_handler;
+  return sigismember64(&old_mask, sig) ? SIG_HOLD : old_sa.sa_handler;
 }
 
 // This isn't in our header files, but is exposed on all architectures.
 extern "C" int sigsetmask(int mask) {
-  union {
-    int mask;
-    sigset_t set;
-  } in, out;
-
-  sigemptyset(&in.set);
-  in.mask = mask;
-
-  if (sigprocmask(SIG_SETMASK, &in.set, &out.set) == -1) return -1;
-  return out.mask;
+  SigSetConverter in, out;
+  sigemptyset(&in.sigset);
+  in.bsd = mask;
+  if (sigprocmask(SIG_SETMASK, &in.sigset, &out.sigset) == -1) return -1;
+  return out.bsd;
 }
 
 int sigsuspend(const sigset_t* bionic_set) {
-  kernel_sigset_t set(bionic_set);
-  return __rt_sigsuspend(&set, sizeof(set));
+  SigSetConverter set = {};
+  set.sigset = *bionic_set;
+  return __rt_sigsuspend(&set.sigset64, sizeof(set.sigset64));
 }
 
-int sigtimedwait(const sigset_t* set, siginfo_t* info, const timespec* timeout) {
-  kernel_sigset_t sigset(set);
-  return __rt_sigtimedwait(sigset.get(), info, timeout, sizeof(sigset));
+int sigsuspend64(const sigset64_t* set) {
+  return __rt_sigsuspend(set, sizeof(*set));
 }
 
-int sigwait(const sigset_t* set, int* sig) {
-  kernel_sigset_t sigset(set);
+int sigtimedwait(const sigset_t* bionic_set, siginfo_t* info, const timespec* timeout) {
+  SigSetConverter set = {};
+  set.sigset = *bionic_set;
+  return __rt_sigtimedwait(&set.sigset64, info, timeout, sizeof(set.sigset64));
+}
+
+int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeout) {
+  return __rt_sigtimedwait(set, info, timeout, sizeof(*set));
+}
+
+int sigwait(const sigset_t* bionic_set, int* sig) {
+  SigSetConverter set = {};
+  set.sigset = *bionic_set;
+  return sigwait64(&set.sigset64, sig);
+}
+
+int sigwait64(const sigset64_t* set, int* sig) {
   while (true) {
     // __rt_sigtimedwait can return EAGAIN or EINTR, we need to loop
     // around them since sigwait is only allowed to return EINVAL.
-    int result = __rt_sigtimedwait(sigset.get(), NULL, NULL, sizeof(sigset));
+    int result = sigtimedwait64(set, nullptr, nullptr);
     if (result >= 0) {
       *sig = result;
       return 0;
     }
-
-    if (errno != EAGAIN && errno != EINTR) {
-      return errno;
-    }
+    if (errno != EAGAIN && errno != EINTR) return errno;
   }
 }
 
 int sigwaitinfo(const sigset_t* set, siginfo_t* info) {
-  return sigtimedwait(set, info, NULL);
+  return sigtimedwait(set, info, nullptr);
+}
+
+int sigwaitinfo64(const sigset64_t* set, siginfo_t* info) {
+  return sigtimedwait64(set, info, nullptr);
 }
