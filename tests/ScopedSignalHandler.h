@@ -20,6 +20,26 @@
 #include <signal.h>
 #include <string.h>
 
+#if defined(__GLIBC__)
+#define posix_spawnattr_getsigdefault64 posix_spawnattr_getsigdefault
+#define posix_spawnattr_getsigmask64 posix_spawnattr_getsigmask
+#define posix_spawnattr_setsigdefault64 posix_spawnattr_setsigdefault
+#define posix_spawnattr_setsigmask64 posix_spawnattr_setsigmask
+#define pthread_sigmask64 pthread_sigmask
+#define sigaddset64 sigaddset
+#define sigdelset64 sigdelset
+#define sigemptyset64 sigemptyset
+#define sigfillset64 sigfillset
+#define sigismember64 sigismember
+#define sigpending64 sigpending
+#define sigprocmask64 sigprocmask
+#define sigset64_t sigset_t
+#define sigsuspend64 sigsuspend
+#define sigtimedwait64 sigtimedwait
+#define sigwait64 sigwait
+#define sigwaitinfo64 sigwaitinfo
+#endif
+
 class ScopedSignalHandler {
  public:
   ScopedSignalHandler(int signal_number, void (*handler)(int), int sa_flags = 0)
@@ -56,15 +76,15 @@ class ScopedSignalHandler {
 class SignalMaskRestorer {
  public:
   SignalMaskRestorer() {
-    sigprocmask(SIG_SETMASK, nullptr, &old_mask_);
+    sigprocmask64(SIG_SETMASK, nullptr, &old_mask_);
   }
 
   ~SignalMaskRestorer() {
-    sigprocmask(SIG_SETMASK, &old_mask_, nullptr);
+    sigprocmask64(SIG_SETMASK, &old_mask_, nullptr);
   }
 
  private:
-  sigset_t old_mask_;
+  sigset64_t old_mask_;
 };
 
 #endif // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H

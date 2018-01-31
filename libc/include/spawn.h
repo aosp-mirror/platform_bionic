@@ -63,10 +63,14 @@ int posix_spawnattr_setpgroup(posix_spawnattr_t* __attr, pid_t __pgroup) __INTRO
 int posix_spawnattr_getpgroup(const posix_spawnattr_t* __attr, pid_t* __pgroup) __INTRODUCED_IN(28);
 
 int posix_spawnattr_setsigmask(posix_spawnattr_t* __attr, const sigset_t* __mask) __INTRODUCED_IN(28);
+int posix_spawnattr_setsigmask64(posix_spawnattr_t* __attr, const sigset64_t* __mask) __INTRODUCED_IN(28);
 int posix_spawnattr_getsigmask(const posix_spawnattr_t* __attr, sigset_t* __mask) __INTRODUCED_IN(28);
+int posix_spawnattr_getsigmask64(const posix_spawnattr_t* __attr, sigset64_t* __mask) __INTRODUCED_IN(28);
 
 int posix_spawnattr_setsigdefault(posix_spawnattr_t* __attr, const sigset_t* __mask) __INTRODUCED_IN(28);
+int posix_spawnattr_setsigdefault64(posix_spawnattr_t* __attr, const sigset64_t* __mask) __INTRODUCED_IN(28);
 int posix_spawnattr_getsigdefault(const posix_spawnattr_t* __attr, sigset_t* __mask) __INTRODUCED_IN(28);
+int posix_spawnattr_getsigdefault64(const posix_spawnattr_t* __attr, sigset64_t* __mask) __INTRODUCED_IN(28);
 
 int posix_spawnattr_setschedparam(posix_spawnattr_t* __attr, const struct sched_param* __param) __INTRODUCED_IN(28);
 int posix_spawnattr_getschedparam(const posix_spawnattr_t* __attr, struct sched_param* __param) __INTRODUCED_IN(28);

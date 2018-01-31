@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,14 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <pthread.h>
-#include <signal.h>
+#pragma once
 
-#include "private/ErrnoRestorer.h"
-
-int pthread_sigmask(int how, const sigset_t* new_set, sigset_t* old_set) {
-  ErrnoRestorer errno_restorer;
-  int result = sigprocmask(how, new_set, old_set);
-  return (result == -1) ? errno : 0;
-}
+union SigSetConverter {
+  int bsd;
+  sigset_t sigset;
+  sigset64_t sigset64;
+};
