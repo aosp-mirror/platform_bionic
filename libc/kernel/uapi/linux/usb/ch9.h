@@ -79,6 +79,8 @@
 #define TEST_SE0_NAK 3
 #define TEST_PACKET 4
 #define TEST_FORCE_EN 5
+#define USB_STATUS_TYPE_STANDARD 0
+#define USB_STATUS_TYPE_PTM 1
 #define USB_DEVICE_U1_ENABLE 48
 #define USB_DEVICE_U2_ENABLE 49
 #define USB_DEVICE_LTM_ENABLE 50
@@ -367,6 +369,7 @@ struct usb_wireless_cap_descriptor {
   __le16 bmBandGroup;
   __u8 bReserved;
 } __attribute__((packed));
+#define USB_DT_USB_WIRELESS_CAP_SIZE 11
 #define USB_CAP_TYPE_EXT 2
 struct usb_ext_cap_descriptor {
   __u8 bLength;
@@ -504,6 +507,7 @@ struct usb_ptm_cap_descriptor {
   __u8 bDescriptorType;
   __u8 bDevCapabilityType;
 } __attribute__((packed));
+#define USB_DT_USB_PTM_ID_SIZE 3
 #define USB_DT_USB_SSP_CAP_SIZE(ssac) (16 + ssac * 4)
 struct usb_wireless_ep_comp_descriptor {
   __u8 bLength;

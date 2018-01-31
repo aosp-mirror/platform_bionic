@@ -22,12 +22,12 @@
 #include <linux/in.h>
 #include <linux/in6.h>
 struct sockaddr_rxrpc {
-  sa_family_t srx_family;
-  u16 srx_service;
-  u16 transport_type;
-  u16 transport_len;
+  __kernel_sa_family_t srx_family;
+  __u16 srx_service;
+  __u16 transport_type;
+  __u16 transport_len;
   union {
-    sa_family_t family;
+    __kernel_sa_family_t family;
     struct sockaddr_in sin;
     struct sockaddr_in6 sin6;
   } transport;
@@ -50,6 +50,7 @@ enum rxrpc_cmsg_type {
   RXRPC_EXCLUSIVE_CALL = 10,
   RXRPC_UPGRADE_SERVICE = 11,
   RXRPC_TX_LENGTH = 12,
+  RXRPC_SET_CALL_TIMEOUT = 13,
   RXRPC__SUPPORTED
 };
 #define RXRPC_SECURITY_PLAIN 0
