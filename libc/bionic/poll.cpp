@@ -31,51 +31,56 @@
 #include <sys/select.h>
 
 #include "private/bionic_time_conversions.h"
-#include "private/kernel_sigset_t.h"
+#include "private/SigSetConverter.h"
 
-extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const kernel_sigset_t*, size_t);
+extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t);
 extern "C" int __pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*);
 
 int poll(pollfd* fds, nfds_t fd_count, int ms) __overloadable {
   timespec ts;
-  timespec* ts_ptr = NULL;
+  timespec* ts_ptr = nullptr;
   if (ms >= 0) {
     timespec_from_ms(ts, ms);
     ts_ptr = &ts;
   }
-  return __ppoll(fds, fd_count, ts_ptr, NULL, 0);
+  return __ppoll(fds, fd_count, ts_ptr, nullptr, 0);
 }
 
 int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) __overloadable {
+  // The underlying `__ppoll` system call only takes `sigset64_t`.
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {};
+    set.sigset = *ss;
+    ss_ptr = &set.sigset64;
+  }
+  return ppoll64(fds, fd_count, ts, ss_ptr);
+}
+
+int ppoll64(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset64_t* ss) {
+  // The underlying __ppoll system call modifies its `struct timespec` argument.
   timespec mutable_ts;
-  timespec* mutable_ts_ptr = NULL;
-  if (ts != NULL) {
+  timespec* mutable_ts_ptr = nullptr;
+  if (ts != nullptr) {
     mutable_ts = *ts;
     mutable_ts_ptr = &mutable_ts;
   }
-
-  kernel_sigset_t kernel_ss;
-  kernel_sigset_t* kernel_ss_ptr = NULL;
-  if (ss != NULL) {
-    kernel_ss.set(ss);
-    kernel_ss_ptr = &kernel_ss;
-  }
-
-  return __ppoll(fds, fd_count, mutable_ts_ptr, kernel_ss_ptr, sizeof(kernel_ss));
+  return __ppoll(fds, fd_count, mutable_ts_ptr, ss, sizeof(*ss));
 }
 
 int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds, timeval* tv) {
   timespec ts;
-  timespec* ts_ptr = NULL;
-  if (tv != NULL) {
+  timespec* ts_ptr = nullptr;
+  if (tv != nullptr) {
     if (!timespec_from_timeval(ts, *tv)) {
       errno = EINVAL;
       return -1;
     }
     ts_ptr = &ts;
   }
-  int result = __pselect6(fd_count, read_fds, write_fds, error_fds, ts_ptr, NULL);
-  if (tv != NULL) {
+  int result = __pselect6(fd_count, read_fds, write_fds, error_fds, ts_ptr, nullptr);
+  if (tv != nullptr) {
     timeval_from_timespec(*tv, ts);
   }
   return result;
@@ -83,18 +88,25 @@ int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
 
 int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
             const timespec* ts, const sigset_t* ss) {
+  // The underlying `__pselect6` system call only takes `sigset64_t`.
+  SigSetConverter set;
+  sigset64_t* ss_ptr = nullptr;
+  if (ss != nullptr) {
+    set = {};
+    set.sigset = *ss;
+    ss_ptr = &set.sigset64;
+  }
+  return pselect64(fd_count, read_fds, write_fds, error_fds, ts, ss_ptr);
+}
+
+int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds,
+              const timespec* ts, const sigset64_t* ss) {
+  // The underlying __pselect6 system call modifies its `struct timespec` argument.
   timespec mutable_ts;
-  timespec* mutable_ts_ptr = NULL;
-  if (ts != NULL) {
+  timespec* mutable_ts_ptr = nullptr;
+  if (ts != nullptr) {
     mutable_ts = *ts;
     mutable_ts_ptr = &mutable_ts;
-  }
-
-  kernel_sigset_t kernel_ss;
-  kernel_sigset_t* kernel_ss_ptr = NULL;
-  if (ss != NULL) {
-    kernel_ss.set(ss);
-    kernel_ss_ptr = &kernel_ss;
   }
 
   // The Linux kernel only handles 6 arguments and this system call really needs 7,
@@ -104,8 +116,8 @@ int pselect(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds
     size_t ss_len;
   };
   pselect6_extra_data_t extra_data;
-  extra_data.ss_addr = reinterpret_cast<uintptr_t>(kernel_ss_ptr);
-  extra_data.ss_len = sizeof(kernel_ss);
+  extra_data.ss_addr = reinterpret_cast<uintptr_t>(ss);
+  extra_data.ss_len = sizeof(*ss);
 
   return __pselect6(fd_count, read_fds, write_fds, error_fds, mutable_ts_ptr, &extra_data);
 }

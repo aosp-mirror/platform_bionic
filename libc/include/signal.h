@@ -80,6 +80,13 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
 #define si_timerid si_tid /* glibc compatibility. */
 
+/* sigset_t is already large enough on LP64, but LP32's sigset_t is just `unsigned long`. */
+#if defined(__LP64__)
+typedef sigset_t sigset64_t;
+#else
+typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
+#endif
+
 #if defined(__LP64__)
 
 struct sigaction {
@@ -117,6 +124,7 @@ struct sigaction {
 
 #endif
 
+// TODO: sigaction contains a sigset_t that's too small on LP32.
 int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
 
 int siginterrupt(int __signal, int __flag);
@@ -124,18 +132,27 @@ int siginterrupt(int __signal, int __flag);
 #if __ANDROID_API__ >= __ANDROID_API_L__
 sighandler_t signal(int __signal, sighandler_t __handler) __INTRODUCED_IN(21);
 int sigaddset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigaddset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 int sigdelset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigdelset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 int sigemptyset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigemptyset64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigfillset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigfillset64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigismember(const sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigismember64(const sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 #else
 // Implemented as static inlines before 21.
 #endif
 
 int sigpending(sigset_t* __set);
+int sigpending64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigprocmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int sigprocmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
 int sigsuspend(const sigset_t* __mask);
+int sigsuspend64(const sigset64_t* __mask) __INTRODUCED_IN(28);
 int sigwait(const sigset_t* __set, int* __signal);
+int sigwait64(const sigset64_t* __set, int* __signal) __INTRODUCED_IN(28);
 
 int sighold(int __signal)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
@@ -162,10 +179,13 @@ void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
 
 int pthread_kill(pthread_t __pthread, int __signal);
 int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int pthread_sigmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
 
 int sigqueue(pid_t __pid, int __signal, const union sigval __value) __INTRODUCED_IN(23);
 int sigtimedwait(const sigset_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(23);
+int sigtimedwait64(const sigset64_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(28);
 int sigwaitinfo(const sigset_t* __set, siginfo_t* __info) __INTRODUCED_IN(23);
+int sigwaitinfo64(const sigset64_t* __set, siginfo_t* __info) __INTRODUCED_IN(28);
 
 __END_DECLS
 
