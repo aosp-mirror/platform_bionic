@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f681c8ce_d5523a95",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-31T02:47:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34a3500b_54f4f461",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 36
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b022cdfe_f5c7c86f",
         "filename": "tests/sys_signalfd_test.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c43079be_077c2634",
+        "filename": "tests/sys_signalfd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-31T02:47:23Z",
+      "side": 1,
+      "message": "no, just copy \u0026 paste from the previous test i\u0027d written. simplified.",
+      "parentUuid": "b022cdfe_f5c7c86f",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 5
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8346eab_03ef90fe",
         "filename": "tests/sys_signalfd_test.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2018-01-31T01:50:21Z",
       "side": 1,
       "message": "should this be SIG_SETMASK instead, so we\u0027re not affected by whatever signal mask we\u0027ve inherited from the shell or whatever?",
+      "range": {
+        "startLine": 64,
+        "startChar": 27,
+        "endLine": 64,
+        "endChar": 36
+      },
+      "revId": "a60e9b86b1562786751ff85342e6beaadc442810",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75288d41_1533acf3",
+        "filename": "tests/sys_signalfd_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-01-31T02:47:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8346eab_03ef90fe",
       "range": {
         "startLine": 64,
         "startChar": 27,
