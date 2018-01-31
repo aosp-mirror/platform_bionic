@@ -22,6 +22,30 @@
       "revId": "6878dc01174e479655e121df4fa545b1f1616fdf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7d0bb13_c913a8e8",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1385,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-01-31T09:20:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc9e645_3dc304d3",
+      "range": {
+        "startLine": 1385,
+        "startChar": 33,
+        "endLine": 1385,
+        "endChar": 38
+      },
+      "revId": "6878dc01174e479655e121df4fa545b1f1616fdf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
