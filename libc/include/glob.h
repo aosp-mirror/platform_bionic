@@ -90,8 +90,8 @@ typedef struct {
 
 __BEGIN_DECLS
 
-int glob(const char* __pattern, int __flags, int (*__error_callback)(const char* __failure_path, int __failure_errno), glob_t* __result_ptr) __INTRODUCED_IN_FUTURE;
-void globfree(glob_t* __result_ptr) __INTRODUCED_IN_FUTURE;
+int glob(const char* __pattern, int __flags, int (*__error_callback)(const char* __failure_path, int __failure_errno), glob_t* __result_ptr) __INTRODUCED_IN(28);
+void globfree(glob_t* __result_ptr) __INTRODUCED_IN(28);
 
 __END_DECLS
 
