@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82f99bca_d74ba0ad",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-01T23:36:26Z",
+      "side": 1,
+      "message": "\"Inlining\" (or \"If we inline\" or \"If the compiler inlines\")",
+      "range": {
+        "startLine": 174,
+        "startChar": 3,
+        "endLine": 174,
+        "endChar": 9
+      },
+      "revId": "da309d29e318c36a5a6d1206ef74c6ba6ffe0990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
