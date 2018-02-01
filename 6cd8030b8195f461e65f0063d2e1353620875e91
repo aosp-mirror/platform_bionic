@@ -22,6 +22,30 @@
       "revId": "6cd8030b8195f461e65f0063d2e1353620875e91",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c3b4170_5134ca92",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-01T01:49:06Z",
+      "side": 1,
+      "message": "doesn\u0027t seem to be true. it certainly worked like this.\n\nsince the arm32 jmpbuf has tons of free space, though, i\u0027ll skip four more bytes anyway...",
+      "parentUuid": "447bf96d_ed17ed9b",
+      "range": {
+        "startLine": 68,
+        "startChar": 9,
+        "endLine": 68,
+        "endChar": 50
+      },
+      "revId": "6cd8030b8195f461e65f0063d2e1353620875e91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
