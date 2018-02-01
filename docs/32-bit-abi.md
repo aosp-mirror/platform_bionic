@@ -59,6 +59,9 @@ to double check:
 
 In the 64-bit ABI, `off_t` is always 64-bit.
 
+For source compatibility, the names containing `64` are also available
+in the 64-bit ABI even though they're identical to the non-`64` names.
+
 
 ## `sigset_t` is too small for real-time signals
 
@@ -68,7 +71,14 @@ code. Android P (API level 28) adds `sigset64_t` and a corresponding function
 for every function that takes a `sigset_t` (so `sigprocmask64` takes a
 `sigset64_t` where `sigprocmask` takes a `sigset_t`).
 
+On 32-bit Android, `struct sigaction` is also too small because it contains
+a `sigset_t`. We also offer a `struct sigaction64` and `sigaction64` function
+to work around this.
+
 In the 64-bit ABI, `sigset_t` is the correct size for every architecture.
+
+For source compatibility, the names containing `64` are also available
+in the 64-bit ABI even though they're identical to the non-`64` names.
 
 
 ## `time_t` is 32-bit

@@ -179,13 +179,10 @@ RecordData::RecordData() {
 }
 
 bool RecordData::Initialize(const Config& config) {
-  struct sigaction dump_act;
-  memset(&dump_act, 0, sizeof(dump_act));
-
+  struct sigaction64 dump_act = {};
   dump_act.sa_sigaction = RecordDump;
   dump_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
-  sigemptyset(&dump_act.sa_mask);
-  if (sigaction(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
+  if (sigaction64(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
     error_log("Unable to set up record dump signal function: %s", strerror(errno));
     return false;
   }
