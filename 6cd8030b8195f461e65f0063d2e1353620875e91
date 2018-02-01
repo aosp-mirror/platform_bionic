@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "447bf96d_ed17ed9b",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-02-01T00:52:24Z",
+      "side": 1,
+      "message": "Is this not actually true? The ARM reference manual seems to imply that the address must be aligned: the pseudocode for vldmia on A8-923 has \u0027MemA\u0027, which is defined to be\u0027Memory access that must be aligned, at current privilege level\u0027 at AppxQ-2677",
+      "range": {
+        "startLine": 68,
+        "startChar": 9,
+        "endLine": 68,
+        "endChar": 50
+      },
+      "revId": "6cd8030b8195f461e65f0063d2e1353620875e91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
