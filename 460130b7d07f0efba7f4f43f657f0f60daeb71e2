@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dac09d54_ad260fa0",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-01T20:46:58Z",
+      "side": 1,
+      "message": "serban: is this actually true? it didn\u0027t seem to be (on current devices), and the documentation i found seemed at best to imply that it might be _slower_ if unaligned.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "460130b7d07f0efba7f4f43f657f0f60daeb71e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
