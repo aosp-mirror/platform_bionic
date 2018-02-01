@@ -356,9 +356,9 @@ TEST_F(pthread_DeathTest, pthread_bug_37410) {
 }
 
 static void* SignalHandlerFn(void* arg) {
-  sigset_t wait_set;
-  sigfillset(&wait_set);
-  return reinterpret_cast<void*>(sigwait(&wait_set, reinterpret_cast<int*>(arg)));
+  sigset64_t wait_set;
+  sigfillset64(&wait_set);
+  return reinterpret_cast<void*>(sigwait64(&wait_set, reinterpret_cast<int*>(arg)));
 }
 
 TEST(pthread, pthread_sigmask) {
@@ -400,6 +400,47 @@ TEST(pthread, pthread_sigmask) {
 
   // Restore the original signal mask.
   ASSERT_EQ(0, pthread_sigmask(SIG_SETMASK, &original_set, NULL));
+}
+
+TEST(pthread, pthread_sigmask64_SIGTRMIN) {
+  // Check that SIGRTMIN isn't blocked.
+  sigset64_t original_set;
+  sigemptyset64(&original_set);
+  ASSERT_EQ(0, pthread_sigmask64(SIG_BLOCK, NULL, &original_set));
+  ASSERT_FALSE(sigismember64(&original_set, SIGRTMIN));
+
+  // Block SIGRTMIN.
+  sigset64_t set;
+  sigemptyset64(&set);
+  sigaddset64(&set, SIGRTMIN);
+  ASSERT_EQ(0, pthread_sigmask64(SIG_BLOCK, &set, NULL));
+
+  // Check that SIGRTMIN is blocked.
+  sigset64_t final_set;
+  sigemptyset64(&final_set);
+  ASSERT_EQ(0, pthread_sigmask64(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember64(&final_set, SIGRTMIN));
+  // ...and that sigprocmask64 agrees with pthread_sigmask64.
+  sigemptyset64(&final_set);
+  ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, NULL, &final_set));
+  ASSERT_TRUE(sigismember64(&final_set, SIGRTMIN));
+
+  // Spawn a thread that calls sigwait64 and tells us what it received.
+  pthread_t signal_thread;
+  int received_signal = -1;
+  ASSERT_EQ(0, pthread_create(&signal_thread, NULL, SignalHandlerFn, &received_signal));
+
+  // Send that thread SIGRTMIN.
+  pthread_kill(signal_thread, SIGRTMIN);
+
+  // See what it got.
+  void* join_result;
+  ASSERT_EQ(0, pthread_join(signal_thread, &join_result));
+  ASSERT_EQ(SIGRTMIN, received_signal);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(join_result));
+
+  // Restore the original signal mask.
+  ASSERT_EQ(0, pthread_sigmask64(SIG_SETMASK, &original_set, NULL));
 }
 
 static void test_pthread_setname_np__pthread_getname_np(pthread_t t) {
@@ -1378,18 +1419,23 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   EXPECT_EQ(stack_size, stack_size2);
 
 #if defined(__BIONIC__)
-  // What does /proc/self/maps' [stack] line say?
+  // Find stack in /proc/self/maps using a pointer to the stack.
+  //
+  // We do not use "[stack]" label because in native-bridge environment it is not
+  // guaranteed to point to the right stack. A native bridge implementation may
+  // keep separate stack for the guest code.
   void* maps_stack_hi = NULL;
   std::vector<map_record> maps;
   ASSERT_TRUE(Maps::parse_maps(&maps));
+  uintptr_t stack_address = reinterpret_cast<uintptr_t>(&maps_stack_hi);
   for (const auto& map : maps) {
-    if (map.pathname == "[stack]") {
+    if (map.addr_start <= stack_address && map.addr_end > stack_address){
       maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
       break;
     }
   }
 
-  // The high address of the /proc/self/maps [stack] region should equal stack_base + stack_size.
+  // The high address of the /proc/self/maps stack region should equal stack_base + stack_size.
   // Remember that the stack grows down (and is mapped in on demand), so the low address of the
   // region isn't very interesting.
   EXPECT_EQ(maps_stack_hi, reinterpret_cast<uint8_t*>(stack_base) + stack_size);

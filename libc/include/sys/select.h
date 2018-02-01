@@ -75,6 +75,7 @@ int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
 
 int select(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, struct timeval* __timeout);
 int pselect(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset_t* __mask);
+int pselect64(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset64_t* __mask);
 
 __END_DECLS
 

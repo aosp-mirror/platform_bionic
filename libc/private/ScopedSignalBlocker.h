@@ -20,14 +20,13 @@
 #include <signal.h>
 
 #include "bionic_macros.h"
-#include "kernel_sigset_t.h"
 
 class ScopedSignalBlocker {
  public:
   explicit ScopedSignalBlocker() {
-    kernel_sigset_t set;
-    set.fill();
-    __rt_sigprocmask(SIG_SETMASK, &set, &old_set_, sizeof(set));
+    sigset64_t set;
+    sigfillset64(&set);
+    sigprocmask64(SIG_SETMASK, &set, &old_set_);
   }
 
   ~ScopedSignalBlocker() {
@@ -35,11 +34,11 @@ class ScopedSignalBlocker {
   }
 
   void reset() {
-    __rt_sigprocmask(SIG_SETMASK, &old_set_, nullptr, sizeof(old_set_));
+    sigprocmask64(SIG_SETMASK, &old_set_, nullptr);
   }
 
  private:
-  kernel_sigset_t old_set_;
+  sigset64_t old_set_;
 
   DISALLOW_COPY_AND_ASSIGN(ScopedSignalBlocker);
 };

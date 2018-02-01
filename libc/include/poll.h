@@ -40,6 +40,7 @@ typedef unsigned int nfds_t;
 
 int poll(struct pollfd* __fds, nfds_t __count, int __timeout_ms) __overloadable __RENAME_CLANG(poll);
 int ppoll(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset_t* __mask) __overloadable __RENAME_CLANG(ppoll) __INTRODUCED_IN(21);
+int ppoll64(struct pollfd* __fds, nfds_t __count, const struct timespec* __timeout, const sigset64_t* __mask) __INTRODUCED_IN(28);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/poll.h>
