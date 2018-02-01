@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b9f3bb3a_21805e43",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-01T22:45:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d1335cc3_abc0a2d3",
+      "range": {
+        "startLine": 98,
+        "startChar": 14,
+        "endLine": 98,
+        "endChar": 16
+      },
+      "revId": "f782f2a48e9bbf3bae540ef336323ece5cadc6e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5392274e_4c4b9072",
         "filename": "libc/bionic/sigaction.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-02-01T22:35:05Z",
       "side": 1,
       "message": "indentation here is weird. is this gerrit misrendering?",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 65
+      },
+      "revId": "f782f2a48e9bbf3bae540ef336323ece5cadc6e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b054f574_9a92f77b",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-01T22:45:26Z",
+      "side": 1,
+      "message": "no, that\u0027s a genuine \"search-and-replace\"-o.\n\ni\u0027ve dropped the \"_action\" suffix in this file to reduce the amount of line wrapping.",
+      "parentUuid": "5392274e_4c4b9072",
       "range": {
         "startLine": 121,
         "startChar": 0,
