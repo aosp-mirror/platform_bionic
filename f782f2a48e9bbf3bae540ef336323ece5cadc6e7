@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1335cc3_abc0a2d3",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-02-01T22:35:05Z",
+      "side": 1,
+      "message": "nit: extra space here",
+      "range": {
+        "startLine": 98,
+        "startChar": 14,
+        "endLine": 98,
+        "endChar": 16
+      },
+      "revId": "f782f2a48e9bbf3bae540ef336323ece5cadc6e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5392274e_4c4b9072",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-02-01T22:35:05Z",
+      "side": 1,
+      "message": "indentation here is weird. is this gerrit misrendering?",
+      "range": {
+        "startLine": 121,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 65
+      },
+      "revId": "f782f2a48e9bbf3bae540ef336323ece5cadc6e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
