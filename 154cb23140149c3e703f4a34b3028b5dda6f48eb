@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ccb403d_f05de852",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-02-01T04:33:53Z",
+      "side": 1,
+      "message": "Is there a reason to make this a class instead of a namespace with some static data? So long aas AllocId is only called once, it should ideally generate the same code, since everything should be inlined. But otherwise you\u0027re passing around a \"this\" argument, which isn\u0027t very informative. I can\u0027t imagine there would ever be more than one.",
+      "range": {
+        "startLine": 255,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 24
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "520c0888_2b5a74fe",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-02-01T04:33:53Z",
+      "side": 1,
+      "message": "Initialize this statically, so you can check it first, and avoid the nodes_ test on the fast path.",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 22
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42de92f8_dbd4196f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-02-01T04:33:53Z",
+      "side": 1,
+      "message": "Call IdToNode instead.",
+      "range": {
+        "startLine": 312,
+        "startChar": 11,
+        "endLine": 312,
+        "endChar": 40
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
