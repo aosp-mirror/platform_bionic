@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "947196cd_abe78a36",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-02-01T19:03:19Z",
+      "side": 1,
+      "message": "Done. Using namespace to group static data is better here, considering we only need one instance. I didn\u0027t think of it because using class to group data is more familiar to me.",
+      "parentUuid": "4ccb403d_f05de852",
+      "range": {
+        "startLine": 255,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 24
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "520c0888_2b5a74fe",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "05466df6_d0e1c09f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-02-01T19:03:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "520c0888_2b5a74fe",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 22
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "42de92f8_dbd4196f",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47b6b021_422885a5",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-02-01T19:03:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42de92f8_dbd4196f",
+      "range": {
+        "startLine": 312,
+        "startChar": 11,
+        "endLine": 312,
+        "endChar": 40
+      },
+      "revId": "154cb23140149c3e703f4a34b3028b5dda6f48eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
