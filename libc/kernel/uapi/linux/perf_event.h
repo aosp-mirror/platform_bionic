@@ -329,6 +329,7 @@ enum perf_callchain_context {
 #define PERF_AUX_FLAG_TRUNCATED 0x01
 #define PERF_AUX_FLAG_OVERWRITE 0x02
 #define PERF_AUX_FLAG_PARTIAL 0x04
+#define PERF_AUX_FLAG_COLLISION 0x08
 #define PERF_FLAG_FD_NO_GROUP (1UL << 0)
 #define PERF_FLAG_FD_OUTPUT (1UL << 1)
 #define PERF_FLAG_PID_CGROUP (1UL << 2)

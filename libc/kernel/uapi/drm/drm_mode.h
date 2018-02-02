@@ -427,6 +427,26 @@ struct drm_mode_create_blob {
 struct drm_mode_destroy_blob {
   __u32 blob_id;
 };
+struct drm_mode_create_lease {
+  __u64 object_ids;
+  __u32 object_count;
+  __u32 flags;
+  __u32 lessee_id;
+  __u32 fd;
+};
+struct drm_mode_list_lessees {
+  __u32 count_lessees;
+  __u32 pad;
+  __u64 lessees_ptr;
+};
+struct drm_mode_get_lease {
+  __u32 count_objects;
+  __u32 pad;
+  __u64 objects_ptr;
+};
+struct drm_mode_revoke_lease {
+  __u32 lessee_id;
+};
 #ifdef __cplusplus
 #endif
 #endif

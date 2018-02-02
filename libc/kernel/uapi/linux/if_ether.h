@@ -19,6 +19,7 @@
 #ifndef _UAPI_LINUX_IF_ETHER_H
 #define _UAPI_LINUX_IF_ETHER_H
 #include <linux/types.h>
+#include <linux/libc-compat.h>
 #define ETH_ALEN 6
 #define ETH_HLEN 14
 #define ETH_ZLEN 60
@@ -116,9 +117,11 @@
 #define ETH_P_CAIF 0x00F7
 #define ETH_P_XDSA 0x00F8
 #define ETH_P_MAP 0x00F9
+#if __UAPI_DEF_ETHHDR
 struct ethhdr {
   unsigned char h_dest[ETH_ALEN];
   unsigned char h_source[ETH_ALEN];
   __be16 h_proto;
 } __attribute__((packed));
+#endif
 #endif

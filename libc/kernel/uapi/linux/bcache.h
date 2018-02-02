@@ -46,7 +46,7 @@ struct bkey {
 #define START_KEY(k) KEY(KEY_INODE(k), KEY_START(k), 0)
 #define PTR_DEV_BITS 12
 #define PTR_CHECK_DEV ((1 << PTR_DEV_BITS) - 1)
-#define PTR(gen,offset,dev) ((((__u64) dev) << 51) | ((__u64) offset) << 8 | gen)
+#define MAKE_PTR(gen,offset,dev) ((((__u64) dev) << 51) | ((__u64) offset) << 8 | gen)
 #define bkey_copy(_dest,_src) memcpy(_dest, _src, bkey_bytes(_src))
 #define BKEY_PAD 8
 #define BKEY_PADDED(key) union { struct bkey key; __u64 key ##_pad[BKEY_PAD]; }
