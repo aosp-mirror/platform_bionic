@@ -412,6 +412,20 @@ struct drm_syncobj_array {
   __u32 count_handles;
   __u32 pad;
 };
+struct drm_crtc_get_sequence {
+  __u32 crtc_id;
+  __u32 active;
+  __u64 sequence;
+  __s64 sequence_ns;
+};
+#define DRM_CRTC_SEQUENCE_RELATIVE 0x00000001
+#define DRM_CRTC_SEQUENCE_NEXT_ON_MISS 0x00000002
+struct drm_crtc_queue_sequence {
+  __u32 crtc_id;
+  __u32 flags;
+  __u64 sequence;
+  __u64 user_data;
+};
 #ifdef __cplusplus
 #endif
 #include "drm_mode.h"
@@ -478,6 +492,8 @@ struct drm_syncobj_array {
 #define DRM_IOCTL_SG_ALLOC DRM_IOWR(0x38, struct drm_scatter_gather)
 #define DRM_IOCTL_SG_FREE DRM_IOW(0x39, struct drm_scatter_gather)
 #define DRM_IOCTL_WAIT_VBLANK DRM_IOWR(0x3a, union drm_wait_vblank)
+#define DRM_IOCTL_CRTC_GET_SEQUENCE DRM_IOWR(0x3b, struct drm_crtc_get_sequence)
+#define DRM_IOCTL_CRTC_QUEUE_SEQUENCE DRM_IOWR(0x3c, struct drm_crtc_queue_sequence)
 #define DRM_IOCTL_UPDATE_DRAW DRM_IOW(0x3f, struct drm_update_draw)
 #define DRM_IOCTL_MODE_GETRESOURCES DRM_IOWR(0xA0, struct drm_mode_card_res)
 #define DRM_IOCTL_MODE_GETCRTC DRM_IOWR(0xA1, struct drm_mode_crtc)
@@ -517,6 +533,10 @@ struct drm_syncobj_array {
 #define DRM_IOCTL_SYNCOBJ_WAIT DRM_IOWR(0xC3, struct drm_syncobj_wait)
 #define DRM_IOCTL_SYNCOBJ_RESET DRM_IOWR(0xC4, struct drm_syncobj_array)
 #define DRM_IOCTL_SYNCOBJ_SIGNAL DRM_IOWR(0xC5, struct drm_syncobj_array)
+#define DRM_IOCTL_MODE_CREATE_LEASE DRM_IOWR(0xC6, struct drm_mode_create_lease)
+#define DRM_IOCTL_MODE_LIST_LESSEES DRM_IOWR(0xC7, struct drm_mode_list_lessees)
+#define DRM_IOCTL_MODE_GET_LEASE DRM_IOWR(0xC8, struct drm_mode_get_lease)
+#define DRM_IOCTL_MODE_REVOKE_LEASE DRM_IOWR(0xC9, struct drm_mode_revoke_lease)
 #define DRM_COMMAND_BASE 0x40
 #define DRM_COMMAND_END 0xA0
 struct drm_event {
@@ -525,6 +545,7 @@ struct drm_event {
 };
 #define DRM_EVENT_VBLANK 0x01
 #define DRM_EVENT_FLIP_COMPLETE 0x02
+#define DRM_EVENT_CRTC_SEQUENCE 0x03
 struct drm_event_vblank {
   struct drm_event base;
   __u64 user_data;
@@ -532,6 +553,12 @@ struct drm_event_vblank {
   __u32 tv_usec;
   __u32 sequence;
   __u32 crtc_id;
+};
+struct drm_event_crtc_sequence {
+  struct drm_event base;
+  __u64 user_data;
+  __s64 time_ns;
+  __u64 sequence;
 };
 typedef struct drm_clip_rect drm_clip_rect_t;
 typedef struct drm_drawable_info drm_drawable_info_t;

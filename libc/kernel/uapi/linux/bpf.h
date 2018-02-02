@@ -82,6 +82,7 @@ enum bpf_cmd {
   BPF_PROG_GET_FD_BY_ID,
   BPF_MAP_GET_FD_BY_ID,
   BPF_OBJ_GET_INFO_BY_FD,
+  BPF_PROG_QUERY,
 };
 enum bpf_map_type {
   BPF_MAP_TYPE_UNSPEC,
@@ -100,6 +101,7 @@ enum bpf_map_type {
   BPF_MAP_TYPE_HASH_OF_MAPS,
   BPF_MAP_TYPE_DEVMAP,
   BPF_MAP_TYPE_SOCKMAP,
+  BPF_MAP_TYPE_CPUMAP,
 };
 enum bpf_prog_type {
   BPF_PROG_TYPE_UNSPEC,
@@ -117,6 +119,7 @@ enum bpf_prog_type {
   BPF_PROG_TYPE_LWT_XMIT,
   BPF_PROG_TYPE_SOCK_OPS,
   BPF_PROG_TYPE_SK_SKB,
+  BPF_PROG_TYPE_CGROUP_DEVICE,
 };
 enum bpf_attach_type {
   BPF_CGROUP_INET_INGRESS,
@@ -125,10 +128,12 @@ enum bpf_attach_type {
   BPF_CGROUP_SOCK_OPS,
   BPF_SK_SKB_STREAM_PARSER,
   BPF_SK_SKB_STREAM_VERDICT,
+  BPF_CGROUP_DEVICE,
   __MAX_BPF_ATTACH_TYPE
 };
 #define MAX_BPF_ATTACH_TYPE __MAX_BPF_ATTACH_TYPE
 #define BPF_F_ALLOW_OVERRIDE (1U << 0)
+#define BPF_F_ALLOW_MULTI (1U << 1)
 #define BPF_F_STRICT_ALIGNMENT (1U << 0)
 #define BPF_PSEUDO_MAP_FD 1
 #define BPF_ANY 0
@@ -137,6 +142,10 @@ enum bpf_attach_type {
 #define BPF_F_NO_PREALLOC (1U << 0)
 #define BPF_F_NO_COMMON_LRU (1U << 1)
 #define BPF_F_NUMA_NODE (1U << 2)
+#define BPF_F_QUERY_EFFECTIVE (1U << 0)
+#define BPF_OBJ_NAME_LEN 16U
+#define BPF_F_RDONLY (1U << 3)
+#define BPF_F_WRONLY (1U << 4)
 union bpf_attr {
   struct {
     __u32 map_type;
@@ -146,6 +155,7 @@ union bpf_attr {
     __u32 map_flags;
     __u32 inner_map_fd;
     __u32 numa_node;
+    char map_name[BPF_OBJ_NAME_LEN];
   };
   struct {
     __u32 map_fd;
@@ -166,10 +176,13 @@ union bpf_attr {
     __aligned_u64 log_buf;
     __u32 kern_version;
     __u32 prog_flags;
+    char prog_name[BPF_OBJ_NAME_LEN];
+    __u32 prog_ifindex;
   };
   struct {
     __aligned_u64 pathname;
     __u32 bpf_fd;
+    __u32 file_flags;
   };
   struct {
     __u32 target_fd;
@@ -194,14 +207,23 @@ union bpf_attr {
       __u32 map_id;
     };
     __u32 next_id;
+    __u32 open_flags;
   };
   struct {
     __u32 bpf_fd;
     __u32 info_len;
     __aligned_u64 info;
   } info;
+  struct {
+    __u32 target_fd;
+    __u32 attach_type;
+    __u32 query_flags;
+    __u32 attach_flags;
+    __aligned_u64 prog_ids;
+    __u32 prog_cnt;
+  } query;
 } __attribute__((aligned(8)));
-#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head), FN(probe_read_str), FN(get_socket_cookie), FN(get_socket_uid), FN(set_hash), FN(setsockopt), FN(skb_adjust_room), FN(redirect_map), FN(sk_redirect_map), FN(sock_map_update),
+#define __BPF_FUNC_MAPPER(FN) FN(unspec), FN(map_lookup_elem), FN(map_update_elem), FN(map_delete_elem), FN(probe_read), FN(ktime_get_ns), FN(trace_printk), FN(get_prandom_u32), FN(get_smp_processor_id), FN(skb_store_bytes), FN(l3_csum_replace), FN(l4_csum_replace), FN(tail_call), FN(clone_redirect), FN(get_current_pid_tgid), FN(get_current_uid_gid), FN(get_current_comm), FN(get_cgroup_classid), FN(skb_vlan_push), FN(skb_vlan_pop), FN(skb_get_tunnel_key), FN(skb_set_tunnel_key), FN(perf_event_read), FN(redirect), FN(get_route_realm), FN(perf_event_output), FN(skb_load_bytes), FN(get_stackid), FN(csum_diff), FN(skb_get_tunnel_opt), FN(skb_set_tunnel_opt), FN(skb_change_proto), FN(skb_change_type), FN(skb_under_cgroup), FN(get_hash_recalc), FN(get_current_task), FN(probe_write_user), FN(current_task_under_cgroup), FN(skb_change_tail), FN(skb_pull_data), FN(csum_update), FN(set_hash_invalid), FN(get_numa_node_id), FN(skb_change_head), FN(xdp_adjust_head), FN(probe_read_str), FN(get_socket_cookie), FN(get_socket_uid), FN(set_hash), FN(setsockopt), FN(skb_adjust_room), FN(redirect_map), FN(sk_redirect_map), FN(sock_map_update), FN(xdp_adjust_meta), FN(perf_event_read_value), FN(perf_prog_read_value), FN(getsockopt),
 #define __BPF_ENUM_FN(x) BPF_FUNC_ ##x
 enum bpf_func_id {
   __BPF_FUNC_MAPPER(__BPF_ENUM_FN) __BPF_FUNC_MAX_ID,
@@ -253,6 +275,7 @@ struct __sk_buff {
   __u32 local_ip6[4];
   __u32 remote_port;
   __u32 local_port;
+  __u32 data_meta;
 };
 struct bpf_tunnel_key {
   __u32 tunnel_id;
@@ -289,6 +312,7 @@ enum xdp_action {
 struct xdp_md {
   __u32 data;
   __u32 data_end;
+  __u32 data_meta;
 };
 enum sk_action {
   SK_DROP = 0,
@@ -303,6 +327,11 @@ struct bpf_prog_info {
   __u32 xlated_prog_len;
   __aligned_u64 jited_prog_insns;
   __aligned_u64 xlated_prog_insns;
+  __u64 load_time;
+  __u32 created_by_uid;
+  __u32 nr_map_ids;
+  __aligned_u64 map_ids;
+  char name[BPF_OBJ_NAME_LEN];
 } __attribute__((aligned(8)));
 struct bpf_map_info {
   __u32 type;
@@ -311,6 +340,7 @@ struct bpf_map_info {
   __u32 value_size;
   __u32 max_entries;
   __u32 map_flags;
+  char name[BPF_OBJ_NAME_LEN];
 } __attribute__((aligned(8)));
 struct bpf_sock_ops {
   __u32 op;
@@ -334,7 +364,23 @@ enum {
   BPF_SOCK_OPS_ACTIVE_ESTABLISHED_CB,
   BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB,
   BPF_SOCK_OPS_NEEDS_ECN,
+  BPF_SOCK_OPS_BASE_RTT,
 };
 #define TCP_BPF_IW 1001
 #define TCP_BPF_SNDCWND_CLAMP 1002
+struct bpf_perf_event_value {
+  __u64 counter;
+  __u64 enabled;
+  __u64 running;
+};
+#define BPF_DEVCG_ACC_MKNOD (1ULL << 0)
+#define BPF_DEVCG_ACC_READ (1ULL << 1)
+#define BPF_DEVCG_ACC_WRITE (1ULL << 2)
+#define BPF_DEVCG_DEV_BLOCK (1ULL << 0)
+#define BPF_DEVCG_DEV_CHAR (1ULL << 1)
+struct bpf_cgroup_dev_ctx {
+  __u32 access_type;
+  __u32 major;
+  __u32 minor;
+};
 #endif

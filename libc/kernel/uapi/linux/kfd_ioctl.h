@@ -125,7 +125,7 @@ struct kfd_ioctl_dbg_wave_control_args {
 #define KFD_IOC_WAIT_RESULT_COMPLETE 0
 #define KFD_IOC_WAIT_RESULT_TIMEOUT 1
 #define KFD_IOC_WAIT_RESULT_FAIL 2
-#define KFD_SIGNAL_EVENT_LIMIT 256
+#define KFD_SIGNAL_EVENT_LIMIT 4096
 struct kfd_ioctl_create_event_args {
   __u64 event_page_offset;
   __u32 event_trigger_data;
@@ -175,19 +175,19 @@ struct kfd_ioctl_wait_events_args {
   __u32 wait_result;
 };
 struct kfd_ioctl_set_scratch_backing_va_args {
-  uint64_t va_addr;
-  uint32_t gpu_id;
-  uint32_t pad;
+  __u64 va_addr;
+  __u32 gpu_id;
+  __u32 pad;
 };
 struct kfd_ioctl_get_tile_config_args {
-  uint64_t tile_config_ptr;
-  uint64_t macro_tile_config_ptr;
-  uint32_t num_tile_configs;
-  uint32_t num_macro_tile_configs;
-  uint32_t gpu_id;
-  uint32_t gb_addr_config;
-  uint32_t num_banks;
-  uint32_t num_ranks;
+  __u64 tile_config_ptr;
+  __u64 macro_tile_config_ptr;
+  __u32 num_tile_configs;
+  __u32 num_macro_tile_configs;
+  __u32 gpu_id;
+  __u32 gb_addr_config;
+  __u32 num_banks;
+  __u32 num_ranks;
 };
 #define AMDKFD_IOCTL_BASE 'K'
 #define AMDKFD_IO(nr) _IO(AMDKFD_IOCTL_BASE, nr)
