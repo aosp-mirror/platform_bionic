@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0b678f0_f9292ada",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-02T18:39:03Z",
+      "side": 1,
+      "message": "what projects are using this? glibc doesn\u0027t expose these either. (and the struct is already in the uapi headers.)",
+      "revId": "f51aec7b5cb32c1826836582068a7b8827fbed3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
