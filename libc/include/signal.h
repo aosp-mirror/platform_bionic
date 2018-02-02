@@ -40,7 +40,8 @@
 /* For 64-bit (and mips), the kernel's struct sigaction doesn't match the
  * POSIX one, so we need to expose our own and translate behind the scenes.
  * For 32-bit, we're stuck with the definitions we already shipped,
- * even though they contain a sigset_t that's too small. */
+ * even though they contain a sigset_t that's too small. See sigaction64.
+ */
 #define sigaction __kernel_sigaction
 #include <linux/signal.h>
 #undef sigaction
@@ -89,43 +90,65 @@ typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
 
 #if defined(__LP64__)
 
+#define __SIGACTION_BODY \
+  int sa_flags; \
+  union { \
+    sighandler_t sa_handler; \
+    void (*sa_sigaction)(int, struct siginfo*, void*); \
+  }; \
+  sigset_t sa_mask; \
+  void (*sa_restorer)(void); \
+
+struct sigaction { __SIGACTION_BODY };
+struct sigaction64 { __SIGACTION_BODY };
+
+#undef __SIGACTION_BODY
+
+#elif defined(__mips__)
+
+#define __SIGACTION_BODY \
+  int sa_flags; \
+  union { \
+    sighandler_t sa_handler; \
+    void (*sa_sigaction)(int, struct siginfo*, void*); \
+  }; \
+  sigset_t sa_mask; \
+
+struct sigaction { __SIGACTION_BODY };
+struct sigaction64 { __SIGACTION_BODY };
+
+#undef __SIGACTION_BODY
+
+#else
+
+#undef sa_handler
+#undef sa_sigaction
+
 struct sigaction {
-  int sa_flags;
   union {
     sighandler_t sa_handler;
     void (*sa_sigaction)(int, struct siginfo*, void*);
   };
   sigset_t sa_mask;
+  int sa_flags;
   void (*sa_restorer)(void);
 };
 
-#elif defined(__mips__)
-
-struct sigaction {
-  int sa_flags;
+/* This matches the kernel's internal structure. */
+struct sigaction64 {
   union {
     sighandler_t sa_handler;
-    void (*sa_sigaction) (int, struct siginfo*, void*);
+    void (*sa_sigaction)(int, struct siginfo*, void*);
   };
-  sigset_t sa_mask;
-};
-
-#else
-
-struct sigaction {
-  union {
-    sighandler_t _sa_handler;
-    void (*_sa_sigaction)(int, struct siginfo*, void*);
-  } _u;
-  sigset_t sa_mask;
   int sa_flags;
   void (*sa_restorer)(void);
+  sigset64_t sa_mask;
 };
 
 #endif
 
-// TODO: sigaction contains a sigset_t that's too small on LP32.
 int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
+int sigaction64(int __signal, const struct sigaction64* __new_action, struct sigaction64* __old_action) __INTRODUCED_IN(28);
 
 int siginterrupt(int __signal, int __flag);
 
@@ -191,4 +214,4 @@ __END_DECLS
 
 #include <android/legacy_signal_inlines.h>
 
-#endif /* _SIGNAL_H_ */
+#endif

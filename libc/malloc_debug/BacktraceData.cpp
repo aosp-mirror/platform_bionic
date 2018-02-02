@@ -59,13 +59,10 @@ BacktraceData::BacktraceData(DebugData* debug_data, const Config& config, size_t
 bool BacktraceData::Initialize(const Config& config) {
   enabled_ = config.backtrace_enabled();
   if (config.backtrace_enable_on_signal()) {
-    struct sigaction enable_act;
-    memset(&enable_act, 0, sizeof(enable_act));
-
+    struct sigaction64 enable_act = {};
     enable_act.sa_sigaction = ToggleBacktraceEnable;
     enable_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
-    sigemptyset(&enable_act.sa_mask);
-    if (sigaction(config.backtrace_signal(), &enable_act, nullptr) != 0) {
+    if (sigaction64(config.backtrace_signal(), &enable_act, nullptr) != 0) {
       error_log("Unable to set up backtrace signal enable function: %s", strerror(errno));
       return false;
     }
@@ -73,13 +70,10 @@ bool BacktraceData::Initialize(const Config& config) {
              config.backtrace_signal(), getpid());
   }
 
-  struct sigaction act;
-  memset(&act, 0, sizeof(act));
-
+  struct sigaction64 act = {};
   act.sa_sigaction = EnableDump;
   act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
-  sigemptyset(&act.sa_mask);
-  if (sigaction(config.backtrace_dump_signal(), &act, nullptr) != 0) {
+  if (sigaction64(config.backtrace_dump_signal(), &act, nullptr) != 0) {
     error_log("Unable to set up backtrace dump signal function: %s", strerror(errno));
     return false;
   }
