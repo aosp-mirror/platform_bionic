@@ -67,13 +67,10 @@ void abort() {
   sigprocmask64(SIG_SETMASK, &mask, nullptr);
   inline_tgkill(pid, tid, SIGABRT);
 
-  // If SIGABRT ignored, or caught and the handler returns,
+  // If SIGABRT is ignored or it's caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
-  struct sigaction sa;
-  sa.sa_handler = SIG_DFL;
-  sa.sa_flags   = SA_RESTART;
-  sigemptyset(&sa.sa_mask);
-  sigaction(SIGABRT, &sa, &sa);
+  struct sigaction64 sa = { .sa_handler = SIG_DFL, .sa_flags = SA_RESTART };
+  sigaction64(SIGABRT, &sa, nullptr);
 
   sigprocmask64(SIG_SETMASK, &mask, nullptr);
   inline_tgkill(pid, tid, SIGABRT);

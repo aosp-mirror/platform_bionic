@@ -98,17 +98,17 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   // POSIX: "Signals set to be caught by the calling process shall be
   // set to the default action in the child process."
   bool use_sigdefault = ((flags & POSIX_SPAWN_SETSIGDEF) != 0);
-  const struct sigaction default_sa = { .sa_handler = SIG_DFL };
+  const struct sigaction64 default_sa = { .sa_handler = SIG_DFL };
   for (int s = 1; s < _NSIG; ++s) {
     bool reset = false;
     if (use_sigdefault && sigismember64(&(*attr)->sigdefault.sigset64, s)) {
       reset = true;
     } else {
-      struct sigaction current;
-      if (sigaction(s, nullptr, &current) == -1) _exit(127);
+      struct sigaction64 current;
+      if (sigaction64(s, nullptr, &current) == -1) _exit(127);
       reset = (current.sa_handler != SIG_IGN && current.sa_handler != SIG_DFL);
     }
-    if (reset && sigaction(s, &default_sa, nullptr) == -1) _exit(127);
+    if (reset && sigaction64(s, &default_sa, nullptr) == -1) _exit(127);
   }
 
   if ((flags & POSIX_SPAWN_SETPGROUP) != 0 && setpgid(0, (*attr)->pgroup) == -1) _exit(127);

@@ -147,22 +147,19 @@ int sighold(int sig) {
 }
 
 int sigignore(int sig) {
-  struct sigaction sa;
-  memset(&sa, 0, sizeof(sa));
-  if (sigemptyset(&sa.sa_mask) == -1) return -1;
-  sa.sa_handler = SIG_IGN;
-  return sigaction(sig, &sa, nullptr);
+  struct sigaction64 sa = { .sa_handler = SIG_IGN };
+  return sigaction64(sig, &sa, nullptr);
 }
 
 int siginterrupt(int sig, int flag) {
-  struct sigaction act;
-  sigaction(sig, nullptr, &act);
+  struct sigaction64 act;
+  sigaction64(sig, nullptr, &act);
   if (flag) {
     act.sa_flags &= ~SA_RESTART;
   } else {
     act.sa_flags |= SA_RESTART;
   }
-  return sigaction(sig, &act, nullptr);
+  return sigaction64(sig, &act, nullptr);
 }
 
 template <typename SigSetT>
@@ -185,16 +182,8 @@ int sigismember64(const sigset64_t* set, int sig) {
 }
 
 __LIBC_HIDDEN__ sighandler_t _signal(int sig, sighandler_t handler, int flags) {
-  struct sigaction sa;
-  sigemptyset(&sa.sa_mask);
-  sa.sa_handler = handler;
-  sa.sa_flags = flags;
-
-  if (sigaction(sig, &sa, &sa) == -1) {
-    return SIG_ERR;
-  }
-
-  return sa.sa_handler;
+  struct sigaction64 sa = { .sa_handler = handler, .sa_flags = flags };
+  return (sigaction64(sig, &sa, &sa) == -1) ? SIG_ERR : sa.sa_handler;
 }
 
 sighandler_t signal(int sig, sighandler_t handler) {
@@ -262,15 +251,11 @@ int sigrelse(int sig) {
 }
 
 sighandler_t sigset(int sig, sighandler_t disp) {
-  struct sigaction new_sa;
-  if (disp != SIG_HOLD) {
-    memset(&new_sa, 0, sizeof(new_sa));
-    new_sa.sa_handler = disp;
-    sigemptyset(&new_sa.sa_mask);
-  }
+  struct sigaction64 new_sa;
+  if (disp != SIG_HOLD) new_sa = { .sa_handler = disp };
 
-  struct sigaction old_sa;
-  if (sigaction(sig, (disp == SIG_HOLD) ? nullptr : &new_sa, &old_sa) == -1) {
+  struct sigaction64 old_sa;
+  if (sigaction64(sig, (disp == SIG_HOLD) ? nullptr : &new_sa, &old_sa) == -1) {
     return SIG_ERR;
   }
 

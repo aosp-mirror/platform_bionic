@@ -26,6 +26,7 @@
 #define posix_spawnattr_setsigdefault64 posix_spawnattr_setsigdefault
 #define posix_spawnattr_setsigmask64 posix_spawnattr_setsigmask
 #define pthread_sigmask64 pthread_sigmask
+#define sigaction64 sigaction
 #define sigaddset64 sigaddset
 #define sigdelset64 sigdelset
 #define sigemptyset64 sigemptyset
@@ -47,7 +48,7 @@ class ScopedSignalHandler {
     memset(&action_, 0, sizeof(action_));
     action_.sa_flags = sa_flags;
     action_.sa_handler = handler;
-    sigaction(signal_number_, &action_, &old_action_);
+    sigaction64(signal_number_, &action_, &old_action_);
   }
 
   ScopedSignalHandler(int signal_number, void (*action)(int, siginfo_t*, void*),
@@ -56,20 +57,20 @@ class ScopedSignalHandler {
     memset(&action_, 0, sizeof(action_));
     action_.sa_flags = sa_flags;
     action_.sa_sigaction = action;
-    sigaction(signal_number_, &action_, &old_action_);
+    sigaction64(signal_number_, &action_, &old_action_);
   }
 
   ScopedSignalHandler(int signal_number) : signal_number_(signal_number) {
-    sigaction(signal_number, nullptr, &old_action_);
+    sigaction64(signal_number, nullptr, &old_action_);
   }
 
   ~ScopedSignalHandler() {
-    sigaction(signal_number_, &old_action_, NULL);
+    sigaction64(signal_number_, &old_action_, NULL);
   }
 
  private:
-  struct sigaction action_;
-  struct sigaction old_action_;
+  struct sigaction64 action_;
+  struct sigaction64 old_action_;
   const int signal_number_;
 };
 

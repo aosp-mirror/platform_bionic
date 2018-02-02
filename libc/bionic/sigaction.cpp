@@ -27,6 +27,7 @@
  */
 
 #include <signal.h>
+#include <string.h>
 
 extern "C" void __restore_rt(void);
 extern "C" void __restore(void);
@@ -75,28 +76,49 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
   return result;
 }
 
+__strong_alias(sigaction64, sigaction);
+
 #else
 
+extern "C" int __rt_sigaction(int, const struct sigaction64*, struct sigaction64*, size_t);
 extern "C" int __sigaction(int, const struct sigaction*, struct sigaction*);
 
-int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
+int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* bionic_old) {
   // The 32-bit ABI is broken. struct sigaction includes a too-small sigset_t,
-  // so we have to use sigaction(2) rather than rt_sigaction(2).
-  struct sigaction kernel_new_action;
-  if (bionic_new_action != NULL) {
-    kernel_new_action.sa_flags = bionic_new_action->sa_flags;
-    kernel_new_action.sa_handler = bionic_new_action->sa_handler;
-    kernel_new_action.sa_mask = bionic_new_action->sa_mask;
-#if defined(SA_RESTORER)
-    kernel_new_action.sa_restorer = bionic_new_action->sa_restorer;
-
-    if (!(kernel_new_action.sa_flags & SA_RESTORER)) {
-      kernel_new_action.sa_flags |= SA_RESTORER;
-      kernel_new_action.sa_restorer = (kernel_new_action.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
-    }
-#endif
+  // so we have to translate to struct sigaction64 first.
+  struct sigaction64 kernel_new;
+  if (bionic_new) {
+    kernel_new = {};
+    kernel_new.sa_flags = bionic_new->sa_flags;
+    kernel_new.sa_handler = bionic_new->sa_handler;
+    memcpy(&kernel_new.sa_mask, &bionic_new->sa_mask, sizeof(bionic_new->sa_mask));
   }
-  return __sigaction(signal, (bionic_new_action != NULL) ? &kernel_new_action : NULL, bionic_old_action);
+
+  struct sigaction64 kernel_old;
+  int result = sigaction64(signal, bionic_new ? &kernel_new : nullptr, &kernel_old);
+  if (bionic_old) {
+    *bionic_old = {};
+    bionic_old->sa_flags = kernel_old.sa_flags;
+    bionic_old->sa_handler = kernel_old.sa_handler;
+    memcpy(&bionic_old->sa_mask, &kernel_old.sa_mask, sizeof(bionic_old->sa_mask));
+  }
+  return result;
+}
+
+int sigaction64(int signal, const struct sigaction64* bionic_new, struct sigaction64* bionic_old) {
+  struct sigaction64 kernel_new;
+  if (bionic_new) {
+    kernel_new = *bionic_new;
+    if (!(kernel_new.sa_flags & SA_RESTORER)) {
+      kernel_new.sa_flags |= SA_RESTORER;
+      kernel_new.sa_restorer = (kernel_new.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
+    }
+  }
+
+  return __rt_sigaction(signal,
+                        bionic_new ? &kernel_new : nullptr,
+                        bionic_old,
+                        sizeof(kernel_new.sa_mask));
 }
 
 #endif
