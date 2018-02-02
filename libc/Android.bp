@@ -538,7 +538,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // These two depend on getentropy_linux.c, which isn't in libc_ndk.a.
+        // These two depend on getentropy, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
         "upstream-openbsd/lib/libc/crypt/arc4random_uniform.c",
 
@@ -817,9 +817,7 @@ cc_library_static {
         // initialized, resulting in nullptr dereferences.
         "bionic/getauxval.cpp",
 
-        // These four require getauxval, which isn't available on older
-        // platforms.
-        "bionic/getentropy_linux.c",
+        // These require getauxval, which isn't available on older platforms.
         "bionic/sysconf.cpp",
         "bionic/vdso.cpp",
         "bionic/setjmp_cookie.cpp",
@@ -1266,6 +1264,7 @@ cc_library_static {
         "bionic/futimens.cpp",
         "bionic/getcwd.cpp",
         "bionic/getdomainname.cpp",
+        "bionic/getentropy.cpp",
         "bionic/gethostname.cpp",
         "bionic/getpagesize.cpp",
         "bionic/getpgrp.cpp",
