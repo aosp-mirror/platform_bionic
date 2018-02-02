@@ -96,7 +96,6 @@ static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
 
-#if defined(__LP64__)
 namespace {
 struct PIMutex {
   pthread_mutex_t mutex;
@@ -145,7 +144,6 @@ static void BM_pthread_mutex_lock_RECURSIVE_PI(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE_PI);
-#endif  // defined(__LP64__)
 
 static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
