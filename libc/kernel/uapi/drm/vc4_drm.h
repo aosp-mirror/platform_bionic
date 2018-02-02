@@ -32,6 +32,7 @@
 #define DRM_VC4_SET_TILING 0x08
 #define DRM_VC4_GET_TILING 0x09
 #define DRM_VC4_LABEL_BO 0x0a
+#define DRM_VC4_GEM_MADVISE 0x0b
 #define DRM_IOCTL_VC4_SUBMIT_CL DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_SUBMIT_CL, struct drm_vc4_submit_cl)
 #define DRM_IOCTL_VC4_WAIT_SEQNO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_WAIT_SEQNO, struct drm_vc4_wait_seqno)
 #define DRM_IOCTL_VC4_WAIT_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_WAIT_BO, struct drm_vc4_wait_bo)
@@ -43,6 +44,7 @@
 #define DRM_IOCTL_VC4_SET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_SET_TILING, struct drm_vc4_set_tiling)
 #define DRM_IOCTL_VC4_GET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_GET_TILING, struct drm_vc4_get_tiling)
 #define DRM_IOCTL_VC4_LABEL_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_LABEL_BO, struct drm_vc4_label_bo)
+#define DRM_IOCTL_VC4_GEM_MADVISE DRM_IOWR(DRM_COMMAND_BASE + DRM_VC4_GEM_MADVISE, struct drm_vc4_gem_madvise)
 struct drm_vc4_submit_rcl_surface {
   __u32 hindex;
   __u32 offset;
@@ -142,6 +144,7 @@ struct drm_vc4_get_hang_state {
 #define DRM_VC4_PARAM_SUPPORTS_ETC1 4
 #define DRM_VC4_PARAM_SUPPORTS_THREADED_FS 5
 #define DRM_VC4_PARAM_SUPPORTS_FIXED_RCL_ORDER 6
+#define DRM_VC4_PARAM_SUPPORTS_MADVISE 7
 struct drm_vc4_get_param {
   __u32 param;
   __u32 pad;
@@ -161,6 +164,16 @@ struct drm_vc4_label_bo {
   __u32 handle;
   __u32 len;
   __u64 name;
+};
+#define VC4_MADV_WILLNEED 0
+#define VC4_MADV_DONTNEED 1
+#define __VC4_MADV_PURGED 2
+#define __VC4_MADV_NOTSUPP 3
+struct drm_vc4_gem_madvise {
+  __u32 handle;
+  __u32 madv;
+  __u32 retained;
+  __u32 pad;
 };
 #ifdef __cplusplus
 #endif

@@ -66,5 +66,5 @@ struct bfs_super_block {
 #define BFS_NZFILESIZE(ip) ((le32_to_cpu((ip)->i_eoffset) + 1) - le32_to_cpu((ip)->i_sblock) * BFS_BSIZE)
 #define BFS_FILESIZE(ip) ((ip)->i_sblock == 0 ? 0 : BFS_NZFILESIZE(ip))
 #define BFS_FILEBLOCKS(ip) ((ip)->i_sblock == 0 ? 0 : (le32_to_cpu((ip)->i_eblock) + 1) - le32_to_cpu((ip)->i_sblock))
-#define BFS_UNCLEAN(bfs_sb,sb) ((le32_to_cpu(bfs_sb->s_from) != - 1) && (le32_to_cpu(bfs_sb->s_to) != - 1) && ! (sb->s_flags & MS_RDONLY))
+#define BFS_UNCLEAN(bfs_sb,sb) ((le32_to_cpu(bfs_sb->s_from) != - 1) && (le32_to_cpu(bfs_sb->s_to) != - 1) && ! (sb->s_flags & SB_RDONLY))
 #endif

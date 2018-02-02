@@ -87,6 +87,8 @@ enum {
 #define TCP_FASTOPEN_CONNECT 30
 #define TCP_ULP 31
 #define TCP_MD5SIG_EXT 32
+#define TCP_FASTOPEN_KEY 33
+#define TCP_FASTOPEN_NO_COOKIE 34
 struct tcp_repair_opt {
   __u32 opt_code;
   __u32 opt_val;
