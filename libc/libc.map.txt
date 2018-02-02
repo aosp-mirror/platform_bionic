@@ -1411,6 +1411,7 @@ LIBC_P { # introduced=P
     sethostent;
     setnetent;
     setprotoent;
+    sigaction64;
     sigaddset64;
     sigdelset64;
     sigemptyset64;
