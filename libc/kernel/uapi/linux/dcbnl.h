@@ -91,6 +91,7 @@ struct cee_pfc {
 #define IEEE_8021QAZ_APP_SEL_STREAM 2
 #define IEEE_8021QAZ_APP_SEL_DGRAM 3
 #define IEEE_8021QAZ_APP_SEL_ANY 4
+#define IEEE_8021QAZ_APP_SEL_DSCP 5
 struct dcb_app {
   __u8 selector;
   __u8 priority;

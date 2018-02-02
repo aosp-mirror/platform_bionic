@@ -19,10 +19,6 @@
 #ifndef _UAPI_LINUX_TLS_H
 #define _UAPI_LINUX_TLS_H
 #include <linux/types.h>
-#include <asm/byteorder.h>
-#include <linux/socket.h>
-#include <linux/tcp.h>
-#include <net/tcp.h>
 #define TLS_TX 1
 #define TLS_VERSION_MINOR(ver) ((ver) & 0xFF)
 #define TLS_VERSION_MAJOR(ver) (((ver) >> 8) & 0xFF)
