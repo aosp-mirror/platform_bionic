@@ -943,11 +943,16 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+    if (old_state == 0xffff) {
+        // The mutex has been destroyed.
+        return EBUSY;
+    }
     uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
     if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
         int result = PIMutexDestroy(mutex->ToPIMutex());
         if (result == 0) {
             mutex->FreePIMutex();
+            atomic_store(&mutex->state, 0xffff);
         }
         return result;
     }
