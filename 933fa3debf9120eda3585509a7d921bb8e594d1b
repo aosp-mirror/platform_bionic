@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cfdd2ead_9ece8b47",
+        "filename": "libc/bionic/getentropy_linux.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-02-03T01:15:04Z",
+      "side": 1,
+      "message": "Make this a long instead, and delete the cast below?",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 77,
+        "endChar": 5
+      },
+      "revId": "933fa3debf9120eda3585509a7d921bb8e594d1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
