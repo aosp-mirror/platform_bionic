@@ -22,6 +22,30 @@
       "revId": "460130b7d07f0efba7f4f43f657f0f60daeb71e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1a605bb_6603f882",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1030338
+      },
+      "writtenOn": "2018-02-04T13:35:54Z",
+      "side": 1,
+      "message": "Sorry for the delay.\n\nTL;DR both work, aligned is faster. \n\nThe register list version of load/stores used in setjmp is faster when aligned on Armv7+ devices. Unaligned access for a subset of load/stores (like this multi register version), are emulated for ensuring SW backward compatibility (here is a link on this): http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/327360.html",
+      "parentUuid": "dac09d54_ad260fa0",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 38
+      },
+      "revId": "460130b7d07f0efba7f4f43f657f0f60daeb71e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
