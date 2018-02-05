@@ -21,25 +21,28 @@
 
 #include <gtest/gtest.h>
 
+#if !defined(__BIONIC__)
+#define sigaction64 sigaction
+#endif
+
 class BionicDeathTest : public testing::Test {
  protected:
   virtual void SetUp() {
     // Suppress debuggerd stack traces. Too slow.
     for (int signo : { SIGABRT, SIGBUS, SIGSEGV, SIGSYS }) {
-      struct sigaction action = {};
-      action.sa_handler = SIG_DFL;
-      sigaction(signo, &action, &previous_);
+      struct sigaction64 action = { .sa_handler = SIG_DFL };
+      sigaction64(signo, &action, &previous_);
     }
   }
 
   virtual void TearDown() {
     for (int signo : { SIGABRT, SIGBUS, SIGSEGV, SIGSYS }) {
-      sigaction(signo, &previous_, nullptr);
+      sigaction64(signo, &previous_, nullptr);
     }
   }
 
  private:
-  struct sigaction previous_;
+  struct sigaction64 previous_;
 };
 
 #endif // BIONIC_TESTS_BIONIC_DEATH_TEST_H_

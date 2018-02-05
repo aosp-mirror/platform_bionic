@@ -269,55 +269,63 @@ TEST(signal, sigsuspend64_sigpending64) {
   ASSERT_EQ(1, g_sigsuspend64_signal_handler_call_count);
 }
 
-static void EmptySignalHandler(int) {}
-static void EmptySignalAction(int, siginfo_t*, void*) {}
-
-TEST(signal, sigaction) {
+template <typename SigActionT, typename SigSetT>
+static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*),
+                          int (sigaddset_fn)(SigSetT*, int),
+                          int sig) {
   // Both bionic and glibc set SA_RESTORER when talking to the kernel on arm,
   // arm64, x86, and x86-64. The version of glibc we're using also doesn't
   // define SA_RESTORER, but luckily it's the same value everywhere, and mips
   // doesn't use the bit for anything.
   static const unsigned sa_restorer = 0x4000000;
 
-  // See what's currently set for SIGALRM.
-  struct sigaction original_sa;
-  memset(&original_sa, 0, sizeof(original_sa));
-  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &original_sa));
+  // See what's currently set for this signal.
+  SigActionT original_sa = {};
+  ASSERT_EQ(0, sigaction_fn(sig, NULL, &original_sa));
   ASSERT_TRUE(original_sa.sa_handler == NULL);
   ASSERT_TRUE(original_sa.sa_sigaction == NULL);
   ASSERT_EQ(0U, original_sa.sa_flags & ~sa_restorer);
 
   // Set a traditional sa_handler signal handler.
-  struct sigaction sa;
-  memset(&sa, 0, sizeof(sa));
-  sigaddset(&sa.sa_mask, SIGALRM);
+  auto no_op_signal_handler = [](int) {};
+  SigActionT sa = {};
+  sigaddset_fn(&sa.sa_mask, sig);
   sa.sa_flags = SA_ONSTACK;
-  sa.sa_handler = EmptySignalHandler;
-  ASSERT_EQ(0, sigaction(SIGALRM, &sa, NULL));
+  sa.sa_handler = no_op_signal_handler;
+  ASSERT_EQ(0, sigaction_fn(sig, &sa, NULL));
 
   // Check that we can read it back.
-  memset(&sa, 0, sizeof(sa));
-  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
-  ASSERT_TRUE(sa.sa_handler == EmptySignalHandler);
+  sa = {};
+  ASSERT_EQ(0, sigaction_fn(sig, NULL, &sa));
+  ASSERT_TRUE(sa.sa_handler == no_op_signal_handler);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK), sa.sa_flags & ~sa_restorer);
 
   // Set a new-style sa_sigaction signal handler.
-  memset(&sa, 0, sizeof(sa));
-  sigaddset(&sa.sa_mask, SIGALRM);
+  auto no_op_sigaction = [](int, siginfo_t*, void*) {};
+  sa = {};
+  sigaddset_fn(&sa.sa_mask, sig);
   sa.sa_flags = SA_ONSTACK | SA_SIGINFO;
-  sa.sa_sigaction = EmptySignalAction;
-  ASSERT_EQ(0, sigaction(SIGALRM, &sa, NULL));
+  sa.sa_sigaction = no_op_sigaction;
+  ASSERT_EQ(0, sigaction_fn(sig, &sa, NULL));
 
   // Check that we can read it back.
-  memset(&sa, 0, sizeof(sa));
-  ASSERT_EQ(0, sigaction(SIGALRM, NULL, &sa));
-  ASSERT_TRUE(sa.sa_sigaction == EmptySignalAction);
+  sa = {};
+  ASSERT_EQ(0, sigaction_fn(sig, NULL, &sa));
+  ASSERT_TRUE(sa.sa_sigaction == no_op_sigaction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
 
   // Put everything back how it was.
-  ASSERT_EQ(0, sigaction(SIGALRM, &original_sa, NULL));
+  ASSERT_EQ(0, sigaction_fn(sig, &original_sa, NULL));
+}
+
+TEST(signal, sigaction) {
+  TestSigAction(sigaction, sigaddset, SIGALRM);
+}
+
+TEST(signal, sigaction64_SIGRTMIN) {
+  TestSigAction(sigaction64, sigaddset64, SIGRTMIN);
 }
 
 TEST(signal, sys_signame) {
@@ -495,8 +503,7 @@ TEST(signal, rt_tgsigqueueinfo) {
     "* https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=66dd34ad31e5963d72a700ec3f2449291d322921\n";
   static siginfo received;
 
-  struct sigaction handler;
-  memset(&handler, 0, sizeof(handler));
+  struct sigaction handler = {};
   handler.sa_sigaction = [](int, siginfo_t* siginfo, void*) { received = *siginfo; };
   handler.sa_flags = SA_SIGINFO;
 

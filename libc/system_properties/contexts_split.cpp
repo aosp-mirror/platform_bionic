@@ -274,12 +274,22 @@ bool ContextsSplit::InitializeProperties() {
     // Don't check for failure here, so we always have a sane list of properties.
     // E.g. In case of recovery, the vendor partition will not have mounted and we
     // still need the system / platform properties to function.
-    InitializePropertiesFromFile("/vendor/etc/selinux/nonplat_property_contexts");
+    if (access("/vendor/etc/selinux/vendor_property_contexts", R_OK) != -1) {
+      InitializePropertiesFromFile("/vendor/etc/selinux/vendor_property_contexts");
+    } else {
+      // Fallback to nonplat_* if vendor_* doesn't exist.
+      InitializePropertiesFromFile("/vendor/etc/selinux/nonplat_property_contexts");
+    }
   } else {
     if (!InitializePropertiesFromFile("/plat_property_contexts")) {
       return false;
     }
-    InitializePropertiesFromFile("/nonplat_property_contexts");
+    if (access("/vendor_property_contexts", R_OK) != -1) {
+      InitializePropertiesFromFile("/vendor_property_contexts");
+    } else {
+      // Fallback to nonplat_* if vendor_* doesn't exist.
+      InitializePropertiesFromFile("/nonplat_property_contexts");
+    }
   }
 
   return true;

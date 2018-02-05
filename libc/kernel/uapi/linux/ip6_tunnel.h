@@ -29,6 +29,7 @@
 #define IP6_TNL_F_MIP6_DEV 0x8
 #define IP6_TNL_F_RCV_DSCP_COPY 0x10
 #define IP6_TNL_F_USE_ORIG_FWMARK 0x20
+#define IP6_TNL_F_ALLOW_LOCAL_REMOTE 0x40
 struct ip6_tnl_parm {
   char name[IFNAMSIZ];
   int link;

@@ -1718,6 +1718,7 @@ struct PthreadMutex {
 
   void destroy() {
     ASSERT_EQ(0, pthread_mutex_destroy(&lock));
+    ASSERT_EQ(EBUSY, pthread_mutex_destroy(&lock));
   }
 
   DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
@@ -1776,13 +1777,40 @@ TEST(pthread, pthread_mutex_lock_RECURSIVE) {
 }
 
 TEST(pthread, pthread_mutex_lock_pi) {
-#if defined(__BIONIC__) && !defined(__LP64__)
-  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
-  return;
-#endif
   TestPthreadMutexLockNormal(PTHREAD_PRIO_INHERIT);
   TestPthreadMutexLockErrorCheck(PTHREAD_PRIO_INHERIT);
   TestPthreadMutexLockRecursive(PTHREAD_PRIO_INHERIT);
+}
+
+TEST(pthread, pthread_mutex_pi_count_limit) {
+#if defined(__BIONIC__) && !defined(__LP64__)
+  // Bionic only supports 65536 pi mutexes in 32-bit programs.
+  pthread_mutexattr_t attr;
+  ASSERT_EQ(0, pthread_mutexattr_init(&attr));
+  ASSERT_EQ(0, pthread_mutexattr_setprotocol(&attr, PTHREAD_PRIO_INHERIT));
+  std::vector<pthread_mutex_t> mutexes(65536);
+  // Test if we can use 65536 pi mutexes at the same time.
+  // Run 2 times to check if freed pi mutexes can be recycled.
+  for (int repeat = 0; repeat < 2; ++repeat) {
+    for (auto& m : mutexes) {
+      ASSERT_EQ(0, pthread_mutex_init(&m, &attr));
+    }
+    pthread_mutex_t m;
+    ASSERT_EQ(ENOMEM, pthread_mutex_init(&m, &attr));
+    for (auto& m : mutexes) {
+      ASSERT_EQ(0, pthread_mutex_lock(&m));
+    }
+    for (auto& m : mutexes) {
+      ASSERT_EQ(0, pthread_mutex_unlock(&m));
+    }
+    for (auto& m : mutexes) {
+      ASSERT_EQ(0, pthread_mutex_destroy(&m));
+    }
+  }
+  ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
+#else
+  GTEST_LOG_(INFO) << "This test does nothing as pi mutex count isn't limited.\n";
+#endif
 }
 
 TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
@@ -1801,6 +1829,7 @@ TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
   ASSERT_EQ(0, memcmp(&lock_recursive, &m3.lock, sizeof(pthread_mutex_t)));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock_recursive));
 }
+
 class MutexWakeupHelper {
  private:
   PthreadMutex m;
@@ -1949,10 +1978,6 @@ public:
 };
 
 TEST(pthread, pthread_mutex_pi_wakeup) {
-#if defined(__BIONIC__) && !defined(__LP64__)
-  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
-  return;
-#endif
   for (int type : {PTHREAD_MUTEX_NORMAL, PTHREAD_MUTEX_RECURSIVE, PTHREAD_MUTEX_ERRORCHECK}) {
     for (int protocol : {PTHREAD_PRIO_INHERIT}) {
       PIMutexWakeupHelper helper(type, protocol);
@@ -2005,10 +2030,6 @@ TEST(pthread, pthread_mutex_timedlock) {
 }
 
 TEST(pthread, pthread_mutex_timedlock_pi) {
-#if defined(__BIONIC__) && !defined(__LP64__)
-  GTEST_LOG_(INFO) << "PTHREAD_PRIO_INHERIT isn't supported in 32bit programs, skipping test";
-  return;
-#endif
   PthreadMutex m(PTHREAD_MUTEX_NORMAL, PTHREAD_PRIO_INHERIT);
   timespec ts;
   clock_gettime(CLOCK_REALTIME, &ts);

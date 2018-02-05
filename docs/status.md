@@ -49,11 +49,12 @@ New libc functions in P:
   * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
   * `pthread_attr_getinheritsched`/`pthread_attr_setinheritsched`/`pthread_setschedprio`
   * `pthread_mutexattr_getprotocol`/`pthread_mutexattr_setprotocol` (mutex priority inheritance)
+  * <signal.h> support for `sigaction64_t` and `sigset64_t` allowing LP32 access to real-time signals
   * <spawn.h>
   * `swab`
   * `syncfs`
-  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these).
-  * `%mc`/`%ms`/`%m[` support in the scanf family.
+  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these)
+  * `%mc`/`%ms`/`%m[` support in the scanf family
 
 New libc functions in O:
   * `sendto` FORTIFY support

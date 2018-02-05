@@ -42,10 +42,10 @@
 // 3      ebp
 // 4      esi
 // 5      edi
-// 6      sigmask         signal mask (not used with _setjmp / _longjmp)
-// 7      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
-// 8      checksum        checksum of the core registers, to give better error messages.
-// 9      reserved
+// 6      sigmask         64-bit signal mask (not used with _setjmp / _longjmp)
+// 7      "               "
+// 8      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
+// 9      checksum        checksum of the core registers, to give better error messages.
 
 #define _JB_EDX 0
 #define _JB_EBX 1
@@ -54,8 +54,8 @@
 #define _JB_ESI 4
 #define _JB_EDI 5
 #define _JB_SIGMASK 6
-#define _JB_SIGFLAG 7
-#define _JB_CHECKSUM 8
+#define _JB_SIGFLAG 8
+#define _JB_CHECKSUM 9
 
 .macro m_mangle_registers reg
   xorl \reg,%edx
@@ -117,7 +117,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   pushl %eax
   pushl $0 // NULL
   pushl $2 // SIG_SETMASK
-  call PIC_PLT(sigprocmask)
+  call PIC_PLT(sigprocmask64)
   addl $12,%esp
   PIC_EPILOGUE
   popl %ecx
@@ -165,7 +165,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   pushl $0 // NULL
   pushl %eax
   pushl $2 // SIG_SETMASK
-  call PIC_PLT(sigprocmask)
+  call PIC_PLT(sigprocmask64)
   addl $12,%esp
   PIC_EPILOGUE
 
