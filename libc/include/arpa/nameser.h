@@ -474,6 +474,7 @@ typedef enum __ns_cert_types {
  */
 #define NS_OPT_DNSSEC_OK	0x8000U
 #define NS_OPT_NSID             3
+#define NS_OPT_PADDING          12
 
 /*
  * Inline versions of get/put short/long.  Pointer is advanced.
