@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4732c4de_767d2b55",
+        "filename": "libc/bionic/sigaction.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-05T21:18:36Z",
+      "side": 1,
+      "message": "shouldn\u0027t this have the L113-116 block to clobber this if SA_RESTORER is set?",
+      "revId": "11f607641000993a90ef774bfab18347052094d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
