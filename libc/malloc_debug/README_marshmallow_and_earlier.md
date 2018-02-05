@@ -4,10 +4,10 @@ Malloc Debug
 Malloc debug is a method of debugging native memory problems. It can help
 detect memory corruption, memory leaks, and use after free issues.
 
-This documentation describes how to enable this feature on versions of
-the Android OS, Marshmallow or older. Note: malloc debug was full of bugs
-and was not fully functional until KitKat, so using it on a version older
-than that is not guaranteed to work at all.
+This documentation describes how to enable this feature on API level
+23 or older. Note: malloc debug was full of bugs and was not fully
+functional until API level 19, so using it on a version older than that
+is not guaranteed to work at all.
 
 The documentation for malloc debug on newer versions of Android is
 [here](README.md).
