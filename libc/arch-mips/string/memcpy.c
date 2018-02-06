@@ -286,7 +286,7 @@ aligned_words (reg_t * a, const reg_t * b,
 }
 
 void *
-memcpy (void *a, const void *b, size_t len) __overloadable
+memcpy (void *a, const void *b, size_t len)
 {
   unsigned long bytes, words;
   void *ret = a;

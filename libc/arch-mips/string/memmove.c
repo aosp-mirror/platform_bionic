@@ -383,7 +383,7 @@ aligned_words_backward (reg_t * a, const reg_t * b,
 }
 
 void *
-memmove (void *dst0, const void *src0, size_t length) __overloadable
+memmove (void *dst0, const void *src0, size_t length)
 {
   unsigned long bytes, words;
   void *ret = dst0;

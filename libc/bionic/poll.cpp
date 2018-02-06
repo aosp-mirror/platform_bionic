@@ -36,7 +36,7 @@
 extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t);
 extern "C" int __pselect6(int, fd_set*, fd_set*, fd_set*, timespec*, void*);
 
-int poll(pollfd* fds, nfds_t fd_count, int ms) __overloadable {
+int poll(pollfd* fds, nfds_t fd_count, int ms) {
   timespec ts;
   timespec* ts_ptr = nullptr;
   if (ms >= 0) {
@@ -46,7 +46,7 @@ int poll(pollfd* fds, nfds_t fd_count, int ms) __overloadable {
   return __ppoll(fds, fd_count, ts_ptr, nullptr, 0);
 }
 
-int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) __overloadable {
+int ppoll(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset_t* ss) {
   // The underlying `__ppoll` system call only takes `sigset64_t`.
   SigSetConverter set;
   sigset64_t* ss_ptr = nullptr;
