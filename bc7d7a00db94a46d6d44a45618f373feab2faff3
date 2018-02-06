@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d836e6e_5f3ca87a",
+        "filename": "libc/include/arpa/nameser.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-06T22:45:52Z",
+      "side": 1,
+      "message": "glibc doesn\u0027t have this in its headers. is this IETF?",
+      "revId": "bc7d7a00db94a46d6d44a45618f373feab2faff3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
