@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4a2ddc52_82f76e6e",
+        "filename": "libc/include/string.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-06T21:20:10Z",
+      "side": 0,
+      "message": "oops",
+      "range": {
+        "startLine": 80,
+        "startChar": 83,
+        "endLine": 80,
+        "endChar": 102
+      },
+      "revId": "2bf1d3dae262f92dbc964be467060dc6a24787af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
