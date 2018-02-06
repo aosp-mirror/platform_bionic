@@ -58,17 +58,15 @@
 // 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
 // 1      sigmask         64-bit signal mask (not used with _setjmp / _longjmp)
 // 2      "               "
-// 3      reserved        (unused to allow float_base to be maximally aligned)
+// 3      reserved        (unused to allow float_base to be maximally aligned;
+//                        this avoids software emulation of unaligned loads/stores)
 // 4      float_base      base of float registers (d8 to d15)
 // 20     float_state     floating-point status and control register
 // 21     core_base       base of core registers (r4-r11, r13-r14)
-// 31     checksum        checksum of all of the core registers, to give better error messages.
+// 31     checksum        checksum of all of the core registers, to give better error messages
 // 32     reserved        reserved entries (room to grow)
-// 64
-//
-// NOTE: float_base must be at an even word index, since the
-//       FP registers will be loaded/stored with instructions
-//       that expect 8-byte alignment.
+// ...
+// 63     "               "
 
 #define _JB_SIGFLAG     0
 #define _JB_SIGMASK     (_JB_SIGFLAG + 1)
