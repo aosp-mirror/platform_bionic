@@ -166,11 +166,10 @@ struct __sfileext {
     _EXT(fp)->_caller_handles_locking = true; \
   } while (0)
 
-/*
- * Android <= KitKat had getc/putc macros in <stdio.h> that referred
- * to __srget/__swbuf, so those symbols need to be public for LP32
- * but can be hidden for LP64.
- */
+// Android <= 19 had getc/putc macros in <stdio.h> that referred
+// to __srget/__swbuf, so those symbols need to be public for LP32
+// but can be hidden for LP64. Moreover, the NDK continued to ship
+// those macros until r15 made unified headers the default.
 __LIBC32_LEGACY_PUBLIC__ int __srget(FILE*);
 __LIBC32_LEGACY_PUBLIC__ int __swbuf(int, FILE*);
 __LIBC32_LEGACY_PUBLIC__ int __srefill(FILE*);
