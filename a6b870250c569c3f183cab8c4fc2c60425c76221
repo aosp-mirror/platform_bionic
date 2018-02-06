@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e2b0dd4_ae58f576",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 313,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-02-06T02:59:02Z",
+      "side": 1,
+      "message": "The standard seems to say (for some unknown reason) that aligned_alloc must return nullptr if size isn\u0027t a multiple of alignment: http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_460\n\nWhat does jemalloc do?",
+      "range": {
+        "startLine": 312,
+        "startChar": 0,
+        "endLine": 313,
+        "endChar": 41
+      },
+      "revId": "a6b870250c569c3f183cab8c4fc2c60425c76221",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
