@@ -225,7 +225,9 @@ TEST(MATH_TEST, finitef) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isfinite(double);
 extern "C" int __isfinitef(float);
+extern "C" int isfinitef(float);
 extern "C" int __isfinitel(long double);
+extern "C" int isfinitel(long double);
 
 TEST(MATH_TEST, __isfinite) {
 #if defined(__GLIBC__)
@@ -243,12 +245,28 @@ TEST(MATH_TEST, __isfinitef) {
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
 }
 
+TEST(MATH_TEST, isfinitef) {
+#if defined(__GLIBC__)
+#define isfinitef __finitef
+#endif
+  ASSERT_TRUE(isfinitef(123.0f));
+  ASSERT_FALSE(isfinitef(HUGE_VALF));
+}
+
 TEST(MATH_TEST, __isfinitel) {
 #if defined(__GLIBC__)
 #define __isfinitel __finitel
 #endif
   ASSERT_TRUE(__isfinitel(123.0L));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
+}
+
+TEST(MATH_TEST, isfinitel) {
+#if defined(__GLIBC__)
+#define isfinitel __finitel
+#endif
+  ASSERT_TRUE(isfinitel(123.0L));
+  ASSERT_FALSE(isfinitel(HUGE_VALL));
 }
 
 TEST(MATH_TEST, finite) {
@@ -265,7 +283,9 @@ TEST(MATH_TEST, isinf_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isinf(double);
 extern "C" int __isinff(float);
+extern "C" int isinff(float);
 extern "C" int __isinfl(long double);
+extern "C" int isinfl(long double);
 
 TEST(MATH_TEST, __isinf) {
   ASSERT_FALSE(__isinf(123.0));
@@ -277,9 +297,19 @@ TEST(MATH_TEST, __isinff) {
   ASSERT_TRUE(__isinff(HUGE_VALF));
 }
 
+TEST(MATH_TEST, isinff) {
+  ASSERT_FALSE(isinff(123.0f));
+  ASSERT_TRUE(isinff(HUGE_VALF));
+}
+
 TEST(MATH_TEST, __isinfl) {
   ASSERT_FALSE(__isinfl(123.0L));
   ASSERT_TRUE(__isinfl(HUGE_VALL));
+}
+
+TEST(MATH_TEST, isinfl) {
+  ASSERT_FALSE(isinfl(123.0L));
+  ASSERT_TRUE(isinfl(HUGE_VALL));
 }
 
 TEST(MATH_TEST, isnan_function) {
@@ -291,7 +321,9 @@ TEST(MATH_TEST, isnan_function) {
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isnan(double);
 extern "C" int __isnanf(float);
+extern "C" int isnanf(float);
 extern "C" int __isnanl(long double);
+extern "C" int isnanl(long double);
 
 TEST(MATH_TEST, __isnan) {
   ASSERT_FALSE(__isnan(123.0));
@@ -303,20 +335,27 @@ TEST(MATH_TEST, __isnanf) {
   ASSERT_TRUE(__isnanf(nanf("")));
 }
 
-TEST(MATH_TEST, __isnanl) {
-  ASSERT_FALSE(__isnanl(123.0L));
-  ASSERT_TRUE(__isnanl(nanl("")));
-}
-
 TEST(MATH_TEST, isnanf) {
   ASSERT_FALSE(isnanf(123.0f));
   ASSERT_TRUE(isnanf(nanf("")));
 }
 
+TEST(MATH_TEST, __isnanl) {
+  ASSERT_FALSE(__isnanl(123.0L));
+  ASSERT_TRUE(__isnanl(nanl("")));
+}
+
+TEST(MATH_TEST, isnanl) {
+  ASSERT_FALSE(isnanl(123.0L));
+  ASSERT_TRUE(isnanl(nanl("")));
+}
+
 // Historical BSD cruft that isn't exposed in <math.h> any more.
 extern "C" int __isnormal(double);
 extern "C" int __isnormalf(float);
+extern "C" int isnormalf(float);
 extern "C" int __isnormall(long double);
+extern "C" int isnormall(long double);
 
 TEST(MATH_TEST, __isnormal) {
 #if defined(__BIONIC__)
@@ -336,12 +375,30 @@ TEST(MATH_TEST, __isnormalf) {
 #endif // __BIONIC__
 }
 
+TEST(MATH_TEST, isnormalf) {
+#if defined(__BIONIC__)
+  ASSERT_TRUE(isnormalf(123.0f));
+  ASSERT_FALSE(isnormalf(float_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "glibc doesn't have isnormalf.\n";
+#endif // __BIONIC__
+}
+
 TEST(MATH_TEST, __isnormall) {
 #if defined(__BIONIC__)
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
 #else // __BIONIC__
   GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
+#endif // __BIONIC__
+}
+
+TEST(MATH_TEST, isnormall) {
+#if defined(__BIONIC__)
+  ASSERT_TRUE(isnormall(123.0L));
+  ASSERT_FALSE(isnormall(ldouble_subnormal()));
+#else // __BIONIC__
+  GTEST_LOG_(INFO) << "glibc doesn't have isnormall.\n";
 #endif // __BIONIC__
 }
 
@@ -957,7 +1014,7 @@ TEST(MATH_TEST, logb) {
 TEST(MATH_TEST, logbf) {
   ASSERT_EQ(-HUGE_VALF, logbf(0.0f));
   ASSERT_TRUE(isnanf(logbf(nanf(""))));
-  ASSERT_TRUE(__isinff(logbf(HUGE_VALF)));
+  ASSERT_TRUE(isinff(logbf(HUGE_VALF)));
   ASSERT_EQ(0.0f, logbf(1.0f));
   ASSERT_EQ(3.0f, logbf(10.0f));
 }
@@ -980,7 +1037,7 @@ TEST(MATH_TEST, log1p) {
 TEST(MATH_TEST, log1pf) {
   ASSERT_EQ(-HUGE_VALF, log1pf(-1.0f));
   ASSERT_TRUE(isnanf(log1pf(nanf(""))));
-  ASSERT_TRUE(__isinff(log1pf(HUGE_VALF)));
+  ASSERT_TRUE(isinff(log1pf(HUGE_VALF)));
   ASSERT_FLOAT_EQ(1.0f, log1pf(static_cast<float>(M_E) - 1.0f));
 }
 
