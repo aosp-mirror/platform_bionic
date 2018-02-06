@@ -18,11 +18,11 @@ cc_library_static {
     name: "libbionic_tests_headers_posix",
     srcs: ["*.c"],
     cflags: [
-      "-Wno-absolute-value", // broken clang diagnostic that doesn't understand <tgmath.h>
-      "-Wno-deprecated",
-      "-Werror",
-      "-D_POSIX_C_SOURCE=200809L",
-      "-D_XOPEN_SOURCE=700",
+        "-Wno-absolute-value", // broken clang diagnostic that doesn't understand <tgmath.h>
+        "-Wno-deprecated",
+        "-Werror",
+        "-D_POSIX_C_SOURCE=200809L",
+        "-D_XOPEN_SOURCE=700",
     ],
     host_supported: true,
     target: {
