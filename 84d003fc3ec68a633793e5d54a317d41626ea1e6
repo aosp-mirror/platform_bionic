@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ab2eba9_02ce0ef5",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-06T06:11:49Z",
+      "side": 1,
+      "message": "what does |sort say? looks like we\u0027d been sorting with __coming first, so aligned_alloc would be between __fwriting and endhostent. (in the other sections too.)",
+      "revId": "84d003fc3ec68a633793e5d54a317d41626ea1e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a9d19d49_d2b864ff",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-06T06:11:49Z",
+      "side": 1,
+      "message": "The *original* standard said that, but DR460 agreed it should be changed to \"If the value of alignment is not a valid alignment supported by the implementation the function shall fail by returning a null pointer.\"\n\nhttp://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_460",
+      "revId": "84d003fc3ec68a633793e5d54a317d41626ea1e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
