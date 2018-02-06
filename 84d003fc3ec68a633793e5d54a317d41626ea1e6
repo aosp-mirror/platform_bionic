@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0ea73fbb_138cda0d",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-02-06T19:00:14Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "5ab2eba9_02ce0ef5",
+      "revId": "84d003fc3ec68a633793e5d54a317d41626ea1e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9d19d49_d2b864ff",
         "filename": "tests/stdlib_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2018-02-06T06:11:49Z",
       "side": 1,
       "message": "The *original* standard said that, but DR460 agreed it should be changed to \"If the value of alignment is not a valid alignment supported by the implementation the function shall fail by returning a null pointer.\"\n\nhttp://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_460",
+      "revId": "84d003fc3ec68a633793e5d54a317d41626ea1e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "361a143b_ffe2b84e",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-02-06T19:00:14Z",
+      "side": 1,
+      "message": "I\u0027m removing the comment since you are correct. The final statement does not mention the size restriction.",
+      "parentUuid": "a9d19d49_d2b864ff",
       "revId": "84d003fc3ec68a633793e5d54a317d41626ea1e6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
