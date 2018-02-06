@@ -6,7 +6,10 @@ cc_library_static {
         "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
-    cflags: ["-Wall", "-Werror"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
@@ -26,9 +29,15 @@ cc_object {
     host_supported: true,
     device_supported: false,
     target: {
-        linux_bionic: { enabled: true },
-        linux_glibc: { enabled: false },
-        darwin: { enabled: false },
+        linux_bionic: {
+            enabled: true,
+        },
+        linux_glibc: {
+            enabled: false,
+        },
+        darwin: {
+            enabled: false,
+        },
     },
 
     cflags: [
@@ -187,7 +196,7 @@ cc_binary {
 
         // Important: The liblinker_malloc should be the last library in the list
         // to overwrite any other malloc implementations by other static libraries.
-        "liblinker_malloc"
+        "liblinker_malloc",
     ],
     static_executable: true,
 
