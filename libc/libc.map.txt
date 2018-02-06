@@ -1347,6 +1347,7 @@ LIBC_P { # introduced=P
   global:
     __freading;
     __fwriting;
+    aligned_alloc;
     endhostent;
     endnetent;
     endprotoent;

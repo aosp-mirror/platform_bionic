@@ -23,6 +23,7 @@ the normal allocation calls. The replaced calls are:
 * `realloc`
 * `posix_memalign`
 * `memalign`
+* `aligned_alloc`
 * `malloc_usable_size`
 
 On 32 bit systems, these two deprecated functions are also replaced:
@@ -321,6 +322,10 @@ Example:
     186: realloc 0xb609f080 0xb603e9a0 12
 
 pointer = memalign(alignment, size)
+
+**THREAD\_ID**: memalign pointer alignment size
+
+pointer = aligned\_alloc(alignment, size)
 
 **THREAD\_ID**: memalign pointer alignment size
 
