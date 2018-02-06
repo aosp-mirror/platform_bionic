@@ -4,7 +4,10 @@
 cc_library_static {
     name: "libdl_static",
 
-    srcs: ["libdl.cpp", "libdl_cfi.cpp"],
+    srcs: [
+        "libdl.cpp",
+        "libdl_cfi.cpp",
+    ],
 
     cflags: [
         "-Wall",
@@ -71,7 +74,7 @@ cc_library {
         whole_static_libs: ["libdl_static"],
     },
     static: {
-        srcs: [ "libdl_static.c" ],
+        srcs: ["libdl_static.c"],
     },
     cflags: [
         "-Wall",
@@ -91,7 +94,7 @@ cc_library {
 
     // This is placeholder library the actual implementation is (currently)
     // provided by the linker.
-    shared_libs: [ "ld-android" ],
+    shared_libs: ["ld-android"],
 
     sanitize: {
         never: true,

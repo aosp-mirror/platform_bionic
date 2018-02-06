@@ -245,10 +245,13 @@ cc_test_library {
 
 cc_test_library {
     name: "libfortify1-tests-clang",
-    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    defaults: [
+        "bionic_fortify_tests_defaults",
+        "bionic_tests_defaults",
+    ],
     cflags: [
         "-D_FORTIFY_SOURCE=1",
-        "-DTEST_NAME=Fortify1_clang"
+        "-DTEST_NAME=Fortify1_clang",
     ],
     shared: {
         enabled: false,
@@ -257,10 +260,13 @@ cc_test_library {
 
 cc_test_library {
     name: "libfortify2-tests-clang",
-    defaults: ["bionic_fortify_tests_defaults", "bionic_tests_defaults"],
+    defaults: [
+        "bionic_fortify_tests_defaults",
+        "bionic_tests_defaults",
+    ],
     cflags: [
         "-D_FORTIFY_SOURCE=2",
-        "-DTEST_NAME=Fortify2_clang"
+        "-DTEST_NAME=Fortify2_clang",
     ],
     shared: {
         enabled: false,
@@ -312,7 +318,10 @@ cc_test_library {
 
 cc_test_library {
     name: "libBionicLoaderTests",
-    defaults: ["bionic_tests_defaults", "llvm-defaults"],
+    defaults: [
+        "bionic_tests_defaults",
+        "llvm-defaults",
+    ],
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
@@ -347,7 +356,7 @@ cc_test_library {
                 "libLLVMCore",
                 "libLLVMSupport",
             ],
-        }
+        },
     },
 }
 
@@ -439,12 +448,15 @@ cc_defaults {
                 "-Wl,--enable-new-dtags",
             ],
         },
-    }
+    },
 }
 
 cc_test {
     name: "bionic-unit-tests",
-    defaults: ["bionic_unit_tests_defaults", "bionic_tests_defaults"],
+    defaults: [
+        "bionic_unit_tests_defaults",
+        "bionic_tests_defaults",
+    ],
 
     target: {
         android: {
