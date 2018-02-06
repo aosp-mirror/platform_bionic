@@ -77,6 +77,7 @@ void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
 void* debug_malloc(size_t size);
 void debug_free(void* pointer);
+void* debug_aligned_alloc(size_t alignment, size_t size);
 void* debug_memalign(size_t alignment, size_t bytes);
 void* debug_realloc(void* pointer, size_t bytes);
 void* debug_calloc(size_t nmemb, size_t bytes);
@@ -667,6 +668,17 @@ struct mallinfo debug_mallinfo() {
 
 int debug_mallopt(int param, int value) {
   return g_dispatch->mallopt(param, value);
+}
+
+void* debug_aligned_alloc(size_t alignment, size_t size) {
+  if (DebugCallsDisabled()) {
+    return g_dispatch->aligned_alloc(alignment, size);
+  }
+  if (!powerof2(alignment)) {
+    errno = EINVAL;
+    return nullptr;
+  }
+  return debug_memalign(alignment, size);
 }
 
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
