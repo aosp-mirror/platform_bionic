@@ -67,7 +67,7 @@ cc_benchmark {
         "libsystemproperties",
         "libasync_safe",
     ],
-    include_dirs: ["bionic/libc",],
+    include_dirs: ["bionic/libc"],
 }
 
 // We don't build a static benchmark executable because it's not usually
@@ -107,5 +107,8 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: ["suites/*", "test_suites/*"],
+    data: [
+        "suites/*",
+        "test_suites/*",
+    ],
 }

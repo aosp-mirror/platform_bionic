@@ -80,7 +80,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
     ldflags: ["-Wl,-z,norelro"],
-    shared_libs = ["libtest_simple"],
+    shared_libs: ["libtest_simple"],
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +122,6 @@ cc_test_library {
     allow_undefined_symbols: true,
     relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
 }
-
 
 // -----------------------------------------------------------------------------
 // Library used by dlext indirect unload on the namespace boundary tests
@@ -407,7 +406,6 @@ cc_test_library {
 // +-> libtest_relo_check_dt_needed_order_2.so
 // -----------------------------------------------------------------------------
 
-
 cc_test_library {
     name: "libtest_relo_check_dt_needed_order",
     defaults: ["bionic_testlib_defaults"],
@@ -457,7 +455,7 @@ cc_test_library {
     name: "libtest_ifunc_variable",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc_variable.cpp"],
-    shared_libs: [ "libtest_ifunc_variable_impl" ],
+    shared_libs: ["libtest_ifunc_variable_impl"],
 
     arch: {
         mips: {
@@ -559,7 +557,6 @@ cc_test_library {
         },
     },
 }
-
 
 // -----------------------------------------------------------------------------
 // Library with weak function
@@ -695,7 +692,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["thread_local_dtor.cpp"],
 }
-
 
 // -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
