@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <gtest/gtest.h>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "utils.h"
 
 #include <android-base/file.h>
