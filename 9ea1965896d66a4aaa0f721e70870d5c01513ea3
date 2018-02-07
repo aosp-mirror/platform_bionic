@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "740c4b17_816513fb",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T02:21:39Z",
+      "side": 1,
+      "message": "Taking this from the original commit, but this does seem wrong.  I think there are two possibilities here:\n\n1) We continue with the is_oem_id() checks and only source the passwd/group files from /vendor, since in a Treble world, all vendor (oem) info should be on /vendor.  We would not use /system/etc/{passwd,group} in this case.\n\n2) We continue with the is_oem_id() checks for vendor, but also check !is_oem_id() \u0026\u0026 !is_valid_app_id() and after having checked android_ids, check /system/etc/{passwd,group}.  We could even move to a future where the android_ids array is deprecated in favor of those files, but honestly, I don\u0027t see a huge gain there.",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
