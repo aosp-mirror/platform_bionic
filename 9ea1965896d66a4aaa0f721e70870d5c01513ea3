@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "4f8d0be8_22ca6462",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "Done; I should know better...",
+      "parentUuid": "5df7066b_6152b6f5",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4198d4e_b44c4813",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -107,6 +131,30 @@
       "writtenOn": "2018-02-07T21:20:43Z",
       "side": 1,
       "message": "\u003d\u003d -1",
+      "range": {
+        "startLine": 95,
+        "startChar": 28,
+        "endLine": 95,
+        "endChar": 31
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c394e9e_a9a1b7df",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4198d4e_b44c4813",
       "range": {
         "startLine": 95,
         "startChar": 28,
@@ -142,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "d1d8750b_f14cbbf0",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "It\u0027s the number of fields written to fields[].  I care more about the number written than read, since reading won\u0027t overflow but fields[] can.",
+      "parentUuid": "b1d2d660_7f8cf175",
+      "range": {
+        "startLine": 230,
+        "startChar": 16,
+        "endLine": 230,
+        "endChar": 23
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f3914df_7dad091b",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -153,6 +225,24 @@
       "writtenOn": "2018-02-07T21:20:43Z",
       "side": 1,
       "message": "strcspn?",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7e689bb4_cb262b12",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "Is that actually any clearer?  Or less code?  We\u0027ll still need to check \n\nif (*(begin + result) \u003d\u003d \u0027\\n\u0027) {\n// Do X\n}\nif (*(begin + result) \u003d\u003d \u0027:\u0027) {\n// Do Y\n}\nbegin \u003d begin + result",
+      "parentUuid": "8f3914df_7dad091b",
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -176,6 +266,24 @@
     },
     {
       "key": {
+        "uuid": "7340c182_0ad33f6e",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "When I wrote it line_beginning would always start \u003c end, but sure we can make it while to be more canonical.",
+      "parentUuid": "c741044d_a83f0793",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b47695f8_8b2316fb",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -187,6 +295,30 @@
       "writtenOn": "2018-02-07T21:20:43Z",
       "side": 1,
       "message": "factor this out, since it appears so many times?",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 280,
+        "endChar": 62
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dac55f50_2b6cccc4",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "Done; also made it so I don\u0027t actually write to the state struct unless we\u0027re returning true, which I had been meaning to do.",
+      "parentUuid": "b47695f8_8b2316fb",
       "range": {
         "startLine": 277,
         "startChar": 0,
@@ -300,6 +432,24 @@
       "side": 1,
       "message": "Ok, I buy that for a nickle. If we stop designing for the future, you do #1 _today_, and we still can do #2 later without any disruption. Make note of these sentiments in the comment reporting the list of files to check for passwd/group so future selves can revisit this and understand the tradeoffs?",
       "parentUuid": "101698b1_f619656c",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1bd2b19_26067057",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "It\u0027s not that I\u0027m not designing for the future.  It\u0027s that I\u0027m hypothesizing in the future we won\u0027t need to break the Android-isms that we have a uid without a matching gid (or vice versa) or to not publish specific names in the headers.  I think that in the future, we would be worse off if we make this more complicated than adding a line to a header.\n\nThe other option that I would be okay with is if we deprecate that header now and move *all* of the platform AIDs to a system/core/android_ids/config.fs.  We could then put user-only, group-only and no-header options in that file too.\n\nBut in any case, we need to have only one source.",
+      "parentUuid": "684655d4_d1600c09",
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -435,6 +585,24 @@
       "writtenOn": "2018-02-07T21:20:43Z",
       "side": 1,
       "message": "yeah, i did think the absence of this was strange in the original. why not just put this in the obvious place?",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b7342a42_273ad42e",
+        "filename": "tests/grp_pwd_file_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T23:02:30Z",
+      "side": 1,
+      "message": "Because we shouldn\u0027t ever call that destructor.  But I guess if we do, then we\u0027re already doing something wrong and might as well reclaim the resources while we\u0027re at it.\n\nIn any case, I moved it over.",
+      "parentUuid": "fdaa4c16_624d24c6",
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
