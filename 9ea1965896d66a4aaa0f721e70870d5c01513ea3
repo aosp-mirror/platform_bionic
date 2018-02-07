@@ -144,6 +144,24 @@
     },
     {
       "key": {
+        "uuid": "101698b1_f619656c",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T19:02:36Z",
+      "side": 1,
+      "message": "I understand what you\u0027re saying.  \n\nI still don\u0027t think we gain much if we make these changes.  I prefer simplicity over everything else and only having one place where we make changes to the system AIDs (android_filesystem_config.h in AOSP) is a bigger advantage than anything else (this is why my #1 option was not to parse /system/etc/{passwd,group} at all).  \n\nI agree that it\u0027s unfortunate that we\u0027ll have the AID_BIN and AID_DAEMON constants and that we\u0027ll create extra users/groups where they\u0027re otherwise unneeded, but I don\u0027t see that causing any actual problems.  Whereas, I can forsee actual problems arrising if we have two sources of truth and we create misunderstandings or conflicts between them.\n\nPerhaps we can clean this up a bit by moving the header from such an esoteric location to system/core/android_ids/android_ids.h?  We can always #include it from /system/core/libcutils/include/private/android_filesystem_config.h to keep existing users building.  But the important goal here being 1 single source of truth for system AIDs.",
+      "parentUuid": "039f0323_21285b77",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "16e9494b_848c9b10",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
