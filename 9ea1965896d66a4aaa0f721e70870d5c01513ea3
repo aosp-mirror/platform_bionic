@@ -73,6 +73,132 @@
     },
     {
       "key": {
+        "uuid": "5df7066b_6152b6f5",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "avoid double-checked locking.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 5
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4198d4e_b44c4813",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "\u003d\u003d -1",
+      "range": {
+        "startLine": 95,
+        "startChar": 28,
+        "endLine": 95,
+        "endChar": 31
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1d2d660_7f8cf175",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "i know what you mean, but \"read\" might read better. (or just \"count\" if you want to sidestep the issue.)",
+      "range": {
+        "startLine": 230,
+        "startChar": 16,
+        "endLine": 230,
+        "endChar": 23
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f3914df_7dad091b",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "strcspn?",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c741044d_a83f0793",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "why is this a `do` loop?",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b47695f8_8b2316fb",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "factor this out, since it appears so many times?",
+      "range": {
+        "startLine": 277,
+        "startChar": 0,
+        "endLine": 280,
+        "endChar": 62
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "740c4b17_816513fb",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -292,6 +418,23 @@
         "endLine": 319,
         "endChar": 31
       },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdaa4c16_624d24c6",
+        "filename": "tests/grp_pwd_file_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-07T21:20:43Z",
+      "side": 1,
+      "message": "yeah, i did think the absence of this was strange in the original. why not just put this in the obvious place?",
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
