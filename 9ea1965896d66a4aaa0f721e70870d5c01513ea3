@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d0959846_fce8887a",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T03:32:35Z",
+      "side": 1,
+      "message": "nit: maybe do an inert CL dependency pass to change _all_ NULL to nullptr?",
+      "range": {
+        "startLine": 539,
+        "startChar": 12,
+        "endLine": 539,
+        "endChar": 16
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "740c4b17_816513fb",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -13,6 +36,70 @@
       "writtenOn": "2018-02-07T02:21:39Z",
       "side": 1,
       "message": "Taking this from the original commit, but this does seem wrong.  I think there are two possibilities here:\n\n1) We continue with the is_oem_id() checks and only source the passwd/group files from /vendor, since in a Treble world, all vendor (oem) info should be on /vendor.  We would not use /system/etc/{passwd,group} in this case.\n\n2) We continue with the is_oem_id() checks for vendor, but also check !is_oem_id() \u0026\u0026 !is_valid_app_id() and after having checked android_ids, check /system/etc/{passwd,group}.  We could even move to a future where the android_ids array is deprecated in favor of those files, but honestly, I don\u0027t see a huge gain there.",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ceaa59b_2d573bb1",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T03:32:35Z",
+      "side": 1,
+      "message": "[TL;DR] Yes to option 2. beware of /odm/etc/? Deprecate AID_BIN and AID_DAEMON if you can!\n\nAt incept, we built these files based on the collection of ids, allocating unique values, complaining if not unique. This was wrong minded since I did not conceptualize building /vendor separately, we were all this one big happy family back then. But in the _real_ treble world /system/etc/passwd should never contain oem ids, and /vendor/etc/passwd would.\n\nSo I side with option 2, but this will make the caller interesting since you are filtering the call to only support oem ids.\n\nWe did a cleanup pass replacing as many hard-coded AID_* references as possible with calls to getpwnam. Recognize that /system/etc/passwd can probably take a much distant future to contain the replacement for the android_ids array due to some level of momentum, so both the array and the private android_filesystem_config.h file. However, I can imagine _new_ and interesting contributions adding to /system/etc/passwd because there is more flexibility over the other fields, and we do not run the \u0027risk\u0027 of adding AID_* values, or when we want a uid, but not a gid. I would have liked to have added to /system/etc/passwd and /system/etc/group in https://android-review.googlesource.com/c/platform/system/core/+/608356 rather than add AID_BIN and AID_DAEMON as they now can be abused.\n\nSo, if you do implement /system/etc/passwd and /system/etc/group parsing, do revert c/608356 and add the start of ids that we do _not_ want AID_* associated with.\n\nAlso, gets interesting if we _also_ decide to support the /odm/etc/passwd file; but that collision dispute is between the odm and the partners ...",
+      "parentUuid": "740c4b17_816513fb",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16e9494b_848c9b10",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T03:32:35Z",
+      "side": 1,
+      "message": "do not forget to have a companion sepolicy to make this world readable, /system/etc/passwd by default is AFAIK?, but /vendor/etc/passwd is _not_!",
+      "range": {
+        "startLine": 308,
+        "startChar": 5,
+        "endLine": 308,
+        "endChar": 23
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ace190b_252d9783",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T03:32:35Z",
+      "side": 1,
+      "message": "Beware, the POSIX API for getpwnam_r supports propagation of errno from the operation(s), but it is the antipattern that is concerning, it is not in errno, but in the int returned from the function.",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 31
+      },
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
