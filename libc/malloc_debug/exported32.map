@@ -1,5 +1,6 @@
 LIBC_MALLOC_DEBUG {
   global:
+    debug_aligned_alloc;
     debug_calloc;
     debug_dump_heap;
     debug_finalize;

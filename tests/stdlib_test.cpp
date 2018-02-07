@@ -35,6 +35,14 @@
 #include <limits>
 #include <string>
 
+#if defined(__BIONIC__)
+  #define ALIGNED_ALLOC_AVAILABLE 1
+#elif defined(__GLIBC_PREREQ)
+  #if __GLIBC_PREREQ(2, 16)
+    #define ALIGNED_ALLOC_AVAILABLE 1
+  #endif
+#endif
+
 // The random number generator tests all set the seed, get four values, reset the seed and check
 // that they get the first two values repeated, and then reset the seed and check two more values
 // to rule out the possibility that we're just going round a cycle of four values.
@@ -224,6 +232,50 @@ TEST(stdlib, posix_memalign_various_sizes) {
 TEST(stdlib, posix_memalign_overflow) {
   void* ptr;
   ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
+}
+
+TEST(stdlib, aligned_alloc_sweep) {
+#if defined(ALIGNED_ALLOC_AVAILABLE)
+  // Verify powers of 2 up to 2048 allocate, and verify that all other
+  // alignment values between the powers of 2 fail.
+  size_t last_align = 1;
+  for (size_t align = 1; align <= 2048; align <<= 1) {
+    // Try all of the non power of 2 values from the last until this value.
+    for (size_t fail_align = last_align + 1; fail_align < align; fail_align++) {
+      ASSERT_TRUE(aligned_alloc(fail_align, 256) == nullptr)
+          << "Unexpected success at align " << fail_align;
+      ASSERT_EQ(EINVAL, errno) << "Unexpected errno at align " << fail_align;
+    }
+    void* ptr = aligned_alloc(align, 256);
+    ASSERT_TRUE(ptr != nullptr) << "Unexpected failure at align " << align;
+    ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) & (align - 1))
+        << "Did not return a valid aligned ptr " << ptr << " expected alignment " << align;
+    free(ptr);
+    last_align = align;
+  }
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
+#endif
+}
+
+TEST(stdlib, aligned_alloc_overflow) {
+#if defined(ALIGNED_ALLOC_AVAILABLE)
+  ASSERT_TRUE(aligned_alloc(16, SIZE_MAX) == nullptr);
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
+#endif
+}
+
+TEST(stdlib, aligned_alloc_size_not_multiple_of_alignment) {
+#if defined(ALIGNED_ALLOC_AVAILABLE)
+  for (size_t size = 1; size <= 2048; size++) {
+    void* ptr = aligned_alloc(2048, size);
+    ASSERT_TRUE(ptr != nullptr) << "Failed at size " << std::to_string(size);
+    free(ptr);
+  }
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
+#endif
 }
 
 TEST(stdlib, realpath__NULL_filename) {
