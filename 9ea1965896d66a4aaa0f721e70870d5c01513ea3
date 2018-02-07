@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "0705b76d_83e8b9e7",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T16:35:54Z",
+      "side": 1,
+      "message": "\u003e Yes to option 2. \n\nSgtm.\n\n\u003ebeware of /odm/etc/? \n\nYes; I\u0027ve been purposefully ignoring that in this CL.  At some point we need to subdivide the \u0027OEM\u0027 range into Vendor/Odm/Product ranges for those three partitions.  I filed b/73062966 for this.\n\n\u003e Deprecate AID_BIN and AID_DAEMON if you can!\n\nYou mean that these only needed to be users and not groups, right?\n\nHow much do we gain if we allow a name to be specified as only a user or group?  The current scripts we have to convert from config.fs to passwd/group don\u0027t have an option to specify something as only a user or only a group.  Seems like we may just leave this as an Android-ism?",
+      "parentUuid": "1ceaa59b_2d573bb1",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "16e9494b_848c9b10",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
