@@ -285,6 +285,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_TRUE(original_sa.sa_handler == NULL);
   ASSERT_TRUE(original_sa.sa_sigaction == NULL);
   ASSERT_EQ(0U, original_sa.sa_flags & ~sa_restorer);
+  ASSERT_EQ(bool(original_sa.sa_flags & sa_restorer), bool(original_sa.sa_restorer));
 
   // Set a traditional sa_handler signal handler.
   auto no_op_signal_handler = [](int) {};
@@ -300,6 +301,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_TRUE(sa.sa_handler == no_op_signal_handler);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK), sa.sa_flags & ~sa_restorer);
+  ASSERT_EQ(bool(sa.sa_flags & sa_restorer), bool(sa.sa_restorer));
 
   // Set a new-style sa_sigaction signal handler.
   auto no_op_sigaction = [](int, siginfo_t*, void*) {};
@@ -315,6 +317,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   ASSERT_TRUE(sa.sa_sigaction == no_op_sigaction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
+  ASSERT_EQ(bool(sa.sa_flags & sa_restorer), bool(sa.sa_restorer));
 
   // Put everything back how it was.
   ASSERT_EQ(0, sigaction_fn(sig, &original_sa, NULL));
