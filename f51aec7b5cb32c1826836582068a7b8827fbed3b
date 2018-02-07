@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6651c61f_91ba5d4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1124848
+      },
+      "writtenOn": "2018-02-07T00:24:26Z",
+      "side": 1,
+      "message": "The syscalls and attributes will be used for many sched-deadline efforts underway. Its been supported in the kernel for years, no reason from my eyes for bionic not to support it.",
+      "parentUuid": "e0b678f0_f9292ada",
+      "revId": "f51aec7b5cb32c1826836582068a7b8827fbed3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "673243f4_b48bf87e",
         "filename": "libc/include/sched.h",
         "patchSetId": 1
