@@ -86,7 +86,7 @@ std::string ReallocEntry::GetString() const {
                                      old_pointer_, size_);
 }
 
-// posix_memalign, memalgin, pvalloc, valloc all recorded with this class.
+// aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment)
     : MallocEntry(pointer, size), alignment_(alignment) {
 }
