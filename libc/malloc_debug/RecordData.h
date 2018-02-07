@@ -129,7 +129,7 @@ class ReallocEntry : public MallocEntry {
   DISALLOW_COPY_AND_ASSIGN(ReallocEntry);
 };
 
-// posix_memalign, memalign, pvalloc, valloc all recorded with this class.
+// aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 class MemalignEntry : public MallocEntry {
  public:
   MemalignEntry(void* pointer, size_t size, size_t alignment);
