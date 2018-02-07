@@ -83,6 +83,30 @@
     },
     {
       "key": {
+        "uuid": "ed38b3b7_bdde4564",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T16:34:33Z",
+      "side": 1,
+      "message": "Right, I\u0027ll need to add that.",
+      "parentUuid": "16e9494b_848c9b10",
+      "range": {
+        "startLine": 308,
+        "startChar": 5,
+        "endLine": 308,
+        "endChar": 23
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6ace190b_252d9783",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -94,6 +118,30 @@
       "writtenOn": "2018-02-07T03:32:35Z",
       "side": 1,
       "message": "Beware, the POSIX API for getpwnam_r supports propagation of errno from the operation(s), but it is the antipattern that is concerning, it is not in errno, but in the int returned from the function.",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 31
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50532c5d_0e213390",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-07T16:34:33Z",
+      "side": 1,
+      "message": "Hm.  I\u0027m okay with not propagating these errno\u0027s.  It will probably be masked in any case, since either:\n\n1) We fail to find an AID in these files, but we generate a generic oem one and thus return success with errno\u003d0\n2) We fail here and we fail later on too so we\u0027ll be returning an error later on anyway.",
+      "parentUuid": "6ace190b_252d9783",
       "range": {
         "startLine": 319,
         "startChar": 0,
