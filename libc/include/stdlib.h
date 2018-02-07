@@ -79,6 +79,8 @@ unsigned long long strtoull(const char* __s, char** __end_ptr, int __base);
 
 int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(16);
 
+void* aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
+
 double strtod(const char* __s, char** __end_ptr);
 long double strtold(const char* __s, char** __end_ptr) __RENAME_LDBL(strtod, 3, 21);
 

@@ -69,6 +69,7 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
     Malloc(malloc_disable),
     Malloc(malloc_enable),
     Malloc(mallopt),
+    Malloc(aligned_alloc),
   };
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
@@ -140,6 +141,14 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
     return _posix_memalign(memptr, alignment, size);
   }
   return Malloc(posix_memalign)(memptr, alignment, size);
+}
+
+extern "C" void* aligned_alloc(size_t alignment, size_t size) {
+  auto _aligned_alloc = __libc_globals->malloc_dispatch.aligned_alloc;
+  if (__predict_false(_aligned_alloc != nullptr)) {
+    return _aligned_alloc(alignment, size);
+  }
+  return Malloc(aligned_alloc)(alignment, size);
 }
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
@@ -274,6 +283,10 @@ static bool InitMalloc(void* malloc_impl_handler, MallocDispatch* table, const c
   }
   if (!InitMallocFunction<MallocPosixMemalign>(malloc_impl_handler, &table->posix_memalign,
                                                prefix, "posix_memalign")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocAlignedAlloc>(malloc_impl_handler, &table->aligned_alloc,
+                                              prefix, "aligned_alloc")) {
     return false;
   }
   if (!InitMallocFunction<MallocRealloc>(malloc_impl_handler, &table->realloc,

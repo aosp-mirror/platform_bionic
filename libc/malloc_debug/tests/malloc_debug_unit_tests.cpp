@@ -54,6 +54,7 @@ void* debug_calloc(size_t, size_t);
 void* debug_realloc(void*, size_t);
 int debug_posix_memalign(void**, size_t, size_t);
 void* debug_memalign(size_t, size_t);
+void* debug_aligned_alloc(size_t, size_t);
 size_t debug_malloc_usable_size(void*);
 void debug_get_malloc_leak_info(uint8_t**, size_t*, size_t*, size_t*, size_t*);
 void debug_free_malloc_leak_info(uint8_t*);
@@ -136,6 +137,7 @@ MallocDispatch MallocDebugTest::dispatch = {
   nullptr,
   nullptr,
   mallopt,
+  aligned_alloc,
 };
 
 void VerifyAllocCalls(bool backtrace_enabled) {
@@ -304,6 +306,11 @@ TEST_F(MallocDebugTest, expand_alloc) {
   debug_free(pointer);
 
   pointer = debug_memalign(128, 15);
+  ASSERT_TRUE(pointer != nullptr);
+  ASSERT_LE(1039U, debug_malloc_usable_size(pointer));
+  debug_free(pointer);
+
+  pointer = debug_aligned_alloc(128, 15);
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_LE(1039U, debug_malloc_usable_size(pointer));
   debug_free(pointer);
@@ -1769,6 +1776,12 @@ void VerifyRecordAllocs() {
   pointer = debug_memalign(16, 40);
   ASSERT_TRUE(pointer != nullptr);
   expected += android::base::StringPrintf("%d: memalign %p 16 40\n", getpid(), pointer);
+  debug_free(pointer);
+  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+
+  pointer = debug_aligned_alloc(32, 50);
+  ASSERT_TRUE(pointer != nullptr);
+  expected += android::base::StringPrintf("%d: memalign %p 32 50\n", getpid(), pointer);
   debug_free(pointer);
   expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 
