@@ -102,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "039f0323_21285b77",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T17:17:32Z",
+      "side": 1,
+      "message": "No, for these two uid and gid. But I really didn\u0027t want to _make_ AID_BIN or AID_DAEMON and hide them from the private/android_filesystem_config.h API. We can fix this recent transgression without breaking Androidism(s).\n\nI would prefer to grow in a static /system/etc/passwd and /system/etc/group file for runtime, than private/android_filesystem_config.h at build time if at all possible, but that may be just me fighting Androidism :-). The sad part is that one updates two UNIX standard files (passwd and group) instead of one file in a deliciously obscure location .../system/core/libcutils/include/private/android_filesystem_config.h.\n\nsuggestion: .../system/core/rootdir/passwd, and for Androidism\u0027s sake copy to /system/etc/passwd, and autogenerate for now /system/etc/group from the passwd file content?\n\nAnd yes, in the future, an agenda, there may be a need for a uid, without a corresponding gid to enforce refined DAC security. There are a potpourri of external applications and tests that never make the assumption they are the same, or that either one or the other exist (sameness is an Androidism). I figure Androidism that will remain is that we will likely _never_ define a gid with a different name matching a uid, that will create some ecosystem confusion.",
+      "parentUuid": "0705b76d_83e8b9e7",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "16e9494b_848c9b10",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
@@ -193,6 +211,30 @@
       "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "482170cd_6fe24500",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T17:17:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "50532c5d_0e213390",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 319,
+        "endChar": 31
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
