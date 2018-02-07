@@ -162,6 +162,24 @@
     },
     {
       "key": {
+        "uuid": "684655d4_d1600c09",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1032276
+      },
+      "writtenOn": "2018-02-07T19:47:13Z",
+      "side": 1,
+      "message": "Ok, I buy that for a nickle. If we stop designing for the future, you do #1 _today_, and we still can do #2 later without any disruption. Make note of these sentiments in the comment reporting the list of files to check for passwd/group so future selves can revisit this and understand the tradeoffs?",
+      "parentUuid": "101698b1_f619656c",
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "16e9494b_848c9b10",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
