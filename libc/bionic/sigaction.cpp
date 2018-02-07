@@ -81,7 +81,6 @@ __strong_alias(sigaction64, sigaction);
 #else
 
 extern "C" int __rt_sigaction(int, const struct sigaction64*, struct sigaction64*, size_t);
-extern "C" int __sigaction(int, const struct sigaction*, struct sigaction*);
 
 int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* bionic_old) {
   // The 32-bit ABI is broken. struct sigaction includes a too-small sigset_t,
@@ -91,6 +90,7 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
     kernel_new = {};
     kernel_new.sa_flags = bionic_new->sa_flags;
     kernel_new.sa_handler = bionic_new->sa_handler;
+    kernel_new.sa_restorer = bionic_new->sa_restorer;
     memcpy(&kernel_new.sa_mask, &bionic_new->sa_mask, sizeof(bionic_new->sa_mask));
   }
 
@@ -100,6 +100,7 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
     *bionic_old = {};
     bionic_old->sa_flags = kernel_old.sa_flags;
     bionic_old->sa_handler = kernel_old.sa_handler;
+    bionic_old->sa_restorer = kernel_old.sa_restorer;
     memcpy(&bionic_old->sa_mask, &kernel_old.sa_mask, sizeof(bionic_old->sa_mask));
   }
   return result;
