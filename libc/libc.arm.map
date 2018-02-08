@@ -1321,7 +1321,11 @@ LIBC_O {
 LIBC_P { # introduced=P
   global:
     __freading;
+    __free_hook;
     __fwriting;
+    __malloc_hook;
+    __memalign_hook;
+    __realloc_hook;
     aligned_alloc;
     endhostent;
     endnetent;
