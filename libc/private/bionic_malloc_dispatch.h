@@ -46,6 +46,7 @@ typedef int (*MallocIterate)(uintptr_t, size_t, void (*)(uintptr_t, size_t, void
 typedef void (*MallocMallocDisable)();
 typedef void (*MallocMallocEnable)();
 typedef int (*MallocMallopt)(int, int);
+typedef void* (*MallocAlignedAlloc)(size_t, size_t);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 typedef void* (*MallocPvalloc)(size_t);
@@ -71,6 +72,7 @@ struct MallocDispatch {
   MallocMallocDisable malloc_disable;
   MallocMallocEnable malloc_enable;
   MallocMallopt mallopt;
+  MallocAlignedAlloc aligned_alloc;
 } __attribute__((aligned(32)));
 
 #endif
