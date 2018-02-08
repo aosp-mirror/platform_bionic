@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "164233c6_82dca214",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-02-08T18:47:58Z",
+      "side": 1,
+      "message": "Isn\u0027t this almost always going to be __INTRODUCED_IN_FUTURE? I don\u0027t know if this is something that should be mentioned here though.",
+      "range": {
+        "startLine": 176,
+        "startChar": 33,
+        "endLine": 176,
+        "endChar": 50
+      },
+      "revId": "1a1b57cb836dced5d6826c4693f8a6184e21c62b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
