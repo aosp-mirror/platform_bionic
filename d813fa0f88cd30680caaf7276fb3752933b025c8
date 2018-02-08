@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fc2f900_e5eb6462",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-08T03:07:03Z",
+      "side": 1,
+      "message": "not just {}?",
+      "range": {
+        "startLine": 201,
+        "startChar": 37,
+        "endLine": 201,
+        "endChar": 38
+      },
+      "revId": "d813fa0f88cd30680caaf7276fb3752933b025c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
