@@ -1,0 +1,24 @@
+LIBC_MALLOC_HOOKS {
+  global:
+    hooks_aligned_alloc;
+    hooks_calloc;
+    hooks_finalize;
+    hooks_free;
+    hooks_free_malloc_leak_info;
+    hooks_get_malloc_leak_info;
+    hooks_initialize;
+    hooks_iterate;
+    hooks_mallinfo;
+    hooks_malloc;
+    hooks_malloc_backtrace;
+    hooks_malloc_disable;
+    hooks_malloc_enable;
+    hooks_malloc_usable_size;
+    hooks_mallopt;
+    hooks_memalign;
+    hooks_posix_memalign;
+    hooks_realloc;
+
+  local:
+    *;
+};
