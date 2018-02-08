@@ -503,6 +503,30 @@
     },
     {
       "key": {
+        "uuid": "49d6fadf_8fd3987d",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-02-08T21:20:20Z",
+      "side": 1,
+      "message": "Is it not world readable?  I finally got around to checking after unrooting and it worked.  It looks both readable from a permissions standpoint and from an SELinux standpoint.\n\n\nbullhead:/ $ ls -lZ /vendor/etc/passwd  \n-rw-r--r-- 1 root root u:object_r:vendor_configs_file:s0 182 2018-02-08 21:10 /vendor/etc/passwd\n\nallow domain vendor_configs_file:file { read open getattr };",
+      "parentUuid": "ed38b3b7_bdde4564",
+      "range": {
+        "startLine": 308,
+        "startChar": 5,
+        "endLine": 308,
+        "endChar": 23
+      },
+      "revId": "9ea1965896d66a4aaa0f721e70870d5c01513ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6ace190b_252d9783",
         "filename": "libc/bionic/grp_pwd_file.cpp",
         "patchSetId": 6
