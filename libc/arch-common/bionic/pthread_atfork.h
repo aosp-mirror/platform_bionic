@@ -16,9 +16,9 @@
 
 #include <android/api-level.h>
 
-// __register_atfork wasn't available until android-23. We need to build a
-// pre-23 and 23+ version of crtbegin.
-#if __ANDROID_API__ >= __ANDROID_API_M__
+// __register_atfork wasn't available until android-23. When using libc.a, we're
+// using the latest library regardless of target API level.
+#if defined(_FORCE_CRT_ATFORK) || __ANDROID_API__ >= __ANDROID_API_M__
 
 extern void* __dso_handle;
 
