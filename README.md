@@ -144,8 +144,23 @@ libc/
 </pre>
 
 
-Adding system calls
--------------------
+Adding libc wrappers for system calls
+-------------------------------------
+
+The first question you should ask is "should I add a libc wrapper for
+this system call?". The answer is usually "no".
+
+The answer is "yes" if the system call is part of the POSIX standard.
+
+The answer is probably "yes" if the system call has a wrapper in at
+least one other C library.
+
+The answer may be "yes" if the system call has three/four distinct
+users in different projects, and there isn't a more specific library
+that would make more sense as the place to add the wrapper.
+
+In all other cases, you should use
+[syscall(3)](http://man7.org/linux/man-pages/man2/syscall.2.html) instead.
 
 Adding a system call usually involves:
 
@@ -157,7 +172,8 @@ Adding a system call usually involves:
      kernel uapi header files, in which case you just need to make sure that
      the appropriate POSIX header file in libc/include/ includes the
      relevant file or files.
-  4. Add function declarations to the appropriate header file.
+  4. Add function declarations to the appropriate header file. Don't forget
+     to include the appropriate `__INTRODUCED_IN()`.
   5. Add the function name to the correct section in libc/libc.map.txt and
      run `./libc/tools/genversion-scripts.py`.
   6. Add at least basic tests. Even a test that deliberately supplies
