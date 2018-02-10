@@ -33,7 +33,7 @@
 
 extern "C" int __getcwd(char* buf, size_t size);
 
-char* getcwd(char* buf, size_t size) __overloadable {
+char* getcwd(char* buf, size_t size) {
   // You can't specify size 0 unless you're asking us to allocate for you.
   if (buf != NULL && size == 0) {
     errno = EINVAL;

@@ -42,24 +42,23 @@ __BEGIN_DECLS
 #endif
 
 void* memccpy(void* __dst, const void* __src, int __stop_char, size_t __n);
-void* memchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memchr);
+void* memchr(const void* __s, int __ch, size_t __n) __attribute_pure__;
 #if defined(__cplusplus)
 extern "C++" void* memrchr(void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
 extern "C++" const void* memrchr(const void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
 #else
-void* memrchr(const void* __s, int __ch, size_t __n) __attribute_pure__ __overloadable __RENAME_CLANG(memrchr);
+void* memrchr(const void* __s, int __ch, size_t __n) __attribute_pure__;
 #endif
 int memcmp(const void* __lhs, const void* __rhs, size_t __n) __attribute_pure__;
-void* memcpy(void*, const void*, size_t)
-        __overloadable __RENAME_CLANG(memcpy);
+void* memcpy(void*, const void*, size_t);
 #if defined(__USE_GNU)
 void* mempcpy(void* __dst, const void* __src, size_t __n) __INTRODUCED_IN(23);
 #endif
-void* memmove(void* __dst, const void* __src, size_t __n) __overloadable __RENAME_CLANG(memmove);
-void* memset(void* __dst, int __ch, size_t __n) __overloadable __RENAME_CLANG(memset);
+void* memmove(void* __dst, const void* __src, size_t __n);
+void* memset(void* __dst, int __ch, size_t __n);
 void* memmem(const void* __haystack, size_t __haystack_size, const void* __needle, size_t __needle_size) __attribute_pure__;
 
-char* strchr(const char* __s, int __ch) __attribute_pure__ __overloadable __RENAME_CLANG(strchr);
+char* strchr(const char* __s, int __ch) __attribute_pure__;
 char* __strchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
@@ -70,16 +69,16 @@ char* strchrnul(const char* __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24
 #endif
 #endif
 
-char* strrchr(const char* __s, int __ch) __attribute_pure__ __overloadable __RENAME_CLANG(strrchr);
+char* strrchr(const char* __s, int __ch) __attribute_pure__;
 char* __strrchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 
-size_t strlen(const char* __s) __attribute_pure__ __overloadable __RENAME_CLANG(strlen);
+size_t strlen(const char* __s) __attribute_pure__;
 size_t __strlen_chk(const char* __s, size_t __n) __INTRODUCED_IN(17);
 
 int strcmp(const char* __lhs, const char* __rhs) __attribute_pure__;
-char* stpcpy(char* __dst, const char* __src) __overloadable __RENAME_CLANG(stpcpy) __INTRODUCED_IN(21);
-char* strcpy(char* __dst, const char* __src) __overloadable __RENAME_CLANG(strcpy);
-char* strcat(char* __dst, const char* __src) __overloadable __RENAME_CLANG(strcat);
+char* stpcpy(char* __dst, const char* __src) __INTRODUCED_IN(21);
+char* strcpy(char* __dst, const char* __src);
+char* strcat(char* __dst, const char* __src);
 char* strdup(const char* __s);
 
 char* strstr(const char* __haystack, const char* __needle) __attribute_pure__;
@@ -101,14 +100,14 @@ int strerror_r(int __errno_value, char* __buf, size_t __n);
 #endif
 
 size_t strnlen(const char* __s, size_t __n) __attribute_pure__;
-char* strncat(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strncat);
+char* strncat(char* __dst, const char* __src, size_t __n);
 char* strndup(const char* __s, size_t __n);
 int strncmp(const char* __lhs, const char* __rhs, size_t __n) __attribute_pure__;
-char* stpncpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(stpncpy) __INTRODUCED_IN(21);
-char* strncpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strncpy);
+char* stpncpy(char* __dst, const char* __src, size_t __n) __INTRODUCED_IN(21);
+char* strncpy(char* __dst, const char* __src, size_t __n);
 
-size_t strlcat(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strlcat);
-size_t strlcpy(char* __dst, const char* __src, size_t __n) __overloadable __RENAME_CLANG(strlcpy);
+size_t strlcat(char* __dst, const char* __src, size_t __n);
+size_t strlcpy(char* __dst, const char* __src, size_t __n);
 
 size_t strcspn(const char* __s, const char* __reject) __attribute_pure__;
 char* strpbrk(const char* __s, const char* __accept) __attribute_pure__;

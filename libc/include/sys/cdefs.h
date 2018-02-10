@@ -348,11 +348,8 @@
  */
 #if defined(__clang__) && defined(__BIONIC_FORTIFY)
 #  define __overloadable __attribute__((overloadable))
-/* We don't use __RENAME directly because on gcc this could result in unnecessary renames. */
-#  define __RENAME_CLANG(x) __RENAME(x)
 #else
 #  define __overloadable
-#  define __RENAME_CLANG(x)
 #endif
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */

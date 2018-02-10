@@ -71,9 +71,9 @@ __BEGIN_DECLS
 
 int creat(const char* __path, mode_t __mode);
 int creat64(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
-int openat(int __dir_fd, const char* __path, int __flags, ...) __overloadable __RENAME_CLANG(openat);
+int openat(int __dir_fd, const char* __path, int __flags, ...);
 int openat64(int __dir_fd, const char* __path, int __flags, ...) __INTRODUCED_IN(21);
-int open(const char* __path, int __flags, ...) __overloadable __RENAME_CLANG(open);
+int open(const char* __path, int __flags, ...);
 int open64(const char* __path, int __flags, ...) __INTRODUCED_IN(21);
 ssize_t splice(int __in_fd, off64_t* __in_offset, int __out_fd, off64_t* __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
 ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
