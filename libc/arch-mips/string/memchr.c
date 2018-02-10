@@ -100,7 +100,7 @@ do_bytes (const op_t* w, unsigned char ch)
 }
 
 void *
-memchr (void const *s, int c_in, size_t n) __overloadable
+memchr (void const *s, int c_in, size_t n)
 {
   if (n != 0) {
     const unsigned char *p = (const unsigned char *) s;

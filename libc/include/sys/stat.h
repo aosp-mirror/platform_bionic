@@ -165,7 +165,7 @@ int stat(const char* __path, struct stat* __buf);
 int stat64(const char* __path, struct stat64* __buf) __INTRODUCED_IN(21);
 
 int mknod(const char* __path, mode_t __mode, dev_t __dev);
-mode_t umask(mode_t __mask) __overloadable __RENAME_CLANG(umask);
+mode_t umask(mode_t __mask);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/stat.h>
