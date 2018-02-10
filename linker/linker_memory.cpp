@@ -32,27 +32,28 @@
 #include <sys/cdefs.h>
 #include <unistd.h>
 
+#include <atomic>
+
 #include <async_safe/log.h>
 
 static LinkerMemoryAllocator g_linker_allocator;
-static pid_t fallback_tid = 0;
+static std::atomic<pid_t> fallback_tid(0);
 
 // Used by libdebuggerd_handler to switch allocators during a crash dump, in
 // case the linker heap is corrupted. Do not use this function.
-extern "C" void __linker_enable_fallback_allocator() {
-  if (fallback_tid != 0) {
-    async_safe_fatal("attempted to use currently-in-use fallback allocator");
-  }
-
-  fallback_tid = gettid();
+extern "C" bool __linker_enable_fallback_allocator() {
+  pid_t expected = 0;
+  return fallback_tid.compare_exchange_strong(expected, gettid());
 }
 
 extern "C" void __linker_disable_fallback_allocator() {
-  if (fallback_tid == 0) {
+  pid_t previous = fallback_tid.exchange(0);
+  if (previous == 0) {
     async_safe_fatal("attempted to disable unused fallback allocator");
+  } else if (previous != gettid()) {
+    async_safe_fatal("attempted to disable fallback allocator in use by another thread (%d)",
+                     previous);
   }
-
-  fallback_tid = 0;
 }
 
 static LinkerMemoryAllocator& get_fallback_allocator() {
