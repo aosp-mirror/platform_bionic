@@ -53,7 +53,7 @@ __asm__(PRE "mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
 __asm__(PRE "mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)
-__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; pushl %eax; calll _start_main" POST);
+__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax; calll _start_main" POST);
 #elif defined(__x86_64__)
 __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #else
