@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2510db34_71217b30",
+        "filename": "libc/include/sys/stat.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-12T23:51:35Z",
+      "side": 1,
+      "message": "i used 3 because we don\u0027t have more detailed records that far back, and that\u0027s what we used in \u003cmath.h\u003e for \"prehistoric\".",
+      "range": {
+        "startLine": 159,
+        "startChar": 67,
+        "endLine": 159,
+        "endChar": 68
+      },
+      "revId": "25f17e48df2e5e9e88b0c5cd2ebeded33c7cedc0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
