@@ -76,4 +76,19 @@ class Lock {
   }
 };
 
+class LockGuard {
+ public:
+  LockGuard(Lock& lock) : lock_(lock) {
+    lock_.lock();
+  }
+  ~LockGuard() {
+    lock_.unlock();
+  }
+
+  DISALLOW_COPY_AND_ASSIGN(LockGuard);
+
+ private:
+  Lock& lock_;
+};
+
 #endif  // _BIONIC_LOCK_H
