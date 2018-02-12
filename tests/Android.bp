@@ -75,6 +75,7 @@ cc_test_library {
         "getcwd_test.cpp",
         "glob_test.cpp",
         "grp_pwd_test.cpp",
+        "grp_pwd_file_test.cpp",
         "iconv_test.cpp",
         "ifaddrs_test.cpp",
         "inttypes_test.cpp",
