@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_SOINFO_H
-#define __LINKER_SOINFO_H
+#pragma once
 
 #include <link.h>
 
@@ -386,5 +385,3 @@ void for_each_dt_needed(const soinfo* si, F action) {
     }
   }
 }
-
-#endif  /* __LINKER_SOINFO_H */

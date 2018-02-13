@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
-#define SYSTEM_PROPERTIES_CONTEXTS_SERIALIZED_H
+#pragma once
 
 #include <property_info_parser/property_info_parser.h>
 
@@ -60,5 +59,3 @@ class ContextsSerialized : public Contexts {
   size_t context_nodes_mmap_size_ = 0;
   prop_area* serial_prop_area_ = nullptr;
 };
-
-#endif

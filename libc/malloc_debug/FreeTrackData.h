@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_FREETRACKDATA_H
-#define DEBUG_MALLOC_FREETRACKDATA_H
+#pragma once
 
 #include <stdint.h>
 #include <pthread.h>
@@ -75,5 +74,3 @@ class FreeTrackData : public OptionData {
 
   DISALLOW_COPY_AND_ASSIGN(FreeTrackData);
 };
-
-#endif // DEBUG_MALLOC_FREETRACKDATA_H

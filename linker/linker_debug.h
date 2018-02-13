@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_DEBUG_H_
-#define _LINKER_DEBUG_H_
+#pragma once
 
 // You can increase the verbosity of debug traces by defining the LD_DEBUG
 // environment variable to a numeric value from 0 to 2 (corresponding to
@@ -102,5 +101,3 @@ extern uint32_t bitmask[];
 #define MARK(x) do {} while (0)
 
 #endif
-
-#endif /* _LINKER_DEBUG_H_ */

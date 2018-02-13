@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_H
-#define SYSTEM_PROPERTIES_CONTEXTS_H
+#pragma once
 
 #include "prop_area.h"
 #include "prop_info.h"
@@ -44,5 +43,3 @@ class Contexts {
   virtual void ResetAccess() = 0;
   virtual void FreeAndUnmap() = 0;
 };
-
-#endif

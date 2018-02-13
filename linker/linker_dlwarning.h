@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_DLWARNING_H
-#define __LINKER_DLWARNING_H
+#pragma once
 
 void add_dlwarning(const char* sopath, const char* message, const char* value = nullptr);
 
@@ -36,5 +35,3 @@ void add_dlwarning(const char* sopath, const char* message, const char* value = 
 // is used to avoid forcing user into saving the message
 // to a global variable.
 void get_dlwarning(void* user_data, void (*f)(void*, const char*));
-
-#endif  /* __LINKER_DLWARNING_H */

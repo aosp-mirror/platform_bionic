@@ -33,8 +33,7 @@
 // - android uses 128 bits long doubles for LP64, so the structure and macros
 //   were reworked for the quad precision ieee representation.
 
-#ifndef _FPMATH_
-#define _FPMATH_
+#pragma once
 
 #include <endian.h>
 
@@ -92,5 +91,3 @@ union IEEEl2bits {
 } while(0)
 
 #endif // __LP64__
-
-#endif // _FPMATH_

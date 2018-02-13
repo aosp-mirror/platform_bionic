@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ASYNC_SAFE_LOG_LOG_H
-#define _ASYNC_SAFE_LOG_LOG_H
+#pragma once
 
 #include <sys/cdefs.h>
 #include <stdarg.h>
@@ -104,5 +103,3 @@ int async_safe_write_log(int pri, const char* tag, const char* msg);
   } while(0)
 
 __END_DECLS
-
-#endif

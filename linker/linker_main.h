@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_MAIN_H
-#define __LINKER_MAIN_H
+#pragma once
 
 #include <android/dlext.h>
 
@@ -71,5 +70,3 @@ void solist_add_soinfo(soinfo* si);
 bool solist_remove_soinfo(soinfo* si);
 soinfo* solist_get_head();
 soinfo* solist_get_somain();
-
-#endif

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXT_NODE_H
-#define SYSTEM_PROPERTIES_CONTEXT_NODE_H
+#pragma once
 
 #include "private/bionic_lock.h"
 
@@ -66,5 +65,3 @@ class ContextNode {
   bool no_access_;
   const char* filename_;
 };
-
-#endif

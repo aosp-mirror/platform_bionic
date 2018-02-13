@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#pragma once
+
 #include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
@@ -34,9 +36,6 @@
 #include "private/bionic_macros.h"
 
 #include "prop_info.h"
-
-#ifndef SYSTEM_PROPERTIES_PROP_AREA_H
-#define SYSTEM_PROPERTIES_PROP_AREA_H
 
 // Properties are stored in a hybrid trie/binary tree structure.
 // Each property's name is delimited at '.' characters, and the tokens are put
@@ -161,5 +160,3 @@ class prop_area {
 
   DISALLOW_COPY_AND_ASSIGN(prop_area);
 };
-
-#endif
