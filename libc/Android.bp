@@ -1278,6 +1278,7 @@ cc_library_static {
         "bionic/getpriority.cpp",
         "bionic/gettid.cpp",
         "bionic/grp_pwd.cpp",
+        "bionic/grp_pwd_file.cpp",
         "bionic/iconv.cpp",
         "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",

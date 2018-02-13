@@ -81,8 +81,10 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
 #define si_timerid si_tid /* glibc compatibility. */
 
-/* sigset_t is already large enough on LP64, but LP32's sigset_t is just `unsigned long`. */
-#if defined(__LP64__)
+/* sigset_t is already large enough on LP64 and mips, but other LP32's sigset_t
+ * is just `unsigned long`.
+ */
+#if defined(__LP64__) || defined(__mips__)
 typedef sigset_t sigset64_t;
 #else
 typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
