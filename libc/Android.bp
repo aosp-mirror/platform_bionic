@@ -33,6 +33,7 @@ libc_common_src_files_32 = [
 
 libc_common_flags = [
     "-D_LIBC=1",
+    "-D__BIONIC_LP32_USE_STAT64",
     "-Wall",
     "-Wextra",
     "-Wunused",
