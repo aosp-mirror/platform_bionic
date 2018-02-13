@@ -104,9 +104,7 @@ cc_binary {
             version_script: "linker.generic.map",
         },
         x86: {
-            srcs: ["arch/x86/begin.c"],
-
-            cflags: ["-D__work_around_b_24465209__"],
+            srcs: ["arch/x86/begin.S"],
             version_script: "linker.generic.map",
         },
         x86_64: {
