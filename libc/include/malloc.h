@@ -81,6 +81,14 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 #define M_DECAY_TIME -100
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 
+/*
+ * Memory Allocation Hooks
+ */
+extern void* (*volatile __malloc_hook)(size_t, const void*) __INTRODUCED_IN(28);
+extern void* (*volatile __realloc_hook)(void*, size_t, const void*) __INTRODUCED_IN(28);
+extern void (*volatile __free_hook)(void*, const void*) __INTRODUCED_IN(28);
+extern void* (*volatile __memalign_hook)(size_t, size_t, const void*) __INTRODUCED_IN(28);
+
 __END_DECLS
 
 #endif  /* LIBC_INCLUDE_MALLOC_H_ */
