@@ -539,7 +539,7 @@ TEST(wchar, mbsnrtowcs) {
   ASSERT_EQ(EILSEQ, errno);
 }
 
-TEST(wchar, wcsftime) {
+TEST(wchar, wcsftime__wcsftime_l) {
   setenv("TZ", "UTC", 1);
 
   struct tm t;
@@ -551,6 +551,8 @@ TEST(wchar, wcsftime) {
   wchar_t buf[64];
 
   EXPECT_EQ(24U, wcsftime(buf, sizeof(buf), L"%c", &t));
+  EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
+  EXPECT_EQ(24U, wcsftime_l(buf, sizeof(buf), L"%c", &t, LC_GLOBAL_LOCALE));
   EXPECT_STREQ(L"Sun Mar 10 00:00:00 2100", buf);
 }
 
@@ -876,6 +878,34 @@ TEST(wchar, wcstold_hex_floats) {
 
 TEST(wchar, wcstold_hex_inf_nan) {
   TestWcsToFloatInfNan(wcstold);
+}
+
+TEST(wchar, wcstod_l) {
+  EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstof_l) {
+  EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstol_l) {
+  EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstold_l) {
+  EXPECT_EQ(1.23L, wcstold_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstoll_l) {
+  EXPECT_EQ(123LL, wcstoll_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstoul_l) {
+  EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+}
+
+TEST(wchar, wcstoull_l) {
+  EXPECT_EQ(123ULL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
 }
 
 static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {
