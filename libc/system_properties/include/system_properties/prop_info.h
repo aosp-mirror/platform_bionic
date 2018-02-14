@@ -26,14 +26,13 @@
  * SUCH DAMAGE.
  */
 
+#pragma once
+
 #include <stdatomic.h>
 #include <stdint.h>
 #include <sys/system_properties.h>
 
 #include "private/bionic_macros.h"
-
-#ifndef SYSTEM_PROPERTIES_PROP_INFO_H
-#define SYSTEM_PROPERTIES_PROP_INFO_H
 
 // The C11 standard doesn't allow atomic loads from const fields,
 // though C++11 does.  Fudge it until standards get straightened out.
@@ -88,5 +87,3 @@ struct prop_info {
 };
 
 static_assert(sizeof(prop_info) == 96, "sizeof struct prop_info must be 96 bytes");
-
-#endif

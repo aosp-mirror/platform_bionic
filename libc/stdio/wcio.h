@@ -29,8 +29,7 @@
  * $Citrus$
  */
 
-#ifndef _WCIO_H_
-#define _WCIO_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -80,5 +79,3 @@ do {\
 } while (0)
 
 __END_DECLS
-
-#endif /*_WCIO_H_*/

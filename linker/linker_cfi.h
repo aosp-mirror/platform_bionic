@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_CFI_H_
-#define _LINKER_CFI_H_
+#pragma once
 
 #include "linker.h"
 #include "linker_debug.h"
@@ -103,5 +102,3 @@ class CFIShadowWriter : private CFIShadow {
 };
 
 CFIShadowWriter* get_cfi_shadow();
-
-#endif // _LINKER_CFI_H_

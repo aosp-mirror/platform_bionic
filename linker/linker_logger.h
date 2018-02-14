@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_LOGGER_H_
-#define _LINKER_LOGGER_H_
+#pragma once
 
 #include <stdlib.h>
 #include <limits.h>
@@ -61,5 +60,3 @@ extern char** g_argv;
 // If the system property debug.ld.greylist_disabled is true, we'll not use the greylist
 // regardless of API level.
 extern bool g_greylist_disabled;
-
-#endif /* _LINKER_LOGGER_H_ */

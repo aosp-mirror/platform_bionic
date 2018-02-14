@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef LIBC_INIT_COMMON_H
-#define LIBC_INIT_COMMON_H
+
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -57,7 +57,5 @@ __LIBC_HIDDEN__ void __libc_init_globals(KernelArgumentBlock& args);
 __LIBC_HIDDEN__ void __libc_init_common(KernelArgumentBlock& args);
 
 __LIBC_HIDDEN__ void __libc_init_AT_SECURE(KernelArgumentBlock& args);
-
-#endif
 
 #endif
