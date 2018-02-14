@@ -34,33 +34,14 @@
 
 #include <asm/sigcontext.h>
 #include <bits/pthread_types.h>
+#include <bits/signal_types.h>
 #include <bits/timespec.h>
 #include <limits.h>
-
-/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the
- * POSIX one, so we need to expose our own and translate behind the scenes.
- * For 32-bit, we're stuck with the definitions we already shipped,
- * even though they contain a sigset_t that's too small. See sigaction64.
- */
-#define sigaction __kernel_sigaction
-#include <linux/signal.h>
-#undef sigaction
 
 #include <sys/ucontext.h>
 #define __BIONIC_HAVE_UCONTEXT_T
 
 __BEGIN_DECLS
-
-typedef int sig_atomic_t;
-
-/* The arm and x86 kernel header files don't define _NSIG. */
-#ifndef _KERNEL__NSIG
-#define _KERNEL__NSIG 64
-#endif
-
-/* Userspace's NSIG is the kernel's _NSIG + 1. */
-#define _NSIG (_KERNEL__NSIG + 1)
-#define NSIG _NSIG
 
 /* The kernel headers define SIG_DFL (0) and SIG_IGN (1) but not SIG_HOLD, since
  * SIG_HOLD is only used by the deprecated SysV signal API.
@@ -76,78 +57,7 @@ int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 extern const char* const sys_siglist[_NSIG];
 extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
 
-typedef __sighandler_t sig_t; /* BSD compatibility. */
-typedef __sighandler_t sighandler_t; /* glibc compatibility. */
-
 #define si_timerid si_tid /* glibc compatibility. */
-
-/* sigset_t is already large enough on LP64 and mips, but other LP32's sigset_t
- * is just `unsigned long`.
- */
-#if defined(__LP64__) || defined(__mips__)
-typedef sigset_t sigset64_t;
-#else
-typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
-#endif
-
-#if defined(__LP64__)
-
-#define __SIGACTION_BODY \
-  int sa_flags; \
-  union { \
-    sighandler_t sa_handler; \
-    void (*sa_sigaction)(int, struct siginfo*, void*); \
-  }; \
-  sigset_t sa_mask; \
-  void (*sa_restorer)(void); \
-
-struct sigaction { __SIGACTION_BODY };
-struct sigaction64 { __SIGACTION_BODY };
-
-#undef __SIGACTION_BODY
-
-#elif defined(__mips__)
-
-#define __SIGACTION_BODY \
-  int sa_flags; \
-  union { \
-    sighandler_t sa_handler; \
-    void (*sa_sigaction)(int, struct siginfo*, void*); \
-  }; \
-  sigset_t sa_mask; \
-
-struct sigaction { __SIGACTION_BODY };
-struct sigaction64 { __SIGACTION_BODY };
-
-#undef __SIGACTION_BODY
-
-#else
-
-#undef sa_handler
-#undef sa_sigaction
-
-struct sigaction {
-  union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction)(int, struct siginfo*, void*);
-  };
-  sigset_t sa_mask;
-  int sa_flags;
-  void (*sa_restorer)(void);
-};
-
-/* This matches the kernel's internal structure. */
-struct sigaction64 {
-  union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction)(int, struct siginfo*, void*);
-  };
-  int sa_flags;
-  void (*sa_restorer)(void);
-  sigset64_t sa_mask;
-};
-
-#endif
 
 int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
 int sigaction64(int __signal, const struct sigaction64* __new_action, struct sigaction64* __old_action) __INTRODUCED_IN(28);
