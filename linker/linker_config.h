@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_CONFIG_H_
-#define _LINKER_CONFIG_H_
+#pragma once
 
 #include <android/api-level.h>
 
@@ -171,5 +170,3 @@ class Config {
 
   DISALLOW_COPY_AND_ASSIGN(Config);
 };
-
-#endif /* _LINKER_CONFIG_H_ */

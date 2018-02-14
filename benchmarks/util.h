@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_BENCHMARKS_UTIL_H_
-#define _BIONIC_BENCHMARKS_UTIL_H_
+#pragma once
 
 #include <map>
 #include <mutex>
@@ -62,5 +61,3 @@ wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbyte
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte);
 
 bool LockToCPU(long cpu_to_lock);
-
-#endif // _BIONIC_BENCHMARKS_UTIL_H

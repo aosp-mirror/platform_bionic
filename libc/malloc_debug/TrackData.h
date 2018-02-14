@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_TRACKDATA_H
-#define DEBUG_MALLOC_TRACKDATA_H
+#pragma once
 
 #include <stdint.h>
 #include <pthread.h>
@@ -75,5 +74,3 @@ class TrackData : public OptionData {
 
   DISALLOW_COPY_AND_ASSIGN(TrackData);
 };
-
-#endif // DEBUG_MALLOC_TRACKDATA_H

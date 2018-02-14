@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_DEBUGDATA_H
-#define DEBUG_MALLOC_DEBUGDATA_H
+#pragma once
 
 #include <stdint.h>
 
@@ -106,5 +105,3 @@ class DebugData {
 };
 
 extern DebugData* g_debug;
-
-#endif // MALLOC_DEBUG_DEBUGDATA_H
