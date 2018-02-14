@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_SYSTEM_PROPERTIES_H
-#define SYSTEM_PROPERTIES_SYSTEM_PROPERTIES_H
+#pragma once
 
 #include <stdint.h>
 #include <sys/system_properties.h>
@@ -92,5 +91,3 @@ class SystemProperties {
   bool initialized_;
   char property_filename_[PROP_FILENAME_MAX];
 };
-
-#endif

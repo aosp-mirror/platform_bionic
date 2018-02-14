@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_SLEB128_H
-#define _LINKER_SLEB128_H
+#pragma once
 
 #include <stdint.h>
 
@@ -70,5 +69,3 @@ class sleb128_decoder {
   const uint8_t* current_;
   const uint8_t* const end_;
 };
-
-#endif // __LINKER_SLEB128_H

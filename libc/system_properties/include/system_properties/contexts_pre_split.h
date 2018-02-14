@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
-#define SYSTEM_PROPERTIES_CONTEXTS_PRE_SPLIT_H
+#pragma once
 
 #include "contexts.h"
 #include "prop_area.h"
@@ -68,5 +67,3 @@ class ContextsPreSplit : public Contexts {
  private:
   prop_area* pre_split_prop_area_ = nullptr;
 };
-
-#endif

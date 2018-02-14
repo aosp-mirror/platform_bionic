@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_BACKTRACEDATA_H
-#define DEBUG_MALLOC_BACKTRACEDATA_H
+#pragma once
 
 #include <stdint.h>
 
@@ -67,5 +66,3 @@ class BacktraceData : public OptionData {
 
   DISALLOW_COPY_AND_ASSIGN(BacktraceData);
 };
-
-#endif // DEBUG_MALLOC_BACKTRACEDATA_H

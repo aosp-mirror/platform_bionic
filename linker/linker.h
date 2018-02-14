@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_H_
-#define _LINKER_H_
+#pragma once
 
 #include <dlfcn.h>
 #include <android/dlext.h>
@@ -187,5 +186,3 @@ android_namespace_t* get_exported_namespace(const char* name);
 
 void increment_dso_handle_reference_counter(void* dso_handle);
 void decrement_dso_handle_reference_counter(void* dso_handle);
-
-#endif

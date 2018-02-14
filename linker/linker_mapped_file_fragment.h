@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef LINKER_MAPPED_FILE_FRAGMENT_H
-#define LINKER_MAPPED_FILE_FRAGMENT_H
+
+#pragma once
 
 #include <unistd.h>
 
@@ -49,5 +49,3 @@ class MappedFileFragment {
 
   DISALLOW_COPY_AND_ASSIGN(MappedFileFragment);
 };
-
-#endif /* LINKER_MAPPED_FILE_FRAGMENT_H */

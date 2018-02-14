@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_COMMON_TYPES_H
-#define __LINKER_COMMON_TYPES_H
+#pragma once
 
 #include <android/dlext.h>
 #include "linked_list.h"
@@ -65,5 +64,3 @@ class NamespaceListAllocator {
 
 typedef LinkedList<soinfo, SoinfoListAllocator> soinfo_list_t;
 typedef LinkedList<android_namespace_t, NamespaceListAllocator> android_namespace_list_t;
-
-#endif  /* __LINKER_COMMON_TYPES_H */
