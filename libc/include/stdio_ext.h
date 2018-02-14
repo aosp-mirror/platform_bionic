@@ -45,6 +45,8 @@ void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
 size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
 void _flushlbf(void) __INTRODUCED_IN(23);
 
+void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
+
 #define FSETLOCKING_QUERY 0
 #define FSETLOCKING_INTERNAL 1
 #define FSETLOCKING_BYCALLER 2

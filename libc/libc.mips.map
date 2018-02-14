@@ -1306,6 +1306,7 @@ LIBC_P { # introduced=P
   global:
     __freading;
     __free_hook;
+    __fseterr;
     __fwriting;
     __malloc_hook;
     __memalign_hook;
