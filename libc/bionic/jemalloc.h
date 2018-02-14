@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef LIBC_BIONIC_JEMALLOC_H_
-#define LIBC_BIONIC_JEMALLOC_H_
+#pragma once
 
 #include <jemalloc/jemalloc.h>
 #include <malloc.h>  // For struct mallinfo.
@@ -35,5 +34,3 @@ void* je_memalign_round_up_boundary(size_t, size_t);
 void* je_pvalloc(size_t);
 
 __END_DECLS
-
-#endif  // LIBC_BIONIC_DLMALLOC_H_

@@ -32,8 +32,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_STDIO_LOCAL_H__
-#define __BIONIC_STDIO_LOCAL_H__
+#pragma once
 
 #include <pthread.h>
 #include <stdbool.h>
@@ -278,5 +277,3 @@ char* __hldtoa(long double, const char*, int, int*, int*, char**);
 char* __ldtoa(long double*, int, int, int*, int*, char**);
 
 __END_DECLS
-
-#endif

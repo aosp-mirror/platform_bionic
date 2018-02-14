@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BIONIC_NETLINK_H
-#define BIONIC_NETLINK_H
+#pragma once
 
 #include <sys/types.h>
 
@@ -49,5 +48,3 @@ class NetlinkConnection {
   char* data_;
   size_t size_;
 };
-
-#endif

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SYSTEM_PROPERTIES_CONTEXTS_SPLIT_H
-#define SYSTEM_PROPERTIES_CONTEXTS_SPLIT_H
+#pragma once
 
 #include "contexts.h"
 
@@ -58,5 +57,3 @@ class ContextsSplit : public Contexts {
   prop_area* serial_prop_area_ = nullptr;
   const char* filename_ = nullptr;
 };
-
-#endif

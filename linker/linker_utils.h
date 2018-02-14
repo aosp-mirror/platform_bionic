@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_UTILS_H
-#define __LINKER_UTILS_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -56,5 +55,3 @@ std::string dirname(const char* path);
 off64_t page_start(off64_t offset);
 size_t page_offset(off64_t offset);
 bool safe_add(off64_t* out, off64_t a, size_t b);
-
-#endif

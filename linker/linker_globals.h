@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_GLOBALS_H
-#define __LINKER_GLOBALS_H
+#pragma once
 
 #include <link.h>
 #include <stddef.h>
@@ -86,5 +85,3 @@ class DlErrorRestorer {
  private:
   std::string saved_error_msg_;
 };
-
-#endif  /* __LINKER_GLOBALS_H */
