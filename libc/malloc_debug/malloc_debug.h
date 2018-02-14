@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_H
-#define MALLOC_DEBUG_H
+#pragma once
 
 #include <stdint.h>
 
@@ -70,5 +69,3 @@ constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** 
 constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
 
 extern const MallocDispatch* g_dispatch;
-
-#endif // MALLOC_DEBUG_H

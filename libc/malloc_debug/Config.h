@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_CONFIG_H
-#define MALLOC_DEBUG_CONFIG_H
+#pragma once
 
 #include <stdint.h>
 
@@ -159,5 +158,3 @@ class Config {
   uint8_t front_guard_value_;
   uint8_t rear_guard_value_;
 };
-
-#endif  // MALLOC_DEBUG_CONFIG_H

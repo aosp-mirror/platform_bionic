@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKED_LIST_H
-#define __LINKED_LIST_H
+#pragma once
 
 #include "private/bionic_macros.h"
 
@@ -259,5 +258,3 @@ class LinkedList {
   LinkedListEntry<T>* tail_;
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };
-
-#endif // __LINKED_LIST_H

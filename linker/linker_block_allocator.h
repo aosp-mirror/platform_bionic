@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_BLOCK_ALLOCATOR_H
-#define __LINKER_BLOCK_ALLOCATOR_H
+#pragma once
 
 #include <stdlib.h>
 #include <limits.h>
@@ -89,5 +88,3 @@ class LinkerTypeAllocator {
   LinkerBlockAllocator block_allocator_;
   DISALLOW_COPY_AND_ASSIGN(LinkerTypeAllocator);
 };
-
-#endif // __LINKER_BLOCK_ALLOCATOR_H

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_MAPDATA_H
-#define DEBUG_MALLOC_MAPDATA_H
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -74,5 +73,3 @@ class MapData {
 
   DISALLOW_COPY_AND_ASSIGN(MapData);
 };
-
-#endif  // DEBUG_MALLOC_MAPDATA_H

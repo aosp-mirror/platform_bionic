@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef SECCOMP_POLICY_H
-#define SECCOMP_POLICY_H
+#pragma once
 
 #include <stddef.h>
 #include <linux/filter.h>
@@ -23,5 +22,3 @@
 bool set_app_seccomp_filter();
 bool set_system_seccomp_filter();
 bool set_global_seccomp_filter();
-
-#endif

@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_RECORDDATA_H
-#define DEBUG_MALLOC_RECORDDATA_H
+#pragma once
 
 #include <stdint.h>
 #include <pthread.h>
@@ -173,5 +172,3 @@ class RecordData {
 
   DISALLOW_COPY_AND_ASSIGN(RecordData);
 };
-
-#endif // DEBUG_MALLOC_RECORDDATA_H

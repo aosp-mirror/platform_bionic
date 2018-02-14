@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef GRP_PWD_FILE_H
-#define GRP_PWD_FILE_H
+#pragma once
 
 #include <grp.h>
 #include <pwd.h>
@@ -93,5 +92,3 @@ class GroupFile {
  private:
   MmapFile mmap_file_;
 };
-
-#endif

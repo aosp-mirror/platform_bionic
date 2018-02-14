@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_NAMESPACES_H
-#define __LINKER_NAMESPACES_H
+#pragma once
 
 #include "linker_common_types.h"
 
@@ -164,5 +163,3 @@ struct android_namespace_t {
 
   DISALLOW_COPY_AND_ASSIGN(android_namespace_t);
 };
-
-#endif  /* __LINKER_NAMESPACES_H */

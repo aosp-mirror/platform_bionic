@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef SECCOMP_BPFS_H
-#define SECCOMP_BPFS_H
+#pragma once
 
 #include <stddef.h>
 #include <linux/seccomp.h>
@@ -61,5 +60,3 @@ extern const struct sock_filter mips64_system_filter[];
 extern const size_t mips64_system_filter_size;
 extern const struct sock_filter mips64_global_filter[];
 extern const size_t mips64_global_filter_size;
-
-#endif

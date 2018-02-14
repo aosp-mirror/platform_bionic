@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_RELOC_ITERATORS_H
-#define __LINKER_RELOC_ITERATORS_H
+#pragma once
 
 #include "linker.h"
 
@@ -173,5 +172,3 @@ class packed_reloc_iterator {
   size_t relocation_group_index_;
   rel_t reloc_;
 };
-
-#endif  // __LINKER_RELOC_ITERATORS_H
