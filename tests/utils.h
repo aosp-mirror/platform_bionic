@@ -140,15 +140,20 @@ static inline void WaitUntilThreadSleep(std::atomic<pid_t>& tid) {
   }
 }
 
-static inline void AssertChildExited(int pid, int expected_exit_status) {
+static inline void AssertChildExited(int pid, int expected_exit_status,
+                                     const std::string* error_msg = nullptr) {
   int status;
-  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, &status, 0)));
+  std::string error;
+  if (error_msg == nullptr) {
+    error_msg = &error;
+  }
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, &status, 0))) << *error_msg;
   if (expected_exit_status >= 0) {
-    ASSERT_TRUE(WIFEXITED(status));
-    ASSERT_EQ(expected_exit_status, WEXITSTATUS(status));
+    ASSERT_TRUE(WIFEXITED(status)) << *error_msg;
+    ASSERT_EQ(expected_exit_status, WEXITSTATUS(status)) << *error_msg;
   } else {
-    ASSERT_TRUE(WIFSIGNALED(status));
-    ASSERT_EQ(-expected_exit_status, WTERMSIG(status));
+    ASSERT_TRUE(WIFSIGNALED(status)) << *error_msg;
+    ASSERT_EQ(-expected_exit_status, WTERMSIG(status)) << *error_msg;
   }
 }
 
@@ -215,7 +220,8 @@ class ExecTestHelper {
     }
     close(fds[0]);
 
-    AssertChildExited(pid, expected_exit_status);
+    std::string error_msg("Test output:\n" + output);
+    AssertChildExited(pid, expected_exit_status, &error_msg);
     if (expected_output != nullptr) {
       ASSERT_EQ(expected_output, output);
     }
