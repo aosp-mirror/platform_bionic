@@ -72,6 +72,10 @@ void _flushlbf() {
   fflush(NULL);
 }
 
+void __fseterr(FILE* fp) {
+  fp->_flags |= __SERR;
+}
+
 int __fsetlocking(FILE* fp, int type) {
   int old_state = _EXT(fp)->_caller_handles_locking ? FSETLOCKING_BYCALLER : FSETLOCKING_INTERNAL;
   if (type == FSETLOCKING_QUERY) {
