@@ -1306,6 +1306,7 @@ LIBC_P { # introduced=P
   global:
     __freading;
     __free_hook;
+    __fseterr;
     __fwriting;
     __malloc_hook;
     __memalign_hook;
@@ -1388,8 +1389,14 @@ LIBC_P { # introduced=P
     sigtimedwait64;
     sigwait64;
     sigwaitinfo64;
+    strptime_l;
     swab;
     syncfs;
+    wcsftime_l;
+    wcstod_l;
+    wcstof_l;
+    wcstol_l;
+    wcstoul_l;
 } LIBC_O;
 
 LIBC_PRIVATE {
