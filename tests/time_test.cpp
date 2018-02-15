@@ -279,6 +279,23 @@ TEST(time, strptime) {
   EXPECT_STREQ("09:41:53", buf);
 }
 
+TEST(time, strptime_l) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  char buf[64];
+
+  memset(&t, 0, sizeof(t));
+  strptime_l("11:14", "%R", &t, LC_GLOBAL_LOCALE);
+  strftime_l(buf, sizeof(buf), "%H:%M", &t, LC_GLOBAL_LOCALE);
+  EXPECT_STREQ("11:14", buf);
+
+  memset(&t, 0, sizeof(t));
+  strptime_l("09:41:53", "%T", &t, LC_GLOBAL_LOCALE);
+  strftime_l(buf, sizeof(buf), "%H:%M:%S", &t, LC_GLOBAL_LOCALE);
+  EXPECT_STREQ("09:41:53", buf);
+}
+
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
   itimerspec ts;
   ts.it_value.tv_sec = value_s;

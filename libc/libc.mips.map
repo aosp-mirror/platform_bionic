@@ -1388,8 +1388,14 @@ LIBC_P { # introduced=P
     sigtimedwait64;
     sigwait64;
     sigwaitinfo64;
+    strptime_l;
     swab;
     syncfs;
+    wcsftime_l;
+    wcstod_l;
+    wcstof_l;
+    wcstol_l;
+    wcstoul_l;
 } LIBC_O;
 
 LIBC_PRIVATE {
