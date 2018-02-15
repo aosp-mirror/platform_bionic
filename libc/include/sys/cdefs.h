@@ -120,6 +120,7 @@
 
 #define __printflike(x, y) __attribute__((__format__(printf, x, y)))
 #define __scanflike(x, y) __attribute__((__format__(scanf, x, y)))
+#define __strftimelike(x) __attribute__((__format__(strftime, x, 0)))
 
 /*
  * GNU C version 2.96 added explicit branch prediction so that

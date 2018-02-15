@@ -430,3 +430,7 @@ _conv_num(const unsigned char **buf, int *dest, int llim, int ulim)
     *dest = result;
     return (1);
 }
+
+char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t l) {
+  return strptime(buf, fmt, tm);
+}
