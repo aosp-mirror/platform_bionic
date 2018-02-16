@@ -256,7 +256,12 @@ TEST(dlfcn, dlopen_vdso) {
     return;
   }
 #endif
-  void* handle = dlopen("linux-vdso.so.1", RTLD_NOW);
+
+  const char* vdso_name = "linux-vdso.so.1";
+#if defined(__i386__)
+  vdso_name = "linux-gate.so.1";
+#endif
+  void* handle = dlopen(vdso_name, RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
 }
