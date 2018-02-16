@@ -209,12 +209,6 @@ cc_binary {
         android: {
             static_libs: ["libdebuggerd_handler_fallback"],
         },
-        android64: {
-            cflags: ["-DTARGET_IS_64_BIT"],
-        },
-        linux_bionic: {
-            cflags: ["-DTARGET_IS_64_BIT"],
-        },
     },
     compile_multilib: "both",
 
