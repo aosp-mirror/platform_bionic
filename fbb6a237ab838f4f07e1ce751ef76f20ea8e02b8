@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc5b9618_da08569d",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-02-20T23:56:04Z",
+      "side": 1,
+      "message": "Should Unmap change status_ to something, like Error?",
+      "revId": "fbb6a237ab838f4f07e1ce751ef76f20ea8e02b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
