@@ -193,10 +193,13 @@ MmapFile::MmapFile(const char* filename) : filename_(filename) {
   lock_.init(false);
 }
 
-MmapFile::~MmapFile() {
+void MmapFile::Unmap() {
   if (status_ == FileStatus::Initialized) {
     size_t size = end_ - start_ + 1;
     munmap(const_cast<char*>(start_), size);
+    status_ = FileStatus::Uninitialized;
+    start_ = nullptr;
+    end_ = nullptr;
   }
 }
 

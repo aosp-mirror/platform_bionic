@@ -38,12 +38,12 @@
 class MmapFile {
  public:
   MmapFile(const char* filename);
-  ~MmapFile();
 
   template <typename Line>
   bool FindById(uid_t uid, Line* line);
   template <typename Line>
   bool FindByName(const char* name, Line* line);
+  void Unmap();
 
   DISALLOW_COPY_AND_ASSIGN(MmapFile);
 
@@ -73,6 +73,9 @@ class PasswdFile {
 
   bool FindById(uid_t id, passwd_state_t* passwd_state);
   bool FindByName(const char* name, passwd_state_t* passwd_state);
+  void Unmap() {
+    mmap_file_.Unmap();
+  }
 
   DISALLOW_COPY_AND_ASSIGN(PasswdFile);
 
@@ -86,6 +89,9 @@ class GroupFile {
 
   bool FindById(gid_t id, group_state_t* group_state);
   bool FindByName(const char* name, group_state_t* group_state);
+  void Unmap() {
+    mmap_file_.Unmap();
+  }
 
   DISALLOW_COPY_AND_ASSIGN(GroupFile);
 
