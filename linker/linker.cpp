@@ -863,11 +863,8 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     }
   }
 
-  // If not found - use dlsym_handle_lookup for caller's
-  // local_group unless it is part of the global group in which
-  // case we already did it.
-  if (s == nullptr && caller != nullptr &&
-      (caller->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+  // If not found - use dlsym_handle_lookup for caller's local_group
+  if (s == nullptr && caller != nullptr) {
     soinfo* local_group_root = caller->get_local_group_root();
 
     return dlsym_handle_lookup(local_group_root->get_primary_namespace(),
