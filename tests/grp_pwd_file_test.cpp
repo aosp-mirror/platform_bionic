@@ -23,6 +23,19 @@
 #if defined(__BIONIC__)
 #include "../libc/bionic/grp_pwd_file.cpp"
 
+template <typename T>
+class FileUnmapper {
+ public:
+  FileUnmapper(T& file) : file_(file) {
+  }
+  ~FileUnmapper() {
+    file_.Unmap();
+  }
+
+ private:
+  T& file_;
+};
+
 void FindAndCheckPasswdEntry(PasswdFile* file, const char* name, uid_t uid, gid_t gid,
                              const char* dir, const char* shell) {
   passwd_state_t name_passwd_state;
@@ -82,6 +95,7 @@ TEST(grp_pwd_file, passwd_file_one_entry) {
   write(file.fd, test_string, sizeof(test_string) - 1);
 
   PasswdFile passwd_file(file.filename);
+  FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "name", 1, 2, "dir", "shell");
 
@@ -101,6 +115,7 @@ TEST(grp_pwd_file, group_file_one_entry) {
   write(file.fd, test_string, sizeof(test_string) - 1);
 
   GroupFile group_file(file.filename);
+  FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "name", 1);
 
@@ -136,6 +151,7 @@ TEST(grp_pwd_file, passwd_file_many_entries) {
   write(file.fd, test_string, sizeof(test_string) - 1);
 
   PasswdFile passwd_file(file.filename);
+  FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "first", 1, 2, "dir", "shell");
   FindAndCheckPasswdEntry(&passwd_file, "middle-ish", 13, 4, "/", "/system/bin/sh");
@@ -171,6 +187,7 @@ TEST(grp_pwd_file, group_file_many_entries) {
   write(file.fd, test_string, sizeof(test_string) - 1);
 
   GroupFile group_file(file.filename);
+  FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "first", 1);
   FindAndCheckGroupEntry(&group_file, "middle-ish", 6);
