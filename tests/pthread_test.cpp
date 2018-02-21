@@ -914,7 +914,7 @@ static void test_pthread_rwlock_reader_wakeup_writer(std::function<int (pthread_
   ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
-  wakeup_arg.trylock_function = pthread_rwlock_trywrlock;
+  wakeup_arg.trylock_function = &pthread_rwlock_trywrlock;
   wakeup_arg.lock_function = lock_function;
 
   pthread_t thread;
@@ -950,7 +950,7 @@ static void test_pthread_rwlock_writer_wakeup_reader(std::function<int (pthread_
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
-  wakeup_arg.trylock_function = pthread_rwlock_tryrdlock;
+  wakeup_arg.trylock_function = &pthread_rwlock_tryrdlock;
   wakeup_arg.lock_function = lock_function;
 
   pthread_t thread;
@@ -1010,8 +1010,8 @@ TEST(pthread, pthread_rwlock_timedrdlock_timeout) {
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
-  wakeup_arg.trylock_function = pthread_rwlock_tryrdlock;
-  wakeup_arg.timed_lock_function = pthread_rwlock_timedrdlock;
+  wakeup_arg.trylock_function = &pthread_rwlock_tryrdlock;
+  wakeup_arg.timed_lock_function = &pthread_rwlock_timedrdlock;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, nullptr,
@@ -1031,8 +1031,8 @@ TEST(pthread, pthread_rwlock_timedwrlock_timeout) {
   ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
-  wakeup_arg.trylock_function = pthread_rwlock_trywrlock;
-  wakeup_arg.timed_lock_function = pthread_rwlock_timedwrlock;
+  wakeup_arg.trylock_function = &pthread_rwlock_trywrlock;
+  wakeup_arg.timed_lock_function = &pthread_rwlock_timedwrlock;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, nullptr,
