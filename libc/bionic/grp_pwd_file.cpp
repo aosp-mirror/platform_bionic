@@ -233,7 +233,7 @@ bool MmapFile::DoMmap() {
 
   auto mmap_size = fd_stat.st_size;
 
-  const void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd, 0);
+  void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd, 0);
   close(fd);
 
   if (map_result == MAP_FAILED) {
@@ -243,7 +243,12 @@ bool MmapFile::DoMmap() {
   start_ = static_cast<const char*>(map_result);
   end_ = start_ + mmap_size - 1;
 
-  return *end_ == '\n';
+  if (*end_ != '\n') {
+    munmap(map_result, mmap_size);
+    return false;
+  }
+
+  return true;
 }
 
 template <typename Line, typename Predicate>
