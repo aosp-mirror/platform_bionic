@@ -42,7 +42,7 @@ class SystemPropertiesTest : public SystemProperties {
   }
   ~SystemPropertiesTest() {
     if (valid_) {
-      contexts()->FreeAndUnmap();
+      contexts_->FreeAndUnmap();
     }
   }
 
