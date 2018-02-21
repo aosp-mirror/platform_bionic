@@ -17,6 +17,7 @@
 cc_defaults {
     name: "bionic_tests_defaults",
     host_supported: true,
+    cpp_std: "experimental",
     target: {
         darwin: {
             enabled: false,
