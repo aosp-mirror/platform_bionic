@@ -29,6 +29,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <sys/param.h>
 #include <sys/system_properties.h>
 
 #include "contexts.h"
@@ -40,12 +41,13 @@ constexpr int PROP_FILENAME_MAX = 1024;
 
 class SystemProperties {
  public:
+  friend struct LocalPropertyTestState;
+  friend class SystemPropertiesTest;
   // Note that system properties are initialized before libc calls static initializers, so
   // doing any initialization in this constructor is an error.  Even a Constructor that zero
   // initializes this class will clobber the previous property initialization.
   // We rely on the static SystemProperties in libc to be placed in .bss and zero initialized.
-  SystemProperties() {
-  }
+  SystemProperties() = default;
   // Special constructor for testing that also zero initializes the important members.
   explicit SystemProperties(bool initialized) : initialized_(initialized) {
   }
@@ -71,23 +73,17 @@ class SystemProperties {
   const prop_info* FindNth(unsigned n);
   int Foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie);
 
-  Contexts* contexts() {
-    return reinterpret_cast<Contexts*>(&contexts_union_);
-  }
-
  private:
-  // We don't want to use new or malloc in properties (b/31659220), and since these classes
-  // are small enough and we place them in a union.  See the above note about Constructors
-  // for why there is a no-op constructor here.
-  union ContextsUnion {
-    ContextsUnion() {
-    }
-    ~ContextsUnion() {
-    }
-    ContextsSerialized contexts_serialized;
-    ContextsSplit contexts_split;
-    ContextsPreSplit contexts_pre_split;
-  } contexts_union_;
+  // We don't want to use new or malloc in properties (b/31659220), and we don't want to waste a
+  // full page by using mmap(), so we set aside enough space to create any context of the three
+  // contexts.
+  static constexpr size_t kMaxContextsAlign =
+      MAX(alignof(ContextsSerialized), MAX(alignof(ContextsSplit), alignof(ContextsPreSplit)));
+  static constexpr size_t kMaxContextsSize =
+      MAX(sizeof(ContextsSerialized), MAX(sizeof(ContextsSplit), sizeof(ContextsPreSplit)));
+  alignas(kMaxContextsAlign) char contexts_data_[kMaxContextsSize];
+  Contexts* contexts_;
+
   bool initialized_;
   char property_filename_[PROP_FILENAME_MAX];
 };
