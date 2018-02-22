@@ -35,6 +35,8 @@
 #include "private/bionic_defs.h"
 
 static SystemProperties system_properties;
+static_assert(__is_trivially_constructible(SystemProperties),
+              "System Properties must be trivially constructable");
 
 // This is public because it was exposed in the NDK. As of 2017-01, ~60 apps reference this symbol.
 // It is set to nullptr and never modified.
