@@ -63,7 +63,7 @@ bool SystemProperties::Init(const char* filename) {
   ErrnoRestorer errno_restorer;
 
   if (initialized_) {
-    contexts()->ResetAccess();
+    contexts_->ResetAccess();
     return true;
   }
 
@@ -74,19 +74,19 @@ bool SystemProperties::Init(const char* filename) {
 
   if (is_dir(property_filename_)) {
     if (access("/dev/__properties__/property_info", R_OK) == 0) {
-      new (&contexts_union_.contexts_serialized) ContextsSerialized();
-      if (!contexts_union_.contexts_serialized.Initialize(false, property_filename_, nullptr)) {
+      contexts_ = new (contexts_data_) ContextsSerialized();
+      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
         return false;
       }
     } else {
-      new (&contexts_union_.contexts_split) ContextsSplit();
-      if (!contexts_union_.contexts_split.Initialize(false, property_filename_, nullptr)) {
+      contexts_ = new (contexts_data_) ContextsSplit();
+      if (!contexts_->Initialize(false, property_filename_, nullptr)) {
         return false;
       }
     }
   } else {
-    new (&contexts_union_.contexts_pre_split) ContextsPreSplit();
-    if (!contexts_union_.contexts_pre_split.Initialize(false, property_filename_, nullptr)) {
+    contexts_ = new (contexts_data_) ContextsPreSplit();
+    if (!contexts_->Initialize(false, property_filename_, nullptr)) {
       return false;
     }
   }
@@ -100,8 +100,8 @@ bool SystemProperties::AreaInit(const char* filename, bool* fsetxattr_failed) {
   }
   strcpy(property_filename_, filename);
 
-  new (&contexts_union_.contexts_serialized) ContextsSerialized();
-  if (!contexts_union_.contexts_serialized.Initialize(true, property_filename_, fsetxattr_failed)) {
+  contexts_ = new (contexts_data_) ContextsSerialized();
+  if (!contexts_->Initialize(true, property_filename_, fsetxattr_failed)) {
     return false;
   }
   initialized_ = true;
@@ -113,7 +113,7 @@ uint32_t SystemProperties::AreaSerial() {
     return -1;
   }
 
-  prop_area* pa = contexts()->GetSerialPropArea();
+  prop_area* pa = contexts_->GetSerialPropArea();
   if (!pa) {
     return -1;
   }
@@ -127,7 +127,7 @@ const prop_info* SystemProperties::Find(const char* name) {
     return nullptr;
   }
 
-  prop_area* pa = contexts()->GetPropAreaForName(name);
+  prop_area* pa = contexts_->GetPropAreaForName(name);
   if (!pa) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
     return nullptr;
@@ -231,7 +231,7 @@ int SystemProperties::Update(prop_info* pi, const char* value, unsigned int len)
     return -1;
   }
 
-  prop_area* pa = contexts()->GetSerialPropArea();
+  prop_area* pa = contexts_->GetSerialPropArea();
   if (!pa) {
     return -1;
   }
@@ -269,12 +269,12 @@ int SystemProperties::Add(const char* name, unsigned int namelen, const char* va
     return -1;
   }
 
-  prop_area* serial_pa = contexts()->GetSerialPropArea();
+  prop_area* serial_pa = contexts_->GetSerialPropArea();
   if (serial_pa == nullptr) {
     return -1;
   }
 
-  prop_area* pa = contexts()->GetPropAreaForName(name);
+  prop_area* pa = contexts_->GetPropAreaForName(name);
   if (!pa) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied adding property \"%s\"", name);
     return -1;
@@ -319,7 +319,7 @@ bool SystemProperties::Wait(const prop_info* pi, uint32_t old_serial, uint32_t* 
       return -1;
     }
 
-    prop_area* serial_pa = contexts()->GetSerialPropArea();
+    prop_area* serial_pa = contexts_->GetSerialPropArea();
     if (serial_pa == nullptr) {
       return -1;
     }
@@ -364,7 +364,7 @@ int SystemProperties::Foreach(void (*propfn)(const prop_info* pi, void* cookie),
     return -1;
   }
 
-  contexts()->ForEach(propfn, cookie);
+  contexts_->ForEach(propfn, cookie);
 
   return 0;
 }
