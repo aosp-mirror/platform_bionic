@@ -98,7 +98,7 @@ struct LocalPropertyTestState {
       return;
     }
 
-    system_properties_.contexts()->FreeAndUnmap();
+    system_properties_.contexts_->FreeAndUnmap();
 
     for (int i = 0; i < nprops; i++) {
       delete names[i];
