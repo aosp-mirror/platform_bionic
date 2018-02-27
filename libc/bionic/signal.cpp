@@ -40,7 +40,6 @@
 #include "private/SigSetConverter.h"
 
 extern "C" int __rt_sigpending(const sigset64_t*, size_t);
-extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 extern "C" int ___rt_sigqueueinfo(pid_t, int, siginfo_t*);
 extern "C" int __rt_sigsuspend(const sigset64_t*, size_t);
 extern "C" int __rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t);
@@ -206,31 +205,6 @@ int sigpending(sigset_t* bionic_set) {
 
 int sigpending64(sigset64_t* set) {
   return __rt_sigpending(set, sizeof(*set));
-}
-
-int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
-  SigSetConverter new_set;
-  sigset64_t* new_set_ptr = nullptr;
-  if (bionic_new_set != nullptr) {
-    sigemptyset64(&new_set.sigset64);
-    new_set.sigset = *bionic_new_set;
-    new_set_ptr = &new_set.sigset64;
-  }
-
-  SigSetConverter old_set;
-  if (sigprocmask64(how, new_set_ptr, &old_set.sigset64) == -1) {
-    return -1;
-  }
-
-  if (bionic_old_set != nullptr) {
-    *bionic_old_set = old_set.sigset;
-  }
-
-  return 0;
-}
-
-int sigprocmask64(int how, const sigset64_t* new_set, sigset64_t* old_set) {
-  return __rt_sigprocmask(how, new_set, old_set, sizeof(*new_set));
 }
 
 int sigqueue(pid_t pid, int sig, const sigval value) {
