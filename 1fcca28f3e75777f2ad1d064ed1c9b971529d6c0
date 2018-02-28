@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fda9a072_6fb58f4f",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-02-28T21:06:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e85fc981_df59fd44",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 37
+      },
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3548b406_8a832e2e",
         "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "896c4b1d_4494c18a",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-02-28T21:06:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3548b406_8a832e2e",
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "740c0f19_62b169eb",
         "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
         "patchSetId": 1
@@ -53,6 +95,30 @@
       "writtenOn": "2018-02-28T20:49:02Z",
       "side": 1,
       "message": "these two groups seem like they should be in common.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 76
+      },
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b1fcf69_606fbf68",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-02-28T21:06:59Z",
+      "side": 1,
+      "message": "io_* seems to be added for system service?  Moved others back to common.",
+      "parentUuid": "740c0f19_62b169eb",
       "range": {
         "startLine": 54,
         "startChar": 0,
