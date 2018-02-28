@@ -38,6 +38,7 @@
 
 #include "private/ErrnoRestorer.h"
 #include "private/SigSetConverter.h"
+#include "private/sigrtmin.h"
 
 extern "C" int __rt_sigpending(const sigset64_t*, size_t);
 extern "C" int ___rt_sigqueueinfo(pid_t, int, siginfo_t*);
@@ -255,21 +256,33 @@ extern "C" int sigsetmask(int mask) {
 int sigsuspend(const sigset_t* bionic_set) {
   SigSetConverter set = {};
   set.sigset = *bionic_set;
-  return __rt_sigsuspend(&set.sigset64, sizeof(set.sigset64));
+  return sigsuspend64(&set.sigset64);
 }
 
 int sigsuspend64(const sigset64_t* set) {
-  return __rt_sigsuspend(set, sizeof(*set));
+  sigset64_t mutable_set;
+  sigset64_t* mutable_set_ptr = nullptr;
+  if (set) {
+    mutable_set = filter_reserved_signals(*set);
+    mutable_set_ptr = &mutable_set;
+  }
+  return __rt_sigsuspend(mutable_set_ptr, sizeof(*set));
 }
 
 int sigtimedwait(const sigset_t* bionic_set, siginfo_t* info, const timespec* timeout) {
   SigSetConverter set = {};
   set.sigset = *bionic_set;
-  return __rt_sigtimedwait(&set.sigset64, info, timeout, sizeof(set.sigset64));
+  return sigtimedwait64(&set.sigset64, info, timeout);
 }
 
 int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeout) {
-  return __rt_sigtimedwait(set, info, timeout, sizeof(*set));
+  sigset64_t mutable_set;
+  sigset64_t* mutable_set_ptr = nullptr;
+  if (set) {
+    mutable_set = filter_reserved_signals(*set);
+    mutable_set_ptr = &mutable_set;
+  }
+  return __rt_sigtimedwait(mutable_set_ptr, info, timeout, sizeof(*set));
 }
 
 int sigwait(const sigset_t* bionic_set, int* sig) {

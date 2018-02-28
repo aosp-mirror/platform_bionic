@@ -35,6 +35,8 @@
 #include <time.h>
 
 // System calls.
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+extern "C" int __rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t);
 extern "C" int __timer_create(clockid_t, sigevent*, __kernel_timer_t*);
 extern "C" int __timer_delete(__kernel_timer_t);
 extern "C" int __timer_getoverrun(__kernel_timer_t);
@@ -77,7 +79,7 @@ static void* __timer_thread_start(void* arg) {
   while (true) {
     // Wait for a signal...
     siginfo_t si = {};
-    if (sigtimedwait64(&sigset, &si, nullptr) == -1) continue;
+    if (__rt_sigtimedwait(&sigset, &si, nullptr, sizeof(sigset)) == -1) continue;
 
     if (si.si_code == SI_TIMER) {
       // This signal was sent because a timer fired, so call the callback.
@@ -146,11 +148,13 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   sigset64_t sigset = {};
   sigaddset64(&sigset, TIMER_SIGNAL);
   sigset64_t old_sigset;
-  sigprocmask64(SIG_BLOCK, &sigset, &old_sigset);
+
+  // Use __rt_sigprocmask instead of sigprocmask64 to avoid filtering out TIMER_SIGNAL.
+  __rt_sigprocmask(SIG_BLOCK, &sigset, &old_sigset, sizeof(sigset));
 
   int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
 
-  sigprocmask64(SIG_SETMASK, &old_sigset, nullptr);
+  __rt_sigprocmask(SIG_BLOCK, &old_sigset, nullptr, sizeof(old_sigset));
 
   if (rc != 0) {
     free(timer);

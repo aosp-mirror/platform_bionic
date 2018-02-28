@@ -31,6 +31,7 @@
 #include <sys/select.h>
 
 #include "private/bionic_time_conversions.h"
+#include "private/sigrtmin.h"
 #include "private/SigSetConverter.h"
 
 extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t);
@@ -66,7 +67,15 @@ int ppoll64(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset64_t* 
     mutable_ts = *ts;
     mutable_ts_ptr = &mutable_ts;
   }
-  return __ppoll(fds, fd_count, mutable_ts_ptr, ss, sizeof(*ss));
+
+  sigset64_t mutable_ss;
+  sigset64_t* mutable_ss_ptr = nullptr;
+  if (ss != nullptr) {
+    mutable_ss = filter_reserved_signals(*ss);
+    mutable_ss_ptr = &mutable_ss;
+  }
+
+  return __ppoll(fds, fd_count, mutable_ts_ptr, mutable_ss_ptr, sizeof(*mutable_ss_ptr));
 }
 
 int select(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_fds, timeval* tv) {
@@ -109,6 +118,13 @@ int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_f
     mutable_ts_ptr = &mutable_ts;
   }
 
+  sigset64_t mutable_ss;
+  sigset64_t* mutable_ss_ptr = nullptr;
+  if (ss != nullptr) {
+    mutable_ss = filter_reserved_signals(*ss);
+    mutable_ss_ptr = &mutable_ss;
+  }
+
   // The Linux kernel only handles 6 arguments and this system call really needs 7,
   // so the last argument is a void* pointing to:
   struct pselect6_extra_data_t {
@@ -116,8 +132,8 @@ int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_f
     size_t ss_len;
   };
   pselect6_extra_data_t extra_data;
-  extra_data.ss_addr = reinterpret_cast<uintptr_t>(ss);
-  extra_data.ss_len = sizeof(*ss);
+  extra_data.ss_addr = reinterpret_cast<uintptr_t>(mutable_ss_ptr);
+  extra_data.ss_len = sizeof(*mutable_ss_ptr);
 
   return __pselect6(fd_count, read_fds, write_fds, error_fds, mutable_ts_ptr, &extra_data);
 }
