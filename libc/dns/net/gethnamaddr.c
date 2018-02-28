@@ -127,7 +127,7 @@ static const struct android_net_context NETCONTEXT_UNSET = {
 	.uid = NET_CONTEXT_INVALID_UID
 };
 
-#define	MAXPACKET	(64*1024)
+#define	MAXPACKET	(8*1024)
 
 typedef union {
     HEADER hdr;
