@@ -115,8 +115,12 @@ static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_typ
 
 #else // !defined(__BIONIC__)
 
-static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
+static void print_no_getpwnam_test_info() {
   GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+}
+
+static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
+  print_no_getpwnam_test_info();
 }
 
 #endif
@@ -238,6 +242,7 @@ static void expect_ids(const T& ids) {
 }
 
 TEST(pwd, getpwent_iterate) {
+#if defined(__BIONIC__)
   passwd* pwd;
   std::set<uid_t> uids;
 
@@ -263,6 +268,9 @@ TEST(pwd, getpwent_iterate) {
   endpwent();
 
   expect_ids(uids);
+#else
+  print_no_getpwnam_test_info();
+#endif
 }
 
 static void check_group(const group* grp, const char* group_name, gid_t gid) {
@@ -477,6 +485,7 @@ TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
 }
 
 TEST(grp, getgrent_iterate) {
+#if defined(__BIONIC__)
   group* grp;
   std::set<gid_t> gids;
 
@@ -493,4 +502,7 @@ TEST(grp, getgrent_iterate) {
   endgrent();
 
   expect_ids(gids);
+#else
+  print_no_getgrnam_test_info();
+#endif
 }

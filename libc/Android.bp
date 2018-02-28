@@ -1342,6 +1342,7 @@ cc_library_static {
         "bionic/setpgrp.cpp",
         "bionic/sigaction.cpp",
         "bionic/signal.cpp",
+        "bionic/sigprocmask.cpp",
         "bionic/socket.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
