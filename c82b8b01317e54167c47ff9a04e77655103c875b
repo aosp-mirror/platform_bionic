@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ede8c2e_cfdf321a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-28T20:36:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0e6fa7d_21f54028",
+      "range": {
+        "startLine": 1112,
+        "startChar": 6,
+        "endLine": 1112,
+        "endChar": 8
+      },
+      "revId": "c82b8b01317e54167c47ff9a04e77655103c875b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8dabaede_d59d5734",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2018-02-28T20:29:43Z",
       "side": 1,
       "message": "actually, this is no longer the case. linker has dt_soname in PI.",
+      "revId": "c82b8b01317e54167c47ff9a04e77655103c875b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b2bf19e_0c273b02",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3510,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-28T20:36:24Z",
+      "side": 1,
+      "message": "i\u0027ll remove that condition in a followup.",
+      "parentUuid": "8dabaede_d59d5734",
       "revId": "c82b8b01317e54167c47ff9a04e77655103c875b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
