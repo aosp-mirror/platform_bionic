@@ -28,6 +28,7 @@
 
 #include <signal.h>
 
+#include "private/sigrtmin.h"
 #include "private/SigSetConverter.h"
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
@@ -64,5 +65,11 @@ int sigprocmask(int how,
 int sigprocmask64(int how,
                   const sigset64_t* new_set,
                   sigset64_t* old_set) __attribute__((__noinline__)) {
-  return __rt_sigprocmask(how, new_set, old_set, sizeof(*new_set));
+  sigset64_t mutable_new_set;
+  sigset64_t* mutable_new_set_ptr = nullptr;
+  if (new_set) {
+    mutable_new_set = filter_reserved_signals(*new_set);
+    mutable_new_set_ptr = &mutable_new_set;
+  }
+  return __rt_sigprocmask(how, mutable_new_set_ptr, old_set, sizeof(*new_set));
 }

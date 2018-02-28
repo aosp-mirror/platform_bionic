@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,10 +26,25 @@
  * SUCH DAMAGE.
  */
 
+#pragma once
+
+#include <sys/cdefs.h>
+
 #include <signal.h>
 
-#include "private/sigrtmin.h"
+// Realtime signals reserved for internal use:
+//   32 (__SIGRTMIN + 0)        POSIX timers
+//   33 (__SIGRTMIN + 1)        libbacktrace
+//   34 (__SIGRTMIN + 2)        libcore
+//   35 (__SIGRTMIN + 3)        debuggerd -b
+//
+// If you change this, also change __ndk_legacy___libc_current_sigrtmin
+// in <android/legacy_signal_inlines.h> to match.
 
-int __libc_current_sigrtmin() {
-  return __SIGRTMIN + __SIGRT_RESERVED;
+#define __SIGRT_RESERVED 4
+static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset) {
+  for (int signo = __SIGRTMIN; signo < __SIGRTMIN + __SIGRT_RESERVED; ++signo) {
+    sigdelset64(&sigset, signo);
+  }
+  return sigset;
 }
