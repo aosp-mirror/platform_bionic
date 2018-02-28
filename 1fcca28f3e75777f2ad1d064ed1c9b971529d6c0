@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e85fc981_df59fd44",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-28T20:49:02Z",
+      "side": 1,
+      "message": "these two groups seem like they should be in common.",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 37
+      },
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3548b406_8a832e2e",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-28T20:49:02Z",
+      "side": 1,
+      "message": "the bug seems to be for CTS, so needed in common?",
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "740c0f19_62b169eb",
+        "filename": "libc/SECCOMP_WHITELIST_SYSTEM.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-02-28T20:49:02Z",
+      "side": 1,
+      "message": "these two groups seem like they should be in common.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 76
+      },
+      "revId": "1fcca28f3e75777f2ad1d064ed1c9b971529d6c0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
