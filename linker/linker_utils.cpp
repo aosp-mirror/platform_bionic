@@ -209,31 +209,28 @@ void resolve_paths(std::vector<std::string>& paths,
     const char* original_path = path.c_str();
     if (realpath(original_path, resolved_path) != nullptr) {
       struct stat s;
-      if (stat(resolved_path, &s) == 0) {
-        if (S_ISDIR(s.st_mode)) {
-          resolved_paths->push_back(resolved_path);
-        } else {
-          DL_WARN("Warning: \"%s\" is not a directory (excluding from path)", resolved_path);
-          continue;
-        }
-      } else {
-        DL_WARN("Warning: cannot stat file \"%s\": %s", resolved_path, strerror(errno));
+      if (stat(resolved_path, &s) == -1) {
+        DL_WARN("Warning: cannot stat file \"%s\": %s (ignoring)", resolved_path, strerror(errno));
         continue;
       }
+      if (!S_ISDIR(s.st_mode)) {
+        DL_WARN("Warning: \"%s\" is not a directory (ignoring)", resolved_path);
+        continue;
+      }
+      resolved_paths->push_back(resolved_path);
     } else {
+      std::string normalized_path;
+      if (!normalize_path(original_path, &normalized_path)) {
+        DL_WARN("Warning: unable to normalize \"%s\" (ignoring)", original_path);
+        continue;
+      }
+
       std::string zip_path;
       std::string entry_path;
-
-      std::string normalized_path;
-
-      if (!normalize_path(original_path, &normalized_path)) {
-        DL_WARN("Warning: unable to normalize \"%s\"", original_path);
-        continue;
-      }
-
       if (parse_zip_path(normalized_path.c_str(), &zip_path, &entry_path)) {
         if (realpath(zip_path.c_str(), resolved_path) == nullptr) {
-          DL_WARN("Warning: unable to resolve \"%s\": %s", zip_path.c_str(), strerror(errno));
+          DL_WARN("Warning: unable to resolve \"%s\": %s (ignoring)",
+                  zip_path.c_str(), strerror(errno));
           continue;
         }
 
@@ -242,4 +239,3 @@ void resolve_paths(std::vector<std::string>& paths,
     }
   }
 }
-
