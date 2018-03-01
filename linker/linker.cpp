@@ -1105,10 +1105,14 @@ static int open_library(android_namespace_t* ns,
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
-  if (get_application_target_sdk_version() < __ANDROID_API_M__) {
+  int app_target_api_level = get_application_target_sdk_version();
+  if (app_target_api_level < __ANDROID_API_M__) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN("library \"%s\" has invalid DT_NEEDED entry \"%s\"", sopath, dt_needed);
+      DL_WARN_documented_change(__ANDROID_API_M__,
+                                "invalid-dt_needed-entries-enforced-for-api-level-23",
+                                "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
+                                sopath, dt_needed, app_target_api_level);
       add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
     }
 
@@ -1246,10 +1250,11 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
-                " - the access is temporarily granted as a workaround for http://b/26394120, note that the access"
-                " will be removed in future releases of Android.",
-                name, realpath.c_str(), sopath, ns->get_name());
+        DL_WARN_documented_change(__ANDROID_API_N__,
+                                  "private-api-enforced-for-api-level-24",
+                                  "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
+                                  "is not accessible by namespace \"%s\"",
+                                  name, realpath.c_str(), sopath, ns->get_name());
         add_dlwarning(sopath, "unauthorized access to",  name);
       }
     } else {
@@ -3363,7 +3368,9 @@ bool soinfo::prelink_image() {
         set_dt_flags_1(d->d_un.d_val);
 
         if ((d->d_un.d_val & ~SUPPORTED_DT_FLAGS_1) != 0) {
-          DL_WARN("\"%s\" has unsupported flags DT_FLAGS_1=%p", get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
+          DL_WARN("Warning: \"%s\" has unsupported flags DT_FLAGS_1=%p "
+                  "(ignoring unsupported flags)",
+                  get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
 #if defined(__mips__)
@@ -3442,7 +3449,7 @@ bool soinfo::prelink_image() {
           } else {
             tag_name = "unknown";
           }
-          DL_WARN("\"%s\" unused DT entry: %s (type %p arg %p)",
+          DL_WARN("Warning: \"%s\" unused DT entry: %s (type %p arg %p) (ignoring)",
                   get_realpath(),
                   tag_name,
                   reinterpret_cast<void*>(d->d_tag),
@@ -3495,16 +3502,20 @@ bool soinfo::prelink_image() {
   // Before M release linker was using basename in place of soname.
   // In the case when dt_soname is absent some apps stop working
   // because they can't find dt_needed library by soname.
-  // This workaround should keep them working. (applies only
-  // for apps targeting sdk version < M). Make an exception for
-  // the main executable and linker; they do not need to have dt_soname
+  // This workaround should keep them working. (Applies only
+  // for apps targeting sdk version < M.) Make an exception for
+  // the main executable and linker; they do not need to have dt_soname.
+  // TODO: >= O the linker doesn't need this workaround.
   if (soname_ == nullptr &&
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
       get_application_target_sdk_version() < __ANDROID_API_M__) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
-        get_realpath(), soname_);
+    DL_WARN_documented_change(__ANDROID_API_M__,
+                              "missing-soname-enforced-for-api-level-23",
+                              "\"%s\" has no DT_SONAME (will use %s instead)",
+                              get_realpath(), soname_);
+
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
   return true;
@@ -3535,7 +3546,8 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Fail if app is targeting M or above.
-    if (get_application_target_sdk_version() >= __ANDROID_API_M__) {
+    int app_target_api_level = get_application_target_sdk_version();
+    if (app_target_api_level >= __ANDROID_API_M__) {
       DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
                      "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
                      "Enforced-for-API-level-23)", get_realpath());
@@ -3543,13 +3555,13 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN("\"%s\" has text relocations (https://android.googlesource.com/platform/"
-            "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-Enforced-"
-            "for-API-level-23)", get_realpath());
+    DL_WARN_documented_change(__ANDROID_API_M__,
+                              "Text-Relocations-Enforced-for-API-level-23",
+                              "\"%s\" has text relocations",
+                              get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-             get_realpath(), strerror(errno));
+      DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
   }
@@ -3739,7 +3751,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
                                   &config,
                                   &error_msg)) {
     if (!error_msg.empty()) {
-      DL_WARN("error reading config file \"%s\" for \"%s\" (will use default configuration): %s",
+      DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
               config_file,
               executable_path,
               error_msg.c_str());

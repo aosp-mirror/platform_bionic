@@ -152,7 +152,7 @@ static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
       ELF_ST_BIND(s->st_info) == STB_WEAK) {
     return s->st_shndx != SHN_UNDEF;
   } else if (ELF_ST_BIND(s->st_info) != STB_LOCAL) {
-    DL_WARN("unexpected ST_BIND value: %d for \"%s\" in \"%s\"",
+    DL_WARN("Warning: unexpected ST_BIND value: %d for \"%s\" in \"%s\" (ignoring)",
             ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
   }
 
