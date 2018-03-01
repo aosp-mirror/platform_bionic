@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "6e7c0d2a_deaa87b9",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-01T23:47:51Z",
+      "side": 1,
+      "message": "yeah, it\u0027s tomcherry-style \"reformat only as you touch it\".\n\nor it was meant to be --- i hadn\u0027t even noticed that i\u0027d reformatted `wchar_io_data`. clearly i\u0027m not cut out for this style :-/",
+      "parentUuid": "1fe4f455_5fd75361",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 291,
+        "endChar": 1
+      },
+      "revId": "5a98234c046ad7f7474d0d7cec61f16e00a0050d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "925a800c_3e9f805b",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
