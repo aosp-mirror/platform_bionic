@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1fe4f455_5fd75361",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-03-01T23:43:08Z",
+      "side": 1,
+      "message": "Some of the file has tabs and the old style, and some has our new style. But it\u0027s a nit within a nit.",
+      "parentUuid": "b440f762_e13a32f2",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 291,
+        "endChar": 1
+      },
+      "revId": "5a98234c046ad7f7474d0d7cec61f16e00a0050d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "925a800c_3e9f805b",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
