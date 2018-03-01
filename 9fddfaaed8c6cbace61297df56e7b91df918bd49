@@ -22,6 +22,30 @@
       "revId": "9fddfaaed8c6cbace61297df56e7b91df918bd49",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e92b1464_0af4d7cc",
+        "filename": "libc/tzcode/strptime.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-01T00:31:06Z",
+      "side": 1,
+      "message": "glibc agrees with you. added test and fixed.",
+      "parentUuid": "8d59ee8e_4363792d",
+      "range": {
+        "startLine": 347,
+        "startChar": 25,
+        "endLine": 347,
+        "endChar": 31
+      },
+      "revId": "9fddfaaed8c6cbace61297df56e7b91df918bd49",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
