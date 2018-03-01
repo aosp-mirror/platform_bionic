@@ -49,6 +49,8 @@
       async_safe_format_fd(2, "\n"); \
     } while (false)
 
+void DL_WARN_documented_change(int api_level, const char* doc_link, const char* fmt, ...);
+
 #define DL_ERR_AND_LOG(fmt, x...) \
   do { \
     DL_ERR(fmt, x); \
