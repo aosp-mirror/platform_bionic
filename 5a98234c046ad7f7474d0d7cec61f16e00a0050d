@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b440f762_e13a32f2",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-01T23:40:55Z",
+      "side": 1,
+      "message": "the rest of the file still has tabs, and i didn\u0027t want to go down the slippery slope of cleaning up casts and using nullptr and ...",
+      "parentUuid": "63cc2852_d8a5bfcc",
+      "range": {
+        "startLine": 291,
+        "startChar": 0,
+        "endLine": 291,
+        "endChar": 1
+      },
+      "revId": "5a98234c046ad7f7474d0d7cec61f16e00a0050d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "925a800c_3e9f805b",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "c7e73866_26cb4d58",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-01T23:40:55Z",
+      "side": 1,
+      "message": "...and fixing formatting :-)\n\ni assume we will do this at some point --- i just want P to have all this stuff in one file to avoid future merge conflicts caused by moving stuff around between branches.",
+      "parentUuid": "925a800c_3e9f805b",
+      "range": {
+        "startLine": 295,
+        "startChar": 21,
+        "endLine": 295,
+        "endChar": 23
+      },
+      "revId": "5a98234c046ad7f7474d0d7cec61f16e00a0050d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d4ec1b72_9126cf59",
         "filename": "libc/stdio/local.h",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2018-03-01T23:25:23Z",
       "side": 1,
       "message": "WCIO_FREEUB is gone, did you mean to remove it?",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 309,
+        "endChar": 0
+      },
+      "revId": "5a98234c046ad7f7474d0d7cec61f16e00a0050d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8251fbc_cdd313f4",
+        "filename": "libc/stdio/local.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-01T23:40:55Z",
+      "side": 1,
+      "message": "yes. it was unused.",
+      "parentUuid": "d4ec1b72_9126cf59",
       "range": {
         "startLine": 308,
         "startChar": 0,
