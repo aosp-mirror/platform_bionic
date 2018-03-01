@@ -871,3 +871,54 @@ TEST(time, ctime_r) {
   ASSERT_EQ(buf, ctime_r(&t, buf));
   ASSERT_STREQ("Thu Jan  1 00:00:00 1970\n", buf);
 }
+
+// https://issuetracker.google.com/37128336
+TEST(time, strftime_strptime_s) {
+  char buf[32];
+  const struct tm tm0 = { .tm_year = 1982-1900, .tm_mon = 0, .tm_mday = 1 };
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  strftime(buf, sizeof(buf), "<%s>", &tm0);
+  EXPECT_STREQ("<378720000>", buf);
+
+  setenv("TZ", "UTC", 1);
+  strftime(buf, sizeof(buf), "<%s>", &tm0);
+  EXPECT_STREQ("<378691200>", buf);
+
+  struct tm tm;
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+  memset(&tm, 0xff, sizeof(tm));
+  char* p = strptime("378720000x", "%s", &tm);
+  ASSERT_EQ('x', *p);
+  EXPECT_EQ(0, tm.tm_sec);
+  EXPECT_EQ(0, tm.tm_min);
+  EXPECT_EQ(0, tm.tm_hour);
+  EXPECT_EQ(1, tm.tm_mday);
+  EXPECT_EQ(0, tm.tm_mon);
+  EXPECT_EQ(82, tm.tm_year);
+  EXPECT_EQ(5, tm.tm_wday);
+  EXPECT_EQ(0, tm.tm_yday);
+  EXPECT_EQ(0, tm.tm_isdst);
+
+  setenv("TZ", "UTC", 1);
+  tzset();
+  memset(&tm, 0xff, sizeof(tm));
+  p = strptime("378691200x", "%s", &tm);
+  ASSERT_EQ('x', *p);
+  EXPECT_EQ(0, tm.tm_sec);
+  EXPECT_EQ(0, tm.tm_min);
+  EXPECT_EQ(0, tm.tm_hour);
+  EXPECT_EQ(1, tm.tm_mday);
+  EXPECT_EQ(0, tm.tm_mon);
+  EXPECT_EQ(82, tm.tm_year);
+  EXPECT_EQ(5, tm.tm_wday);
+  EXPECT_EQ(0, tm.tm_yday);
+  EXPECT_EQ(0, tm.tm_isdst);
+}
+
+TEST(time, strptime_s_nothing) {
+  struct tm tm;
+  ASSERT_EQ(nullptr, strptime("x", "%s", &tm));
+}
