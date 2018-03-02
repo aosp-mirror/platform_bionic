@@ -53,6 +53,8 @@ New libc functions in P:
   * <spawn.h>
   * `swab`
   * `syncfs`
+
+New libc behavior in P:
   * `%C` and `%S` support in the printf family (previously only the wprintf family supported these)
   * `%mc`/`%ms`/`%m[` support in the scanf family
   * `%s` support in strptime (strftime already supported it)
