@@ -42,8 +42,6 @@
 #include "private/bionic_fortify.h"
 #endif
 
-#include "wcio.h"
-
 /*
  * Information local to this implementation of stdio,
  * in particular, macros and private variables.
@@ -108,6 +106,19 @@ struct __sFILE {
 	// into an array of this struct (which was in <stdio.h> historically), so if
 	// you need to make any changes, they need to be in the `__sfileext` struct
 	// below, and accessed via `_EXT`.
+};
+
+/* minimal requirement of SUSv2 */
+#define WCIO_UNGETWC_BUFSIZE 1
+
+struct wchar_io_data {
+  mbstate_t wcio_mbstate_in;
+  mbstate_t wcio_mbstate_out;
+
+  wchar_t wcio_ungetwc_buf[WCIO_UNGETWC_BUFSIZE];
+  size_t wcio_ungetwc_inbuf;
+
+  int wcio_mode; /* orientation */
 };
 
 struct __sfileext {
@@ -275,5 +286,24 @@ size_t wparsefloat(FILE*, wchar_t*, wchar_t*);
 char* __hdtoa(double, const char*, int, int*, int*, char**);
 char* __hldtoa(long double, const char*, int, int*, int*, char**);
 char* __ldtoa(long double*, int, int, int*, int*, char**);
+
+#define WCIO_GET(fp) \
+	(_EXT(fp) ? &(_EXT(fp)->_wcio) : (struct wchar_io_data *)0)
+
+#define _SET_ORIENTATION(fp, mode) \
+do {\
+	struct wchar_io_data *_wcio = WCIO_GET(fp); \
+	if (_wcio && _wcio->wcio_mode == 0) \
+		_wcio->wcio_mode = (mode);\
+} while (0)
+
+#define WCIO_FREE(fp) \
+do {\
+	struct wchar_io_data *_wcio = WCIO_GET(fp); \
+	if (_wcio) { \
+		_wcio->wcio_mode = 0;\
+		_wcio->wcio_ungetwc_inbuf = 0;\
+	} \
+} while (0)
 
 __END_DECLS
