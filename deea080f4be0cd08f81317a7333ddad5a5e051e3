@@ -36,6 +36,40 @@
     },
     {
       "key": {
+        "uuid": "b74edeaf_912f6ef3",
+        "filename": "libc/private/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-03-02T23:58:12Z",
+      "side": 1,
+      "message": "Could this be: action_ \u003d {}\n\nIf we can, the #include \u003cstring.h\u003e could be removed, too, AFAICT.",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efb9466a_447b0a4f",
+        "filename": "libc/private/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-03-02T23:58:12Z",
+      "side": 1,
+      "message": "Could this be: action_ \u003d {}",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dc157935_39f9f843",
         "filename": "libc/private/ScopedSignalHandler.h",
         "patchSetId": 1
