@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e95c1706_ae942b56",
+        "filename": "libc/bionic/system.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-03T01:45:15Z",
+      "side": 1,
+      "message": "posix_spawn already has logic to decide which to use, so saying nothing here made sense to me. (if we disagree with posix_spawn\u0027s heuristic, we should change that.)",
+      "parentUuid": "11816a17_ad9aad06",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7a831ff_8c18cb33",
         "filename": "libc/private/ScopedSignalBlocker.h",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-03-02T23:49:43Z",
       "side": 1,
       "message": "SIG_SETMASK will unblock all the other signals. Should this be SIG_BLOCK?",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdda5e51_a947809a",
+        "filename": "libc/private/ScopedSignalBlocker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-03T01:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7a831ff_8c18cb33",
       "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "82cf7014_536ce63f",
+        "filename": "libc/private/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-03T01:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b74edeaf_912f6ef3",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "efb9466a_447b0a4f",
         "filename": "libc/private/ScopedSignalHandler.h",
         "patchSetId": 1
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "9ea319b0_fd0a890c",
+        "filename": "libc/private/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-03T01:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efb9466a_447b0a4f",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dc157935_39f9f843",
         "filename": "libc/private/ScopedSignalHandler.h",
         "patchSetId": 1
@@ -81,6 +153,24 @@
       "writtenOn": "2018-03-02T23:49:43Z",
       "side": 1,
       "message": "s/NULL/nullptr/",
+      "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1539238_480ccdbc",
+        "filename": "libc/private/ScopedSignalHandler.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-03T01:45:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc157935_39f9f843",
       "revId": "deea080f4be0cd08f81317a7333ddad5a5e051e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
