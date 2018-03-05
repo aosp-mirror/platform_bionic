@@ -893,6 +893,7 @@ struct RwlockWakeupHelperArg {
   std::function<int (pthread_rwlock_t*)> trylock_function;
   std::function<int (pthread_rwlock_t*)> lock_function;
   std::function<int (pthread_rwlock_t*, const timespec*)> timed_lock_function;
+  clockid_t clock;
 };
 
 static void pthread_rwlock_wakeup_helper(RwlockWakeupHelperArg* arg) {
@@ -944,6 +945,19 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer_timedwait) {
   });
 }
 
+TEST(pthread, pthread_rwlock_reader_wakeup_writer_timedwait_monotonic_np) {
+#if defined(__BIONIC__)
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_reader_wakeup_writer(
+      [&](pthread_rwlock_t* lock) { return pthread_rwlock_timedwrlock_monotonic_np(lock, &ts); });
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedwrlock_monotonic_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
+}
+
 static void test_pthread_rwlock_writer_wakeup_reader(std::function<int (pthread_rwlock_t*)> lock_function) {
   RwlockWakeupHelperArg wakeup_arg;
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, NULL));
@@ -980,6 +994,19 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader_timedwait) {
   });
 }
 
+TEST(pthread, pthread_rwlock_writer_wakeup_reader_timedwait_monotonic_np) {
+#if defined(__BIONIC__)
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_writer_wakeup_reader(
+      [&](pthread_rwlock_t* lock) { return pthread_rwlock_timedrdlock_monotonic_np(lock, &ts); });
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedrdlock_monotonic_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
+}
+
 static void pthread_rwlock_wakeup_timeout_helper(RwlockWakeupHelperArg* arg) {
   arg->tid = gettid();
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_INITIALIZED, arg->progress);
@@ -988,7 +1015,7 @@ static void pthread_rwlock_wakeup_timeout_helper(RwlockWakeupHelperArg* arg) {
   ASSERT_EQ(EBUSY, arg->trylock_function(&arg->lock));
 
   timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(0, clock_gettime(arg->clock, &ts));
   ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
   ts.tv_nsec = -1;
   ASSERT_EQ(EINVAL, arg->timed_lock_function(&arg->lock, &ts));
@@ -997,21 +1024,60 @@ static void pthread_rwlock_wakeup_timeout_helper(RwlockWakeupHelperArg* arg) {
   ts.tv_nsec = NS_PER_S - 1;
   ts.tv_sec = -1;
   ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(0, clock_gettime(arg->clock, &ts));
   ts.tv_sec += 1;
   ASSERT_EQ(ETIMEDOUT, arg->timed_lock_function(&arg->lock, &ts));
   ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, arg->progress);
   arg->progress = RwlockWakeupHelperArg::LOCK_TIMEDOUT;
 }
 
-TEST(pthread, pthread_rwlock_timedrdlock_timeout) {
+static void pthread_rwlock_timedrdlock_timeout_helper(
+    clockid_t clock, int (*lock_function)(pthread_rwlock_t* __rwlock, const timespec* __timeout)) {
   RwlockWakeupHelperArg wakeup_arg;
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
   ASSERT_EQ(0, pthread_rwlock_wrlock(&wakeup_arg.lock));
   wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
   wakeup_arg.tid = 0;
   wakeup_arg.trylock_function = &pthread_rwlock_tryrdlock;
-  wakeup_arg.timed_lock_function = &pthread_rwlock_timedrdlock;
+  wakeup_arg.timed_lock_function = lock_function;
+  wakeup_arg.clock = clock;
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+      reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_timeout_helper), &wakeup_arg));
+  WaitUntilThreadSleep(wakeup_arg.tid);
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
+
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_TIMEDOUT, wakeup_arg.progress);
+  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
+  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+}
+
+TEST(pthread, pthread_rwlock_timedrdlock_timeout) {
+  pthread_rwlock_timedrdlock_timeout_helper(CLOCK_REALTIME, pthread_rwlock_timedrdlock);
+}
+
+TEST(pthread, pthread_rwlock_timedrdlock_monotonic_np_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedrdlock_timeout_helper(CLOCK_MONOTONIC,
+                                            pthread_rwlock_timedrdlock_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedrdlock_monotonic_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
+}
+
+static void pthread_rwlock_timedwrlock_timeout_helper(
+    clockid_t clock, int (*lock_function)(pthread_rwlock_t* __rwlock, const timespec* __timeout)) {
+  RwlockWakeupHelperArg wakeup_arg;
+  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
+  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
+  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
+  wakeup_arg.tid = 0;
+  wakeup_arg.trylock_function = &pthread_rwlock_trywrlock;
+  wakeup_arg.timed_lock_function = lock_function;
+  wakeup_arg.clock = clock;
 
   pthread_t thread;
   ASSERT_EQ(0, pthread_create(&thread, nullptr,
@@ -1026,24 +1092,17 @@ TEST(pthread, pthread_rwlock_timedrdlock_timeout) {
 }
 
 TEST(pthread, pthread_rwlock_timedwrlock_timeout) {
-  RwlockWakeupHelperArg wakeup_arg;
-  ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
-  ASSERT_EQ(0, pthread_rwlock_rdlock(&wakeup_arg.lock));
-  wakeup_arg.progress = RwlockWakeupHelperArg::LOCK_INITIALIZED;
-  wakeup_arg.tid = 0;
-  wakeup_arg.trylock_function = &pthread_rwlock_trywrlock;
-  wakeup_arg.timed_lock_function = &pthread_rwlock_timedwrlock;
+  pthread_rwlock_timedwrlock_timeout_helper(CLOCK_REALTIME, pthread_rwlock_timedwrlock);
+}
 
-  pthread_t thread;
-  ASSERT_EQ(0, pthread_create(&thread, nullptr,
-      reinterpret_cast<void* (*)(void*)>(pthread_rwlock_wakeup_timeout_helper), &wakeup_arg));
-  WaitUntilThreadSleep(wakeup_arg.tid);
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_WAITING, wakeup_arg.progress);
-
-  ASSERT_EQ(0, pthread_join(thread, nullptr));
-  ASSERT_EQ(RwlockWakeupHelperArg::LOCK_TIMEDOUT, wakeup_arg.progress);
-  ASSERT_EQ(0, pthread_rwlock_unlock(&wakeup_arg.lock));
-  ASSERT_EQ(0, pthread_rwlock_destroy(&wakeup_arg.lock));
+TEST(pthread, pthread_rwlock_timedwrlock_monotonic_np_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedwrlock_timeout_helper(CLOCK_MONOTONIC,
+                                            pthread_rwlock_timedwrlock_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedwrlock_monotonic_np is "
+                      "only supported on bionic";
+#endif  // __BIONIC__
 }
 
 class RwlockKindTestHelper {
@@ -1376,23 +1435,57 @@ TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC) {
   ASSERT_EQ(0, pthread_cond_signal(&cond));
 }
 
-TEST(pthread, pthread_cond_timedwait_timeout) {
+TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC_np) {
+#if defined(__BIONIC__)
+  InitCond(CLOCK_REALTIME);
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    return pthread_cond_timedwait_monotonic_np(cond, mutex, &ts);
+  });
+  progress = SIGNALED;
+  ASSERT_EQ(0, pthread_cond_signal(&cond));
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_cond_timedwait_monotonic_np is only "
+                      "supported on bionic";
+#endif  // __BIONIC__
+}
+
+static void pthread_cond_timedwait_timeout_helper(clockid_t clock,
+                                                  int (*wait_function)(pthread_cond_t* __cond,
+                                                                       pthread_mutex_t* __mutex,
+                                                                       const timespec* __timeout)) {
   pthread_mutex_t mutex;
   ASSERT_EQ(0, pthread_mutex_init(&mutex, nullptr));
   pthread_cond_t cond;
   ASSERT_EQ(0, pthread_cond_init(&cond, nullptr));
   ASSERT_EQ(0, pthread_mutex_lock(&mutex));
+
   timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
-  ASSERT_EQ(ETIMEDOUT, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
+  ASSERT_EQ(ETIMEDOUT, wait_function(&cond, &mutex, &ts));
   ts.tv_nsec = -1;
-  ASSERT_EQ(EINVAL, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ASSERT_EQ(EINVAL, wait_function(&cond, &mutex, &ts));
   ts.tv_nsec = NS_PER_S;
-  ASSERT_EQ(EINVAL, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ASSERT_EQ(EINVAL, wait_function(&cond, &mutex, &ts));
   ts.tv_nsec = NS_PER_S - 1;
   ts.tv_sec = -1;
-  ASSERT_EQ(ETIMEDOUT, pthread_cond_timedwait(&cond, &mutex, &ts));
+  ASSERT_EQ(ETIMEDOUT, wait_function(&cond, &mutex, &ts));
   ASSERT_EQ(0, pthread_mutex_unlock(&mutex));
+}
+
+TEST(pthread, pthread_cond_timedwait_timeout) {
+  pthread_cond_timedwait_timeout_helper(CLOCK_REALTIME, pthread_cond_timedwait);
+}
+
+TEST(pthread, pthread_cond_timedwait_monotonic_np_timeout) {
+#if defined(__BIONIC__)
+  pthread_cond_timedwait_timeout_helper(CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_cond_timedwait_monotonic_np is only "
+                      "supported on bionic";
+#endif  // __BIONIC__
 }
 
 TEST(pthread, pthread_attr_getstack__main_thread) {
@@ -1999,7 +2092,9 @@ TEST(pthread, pthread_mutex_owner_tid_limit) {
 #endif
 }
 
-TEST(pthread, pthread_mutex_timedlock) {
+static void pthread_mutex_timedlock_helper(clockid_t clock,
+                                           int (*lock_function)(pthread_mutex_t* __mutex,
+                                                                const timespec* __timeout)) {
   pthread_mutex_t m;
   ASSERT_EQ(0, pthread_mutex_init(&m, nullptr));
 
@@ -2007,49 +2102,90 @@ TEST(pthread, pthread_mutex_timedlock) {
   ASSERT_EQ(0, pthread_mutex_lock(&m));
 
   timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
-  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
+  ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
   ts.tv_nsec = -1;
-  ASSERT_EQ(EINVAL, pthread_mutex_timedlock(&m, &ts));
+  ASSERT_EQ(EINVAL, lock_function(&m, &ts));
   ts.tv_nsec = NS_PER_S;
-  ASSERT_EQ(EINVAL, pthread_mutex_timedlock(&m, &ts));
+  ASSERT_EQ(EINVAL, lock_function(&m, &ts));
   ts.tv_nsec = NS_PER_S - 1;
   ts.tv_sec = -1;
-  ASSERT_EQ(ETIMEDOUT, pthread_mutex_timedlock(&m, &ts));
+  ASSERT_EQ(ETIMEDOUT, lock_function(&m, &ts));
 
   // If the mutex is unlocked, pthread_mutex_timedlock should succeed.
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
 
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
   ts.tv_sec += 1;
-  ASSERT_EQ(0, pthread_mutex_timedlock(&m, &ts));
+  ASSERT_EQ(0, lock_function(&m, &ts));
 
   ASSERT_EQ(0, pthread_mutex_unlock(&m));
   ASSERT_EQ(0, pthread_mutex_destroy(&m));
 }
 
-TEST(pthread, pthread_mutex_timedlock_pi) {
+TEST(pthread, pthread_mutex_timedlock) {
+  pthread_mutex_timedlock_helper(CLOCK_REALTIME, pthread_mutex_timedlock);
+}
+
+TEST(pthread, pthread_mutex_timedlock_monotonic_np) {
+#if defined(__BIONIC__)
+  pthread_mutex_timedlock_helper(CLOCK_MONOTONIC, pthread_mutex_timedlock_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_mutex_timedlock_monotonic_np is only "
+                      "supported on bionic";
+#endif  // __BIONIC__
+}
+
+static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
+                                              int (*lock_function)(pthread_mutex_t* __mutex,
+                                                                   const timespec* __timeout)) {
   PthreadMutex m(PTHREAD_MUTEX_NORMAL, PTHREAD_PRIO_INHERIT);
+
   timespec ts;
-  clock_gettime(CLOCK_REALTIME, &ts);
+  clock_gettime(clock, &ts);
   ts.tv_sec += 1;
-  ASSERT_EQ(0, pthread_mutex_timedlock(&m.lock, &ts));
+  ASSERT_EQ(0, lock_function(&m.lock, &ts));
+
+  struct ThreadArgs {
+    clockid_t clock;
+    int (*lock_function)(pthread_mutex_t* __mutex, const timespec* __timeout);
+    PthreadMutex& m;
+  };
+
+  ThreadArgs thread_args = {
+    .clock = clock,
+    .lock_function = lock_function,
+    .m = m,
+  };
 
   auto ThreadFn = [](void* arg) -> void* {
-    PthreadMutex& m = *static_cast<PthreadMutex*>(arg);
+    auto args = static_cast<ThreadArgs*>(arg);
     timespec ts;
-    clock_gettime(CLOCK_REALTIME, &ts);
+    clock_gettime(args->clock, &ts);
     ts.tv_sec += 1;
-    intptr_t result = pthread_mutex_timedlock(&m.lock, &ts);
+    intptr_t result = args->lock_function(&args->m.lock, &ts);
     return reinterpret_cast<void*>(result);
   };
 
   pthread_t thread;
-  ASSERT_EQ(0, pthread_create(&thread, NULL, ThreadFn, &m));
+  ASSERT_EQ(0, pthread_create(&thread, NULL, ThreadFn, &thread_args));
   void* result;
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+}
+
+TEST(pthread, pthread_mutex_timedlock_pi) {
+  pthread_mutex_timedlock_pi_helper(CLOCK_REALTIME, pthread_mutex_timedlock);
+}
+
+TEST(pthread, pthread_mutex_timedlock_monotonic_np_pi) {
+#if defined(__BIONIC__)
+  pthread_mutex_timedlock_pi_helper(CLOCK_MONOTONIC, pthread_mutex_timedlock_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing since pthread_mutex_timedlock_monotonic_np is only "
+                      "supported on bionic";
+#endif  // __BIONIC__
 }
 
 TEST(pthread, pthread_mutex_using_destroyed_mutex) {
@@ -2066,6 +2202,8 @@ TEST(pthread, pthread_mutex_using_destroyed_mutex) {
   timespec ts;
   ASSERT_EXIT(pthread_mutex_timedlock(&m, &ts), ::testing::KilledBySignal(SIGABRT),
               "pthread_mutex_timedlock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_timedlock_monotonic_np(&m, &ts), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_timedlock_monotonic_np called on a destroyed mutex");
   ASSERT_EXIT(pthread_mutex_destroy(&m), ::testing::KilledBySignal(SIGABRT),
               "pthread_mutex_destroy called on a destroyed mutex");
 #else

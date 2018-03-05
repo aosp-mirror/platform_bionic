@@ -122,6 +122,16 @@ int pthread_cond_destroy(pthread_cond_t* __cond);
 int pthread_cond_init(pthread_cond_t* __cond, const pthread_condattr_t* __attr);
 int pthread_cond_signal(pthread_cond_t* __cond);
 int pthread_cond_timedwait(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __timeout);
+/*
+ * Condition variables use CLOCK_REALTIME by default for their timeouts, however that is
+ * typically inappropriate, since that clock can change dramatically, causing the timeout to
+ * either expire earlier or much later than intended.
+ * Condition variables have an initialization option to use CLOCK_MONOTONIC, and in addition,
+ * Android provides this API to use CLOCK_MONOTONIC on a condition variable for this single wait
+ * no matter how it was initialized.
+ */
+int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex,
+                                        const struct timespec* __timeout) __INTRODUCED_IN_64(28);
 int pthread_cond_wait(pthread_cond_t* __cond, pthread_mutex_t* __mutex);
 
 int pthread_create(pthread_t* __pthread_ptr, pthread_attr_t const* __attr, void* (*__start_routine)(void*), void*);
@@ -159,6 +169,16 @@ int pthread_mutex_init(pthread_mutex_t* __mutex, const pthread_mutexattr_t* __at
 int pthread_mutex_lock(pthread_mutex_t* __mutex);
 int pthread_mutex_timedlock(pthread_mutex_t* __mutex, const struct timespec* __timeout)
   __INTRODUCED_IN(21);
+
+/*
+ * POSIX only supports using pthread_mutex_timedlock() with CLOCK_REALTIME, however that is
+ * typically inappropriate, since that clock can change dramatically, causing the timeout to
+ * either expire earlier or much later than intended.
+ * This function is added to use a timespec based on CLOCK_MONOTONIC that does not suffer
+ * from this issue.
+ */
+int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* __mutex, const struct timespec* __timeout)
+    __INTRODUCED_IN(28);
 int pthread_mutex_trylock(pthread_mutex_t* __mutex);
 int pthread_mutex_unlock(pthread_mutex_t* __mutex);
 
@@ -176,7 +196,6 @@ int pthread_mutex_unlock(pthread_mutex_t* __mutex);
  */
 int pthread_mutex_lock_timeout_np(pthread_mutex_t* __mutex, unsigned __timeout_ms);
 int pthread_cond_timeout_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, unsigned __timeout_ms);
-int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __timeout);
 int pthread_cond_timedwait_relative_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __relative_timeout);
 #endif
 
@@ -194,7 +213,13 @@ int pthread_rwlock_destroy(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_init(pthread_rwlock_t* __rwlock, const pthread_rwlockattr_t* __attr);
 int pthread_rwlock_rdlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_timedrdlock(pthread_rwlock_t* __rwlock, const struct timespec* __timeout);
+/* See the comment on pthread_mutex_timedlock_monotonic_np for usage of this function. */
+int pthread_rwlock_timedrdlock_monotonic_np(pthread_rwlock_t* __rwlock,
+                                            const struct timespec* __timeout) __INTRODUCED_IN(28);
 int pthread_rwlock_timedwrlock(pthread_rwlock_t* __rwlock, const struct timespec* __timeout);
+/* See the comment on pthread_mutex_timedlock_monotonic_np for usage of this function. */
+int pthread_rwlock_timedwrlock_monotonic_np(pthread_rwlock_t* __rwlock,
+                                            const struct timespec* __timeout) __INTRODUCED_IN(28);
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_trywrlock(pthread_rwlock_t* __rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t* __rwlock);
