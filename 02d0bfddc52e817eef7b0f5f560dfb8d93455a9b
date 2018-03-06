@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c105d8f_949418b0",
+        "filename": "libc/bionic/legacy_32_bit_support.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-06T23:37:18Z",
+      "side": 1,
+      "message": "or just `return preadv64(fd, ios, count, offset);`?",
+      "revId": "02d0bfddc52e817eef7b0f5f560dfb8d93455a9b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
