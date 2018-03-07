@@ -53,7 +53,7 @@ constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
 #endif
 
 // If one or more of these options is set, then a special header is needed.
-constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD | BACKTRACE | FREE_TRACK | LEAK_TRACK;
+constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD;
 
 class Config {
  public:

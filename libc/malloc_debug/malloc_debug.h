@@ -37,12 +37,9 @@
 // part of the header does not exist, the other parts of the header
 // will still be in this order.
 //   Header          (Required)
-//   BacktraceHeader (Optional: For the allocation backtrace)
 //   uint8_t data    (Optional: Front guard, will be a multiple of MINIMUM_ALIGNMENT_BYTES)
 //   allocation data
 //   uint8_t data    (Optional: End guard)
-//
-// If backtracing is enabled, then both BacktraceHeaders will be present.
 //
 // In the initialization function, offsets into the header will be set
 // for each different header location. The offsets are always from the
@@ -52,10 +49,6 @@ struct Header {
   void* orig_pointer;
   size_t size;
   size_t usable_size;
-  size_t real_size() const { return size & ~(1U << 31); }
-  void set_zygote_child_alloc() { size |= 1U << 31; }
-  bool zygote_child_alloc() const { return size & (1U << 31); }
-  static size_t max_size() { return (1U << 31) - 1; }
 } __attribute__((packed));
 
 struct BacktraceHeader {
