@@ -499,24 +499,8 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         else
           ADDTYPE(T_DOUBLE);
         break;
-#ifndef NO_PRINTF_PERCENT_N
       case 'n':
-        if (flags & LLONGINT)
-          ADDTYPE(TP_LLONG);
-        else if (flags & LONGINT)
-          ADDTYPE(TP_LONG);
-        else if (flags & SHORTINT)
-          ADDTYPE(TP_SHORT);
-        else if (flags & PTRINT)
-          ADDTYPE(TP_PTRINT);
-        else if (flags & SIZEINT)
-          ADDTYPE(TP_SSIZEINT);
-        else if (flags & MAXINT)
-          ADDTYPE(TP_MAXINT);
-        else
-          ADDTYPE(TP_INT);
-        continue; /* no output */
-#endif            /* NO_PRINTF_PERCENT_N */
+        __fortify_fatal("%%n not allowed on Android");
       case 'O':
         flags |= LONGINT;
         /*FALLTHROUGH*/
