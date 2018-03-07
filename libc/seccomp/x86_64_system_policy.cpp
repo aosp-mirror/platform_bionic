@@ -20,14 +20,14 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 24, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 21, 76, 75), //lseek|mmap|mprotect|munmap|brk|rt_sigaction|rt_sigprocmask|rt_sigreturn|ioctl|pread64|pwrite64|readv|writev
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 29, 75, 74), //sched_yield|mremap|msync|mincore|madvise
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 33, 74, 73), //dup
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 58, 5, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 59, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 44, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 38, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 37, 70, 69), //nanosleep|getitimer
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 43, 69, 68), //setitimer|getpid|sendfile|socket|connect
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 57, 68, 67), //sendto|recvfrom|sendmsg|recvmsg|shutdown|bind|listen|getsockname|getpeername|socketpair|setsockopt|getsockopt|clone
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 72, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 64, 66, 65), //vfork|execve|exit|wait4|kill|uname
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 64, 66, 65), //execve|exit|wait4|kill|uname
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 78, 65, 64), //fcntl|flock|fsync|fdatasync|truncate|ftruncate
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 137, 11, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 95, 5, 0),
