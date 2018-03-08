@@ -24,3 +24,60 @@
 #      - Each parameter type is assumed to be stored in 32 bits.
 #
 # This file is processed by a python script named genseccomp.py.
+
+# Syscalls needed to run GFXBenchmark
+pid_t	vfork:vfork()	arm,x86,x86_64
+
+# Needed for debugging 32-bit Chrome
+int	pipe:pipe(int pipefd[2])	arm,x86,mips
+
+# b/34651972
+int	access:access(const char *pathname, int mode)	arm,x86,mips
+int	stat64:stat64(const char*, struct stat64*)	arm,x86,mips
+
+# b/34813887
+int	open:open(const char *path, int oflag, ... ) arm,x86,mips
+int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) arm,x86,mips
+
+# b/34719286
+int	eventfd:eventfd(unsigned int initval, int flags)	arm,x86,mips
+
+# b/34817266
+int	epoll_wait:epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout)	arm,x86,mips
+
+# b/34908783
+int	epoll_create:epoll_create(int size)	arm,x86,mips
+
+# b/34979910
+int	creat:creat(const char *pathname, mode_t mode)	arm,x86,mips
+int	unlink:unlink(const char *pathname)	arm,x86,mips
+
+# b/35059702
+int	lstat64:lstat64(const char*, struct stat64*)	arm,x86,mips
+
+# b/35217603
+int	fcntl:fcntl(int fd, int cmd, ... /* arg */ )	arm,x86,mips
+pid_t	fork:fork()	arm,x86,mips
+int	poll:poll(struct pollfd *fds, nfds_t nfds, int timeout)	arm,x86,mips
+
+# b/35906875. Note mips already has getuid from SYSCALLS.TXT
+int	inotify_init()	arm,x86,mips
+uid_t	getuid()	arm,x86
+
+# b/36435222
+int	remap_file_pages(void *addr, size_t size, int prot, size_t pgoff, int flags)	arm,x86,mips
+
+# b/36449658
+int	rename(const char *oldpath, const char *newpath)	arm,x86,mips
+
+# b/36726183. Note arm does not support mmap
+void*	mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)	x86,mips
+
+# b/37769298
+int dup2(int oldfd, int newfd)	arm,x86,mips
+
+# b/62779795
+int compat_select:_newselect(int n, unsigned long* inp, unsigned long* outp, unsigned long* exp, struct timeval* timeout) arm,x86,mips
+
+# b/62090571
+int mkdir(const char *pathname, mode_t mode)	arm,x86,mips
