@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6228bf80_e1a95e3d",
+        "filename": "libc/include/netdb.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-08T16:29:15Z",
+      "side": 1,
+      "message": "is this the right header? you actually want this in the NDK?",
+      "revId": "9d581b8095862b3f0dd1eb6024936a88e07264f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e603521c_c87c6403",
+        "filename": "tests/headers/posix/netdb_h.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-08T16:29:15Z",
+      "side": 1,
+      "message": "aiui this is *not* in POSIX, and shouldn\u0027t be added to the POSIX conformance test?",
+      "revId": "9d581b8095862b3f0dd1eb6024936a88e07264f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
