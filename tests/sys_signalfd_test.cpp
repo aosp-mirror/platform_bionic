@@ -36,7 +36,7 @@
 
 #include <thread>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 
 static void TestSignalFd(int fd, int signal) {
   ASSERT_NE(-1, fd) << strerror(errno);

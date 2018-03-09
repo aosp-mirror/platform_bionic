@@ -40,7 +40,7 @@
 #include "private/bionic_constants.h"
 #include "private/bionic_macros.h"
 #include "BionicDeathTest.h"
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "utils.h"
 
 TEST(pthread, pthread_key_create) {
