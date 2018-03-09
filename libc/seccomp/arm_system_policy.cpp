@@ -72,7 +72,7 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 137, 65, 64), //personality
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 141, 64, 63), //setfsuid|setfsgid|_llseek
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 290, 31, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 217, 15, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 191, 7, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 190, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 172, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 150, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 149, 58, 57), //flock|msync|readv|writev|getsid|fdatasync
@@ -82,7 +82,7 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 182, 55, 54), //prctl|rt_sigreturn|rt_sigaction|
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 188, 54, 53), //getcwd|capget|capset|sigaltstack|sendfile
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 199, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 197, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 195, 51, 50), //ugetrlimit|mmap2|truncate64|ftruncate64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 195, 51, 50), //vfork|ugetrlimit|mmap2|truncate64|ftruncate64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 198, 50, 49), //fstat64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 213, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 212, 48, 47), //getuid32|getgid32|geteuid32|getegid32|setreuid32|setregid32|getgroups32|setgroups32|fchown32|setresuid32|getresuid32|setresgid32|getresgid32

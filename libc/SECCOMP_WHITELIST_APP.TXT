@@ -25,9 +25,6 @@
 #
 # This file is processed by a python script named genseccomp.py.
 
-# Syscalls needed to run GFXBenchmark
-pid_t	vfork:vfork()	arm,x86,x86_64
-
 # Needed for debugging 32-bit Chrome
 int	pipe:pipe(int pipefd[2])	arm,x86,mips
 
