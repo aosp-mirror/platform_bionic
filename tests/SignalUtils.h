@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H
-#define _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H
+#pragma once
 
 #include <signal.h>
 #include <string.h>
@@ -41,38 +40,7 @@
 #define sigwaitinfo64 sigwaitinfo
 #endif
 
-class ScopedSignalHandler {
- public:
-  ScopedSignalHandler(int signal_number, void (*handler)(int), int sa_flags = 0)
-      : signal_number_(signal_number) {
-    memset(&action_, 0, sizeof(action_));
-    action_.sa_flags = sa_flags;
-    action_.sa_handler = handler;
-    sigaction64(signal_number_, &action_, &old_action_);
-  }
-
-  ScopedSignalHandler(int signal_number, void (*action)(int, siginfo_t*, void*),
-                      int sa_flags = SA_SIGINFO)
-      : signal_number_(signal_number) {
-    memset(&action_, 0, sizeof(action_));
-    action_.sa_flags = sa_flags;
-    action_.sa_sigaction = action;
-    sigaction64(signal_number_, &action_, &old_action_);
-  }
-
-  ScopedSignalHandler(int signal_number) : signal_number_(signal_number) {
-    sigaction64(signal_number, nullptr, &old_action_);
-  }
-
-  ~ScopedSignalHandler() {
-    sigaction64(signal_number_, &old_action_, NULL);
-  }
-
- private:
-  struct sigaction64 action_;
-  struct sigaction64 old_action_;
-  const int signal_number_;
-};
+#include "private/ScopedSignalHandler.h"
 
 class SignalMaskRestorer {
  public:
@@ -87,5 +55,3 @@ class SignalMaskRestorer {
  private:
   sigset64_t old_mask_;
 };
-
-#endif // _BIONIC_TESTS_SCOPED_SIGNAL_HANDLER_H

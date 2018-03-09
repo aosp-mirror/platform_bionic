@@ -17,7 +17,7 @@
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 
