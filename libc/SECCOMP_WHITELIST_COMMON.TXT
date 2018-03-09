@@ -39,6 +39,9 @@ int	fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)	mips64
 int	fstat64|fstat:fstat(int, struct stat*)	mips64
 int	_flush_cache:cacheflush(char* addr, const int nbytes, const int op)	mips64
 
+# vfork is used by java.lang.ProcessBuilder
+pid_t	vfork:vfork()	arm,x86,x86_64
+
 # Needed for performance tools
 int	perf_event_open:perf_event_open(struct perf_event_attr *attr, pid_t pid, int cpu, int group_fd, unsigned long flags)	all
 
