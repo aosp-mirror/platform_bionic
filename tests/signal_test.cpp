@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 
 static int SIGNAL_MIN() {
   return 1; // Signals start at 1 (SIGHUP), not 0.
