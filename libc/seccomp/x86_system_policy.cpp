@@ -76,12 +76,12 @@ BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 141, 53, 52), //setfsuid|setfsgid|_llseek
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 150, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 149, 51, 50), //flock|msync|readv|writev|getsid|fdatasync
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 164, 50, 49), //mlock|munlock|mlockall|munlockall|sched_setparam|sched_getparam|sched_setscheduler|sched_getscheduler|sched_yield|sched_get_priority_max|sched_get_priority_min|sched_rr_get_interval|nanosleep|mremap
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 191, 3, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 190, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 183, 1, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 182, 47, 46), //prctl|rt_sigreturn|rt_sigaction|rt_sigprocmask|rt_sigpending|rt_sigtimedwait|rt_sigqueueinfo|rt_sigsuspend|pread64|pwrite64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 188, 46, 45), //getcwd|capget|capset|sigaltstack|sendfile
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 197, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 195, 44, 43), //ugetrlimit|mmap2|truncate64|ftruncate64
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 195, 44, 43), //vfork|ugetrlimit|mmap2|truncate64|ftruncate64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 198, 43, 42), //fstat64
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 245, 7, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 218, 3, 0),
