@@ -231,8 +231,6 @@ int __vfwscanf(FILE*, const wchar_t*, va_list);
 #define FUNLOCKFILE(fp) \
   if (!_EXT(fp)->_caller_handles_locking) funlockfile(fp)
 
-#define NO_PRINTF_PERCENT_N
-
 /* OpenBSD exposes these in <stdio.h>, but we only want them exposed to the implementation. */
 #define __sferror(p) (((p)->_flags & __SERR) != 0)
 #define __sclearerr(p) ((void)((p)->_flags &= ~(__SERR | __SEOF)))
