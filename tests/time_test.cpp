@@ -26,7 +26,7 @@
 #include <unistd.h>
 #include <atomic>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "utils.h"
 
 #include "private/bionic_constants.h"

@@ -24,7 +24,7 @@
 #include <unistd.h>
 
 #include "private/bionic_constants.h"
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 
 TEST(semaphore, sem_init) {
   sem_t s;

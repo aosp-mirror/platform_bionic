@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <unwind.h>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 
 #define noinline __attribute__((__noinline__))
 #define __unused __attribute__((__unused__))
