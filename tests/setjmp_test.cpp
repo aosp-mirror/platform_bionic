@@ -19,7 +19,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 
 TEST(setjmp, setjmp_smoke) {
   int value;
