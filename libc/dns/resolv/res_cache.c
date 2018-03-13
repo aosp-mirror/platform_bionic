@@ -591,12 +591,12 @@ _dnsPacket_checkQuery( DnsPacket*  packet )
 
     /* QR must be set to 0, opcode must be 0 and AA must be 0 */
     /* RA, Z, and RCODE must be 0 */
-    if ((p[2] & 0xFC) != 0 || p[3] != 0) {
+    if ((p[2] & 0xFC) != 0 || (p[3] & 0xCF) != 0) {
         XLOG("query packet flags unsupported");
         return 0;
     }
 
-    /* Note that we ignore the TC and RD bits here for the
+    /* Note that we ignore the TC, RD, CD, and AD bits here for the
      * following reasons:
      *
      * - there is no point for a query packet sent to a server
@@ -606,11 +606,11 @@ _dnsPacket_checkQuery( DnsPacket*  packet )
      *   _resolv_cache_add. We should not freak out if this
      *   is the case.
      *
-     * - we consider that the result from a RD=0 or a RD=1
-     *   query might be different, hence that the RD bit
+     * - we consider that the result from a query might depend on
+     *   the RD, AD, and CD bits, so these bits
      *   should be used to differentiate cached result.
      *
-     *   this implies that RD is checked when hashing or
+     *   this implies that these bits are checked when hashing or
      *   comparing query packets, but not TC
      */
 
@@ -620,7 +620,7 @@ _dnsPacket_checkQuery( DnsPacket*  packet )
     dnCount = (p[8] << 8) | p[9];
     arCount = (p[10]<< 8) | p[11];
 
-    if (anCount != 0 || dnCount != 0 || arCount != 0) {
+    if (anCount != 0 || dnCount != 0 || arCount > 1) {
         XLOG("query packet contains non-query records");
         return 0;
     }
@@ -817,11 +817,25 @@ _dnsPacket_hashQR( DnsPacket*  packet, unsigned  hash )
 }
 
 static unsigned
+_dnsPacket_hashRR( DnsPacket*  packet, unsigned  hash )
+{
+    int rdlength;
+    hash = _dnsPacket_hashQR(packet, hash);
+    hash = _dnsPacket_hashBytes(packet, 4, hash); /* TTL */
+    rdlength = _dnsPacket_readInt16(packet);
+    hash = _dnsPacket_hashBytes(packet, rdlength, hash); /* RDATA */
+    return hash;
+}
+
+static unsigned
 _dnsPacket_hashQuery( DnsPacket*  packet )
 {
     unsigned  hash = FNV_BASIS;
-    int       count;
+    int       count, arcount;
     _dnsPacket_rewind(packet);
+
+    /* ignore the ID */
+    _dnsPacket_skip(packet, 2);
 
     /* we ignore the TC bit for reasons explained in
      * _dnsPacket_checkQuery().
@@ -832,18 +846,28 @@ _dnsPacket_hashQuery( DnsPacket*  packet )
      */
     hash = hash*FNV_MULT ^ (packet->base[2] & 1);
 
-    /* assume: other flags are 0 */
-    _dnsPacket_skip(packet, 4);
+    /* mark the first header byte as processed */
+    _dnsPacket_skip(packet, 1);
+
+    /* process the second header byte */
+    hash = _dnsPacket_hashBytes(packet, 1, hash);
 
     /* read QDCOUNT */
     count = _dnsPacket_readInt16(packet);
 
-    /* assume: ANcount, NScount, ARcount are 0 */
-    _dnsPacket_skip(packet, 6);
+    /* assume: ANcount and NScount are 0 */
+    _dnsPacket_skip(packet, 4);
+
+    /* read ARCOUNT */
+    arcount = _dnsPacket_readInt16(packet);
 
     /* hash QDCOUNT QRs */
     for ( ; count > 0; count-- )
         hash = _dnsPacket_hashQR(packet, hash);
+
+    /* hash ARCOUNT RRs */
+    for ( ; arcount > 0; arcount-- )
+        hash = _dnsPacket_hashRR(packet, hash);
 
     return hash;
 }
@@ -929,9 +953,28 @@ _dnsPacket_isEqualQR( DnsPacket*  pack1, DnsPacket*  pack2 )
 }
 
 static int
+_dnsPacket_isEqualRR( DnsPacket*  pack1, DnsPacket*  pack2 )
+{
+    int rdlength1, rdlength2;
+    /* compare query + TTL */
+    if ( !_dnsPacket_isEqualQR(pack1, pack2) ||
+         !_dnsPacket_isEqualBytes(pack1, pack2, 4) )
+        return 0;
+
+    /* compare RDATA */
+    rdlength1 = _dnsPacket_readInt16(pack1);
+    rdlength2 = _dnsPacket_readInt16(pack2);
+    if ( rdlength1 != rdlength2 ||
+         !_dnsPacket_isEqualBytes(pack1, pack2, rdlength1) )
+        return 0;
+
+    return 1;
+}
+
+static int
 _dnsPacket_isEqualQuery( DnsPacket*  pack1, DnsPacket*  pack2 )
 {
-    int  count1, count2;
+    int  count1, count2, arcount1, arcount2;
 
     /* compare the headers, ignore most fields */
     _dnsPacket_rewind(pack1);
@@ -943,7 +986,12 @@ _dnsPacket_isEqualQuery( DnsPacket*  pack1, DnsPacket*  pack2 )
         return 0;
     }
 
-    /* assume: other flags are all 0 */
+    if (pack1->base[3] != pack2->base[3]) {
+        XLOG("different CD or AD");
+        return 0;
+    }
+
+    /* mark ID and header bytes as compared */
     _dnsPacket_skip(pack1, 4);
     _dnsPacket_skip(pack2, 4);
 
@@ -955,14 +1003,30 @@ _dnsPacket_isEqualQuery( DnsPacket*  pack1, DnsPacket*  pack2 )
         return 0;
     }
 
-    /* assume: ANcount, NScount and ARcount are all 0 */
-    _dnsPacket_skip(pack1, 6);
-    _dnsPacket_skip(pack2, 6);
+    /* assume: ANcount and NScount are 0 */
+    _dnsPacket_skip(pack1, 4);
+    _dnsPacket_skip(pack2, 4);
+
+    /* compare ARCOUNT */
+    arcount1 = _dnsPacket_readInt16(pack1);
+    arcount2 = _dnsPacket_readInt16(pack2);
+    if (arcount1 != arcount2 || arcount1 < 0) {
+        XLOG("different ARCOUNT");
+        return 0;
+    }
 
     /* compare the QDCOUNT QRs */
     for ( ; count1 > 0; count1-- ) {
         if (!_dnsPacket_isEqualQR(pack1, pack2)) {
             XLOG("different QR");
+            return 0;
+        }
+    }
+
+    /* compare the ARCOUNT RRs */
+    for ( ; arcount1 > 0; arcount1-- ) {
+        if (!_dnsPacket_isEqualRR(pack1, pack2)) {
+            XLOG("different additional RR");
             return 0;
         }
     }
