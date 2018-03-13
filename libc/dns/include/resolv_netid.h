@@ -72,10 +72,14 @@ struct android_net_context {
     unsigned dns_netid;
     unsigned dns_mark;
     uid_t uid;
+    unsigned flags;
     res_send_qhook qhook;
 };
 
 #define NET_CONTEXT_INVALID_UID ((uid_t)-1)
+
+#define NET_CONTEXT_FLAG_USE_LOCAL_NAMESERVERS  0x00000001
+#define NET_CONTEXT_FLAG_USE_EDNS               0x00000002
 
 struct hostent *android_gethostbyaddrfornet(const void *, socklen_t, int, unsigned, unsigned) __used_in_netd;
 struct hostent *android_gethostbynamefornet(const char *, int, unsigned, unsigned) __used_in_netd;
