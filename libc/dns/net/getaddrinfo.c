@@ -107,6 +107,7 @@
 #include <syslog.h>
 #include <stdarg.h>
 #include "nsswitch.h"
+#include "private/bionic_defs.h"
 
 typedef union sockaddr_union {
     struct sockaddr     generic;
@@ -310,6 +311,7 @@ do { 								\
 #define MATCH(x, y, w) 							\
 	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == ANY || (y) == ANY)))
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 const char *
 gai_strerror(int ecode)
 {
@@ -318,6 +320,7 @@ gai_strerror(int ecode)
 	return ai_errlist[ecode];
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void
 freeaddrinfo(struct addrinfo *ai)
 {
@@ -556,6 +559,7 @@ exit:
 }
 #endif
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
@@ -563,6 +567,7 @@ getaddrinfo(const char *hostname, const char *servname,
 	return android_getaddrinfofornet(hostname, servname, hints, NETID_UNSET, MARK_UNSET, res);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 android_getaddrinfofornet(const char *hostname, const char *servname,
     const struct addrinfo *hints, unsigned netid, unsigned mark, struct addrinfo **res)
@@ -577,6 +582,7 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 	return android_getaddrinfofornetcontext(hostname, servname, hints, &netcontext, res);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 android_getaddrinfofornetcontext(const char *hostname, const char *servname,
     const struct addrinfo *hints, const struct android_net_context *netcontext,
