@@ -16,6 +16,24 @@
       "revId": "8152b72e84090a7cafe5460d4e0569c5bee02bbd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e59e3b1_25c59bce",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-14T21:50:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70748b56_e5d828cb",
+      "revId": "8152b72e84090a7cafe5460d4e0569c5bee02bbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
