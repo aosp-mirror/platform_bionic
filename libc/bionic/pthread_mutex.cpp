@@ -40,7 +40,9 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_constants.h"
+#include "private/bionic_fortify.h"
 #include "private/bionic_futex.h"
+#include "private/bionic_sdk_version.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_time_conversions.h"
 #include "private/bionic_tls.h"
@@ -171,7 +173,7 @@ static inline __always_inline int PIMutexTryLock(PIMutex& mutex) {
     return EBUSY;
 }
 
-// Inlining this function in pthread_mutex_lock() add the cost of stack frame instructions on
+// Inlining this function in pthread_mutex_lock() adds the cost of stack frame instructions on
 // ARM/ARM64, which increases at most 20 percent overhead. So make it noinline.
 static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
                                                        const timespec* abs_timeout) {
@@ -413,7 +415,7 @@ static void FreeId(int id) {
 #define  MUTEX_TYPE_BITS_RECURSIVE   MUTEX_TYPE_TO_BITS(PTHREAD_MUTEX_RECURSIVE)
 #define  MUTEX_TYPE_BITS_ERRORCHECK  MUTEX_TYPE_TO_BITS(PTHREAD_MUTEX_ERRORCHECK)
 // Use a special mutex type to mark priority inheritance mutexes.
-#define  MUTEX_TYPE_BITS_WITH_PI     MUTEX_TYPE_TO_BITS(3)
+#define  PI_MUTEX_STATE     MUTEX_TYPE_TO_BITS(3)
 
 // For a PI mutex, it includes below fields:
 //   Atomic(uint16_t) state;
@@ -423,6 +425,7 @@ static void FreeId(int id) {
 //
 //   bits:   name    description
 //   15-14   type    mutex type, should be 3
+//   13-0    padding should be 0
 //
 //   pi_mutex holds the state of a PI mutex.
 //   pi_mutex_id holds an integer to find the state of a PI mutex.
@@ -533,7 +536,7 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
         }
         mutex->pi_mutex_id = id;
 #endif
-        atomic_init(&mutex->state, MUTEX_TYPE_BITS_WITH_PI);
+        atomic_init(&mutex->state, PI_MUTEX_STATE);
         PIMutex& pi_mutex = mutex->ToPIMutex();
         pi_mutex.type = *attr & MUTEXATTR_TYPE_MASK;
         pi_mutex.shared = (*attr & MUTEXATTR_SHARED_MASK) != 0;
@@ -777,6 +780,20 @@ static int MutexLockWithTimeout(pthread_mutex_internal_t* mutex, bool use_realti
 
 }  // namespace NonPI
 
+static inline __always_inline bool IsMutexDestroyed(uint16_t mutex_state) {
+    return mutex_state == 0xffff;
+}
+
+// Inlining this function in pthread_mutex_lock() adds the cost of stack frame instructions on
+// ARM64. So make it noinline.
+static int __attribute__((noinline)) HandleUsingDestroyedMutex(pthread_mutex_t* mutex,
+                                                               const char* function_name) {
+    if (bionic_get_application_target_sdk_version() >= __ANDROID_API_P__) {
+        __fortify_fatal("%s called on a destroyed mutex (%p)", function_name, mutex);
+    }
+    return EBUSY;
+}
+
 int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 #if !defined(__LP64__)
     // Some apps depend on being able to pass NULL as a mutex and get EINVAL
@@ -788,7 +805,6 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
 #endif
 
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
     // Avoid slowing down fast path of normal mutex lock operation.
@@ -797,13 +813,17 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
         if (__predict_true(NonPI::NormalMutexTryLock(mutex, shared) == 0)) {
             return 0;
         }
-    } else if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    }
+    if (old_state == PI_MUTEX_STATE) {
         PIMutex& m = mutex->ToPIMutex();
         // Handle common case first.
         if (__predict_true(PIMutexTryLock(m) == 0)) {
             return 0;
         }
         return PIMutexTimedLock(mutex->ToPIMutex(), nullptr);
+    }
+    if (__predict_false(IsMutexDestroyed(old_state))) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
     return NonPI::MutexLockWithTimeout(mutex, false, nullptr);
 }
@@ -819,7 +839,6 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
 #endif
 
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
     uint16_t shared = (old_state & MUTEX_SHARED_MASK);
@@ -829,8 +848,11 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
         NonPI::NormalMutexUnlock(mutex, shared);
         return 0;
     }
-    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    if (old_state == PI_MUTEX_STATE) {
         return PIMutexUnlock(mutex->ToPIMutex());
+    }
+    if (__predict_false(IsMutexDestroyed(old_state))) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
 
     // Do we already own this recursive or error-check mutex?
@@ -875,8 +897,11 @@ int pthread_mutex_trylock(pthread_mutex_t* mutex_interface) {
         uint16_t shared = (old_state & MUTEX_SHARED_MASK);
         return NonPI::NormalMutexTryLock(mutex, shared);
     }
-    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    if (old_state == PI_MUTEX_STATE) {
         return PIMutexTryLock(mutex->ToPIMutex());
+    }
+    if (__predict_false(IsMutexDestroyed(old_state))) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
 
     // Do we already own this recursive or error-check mutex?
@@ -934,8 +959,11 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
             return 0;
         }
     }
-    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    if (old_state == PI_MUTEX_STATE) {
         return PIMutexTimedLock(mutex->ToPIMutex(), abs_timeout);
+    }
+    if (__predict_false(IsMutexDestroyed(old_state))) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
     return NonPI::MutexLockWithTimeout(mutex, true, abs_timeout);
 }
@@ -943,12 +971,10 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-    if (old_state == 0xffff) {
-        // The mutex has been destroyed.
-        return EBUSY;
+    if (__predict_false(IsMutexDestroyed(old_state))) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
     }
-    uint16_t mtype  = (old_state & MUTEX_TYPE_MASK);
-    if (mtype == MUTEX_TYPE_BITS_WITH_PI) {
+    if (old_state == PI_MUTEX_STATE) {
         int result = PIMutexDestroy(mutex->ToPIMutex());
         if (result == 0) {
             mutex->FreePIMutex();
