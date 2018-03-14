@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "233e7416_eb353175",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-14T23:15:24Z",
+      "side": 1,
+      "message": "partially. the regression is totally fixed after avoiding stack frame instructions in pthread_mutex_lock on arm64.",
+      "parentUuid": "fb897c56_2843ec1a",
+      "range": {
+        "startLine": 805,
+        "startChar": 4,
+        "endLine": 807,
+        "endChar": 5
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c880126_18f5000a",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 2
