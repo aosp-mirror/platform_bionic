@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d831214_10790c9d",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-14T19:54:31Z",
+      "side": 0,
+      "message": "add death tests for destroying a mutex twice or calling lock/unlock on a destroyed mutex?",
+      "revId": "35e620cf98d133ba6e40f7713c858c40bb825a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

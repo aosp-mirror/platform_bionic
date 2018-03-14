@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70748b56_e5d828cb",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-14T19:54:31Z",
+      "side": 1,
+      "message": "pass the function name through so we can say \"pthread_mutex_unlock called on a destroyed mutex (%p)\"?\n\n(i\u0027m tempted to call __fortify_fatal here because in my head __fortify_fatal \u003d\u003d app bug, async_safe_fatal \u003d\u003d libc bug.)",
+      "revId": "8152b72e84090a7cafe5460d4e0569c5bee02bbd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
