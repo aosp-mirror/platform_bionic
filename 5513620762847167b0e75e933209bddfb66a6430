@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "354bfbfd_5e262463",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-14T22:22:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f9bde6f_d7cee054",
+      "range": {
+        "startLine": 782,
+        "startChar": 35,
+        "endLine": 782,
+        "endChar": 51
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19dad870_4814e495",
         "filename": "libc/bionic/pthread_mutex.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-03-14T21:51:32Z",
       "side": 1,
       "message": "Isn\u0027t the \"destroyed\" case going to fail all the type tests anyway, so that we can check it below, off the critical path?\n\nI would be impressed if the compiler did that automagically. I doubt it.",
+      "range": {
+        "startLine": 805,
+        "startChar": 4,
+        "endLine": 807,
+        "endChar": 5
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34031bdc_a5a7c45b",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-14T22:22:53Z",
+      "side": 1,
+      "message": "The destroyed mutex will fail MUTEX_TYPE_BITS_NORMAL check, but pass MUTEX_TYPE_BITS_WITH_PI check. So moved the check below the MUTEX_TYPE_BITS_NORMAL branch.",
+      "parentUuid": "19dad870_4814e495",
       "range": {
         "startLine": 805,
         "startChar": 4,
