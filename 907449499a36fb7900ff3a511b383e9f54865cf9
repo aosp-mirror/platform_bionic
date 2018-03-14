@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd5e0cc2_d332fcbf",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-14T23:19:48Z",
+      "side": 1,
+      "message": "`\u003d {}` so it\u0027s zero-initialized?",
+      "revId": "907449499a36fb7900ff3a511b383e9f54865cf9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
