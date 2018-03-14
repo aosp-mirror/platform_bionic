@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5833525d_14ca4cb2",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-14T22:30:53Z",
+      "side": 1,
+      "message": "looks like a function call? \"mutex (%p)\" or \"mutex: %p\", or if you did want it to look like a function call, combine it with the function name \"%s(%p): mutex already destroyed\"?\n\n(yes, i know i\u0027m really anal about error messages, but random developers/QA folks all around the world will have to understand what we meant, and we won\u0027t be around to help them.)",
+      "range": {
+        "startLine": 787,
+        "startChar": 54,
+        "endLine": 787,
+        "endChar": 63
+      },
+      "revId": "88ecde33f2b769049e3f2e529b959b1ad358e29c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e8f7d62b_a0ecffbe",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2070,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-14T22:30:53Z",
+      "side": 1,
+      "message": "nice! +tomcherry since he\u0027s about to add a pthread_mutex function...",
+      "revId": "88ecde33f2b769049e3f2e529b959b1ad358e29c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
