@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f9bde6f_d7cee054",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 782,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-03-14T21:51:32Z",
+      "side": 1,
+      "message": "I dislike that name for something that has serious side effects, like crashing the process. How about \"CheckMutexDestroyed\"?",
+      "range": {
+        "startLine": 782,
+        "startChar": 35,
+        "endLine": 782,
+        "endChar": 51
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19dad870_4814e495",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-03-14T21:51:32Z",
+      "side": 1,
+      "message": "Isn\u0027t the \"destroyed\" case going to fail all the type tests anyway, so that we can check it below, off the critical path?\n\nI would be impressed if the compiler did that automagically. I doubt it.",
+      "range": {
+        "startLine": 805,
+        "startChar": 4,
+        "endLine": 807,
+        "endChar": 5
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c880126_18f5000a",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-03-14T21:51:32Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 838,
+        "startChar": 4,
+        "endLine": 840,
+        "endChar": 5
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "615df533_f499bc2f",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-03-14T21:51:32Z",
+      "side": 1,
+      "message": "And again.",
+      "range": {
+        "startLine": 888,
+        "startChar": 4,
+        "endLine": 890,
+        "endChar": 5
+      },
+      "revId": "5513620762847167b0e75e933209bddfb66a6430",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
