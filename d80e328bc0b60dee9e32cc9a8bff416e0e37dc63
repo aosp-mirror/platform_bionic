@@ -46,6 +46,30 @@
       "revId": "d80e328bc0b60dee9e32cc9a8bff416e0e37dc63",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5a50241_0a244200",
+        "filename": "libc/bionic/pthread_mutex.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-03-15T15:21:21Z",
+      "side": 1,
+      "message": "OK. But isn\u0027t the \"destroyed\" value arbitrary, as are the type encodings? So this is easily fixable? I\u0027m entirely fine with postponing that to a follow-up CL, but it seems suboptimal.",
+      "parentUuid": "8ad4fb27_871feb7d",
+      "range": {
+        "startLine": 816,
+        "startChar": 4,
+        "endLine": 818,
+        "endChar": 5
+      },
+      "revId": "d80e328bc0b60dee9e32cc9a8bff416e0e37dc63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
