@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "59321129_1beb160a",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2055,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-15T00:06:56Z",
+      "side": 1,
+      "message": "I tried below: if changing the error message in the second ASSERT_EXIT, the test fails. So multiple ASSERT_EXITs can be used in a test. I think a correct one might be: ASSERT_EXIT runs the expression in ASSERT_EXIT in a separate process, so the expressions in different ASSERT_EXITs won\u0027t affect each other.",
+      "parentUuid": "0175f4ea_b72a72d2",
+      "revId": "88ecde33f2b769049e3f2e529b959b1ad358e29c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e8f7d62b_a0ecffbe",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 5
