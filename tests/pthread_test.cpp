@@ -1718,7 +1718,6 @@ struct PthreadMutex {
 
   void destroy() {
     ASSERT_EQ(0, pthread_mutex_destroy(&lock));
-    ASSERT_EQ(EBUSY, pthread_mutex_destroy(&lock));
   }
 
   DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
@@ -2051,6 +2050,27 @@ TEST(pthread, pthread_mutex_timedlock_pi) {
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(ETIMEDOUT, reinterpret_cast<intptr_t>(result));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
+}
+
+TEST(pthread, pthread_mutex_using_destroyed_mutex) {
+#if defined(__BIONIC__)
+  pthread_mutex_t m;
+  ASSERT_EQ(0, pthread_mutex_init(&m, nullptr));
+  ASSERT_EQ(0, pthread_mutex_destroy(&m));
+  ASSERT_EXIT(pthread_mutex_lock(&m), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_lock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_unlock(&m), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_unlock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_trylock(&m), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_trylock called on a destroyed mutex");
+  timespec ts;
+  ASSERT_EXIT(pthread_mutex_timedlock(&m, &ts), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_timedlock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_destroy(&m), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_destroy called on a destroyed mutex");
+#else
+  GTEST_LOG_(INFO) << "This test tests bionic pthread mutex implementation details.";
+#endif
 }
 
 class StrictAlignmentAllocator {
