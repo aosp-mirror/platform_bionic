@@ -16,6 +16,24 @@
       "revId": "57fb1074a745e342beae41375565a4cac574789a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff7e00b7_fc8c0c8e",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-03-20T13:55:34Z",
+      "side": 1,
+      "message": "I hadn\u0027t.  I think what the latest patchset has now is correct and matches what I have in the linker scripts.",
+      "parentUuid": "729e9f22_89ad0720",
+      "revId": "57fb1074a745e342beae41375565a4cac574789a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
