@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "80ed20ac_dfa8e6ee",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-20T23:49:51Z",
+      "side": 1,
+      "message": "on?",
+      "range": {
+        "startLine": 177,
+        "startChar": 50,
+        "endLine": 177,
+        "endChar": 56
+      },
+      "revId": "04807ce493b53b5d4bcc386a16d4a9067117372f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ca1d3d0_5c1e760f",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-20T23:49:51Z",
+      "side": 1,
+      "message": ".",
+      "range": {
+        "startLine": 216,
+        "startChar": 85,
+        "endLine": 216,
+        "endChar": 86
+      },
+      "revId": "04807ce493b53b5d4bcc386a16d4a9067117372f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16337bc0_f32e1607",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-20T23:49:51Z",
+      "side": 1,
+      "message": ".",
+      "range": {
+        "startLine": 220,
+        "startChar": 85,
+        "endLine": 220,
+        "endChar": 86
+      },
+      "revId": "04807ce493b53b5d4bcc386a16d4a9067117372f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
