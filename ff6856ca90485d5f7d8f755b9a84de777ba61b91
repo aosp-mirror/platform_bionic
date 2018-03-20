@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "558e2c8c_b271abcb",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-20T19:21:38Z",
+      "side": 1,
+      "message": "Since there is no online doc about the interfaces, can we add some comment here and below, say it needs absolute time based on CLOCK_MONOTONIC clock?",
+      "range": {
+        "startLine": 126,
+        "startChar": 96,
+        "endLine": 126,
+        "endChar": 97
+      },
+      "revId": "ff6856ca90485d5f7d8f755b9a84de777ba61b91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f2af71f_a02d7301",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-03-20T19:21:38Z",
+      "side": 1,
+      "message": "There was a time enh wanted to add specific reason for omitted tests. Maybe the info can be changed to \"This test does nothing because pthread_rwlock_timedwrlock_monotonic_np is only supported on bionic.\". And \"\\n\" isn\u0027t needed in gtest log.",
+      "range": {
+        "startLine": 956,
+        "startChar": 48,
+        "endLine": 956,
+        "endChar": 50
+      },
+      "revId": "ff6856ca90485d5f7d8f755b9a84de777ba61b91",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
