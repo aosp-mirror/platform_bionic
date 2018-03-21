@@ -101,35 +101,49 @@ static inline void timespec_add_ms(timespec& ts, size_t ms) {
   }
 }
 
-TEST(semaphore, sem_timedwait) {
+static void sem_timedwait_helper(clockid_t clock,
+                                 int (*wait_function)(sem_t* __sem, const timespec* __ts)) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));
 
   timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ASSERT_EQ(0, clock_gettime(clock, &ts));
   timespec_add_ms(ts, 100);
 
   errno = 0;
-  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(-1, wait_function(&s, &ts));
   ASSERT_EQ(ETIMEDOUT, errno);
 
   // A negative timeout is an error.
   errno = 0;
   ts.tv_nsec = -1;
-  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(-1, wait_function(&s, &ts));
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
   ts.tv_nsec = NS_PER_S;
-  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(-1, wait_function(&s, &ts));
   ASSERT_EQ(EINVAL, errno);
 
   errno = 0;
   ts.tv_nsec = NS_PER_S - 1;
   ts.tv_sec = -1;
-  ASSERT_EQ(-1, sem_timedwait(&s, &ts));
+  ASSERT_EQ(-1, wait_function(&s, &ts));
   ASSERT_EQ(ETIMEDOUT, errno);
 
   ASSERT_EQ(0, sem_destroy(&s));
+}
+
+TEST(semaphore, sem_timedwait) {
+  sem_timedwait_helper(CLOCK_REALTIME, sem_timedwait);
+}
+
+TEST(semaphore, sem_timedwait_monotonic_np) {
+#if defined(__BIONIC__)
+  sem_timedwait_helper(CLOCK_MONOTONIC, sem_timedwait_monotonic_np);
+#else   // __BIONIC__
+  GTEST_LOG_(INFO)
+      << "This test does nothing since sem_timedwait_monotonic_np is only supported on bionic";
+#endif  // __BIONIC__
 }
 
 TEST(semaphore_DeathTest, sem_timedwait_null_timeout) {
