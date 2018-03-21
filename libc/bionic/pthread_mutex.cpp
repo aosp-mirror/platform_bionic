@@ -176,6 +176,7 @@ static inline __always_inline int PIMutexTryLock(PIMutex& mutex) {
 // Inlining this function in pthread_mutex_lock() adds the cost of stack frame instructions on
 // ARM/ARM64, which increases at most 20 percent overhead. So make it noinline.
 static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
+                                                       bool use_realtime_clock,
                                                        const timespec* abs_timeout) {
     int ret = PIMutexTryLock(mutex);
     if (__predict_true(ret == 0)) {
@@ -183,7 +184,7 @@ static int  __attribute__((noinline)) PIMutexTimedLock(PIMutex& mutex,
     }
     if (ret == EBUSY) {
         ScopedTrace trace("Contending for pthread mutex");
-        ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, true, abs_timeout);
+        ret = -__futex_pi_lock_ex(&mutex.owner_tid, mutex.shared, use_realtime_clock, abs_timeout);
     }
     return ret;
 }
@@ -820,7 +821,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
         if (__predict_true(PIMutexTryLock(m) == 0)) {
             return 0;
         }
-        return PIMutexTimedLock(mutex->ToPIMutex(), nullptr);
+        return PIMutexTimedLock(mutex->ToPIMutex(), false, nullptr);
     }
     if (__predict_false(IsMutexDestroyed(old_state))) {
         return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
@@ -948,7 +949,8 @@ extern "C" int pthread_mutex_lock_timeout_np(pthread_mutex_t* mutex_interface, u
 }
 #endif
 
-int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* abs_timeout) {
+static int __pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, bool use_realtime_clock,
+                                     const timespec* abs_timeout, const char* function) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
     uint16_t mtype = (old_state & MUTEX_TYPE_MASK);
@@ -960,12 +962,21 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const timespec* ab
         }
     }
     if (old_state == PI_MUTEX_STATE) {
-        return PIMutexTimedLock(mutex->ToPIMutex(), abs_timeout);
+        return PIMutexTimedLock(mutex->ToPIMutex(), use_realtime_clock, abs_timeout);
     }
     if (__predict_false(IsMutexDestroyed(old_state))) {
-        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
+        return HandleUsingDestroyedMutex(mutex_interface, function);
     }
-    return NonPI::MutexLockWithTimeout(mutex, true, abs_timeout);
+    return NonPI::MutexLockWithTimeout(mutex, use_realtime_clock, abs_timeout);
+}
+
+int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const struct timespec* abs_timeout) {
+    return __pthread_mutex_timedlock(mutex_interface, true, abs_timeout, __FUNCTION__);
+}
+
+int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* mutex_interface,
+                                         const struct timespec* abs_timeout) {
+    return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
 }
 
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
