@@ -774,6 +774,9 @@ void res_setnetcontext(res_state statp, const struct android_net_context *netcon
 		statp->netid = netcontext->dns_netid;
 		statp->_mark = netcontext->dns_mark;
 		statp->qhook = netcontext->qhook;
+		if (netcontext->flags & NET_CONTEXT_FLAG_USE_EDNS) {
+			statp->options |= RES_USE_EDNS0 | RES_USE_DNSSEC;
+		}
 	}
 }
 
