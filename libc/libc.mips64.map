@@ -74,6 +74,7 @@ LIBC {
     __p_type_syms; # var
     __poll_chk; # introduced=23
     __ppoll_chk; # introduced=23
+    __ppoll64_chk; # introduced=28
     __pread64_chk; # introduced=23
     __pread_chk; # introduced=23
     __progname; # var
