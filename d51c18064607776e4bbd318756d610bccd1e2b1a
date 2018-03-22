@@ -16,6 +16,24 @@
       "revId": "d51c18064607776e4bbd318756d610bccd1e2b1a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "327b007f_e162c9e4",
+        "filename": "tests/fortify_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1001,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-22T18:19:31Z",
+      "side": 1,
+      "message": "yeah, building the platform with GCC is no longer supported.",
+      "parentUuid": "65368623_96f3e223",
+      "revId": "d51c18064607776e4bbd318756d610bccd1e2b1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
