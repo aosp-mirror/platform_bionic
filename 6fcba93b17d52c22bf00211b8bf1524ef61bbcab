@@ -22,6 +22,30 @@
       "revId": "6fcba93b17d52c22bf00211b8bf1524ef61bbcab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25942e86_e3b011fb",
+        "filename": "libc/bionic/posix_timers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-22T18:28:34Z",
+      "side": 1,
+      "message": "fixed by https://android-review.googlesource.com/#/c/platform/bionic/+/645238/",
+      "parentUuid": "216589af_db6520f2",
+      "range": {
+        "startLine": 157,
+        "startChar": 19,
+        "endLine": 157,
+        "endChar": 28
+      },
+      "revId": "6fcba93b17d52c22bf00211b8bf1524ef61bbcab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
