@@ -154,7 +154,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
 
   int rc = pthread_create(&timer->callback_thread, &thread_attributes, __timer_thread_start, timer);
 
-  __rt_sigprocmask(SIG_BLOCK, &old_sigset, nullptr, sizeof(old_sigset));
+  __rt_sigprocmask(SIG_SETMASK, &old_sigset, nullptr, sizeof(old_sigset));
 
   if (rc != 0) {
     free(timer);

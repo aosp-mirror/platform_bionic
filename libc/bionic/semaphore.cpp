@@ -231,7 +231,7 @@ int sem_wait(sem_t* sem) {
   }
 }
 
-int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
+static int __sem_timedwait(sem_t* sem, const timespec* abs_timeout, bool use_realtime_clock) {
   atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
 
   // POSIX says we need to try to decrement the semaphore
@@ -257,7 +257,8 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
     }
 
     // Contention detected. Wait for a wakeup event.
-    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, true, abs_timeout);
+    int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE,
+                                 use_realtime_clock, abs_timeout);
 
     // Return in case of timeout or interrupt.
     if (result == -ETIMEDOUT || result == -EINTR) {
@@ -265,6 +266,14 @@ int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
       return -1;
     }
   }
+}
+
+int sem_timedwait(sem_t* sem, const timespec* abs_timeout) {
+  return __sem_timedwait(sem, abs_timeout, true);
+}
+
+int sem_timedwait_monotonic_np(sem_t* sem, const timespec* abs_timeout) {
+  return __sem_timedwait(sem, abs_timeout, false);
 }
 
 int sem_post(sem_t* sem) {

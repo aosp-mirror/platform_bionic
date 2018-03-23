@@ -48,6 +48,18 @@ cc_defaults {
 // All standard tests.
 // -----------------------------------------------------------------------------
 
+// Test diagnostics emitted by clang. The library that results is useless; we
+// just want to run '-Xclang -verify', which will fail if the diagnostics don't
+// match up with what the source file says they should be.
+cc_test_library {
+    name: "clang_diagnostic_tests",
+    cflags: [
+      "-Xclang",
+      "-verify",
+    ],
+    srcs: ["sys_ioctl_diag_test.cpp"],
+}
+
 cc_test_library {
     name: "libBionicStandardTests",
     defaults: ["bionic_tests_defaults"],

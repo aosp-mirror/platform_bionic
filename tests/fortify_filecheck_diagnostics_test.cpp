@@ -278,7 +278,15 @@ void test_ppoll() {
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__ppoll_too_small_error' declared with attribute error: ppoll: pollfd array smaller than fd count
   // CLANG: error: in call to 'ppoll', fd_count is larger than the given buffer
-  ppoll(fds, 2, &timeout, NULL);
+  ppoll(fds, 2, &timeout, nullptr);
+}
+
+void test_ppoll64() {
+  pollfd fds[1];
+  timespec timeout;
+  // NOLINTNEXTLINE(whitespace/line_length)
+  // CLANG: error: in call to 'ppoll64', fd_count is larger than the given buffer
+  ppoll64(fds, 2, &timeout, nullptr);
 }
 
 void test_fread_overflow() {

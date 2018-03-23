@@ -343,21 +343,7 @@
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
 
-/*
- * Used to support clangisms with FORTIFY. Because these change how symbols are
- * emitted, we need to ensure that bionic itself is built fortified. But lots
- * of external code (especially stuff using configure) likes to declare
- * functions directly, and they can't know that the overloadable attribute
- * exists. This leads to errors like:
- *
- * dcigettext.c:151:7: error: redeclaration of 'getcwd' must have the 'overloadable' attribute
- * char *getcwd ();
- *       ^
- *
- * To avoid this and keep such software building, don't use overloadable if
- * we're not using fortify.
- */
-#if defined(__clang__) && defined(__BIONIC_FORTIFY)
+#if defined(__clang__)
 #  define __overloadable __attribute__((overloadable))
 #else
 #  define __overloadable
