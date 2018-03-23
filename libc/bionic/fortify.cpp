@@ -169,6 +169,12 @@ int __ppoll_chk(pollfd* fds, nfds_t fd_count, const timespec* timeout,
   return ppoll(fds, fd_count, timeout, mask);
 }
 
+int __ppoll64_chk(pollfd* fds, nfds_t fd_count, const timespec* timeout,
+                  const sigset64_t* mask, size_t fds_size) {
+  __check_pollfd_array("ppoll64", fds_size, fd_count);
+  return ppoll64(fds, fd_count, timeout, mask);
+}
+
 ssize_t __pread64_chk(int fd, void* buf, size_t count, off64_t offset, size_t buf_size) {
   __check_count("pread64", "count", count);
   __check_buffer_access("pread64", "write into", count, buf_size);
