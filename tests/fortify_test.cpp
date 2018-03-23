@@ -995,7 +995,18 @@ TEST_F(DEATHTEST, ppoll_fortified) {
   // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
   timespec timeout;
   timeout.tv_sec = timeout.tv_nsec = 0;
-  ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, NULL));
+  ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, nullptr));
+}
+
+TEST_F(DEATHTEST, ppoll64_fortified) {
+#if __BIONIC__ // glibc doesn't have ppoll64.
+  nfds_t fd_count = atoi("2"); // suppress compiler optimizations
+  pollfd buf[1] = {{0, POLLIN, 0}};
+  // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
+  timespec timeout;
+  timeout.tv_sec = timeout.tv_nsec = 0;
+  ASSERT_FORTIFY(ppoll64(buf, fd_count, &timeout, nullptr));
+#endif
 }
 
 TEST_F(DEATHTEST, open_O_CREAT_without_mode_fortified) {
