@@ -317,6 +317,12 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
       line.pop_back();
       testcase_list.push_back(TestCase(line.c_str()));
     } else {
+      if (testcase_list.empty()) {
+        // Invalid response from gtest - likely it has been upset by an invalid --gtest_* flag.
+        // Relay the message to user.
+        fprintf(stderr, "%s", content.c_str());
+        return false;
+      }
       testcase_list.back().AppendTest(line.c_str());
     }
   }
