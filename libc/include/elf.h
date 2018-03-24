@@ -260,6 +260,8 @@ typedef Elf64_Xword Elf64_Relr;
 #define DT_ANDROID_RELASZ (DT_LOOS + 5)
 
 #define DT_GNU_HASH 0x6ffffef5
+#define DT_TLSDESC_PLT 0x6ffffef6
+#define DT_TLSDESC_GOT 0x6ffffef7
 
 /* http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
 #define EI_ABIVERSION 8
