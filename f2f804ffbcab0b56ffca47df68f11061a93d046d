@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "384be53b_235105ef",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-03-24T08:13:16Z",
+      "side": 1,
+      "message": "I think we only want to define this macro if __ANDROID_API__ is new enough?",
+      "revId": "f2f804ffbcab0b56ffca47df68f11061a93d046d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
