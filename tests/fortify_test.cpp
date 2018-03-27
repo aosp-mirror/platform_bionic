@@ -417,11 +417,9 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#ifdef __clang__ && !__has_attribute(alloc_size)
+#if !__has_attribute(alloc_size)
 // TODO: remove this after Clang prebuilt rebase.
 #else
-// This test is disabled in clang because clang doesn't properly detect
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   char* buf = (char *) malloc(10);
   char source_buf[11];
