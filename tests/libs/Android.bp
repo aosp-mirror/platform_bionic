@@ -40,6 +40,16 @@ cc_defaults {
 }
 
 // -----------------------------------------------------------------------------
+// Library to test ELF TLS
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libelf-tls-library",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elf_tls_test_library.cpp"],
+    cflags: ["-fno-emulated-tls"],
+}
+
+// -----------------------------------------------------------------------------
 // Library to test gnu-styled hash
 // -----------------------------------------------------------------------------
 cc_test_library {
