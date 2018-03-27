@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "071a034f_6c1a53e2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-03-27T21:40:14Z",
+      "side": 1,
+      "message": "In com_android_internal_os_Zygote.cpp, SetUpSeccompFilter() should use uid instead of getuid()... so effectively, apps are using the system filter. I\u0027m reverting this to fix master first, then fix both P and master later.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 21
+      },
+      "revId": "040c28a0233a63278331797aad5a100303e80928",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
