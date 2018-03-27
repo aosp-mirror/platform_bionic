@@ -2784,6 +2784,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
         }
 #endif
+        if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
+          DL_ERR("unsupported ELF TLS symbol \"%s\" referenced by \"%s\"",
+                 sym_name, get_realpath());
+          return false;
+        }
         sym_addr = lsi->resolve_symbol_address(s);
 #if !defined(__LP64__)
         if (protect_segments) {
@@ -3437,6 +3442,11 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
+          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
+            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
+            return false;
+          }
+
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";
