@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "304c5364_240844e7",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-03-29T18:24:46Z",
+      "side": 1,
+      "message": "libtest_missing_symbol_child_private is also missing.  We should add that in the same CL (and avoid the extra cherry-pick).",
+      "revId": "51466528cd0ac3487cb7e73c00fdb1d03aa11e62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
