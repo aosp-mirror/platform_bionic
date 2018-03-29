@@ -533,6 +533,7 @@ cc_test {
         "libtest_init_fini_order_root2",
         "libtest_init_fini_order_root",
         "libtest_missing_symbol_child_public",
+        "libtest_missing_symbol_child_private",
         "libtest_missing_symbol_root",
         "libtest_missing_symbol",
         "libtest_nodelete_1",
