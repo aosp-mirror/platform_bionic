@@ -22,6 +22,30 @@
       "revId": "ce10b1629484e551908a6e77846bf1d01840bd45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89dd058c_88aad0cb",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-29T18:20:29Z",
+      "side": 1,
+      "message": "i think you\u0027re right, but oddly i don\u0027t see an error if i build locally.\n\nhttps://android-review.googlesource.com/#/c/platform/bionic/+/652224/",
+      "parentUuid": "3567a25a_db3dd581",
+      "range": {
+        "startLine": 599,
+        "startChar": 19,
+        "endLine": 599,
+        "endChar": 20
+      },
+      "revId": "ce10b1629484e551908a6e77846bf1d01840bd45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
