@@ -595,6 +595,13 @@ cc_test {
         "libnstest_ns_a_public1_internal",
         "libnstest_ns_b_public2",
         "libnstest_ns_b_public3",
+        "ld_preload_test_helper",
+        "ld_preload_test_helper_lib1",
+        "ld_preload-test_helper_lib2",
+        "ld_config_test_helper",
+        "ld_config_test_helper_lib1",
+        "ld_config_test_helper_lib2",
+        "ld_config_test_helper_lib3",
     ],
 }
 
