@@ -16,6 +16,24 @@
       "revId": "51466528cd0ac3487cb7e73c00fdb1d03aa11e62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87831419_55cde42e",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-29T18:27:15Z",
+      "side": 1,
+      "message": "meh, cherrypicks are cheap. i already get told off for putting unrelated things into the same CL :-)",
+      "parentUuid": "304c5364_240844e7",
+      "revId": "51466528cd0ac3487cb7e73c00fdb1d03aa11e62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
