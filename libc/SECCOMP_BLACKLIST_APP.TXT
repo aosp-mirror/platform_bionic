@@ -29,14 +29,13 @@
 # This file is processed by a python script named genseccomp.py.
 
 # syscalls to modify IDs
+# setresuid and setresuid32 are still needed since they are used after the filter setup.
 int     setgid:setgid32(gid_t)     arm,x86
 int     setgid:setgid(gid_t)       arm64,mips,mips64,x86_64
 int     setuid:setuid32(uid_t)    arm,x86
 int     setuid:setuid(uid_t)      arm64,mips,mips64,x86_64
 int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
 int     setreuid:setreuid(uid_t, uid_t)     arm64,mips,mips64,x86_64
-int     setresuid:setresuid32(uid_t, uid_t, uid_t)   arm,x86
-int     setresuid:setresuid(uid_t, uid_t, uid_t)     arm64,mips,mips64,x86_64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
 int     setfsgid(gid_t)  all
@@ -52,8 +51,6 @@ int     settimeofday(const struct timeval*, const struct timezone*)   all
 
 int     acct(const char*  filepath)  all
 int     klogctl:syslog(int, char*, int)   all
-
-int     capset(cap_user_header_t header, const cap_user_data_t data) all
 int     chroot(const char*)  all
 
 # syscalls to change machine various configurations
