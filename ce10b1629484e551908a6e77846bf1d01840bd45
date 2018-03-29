@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3567a25a_db3dd581",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-03-29T18:00:50Z",
+      "side": 1,
+      "message": "I guess this needs to be an \u0027_\u0027.  From the logs:\nCANNOT LINK EXECUTABLE \"/data/nativetest/bionic-loader-test-libs/ld_preload_test_helper/ld_preload_test_helper\": library \"/data/nativetest/bionic-loader-test-libs/ld_preload_test_helper_lib2.so\" not found",
+      "range": {
+        "startLine": 599,
+        "startChar": 19,
+        "endLine": 599,
+        "endChar": 20
+      },
+      "revId": "ce10b1629484e551908a6e77846bf1d01840bd45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
