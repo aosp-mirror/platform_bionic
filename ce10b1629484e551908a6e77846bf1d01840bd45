@@ -46,6 +46,30 @@
       "revId": "ce10b1629484e551908a6e77846bf1d01840bd45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80e3c840_916ad810",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-03-30T00:20:18Z",
+      "side": 1,
+      "message": "Sorry for the silly typo and thank you for fixing this. I am shamed. :(\n\n\u0027required: \u0027field isn\u0027t checked in soong, but simply emitted to make. that\u0027s why this typo didn\u0027t break the build.",
+      "parentUuid": "89dd058c_88aad0cb",
+      "range": {
+        "startLine": 599,
+        "startChar": 19,
+        "endLine": 599,
+        "endChar": 20
+      },
+      "revId": "ce10b1629484e551908a6e77846bf1d01840bd45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
