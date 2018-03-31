@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4c1bdd5_bac9c77c",
+        "filename": "libc/SECCOMP_WHITELIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-03-31T05:32:25Z",
+      "side": 1,
+      "message": "but not for LP64?",
+      "revId": "1afb40c9fe8fb7117a9dbe62e5609aead91ad51a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
