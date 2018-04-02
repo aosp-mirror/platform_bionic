@@ -269,8 +269,28 @@ res_nopt(res_state statp,
 	}
 	ns_put16(flags, cp);
 	cp += INT16SZ;
+#ifdef EDNS0_PADDING
+	{
+		u_int16_t minlen = (cp - buf) + 3 * INT16SZ;
+		u_int16_t extra = minlen % EDNS0_PADDING;
+		u_int16_t padlen = (EDNS0_PADDING - extra) % EDNS0_PADDING;
+		if (minlen > buflen) {
+			return (-1);
+		}
+		padlen = MIN(padlen, buflen - minlen);
+		ns_put16(padlen + 2 * INT16SZ, cp);	/* RDLEN */
+		cp += INT16SZ;
+		ns_put16(NS_OPT_PADDING, cp);	/* OPTION-CODE */
+		cp += INT16SZ;
+		ns_put16(padlen, cp);	/* OPTION-LENGTH */
+		cp += INT16SZ;
+		memset(cp, 0, padlen);
+		cp += padlen;
+	}
+#else
 	ns_put16(0, cp);	/* RDLEN */
 	cp += INT16SZ;
+#endif
 	hp->arcount = htons(ntohs(hp->arcount) + 1);
 
 	return (cp - buf);
