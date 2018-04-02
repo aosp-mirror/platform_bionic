@@ -16,6 +16,24 @@
       "revId": "1afb40c9fe8fb7117a9dbe62e5609aead91ad51a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa161b71_53fac07d",
+        "filename": "libc/SECCOMP_WHITELIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-04-02T16:47:50Z",
+      "side": 1,
+      "message": "This is copied from previous configuration.  It was not allowed for other platforms before. \n Looks like on other platforms, vfork wrapper internally uses clone.",
+      "parentUuid": "e4c1bdd5_bac9c77c",
+      "revId": "1afb40c9fe8fb7117a9dbe62e5609aead91ad51a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
