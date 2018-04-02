@@ -37,9 +37,10 @@ my_shared_libs := \
 $(LOCAL_BUILT_MODULE): PRIVATE_SHARED_LIBS := $(my_shared_libs)
 $(LOCAL_BUILT_MODULE): $(my_shared_libs) $(BIONIC_TESTS_ZIPALIGN)
 	@echo "Aligning zip: $@"
-	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir
-	$(hide) cp $(PRIVATE_SHARED_LIBS) $(dir $@)/libdir
-	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -qrD0 $(notdir $@).unaligned empty_file.txt libdir/*.so)
+	$(hide) rm -rf $@.unaligned $@ $(dir $@)/zipdir && mkdir -p $(dir $@)/zipdir/libdir
+	$(hide) cp $(PRIVATE_SHARED_LIBS) $(dir $@)/zipdir/libdir
+	$(hide) touch $(dir $@)/zipdir/empty_file.txt
+	$(hide) (cd $(dir $@)/zipdir && zip -qrD0 ../$(notdir $@).unaligned .)
 	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
 
 include $(CLEAR_VARS)
@@ -64,13 +65,14 @@ $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_C := $(lib_c)
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_X := $(lib_x)
 $(LOCAL_BUILT_MODULE) : $(lib_d) $(lib_a) $(lib_b) $(lib_c) $(lib_x) $(BIONIC_TESTS_ZIPALIGN)
 	@echo "Aligning zip: $@"
-	$(hide) rm -rf $(dir $@) && mkdir -p $(dir $@)/libdir && \
-    mkdir -p $(dir $@)/libdir/dt_runpath_a && mkdir -p $(dir $@)/libdir/dt_runpath_b_c_x
-	$(hide) cp $(PRIVATE_LIB_D) $(dir $@)/libdir
-	$(hide) cp $(PRIVATE_LIB_A) $(dir $@)/libdir/dt_runpath_a
-	$(hide) cp $(PRIVATE_LIB_B) $(dir $@)/libdir/dt_runpath_b_c_x
-	$(hide) cp $(PRIVATE_LIB_C) $(dir $@)/libdir/dt_runpath_b_c_x
-	$(hide) cp $(PRIVATE_LIB_X) $(dir $@)/libdir/dt_runpath_b_c_x
-	$(hide) (cd $(dir $@) && touch empty_file.txt && zip -qrD0 $(notdir $@).unaligned empty_file.txt libdir)
+	$(hide) rm -rf $@.unaligned $@ $(dir $@)/zipdir && mkdir -p $(dir $@)/zipdir/libdir && \
+    mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_a && mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+	$(hide) cp $(PRIVATE_LIB_D) $(dir $@)/zipdir/libdir
+	$(hide) cp $(PRIVATE_LIB_A) $(dir $@)/zipdir/libdir/dt_runpath_a
+	$(hide) cp $(PRIVATE_LIB_B) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+	$(hide) cp $(PRIVATE_LIB_C) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+	$(hide) cp $(PRIVATE_LIB_X) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+	$(hide) touch $(dir $@)/zipdir/empty_file.txt
+	$(hide) (cd $(dir $@)/zipdir && zip -qrD0 ../$(notdir $@).unaligned .)
 	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
 
