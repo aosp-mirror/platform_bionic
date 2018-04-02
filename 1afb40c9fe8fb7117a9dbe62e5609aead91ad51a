@@ -34,6 +34,24 @@
       "revId": "1afb40c9fe8fb7117a9dbe62e5609aead91ad51a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92d98b6f_a20aad2c",
+        "filename": "libc/SECCOMP_WHITELIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-02T23:41:12Z",
+      "side": 1,
+      "message": "huh. looks like i didn\u0027t bother moving arm and x86 over for some reason. i suck. http://b/77493816",
+      "parentUuid": "fa161b71_53fac07d",
+      "revId": "1afb40c9fe8fb7117a9dbe62e5609aead91ad51a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
