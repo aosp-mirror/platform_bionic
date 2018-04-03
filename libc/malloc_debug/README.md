@@ -33,6 +33,13 @@ On 32 bit systems, these two deprecated functions are also replaced:
 
 Any errors detected by the library are reported in the log.
 
+NOTE: There is a small behavioral change beginning in P for realloc.
+Before, a realloc from one size to a smaller size would not update the
+backtrace related to the allocation. Starting in P, every single realloc
+call changes the backtrace for the pointer no matter whether the pointer
+returned has changed or not.
+
+
 Controlling Malloc Debug Behavior
 ---------------------------------
 Malloc debug is controlled by individual options. Each option can be enabled
@@ -106,8 +113,9 @@ If MAX\_FRAMES is present, it indicates the maximum number of frames to
 capture in a backtrace. The default is 16 frames, the maximumum value
 this can be set to is 256.
 
-This option adds a special header to all allocations that contains the
-backtrace and information about the original allocation.
+Before P, this option adds a special header to all allocations that contains
+the backtrace and information about the original allocation. After that, this
+option will not add a special header.
 
 As of P, this option will also enable dumping backtrace heap data to a
 file when the process receives the signal SIGRTMAX - 17 ( which is 47 on most
@@ -132,8 +140,9 @@ If MAX\_FRAMES is present, it indicates the maximum number of frames to
 capture in a backtrace. The default is 16 frames, the maximumum value
 this can be set to is 256.
 
-This option adds a special header to all allocations that contains the
-backtrace and information about the original allocation.
+Before P, this option adds a special header to all allocations that contains
+the backtrace and information about the original allocation. After that, this
+option will not add a special header.
 
 ### backtrace\_dump\_on\_exit
 As of P, when the backtrace option has been enabled, this causes the backtrace
@@ -201,8 +210,9 @@ If ALLOCATION\_COUNT is present, it indicates the total number of allocations
 in the list. The default is to record 100 freed allocations, the max
 allocations to record is 16384.
 
-This option adds a special header to all allocations that contains
-information about the original allocation.
+Before P, this option adds a special header to all allocations that contains
+the backtrace and information about the original allocation. After that, this
+option will not add a special header.
 
 Example error:
 
@@ -238,8 +248,9 @@ then the log will include the backtrace of the leaked allocations. This
 option is not useful when enabled globally because a lot of programs do not
 free everything before the program terminates.
 
-This option adds a special header to all allocations that contains
-information about the original allocation.
+Before P, this option adds a special header to all allocations that contains
+the backtrace and information about the original allocation. After that, this
+option will not add a special header.
 
 Example leak error found in the log:
 
@@ -361,6 +372,26 @@ If FILE\_NAME is set, then it indicates where the record allocation data
 will be placed.
 
 **NOTE**: This option is not available until the O release of Android.
+
+### verify\_pointers
+Track all live allocations to determine if a pointer is used that does not
+exist. This option is a lightweight way to verify that all
+free/malloc\_usable\_size/realloc calls are passed valid pointers.
+
+Example error:
+
+    04-15 12:00:31.304  7412  7412 E malloc_debug: +++ ALLOCATION 0x12345678 UNKNOWN POINTER (free)
+    04-15 12:00:31.305  7412  7412 E malloc_debug: Backtrace at time of failure:
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #00  pc 00029310  /system/lib/libc.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #01  pc 00021438  /system/lib/libc.so (newlocale+160)
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #02  pc 000a9e38  /system/lib/libc++.so
+    04-15 12:00:31.305  7412  7412 E malloc_debug:           #03  pc 000a28a8  /system/lib/libc++.so
+
+Where the name of the function varies depending on the function that called
+with a bad pointer. Only three functions do this checking: free,
+malloc\_usable\_size, realloc.
+
+**NOTE**: This option is not available until the P release of Android.
 
 Additional Errors
 -----------------
