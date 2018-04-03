@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8959d280_1c6db649",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Done, and added the -Wthread-safety to turn on the analysis.",
+      "parentUuid": "f5d481b4_7352763f",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 70
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9b9c866_0d366714",
         "filename": "libc/malloc_debug/PointerData.cpp",
         "patchSetId": 2
@@ -59,6 +83,42 @@
     },
     {
       "key": {
+        "uuid": "60ddc458_e4dc68fd",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b23dd94d_ca031a8c",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef3b4799_a7d6499c",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9b9c866_0d366714",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e5536c8_2da02d75",
         "filename": "libc/malloc_debug/PointerData.cpp",
         "patchSetId": 2
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "71e7a48a_b6f19c94",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Oops, originally I had code that used the iter after the for loop.\n\nMoved into the for.",
+      "parentUuid": "8e5536c8_2da02d75",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60d90db8_8c50b856",
         "filename": "libc/malloc_debug/PointerData.cpp",
         "patchSetId": 2
@@ -87,6 +165,24 @@
       "writtenOn": "2018-04-03T00:13:08Z",
       "side": 1,
       "message": "`empty` here and elsewhere?",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b2dcda88_bf4290cc",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60d90db8_8c50b856",
       "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "c202592b_62d85db2",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "This probably wasn\u0027t the best way, I changed it to a count check which makes it more obvious what\u0027s going on.\n\nIt is possible that someone could check this and then the pointer gets freed in another thread, but it didn\u0027t seem worth verifying this case.",
+      "parentUuid": "ea9d252d_1380ac77",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 499,
+        "endChar": 52
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1a465b4_c6e7d1ad",
         "filename": "libc/malloc_debug/PointerData.h",
         "patchSetId": 2
@@ -127,6 +247,24 @@
       "writtenOn": "2018-04-03T00:13:08Z",
       "side": 1,
       "message": "size_t is uint64_t on LP64.",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90116a7a_eb3b6a90",
+        "filename": "libc/malloc_debug/PointerData.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "The code disallows any allocation over this size regardless of 64 bit or 32 bit. Therefore, I didn\u0027t think it warranted making it depend on the bitness, and left it to use this value.\n\nI did modify the code to put the max size function in this structure so it\u0027s all in the same place.",
+      "parentUuid": "d1a465b4_c6e7d1ad",
       "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -156,6 +294,30 @@
     },
     {
       "key": {
+        "uuid": "434e1215_bdb8c62b",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Does seem more understandable than my original wording.",
+      "parentUuid": "cf833c3b_254179dd",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 37
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d1765672_6e660ece",
         "filename": "libc/malloc_debug/RecordData.cpp",
         "patchSetId": 2
@@ -173,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "2ba8bbcd_ebaab3f0",
+        "filename": "libc/malloc_debug/RecordData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "I don\u0027t know, but I don\u0027t like it so I put it back to the way it was. I\u0027ll fight with the formatter another time.",
+      "parentUuid": "d1765672_6e660ece",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9567b2c7_3789843f",
         "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
         "patchSetId": 2
@@ -184,6 +364,24 @@
       "writtenOn": "2018-04-03T00:13:08Z",
       "side": 1,
       "message": "at top?",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a25f1180_849c9d05",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-03T01:59:31Z",
+      "side": 1,
+      "message": "Not necessary, and should have been deleted.",
+      "parentUuid": "9567b2c7_3789843f",
       "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
