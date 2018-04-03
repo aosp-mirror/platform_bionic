@@ -69,65 +69,70 @@ static constexpr size_t MAX_RECORD_ALLOCS = 50000000;
 static constexpr const char DEFAULT_RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
 
 const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
-    {"guard",
-      {FRONT_GUARD | REAR_GUARD, &Config::SetGuard},
+    {
+        "guard", {FRONT_GUARD | REAR_GUARD | TRACK_ALLOCS, &Config::SetGuard},
     },
-    {"front_guard",
-      {FRONT_GUARD, &Config::SetFrontGuard},
+    {
+        "front_guard", {FRONT_GUARD | TRACK_ALLOCS, &Config::SetFrontGuard},
     },
-    {"rear_guard",
-      {REAR_GUARD, &Config::SetRearGuard},
-    },
-
-    {"backtrace",
-      {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
-    },
-    {"backtrace_enable_on_signal",
-      {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
+    {
+        "rear_guard", {REAR_GUARD | TRACK_ALLOCS, &Config::SetRearGuard},
     },
 
-    {"backtrace_dump_on_exit",
-      {0, &Config::SetBacktraceDumpOnExit},
+    {
+        "backtrace", {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
     },
-    {"backtrace_dump_prefix",
-      {0, &Config::SetBacktraceDumpPrefix},
-    },
-
-    {"fill",
-      {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
-    },
-    {"fill_on_alloc",
-      {FILL_ON_ALLOC, &Config::SetFillOnAlloc},
-    },
-    {"fill_on_free",
-      {FILL_ON_FREE, &Config::SetFillOnFree},
+    {
+        "backtrace_enable_on_signal",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
     },
 
-    {"expand_alloc",
-      {EXPAND_ALLOC, &Config::SetExpandAlloc},
+    {
+        "backtrace_dump_on_exit", {0, &Config::SetBacktraceDumpOnExit},
+    },
+    {
+        "backtrace_dump_prefix", {0, &Config::SetBacktraceDumpPrefix},
     },
 
-    {"free_track",
-      {FREE_TRACK | FILL_ON_FREE, &Config::SetFreeTrack},
+    {
+        "fill", {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
     },
-    {"free_track_backtrace_num_frames",
-      {0, &Config::SetFreeTrackBacktraceNumFrames},
+    {
+        "fill_on_alloc", {FILL_ON_ALLOC, &Config::SetFillOnAlloc},
+    },
+    {
+        "fill_on_free", {FILL_ON_FREE, &Config::SetFillOnFree},
     },
 
-    {"leak_track",
-      {LEAK_TRACK | TRACK_ALLOCS, &Config::VerifyValueEmpty},
+    {
+        "expand_alloc", {EXPAND_ALLOC, &Config::SetExpandAlloc},
     },
 
-    {"record_allocs",
-      {RECORD_ALLOCS, &Config::SetRecordAllocs},
+    {
+        "free_track", {FREE_TRACK | FILL_ON_FREE | TRACK_ALLOCS, &Config::SetFreeTrack},
     },
-    {"record_allocs_file",
-      {0, &Config::SetRecordAllocsFile},
+    {
+        "free_track_backtrace_num_frames", {0, &Config::SetFreeTrackBacktraceNumFrames},
+    },
+
+    {
+        "leak_track", {LEAK_TRACK | TRACK_ALLOCS, &Config::VerifyValueEmpty},
+    },
+
+    {
+        "record_allocs", {RECORD_ALLOCS, &Config::SetRecordAllocs},
+    },
+    {
+        "record_allocs_file", {0, &Config::SetRecordAllocsFile},
+    },
+
+    {
+        "verify_pointers", {TRACK_ALLOCS, &Config::VerifyValueEmpty},
     },
 };
 
-bool Config::ParseValue(const std::string& option, const std::string& value,
-                        size_t min_value, size_t max_value, size_t* parsed_value) const {
+bool Config::ParseValue(const std::string& option, const std::string& value, size_t min_value,
+                        size_t max_value, size_t* parsed_value) const {
   assert(!value.empty());
 
   // Parse the value into a size_t value.
@@ -135,8 +140,7 @@ bool Config::ParseValue(const std::string& option, const std::string& value,
   char* end;
   long long_value = strtol(value.c_str(), &end, 10);
   if (errno != 0) {
-    error_log("%s: bad value for option '%s': %s", getprogname(), option.c_str(),
-              strerror(errno));
+    error_log("%s: bad value for option '%s': %s", getprogname(), option.c_str(), strerror(errno));
     return false;
   }
   if (end == value.c_str()) {
@@ -144,24 +148,24 @@ bool Config::ParseValue(const std::string& option, const std::string& value,
     return false;
   }
   if (static_cast<size_t>(end - value.c_str()) != value.size()) {
-    error_log("%s: bad value for option '%s', non space found after option: %s",
-              getprogname(), option.c_str(), end);
+    error_log("%s: bad value for option '%s', non space found after option: %s", getprogname(),
+              option.c_str(), end);
     return false;
   }
   if (long_value < 0) {
-    error_log("%s: bad value for option '%s', value cannot be negative: %ld",
-              getprogname(), option.c_str(), long_value);
+    error_log("%s: bad value for option '%s', value cannot be negative: %ld", getprogname(),
+              option.c_str(), long_value);
     return false;
   }
 
   if (static_cast<size_t>(long_value) < min_value) {
-    error_log("%s: bad value for option '%s', value must be >= %zu: %ld",
-              getprogname(), option.c_str(), min_value, long_value);
+    error_log("%s: bad value for option '%s', value must be >= %zu: %ld", getprogname(),
+              option.c_str(), min_value, long_value);
     return false;
   }
   if (static_cast<size_t>(long_value) > max_value) {
-    error_log("%s: bad value for option '%s', value must be <= %zu: %ld",
-              getprogname(), option.c_str(), max_value, long_value);
+    error_log("%s: bad value for option '%s', value must be <= %zu: %ld", getprogname(),
+              option.c_str(), max_value, long_value);
     return false;
   }
   *parsed_value = static_cast<size_t>(long_value);
@@ -261,7 +265,6 @@ bool Config::SetBacktraceDumpPrefix(const std::string&, const std::string& value
   return true;
 }
 
-
 bool Config::SetExpandAlloc(const std::string& option, const std::string& value) {
   return ParseValue(option, value, DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, &expand_alloc_bytes_);
 }
@@ -305,13 +308,12 @@ bool Config::SetRecordAllocsFile(const std::string&, const std::string& value) {
 bool Config::VerifyValueEmpty(const std::string& option, const std::string& value) {
   if (!value.empty()) {
     // This is not valid.
-    error_log("%s: value set for option '%s' which does not take a value",
-              getprogname(), option.c_str());
+    error_log("%s: value set for option '%s' which does not take a value", getprogname(),
+              option.c_str());
     return false;
   }
   return true;
 }
-
 
 void Config::LogUsage() const {
   error_log("malloc debug options usage:");
@@ -329,8 +331,8 @@ void Config::LogUsage() const {
   error_log("  guard[=XX]");
   error_log("    Enables both a front guard and a rear guard on all allocations.");
   error_log("    If XX is set it sets the number of bytes in both guards.");
-  error_log("    The default is %zu bytes, the max bytes is %zu.",
-            DEFAULT_GUARD_BYTES, MAX_GUARD_BYTES);
+  error_log("    The default is %zu bytes, the max bytes is %zu.", DEFAULT_GUARD_BYTES,
+            MAX_GUARD_BYTES);
   error_log("");
   error_log("  backtrace[=XX]");
   error_log("    Enable capturing the backtrace at the point of allocation.");
@@ -419,13 +421,16 @@ void Config::LogUsage() const {
   error_log("    This option only has meaning if the record_allocs options has been specified.");
   error_log("    This is the name of the file to which recording information will be dumped.");
   error_log("    The default is %s.", DEFAULT_RECORD_ALLOCS_FILE);
+  error_log("");
+  error_log("  verify_pointers");
+  error_log("    A lightweight way to verify that free/malloc_usable_size/realloc");
+  error_log("    are passed valid pointers.");
 }
 
 bool Config::GetOption(const char** options_str, std::string* option, std::string* value) {
   const char* cur = *options_str;
   // Process each property name we can find.
-  while (isspace(*cur))
-    ++cur;
+  while (isspace(*cur)) ++cur;
 
   if (*cur == '\0') {
     *options_str = cur;
@@ -433,25 +438,21 @@ bool Config::GetOption(const char** options_str, std::string* option, std::strin
   }
 
   const char* start = cur;
-  while (!isspace(*cur) && *cur != '=' && *cur != '\0')
-    ++cur;
+  while (!isspace(*cur) && *cur != '=' && *cur != '\0') ++cur;
 
   *option = std::string(start, cur - start);
 
   // Skip any spaces after the name.
-  while (isspace(*cur))
-    ++cur;
+  while (isspace(*cur)) ++cur;
 
   value->clear();
   if (*cur == '=') {
     ++cur;
     // Skip the space after the equal.
-    while (isspace(*cur))
-      ++cur;
+    while (isspace(*cur)) ++cur;
 
     start = cur;
-    while (!isspace(*cur) && *cur != '\0')
-      ++cur;
+    while (!isspace(*cur) && *cur != '\0') ++cur;
 
     if (cur != start) {
       *value = std::string(start, cur - start);

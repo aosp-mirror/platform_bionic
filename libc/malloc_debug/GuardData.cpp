@@ -31,13 +31,13 @@
 
 #include <vector>
 
-#include "backtrace.h"
 #include "Config.h"
+#include "DebugData.h"
+#include "GuardData.h"
+#include "backtrace.h"
 #include "debug_disable.h"
 #include "debug_log.h"
-#include "DebugData.h"
 #include "malloc_debug.h"
-#include "GuardData.h"
 
 GuardData::GuardData(DebugData* debug_data, int init_value, size_t num_bytes)
     : OptionData(debug_data) {
@@ -48,8 +48,8 @@ GuardData::GuardData(DebugData* debug_data, int init_value, size_t num_bytes)
 
 void GuardData::LogFailure(const Header* header, const void* pointer, const void* data) {
   error_log(LOG_DIVIDER);
-  error_log("+++ ALLOCATION %p SIZE %zu HAS A CORRUPTED %s GUARD", pointer,
-            header->real_size(), GetTypeName());
+  error_log("+++ ALLOCATION %p SIZE %zu HAS A CORRUPTED %s GUARD", pointer, header->size,
+            GetTypeName());
 
   // Log all of the failing bytes.
   const uint8_t* expected = cmp_mem_.data();
@@ -70,7 +70,7 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
 }
 
 FrontGuardData::FrontGuardData(DebugData* debug_data, const Config& config, size_t* offset)
-   : GuardData(debug_data, config.front_guard_value(), config.front_guard_bytes()) {
+    : GuardData(debug_data, config.front_guard_value(), config.front_guard_bytes()) {
   // Create a buffer for fast comparisons of the front guard.
   cmp_mem_.resize(config.front_guard_bytes());
   memset(cmp_mem_.data(), config.front_guard_value(), cmp_mem_.size());
@@ -88,8 +88,7 @@ void FrontGuardData::LogFailure(const Header* header) {
 }
 
 RearGuardData::RearGuardData(DebugData* debug_data, const Config& config)
-    : GuardData(debug_data, config.rear_guard_value(), config.rear_guard_bytes()) {
-}
+    : GuardData(debug_data, config.rear_guard_value(), config.rear_guard_bytes()) {}
 
 bool RearGuardData::Valid(const Header* header) {
   return GuardData::Valid(debug_->GetRearGuard(header));

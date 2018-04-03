@@ -72,15 +72,8 @@ __END_DECLS
 constexpr char DIVIDER[] =
     "6 malloc_debug *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n";
 
-constexpr uint32_t BACKTRACE_HEADER = 0x1;
-
-static size_t get_tag_offset(uint32_t flags = 0, size_t backtrace_frames = 0) {
-  size_t offset = __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
-  if (flags & BACKTRACE_HEADER) {
-    offset += __BIONIC_ALIGN(sizeof(BacktraceHeader) + sizeof(uintptr_t) * backtrace_frames,
-                             MINIMUM_ALIGNMENT_BYTES);
-  }
-  return offset;
+static size_t get_tag_offset() {
+  return __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 }
 
 static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
@@ -111,6 +104,10 @@ class MallocDebugTest : public ::testing::Test {
 
   void BacktraceDumpOnSignal(bool trigger_with_alloc);
 
+  static size_t GetInfoEntrySize(size_t max_frames) {
+    return 2 * sizeof(size_t) + max_frames * sizeof(uintptr_t);
+  }
+
   bool initialized;
 
   int zygote;
@@ -139,6 +136,16 @@ MallocDispatch MallocDebugTest::dispatch = {
   mallopt,
   aligned_alloc,
 };
+
+std::string ShowDiffs(uint8_t* a, uint8_t* b, size_t size) {
+  std::string diff;
+  for (size_t i = 0; i < size; i++) {
+    if (a[i] != b[i]) {
+      diff += android::base::StringPrintf("Byte %zu: 0x%x 0x%x\n", i, a[i], b[i]);
+    }
+  }
+  return diff;
+}
 
 void VerifyAllocCalls(bool backtrace_enabled) {
   size_t alloc_size = 1024;
@@ -335,7 +342,8 @@ TEST_F(MallocDebugTest, front_guard) {
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[-buffer.size()], buffer.size());
   memset(pointer, 0xff, 100);
   debug_free(pointer);
 
@@ -343,7 +351,8 @@ TEST_F(MallocDebugTest, front_guard) {
   for (size_t alignment = 1; alignment <= 256; alignment++) {
     pointer = reinterpret_cast<uint8_t*>(debug_memalign(alignment, 100));
     ASSERT_TRUE(pointer != nullptr);
-    ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0);
+    ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0)
+        << ShowDiffs(buffer.data(), &pointer[-buffer.size()], buffer.size());
     size_t alignment_mask = alignment - 1;
     if (!powerof2(alignment)) {
       alignment_mask = BIONIC_ROUND_UP_POWER_OF_2(alignment) - 1;
@@ -355,7 +364,8 @@ TEST_F(MallocDebugTest, front_guard) {
 
   pointer = reinterpret_cast<uint8_t*>(debug_calloc(1, 100));
   ASSERT_TRUE(pointer != nullptr);
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[-buffer.size()], buffer.size());
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0, pointer[i]) << "debug_calloc non-zero byte at " << i;
   }
@@ -363,10 +373,12 @@ TEST_F(MallocDebugTest, front_guard) {
 
   pointer = reinterpret_cast<uint8_t*>(debug_realloc(nullptr, 100));
   ASSERT_TRUE(pointer != nullptr);
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[-buffer.size()], buffer.size());
   memset(pointer, 0xff, 100);
   pointer = reinterpret_cast<uint8_t*>(debug_realloc(pointer, 200));
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[-buffer.size()], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[-buffer.size()], buffer.size());
   memset(pointer, 0xff, 200);
   pointer = reinterpret_cast<uint8_t*>(debug_realloc(pointer, 0));
   ASSERT_TRUE(pointer == nullptr);
@@ -427,7 +439,8 @@ TEST_F(MallocDebugTest, rear_guard) {
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_EQ(100U, debug_malloc_usable_size(pointer));
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[100], buffer.size());
   memset(pointer, 0xff, 100);
   debug_free(pointer);
 
@@ -436,7 +449,8 @@ TEST_F(MallocDebugTest, rear_guard) {
     pointer = reinterpret_cast<uint8_t*>(debug_memalign(alignment, 100));
     ASSERT_TRUE(pointer != nullptr);
     ASSERT_EQ(100U, debug_malloc_usable_size(pointer));
-    ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0);
+    ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0)
+        << ShowDiffs(buffer.data(), &pointer[100], buffer.size());
     size_t alignment_mask = alignment - 1;
     if (!powerof2(alignment)) {
       alignment_mask = BIONIC_ROUND_UP_POWER_OF_2(alignment) - 1;
@@ -450,7 +464,8 @@ TEST_F(MallocDebugTest, rear_guard) {
   pointer = reinterpret_cast<uint8_t*>(debug_calloc(1, 100));
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_EQ(100U, debug_malloc_usable_size(pointer));
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[100], buffer.size());
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0, pointer[i]) << "debug_calloc non-zero byte at " << i;
   }
@@ -458,10 +473,12 @@ TEST_F(MallocDebugTest, rear_guard) {
 
   pointer = reinterpret_cast<uint8_t*>(debug_realloc(nullptr, 100));
   ASSERT_TRUE(pointer != nullptr);
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[100], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[100], buffer.size());
   memset(pointer, 0xff, 100);
   pointer = reinterpret_cast<uint8_t*>(debug_realloc(pointer, 200));
-  ASSERT_TRUE(memcmp(buffer.data(), &pointer[200], buffer.size()) == 0);
+  ASSERT_TRUE(memcmp(buffer.data(), &pointer[200], buffer.size()) == 0)
+      << ShowDiffs(buffer.data(), &pointer[200], buffer.size());
   for (size_t i = 0; i < 100; i++) {
     ASSERT_EQ(0xff, pointer[i]) << "debug_realloc not copied byte at " << i;
   }
@@ -829,7 +846,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_finalize) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free_with_backtrace) {
-  Init("free_track=100");
+  Init("free_track=100 rear_guard");
 
   // Free backtrace.
   backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
@@ -860,7 +877,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_with_backtrace) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free_call_realloc) {
-  Init("free_track=100");
+  Init("free_track=100 rear_guard");
 
   // Free backtrace.
   backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
@@ -894,7 +911,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_call_realloc) {
 }
 
 TEST_F(MallocDebugTest, free_track_use_after_free_call_free) {
-  Init("free_track=100");
+  Init("free_track=100 rear_guard");
 
   // Free backtrace.
   backtrace_fake_add(std::vector<uintptr_t> {0xfa, 0xeb, 0xdc});
@@ -926,7 +943,7 @@ TEST_F(MallocDebugTest, free_track_use_after_free_call_free) {
 }
 
 TEST_F(MallocDebugTest, free_track_header_tag_corrupted) {
-  Init("free_track=100 free_track_backtrace_num_frames=0");
+  Init("free_track=100 free_track_backtrace_num_frames=0 rear_guard");
 
   uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
   ASSERT_TRUE(pointer != nullptr);
@@ -1053,7 +1070,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_single) {
   Init("backtrace");
 
   // Create the expected info buffer.
-  size_t individual_size = 2 * sizeof(size_t) + 16 * sizeof(uintptr_t);
+  size_t individual_size = GetInfoEntrySize(16);
   std::vector<uint8_t> expected_info(individual_size);
   memset(expected_info.data(), 0, individual_size);
 
@@ -1082,7 +1099,8 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_single) {
   ASSERT_EQ(individual_size, info_size);
   ASSERT_EQ(200U, total_memory);
   ASSERT_EQ(16U, backtrace_size);
-  ASSERT_TRUE(memcmp(expected_info.data(), info, overall_size) == 0);
+  ASSERT_TRUE(memcmp(expected_info.data(), info, overall_size) == 0)
+      << ShowDiffs(expected_info.data(), info, overall_size);
 
   debug_free_malloc_leak_info(info);
 
@@ -1099,7 +1117,7 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   Init("backtrace=16");
 
   // Create the expected info buffer.
-  size_t individual_size = 2 * sizeof(size_t) + 16 * sizeof(uintptr_t);
+  size_t individual_size = GetInfoEntrySize(16);
   std::vector<uint8_t> expected_info(individual_size * 3);
   memset(expected_info.data(), 0, individual_size * 3);
 
@@ -1162,7 +1180,8 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   ASSERT_EQ(individual_size, info_size);
   ASSERT_EQ(500U + 4100U + 9000U, total_memory);
   ASSERT_EQ(16U, backtrace_size);
-  ASSERT_TRUE(memcmp(expected_info.data(), info, overall_size) == 0);
+  ASSERT_TRUE(memcmp(expected_info.data(), info, overall_size) == 0)
+      << ShowDiffs(expected_info.data(), info, overall_size);
 
   debug_free_malloc_leak_info(info);
 
@@ -1177,52 +1196,13 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
-TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
-  Init("backtrace=16");
+TEST_F(MallocDebugTest, get_malloc_backtrace_with_header) {
+  Init("backtrace=16 guard");
 
-  // Create the expected info buffer.
-  size_t individual_size = 2 * sizeof(size_t) + 16 * sizeof(uintptr_t);
-  std::vector<uint8_t> expected_info(individual_size * 2);
-  memset(expected_info.data(), 0, individual_size * 2);
-
-  InfoEntry* entry0 = reinterpret_cast<InfoEntry*>(expected_info.data());
-  InfoEntry* entry1 = reinterpret_cast<InfoEntry*>(
-      reinterpret_cast<uintptr_t>(entry0) + individual_size);
-
-  // These values will be in the reverse order that we create.
-  entry1->size = 500;
-  entry1->num_allocations = 1;
-  entry1->frames[0] = 0xf;
-  entry1->frames[1] = 0xe;
-  entry1->frames[2] = 0xd;
-  entry1->frames[3] = 0xc;
-
-  backtrace_fake_add(std::vector<uintptr_t> {0xf, 0xe, 0xd, 0xc});
-
-  uint8_t* pointers[3];
-
-  pointers[0] = reinterpret_cast<uint8_t*>(debug_malloc(entry1->size));
-  ASSERT_TRUE(pointers[0] != nullptr);
-  memset(pointers[0], 0, entry1->size);
-
-  entry0->size = 4100;
-  entry0->num_allocations = 1;
-  for (size_t i = 0; i < 16; i++) {
-    entry0->frames[i] = 0xbc000 + i;
-  }
-
-  backtrace_fake_add(
-      std::vector<uintptr_t> {0xbc000, 0xbc001, 0xbc002, 0xbc003, 0xbc004, 0xbc005,
-                              0xbc006, 0xbc007, 0xbc008, 0xbc009, 0xbc00a, 0xbc00b,
-                              0xbc00c, 0xbc00d, 0xbc00e, 0xbc00f, 0xffff});
-
-  pointers[1] = reinterpret_cast<uint8_t*>(debug_malloc(entry0->size));
-  ASSERT_TRUE(pointers[1] != nullptr);
-  memset(pointers[1], 0, entry0->size);
-
-  pointers[2] = reinterpret_cast<uint8_t*>(debug_malloc(10000));
-  ASSERT_TRUE(pointers[2] != nullptr);
-  memset(pointers[2], 0, 10000);
+  void* pointer = debug_malloc(100);
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 100);
+  EXPECT_EQ(100U, debug_malloc_usable_size(pointer));
 
   uint8_t* info;
   size_t overall_size;
@@ -1231,18 +1211,18 @@ TEST_F(MallocDebugTest, get_malloc_leak_info_multi_skip_empty_backtrace) {
   size_t backtrace_size;
 
   debug_get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
-  ASSERT_TRUE(info != nullptr);
-  ASSERT_EQ(individual_size * 2, overall_size);
-  ASSERT_EQ(individual_size, info_size);
-  ASSERT_EQ(500U + 4100U, total_memory);
-  ASSERT_EQ(16U, backtrace_size);
-  ASSERT_TRUE(memcmp(expected_info.data(), info, overall_size) == 0);
-
+  EXPECT_TRUE(info != nullptr);
+  EXPECT_EQ(GetInfoEntrySize(16), overall_size);
+  EXPECT_EQ(GetInfoEntrySize(16), info_size);
+  EXPECT_EQ(100U, total_memory);
+  EXPECT_EQ(16U, backtrace_size);
   debug_free_malloc_leak_info(info);
 
-  debug_free(pointers[0]);
-  debug_free(pointers[1]);
-  debug_free(pointers[2]);
+  debug_free(pointer);
+
+  // There should be no pointers that have leaked.
+  debug_finalize();
+  initialized = false;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
@@ -1338,19 +1318,19 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
       "Backtrace size: 4\n"
       "\n"
 #if defined(__LP64__)
-      "z 0  sz        5  num    1  bt 000000000000a300 000000000000b300\n"
-      "z 0  sz       10  num    1  bt 000000000000a000 000000000000b000\n"
       "z 0  sz       50  num    1  bt 000000000000a100 000000000000b200\n"
-      "z 1  sz       40  num    1  bt 0000000000000300 0000000000000400\n"
-      "z 1  sz      100  num    1  bt 0000000000000100 0000000000000200\n"
+      "z 0  sz       10  num    1  bt 000000000000a000 000000000000b000\n"
+      "z 0  sz        5  num    1  bt 000000000000a300 000000000000b300\n"
       "z 1  sz      200  num    1  bt 0000000000000500 0000000000000600\n"
+      "z 1  sz      100  num    1  bt 0000000000000100 0000000000000200\n"
+      "z 1  sz       40  num    1  bt 0000000000000300 0000000000000400\n"
 #else
-      "z 0  sz        5  num    1  bt 0000a300 0000b300\n"
-      "z 0  sz       10  num    1  bt 0000a000 0000b000\n"
       "z 0  sz       50  num    1  bt 0000a100 0000b200\n"
-      "z 1  sz       40  num    1  bt 00000300 00000400\n"
-      "z 1  sz      100  num    1  bt 00000100 00000200\n"
+      "z 0  sz       10  num    1  bt 0000a000 0000b000\n"
+      "z 0  sz        5  num    1  bt 0000a300 0000b300\n"
       "z 1  sz      200  num    1  bt 00000500 00000600\n"
+      "z 1  sz      100  num    1  bt 00000100 00000200\n"
+      "z 1  sz       40  num    1  bt 00000300 00000400\n"
 #endif
       "MAPS\n"
       "MAP_DATA\n"
@@ -1410,13 +1390,13 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
       "Backtrace size: 4\n"
       "\n"
 #if defined(__LP64__)
-      "z 0  sz      300  num    1  bt 0000000000000100 0000000000000200\n"
-      "z 0  sz      400  num    1  bt 000000000000a000 000000000000b000\n"
       "z 0  sz      500  num    1  bt 000000000000a000 000000000000b000 000000000000c000\n"
+      "z 0  sz      400  num    1  bt 000000000000a000 000000000000b000\n"
+      "z 0  sz      300  num    1  bt 0000000000000100 0000000000000200\n"
 #else
-      "z 0  sz      300  num    1  bt 00000100 00000200\n"
-      "z 0  sz      400  num    1  bt 0000a000 0000b000\n"
       "z 0  sz      500  num    1  bt 0000a000 0000b000 0000c000\n"
+      "z 0  sz      400  num    1  bt 0000a000 0000b000\n"
+      "z 0  sz      300  num    1  bt 00000100 00000200\n"
 #endif
       "MAPS\n"
       "MAP_DATA\n"
@@ -1426,6 +1406,58 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugTest, backtrace_dump_on_exit_shared_backtrace) {
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    Init("backtrace=4 backtrace_dump_on_exit");
+    backtrace_fake_add(std::vector<uintptr_t> {0x100, 0x200});
+    backtrace_fake_add(std::vector<uintptr_t> {0xa000, 0xb000, 0xc000});
+    backtrace_fake_add(std::vector<uintptr_t> {0x100, 0x200});
+
+    std::vector<void*> pointers;
+    pointers.push_back(debug_malloc(300));
+    pointers.push_back(debug_malloc(400));
+    pointers.push_back(debug_malloc(300));
+
+    // Call the exit function manually.
+    debug_finalize();
+    exit(0);
+  }
+  ASSERT_NE(-1, pid);
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
+
+  // Read all of the contents.
+  std::string actual;
+  std::string name = android::base::StringPrintf("%s.%d.exit.txt", BACKTRACE_DUMP_PREFIX, pid);
+  ASSERT_TRUE(android::base::ReadFileToString(name, &actual));
+  ASSERT_EQ(0, unlink(name.c_str()));
+
+  std::string sanitized(SanitizeHeapData(actual));
+
+  std::string expected =
+      "Android Native Heap Dump v1.0\n"
+      "\n"
+      "Total memory: 1000\n"
+      "Allocation records: 2\n"
+      "Backtrace size: 4\n"
+      "\n"
+#if defined(__LP64__)
+      "z 0  sz      400  num    1  bt 000000000000a000 000000000000b000 000000000000c000\n"
+      "z 0  sz      300  num    2  bt 0000000000000100 0000000000000200\n"
+#else
+      "z 0  sz      400  num    1  bt 0000a000 0000b000 0000c000\n"
+      "z 0  sz      300  num    2  bt 00000100 00000200\n"
+#endif
+      "MAPS\n"
+      "MAP_DATA\n"
+      "END\n\n";
+  ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
 
 TEST_F(MallocDebugTest, realloc_usable_size) {
   Init("front_guard");
@@ -1453,7 +1485,7 @@ TEST_F(MallocDebugTest, realloc_usable_size) {
 TEST_F(MallocDebugTest, backtrace_enable_on_signal) {
   Init("backtrace_enable_on_signal=20");
 
-  size_t individual_size = 2 * sizeof(size_t) + 20 * sizeof(uintptr_t);
+  size_t individual_size = GetInfoEntrySize(20);
 
   backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
   backtrace_fake_add(std::vector<uintptr_t> {0x100, 0x200, 0x300, 0x400});
@@ -1532,6 +1564,198 @@ TEST_F(MallocDebugTest, backtrace_enable_on_signal) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, backtrace_same_stack) {
+  Init("backtrace=4");
+
+  size_t individual_size = GetInfoEntrySize(4);
+
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+
+  void* pointers[4];
+  pointers[0] = debug_malloc(10);
+  ASSERT_TRUE(pointers[0] != nullptr);
+  pointers[1] = debug_malloc(10);
+  ASSERT_TRUE(pointers[1] != nullptr);
+  pointers[2] = debug_malloc(10);
+  ASSERT_TRUE(pointers[2] != nullptr);
+  pointers[3] = debug_malloc(100);
+  ASSERT_TRUE(pointers[3] != nullptr);
+
+  uint8_t* info;
+  size_t overall_size;
+  size_t info_size;
+  size_t total_memory;
+  size_t backtrace_size;
+
+  debug_get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
+  ASSERT_TRUE(info != nullptr);
+  ASSERT_EQ(individual_size * 2, overall_size);
+  ASSERT_EQ(individual_size, info_size);
+  EXPECT_EQ(130U, total_memory);
+  EXPECT_EQ(4U, backtrace_size);
+  EXPECT_EQ(100U, *reinterpret_cast<size_t*>(&info[0]));
+  EXPECT_EQ(1U, *reinterpret_cast<size_t*>(&info[sizeof(size_t)]));
+  uintptr_t* ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t)]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0xecd00U, ips[1]);
+  EXPECT_EQ(0x12000U, ips[2]);
+
+  EXPECT_EQ(10U, *reinterpret_cast<size_t*>(&info[individual_size]));
+  EXPECT_EQ(3U, *reinterpret_cast<size_t*>(&info[sizeof(size_t) + individual_size]));
+  ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t) + individual_size]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0xecd00U, ips[1]);
+  EXPECT_EQ(0x12000U, ips[2]);
+
+  debug_free_malloc_leak_info(info);
+
+  debug_free(pointers[0]);
+  debug_free(pointers[1]);
+  debug_free(pointers[2]);
+  debug_free(pointers[3]);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_same_stack_zygote) {
+  Init("backtrace=4");
+
+  size_t individual_size = GetInfoEntrySize(4);
+
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000});
+
+  zygote = 1;
+
+  void* pointers[4];
+  pointers[0] = debug_malloc(100);
+  ASSERT_TRUE(pointers[0] != nullptr);
+  pointers[1] = debug_malloc(100);
+  ASSERT_TRUE(pointers[1] != nullptr);
+  pointers[2] = debug_malloc(100);
+  ASSERT_TRUE(pointers[2] != nullptr);
+  pointers[3] = debug_malloc(100);
+  ASSERT_TRUE(pointers[3] != nullptr);
+
+  uint8_t* info;
+  size_t overall_size;
+  size_t info_size;
+  size_t total_memory;
+  size_t backtrace_size;
+
+  debug_get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
+  ASSERT_TRUE(info != nullptr);
+  ASSERT_EQ(individual_size * 2, overall_size);
+  EXPECT_EQ(individual_size, info_size);
+  EXPECT_EQ(400U, total_memory);
+  EXPECT_EQ(4U, backtrace_size);
+
+  EXPECT_EQ(0x80000064U, *reinterpret_cast<size_t*>(&info[0]));
+  EXPECT_EQ(3U, *reinterpret_cast<size_t*>(&info[sizeof(size_t)]));
+  uintptr_t* ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t)]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0xecd00U, ips[1]);
+  EXPECT_EQ(0x12000U, ips[2]);
+
+  EXPECT_EQ(0x80000064U, *reinterpret_cast<size_t*>(&info[individual_size]));
+  EXPECT_EQ(1U, *reinterpret_cast<size_t*>(&info[sizeof(size_t) + individual_size]));
+  ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t) + individual_size]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0U, ips[1]);
+
+  debug_free_malloc_leak_info(info);
+
+  debug_free(pointers[0]);
+  debug_free(pointers[1]);
+  debug_free(pointers[2]);
+  debug_free(pointers[3]);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_same_stack_mix_zygote) {
+  Init("backtrace=4");
+
+  size_t individual_size = GetInfoEntrySize(4);
+
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000});
+
+  zygote = 1;
+  void* pointers[4];
+  pointers[0] = debug_malloc(40);
+  ASSERT_TRUE(pointers[0] != nullptr);
+  pointers[1] = debug_malloc(40);
+  ASSERT_TRUE(pointers[1] != nullptr);
+
+  zygote = 0;
+  pointers[2] = debug_malloc(40);
+  ASSERT_TRUE(pointers[2] != nullptr);
+  pointers[3] = debug_malloc(100);
+  ASSERT_TRUE(pointers[3] != nullptr);
+
+  uint8_t* info;
+  size_t overall_size;
+  size_t info_size;
+  size_t total_memory;
+  size_t backtrace_size;
+
+  debug_get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
+  ASSERT_TRUE(info != nullptr);
+  ASSERT_EQ(individual_size * 3, overall_size);
+  ASSERT_EQ(individual_size, info_size);
+  EXPECT_EQ(220U, total_memory);
+  EXPECT_EQ(4U, backtrace_size);
+
+  EXPECT_EQ(100U, *reinterpret_cast<size_t*>(&info[0]));
+  EXPECT_EQ(1U, *reinterpret_cast<size_t*>(&info[sizeof(size_t)]));
+  uintptr_t* ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t)]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0U, ips[1]);
+
+  EXPECT_EQ(40U, *reinterpret_cast<size_t*>(&info[individual_size]));
+  EXPECT_EQ(1U, *reinterpret_cast<size_t*>(&info[sizeof(size_t) + individual_size]));
+  ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t) + individual_size]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0xecd00U, ips[1]);
+  EXPECT_EQ(0x12000U, ips[2]);
+
+  EXPECT_EQ(0x80000028U, *reinterpret_cast<size_t*>(&info[2 * individual_size]));
+  EXPECT_EQ(2U, *reinterpret_cast<size_t*>(&info[sizeof(size_t) + 2 * individual_size]));
+  ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t) + 2 * individual_size]);
+  EXPECT_EQ(0xbc000U, ips[0]);
+  EXPECT_EQ(0xecd00U, ips[1]);
+  EXPECT_EQ(0x12000U, ips[2]);
+
+  debug_free_malloc_leak_info(info);
+
+  debug_free(pointers[0]);
+  debug_free(pointers[1]);
+  debug_free(pointers[2]);
+  debug_free(pointers[3]);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, overflow) {
   Init("guard fill_on_free");
 
@@ -1601,7 +1825,8 @@ static void VerifyZygoteSet(size_t memory_bytes) {
   ASSERT_EQ(expected_info_size, info_size);
   ASSERT_EQ(memory_bytes, total_memory);
   ASSERT_EQ(16U, backtrace_size);
-  ASSERT_TRUE(memcmp(info, expected_info.data(), expected_info_size) == 0);
+  ASSERT_TRUE(memcmp(info, expected_info.data(), expected_info_size) == 0)
+      << ShowDiffs(info, expected_info.data(), expected_info_size);
 
   debug_free_malloc_leak_info(info);
 }
@@ -1619,6 +1844,7 @@ TEST_F(MallocDebugTest, zygote_set) {
   ASSERT_EQ(100U, debug_malloc_usable_size(pointer));
   memset(pointer, 0, 100);
   VerifyZygoteSet(100);
+  ASSERT_FALSE(HasFatalFailure());
   debug_free(pointer);
 
   backtrace_fake_add(std::vector<uintptr_t> {0x1});
@@ -1626,6 +1852,7 @@ TEST_F(MallocDebugTest, zygote_set) {
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_EQ(200U, debug_malloc_usable_size(pointer));
   VerifyZygoteSet(200);
+  ASSERT_FALSE(HasFatalFailure());
   debug_free(pointer);
 
   backtrace_fake_add(std::vector<uintptr_t> {0x1});
@@ -1634,6 +1861,7 @@ TEST_F(MallocDebugTest, zygote_set) {
   ASSERT_EQ(300U, debug_malloc_usable_size(pointer));
   memset(pointer, 0, 300);
   VerifyZygoteSet(300);
+  ASSERT_FALSE(HasFatalFailure());
   debug_free(pointer);
 
   backtrace_fake_add(std::vector<uintptr_t> {0x1});
@@ -1642,12 +1870,14 @@ TEST_F(MallocDebugTest, zygote_set) {
   ASSERT_EQ(500U, debug_malloc_usable_size(pointer));
   memset(pointer, 0, 500);
   VerifyZygoteSet(500);
+  ASSERT_FALSE(HasFatalFailure());
 
   backtrace_fake_add(std::vector<uintptr_t> {0x1});
   pointer = debug_realloc(pointer, 300);
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_EQ(300U, debug_malloc_usable_size(pointer));
   VerifyZygoteSet(300);
+  ASSERT_FALSE(HasFatalFailure());
   debug_free(pointer);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1982,5 +2212,64 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
   expected_log += android::base::StringPrintf(
       "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered\n",
       RECORD_ALLOCS_FILE);
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, verify_pointers) {
+  Init("verify_pointers");
+
+  void* pointer = debug_malloc(10);
+  memset(pointer, 0, 10);
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+
+  debug_free(pointer);
+  ASSERT_EQ(0U, debug_malloc_usable_size(pointer));
+  ASSERT_EQ(nullptr, debug_realloc(pointer, 1000));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string free_pointer_str(
+      android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p UNKNOWN POINTER (free)\n",
+                                  pointer));
+  std::string usable_pointer_str(
+      android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p UNKNOWN POINTER (malloc_usable_size)\n",
+                                  pointer));
+  std::string realloc_pointer_str(
+      android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p UNKNOWN POINTER (realloc)\n",
+                                  pointer));
+  std::string backtrace_str("6 malloc_debug Backtrace failed to get any frames.\n");
+
+  std::string expected_log(DIVIDER + free_pointer_str + backtrace_str + DIVIDER);
+  expected_log += DIVIDER + usable_pointer_str + backtrace_str + DIVIDER;
+  expected_log += DIVIDER + realloc_pointer_str + backtrace_str + DIVIDER;
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+
+  resetLogs();
+
+  backtrace_fake_add(std::vector<uintptr_t> {0x100, 0x200});
+  backtrace_fake_add(std::vector<uintptr_t> {0x300, 0x400});
+  backtrace_fake_add(std::vector<uintptr_t> {0x500, 0x600});
+  debug_free(pointer);
+  ASSERT_EQ(0U, debug_malloc_usable_size(pointer));
+  ASSERT_EQ(nullptr, debug_realloc(pointer, 1000));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  expected_log = DIVIDER + free_pointer_str;
+  expected_log += "6 malloc_debug Backtrace at time of failure:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x100\n";
+  expected_log += "6 malloc_debug   #01 pc 0x200\n";
+  expected_log += DIVIDER;
+  expected_log += DIVIDER + usable_pointer_str;
+  expected_log += "6 malloc_debug Backtrace at time of failure:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x300\n";
+  expected_log += "6 malloc_debug   #01 pc 0x400\n";
+  expected_log += DIVIDER;
+  expected_log += DIVIDER + realloc_pointer_str;
+  expected_log += "6 malloc_debug Backtrace at time of failure:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x500\n";
+  expected_log += "6 malloc_debug   #01 pc 0x600\n";
+  expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
