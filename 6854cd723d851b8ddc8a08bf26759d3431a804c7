@@ -1,0 +1,192 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f5d481b4_7352763f",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "#include \u003candroid-base/thread_annotations.h\u003e and use GUARDED_BY and friends?",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 70
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9b9c866_0d366714",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "there\u0027s an annotation for that :-)",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b23dd94d_ca031a8c",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "there\u0027s an annotation for that :-)",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e5536c8_2da02d75",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "move this inside the for, or make the for a while?",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "60d90db8_8c50b856",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "`empty` here and elsewhere?",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea9d252d_1380ac77",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 499,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "is this legit?",
+      "range": {
+        "startLine": 497,
+        "startChar": 0,
+        "endLine": 499,
+        "endChar": 52
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1a465b4_c6e7d1ad",
+        "filename": "libc/malloc_debug/PointerData.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "size_t is uint64_t on LP64.",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf833c3b_254179dd",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "\"Before P\" might be clearer than \"Up until O\" (because you actually mean \u003e\u003d O, right?).",
+      "range": {
+        "startLine": 143,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 37
+      },
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d1765672_6e660ece",
+        "filename": "libc/malloc_debug/RecordData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "(i thought we\u0027d fixed the .clang-format file to not do this?)",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9567b2c7_3789843f",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1567,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-03T00:13:08Z",
+      "side": 1,
+      "message": "at top?",
+      "revId": "6854cd723d851b8ddc8a08bf26759d3431a804c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
