@@ -38,9 +38,9 @@
 
 #include <demangle.h>
 
+#include "MapData.h"
 #include "backtrace.h"
 #include "debug_log.h"
-#include "MapData.h"
 
 #if defined(__LP64__)
 #define PAD_PTR "016" PRIxPTR
@@ -69,8 +69,7 @@ void backtrace_startup() {
   _Unwind_Backtrace(find_current_map, nullptr);
 }
 
-void backtrace_shutdown() {
-}
+void backtrace_shutdown() {}
 
 struct stack_crawl_state_t {
   uintptr_t* frames;
@@ -165,13 +164,13 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
 
     char buf[1024];
     if (symbol != nullptr) {
-      async_safe_format_buffer(
-          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s (%s+%" PRIuPTR ")\n", frame_num,
-          rel_pc, soname, offset_buf, demangle(symbol).c_str(), frames[frame_num] - offset);
+      async_safe_format_buffer(buf, sizeof(buf),
+                               "          #%02zd  pc %" PAD_PTR "  %s%s (%s+%" PRIuPTR ")\n",
+                               frame_num, rel_pc, soname, offset_buf, demangle(symbol).c_str(),
+                               frames[frame_num] - offset);
     } else {
-      async_safe_format_buffer(
-          buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s\n", frame_num, rel_pc, soname,
-          offset_buf);
+      async_safe_format_buffer(buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s\n",
+                               frame_num, rel_pc, soname, offset_buf);
     }
     str += buf;
   }
