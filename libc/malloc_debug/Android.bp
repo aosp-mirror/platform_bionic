@@ -42,15 +42,13 @@ cc_library {
     name: "libc_malloc_debug",
 
     srcs: [
-        "BacktraceData.cpp",
         "Config.cpp",
         "DebugData.cpp",
         "debug_disable.cpp",
-        "FreeTrackData.cpp",
         "GuardData.cpp",
         "malloc_debug.cpp",
+        "PointerData.cpp",
         "RecordData.cpp",
-        "TrackData.cpp",
     ],
 
     stl: "libc++_static",
@@ -91,6 +89,7 @@ cc_library {
         "-Werror",
         "-fno-stack-protector",
         "-Wno-error=format-zero-length",
+        "-Wthread-safety",
     ],
 }
 
@@ -98,16 +97,7 @@ cc_library {
 // Unit Tests
 // ==============================================================
 cc_test {
-
     name: "malloc_debug_unit_tests",
-    multilib: {
-        lib32: {
-            suffix: "32",
-        },
-        lib64: {
-            suffix: "64",
-        },
-    },
 
     srcs: [
         "tests/backtrace_fake.cpp",

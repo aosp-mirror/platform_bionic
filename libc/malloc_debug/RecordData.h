@@ -28,8 +28,8 @@
 
 #pragma once
 
-#include <stdint.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <unistd.h>
 
 #include <atomic>

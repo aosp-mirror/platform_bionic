@@ -33,11 +33,10 @@
 // =============================================================================
 // log functions
 // =============================================================================
-#define debug_log(format, ...)  \
-    async_safe_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__ )
-#define error_log(format, ...)  \
-    async_safe_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__ )
-#define error_log_string(str)  \
-    async_safe_write_log(ANDROID_LOG_ERROR, "malloc_debug", (str))
-#define info_log(format, ...)  \
-    async_safe_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__ )
+#define debug_log(format, ...) \
+  async_safe_format_log(ANDROID_LOG_DEBUG, "malloc_debug", (format), ##__VA_ARGS__)
+#define error_log(format, ...) \
+  async_safe_format_log(ANDROID_LOG_ERROR, "malloc_debug", (format), ##__VA_ARGS__)
+#define error_log_string(str) async_safe_write_log(ANDROID_LOG_ERROR, "malloc_debug", (str))
+#define info_log(format, ...) \
+  async_safe_format_log(ANDROID_LOG_INFO, "malloc_debug", (format), ##__VA_ARGS__)

@@ -31,8 +31,8 @@
 #include <sys/cdefs.h>
 
 #include <mutex>
-#include <string>
 #include <set>
+#include <string>
 
 #include <private/bionic_macros.h>
 
@@ -50,12 +50,9 @@ struct MapEntry {
   std::string name;
 };
 
-
 // Ordering comparator that returns equivalence for overlapping entries
 struct compare_entries {
-  bool operator()(const MapEntry* a, const MapEntry* b) const {
-    return a->end <= b->start;
-  }
+  bool operator()(const MapEntry* a, const MapEntry* b) const { return a->end <= b->start; }
 };
 
 class MapData {
