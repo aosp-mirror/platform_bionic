@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e91f675_a797cdf1",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-04-03T08:20:53Z",
+      "side": 1,
+      "message": "or maybe just remove this check for everything?",
+      "revId": "470b66644b912ac3025ea30141f2f327bb879445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
