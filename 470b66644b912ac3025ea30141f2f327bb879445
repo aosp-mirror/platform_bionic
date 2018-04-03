@@ -16,6 +16,24 @@
       "revId": "470b66644b912ac3025ea30141f2f327bb879445",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a5468e9_6661906a",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-04-03T20:43:10Z",
+      "side": 1,
+      "message": "Maybe?\n\nI think this test is trying to verify that solibs with relocations have the DT_REL[A] tag for the sake of apps doing their own linking. Checking that a binary does not have a DT_ANDROID_REL[A] tag does almost the same thing, I think, unless we come up with some other tag name for relocations.\n\nIt turns out that the detection of the DT_ANDROID_REL[A] tag in this test is broken:\n\n    #define DT_ANDROID_REL (llvm::ELF::DT_LOOS + 2)\n    #define DT_ANDROID_RELA (llvm::ELF::DT_LOOS + 4)\n\nDT_LOOS is sometimes equal to 0x6000000d, and I think that\u0027s the value we need here, but the LLVM version of the constant is 0x60000000 instead. I checked arm/arm64/x86/x86_64 binaries, and the packed relocation tags were 0x6000000f/0x60000011.\n\nThe test still does what we want, though, because it\u0027s verifying that the DT_REL[A] tags exist.\n\nI think most of the binaries in this list are guaranteed to at least have one relocation for __dso_handle via crtbegin_so.o.\n\nI suppose I\u0027m favor of keeping the DT_REL[A] check.",
+      "parentUuid": "4e91f675_a797cdf1",
+      "revId": "470b66644b912ac3025ea30141f2f327bb879445",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
