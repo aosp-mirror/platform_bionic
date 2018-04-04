@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b0957fb_1dde6d7d",
+        "filename": "tests/sys_ptrace_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-04T19:45:55Z",
+      "side": 1,
+      "message": "sorry, i meant err(3) in the sense of `man -s 3 err` :-)\n\nhttp://man7.org/linux/man-pages/man3/err.3.html\n\npass `1` like the other call sites, and lose the \" (%s)\\n\" part --- err(3) does that for you.",
+      "range": {
+        "startLine": 407,
+        "startChar": 14,
+        "endLine": 408,
+        "endChar": 18
+      },
+      "revId": "b5eaf5a5f07f59bae4e0b475f3793c4a436f54aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
