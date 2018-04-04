@@ -31,6 +31,7 @@
 #include <fstream>
 
 #include "gtest_globals.h"
+#include "TemporaryFile.h"
 #include "utils.h"
 
 extern "C" int main_global_default_serial() {
@@ -167,8 +168,8 @@ TEST(dl, exec_without_ld_config_file) {
 }
 
 #if defined(__BIONIC__)
-static void create_ld_config_file(std::string& config_file) {
-  std::ofstream fout(config_file.c_str(), std::ios::out);
+static void create_ld_config_file(const char* config_file) {
+  std::ofstream fout(config_file, std::ios::out);
   fout << "dir.test = " << get_testlib_root() << "/ld_config_test_helper/" << std::endl
        << "[test]" << std::endl
        << "additional.namespaces = ns2" << std::endl
@@ -196,9 +197,9 @@ TEST(dl, exec_with_ld_config_file) {
   }
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
-  std::string config_file = get_testlib_root() + "/ld.config.txt";
-  create_ld_config_file(config_file);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file;
+  TemporaryFile config_file;
+  create_ld_config_file(config_file.filename);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -218,9 +219,9 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
   }
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
-  std::string config_file = get_testlib_root() + "/ld.config.txt";
-  create_ld_config_file(config_file);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file;
+  TemporaryFile config_file;
+  create_ld_config_file(config_file.filename);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
   std::string env2 = std::string("LD_PRELOAD=") + get_testlib_root() + "/ld_config_test_helper_lib3.so";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
@@ -248,9 +249,9 @@ TEST(dl, disable_ld_config_file) {
   std::string error_message = "CANNOT LINK EXECUTABLE \"" + get_testlib_root() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
   std::string helper = get_testlib_root() +
       "/ld_config_test_helper/ld_config_test_helper";
-  std::string config_file = get_testlib_root() + "/ld.config.txt";
-  create_ld_config_file(config_file);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file;
+  TemporaryFile config_file;
+  create_ld_config_file(config_file.filename);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
