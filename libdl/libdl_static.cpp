@@ -17,41 +17,33 @@
 #include <dlfcn.h>
 #include <link.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
-// Proxy calls to bionic loader
-void* dlopen(const char* filename __unused, int flag __unused) {
-  return NULL;
+void* dlopen(const char* /*filename*/, int /*flag*/) {
+  return nullptr;
 }
 
 char* dlerror() {
-  return NULL;
+  return nullptr;
 }
 
-void* dlsym(void* handle __unused, const char* symbol __unused) {
-  return NULL;
+void* dlsym(void* /*handle*/, const char* /*symbol*/) {
+  return nullptr;
 }
 
-void* dlvsym(void* handle __unused,
-             const char* symbol __unused,
-             const char* version __unused) {
-  return NULL;
+void* dlvsym(void* /*handle*/, const char* /*symbol*/, const char* /*version*/) {
+  return nullptr;
 }
 
-int dladdr(const void* addr __unused, Dl_info* info __unused) {
+int dladdr(const void* /*addr*/, Dl_info* /*info*/) {
   return 0;
 }
 
-int dlclose(void* handle __unused) {
+int dlclose(void* /*handle*/) {
   return -1;
 }
 
 #if defined(__arm__)
-_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc __unused, int* pcount __unused) {
+_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr /*pc*/, int* /*pcount*/) {
   return 0;
 }
 #endif
-
-void android_set_application_target_sdk_version(uint32_t target __unused) {
-}
-
