@@ -1438,7 +1438,8 @@ const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
 #define DT_ANDROID_RELA (llvm::ELF::DT_LOOS + 4)
 
 template<typename ELFT>
-void validate_compatibility_of_native_library(const std::string& path, ELFT* elf) {
+void validate_compatibility_of_native_library(const std::string& soname,
+                                              const std::string& path, ELFT* elf) {
   bool has_elf_hash = false;
   bool has_android_rel = false;
   bool has_rel = false;
@@ -1464,10 +1465,14 @@ void validate_compatibility_of_native_library(const std::string& path, ELFT* elf
 
   ASSERT_TRUE(has_elf_hash) << path.c_str() << ": missing elf hash (DT_HASH)";
   ASSERT_TRUE(!has_android_rel) << path.c_str() << ": has packed relocations";
-  ASSERT_TRUE(has_rel) << path.c_str() << ": missing DT_REL/DT_RELA";
+  // libdl.so is simple enough that it might not have any relocations, so
+  // exempt it from the DT_REL/DT_RELA check.
+  if (soname != "libdl.so") {
+    ASSERT_TRUE(has_rel) << path.c_str() << ": missing DT_REL/DT_RELA";
+  }
 }
 
-void validate_compatibility_of_native_library(const char* soname) {
+void validate_compatibility_of_native_library(const std::string& soname) {
   // On the systems with emulation system libraries would be of different
   // architecture.  Try to use alternate paths first.
   std::string path = std::string(ALTERNATE_PATH_TO_SYSTEM_LIB) + soname;
@@ -1487,7 +1492,7 @@ void validate_compatibility_of_native_library(const char* soname) {
 
   ASSERT_TRUE(elf != nullptr);
 
-  validate_compatibility_of_native_library(path, elf);
+  validate_compatibility_of_native_library(soname, path, elf);
 }
 
 // This is a test for app compatibility workaround for arm apps
