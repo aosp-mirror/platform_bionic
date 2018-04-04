@@ -26,11 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#include <stdlib.h>
 #include <sys/cdefs.h>
 
 extern "C" void __internal_linker_error() {
-  abort();
+  __builtin_trap();
 }
 
 __strong_alias(__loader_android_create_namespace, __internal_linker_error);
@@ -59,3 +58,14 @@ __strong_alias(__loader_dl_unwind_find_exidx, __internal_linker_error);
 #endif
 __strong_alias(rtld_db_dlactivity, __internal_linker_error);
 
+#if defined(__arm__)
+// An arm32 unwinding table has an R_ARM_NONE relocation to
+// __aeabi_unwind_cpp_pr0. This shared library will never invoke the unwinder,
+// so it doesn't actually need the routine. Define a dummy version here,
+// because the real version calls libc functions (e.g. memcpy, abort), which
+// would create a dependency cycle with libc.so.
+__attribute__((visibility("hidden")))
+extern "C" void __aeabi_unwind_cpp_pr0() {
+  __builtin_trap();
+}
+#endif
