@@ -74,7 +74,7 @@ cc_library {
         whole_static_libs: ["libdl_static"],
     },
     static: {
-        srcs: ["libdl_static.c"],
+        srcs: ["libdl_static.cpp"],
     },
     cflags: [
         "-Wall",
