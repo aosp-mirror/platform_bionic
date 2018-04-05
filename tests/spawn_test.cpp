@@ -433,12 +433,12 @@ TEST(spawn, signal_stress) {
   static pid_t parent = getpid();
 
   setpgid(0, 0);
+  signal(SIGRTMIN, SIG_IGN);
 
   pid_t pid = fork();
   ASSERT_NE(-1, pid);
 
   if (pid == 0) {
-    signal(SIGRTMIN, SIG_IGN);
     for (size_t i = 0; i < 1024; ++i) {
       kill(0, SIGRTMIN);
       usleep(10);
