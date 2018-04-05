@@ -14,6 +14,7 @@ cc_library_static {
     stl: "libc++_static",
 
     whole_static_libs: [
+        "libbase",
         "libasync_safe",
         "libdemangle",
     ],
@@ -49,6 +50,7 @@ cc_library {
         "malloc_debug.cpp",
         "PointerData.cpp",
         "RecordData.cpp",
+        "UnwindBacktrace.cpp",
     ],
 
     stl: "libc++_static",
@@ -69,7 +71,12 @@ cc_library {
     static_libs: [
         "libasync_safe",
         "libbase",
+        "libdemangle",
         "libc_malloc_debug_backtrace",
+    ],
+
+    shared_libs: [
+        "libunwindstack",
     ],
 
     multilib: {
@@ -112,15 +119,21 @@ cc_test {
         "tests/malloc_debug_unit_tests.cpp",
     ],
 
-    whole_static_libs: ["libc_malloc_debug"],
-
     local_include_dirs: ["tests"],
     include_dirs: [
         "bionic/libc",
         "bionic/libc/async_safe/include",
     ],
 
-    shared_libs: ["libbase"],
+    static_libs: [
+        "libc_malloc_debug",
+        "libdemangle",
+    ],
+
+    shared_libs: [
+        "libbase",
+        "libunwindstack",
+    ],
 
     cflags: [
         "-Wall",

@@ -93,6 +93,9 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {
         "backtrace_dump_prefix", {0, &Config::SetBacktraceDumpPrefix},
     },
+    {
+        "backtrace_full", {BACKTRACE_FULL, &Config::VerifyValueEmpty},
+    },
 
     {
         "fill", {FILL_ON_ALLOC | FILL_ON_FREE, &Config::SetFill},
@@ -362,6 +365,11 @@ void Config::LogUsage() const {
   error_log("    This will cause all live allocations to be dumped to the file");
   error_log("    backtrace_dump_prefix.<PID>.final.txt.");
   error_log("    The default is false.");
+  error_log("");
+  error_log("  backtrace_full");
+  error_log("    Any time a backtrace is acquired, use an unwinder that can");
+  error_log("    display Java stack frames. This unwinder can run slower than");
+  error_log("    normal unwinder.");
   error_log("");
   error_log("  fill_on_alloc[=XX]");
   error_log("    On first allocation, fill with the value 0x%02x.", DEFAULT_FILL_ALLOC_VALUE);
