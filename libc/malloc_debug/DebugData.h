@@ -35,13 +35,11 @@
 
 #include <private/bionic_macros.h>
 
-#include "BacktraceData.h"
 #include "Config.h"
-#include "FreeTrackData.h"
 #include "GuardData.h"
-#include "malloc_debug.h"
+#include "PointerData.h"
 #include "RecordData.h"
-#include "TrackData.h"
+#include "malloc_debug.h"
 
 class DebugData {
  public:
@@ -62,11 +60,6 @@ class DebugData {
     return reinterpret_cast<Header*>(value - pointer_offset_);
   }
 
-  BacktraceHeader* GetAllocBacktrace(const Header* header) {
-    uintptr_t value = reinterpret_cast<uintptr_t>(header);
-    return reinterpret_cast<BacktraceHeader*>(value + backtrace->alloc_offset());
-  }
-
   uint8_t* GetFrontGuard(const Header* header) {
     uintptr_t value = reinterpret_cast<uintptr_t>(header);
     return reinterpret_cast<uint8_t*>(value + front_guard->offset());
@@ -74,30 +67,30 @@ class DebugData {
 
   uint8_t* GetRearGuard(const Header* header) {
     uintptr_t value = reinterpret_cast<uintptr_t>(GetPointer(header));
-    return reinterpret_cast<uint8_t*>(value + header->real_size());
+    return reinterpret_cast<uint8_t*>(value + header->size);
   }
 
   const Config& config() { return config_; }
   size_t pointer_offset() { return pointer_offset_; }
-  bool need_header() { return need_header_; }
   size_t extra_bytes() { return extra_bytes_; }
+
+  bool TrackPointers() { return config_.options() & TRACK_ALLOCS; }
+
+  bool HeaderEnabled() { return config_.options() & HEADER_OPTIONS; }
 
   void PrepareFork();
   void PostForkParent();
   void PostForkChild();
 
-  std::unique_ptr<BacktraceData> backtrace;
-  std::unique_ptr<TrackData> track;
   std::unique_ptr<FrontGuardData> front_guard;
+  std::unique_ptr<PointerData> pointer;
   std::unique_ptr<RearGuardData> rear_guard;
-  std::unique_ptr<FreeTrackData> free_track;
   std::unique_ptr<RecordData> record;
 
  private:
   size_t extra_bytes_ = 0;
 
   size_t pointer_offset_ = 0;
-  bool need_header_ = false;
 
   Config config_;
 

@@ -41,9 +41,9 @@
 #include <android-base/stringprintf.h>
 #include <private/bionic_malloc_dispatch.h>
 
-#include "backtrace.h"
 #include "Config.h"
 #include "DebugData.h"
+#include "backtrace.h"
 #include "debug_disable.h"
 #include "debug_log.h"
 #include "malloc_debug.h"
@@ -66,12 +66,11 @@ const MallocDispatch* g_dispatch;
 __BEGIN_DECLS
 
 bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
-    const char* options);
+                      const char* options);
 void debug_finalize();
 bool debug_dump_heap(const char* file_name);
-void debug_get_malloc_leak_info(
-    uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
-    size_t* backtrace_size);
+void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* info_size,
+                                size_t* total_memory, size_t* backtrace_size);
 ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
 void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
@@ -85,7 +84,7 @@ struct mallinfo debug_mallinfo();
 int debug_mallopt(int param, int value);
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
 int debug_iterate(uintptr_t base, size_t size,
-    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
+                  void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void debug_malloc_disable();
 void debug_malloc_enable();
 
@@ -99,59 +98,92 @@ __END_DECLS
 
 static void InitAtfork() {
   static pthread_once_t atfork_init = PTHREAD_ONCE_INIT;
-  pthread_once(&atfork_init, [](){
+  pthread_once(&atfork_init, []() {
     pthread_atfork(
-        [](){
+        []() {
           if (g_debug != nullptr) {
             g_debug->PrepareFork();
           }
         },
-        [](){
+        []() {
           if (g_debug != nullptr) {
             g_debug->PostForkParent();
           }
         },
-        [](){
+        []() {
           if (g_debug != nullptr) {
             g_debug->PostForkChild();
           }
-        }
-    );
+        });
   });
 }
 
-static void LogTagError(const Header* header, const void* pointer, const char* name) {
+static void LogError(const void* pointer, const char* error_str) {
   error_log(LOG_DIVIDER);
-  if (header->tag == DEBUG_FREE_TAG) {
-    error_log("+++ ALLOCATION %p USED AFTER FREE (%s)", pointer, name);
-    if (g_debug->config().options() & FREE_TRACK) {
-      g_debug->free_track->LogBacktrace(header);
-    }
-  } else {
-    error_log("+++ ALLOCATION %p HAS INVALID TAG %" PRIx32 " (%s)", pointer, header->tag, name);
+  error_log("+++ ALLOCATION %p %s", pointer, error_str);
+
+  // If we are tracking already freed pointers, check to see if this is
+  // one so we can print extra information.
+  if (g_debug->config().options() & FREE_TRACK) {
+    PointerData::LogFreeBacktrace(pointer);
   }
-  error_log("Backtrace at time of failure:");
-  std::vector<uintptr_t> frames(64);
-  size_t frame_num = backtrace_get(frames.data(), frames.size());
-  frames.resize(frame_num);
-  backtrace_log(frames.data(), frames.size());
+
+  std::vector<uintptr_t> frames(128);
+  size_t num_frames = backtrace_get(frames.data(), frames.size());
+  if (num_frames == 0) {
+    error_log("Backtrace failed to get any frames.");
+  } else {
+    error_log("Backtrace at time of failure:");
+    backtrace_log(frames.data(), num_frames);
+  }
   error_log(LOG_DIVIDER);
+}
+
+static bool VerifyPointer(const void* pointer, const char* function_name) {
+  if (g_debug->HeaderEnabled()) {
+    Header* header = g_debug->GetHeader(pointer);
+    if (header->tag != DEBUG_TAG) {
+      std::string error_str;
+      if (header->tag == DEBUG_FREE_TAG) {
+        error_str = std::string("USED AFTER FREE (") + function_name + ")";
+      } else {
+        error_str = android::base::StringPrintf("HAS INVALID TAG %" PRIx32 " (%s)", header->tag,
+                                                function_name);
+      }
+      LogError(pointer, error_str.c_str());
+      return false;
+    }
+  }
+
+  if (g_debug->TrackPointers()) {
+    if (!PointerData::Exists(pointer)) {
+      std::string error_str(std::string("UNKNOWN POINTER (") + function_name + ")");
+      LogError(pointer, error_str.c_str());
+      return false;
+    }
+  }
+  return true;
+}
+
+static size_t InternalMallocUsableSize(void* pointer) {
+  if (g_debug->HeaderEnabled()) {
+    return g_debug->GetHeader(pointer)->usable_size;
+  } else {
+    return g_dispatch->malloc_usable_size(pointer);
+  }
 }
 
 static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   header->tag = DEBUG_TAG;
   header->orig_pointer = orig_pointer;
   header->size = size;
-  if (*g_malloc_zygote_child) {
-    header->set_zygote_child_alloc();
-  }
   header->usable_size = g_dispatch->malloc_usable_size(orig_pointer);
   if (header->usable_size == 0) {
     g_dispatch->free(orig_pointer);
     return nullptr;
   }
-  header->usable_size -= g_debug->pointer_offset() +
-      reinterpret_cast<uintptr_t>(header) - reinterpret_cast<uintptr_t>(orig_pointer);
+  header->usable_size -= g_debug->pointer_offset() + reinterpret_cast<uintptr_t>(header) -
+                         reinterpret_cast<uintptr_t>(orig_pointer);
 
   if (g_debug->config().options() & FRONT_GUARD) {
     uint8_t* guard = g_debug->GetFrontGuard(header);
@@ -163,30 +195,14 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
     memset(guard, g_debug->config().rear_guard_value(), g_debug->config().rear_guard_bytes());
     // If the rear guard is enabled, set the usable size to the exact size
     // of the allocation.
-    header->usable_size = header->real_size();
-  }
-
-  bool backtrace_found = false;
-  if (g_debug->config().options() & BACKTRACE) {
-    BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
-    if (g_debug->backtrace->ShouldBacktrace()) {
-      back_header->num_frames = backtrace_get(
-          &back_header->frames[0], g_debug->config().backtrace_frames());
-      backtrace_found = back_header->num_frames > 0;
-    } else {
-      back_header->num_frames = 0;
-    }
-  }
-
-  if (g_debug->config().options() & TRACK_ALLOCS) {
-    g_debug->track->Add(header, backtrace_found);
+    header->usable_size = header->size;
   }
 
   return g_debug->GetPointer(header);
 }
 
 bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
-    const char* options) {
+                      const char* options) {
   if (malloc_zygote_child == nullptr || options == nullptr) {
     return false;
   }
@@ -222,18 +238,19 @@ void debug_finalize() {
   }
 
   if (g_debug->config().options() & FREE_TRACK) {
-    g_debug->free_track->VerifyAll();
+    PointerData::VerifyAllFreed();
   }
 
   if (g_debug->config().options() & LEAK_TRACK) {
-    g_debug->track->DisplayLeaks();
+    PointerData::LogLeaks();
   }
 
   if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
     ScopedDisableDebugCalls disable;
-    debug_dump_heap(
-        android::base::StringPrintf("%s.%d.exit.txt",
-                                    g_debug->config().backtrace_dump_prefix().c_str(),                              getpid()).c_str());
+    debug_dump_heap(android::base::StringPrintf("%s.%d.exit.txt",
+                                                g_debug->config().backtrace_dump_prefix().c_str(),
+                                                getpid())
+                        .c_str());
   }
 
   DebugDisableSet(true);
@@ -246,13 +263,13 @@ void debug_finalize() {
   DebugDisableFinalize();
 }
 
-void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size,
-    size_t* info_size, size_t* total_memory, size_t* backtrace_size) {
+void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* info_size,
+                                size_t* total_memory, size_t* backtrace_size) {
   ScopedDisableDebugCalls disable;
 
   // Verify the arguments.
-  if (info == nullptr || overall_size == nullptr || info_size == NULL ||
-      total_memory == nullptr || backtrace_size == nullptr) {
+  if (info == nullptr || overall_size == nullptr || info_size == NULL || total_memory == nullptr ||
+      backtrace_size == nullptr) {
     error_log("get_malloc_leak_info: At least one invalid parameter.");
     return;
   }
@@ -264,30 +281,17 @@ void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size,
   *backtrace_size = 0;
 
   if (!(g_debug->config().options() & BACKTRACE)) {
-    error_log("get_malloc_leak_info: Allocations not being tracked, to enable "
-              "set the option 'backtrace'.");
+    error_log(
+        "get_malloc_leak_info: Allocations not being tracked, to enable "
+        "set the option 'backtrace'.");
     return;
   }
 
-  g_debug->track->GetInfo(info, overall_size, info_size, total_memory, backtrace_size);
+  PointerData::GetInfo(info, overall_size, info_size, total_memory, backtrace_size);
 }
 
 void debug_free_malloc_leak_info(uint8_t* info) {
   g_dispatch->free(info);
-}
-
-static size_t internal_malloc_usable_size(void* pointer) {
-  if (g_debug->need_header()) {
-    Header* header = g_debug->GetHeader(pointer);
-    if (header->tag != DEBUG_TAG) {
-      LogTagError(header, pointer, "malloc_usable_size");
-      return 0;
-    }
-
-    return header->usable_size;
-  } else {
-    return g_dispatch->malloc_usable_size(pointer);
-  }
 }
 
 size_t debug_malloc_usable_size(void* pointer) {
@@ -296,15 +300,18 @@ size_t debug_malloc_usable_size(void* pointer) {
   }
   ScopedDisableDebugCalls disable;
 
-  return internal_malloc_usable_size(pointer);
+  if (!VerifyPointer(pointer, "malloc_usable_size")) {
+    return 0;
+  }
+
+  return InternalMallocUsableSize(pointer);
 }
 
-static void *internal_malloc(size_t size) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->backtrace->ShouldDumpAndReset()) {
-    debug_dump_heap(
-        android::base::StringPrintf("%s.%d.txt",
-                                    g_debug->config().backtrace_dump_prefix().c_str(),
-                                    getpid()).c_str());
+static void* InternalMalloc(size_t size) {
+  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+    debug_dump_heap(android::base::StringPrintf(
+                        "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
+                        .c_str());
   }
 
   if (size == 0) {
@@ -318,15 +325,15 @@ static void *internal_malloc(size_t size) {
     return nullptr;
   }
 
-  void* pointer;
-  if (g_debug->need_header()) {
-    if (size > Header::max_size()) {
-      errno = ENOMEM;
-      return nullptr;
-    }
+  if (size > PointerInfoType::MaxSize()) {
+    errno = ENOMEM;
+    return nullptr;
+  }
 
-    Header* header = reinterpret_cast<Header*>(
-        g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
+  void* pointer;
+  if (g_debug->HeaderEnabled()) {
+    Header* header =
+        reinterpret_cast<Header*>(g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
     if (header == nullptr) {
       return nullptr;
     }
@@ -335,11 +342,17 @@ static void *internal_malloc(size_t size) {
     pointer = g_dispatch->malloc(real_size);
   }
 
-  if (pointer != nullptr && g_debug->config().options() & FILL_ON_ALLOC) {
-    size_t bytes = internal_malloc_usable_size(pointer);
-    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
-    bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_alloc_value(), bytes);
+  if (pointer != nullptr) {
+    if (g_debug->TrackPointers()) {
+      PointerData::Add(pointer, size);
+    }
+
+    if (g_debug->config().options() & FILL_ON_ALLOC) {
+      size_t bytes = InternalMallocUsableSize(pointer);
+      size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
+      bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
+      memset(pointer, g_debug->config().fill_alloc_value(), bytes);
+    }
   }
   return pointer;
 }
@@ -350,7 +363,7 @@ void* debug_malloc(size_t size) {
   }
   ScopedDisableDebugCalls disable;
 
-  void* pointer = internal_malloc(size);
+  void* pointer = InternalMalloc(size);
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new MallocEntry(pointer, size));
@@ -359,23 +372,18 @@ void* debug_malloc(size_t size) {
   return pointer;
 }
 
-static void internal_free(void* pointer) {
-  if ((g_debug->config().options() & BACKTRACE) && g_debug->backtrace->ShouldDumpAndReset()) {
-    debug_dump_heap(
-        android::base::StringPrintf("%s.%d.txt",
-                                    g_debug->config().backtrace_dump_prefix().c_str(),
-                                    getpid()).c_str());
+static void InternalFree(void* pointer) {
+  if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
+    debug_dump_heap(android::base::StringPrintf(
+                        "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
+                        .c_str());
   }
 
   void* free_pointer = pointer;
   size_t bytes;
   Header* header;
-  if (g_debug->need_header()) {
+  if (g_debug->HeaderEnabled()) {
     header = g_debug->GetHeader(pointer);
-    if (header->tag != DEBUG_TAG) {
-      LogTagError(header, pointer, "free");
-      return;
-    }
     free_pointer = header->orig_pointer;
 
     if (g_debug->config().options() & FRONT_GUARD) {
@@ -389,14 +397,6 @@ static void internal_free(void* pointer) {
       }
     }
 
-    if (g_debug->config().options() & TRACK_ALLOCS) {
-      bool backtrace_found = false;
-      if (g_debug->config().options() & BACKTRACE) {
-        BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
-        backtrace_found = back_header->num_frames > 0;
-      }
-      g_debug->track->Remove(header, backtrace_found);
-    }
     header->tag = DEBUG_FREE_TAG;
 
     bytes = header->usable_size;
@@ -410,13 +410,23 @@ static void internal_free(void* pointer) {
     memset(pointer, g_debug->config().fill_free_value(), bytes);
   }
 
+  if (g_debug->TrackPointers()) {
+    PointerData::Remove(pointer);
+  }
+
   if (g_debug->config().options() & FREE_TRACK) {
     // Do not add the allocation until we are done modifying the pointer
     // itself. This avoids a race if a lot of threads are all doing
     // frees at the same time and we wind up trying to really free this
     // pointer from another thread, while still trying to free it in
     // this function.
-    g_debug->free_track->Add(header);
+    pointer = PointerData::AddFreed(pointer);
+    if (pointer != nullptr) {
+      if (g_debug->HeaderEnabled()) {
+        pointer = g_debug->GetHeader(pointer)->orig_pointer;
+      }
+      g_dispatch->free(pointer);
+    }
   } else {
     g_dispatch->free(free_pointer);
   }
@@ -432,7 +442,11 @@ void debug_free(void* pointer) {
     g_debug->record->AddEntry(new FreeEntry(pointer));
   }
 
-  internal_free(pointer);
+  if (!VerifyPointer(pointer, "free")) {
+    return;
+  }
+
+  InternalFree(pointer);
 }
 
 void* debug_memalign(size_t alignment, size_t bytes) {
@@ -445,13 +459,13 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     bytes = 1;
   }
 
-  void* pointer;
-  if (g_debug->need_header()) {
-    if (bytes > Header::max_size()) {
-      errno = ENOMEM;
-      return nullptr;
-    }
+  if (bytes > PointerInfoType::MaxSize()) {
+    errno = ENOMEM;
+    return nullptr;
+  }
 
+  void* pointer;
+  if (g_debug->HeaderEnabled()) {
     // Make the alignment a power of two.
     if (!powerof2(alignment)) {
       alignment = BIONIC_ROUND_UP_POWER_OF_2(alignment);
@@ -493,15 +507,21 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     pointer = g_dispatch->memalign(alignment, real_size);
   }
 
-  if (pointer != nullptr && g_debug->config().options() & FILL_ON_ALLOC) {
-    size_t bytes = internal_malloc_usable_size(pointer);
-    size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
-    bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_alloc_value(), bytes);
-  }
+  if (pointer != nullptr) {
+    if (g_debug->TrackPointers()) {
+      PointerData::Add(pointer, bytes);
+    }
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment));
+    if (g_debug->config().options() & FILL_ON_ALLOC) {
+      size_t bytes = InternalMallocUsableSize(pointer);
+      size_t fill_bytes = g_debug->config().fill_on_alloc_bytes();
+      bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
+      memset(pointer, g_debug->config().fill_alloc_value(), bytes);
+    }
+
+    if (g_debug->config().options() & RECORD_ALLOCS) {
+      g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment));
+    }
   }
 
   return pointer;
@@ -514,11 +534,15 @@ void* debug_realloc(void* pointer, size_t bytes) {
   ScopedDisableDebugCalls disable;
 
   if (pointer == nullptr) {
-    pointer = internal_malloc(bytes);
+    pointer = InternalMalloc(bytes);
     if (g_debug->config().options() & RECORD_ALLOCS) {
       g_debug->record->AddEntry(new ReallocEntry(pointer, bytes, nullptr));
     }
     return pointer;
+  }
+
+  if (!VerifyPointer(pointer, "realloc")) {
+    return nullptr;
   }
 
   if (bytes == 0) {
@@ -526,7 +550,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
       g_debug->record->AddEntry(new ReallocEntry(nullptr, bytes, pointer));
     }
 
-    internal_free(pointer);
+    InternalFree(pointer);
     return nullptr;
   }
 
@@ -540,45 +564,45 @@ void* debug_realloc(void* pointer, size_t bytes) {
     }
   }
 
+  if (bytes > PointerInfoType::MaxSize()) {
+    errno = ENOMEM;
+    return nullptr;
+  }
+
   void* new_pointer;
   size_t prev_size;
-  if (g_debug->need_header()) {
-    if (bytes > Header::max_size()) {
-      errno = ENOMEM;
-      return nullptr;
-    }
-
-    Header* header = g_debug->GetHeader(pointer);
-    if (header->tag != DEBUG_TAG) {
-      LogTagError(header, pointer, "realloc");
-      return nullptr;
-    }
-
+  if (g_debug->HeaderEnabled()) {
     // Same size, do nothing.
-    if (real_size == header->real_size()) {
-      // Do not bother recording, this is essentially a nop.
+    Header* header = g_debug->GetHeader(pointer);
+    if (real_size == header->size) {
+      if (g_debug->TrackPointers()) {
+        // Remove and re-add so that the backtrace is updated.
+        PointerData::Remove(pointer);
+        PointerData::Add(pointer, real_size);
+      }
       return pointer;
     }
 
     // Allocation is shrinking.
     if (real_size < header->usable_size) {
       header->size = real_size;
-      if (*g_malloc_zygote_child) {
-        header->set_zygote_child_alloc();
-      }
       if (g_debug->config().options() & REAR_GUARD) {
         // Don't bother allocating a smaller pointer in this case, simply
         // change the header usable_size and reset the rear guard.
-        header->usable_size = header->real_size();
+        header->usable_size = header->size;
         memset(g_debug->GetRearGuard(header), g_debug->config().rear_guard_value(),
                g_debug->config().rear_guard_bytes());
       }
-      // Do not bother recording, this is essentially a nop.
+      if (g_debug->TrackPointers()) {
+        // Remove and re-add so that the backtrace is updated.
+        PointerData::Remove(pointer);
+        PointerData::Add(pointer, real_size);
+      }
       return pointer;
     }
 
     // Allocate the new size.
-    new_pointer = internal_malloc(bytes);
+    new_pointer = InternalMalloc(bytes);
     if (new_pointer == nullptr) {
       errno = ENOMEM;
       return nullptr;
@@ -586,17 +610,25 @@ void* debug_realloc(void* pointer, size_t bytes) {
 
     prev_size = header->usable_size;
     memcpy(new_pointer, pointer, prev_size);
-    internal_free(pointer);
+    InternalFree(pointer);
   } else {
+    if (g_debug->TrackPointers()) {
+      PointerData::Remove(pointer);
+    }
+
     prev_size = g_dispatch->malloc_usable_size(pointer);
     new_pointer = g_dispatch->realloc(pointer, real_size);
     if (new_pointer == nullptr) {
       return nullptr;
     }
+
+    if (g_debug->TrackPointers()) {
+      PointerData::Add(new_pointer, real_size);
+    }
   }
 
   if (g_debug->config().options() & FILL_ON_ALLOC) {
-    size_t bytes = internal_malloc_usable_size(new_pointer);
+    size_t bytes = InternalMallocUsableSize(new_pointer);
     if (bytes > g_debug->config().fill_on_alloc_bytes()) {
       bytes = g_debug->config().fill_on_alloc_bytes();
     }
@@ -637,17 +669,16 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
     return nullptr;
   }
 
-  void* pointer;
-  if (g_debug->need_header()) {
-    // The above check will guarantee the multiply will not overflow.
-    if (size > Header::max_size()) {
-      errno = ENOMEM;
-      return nullptr;
-    }
+  if (real_size > PointerInfoType::MaxSize()) {
+    errno = ENOMEM;
+    return nullptr;
+  }
 
+  void* pointer;
+  if (g_debug->HeaderEnabled()) {
     // Need to guarantee the alignment of the header.
-    Header* header = reinterpret_cast<Header*>(
-        g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
+    Header* header =
+        reinterpret_cast<Header*>(g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
     if (header == nullptr) {
       return nullptr;
     }
@@ -656,8 +687,13 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
   } else {
     pointer = g_dispatch->calloc(1, real_size);
   }
+
   if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(new CallocEntry(pointer, bytes, nmemb));
+  }
+
+  if (pointer != nullptr && g_debug->TrackPointers()) {
+    PointerData::Add(pointer, size);
   }
   return pointer;
 }
@@ -695,81 +731,45 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
   return (*memptr != nullptr) ? 0 : ENOMEM;
 }
 
-int debug_iterate(uintptr_t base, size_t size,
-    void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
-  // Can't allocate, malloc is disabled
-  // Manual capture of the arguments to pass to the lambda below as void* arg
-  struct iterate_ctx {
-    decltype(callback) callback;
-    decltype(arg) arg;
-  } ctx = { callback, arg };
+int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
+                  void* arg) {
+  if (g_debug->TrackPointers()) {
+    // Since malloc is disabled, don't bother acquiring any locks.
+    for (auto it = PointerData::begin(); it != PointerData::end(); ++it) {
+      callback(it->first, InternalMallocUsableSize(reinterpret_cast<void*>(it->first)), arg);
+    }
+    return 0;
+  }
 
-  return g_dispatch->iterate(base, size,
-      [](uintptr_t base, size_t size, void* arg) {
-        const iterate_ctx* ctx = reinterpret_cast<iterate_ctx*>(arg);
-        const void* pointer = reinterpret_cast<void*>(base);
-        if (g_debug->need_header()) {
-          const Header* header = reinterpret_cast<const Header*>(pointer);
-          if (g_debug->config().options() & TRACK_ALLOCS) {
-            if (g_debug->track->Contains(header)) {
-              // Return just the body of the allocation if we're sure the header exists
-              ctx->callback(reinterpret_cast<uintptr_t>(g_debug->GetPointer(header)),
-                  header->usable_size, ctx->arg);
-              return;
-            }
-          }
-        }
-        // Fall back to returning the whole allocation
-        ctx->callback(base, size, ctx->arg);
-      }, &ctx);
+  // An option that adds a header will add pointer tracking, so no need to
+  // check if headers are enabled.
+  return g_dispatch->iterate(base, size, callback, arg);
 }
 
 void debug_malloc_disable() {
   g_dispatch->malloc_disable();
-  if (g_debug->track) {
-    g_debug->track->PrepareFork();
+  if (g_debug->pointer) {
+    g_debug->pointer->PrepareFork();
   }
 }
 
 void debug_malloc_enable() {
-  if (g_debug->track) {
-    g_debug->track->PostForkParent();
+  if (g_debug->pointer) {
+    g_debug->pointer->PostForkParent();
   }
   g_dispatch->malloc_enable();
 }
 
-ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
+ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t max_frames) {
   if (DebugCallsDisabled() || pointer == nullptr) {
     return 0;
   }
   ScopedDisableDebugCalls disable;
 
-  if (g_debug->need_header()) {
-    Header* header;
-    if (g_debug->config().options() & TRACK_ALLOCS) {
-      header = g_debug->GetHeader(pointer);
-      if (!g_debug->track->Contains(header)) {
-        return 0;
-      }
-    } else {
-      header = reinterpret_cast<Header*>(pointer);
-    }
-    if (header->tag != DEBUG_TAG) {
-      return 0;
-    }
-    if (g_debug->config().options() & BACKTRACE) {
-      BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
-      if (back_header->num_frames > 0) {
-        if (frame_count > back_header->num_frames) {
-          frame_count = back_header->num_frames;
-        }
-        memcpy(frames, &back_header->frames[0], frame_count * sizeof(uintptr_t));
-        return frame_count;
-      }
-    }
+  if (!(g_debug->config().options() & BACKTRACE)) {
+    return 0;
   }
-
-  return 0;
+  return PointerData::GetFrames(pointer, frames, max_frames);
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
@@ -821,30 +821,7 @@ bool debug_dump_heap(const char* file_name) {
 
   fprintf(fp, "Android Native Heap Dump v1.0\n\n");
 
-  std::vector<const Header*> list;
-  size_t total_memory;
-  g_debug->track->GetListBySizeThenBacktrace(&list, &total_memory);
-  fprintf(fp, "Total memory: %zu\n", total_memory);
-  fprintf(fp, "Allocation records: %zd\n", list.size());
-  fprintf(fp, "Backtrace size: %zu\n", g_debug->config().backtrace_frames());
-  fprintf(fp, "\n");
-
-  for (const auto& header : list) {
-    const BacktraceHeader* back_header = g_debug->GetAllocBacktrace(header);
-    fprintf(fp, "z %d  sz %8zu  num    1  bt", (header->zygote_child_alloc()) ? 1 : 0,
-            header->real_size());
-    for (size_t i = 0; i < back_header->num_frames; i++) {
-      if (back_header->frames[i] == 0) {
-        break;
-      }
-#ifdef __LP64__
-      fprintf(fp, " %016" PRIxPTR, back_header->frames[i]);
-#else
-      fprintf(fp, " %08" PRIxPTR, back_header->frames[i]);
-#endif
-    }
-    fprintf(fp, "\n");
-  }
+  PointerData::DumpLiveToFile(fp);
 
   fprintf(fp, "MAPS\n");
   std::string content;

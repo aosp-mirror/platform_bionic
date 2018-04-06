@@ -28,14 +28,12 @@
 
 #include <stdint.h>
 
-#include "BacktraceData.h"
 #include "Config.h"
 #include "DebugData.h"
-#include "debug_disable.h"
-#include "FreeTrackData.h"
 #include "GuardData.h"
+#include "PointerData.h"
+#include "debug_disable.h"
 #include "malloc_debug.h"
-#include "TrackData.h"
 
 bool DebugData::Initialize(const char* options) {
   if (!config_.Init(options)) {
@@ -44,17 +42,8 @@ bool DebugData::Initialize(const char* options) {
 
   // Check to see if the options that require a header are enabled.
   if (config_.options() & HEADER_OPTIONS) {
-    need_header_ = true;
-
     // Initialize all of the static header offsets.
     pointer_offset_ = __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
-
-    if (config_.options() & BACKTRACE) {
-      backtrace.reset(new BacktraceData(this, config_, &pointer_offset_));
-      if (!backtrace->Initialize(config_)) {
-        return false;
-      }
-    }
 
     if (config_.options() & FRONT_GUARD) {
       front_guard.reset(new FrontGuardData(this, config_, &pointer_offset_));
@@ -67,13 +56,12 @@ bool DebugData::Initialize(const char* options) {
       rear_guard.reset(new RearGuardData(this, config_));
       extra_bytes_ += config_.rear_guard_bytes();
     }
+  }
 
-    if (config_.options() & FREE_TRACK) {
-      free_track.reset(new FreeTrackData(this, config_));
-    }
-
-    if (config_.options() & TRACK_ALLOCS) {
-      track.reset(new TrackData(this));
+  if (TrackPointers()) {
+    pointer.reset(new PointerData(this));
+    if (!pointer->Initialize(config_)) {
+      return false;
     }
   }
 
@@ -91,28 +79,19 @@ bool DebugData::Initialize(const char* options) {
 }
 
 void DebugData::PrepareFork() {
-  if (track != nullptr) {
-    track->PrepareFork();
-  }
-  if (free_track != nullptr) {
-    free_track->PrepareFork();
+  if (pointer != nullptr) {
+    pointer->PrepareFork();
   }
 }
 
 void DebugData::PostForkParent() {
-  if (track != nullptr) {
-    track->PostForkParent();
-  }
-  if (free_track != nullptr) {
-    free_track->PostForkParent();
+  if (pointer != nullptr) {
+    pointer->PostForkParent();
   }
 }
 
 void DebugData::PostForkChild() {
-  if (track != nullptr) {
-    track->PostForkChild();
-  }
-  if (free_track != nullptr) {
-    free_track->PostForkChild();
+  if (pointer != nullptr) {
+    pointer->PostForkChild();
   }
 }

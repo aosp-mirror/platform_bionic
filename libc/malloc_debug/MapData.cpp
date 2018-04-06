@@ -31,8 +31,8 @@
 #include <inttypes.h>
 #include <link.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <vector>
 
@@ -46,8 +46,8 @@ static MapEntry* parse_line(char* line) {
   uintptr_t offset;
   char permissions[5];
   int name_pos;
-  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start,
-             &end, permissions, &offset, &name_pos) < 2) {
+  if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start, &end,
+             permissions, &offset, &name_pos) < 2) {
     return nullptr;
   }
 
@@ -66,13 +66,13 @@ static MapEntry* parse_line(char* line) {
   return entry;
 }
 
-template<typename T>
+template <typename T>
 static inline bool get_val(MapEntry* entry, uintptr_t addr, T* store) {
   if (addr < entry->start || addr + sizeof(T) > entry->end) {
     return false;
   }
   // Make sure the address is aligned properly.
-  if (addr & (sizeof(T)-1)) {
+  if (addr & (sizeof(T) - 1)) {
     return false;
   }
   *store = *reinterpret_cast<T*>(addr);
@@ -157,7 +157,7 @@ const MapEntry* MapData::find(uintptr_t pc, uintptr_t* rel_pc) {
     return nullptr;
   }
 
-  MapEntry *entry = *it;
+  MapEntry* entry = *it;
   if (!entry->load_base_read) {
     read_loadbase(entry);
   }
