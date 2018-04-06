@@ -555,7 +555,13 @@ contain any data.
 
 ### For app developers
 
-Enable malloc debug for a specific program/application (Android O or later):
+App developers should check the NDK documentation about
+[wrap.sh](https://developer.android.com/ndk/guides/wrap-script.html)
+for the best way to use malloc debug in Android O or later on non-rooted
+devices.
+
+If you do have a rooted device, you can enable malloc debug for a specific
+program/application (Android O or later):
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
 
