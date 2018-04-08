@@ -384,22 +384,40 @@ class PtraceResumptionTest : public ::testing::Test {
 
   PtraceResumptionTest() {
     unique_fd worker_pipe_read;
-    int pipefd[2];
-    if (pipe2(pipefd, O_CLOEXEC) != 0) {
+    if (!android::base::Pipe(&worker_pipe_read, &worker_pipe_write)) {
       err(1, "failed to create pipe");
     }
 
-    worker_pipe_read.reset(pipefd[0]);
-    worker_pipe_write.reset(pipefd[1]);
+    // Second pipe to synchronize the Yama ptracer setup.
+    unique_fd worker_pipe_setup_read, worker_pipe_setup_write;
+    if (!android::base::Pipe(&worker_pipe_setup_read, &worker_pipe_setup_write)) {
+      err(1, "failed to create pipe");
+    }
 
     worker = fork();
     if (worker == -1) {
       err(1, "failed to fork worker");
     } else if (worker == 0) {
       char buf;
+      // Allow the tracer process, which is not a direct process ancestor, to
+      // be able to use ptrace(2) on this process when Yama LSM is active.
+      if (prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY, 0, 0, 0) == -1) {
+        // if Yama is off prctl(PR_SET_PTRACER) returns EINVAL - don't log in this
+        // case since it's expected behaviour.
+        if (errno != EINVAL) {
+          err(1, "prctl(PR_SET_PTRACER, PR_SET_PTRACER_ANY) failed for pid %d", getpid());
+        }
+      }
+      worker_pipe_setup_write.reset();
+
       worker_pipe_write.reset();
       TEMP_FAILURE_RETRY(read(worker_pipe_read.get(), &buf, sizeof(buf)));
       exit(0);
+    } else {
+      // Wait until the Yama ptracer is setup.
+      char buf;
+      worker_pipe_setup_write.reset();
+      TEMP_FAILURE_RETRY(read(worker_pipe_setup_read.get(), &buf, sizeof(buf)));
     }
   }
 
