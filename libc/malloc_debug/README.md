@@ -5,14 +5,10 @@ Malloc debug is a method of debugging native memory problems. It can help
 detect memory corruption, memory leaks, and use after free issues.
 
 This documentation describes how to enable this feature on Android N or later
-versions of the Android OS.
+versions of the Android OS. (See the "Examples" section.)
 
 The documentation for malloc debug on older versions of Android is
 [here](README_marshmallow_and_earlier.md).
-
-In order to enable malloc debug, you must be able to set special system
-properties using the setprop command from the shell. This requires the
-ability to run as root on the device.
 
 When malloc debug is enabled, it works by adding a shim layer that replaces
 the normal allocation calls. The replaced calls are:
@@ -559,7 +555,13 @@ contain any data.
 
 ### For app developers
 
-Enable malloc debug for a specific program/application (Android O or later):
+App developers should check the NDK documentation about
+[wrap.sh](https://developer.android.com/ndk/guides/wrap-script.html)
+for the best way to use malloc debug in Android O or later on non-rooted
+devices.
+
+If you do have a rooted device, you can enable malloc debug for a specific
+program/application (Android O or later):
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
 
