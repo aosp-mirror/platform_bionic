@@ -463,10 +463,19 @@ TEST(spawn, signal_stress) {
   // because our sigset_t was too small.
   ScopedSignalHandler ssh(SIGRTMIN, [](int) { ASSERT_EQ(getpid(), parent); });
 
+  const size_t pid_count = 128;
+  pid_t spawned_pids[pid_count];
+
   ExecTestHelper eth;
   eth.SetArgs({"true", nullptr});
-  for (size_t i = 0; i < 128; ++i) {
-    posix_spawn(nullptr, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr);
+  for (size_t i = 0; i < pid_count; ++i) {
+    pid_t spawned_pid;
+    ASSERT_EQ(0, posix_spawn(&spawned_pid, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr));
+    spawned_pids[i] = spawned_pid;
+  }
+
+  for (pid_t spawned_pid : spawned_pids) {
+    ASSERT_EQ(spawned_pid, TEMP_FAILURE_RETRY(waitpid(spawned_pid, nullptr, 0)));
   }
 
   AssertChildExited(pid, 99);
