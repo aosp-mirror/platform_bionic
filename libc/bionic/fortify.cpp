@@ -80,17 +80,17 @@
 
 int __FD_ISSET_chk(int fd, const fd_set* set, size_t set_size) {
   __check_fd_set("FD_ISSET", fd, set_size);
-  return FD_ISSET(fd, set);
+  return __FD_ISSET(fd, set);
 }
 
 void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_CLR", fd, set_size);
-  FD_CLR(fd, set);
+  __FD_CLR(fd, set);
 }
 
 void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_SET", fd, set_size);
-  FD_SET(fd, set);
+  __FD_SET(fd, set);
 }
 
 char* __fgets_chk(char* dst, int supplied_size, FILE* stream, size_t dst_len_from_compiler) {
