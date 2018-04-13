@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c37ec716_18d4bf28",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-13T21:59:06Z",
+      "side": 1,
+      "message": "would a __BIONIC_NO_SYS_SELECT_FORTIFY similar to the existing __BIONIC_NO_STDIO_FORTIFY be better? it would avoid having two copies of these.",
+      "revId": "44123d1626d1e49bb5119c8958c12780340c3842",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
