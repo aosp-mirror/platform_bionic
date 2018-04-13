@@ -16,6 +16,24 @@
       "revId": "44123d1626d1e49bb5119c8958c12780340c3842",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d5a72f6_3d357fe2",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-04-13T22:10:38Z",
+      "side": 1,
+      "message": "Alternatively, #define __FD_ISSET to the real thing, and #define FD_ISSET to either __FD_ISSET or __FD_ISSET_chk?",
+      "parentUuid": "c37ec716_18d4bf28",
+      "revId": "44123d1626d1e49bb5119c8958c12780340c3842",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
