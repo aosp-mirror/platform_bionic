@@ -28,7 +28,7 @@
 #define _GNU_SOURCE 1
 #include <sched.h>
 
-int __sched_cpucount(size_t setsize, cpu_set_t* set) {
+int __sched_cpucount(size_t setsize, const cpu_set_t* set) {
   int nn = 0;
   int nn_max = setsize / sizeof(__CPU_BITTYPE);
   int count = 0;
