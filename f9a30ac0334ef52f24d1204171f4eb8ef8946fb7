@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61287e38_d677d355",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-16T17:04:25Z",
+      "side": 1,
+      "message": "but what\u0027s the bug here, and what should this look like long-term?\n\n(well, medium-term... long term we\u0027ll support ELF TLS and delete this!)",
+      "revId": "f9a30ac0334ef52f24d1204171f4eb8ef8946fb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
