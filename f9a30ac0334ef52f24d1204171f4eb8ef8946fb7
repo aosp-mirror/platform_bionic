@@ -16,6 +16,24 @@
       "revId": "f9a30ac0334ef52f24d1204171f4eb8ef8946fb7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f080eb66_5b251a33",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2018-04-16T17:15:49Z",
+      "side": 1,
+      "message": "Since Android does not have __tls_get_addr yet, -fno-emulated-tls is only a test of compiler. I think lld is correct to reject this at link time. But if the purpose of this test is to check at run-time, allow_undefined-symbols is the trick to get the linked library.",
+      "parentUuid": "61287e38_d677d355",
+      "revId": "f9a30ac0334ef52f24d1204171f4eb8ef8946fb7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
