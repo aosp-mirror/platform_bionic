@@ -63,15 +63,20 @@ void __FD_CLR_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 void __FD_SET_chk(int, fd_set*, size_t) __INTRODUCED_IN(21);
 int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
 
-#if defined(__BIONIC_FORTIFY) && __ANDROID_API__ >= __ANDROID_API_L__
+#define __FD_CLR(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd))
+#define __FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))
+#define __FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
+
+
+#if __ANDROID_API__ >= __ANDROID_API_L__
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
 #define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
 #else
-#define FD_CLR(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] &= ~__FDMASK(fd))
-#define FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))
-#define FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
-#endif /* defined(__BIONIC_FORTIFY) && __ANDROID_API >= 21 */
+#define FD_CLR(fd, set) __FD_CLR(fd, set)
+#define FD_SET(fd, set) __FD_SET(fd, set)
+#define FD_ISSET(fd, set) __FD_ISSET(fd, set)
+#endif /* __ANDROID_API >= 21 */
 
 int select(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, struct timeval* __timeout);
 int pselect(int __fd_count, fd_set* __read_fds, fd_set* __write_fds, fd_set* __exception_fds, const struct timespec* __timeout, const sigset_t* __mask);
