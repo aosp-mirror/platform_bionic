@@ -140,6 +140,10 @@ cc_binary {
         "-Wl,-soname,ld-android.so",
     ],
 
+    // lld bug: https://bugs.llvm.org/show_bug.cgi?id=36295
+    // error: symbol __aeabi_*@@LIBC_N has undefined version LIBC_N
+    use_clang_lld: false,
+
     cflags: [
         "-fno-stack-protector",
         "-Wstrict-overflow=5",
