@@ -47,6 +47,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elf_tls_test_library.cpp"],
     cflags: ["-fno-emulated-tls"],
+    allow_undefined_symbols: true, // __tls_get_addr is undefined.
 }
 
 // -----------------------------------------------------------------------------
