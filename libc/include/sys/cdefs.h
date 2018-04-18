@@ -289,14 +289,22 @@
 #  endif
 #endif
 
+// As we move some FORTIFY checks to be always on, __bos needs to be
+// always available.
 #if defined(__BIONIC_FORTIFY)
 #  if _FORTIFY_SOURCE == 2
 #    define __bos_level 1
 #  else
 #    define __bos_level 0
 #  endif
-#  define __bosn(s, n) __builtin_object_size((s), (n))
-#  define __bos(s) __bosn((s), __bos_level)
+#else
+#  define __bos_level 0
+#endif
+
+#define __bosn(s, n) __builtin_object_size((s), (n))
+#define __bos(s) __bosn((s), __bos_level)
+
+#if defined(__BIONIC_FORTIFY)
 #  define __bos0(s) __bosn((s), 0)
 #  if defined(__clang__)
 #    define __pass_object_size_n(n) __attribute__((pass_object_size(n)))
