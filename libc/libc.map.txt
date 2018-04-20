@@ -734,7 +734,7 @@ LIBC {
     posix_fallocate; # introduced=21
     posix_fallocate64; # introduced=21
     posix_madvise; # introduced=23
-    posix_memalign; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    posix_memalign; # introduced=17
     posix_openpt; # introduced=21
     ppoll; # introduced=21
     prctl;
