@@ -77,7 +77,7 @@ long long strtoll(const char* __s, char** __end_ptr, int __base);
 unsigned long strtoul(const char* __s, char** __end_ptr, int __base);
 unsigned long long strtoull(const char* __s, char** __end_ptr, int __base);
 
-int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(16);
+int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(17);
 
 void* aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
