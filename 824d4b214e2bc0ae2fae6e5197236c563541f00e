@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "40da7873_7154cb5f",
+        "filename": "libc/kernel/tools/generate_uapi_headers.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-04-24T20:02:44Z",
+      "side": 1,
+      "message": "currently\n\nbut maybe just replace this with a link to the bug instead?",
+      "range": {
+        "startLine": 251,
+        "startChar": 21,
+        "endLine": 251,
+        "endChar": 28
+      },
+      "revId": "824d4b214e2bc0ae2fae6e5197236c563541f00e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
