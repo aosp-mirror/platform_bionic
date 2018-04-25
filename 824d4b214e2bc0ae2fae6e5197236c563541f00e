@@ -22,6 +22,30 @@
       "revId": "824d4b214e2bc0ae2fae6e5197236c563541f00e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "530c770f_4aa23aa3",
+        "filename": "libc/kernel/tools/generate_uapi_headers.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-04-25T19:23:21Z",
+      "side": 1,
+      "message": "I changed the comment and reference the bug now.",
+      "parentUuid": "40da7873_7154cb5f",
+      "range": {
+        "startLine": 251,
+        "startChar": 21,
+        "endLine": 251,
+        "endChar": 28
+      },
+      "revId": "824d4b214e2bc0ae2fae6e5197236c563541f00e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
