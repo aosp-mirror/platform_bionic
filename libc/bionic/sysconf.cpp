@@ -221,9 +221,7 @@ long sysconf(int name) {
     case _SC_LEVEL4_CACHE_LINESIZE:   return 0;
 
     default:
-      // Posix says EINVAL is the only error that shall be returned,
-      // but glibc uses ENOSYS.
-      errno = ENOSYS;
+      errno = EINVAL;
       return -1;
   }
 }
