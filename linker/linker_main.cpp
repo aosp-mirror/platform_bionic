@@ -414,6 +414,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
+  // Store a pointer to the kernel argument block in a TLS slot to be
+  // picked up by the libc constructor.
+  __get_tls()[TLS_SLOT_BIONIC_PREINIT] = &args;
+
   si->call_pre_init_constructors();
 
   /* After the prelink_image, the si->load_bias is initialized.
