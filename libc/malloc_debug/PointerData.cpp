@@ -392,10 +392,12 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
     FrameInfoType* b_frame = b.frame_info;
     if (a_frame == nullptr && b_frame != nullptr) {
       return false;
-    }
-    if (a_frame != nullptr && b_frame == nullptr) {
+    } else if (a_frame != nullptr && b_frame == nullptr) {
       return true;
+    } else if (a_frame == nullptr && b_frame == nullptr) {
+      return a.pointer < b.pointer;
     }
+
     // Put the pointers with longest backtrace first.
     if (a_frame->frames.size() != b_frame->frames.size()) {
       return a_frame->frames.size() > b_frame->frames.size();
