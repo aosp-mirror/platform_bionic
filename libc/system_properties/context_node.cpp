@@ -51,7 +51,7 @@ bool ContextNode::Open(bool access_rw, bool* fsetxattr_failed) {
 
   char filename[PROP_FILENAME_MAX];
   int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  if (len < 0 || len >= PROP_FILENAME_MAX) {
     lock_.unlock();
     return false;
   }
@@ -86,7 +86,7 @@ void ContextNode::ResetAccess() {
 bool ContextNode::CheckAccess() {
   char filename[PROP_FILENAME_MAX];
   int len = async_safe_format_buffer(filename, sizeof(filename), "%s/%s", filename_, context_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  if (len < 0 || len >= PROP_FILENAME_MAX) {
     return false;
   }
 
