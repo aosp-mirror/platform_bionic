@@ -68,7 +68,7 @@ bool ContextsSerialized::InitializeContextNodes() {
 bool ContextsSerialized::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
   int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial", filename_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  if (len < 0 || len >= PROP_FILENAME_MAX) {
     serial_prop_area_ = nullptr;
     return false;
   }
