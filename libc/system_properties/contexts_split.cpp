@@ -196,7 +196,7 @@ static int read_spec_entries(char* line_buf, int num_args, ...) {
 bool ContextsSplit::MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed) {
   char filename[PROP_FILENAME_MAX];
   int len = async_safe_format_buffer(filename, sizeof(filename), "%s/properties_serial", filename_);
-  if (len < 0 || len > PROP_FILENAME_MAX) {
+  if (len < 0 || len >= PROP_FILENAME_MAX) {
     serial_prop_area_ = nullptr;
     return false;
   }

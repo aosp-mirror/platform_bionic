@@ -67,7 +67,7 @@ bool SystemProperties::Init(const char* filename) {
     return true;
   }
 
-  if (strlen(filename) > PROP_FILENAME_MAX) {
+  if (strlen(filename) >= PROP_FILENAME_MAX) {
     return false;
   }
   strcpy(property_filename_, filename);
@@ -95,7 +95,7 @@ bool SystemProperties::Init(const char* filename) {
 }
 
 bool SystemProperties::AreaInit(const char* filename, bool* fsetxattr_failed) {
-  if (strlen(filename) > PROP_FILENAME_MAX) {
+  if (strlen(filename) >= PROP_FILENAME_MAX) {
     return false;
   }
   strcpy(property_filename_, filename);
