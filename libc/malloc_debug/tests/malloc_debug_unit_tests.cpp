@@ -1756,6 +1756,53 @@ TEST_F(MallocDebugTest, backtrace_same_stack_mix_zygote) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, backtrace_frame_data_nullptr_same_size) {
+  Init("backtrace=4");
+
+  size_t individual_size = GetInfoEntrySize(4);
+
+  void* pointers[4];
+  pointers[0] = debug_malloc(100);
+  ASSERT_TRUE(pointers[0] != nullptr);
+  pointers[1] = debug_malloc(100);
+  ASSERT_TRUE(pointers[1] != nullptr);
+  pointers[2] = debug_malloc(100);
+  ASSERT_TRUE(pointers[2] != nullptr);
+  pointers[3] = debug_malloc(100);
+  ASSERT_TRUE(pointers[3] != nullptr);
+
+  uint8_t* info;
+  size_t overall_size;
+  size_t info_size;
+  size_t total_memory;
+  size_t backtrace_size;
+
+  debug_get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
+  ASSERT_TRUE(info != nullptr);
+  ASSERT_EQ(individual_size, overall_size);
+  EXPECT_EQ(individual_size, info_size);
+  EXPECT_EQ(400U, total_memory);
+  EXPECT_EQ(4U, backtrace_size);
+
+  EXPECT_EQ(100U, *reinterpret_cast<size_t*>(&info[0]));
+  EXPECT_EQ(4U, *reinterpret_cast<size_t*>(&info[sizeof(size_t)]));
+  uintptr_t* ips = reinterpret_cast<uintptr_t*>(&info[2 * sizeof(size_t)]);
+  EXPECT_EQ(0U, ips[0]);
+
+  debug_free_malloc_leak_info(info);
+
+  debug_free(pointers[0]);
+  debug_free(pointers[1]);
+  debug_free(pointers[2]);
+  debug_free(pointers[3]);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the backtrace.\n",
+      SIGRTMAX - 17, getpid());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, overflow) {
   Init("guard fill_on_free");
 
