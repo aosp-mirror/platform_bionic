@@ -45,8 +45,8 @@ static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name,
 constexpr auto KB = 1024;
 
 typedef struct {
-  long cpu_to_lock;
-  long num_iterations;
+  int cpu_to_lock = -1;
+  long num_iterations = 0;
   std::string xmlpath;
   std::vector<std::string> extra_benchmarks;
 } bench_opts_t;
@@ -60,4 +60,4 @@ wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbyte
 
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte);
 
-bool LockToCPU(long cpu_to_lock);
+bool LockToCPU(int cpu_to_lock);

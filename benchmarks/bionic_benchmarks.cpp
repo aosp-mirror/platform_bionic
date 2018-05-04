@@ -139,9 +139,6 @@ bench_opts_t ParseOpts(int argc, char** argv) {
   int opt;
   int option_index = 0;
 
-  opts.cpu_to_lock = LONG_MAX;
-  opts.num_iterations = 0;
-
   // To make this parser handle the benchmark options silently:
   extern int opterr;
   opterr = 0;
@@ -204,8 +201,9 @@ bench_opts_t ParseOpts(int argc, char** argv) {
 }
 
 // This is a wrapper for every function call for per-benchmark cpu pinning.
-void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, long cpu_to_lock) {
-  if (cpu_to_lock != LONG_MAX) LockToCPU(cpu_to_lock);
+void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, int cpu_to_lock) {
+  if (cpu_to_lock >= 0) LockToCPU(cpu_to_lock);
+
   // To avoid having to link against Google benchmarks in libutil,
   // benchmarks are kept without parameter information, necessitating this cast.
   reinterpret_cast<void(*) (benchmark::State&)>(func_to_bench)(state);
@@ -311,11 +309,11 @@ void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
                                                          secondary_opts.num_iterations;
-  int cpu_to_use = INT_MAX;
-  if (primary_opts.cpu_to_lock != INT_MAX) {
+  int cpu_to_use = -1;
+  if (primary_opts.cpu_to_lock >= 0) {
     cpu_to_use = primary_opts.cpu_to_lock;
 
-  } else if (secondary_opts.cpu_to_lock != INT_MAX) {
+  } else if (secondary_opts.cpu_to_lock >= 0) {
     cpu_to_use = secondary_opts.cpu_to_lock;
   }
 
@@ -398,16 +396,12 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
       int temp;
       num_iterations_elem->QueryIntText(&temp);
       xml_opts.num_iterations = temp;
-    } else {
-      xml_opts.num_iterations = 0;
     }
     auto* cpu_to_lock_elem = fn->FirstChildElement("cpu");
     if (cpu_to_lock_elem) {
       int temp;
       cpu_to_lock_elem->QueryIntText(&temp);
       xml_opts.cpu_to_lock = temp;
-    } else {
-      xml_opts.cpu_to_lock = INT_MAX;
     }
 
     RegisterGoogleBenchmarks(xml_opts, cmdline_opts, fn_name, run_args);
