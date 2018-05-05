@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20a474b2_2d951548",
+        "filename": "benchmarks/tests/interface_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 279,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-05T00:22:33Z",
+      "side": 1,
+      "message": "(i still think this test does more harm than good... it\u0027s overly-specific to something that naturally changes a lot [and where change is a good thing].)",
+      "range": {
+        "startLine": 275,
+        "startChar": 0,
+        "endLine": 279,
+        "endChar": 0
+      },
+      "revId": "76de6d722b7c13a951801aa3dcb6d3171454f3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ba3a3ac_500cc9d7",
+        "filename": "benchmarks/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-05T00:22:33Z",
+      "side": 1,
+      "message": "didn\u0027t `int` make more sense than `long`? should we move the other direction?",
+      "range": {
+        "startLine": 68,
+        "startChar": 15,
+        "endLine": 68,
+        "endChar": 19
+      },
+      "revId": "76de6d722b7c13a951801aa3dcb6d3171454f3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
