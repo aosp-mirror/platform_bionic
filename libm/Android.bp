@@ -179,12 +179,6 @@ cc_library {
         // The FreeBSD complex functions appear to be better, but they're incomplete.
         // We take the FreeBSD implementations when they exist, but fill out the rest
         // of <complex.h> from NetBSD...
-        "upstream-netbsd/lib/libm/complex/cacoshl.c",
-        "upstream-netbsd/lib/libm/complex/cacosl.c",
-        "upstream-netbsd/lib/libm/complex/casinhl.c",
-        "upstream-netbsd/lib/libm/complex/casinl.c",
-        "upstream-netbsd/lib/libm/complex/catanhl.c",
-        "upstream-netbsd/lib/libm/complex/catanl.c",
         "upstream-netbsd/lib/libm/complex/ccoshl.c",
         "upstream-netbsd/lib/libm/complex/ccosl.c",
         "upstream-netbsd/lib/libm/complex/cephes_subrl.c",
@@ -218,6 +212,7 @@ cc_library {
     multilib: {
         lib64: {
             srcs: [
+                "upstream-freebsd/lib/msun/src/catrigl.c",
                 "upstream-freebsd/lib/msun/src/e_acosl.c",
                 "upstream-freebsd/lib/msun/src/e_acoshl.c",
                 "upstream-freebsd/lib/msun/src/e_asinl.c",
