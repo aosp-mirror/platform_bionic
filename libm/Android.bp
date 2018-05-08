@@ -162,6 +162,8 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_significand.c",
         "upstream-freebsd/lib/msun/src/s_significandf.c",
         "upstream-freebsd/lib/msun/src/s_sin.c",
+        "upstream-freebsd/lib/msun/src/s_sincos.c",
+        "upstream-freebsd/lib/msun/src/s_sincosf.c",
         "upstream-freebsd/lib/msun/src/s_sinf.c",
         "upstream-freebsd/lib/msun/src/s_tan.c",
         "upstream-freebsd/lib/msun/src/s_tanf.c",
@@ -201,7 +203,6 @@ cc_library {
 
         // Functionality not in the BSDs.
         "significandl.c",
-        "sincos.c",
         "fake_long_double.c",
 
         // Home-grown stuff.
@@ -250,6 +251,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_rintl.c",
                 "upstream-freebsd/lib/msun/src/s_roundl.c",
                 "upstream-freebsd/lib/msun/src/s_scalbnl.c",
+                "upstream-freebsd/lib/msun/src/s_sincosl.c",
                 "upstream-freebsd/lib/msun/src/e_sinhl.c",
                 "upstream-freebsd/lib/msun/src/s_sinl.c",
                 "upstream-freebsd/lib/msun/src/s_tanhl.c",
