@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "162e4a36_0c0a3487",
+        "filename": "libm/fake_long_double.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-08T22:27:07Z",
+      "side": 0,
+      "message": "This was added in another cl and is removed in this one. I didn\u0027t see a definition of this function, though.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 70
+      },
+      "revId": "b2017215a7e247e63c98899bb9314b3eebb14460",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
