@@ -22,6 +22,30 @@
       "revId": "071f53eee00f26af3925a6204599e876309d3e7b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a8491d6_fe09ebcf",
+        "filename": "libc/bionic/ftw.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-08T22:20:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6390c01_73464256",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 1
+      },
+      "revId": "071f53eee00f26af3925a6204599e876309d3e7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
