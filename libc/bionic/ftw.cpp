@@ -25,7 +25,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-static int do_nftw(const char *path,
+extern "C" FTS* __fts_open(char* const*, int, int (*)(const FTSENT**, const FTSENT**));
+
+static int do_nftw(const char* path,
                    int (*ftw_fn)(const char*, const struct stat*, int),
                    int (*nftw_fn)(const char*, const struct stat*, int, FTW*),
                    int nfds,
@@ -47,7 +49,7 @@ static int do_nftw(const char *path,
 
   // Call fts_open.
   char* const paths[2] = { const_cast<char*>(path), nullptr };
-  FTS* fts = fts_open(paths, fts_options, nullptr);
+  FTS* fts = __fts_open(paths, fts_options | FTS_FOR_FTW, nullptr);
   if (fts == nullptr) {
     return -1;
   }
@@ -64,6 +66,9 @@ static int do_nftw(const char *path,
         if (postorder || access(cur->fts_path, R_OK) == -1) continue;
         fn_flag = FTW_D;
         break;
+      case FTS_DC:
+        // POSIX says nftw "shall not report" directories causing loops (http://b/31152735).
+        continue;
       case FTS_DNR:
         fn_flag = FTW_DNR;
         break;
@@ -85,10 +90,6 @@ static int do_nftw(const char *path,
       case FTS_SLNONE:
         fn_flag = (nftw_fn != nullptr) ? FTW_SLN : FTW_NS;
         break;
-      case FTS_DC:
-        errno = ELOOP;
-        error = -1;
-        continue;
       default:
         error = -1;
         continue;
