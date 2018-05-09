@@ -168,7 +168,11 @@ TEST(dl, exec_without_ld_config_file) {
 }
 
 #if defined(__BIONIC__)
+extern "C" void android_get_LD_LIBRARY_PATH(char*, size_t);
 static void create_ld_config_file(const char* config_file) {
+  char default_search_paths[PATH_MAX];
+  android_get_LD_LIBRARY_PATH(default_search_paths, sizeof(default_search_paths));
+
   std::ofstream fout(config_file, std::ios::out);
   fout << "dir.test = " << get_testlib_root() << "/ld_config_test_helper/" << std::endl
        << "[test]" << std::endl
@@ -176,7 +180,7 @@ static void create_ld_config_file(const char* config_file) {
        << "namespace.default.search.paths = " << get_testlib_root() << std::endl
        << "namespace.default.links = ns2" << std::endl
        << "namespace.default.link.ns2.shared_libs = libc.so:libm.so:libdl.so:ld_config_test_helper_lib1.so" << std::endl
-       << "namespace.ns2.search.paths = /system/${LIB}:" << get_testlib_root() << "/ns2" << std::endl;
+       << "namespace.ns2.search.paths = " << default_search_paths << ":" << get_testlib_root() << "/ns2" << std::endl;
   fout.close();
 }
 #endif
