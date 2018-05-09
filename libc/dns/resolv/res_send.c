@@ -100,6 +100,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #ifdef ANDROID_CHANGES
 #include "resolv_netid.h"
 #include "resolv_private.h"
+#include "private/android_filesystem_config.h"
 #else
 #include <resolv.h>
 #endif
@@ -820,6 +821,7 @@ send_vc(res_state statp,
 				return (-1);
 			}
 		}
+		fchown(statp->_vcsock, AID_DNS, -1);
 		if (statp->_mark != MARK_UNSET) {
 			if (setsockopt(statp->_vcsock, SOL_SOCKET,
 				    SO_MARK, &statp->_mark, sizeof(statp->_mark)) < 0) {
@@ -1122,6 +1124,7 @@ send_dg(res_state statp,
 			}
 		}
 
+		fchown(EXT(statp).nssocks[ns], AID_DNS, -1);
 		if (statp->_mark != MARK_UNSET) {
 			if (setsockopt(EXT(statp).nssocks[ns], SOL_SOCKET,
 					SO_MARK, &(statp->_mark), sizeof(statp->_mark)) < 0) {
