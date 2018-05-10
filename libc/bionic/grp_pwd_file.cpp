@@ -39,7 +39,7 @@
 // allocations.  Note that these files and the strings contained within them are explicitly not
 // null-terminated.  ':'s are used to deliminate fields and '\n's are used to deliminate lines.
 // There is a check that the file ends with '\n', such that terminating loops at '\n' ensures that
-// memory will be not ready before the mmap region.
+// memory will be not read beyond the mmap region.
 
 namespace {
 
