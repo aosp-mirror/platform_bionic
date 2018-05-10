@@ -94,7 +94,7 @@ TEST(grp_pwd_file, passwd_file_one_entry) {
   static const char test_string[] = "name:password:1:2:user_info:dir:shell\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  PasswdFile passwd_file(file.filename);
+  PasswdFile passwd_file(file.filename, nullptr);
   FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "name", 1, 2, "dir", "shell");
@@ -114,7 +114,7 @@ TEST(grp_pwd_file, group_file_one_entry) {
   static const char test_string[] = "name:password:1:one,two,three\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  GroupFile group_file(file.filename);
+  GroupFile group_file(file.filename, nullptr);
   FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "name", 1);
@@ -150,7 +150,7 @@ TEST(grp_pwd_file, passwd_file_many_entries) {
 
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  PasswdFile passwd_file(file.filename);
+  PasswdFile passwd_file(file.filename, nullptr);
   FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "first", 1, 2, "dir", "shell");
@@ -186,7 +186,7 @@ TEST(grp_pwd_file, group_file_many_entries) {
 
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  GroupFile group_file(file.filename);
+  GroupFile group_file(file.filename, nullptr);
   FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "first", 1);
@@ -195,6 +195,50 @@ TEST(grp_pwd_file, group_file_many_entries) {
 
   EXPECT_FALSE(group_file.FindByName("not_name", nullptr));
   EXPECT_FALSE(group_file.FindById(799, nullptr));
+
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
+}
+
+TEST(grp_pwd_file, passwd_file_required_prefix) {
+#if defined(__BIONIC__)
+  TemporaryFile file;
+  ASSERT_NE(-1, file.fd);
+  static const char test_string[] =
+      "name:password:1:2:user_info:dir:shell\n"
+      "vendor_name:password:3:4:user_info:dir:shell\n";
+  write(file.fd, test_string, sizeof(test_string) - 1);
+
+  PasswdFile passwd_file(file.filename, "vendor_");
+  FileUnmapper unmapper(passwd_file);
+
+  EXPECT_FALSE(passwd_file.FindByName("name", nullptr));
+  EXPECT_FALSE(passwd_file.FindById(1, nullptr));
+
+  FindAndCheckPasswdEntry(&passwd_file, "vendor_name", 3, 4, "dir", "shell");
+
+#else   // __BIONIC__
+  GTEST_LOG_(INFO) << "This test does nothing.\n";
+#endif  // __BIONIC__
+}
+
+TEST(grp_pwd_file, group_file_required_prefix) {
+#if defined(__BIONIC__)
+  TemporaryFile file;
+  ASSERT_NE(-1, file.fd);
+  static const char test_string[] =
+      "name:password:1:one,two,three\n"
+      "vendor_name:password:2:one,two,three\n";
+  write(file.fd, test_string, sizeof(test_string) - 1);
+
+  GroupFile group_file(file.filename, "vendor_");
+  FileUnmapper unmapper(group_file);
+
+  EXPECT_FALSE(group_file.FindByName("name", nullptr));
+  EXPECT_FALSE(group_file.FindById(1, nullptr));
+
+  FindAndCheckGroupEntry(&group_file, "vendor_name", 2);
 
 #else   // __BIONIC__
   GTEST_LOG_(INFO) << "This test does nothing.\n";
