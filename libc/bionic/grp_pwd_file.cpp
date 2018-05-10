@@ -30,8 +30,11 @@
 
 #include <fcntl.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
+
+#include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
 
@@ -189,7 +192,8 @@ struct GroupLine {
 
 }  // namespace
 
-MmapFile::MmapFile(const char* filename) : filename_(filename) {
+MmapFile::MmapFile(const char* filename, const char* required_prefix)
+    : filename_(filename), required_prefix_(required_prefix) {
   lock_.init(false);
 }
 
@@ -266,6 +270,18 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
 
   while (line_beginning < end) {
     line_beginning = ParseLine(line_beginning, end, line->fields, line->kNumFields);
+    // To comply with Treble, users/groups from the vendor partition need to be prefixed with
+    // vendor_.
+    if (required_prefix_ != nullptr) {
+      if (strncmp(line->fields[0], required_prefix_, strlen(required_prefix_)) != 0) {
+        char name[kGrpPwdBufferSize];
+        CopyFieldToString(name, line->fields[0], sizeof(name));
+        async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                              "Found user/group name '%s' in '%s' without required prefix '%s'",
+                              name, filename_, required_prefix_);
+        continue;
+      }
+    }
     if (predicate(line)) return true;
   }
 
@@ -303,7 +319,8 @@ bool MmapFile::FindByName(const char* name, Line* line) {
   });
 }
 
-PasswdFile::PasswdFile(const char* filename) : mmap_file_(filename) {
+PasswdFile::PasswdFile(const char* filename, const char* required_prefix)
+    : mmap_file_(filename, required_prefix) {
 }
 
 bool PasswdFile::FindById(uid_t id, passwd_state_t* passwd_state) {
@@ -318,7 +335,8 @@ bool PasswdFile::FindByName(const char* name, passwd_state_t* passwd_state) {
   return mmap_file_.FindByName(name, &passwd_line) && passwd_line.ToPasswdState(passwd_state);
 }
 
-GroupFile::GroupFile(const char* filename) : mmap_file_(filename) {
+GroupFile::GroupFile(const char* filename, const char* required_prefix)
+    : mmap_file_(filename, required_prefix) {
 }
 
 bool GroupFile::FindById(gid_t id, group_state_t* group_state) {
