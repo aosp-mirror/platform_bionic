@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "feba7771_1fd723eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1247518
+      },
+      "writtenOn": "2018-05-10T20:56:24Z",
+      "side": 1,
+      "message": "without",
+      "range": {
+        "startLine": 10,
+        "startChar": 65,
+        "endLine": 10,
+        "endChar": 69
+      },
+      "revId": "6211f615f124a11466c938b9ad306905770e46f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "042811fb_b3315dba",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1247518
+      },
+      "writtenOn": "2018-05-10T20:56:24Z",
+      "side": 1,
+      "message": "perhaps a little more noisy on failure?\nparticulary given init\u0027s current behavior of falling back to root if the username isn\u0027t found",
+      "range": {
+        "startLine": 275,
+        "startChar": 1,
+        "endLine": 275,
+        "endChar": 17
+      },
+      "revId": "6211f615f124a11466c938b9ad306905770e46f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
