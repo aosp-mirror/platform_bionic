@@ -70,21 +70,12 @@ void* reallocarray(void*, size_t, size_t);
 #define	BNAMES		2		/* fts_children, names only */
 #define	BREAD		3		/* fts_read */
 
-FTS *
-fts_open(char * const *argv, int options,
-    int (*compar)(const FTSENT **, const FTSENT **))
-{
+FTS* __fts_open(char* const* argv, int options, int (*compar)(const FTSENT**, const FTSENT**)) {
 	FTS *sp;
 	FTSENT *p, *root;
 	int nitems;
 	FTSENT *parent, *tmp;
 	size_t len;
-
-	/* Options check. */
-	if (options & ~FTS_OPTIONMASK) {
-		errno = EINVAL;
-		return (NULL);
-	}
 
 	/* Allocate/initialize the stream */
 	if ((sp = calloc(1, sizeof(FTS))) == NULL)
@@ -122,6 +113,9 @@ fts_open(char * const *argv, int options,
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
 		p->fts_info = fts_stat(sp, p, ISSET(FTS_COMFOLLOW), -1);
+
+		// For ftw/nftw we need to fail early: http://b/31152735
+		if ((options & FTS_FOR_FTW) != 0 && p->fts_info == FTS_NS) goto mem3;
 
 		/* Command-line "." and ".." are real directories. */
 		if (p->fts_info == FTS_DOT)
@@ -164,7 +158,7 @@ fts_open(char * const *argv, int options,
 	 * and ".." are all fairly nasty problems.  Note, if we can't get the
 	 * descriptor we run anyway, just more slowly.
 	 */
-	if (!ISSET(FTS_NOCHDIR) && (sp->fts_rfd = open(".", O_RDONLY, 0)) < 0)
+	if (!ISSET(FTS_NOCHDIR) && (sp->fts_rfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0)
 		SET(FTS_NOCHDIR);
 
 	if (nitems == 0)
@@ -227,10 +221,8 @@ fts_close(FTS *sp)
 	rfd = ISSET(FTS_NOCHDIR) ? -1 : sp->fts_rfd;
 
 	/* Free up child linked list, sort array, path buffer, stream ptr.*/
-	if (sp->fts_child)
-		fts_lfree(sp->fts_child);
-	if (sp->fts_array)
-		free(sp->fts_array);
+	fts_lfree(sp->fts_child);
+	free(sp->fts_array);
 	free(sp->fts_path);
 	free(sp);
 
@@ -289,7 +281,7 @@ fts_read(FTS *sp)
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
 		p->fts_info = fts_stat(sp, p, 1, -1);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-			if ((p->fts_symfd = open(".", O_RDONLY, 0)) < 0) {
+			if ((p->fts_symfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0) {
 				p->fts_errno = errno;
 				p->fts_info = FTS_ERR;
 			} else
@@ -378,8 +370,7 @@ next:	tmp = p;
 		if (p->fts_instr == FTS_FOLLOW) {
 			p->fts_info = fts_stat(sp, p, 1, -1);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-				if ((p->fts_symfd =
-				    open(".", O_RDONLY, 0)) < 0) {
+				if ((p->fts_symfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0) {
 					p->fts_errno = errno;
 					p->fts_info = FTS_ERR;
 				} else
@@ -498,8 +489,7 @@ fts_children(FTS *sp, int instr)
 		return (NULL);
 
 	/* Free up any previous child list. */
-	if (sp->fts_child)
-		fts_lfree(sp->fts_child);
+	fts_lfree(sp->fts_child);
 
 	if (instr == FTS_NAMEONLY) {
 		SET(FTS_NAMEONLY);
@@ -518,7 +508,7 @@ fts_children(FTS *sp, int instr)
 	    ISSET(FTS_NOCHDIR))
 		return (sp->fts_child = fts_build(sp, instr));
 
-	if ((fd = open(".", O_RDONLY, 0)) < 0)
+	if ((fd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0)
 		return (NULL);
 	sp->fts_child = fts_build(sp, instr);
 	if (fchdir(fd)) {
@@ -664,8 +654,7 @@ fts_build(FTS *sp, int type)
 				 * structures already allocated.
 				 */
 mem1:				saved_errno = errno;
-				if (p)
-					free(p);
+				free(p);
 				fts_lfree(head);
 				(void)closedir(dirp);
 				cur->fts_info = FTS_ERR;
@@ -817,9 +806,9 @@ fts_stat(FTS *sp, FTSENT *p, int follow, int dfd)
 	 * fail, set the errno from the stat call.
 	 */
 	if (ISSET(FTS_LOGICAL) || follow) {
-		if (fstatat(dfd, path, sbp, 0)) {
+		if (fstatat(dfd, path, sbp, 0) == -1) {
 			saved_errno = errno;
-			if (!fstatat(dfd, path, sbp, AT_SYMLINK_NOFOLLOW)) {
+			if (fstatat(dfd, path, sbp, AT_SYMLINK_NOFOLLOW) == 0) {
 				errno = 0;
 				return (FTS_SLNONE);
 			}
@@ -886,8 +875,7 @@ fts_sort(FTS *sp, FTSENT *head, int nitems)
 		sp->fts_nitems = nitems + 40;
 		if ((a = reallocarray(sp->fts_array,
 		    sp->fts_nitems, sizeof(FTSENT *))) == NULL) {
-			if (sp->fts_array)
-				free(sp->fts_array);
+			free(sp->fts_array);
 			sp->fts_array = NULL;
 			sp->fts_nitems = 0;
 			return (head);
@@ -961,8 +949,7 @@ fts_palloc(FTS *sp, size_t more)
 	 */
 	more += 256;
 	if (sp->fts_pathlen + more < sp->fts_pathlen) {
-		if (sp->fts_path)
-			free(sp->fts_path);
+		free(sp->fts_path);
 		sp->fts_path = NULL;
 		errno = ENAMETOOLONG;
 		return (1);
@@ -970,8 +957,7 @@ fts_palloc(FTS *sp, size_t more)
 	sp->fts_pathlen += more;
 	p = realloc(sp->fts_path, sp->fts_pathlen);
 	if (p == NULL) {
-		if (sp->fts_path)
-			free(sp->fts_path);
+		free(sp->fts_path);
 		sp->fts_path = NULL;
 		return (1);
 	}
@@ -1032,7 +1018,7 @@ fts_safe_changedir(FTS *sp, FTSENT *p, int fd, char *path)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd < 0 && (newfd = open(path, O_RDONLY, 0)) < 0)
+	if (fd < 0 && (newfd = open(path, O_RDONLY|O_DIRECTORY|O_CLOEXEC, 0)) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
 		ret = -1;
@@ -1050,4 +1036,13 @@ bail:
 		(void)close(newfd);
 	errno = oerrno;
 	return (ret);
+}
+
+FTS* fts_open(char* const* argv, int options, int (*compar)(const FTSENT**, const FTSENT**)) {
+    // Options check.
+    if ((options & ~FTS_OPTIONMASK) != 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+    return __fts_open(argv, options, compar);
 }
