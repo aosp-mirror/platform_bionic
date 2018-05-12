@@ -108,7 +108,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_csinhf.c",
         "upstream-freebsd/lib/msun/src/s_csqrt.c",
         "upstream-freebsd/lib/msun/src/s_csqrtf.c",
-        "upstream-freebsd/lib/msun/src/s_csqrtl.c",
         "upstream-freebsd/lib/msun/src/s_ctanh.c",
         "upstream-freebsd/lib/msun/src/s_ctanhf.c",
         "upstream-freebsd/lib/msun/src/s_erf.c",
@@ -163,6 +162,8 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_significand.c",
         "upstream-freebsd/lib/msun/src/s_significandf.c",
         "upstream-freebsd/lib/msun/src/s_sin.c",
+        "upstream-freebsd/lib/msun/src/s_sincos.c",
+        "upstream-freebsd/lib/msun/src/s_sincosf.c",
         "upstream-freebsd/lib/msun/src/s_sinf.c",
         "upstream-freebsd/lib/msun/src/s_tan.c",
         "upstream-freebsd/lib/msun/src/s_tanf.c",
@@ -180,12 +181,6 @@ cc_library {
         // The FreeBSD complex functions appear to be better, but they're incomplete.
         // We take the FreeBSD implementations when they exist, but fill out the rest
         // of <complex.h> from NetBSD...
-        "upstream-netbsd/lib/libm/complex/cacoshl.c",
-        "upstream-netbsd/lib/libm/complex/cacosl.c",
-        "upstream-netbsd/lib/libm/complex/casinhl.c",
-        "upstream-netbsd/lib/libm/complex/casinl.c",
-        "upstream-netbsd/lib/libm/complex/catanhl.c",
-        "upstream-netbsd/lib/libm/complex/catanl.c",
         "upstream-netbsd/lib/libm/complex/ccoshl.c",
         "upstream-netbsd/lib/libm/complex/ccosl.c",
         "upstream-netbsd/lib/libm/complex/cephes_subrl.c",
@@ -208,7 +203,6 @@ cc_library {
 
         // Functionality not in the BSDs.
         "significandl.c",
-        "sincos.c",
         "fake_long_double.c",
 
         // Home-grown stuff.
@@ -219,6 +213,7 @@ cc_library {
     multilib: {
         lib64: {
             srcs: [
+                "upstream-freebsd/lib/msun/src/catrigl.c",
                 "upstream-freebsd/lib/msun/src/e_acosl.c",
                 "upstream-freebsd/lib/msun/src/e_acoshl.c",
                 "upstream-freebsd/lib/msun/src/e_asinl.c",
@@ -236,6 +231,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_copysignl.c",
                 "upstream-freebsd/lib/msun/src/e_coshl.c",
                 "upstream-freebsd/lib/msun/src/s_cosl.c",
+                "upstream-freebsd/lib/msun/src/s_csqrtl.c",
                 "upstream-freebsd/lib/msun/src/s_floorl.c",
                 "upstream-freebsd/lib/msun/src/s_fmal.c",
                 "upstream-freebsd/lib/msun/src/s_fmaxl.c",
@@ -255,6 +251,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_rintl.c",
                 "upstream-freebsd/lib/msun/src/s_roundl.c",
                 "upstream-freebsd/lib/msun/src/s_scalbnl.c",
+                "upstream-freebsd/lib/msun/src/s_sincosl.c",
                 "upstream-freebsd/lib/msun/src/e_sinhl.c",
                 "upstream-freebsd/lib/msun/src/s_sinl.c",
                 "upstream-freebsd/lib/msun/src/s_tanhl.c",
