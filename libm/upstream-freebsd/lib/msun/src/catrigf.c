@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2012 Stephen Montgomery-Smith <stephen@FreeBSD.ORG>
  * All rights reserved.
  *
@@ -39,7 +41,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/catrigf.c 275819 2014-12-16 09:21:56Z ed $");
+__FBSDID("$FreeBSD: head/lib/msun/src/catrigf.c 326219 2017-11-26 02:00:33Z pfg $");
 
 #include <complex.h>
 #include <float.h>
@@ -51,7 +53,7 @@ __FBSDID("$FreeBSD: head/lib/msun/src/catrigf.c 275819 2014-12-16 09:21:56Z ed $
 #define isinf(x)	(fabsf(x) == INFINITY)
 #undef isnan
 #define isnan(x)	((x) != (x))
-#define	raise_inexact()	do { volatile float junk = 1 + tiny; } while(0)
+#define	raise_inexact()	do { volatile float junk __unused = 1 + tiny; } while(0)
 #undef signbit
 #define signbit(x)	(__builtin_signbitf(x))
 

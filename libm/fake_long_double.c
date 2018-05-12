@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#define _GNU_SOURCE
 #include <float.h>
 #include <math.h>
 
@@ -37,6 +38,7 @@ long lroundl(long double a1) { return lround(a1); }
 long double modfl(long double a1, long double* a2) { double i; double f = modf(a1, &i); *a2 = i; return f; }
 float nexttowardf(float a1, long double a2) { return nextafterf(a1, (float) a2); }
 long double roundl(long double a1) { return round(a1); }
+void sincosl(long double x, long double* s, long double* c) { return sincos(x, (double*) s, (double*) c); }
 
 #endif // __LP64__
 

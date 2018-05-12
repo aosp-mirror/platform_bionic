@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2005 Bruce D. Evans and Steven G. Kargl
  * All rights reserved.
  *
@@ -29,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_ccoshf.c 284423 2015-06-15 20:11:06Z tijl $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_ccoshf.c 326219 2017-11-26 02:00:33Z pfg $");
 
 #include <complex.h>
 #include <math.h>
