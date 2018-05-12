@@ -15,7 +15,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_lgammaf_r.c 306709 2016-10-05 17:04:58Z emaste $");
 
 #include "math.h"
 #include "math_private.h"
@@ -122,7 +122,7 @@ sin_pif(float x)
 float
 __ieee754_lgammaf_r(float x, int *signgamp)
 {
-	float nadj,p,p1,p2,p3,q,r,t,w,y,z;
+	float nadj,p,p1,p2,q,r,t,w,y,z;
 	int32_t hx;
 	int i,ix;
 

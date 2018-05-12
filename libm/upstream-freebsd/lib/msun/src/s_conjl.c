@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2004 Stefan Farfeleder
  * All rights reserved.
  *
@@ -23,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/src/s_conjl.c 275819 2014-12-16 09:21:56Z ed $
+ * $FreeBSD: head/lib/msun/src/s_conjl.c 326219 2017-11-26 02:00:33Z pfg $
  */
 
 #include <complex.h>
