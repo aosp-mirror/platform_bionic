@@ -64,6 +64,7 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
+static soinfo* vdso; // vdso if present
 
 void solist_add_soinfo(soinfo* si) {
   sonext->next = si;
@@ -102,6 +103,10 @@ soinfo* solist_get_head() {
 
 soinfo* solist_get_somain() {
   return somain;
+}
+
+soinfo* solist_get_vdso() {
+  return vdso;
 }
 
 int g_ld_debug_verbosity;
@@ -158,6 +163,8 @@ static void add_vdso(KernelArgumentBlock& args) {
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
   si->set_linked();
   si->call_constructors();
+
+  vdso = si;
 }
 
 /* gdb expects the linker to be in the debug shared object list.
@@ -280,6 +287,8 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
     }
   }
 
+  add_vdso(args);
+
   struct stat file_stat;
   // Stat "/proc/self/exe" instead of executable_path because
   // the executable could be unlinked by this point and it should
@@ -365,8 +374,6 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
       somain->add_secondary_namespace(linked_ns);
     }
   }
-
-  add_vdso(args);
 
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
