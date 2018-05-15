@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69b81223_e3862c95",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2018-05-15T20:59:35Z",
+      "side": 1,
+      "message": "magic? not sure where this is coming from :(",
+      "range": {
+        "startLine": 277,
+        "startChar": 18,
+        "endLine": 277,
+        "endChar": 20
+      },
+      "revId": "a96c226261151ee898108b8e847dd100238e86ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
