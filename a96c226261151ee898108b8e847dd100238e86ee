@@ -22,6 +22,30 @@
       "revId": "a96c226261151ee898108b8e847dd100238e86ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39cbfa83_ce1a686b",
+        "filename": "libc/bionic/grp_pwd_file.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-05-15T21:11:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69b81223_e3862c95",
+      "range": {
+        "startLine": 277,
+        "startChar": 18,
+        "endLine": 277,
+        "endChar": 20
+      },
+      "revId": "a96c226261151ee898108b8e847dd100238e86ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
