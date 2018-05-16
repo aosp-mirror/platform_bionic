@@ -37,7 +37,7 @@
 
 class MmapFile {
  public:
-  MmapFile(const char* filename);
+  MmapFile(const char* filename, const char* required_prefix);
 
   template <typename Line>
   bool FindById(uid_t uid, Line* line);
@@ -65,11 +65,12 @@ class MmapFile {
   const char* filename_ = nullptr;
   const char* start_ = nullptr;
   const char* end_ = nullptr;
+  const char* required_prefix_;
 };
 
 class PasswdFile {
  public:
-  PasswdFile(const char* filename);
+  PasswdFile(const char* filename, const char* required_prefix);
 
   bool FindById(uid_t id, passwd_state_t* passwd_state);
   bool FindByName(const char* name, passwd_state_t* passwd_state);
@@ -85,7 +86,7 @@ class PasswdFile {
 
 class GroupFile {
  public:
-  GroupFile(const char* filename);
+  GroupFile(const char* filename, const char* required_prefix);
 
   bool FindById(gid_t id, group_state_t* group_state);
   bool FindByName(const char* name, group_state_t* group_state);
