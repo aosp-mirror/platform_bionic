@@ -44,6 +44,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <android-base/properties.h>
 #include <android-base/scopeguard.h>
 
 #include <async_safe/log.h>
@@ -85,6 +86,7 @@ static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_lis
 static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_STRING ".txt";
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
+static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir     = "/system/lib64";
@@ -3718,6 +3720,10 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
 }
 
 static std::string get_ld_config_file_vndk_path() {
+  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
+    return kLdConfigVndkLiteFilePath;
+  }
+
   std::string ld_config_file_vndk = kLdConfigFilePath;
   size_t insert_pos = ld_config_file_vndk.find_last_of('.');
   if (insert_pos == std::string::npos) {
