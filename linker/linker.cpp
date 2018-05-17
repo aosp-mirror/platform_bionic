@@ -44,6 +44,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <android-base/properties.h>
 #include <android-base/scopeguard.h>
 
 #include <async_safe/log.h>
@@ -89,6 +90,7 @@ static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_lis
 static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_STRING ".txt";
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
+static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir     = "/system/lib64";
@@ -3721,6 +3723,42 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
+static std::string get_ld_config_file_vndk_path() {
+  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
+    return kLdConfigVndkLiteFilePath;
+  }
+
+  std::string ld_config_file_vndk = kLdConfigFilePath;
+  size_t insert_pos = ld_config_file_vndk.find_last_of('.');
+  if (insert_pos == std::string::npos) {
+    insert_pos = ld_config_file_vndk.length();
+  }
+  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
+  return ld_config_file_vndk;
+}
+
+static std::string get_ld_config_file_path() {
+#ifdef USE_LD_CONFIG_FILE
+  // This is a debugging/testing only feature. Must not be available on
+  // production builds.
+  const char* ld_config_file_env = getenv("LD_CONFIG_FILE");
+  if (ld_config_file_env != nullptr && file_exists(ld_config_file_env)) {
+    return ld_config_file_env;
+  }
+#endif
+
+  if (file_exists(kLdConfigArchFilePath)) {
+    return kLdConfigArchFilePath;
+  }
+
+  std::string ld_config_file_vndk = get_ld_config_file_vndk_path();
+  if (file_exists(ld_config_file_vndk.c_str())) {
+    return ld_config_file_vndk;
+  }
+
+  return kLdConfigFilePath;
+}
+
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
   g_default_namespace.set_name("(default)");
 
@@ -3738,31 +3776,16 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string error_msg;
 
-  std::string ld_config_vndk = kLdConfigFilePath;
-  size_t insert_pos = ld_config_vndk.find_last_of('.');
-  if (insert_pos == std::string::npos) {
-    insert_pos = ld_config_vndk.length();
-  }
-  ld_config_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
-  const char* ld_config_txt = file_exists(ld_config_vndk.c_str()) ? ld_config_vndk.c_str() : kLdConfigFilePath;
-  const char* config_file = file_exists(kLdConfigArchFilePath) ? kLdConfigArchFilePath : ld_config_txt;
-#ifdef USE_LD_CONFIG_FILE
-  // This is a debugging/testing only feature. Must not be available on
-  // production builds.
-  const char* ld_config_file = getenv("LD_CONFIG_FILE");
-  if (ld_config_file != nullptr && file_exists(ld_config_file)) {
-    config_file = ld_config_file;
-  }
-#endif
+  std::string ld_config_file_path = get_ld_config_file_path();
 
-  if (!Config::read_binary_config(config_file,
+  if (!Config::read_binary_config(ld_config_file_path.c_str(),
                                   executable_path,
                                   g_is_asan,
                                   &config,
                                   &error_msg)) {
     if (!error_msg.empty()) {
       DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
-              config_file,
+              ld_config_file_path.c_str(),
               executable_path,
               error_msg.c_str());
     }
