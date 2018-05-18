@@ -60,25 +60,6 @@ __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
-#if defined(__i386__)
-__attribute__((__naked__)) static void __libc_int0x80() {
-  __asm__ volatile("int $0x80; ret");
-}
-
-__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
-
-__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
-  // Running under valgrind, AT_SYSINFO won't be set.
-  void* at_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
-  if (at_sysinfo != nullptr) __libc_sysinfo = at_sysinfo;
-}
-
-// TODO: lose this function and just access __libc_sysinfo directly.
-__LIBC_HIDDEN__ extern "C" void* __kernel_syscall() {
-  return __libc_sysinfo;
-}
-#endif
-
 void __libc_init_globals(KernelArgumentBlock& args) {
 #if defined(__i386__)
   __libc_init_sysinfo(args);

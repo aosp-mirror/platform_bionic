@@ -510,6 +510,10 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
+#if defined(__i386__)
+  __libc_init_sysinfo(args);
+#endif
+
   // AT_BASE is set to 0 in the case when linker is run by iself
   // so in order to link the linker it needs to calcuate AT_BASE
   // using information at hand. The trick below takes advantage
@@ -551,15 +555,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
   if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
-
-#if defined(__i386__)
-  // On x86, we can't make system calls before this point.
-  // We can't move this up because this needs to assign to a global.
-  // Note that until we call __libc_init_main_thread below we have
-  // no TLS, so you shouldn't make a system call that can fail, because
-  // it will SEGV when it tries to set errno.
-  __libc_init_sysinfo(args);
-#endif
 
   // Initialize the main thread (including TLS, so system calls really work).
   __libc_init_main_thread(args);
