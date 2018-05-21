@@ -44,7 +44,7 @@ static int dl_callback(struct dl_phdr_info *info, size_t /* size */, void *data)
     return 0;
   }
 
-  if (android::base::EndsWith(info->dlpi_name, suffix.c_str())) {
+  if (android::base::EndsWith(info->dlpi_name, suffix)) {
     std::string* path = reinterpret_cast<std::string*>(data);
     *path = info->dlpi_name;
     return 1; // found

@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef __LINKER_GDB_SUPPORT_H
-#define __LINKER_GDB_SUPPORT_H
+
+#pragma once
 
 #include <link.h>
 #include <sys/cdefs.h>
@@ -42,5 +42,3 @@ void notify_gdb_of_libraries();
 extern struct r_debug _r_debug;
 
 __END_DECLS
-
-#endif

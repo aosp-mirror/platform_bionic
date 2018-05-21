@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_DISABLE_H
-#define MALLOC_DEBUG_DISABLE_H
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -60,5 +59,3 @@ class ScopedDisableDebugCalls {
 
   DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
 };
-
-#endif  // MALLOC_DEBUG_DISABLE_H

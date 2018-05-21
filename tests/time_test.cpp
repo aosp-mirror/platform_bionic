@@ -26,10 +26,35 @@
 #include <unistd.h>
 #include <atomic>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "utils.h"
 
 #include "private/bionic_constants.h"
+
+TEST(time, time) {
+  // Acquire time
+  time_t p1, t1 = time(&p1);
+  // valid?
+  ASSERT_NE(static_cast<time_t>(0), t1);
+  ASSERT_NE(static_cast<time_t>(-1), t1);
+  ASSERT_EQ(p1, t1);
+
+  // Acquire time one+ second later
+  usleep(1010000);
+  time_t p2, t2 = time(&p2);
+  // valid?
+  ASSERT_NE(static_cast<time_t>(0), t2);
+  ASSERT_NE(static_cast<time_t>(-1), t2);
+  ASSERT_EQ(p2, t2);
+
+  // Expect time progression
+  ASSERT_LT(p1, p2);
+  ASSERT_LE(t2 - t1, static_cast<time_t>(2));
+
+  // Expect nullptr call to produce same results
+  ASSERT_LE(t2, time(nullptr));
+  ASSERT_LE(time(nullptr) - t2, static_cast<time_t>(1));
+}
 
 TEST(time, gmtime) {
   time_t t = 0;
@@ -251,6 +276,23 @@ TEST(time, strptime) {
   memset(&t, 0, sizeof(t));
   strptime("09:41:53", "%T", &t);
   strftime(buf, sizeof(buf), "%H:%M:%S", &t);
+  EXPECT_STREQ("09:41:53", buf);
+}
+
+TEST(time, strptime_l) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm t;
+  char buf[64];
+
+  memset(&t, 0, sizeof(t));
+  strptime_l("11:14", "%R", &t, LC_GLOBAL_LOCALE);
+  strftime_l(buf, sizeof(buf), "%H:%M", &t, LC_GLOBAL_LOCALE);
+  EXPECT_STREQ("11:14", buf);
+
+  memset(&t, 0, sizeof(t));
+  strptime_l("09:41:53", "%T", &t, LC_GLOBAL_LOCALE);
+  strftime_l(buf, sizeof(buf), "%H:%M:%S", &t, LC_GLOBAL_LOCALE);
   EXPECT_STREQ("09:41:53", buf);
 }
 
@@ -828,4 +870,55 @@ TEST(time, ctime_r) {
   char buf[256];
   ASSERT_EQ(buf, ctime_r(&t, buf));
   ASSERT_STREQ("Thu Jan  1 00:00:00 1970\n", buf);
+}
+
+// https://issuetracker.google.com/37128336
+TEST(time, strftime_strptime_s) {
+  char buf[32];
+  const struct tm tm0 = { .tm_year = 1982-1900, .tm_mon = 0, .tm_mday = 1 };
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  strftime(buf, sizeof(buf), "<%s>", &tm0);
+  EXPECT_STREQ("<378720000>", buf);
+
+  setenv("TZ", "UTC", 1);
+  strftime(buf, sizeof(buf), "<%s>", &tm0);
+  EXPECT_STREQ("<378691200>", buf);
+
+  struct tm tm;
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+  memset(&tm, 0xff, sizeof(tm));
+  char* p = strptime("378720000x", "%s", &tm);
+  ASSERT_EQ('x', *p);
+  EXPECT_EQ(0, tm.tm_sec);
+  EXPECT_EQ(0, tm.tm_min);
+  EXPECT_EQ(0, tm.tm_hour);
+  EXPECT_EQ(1, tm.tm_mday);
+  EXPECT_EQ(0, tm.tm_mon);
+  EXPECT_EQ(82, tm.tm_year);
+  EXPECT_EQ(5, tm.tm_wday);
+  EXPECT_EQ(0, tm.tm_yday);
+  EXPECT_EQ(0, tm.tm_isdst);
+
+  setenv("TZ", "UTC", 1);
+  tzset();
+  memset(&tm, 0xff, sizeof(tm));
+  p = strptime("378691200x", "%s", &tm);
+  ASSERT_EQ('x', *p);
+  EXPECT_EQ(0, tm.tm_sec);
+  EXPECT_EQ(0, tm.tm_min);
+  EXPECT_EQ(0, tm.tm_hour);
+  EXPECT_EQ(1, tm.tm_mday);
+  EXPECT_EQ(0, tm.tm_mon);
+  EXPECT_EQ(82, tm.tm_year);
+  EXPECT_EQ(5, tm.tm_wday);
+  EXPECT_EQ(0, tm.tm_yday);
+  EXPECT_EQ(0, tm.tm_isdst);
+}
+
+TEST(time, strptime_s_nothing) {
+  struct tm tm;
+  ASSERT_EQ(nullptr, strptime("x", "%s", &tm));
 }

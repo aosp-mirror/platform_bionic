@@ -34,36 +34,14 @@
 
 #include <asm/sigcontext.h>
 #include <bits/pthread_types.h>
+#include <bits/signal_types.h>
 #include <bits/timespec.h>
 #include <limits.h>
-
-#if defined(__LP64__) || defined(__mips__)
-/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the POSIX one,
- * so we need to expose our own and translate behind the scenes. */
-#  define sigaction __kernel_sigaction
-#  include <linux/signal.h>
-#  undef sigaction
-#else
-/* For 32-bit, we're stuck with the definitions we already shipped,
- * even though they contain a sigset_t that's too small. */
-#  include <linux/signal.h>
-#endif
 
 #include <sys/ucontext.h>
 #define __BIONIC_HAVE_UCONTEXT_T
 
 __BEGIN_DECLS
-
-typedef int sig_atomic_t;
-
-/* The arm and x86 kernel header files don't define _NSIG. */
-#ifndef _KERNEL__NSIG
-#define _KERNEL__NSIG 64
-#endif
-
-/* Userspace's NSIG is the kernel's _NSIG + 1. */
-#define _NSIG (_KERNEL__NSIG + 1)
-#define NSIG _NSIG
 
 /* The kernel headers define SIG_DFL (0) and SIG_IGN (1) but not SIG_HOLD, since
  * SIG_HOLD is only used by the deprecated SysV signal API.
@@ -79,55 +57,37 @@ int __libc_current_sigrtmax(void) __INTRODUCED_IN(21);
 extern const char* const sys_siglist[_NSIG];
 extern const char* const sys_signame[_NSIG]; /* BSD compatibility. */
 
-typedef __sighandler_t sig_t; /* BSD compatibility. */
-typedef __sighandler_t sighandler_t; /* glibc compatibility. */
-
 #define si_timerid si_tid /* glibc compatibility. */
 
-#if defined(__LP64__)
-
-struct sigaction {
-  unsigned int sa_flags;
-  union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction)(int, struct siginfo*, void*);
-  };
-  sigset_t sa_mask;
-  void (*sa_restorer)(void);
-};
-
-#elif defined(__mips__)
-
-struct sigaction {
-  unsigned int sa_flags;
-  union {
-    sighandler_t sa_handler;
-    void (*sa_sigaction) (int, struct siginfo*, void*);
-  };
-  sigset_t sa_mask;
-};
-
-#endif
-
 int sigaction(int __signal, const struct sigaction* __new_action, struct sigaction* __old_action);
+int sigaction64(int __signal, const struct sigaction64* __new_action, struct sigaction64* __old_action) __INTRODUCED_IN(28);
 
 int siginterrupt(int __signal, int __flag);
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
 sighandler_t signal(int __signal, sighandler_t __handler) __INTRODUCED_IN(21);
 int sigaddset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigaddset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 int sigdelset(sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigdelset64(sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 int sigemptyset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigemptyset64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigfillset(sigset_t* __set) __INTRODUCED_IN(21);
+int sigfillset64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigismember(const sigset_t* __set, int __signal) __INTRODUCED_IN(21);
+int sigismember64(const sigset64_t* __set, int __signal) __INTRODUCED_IN(28);
 #else
 // Implemented as static inlines before 21.
 #endif
 
 int sigpending(sigset_t* __set);
+int sigpending64(sigset64_t* __set) __INTRODUCED_IN(28);
 int sigprocmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int sigprocmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
 int sigsuspend(const sigset_t* __mask);
+int sigsuspend64(const sigset64_t* __mask) __INTRODUCED_IN(28);
 int sigwait(const sigset_t* __set, int* __signal);
+int sigwait64(const sigset64_t* __set, int* __signal) __INTRODUCED_IN(28);
 
 int sighold(int __signal)
   __attribute__((deprecated("use sigprocmask() or pthread_sigmask() instead")))
@@ -154,13 +114,16 @@ void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
 
 int pthread_kill(pthread_t __pthread, int __signal);
 int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
+int pthread_sigmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
 
 int sigqueue(pid_t __pid, int __signal, const union sigval __value) __INTRODUCED_IN(23);
 int sigtimedwait(const sigset_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(23);
+int sigtimedwait64(const sigset64_t* __set, siginfo_t* __info, const struct timespec* __timeout) __INTRODUCED_IN(28);
 int sigwaitinfo(const sigset_t* __set, siginfo_t* __info) __INTRODUCED_IN(23);
+int sigwaitinfo64(const sigset64_t* __set, siginfo_t* __info) __INTRODUCED_IN(28);
 
 __END_DECLS
 
 #include <android/legacy_signal_inlines.h>
 
-#endif /* _SIGNAL_H_ */
+#endif

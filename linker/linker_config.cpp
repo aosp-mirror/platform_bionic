@@ -194,14 +194,14 @@ static bool parse_config_file(const char* ld_config_file_path,
 
   std::string section_name;
 
-  while(true) {
+  while (true) {
     std::string name;
     std::string value;
     std::string error;
 
     int result = cp.next_token(&name, &value, &error);
     if (result == ConfigParser::kError) {
-      DL_WARN("error parsing %s:%zd: %s (ignoring this line)",
+      DL_WARN("%s:%zd: warning: couldn't parse %s (ignoring this line)",
               ld_config_file_path,
               cp.lineno(),
               error.c_str());
@@ -214,7 +214,7 @@ static bool parse_config_file(const char* ld_config_file_path,
 
     if (result == ConfigParser::kPropertyAssign) {
       if (!android::base::StartsWith(name, "dir.")) {
-        DL_WARN("error parsing %s:%zd: unexpected property name \"%s\", "
+        DL_WARN("%s:%zd: warning: unexpected property name \"%s\", "
                 "expected format dir.<section_name> (ignoring this line)",
                 ld_config_file_path,
                 cp.lineno(),
@@ -228,7 +228,7 @@ static bool parse_config_file(const char* ld_config_file_path,
       }
 
       if (value.empty()) {
-        DL_WARN("error parsing %s:%zd: property value is empty (ignoring this line)",
+        DL_WARN("%s:%zd: warning: property value is empty (ignoring this line)",
                 ld_config_file_path,
                 cp.lineno());
         continue;
@@ -275,7 +275,7 @@ static bool parse_config_file(const char* ld_config_file_path,
 
     if (result == ConfigParser::kPropertyAssign) {
       if (properties->find(name) != properties->end()) {
-        DL_WARN("%s:%zd: warning: property \"%s\" redefinition",
+        DL_WARN("%s:%zd: warning: redefining property \"%s\" (overriding previous value)",
                 ld_config_file_path,
                 cp.lineno(),
                 name.c_str());
@@ -284,7 +284,7 @@ static bool parse_config_file(const char* ld_config_file_path,
       (*properties)[name] = PropertyValue(std::move(value), cp.lineno());
     } else if (result == ConfigParser::kPropertyAppend) {
       if (properties->find(name) == properties->end()) {
-        DL_WARN("%s:%zd: warning: appending to property \"%s\" which isn't defined",
+        DL_WARN("%s:%zd: warning: appending to undefined property \"%s\" (treating as assignment)",
                 ld_config_file_path,
                 cp.lineno(),
                 name.c_str());
@@ -299,7 +299,7 @@ static bool parse_config_file(const char* ld_config_file_path,
           value = ":" + value;
           (*properties)[name].append_value(std::move(value));
         } else {
-          DL_WARN("%s:%zd: warning: += isn't allowed to property \"%s\". Ignoring.",
+          DL_WARN("%s:%zd: warning: += isn't allowed for property \"%s\" (ignoring)",
                   ld_config_file_path,
                   cp.lineno(),
                   name.c_str());
@@ -308,7 +308,7 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
 
     if (result == ConfigParser::kError) {
-      DL_WARN("error parsing %s:%zd: %s (ignoring this line)",
+      DL_WARN("%s:%zd: warning: couldn't parse %s (ignoring this line)",
               ld_config_file_path,
               cp.lineno(),
               error.c_str());
@@ -489,12 +489,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
         return false;
       }
 
+      bool allow_all_shared_libs = properties.get_bool(property_name_prefix + ".link." +
+                                                       linked_ns_name + ".allow_all_shared_libs");
+
       std::string shared_libs = properties.get_string(property_name_prefix +
                                                       ".link." +
                                                       linked_ns_name +
                                                       ".shared_libs", &lineno);
 
-      if (shared_libs.empty()) {
+      if (!allow_all_shared_libs && shared_libs.empty()) {
         *error_msg = create_error_msg(ld_config_file_path,
                                       lineno,
                                       std::string("list of shared_libs for ") +
@@ -505,7 +508,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
         return false;
       }
 
-      ns_config->add_namespace_link(linked_ns_name, shared_libs);
+      if (allow_all_shared_libs && !shared_libs.empty()) {
+        *error_msg = create_error_msg(ld_config_file_path, lineno,
+                                      std::string("both shared_libs and allow_all_shared_libs "
+                                                  "are set for ") +
+                                      name + "->" + linked_ns_name + " link.");
+        return false;
+      }
+
+      ns_config->add_namespace_link(linked_ns_name, shared_libs, allow_all_shared_libs);
     }
 
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));

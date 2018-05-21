@@ -6,7 +6,10 @@ cc_library_static {
         "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
-    cflags: ["-Wall", "-Werror"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
@@ -26,9 +29,15 @@ cc_object {
     host_supported: true,
     device_supported: false,
     target: {
-        linux_bionic: { enabled: true },
-        linux_glibc: { enabled: false },
-        darwin: { enabled: false },
+        linux_bionic: {
+            enabled: true,
+        },
+        linux_glibc: {
+            enabled: false,
+        },
+        darwin: {
+            enabled: false,
+        },
     },
 
     cflags: [
@@ -95,9 +104,7 @@ cc_binary {
             version_script: "linker.generic.map",
         },
         x86: {
-            srcs: ["arch/x86/begin.c"],
-
-            cflags: ["-D__work_around_b_24465209__"],
+            srcs: ["arch/x86/begin.S"],
             version_script: "linker.generic.map",
         },
         x86_64: {
@@ -130,7 +137,12 @@ cc_binary {
         "-shared",
         "-Wl,-Bsymbolic",
         "-Wl,--exclude-libs,ALL",
+        "-Wl,-soname,ld-android.so",
     ],
+
+    // lld bug: https://bugs.llvm.org/show_bug.cgi?id=36295
+    // error: symbol __aeabi_*@@LIBC_N has undefined version LIBC_N
+    use_clang_lld: false,
 
     cflags: [
         "-fno-stack-protector",
@@ -186,7 +198,7 @@ cc_binary {
 
         // Important: The liblinker_malloc should be the last library in the list
         // to overwrite any other malloc implementations by other static libraries.
-        "liblinker_malloc"
+        "liblinker_malloc",
     ],
     static_executable: true,
 
@@ -201,12 +213,6 @@ cc_binary {
         android: {
             static_libs: ["libdebuggerd_handler_fallback"],
         },
-        android64: {
-            cflags: ["-DTARGET_IS_64_BIT"],
-        },
-        linux_bionic: {
-            cflags: ["-DTARGET_IS_64_BIT"],
-        },
     },
     compile_multilib: "both",
 
@@ -219,4 +225,60 @@ cc_binary {
     // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
     // looking up symbols in the linker by mistake.
     prefix_symbols: "__dl_",
+}
+
+cc_library {
+    // NOTE: --exclude-libs=libgcc.a makes sure that any symbols ld-android.so pulls from
+    // libgcc.a are made static to ld-android.so.  This in turn ensures that libraries that
+    // a) pull symbols from libgcc.a and b) depend on ld-android.so will not rely on ld-android.so
+    // to provide those symbols, but will instead pull them from libgcc.a.  Specifically,
+    // we use this property to make sure libc.so has its own copy of the code from
+    // libgcc.a it uses.
+    //
+    // DO NOT REMOVE --exclude-libs!
+
+    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
+
+    // for x86, exclude libgcc_eh.a for the same reasons as above
+    arch: {
+        arm: {
+            version_script: "linker.arm.map",
+        },
+        arm64: {
+            version_script: "linker.generic.map",
+        },
+        x86: {
+            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
+        },
+        x86_64: {
+            ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
+            version_script: "linker.generic.map",
+        },
+        mips: {
+            version_script: "linker.generic.map",
+        },
+        mips64: {
+            version_script: "linker.generic.map",
+        },
+    },
+
+    srcs: ["ld_android.cpp"],
+    cflags: [
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+    stl: "none",
+
+    name: "ld-android",
+    defaults: ["linux_bionic_supported"],
+
+    nocrt: true,
+    system_shared_libs: [],
+
+    sanitize: {
+        never: true,
+    },
 }

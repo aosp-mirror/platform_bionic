@@ -36,6 +36,7 @@
 #include <unistd.h>
 
 #include "private/ScopedSignalBlocker.h"
+#include "private/SigSetConverter.h"
 
 enum Action {
   kOpen,
@@ -87,8 +88,8 @@ struct __posix_spawnattr {
   pid_t pgroup;
   sched_param schedparam;
   int schedpolicy;
-  sigset_t sigmask;
-  sigset_t sigdefault;
+  SigSetConverter sigmask;
+  SigSetConverter sigdefault;
 };
 
 static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
@@ -97,17 +98,17 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   // POSIX: "Signals set to be caught by the calling process shall be
   // set to the default action in the child process."
   bool use_sigdefault = ((flags & POSIX_SPAWN_SETSIGDEF) != 0);
-  const struct sigaction default_sa = { .sa_handler = SIG_DFL };
+  const struct sigaction64 default_sa = { .sa_handler = SIG_DFL };
   for (int s = 1; s < _NSIG; ++s) {
     bool reset = false;
-    if (use_sigdefault && sigismember(&(*attr)->sigdefault, s)) {
+    if (use_sigdefault && sigismember64(&(*attr)->sigdefault.sigset64, s)) {
       reset = true;
     } else {
-      struct sigaction current;
-      if (sigaction(s, nullptr, &current) == -1) _exit(127);
+      struct sigaction64 current;
+      if (sigaction64(s, nullptr, &current) == -1) _exit(127);
       reset = (current.sa_handler != SIG_IGN && current.sa_handler != SIG_DFL);
     }
-    if (reset && sigaction(s, &default_sa, nullptr) == -1) _exit(127);
+    if (reset && sigaction64(s, &default_sa, nullptr) == -1) _exit(127);
   }
 
   if ((flags & POSIX_SPAWN_SETPGROUP) != 0 && setpgid(0, (*attr)->pgroup) == -1) _exit(127);
@@ -126,7 +127,7 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   }
 
   if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
-    if (sigprocmask(SIG_SETMASK, &(*attr)->sigmask, nullptr)) _exit(127);
+    if (sigprocmask64(SIG_SETMASK, &(*attr)->sigmask.sigset64, nullptr)) _exit(127);
   }
 }
 
@@ -209,22 +210,42 @@ int posix_spawnattr_getpgroup(const posix_spawnattr_t* attr, pid_t* pgroup) {
 }
 
 int posix_spawnattr_setsigmask(posix_spawnattr_t* attr, const sigset_t* mask) {
-  (*attr)->sigmask = *mask;
+  (*attr)->sigmask.sigset = *mask;
+  return 0;
+}
+
+int posix_spawnattr_setsigmask64(posix_spawnattr_t* attr, const sigset64_t* mask) {
+  (*attr)->sigmask.sigset64 = *mask;
   return 0;
 }
 
 int posix_spawnattr_getsigmask(const posix_spawnattr_t* attr, sigset_t* mask) {
-  *mask = (*attr)->sigmask;
+  *mask = (*attr)->sigmask.sigset;
+  return 0;
+}
+
+int posix_spawnattr_getsigmask64(const posix_spawnattr_t* attr, sigset64_t* mask) {
+  *mask = (*attr)->sigmask.sigset64;
   return 0;
 }
 
 int posix_spawnattr_setsigdefault(posix_spawnattr_t* attr, const sigset_t* mask) {
-  (*attr)->sigdefault = *mask;
+  (*attr)->sigdefault.sigset = *mask;
+  return 0;
+}
+
+int posix_spawnattr_setsigdefault64(posix_spawnattr_t* attr, const sigset64_t* mask) {
+  (*attr)->sigdefault.sigset64 = *mask;
   return 0;
 }
 
 int posix_spawnattr_getsigdefault(const posix_spawnattr_t* attr, sigset_t* mask) {
-  *mask = (*attr)->sigdefault;
+  *mask = (*attr)->sigdefault.sigset;
+  return 0;
+}
+
+int posix_spawnattr_getsigdefault64(const posix_spawnattr_t* attr, sigset64_t* mask) {
+  *mask = (*attr)->sigdefault.sigset64;
   return 0;
 }
 

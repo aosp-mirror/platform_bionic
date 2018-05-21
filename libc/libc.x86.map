@@ -112,6 +112,7 @@ LIBC {
     __poll_chk; # introduced=23
     __ppoll; # arm x86 mips introduced=21
     __ppoll_chk; # introduced=23
+    __ppoll64_chk; # introduced=28
     __pread64_chk; # introduced=23
     __pread_chk; # introduced=23
     __progname; # var
@@ -705,7 +706,7 @@ LIBC {
     posix_fallocate; # introduced=21
     posix_fallocate64; # introduced=21
     posix_madvise; # introduced=23
-    posix_memalign; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    posix_memalign; # introduced=17
     posix_openpt; # introduced=21
     ppoll; # introduced=21
     prctl;
@@ -741,7 +742,7 @@ LIBC {
     pthread_cond_signal;
     pthread_cond_timedwait;
     pthread_cond_timedwait_monotonic; # arm x86 mips
-    pthread_cond_timedwait_monotonic_np; # arm x86 mips
+    pthread_cond_timedwait_monotonic_np; # introduced-arm=16 introduced-x86=16 introduced-mips=16 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
     pthread_cond_timedwait_relative_np; # arm x86 mips
     pthread_cond_timeout_np; # arm x86 mips
     pthread_cond_wait;
@@ -1303,10 +1304,17 @@ LIBC_O {
 LIBC_P { # introduced=P
   global:
     __freading;
+    __free_hook;
+    __fseterr;
     __fwriting;
+    __malloc_hook;
+    __memalign_hook;
+    __realloc_hook;
+    aligned_alloc;
     endhostent;
     endnetent;
     endprotoent;
+    epoll_pwait64;
     fexecve;
     fflush_unlocked;
     fgetc_unlocked;
@@ -1338,28 +1346,60 @@ LIBC_P { # introduced=P
     posix_spawnattr_getschedparam;
     posix_spawnattr_getschedpolicy;
     posix_spawnattr_getsigdefault;
+    posix_spawnattr_getsigdefault64;
     posix_spawnattr_getsigmask;
+    posix_spawnattr_getsigmask64;
     posix_spawnattr_init;
     posix_spawnattr_setflags;
     posix_spawnattr_setpgroup;
     posix_spawnattr_setschedparam;
     posix_spawnattr_setschedpolicy;
     posix_spawnattr_setsigdefault;
+    posix_spawnattr_setsigdefault64;
     posix_spawnattr_setsigmask;
+    posix_spawnattr_setsigmask64;
     posix_spawn_file_actions_addclose;
     posix_spawn_file_actions_adddup2;
     posix_spawn_file_actions_addopen;
     posix_spawn_file_actions_destroy;
     posix_spawn_file_actions_init;
     posix_spawnp;
+    ppoll64;
+    pselect64;
     pthread_attr_getinheritsched;
     pthread_attr_setinheritsched;
+    pthread_mutex_timedlock_monotonic_np;
+    pthread_mutexattr_getprotocol;
+    pthread_mutexattr_setprotocol;
+    pthread_rwlock_timedrdlock_monotonic_np;
+    pthread_rwlock_timedwrlock_monotonic_np;
     pthread_setschedprio;
+    pthread_sigmask64;
+    sem_timedwait_monotonic_np;
     sethostent;
     setnetent;
     setprotoent;
+    sigaction64;
+    sigaddset64;
+    sigdelset64;
+    sigemptyset64;
+    sigfillset64;
+    sigismember64;
+    signalfd64;
+    sigpending64;
+    sigprocmask64;
+    sigsuspend64;
+    sigtimedwait64;
+    sigwait64;
+    sigwaitinfo64;
+    strptime_l;
     swab;
     syncfs;
+    wcsftime_l;
+    wcstod_l;
+    wcstof_l;
+    wcstol_l;
+    wcstoul_l;
 } LIBC_O;
 
 LIBC_PRIVATE {

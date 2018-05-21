@@ -107,6 +107,7 @@
 #include <syslog.h>
 #include <stdarg.h>
 #include "nsswitch.h"
+#include "private/bionic_defs.h"
 
 typedef union sockaddr_union {
     struct sockaddr     generic;
@@ -198,7 +199,7 @@ static const ns_src default_dns_files[] = {
 	{ 0, 0 }
 };
 
-#define MAXPACKET	(64*1024)
+#define MAXPACKET	(8*1024)
 
 typedef union {
 	HEADER hdr;
@@ -310,6 +311,7 @@ do { 								\
 #define MATCH(x, y, w) 							\
 	((x) == (y) || (/*CONSTCOND*/(w) && ((x) == ANY || (y) == ANY)))
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 const char *
 gai_strerror(int ecode)
 {
@@ -318,6 +320,7 @@ gai_strerror(int ecode)
 	return ai_errlist[ecode];
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void
 freeaddrinfo(struct addrinfo *ai)
 {
@@ -556,6 +559,7 @@ exit:
 }
 #endif
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 getaddrinfo(const char *hostname, const char *servname,
     const struct addrinfo *hints, struct addrinfo **res)
@@ -563,6 +567,7 @@ getaddrinfo(const char *hostname, const char *servname,
 	return android_getaddrinfofornet(hostname, servname, hints, NETID_UNSET, MARK_UNSET, res);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 android_getaddrinfofornet(const char *hostname, const char *servname,
     const struct addrinfo *hints, unsigned netid, unsigned mark, struct addrinfo **res)
@@ -577,6 +582,7 @@ android_getaddrinfofornet(const char *hostname, const char *servname,
 	return android_getaddrinfofornetcontext(hostname, servname, hints, &netcontext, res);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int
 android_getaddrinfofornetcontext(const char *hostname, const char *servname,
     const struct addrinfo *hints, const struct android_net_context *netcontext,
@@ -2171,8 +2177,12 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 		int class, type;
 		u_char *answer;
 		int anslen;
+		u_int oflags;
 
 		hp = (HEADER *)(void *)t->answer;
+		oflags = res->_flags;
+
+again:
 		hp->rcode = NOERROR;	/* default */
 
 		/* make it easier... */
@@ -2188,7 +2198,8 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 		n = res_nmkquery(res, QUERY, name, class, type, NULL, 0, NULL,
 		    buf, sizeof(buf));
 #ifdef RES_USE_EDNS0
-		if (n > 0 && (res->options & RES_USE_EDNS0) != 0)
+		if (n > 0 && (res->_flags & RES_F_EDNS0ERR) == 0 &&
+		    (res->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0)
 			n = res_nopt(res, n, buf, sizeof(buf), anslen);
 #endif
 		if (n <= 0) {
@@ -2213,6 +2224,18 @@ res_queryN(const char *name, /* domain name */ struct res_target *target,
 
 		if (n < 0 || hp->rcode != NOERROR || ntohs(hp->ancount) == 0) {
 			rcode = hp->rcode;	/* record most recent error */
+#ifdef RES_USE_EDNS0
+			/* if the query choked with EDNS0, retry without EDNS0 */
+			if ((res->options & (RES_USE_EDNS0|RES_USE_DNSSEC)) != 0 &&
+			    ((oflags ^ res->_flags) & RES_F_EDNS0ERR) != 0) {
+				res->_flags |= RES_F_EDNS0ERR;
+#ifdef DEBUG
+				if (res->options & RES_DEBUG)
+					printf(";; res_nquery: retry without EDNS0\n");
+#endif
+				goto again;
+			}
+#endif
 #ifdef DEBUG
 			if (res->options & RES_DEBUG)
 				printf(";; rcode = %u, ancount=%u\n", hp->rcode,

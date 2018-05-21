@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_GLOBALS_H
-#define __LINKER_GLOBALS_H
+#pragma once
 
 #include <link.h>
 #include <stddef.h>
@@ -49,6 +48,8 @@
       async_safe_format_fd(2, fmt, ##x); \
       async_safe_format_fd(2, "\n"); \
     } while (false)
+
+void DL_WARN_documented_change(int api_level, const char* doc_link, const char* fmt, ...);
 
 #define DL_ERR_AND_LOG(fmt, x...) \
   do { \
@@ -86,5 +87,3 @@ class DlErrorRestorer {
  private:
   std::string saved_error_msg_;
 };
-
-#endif  /* __LINKER_GLOBALS_H */

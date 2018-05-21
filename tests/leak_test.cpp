@@ -107,10 +107,17 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
 // http://b/36045112
 TEST(pthread_leak, join) {
   LeakChecker lc;
-  for (int i = 0; i < 100; ++i) {
-    pthread_t thread;
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
-    ASSERT_EQ(0, pthread_join(thread, nullptr));
+
+  for (size_t pass = 0; pass < 2; ++pass) {
+    for (int i = 0; i < 100; ++i) {
+      pthread_t thread;
+      ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+      ASSERT_EQ(0, pthread_join(thread, nullptr));
+    }
+
+    // A native bridge implementation might need a warm up pass to reach a steady state.
+    // http://b/37920774.
+    if (pass == 0) lc.Reset();
   }
 }
 
@@ -145,9 +152,8 @@ TEST(pthread_leak, detach) {
 
     WaitUntilAllExited(tids, arraysize(tids));
 
-    // houdini keeps a thread pool, so we ignore the first pass while the
-    // pool fills, but then on the second pass require that the "pool" isn't
-    // actually an unbounded leak. https://issuetracker.google.com/37920774.
+    // A native bridge implementation might need a warm up pass to reach a steady state.
+    // http://b/37920774.
     if (pass == 0) lc.Reset();
   }
 }

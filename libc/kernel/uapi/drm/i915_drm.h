@@ -293,6 +293,9 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_MIN_EU_IN_POOL 39
 #define I915_PARAM_MMAP_GTT_VERSION 40
 #define I915_PARAM_HAS_SCHEDULER 41
+#define I915_SCHEDULER_CAP_ENABLED (1ul << 0)
+#define I915_SCHEDULER_CAP_PRIORITY (1ul << 1)
+#define I915_SCHEDULER_CAP_PREEMPTION (1ul << 2)
 #define I915_PARAM_HUC_STATUS 42
 #define I915_PARAM_HAS_EXEC_ASYNC 43
 #define I915_PARAM_HAS_EXEC_FENCE 44
@@ -633,6 +636,7 @@ struct drm_i915_gem_context_destroy {
 };
 struct drm_i915_reg_read {
   __u64 offset;
+#define I915_REG_READ_8B_WA (1ul << 0)
   __u64 val;
 };
 struct drm_i915_reset_stats {
@@ -660,6 +664,10 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_GTT_SIZE 0x3
 #define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE 0x4
 #define I915_CONTEXT_PARAM_BANNABLE 0x5
+#define I915_CONTEXT_PARAM_PRIORITY 0x6
+#define I915_CONTEXT_MAX_USER_PRIORITY 1023
+#define I915_CONTEXT_DEFAULT_PRIORITY 0
+#define I915_CONTEXT_MIN_USER_PRIORITY - 1023
   __u64 value;
 };
 enum drm_i915_oa_format {
@@ -709,9 +717,9 @@ struct drm_i915_perf_oa_config {
   __u32 n_mux_regs;
   __u32 n_boolean_regs;
   __u32 n_flex_regs;
-  __u64 __user mux_regs_ptr;
-  __u64 __user boolean_regs_ptr;
-  __u64 __user flex_regs_ptr;
+  __u64 mux_regs_ptr;
+  __u64 boolean_regs_ptr;
+  __u64 flex_regs_ptr;
 };
 #ifdef __cplusplus
 #endif

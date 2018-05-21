@@ -1,14 +1,127 @@
-Android bionic status
-=====================
+# Android bionic status
 
-# Target API level behavioral differences
+## Bionic function availability
+
+### POSIX
+
+You can see the current status with respect to POSIX in the form of tests:
+https://android.googlesource.com/platform/bionic/+/master/tests/headers/posix/
+
+Some POSIX functionality is not supported by the Linux kernel, and
+is guarded with tests for `__linux__`. Other functionality is not
+supported by bionic or glibc, and guarded with tests for `__BIONIC__`
+and `__GLIBC__`. In other cases historical accidents mean 32-bit
+bionic diverged but 64-bit bionic matches POSIX; these are guarded with
+`__LP64__`.
+
+Most bionic-only diversions should be accompanied by an explanatory comment.
+
+Missing functions are either obsolete or explicitly disallowed by SELinux:
+  * `a64l`/`l64a`
+  * `confstr`
+  * `crypt`/`encrypt`/`setkey`
+  * `gethostid`
+  * `shm_open`/`shm_unlink`
+  * `sockatmark`
+
+Missing functionality:
+  * `<aio.h>`
+  * `<wordexp.h>`
+  * Thread cancellation
+  * Robust mutexes
+
+Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
+list of POSIX functions implemented by glibc but not by bionic.
+
+### libc
+
+Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+
+New libc functions in P:
+  * `__freading`/`__fwriting` (completing <stdio_ext.h>)
+  * `endhostent`/`endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
+  * `fexecve`
+  * `fflush_unlocked`/`fgetc_unlocked`/`fgets_unlocked`/`fputc_unlocked`/`fputs_unlocked`/`fread_unlocked`/`fwrite_unlocked`
+  * `getentropy`/`getrandom` (adding <sys/random.h>)
+  * `getlogin_r`
+  * `glob`/`globfree` (adding <glob.h>)
+  * `hcreate`/`hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
+  * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
+  * `pthread_attr_getinheritsched`/`pthread_attr_setinheritsched`/`pthread_setschedprio`
+  * `pthread_mutexattr_getprotocol`/`pthread_mutexattr_setprotocol` (mutex priority inheritance)
+  * <signal.h> support for `sigaction64_t` and `sigset64_t` allowing LP32 access to real-time signals
+  * <spawn.h>
+  * `swab`
+  * `syncfs`
+
+New libc behavior in P:
+  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these)
+  * `%mc`/`%ms`/`%m[` support in the scanf family
+  * `%s` support in strptime (strftime already supported it)
+
+New libc functions in O:
+  * `sendto` FORTIFY support
+  * `__system_property_read_callback`/`__system_property_wait`
+  * legacy `bsd_signal`
+  * `catclose`/`catgets`/`catopen` (adding <nl_types.h>)
+  * `ctermid`
+  * all 6 <grp.h>/<pwd.h> (get|set|end)(gr|pw)ent functions
+  * `futimes`/`futimesat`/`lutimes`
+  * `getdomainname`/`setdomainname`
+  * `getsubopt`
+  * `hasmntopt`
+  * `mallopt`
+  * `mblen`
+  * 4 <sys/msg.h> `msg*` functions
+  * <langinfo.h> `nl_langinfo`/`nl_langinfo_l`
+  * `pthread_getname_np`
+  * 2 new Linux system calls `quotactl` and `sync_file_range`
+  * 4 <sys/sem.h> `sem*` functions
+  * 4 <sys/shm.h> `shm*` functions
+  * 5 legacy <signal.h> functions: `sighold`/`sigignore`/`sigpause`/`sigrelse`/`sigset`
+  * `strtod_l`/`strtof_l`/`strtol_l`/`strtoul_l`
+  * <wctype.h> `towctrans`/`towctrans_l`/`wctrans`/`wctrans_l`
+
+New libc functions in N:
+  * more FORTIFY support functions (`fread`/`fwrite`/`getcwd`/`pwrite`/`write`)
+  * all remaining `_FILE_OFFSET_BITS=64` functions, completing `_FILE_OFFSET_BITS=64` support in bionic (8)
+  * all 7 `pthread_barrier*` functions
+  * all 5 `pthread_spin*` functions
+  * `lockf`/`preadv`/`pwritev`/`scandirat` and `off64_t` variants
+  * `adjtimex`/`clock_adjtime`
+  * `getifaddrs`/`freeifaddrs`/`if_freenameindex`/`if_nameindex`
+  * `getgrgid_r`/`getgrnam_r`
+  * GNU extensions `fileno_unlocked`/`strchrnul`
+  * 32-bit `prlimit`
+
+libc function count over time:
+  G 803, H 825, I 826, J 846, J-MR1 873, J-MR2 881, K 896, L 1116, M 1181, N 1226, O 1278
+
+```
+ndk-r17$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
+  echo $i; nm $i | grep -vw [AbdNnt] | grep -vw B | wc -l ; done
+```
+
+### libm
+
+Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
+
+0 remaining missing POSIX libm functions.
+
+19 new libm functions in O: complex trig/exp/log functions.
+
+libm function count over time:
+  G 158, J-MR2 164, L 220, M 265, O 284
+
+
+
+## Target API level behavioral differences
 
 Most bionic bug fixes and improvements have been made without checks for
 the app's `targetSdkVersion`. As of O there were exactly two exceptions,
 but there are likely to be more in future because of Project Treble.
 
-Invalid `pthread_t` handling (targetSdkVersion >= O)
-----------------------------------------------------
+### Invalid `pthread_t` handling (targetSdkVersion >= O)
 
 As part of a long-term goal to remove the global thread list,
 and in an attempt to flush out racy code, we changed how an invalid
@@ -53,8 +166,7 @@ To fix your code, taking the affected functions one by one:
     the tid may have been reused, but your code is inherently unsafe without
     a redesign anyway.
 
-Interruptable `sem_wait` (targetSdkVersion >= N)
-------------------------------------------------
+### Interruptable `sem_wait` (targetSdkVersion >= N)
 
 POSIX says that `sem_wait` can be interrupted by delivery of a
 signal. This wasn't historically true in Android, and when we fixed this
@@ -62,108 +174,30 @@ bug we found that existing code relied on the old behavior. To preserve
 compatibility, `sem_wait` can only return EINTR on Android if the app
 targets N or later.
 
-# Bionic function availability
 
-libc
-----
+## FORTIFY
 
-Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+The `_FORTIFY_SOURCE` macro can be used to enable extra
+automatic bounds checking for common libc functions. If a buffer
+overrun is detected, the program is safely aborted as in this
+(example)[https://source.android.com/devices/tech/debug/native-crash#fortify].
 
-New libc functions in P:
-  * `__freading`/`__fwriting` (completing <stdio_ext.h>)
-  * `endhostent`/`endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
-  * `fexecve`
-  * `fflush_unlocked`/`fgetc_unlocked`/`fgets_unlocked`/`fputc_unlocked`/`fputs_unlocked`/`fread_unlocked`/`fwrite_unlocked`
-  * `getentropy`/`getrandom` (adding <sys/random.h>)
-  * `getlogin_r`
-  * `glob`/`globfree` (adding <glob.h>)
-  * `hcreate`/`hcreate_r`/`hdestroy`/`hdestroy_r`/`hsearch`/`hsearch_r` (completing <search.h>)
-  * `iconv`/`iconv_close`/`iconv_open` (adding <iconv.h>)
-  * `pthread_attr_getinheritsched`/`pthread_attr_setinheritsched`/`pthread_setschedprio`
-  * <spawn.h>
-  * `swab`
-  * `syncfs`
-  * %C and %S support in the printf family (previously only the wprintf family supported these).
+Note that in recent releases Android's FORTIFY has been extended to
+cover other issues. It can now detect, for example, passing `O_CREAT`
+to open(2) without specifying a mode. It also performs some checking
+regardless of whether the caller was built with FORTIFY enabled. In P,
+for example, calling a `pthread_mutex_` function on a destroyed mutex,
+calling a `<dirent.h>` function on a null pointer, using `%n` with the
+printf(3) family, or using the scanf(3) `m` modifier incorrectly will
+all result in FORTIFY failures even for code not built with FORTIFY.
 
-New libc functions in O:
-  * `sendto` FORTIFY support
-  * `__system_property_read_callback`/`__system_property_wait`
-  * legacy `bsd_signal`
-  * `catclose`/`catgets`/`catopen` (adding <nl_types.h>)
-  * `ctermid`
-  * all 6 <grp.h>/<pwd.h> (get|set|end)(gr|pw)ent functions
-  * `futimes`/`futimesat`/`lutimes`
-  * `getdomainname`/`setdomainname`
-  * `getsubopt`
-  * `hasmntopt`
-  * `mallopt`
-  * `mblen`
-  * 4 <sys/msg.h> `msg*` functions
-  * <langinfo.h> `nl_langinfo`/`nl_langinfo_l`
-  * `pthread_getname_np`
-  * 2 new Linux system calls `quotactl` and `sync_file_range`
-  * 4 <sys/sem.h> `sem*` functions
-  * 4 <sys/shm.h> `shm*` functions
-  * 5 legacy <signal.h> functions: `sighold`/`sigignore`/`sigpause`/`sigrelse`/`sigset`
-  * `strtod_l`/`strtof_l`/`strtol_l`/`strtoul_l`
-  * <wctype.h> `towctrans`/`towctrans_l`/`wctrans`/`wctrans_l`
+More background information is available in our
+(FORTIFY in Android)[https://android-developers.googleblog.com/2017/04/fortify-in-android.html]
+blog post.
 
-New libc functions in N:
-  * more FORTIFY support functions (`fread`/`fwrite`/`getcwd`/`pwrite`/`write`)
-  * all remaining `_FILE_OFFSET_BITS=64` functions, completing `_FILE_OFFSET_BITS=64` support in bionic (8)
-  * all 7 `pthread_barrier*` functions
-  * all 5 `pthread_spin*` functions
-  * `lockf`/`preadv`/`pwritev`/`scandirat` and `off64_t` variants
-  * `adjtimex`/`clock_adjtime`
-  * `getifaddrs`/`freeifaddrs`/`if_freenameindex`/`if_nameindex`
-  * `getgrgid_r`/`getgrnam_r`
-  * GNU extensions `fileno_unlocked`/`strchrnul`
-  * 32-bit `prlimit`
-
-libc function count over time:
-  G 803, H 825, I 826, J 846, J-MR1 873, J-MR2 881, K 896, L 1116, M 1181, N 1226, O 1278
-
-```
-ndk-r17$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do echo $i; nm $i | grep -vw [AbdNnt] | grep -vw B | wc -l ; done
-```
-
-Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
-list of POSIX functions implemented by glibc but not by bionic. Currently
-(2017-10):
-```
-aio_cancel
-aio_error
-aio_fsync
-aio_read
-aio_return
-aio_suspend
-aio_write
-lio_listio
-pthread_cancel
-pthread_mutex_consistent
-pthread_mutex_getprioceiling
-pthread_mutex_setprioceiling
-pthread_mutexattr_getprioceiling
-pthread_mutexattr_getprotocol
-pthread_mutexattr_getrobust
-pthread_mutexattr_setprioceiling
-pthread_mutexattr_setprotocol
-pthread_mutexattr_setrobust
-pthread_setcancelstate
-pthread_setcanceltype
-pthread_testcancel
-wordexp
-wordfree
-```
-
-libm
-----
-
-Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
-
-0 remaining missing POSIX libm functions.
-
-19 new libm functions in O: complex trig/exp/log functions.
-
-libm function count over time:
-  G 158, J-MR2 164, L 220, M 265, O 284
+The Android platform is built with `-D_FORTIFY_SOURCE=2`, but NDK users
+need to manually enable FORTIFY by setting that themselves in whatever
+build system they're using. The exact subset of FORTIFY available to
+NDK users will depend on their target ABI level, because when a FORTIFY
+check can't be guaranteed at compile-time, a call to a run-time `_chk`
+function is added.

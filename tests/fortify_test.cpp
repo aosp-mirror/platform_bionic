@@ -417,11 +417,9 @@ TEST_F(DEATHTEST, sprintf_fortified) {
   ASSERT_FORTIFY(sprintf(buf, "%s", source_buf));
 }
 
-#ifdef __clang__ && !__has_attribute(alloc_size)
+#if !__has_attribute(alloc_size)
 // TODO: remove this after Clang prebuilt rebase.
 #else
-// This test is disabled in clang because clang doesn't properly detect
-// this buffer overflow. TODO: Fix clang.
 TEST_F(DEATHTEST, sprintf_malloc_fortified) {
   char* buf = (char *) malloc(10);
   char source_buf[11];
@@ -995,7 +993,18 @@ TEST_F(DEATHTEST, ppoll_fortified) {
   // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
   timespec timeout;
   timeout.tv_sec = timeout.tv_nsec = 0;
-  ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, NULL));
+  ASSERT_FORTIFY(ppoll(buf, fd_count, &timeout, nullptr));
+}
+
+TEST_F(DEATHTEST, ppoll64_fortified) {
+#if __BIONIC__ // glibc doesn't have ppoll64.
+  nfds_t fd_count = atoi("2"); // suppress compiler optimizations
+  pollfd buf[1] = {{0, POLLIN, 0}};
+  // Set timeout to zero to prevent waiting in ppoll when fortify test fails.
+  timespec timeout;
+  timeout.tv_sec = timeout.tv_nsec = 0;
+  ASSERT_FORTIFY(ppoll64(buf, fd_count, &timeout, nullptr));
+#endif
 }
 
 TEST_F(DEATHTEST, open_O_CREAT_without_mode_fortified) {

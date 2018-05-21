@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "ScopedSignalHandler.h"
 #include "utils.h"
 
 #include <fenv.h>

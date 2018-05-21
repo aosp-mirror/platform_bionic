@@ -21,37 +21,28 @@
 
 #include <string>
 
+#include <android-base/test_utils.h>
+
+using namespace std::literals;
+
 #if defined(__BIONIC__)
 
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
 
 #include <benchmark/benchmark.h>
+#include <system_properties/system_properties.h>
 #include "util.h"
 
 struct LocalPropertyTestState {
-  explicit LocalPropertyTestState(int nprops) : nprops(nprops), valid(false) {
+  explicit LocalPropertyTestState(int nprops)
+      : nprops(nprops), valid(false), system_properties_(false) {
     static const char prop_name_chars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.";
 
-    const char* android_data = getenv("ANDROID_DATA");
-    if (android_data == NULL) {
-      printf("ANDROID_DATA environment variable not set\n");
+    valid = system_properties_.AreaInit(dir_.path, nullptr);
+    if (!valid) {
       return;
     }
-    char dir_template[PATH_MAX];
-    snprintf(dir_template, sizeof(dir_template), "%s/local/tmp/prop-XXXXXX", android_data);
-    char* dirname = mkdtemp(dir_template);
-    if (!dirname) {
-      printf("making temp file for test state failed (is %s/local/tmp writable?): %s\n",
-             android_data, strerror(errno));
-      return;
-    }
-
-    pa_dirname = dirname;
-    pa_filename = pa_dirname + "/__properties__";
-
-    __system_property_set_filename(pa_filename.c_str());
-    __system_property_area_init();
 
     names = new char* [nprops];
     name_lens = new int[nprops];
@@ -88,7 +79,7 @@ struct LocalPropertyTestState {
         values[i][j] = prop_name_chars[random() % (sizeof(prop_name_chars) - 1)];
       }
 
-      if (__system_property_add(names[i], name_lens[i], values[i], value_lens[i]) < 0) {
+      if (system_properties_.Add(names[i], name_lens[i], values[i], value_lens[i]) < 0) {
         printf("Failed to add a property, terminating...\n");
         printf("%s = %.*s\n", names[i], value_lens[i], values[i]);
         exit(1);
@@ -98,14 +89,16 @@ struct LocalPropertyTestState {
     valid = true;
   }
 
-  ~LocalPropertyTestState() {
-    if (!valid)
-      return;
+  SystemProperties& system_properties() {
+    return system_properties_;
+  }
 
-    __system_property_set_filename(PROP_FILENAME);
-    __system_property_area_init();
-    unlink(pa_filename.c_str());
-    rmdir(pa_dirname.c_str());
+  ~LocalPropertyTestState() {
+    if (!valid) {
+      return;
+    }
+
+    system_properties_.contexts_->FreeAndUnmap();
 
     for (int i = 0; i < nprops; i++) {
       delete names[i];
@@ -126,8 +119,8 @@ struct LocalPropertyTestState {
   bool valid;
 
  private:
-  std::string pa_dirname;
-  std::string pa_filename;
+  SystemProperties system_properties_;
+  TemporaryDir dir_;
 };
 
 static void BM_property_get(benchmark::State& state) {
@@ -138,7 +131,7 @@ static void BM_property_get(benchmark::State& state) {
 
   while (state.KeepRunning()) {
     char value[PROP_VALUE_MAX];
-    __system_property_get(pa.names[random() % nprops], value);
+    pa.system_properties().Get(pa.names[random() % nprops], value);
   }
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_property_get, "NUM_PROPS");
@@ -150,7 +143,7 @@ static void BM_property_find(benchmark::State& state) {
   if (!pa.valid) return;
 
   while (state.KeepRunning()) {
-    __system_property_find(pa.names[random() % nprops]);
+    pa.system_properties().Find(pa.names[random() % nprops]);
   }
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_property_find, "NUM_PROPS");
@@ -165,12 +158,12 @@ static void BM_property_read(benchmark::State& state) {
   char propvalue[PROP_VALUE_MAX];
 
   for (size_t i = 0; i < nprops; ++i) {
-    pinfo[i] = __system_property_find(pa.names[random() % nprops]);
+    pinfo[i] = pa.system_properties().Find(pa.names[random() % nprops]);
   }
 
   size_t i = 0;
   while (state.KeepRunning()) {
-    __system_property_read(pinfo[i], 0, propvalue);
+    pa.system_properties().Read(pinfo[i], 0, propvalue);
     i = (i + 1) % nprops;
   }
 
@@ -186,12 +179,12 @@ static void BM_property_serial(benchmark::State& state) {
 
   const prop_info** pinfo = new const prop_info*[nprops];
   for (size_t i = 0; i < nprops; ++i) {
-    pinfo[i] = __system_property_find(pa.names[random() % nprops]);
+    pinfo[i] = pa.system_properties().Find(pa.names[random() % nprops]);
   }
 
   size_t i = 0;
   while (state.KeepRunning()) {
-    __system_property_serial(pinfo[i]);
+    pa.system_properties().Serial(pinfo[i]);
     i = (i + 1) % nprops;
   }
 

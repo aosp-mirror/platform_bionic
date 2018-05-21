@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_SOINFO_H
-#define __LINKER_SOINFO_H
+#pragma once
 
 #include <link.h>
 
@@ -52,9 +51,17 @@
                                          // when load group is crossing
                                          // namespace boundary twice and second
                                          // local group depends on the same libraries.
+#define FLAG_TLS_NODELETE     0x00000200 // This flag set when there is at least one
+                                         // outstanding thread_local dtor
+                                         // registered with this soinfo. In such
+                                         // a case the actual unload is
+                                         // postponed until the last thread_local
+                                         // destructor associated with this
+                                         // soinfo is executed and this flag is
+                                         // unset.
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 3
+#define SOINFO_VERSION 4
 
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
@@ -253,9 +260,12 @@ struct soinfo {
   void set_linker_flag();
   void set_main_executable();
   void set_nodelete();
+  void set_tls_nodelete();
+  void unset_tls_nodelete();
 
   size_t increment_ref_count();
   size_t decrement_ref_count();
+  size_t get_ref_count() const;
 
   soinfo* get_local_group_root() const;
 
@@ -298,6 +308,8 @@ struct soinfo {
   template<typename ElfRelIteratorT>
   bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                 const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  bool relocate_relr();
+  void apply_relr_reloc(ElfW(Addr) offset);
 
  private:
   // This part of the structure is only available
@@ -354,6 +366,10 @@ struct soinfo {
   friend soinfo* get_libdl_info(const char* linker_path,
                                 const soinfo& linker_si,
                                 const link_map& linker_map);
+
+  // version >= 4
+  ElfW(Relr)* relr_;
+  size_t relr_count_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
@@ -369,5 +385,3 @@ void for_each_dt_needed(const soinfo* si, F action) {
     }
   }
 }
-
-#endif  /* __LINKER_SOINFO_H */

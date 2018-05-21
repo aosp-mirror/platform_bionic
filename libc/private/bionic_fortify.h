@@ -52,7 +52,7 @@ static inline void __check_fd_set(const char* fn, int fd, size_t set_size) {
     __fortify_fatal("%s: file descriptor %d < 0", fn, fd);
   }
   if (__predict_false(fd >= FD_SETSIZE)) {
-    __fortify_fatal("%s: file descriptor %d >= FD_SETSIZE %zu", fn, fd, set_size);
+    __fortify_fatal("%s: file descriptor %d >= FD_SETSIZE %zu", fn, fd, FD_SETSIZE);
   }
   if (__predict_false(set_size < sizeof(fd_set))) {
     __fortify_fatal("%s: set size %zu is too small to be an fd_set", fn, set_size);

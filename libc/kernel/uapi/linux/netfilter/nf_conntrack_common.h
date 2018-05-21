@@ -30,7 +30,7 @@ enum ip_conntrack_info {
 };
 #define NF_CT_STATE_INVALID_BIT (1 << 0)
 #define NF_CT_STATE_BIT(ctinfo) (1 << ((ctinfo) % IP_CT_IS_REPLY + 1))
-#define NF_CT_STATE_UNTRACKED_BIT (1 << (IP_CT_UNTRACKED + 1))
+#define NF_CT_STATE_UNTRACKED_BIT (1 << 6)
 enum ip_conntrack_status {
   IPS_EXPECTED_BIT = 0,
   IPS_EXPECTED = (1 << IPS_EXPECTED_BIT),

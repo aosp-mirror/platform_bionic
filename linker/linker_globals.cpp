@@ -26,9 +26,11 @@
  * SUCH DAMAGE.
  */
 
-
+#include "linker.h"
 #include "linker_globals.h"
 #include "linker_namespaces.h"
+
+#include "android-base/stringprintf.h"
 
 int g_argc = 0;
 char** g_argv = nullptr;
@@ -48,3 +50,18 @@ size_t linker_get_error_buffer_size() {
   return sizeof(__linker_dl_err_buf);
 }
 
+void DL_WARN_documented_change(int api_level, const char* doc_link, const char* fmt, ...) {
+  std::string result{"Warning: "};
+
+  va_list ap;
+  va_start(ap, fmt);
+  android::base::StringAppendV(&result, fmt, ap);
+  va_end(ap);
+
+  android::base::StringAppendF(&result,
+                               " and will not work when the app moves to API level %d or later "
+                               "(https://android.googlesource.com/platform/bionic/+/master/%s) "
+                               "(allowing for now because this app's target API level is still %d)",
+                               api_level, doc_link, get_application_target_sdk_version());
+  DL_WARN("%s", result.c_str());
+}

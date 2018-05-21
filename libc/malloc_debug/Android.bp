@@ -13,7 +13,10 @@ cc_library_static {
 
     stl: "libc++_static",
 
-    whole_static_libs: ["libasync_safe", "libdemangle"],
+    whole_static_libs: [
+        "libasync_safe",
+        "libdemangle",
+    ],
 
     include_dirs: ["bionic/libc"],
 
@@ -39,15 +42,13 @@ cc_library {
     name: "libc_malloc_debug",
 
     srcs: [
-        "BacktraceData.cpp",
         "Config.cpp",
         "DebugData.cpp",
         "debug_disable.cpp",
-        "FreeTrackData.cpp",
         "GuardData.cpp",
         "malloc_debug.cpp",
+        "PointerData.cpp",
         "RecordData.cpp",
-        "TrackData.cpp",
     ],
 
     stl: "libc++_static",
@@ -59,6 +60,11 @@ cc_library {
             static_libs: ["libunwind_llvm"],
         },
     },
+
+    // Clang lld link flags do not work with special link rules
+    // for libunwind_llvm yet. Linked aosp_arm-eng image failed to
+    // boot up in the emulator. http://b/78118944.
+    use_clang_lld: false,
 
     static_libs: [
         "libasync_safe",
@@ -88,6 +94,7 @@ cc_library {
         "-Werror",
         "-fno-stack-protector",
         "-Wno-error=format-zero-length",
+        "-Wthread-safety",
     ],
 }
 
@@ -95,16 +102,7 @@ cc_library {
 // Unit Tests
 // ==============================================================
 cc_test {
-
     name: "malloc_debug_unit_tests",
-    multilib: {
-        lib32: {
-            suffix: "32",
-        },
-        lib64: {
-            suffix: "64",
-        },
-    },
 
     srcs: [
         "tests/backtrace_fake.cpp",
@@ -117,7 +115,10 @@ cc_test {
     whole_static_libs: ["libc_malloc_debug"],
 
     local_include_dirs: ["tests"],
-    include_dirs: ["bionic/libc", "bionic/libc/async_safe/include"],
+    include_dirs: [
+        "bionic/libc",
+        "bionic/libc/async_safe/include",
+    ],
 
     shared_libs: ["libbase"],
 

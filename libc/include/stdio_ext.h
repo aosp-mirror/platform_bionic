@@ -37,13 +37,15 @@ __BEGIN_DECLS
 
 size_t __fbufsize(FILE* __fp) __INTRODUCED_IN(23);
 int __freadable(FILE* __fp) __INTRODUCED_IN(23);
-int __freading(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int __freading(FILE* __fp) __INTRODUCED_IN(28);
 int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
-int __fwriting(FILE* __fp) __INTRODUCED_IN_FUTURE;
+int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
 int __flbf(FILE* __fp) __INTRODUCED_IN(23);
 void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
 size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
 void _flushlbf(void) __INTRODUCED_IN(23);
+
+void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
 
 #define FSETLOCKING_QUERY 0
 #define FSETLOCKING_INTERNAL 1

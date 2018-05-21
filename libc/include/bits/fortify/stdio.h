@@ -63,8 +63,7 @@ int snprintf(char* dest, size_t size, const char* format)
                 "format string will always overflow destination buffer")
     __errorattr("format string will always overflow destination buffer");
 
-__BIONIC_FORTIFY_INLINE
-__printflike(3, 4)
+__BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
 int snprintf(char* const __pass_object_size dest, size_t size, const char* format, ...)
         __overloadable {
     va_list va;
@@ -82,8 +81,7 @@ int sprintf(char* dest, const char* format)
                 "format string will always overflow destination buffer")
     __errorattr("format string will always overflow destination buffer");
 
-__BIONIC_FORTIFY_INLINE
-__printflike(2, 3)
+__BIONIC_FORTIFY_VARIADIC __printflike(2, 3)
 int sprintf(char* const __pass_object_size dest, const char* format, ...) __overloadable {
     va_list va;
     va_start(va, format);
@@ -159,12 +157,12 @@ __errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
 
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
-__BIONIC_FORTIFY_INLINE __printflike(3, 4)
+__BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
 int snprintf(char* dest, size_t size, const char* format, ...) {
     return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, __builtin_va_arg_pack());
 }
 
-__BIONIC_FORTIFY_INLINE __printflike(2, 3)
+__BIONIC_FORTIFY_VARIADIC __printflike(2, 3)
 int sprintf(char* dest, const char* format, ...) {
     return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
 }

@@ -28,14 +28,8 @@
 
 #include <signal.h>
 
-// Realtime signals reserved for internal use:
-//   32 (__SIGRTMIN + 0)        POSIX timers
-//   33 (__SIGRTMIN + 1)        libbacktrace
-//   34 (__SIGRTMIN + 2)        libcore
-//   35 (__SIGRTMIN + 3)        debuggerd -b
+#include "private/sigrtmin.h"
 
-int __libc_current_sigrtmin(void) {
-  // If you change this, also change __ndk_legacy___libc_current_sigrtmin
-  // in <android/legacy_signal_inlines.h> to match.
-  return __SIGRTMIN + 4;
+int __libc_current_sigrtmin() {
+  return __SIGRTMIN + __SIGRT_RESERVED;
 }

@@ -38,6 +38,7 @@
 #define FAN_ALL_CLASS_BITS (FAN_CLASS_NOTIF | FAN_CLASS_CONTENT | FAN_CLASS_PRE_CONTENT)
 #define FAN_UNLIMITED_QUEUE 0x00000010
 #define FAN_UNLIMITED_MARKS 0x00000020
+#define FAN_ENABLE_AUDIT 0x00000040
 #define FAN_ALL_INIT_FLAGS (FAN_CLOEXEC | FAN_NONBLOCK | FAN_ALL_CLASS_BITS | FAN_UNLIMITED_QUEUE | FAN_UNLIMITED_MARKS)
 #define FAN_MARK_ADD 0x00000001
 #define FAN_MARK_REMOVE 0x00000002
@@ -67,6 +68,7 @@ struct fanotify_response {
 };
 #define FAN_ALLOW 0x01
 #define FAN_DENY 0x02
+#define FAN_AUDIT 0x10
 #define FAN_NOFD - 1
 #define FAN_EVENT_METADATA_LEN (sizeof(struct fanotify_event_metadata))
 #define FAN_EVENT_NEXT(meta,len) ((len) -= (meta)->event_len, (struct fanotify_event_metadata *) (((char *) (meta)) + (meta)->event_len))

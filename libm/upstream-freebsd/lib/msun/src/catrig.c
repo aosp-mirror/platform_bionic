@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2012 Stephen Montgomery-Smith <stephen@FreeBSD.ORG>
  * All rights reserved.
  *
@@ -25,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/catrig.c 275819 2014-12-16 09:21:56Z ed $");
+__FBSDID("$FreeBSD: head/lib/msun/src/catrig.c 327232 2017-12-27 03:23:41Z eadler $");
 
 #include <complex.h>
 #include <float.h>
@@ -37,7 +39,7 @@ __FBSDID("$FreeBSD: head/lib/msun/src/catrig.c 275819 2014-12-16 09:21:56Z ed $"
 #define isinf(x)	(fabs(x) == INFINITY)
 #undef isnan
 #define isnan(x)	((x) != (x))
-#define	raise_inexact()	do { volatile float junk = 1 + tiny; } while(0)
+#define	raise_inexact()	do { volatile float junk __unused = 1 + tiny; } while(0)
 #undef signbit
 #define signbit(x)	(__builtin_signbit(x))
 
@@ -469,8 +471,13 @@ clog_for_large_values(double complex z)
 
 	/*
 	 * Avoid overflow in hypot() when x and y are both very large.
-	 * Divide x and y by E, and then add 1 to the logarithm.  This depends
-	 * on E being larger than sqrt(2).
+	 * Divide x and y by E, and then add 1 to the logarithm.  This
+	 * depends on E being larger than sqrt(2), since the return value of
+	 * hypot cannot overflow if neither argument is greater in magnitude
+	 * than 1/sqrt(2) of the maximum value of the return type.  Likewise
+	 * this determines the necessary threshold for using this method
+	 * (however, actually use 1/2 instead as it is simpler).
+	 *
 	 * Dividing by E causes an insignificant loss of accuracy; however
 	 * this method is still poor since it is uneccessarily slow.
 	 */
@@ -604,7 +611,7 @@ catanh(double complex z)
 	if (ax < SQRT_3_EPSILON / 2 && ay < SQRT_3_EPSILON / 2) {
 		/*
 		 * z = 0 was filtered out above.  All other cases must raise
-		 * inexact, but this is the only only that needs to do it
+		 * inexact, but this is the only case that needs to do it
 		 * explicitly.
 		 */
 		raise_inexact();
@@ -637,3 +644,12 @@ catan(double complex z)
 
 	return (CMPLX(cimag(w), creal(w)));
 }
+
+#if LDBL_MANT_DIG == 53
+__weak_reference(cacosh, cacoshl);
+__weak_reference(cacos, cacosl);
+__weak_reference(casinh, casinhl);
+__weak_reference(casin, casinl);
+__weak_reference(catanh, catanhl);
+__weak_reference(catan, catanl);
+#endif

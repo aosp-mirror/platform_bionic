@@ -36,7 +36,7 @@ SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
 SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
 #undef SECTION
 
-static void _start_main(void* raw_args) __used {
+__used static void _start_main(void* raw_args) {
   structors_array_t array;
   array.preinit_array = &__PREINIT_ARRAY__;
   array.init_array = &__INIT_ARRAY__;
@@ -53,7 +53,7 @@ __asm__(PRE "mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
 __asm__(PRE "mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)
-__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; pushl %eax; calll _start_main" POST);
+__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax; calll _start_main" POST);
 #elif defined(__x86_64__)
 __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #else
@@ -66,3 +66,6 @@ __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
+#ifdef __i386__
+# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
+#endif

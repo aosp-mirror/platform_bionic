@@ -26,11 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_RECORDDATA_H
-#define DEBUG_MALLOC_RECORDDATA_H
+#pragma once
 
-#include <stdint.h>
 #include <pthread.h>
+#include <stdint.h>
 #include <unistd.h>
 
 #include <atomic>
@@ -66,7 +65,7 @@ class ThreadCompleteEntry : public RecordEntry {
 
 class AllocEntry : public RecordEntry {
  public:
-  AllocEntry(void* pointer);
+  explicit AllocEntry(void* pointer);
   virtual ~AllocEntry() = default;
 
  protected:
@@ -92,7 +91,7 @@ class MallocEntry : public AllocEntry {
 
 class FreeEntry : public AllocEntry {
  public:
-  FreeEntry(void* pointer);
+  explicit FreeEntry(void* pointer);
   virtual ~FreeEntry() = default;
 
   std::string GetString() const override;
@@ -129,7 +128,7 @@ class ReallocEntry : public MallocEntry {
   DISALLOW_COPY_AND_ASSIGN(ReallocEntry);
 };
 
-// posix_memalign, memalign, pvalloc, valloc all recorded with this class.
+// aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 class MemalignEntry : public MallocEntry {
  public:
   MemalignEntry(void* pointer, size_t size, size_t alignment);
@@ -173,5 +172,3 @@ class RecordData {
 
   DISALLOW_COPY_AND_ASSIGN(RecordData);
 };
-
-#endif // DEBUG_MALLOC_RECORDDATA_H

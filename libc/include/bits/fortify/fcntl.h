@@ -98,7 +98,7 @@ __errordecl(__creat_missing_mode, __open_too_few_args_error);
 __errordecl(__creat_too_many_args, __open_too_many_args_error);
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
-__BIONIC_FORTIFY_INLINE
+__BIONIC_FORTIFY_VARIADIC
 int open(const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if (__open_modes_useful(flags) && __builtin_va_arg_pack_len() == 0) {
@@ -117,7 +117,7 @@ int open(const char* pathname, int flags, ...) {
     return __open_real(pathname, flags, __builtin_va_arg_pack());
 }
 
-__BIONIC_FORTIFY_INLINE
+__BIONIC_FORTIFY_VARIADIC
 int openat(int dirfd, const char* pathname, int flags, ...) {
     if (__builtin_constant_p(flags)) {
         if (__open_modes_useful(flags) && __builtin_va_arg_pack_len() == 0) {

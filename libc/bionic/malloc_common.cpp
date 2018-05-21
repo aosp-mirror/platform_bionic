@@ -69,7 +69,14 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
     Malloc(malloc_disable),
     Malloc(malloc_enable),
     Malloc(mallopt),
+    Malloc(aligned_alloc),
   };
+
+// Malloc hooks.
+void* (*volatile __malloc_hook)(size_t, const void*);
+void* (*volatile __realloc_hook)(void*, size_t, const void*);
+void (*volatile __free_hook)(void*, const void*);
+void* (*volatile __memalign_hook)(size_t, size_t, const void*);
 
 // In a VM process, this is set to 1 after fork()ing out of zygote.
 int gMallocLeakZygoteChild = 0;
@@ -142,6 +149,14 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
   return Malloc(posix_memalign)(memptr, alignment, size);
 }
 
+extern "C" void* aligned_alloc(size_t alignment, size_t size) {
+  auto _aligned_alloc = __libc_globals->malloc_dispatch.aligned_alloc;
+  if (__predict_false(_aligned_alloc != nullptr)) {
+    return _aligned_alloc(alignment, size);
+  }
+  return Malloc(aligned_alloc)(alignment, size);
+}
+
 extern "C" void* realloc(void* old_mem, size_t bytes) {
   auto _realloc = __libc_globals->malloc_dispatch.realloc;
   if (__predict_false(_realloc != nullptr)) {
@@ -181,17 +196,30 @@ extern "C" void* valloc(size_t bytes) {
 
 extern "C" int __cxa_atexit(void (*func)(void *), void *arg, void *dso);
 
+static const char* HOOKS_SHARED_LIB = "libc_malloc_hooks.so";
+static const char* HOOKS_PROPERTY_ENABLE = "libc.debug.hooks.enable";
+static const char* HOOKS_ENV_ENABLE = "LIBC_HOOKS_ENABLE";
+
 static const char* DEBUG_SHARED_LIB = "libc_malloc_debug.so";
-static const char* DEBUG_MALLOC_PROPERTY_OPTIONS = "libc.debug.malloc.options";
-static const char* DEBUG_MALLOC_PROPERTY_PROGRAM = "libc.debug.malloc.program";
-static const char* DEBUG_MALLOC_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
+static const char* DEBUG_PROPERTY_OPTIONS = "libc.debug.malloc.options";
+static const char* DEBUG_PROPERTY_PROGRAM = "libc.debug.malloc.program";
+static const char* DEBUG_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
 
-static void* libc_malloc_impl_handle = nullptr;
+enum FunctionEnum : uint8_t {
+  FUNC_INITIALIZE,
+  FUNC_FINALIZE,
+  FUNC_GET_MALLOC_LEAK_INFO,
+  FUNC_FREE_MALLOC_LEAK_INFO,
+  FUNC_MALLOC_BACKTRACE,
+  FUNC_LAST,
+};
+static void* g_functions[FUNC_LAST];
 
-static void (*g_debug_finalize_func)();
-static void (*g_debug_get_malloc_leak_info_func)(uint8_t**, size_t*, size_t*, size_t*, size_t*);
-static void (*g_debug_free_malloc_leak_info_func)(uint8_t*);
-static ssize_t (*g_debug_malloc_backtrace_func)(void*, uintptr_t*, size_t);
+typedef void (*finalize_func_t)();
+typedef bool (*init_func_t)(const MallocDispatch*, int*, const char*);
+typedef void (*get_malloc_leak_info_func_t)(uint8_t**, size_t*, size_t*, size_t*, size_t*);
+typedef void (*free_malloc_leak_info_func_t)(uint8_t*);
+typedef ssize_t (*malloc_backtrace_func_t)(void*, uintptr_t*, size_t);
 
 // =============================================================================
 // Log functions
@@ -216,17 +244,20 @@ static ssize_t (*g_debug_malloc_backtrace_func)(void*, uintptr_t*, size_t);
 // "*backtrace_size" is set to the maximum number of entries in the back trace
 extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overall_size,
     size_t* info_size, size_t* total_memory, size_t* backtrace_size) {
-  if (g_debug_get_malloc_leak_info_func == nullptr) {
+  void* func = g_functions[FUNC_GET_MALLOC_LEAK_INFO];
+  if (func == nullptr) {
     return;
   }
-  g_debug_get_malloc_leak_info_func(info, overall_size, info_size, total_memory, backtrace_size);
+  reinterpret_cast<get_malloc_leak_info_func_t>(func)(info, overall_size, info_size, total_memory,
+                                                      backtrace_size);
 }
 
 extern "C" void free_malloc_leak_info(uint8_t* info) {
-  if (g_debug_free_malloc_leak_info_func == nullptr) {
+  void* func = g_functions[FUNC_FREE_MALLOC_LEAK_INFO];
+  if (func == nullptr) {
     return;
   }
-  g_debug_free_malloc_leak_info_func(info);
+  reinterpret_cast<free_malloc_leak_info_func_t>(func)(info);
 }
 
 // =============================================================================
@@ -243,62 +274,56 @@ static bool InitMallocFunction(void* malloc_impl_handler, FunctionType* func, co
   return true;
 }
 
-static bool InitMalloc(void* malloc_impl_handler, MallocDispatch* table, const char* prefix) {
-  if (!InitMallocFunction<MallocCalloc>(malloc_impl_handler, &table->calloc,
-                                        prefix, "calloc")) {
+static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const char* prefix) {
+  if (!InitMallocFunction<MallocCalloc>(impl_handler, &table->calloc, prefix, "calloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocFree>(malloc_impl_handler, &table->free,
-                                      prefix, "free")) {
+  if (!InitMallocFunction<MallocFree>(impl_handler, &table->free, prefix, "free")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMallinfo>(malloc_impl_handler, &table->mallinfo,
-                                          prefix, "mallinfo")) {
+  if (!InitMallocFunction<MallocMallinfo>(impl_handler, &table->mallinfo, prefix, "mallinfo")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMallopt>(malloc_impl_handler, &table->mallopt,
-                                         prefix, "mallopt")) {
+  if (!InitMallocFunction<MallocMallopt>(impl_handler, &table->mallopt, prefix, "mallopt")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMalloc>(malloc_impl_handler, &table->malloc,
-                                        prefix, "malloc")) {
+  if (!InitMallocFunction<MallocMalloc>(impl_handler, &table->malloc, prefix, "malloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMallocUsableSize>(
-      malloc_impl_handler, &table->malloc_usable_size, prefix, "malloc_usable_size")) {
+  if (!InitMallocFunction<MallocMallocUsableSize>(impl_handler, &table->malloc_usable_size, prefix,
+                                                  "malloc_usable_size")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMemalign>(malloc_impl_handler, &table->memalign,
-                                          prefix, "memalign")) {
+  if (!InitMallocFunction<MallocMemalign>(impl_handler, &table->memalign, prefix, "memalign")) {
     return false;
   }
-  if (!InitMallocFunction<MallocPosixMemalign>(malloc_impl_handler, &table->posix_memalign,
-                                               prefix, "posix_memalign")) {
+  if (!InitMallocFunction<MallocPosixMemalign>(impl_handler, &table->posix_memalign, prefix,
+                                               "posix_memalign")) {
     return false;
   }
-  if (!InitMallocFunction<MallocRealloc>(malloc_impl_handler, &table->realloc,
-                                         prefix, "realloc")) {
+  if (!InitMallocFunction<MallocAlignedAlloc>(impl_handler, &table->aligned_alloc,
+                                              prefix, "aligned_alloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocIterate>(malloc_impl_handler, &table->iterate,
-                                         prefix, "iterate")) {
+  if (!InitMallocFunction<MallocRealloc>(impl_handler, &table->realloc, prefix, "realloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMallocDisable>(malloc_impl_handler, &table->malloc_disable,
-                                         prefix, "malloc_disable")) {
+  if (!InitMallocFunction<MallocIterate>(impl_handler, &table->iterate, prefix, "iterate")) {
     return false;
   }
-  if (!InitMallocFunction<MallocMallocEnable>(malloc_impl_handler, &table->malloc_enable,
-                                         prefix, "malloc_enable")) {
+  if (!InitMallocFunction<MallocMallocDisable>(impl_handler, &table->malloc_disable, prefix,
+                                               "malloc_disable")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMallocEnable>(impl_handler, &table->malloc_enable, prefix,
+                                              "malloc_enable")) {
     return false;
   }
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  if (!InitMallocFunction<MallocPvalloc>(malloc_impl_handler, &table->pvalloc,
-                                         prefix, "pvalloc")) {
+  if (!InitMallocFunction<MallocPvalloc>(impl_handler, &table->pvalloc, prefix, "pvalloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocValloc>(malloc_impl_handler, &table->valloc,
-                                        prefix, "valloc")) {
+  if (!InitMallocFunction<MallocValloc>(impl_handler, &table->valloc, prefix, "valloc")) {
     return false;
   }
 #endif
@@ -315,102 +340,114 @@ static void malloc_fini_impl(void*) {
   fclose(stdout);
   fclose(stderr);
 
-  g_debug_finalize_func();
+  reinterpret_cast<finalize_func_t>(g_functions[FUNC_FINALIZE])();
+}
+
+static bool CheckLoadMallocHooks(char** options) {
+  char* env = getenv(HOOKS_ENV_ENABLE);
+  if ((env == nullptr || env[0] == '\0' || env[0] == '0') &&
+    (__system_property_get(HOOKS_PROPERTY_ENABLE, *options) == 0 || *options[0] == '\0' || *options[0] == '0')) {
+    return false;
+  }
+  *options = nullptr;
+  return true;
+}
+
+static bool CheckLoadMallocDebug(char** options) {
+  // If DEBUG_MALLOC_ENV_OPTIONS is set then it overrides the system properties.
+  char* env = getenv(DEBUG_ENV_OPTIONS);
+  if (env == nullptr || env[0] == '\0') {
+    if (__system_property_get(DEBUG_PROPERTY_OPTIONS, *options) == 0 || *options[0] == '\0') {
+      return false;
+    }
+
+    // Check to see if only a specific program should have debug malloc enabled.
+    char program[PROP_VALUE_MAX];
+    if (__system_property_get(DEBUG_PROPERTY_PROGRAM, program) != 0 &&
+        strstr(getprogname(), program) == nullptr) {
+      return false;
+    }
+  } else {
+    *options = env;
+  }
+  return true;
+}
+
+static void ClearGlobalFunctions() {
+  for (size_t i = 0; i < FUNC_LAST; i++) {
+    g_functions[i] = nullptr;
+  }
+}
+
+static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
+  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
+  if (impl_handle == nullptr) {
+    error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
+    return nullptr;
+  }
+
+  static constexpr const char* names[] = {
+    "initialize",
+    "finalize",
+    "get_malloc_leak_info",
+    "free_malloc_leak_info",
+    "malloc_backtrace",
+  };
+  for (size_t i = 0; i < FUNC_LAST; i++) {
+    char symbol[128];
+    snprintf(symbol, sizeof(symbol), "%s_%s", prefix, names[i]);
+    g_functions[i] = dlsym(impl_handle, symbol);
+    if (g_functions[i] == nullptr) {
+      error_log("%s: %s routine not found in %s", getprogname(), symbol, shared_lib);
+      dlclose(impl_handle);
+      ClearGlobalFunctions();
+      return nullptr;
+    }
+  }
+
+  if (!InitMallocFunctions(impl_handle, dispatch_table, prefix)) {
+    dlclose(impl_handle);
+    ClearGlobalFunctions();
+    return nullptr;
+  }
+
+  return impl_handle;
 }
 
 // Initializes memory allocation framework once per process.
 static void malloc_init_impl(libc_globals* globals) {
-  char value[PROP_VALUE_MAX];
-
-  // If DEBUG_MALLOC_ENV_OPTIONS is set then it overrides the system properties.
-  const char* options = getenv(DEBUG_MALLOC_ENV_OPTIONS);
-  if (options == nullptr || options[0] == '\0') {
-    if (__system_property_get(DEBUG_MALLOC_PROPERTY_OPTIONS, value) == 0 || value[0] == '\0') {
-      return;
-    }
-    options = value;
-
-    // Check to see if only a specific program should have debug malloc enabled.
-    char program[PROP_VALUE_MAX];
-    if (__system_property_get(DEBUG_MALLOC_PROPERTY_PROGRAM, program) != 0 &&
-        strstr(getprogname(), program) == nullptr) {
-      return;
-    }
-  }
-
-  // Load the debug malloc shared library.
-  void* malloc_impl_handle = dlopen(DEBUG_SHARED_LIB, RTLD_NOW | RTLD_LOCAL);
-  if (malloc_impl_handle == nullptr) {
-    error_log("%s: Unable to open debug malloc shared library %s: %s",
-              getprogname(), DEBUG_SHARED_LIB, dlerror());
+  const char* prefix;
+  const char* shared_lib;
+  char prop[PROP_VALUE_MAX];
+  char* options = prop;
+  // Prefer malloc debug since it existed first and is a more complete
+  // malloc interceptor than the hooks.
+  if (CheckLoadMallocDebug(&options)) {
+    prefix = "debug";
+    shared_lib = DEBUG_SHARED_LIB;
+  } else if (CheckLoadMallocHooks(&options)) {
+    prefix = "hooks";
+    shared_lib = HOOKS_SHARED_LIB;
+  } else {
     return;
   }
 
-  // Initialize malloc debugging in the loaded module.
-  auto init_func = reinterpret_cast<bool (*)(const MallocDispatch*, int*, const char*)>(
-      dlsym(malloc_impl_handle, "debug_initialize"));
-  if (init_func == nullptr) {
-    error_log("%s: debug_initialize routine not found in %s", getprogname(), DEBUG_SHARED_LIB);
-    dlclose(malloc_impl_handle);
+  MallocDispatch dispatch_table;
+  void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+  if (impl_handle == nullptr) {
     return;
   }
 
-  // Get the syms for the external functions.
-  void* finalize_sym = dlsym(malloc_impl_handle, "debug_finalize");
-  if (finalize_sym == nullptr) {
-    error_log("%s: debug_finalize routine not found in %s", getprogname(), DEBUG_SHARED_LIB);
-    dlclose(malloc_impl_handle);
-    return;
-  }
-
-  void* get_leak_info_sym = dlsym(malloc_impl_handle, "debug_get_malloc_leak_info");
-  if (get_leak_info_sym == nullptr) {
-    error_log("%s: debug_get_malloc_leak_info routine not found in %s", getprogname(),
-              DEBUG_SHARED_LIB);
-    dlclose(malloc_impl_handle);
-    return;
-  }
-
-  void* free_leak_info_sym = dlsym(malloc_impl_handle, "debug_free_malloc_leak_info");
-  if (free_leak_info_sym == nullptr) {
-    error_log("%s: debug_free_malloc_leak_info routine not found in %s", getprogname(),
-              DEBUG_SHARED_LIB);
-    dlclose(malloc_impl_handle);
-    return;
-  }
-
-  void* malloc_backtrace_sym = dlsym(malloc_impl_handle, "debug_malloc_backtrace");
-  if (malloc_backtrace_sym == nullptr) {
-    error_log("%s: debug_malloc_backtrace routine not found in %s", getprogname(),
-              DEBUG_SHARED_LIB);
-    dlclose(malloc_impl_handle);
-    return;
-  }
-
+  init_func_t init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
-    dlclose(malloc_impl_handle);
+    dlclose(impl_handle);
+    ClearGlobalFunctions();
     return;
   }
 
-  MallocDispatch malloc_dispatch_table;
-  if (!InitMalloc(malloc_impl_handle, &malloc_dispatch_table, "debug")) {
-    auto finalize_func = reinterpret_cast<void (*)()>(finalize_sym);
-    finalize_func();
-    dlclose(malloc_impl_handle);
-    return;
-  }
+  globals->malloc_dispatch = dispatch_table;
 
-  g_debug_finalize_func = reinterpret_cast<void (*)()>(finalize_sym);
-  g_debug_get_malloc_leak_info_func = reinterpret_cast<void (*)(
-      uint8_t**, size_t*, size_t*, size_t*, size_t*)>(get_leak_info_sym);
-  g_debug_free_malloc_leak_info_func = reinterpret_cast<void (*)(uint8_t*)>(free_leak_info_sym);
-  g_debug_malloc_backtrace_func = reinterpret_cast<ssize_t (*)(
-      void*, uintptr_t*, size_t)>(malloc_backtrace_sym);
-
-  globals->malloc_dispatch = malloc_dispatch_table;
-  libc_malloc_impl_handle = malloc_impl_handle;
-
-  info_log("%s: malloc debug enabled", getprogname());
+  info_log("%s: malloc %s enabled", getprogname(), prefix);
 
   // Use atexit to trigger the cleanup function. This avoids a problem
   // where another atexit function is used to cleanup allocated memory,
@@ -465,10 +502,11 @@ extern "C" void malloc_enable() {
 
 #ifndef LIBC_STATIC
 extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count) {
-  if (g_debug_malloc_backtrace_func == nullptr) {
+  void* func = g_functions[FUNC_MALLOC_BACKTRACE];
+  if (func == nullptr) {
     return 0;
   }
-  return g_debug_malloc_backtrace_func(pointer, frames, frame_count);
+  return reinterpret_cast<malloc_backtrace_func_t>(func)(pointer, frames, frame_count);
 }
 #else
 extern "C" ssize_t malloc_backtrace(void*, uintptr_t*, size_t) {

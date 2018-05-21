@@ -34,6 +34,10 @@
 					 * servers.
 					 */
 
+/* If EDNS0_PADDING is defined, queries will be padded to a multiple of this length
+when EDNS0 is active. */
+#define EDNS0_PADDING	128
+
 /* per-netid configuration parameters passed from netd to the resolver */
 struct __res_params {
     uint16_t sample_validity; // sample lifetime in s

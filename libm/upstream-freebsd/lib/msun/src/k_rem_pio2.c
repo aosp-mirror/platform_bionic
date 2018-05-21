@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/k_rem_pio2.c 298896 2016-05-01 19:37:33Z pfg $");
 
 /*
  * __kernel_rem_pio2(x,y,e0,nx,prec)
@@ -83,7 +83,7 @@ __FBSDID("$FreeBSD$");
  *		jk+1 must be 2 larger than you might expect so that our
  *		recomputation test works. (Up to 24 bits in the integer
  *		part (the 24 bits of it that we compute) and 23 bits in
- *		the fraction part may be lost to cancelation before we
+ *		the fraction part may be lost to cancellation before we
  *		recompute.)
  *
  * 	jz	local integer variable indicating the number of 

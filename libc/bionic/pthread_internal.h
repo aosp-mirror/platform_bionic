@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PTHREAD_INTERNAL_H_
-#define _PTHREAD_INTERNAL_H_
+
+#pragma once
 
 #include <pthread.h>
 #include <stdatomic.h>
@@ -172,5 +172,3 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
-
-#endif /* _PTHREAD_INTERNAL_H_ */

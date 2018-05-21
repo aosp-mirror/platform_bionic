@@ -12,13 +12,15 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_fmod.c 305380 2016-09-04 12:01:32Z bde $");
 
 /* 
  * __ieee754_fmod(x,y)
  * Return x mod y in exact arithmetic
  * Method: shift and subtract
  */
+
+#include <float.h>
 
 #include "math.h"
 #include "math_private.h"
@@ -130,3 +132,7 @@ __ieee754_fmod(double x, double y)
 	}
 	return x;		/* exact output */
 }
+
+#if (LDBL_MANT_DIG == 53)
+__weak_reference(fmod, fmodl);
+#endif

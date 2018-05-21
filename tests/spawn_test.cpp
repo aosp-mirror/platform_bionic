@@ -20,7 +20,7 @@
 #include <fcntl.h>
 #include <gtest/gtest.h>
 
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "utils.h"
 
 #include <android-base/file.h>
@@ -96,6 +96,25 @@ TEST(spawn, posix_spawnattr_setsigmask_posix_spawnattr_getsigmask) {
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
 
+TEST(spawn, posix_spawnattr_setsigmask64_posix_spawnattr_getsigmask64) {
+  posix_spawnattr_t sa;
+  ASSERT_EQ(0, posix_spawnattr_init(&sa));
+
+  sigset64_t sigs;
+  ASSERT_EQ(0, posix_spawnattr_getsigmask64(&sa, &sigs));
+  ASSERT_FALSE(sigismember64(&sigs, SIGRTMIN));
+
+  sigset64_t just_SIGRTMIN;
+  sigemptyset64(&just_SIGRTMIN);
+  sigaddset64(&just_SIGRTMIN, SIGRTMIN);
+  ASSERT_EQ(0, posix_spawnattr_setsigmask64(&sa, &just_SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_getsigmask64(&sa, &sigs));
+  ASSERT_TRUE(sigismember64(&sigs, SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+}
+
 TEST(spawn, posix_spawnattr_setsigdefault_posix_spawnattr_getsigdefault) {
   posix_spawnattr_t sa;
   ASSERT_EQ(0, posix_spawnattr_init(&sa));
@@ -111,6 +130,25 @@ TEST(spawn, posix_spawnattr_setsigdefault_posix_spawnattr_getsigdefault) {
 
   ASSERT_EQ(0, posix_spawnattr_getsigdefault(&sa, &sigs));
   ASSERT_TRUE(sigismember(&sigs, SIGALRM));
+
+  ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+}
+
+TEST(spawn, posix_spawnattr_setsigdefault64_posix_spawnattr_getsigdefault64) {
+  posix_spawnattr_t sa;
+  ASSERT_EQ(0, posix_spawnattr_init(&sa));
+
+  sigset64_t sigs;
+  ASSERT_EQ(0, posix_spawnattr_getsigdefault64(&sa, &sigs));
+  ASSERT_FALSE(sigismember64(&sigs, SIGRTMIN));
+
+  sigset64_t just_SIGRTMIN;
+  sigemptyset64(&just_SIGRTMIN);
+  sigaddset64(&just_SIGRTMIN, SIGRTMIN);
+  ASSERT_EQ(0, posix_spawnattr_setsigdefault64(&sa, &just_SIGRTMIN));
+
+  ASSERT_EQ(0, posix_spawnattr_getsigdefault64(&sa, &sigs));
+  ASSERT_TRUE(sigismember64(&sigs, SIGRTMIN));
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
@@ -376,6 +414,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
   sigset_t just_SIGALRM;
   sigemptyset(&just_SIGALRM);
   sigaddset(&just_SIGALRM, SIGALRM);
+
   ASSERT_EQ(0, posix_spawnattr_setsigdefault(&sa, &just_SIGALRM));
   ASSERT_EQ(0, posix_spawnattr_setflags(&sa, POSIX_SPAWN_SETSIGDEF));
 
@@ -393,15 +432,18 @@ TEST(spawn, signal_stress) {
   // child without first defaulting any caught signals (http://b/68707996).
   static pid_t parent = getpid();
 
+  setpgid(0, 0);
+  signal(SIGRTMIN, SIG_IGN);
+
   pid_t pid = fork();
   ASSERT_NE(-1, pid);
 
   if (pid == 0) {
     for (size_t i = 0; i < 1024; ++i) {
-      kill(0, SIGWINCH);
+      kill(0, SIGRTMIN);
       usleep(10);
     }
-    return;
+    _exit(99);
   }
 
   // We test both with and without attributes, because they used to be
@@ -417,11 +459,24 @@ TEST(spawn, signal_stress) {
 
   posix_spawnattr_t* attrs[] = { nullptr, &attr1, &attr2 };
 
-  ScopedSignalHandler ssh(SIGWINCH, [](int) { ASSERT_EQ(getpid(), parent); });
+  // We use a real-time signal because that's a tricky case for LP32
+  // because our sigset_t was too small.
+  ScopedSignalHandler ssh(SIGRTMIN, [](int) { ASSERT_EQ(getpid(), parent); });
+
+  const size_t pid_count = 128;
+  pid_t spawned_pids[pid_count];
 
   ExecTestHelper eth;
   eth.SetArgs({"true", nullptr});
-  for (size_t i = 0; i < 128; ++i) {
-    posix_spawn(nullptr, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr);
+  for (size_t i = 0; i < pid_count; ++i) {
+    pid_t spawned_pid;
+    ASSERT_EQ(0, posix_spawn(&spawned_pid, "true", nullptr, attrs[i % 3], eth.GetArgs(), nullptr));
+    spawned_pids[i] = spawned_pid;
   }
+
+  for (pid_t spawned_pid : spawned_pids) {
+    ASSERT_EQ(spawned_pid, TEMP_FAILURE_RETRY(waitpid(spawned_pid, nullptr, 0)));
+  }
+
+  AssertChildExited(pid, 99);
 }

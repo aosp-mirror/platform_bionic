@@ -78,34 +78,27 @@ kernel_token_replacements = {
     "SIGRTMAX": "__SIGRTMAX",
     # We want to support both BSD and Linux member names in struct udphdr.
     "udphdr": "__kernel_udphdr",
-    # The kernel's struct epoll_event just has __u64 for the data.
-    "epoll_event": "__kernel_uapi_epoll_event",
     # This causes problems when trying to export the headers for the ndk.
     "__attribute_const__": "__attribute__((__const__))",
+    # In this case the kernel tries to keep out of our way, but we're happy to use its definition.
+    "__kernel_sockaddr_storage": "sockaddr_storage",
     }
+
+
+# This is the set of struct definitions that we want to replace with
+# a #include of <bits/struct.h> instead.
+kernel_struct_replacements = set(
+        [
+          "epoll_event",
+          "in_addr",
+          "ip_mreq_source",
+          "ip_msfilter",
+        ]
+    )
+
 
 # This is the set of known static inline functions that we want to keep
 # in the final kernel headers.
-kernel_known_arm_statics = set(
-        [
-        ]
-    )
-
-kernel_known_arm64_statics = set(
-        [
-        ]
-    )
-
-kernel_known_mips_statics = set(
-        [
-        ]
-    )
-
-kernel_known_x86_statics = set(
-        [
-        ]
-    )
-
 kernel_known_generic_statics = set(
         [
           "ipt_get_target",  # uapi/linux/netfilter_ipv4/ip_tables.h
@@ -130,25 +123,6 @@ kernel_known_generic_statics = set(
           # These are required to support the above functions.
           "__fswahw32",
           "__fswahb32",
-        ]
-    )
-
-# this maps an architecture to the set of static inline functions that
-# we want to keep in the final headers
-#
-kernel_known_statics = {
-        "arm" : kernel_known_arm_statics,
-        "arm64" : kernel_known_arm64_statics,
-        "mips" : kernel_known_mips_statics,
-        "x86" : kernel_known_x86_statics,
-    }
-
-# this is a list of macros which we want to specifically exclude from
-# the generated files.
-#
-kernel_ignored_macros = set(
-        [
-
         ]
     )
 

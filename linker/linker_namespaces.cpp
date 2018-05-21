@@ -64,7 +64,8 @@ bool android_namespace_t::is_accessible(soinfo* s) {
     // This is workaround for apps hacking into soinfo list.
     // and inserting their own entries into it. (http://b/37191433)
     if (!si->has_min_version(3)) {
-      DL_WARN("invalid soinfo version for \"%s\"", si->get_soname());
+      DL_WARN("Warning: invalid soinfo version for \"%s\" (assuming inaccessible)",
+              si->get_soname());
       return false;
     }
 

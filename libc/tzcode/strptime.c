@@ -38,7 +38,9 @@
 
 //#include <sys/localedef.h>
 #include <ctype.h>
+#include <errno.h>
 #include <locale.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include "tzfile.h"
@@ -128,7 +130,7 @@ _strptime(const unsigned char *buf, const char *fmt, struct tm *tm, struct centu
             fmt++;
             continue;
         }
-                
+
         if ((c = *fmt++) != '%')
             goto literal;
 
@@ -154,7 +156,7 @@ literal:
             _LEGAL_ALT(0);
             alt_format |= _ALT_O;
             goto again;
-            
+
         /*
          * "Complex" conversion rules, implemented through recursion.
          */
@@ -169,7 +171,7 @@ literal:
             if (!(bp = _strptime(bp, "%m/%d/%y", tm, cr)))
                 return (NULL);
             break;
-    
+
         case 'R':   /* The time as "%H:%M". */
             _LEGAL_ALT(0);
             if (!(bp = _strptime(bp, "%H:%M", tm, cr)))
@@ -337,6 +339,25 @@ literal:
                 return (NULL);
             break;
 
+        case 's':
+            {
+                // Android addition, based on FreeBSD's implementation.
+                int saved_errno = errno;
+                errno = 0;
+                const unsigned char* old_bp = bp;
+                long n = strtol((const char*) bp, (char**) &bp, 10);
+                time_t t = n;
+                if (bp == old_bp || errno == ERANGE || ((long) t) != n) {
+                    errno = saved_errno;
+                    return NULL;
+                }
+                errno = saved_errno;
+
+                if (localtime_r(&t, tm) == NULL) return NULL;
+            }
+            break;
+
+
         case 'U':   /* The week of year, beginning on sunday. */
         case 'W':   /* The week of year, beginning on monday. */
             _LEGAL_ALT(_ALT_O);
@@ -429,4 +450,8 @@ _conv_num(const unsigned char **buf, int *dest, int llim, int ulim)
 
     *dest = result;
     return (1);
+}
+
+char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t l) {
+  return strptime(buf, fmt, tm);
 }

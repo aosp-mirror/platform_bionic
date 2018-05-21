@@ -40,6 +40,17 @@ cc_defaults {
 }
 
 // -----------------------------------------------------------------------------
+// Library to test ELF TLS
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libelf-tls-library",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["elf_tls_test_library.cpp"],
+    cflags: ["-fno-emulated-tls"],
+    allow_undefined_symbols: true, // __tls_get_addr is undefined.
+}
+
+// -----------------------------------------------------------------------------
 // Library to test gnu-styled hash
 // -----------------------------------------------------------------------------
 cc_test_library {
@@ -80,7 +91,7 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
     ldflags: ["-Wl,-z,norelro"],
-    shared_libs = ["libtest_simple"],
+    shared_libs: ["libtest_simple"],
 }
 
 // -----------------------------------------------------------------------------
@@ -122,7 +133,6 @@ cc_test_library {
     allow_undefined_symbols: true,
     relative_install_path: "bionic-loader-test-libs/public_namespace_libs",
 }
-
 
 // -----------------------------------------------------------------------------
 // Library used by dlext indirect unload on the namespace boundary tests
@@ -259,6 +269,58 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Build test helper libraries for linker namespaces for allow all shared libs
+//
+// This set of libraries is used to verify linker namespaces for allow all
+// shared libs.
+//
+// Test cases
+// 1. Check that namespace a exposes libnstest_ns_a_public1 to
+//    namespace b while keeping libnstest_ns_a_public1_internal as an
+//    internal lib.
+// 2. Check that namespace b exposes all libraries to namespace a.
+//
+// Dependency tree (visibility)
+// libnstest_ns_b_public2.so  (ns:b)
+// +-> libnstest_ns_a_public1.so  (ns:a)
+//     +-> libnstest_ns_a_public2_internal.so  (ns:a)
+//     +-> libnstest_ns_b_public3.so  (ns:b)
+//
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libnstest_ns_a_public1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_a_public1.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_a",
+    shared_libs: [
+        "libnstest_ns_a_public1_internal",
+        "libnstest_ns_b_public3",
+    ],
+}
+
+cc_test_library {
+    name: "libnstest_ns_a_public1_internal",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_a_public1_internal.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_a",
+}
+
+cc_test_library {
+    name: "libnstest_ns_b_public2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_b_public2.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_b",
+    shared_libs: ["libnstest_ns_a_public1"],
+}
+
+cc_test_library {
+    name: "libnstest_ns_b_public3",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["libnstest_ns_b_public3.cpp"],
+    relative_install_path: "bionic-loader-test-libs/ns_b",
+}
+
+// -----------------------------------------------------------------------------
 // Build DT_RUNPATH test helper libraries
 // -----------------------------------------------------------------------------
 // include $(LOCAL_PATH)/Android.build.dt_runpath.mk
@@ -355,7 +417,6 @@ cc_test_library {
 // +-> libtest_relo_check_dt_needed_order_2.so
 // -----------------------------------------------------------------------------
 
-
 cc_test_library {
     name: "libtest_relo_check_dt_needed_order",
     defaults: ["bionic_testlib_defaults"],
@@ -405,7 +466,7 @@ cc_test_library {
     name: "libtest_ifunc_variable",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc_variable.cpp"],
-    shared_libs: [ "libtest_ifunc_variable_impl" ],
+    shared_libs: ["libtest_ifunc_variable_impl"],
 
     arch: {
         mips: {
@@ -507,7 +568,6 @@ cc_test_library {
         },
     },
 }
-
 
 // -----------------------------------------------------------------------------
 // Library with weak function
@@ -633,6 +693,15 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["empty.cpp"],
     shared_libs: ["libtest_dlopen_from_ctor"],
+}
+
+// -----------------------------------------------------------------------------
+// Library with non-trivial thread_local variable to test dlclose()
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_thread_local_dtor",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["thread_local_dtor.cpp"],
 }
 
 // -----------------------------------------------------------------------------

@@ -22,11 +22,13 @@ cc_defaults {
         "-Wall",
         "-Wextra",
         "-Werror",
+        "-Wno-gcc-compat",
         "-Wunused",
     ],
     srcs: [
         "bionic_benchmarks.cpp",
         "atomic_benchmark.cpp",
+        "inttypes_benchmark.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",
@@ -61,6 +63,11 @@ cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
     data: ["suites/*"],
+    static_libs: [
+        "libsystemproperties",
+        "libasync_safe",
+    ],
+    include_dirs: ["bionic/libc"],
 }
 
 // We don't build a static benchmark executable because it's not usually
@@ -100,5 +107,8 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: ["suites/*", "test_suites/*"],
+    data: [
+        "suites/*",
+        "test_suites/*",
+    ],
 }
