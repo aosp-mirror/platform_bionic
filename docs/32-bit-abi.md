@@ -59,14 +59,26 @@ to double check:
 
 In the 64-bit ABI, `off_t` is always 64-bit.
 
+For source compatibility, the names containing `64` are also available
+in the 64-bit ABI even though they're identical to the non-`64` names.
+
 
 ## `sigset_t` is too small for real-time signals
 
 On 32-bit Android, `sigset_t` is too small for ARM and x86 (but correct for
 MIPS). This means that there is no support for real-time signals in 32-bit
-code.
+code. Android P (API level 28) adds `sigset64_t` and a corresponding function
+for every function that takes a `sigset_t` (so `sigprocmask64` takes a
+`sigset64_t` where `sigprocmask` takes a `sigset_t`).
+
+On 32-bit Android, `struct sigaction` is also too small because it contains
+a `sigset_t`. We also offer a `struct sigaction64` and `sigaction64` function
+to work around this.
 
 In the 64-bit ABI, `sigset_t` is the correct size for every architecture.
+
+For source compatibility, the names containing `64` are also available
+in the 64-bit ABI even though they're identical to the non-`64` names.
 
 
 ## `time_t` is 32-bit
@@ -77,10 +89,11 @@ Android all use the 32-bit `time_t`.
 
 In the 64-bit ABI, `time_t` is 64-bit.
 
+
 ## `pthread_mutex_t` is too small for large pids
 
 This doesn't generally affect Android devices, because on devices
-`/proc/sys/kernel/pid_max` is usually too small to hit the 16-bit limit,
+`/proc/sys/kernel/pid_max` is usually too small to hit our 16-bit limit,
 but 32-bit bionic's `pthread_mutex` is a total of 32 bits, leaving just
 16 bits for the owner thread id. This means bionic isn't able to support
 mutexes for tids that don't fit in 16 bits. This typically manifests as

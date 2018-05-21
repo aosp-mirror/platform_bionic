@@ -268,8 +268,10 @@ bool ElfReader::VerifyElfHeader() {
                      name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
       return false;
     }
-    DL_WARN("\"%s\" has unsupported e_shentsize: 0x%x (expected 0x%zx)",
-            name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
+    DL_WARN_documented_change(__ANDROID_API_O__,
+                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
+                              "\"%s\" has unsupported e_shentsize 0x%x (expected 0x%zx)",
+                              name_.c_str(), header_.e_shentsize, sizeof(ElfW(Shdr)));
     add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
@@ -280,7 +282,9 @@ bool ElfReader::VerifyElfHeader() {
       return false;
     }
 
-    DL_WARN("\"%s\" has invalid e_shstrndx", name_.c_str());
+    DL_WARN_documented_change(__ANDROID_API_O__,
+                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
+                              "\"%s\" has invalid e_shstrndx", name_.c_str());
     add_dlwarning(name_.c_str(), "has invalid ELF header");
   }
 
@@ -395,11 +399,13 @@ bool ElfReader::ReadDynamicSection() {
                      pt_dynamic_offset);
       return false;
     }
-    DL_WARN("\"%s\" .dynamic section has invalid offset: 0x%zx, "
-            "expected to match PT_DYNAMIC offset: 0x%zx",
-            name_.c_str(),
-            static_cast<size_t>(dynamic_shdr->sh_offset),
-            pt_dynamic_offset);
+    DL_WARN_documented_change(__ANDROID_API_O__,
+                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
+                              "\"%s\" .dynamic section has invalid offset: 0x%zx "
+                              "(expected to match PT_DYNAMIC offset 0x%zx)",
+                              name_.c_str(),
+                              static_cast<size_t>(dynamic_shdr->sh_offset),
+                              pt_dynamic_offset);
     add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
@@ -412,11 +418,13 @@ bool ElfReader::ReadDynamicSection() {
                      pt_dynamic_filesz);
       return false;
     }
-    DL_WARN("\"%s\" .dynamic section has invalid size: 0x%zx, "
-            "expected to match PT_DYNAMIC filesz: 0x%zx",
-            name_.c_str(),
-            static_cast<size_t>(dynamic_shdr->sh_size),
-            pt_dynamic_filesz);
+    DL_WARN_documented_change(__ANDROID_API_O__,
+                              "invalid-elf-header_section-headers-enforced-for-api-level-26",
+                              "\"%s\" .dynamic section has invalid size: 0x%zx "
+                              "(expected to match PT_DYNAMIC filesz 0x%zx)",
+                              name_.c_str(),
+                              static_cast<size_t>(dynamic_shdr->sh_size),
+                              pt_dynamic_filesz);
     add_dlwarning(name_.c_str(), "invalid .dynamic section");
   }
 
@@ -651,10 +659,13 @@ bool ElfReader::LoadSegments() {
       if ((prot & (PROT_EXEC | PROT_WRITE)) == (PROT_EXEC | PROT_WRITE)) {
         // W + E PT_LOAD segments are not allowed in O.
         if (get_application_target_sdk_version() >= __ANDROID_API_O__) {
-          DL_ERR_AND_LOG("\"%s\": W + E load segments are not allowed", name_.c_str());
+          DL_ERR_AND_LOG("\"%s\": W+E load segments are not allowed", name_.c_str());
           return false;
         }
-        DL_WARN("\"%s\": W + E load segments are not allowed", name_.c_str());
+        DL_WARN_documented_change(__ANDROID_API_O__,
+                                  "writable-and-executable-segments-enforced-for-api-level-26",
+                                  "\"%s\" has load segments that are both writable and executable",
+                                  name_.c_str());
         add_dlwarning(name_.c_str(), "W+E load segments");
       }
 

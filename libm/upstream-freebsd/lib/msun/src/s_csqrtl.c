@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2007-2008 David Schultz <das@FreeBSD.ORG>
  * All rights reserved.
  *
@@ -25,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_csqrtl.c 275819 2014-12-16 09:21:56Z ed $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_csqrtl.c 326219 2017-11-26 02:00:33Z pfg $");
 
 #include <complex.h>
 #include <float.h>
@@ -42,8 +44,16 @@ __FBSDID("$FreeBSD: head/lib/msun/src/s_csqrtl.c 275819 2014-12-16 09:21:56Z ed 
  */
 #pragma	STDC CX_LIMITED_RANGE	ON
 
-/* We risk spurious overflow for components >= LDBL_MAX / (1 + sqrt(2)). */
-#define	THRESH	(LDBL_MAX / 2.414213562373095048801688724209698L)
+/*
+ * We risk spurious overflow for components >= LDBL_MAX / (1 + sqrt(2)).
+ * Rather than determining the fully precise value at which we might
+ * overflow, just use a threshold of approximately LDBL_MAX / 4.
+ */
+#if LDBL_MAX_EXP != 0x4000
+#error "Unsupported long double format"
+#else
+#define	THRESH	0x1p16382L
+#endif
 
 long double complex
 csqrtl(long double complex z)

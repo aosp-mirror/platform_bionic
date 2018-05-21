@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_LIBM_FREEBSD_COMPAT_H_included
-#define _BIONIC_LIBM_FREEBSD_COMPAT_H_included
+#pragma once
 
 #include <float.h>
 
@@ -38,5 +37,3 @@ int digittoint(char ch);
 
 // Similarly rename _scan_nan.
 #define _scan_nan __libm_scan_nan
-
-#endif

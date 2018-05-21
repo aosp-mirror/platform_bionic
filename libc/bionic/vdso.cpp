@@ -60,11 +60,25 @@ int gettimeofday(timeval* tv, struct timezone* tz) {
   return __gettimeofday(tv, tz);
 }
 
+time_t time(time_t* t) {
+  auto vdso_time = reinterpret_cast<decltype(&time)>(__libc_globals->vdso[VDSO_TIME].fn);
+  if (__predict_true(vdso_time)) {
+    return vdso_time(t);
+  }
+
+  // We can't fallback to the time(2) system call because it doesn't exist for most architectures.
+  timeval tv;
+  if (gettimeofday(&tv, nullptr) == -1) return -1;
+  if (t) *t = tv.tv_sec;
+  return tv.tv_sec;
+}
+
 void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
   auto&& vdso = globals->vdso;
   vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, nullptr };
   vdso[VDSO_CLOCK_GETRES] = { VDSO_CLOCK_GETRES_SYMBOL, nullptr };
   vdso[VDSO_GETTIMEOFDAY] = { VDSO_GETTIMEOFDAY_SYMBOL, nullptr };
+  vdso[VDSO_TIME] = { VDSO_TIME_SYMBOL, nullptr };
 
   // Do we have a vdso?
   uintptr_t vdso_ehdr_addr = args.getauxval(AT_SYSINFO_EHDR);

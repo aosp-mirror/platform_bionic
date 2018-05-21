@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_RELOCS_H
-#define __LINKER_RELOCS_H
+#pragma once
 
 #include <elf.h>
 
@@ -62,5 +61,3 @@
 #define R_GENERIC_IRELATIVE R_X86_64_IRELATIVE
 
 #endif
-
-#endif // __LINKER_RELOCS_H

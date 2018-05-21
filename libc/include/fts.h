@@ -58,8 +58,9 @@ typedef struct {
 #define	FTS_XDEV	0x0040		/* don't cross devices */
 #define	FTS_OPTIONMASK	0x00ff		/* valid user option mask */
 
-#define	FTS_NAMEONLY	0x1000		/* (private) child names only */
-#define	FTS_STOP	0x2000		/* (private) unrecoverable error */
+#define FTS_NAMEONLY 0x1000  /* (private) child names only */
+#define FTS_STOP 0x2000      /* (private) unrecoverable error */
+#define FTS_FOR_FTW 0x4000   /* (private) fts is being called by ftw/nftw */
 	int fts_options;		/* fts_open options, global flags */
 } FTS;
 

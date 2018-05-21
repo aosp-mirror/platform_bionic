@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,30 +26,50 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <pthread.h>
 #include <signal.h>
 
-#include "private/kernel_sigset_t.h"
+#include "private/sigrtmin.h"
+#include "private/SigSetConverter.h"
 
-extern "C" int __rt_sigprocmask(int, const kernel_sigset_t*, kernel_sigset_t*, size_t);
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
-int sigprocmask(int how, const sigset_t* bionic_new_set, sigset_t* bionic_old_set) {
-  kernel_sigset_t new_set;
-  kernel_sigset_t* new_set_ptr = NULL;
-  if (bionic_new_set != NULL) {
-    new_set.set(bionic_new_set);
-    new_set_ptr = &new_set;
+//
+// These need to be kept separate from pthread_sigmask, sigblock, sigsetmask,
+// sighold, and sigset because libsigchain only intercepts sigprocmask so we
+// can't allow clang to decide to inline sigprocmask.
+//
+
+int sigprocmask(int how,
+                const sigset_t* bionic_new_set,
+                sigset_t* bionic_old_set) __attribute__((__noinline__)) {
+  SigSetConverter new_set;
+  sigset64_t* new_set_ptr = nullptr;
+  if (bionic_new_set != nullptr) {
+    sigemptyset64(&new_set.sigset64);
+    new_set.sigset = *bionic_new_set;
+    new_set_ptr = &new_set.sigset64;
   }
 
-  kernel_sigset_t old_set;
-  if (__rt_sigprocmask(how, new_set_ptr, &old_set, sizeof(old_set)) == -1) {
+  SigSetConverter old_set;
+  if (sigprocmask64(how, new_set_ptr, &old_set.sigset64) == -1) {
     return -1;
   }
 
-  if (bionic_old_set != NULL) {
-    *bionic_old_set = old_set.bionic;
+  if (bionic_old_set != nullptr) {
+    *bionic_old_set = old_set.sigset;
   }
 
   return 0;
+}
+
+int sigprocmask64(int how,
+                  const sigset64_t* new_set,
+                  sigset64_t* old_set) __attribute__((__noinline__)) {
+  sigset64_t mutable_new_set;
+  sigset64_t* mutable_new_set_ptr = nullptr;
+  if (new_set) {
+    mutable_new_set = filter_reserved_signals(*new_set);
+    mutable_new_set_ptr = &mutable_new_set;
+  }
+  return __rt_sigprocmask(how, mutable_new_set_ptr, old_set, sizeof(*new_set));
 }

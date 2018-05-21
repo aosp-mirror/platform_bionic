@@ -40,10 +40,10 @@
 #include <android-base/stringprintf.h>
 
 #include "Config.h"
-#include "debug_disable.h"
-#include "debug_log.h"
 #include "DebugData.h"
 #include "RecordData.h"
+#include "debug_disable.h"
+#include "debug_log.h"
 
 RecordEntry::RecordEntry() : tid_(gettid()) {
 }
@@ -52,52 +52,45 @@ std::string ThreadCompleteEntry::GetString() const {
   return android::base::StringPrintf("%d: thread_done 0x0\n", tid_);
 }
 
-AllocEntry::AllocEntry(void* pointer) : pointer_(pointer) {
-}
+AllocEntry::AllocEntry(void* pointer) : pointer_(pointer) {}
 
-MallocEntry::MallocEntry(void* pointer, size_t size) : AllocEntry(pointer), size_(size) {
-}
+MallocEntry::MallocEntry(void* pointer, size_t size) : AllocEntry(pointer), size_(size) {}
 
 std::string MallocEntry::GetString() const {
   return android::base::StringPrintf("%d: malloc %p %zu\n", tid_, pointer_, size_);
 }
 
-FreeEntry::FreeEntry(void* pointer) : AllocEntry(pointer) {
-}
+FreeEntry::FreeEntry(void* pointer) : AllocEntry(pointer) {}
 
 std::string FreeEntry::GetString() const {
   return android::base::StringPrintf("%d: free %p\n", tid_, pointer_);
 }
 
 CallocEntry::CallocEntry(void* pointer, size_t nmemb, size_t size)
-    : MallocEntry(pointer, size), nmemb_(nmemb) {
-}
+    : MallocEntry(pointer, size), nmemb_(nmemb) {}
 
 std::string CallocEntry::GetString() const {
   return android::base::StringPrintf("%d: calloc %p %zu %zu\n", tid_, pointer_, nmemb_, size_);
 }
 
 ReallocEntry::ReallocEntry(void* pointer, size_t size, void* old_pointer)
-    : MallocEntry(pointer, size), old_pointer_(old_pointer) {
-}
+    : MallocEntry(pointer, size), old_pointer_(old_pointer) {}
 
 std::string ReallocEntry::GetString() const {
-  return android::base::StringPrintf("%d: realloc %p %p %zu\n", tid_, pointer_,
-                                     old_pointer_, size_);
+  return android::base::StringPrintf("%d: realloc %p %p %zu\n", tid_, pointer_, old_pointer_, size_);
 }
 
-// posix_memalign, memalgin, pvalloc, valloc all recorded with this class.
+// aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment)
-    : MallocEntry(pointer, size), alignment_(alignment) {
-}
+    : MallocEntry(pointer, size), alignment_(alignment) {}
 
 std::string MemalignEntry::GetString() const {
-  return android::base::StringPrintf("%d: memalign %p %zu %zu\n", tid_, pointer_,
-                                     alignment_, size_);
+  return android::base::StringPrintf("%d: memalign %p %zu %zu\n", tid_, pointer_, alignment_, size_);
 }
 
 struct ThreadData {
-  ThreadData(RecordData* record_data, ThreadCompleteEntry* entry) : record_data(record_data), entry(entry) {}
+  ThreadData(RecordData* record_data, ThreadCompleteEntry* entry)
+      : record_data(record_data), entry(entry) {}
   RecordData* record_data;
   ThreadCompleteEntry* entry;
   size_t count = 0;
@@ -141,8 +134,8 @@ void RecordData::Dump() {
     last_entry_index = num_entries_;
   }
 
-  int dump_fd = open(dump_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW,
-                     0755);
+  int dump_fd =
+      open(dump_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW, 0755);
   if (dump_fd != -1) {
     for (size_t i = 0; i < last_entry_index; i++) {
       std::string line = entries_[i]->GetString();
@@ -179,13 +172,10 @@ RecordData::RecordData() {
 }
 
 bool RecordData::Initialize(const Config& config) {
-  struct sigaction dump_act;
-  memset(&dump_act, 0, sizeof(dump_act));
-
+  struct sigaction64 dump_act = {};
   dump_act.sa_sigaction = RecordDump;
   dump_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
-  sigemptyset(&dump_act.sa_mask);
-  if (sigaction(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
+  if (sigaction64(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
     error_log("Unable to set up record dump signal function: %s", strerror(errno));
     return false;
   }
@@ -204,7 +194,7 @@ bool RecordData::Initialize(const Config& config) {
 }
 
 RecordData::~RecordData() {
-  delete [] entries_;
+  delete[] entries_;
   pthread_key_delete(key_);
 }
 

@@ -139,9 +139,6 @@ bench_opts_t ParseOpts(int argc, char** argv) {
   int opt;
   int option_index = 0;
 
-  opts.cpu_to_lock = LONG_MAX;
-  opts.num_iterations = 0;
-
   // To make this parser handle the benchmark options silently:
   extern int opterr;
   opterr = 0;
@@ -204,8 +201,9 @@ bench_opts_t ParseOpts(int argc, char** argv) {
 }
 
 // This is a wrapper for every function call for per-benchmark cpu pinning.
-void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, long cpu_to_lock) {
-  if (cpu_to_lock != LONG_MAX) LockToCPU(cpu_to_lock);
+void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, int cpu_to_lock) {
+  if (cpu_to_lock >= 0) LockToCPU(cpu_to_lock);
+
   // To avoid having to link against Google benchmarks in libutil,
   // benchmarks are kept without parameter information, necessitating this cast.
   reinterpret_cast<void(*) (benchmark::State&)>(func_to_bench)(state);
@@ -305,22 +303,22 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
 }
 
 void RegisterGoogleBenchmarks(bench_opts_t primary_opts, bench_opts_t secondary_opts,
-                         std::string fn_name, args_vector_t* run_args) {
+                              const std::string& fn_name, args_vector_t* run_args) {
   if (g_str_to_func.find(fn_name) == g_str_to_func.end()) {
     errx(1, "ERROR: No benchmark for function %s", fn_name.c_str());
   }
   long iterations_to_use = primary_opts.num_iterations ? primary_opts.num_iterations :
                                                          secondary_opts.num_iterations;
-  int cpu_to_use = INT_MAX;
-  if (primary_opts.cpu_to_lock != INT_MAX) {
+  int cpu_to_use = -1;
+  if (primary_opts.cpu_to_lock >= 0) {
     cpu_to_use = primary_opts.cpu_to_lock;
 
-  } else if (secondary_opts.cpu_to_lock != INT_MAX) {
+  } else if (secondary_opts.cpu_to_lock >= 0) {
     cpu_to_use = secondary_opts.cpu_to_lock;
   }
 
   benchmark_func_t benchmark_function = g_str_to_func.at(fn_name).first;
-  for (std::vector<int> args : (*run_args)) {
+  for (const std::vector<int>& args : (*run_args)) {
     auto registration = benchmark::RegisterBenchmark(fn_name.c_str(), LockAndRun,
                                                      benchmark_function,
                                                      cpu_to_use)->Args(args);
@@ -335,13 +333,13 @@ void RegisterCliBenchmarks(bench_opts_t cmdline_opts,
   // Register any of the extra benchmarks that were specified in the options.
   args_vector_t arg_vector;
   args_vector_t* run_args = &arg_vector;
-  for (std::string extra_fn : cmdline_opts.extra_benchmarks) {
+  for (const std::string& extra_fn : cmdline_opts.extra_benchmarks) {
     android::base::Trim(extra_fn);
-    size_t first_space_pos = extra_fn.find(" ");
+    size_t first_space_pos = extra_fn.find(' ');
     std::string fn_name = extra_fn.substr(0, first_space_pos);
     std::string cmd_args;
     if (first_space_pos != std::string::npos) {
-      cmd_args = extra_fn.substr(extra_fn.find(" ") + 1);
+      cmd_args = extra_fn.substr(extra_fn.find(' ') + 1);
     } else {
       cmd_args = "";
     }
@@ -398,16 +396,12 @@ int RegisterXmlBenchmarks(bench_opts_t cmdline_opts,
       int temp;
       num_iterations_elem->QueryIntText(&temp);
       xml_opts.num_iterations = temp;
-    } else {
-      xml_opts.num_iterations = 0;
     }
     auto* cpu_to_lock_elem = fn->FirstChildElement("cpu");
     if (cpu_to_lock_elem) {
       int temp;
       cpu_to_lock_elem->QueryIntText(&temp);
       xml_opts.cpu_to_lock = temp;
-    } else {
-      xml_opts.cpu_to_lock = INT_MAX;
     }
 
     RegisterGoogleBenchmarks(xml_opts, cmdline_opts, fn_name, run_args);
@@ -514,28 +508,12 @@ static bool FileExists(const std::string& file) {
 
 void RegisterAllBenchmarks(const bench_opts_t& opts,
                            std::map<std::string, args_vector_t>& args_shorthand) {
-  // Add the property tests at the end since they might cause segfaults in
-  // tests running afterwards (b/62197783).
-  std::vector<std::string> prop_tests;
-
   for (auto& entry : g_str_to_func) {
-    if (android::base::StartsWith(entry.first, "BM_property_")) {
-      prop_tests.push_back(entry.first);
-    } else {
-      auto& function_info = entry.second;
-      args_vector_t arg_vector;
-      args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
-                                            args_shorthand);
-      RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
-    }
-  }
-
-  for (auto& prop_name : prop_tests) {
-    auto& function_info = g_str_to_func.at(prop_name);
+    auto& function_info = entry.second;
     args_vector_t arg_vector;
     args_vector_t* run_args = ResolveArgs(&arg_vector, function_info.second,
                                           args_shorthand);
-    RegisterGoogleBenchmarks(bench_opts_t(), opts, prop_name, run_args);
+    RegisterGoogleBenchmarks(bench_opts_t(), opts, entry.first, run_args);
   }
 }
 

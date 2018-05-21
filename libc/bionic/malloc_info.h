@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef LIBC_BIONIC_MALLOC_INFO_H_
-#define LIBC_BIONIC_MALLOC_INFO_H_
+#pragma once
 
 #include <malloc.h>
 #include <sys/cdefs.h>
@@ -28,5 +27,3 @@ __LIBC_HIDDEN__ struct mallinfo __mallinfo_arena_info(size_t);
 __LIBC_HIDDEN__ struct mallinfo __mallinfo_bin_info(size_t, size_t);
 
 __END_DECLS
-
-#endif // LIBC_BIONIC_MALLOC_INFO_H_

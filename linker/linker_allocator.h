@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __LINKER_ALLOCATOR_H
-#define __LINKER_ALLOCATOR_H
+#pragma once
 
 #include <errno.h>
 #include <stdlib.h>
@@ -152,6 +151,3 @@ class LinkerMemoryAllocator {
   LinkerSmallObjectAllocator* allocators_;
   uint8_t allocators_buf_[sizeof(LinkerSmallObjectAllocator)*kSmallObjectAllocatorsCount];
 };
-
-
-#endif  /* __LINKER_ALLOCATOR_H */

@@ -190,6 +190,22 @@ TEST(stdio_ext, __freading__fwriting) {
   }
 }
 
+TEST(stdio_ext, __fseterr) {
+#if defined(__GLIBC__)
+  GTEST_LOG_(INFO) << "glibc doesn't have __fseterr, but gnulib will use it";
+#else
+  FILE* fp = fopen("/dev/null", "w");
+
+  ASSERT_FALSE(ferror(fp));
+  __fseterr(fp);
+  ASSERT_TRUE(ferror(fp));
+  clearerr(fp);
+  ASSERT_FALSE(ferror(fp));
+
+  fclose(fp);
+#endif
+}
+
 TEST(stdio_ext, __fsetlocking) {
   FILE* fp = fopen("/proc/version", "r");
   ASSERT_EQ(FSETLOCKING_INTERNAL, __fsetlocking(fp, FSETLOCKING_QUERY));

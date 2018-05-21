@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef SCOPED_SIGNAL_BLOCKER_H
-#define SCOPED_SIGNAL_BLOCKER_H
+#pragma once
 
 #include <signal.h>
 
@@ -23,10 +22,18 @@
 
 class ScopedSignalBlocker {
  public:
+  // Block all signals.
   explicit ScopedSignalBlocker() {
-    sigset_t set;
-    sigfillset(&set);
-    sigprocmask(SIG_BLOCK, &set, &old_set_);
+    sigset64_t set;
+    sigfillset64(&set);
+    sigprocmask64(SIG_BLOCK, &set, &old_set_);
+  }
+
+  // Block just the specified signal.
+  explicit ScopedSignalBlocker(int signal) {
+    sigset64_t set = {};
+    sigaddset64(&set, signal);
+    sigprocmask64(SIG_BLOCK, &set, &old_set_);
   }
 
   ~ScopedSignalBlocker() {
@@ -34,13 +41,10 @@ class ScopedSignalBlocker {
   }
 
   void reset() {
-    sigprocmask(SIG_SETMASK, &old_set_, nullptr);
+    sigprocmask64(SIG_SETMASK, &old_set_, nullptr);
   }
 
- private:
-  sigset_t old_set_;
+  sigset64_t old_set_;
 
   DISALLOW_COPY_AND_ASSIGN(ScopedSignalBlocker);
 };
-
-#endif

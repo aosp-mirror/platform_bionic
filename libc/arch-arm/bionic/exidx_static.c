@@ -30,17 +30,20 @@
 
 /* Find the .ARM.exidx section (which in the case of a static executable
  * can be identified through its start and end symbols), and return its
- * beginning and numbe of entries to the caller.  Note that for static
+ * beginning and number of entries to the caller.  Note that for static
  * executables we do not need to use the value of the PC to find the
  * EXIDX section.
  */
 
-extern unsigned __exidx_end;
-extern unsigned __exidx_start;
+struct exidx_entry {
+  uint32_t key;
+  uint32_t value;
+};
 
-_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __attribute__((unused)), 
-                                    int *pcount)
-{
-	*pcount = (__exidx_end-__exidx_start)/8;
-	return (_Unwind_Ptr)__exidx_start;
+extern struct exidx_entry __exidx_end;
+extern struct exidx_entry __exidx_start;
+
+_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __attribute__((unused)), int* pcount) {
+  *pcount = (&__exidx_end - &__exidx_start);
+  return (_Unwind_Ptr)&__exidx_start;
 }

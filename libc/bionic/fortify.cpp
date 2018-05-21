@@ -80,17 +80,17 @@
 
 int __FD_ISSET_chk(int fd, const fd_set* set, size_t set_size) {
   __check_fd_set("FD_ISSET", fd, set_size);
-  return FD_ISSET(fd, set);
+  return __FD_ISSET(fd, set);
 }
 
 void __FD_CLR_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_CLR", fd, set_size);
-  FD_CLR(fd, set);
+  __FD_CLR(fd, set);
 }
 
 void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
   __check_fd_set("FD_SET", fd, set_size);
-  FD_SET(fd, set);
+  __FD_SET(fd, set);
 }
 
 char* __fgets_chk(char* dst, int supplied_size, FILE* stream, size_t dst_len_from_compiler) {
@@ -167,6 +167,12 @@ int __ppoll_chk(pollfd* fds, nfds_t fd_count, const timespec* timeout,
                 const sigset_t* mask, size_t fds_size) {
   __check_pollfd_array("ppoll", fds_size, fd_count);
   return ppoll(fds, fd_count, timeout, mask);
+}
+
+int __ppoll64_chk(pollfd* fds, nfds_t fd_count, const timespec* timeout,
+                  const sigset64_t* mask, size_t fds_size) {
+  __check_pollfd_array("ppoll64", fds_size, fd_count);
+  return ppoll64(fds, fd_count, timeout, mask);
 }
 
 ssize_t __pread64_chk(int fd, void* buf, size_t count, off64_t offset, size_t buf_size) {

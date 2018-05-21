@@ -33,6 +33,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <optional>
 #include <set>
 #include <sstream>
 #include <string>
@@ -495,7 +496,6 @@ extern "C" const char* __asan_default_options() {
 
 int main(int argc, char** argv) {
   std::string cwd = getWorkingDir() + "/";
-  bool default_args = true;
   std::string platform_dir;
   std::set<Arch> selected_architectures;
   std::set<int> selected_levels;
@@ -506,7 +506,6 @@ int main(int argc, char** argv) {
 
   int c;
   while ((c = getopt(argc, argv, "a:r:p:so:fdj:vhFi")) != -1) {
-    default_args = false;
     switch (c) {
       case 'a': {
         char* end;
@@ -614,9 +613,6 @@ int main(int argc, char** argv) {
     std::string versioner_dir = to_string(top) + "/bionic/tools/versioner";
     location.header_path = versioner_dir + "/current";
     location.dependency_dir = versioner_dir + "/dependencies";
-    if (platform_dir.empty()) {
-      platform_dir = versioner_dir + "/platforms";
-    }
   } else {
     if (!android::base::Realpath(argv[optind], &location.header_path)) {
       err(1, "failed to get realpath for path '%s'", argv[optind]);
@@ -653,15 +649,9 @@ int main(int argc, char** argv) {
   }
 
   std::set<CompilationType> compilation_types;
-  NdkSymbolDatabase symbol_database;
+  std::optional<NdkSymbolDatabase> symbol_database;
 
   compilation_types = generateCompilationTypes(selected_architectures, selected_levels);
-
-  // Do this before compiling so that we can early exit if the platforms don't match what we
-  // expect.
-  if (!platform_dir.empty()) {
-    symbol_database = parsePlatforms(compilation_types, platform_dir);
-  }
 
   auto start = std::chrono::high_resolution_clock::now();
   std::unique_ptr<HeaderDatabase> declaration_database =
@@ -682,8 +672,8 @@ int main(int argc, char** argv) {
       failed = true;
     }
 
-    if (!platform_dir.empty()) {
-      if (!checkVersions(compilation_types, declaration_database.get(), symbol_database)) {
+    if (symbol_database) {
+      if (!checkVersions(compilation_types, declaration_database.get(), *symbol_database)) {
         printf("versioner: version check failed\n");
         failed = true;
       }

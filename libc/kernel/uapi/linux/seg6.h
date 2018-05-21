@@ -27,7 +27,7 @@ struct ipv6_sr_hdr {
   __u8 segments_left;
   __u8 first_segment;
   __u8 flags;
-  __u16 reserved;
+  __u16 tag;
   struct in6_addr segments[0];
 };
 #define SR6_FLAG1_PROTECTED (1 << 6)

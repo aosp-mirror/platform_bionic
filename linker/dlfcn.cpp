@@ -65,6 +65,8 @@ bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
 bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       android_namespace_t* namespace_to,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
+bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
+                                               android_namespace_t* namespace_to) __LINKER_PUBLIC__;
 void __loader_android_set_application_target_sdk_version(uint32_t target) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
@@ -82,6 +84,8 @@ void* __loader_dlvsym(void* handle,
                       const char* symbol,
                       const char* version,
                       const void* caller_addr) __LINKER_PUBLIC__;
+void __loader_add_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
+void __loader_remove_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_PUBLIC__;
 #endif
@@ -264,12 +268,35 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
   return success;
 }
 
+bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
+                                               android_namespace_t* namespace_to) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+
+  bool success = link_namespaces_all_libs(namespace_from, namespace_to);
+
+  if (!success) {
+    __bionic_format_dlerror("android_link_namespaces_all_libs failed", linker_get_error_buffer());
+  }
+
+  return success;
+}
+
 android_namespace_t* __loader_android_get_exported_namespace(const char* name) {
   return get_exported_namespace(name);
 }
 
 void __loader_cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *CallerPc) {
   CFIShadowWriter::CfiFail(CallSiteTypeId, Ptr, DiagData, CallerPc);
+}
+
+void __loader_add_thread_local_dtor(void* dso_handle) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  increment_dso_handle_reference_counter(dso_handle);
+}
+
+void __loader_remove_thread_local_dtor(void* dso_handle) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
+  decrement_dso_handle_reference_counter(dso_handle);
 }
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
@@ -298,7 +325,7 @@ soinfo* get_libdl_info(const char* linker_path,
     __libdl_info->ref_count_ = 1;
     __libdl_info->strtab_size_ = linker_si.strtab_size_;
     __libdl_info->local_group_root_ = __libdl_info;
-    __libdl_info->soname_ = "ld-android.so";
+    __libdl_info->soname_ = linker_si.soname_;
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
     __libdl_info->generate_handle();
     __libdl_info->link_map_head.l_addr = linker_map.l_addr;

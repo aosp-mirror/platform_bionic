@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
 #if defined(__BIONIC_LP32_USE_LONG_DOUBLE)
 #define COMPLEX_TEST complex_h_force_long_double
 #else
@@ -43,26 +41,27 @@
 
 #include <math.h> // For M_PI_2/M_PI_2l.
 
-#if 0
-// Note that gtest doesn't support complex numbers, so the output from
-// assertion failures is misleading/useless (at best you'll only see the real
-// part).
-// TODO: find out why gtest doesn't use these; until then they're only useful
-// for manual printf^Woperator<< debugging.
+// Prettify gtest Complex printing.
 #include <iostream>
-std::ostream& operator<<(std::ostream& os, const double _Complex c) {
-  os << "(" << creal(c) << "," << cimag(c) << "i)";
- return os;
+namespace testing {
+namespace internal {
+inline void PrintTo(const double _Complex& c, std::ostream* os) {
+  *os << "(" << creal(c) << "," << cimag(c) << "i)";
 }
-std::ostream& operator<<(std::ostream& os, const float _Complex c) {
-  os << "(" << crealf(c) << "," << cimagf(c) << "i)";
-  return os;
+inline void PrintTo(const float _Complex& c, std::ostream* os) {
+  *os << "(" << crealf(c) << "," << cimagf(c) << "i)";
 }
-std::ostream& operator<<(std::ostream& os, const long double _Complex c) {
-  os << "(" << creall(c) << "," << cimagl(c) << "i)";
-  return os;
+inline void PrintTo(const long double _Complex& c, std::ostream* os) {
+  *os << "(" << creall(c) << "," << cimagl(c) << "i)";
 }
-#endif
+}
+}
+
+// Macro 'I' defined in complex.h conflicts with gtest.h.
+#pragma push_macro("I")
+#undef I
+#include <gtest/gtest.h>
+#pragma pop_macro("I")
 
 TEST(COMPLEX_TEST, cabs) {
   ASSERT_EQ(0.0, cabs(0));

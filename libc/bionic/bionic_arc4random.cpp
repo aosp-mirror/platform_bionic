@@ -28,8 +28,6 @@
 
 #include "private/bionic_arc4random.h"
 
-#include <errno.h>
-#include <stdatomic.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/auxv.h>
@@ -39,15 +37,12 @@
 
 #include "private/KernelArgumentBlock.h"
 
-bool __libc_arc4random_has_unlimited_entropy() {
-  static bool have_urandom = access("/dev/urandom", R_OK) == 0;
-  return have_urandom;
-}
-
 void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args) {
-  // Only call arc4random_buf once we `have_urandom', since in getentropy_getrandom we may fallback
-  // to use /dev/urandom, if the kernel entropy pool hasn't been initialized or not enough bytes
-  if (__libc_arc4random_has_unlimited_entropy()) {
+  // Only call arc4random_buf once we have `/dev/urandom` because getentropy(3)
+  // will fall back to using `/dev/urandom` if getrandom(2) fails, and abort if
+  // if can't use `/dev/urandom`.
+  static bool have_urandom = access("/dev/urandom", R_OK) == 0;
+  if (have_urandom) {
     arc4random_buf(buf, n);
     return;
   }

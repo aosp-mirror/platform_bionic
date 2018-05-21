@@ -37,22 +37,6 @@
 
 __BEGIN_DECLS
 
-typedef union epoll_data {
-  void* ptr;
-  int fd;
-  uint32_t u32;
-  uint64_t u64;
-} epoll_data_t;
-
-struct epoll_event {
-  uint32_t events;
-  epoll_data_t data;
-}
-#ifdef __x86_64__
-__packed
-#endif
-;
-
 int epoll_create(int __size);
 int epoll_create1(int __flags) __INTRODUCED_IN(21);
 
@@ -74,6 +58,7 @@ int epoll_create1(int __flags) __INTRODUCED_IN(21);
 int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __event);
 int epoll_wait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms);
 int epoll_pwait(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset_t* __mask) __INTRODUCED_IN(21);
+int epoll_pwait64(int __epoll_fd, struct epoll_event* __events, int __event_count, int __timeout_ms, const sigset64_t* __mask) __INTRODUCED_IN(28);
 
 __END_DECLS
 

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_BENCHMARKS_UTIL_H_
-#define _BIONIC_BENCHMARKS_UTIL_H_
+#pragma once
 
 #include <map>
 #include <mutex>
@@ -29,7 +28,7 @@ extern std::mutex g_map_lock;
 
 extern std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
 
-static int  __attribute__((unused)) EmplaceBenchmark (std::string fn_name, benchmark_func_t fn_ptr, std::string arg = "") {
+static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name, benchmark_func_t fn_ptr, const std::string& arg = "") {
   g_map_lock.lock();
   g_str_to_func.emplace(std::string(fn_name), std::make_pair(fn_ptr, arg));
   g_map_lock.unlock();
@@ -46,8 +45,8 @@ static int  __attribute__((unused)) EmplaceBenchmark (std::string fn_name, bench
 constexpr auto KB = 1024;
 
 typedef struct {
-  long cpu_to_lock;
-  long num_iterations;
+  int cpu_to_lock = -1;
+  long num_iterations = 0;
   std::string xmlpath;
   std::vector<std::string> extra_benchmarks;
 } bench_opts_t;
@@ -61,6 +60,4 @@ wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbyte
 
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte);
 
-bool LockToCPU(long cpu_to_lock);
-
-#endif // _BIONIC_BENCHMARKS_UTIL_H
+bool LockToCPU(int cpu_to_lock);

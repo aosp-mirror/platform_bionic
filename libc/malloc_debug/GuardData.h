@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_GUARDDATA_H
-#define DEBUG_MALLOC_GUARDDATA_H
+#pragma once
 
 #include <stdint.h>
 #include <string.h>
@@ -93,5 +92,3 @@ class RearGuardData : public GuardData {
 
   DISALLOW_COPY_AND_ASSIGN(RearGuardData);
 };
-
-#endif // DEBUG_MALLOC_GUARDDATA_H

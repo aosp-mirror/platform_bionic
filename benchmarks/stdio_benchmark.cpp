@@ -29,7 +29,7 @@ static void FillFile(TemporaryFile& tf) {
   memset(line, 'x', sizeof(line));
   line[sizeof(line) - 1] = '\0';
 
-  FILE* fp = fopen(tf.path, "w");
+  FILE* fp = fopen(tf.path, "we");
   for (size_t i = 0; i < 4096; ++i) fputs(line, fp);
   fclose(fp);
 }
@@ -223,6 +223,7 @@ static void BM_stdio_scanf_d(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_stdio_scanf_d);
 
+// Parsing maps is a common use of sscanf with a relatively complex format string.
 static void BM_stdio_scanf_maps(benchmark::State& state) {
   while (state.KeepRunning()) {
     uintptr_t start;
@@ -236,3 +237,71 @@ static void BM_stdio_scanf_maps(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_stdio_scanf_maps);
+
+// Hard-coded equivalent of the maps sscanf from libunwindstack/Maps.cpp for a baseline.
+static int ParseMap(const char* line, const char* /*fmt*/, uintptr_t* start, uintptr_t* end,
+                    char* permissions, uintptr_t* offset, int* name_pos) __attribute__((noinline)) {
+  char* str;
+  const char* old_str = line;
+
+  // "%" PRIxPTR "-"
+  *start = strtoul(old_str, &str, 16);
+  if (old_str == str || *str++ != '-') return 0;
+
+  // "%" PRIxPTR " "
+  old_str = str;
+  *end = strtoul(old_str, &str, 16);
+  if (old_str == str || !std::isspace(*str++)) return 0;
+  while (std::isspace(*str)) str++;
+
+  // "%4s "
+  if (*str == '\0') return 0;
+  permissions[0] = *str;
+  str++;
+  permissions[1] = *str;
+  str++;
+  permissions[2] = *str;
+  str++;
+  permissions[3] = *str;
+  str++;
+  permissions[4] = 0;
+  if (!std::isspace(*str++)) return 0;
+
+  // "%" PRIxPTR " "
+  old_str = str;
+  *offset = strtoul(old_str, &str, 16);
+  if (old_str == str || !std::isspace(*str)) return 0;
+
+  // "%*x:%*x "
+  old_str = str;
+  (void)strtoul(old_str, &str, 16);
+  if (old_str == str || *str++ != ':') return 0;
+  if (std::isspace(*str)) return 0;
+  old_str = str;
+  (void)strtoul(str, &str, 16);
+  if (old_str == str || !std::isspace(*str++)) return 0;
+
+  // "%*d "
+  old_str = str;
+  (void)strtoul(old_str, &str, 10);
+  if (old_str == str || (!std::isspace(*str) && *str != '\0')) return 0;
+  while (std::isspace(*str)) str++;
+
+  // "%n"
+  *name_pos = (str - line);
+  return 4;
+}
+
+static void BM_stdio_scanf_maps_baseline(benchmark::State& state) {
+  while (state.KeepRunning()) {
+    uintptr_t start;
+    uintptr_t end;
+    uintptr_t offset;
+    char permissions[5];
+    int name_pos;
+    if (ParseMap("6f000000-6f01e000 rwxp 00000000 00:0c 16389419   /system/lib/libcomposer.so",
+               "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n",
+               &start, &end, permissions, &offset, &name_pos) != 4) abort();
+  }
+}
+BIONIC_BENCHMARK(BM_stdio_scanf_maps_baseline);

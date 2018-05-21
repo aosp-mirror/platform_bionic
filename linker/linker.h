@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LINKER_H_
-#define _LINKER_H_
+#pragma once
 
 #include <dlfcn.h>
 #include <android/dlext.h>
@@ -180,6 +179,10 @@ bool link_namespaces(android_namespace_t* namespace_from,
                      android_namespace_t* namespace_to,
                      const char* shared_lib_sonames);
 
+bool link_namespaces_all_libs(android_namespace_t* namespace_from,
+                              android_namespace_t* namespace_to);
+
 android_namespace_t* get_exported_namespace(const char* name);
 
-#endif
+void increment_dso_handle_reference_counter(void* dso_handle);
+void decrement_dso_handle_reference_counter(void* dso_handle);

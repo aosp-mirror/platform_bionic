@@ -26,14 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_MAPDATA_H
-#define DEBUG_MALLOC_MAPDATA_H
+#pragma once
 
 #include <sys/cdefs.h>
 
 #include <mutex>
-#include <string>
 #include <set>
+#include <string>
 
 #include <private/bionic_macros.h>
 
@@ -41,7 +40,7 @@ struct MapEntry {
   MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len)
       : start(start), end(end), offset(offset), name(name, name_len) {}
 
-  MapEntry(uintptr_t pc) : start(pc), end(pc) {}
+  explicit MapEntry(uintptr_t pc) : start(pc), end(pc) {}
 
   uintptr_t start;
   uintptr_t end;
@@ -51,12 +50,9 @@ struct MapEntry {
   std::string name;
 };
 
-
 // Ordering comparator that returns equivalence for overlapping entries
 struct compare_entries {
-  bool operator()(const MapEntry* a, const MapEntry* b) const {
-    return a->end <= b->start;
-  }
+  bool operator()(const MapEntry* a, const MapEntry* b) const { return a->end <= b->start; }
 };
 
 class MapData {
@@ -74,5 +70,3 @@ class MapData {
 
   DISALLOW_COPY_AND_ASSIGN(MapData);
 };
-
-#endif  // DEBUG_MALLOC_MAPDATA_H

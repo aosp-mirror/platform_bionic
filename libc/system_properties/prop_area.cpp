@@ -26,6 +26,9 @@
  * SUCH DAMAGE.
  */
 
+#include "system_properties/prop_area.h"
+
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/cdefs.h>
@@ -37,8 +40,6 @@
 #include <new>
 
 #include <async_safe/log.h>
-
-#include "prop_area.h"
 
 constexpr size_t PA_SIZE = 128 * 1024;
 constexpr uint32_t PROP_AREA_MAGIC = 0x504f5250;

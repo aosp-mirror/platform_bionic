@@ -29,6 +29,7 @@
 #ifndef _SYS_WAIT_H_
 #define _SYS_WAIT_H_
 
+#include <bits/wait.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/resource.h>
@@ -36,19 +37,6 @@
 #include <signal.h>
 
 __BEGIN_DECLS
-
-#define WEXITSTATUS(s)  (((s) & 0xff00) >> 8)
-#define WCOREDUMP(s)    ((s) & 0x80)
-#define WTERMSIG(s)     ((s) & 0x7f)
-#define WSTOPSIG(s)     WEXITSTATUS(s)
-
-#define WIFEXITED(s)    (WTERMSIG(s) == 0)
-#define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
-#define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
-#define WIFCONTINUED(s) ((s) == 0xffff)
-
-#define W_EXITCODE(ret, sig)    ((ret) << 8 | (sig))
-#define W_STOPCODE(sig)         ((sig) << 8 | 0x7f)
 
 pid_t wait(int* __status);
 pid_t waitpid(pid_t __pid, int* __status, int __options);

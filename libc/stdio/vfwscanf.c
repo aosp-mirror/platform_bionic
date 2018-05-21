@@ -182,7 +182,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
         if ((wi = __fgetwc_unlock(fp)) == WEOF) goto input_failure;
         if (wi != c) {
           __ungetwc(wi, fp);
-          goto input_failure;
+          goto match_failure;
         }
         nread++;
         continue;
@@ -402,28 +402,26 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
         break;
 
       case CT_CCL:
-        /* scan a (nonempty) character class (sets NOSKIP) */
-        if (width == 0) width = (size_t)~0; /* `infinity' */
-        /* take only those things in the class */
+      case CT_STRING:
+        // CT_CCL: scan a (nonempty) character class (sets NOSKIP).
+        // CT_STRING: like CCL, but zero-length string OK, & no NOSKIP.
+        if (width == 0) width = (size_t)~0; // 'infinity'.
         if ((flags & SUPPRESS) && (flags & LONG)) {
           n = 0;
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && in_ccl(wi, ccl)) n++;
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && ((c == CT_CCL && in_ccl(wi, ccl)) || (c == CT_STRING && !iswspace(wi)))) n++;
           if (wi != WEOF) __ungetwc(wi, fp);
-          if (n == 0) goto match_failure;
         } else if (flags & LONG) {
           p0 = p = va_arg(ap, wchar_t*);
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && in_ccl(wi, ccl))
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && ((c == CT_CCL && in_ccl(wi, ccl)) || (c == CT_STRING && !iswspace(wi)))) {
             *p++ = (wchar_t)wi;
+          }
           if (wi != WEOF) __ungetwc(wi, fp);
           n = p - p0;
-          if (n == 0) goto match_failure;
-          *p = 0;
-          nassigned++;
         } else {
           if (!(flags & SUPPRESS)) mbp = va_arg(ap, char*);
           n = 0;
           memset(&mbs, 0, sizeof(mbs));
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width != 0 && in_ccl(wi, ccl)) {
+          while ((wi = __fgetwc_unlock(fp)) != WEOF && width != 0 && ((c == CT_CCL && in_ccl(wi, ccl)) || (c == CT_STRING && !iswspace(wi)))) {
             if (width >= MB_CUR_MAX && !(flags & SUPPRESS)) {
               nconv = wcrtomb(mbp, wi, &mbs);
               if (nconv == (size_t)-1) goto input_failure;
@@ -438,56 +436,19 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
             n++;
           }
           if (wi != WEOF) __ungetwc(wi, fp);
-          if (n == 0) goto match_failure;
-          if (!(flags & SUPPRESS)) {
-            *mbp = 0;
-            nassigned++;
+        }
+        if (c == CT_CCL && n == 0) goto match_failure;
+        if (!(flags & SUPPRESS)) {
+          if (flags & LONG) {
+            *p = L'\0';
+          } else {
+            *mbp = '\0';
           }
+          ++nassigned;
         }
         nread += n;
         nconversions++;
         break;
-
-      case CT_STRING:
-        /* like CCL, but zero-length string OK, & no NOSKIP */
-        if (width == 0) width = (size_t)~0;
-        if ((flags & SUPPRESS) && (flags & LONG)) {
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && !iswspace(wi)) nread++;
-          if (wi != WEOF) __ungetwc(wi, fp);
-        } else if (flags & LONG) {
-          p0 = p = va_arg(ap, wchar_t*);
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width-- != 0 && !iswspace(wi)) {
-            *p++ = (wchar_t)wi;
-            nread++;
-          }
-          if (wi != WEOF) __ungetwc(wi, fp);
-          *p = 0;
-          nassigned++;
-        } else {
-          if (!(flags & SUPPRESS)) mbp = va_arg(ap, char*);
-          memset(&mbs, 0, sizeof(mbs));
-          while ((wi = __fgetwc_unlock(fp)) != WEOF && width != 0 && !iswspace(wi)) {
-            if (width >= MB_CUR_MAX && !(flags & SUPPRESS)) {
-              nconv = wcrtomb(mbp, wi, &mbs);
-              if (nconv == (size_t)-1) goto input_failure;
-            } else {
-              nconv = wcrtomb(mbbuf, wi, &mbs);
-              if (nconv == (size_t)-1) goto input_failure;
-              if (nconv > width) break;
-              if (!(flags & SUPPRESS)) memcpy(mbp, mbbuf, nconv);
-            }
-            if (!(flags & SUPPRESS)) mbp += nconv;
-            width -= nconv;
-            nread++;
-          }
-          if (wi != WEOF) __ungetwc(wi, fp);
-          if (!(flags & SUPPRESS)) {
-            *mbp = 0;
-            nassigned++;
-          }
-        }
-        nconversions++;
-        continue;
 
       case CT_INT:
         /* scan an integer as if by strtoimax/strtoumax */

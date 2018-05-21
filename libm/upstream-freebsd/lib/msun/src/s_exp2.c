@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2005 David Schultz <das@FreeBSD.ORG>
  * All rights reserved.
  *
@@ -25,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_exp2.c 286515 2015-08-09 10:00:13Z dim $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_exp2.c 326219 2017-11-26 02:00:33Z pfg $");
 
 #include <float.h>
 

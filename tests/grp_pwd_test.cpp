@@ -44,9 +44,12 @@ enum uid_type_t {
 
 #if defined(__BIONIC__)
 
-static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type,
+                         bool check_username) {
   ASSERT_TRUE(pwd != NULL);
-  EXPECT_STREQ(username, pwd->pw_name);
+  if (check_username) {
+    EXPECT_STREQ(username, pwd->pw_name);
+  }
   EXPECT_EQ(uid, pwd->pw_uid);
   EXPECT_EQ(uid, pwd->pw_gid);
   EXPECT_EQ(NULL, pwd->pw_passwd);
@@ -62,23 +65,26 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
 }
 
-static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
+                           bool check_username) {
   errno = 0;
   passwd* pwd = getpwuid(uid);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getpwuid");
-  check_passwd(pwd, username, uid, uid_type);
+  check_passwd(pwd, username, uid, uid_type, check_username);
 }
 
-static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam(const char* username, uid_t uid, uid_type_t uid_type,
+                           bool check_username) {
   errno = 0;
   passwd* pwd = getpwnam(username);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getpwnam");
-  check_passwd(pwd, username, uid, uid_type);
+  check_passwd(pwd, username, uid, uid_type, check_username);
 }
 
-static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_type,
+                             bool check_username) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -89,10 +95,11 @@ static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_typ
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getpwuid_r");
-  check_passwd(pwd, username, uid, uid_type);
+  check_passwd(pwd, username, uid, uid_type, check_username);
 }
 
-static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_type) {
+static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_type,
+                             bool check_username) {
   passwd pwd_storage;
   char buf[512];
   int result;
@@ -103,20 +110,30 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getpwnam_r");
-  check_passwd(pwd, username, uid, uid_type);
+  check_passwd(pwd, username, uid, uid_type, check_username);
 }
 
-static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_type) {
-  check_getpwuid(username, uid, uid_type);
-  check_getpwnam(username, uid, uid_type);
-  check_getpwuid_r(username, uid, uid_type);
-  check_getpwnam_r(username, uid, uid_type);
+static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_type,
+                             bool check_username = true) {
+  check_getpwuid(username, uid, uid_type, check_username);
+  check_getpwnam(username, uid, uid_type, check_username);
+  check_getpwuid_r(username, uid, uid_type, check_username);
+  check_getpwnam_r(username, uid, uid_type, check_username);
 }
 
 #else // !defined(__BIONIC__)
 
-static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
+static void print_no_getpwnam_test_info() {
   GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
+}
+
+static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */,
+                             bool /* check_username */) {
+  print_no_getpwnam_test_info();
+}
+
+static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
+  print_no_getpwnam_test_info();
 }
 
 #endif
@@ -134,19 +151,19 @@ TEST(pwd, getpwnam_app_id_radio) {
 }
 
 TEST(pwd, getpwnam_oem_id_5000) {
-  check_get_passwd("oem_5000", 5000, TYPE_SYSTEM);
+  check_get_passwd("oem_5000", 5000, TYPE_SYSTEM, false);
 }
 
 TEST(pwd, getpwnam_oem_id_5999) {
-  check_get_passwd("oem_5999", 5999, TYPE_SYSTEM);
+  check_get_passwd("oem_5999", 5999, TYPE_SYSTEM, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2900) {
-  check_get_passwd("oem_2900", 2900, TYPE_SYSTEM);
+  check_get_passwd("oem_2900", 2900, TYPE_SYSTEM, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2999) {
-  check_get_passwd("oem_2999", 2999, TYPE_SYSTEM);
+  check_get_passwd("oem_2999", 2999, TYPE_SYSTEM, false);
 }
 
 TEST(pwd, getpwnam_app_id_nobody) {
@@ -238,6 +255,7 @@ static void expect_ids(const T& ids) {
 }
 
 TEST(pwd, getpwent_iterate) {
+#if defined(__BIONIC__)
   passwd* pwd;
   std::set<uid_t> uids;
 
@@ -257,49 +275,50 @@ TEST(pwd, getpwent_iterate) {
       EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
     }
 
-    // TODO(b/27999086): fix this check with the OEM range
-    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-    // yet, so therefore we do not check for uid's in the OEM range.
-    if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
-        !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
-      EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
-    }
+    EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
     uids.emplace(pwd->pw_uid);
   }
   endpwent();
 
   expect_ids(uids);
+#else
+  print_no_getpwnam_test_info();
+#endif
 }
 
-static void check_group(const group* grp, const char* group_name, gid_t gid) {
+static void check_group(const group* grp, const char* group_name, gid_t gid,
+                        bool check_groupname = true) {
   ASSERT_TRUE(grp != NULL);
-  EXPECT_STREQ(group_name, grp->gr_name);
+  if (check_groupname) {
+    EXPECT_STREQ(group_name, grp->gr_name);
+  }
   EXPECT_EQ(gid, grp->gr_gid);
   ASSERT_TRUE(grp->gr_mem != NULL);
-  EXPECT_STREQ(group_name, grp->gr_mem[0]);
+  if (check_groupname) {
+    EXPECT_STREQ(group_name, grp->gr_mem[0]);
+  }
   EXPECT_TRUE(grp->gr_mem[1] == NULL);
 }
 
 #if defined(__BIONIC__)
 
-static void check_getgrgid(const char* group_name, gid_t gid) {
+static void check_getgrgid(const char* group_name, gid_t gid, bool check_groupname) {
   errno = 0;
   group* grp = getgrgid(gid);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getgrgid");
-  check_group(grp, group_name, gid);
+  check_group(grp, group_name, gid, check_groupname);
 }
 
-static void check_getgrnam(const char* group_name, gid_t gid) {
+static void check_getgrnam(const char* group_name, gid_t gid, bool check_groupname) {
   errno = 0;
   group* grp = getgrnam(group_name);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getgrnam");
-  check_group(grp, group_name, gid);
+  check_group(grp, group_name, gid, check_groupname);
 }
 
-static void check_getgrgid_r(const char* group_name, gid_t gid) {
+static void check_getgrgid_r(const char* group_name, gid_t gid, bool check_groupname) {
   group grp_storage;
   char buf[512];
   group* grp;
@@ -309,10 +328,10 @@ static void check_getgrgid_r(const char* group_name, gid_t gid) {
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getgrgid_r");
-  check_group(grp, group_name, gid);
+  check_group(grp, group_name, gid, check_groupname);
 }
 
-static void check_getgrnam_r(const char* group_name, gid_t gid) {
+static void check_getgrnam_r(const char* group_name, gid_t gid, bool check_groupname) {
   group grp_storage;
   char buf[512];
   group* grp;
@@ -322,20 +341,24 @@ static void check_getgrnam_r(const char* group_name, gid_t gid) {
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
   SCOPED_TRACE("getgrnam_r");
-  check_group(grp, group_name, gid);
+  check_group(grp, group_name, gid, check_groupname);
 }
 
-static void check_get_group(const char* group_name, gid_t gid) {
-  check_getgrgid(group_name, gid);
-  check_getgrnam(group_name, gid);
-  check_getgrgid_r(group_name, gid);
-  check_getgrnam_r(group_name, gid);
+static void check_get_group(const char* group_name, gid_t gid, bool check_groupname = true) {
+  check_getgrgid(group_name, gid, check_groupname);
+  check_getgrnam(group_name, gid, check_groupname);
+  check_getgrgid_r(group_name, gid, check_groupname);
+  check_getgrnam_r(group_name, gid, check_groupname);
 }
 
 #else // !defined(__BIONIC__)
 
 static void print_no_getgrnam_test_info() {
   GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
+}
+
+static void check_get_group(const char*, gid_t, bool) {
+  print_no_getgrnam_test_info();
 }
 
 static void check_get_group(const char*, gid_t) {
@@ -357,19 +380,19 @@ TEST(grp, getgrnam_app_id_radio) {
 }
 
 TEST(grp, getgrnam_oem_id_5000) {
-  check_get_group("oem_5000", 5000);
+  check_get_group("oem_5000", 5000, false);
 }
 
 TEST(grp, getgrnam_oem_id_5999) {
-  check_get_group("oem_5999", 5999);
+  check_get_group("oem_5999", 5999, false);
 }
 
 TEST(grp, getgrnam_oem_id_2900) {
-  check_get_group("oem_2900", 2900);
+  check_get_group("oem_2900", 2900, false);
 }
 
 TEST(grp, getgrnam_oem_id_2999) {
-  check_get_group("oem_2999", 2999);
+  check_get_group("oem_2999", 2999, false);
 }
 
 TEST(grp, getgrnam_app_id_nobody) {
@@ -484,6 +507,7 @@ TEST(grp, getgrnam_r_large_enough_suggested_buffer_size) {
 }
 
 TEST(grp, getgrent_iterate) {
+#if defined(__BIONIC__)
   group* grp;
   std::set<gid_t> gids;
 
@@ -494,17 +518,13 @@ TEST(grp, getgrent_iterate) {
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
 
-    // TODO(b/27999086): fix this check with the OEM range
-    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-    // yet, so therefore we do not check for gid's in the OEM range.
-    if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
-        !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
-      EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
-    }
+    EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
     gids.emplace(grp->gr_gid);
   }
   endgrent();
 
   expect_ids(gids);
+#else
+  print_no_getgrnam_test_info();
+#endif
 }

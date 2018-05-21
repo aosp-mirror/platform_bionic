@@ -17,7 +17,7 @@
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
-#include "ScopedSignalHandler.h"
+#include "SignalUtils.h"
 #include "TemporaryFile.h"
 #include "utils.h"
 
@@ -836,19 +836,23 @@ TEST(UNISTD_TEST, _POSIX_options) {
 #endif // defined(__BIONIC__)
 }
 
-#define VERIFY_SYSCONF_UNSUPPORTED(name) VerifySysconf(name, #name, [](long v){return v == -1;})
+#define VERIFY_SYSCONF_UNKNOWN(name) \
+  VerifySysconf(name, #name, [](long v){return v == -1 && errno == EINVAL;})
+
+#define VERIFY_SYSCONF_UNSUPPORTED(name) \
+  VerifySysconf(name, #name, [](long v){return v == -1 && errno == 0;})
 
 // sysconf() means unlimited when it returns -1 with errno unchanged.
 #define VERIFY_SYSCONF_POSITIVE(name) \
-  VerifySysconf(name, #name, [](long v){return (v > 0 || v == -1);})
+  VerifySysconf(name, #name, [](long v){return (v > 0 || v == -1) && errno == 0;})
 
 #define VERIFY_SYSCONF_POSIX_VERSION(name) \
-  VerifySysconf(name, #name, [](long v){return v == _POSIX_VERSION;})
+  VerifySysconf(name, #name, [](long v){return v == _POSIX_VERSION && errno == 0;})
 
 static void VerifySysconf(int option, const char *option_name, bool (*verify)(long)) {
   errno = 0;
   long ret = sysconf(option);
-  EXPECT_TRUE(0 == errno && verify(ret)) << "name = " << option_name << ", ret = "
+  EXPECT_TRUE(verify(ret)) << "name = " << option_name << ", ret = "
       << ret <<", Error Message: " << strerror(errno);
 }
 
@@ -879,17 +883,17 @@ TEST(UNISTD_TEST, sysconf) {
   VERIFY_SYSCONF_POSITIVE(_SC_RE_DUP_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_STREAM_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_TZNAME_MAX);
-  VerifySysconf(_SC_XOPEN_VERSION, "_SC_XOPEN_VERSION", [](long v){return v == _XOPEN_VERSION;});
+  VerifySysconf(_SC_XOPEN_VERSION, "_SC_XOPEN_VERSION", [](long v){return v == _XOPEN_VERSION && errno == 0;});
   VERIFY_SYSCONF_POSITIVE(_SC_ATEXIT_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_IOV_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_PAGESIZE);
   VERIFY_SYSCONF_POSITIVE(_SC_PAGE_SIZE);
   VerifySysconf(_SC_PAGE_SIZE, "_SC_PAGE_SIZE",
-                [](long v){return v == sysconf(_SC_PAGESIZE) && v == getpagesize();});
+                [](long v){return v == sysconf(_SC_PAGESIZE) && errno == 0 && v == getpagesize();});
   VERIFY_SYSCONF_POSITIVE(_SC_XOPEN_UNIX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_LISTIO_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_AIO_MAX);
-  VerifySysconf(_SC_AIO_PRIO_DELTA_MAX, "_SC_AIO_PRIO_DELTA_MAX", [](long v){return v >= 0;});
+  VerifySysconf(_SC_AIO_PRIO_DELTA_MAX, "_SC_AIO_PRIO_DELTA_MAX", [](long v){return v >= 0 && errno == 0;});
   VERIFY_SYSCONF_POSITIVE(_SC_DELAYTIMER_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_MQ_OPEN_MAX);
   VERIFY_SYSCONF_POSITIVE(_SC_MQ_PRIO_MAX);
@@ -1024,6 +1028,11 @@ TEST(UNISTD_TEST, sysconf_SC_ARG_MAX) {
   ASSERT_EQ(ARG_MAX, sysconf(_SC_ARG_MAX));
 }
 
+TEST(UNISTD_TEST, sysconf_unknown) {
+  VERIFY_SYSCONF_UNKNOWN(-1);
+  VERIFY_SYSCONF_UNKNOWN(666);
+}
+
 TEST(UNISTD_TEST, dup2_same) {
   // POSIX says of dup2:
   // If fildes2 is already a valid open file descriptor ...
@@ -1041,6 +1050,17 @@ TEST(UNISTD_TEST, dup2_same) {
   errno = 0;
   ASSERT_EQ(-1, dup2(fd, fd));
   ASSERT_EQ(EBADF, errno);
+}
+
+TEST(UNISTD_TEST, dup3) {
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_EQ(666, dup3(fd, 666, 0));
+  AssertCloseOnExec(666, false);
+  close(666);
+  ASSERT_EQ(667, dup3(fd, 667, O_CLOEXEC));
+  AssertCloseOnExec(667, true);
+  close(667);
+  close(fd);
 }
 
 TEST(UNISTD_TEST, lockf_smoke) {

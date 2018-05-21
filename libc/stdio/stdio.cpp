@@ -170,7 +170,10 @@ found:
 
 	fp->_lb._base = nullptr;	/* no line buffer */
 	fp->_lb._size = 0;
-	_FILEEXT_INIT(fp);
+
+	memset(_EXT(fp), 0, sizeof(struct __sfileext));
+	_FLOCK(fp) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+	_EXT(fp)->_caller_handles_locking = false;
 
 	// Caller sets cookie, _read/_write etc.
 	// We explicitly clear _seek and _seek64 to prevent subtle bugs.
@@ -710,7 +713,7 @@ int fgetc_unlocked(FILE* fp) {
  * Return first argument, or NULL if no characters were read.
  * Do not return NULL if n == 1.
  */
-char* fgets(char* buf, int n, FILE* fp) __overloadable {
+char* fgets(char* buf, int n, FILE* fp) {
   CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return fgets_unlocked(buf, n, fp);
@@ -1028,7 +1031,7 @@ int fflush_unlocked(FILE* fp) {
   return __sflush(fp);
 }
 
-size_t fread(void* buf, size_t size, size_t count, FILE* fp) __overloadable {
+size_t fread(void* buf, size_t size, size_t count, FILE* fp) {
   CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return fread_unlocked(buf, size, count, fp);

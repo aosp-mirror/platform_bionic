@@ -17,7 +17,10 @@
     __loader_android_dlwarning;
     __loader_cfi_fail;
     __loader_android_link_namespaces;
+    __loader_android_link_namespaces_all_libs;
     __loader_android_get_exported_namespace;
+    __loader_add_thread_local_dtor;
+    __loader_remove_thread_local_dtor;
     rtld_db_dlactivity;
   local:
     *;

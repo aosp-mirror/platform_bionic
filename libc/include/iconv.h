@@ -37,9 +37,9 @@ __BEGIN_DECLS
 struct __iconv_t;
 typedef struct __iconv_t* iconv_t;
 
-iconv_t iconv_open(const char* __src_encoding, const char* __dst_encoding) __INTRODUCED_IN_FUTURE;
-size_t iconv(iconv_t __converter, char** __src_buf, size_t* __src_bytes_left, char** __dst_buf, size_t* __dst_bytes_left) __INTRODUCED_IN_FUTURE;
-int iconv_close(iconv_t __converter) __INTRODUCED_IN_FUTURE;
+iconv_t iconv_open(const char* __src_encoding, const char* __dst_encoding) __INTRODUCED_IN(28);
+size_t iconv(iconv_t __converter, char** __src_buf, size_t* __src_bytes_left, char** __dst_buf, size_t* __dst_bytes_left) __INTRODUCED_IN(28);
+int iconv_close(iconv_t __converter) __INTRODUCED_IN(28);
 
 __END_DECLS
 

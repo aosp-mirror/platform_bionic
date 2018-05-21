@@ -38,9 +38,9 @@ __BEGIN_DECLS
 
 /* See also arc4random_buf in <stdlib.h>, which is available in all API levels. */
 
-int getentropy(void* __buffer, size_t __buffer_size) __wur __INTRODUCED_IN_FUTURE;
+int getentropy(void* __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
 
-ssize_t getrandom(void* __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN_FUTURE;
+ssize_t getrandom(void* __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
 
 __END_DECLS
 

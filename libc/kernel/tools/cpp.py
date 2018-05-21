@@ -31,6 +31,7 @@ clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/sdk/tools/linu
 
 from defaults import kCppUndefinedMacro
 from defaults import kernel_remove_config_macros
+from defaults import kernel_struct_replacements
 from defaults import kernel_token_replacements
 
 
@@ -1215,10 +1216,6 @@ class BlockList(object):
             if b.isIf():
                 b.expr.optimize(macros)
 
-    def removeMacroDefines(self, macros):
-        """Remove known macro definitions from a BlockList."""
-        self.blocks = remove_macro_defines(self.blocks, macros)
-
     def optimizeAll(self, macros):
         self.optimizeMacros(macros)
         self.optimizeIf01()
@@ -1238,7 +1235,7 @@ class BlockList(object):
         for b in self.blocks:
             indent = b.write(out, indent)
 
-    def removeVarsAndFuncs(self, knownStatics=None):
+    def removeVarsAndFuncs(self, keep):
         """Remove variable and function declarations.
 
         All extern and static declarations corresponding to variable and
@@ -1246,7 +1243,7 @@ class BlockList(object):
         enum/structs/union declarations.
 
         However, we keep the definitions corresponding to the set of known
-        static inline functions in the set 'knownStatics', which is useful
+        static inline functions in the set 'keep', which is useful
         for optimized byteorder swap functions and stuff like that.
         """
 
@@ -1262,8 +1259,6 @@ class BlockList(object):
         # state = 2 => var declaration encountered, ends with ";"
         # state = 3 => func declaration encountered, ends with "}"
 
-        if knownStatics is None:
-            knownStatics = set()
         state = 0
         depth = 0
         blocks2 = []
@@ -1319,9 +1314,9 @@ class BlockList(object):
                     # its name.
                     #
                     # We're going to parse the next tokens of the same block
-                    # until we find a semi-column or a left parenthesis.
+                    # until we find a semicolon or a left parenthesis.
                     #
-                    # The semi-column corresponds to a variable definition,
+                    # The semicolon corresponds to a variable definition,
                     # the left-parenthesis to a function definition.
                     #
                     # We also assume that the var/func name is the last
@@ -1355,7 +1350,7 @@ class BlockList(object):
                                       ident)
                         break
 
-                    if ident in knownStatics:
+                    if ident in keep:
                         logging.debug("### keep var/func '%s': %s", ident,
                                       repr(b.tokens[i:j]))
                     else:
@@ -1370,21 +1365,42 @@ class BlockList(object):
                     i += 1
 
                 if i > first:
-                    # print "### final '%s'" % repr(b.tokens[first:i])
+                    #print "### final '%s'" % repr(b.tokens[first:i])
                     blocks2.append(Block(b.tokens[first:i]))
 
         self.blocks = blocks2
 
     def replaceTokens(self, replacements):
         """Replace tokens according to the given dict."""
+        extra_includes = []
         for b in self.blocks:
             made_change = False
             if b.isInclude() is None:
-                for tok in b.tokens:
+                i = 0
+                while i < len(b.tokens):
+                    tok = b.tokens[i]
+                    if (tok.kind == TokenKind.KEYWORD and tok.id == 'struct'
+                        and (i + 2) < len(b.tokens) and b.tokens[i + 2].id == '{'):
+                        struct_name = b.tokens[i + 1].id
+                        if struct_name in kernel_struct_replacements:
+                            extra_includes.append("<bits/%s.h>" % struct_name)
+                            end = i + 2
+                            while end < len(b.tokens) and b.tokens[end].id != '}':
+                                end += 1
+                            end += 1 # Swallow '}'
+                            while end < len(b.tokens) and b.tokens[end].id != ';':
+                                end += 1
+                            end += 1 # Swallow ';'
+                            # Remove these tokens. We'll replace them later with a #include block.
+                            b.tokens[i:end] = []
+                            made_change = True
+                            # We've just modified b.tokens, so revisit the current offset.
+                            continue
                     if tok.kind == TokenKind.IDENTIFIER:
                         if tok.id in replacements:
                             tok.id = replacements[tok.id]
                             made_change = True
+                    i += 1
 
                 if b.isDefine() and b.define_id in replacements:
                     b.define_id = replacements[b.define_id]
@@ -1393,6 +1409,11 @@ class BlockList(object):
             if made_change and b.isIf():
                 # Keep 'expr' in sync with 'tokens'.
                 b.expr = CppExpr(b.tokens)
+
+        for extra_include in extra_includes:
+            replacement = CppStringTokenizer(extra_include)
+            self.blocks.insert(2, Block(replacement.tokens, directive='include'))
+
 
 
 def strip_space(s):
@@ -1618,19 +1639,6 @@ def test_BlockParser():
 #####                                                                      #####
 ################################################################################
 ################################################################################
-
-
-def remove_macro_defines(blocks, excludedMacros=None):
-    """Remove macro definitions like #define <macroName>  ...."""
-    if excludedMacros is None:
-        excludedMacros = set()
-    result = []
-    for b in blocks:
-        macroName = b.isDefine()
-        if macroName is None or macroName not in excludedMacros:
-            result.append(b)
-
-    return result
 
 
 def find_matching_endif(blocks, i):

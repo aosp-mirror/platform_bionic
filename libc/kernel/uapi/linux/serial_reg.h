@@ -113,6 +113,7 @@
 #define UART_SCR 7
 #define UART_DLL 0
 #define UART_DLM 1
+#define UART_DIV_MAX 0xFFFF
 #define UART_EFR 2
 #define UART_XR_EFR 9
 #define UART_EFR_CTS 0x80

@@ -194,6 +194,10 @@ typedef struct {
   Elf64_Word vna_next;
 } Elf64_Vernaux;
 
+/* Relocation table entry for relative (in section of type SHT_RELR). */
+typedef Elf32_Word Elf32_Relr;
+typedef Elf64_Xword Elf64_Relr;
+
 /* http://www.sco.com/developers/gabi/latest/ch5.dynamic.html */
 #define DF_ORIGIN     0x00000001
 #define DF_SYMBOLIC   0x00000002
@@ -242,6 +246,13 @@ typedef struct {
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
 
+/* Experimental support for SHT_RELR sections. For details, see proposal
+   at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg */
+#define DT_RELR 0x6fffe000
+#define DT_RELRSZ 0x6fffe001
+#define DT_RELRENT 0x6fffe003
+#define DT_RELRCOUNT 0x6fffe005
+
 /* Android compressed rel/rela sections */
 #define DT_ANDROID_REL (DT_LOOS + 2)
 #define DT_ANDROID_RELSZ (DT_LOOS + 3)
@@ -249,6 +260,8 @@ typedef struct {
 #define DT_ANDROID_RELASZ (DT_LOOS + 5)
 
 #define DT_GNU_HASH 0x6ffffef5
+#define DT_TLSDESC_PLT 0x6ffffef6
+#define DT_TLSDESC_GOT 0x6ffffef7
 
 /* http://www.sco.com/developers/gabi/latest/ch4.eheader.html */
 #define EI_ABIVERSION 8
@@ -493,6 +506,10 @@ typedef struct {
 #define SHT_NUM 19
 #define SHT_LOOS 0x60000000
 #define SHT_HIOS 0x6fffffff
+
+/* Experimental support for SHT_RELR sections. For details, see proposal
+   at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg */
+#define SHT_RELR 0x6fffff00
 
 /* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
 #define STN_UNDEF 0

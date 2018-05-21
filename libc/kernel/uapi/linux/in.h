@@ -18,6 +18,9 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_IN_H
 #define _UAPI_LINUX_IN_H
+#include <bits/ip_msfilter.h>
+#include <bits/ip_mreq_source.h>
+#include <bits/in_addr.h>
 #include <linux/types.h>
 #include <linux/libc-compat.h>
 #include <linux/socket.h>
@@ -77,9 +80,6 @@ enum {
 };
 #endif
 #if __UAPI_DEF_IN_ADDR
-struct in_addr {
-  __be32 s_addr;
-};
 #endif
 #define IP_TOS 1
 #define IP_TTL 2
@@ -147,36 +147,24 @@ struct ip_mreqn {
   struct in_addr imr_address;
   int imr_ifindex;
 };
-struct ip_mreq_source {
-  __be32 imr_multiaddr;
-  __be32 imr_interface;
-  __be32 imr_sourceaddr;
-};
-struct ip_msfilter {
-  __be32 imsf_multiaddr;
-  __be32 imsf_interface;
-  __u32 imsf_fmode;
-  __u32 imsf_numsrc;
-  __be32 imsf_slist[1];
-};
 #define IP_MSFILTER_SIZE(numsrc) (sizeof(struct ip_msfilter) - sizeof(__u32) + (numsrc) * sizeof(__u32))
 struct group_req {
   __u32 gr_interface;
-  struct __kernel_sockaddr_storage gr_group;
+  struct sockaddr_storage gr_group;
 };
 struct group_source_req {
   __u32 gsr_interface;
-  struct __kernel_sockaddr_storage gsr_group;
-  struct __kernel_sockaddr_storage gsr_source;
+  struct sockaddr_storage gsr_group;
+  struct sockaddr_storage gsr_source;
 };
 struct group_filter {
   __u32 gf_interface;
-  struct __kernel_sockaddr_storage gf_group;
+  struct sockaddr_storage gf_group;
   __u32 gf_fmode;
   __u32 gf_numsrc;
-  struct __kernel_sockaddr_storage gf_slist[1];
+  struct sockaddr_storage gf_slist[1];
 };
-#define GROUP_FILTER_SIZE(numsrc) (sizeof(struct group_filter) - sizeof(struct __kernel_sockaddr_storage) + (numsrc) * sizeof(struct __kernel_sockaddr_storage))
+#define GROUP_FILTER_SIZE(numsrc) (sizeof(struct group_filter) - sizeof(struct sockaddr_storage) + (numsrc) * sizeof(struct sockaddr_storage))
 #endif
 #if __UAPI_DEF_IN_PKTINFO
 struct in_pktinfo {

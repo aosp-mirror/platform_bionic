@@ -26,15 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef DEBUG_MALLOC_OPTIONDATA_H
-#define DEBUG_MALLOC_OPTIONDATA_H
+#pragma once
 
 // Forward Declarations
 class DebugData;
 
 class OptionData {
  public:
-  OptionData(DebugData* debug) : debug_(debug) {}
+  explicit OptionData(DebugData* debug) : debug_(debug) {}
   ~OptionData() = default;
 
  protected:
@@ -42,5 +41,3 @@ class OptionData {
 
   DISALLOW_COPY_AND_ASSIGN(OptionData);
 };
-
-#endif // MALLOC_DEBUG_OPTIONDATA_H

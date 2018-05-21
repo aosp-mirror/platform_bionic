@@ -71,9 +71,7 @@
 #include "android-base/stringprintf.h"
 #include "ziparchive/zip_archive.h"
 
-// Override macros to use C++ style casts.
-#undef ELF_ST_TYPE
-#define ELF_ST_TYPE(x) (static_cast<uint32_t>(x) & 0xf)
+static std::unordered_map<void*, size_t> g_dso_handle_counters;
 
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 static std::unordered_map<std::string, android_namespace_t*> g_exported_namespaces;
@@ -861,11 +859,8 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     }
   }
 
-  // If not found - use dlsym_handle_lookup for caller's
-  // local_group unless it is part of the global group in which
-  // case we already did it.
-  if (s == nullptr && caller != nullptr &&
-      (caller->get_rtld_flags() & RTLD_GLOBAL) == 0) {
+  // If not found - use dlsym_handle_lookup for caller's local_group
+  if (s == nullptr && caller != nullptr) {
     soinfo* local_group_root = caller->get_local_group_root();
 
     return dlsym_handle_lookup(local_group_root->get_primary_namespace(),
@@ -1106,10 +1101,14 @@ static int open_library(android_namespace_t* ns,
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
-  if (get_application_target_sdk_version() < __ANDROID_API_M__) {
+  int app_target_api_level = get_application_target_sdk_version();
+  if (app_target_api_level < __ANDROID_API_M__) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN("library \"%s\" has invalid DT_NEEDED entry \"%s\"", sopath, dt_needed);
+      DL_WARN_documented_change(__ANDROID_API_M__,
+                                "invalid-dt_needed-entries-enforced-for-api-level-23",
+                                "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
+                                sopath, dt_needed, app_target_api_level);
       add_dlwarning(sopath, "invalid DT_NEEDED entry",  dt_needed);
     }
 
@@ -1247,10 +1246,11 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        DL_WARN("library \"%s\" (\"%s\") needed or dlopened by \"%s\" is not accessible for the namespace \"%s\""
-                " - the access is temporarily granted as a workaround for http://b/26394120, note that the access"
-                " will be removed in future releases of Android.",
-                name, realpath.c_str(), sopath, ns->get_name());
+        DL_WARN_documented_change(__ANDROID_API_N__,
+                                  "private-api-enforced-for-api-level-24",
+                                  "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
+                                  "is not accessible by namespace \"%s\"",
+                                  name, realpath.c_str(), sopath, ns->get_name());
         add_dlwarning(sopath, "unauthorized access to",  name);
       }
     } else {
@@ -1428,7 +1428,7 @@ static bool find_library_in_linked_namespace(const android_namespace_link_t& nam
   }
 
   // returning true with empty soinfo means that the library is okay to be
-  // loaded in the namespace buy has not yet been loaded there before.
+  // loaded in the namespace but has not yet been loaded there before.
   task->set_soinfo(nullptr);
   return true;
 }
@@ -1780,26 +1780,10 @@ static soinfo* find_library(android_namespace_t* ns,
   return si;
 }
 
-static void soinfo_unload(soinfo* unload_si) {
-  // Note that the library can be loaded but not linked;
-  // in which case there is no root but we still need
-  // to walk the tree and unload soinfos involved.
-  //
-  // This happens on unsuccessful dlopen, when one of
-  // the DT_NEEDED libraries could not be linked/found.
-  bool is_linked = unload_si->is_linked();
-  soinfo* root = is_linked ? unload_si->get_local_group_root() : unload_si;
-
-  LD_LOG(kLogDlopen,
-         "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
-         unload_si->get_realpath(),
-         unload_si,
-         root->get_realpath(),
-         root);
-
+static void soinfo_unload_impl(soinfo* root) {
   ScopedTrace trace((std::string("unload ") + root->get_realpath()).c_str());
+  bool is_linked = root->is_linked();
 
-  size_t ref_count = is_linked ? root->decrement_ref_count() : 0;
   if (!root->can_unload()) {
     LD_LOG(kLogDlopen,
            "... dlclose(root=\"%s\"@%p) ... not unloading - the load group is flagged with NODELETE",
@@ -1808,14 +1792,6 @@ static void soinfo_unload(soinfo* unload_si) {
     return;
   }
 
-  if (ref_count > 0) {
-    LD_LOG(kLogDlopen,
-           "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
-           root->get_realpath(),
-           root,
-           ref_count);
-    return;
-  }
 
   soinfo_list_t unload_list;
   unload_list.push_back(root);
@@ -1913,6 +1889,86 @@ static void soinfo_unload(soinfo* unload_si) {
   } else {
       LD_LOG(kLogDlopen,
              "... dlclose: unload_si was not linked - not unloading external references ...");
+  }
+}
+
+static void soinfo_unload(soinfo* unload_si) {
+  // Note that the library can be loaded but not linked;
+  // in which case there is no root but we still need
+  // to walk the tree and unload soinfos involved.
+  //
+  // This happens on unsuccessful dlopen, when one of
+  // the DT_NEEDED libraries could not be linked/found.
+  bool is_linked = unload_si->is_linked();
+  soinfo* root = is_linked ? unload_si->get_local_group_root() : unload_si;
+
+  LD_LOG(kLogDlopen,
+         "... dlclose(realpath=\"%s\"@%p) ... load group root is \"%s\"@%p",
+         unload_si->get_realpath(),
+         unload_si,
+         root->get_realpath(),
+         root);
+
+
+  size_t ref_count = is_linked ? root->decrement_ref_count() : 0;
+  if (ref_count > 0) {
+    LD_LOG(kLogDlopen,
+           "... dlclose(root=\"%s\"@%p) ... not unloading - decrementing ref_count to %zd",
+           root->get_realpath(),
+           root,
+           ref_count);
+    return;
+  }
+
+  soinfo_unload_impl(root);
+}
+
+void increment_dso_handle_reference_counter(void* dso_handle) {
+  if (dso_handle == nullptr) {
+    return;
+  }
+
+  auto it = g_dso_handle_counters.find(dso_handle);
+  if (it != g_dso_handle_counters.end()) {
+    CHECK(++it->second != 0);
+  } else {
+    soinfo* si = find_containing_library(dso_handle);
+    if (si != nullptr) {
+      ProtectedDataGuard guard;
+      si->set_tls_nodelete();
+    } else {
+      async_safe_fatal(
+          "increment_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
+          dso_handle);
+    }
+    g_dso_handle_counters[dso_handle] = 1U;
+  }
+}
+
+void decrement_dso_handle_reference_counter(void* dso_handle) {
+  if (dso_handle == nullptr) {
+    return;
+  }
+
+  auto it = g_dso_handle_counters.find(dso_handle);
+  CHECK(it != g_dso_handle_counters.end());
+  CHECK(it->second != 0);
+
+  if (--it->second == 0) {
+    soinfo* si = find_containing_library(dso_handle);
+    if (si != nullptr) {
+      ProtectedDataGuard guard;
+      si->unset_tls_nodelete();
+      if (si->get_ref_count() == 0) {
+        // Perform deferred unload - note that soinfo_unload_impl does not decrement ref_count
+        soinfo_unload_impl(si);
+      }
+    } else {
+      async_safe_fatal(
+          "decrement_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
+          dso_handle);
+    }
+    g_dso_handle_counters.erase(it);
   }
 }
 
@@ -2305,7 +2361,8 @@ android_namespace_t* create_namespace(const void* caller_addr,
     add_soinfos_to_namespace(parent_namespace->soinfo_list(), ns);
     // and copy parent namespace links
     for (auto& link : parent_namespace->linked_namespaces()) {
-      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames());
+      ns->add_linked_namespace(link.linked_namespace(), link.shared_lib_sonames(),
+                               link.allow_all_shared_libs());
     }
   } else {
     // If not shared - copy only the shared group
@@ -2341,7 +2398,25 @@ bool link_namespaces(android_namespace_t* namespace_from,
   std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
+
+  return true;
+}
+
+bool link_namespaces_all_libs(android_namespace_t* namespace_from,
+                              android_namespace_t* namespace_to) {
+  if (namespace_from == nullptr) {
+    DL_ERR("error linking namespaces: namespace_from is null.");
+    return false;
+  }
+
+  if (namespace_to == nullptr) {
+    DL_ERR("error linking namespaces: namespace_to is null.");
+    return false;
+  }
+
+  ProtectedDataGuard guard;
+  namespace_from->add_linked_namespace(namespace_to, std::unordered_set<std::string>(), true);
 
   return true;
 }
@@ -2537,6 +2612,50 @@ bool soinfo::lookup_version_info(const VersionTracker& version_tracker, ElfW(Wor
   return true;
 }
 
+void soinfo::apply_relr_reloc(ElfW(Addr) offset) {
+  ElfW(Addr) address = offset + load_bias;
+  *reinterpret_cast<ElfW(Addr)*>(address) += load_bias;
+}
+
+// Process relocations in SHT_RELR section (experimental).
+// Details of the encoding are described in this post:
+//   https://groups.google.com/d/msg/generic-abi/bX460iggiKg/Pi9aSwwABgAJ
+bool soinfo::relocate_relr() {
+  ElfW(Relr)* begin = relr_;
+  ElfW(Relr)* end = relr_ + relr_count_;
+  constexpr size_t wordsize = sizeof(ElfW(Addr));
+
+  ElfW(Addr) base = 0;
+  for (ElfW(Relr)* current = begin; current < end; ++current) {
+    ElfW(Relr) entry = *current;
+    ElfW(Addr) offset;
+
+    if ((entry&1) == 0) {
+      // Even entry: encodes the offset for next relocation.
+      offset = static_cast<ElfW(Addr)>(entry);
+      apply_relr_reloc(offset);
+      // Set base offset for subsequent bitmap entries.
+      base = offset + wordsize;
+      continue;
+    }
+
+    // Odd entry: encodes bitmap for relocations starting at base.
+    offset = base;
+    while (entry != 0) {
+      entry >>= 1;
+      if ((entry&1) != 0) {
+        apply_relr_reloc(offset);
+      }
+      offset += wordsize;
+    }
+
+    // Advance base offset by 63 words for 64-bit platforms,
+    // or 31 words for 32-bit platforms.
+    base += (8*wordsize - 1) * wordsize;
+  }
+  return true;
+}
+
 #if !defined(__mips__)
 #if defined(USE_RELA)
 static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
@@ -2661,6 +2780,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
         }
 #endif
+        if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
+          DL_ERR("unsupported ELF TLS symbol \"%s\" referenced by \"%s\"",
+                 sym_name, get_realpath());
+          return false;
+        }
         sym_addr = lsi->resolve_symbol_address(s);
 #if !defined(__LP64__)
         if (protect_segments) {
@@ -3093,7 +3217,7 @@ bool soinfo::prelink_image() {
         }
         break;
 
-      // ignored (see DT_RELCOUNT comments for details)
+      // Ignored (see DT_RELCOUNT comments for details).
       case DT_RELACOUNT:
         break;
 
@@ -3154,6 +3278,25 @@ bool soinfo::prelink_image() {
         return false;
 
 #endif
+      case DT_RELR:
+        relr_ = reinterpret_cast<ElfW(Relr)*>(load_bias + d->d_un.d_ptr);
+        break;
+
+      case DT_RELRSZ:
+        relr_count_ = d->d_un.d_val / sizeof(ElfW(Relr));
+        break;
+
+      case DT_RELRENT:
+        if (d->d_un.d_val != sizeof(ElfW(Relr))) {
+          DL_ERR("invalid DT_RELRENT: %zd", static_cast<size_t>(d->d_un.d_val));
+          return false;
+        }
+        break;
+
+      // Ignored (see DT_RELCOUNT comments for details).
+      case DT_RELRCOUNT:
+        break;
+
       case DT_INIT:
         init_func_ = reinterpret_cast<linker_ctor_function_t>(load_bias + d->d_un.d_ptr);
         DEBUG("%s constructors (DT_INIT) found at %p", get_realpath(), init_func_);
@@ -3226,7 +3369,9 @@ bool soinfo::prelink_image() {
         set_dt_flags_1(d->d_un.d_val);
 
         if ((d->d_un.d_val & ~SUPPORTED_DT_FLAGS_1) != 0) {
-          DL_WARN("\"%s\" has unsupported flags DT_FLAGS_1=%p", get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
+          DL_WARN("Warning: \"%s\" has unsupported flags DT_FLAGS_1=%p "
+                  "(ignoring unsupported flags)",
+                  get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
 #if defined(__mips__)
@@ -3293,6 +3438,11 @@ bool soinfo::prelink_image() {
 
       default:
         if (!relocating_linker) {
+          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
+            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
+            return false;
+          }
+
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";
@@ -3305,7 +3455,7 @@ bool soinfo::prelink_image() {
           } else {
             tag_name = "unknown";
           }
-          DL_WARN("\"%s\" unused DT entry: %s (type %p arg %p)",
+          DL_WARN("Warning: \"%s\" unused DT entry: %s (type %p arg %p) (ignoring)",
                   get_realpath(),
                   tag_name,
                   reinterpret_cast<void*>(d->d_tag),
@@ -3358,16 +3508,20 @@ bool soinfo::prelink_image() {
   // Before M release linker was using basename in place of soname.
   // In the case when dt_soname is absent some apps stop working
   // because they can't find dt_needed library by soname.
-  // This workaround should keep them working. (applies only
-  // for apps targeting sdk version < M). Make an exception for
-  // the main executable and linker; they do not need to have dt_soname
+  // This workaround should keep them working. (Applies only
+  // for apps targeting sdk version < M.) Make an exception for
+  // the main executable and linker; they do not need to have dt_soname.
+  // TODO: >= O the linker doesn't need this workaround.
   if (soname_ == nullptr &&
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
       get_application_target_sdk_version() < __ANDROID_API_M__) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN("%s: is missing DT_SONAME will use basename as a replacement: \"%s\"",
-        get_realpath(), soname_);
+    DL_WARN_documented_change(__ANDROID_API_M__,
+                              "missing-soname-enforced-for-api-level-23",
+                              "\"%s\" has no DT_SONAME (will use %s instead)",
+                              get_realpath(), soname_);
+
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
   return true;
@@ -3398,7 +3552,8 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Fail if app is targeting M or above.
-    if (get_application_target_sdk_version() >= __ANDROID_API_M__) {
+    int app_target_api_level = get_application_target_sdk_version();
+    if (app_target_api_level >= __ANDROID_API_M__) {
       DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
                      "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
                      "Enforced-for-API-level-23)", get_realpath());
@@ -3406,13 +3561,13 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN("\"%s\" has text relocations (https://android.googlesource.com/platform/"
-            "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-Enforced-"
-            "for-API-level-23)", get_realpath());
+    DL_WARN_documented_change(__ANDROID_API_M__,
+                              "Text-Relocations-Enforced-for-API-level-23",
+                              "\"%s\" has text relocations",
+                              get_realpath());
     add_dlwarning(get_realpath(), "text relocations");
     if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-      DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-             get_realpath(), strerror(errno));
+      DL_ERR("can't unprotect loadable segments for \"%s\": %s", get_realpath(), strerror(errno));
       return false;
     }
   }
@@ -3446,16 +3601,23 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 
+  if (relr_ != nullptr) {
+    DEBUG("[ relocating %s relr ]", get_realpath());
+    if (!relocate_relr()) {
+      return false;
+    }
+  }
+
 #if defined(USE_RELA)
   if (rela_ != nullptr) {
-    DEBUG("[ relocating %s ]", get_realpath());
+    DEBUG("[ relocating %s rela ]", get_realpath());
     if (!relocate(version_tracker,
             plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rela_ != nullptr) {
-    DEBUG("[ relocating %s plt ]", get_realpath());
+    DEBUG("[ relocating %s plt rela ]", get_realpath());
     if (!relocate(version_tracker,
             plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
       return false;
@@ -3463,14 +3625,14 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #else
   if (rel_ != nullptr) {
-    DEBUG("[ relocating %s ]", get_realpath());
+    DEBUG("[ relocating %s rel ]", get_realpath());
     if (!relocate(version_tracker,
             plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
       return false;
     }
   }
   if (plt_rel_ != nullptr) {
-    DEBUG("[ relocating %s plt ]", get_realpath());
+    DEBUG("[ relocating %s plt rel ]", get_realpath());
     if (!relocate(version_tracker,
             plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
       return false;
@@ -3573,7 +3735,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   std::string error_msg;
 
   std::string ld_config_vndk = kLdConfigFilePath;
-  size_t insert_pos = ld_config_vndk.find_last_of(".");
+  size_t insert_pos = ld_config_vndk.find_last_of('.');
   if (insert_pos == std::string::npos) {
     insert_pos = ld_config_vndk.length();
   }
@@ -3595,7 +3757,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
                                   &config,
                                   &error_msg)) {
     if (!error_msg.empty()) {
-      DL_WARN("error reading config file \"%s\" for \"%s\" (will use default configuration): %s",
+      DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
               config_file,
               executable_path,
               error_msg.c_str());
@@ -3650,14 +3812,24 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
       auto it_to = namespaces.find(ns_link.ns_name());
       CHECK(it_to != namespaces.end());
       android_namespace_t* namespace_to = it_to->second;
-      link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      if (ns_link.allow_all_shared_libs()) {
+        link_namespaces_all_libs(namespace_from, namespace_to);
+      } else {
+        link_namespaces(namespace_from, namespace_to, ns_link.shared_libs().c_str());
+      }
     }
   }
   // we can no longer rely on the fact that libdl.so is part of default namespace
   // this is why we want to add ld-android.so to all namespaces from ld.config.txt
   soinfo* ld_android_so = solist_get_head();
+
+  // we also need vdso to be available for all namespaces (if present)
+  soinfo* vdso = solist_get_vdso();
   for (auto it : namespaces) {
     it.second->add_soinfo(ld_android_so);
+    if (vdso != nullptr) {
+      it.second->add_soinfo(vdso);
+    }
     // somain and ld_preloads are added to these namespaces after LD_PRELOAD libs are linked
   }
 

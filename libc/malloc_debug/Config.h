@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef MALLOC_DEBUG_CONFIG_H
-#define MALLOC_DEBUG_CONFIG_H
+#pragma once
 
 #include <stdint.h>
 
@@ -54,7 +53,7 @@ constexpr size_t MINIMUM_ALIGNMENT_BYTES = 8;
 #endif
 
 // If one or more of these options is set, then a special header is needed.
-constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD | BACKTRACE | FREE_TRACK | LEAK_TRACK;
+constexpr uint64_t HEADER_OPTIONS = FRONT_GUARD | REAR_GUARD;
 
 class Config {
  public:
@@ -159,5 +158,3 @@ class Config {
   uint8_t front_guard_value_;
   uint8_t rear_guard_value_;
 };
-
-#endif  // MALLOC_DEBUG_CONFIG_H

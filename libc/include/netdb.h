@@ -214,23 +214,23 @@ struct hostent* gethostbyname(const char* __name);
 int gethostbyname_r(const char* __name, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr);
 struct hostent* gethostbyname2(const char* __name, int __af);
 int gethostbyname2_r(const char* __name, int __af, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr) __INTRODUCED_IN(23);
-void endhostent(void) __INTRODUCED_IN_FUTURE;
+void endhostent(void) __INTRODUCED_IN(28);
 struct hostent* gethostent(void);
-void sethostent(int __stay_open) __INTRODUCED_IN_FUTURE;
+void sethostent(int __stay_open) __INTRODUCED_IN(28);
 
 /* These functions are obsolete. None of these functions return anything but nullptr. */
-void endnetent(void) __INTRODUCED_IN_FUTURE;
+void endnetent(void) __INTRODUCED_IN(28);
 struct netent* getnetbyaddr(uint32_t __net, int __type);
 struct netent* getnetbyname(const char* __name);
-struct netent* getnetent(void) __INTRODUCED_IN_FUTURE;
-void setnetent(int __stay_open) __INTRODUCED_IN_FUTURE;
+struct netent* getnetent(void) __INTRODUCED_IN(28);
+void setnetent(int __stay_open) __INTRODUCED_IN(28);
 
 /* None of these functions return anything but nullptr. */
-void endprotoent(void) __INTRODUCED_IN_FUTURE;
+void endprotoent(void) __INTRODUCED_IN(28);
 struct protoent* getprotobyname(const char* __name);
 struct protoent* getprotobynumber(int __proto);
-struct protoent* getprotoent(void) __INTRODUCED_IN_FUTURE;
-void setprotoent(int __stay_open) __INTRODUCED_IN_FUTURE;
+struct protoent* getprotoent(void) __INTRODUCED_IN(28);
+void setprotoent(int __stay_open) __INTRODUCED_IN(28);
 
 /* These functions return entries from a built-in database. */
 void endservent(void);
