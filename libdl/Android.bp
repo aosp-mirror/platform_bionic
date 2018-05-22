@@ -3,6 +3,7 @@
 //
 cc_library_static {
     name: "libdl_static",
+    recovery_available: true,
 
     srcs: [
         "libdl.cpp",
@@ -28,6 +29,7 @@ cc_library_static {
 
 cc_library {
     name: "libdl",
+    recovery_available: true,
     static_ndk_lib: true,
 
     defaults: ["linux_bionic_supported"],
