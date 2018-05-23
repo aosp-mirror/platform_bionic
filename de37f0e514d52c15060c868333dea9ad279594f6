@@ -1,0 +1,141 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3de170a8_3f118690",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "just strike this? or explicitly say \"use libunwindstack to unwind...\".\n\nmore useful to say what the \"con\" is. you admit to the \"pro\" in the next line, but no mention of cons :-)",
+      "range": {
+        "startLine": 370,
+        "startChar": 58,
+        "endLine": 370,
+        "endChar": 72
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f93795b_53690bb6",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "Java",
+      "range": {
+        "startLine": 371,
+        "startChar": 41,
+        "endLine": 371,
+        "endChar": 45
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb0e75fd_4336b371",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "should this error logging just go into LogBacktrace?",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a078e304_5e0c45d4",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "ah, this is the new format.",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c4c17b1_52875405",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "that\u0027s much better!\n\n/me wonders if the help strings should be cut really short and just link to this?",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 0
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1734eee_aa96fea0",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "did the format actually change?",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc15f0dc_a3b17fde",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1507,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-23T02:33:45Z",
+      "side": 1,
+      "message": "use a raw string?",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
