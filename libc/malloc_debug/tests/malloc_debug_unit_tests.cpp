@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
+#include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -1311,30 +1312,23 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
-      "\n"
-      "Total memory: 405\n"
-      "Allocation records: 6\n"
-      "Backtrace size: 4\n"
-      "\n"
-#if defined(__LP64__)
-      "z 0  sz       50  num    1  bt 000000000000a100 000000000000b200\n"
-      "z 0  sz       10  num    1  bt 000000000000a000 000000000000b000\n"
-      "z 0  sz        5  num    1  bt 000000000000a300 000000000000b300\n"
-      "z 1  sz      200  num    1  bt 0000000000000500 0000000000000600\n"
-      "z 1  sz      100  num    1  bt 0000000000000100 0000000000000200\n"
-      "z 1  sz       40  num    1  bt 0000000000000300 0000000000000400\n"
-#else
-      "z 0  sz       50  num    1  bt 0000a100 0000b200\n"
-      "z 0  sz       10  num    1  bt 0000a000 0000b000\n"
-      "z 0  sz        5  num    1  bt 0000a300 0000b300\n"
-      "z 1  sz      200  num    1  bt 00000500 00000600\n"
-      "z 1  sz      100  num    1  bt 00000100 00000200\n"
-      "z 1  sz       40  num    1  bt 00000300 00000400\n"
-#endif
-      "MAPS\n"
-      "MAP_DATA\n"
-      "END\n\n";
+R"(Android Native Heap Dump v1.1
+
+Total memory: 405
+Allocation records: 6
+Backtrace size: 4
+
+z 0  sz       50  num    1  bt a100 b200
+z 0  sz       10  num    1  bt a000 b000
+z 0  sz        5  num    1  bt a300 b300
+z 1  sz      200  num    1  bt 500 600
+z 1  sz      100  num    1  bt 100 200
+z 1  sz       40  num    1  bt 300 400
+MAPS
+MAP_DATA
+END
+
+)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1383,24 +1377,20 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
-      "\n"
-      "Total memory: 1200\n"
-      "Allocation records: 3\n"
-      "Backtrace size: 4\n"
-      "\n"
-#if defined(__LP64__)
-      "z 0  sz      500  num    1  bt 000000000000a000 000000000000b000 000000000000c000\n"
-      "z 0  sz      400  num    1  bt 000000000000a000 000000000000b000\n"
-      "z 0  sz      300  num    1  bt 0000000000000100 0000000000000200\n"
-#else
-      "z 0  sz      500  num    1  bt 0000a000 0000b000 0000c000\n"
-      "z 0  sz      400  num    1  bt 0000a000 0000b000\n"
-      "z 0  sz      300  num    1  bt 00000100 00000200\n"
-#endif
-      "MAPS\n"
-      "MAP_DATA\n"
-      "END\n\n";
+R"(Android Native Heap Dump v1.1
+
+Total memory: 1200
+Allocation records: 3
+Backtrace size: 4
+
+z 0  sz      500  num    1  bt a000 b000 c000
+z 0  sz      400  num    1  bt a000 b000
+z 0  sz      300  num    1  bt 100 200
+MAPS
+MAP_DATA
+END
+
+)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1436,28 +1426,84 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit_shared_backtrace) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
-      "\n"
-      "Total memory: 1000\n"
-      "Allocation records: 2\n"
-      "Backtrace size: 4\n"
-      "\n"
-#if defined(__LP64__)
-      "z 0  sz      400  num    1  bt 000000000000a000 000000000000b000 000000000000c000\n"
-      "z 0  sz      300  num    2  bt 0000000000000100 0000000000000200\n"
-#else
-      "z 0  sz      400  num    1  bt 0000a000 0000b000 0000c000\n"
-      "z 0  sz      300  num    2  bt 00000100 00000200\n"
-#endif
-      "MAPS\n"
-      "MAP_DATA\n"
-      "END\n\n";
+R"(Android Native Heap Dump v1.1
+
+Total memory: 1000
+Allocation records: 2
+Backtrace size: 4
+
+z 0  sz      400  num    1  bt a000 b000 c000
+z 0  sz      300  num    2  bt 100 200
+MAPS
+MAP_DATA
+END
+
+)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, backtrace_full_dump_on_exit) {
+  pid_t pid;
+  if ((pid = fork()) == 0) {
+    Init("backtrace=4 backtrace_full backtrace_dump_on_exit");
+    BacktraceUnwindFake(
+      std::vector<unwindstack::LocalFrameData>{{nullptr, 0x1100, 0x100, "fake1", 10},
+                                               {nullptr, 0x1200, 0x200, "fake2", 20}});
+    unwindstack::MapInfo map_info{0x10000, 0x20000, 0, PROT_READ | PROT_EXEC, "/data/fake.so"};
+    BacktraceUnwindFake(
+      std::vector<unwindstack::LocalFrameData>{{&map_info, 0x1a000, 0xa000, "level1", 0},
+                                               {&map_info, 0x1b000, 0xb000, "level2", 10}});
+    BacktraceUnwindFake(
+      std::vector<unwindstack::LocalFrameData>{{nullptr, 0x1a000, 0xa000, "func1", 0},
+                                               {nullptr, 0x1b000, 0xb000, "func2", 10},
+                                               {nullptr, 0x1c000, 0xc000, "", 30}});
+
+    std::vector<void*> pointers;
+    pointers.push_back(debug_malloc(300));
+    pointers.push_back(debug_malloc(400));
+    pointers.push_back(debug_malloc(500));
+
+    // Call the exit function manually.
+    debug_finalize();
+    exit(0);
+  }
+  ASSERT_NE(-1, pid);
+  ASSERT_EQ(pid, TEMP_FAILURE_RETRY(waitpid(pid, nullptr, 0)));
+
+  // Read all of the contents.
+  std::string actual;
+  std::string name = android::base::StringPrintf("%s.%d.exit.txt", BACKTRACE_DUMP_PREFIX, pid);
+  ASSERT_TRUE(android::base::ReadFileToString(name, &actual));
+  ASSERT_EQ(0, unlink(name.c_str()));
+
+  std::string sanitized(SanitizeHeapData(actual));
+
+  std::string expected =
+R"(Android Native Heap Dump v1.1
+
+Total memory: 1200
+Allocation records: 3
+Backtrace size: 4
+
+z 0  sz      500  num    1  bt 1a000 1b000 1c000
+  bt_info {"" a000 "func1" 0} {"" b000 "func2" a} {"" c000 "" 0}
+z 0  sz      400  num    1  bt 1a000 1b000
+  bt_info {"/data/fake.so" a000 "level1" 0} {"/data/fake.so" b000 "level2" a}
+z 0  sz      300  num    1  bt 1100 1200
+  bt_info {"" 100 "fake1" a} {"" 200 "fake2" 14}
+MAPS
+MAP_DATA
+END
+
+)";
+  ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
 
 TEST_F(MallocDebugTest, realloc_usable_size) {
   Init("front_guard");
@@ -2286,7 +2332,8 @@ TEST_F(MallocDebugTest, verify_pointers) {
   std::string realloc_pointer_str(
       android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p UNKNOWN POINTER (realloc)\n",
                                   pointer));
-  std::string backtrace_str("6 malloc_debug Backtrace failed to get any frames.\n");
+  std::string backtrace_str("6 malloc_debug Backtrace at time of failure:\n");
+  backtrace_str += "6 malloc_debug   Backtrace failed to get any frames.\n";
 
   std::string expected_log(DIVIDER + free_pointer_str + backtrace_str + DIVIDER);
   expected_log += DIVIDER + usable_pointer_str + backtrace_str + DIVIDER;
