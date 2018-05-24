@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "47c6d783_5b8e3418",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "I reworded this whole description.",
+      "parentUuid": "3de170a8_3f118690",
+      "range": {
+        "startLine": 370,
+        "startChar": 58,
+        "endLine": 370,
+        "endChar": 72
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f93795b_53690bb6",
         "filename": "libc/malloc_debug/Config.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2018-05-23T02:33:45Z",
       "side": 1,
       "message": "Java",
+      "range": {
+        "startLine": 371,
+        "startChar": 41,
+        "endLine": 371,
+        "endChar": 45
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1f2e11b_9ba7f136",
+        "filename": "libc/malloc_debug/Config.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "7f93795b_53690bb6",
       "range": {
         "startLine": 371,
         "startChar": 41,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "64faef71_e0557d4a",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "Agreed, done.",
+      "parentUuid": "cb0e75fd_4336b371",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a078e304_5e0c45d4",
         "filename": "libc/malloc_debug/PointerData.cpp",
         "patchSetId": 3
@@ -76,6 +142,24 @@
       "writtenOn": "2018-05-23T02:33:45Z",
       "side": 1,
       "message": "ah, this is the new format.",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62557be5_69401cf0",
+        "filename": "libc/malloc_debug/PointerData.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "Yep.",
+      "parentUuid": "a078e304_5e0c45d4",
       "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -105,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "0fc35aa4_2f2e812e",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "I\u0027m starting to think I should replace all of the logging to point at the url for malloc debug rather than spewing that huge dump that nobody is going to look at.\n\nI\u0027ll do that in a follow up cl.",
+      "parentUuid": "1c4c17b1_52875405",
+      "range": {
+        "startLine": 164,
+        "startChar": 0,
+        "endLine": 167,
+        "endChar": 0
+      },
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e1734eee_aa96fea0",
         "filename": "libc/malloc_debug/malloc_debug.cpp",
         "patchSetId": 3
@@ -122,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "c9bb420d_d7b488a3",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "Yes, I added a new value called bt_info that includes extra information. This is necessary for the oat stuff that only exists on the device and means that you can\u0027t resolve the names/functions/maps.\n\nWhen I add the dex_pc and JIT support, this will be the only way to resolve those stack frames.",
+      "parentUuid": "e1734eee_aa96fea0",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc15f0dc_a3b17fde",
         "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
         "patchSetId": 3
@@ -133,6 +259,24 @@
       "writtenOn": "2018-05-23T02:33:45Z",
       "side": 1,
       "message": "use a raw string?",
+      "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0d62f84_a909fbdc",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1507,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:28:57Z",
+      "side": 1,
+      "message": "Done. I also changed the format a bit. I have no idea why I forced the extra spaces in the output.\n\nI also removed the 0x in front of the relative pc to be consistent with the other addresses and made the function offset hexadecimal so that all backtrace values are hex.",
+      "parentUuid": "cc15f0dc_a3b17fde",
       "revId": "de37f0e514d52c15060c868333dea9ad279594f6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
