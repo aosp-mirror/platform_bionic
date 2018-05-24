@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69d83db4_3f6a7acf",
+        "filename": "libc/arch-arm/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T21:58:25Z",
+      "side": 1,
+      "message": "It would probably be better to replace this up to .Lmemcpy_backwards with b memcpy. That way you are still calling the optimized memcpy and not this version.",
+      "range": {
+        "startLine": 73,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "9ffb289a737d7804ce14c1904bec224fb7d1450e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
