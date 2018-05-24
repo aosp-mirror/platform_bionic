@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b1417cac_0b03c5ed",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:54:02Z",
+      "side": 1,
+      "message": "Because I had two version, one for 64 bit and one for 32 bit. It padded out the data for no good reason.",
+      "parentUuid": "25e44e48_220f8484",
+      "revId": "6944a6b2c4b350b66511d412576571ff7ea4b4b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f2fd4f4_cba23da1",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "57589618_5e38295c",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:54:02Z",
+      "side": 1,
+      "message": "They are relative pcs, so I was acting as if the start of the address is 0xa000 and 0xb000. I\u0027ll add some extra text because I don\u0027t think I explained this very well.",
+      "parentUuid": "3f2fd4f4_cba23da1",
+      "range": {
+        "startLine": 528,
+        "startChar": 33,
+        "endLine": 528,
+        "endChar": 36
+      },
+      "revId": "6944a6b2c4b350b66511d412576571ff7ea4b4b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "78e86e40_5cbac10e",
         "filename": "libc/malloc_debug/tests/backtrace_fake.h",
         "patchSetId": 4
@@ -53,6 +95,30 @@
       "writtenOn": "2018-05-24T01:38:59Z",
       "side": 1,
       "message": "not \u0026 or *?",
+      "range": {
+        "startLine": 30,
+        "startChar": 64,
+        "endLine": 30,
+        "endChar": 65
+      },
+      "revId": "6944a6b2c4b350b66511d412576571ff7ea4b4b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47d0f58b_9fc82136",
+        "filename": "libc/malloc_debug/tests/backtrace_fake.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-24T01:54:02Z",
+      "side": 1,
+      "message": "Changed to const \u0026.",
+      "parentUuid": "78e86e40_5cbac10e",
       "range": {
         "startLine": 30,
         "startChar": 64,
