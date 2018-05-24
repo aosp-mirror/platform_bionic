@@ -1772,8 +1772,8 @@ cc_library {
     arch: {
         arm: {
             //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.arm.map",
@@ -1806,8 +1806,8 @@ cc_library {
         },
         x86: {
             //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
             version_script: "libc.x86.map",
@@ -1838,8 +1838,8 @@ cc_library {
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
             version_script: "libstdc++.arm.map",
         },
         arm64: {
@@ -1852,8 +1852,8 @@ cc_library {
             version_script: "libstdc++.mips64.map",
         },
         x86: {
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
             version_script: "libstdc++.x86.map",
         },
         x86_64: {
