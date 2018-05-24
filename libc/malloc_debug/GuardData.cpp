@@ -62,10 +62,7 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
   }
 
   error_log("Backtrace at time of failure:");
-  std::vector<uintptr_t> frames(64);
-  size_t frame_num = backtrace_get(frames.data(), frames.size());
-  frames.resize(frame_num);
-  backtrace_log(frames.data(), frames.size());
+  BacktraceAndLog();
   error_log(LOG_DIVIDER);
 }
 

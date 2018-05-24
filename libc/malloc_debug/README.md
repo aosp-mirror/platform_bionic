@@ -150,8 +150,8 @@ The file location can be changed by setting the backtrace\_dump\_prefix
 option.
 
 ### backtrace\_dump\_prefix
-As of P, when the backtrace options has been enabled, this sets the prefix
-used for dumping files when the signal SIGRTMAX - 17 is received or when
+As of P, when one of the backtrace options has been enabled, this sets the
+prefix used for dumping files when the signal SIGRTMAX - 17 is received or when
 the program exits and backtrace\_dump\_on\_exit is set.
 
 The default is /data/local/tmp/backtrace\_heap.
@@ -159,6 +159,11 @@ The default is /data/local/tmp/backtrace\_heap.
 When this value is changed from the default, then the filename chosen
 on the signal will be backtrace\_dump\_prefix.**PID**.txt. The filename chosen
 when the program exits will be backtrace\_dump\_prefix.**PID**.exit.txt.
+
+### backtrace\_full
+As of P, any time that a backtrace is gathered, a different algorithm is used
+that is extra thorough and can unwind through Java frames. This will run
+slower than the normal backtracing function.
 
 ### fill\_on\_alloc[=MAX\_FILLED\_BYTES]
 Any allocation routine, other than calloc, will result in the allocation being
@@ -489,6 +494,45 @@ The final section is the map data for the process:
 
 The map data is simply the output of /proc/PID/maps. This data can be used to
 decode the frames in the backtraces.
+
+As of Android P, there is a new version of this file. The new header is:
+
+    Android Native Heap Dump v1.1
+
+The new version no longer 0 pads the backtrace addresses. In v1.0:
+
+    z 0  sz      400  num    1  bt 0000a230 0000b500
+
+While v1.1:
+
+    z 0  sz      400  num    1  bt a230 b500
+
+In addition, when the new option backtrace\_full is used, another line will
+be added to every backtrace line. The line will be:
+
+      bt_info {"MAP_NAME" RELATIVE_TO_MAP_PC "FUNCTION_NAME" FUNCTION_OFFSET} ...
+
+For each backtrace pc, there will be one element in braces.
+
+MAP\_NAME is the name of the map in which the backtrace pc exists. If there is
+no valid map name, this will be empty.
+RELATIVE\_TO\_MAP\_PC is the hexadecimal value of the relative pc to the map.
+FUNCTION\_NAME the name of the function for this pc. If there is no valid
+function name, then it will be empty.
+FUNCTION\_OFFSET the hexadecimal offset from the beginning of the function. If
+the FUNCTION\_NAME is empty, then this value will always be zero.
+
+An example of this new format:
+
+    z 0  sz      400  num    1  bt a2a0 b510
+      bt_info {"/system/libc.so" 2a0 "abort" 24} {"/system/libutils.so" 510 "" 0}
+
+In this example, the first backtrace frame has a pc of 0xa2a0 and is in the
+map named /system/libc.so which starts at 0xa000. The relative pc is 0x2a0,
+and it is in the function abort + 0x24.
+The second backtrace frame has a pc of 0xb510 and is in the map named
+/system/libutils.so which starts at 0xb000. The relative pc is 0x510 and
+it is in an unknown function.
 
 There is a tool to visualize this data, development/scripts/native\_heapdump\_viewer.py.
 
