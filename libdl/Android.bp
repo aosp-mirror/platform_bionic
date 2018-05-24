@@ -50,6 +50,7 @@ cc_library {
         arm: {
             version_script: "libdl.arm.map",
             ldflags: ["-Wl,--hash-style=both"],
+            use_clang_lld: false,
         },
         arm64: {
             version_script: "libdl.arm64.map",
@@ -65,6 +66,7 @@ cc_library {
                 "-Wl,--exclude-libs=libgcc_eh.a",
                 "-Wl,--hash-style=both",
             ],
+            use_clang_lld: false,
             version_script: "libdl.x86.map",
         },
         x86_64: {
