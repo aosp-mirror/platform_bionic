@@ -39,8 +39,10 @@
 #include <vector>
 
 #include <private/bionic_macros.h>
+#include <unwindstack/LocalUnwinder.h>
 
 #include "OptionData.h"
+#include "UnwindBacktrace.h"
 
 extern int* g_malloc_zygote_child;
 
@@ -105,6 +107,7 @@ struct ListInfoType {
   size_t size;
   bool zygote_child_alloc;
   FrameInfoType* frame_info;
+  std::vector<unwindstack::LocalFrameData>* backtrace_info;
 };
 
 class PointerData : public OptionData {
@@ -160,6 +163,7 @@ class PointerData : public OptionData {
 
  private:
   static std::string GetHashString(uintptr_t* frames, size_t num_frames);
+  static void LogBacktrace(size_t hash_index);
 
   size_t alloc_offset_ = 0;
   std::vector<uint8_t> cmp_mem_;
@@ -174,6 +178,7 @@ class PointerData : public OptionData {
   static std::mutex frame_mutex_;
   static std::unordered_map<FrameKeyType, size_t> key_to_index_;
   static std::unordered_map<size_t, FrameInfoType> frames_;
+  static std::unordered_map<size_t, std::vector<unwindstack::LocalFrameData>> backtraces_info_;
   static size_t cur_hash_index_;
 
   static std::mutex free_pointer_mutex_;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,37 +30,12 @@
 
 #include <stdint.h>
 
-#include <private/bionic_malloc_dispatch.h>
+#include <string>
+#include <vector>
 
-// Allocations that require a header include a variable length header.
-// This is the order that data structures will be found. If an optional
-// part of the header does not exist, the other parts of the header
-// will still be in this order.
-//   Header          (Required)
-//   uint8_t data    (Optional: Front guard, will be a multiple of MINIMUM_ALIGNMENT_BYTES)
-//   allocation data
-//   uint8_t data    (Optional: End guard)
-//
-// In the initialization function, offsets into the header will be set
-// for each different header location. The offsets are always from the
-// beginning of the Header section.
-struct Header {
-  uint32_t tag;
-  void* orig_pointer;
-  size_t size;
-  size_t usable_size;
-} __attribute__((packed));
+#include <unwindstack/LocalUnwinder.h>
+#include <unwindstack/MapInfo.h>
 
-struct BacktraceHeader {
-  size_t num_frames;
-  uintptr_t frames[0];
-} __attribute__((packed));
+bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameData>* info, size_t max_frames);
 
-constexpr uint32_t DEBUG_TAG = 0x1ee7d00d;
-constexpr uint32_t DEBUG_FREE_TAG = 0x1cc7dccd;
-constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***";
-constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
-
-extern const MallocDispatch* g_dispatch;
-
-void BacktraceAndLog();
+void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info);
