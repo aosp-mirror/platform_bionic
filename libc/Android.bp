@@ -546,7 +546,6 @@ cc_library_static {
 
         // May be overriden by per-arch optimized versions
         "upstream-openbsd/lib/libc/string/memchr.c",
-        "upstream-openbsd/lib/libc/string/memmove.c",
         "upstream-openbsd/lib/libc/string/memrchr.c",
         "upstream-openbsd/lib/libc/string/stpcpy.c",
         "upstream-openbsd/lib/libc/string/stpncpy.c",
@@ -566,7 +565,6 @@ cc_library_static {
             ],
             neon: {
                 exclude_srcs: [
-                    "upstream-openbsd/lib/libc/string/memmove.c",
                     "upstream-openbsd/lib/libc/string/stpcpy.c",
                     "upstream-openbsd/lib/libc/string/strcat.c",
                 ],
@@ -575,7 +573,6 @@ cc_library_static {
         arm64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -584,7 +581,6 @@ cc_library_static {
         mips: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
@@ -592,7 +588,6 @@ cc_library_static {
         mips64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
@@ -600,7 +595,6 @@ cc_library_static {
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
@@ -620,7 +614,6 @@ cc_library_static {
 
         x86_64: {
             exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
                 "upstream-openbsd/lib/libc/string/strcat.c",
@@ -860,6 +853,7 @@ cc_library_static {
             srcs: [
                 "arch-arm/generic/bionic/memcmp.S",
                 "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memmove.S",
                 "arch-arm/generic/bionic/memset.S",
                 "arch-arm/generic/bionic/strcmp.S",
                 "arch-arm/generic/bionic/strcpy.S",
@@ -877,8 +871,8 @@ cc_library_static {
             ],
             cortex_a7: {
                 srcs: [
-                    "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/cortex-a7/bionic/memcpy.S",
+                    "arch-arm/cortex-a7/bionic/memset.S",
                 ],
                 exclude_srcs: [
                     "arch-arm/cortex-a15/bionic/memcpy.S",
@@ -897,8 +891,8 @@ cc_library_static {
                     "arch-arm/cortex-a9/bionic/strlen.S",
                 ],
                 exclude_srcs: [
-                    "arch-arm/cortex-a15/bionic/memset.S",
                     "arch-arm/cortex-a15/bionic/memcpy.S",
+                    "arch-arm/cortex-a15/bionic/memset.S",
 
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
@@ -1010,6 +1004,7 @@ cc_library_static {
                 ],
                 exclude_srcs: [
                     "arch-arm/generic/bionic/memcpy.S",
+                    "arch-arm/generic/bionic/memmove.S",
                     "arch-arm/generic/bionic/memset.S",
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
