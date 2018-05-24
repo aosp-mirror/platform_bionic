@@ -47,6 +47,7 @@
 #include "debug_disable.h"
 #include "debug_log.h"
 #include "malloc_debug.h"
+#include "UnwindBacktrace.h"
 
 // ------------------------------------------------------------------------
 // Global Data
@@ -118,6 +119,26 @@ static void InitAtfork() {
   });
 }
 
+void BacktraceAndLog() {
+  if (g_debug->config().options() & BACKTRACE_FULL) {
+    std::vector<uintptr_t> frames;
+    std::vector<unwindstack::LocalFrameData> frames_info;
+    if (!Unwind(&frames, &frames_info, 256)) {
+      error_log("  Backtrace failed to get any frames.");
+    } else {
+      UnwindLog(frames_info);
+    }
+  } else {
+    std::vector<uintptr_t> frames(256);
+    size_t num_frames = backtrace_get(frames.data(), frames.size());
+    if (num_frames == 0) {
+      error_log("  Backtrace failed to get any frames.");
+    } else {
+      backtrace_log(frames.data(), num_frames);
+    }
+  }
+}
+
 static void LogError(const void* pointer, const char* error_str) {
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p %s", pointer, error_str);
@@ -128,14 +149,8 @@ static void LogError(const void* pointer, const char* error_str) {
     PointerData::LogFreeBacktrace(pointer);
   }
 
-  std::vector<uintptr_t> frames(128);
-  size_t num_frames = backtrace_get(frames.data(), frames.size());
-  if (num_frames == 0) {
-    error_log("Backtrace failed to get any frames.");
-  } else {
-    error_log("Backtrace at time of failure:");
-    backtrace_log(frames.data(), num_frames);
-  }
+  error_log("Backtrace at time of failure:");
+  BacktraceAndLog();
   error_log(LOG_DIVIDER);
 }
 
@@ -819,7 +834,7 @@ bool debug_dump_heap(const char* file_name) {
     return false;
   }
 
-  fprintf(fp, "Android Native Heap Dump v1.0\n\n");
+  fprintf(fp, "Android Native Heap Dump v1.1\n\n");
 
   PointerData::DumpLiveToFile(fp);
 

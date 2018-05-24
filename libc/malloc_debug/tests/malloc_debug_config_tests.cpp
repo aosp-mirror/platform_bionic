@@ -83,6 +83,11 @@ std::string usage_string(
   "6 malloc_debug     backtrace_dump_prefix.<PID>.final.txt.\n"
   "6 malloc_debug     The default is false.\n"
   "6 malloc_debug \n"
+  "6 malloc_debug   backtrace_full\n"
+  "6 malloc_debug     Any time a backtrace is acquired, use an unwinder that can\n"
+  "6 malloc_debug     display Java stack frames. This unwinder can run slower than\n"
+  "6 malloc_debug     normal unwinder.\n"
+  "6 malloc_debug \n"
   "6 malloc_debug   fill_on_alloc[=XX]\n"
   "6 malloc_debug     On first allocation, fill with the value 0xeb.\n"
   "6 malloc_debug     If XX is set it will only fill up to XX bytes of the\n"
@@ -411,6 +416,24 @@ TEST_F(MallocDebugConfigTest, backtrace_dump_prefix) {
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_full) {
+  ASSERT_TRUE(InitConfig("backtrace_full")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_FULL, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, backtrace_full_fail) {
+  ASSERT_FALSE(InitConfig("backtrace_full=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'backtrace_full' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugConfigTest, fill_on_alloc) {
