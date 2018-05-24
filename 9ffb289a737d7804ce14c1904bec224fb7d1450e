@@ -22,6 +22,30 @@
       "revId": "9ffb289a737d7804ce14c1904bec224fb7d1450e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b682ffa6_f3281c18",
+        "filename": "libc/arch-arm/generic/bionic/memmove.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-24T22:01:56Z",
+      "side": 1,
+      "message": "this is really just an opening move in making all memcpys be memmoves.",
+      "parentUuid": "69d83db4_3f6a7acf",
+      "range": {
+        "startLine": 73,
+        "startChar": 1,
+        "endLine": 73,
+        "endChar": 43
+      },
+      "revId": "9ffb289a737d7804ce14c1904bec224fb7d1450e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
