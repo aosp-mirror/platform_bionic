@@ -293,8 +293,8 @@ cc_library {
                 ],
             },
             instruction_set: "arm",
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
             version_script: "libm.arm.map",
         },
 
@@ -421,8 +421,8 @@ cc_library {
                 ],
             },
             local_include_dirs: ["i387"],
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            use_clang_lld: false,
             version_script: "libm.x86.map",
         },
 
