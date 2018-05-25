@@ -45,9 +45,7 @@ std::string getFakeLogPrint() {
 }
 
 extern "C" int async_safe_format_log(int priority, const char* tag, const char* format, ...) {
-  g_fake_log_print += std::to_string(priority) + ' ';
-  g_fake_log_print += tag;
-  g_fake_log_print += ' ';
+  g_fake_log_print += std::to_string(priority) + ' ' + tag + ' ';
 
   va_list ap;
   va_start(ap, format);
@@ -55,6 +53,12 @@ extern "C" int async_safe_format_log(int priority, const char* tag, const char* 
   va_end(ap);
 
   g_fake_log_print += '\n';
+
+  return 0;
+}
+
+extern "C" int async_safe_write_log(int priority, const char* tag, const char* msg) {
+  g_fake_log_print += std::to_string(priority) + ' ' + tag + ' ' + msg + '\n';
 
   return 0;
 }

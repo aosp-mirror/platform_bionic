@@ -1432,10 +1432,13 @@ const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
 }
 
 // Duplicate these definitions here because they are android specific
-// note that we cannot include <elf.h> because #defines conflict with
-// enum names provided by LLVM.
-#define DT_ANDROID_REL (llvm::ELF::DT_LOOS + 2)
-#define DT_ANDROID_RELA (llvm::ELF::DT_LOOS + 4)
+//  - note that we cannot include <elf.h> because #defines conflict with
+//    enum names provided by LLVM.
+//  - we also don't use llvm::ELF::DT_LOOS because its value is 0x60000000
+//    rather than the 0x6000000d we expect
+#define DT_LOOS 0x6000000d
+#define DT_ANDROID_REL (DT_LOOS + 2)
+#define DT_ANDROID_RELA (DT_LOOS + 4)
 
 template<typename ELFT>
 void validate_compatibility_of_native_library(const std::string& soname,

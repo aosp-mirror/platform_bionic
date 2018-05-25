@@ -43,6 +43,7 @@
 
 #include <android-base/stringprintf.h>
 #include <android-base/thread_annotations.h>
+#include <demangle.h>
 #include <private/bionic_macros.h>
 
 #include "Config.h"
@@ -51,6 +52,7 @@
 #include "backtrace.h"
 #include "debug_log.h"
 #include "malloc_debug.h"
+#include "UnwindBacktrace.h"
 
 std::atomic_uint8_t PointerData::backtrace_enabled_;
 std::atomic_bool PointerData::backtrace_dump_;
@@ -63,6 +65,7 @@ std::mutex PointerData::frame_mutex_;
 std::unordered_map<FrameKeyType, size_t> PointerData::key_to_index_ GUARDED_BY(
     PointerData::frame_mutex_);
 std::unordered_map<size_t, FrameInfoType> PointerData::frames_ GUARDED_BY(PointerData::frame_mutex_);
+std::unordered_map<size_t, std::vector<unwindstack::LocalFrameData>> PointerData::backtraces_info_ GUARDED_BY(PointerData::frame_mutex_);
 constexpr size_t kBacktraceEmptyIndex = 1;
 size_t PointerData::cur_hash_index_ GUARDED_BY(PointerData::frame_mutex_);
 
@@ -127,10 +130,18 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
 }
 
 size_t PointerData::AddBacktrace(size_t num_frames) {
-  std::vector<uintptr_t> frames(num_frames);
-  num_frames = backtrace_get(frames.data(), frames.size());
-  if (num_frames == 0) {
-    return kBacktraceEmptyIndex;
+  std::vector<uintptr_t> frames;
+  std::vector<unwindstack::LocalFrameData> frames_info;
+  if (g_debug->config().options() & BACKTRACE_FULL) {
+    if (!Unwind(&frames, &frames_info, num_frames)) {
+      return kBacktraceEmptyIndex;
+    }
+  } else {
+    frames.resize(num_frames);
+    num_frames = backtrace_get(frames.data(), frames.size());
+    if (num_frames == 0) {
+      return kBacktraceEmptyIndex;
+    }
   }
 
   FrameKeyType key{.num_frames = num_frames, .frames = frames.data()};
@@ -144,6 +155,9 @@ size_t PointerData::AddBacktrace(size_t num_frames) {
     key_to_index_.emplace(key, hash_index);
 
     frames_.emplace(hash_index, FrameInfoType{.references = 1, .frames = std::move(frames)});
+    if (g_debug->config().options() & BACKTRACE_FULL) {
+      backtraces_info_.emplace(hash_index, std::move(frames_info));
+    }
   } else {
     hash_index = entry->second;
     FrameInfoType* frame_info = &frames_[hash_index];
@@ -168,6 +182,9 @@ void PointerData::RemoveBacktrace(size_t hash_index) {
     FrameKeyType key{.num_frames = frame_info->frames.size(), .frames = frame_info->frames.data()};
     key_to_index_.erase(key);
     frames_.erase(hash_index);
+    if (g_debug->config().options() & BACKTRACE_FULL) {
+      backtraces_info_.erase(hash_index);
+    }
   }
 }
 
@@ -230,6 +247,25 @@ size_t PointerData::GetFrames(const void* ptr, uintptr_t* frames, size_t max_fra
   return max_frames;
 }
 
+void PointerData::LogBacktrace(size_t hash_index) {
+  std::lock_guard<std::mutex> frame_guard(frame_mutex_);
+  if (g_debug->config().options() & BACKTRACE_FULL) {
+    auto backtrace_info_entry = backtraces_info_.find(hash_index);
+    if (backtrace_info_entry != backtraces_info_.end()) {
+      UnwindLog(backtrace_info_entry->second);
+      return;
+    }
+  } else {
+    auto frame_entry = frames_.find(hash_index);
+    if (frame_entry != frames_.end()) {
+      FrameInfoType* frame_info = &frame_entry->second;
+      backtrace_log(frame_info->frames.data(), frame_info->frames.size());
+      return;
+    }
+  }
+  error_log("  hash_index %zu does not have matching frame data.", hash_index);
+}
+
 void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_size) {
   error_log(LOG_DIVIDER);
   uint8_t* memory = reinterpret_cast<uint8_t*>(info.pointer);
@@ -242,13 +278,8 @@ void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_si
   }
 
   if (info.hash_index > kBacktraceEmptyIndex) {
-    std::lock_guard<std::mutex> frame_guard(frame_mutex_);
-    auto frame_entry = frames_.find(info.hash_index);
-    if (frame_entry != frames_.end()) {
-      FrameInfoType* frame_info = &frame_entry->second;
-      error_log("Backtrace at time of free:");
-      backtrace_log(frame_info->frames.data(), frame_info->frames.size());
-    }
+    error_log("Backtrace at time of free:");
+    LogBacktrace(info.hash_index);
   }
 
   error_log(LOG_DIVIDER);
@@ -328,15 +359,8 @@ void PointerData::LogFreeBacktrace(const void* ptr) {
     return;
   }
 
-  std::lock_guard<std::mutex> frame_guard(frame_mutex_);
-  auto frame_entry = frames_.find(hash_index);
-  if (frame_entry == frames_.end()) {
-    error_log("Freed pointer hash_index %zu does not have matching frame data.", hash_index);
-    return;
-  }
-  FrameInfoType* frame_info = &frame_entry->second;
   error_log("Backtrace of original free:");
-  backtrace_log(frame_info->frames.data(), frame_info->frames.size());
+  LogBacktrace(hash_index);
 }
 
 void PointerData::VerifyAllFreed() {
@@ -350,18 +374,28 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
     REQUIRES(pointer_mutex_, frame_mutex_) {
   for (const auto& entry : pointers_) {
     FrameInfoType* frame_info = nullptr;
+    std::vector<unwindstack::LocalFrameData>* backtrace_info = nullptr;
     size_t hash_index = entry.second.hash_index;
     if (hash_index > kBacktraceEmptyIndex) {
-      frame_info = &frames_[hash_index];
-      if (frame_info->references == 0) {
+      auto frame_entry = frames_.find(hash_index);
+      if (frame_entry == frames_.end()) {
         // Somehow wound up with a pointer with a valid hash_index, but
         // no frame data. This should not be possible since adding a pointer
         // occurs after the hash_index and frame data have been added.
         // When removing a pointer, the pointer is deleted before the frame
         // data.
-        frames_.erase(hash_index);
         error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", entry.first, hash_index);
-        frame_info = nullptr;
+      } else {
+        frame_info = &frame_entry->second;
+      }
+
+      if (g_debug->config().options() & BACKTRACE_FULL) {
+        auto backtrace_entry = backtraces_info_.find(hash_index);
+        if (backtrace_entry == backtraces_info_.end()) {
+          error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", entry.first, hash_index);
+        } else {
+          backtrace_info = &backtrace_entry->second;
+        }
       }
     }
     if (hash_index == 0 && only_with_backtrace) {
@@ -369,7 +403,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
     }
 
     list->emplace_back(ListInfoType{entry.first, 1, entry.second.RealSize(),
-                                    entry.second.ZygoteChildAlloc(), frame_info});
+                                    entry.second.ZygoteChildAlloc(), frame_info, backtrace_info});
   }
 
   // Sort by the size of the allocation.
@@ -440,7 +474,10 @@ void PointerData::LogLeaks() {
   for (const auto& list_info : list) {
     error_log("+++ %s leaked block of size %zu at 0x%" PRIxPTR " (leak %zu of %zu)", getprogname(),
               list_info.size, list_info.pointer, ++track_count, list.size());
-    if (list_info.frame_info != nullptr) {
+    if (list_info.backtrace_info != nullptr) {
+      error_log("Backtrace at time of allocation:");
+      UnwindLog(*list_info.backtrace_info);
+    } else if (list_info.frame_info != nullptr) {
       error_log("Backtrace at time of allocation:");
       backtrace_log(list_info.frame_info->frames.data(), list_info.frame_info->frames.size());
     }
@@ -520,14 +557,28 @@ void PointerData::DumpLiveToFile(FILE* fp) {
         if (frame_info->frames[i] == 0) {
           break;
         }
-#if defined(__LP64__)
-        fprintf(fp, " %016" PRIxPTR, frame_info->frames[i]);
-#else
-        fprintf(fp, " %08" PRIxPTR, frame_info->frames[i]);
-#endif
+        fprintf(fp, " %" PRIxPTR, frame_info->frames[i]);
       }
     }
     fprintf(fp, "\n");
+    if (info.backtrace_info != nullptr) {
+      fprintf(fp, "  bt_info");
+      for (const auto& frame : *info.backtrace_info) {
+        fprintf(fp, " {");
+        if (frame.map_info != nullptr && !frame.map_info->name.empty()) {
+          fprintf(fp, "\"%s\"", frame.map_info->name.c_str());
+        } else {
+          fprintf(fp, "\"\"");
+        }
+        fprintf(fp, " %" PRIx64, frame.rel_pc);
+        if (frame.function_name.empty()) {
+          fprintf(fp, " \"\" 0}");
+        } else {
+          fprintf(fp, " \"%s\" %" PRIx64 "}", demangle(frame.function_name.c_str()).c_str(), frame.function_offset);
+        }
+      }
+      fprintf(fp, "\n");
+    }
   }
 }
 
