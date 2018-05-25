@@ -534,7 +534,8 @@ The second backtrace frame has a pc of 0xb510 and is in the map named
 /system/libutils.so which starts at 0xb000. The relative pc is 0x510 and
 it is in an unknown function.
 
-There is a tool to visualize this data, development/scripts/native\_heapdump\_viewer.py.
+There is a tool to visualize this data,
+[native\_heapdump\_viewer.py](https://android.googlesource.com/platform/development/+/master/scripts/native_heapdump_viewer.py).
 
 Examples
 ========
@@ -637,9 +638,8 @@ something like the <code>ndk-stack</code> tool.
 
 ### Analyzing heap dumps
 
-To analyze the data produced by the dumpheap command, run this script:
-
-    development/scripts/native_heapdump_viewer.py
+To analyze the data produced by the dumpheap command, run
+[development/scripts/native\_heapdump\_viewer.py](https://android.googlesource.com/platform/development/+/master/scripts/native_heapdump_viewer.py)
 
 In order for the script to properly symbolize the stacks in the file,
 make sure the script is executed from the tree that built the image.
