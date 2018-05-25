@@ -1937,7 +1937,7 @@ void increment_dso_handle_reference_counter(void* dso_handle) {
     soinfo* si = find_containing_library(dso_handle);
     if (si != nullptr) {
       ProtectedDataGuard guard;
-      si->set_tls_nodelete();
+      si->increment_ref_count();
     } else {
       async_safe_fatal(
           "increment_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
@@ -1960,11 +1960,7 @@ void decrement_dso_handle_reference_counter(void* dso_handle) {
     soinfo* si = find_containing_library(dso_handle);
     if (si != nullptr) {
       ProtectedDataGuard guard;
-      si->unset_tls_nodelete();
-      if (si->get_ref_count() == 0) {
-        // Perform deferred unload - note that soinfo_unload_impl does not decrement ref_count
-        soinfo_unload_impl(si);
-      }
+      soinfo_unload(si);
     } else {
       async_safe_fatal(
           "decrement_dso_handle_reference_counter: Couldn't find soinfo by dso_handle=%p",
