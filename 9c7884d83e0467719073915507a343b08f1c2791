@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb7a325b_86c5c6b6",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-05-25T08:56:17Z",
+      "side": 1,
+      "message": "isn\u0027t relro_file name something that mmap of a file provides? If this is not present in maps doesn\u0027t it mean that relro call failed and this is why it ended up not being mmaped?\n\nSeems like this is not a root cause even if this was triggered by switching to another linker.",
+      "revId": "9c7884d83e0467719073915507a343b08f1c2791",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
