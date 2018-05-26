@@ -1042,43 +1042,13 @@ cc_library_static {
             denver64: {
                 srcs: [
                     "arch-arm64/denver64/bionic/memcpy.S",
+                    "arch-arm64/denver64/bionic/memmove.S",
                     "arch-arm64/denver64/bionic/memset.S",
                 ],
                 exclude_srcs: [
                     "arch-arm64/generic/bionic/memcpy.S",
+                    "arch-arm64/generic/bionic/memmove.S",
                     "arch-arm64/generic/bionic/memset.S",
-                ],
-            },
-            cortex_a53: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a55: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a73: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a75: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
                 ],
             },
         },
