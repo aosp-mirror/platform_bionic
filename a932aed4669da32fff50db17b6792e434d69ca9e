@@ -16,6 +16,24 @@
       "revId": "a932aed4669da32fff50db17b6792e434d69ca9e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc4e071c_428e66fa",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-05-29T18:45:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "610c8e10_1144e468",
+      "revId": "a932aed4669da32fff50db17b6792e434d69ca9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
