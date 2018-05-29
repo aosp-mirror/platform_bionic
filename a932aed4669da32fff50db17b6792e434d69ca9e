@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "610c8e10_1144e468",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-29T17:27:46Z",
+      "side": 1,
+      "message": "maybe rename these increment/decrement rather than set/unset?",
+      "revId": "a932aed4669da32fff50db17b6792e434d69ca9e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
