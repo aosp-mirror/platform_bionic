@@ -29,6 +29,7 @@
 #include <set>
 #include <vector>
 
+#include <android-base/file.h>
 #include <android-base/strings.h>
 #include <private/android_filesystem_config.h>
 
@@ -36,6 +37,9 @@
 #include "generated_android_ids.h"
 
 using android::base::Join;
+using android::base::ReadFileToString;
+using android::base::Split;
+using android::base::StartsWith;
 
 enum uid_type_t {
   TYPE_SYSTEM,
@@ -524,6 +528,39 @@ TEST(grp, getgrent_iterate) {
   endgrent();
 
   expect_ids(gids);
+#else
+  print_no_getgrnam_test_info();
+#endif
+}
+
+#if defined(__BIONIC__)
+static void TestAidNamePrefix(const std::string& file_path) {
+  std::string file_contents;
+  if (!ReadFileToString(file_path, &file_contents)) {
+    // If we cannot read this file, then there are no vendor defind AID names, in which case this
+    // test passes by default.
+    return;
+  }
+  auto lines = Split(file_contents, "\n");
+  for (const auto& line : lines) {
+    if (line.empty()) continue;
+    auto name = Split(line, ":")[0];
+    EXPECT_TRUE(StartsWith(name, "vendor_"));
+  }
+}
+#endif
+
+TEST(pwd, vendor_prefix_users) {
+#if defined(__BIONIC__)
+  TestAidNamePrefix("/vendor/etc/passwd");
+#else
+  print_no_getpwnam_test_info();
+#endif
+}
+
+TEST(pwd, vendor_prefix_groups) {
+#if defined(__BIONIC__)
+  TestAidNamePrefix("/vendor/etc/group");
 #else
   print_no_getgrnam_test_info();
 #endif
