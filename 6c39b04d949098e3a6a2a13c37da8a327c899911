@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a3cca174_eeccf6e3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-29T21:49:14Z",
+      "side": 1,
+      "message": "Tabs inserted here and down below.",
+      "range": {
+        "startLine": 1020,
+        "startChar": 8,
+        "endLine": 1020,
+        "endChar": 9
+      },
+      "revId": "6c39b04d949098e3a6a2a13c37da8a327c899911",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b8d279a_114f6686",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-05-29T21:49:14Z",
+      "side": 1,
+      "message": "Would it be better to copy this into the generic directory, delete the cortex-a53 version, and move the generic version into the denver64 directory?",
+      "range": {
+        "startLine": 1020,
+        "startChar": 9,
+        "endLine": 1020,
+        "endChar": 50
+      },
+      "revId": "6c39b04d949098e3a6a2a13c37da8a327c899911",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
