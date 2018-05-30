@@ -1329,7 +1329,7 @@ TEST(dlfcn, dt_runpath_absolute_path) {
   dlclose(handle);
 }
 
-TEST(dlfcn, dlclose_after_thread_local_dtor) {
+static void test_dlclose_after_thread_local_dtor(const char* library_name) {
   bool is_dtor_triggered = false;
 
   auto f = [](void* handle, bool* is_dtor_triggered) {
@@ -1342,10 +1342,10 @@ TEST(dlfcn, dlclose_after_thread_local_dtor) {
     ASSERT_TRUE(!*is_dtor_triggered);
   };
 
-  void* handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  void* handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 
-  handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW);
+  handle = dlopen(library_name, RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
   std::thread t(f, handle, &is_dtor_triggered);
@@ -1354,18 +1354,26 @@ TEST(dlfcn, dlclose_after_thread_local_dtor) {
   ASSERT_TRUE(is_dtor_triggered);
   dlclose(handle);
 
-  handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 }
 
-TEST(dlfcn, dlclose_before_thread_local_dtor) {
+TEST(dlfcn, dlclose_after_thread_local_dtor) {
+  test_dlclose_after_thread_local_dtor("libtest_thread_local_dtor.so");
+}
+
+TEST(dlfcn, dlclose_after_thread_local_dtor_indirect) {
+  test_dlclose_after_thread_local_dtor("libtest_indirect_thread_local_dtor.so");
+}
+
+static void test_dlclose_before_thread_local_dtor(const char* library_name) {
   bool is_dtor_triggered = false;
 
-  auto f = [](bool* is_dtor_triggered) {
-    void* handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  auto f = [library_name](bool* is_dtor_triggered) {
+    void* handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
     ASSERT_TRUE(handle == nullptr);
 
-    handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW);
+    handle = dlopen(library_name, RTLD_NOW);
     ASSERT_TRUE(handle != nullptr) << dlerror();
 
     typedef void (*fn_t)(bool*);
@@ -1380,16 +1388,16 @@ TEST(dlfcn, dlclose_before_thread_local_dtor) {
 
     // Since we have thread_atexit dtors associated with handle - the library should
     // still be availabe.
-    handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+    handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
     ASSERT_TRUE(handle != nullptr) << dlerror();
     dlclose(handle);
   };
 
-  void* handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW);
+  void* handle = dlopen(library_name, RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
 
-  handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 
   std::thread t(f, &is_dtor_triggered);
@@ -1397,12 +1405,126 @@ TEST(dlfcn, dlclose_before_thread_local_dtor) {
 #if defined(__BIONIC__)
   // ld-android.so unloads unreferenced libraries on pthread_exit()
   ASSERT_TRUE(is_dtor_triggered);
-  handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle == nullptr);
 #else
   // GLIBC does not unload libraries with ref_count = 0 on pthread_exit
   ASSERT_TRUE(is_dtor_triggered);
-  handle = dlopen("libtest_thread_local_dtor.so", RTLD_NOW | RTLD_NOLOAD);
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+#endif
+}
+
+TEST(dlfcn, dlclose_before_thread_local_dtor) {
+  test_dlclose_before_thread_local_dtor("libtest_thread_local_dtor.so");
+}
+
+TEST(dlfcn, dlclose_before_thread_local_dtor_indirect) {
+  test_dlclose_before_thread_local_dtor("libtest_indirect_thread_local_dtor.so");
+}
+
+TEST(dlfcn, dlclose_before_thread_local_dtor_multiple_dsos) {
+  const constexpr char* library_name = "libtest_indirect_thread_local_dtor.so";
+
+  bool is_dtor1_triggered = false;
+  bool is_dtor2_triggered = false;
+
+  std::mutex mtx;
+  std::condition_variable cv;
+  void* library_handle = nullptr;
+  bool thread1_dlopen_complete = false;
+  bool thread2_thread_local_dtor_initialized = false;
+  bool thread1_complete = false;
+
+  auto f1 = [&]() {
+    void* handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(handle == nullptr);
+
+    handle = dlopen(library_name, RTLD_NOW);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    std::unique_lock<std::mutex> lock(mtx);
+    thread1_dlopen_complete = true;
+    library_handle = handle;
+    lock.unlock();
+    cv.notify_one();
+
+    typedef void (*fn_t)(bool*);
+    fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "init_thread_local_variable"));
+    ASSERT_TRUE(fn != nullptr) << dlerror();
+
+    fn(&is_dtor1_triggered);
+
+    lock.lock();
+    cv.wait(lock, [&] { return thread2_thread_local_dtor_initialized; });
+    lock.unlock();
+
+    dlclose(handle);
+
+    ASSERT_TRUE(!is_dtor1_triggered);
+
+    // Since we have thread_atexit dtors associated with handle - the library should
+    // still be availabe.
+    handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+    ASSERT_TRUE(handle != nullptr) << dlerror();
+    dlclose(handle);
+  };
+
+  auto f2 = [&]() {
+    std::unique_lock<std::mutex> lock(mtx);
+    cv.wait(lock, [&] { return thread1_dlopen_complete; });
+    void* handle = library_handle;
+    lock.unlock();
+
+    typedef void (*fn_t)(bool*);
+    fn_t fn = reinterpret_cast<fn_t>(dlsym(handle, "init_thread_local_variable2"));
+    ASSERT_TRUE(fn != nullptr) << dlerror();
+
+    fn(&is_dtor2_triggered);
+
+    lock.lock();
+    thread2_thread_local_dtor_initialized = true;
+    lock.unlock();
+    cv.notify_one();
+
+    lock.lock();
+    cv.wait(lock, [&] { return thread1_complete; });
+    lock.unlock();
+
+    ASSERT_TRUE(!is_dtor2_triggered);
+  };
+
+  void* handle = dlopen(library_name, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+
+  std::thread t1(f1);
+  std::thread t2(f2);
+  t1.join();
+  ASSERT_TRUE(is_dtor1_triggered);
+  ASSERT_TRUE(!is_dtor2_triggered);
+
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+  dlclose(handle);
+
+  std::unique_lock<std::mutex> lock(mtx);
+  thread1_complete = true;
+  lock.unlock();
+  cv.notify_one();
+
+  t2.join();
+  ASSERT_TRUE(is_dtor2_triggered);
+
+#if defined(__BIONIC__)
+  // ld-android.so unloads unreferenced libraries on pthread_exit()
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
+  ASSERT_TRUE(handle == nullptr);
+#else
+  // GLIBC does not unload libraries with ref_count = 0 on pthread_exit
+  handle = dlopen(library_name, RTLD_NOW | RTLD_NOLOAD);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 #endif
 }
