@@ -34,6 +34,24 @@
       "revId": "55547db4345ee692b9cfe727c97dd860ed8263f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb0c836b_bdf0c7ca",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-05-30T14:57:02Z",
+      "side": 1,
+      "message": "having said that - nowadays it is much less likely this is going to happen, and for the same reason we might consider droping soinfo version field increments.",
+      "parentUuid": "23ef1ec8_0c79357c",
+      "revId": "55547db4345ee692b9cfe727c97dd860ed8263f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
