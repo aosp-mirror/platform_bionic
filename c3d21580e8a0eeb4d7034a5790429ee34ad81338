@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1414953c_fe7434e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T22:16:44Z",
+      "side": 1,
+      "message": "SHAs are better because they\u0027re global and eternal. gerrit instance change ids aren\u0027t.",
+      "range": {
+        "startLine": 9,
+        "startChar": 9,
+        "endLine": 9,
+        "endChar": 50
+      },
+      "revId": "c3d21580e8a0eeb4d7034a5790429ee34ad81338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbb5fc17_4b73e47f",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T22:16:44Z",
+      "side": 1,
+      "message": "(if there\u0027s only one caller now, and it\u0027s a single line, you could also just inline it...)",
+      "revId": "c3d21580e8a0eeb4d7034a5790429ee34ad81338",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
