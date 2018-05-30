@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b82d6c9_2323170e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-05-30T23:01:04Z",
+      "side": 1,
+      "message": "do you mean \u0027nonexistent\u0027?",
+      "revId": "5943fd440d33f3595e9350c297abb8a078808b0f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
