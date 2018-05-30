@@ -16,6 +16,24 @@
       "revId": "1436457ffa5ac830eafdff68f74b527338801d17",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ca2de5_e4d7aff3",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-05-30T22:42:46Z",
+      "side": 1,
+      "message": "I suppose the comment is referring to the __libc_init_main_thread call above and the __libc_init_globals call below. Maybe it\u0027s better organized like so:\n\n  ...\n  KernelArgumentBlock args(raw_args);\n  \n  // Initializing the globals requires TLS to be available for errno.\n  __libc_init_main_thread(args);\n  __libc_init_globals(args);\n  \n  __libc_init_AT_SECURE(args);\n  __libc_init_common(args);\n  ...",
+      "parentUuid": "166564d1_fee46a95",
+      "revId": "1436457ffa5ac830eafdff68f74b527338801d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
