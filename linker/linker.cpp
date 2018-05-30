@@ -189,7 +189,6 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     "libgui.so",
     "libmedia.so",
     "libnativehelper.so",
-    "libskia.so",
     "libssl.so",
     "libstagefright.so",
     "libsqlite.so",
