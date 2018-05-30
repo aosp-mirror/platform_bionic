@@ -1311,7 +1311,7 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
+      "Android Native Heap Dump v1.1\n"
       "\n"
       "Total memory: 405\n"
       "Allocation records: 6\n"
@@ -1383,7 +1383,7 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
+      "Android Native Heap Dump v1.1\n"
       "\n"
       "Total memory: 1200\n"
       "Allocation records: 3\n"
@@ -1436,7 +1436,7 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit_shared_backtrace) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-      "Android Native Heap Dump v1.0\n"
+      "Android Native Heap Dump v1.1\n"
       "\n"
       "Total memory: 1000\n"
       "Allocation records: 2\n"

@@ -819,7 +819,7 @@ bool debug_dump_heap(const char* file_name) {
     return false;
   }
 
-  fprintf(fp, "Android Native Heap Dump v1.0\n\n");
+  fprintf(fp, "Android Native Heap Dump v1.1\n\n");
 
   PointerData::DumpLiveToFile(fp);
 
