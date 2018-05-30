@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "166564d1_fee46a95",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T22:20:02Z",
+      "side": 1,
+      "message": "does this comment make any sense here? would it make more sense if __libc_init_main_thread was the _next_ line?",
+      "revId": "1436457ffa5ac830eafdff68f74b527338801d17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
