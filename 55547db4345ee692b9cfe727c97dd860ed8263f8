@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fb10dc8_7a842aaa",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T14:49:00Z",
+      "side": 1,
+      "message": "do we need to reserve this? it was never in \u003cdlfcn.h\u003e or anything in the NDK...",
+      "revId": "55547db4345ee692b9cfe727c97dd860ed8263f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
