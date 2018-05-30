@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "000254ec_ccd3f20c",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T23:38:31Z",
+      "side": 1,
+      "message": "no, i think the comment is very important, since it\u0027s non-obvious why we currently need this, or when you could remove it. maybe worth adding the \"remove valgrind\" bug to the comment though.",
+      "revId": "36da91895fc7bf905ab4a0941c5a6c4176d760f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
