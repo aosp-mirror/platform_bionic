@@ -22,6 +22,30 @@
       "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35e9aecf_fd538feb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-05-30T02:00:35Z",
+      "side": 1,
+      "message": "That\u0027s only after system.img is manually mounted to /system by the user via the recovery UI.\n\nThings that needs to be executed before, e.g. adbd, recovery, etc. cannot depend on anything from /system. \n\nThe recovery partition should be self-contained. Otherwise, how can it be used to \u0027recover\u0027 other parts of the system?",
+      "parentUuid": "3e7a6df0_c6c543d5",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 0
+      },
+      "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
