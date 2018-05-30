@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73c38f97_02d6fe27",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T22:22:09Z",
+      "side": 1,
+      "message": "(i hate the fact that we \"need\" this, given that we never run on a CPU that actually needs it.)",
+      "revId": "ec996a60bb071314edb05d205e49464170fd6e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f364338d_faa79a3b",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-05-30T22:22:09Z",
+      "side": 1,
+      "message": "http://b/77856586",
+      "revId": "ec996a60bb071314edb05d205e49464170fd6e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
