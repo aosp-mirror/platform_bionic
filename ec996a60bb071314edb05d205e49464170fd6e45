@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "52a6a28a_c6ff7ae4",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-05-30T23:11:26Z",
+      "side": 1,
+      "message": "It should be possible to get rid of the int $0x80 fallback. If AT_SYSINFO is missing, I suppose the code could __builtin_trap() or do something like the __early_abort() from libc_init_common.cpp.\n\nI think we only need it today for .preinit_array constructors, and I can think of ways to remove that usage. (e.g. Maybe initially point __libc_sysinfo to a function that gets AT_SYSINFO from the auxval, and then fix b/25751302 using a __loader_XXX symbol or by reading TLS_SLOT_BIONIC_PREINIT.)\n\nI\u0027ll leave it as-is for this CL.",
+      "parentUuid": "73c38f97_02d6fe27",
+      "revId": "ec996a60bb071314edb05d205e49464170fd6e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f364338d_faa79a3b",
         "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-05-30T22:22:09Z",
       "side": 1,
       "message": "http://b/77856586",
+      "revId": "ec996a60bb071314edb05d205e49464170fd6e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b81a4e2_8f9212aa",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-05-30T23:11:26Z",
+      "side": 1,
+      "message": "I\u0027ll remove this comment.",
+      "parentUuid": "f364338d_faa79a3b",
       "revId": "ec996a60bb071314edb05d205e49464170fd6e45",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
