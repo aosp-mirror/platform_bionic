@@ -537,14 +537,6 @@ void soinfo::set_nodelete() {
   rtld_flags_ |= RTLD_NODELETE;
 }
 
-void soinfo::set_tls_nodelete() {
-  flags_ |= FLAG_TLS_NODELETE;
-}
-
-void soinfo::unset_tls_nodelete() {
-  flags_ &= ~FLAG_TLS_NODELETE;
-}
-
 const char* soinfo::get_realpath() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
@@ -660,8 +652,7 @@ bool soinfo::is_gnu_hash() const {
 bool soinfo::can_unload() const {
   return !is_linked() ||
          (
-             (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0 &&
-             (flags_ & FLAG_TLS_NODELETE) == 0
+             (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0
          );
 }
 

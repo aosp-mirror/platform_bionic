@@ -700,13 +700,33 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
-// Library with non-trivial thread_local variable to test dlclose()
+// Libraries with non-trivial thread_local variable to test dlclose()
 // -----------------------------------------------------------------------------
 cc_test_library {
     name: "libtest_thread_local_dtor",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["thread_local_dtor.cpp"],
 }
+
+cc_test_library {
+    name: "libtest_thread_local_dtor2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["thread_local_dtor2.cpp"],
+}
+
+// -----------------------------------------------------------------------------
+// Library dt_needs libtest_thread_local_dtor/2 (to check no-unload on load_group)
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libtest_indirect_thread_local_dtor",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    shared_libs: [
+        "libtest_thread_local_dtor",
+        "libtest_thread_local_dtor2",
+    ],
+}
+
 
 // -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
