@@ -16,6 +16,24 @@
       "revId": "36da91895fc7bf905ab4a0941c5a6c4176d760f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6b17555_1478121b",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-05-31T20:54:13Z",
+      "side": 1,
+      "message": "I put the comment back and added a link to the \"remove valgrind\" bug, http://b/77856586.\n\nShould I instead change this code to __builtin_trap() (or something similar) if the AT_SYSINFO auxval is NULL? i.e. Do we currently care about supporting valgrind? I think it should be a separate commit if so, to make the change obvious.",
+      "parentUuid": "000254ec_ccd3f20c",
+      "revId": "36da91895fc7bf905ab4a0941c5a6c4176d760f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
