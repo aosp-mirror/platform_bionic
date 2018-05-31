@@ -81,8 +81,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   // We don't want to free the main thread's stack even when the main thread exits
   // because things like environment variables with global scope live on it.
-  // We also can't free the pthread_internal_t itself, since that lives on the main
-  // thread's stack rather than on the heap.
+  // We also can't free the pthread_internal_t itself, since it is a static variable.
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
   main_thread.mmap_size = 0;
 
@@ -101,10 +100,6 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   __init_thread_stack_guard(&main_thread);
 
   __init_thread(&main_thread);
-
-  // Store a pointer to the kernel argument block in a TLS slot to be
-  // picked up by the libc constructor.
-  main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
   __init_alternate_signal_stack(&main_thread);
 }

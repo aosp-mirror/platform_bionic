@@ -85,14 +85,11 @@ static void __libc_preinit_impl(KernelArgumentBlock& args) {
 // to run before any others (such as the jemalloc constructor), and lower
 // is better (http://b/68046352).
 __attribute__((constructor(1))) static void __libc_preinit() {
-  // Read the kernel argument block pointer from TLS.
+  // Read the kernel argument block pointer from TLS, then clear the slot so no
+  // other initializer sees its value.
   void** tls = __get_tls();
-  KernelArgumentBlock** args_slot = &reinterpret_cast<KernelArgumentBlock**>(tls)[TLS_SLOT_BIONIC_PREINIT];
-  KernelArgumentBlock* args = *args_slot;
-
-  // Clear the slot so no other initializer sees its value.
-  // __libc_init_common() will change the TLS area so the old one won't be accessible anyway.
-  *args_slot = NULL;
+  KernelArgumentBlock* args = static_cast<KernelArgumentBlock*>(tls[TLS_SLOT_BIONIC_PREINIT]);
+  tls[TLS_SLOT_BIONIC_PREINIT] = nullptr;
 
   // The linker has initialized its copy of the global stack_chk_guard, and filled in the main
   // thread's TLS slot with that value. Initialize the local global stack guard with its value.
@@ -102,9 +99,8 @@ __attribute__((constructor(1))) static void __libc_preinit() {
 }
 
 // This function is called from the executable's _start entry point
-// (see arch-$ARCH/bionic/crtbegin_dynamic.S), which is itself
-// called by the dynamic linker after it has loaded all shared
-// libraries the executable depends on.
+// (see arch-$ARCH/bionic/crtbegin.c), which is itself called by the dynamic
+// linker after it has loaded all shared libraries the executable depends on.
 //
 // Note that the dynamic linker has also run all constructors in the
 // executable at this point.
