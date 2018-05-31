@@ -102,7 +102,10 @@ cc_library_static {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
         },
         x86: {
-            srcs: ["arch-x86/bionic/__set_tls.cpp"],
+            srcs: [
+                "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/bionic/__set_tls.cpp",
+            ],
         },
         x86_64: {
             srcs: ["arch-x86_64/bionic/__set_tls.c"],
