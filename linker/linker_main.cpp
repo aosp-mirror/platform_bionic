@@ -228,12 +228,7 @@ static void __linker_cannot_link(const char* argv0) {
   _exit(EXIT_FAILURE);
 }
 
-/*
- * This code is called after the linker has linked itself and
- * fixed it's own GOT. It is safe to make references to externs
- * and other non-local data at this point.
- */
-static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
+static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   ProtectedDataGuard guard;
 
 #if TIMING
@@ -498,6 +493,11 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
+static ElfW(Addr) __attribute__((noinline))
+__linker_init_post_relocation(KernelArgumentBlock& args,
+                              ElfW(Addr) linker_addr,
+                              soinfo& linker_so);
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -531,7 +531,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_addr += reinterpret_cast<uintptr_t>(raw_args);
 #endif
 
-  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
@@ -556,6 +555,19 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // functions at this point.
   if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
 
+  return __linker_init_post_relocation(args, linker_addr, linker_so);
+}
+
+/*
+ * This code is called after the linker has linked itself and fixed its own
+ * GOT. It is safe to make references to externs and other non-local data at
+ * this point. The compiler sometimes moves GOT references earlier in a
+ * function, so avoid inlining this function (http://b/80503879).
+ */
+static ElfW(Addr) __attribute__((noinline))
+__linker_init_post_relocation(KernelArgumentBlock& args,
+                              ElfW(Addr) linker_addr,
+                              soinfo& linker_so) {
   // Initialize the main thread (including TLS, so system calls really work).
   __libc_init_main_thread(args);
 
@@ -580,6 +592,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   //
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
+  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
     async_safe_format_fd(STDOUT_FILENO,
                      "This is %s, the helper program for dynamic executables.\n",
@@ -595,10 +608,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   sonext = solist = get_libdl_info(kLinkerPath, linker_so, linker_link_map);
   g_default_namespace.add_soinfo(solist);
 
-  // We have successfully fixed our own relocations. It's safe to run
-  // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = __linker_init_post_relocation(args);
+  ElfW(Addr) start_address = linker_main(args);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
