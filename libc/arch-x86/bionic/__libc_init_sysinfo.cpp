@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,32 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_GLOBALS_H
-#define _PRIVATE_BIONIC_GLOBALS_H
+#include "private/KernelArgumentBlock.h"
+#include "private/bionic_globals.h"
 
-#include <sys/cdefs.h>
+// This file is compiled without stack protection, because it runs before TLS
+// has been set up.
 
-#include "private/bionic_malloc_dispatch.h"
-#include "private/bionic_vdso.h"
-#include "private/WriteProtected.h"
+__LIBC_HIDDEN__ __attribute__((__naked__)) void __libc_int0x80() {
+  __asm__ volatile("int $0x80; ret");
+}
 
-struct libc_globals {
-  vdso_entry vdso[VDSO_END];
-  long setjmp_cookie;
-  MallocDispatch malloc_dispatch;
-};
+__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
+  // Running under valgrind, AT_SYSINFO won't be set. http://b/77856586.
+  void* at_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+  __libc_sysinfo = (at_sysinfo != nullptr) ? at_sysinfo :
+      reinterpret_cast<void*>(__libc_int0x80);
+}
 
-__LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
-
-class KernelArgumentBlock;
-__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
-__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args);
-__LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args);
-
-#if defined(__i386__)
-__LIBC_HIDDEN__ extern void* __libc_sysinfo;
-__LIBC_HIDDEN__ void __libc_int0x80();
-__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args);
-#endif
-
-#endif
+// TODO: lose this function and just access __libc_sysinfo directly.
+__LIBC_HIDDEN__ extern "C" void* __kernel_syscall() {
+  return __libc_sysinfo;
+}

@@ -45,6 +45,13 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
+// Leave the variable uninitialized for the sake of the dynamic loader, which
+// links in this file. The loader will initialize this variable before
+// relocating itself.
+#if defined(__i386__)
+__LIBC_HIDDEN__ void* __libc_sysinfo;
+#endif
+
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
 static void call_array(void(**list)()) {
