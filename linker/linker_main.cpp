@@ -197,12 +197,16 @@ extern "C" int __system_properties_init(void);
 static const char* get_executable_path() {
   static std::string executable_path;
   if (executable_path.empty()) {
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+    if (!is_init()) {
+      char path[PATH_MAX];
+      ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+      if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+        async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+      }
+      executable_path = std::string(path, path_len);
+    } else {
+      executable_path = "/init";
     }
-    executable_path = std::string(path, path_len);
   }
 
   return executable_path.c_str();
@@ -288,8 +292,14 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   // Stat "/proc/self/exe" instead of executable_path because
   // the executable could be unlinked by this point and it should
   // not cause a crash (see http://b/31084669)
-  if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
-    async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+  if (!is_init()) {
+    if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
+      async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+    }
+  } else {
+    // /proc fs is not mounted when init starts. Therefore we can't use
+    // /proc/self/exe for init.
+    stat("/init", &file_stat);
   }
 
   const char* executable_path = get_executable_path();
