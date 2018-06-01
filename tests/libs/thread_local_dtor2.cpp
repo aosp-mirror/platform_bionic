@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,32 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_GLOBALS_H
-#define _PRIVATE_BIONIC_GLOBALS_H
+namespace {
 
-#include <sys/cdefs.h>
-
-#include "private/bionic_malloc_dispatch.h"
-#include "private/bionic_vdso.h"
-#include "private/WriteProtected.h"
-
-struct libc_globals {
-  vdso_entry vdso[VDSO_END];
-  long setjmp_cookie;
-  MallocDispatch malloc_dispatch;
+class TestClass {
+ public:
+  TestClass(bool* flag) : flag_(flag) {}
+  ~TestClass() {
+    *flag_ = true;
+  }
+ private:
+  bool* flag_;
 };
 
-__LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
+};  // namespace
 
-class KernelArgumentBlock;
-__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
-__LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args);
-__LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args);
-
-#if defined(__i386__)
-__LIBC_HIDDEN__ extern void* __libc_sysinfo;
-__LIBC_HIDDEN__ void __libc_int0x80();
-__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args);
-#endif
-
-#endif
+extern "C" void init_thread_local_variable2(bool* flag) {
+  thread_local TestClass test(flag);
+}

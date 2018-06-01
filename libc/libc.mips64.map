@@ -692,7 +692,7 @@ LIBC {
     pthread_cond_init;
     pthread_cond_signal;
     pthread_cond_timedwait;
-    pthread_cond_timedwait_monotonic_np; # introduced-arm=16 introduced-x86=16 introduced-mips=16 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
+    pthread_cond_timedwait_monotonic_np; # introduced-arm=9 introduced-x86=9 introduced-mips=9 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
     pthread_cond_wait;
     pthread_condattr_destroy;
     pthread_condattr_getclock; # introduced=21
