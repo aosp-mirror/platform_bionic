@@ -31,6 +31,7 @@
 
 #include <sys/cdefs.h>
 
+#include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
 #include "private/WriteProtected.h"
@@ -42,6 +43,15 @@ struct libc_globals {
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
+
+// Globals shared between the dynamic linker and libc.so.
+struct libc_shared_globals {
+  FdTable<128> fd_table;
+};
+
+__LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;
+__LIBC_HIDDEN__ void __libc_init_shared_globals(libc_shared_globals*);
+__LIBC_HIDDEN__ void __libc_init_fdsan();
 
 class KernelArgumentBlock;
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);

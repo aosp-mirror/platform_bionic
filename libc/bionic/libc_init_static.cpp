@@ -96,6 +96,11 @@ __noreturn void __libc_init(void* raw_args,
 
   // Initializing the globals requires TLS to be available for errno.
   __libc_init_main_thread(args);
+
+  static libc_shared_globals shared_globals;
+  __libc_shared_globals = &shared_globals;
+  __libc_init_shared_globals(&shared_globals);
+
   __libc_init_globals(args);
 
   __libc_init_AT_SECURE(args);

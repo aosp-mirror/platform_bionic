@@ -36,6 +36,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
@@ -59,12 +61,18 @@ struct DIR {
 
 #define CHECK_DIR(d) if (d == nullptr) __fortify_fatal("%s: null DIR*", __FUNCTION__)
 
+static uint64_t __get_dir_tag(DIR* dir) {
+  return android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_DIR,
+                                        reinterpret_cast<uint64_t>(dir));
+}
+
 static DIR* __allocate_DIR(int fd) {
   DIR* d = reinterpret_cast<DIR*>(malloc(sizeof(DIR)));
   if (d == NULL) {
     return NULL;
   }
   d->fd_ = fd;
+  android_fdsan_exchange_owner_tag(fd, 0, __get_dir_tag(d));
   d->available_bytes_ = 0;
   d->next_ = NULL;
   d->current_pos_ = 0L;
@@ -159,8 +167,9 @@ int closedir(DIR* d) {
 
   int fd = d->fd_;
   pthread_mutex_destroy(&d->mutex_);
+  int rc = android_fdsan_close_with_tag(fd, __get_dir_tag(d));
   free(d);
-  return close(fd);
+  return rc;
 }
 
 void rewinddir(DIR* d) {

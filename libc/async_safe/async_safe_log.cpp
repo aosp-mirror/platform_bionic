@@ -37,6 +37,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/socket.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <sys/un.h>
@@ -49,6 +50,12 @@
 #include "private/CachedProperty.h"
 #include "private/ErrnoRestorer.h"
 #include "private/ScopedPthreadMutexLocker.h"
+
+// Don't call libc's close, since it might call back into us as a result of fdsan.
+#pragma GCC poison close
+static int __close(int fd) {
+  return syscall(__NR_close, fd);
+}
 
 // Must be kept in sync with frameworks/base/core/java/android/util/EventLog.java.
 enum AndroidEventLogType {
@@ -462,7 +469,7 @@ static int open_log_socket() {
   strlcpy(u.addrUn.sun_path, "/dev/socket/logdw", sizeof(u.addrUn.sun_path));
 
   if (TEMP_FAILURE_RETRY(connect(log_fd, &u.addr, sizeof(u.addrUn))) != 0) {
-    close(log_fd);
+    __close(log_fd);
     return -1;
   }
 
@@ -504,7 +511,7 @@ int async_safe_write_log(int priority, const char* tag, const char* msg) {
   vec[5].iov_len = strlen(msg) + 1;
 
   int result = TEMP_FAILURE_RETRY(writev(main_log_fd, vec, sizeof(vec) / sizeof(vec[0])));
-  close(main_log_fd);
+  __close(main_log_fd);
   return result;
 }
 
