@@ -70,6 +70,30 @@
       "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96159699_1df0e0a4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-06-01T05:25:30Z",
+      "side": 1,
+      "message": "Got it. In recovery partition /etc is not a symlink to /system/etc. So, even when system.img is mounted, the real /etc/ld.config.txt (which is for recovery) is used for /sbin/*. \n\nHowever, all these are removed in current patchset as we have same layout in recovery and system and system.img is mounted to /mnt/system for eyes only.",
+      "parentUuid": "808fa460_f50746b7",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 0
+      },
+      "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
