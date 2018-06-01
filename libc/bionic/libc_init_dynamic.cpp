@@ -62,6 +62,12 @@ extern "C" {
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
 
+// Use an initializer so __libc_sysinfo will have a fallback implementation
+// while .preinit_array constructors run.
+#if defined(__i386__)
+__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
+#endif
+
 // We need a helper function for __libc_preinit because compiling with LTO may
 // inline functions requiring a stack protector check, but __stack_chk_guard is
 // not initialized at the start of __libc_preinit. __libc_preinit_impl will run
