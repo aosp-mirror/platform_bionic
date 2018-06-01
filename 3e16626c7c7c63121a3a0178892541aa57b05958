@@ -46,6 +46,30 @@
       "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "808fa460_f50746b7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-01T05:19:26Z",
+      "side": 1,
+      "message": "(what i meant was that /etc works when system is mounted because it\u0027s a symlink to /system/etc, and /etc also works in recovery because you\u0027re adding an actual /etc. so /etc/ld.config.txt would work in both cases.)",
+      "parentUuid": "35e9aecf_fd538feb",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 0
+      },
+      "revId": "3e16626c7c7c63121a3a0178892541aa57b05958",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
