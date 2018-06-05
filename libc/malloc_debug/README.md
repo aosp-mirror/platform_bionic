@@ -610,6 +610,11 @@ program/application (Android O or later):
 
     adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
 
+If you need to enable multiple options using this method, then you can set
+them like so:
+
+    adb shell setprop wrap.<APP> '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace\ leak_track\ fill logwrapper"'
+
 For example, to enable malloc debug for the google search box (Android O or later):
 
     adb shell setprop wrap.com.google.android.googlequicksearchbox '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
