@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca7562b5_fd89b13a",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-05T04:46:36Z",
+      "side": 1,
+      "message": "*three* levels of quoting? unfortunate. i don\u0027t have a better idea though...",
+      "range": {
+        "startLine": 616,
+        "startChar": 33,
+        "endLine": 616,
+        "endChar": 101
+      },
+      "revId": "1d52a7b1be4693b0b8189b33f8db654f30914384",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
