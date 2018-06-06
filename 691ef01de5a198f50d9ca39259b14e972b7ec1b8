@@ -140,6 +140,30 @@
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "684a4f53_80be5c65",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-06-06T23:37:21Z",
+      "side": 1,
+      "message": "yeah, because of using mmap. Then how about using malloc and a dynamic array, which grows in a power of two?",
+      "parentUuid": "d4c29702_479e0077",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 2
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
