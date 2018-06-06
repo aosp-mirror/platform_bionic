@@ -1921,7 +1921,7 @@ TEST(dlext, ns_anonymous) {
   // some sanity checks..
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
-  ASSERT_EQ(3U, maps_to_copy.size());
+  ASSERT_TRUE(maps_to_copy.size() > 0);
   ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
   ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
 
