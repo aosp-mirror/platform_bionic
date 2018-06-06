@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "820e19ac_56ee89fc",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-06-06T21:51:09Z",
+      "side": 1,
+      "message": "getrlimit(RLIMIT_NOFILE).rlim_max?",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 49
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e184454_95252b28",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-06-06T21:51:09Z",
+      "side": 1,
+      "message": "conflict with close.cpp?",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 9
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41f62d2b_e3689e68",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2018-06-06T21:51:09Z",
+      "side": 1,
+      "message": "For this example, only one bit is enough to prevent close(fd).\nDo we have cases needing a tag instead of just a bit?\nBecause I am a little worried about the needed extra memory.\nOr maybe store the tag/bit information in the file table in the kernel?",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 2
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
