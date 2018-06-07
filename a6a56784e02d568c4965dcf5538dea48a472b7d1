@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09ee8411_b92b66da",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 0,
+      "message": "EXPECT_DEATH these, or add new fileno and dirfd death tests?",
+      "range": {
+        "startLine": 195,
+        "startChar": 0,
+        "endLine": 200,
+        "endChar": 0
+      },
+      "revId": "a6a56784e02d568c4965dcf5538dea48a472b7d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

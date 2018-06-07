@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "9921aa65_d05a3d5b",
+        "filename": "libc/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "yeah, try to use the BSD license for bionic so the BSDs can more easily take stuff back if they want it.",
+      "range": {
+        "startLine": 1074,
+        "startChar": 0,
+        "endLine": 1085,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c14965da_8209b4dd",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "why are you implementing __close here but using ___close elsewhere?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "820e19ac_56ee89fc",
         "filename": "libc/bionic/fdsan.cpp",
         "patchSetId": 2
@@ -37,6 +83,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "820e19ac_56ee89fc",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 49
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52c7cc29_f9f01343",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "what if i set that to unlimited?",
+      "parentUuid": "29ab2e89_092b97d5",
       "range": {
         "startLine": 84,
         "startChar": 48,
@@ -93,6 +163,80 @@
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc616212_d3808044",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "why isn\u0027t this in `globals`?",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6e785c2_274a191c",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "#pragma once",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5968d433_87865e43",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "you\u0027re getting that for free from \u003csys/cdefs.h\u003e, aren\u0027t you?",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b211bbb_3745af99",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "we should doxygen this so it ends up in the NDK API reference.",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     },
     {
       "key": {
@@ -161,6 +305,86 @@
         "endLine": 50,
         "endChar": 2
       },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4cc38eb_62aed824",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "these should probably all be __libc_fdsan_ or just __fdsan_.\n\nand if we are putting them in the NDK, they should probably be android_fdsan_.",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 25
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6daea83b_447948ee",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "__get_file_tag",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 23
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf2e8ac2_979a4669",
+        "filename": "tests/fdsan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "is this actually fixed, or do you still need to put this inside each test to actually get these into CTS?",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0da3711d_8aa1043f",
+        "filename": "tests/fdsan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-07T00:52:53Z",
+      "side": 1,
+      "message": "#include \u003candroid/fdsan.h\u003e",
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
