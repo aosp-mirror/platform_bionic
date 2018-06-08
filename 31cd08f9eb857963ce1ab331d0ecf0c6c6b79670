@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e5b1589_5e872017",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1497,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-08T15:53:43Z",
+      "side": 1,
+      "message": "i wonder if this should actually be moved to getentropy? in the failure path there we could say \"if we\u0027re here because /dev/random hasn\u0027t been created yet, and pid \u003d\u003d 1, fall back to something really crap [like a PRNG seeded from AT_RANDOM]\"?",
+      "range": {
+        "startLine": 1492,
+        "startChar": 0,
+        "endLine": 1497,
+        "endChar": 0
+      },
+      "revId": "31cd08f9eb857963ce1ab331d0ecf0c6c6b79670",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
