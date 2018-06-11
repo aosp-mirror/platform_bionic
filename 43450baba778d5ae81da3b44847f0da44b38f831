@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4ece286_09914b9b",
+        "filename": "libc/arch-common/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-11T11:15:29Z",
+      "side": 1,
+      "message": "are elf-destructors being called for the main executable? I was under impression they were not. That exit called only ones registered with atexit().",
+      "revId": "43450baba778d5ae81da3b44847f0da44b38f831",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
