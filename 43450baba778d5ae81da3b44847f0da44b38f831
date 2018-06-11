@@ -16,6 +16,24 @@
       "revId": "43450baba778d5ae81da3b44847f0da44b38f831",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f11a595_f31ce10d",
+        "filename": "libc/arch-common/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-06-11T21:31:03Z",
+      "side": 1,
+      "message": "AFAICT, they are called: __libc_init registers a call to __libc_fini using __cxa_atexit. __cxa_finalize calls __libc_fini, which then calls the ELF destructors for the main executable (but not for any shared libs). This is reversed from how cleanup works for dlclose where an ELF destructor (__on_dlclose) calls __cxa_finalize.",
+      "parentUuid": "e4ece286_09914b9b",
+      "revId": "43450baba778d5ae81da3b44847f0da44b38f831",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
