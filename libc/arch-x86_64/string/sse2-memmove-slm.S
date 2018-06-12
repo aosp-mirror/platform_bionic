@@ -67,6 +67,12 @@ name:		\
 	cfi_startproc
 #endif
 
+#ifndef ALIAS_SYMBOL
+# define ALIAS_SYMBOL(alias, original) \
+	.globl alias; \
+	.equ alias, original
+#endif
+
 #ifndef END
 # define END(name)		\
 	cfi_endproc;		\
@@ -508,3 +514,5 @@ L(mm_large_page_loop_backward):
 	jmp	L(mm_recalc_len)
 
 END (MEMMOVE)
+
+ALIAS_SYMBOL(memcpy, MEMMOVE)
