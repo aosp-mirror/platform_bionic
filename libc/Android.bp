@@ -855,7 +855,6 @@ cc_library_static {
         arm: {
             srcs: [
                 "arch-arm/generic/bionic/memcmp.S",
-                "arch-arm/generic/bionic/memcpy.S",
                 "arch-arm/generic/bionic/memmove.S",
                 "arch-arm/generic/bionic/memset.S",
                 "arch-arm/generic/bionic/strcmp.S",
@@ -1125,7 +1124,6 @@ cc_library_static {
                 "arch-x86/atom/string/sse2-wcsrchr-atom.S",
                 "arch-x86/atom/string/sse2-wcslen-atom.S",
                 "arch-x86/atom/string/sse2-wcscmp-atom.S",
-                "arch-x86/silvermont/string/sse2-memcpy-slm.S",
                 "arch-x86/silvermont/string/sse2-memmove-slm.S",
                 "arch-x86/silvermont/string/sse2-memset-slm.S",
                 "arch-x86/silvermont/string/sse2-stpcpy-slm.S",
@@ -1154,14 +1152,12 @@ cc_library_static {
                     "arch-x86/atom/string/sse2-strlen-atom.S",
                     "arch-x86/atom/string/ssse3-memcmp-atom.S",
                     "arch-x86/atom/string/ssse3-memcpy-atom.S",
-                    "arch-x86/atom/string/ssse3-memmove-atom.S",
                     "arch-x86/atom/string/ssse3-strcpy-atom.S",
                     "arch-x86/atom/string/ssse3-strncpy-atom.S",
                     "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
                 ],
                 exclude_srcs: [
                     "arch-x86/generic/string/memcmp.S",
-                    "arch-x86/silvermont/string/sse2-memcpy-slm.S",
                     "arch-x86/silvermont/string/sse2-memmove-slm.S",
                     "arch-x86/silvermont/string/sse2-memset-slm.S",
                     "arch-x86/silvermont/string/sse2-strcpy-slm.S",
@@ -1198,7 +1194,6 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "arch-x86_64/string/sse2-memcpy-slm.S",
                 "arch-x86_64/string/sse2-memmove-slm.S",
                 "arch-x86_64/string/sse2-memset-slm.S",
                 "arch-x86_64/string/sse2-stpcpy-slm.S",

@@ -469,3 +469,5 @@ ENTRY(memmove)
         bl      bsd_safe_memcpy
         ldmfd   sp!, {r0, pc}
 END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)

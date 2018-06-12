@@ -92,7 +92,7 @@ ENTRY(memmove)
 	sub	tmp1, dstin, src
 	cmp	count, 96
 	ccmp	tmp1, count, 2, hi
-	b.hs	memcpy
+	b.hs	__memcpy
 
 	cbz	tmp1, 3f
 	add	dstend, dstin, count
@@ -150,4 +150,6 @@ ENTRY(memmove)
 END(wmemmove)
 #else
 END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)
 #endif
