@@ -65,7 +65,7 @@ ENTRY(memmove)
 	b.lo	.Ldownwards
 	add	tmp1, src, count
 	cmp	dstin, tmp1
-	b.hs	memcpy		/* No overlap.  */
+	b.hs	__memcpy	/* No overlap.  */
 
 	/* Upwards move with potential overlap.
 	 * Need to move from the tail backwards.  SRC and DST point one
@@ -196,7 +196,7 @@ ENTRY(memmove)
 	 * DST is more than 16 bytes away from SRC.  */
 	sub	tmp1, src, #16
 	cmp	dstin, tmp1
-	b.ls	memcpy		/* May overlap, but not critically.  */
+	b.ls	__memcpy	/* May overlap, but not critically.  */
 
 	mov	dst, dstin	/* Preserve DSTIN for return value.  */
 	cmp	count, #64
@@ -326,4 +326,6 @@ ENTRY(memmove)
 END(wmemmove)
 #else
 END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)
 #endif
