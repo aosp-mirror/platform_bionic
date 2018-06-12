@@ -42,7 +42,7 @@
         .thumb
         .thumb_func
 
-ENTRY(memcpy)
+ENTRY(__memcpy)
         pld     [r1, #64]
         stmfd   sp!, {r0, lr}
         .cfi_adjust_cfa_offset 8
@@ -50,4 +50,4 @@ ENTRY(memcpy)
         .cfi_rel_offset lr, 4
 
 #include "memcpy_base.S"
-END(memcpy)
+END(__memcpy)
