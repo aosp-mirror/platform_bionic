@@ -34,6 +34,24 @@
       "revId": "43450baba778d5ae81da3b44847f0da44b38f831",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56ad15ca_afb61053",
+        "filename": "libc/arch-common/bionic/crtbegin_so.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-12T08:09:38Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7f11a595_f31ce10d",
+      "revId": "43450baba778d5ae81da3b44847f0da44b38f831",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
