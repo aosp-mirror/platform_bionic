@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e16cca8c_7fcf3157",
+        "filename": "libc/NOTICE",
+        "patchSetId": 2
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9921aa65_d05a3d5b",
+      "range": {
+        "startLine": 1074,
+        "startChar": 0,
+        "endLine": 1085,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c14965da_8209b4dd",
         "filename": "libc/async_safe/async_safe_log.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2018-06-07T00:52:53Z",
       "side": 1,
       "message": "why are you implementing __close here but using ___close elsewhere?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce470764_bc8e9b3a",
+        "filename": "libc/async_safe/async_safe_log.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "We don\u0027t seem to expose any of the other ___functions in the libc version script, and async_safe gets linked into binaries that use libc.so.",
+      "parentUuid": "c14965da_8209b4dd",
       "range": {
         "startLine": 56,
         "startChar": 0,
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "72dd773e_fc5178b3",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "In practice the kernel has a hard coded limit of 1M FDs, and you\u0027ll get EPERM if you try to go above that. My current logic is to default to 32768 if we get something bogus (and they\u0027ll all be clean zero pages if you don\u0027t actually have that many fds, so it shouldn\u0027t matter).",
+      "parentUuid": "52c7cc29_f9f01343",
+      "range": {
+        "startLine": 84,
+        "startChar": 48,
+        "endLine": 84,
+        "endChar": 49
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9e184454_95252b28",
         "filename": "libc/bionic/fdsan.cpp",
         "patchSetId": 2
@@ -183,6 +255,24 @@
     },
     {
       "key": {
+        "uuid": "e51b1f99_e020ac5c",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Deleted it instead (by switching \u0027enabled\u0027 to \u0027disabled\u0027 and relying on zero initialization)",
+      "parentUuid": "dc616212_d3808044",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6e785c2_274a191c",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 2
@@ -206,6 +296,30 @@
     },
     {
       "key": {
+        "uuid": "def47086_a8164cad",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6e785c2_274a191c",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 0
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5968d433_87865e43",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 2
@@ -223,6 +337,24 @@
     },
     {
       "key": {
+        "uuid": "030628ae_24444f54",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5968d433_87865e43",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6b211bbb_3745af99",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 2
@@ -234,6 +366,24 @@
       "writtenOn": "2018-06-07T00:52:53Z",
       "side": 1,
       "message": "we should doxygen this so it ends up in the NDK API reference.",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c93c279a_73c3a86a",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "TODO",
+      "parentUuid": "6b211bbb_3745af99",
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -311,6 +461,30 @@
     },
     {
       "key": {
+        "uuid": "a88147b9_b953f883",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Allocating/reallocating means we would need a global lock, and maintaining signal safety would be difficult. There\u0027s also problems with initialization order: what do we do when something calls close before malloc is initialized? (or if malloc/free calls close).\n\nMoving the table to a static variable with 128 reserved slots (should be enough for the vast majority of functions) and mmap for overflow.",
+      "parentUuid": "684a4f53_80be5c65",
+      "range": {
+        "startLine": 50,
+        "startChar": 1,
+        "endLine": 50,
+        "endChar": 2
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a4cc38eb_62aed824",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 2
@@ -331,6 +505,30 @@
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1543eb04_a7225a8f",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4cc38eb_62aed824",
+      "range": {
+        "startLine": 67,
+        "startChar": 4,
+        "endLine": 67,
+        "endChar": 25
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -357,6 +555,30 @@
     },
     {
       "key": {
+        "uuid": "6b9987ee_dcabd5e4",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6daea83b_447948ee",
+      "range": {
+        "startLine": 98,
+        "startChar": 13,
+        "endLine": 98,
+        "endChar": 23
+      },
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf2e8ac2_979a4669",
         "filename": "tests/fdsan_test.cpp",
         "patchSetId": 2
@@ -374,6 +596,24 @@
     },
     {
       "key": {
+        "uuid": "20f837d4_a7bc8d8f",
+        "filename": "tests/fdsan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "No idea, but moved it inside each test instead of finding out",
+      "parentUuid": "bf2e8ac2_979a4669",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0da3711d_8aa1043f",
         "filename": "tests/fdsan_test.cpp",
         "patchSetId": 2
@@ -388,6 +628,24 @@
       "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "202e2233_13803020",
+        "filename": "tests/fdsan_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-06-12T00:54:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0da3711d_8aa1043f",
+      "revId": "691ef01de5a198f50d9ca39259b14e972b7ec1b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
