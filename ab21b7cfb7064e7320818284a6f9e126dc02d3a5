@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1faa46cf_cb865419",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-06-12T21:25:38Z",
+      "side": 1,
+      "message": "We could make this a static function again. It\u0027s static in P. I changed it in https://android-review.googlesource.com/c/platform/bionic/+/696944 because I needed to access it from multiple object files.",
+      "revId": "ab21b7cfb7064e7320818284a6f9e126dc02d3a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
