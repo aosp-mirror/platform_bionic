@@ -32,15 +32,8 @@
 // This file is compiled without stack protection, because it runs before TLS
 // has been set up.
 
-__LIBC_HIDDEN__ __attribute__((__naked__)) void __libc_int0x80() {
-  __asm__ volatile("int $0x80; ret");
-}
-
 __LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
-  // Running under valgrind, AT_SYSINFO won't be set. http://b/77856586.
-  void* at_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
-  __libc_sysinfo = (at_sysinfo != nullptr) ? at_sysinfo :
-      reinterpret_cast<void*>(__libc_int0x80);
+  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
 }
 
 // TODO: lose this function and just access __libc_sysinfo directly.
