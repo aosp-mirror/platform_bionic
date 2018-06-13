@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ecd54408_c5bd53e7",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-13T20:58:06Z",
+      "side": 1,
+      "message": "these are out of order alphabetically *and* chronologically. shouldn\u0027t WRITE come last for both reasons? (did asan stop messing with these?)",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 0
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edc1ee04_8395a8d7",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-13T20:58:06Z",
+      "side": 1,
+      "message": "multiple versions",
+      "range": {
+        "startLine": 498,
+        "startChar": 14,
+        "endLine": 498,
+        "endChar": 31
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49d4f6b5_efead2dd",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-13T20:58:06Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 506,
+        "startChar": 40,
+        "endLine": 507,
+        "endChar": 5
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
