@@ -1489,6 +1489,11 @@ static bool find_library_internal(android_namespace_t* ns,
 static void soinfo_unload(soinfo* si);
 
 static void shuffle(std::vector<LoadTask*>* v) {
+  if (is_init()) {
+    // arc4random* is not available in init because /dev/random hasn't yet been
+    // created.
+    return;
+  }
   for (size_t i = 0, size = v->size(); i < size; ++i) {
     size_t n = size - i;
     size_t r = arc4random_uniform(n);
