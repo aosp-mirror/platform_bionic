@@ -1,6 +1,7 @@
 cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linux_bionic_supported"],
+    recovery_available: true,
 
     srcs: [
         "linker_allocator.cpp",
@@ -205,6 +206,7 @@ cc_binary {
 
     name: "linker",
     symlinks: ["linker_asan"],
+    recovery_available: true,
     multilib: {
         lib64: {
             suffix: "64",
