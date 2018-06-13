@@ -161,7 +161,7 @@ on the signal will be backtrace\_dump\_prefix.**PID**.txt. The filename chosen
 when the program exits will be backtrace\_dump\_prefix.**PID**.exit.txt.
 
 ### backtrace\_full
-As of P, any time that a backtrace is gathered, a different algorithm is used
+As of Q, any time that a backtrace is gathered, a different algorithm is used
 that is extra thorough and can unwind through Java frames. This will run
 slower than the normal backtracing function.
 
@@ -495,15 +495,32 @@ The final section is the map data for the process:
 The map data is simply the output of /proc/PID/maps. This data can be used to
 decode the frames in the backtraces.
 
-As of Android P, there is a new version of this file. The new header is:
+There are now multiple versions of the file:
+
+Android P produces version v1.1 of the heap dump.
 
     Android Native Heap Dump v1.1
 
-The new version no longer 0 pads the backtrace addresses. In v1.0:
+The only difference between v1.0 and v1.1 is that the NUM\_ALLOCATIONS
+value is always accurate in v1.1. A previous version of malloc debug set
+NUM\_ALLOCATIONS to an incorrect value. For heap dump v1.0, the
+NUM\_ALLOCATIONS value should be treated as always 1 no matter what is
+actually present.
+
+Android Q introduces v1.2 of the heap dump. The new header looks like this:
+
+    Android Native Heap Dump v1.2
+
+    Build fingerprint: 'google/taimen/taimen:8.1.0/OPM2.171026.006.C1/4769658:user/release-keys'
+
+The new line fingerprint line is the contents of the ro.build.fingerprint
+property.
+
+The new version no longer 0 pads the backtrace addresses. In v1.0/v1.1:
 
     z 0  sz      400  num    1  bt 0000a230 0000b500
 
-While v1.1:
+While v1.2:
 
     z 0  sz      400  num    1  bt a230 b500
 

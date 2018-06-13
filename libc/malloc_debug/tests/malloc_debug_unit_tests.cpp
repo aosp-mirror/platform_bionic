@@ -1250,10 +1250,15 @@ static std::string SanitizeHeapData(const std::string& data) {
         continue;
       }
     }
-    if (line == "MAPS") {
-      skip_map_data = true;
+
+    if (android::base::StartsWith(line, "Build fingerprint:")) {
+      sanitized += "Build fingerprint: ''\n";
+    } else {
+      if (line == "MAPS") {
+        skip_map_data = true;
+      }
+      sanitized += line + '\n';
     }
-    sanitized += line + '\n';
   }
   return sanitized;
 }
@@ -1312,7 +1317,9 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-R"(Android Native Heap Dump v1.1
+R"(Android Native Heap Dump v1.2
+
+Build fingerprint: ''
 
 Total memory: 405
 Allocation records: 6
@@ -1377,7 +1384,9 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-R"(Android Native Heap Dump v1.1
+R"(Android Native Heap Dump v1.2
+
+Build fingerprint: ''
 
 Total memory: 1200
 Allocation records: 3
@@ -1426,7 +1435,9 @@ TEST_F(MallocDebugTest, backtrace_dump_on_exit_shared_backtrace) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-R"(Android Native Heap Dump v1.1
+R"(Android Native Heap Dump v1.2
+
+Build fingerprint: ''
 
 Total memory: 1000
 Allocation records: 2
@@ -1482,7 +1493,9 @@ TEST_F(MallocDebugTest, backtrace_full_dump_on_exit) {
   std::string sanitized(SanitizeHeapData(actual));
 
   std::string expected =
-R"(Android Native Heap Dump v1.1
+R"(Android Native Heap Dump v1.2
+
+Build fingerprint: ''
 
 Total memory: 1200
 Allocation records: 3
