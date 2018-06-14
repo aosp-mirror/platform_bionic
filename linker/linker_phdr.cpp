@@ -547,7 +547,10 @@ static void* ReserveAligned(void* hint, size_t size, size_t align) {
 
   uint8_t* first = align_up(mmap_ptr, align);
   uint8_t* last = align_down(mmap_ptr + mmap_size, align) - size;
-  size_t n = arc4random_uniform((last - first) / PAGE_SIZE + 1);
+
+  // arc4random* is not available in init because /dev/urandom hasn't yet been
+  // created. Don't randomize then.
+  size_t n = is_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
   uint8_t* start = first + n * PAGE_SIZE;
   munmap(mmap_ptr, start - mmap_ptr);
   munmap(start + size, mmap_ptr + mmap_size - (start + size));
