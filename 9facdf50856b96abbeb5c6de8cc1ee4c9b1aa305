@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ca381b76_ca3bd1d7",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-06-14T00:34:57Z",
+      "side": 1,
+      "message": "Put them in alpha order. I was keeping them in logical order but that\u0027s probably more confusing.\n\nasan doesn\u0027t touch these since it\u0027s all internal now.",
+      "parentUuid": "ecd54408_c5bd53e7",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 216,
+        "endChar": 0
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edc1ee04_8395a8d7",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "250a31ca_f534acc1",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-06-14T00:34:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edc1ee04_8395a8d7",
+      "range": {
+        "startLine": 498,
+        "startChar": 14,
+        "endLine": 498,
+        "endChar": 31
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "49d4f6b5_efead2dd",
         "filename": "libc/malloc_debug/README.md",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2018-06-13T20:58:06Z",
       "side": 1,
       "message": "?",
+      "range": {
+        "startLine": 506,
+        "startChar": 40,
+        "endLine": 507,
+        "endChar": 5
+      },
+      "revId": "9facdf50856b96abbeb5c6de8cc1ee4c9b1aa305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52e6a529_11f18728",
+        "filename": "libc/malloc_debug/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-06-14T00:34:57Z",
+      "side": 1,
+      "message": "Oops, some kind of brain fade. Reworded so it makes sense.",
+      "parentUuid": "49d4f6b5_efead2dd",
       "range": {
         "startLine": 506,
         "startChar": 40,
