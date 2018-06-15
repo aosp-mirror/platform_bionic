@@ -1475,6 +1475,7 @@ LIBC_PRIVATE {
     tkill; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
+    write_malloc_leak_info;
 } LIBC_P;
 
 LIBC_DEPRECATED {
