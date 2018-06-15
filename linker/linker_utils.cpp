@@ -239,3 +239,8 @@ void resolve_paths(std::vector<std::string>& paths,
     }
   }
 }
+
+bool is_init() {
+  static bool ret = (getpid() == 1);
+  return ret;
+}
