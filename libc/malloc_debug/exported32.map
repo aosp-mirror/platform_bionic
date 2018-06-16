@@ -21,6 +21,7 @@ LIBC_MALLOC_DEBUG {
     debug_pvalloc;
     debug_realloc;
     debug_valloc;
+    debug_write_malloc_leak_info;
 
   local:
     *;
