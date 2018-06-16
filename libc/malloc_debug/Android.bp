@@ -139,5 +139,6 @@ cc_test {
         "-Wall",
         "-Werror",
         "-Wno-error=format-zero-length",
+        "-O0",
     ],
 }
