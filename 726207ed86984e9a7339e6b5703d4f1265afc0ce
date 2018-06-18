@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64079437_05f65e94",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-18T10:15:00Z",
+      "side": 1,
+      "message": "nit: \u003c\u003c error_msg;",
+      "revId": "726207ed86984e9a7339e6b5703d4f1265afc0ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66f88599_cc19e8f4",
+        "filename": "linker/tests/linker_config_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-18T10:15:00Z",
+      "side": 1,
+      "message": "same here",
+      "revId": "726207ed86984e9a7339e6b5703d4f1265afc0ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
