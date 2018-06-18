@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c19b530e_fda926be",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-18T15:06:21Z",
+      "side": 1,
+      "message": "the old code would update the timeout if it retried.\n\nswitching to ppoll instead of poll will let you reuse the existing timespec-based timeout code.\n\notherwise, you can just put TEMP_FAILURE_RETRY around the call to poll and lose the goto.",
+      "range": {
+        "startLine": 1011,
+        "startChar": 23,
+        "endLine": 1011,
+        "endChar": 36
+      },
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "164e1f41_914bc41b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-18T15:06:21Z",
+      "side": 1,
+      "message": "indentation",
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3716082a_7452bd2f",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-18T15:06:21Z",
+      "side": 1,
+      "message": "here too.",
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
