@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d866f097_a5f1a81d",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-06-18T06:46:03Z",
+      "side": 1,
+      "message": "emit a warning message with error cause when realpath() fails? (e.g. for selinux denial, etc.)",
+      "range": {
+        "startLine": 243,
+        "startChar": 8,
+        "endLine": 243,
+        "endChar": 14
+      },
+      "revId": "2b28e3ea9ba46837bf5ed319c8bc5094a0f5cbdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
