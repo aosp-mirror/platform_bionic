@@ -398,10 +398,8 @@ cc_test_library {
 
 // -----------------------------------------------------------------------------
 // Tests for the device using bionic's .so. Run with:
-//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests32
-//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests64
-//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc32
-//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests-gcc64
+//   adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests
+//   adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests
 // -----------------------------------------------------------------------------
 cc_defaults {
     name: "bionic_unit_tests_defaults",
@@ -612,8 +610,8 @@ cc_test {
 
 // -----------------------------------------------------------------------------
 // Tests for the device linked against bionic's static library. Run with:
-//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static32
-//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static64
+//   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
+//   adb shell /data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static
 // -----------------------------------------------------------------------------
 cc_test {
     name: "bionic-unit-tests-static",
