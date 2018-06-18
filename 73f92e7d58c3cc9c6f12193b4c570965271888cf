@@ -46,6 +46,23 @@
       "revId": "73f92e7d58c3cc9c6f12193b4c570965271888cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a56a604_153fc5a2",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-18T07:13:28Z",
+      "side": 1,
+      "message": "worth adding a test?",
+      "revId": "73f92e7d58c3cc9c6f12193b4c570965271888cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
