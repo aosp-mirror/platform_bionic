@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0cd8c193_2e005142",
+        "filename": "libc/arch-common/bionic/crtbegin_so.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-06-19T13:18:23Z",
+      "side": 1,
+      "message": "nit: other functions in this file do not have this...",
+      "range": {
+        "startLine": 42,
+        "startChar": 29,
+        "endLine": 42,
+        "endChar": 33
+      },
+      "revId": "74d9c79c8f11c61c4288f26fb6c2aeb73a25c2ec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
