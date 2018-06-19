@@ -29,3 +29,4 @@ LOCAL_SRC_FILES_mips := prebuilt-elf-files/mips/$(bionic_tests_module)
 LOCAL_SRC_FILES_mips64 := prebuilt-elf-files/mips64/$(bionic_tests_module)
 include $(BUILD_PREBUILT)
 bionic-loader-test-libs-target: $(LOCAL_MODULE)
+.PHONY: bionic-loader-test-libs-target
