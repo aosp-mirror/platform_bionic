@@ -278,3 +278,27 @@ static void BM_math_exp2f_speccpu2017_latency(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_exp2f_speccpu2017_latency);
+
+#include "powf_input.cpp"
+
+static void BM_math_powf_speccpu2006(benchmark::State& state) {
+  f = 0.0;
+  auto cin = powf_input.cbegin();
+  for (auto _ : state) {
+    f = powf(cin->first, cin->second);
+    if (++cin == powf_input.cend())
+      cin = powf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_powf_speccpu2006);
+
+static void BM_math_powf_speccpu2017_latency(benchmark::State& state) {
+  f = 0.0;
+  auto cin = powf_input.cbegin();
+  for (auto _ : state) {
+    f = powf(f * zero + cin->first, cin->second);
+    if (++cin == powf_input.cend())
+      cin = powf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_powf_speccpu2017_latency);
