@@ -23,7 +23,6 @@
 static const double values[] = { 1234.0, nan(""), HUGE_VAL, 0.0 };
 static const char* names[] = { "1234.0", "nan", "HUGE_VAL", "0.0" };
 
-
 static void SetLabel(benchmark::State& state) {
   state.SetLabel(names[state.range(0)]);
 }
@@ -31,6 +30,9 @@ static void SetLabel(benchmark::State& state) {
 // Avoid optimization.
 volatile double d;
 volatile double v;
+volatile float f;
+
+static float zero = 0.0f;
 
 static void BM_math_sqrt(benchmark::State& state) {
   d = 0.0;
@@ -230,3 +232,49 @@ static void BM_math_sincos(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_sincos);
+
+#include "expf_input.cpp"
+
+static void BM_math_expf_speccpu2017(benchmark::State& state) {
+  f = 0.0;
+  auto cin = expf_input.cbegin();
+  for (auto _ : state) {
+    f = expf(*cin);
+    if (++cin == expf_input.cend())
+      cin = expf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_expf_speccpu2017);
+
+static void BM_math_expf_speccpu2017_latency(benchmark::State& state) {
+  f = 0.0;
+  auto cin = expf_input.cbegin();
+  for (auto _ : state) {
+    f = expf(f * zero + *cin);
+    if (++cin == expf_input.cend())
+      cin = expf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_expf_speccpu2017_latency);
+
+static void BM_math_exp2f_speccpu2017(benchmark::State& state) {
+  f = 0.0;
+  auto cin = expf_input.cbegin();
+  for (auto _ : state) {
+    f = exp2f(*cin);
+    if (++cin == expf_input.cend())
+      cin = expf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp2f_speccpu2017);
+
+static void BM_math_exp2f_speccpu2017_latency(benchmark::State& state) {
+  f = 0.0;
+  auto cin = expf_input.cbegin();
+  for (auto _ : state) {
+    f = exp2f(f * zero + *cin);
+    if (++cin == expf_input.cend())
+      cin = expf_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp2f_speccpu2017_latency);
