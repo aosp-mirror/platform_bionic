@@ -240,13 +240,16 @@ static bool parse_config_file(const char* ld_config_file_path,
       std::string resolved_path;
       if (realpath(value.c_str(), buf)) {
         resolved_path = buf;
-      } else {
+      } else if (errno != ENOENT)  {
         DL_WARN("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
                 ld_config_file_path,
                 cp.lineno(),
                 value.c_str(),
                 strerror(errno));
         resolved_path = value;
+      } else {
+        // ENOENT: no need to test if binary is under the path
+        continue;
       }
 
       if (file_is_under_dir(binary_realpath, resolved_path)) {
