@@ -39,6 +39,7 @@
 
 #include <async_safe/log.h>
 
+#include <limits.h>
 #include <stdlib.h>
 
 #include <string>
@@ -223,8 +224,8 @@ static bool parse_config_file(const char* ld_config_file_path,
       }
 
       // remove trailing '/'
-      while (value[value.size() - 1] == '/') {
-        value = value.substr(0, value.size() - 1);
+      while (!value.empty() && value.back() == '/') {
+        value.pop_back();
       }
 
       if (value.empty()) {
@@ -234,7 +235,21 @@ static bool parse_config_file(const char* ld_config_file_path,
         continue;
       }
 
-      if (file_is_under_dir(binary_realpath, value)) {
+      // If the path can be resolved, resolve it
+      char buf[PATH_MAX];
+      std::string resolved_path;
+      if (realpath(value.c_str(), buf)) {
+        resolved_path = buf;
+      } else {
+        DL_WARN("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
+                ld_config_file_path,
+                cp.lineno(),
+                value.c_str(),
+                strerror(errno));
+        resolved_path = value;
+      }
+
+      if (file_is_under_dir(binary_realpath, resolved_path)) {
         section_name = name.substr(4);
         break;
       }
