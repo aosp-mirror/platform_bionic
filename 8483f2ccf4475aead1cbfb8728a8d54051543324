@@ -16,6 +16,24 @@
       "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2db33ca8_f644a6cf",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-06-21T16:00:06Z",
+      "side": 1,
+      "message": "well, that\u0027s not strictly needed as file_is_under_dir will always return false in that case. But, yes, why should we waste cpu cycle?",
+      "parentUuid": "cc79df96_c8142292",
+      "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
