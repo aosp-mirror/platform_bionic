@@ -34,6 +34,24 @@
       "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d451282b_3dc442ea",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-21T16:44:10Z",
+      "side": 1,
+      "message": "it wasn\u0027t performance i was worried about: it was \"how predictable do i think the behavior of a function passed an empty string is?\". reasonable people regularly disagree about what the empty string should mean at the best of times!",
+      "parentUuid": "2db33ca8_f644a6cf",
+      "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
