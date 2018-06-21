@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc79df96_c8142292",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-21T15:49:06Z",
+      "side": 1,
+      "message": "do we need a `continue` in the ENOENT case?",
+      "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
