@@ -476,7 +476,8 @@ std::map<std::string, args_vector_t> GetShorthand() {
     // that can be created with the current property area size.
     {"NUM_PROPS", args_vector_t{ {1}, {4}, {16}, {64}, {128}, {256}, {512} }},
 
-    {"MATH_COMMON", args_vector_t{ {0}, {1}, {2}, {3} }}
+    {"MATH_COMMON", args_vector_t{ {0}, {1}, {2}, {3} }},
+    {"MATH_SINCOS_COMMON", args_vector_t{ {0}, {1}, {2}, {3}, {4}, {5}, {6}, {7} }},
   };
 
   args_vector_t args_onebuf;
