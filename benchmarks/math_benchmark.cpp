@@ -348,3 +348,97 @@ static void BM_math_log2f_speccpu2017_latency(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_log2f_speccpu2017_latency);
+
+// Four ranges of values are checked:
+// * 0.0 <= x < 0.1
+// * 0.1 <= x < 0.7
+// * 0.7 <= x < 3.1
+// * -3.1 <= x < 3.1
+// * 3.3 <= x < 33.3
+// * 100.0 <= x < 1000.0
+// * 1e6 <= x < 1e32
+// * 1e32 < x < FLT_MAX
+
+#include "sincosf_input.cpp"
+
+static void BM_math_sinf(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    f = sinf(*cin);
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_sinf, "MATH_SINCOS_COMMON");
+
+static void BM_math_sinf_latency(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    f = sinf(f * zero + *cin);
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_sinf_latency, "MATH_SINCOS_COMMON");
+
+static void BM_math_cosf(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    f = cosf(*cin);
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_cosf, "MATH_SINCOS_COMMON");
+
+static void BM_math_cosf_latency(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    f = cosf(f * zero + *cin);
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_cosf_latency, "MATH_SINCOS_COMMON");
+
+static void BM_math_sincosf(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    float s, c;
+    sincosf(*cin, &s, &c);
+    f += s;
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_sincosf, "MATH_SINCOS_COMMON");
+
+static void BM_math_sincosf_latency(benchmark::State& state) {
+  auto range = sincosf_input[state.range(0)];
+  auto cin = range.values.cbegin();
+  f = 0.0;
+  for (auto _ : state) {
+    float s, c;
+    sincosf(f * zero + *cin, &s, &c);
+    f += s;
+    if (++cin == range.values.cend())
+      cin = range.values.cbegin();
+  }
+  state.SetLabel(range.label);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_math_sincosf_latency, "MATH_SINCOS_COMMON");
