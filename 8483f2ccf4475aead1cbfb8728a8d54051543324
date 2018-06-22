@@ -52,6 +52,24 @@
       "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61ce4c53_edb531d3",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-06-22T01:05:03Z",
+      "side": 1,
+      "message": "right, that\u0027s a good point. Thanks for merging this. :)",
+      "parentUuid": "d451282b_3dc442ea",
+      "revId": "8483f2ccf4475aead1cbfb8728a8d54051543324",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
