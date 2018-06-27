@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "4d405036_8c7083ba",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-06-27T14:36:51Z",
+      "side": 1,
+      "message": "If we just use TEMP_FAILURE_RETRY like this, will a signal handled in netd while the poll() is running cause the poll to be restarted with the original timeout, and thus the timeout/retransmit timer to fire later than it should?\n\nI don\u0027t know if there are signal handlers in netd and its dependencies today. I was expecting to see us use SIGCHLD because we fork/exec child processes, but it looks like we don\u0027t handle it since android_fork_execvp uses something else. Even if there aren\u0027t, I don\u0027t know if it\u0027s safe to assume that there won\u0027t be in the future.",
+      "parentUuid": "9cd4dea0_6b5681e7",
+      "range": {
+        "startLine": 1011,
+        "startChar": 23,
+        "endLine": 1011,
+        "endChar": 36
+      },
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "164e1f41_914bc41b",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 1
