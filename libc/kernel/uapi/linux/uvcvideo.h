@@ -61,4 +61,11 @@ struct uvc_xu_control_query {
 };
 #define UVCIOC_CTRL_MAP _IOWR('u', 0x20, struct uvc_xu_control_mapping)
 #define UVCIOC_CTRL_QUERY _IOWR('u', 0x21, struct uvc_xu_control_query)
+struct uvc_meta_buf {
+  __u64 ns;
+  __u16 sof;
+  __u8 length;
+  __u8 flags;
+  __u8 buf[];
+} __packed;
 #endif

@@ -44,6 +44,7 @@ enum tcp_conntrack {
 #define IP_CT_TCP_FLAG_DATA_UNACKNOWLEDGED 0x10
 #define IP_CT_TCP_FLAG_MAXACK_SET 0x20
 #define IP_CT_EXP_CHALLENGE_ACK 0x40
+#define IP_CT_TCP_SIMULTANEOUS_OPEN 0x80
 struct nf_ct_tcp_flags {
   __u8 flags;
   __u8 mask;

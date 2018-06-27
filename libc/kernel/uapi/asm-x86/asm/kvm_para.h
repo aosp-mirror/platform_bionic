@@ -19,7 +19,6 @@
 #ifndef _UAPI_ASM_X86_KVM_PARA_H
 #define _UAPI_ASM_X86_KVM_PARA_H
 #include <linux/types.h>
-#include <asm/hyperv.h>
 #define KVM_CPUID_SIGNATURE 0x40000000
 #define KVM_CPUID_FEATURES 0x40000001
 #define KVM_FEATURE_CLOCKSOURCE 0
@@ -30,6 +29,9 @@
 #define KVM_FEATURE_STEAL_TIME 5
 #define KVM_FEATURE_PV_EOI 6
 #define KVM_FEATURE_PV_UNHALT 7
+#define KVM_FEATURE_PV_TLB_FLUSH 9
+#define KVM_FEATURE_ASYNC_PF_VMEXIT 10
+#define KVM_HINTS_REALTIME 0
 #define KVM_FEATURE_CLOCKSOURCE_STABLE_BIT 24
 #define MSR_KVM_WALL_CLOCK 0x11
 #define MSR_KVM_SYSTEM_TIME 0x12
@@ -47,6 +49,8 @@ struct kvm_steal_time {
   __u8 u8_pad[3];
   __u32 pad[11];
 };
+#define KVM_VCPU_PREEMPTED (1 << 0)
+#define KVM_VCPU_FLUSH_TLB (1 << 1)
 #define KVM_CLOCK_PAIRING_WALLCLOCK 0
 struct kvm_clock_pairing {
   __s64 sec;

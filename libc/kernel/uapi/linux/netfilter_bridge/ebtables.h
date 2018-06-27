@@ -24,6 +24,7 @@
 #define EBT_TABLE_MAXNAMELEN 32
 #define EBT_CHAIN_MAXNAMELEN EBT_TABLE_MAXNAMELEN
 #define EBT_FUNCTION_MAXNAMELEN EBT_TABLE_MAXNAMELEN
+#define EBT_EXTENSION_MAXNAMELEN 31
 #define EBT_ACCEPT - 1
 #define EBT_DROP - 2
 #define EBT_CONTINUE - 3
@@ -80,7 +81,10 @@ struct ebt_entries {
 #define EBT_INV_MASK (EBT_IPROTO | EBT_IIN | EBT_IOUT | EBT_ILOGICALIN | EBT_ILOGICALOUT | EBT_ISOURCE | EBT_IDEST)
 struct ebt_entry_match {
   union {
-    char name[EBT_FUNCTION_MAXNAMELEN];
+    struct {
+      char name[EBT_EXTENSION_MAXNAMELEN];
+      uint8_t revision;
+    };
     struct xt_match * match;
   } u;
   unsigned int match_size;
@@ -88,7 +92,10 @@ struct ebt_entry_match {
 };
 struct ebt_entry_watcher {
   union {
-    char name[EBT_FUNCTION_MAXNAMELEN];
+    struct {
+      char name[EBT_EXTENSION_MAXNAMELEN];
+      uint8_t revision;
+    };
     struct xt_target * watcher;
   } u;
   unsigned int watcher_size;
@@ -96,7 +103,10 @@ struct ebt_entry_watcher {
 };
 struct ebt_entry_target {
   union {
-    char name[EBT_FUNCTION_MAXNAMELEN];
+    struct {
+      char name[EBT_EXTENSION_MAXNAMELEN];
+      uint8_t revision;
+    };
     struct xt_target * target;
   } u;
   unsigned int target_size;

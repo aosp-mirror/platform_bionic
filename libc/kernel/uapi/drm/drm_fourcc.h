@@ -101,13 +101,13 @@
 #define DRM_FORMAT_MOD_VENDOR_NONE 0
 #define DRM_FORMAT_MOD_VENDOR_INTEL 0x01
 #define DRM_FORMAT_MOD_VENDOR_AMD 0x02
-#define DRM_FORMAT_MOD_VENDOR_NV 0x03
+#define DRM_FORMAT_MOD_VENDOR_NVIDIA 0x03
 #define DRM_FORMAT_MOD_VENDOR_SAMSUNG 0x04
 #define DRM_FORMAT_MOD_VENDOR_QCOM 0x05
 #define DRM_FORMAT_MOD_VENDOR_VIVANTE 0x06
 #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
 #define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
-#define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | (val & 0x00ffffffffffffffULL))
+#define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | ((val) & 0x00ffffffffffffffULL))
 #define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
 #define DRM_FORMAT_MOD_LINEAR fourcc_mod_code(NONE, 0)
 #define I915_FORMAT_MOD_X_TILED fourcc_mod_code(INTEL, 1)
@@ -120,12 +120,14 @@
 #define DRM_FORMAT_MOD_VIVANTE_SUPER_TILED fourcc_mod_code(VIVANTE, 2)
 #define DRM_FORMAT_MOD_VIVANTE_SPLIT_TILED fourcc_mod_code(VIVANTE, 3)
 #define DRM_FORMAT_MOD_VIVANTE_SPLIT_SUPER_TILED fourcc_mod_code(VIVANTE, 4)
-#define __fourcc_mod_tegra_mode_shift 32
-#define fourcc_mod_tegra_code(val,params) fourcc_mod_code(NV, ((((__u64) val) << __fourcc_mod_tegra_mode_shift) | params))
-#define fourcc_mod_tegra_mod(m) (m & ~((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
-#define fourcc_mod_tegra_param(m) (m & ((1ULL << __fourcc_mod_tegra_mode_shift) - 1))
-#define NV_FORMAT_MOD_TEGRA_TILED fourcc_mod_tegra_code(1, 0)
-#define NV_FORMAT_MOD_TEGRA_16BX2_BLOCK(v) fourcc_mod_tegra_code(2, v)
+#define DRM_FORMAT_MOD_NVIDIA_TEGRA_TILED fourcc_mod_code(NVIDIA, 1)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK(v) fourcc_mod_code(NVIDIA, 0x10 | ((v) & 0xf))
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_ONE_GOB fourcc_mod_code(NVIDIA, 0x10)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_TWO_GOB fourcc_mod_code(NVIDIA, 0x11)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_FOUR_GOB fourcc_mod_code(NVIDIA, 0x12)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_EIGHT_GOB fourcc_mod_code(NVIDIA, 0x13)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_SIXTEEN_GOB fourcc_mod_code(NVIDIA, 0x14)
+#define DRM_FORMAT_MOD_NVIDIA_16BX2_BLOCK_THIRTYTWO_GOB fourcc_mod_code(NVIDIA, 0x15)
 #define DRM_FORMAT_MOD_BROADCOM_VC4_T_TILED fourcc_mod_code(BROADCOM, 1)
 #ifdef __cplusplus
 #endif

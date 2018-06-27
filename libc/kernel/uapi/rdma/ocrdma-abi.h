@@ -26,22 +26,22 @@ struct ocrdma_alloc_ucontext_resp {
   __u32 wqe_size;
   __u32 max_inline_data;
   __u32 dpp_wqe_size;
-  __u64 ah_tbl_page;
+  __aligned_u64 ah_tbl_page;
   __u32 ah_tbl_len;
   __u32 rqe_size;
   __u8 fw_ver[32];
-  __u64 rsvd1;
-  __u64 rsvd2;
+  __aligned_u64 rsvd1;
+  __aligned_u64 rsvd2;
 };
 struct ocrdma_alloc_pd_ureq {
-  __u64 rsvd1;
+  __u32 rsvd[2];
 };
 struct ocrdma_alloc_pd_uresp {
   __u32 id;
   __u32 dpp_enabled;
   __u32 dpp_page_addr_hi;
   __u32 dpp_page_addr_lo;
-  __u64 rsvd1;
+  __u32 rsvd[2];
 };
 struct ocrdma_create_cq_ureq {
   __u32 dpp_cq;
@@ -53,12 +53,12 @@ struct ocrdma_create_cq_uresp {
   __u32 page_size;
   __u32 num_pages;
   __u32 max_hw_cqe;
-  __u64 page_addr[MAX_CQ_PAGES];
-  __u64 db_page_addr;
+  __aligned_u64 page_addr[MAX_CQ_PAGES];
+  __aligned_u64 db_page_addr;
   __u32 db_page_size;
   __u32 phase_change;
-  __u64 rsvd1;
-  __u64 rsvd2;
+  __aligned_u64 rsvd1;
+  __aligned_u64 rsvd2;
 };
 #define MAX_QP_PAGES 8
 #define MAX_UD_AV_PAGES 8
@@ -77,9 +77,9 @@ struct ocrdma_create_qp_uresp {
   __u32 rq_page_size;
   __u32 num_sq_pages;
   __u32 num_rq_pages;
-  __u64 sq_page_addr[MAX_QP_PAGES];
-  __u64 rq_page_addr[MAX_QP_PAGES];
-  __u64 db_page_addr;
+  __aligned_u64 sq_page_addr[MAX_QP_PAGES];
+  __aligned_u64 rq_page_addr[MAX_QP_PAGES];
+  __aligned_u64 db_page_addr;
   __u32 db_page_size;
   __u32 dpp_credit;
   __u32 dpp_offset;
@@ -88,21 +88,21 @@ struct ocrdma_create_qp_uresp {
   __u32 db_sq_offset;
   __u32 db_rq_offset;
   __u32 db_shift;
-  __u64 rsvd[11];
-} __packed;
+  __aligned_u64 rsvd[11];
+};
 struct ocrdma_create_srq_uresp {
   __u16 rq_dbid;
   __u16 resv0;
   __u32 resv1;
   __u32 rq_page_size;
   __u32 num_rq_pages;
-  __u64 rq_page_addr[MAX_QP_PAGES];
-  __u64 db_page_addr;
+  __aligned_u64 rq_page_addr[MAX_QP_PAGES];
+  __aligned_u64 db_page_addr;
   __u32 db_page_size;
   __u32 num_rqe_allocated;
   __u32 db_rq_offset;
   __u32 db_shift;
-  __u64 rsvd2;
-  __u64 rsvd3;
+  __aligned_u64 rsvd2;
+  __aligned_u64 rsvd3;
 };
 #endif

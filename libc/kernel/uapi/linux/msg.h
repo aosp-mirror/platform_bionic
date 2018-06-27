@@ -21,6 +21,7 @@
 #include <linux/ipc.h>
 #define MSG_STAT 11
 #define MSG_INFO 12
+#define MSG_STAT_ANY 13
 #define MSG_NOERROR 010000
 #define MSG_EXCEPT 020000
 #define MSG_COPY 040000

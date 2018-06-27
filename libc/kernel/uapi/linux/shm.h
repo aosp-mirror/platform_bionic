@@ -65,6 +65,7 @@ struct __kernel_legacy_shmid_ds {
 #define SHM_UNLOCK 12
 #define SHM_STAT 13
 #define SHM_INFO 14
+#define SHM_STAT_ANY 15
 struct shminfo {
   int shmmax;
   int shmmin;
