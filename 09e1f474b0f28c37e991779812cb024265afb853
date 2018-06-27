@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "9cd4dea0_6b5681e7",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-06-27T08:23:10Z",
+      "side": 1,
+      "message": "Isn\u0027t netd the only actual caller of this code? And we\u0027re even going to move the entire resolver into netd...\n\nThough the fix you proposed seems very simple. I didn\u0027t know that the ppoll() syscall modified its timespec argument; the manpage says that the glibc wrapper hides this behavior by making a copy.",
+      "parentUuid": "329b6add_20f5db1c",
+      "range": {
+        "startLine": 1011,
+        "startChar": 23,
+        "endLine": 1011,
+        "endChar": 36
+      },
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "164e1f41_914bc41b",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 1
@@ -122,6 +146,42 @@
       "revId": "09e1f474b0f28c37e991779812cb024265afb853",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "004c1eef_1f2700b1",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-06-27T08:23:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3716082a_7452bd2f",
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e4bf60a_f33d9077",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1031,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-06-27T08:23:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3716082a_7452bd2f",
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
