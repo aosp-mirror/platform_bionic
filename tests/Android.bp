@@ -108,6 +108,7 @@ cc_test_library {
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
         "netinet_in_test.cpp",
+        "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
         "pthread_test.cpp",
