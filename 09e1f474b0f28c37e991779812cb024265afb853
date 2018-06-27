@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "d12f1fdd_8c531a17",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-27T14:47:59Z",
+      "side": 1,
+      "message": "\u003e Though the fix you proposed seems very simple. I didn\u0027t know that the ppoll() syscall modified its timespec argument; the manpage says that the glibc wrapper hides this behavior by making a copy.\n\nyes, i wasn\u0027t suggesting you call the system call directly; i was suggesting restoring the evSubTime calls that were there for pselect(2) and using them for ppoll(2) instead. (rather than writing _new_ timeout recalculation code to cope with the fact that poll(2) doesn\u0027t take a `timespec`.)\n\n\u003e If we just use TEMP_FAILURE_RETRY like this, will a signal handled in netd while the poll() is running cause the poll to be restarted with the original timeout, and thus the timeout/retransmit timer to fire later than it should?\n\ncorrect.\n\n\u003e Even if there aren\u0027t, I don\u0027t know if it\u0027s safe to assume that there won\u0027t be in the future.\n\nyes, that\u0027s my concern. especially if it happens via transitive dependency. and/or via some hidden user of signals like timer_create.",
+      "parentUuid": "4d405036_8c7083ba",
+      "range": {
+        "startLine": 1011,
+        "startChar": 23,
+        "endLine": 1011,
+        "endChar": 36
+      },
+      "revId": "09e1f474b0f28c37e991779812cb024265afb853",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "164e1f41_914bc41b",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 1
