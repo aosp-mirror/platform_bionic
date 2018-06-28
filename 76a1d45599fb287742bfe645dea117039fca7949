@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99b361d9_6be2dbca",
+        "filename": "libc/kernel/uapi/asm-generic/poll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-28T15:50:19Z",
+      "side": 1,
+      "message": "ugh. i suspect the missing parentheses around this are going to cause someone trouble somewhere.",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 0
+      },
+      "revId": "76a1d45599fb287742bfe645dea117039fca7949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce3cc61c_d8918e3f",
+        "filename": "libc/kernel/uapi/linux/eventpoll.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-28T15:50:19Z",
+      "side": 1,
+      "message": "ah, crap. we might have to see if we can get gregkh to fix these upstream...",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 45
+      },
+      "revId": "76a1d45599fb287742bfe645dea117039fca7949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0cfac055_bd6178ed",
+        "filename": "libc/kernel/uapi/linux/fs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-28T15:50:19Z",
+      "side": 1,
+      "message": "(at least these people knew what they were doing :-) )",
+      "revId": "76a1d45599fb287742bfe645dea117039fca7949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cc8d301_0407c59f",
+        "filename": "libc/kernel/uapi/linux/input.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-28T15:50:19Z",
+      "side": 1,
+      "message": "interesting. i guess they\u0027ve started work on LP32 with 64-bit time_t then.",
+      "range": {
+        "startLine": 27,
+        "startChar": 39,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "76a1d45599fb287742bfe645dea117039fca7949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
