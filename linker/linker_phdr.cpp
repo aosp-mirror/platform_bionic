@@ -213,7 +213,8 @@ static const char* EM_to_string(int em) {
 
 bool ElfReader::VerifyElfHeader() {
   if (memcmp(header_.e_ident, ELFMAG, SELFMAG) != 0) {
-    DL_ERR("\"%s\" has bad ELF magic", name_.c_str());
+    DL_ERR("\"%s\" has bad ELF magic: %02x%02x%02x%02x", name_.c_str(),
+           header_.e_ident[0], header_.e_ident[1], header_.e_ident[2], header_.e_ident[3]);
     return false;
   }
 
