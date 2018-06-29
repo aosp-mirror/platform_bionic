@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0423993b_cdb5440e",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-06-29T17:00:15Z",
+      "side": 1,
+      "message": "whitespace all wrong",
+      "range": {
+        "startLine": 985,
+        "startChar": 0,
+        "endLine": 988,
+        "endChar": 0
+      },
+      "revId": "76b6b1aca5035a9f62e2bfabf2771bbf3e1b64c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
