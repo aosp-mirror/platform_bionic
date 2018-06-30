@@ -22,6 +22,30 @@
       "revId": "76b6b1aca5035a9f62e2bfabf2771bbf3e1b64c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3caffb23_a8af8120",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-06-30T09:33:08Z",
+      "side": 1,
+      "message": "Fixed.\n\nI just discovered https://editorconfig.org/ which solves the problem of having to reconfigure your editor every time you open a file in a different directory. I\u0027ll contribute the .editorconfig file for bionic.",
+      "parentUuid": "0423993b_cdb5440e",
+      "range": {
+        "startLine": 985,
+        "startChar": 0,
+        "endLine": 988,
+        "endChar": 0
+      },
+      "revId": "76b6b1aca5035a9f62e2bfabf2771bbf3e1b64c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
