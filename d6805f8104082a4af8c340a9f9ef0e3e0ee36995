@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39bb3633_849a40eb",
+        "filename": "libc/arch-arm64/generic/bionic/strcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2018-06-30T14:15:49Z",
+      "side": 0,
+      "message": "We want to keep aligning to a 64B cacheline since ENTRY will align to 16B after your recent change (before it wasn\u0027t aligning at all). The p2align needs to be before ENTRY to be sure it\u0027s correct.",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 0
+      },
+      "revId": "d6805f8104082a4af8c340a9f9ef0e3e0ee36995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
