@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9d091d4_63c6db27",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-02T15:42:59Z",
+      "side": 1,
+      "message": "you didn\u0027t actually upload the fixed version?",
+      "range": {
+        "startLine": 1155,
+        "startChar": 0,
+        "endLine": 1158,
+        "endChar": 0
+      },
+      "revId": "185c42bff0bf00a2dea02e1e2e2db0a1fff7faa4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
