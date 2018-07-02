@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "913d0b13_6ed0834e",
+        "filename": ".editorconfig",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-02T15:20:46Z",
+      "side": 1,
+      "message": "this isn\u0027t actually true.\n\nthe upstream-* stuff we follow their style. for new stuff we use 2-space google-ish style, like system/core/.clang-format-2 (which is what we should move towards... adding links to that to those directories that contain home-grown code).",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "d8bdec4e163c8f98ac54e9a16fee7adb908f4ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
