@@ -22,6 +22,30 @@
       "revId": "b9148710513e17408b1f401ee9f6f6d26fec2b66",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "870c991a_4ae32e58",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-03T09:30:04Z",
+      "side": 1,
+      "message": "Good catch, but due to short-circuit rules rhs of || won\u0027t be evaluated if the lhs is true.",
+      "parentUuid": "8507e14b_e17e4f69",
+      "range": {
+        "startLine": 1042,
+        "startChar": 63,
+        "endLine": 1042,
+        "endChar": 71
+      },
+      "revId": "b9148710513e17408b1f401ee9f6f6d26fec2b66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
