@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8507e14b_e17e4f69",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-03T05:06:32Z",
+      "side": 1,
+      "message": "Pre-existing, but could this be an uninitialized read if getsockopt() fails? Do we want to initialize |error| to 0? That seems to be the intention of the code.",
+      "range": {
+        "startLine": 1042,
+        "startChar": 63,
+        "endLine": 1042,
+        "endChar": 71
+      },
+      "revId": "b9148710513e17408b1f401ee9f6f6d26fec2b66",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

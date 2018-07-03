@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce48fe28_b80f662d",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1188,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-03T05:06:32Z",
+      "side": 0,
+      "message": "I think this could break things. Previously we\u0027d only select on this fd for reading, but now we select for reading and writing.\n\nBased only on code inspection, it looks like this will cause retrying_poll() to always return 1, which will cause us to call recvfrom() and block the DNS query indefinitely if the reply doesn\u0027t come in. But I might be misreading. Do we have a test coverage for this codepath?\n\nIf this is indeed broken, the obvious fix would be to pass in an event mask to retrying_poll. That\u0027s sort of what the existing code did: it passed in two masks, as a way of saying whether it wanted to see reads, writes, or both.",
+      "range": {
+        "startLine": 1188,
+        "startChar": 33,
+        "endLine": 1188,
+        "endChar": 37
+      },
+      "revId": "cff9dfacdc082172fa8bb0ddc5232b8d5e6bedaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
