@@ -275,7 +275,14 @@ TEST(pwd, getpwent_iterate) {
       EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
     }
 
-    EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
+    // TODO(b/27999086): fix this check with the OEM range
+    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
+    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
+    // yet, so therefore we do not check for uid's in the OEM range.
+    if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
+        !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
+      EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
+    }
     uids.emplace(pwd->pw_uid);
   }
   endpwent();
@@ -518,7 +525,14 @@ TEST(grp, getgrent_iterate) {
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
 
-    EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
+    // TODO(b/27999086): fix this check with the OEM range
+    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
+    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
+    // yet, so therefore we do not check for gid's in the OEM range.
+    if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
+        !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
+      EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
+    }
     gids.emplace(grp->gr_gid);
   }
   endgrent();
