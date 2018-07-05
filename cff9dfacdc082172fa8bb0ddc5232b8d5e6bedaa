@@ -22,6 +22,30 @@
       "revId": "cff9dfacdc082172fa8bb0ddc5232b8d5e6bedaa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62be941e_43d7b1a3",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1188,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-05T11:06:19Z",
+      "side": 0,
+      "message": "Done (but tests still pending)",
+      "parentUuid": "ce48fe28_b80f662d",
+      "range": {
+        "startLine": 1188,
+        "startChar": 33,
+        "endLine": 1188,
+        "endChar": 37
+      },
+      "revId": "cff9dfacdc082172fa8bb0ddc5232b8d5e6bedaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
