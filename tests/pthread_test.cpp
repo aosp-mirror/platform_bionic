@@ -2499,6 +2499,11 @@ TEST(pthread, pthread_barrier_check_ordering) {
   }
 }
 
+TEST(pthread, pthread_barrier_init_zero_count) {
+  pthread_barrier_t barrier;
+  ASSERT_EQ(EINVAL, pthread_barrier_init(&barrier, nullptr, 0));
+}
+
 TEST(pthread, pthread_spinlock_smoke) {
   pthread_spinlock_t lock;
   ASSERT_EQ(0, pthread_spin_init(&lock, 0));
