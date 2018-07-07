@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57c03d0f_2f76071b",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-07T00:11:30Z",
+      "side": 1,
+      "message": "probably better as `int64_t`...",
+      "range": {
+        "startLine": 221,
+        "startChar": 2,
+        "endLine": 221,
+        "endChar": 11
+      },
+      "revId": "acba7bccd0a835a43fcd4af5f92b3d4c81768e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8662074d_f4827585",
+        "filename": "benchmarks/bionic_benchmarks.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-07T00:11:30Z",
+      "side": 1,
+      "message": "...and use the `SCNd64` macro here?",
+      "range": {
+        "startLine": 223,
+        "startChar": 50,
+        "endLine": 223,
+        "endChar": 54
+      },
+      "revId": "acba7bccd0a835a43fcd4af5f92b3d4c81768e45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
