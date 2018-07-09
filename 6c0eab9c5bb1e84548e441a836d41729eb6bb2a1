@@ -22,6 +22,30 @@
       "revId": "6c0eab9c5bb1e84548e441a836d41729eb6bb2a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46a1c821_423ebece",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2018-07-09T20:52:37Z",
+      "side": 1,
+      "message": "This path is taken for C++ on Windows/MinGW where we still use libstdc++.\n\nI think char16_t and char32_t are pre-defined for C++11, so this check makes _Atomic(char{16,32}_t) available for C++11 compilations when taking this path.",
+      "parentUuid": "4347eef4_db64a9ba",
+      "range": {
+        "startLine": 330,
+        "startChar": 24,
+        "endLine": 330,
+        "endChar": 75
+      },
+      "revId": "6c0eab9c5bb1e84548e441a836d41729eb6bb2a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
