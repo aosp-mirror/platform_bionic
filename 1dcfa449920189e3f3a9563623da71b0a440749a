@@ -94,6 +94,30 @@
       "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bf0faf85_b1041bef",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-09T19:11:50Z",
+      "side": 1,
+      "message": "glad to know i\u0027m not going crazy :-)",
+      "parentUuid": "55375278_c02fa3b7",
+      "range": {
+        "startLine": 330,
+        "startChar": 27,
+        "endLine": 330,
+        "endChar": 49
+      },
+      "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
