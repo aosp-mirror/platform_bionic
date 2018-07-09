@@ -46,6 +46,30 @@
       "revId": "cff9dfacdc082172fa8bb0ddc5232b8d5e6bedaa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f3e7ecb3_a60e25be",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 1188,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-09T02:45:59Z",
+      "side": 0,
+      "message": "Tested by re-introducing the bug and running the yet unsubmitted test aosp/713993.",
+      "parentUuid": "62be941e_43d7b1a3",
+      "range": {
+        "startLine": 1188,
+        "startChar": 33,
+        "endLine": 1188,
+        "endChar": 37
+      },
+      "revId": "cff9dfacdc082172fa8bb0ddc5232b8d5e6bedaa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
