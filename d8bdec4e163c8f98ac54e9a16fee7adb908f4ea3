@@ -22,6 +22,30 @@
       "revId": "d8bdec4e163c8f98ac54e9a16fee7adb908f4ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0f76603_01a13ab8",
+        "filename": ".editorconfig",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-07-09T05:57:20Z",
+      "side": 1,
+      "message": "I found just a handful of files using the 2-space style:\n\narch-mips/string/memmove.c\nmalloc_debug/PointerData.cpp\nbionic/pthread_internal.cpp\nbionic/strerror_r.cpp\nbionic/tmpfile.cpp\nbionic/grp_pwd.cpp\nstdio/local.h\nstdio/stdio.cpp\n\nShall we just list them explicitly here?\n\nOr we could just give up on having a .editorconfig for bionic if the style can\u0027t be made uniform anyway...",
+      "parentUuid": "913d0b13_6ed0834e",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "d8bdec4e163c8f98ac54e9a16fee7adb908f4ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
