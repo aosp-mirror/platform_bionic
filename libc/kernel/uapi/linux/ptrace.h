@@ -50,6 +50,11 @@ struct ptrace_peeksiginfo_args {
 #define PTRACE_GETSIGMASK 0x420a
 #define PTRACE_SETSIGMASK 0x420b
 #define PTRACE_SECCOMP_GET_FILTER 0x420c
+#define PTRACE_SECCOMP_GET_METADATA 0x420d
+struct seccomp_metadata {
+  __u64 filter_off;
+  __u64 flags;
+};
 #define PTRACE_PEEKSIGINFO_SHARED (1 << 0)
 #define PTRACE_EVENT_FORK 1
 #define PTRACE_EVENT_VFORK 2

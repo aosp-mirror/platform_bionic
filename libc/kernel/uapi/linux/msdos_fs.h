@@ -21,7 +21,9 @@
 #include <linux/types.h>
 #include <linux/magic.h>
 #include <asm/byteorder.h>
+#ifndef SECTOR_SIZE
 #define SECTOR_SIZE 512
+#endif
 #define SECTOR_BITS 9
 #define MSDOS_DPB (MSDOS_DPS)
 #define MSDOS_DPB_BITS 4
