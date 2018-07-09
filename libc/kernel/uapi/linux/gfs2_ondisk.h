@@ -131,9 +131,16 @@ struct gfs2_rgrp {
   __be32 rg_flags;
   __be32 rg_free;
   __be32 rg_dinodes;
-  __be32 __pad;
+  union {
+    __be32 __pad;
+    __be32 rg_skip;
+  };
   __be64 rg_igeneration;
-  __u8 rg_reserved[80];
+  __be64 rg_data0;
+  __be32 rg_data;
+  __be32 rg_bitbytes;
+  __be32 rg_crc;
+  __u8 rg_reserved[60];
 };
 struct gfs2_quota {
   __be64 qu_limit;
@@ -261,6 +268,32 @@ struct gfs2_ea_header {
   __u32 __pad;
 };
 #define GFS2_LOG_HEAD_UNMOUNT 0x00000001
+#define GFS2_LOG_HEAD_FLUSH_NORMAL 0x00000002
+#define GFS2_LOG_HEAD_FLUSH_SYNC 0x00000004
+#define GFS2_LOG_HEAD_FLUSH_SHUTDOWN 0x00000008
+#define GFS2_LOG_HEAD_FLUSH_FREEZE 0x00000010
+#define GFS2_LOG_HEAD_RECOVERY 0x00000020
+#define GFS2_LOG_HEAD_USERSPACE 0x80000000
+#define GFS2_LFC_SHUTDOWN 0x00000100
+#define GFS2_LFC_JDATA_WPAGES 0x00000200
+#define GFS2_LFC_SET_FLAGS 0x00000400
+#define GFS2_LFC_AIL_EMPTY_GL 0x00000800
+#define GFS2_LFC_AIL_FLUSH 0x00001000
+#define GFS2_LFC_RGRP_GO_SYNC 0x00002000
+#define GFS2_LFC_INODE_GO_SYNC 0x00004000
+#define GFS2_LFC_INODE_GO_INVAL 0x00008000
+#define GFS2_LFC_FREEZE_GO_SYNC 0x00010000
+#define GFS2_LFC_KILL_SB 0x00020000
+#define GFS2_LFC_DO_SYNC 0x00040000
+#define GFS2_LFC_INPLACE_RESERVE 0x00080000
+#define GFS2_LFC_WRITE_INODE 0x00100000
+#define GFS2_LFC_MAKE_FS_RO 0x00200000
+#define GFS2_LFC_SYNC_FS 0x00400000
+#define GFS2_LFC_EVICT_INODE 0x00800000
+#define GFS2_LFC_TRANS_END 0x01000000
+#define GFS2_LFC_LOGD_JFLUSH_REQD 0x02000000
+#define GFS2_LFC_LOGD_AIL_FLUSH_REQD 0x04000000
+#define LH_V1_SIZE (offsetofend(struct gfs2_log_header, lh_hash))
 struct gfs2_log_header {
   struct gfs2_meta_header lh_header;
   __be64 lh_sequence;
@@ -268,6 +301,16 @@ struct gfs2_log_header {
   __be32 lh_tail;
   __be32 lh_blkno;
   __be32 lh_hash;
+  __be32 lh_crc;
+  __be32 lh_nsec;
+  __be64 lh_sec;
+  __be64 lh_addr;
+  __be64 lh_jinode;
+  __be64 lh_statfs_addr;
+  __be64 lh_quota_addr;
+  __be64 lh_local_total;
+  __be64 lh_local_free;
+  __be64 lh_local_dinodes;
 };
 #define GFS2_LOG_DESC_METADATA 300
 #define GFS2_LOG_DESC_REVOKE 301

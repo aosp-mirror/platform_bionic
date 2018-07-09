@@ -22,12 +22,14 @@
 #define PVRDMA_UVERBS_ABI_VERSION 3
 #define PVRDMA_UAR_HANDLE_MASK 0x00FFFFFF
 #define PVRDMA_UAR_QP_OFFSET 0
-#define PVRDMA_UAR_QP_SEND BIT(30)
-#define PVRDMA_UAR_QP_RECV BIT(31)
+#define PVRDMA_UAR_QP_SEND (1 << 30)
+#define PVRDMA_UAR_QP_RECV (1 << 31)
 #define PVRDMA_UAR_CQ_OFFSET 4
-#define PVRDMA_UAR_CQ_ARM_SOL BIT(29)
-#define PVRDMA_UAR_CQ_ARM BIT(30)
-#define PVRDMA_UAR_CQ_POLL BIT(31)
+#define PVRDMA_UAR_CQ_ARM_SOL (1 << 29)
+#define PVRDMA_UAR_CQ_ARM (1 << 30)
+#define PVRDMA_UAR_CQ_POLL (1 << 31)
+#define PVRDMA_UAR_SRQ_OFFSET 8
+#define PVRDMA_UAR_SRQ_RECV (1 << 30)
 enum pvrdma_wr_opcode {
   PVRDMA_WR_RDMA_WRITE,
   PVRDMA_WR_RDMA_WRITE_WITH_IMM,
@@ -104,7 +106,7 @@ struct pvrdma_alloc_pd_resp {
   __u32 reserved;
 };
 struct pvrdma_create_cq {
-  __u64 buf_addr;
+  __aligned_u64 buf_addr;
   __u32 buf_size;
   __u32 reserved;
 };
@@ -113,12 +115,12 @@ struct pvrdma_create_cq_resp {
   __u32 reserved;
 };
 struct pvrdma_resize_cq {
-  __u64 buf_addr;
+  __aligned_u64 buf_addr;
   __u32 buf_size;
   __u32 reserved;
 };
 struct pvrdma_create_srq {
-  __u64 buf_addr;
+  __aligned_u64 buf_addr;
   __u32 buf_size;
   __u32 reserved;
 };
@@ -127,21 +129,21 @@ struct pvrdma_create_srq_resp {
   __u32 reserved;
 };
 struct pvrdma_create_qp {
-  __u64 rbuf_addr;
-  __u64 sbuf_addr;
+  __aligned_u64 rbuf_addr;
+  __aligned_u64 sbuf_addr;
   __u32 rbuf_size;
   __u32 sbuf_size;
-  __u64 qp_addr;
+  __aligned_u64 qp_addr;
 };
 struct pvrdma_ex_cmp_swap {
-  __u64 swap_val;
-  __u64 compare_val;
-  __u64 swap_mask;
-  __u64 compare_mask;
+  __aligned_u64 swap_val;
+  __aligned_u64 compare_val;
+  __aligned_u64 swap_mask;
+  __aligned_u64 compare_mask;
 };
 struct pvrdma_ex_fetch_add {
-  __u64 add_val;
-  __u64 field_boundary;
+  __aligned_u64 add_val;
+  __aligned_u64 field_boundary;
 };
 struct pvrdma_av {
   __u32 port_pd;
@@ -155,17 +157,17 @@ struct pvrdma_av {
   __u8 reserved[6];
 };
 struct pvrdma_sge {
-  __u64 addr;
+  __aligned_u64 addr;
   __u32 length;
   __u32 lkey;
 };
 struct pvrdma_rq_wqe_hdr {
-  __u64 wr_id;
+  __aligned_u64 wr_id;
   __u32 num_sge;
   __u32 total_len;
 };
 struct pvrdma_sq_wqe_hdr {
-  __u64 wr_id;
+  __aligned_u64 wr_id;
   __u32 num_sge;
   __u32 total_len;
   __u32 opcode;
@@ -177,19 +179,19 @@ struct pvrdma_sq_wqe_hdr {
   __u32 reserved;
   union {
     struct {
-      __u64 remote_addr;
+      __aligned_u64 remote_addr;
       __u32 rkey;
       __u8 reserved[4];
     } rdma;
     struct {
-      __u64 remote_addr;
-      __u64 compare_add;
-      __u64 swap;
+      __aligned_u64 remote_addr;
+      __aligned_u64 compare_add;
+      __aligned_u64 swap;
       __u32 rkey;
       __u32 reserved;
     } atomic;
     struct {
-      __u64 remote_addr;
+      __aligned_u64 remote_addr;
       __u32 log_arg_sz;
       __u32 rkey;
       union {
@@ -198,13 +200,14 @@ struct pvrdma_sq_wqe_hdr {
       } wr_data;
     } masked_atomics;
     struct {
-      __u64 iova_start;
-      __u64 pl_pdir_dma;
+      __aligned_u64 iova_start;
+      __aligned_u64 pl_pdir_dma;
       __u32 page_shift;
       __u32 page_list_len;
       __u32 length;
       __u32 access_flags;
       __u32 rkey;
+      __u32 reserved;
     } fast_reg;
     struct {
       __u32 remote_qpn;
@@ -214,8 +217,8 @@ struct pvrdma_sq_wqe_hdr {
   } wr;
 };
 struct pvrdma_cqe {
-  __u64 wr_id;
-  __u64 qp;
+  __aligned_u64 wr_id;
+  __aligned_u64 qp;
   __u32 opcode;
   __u32 status;
   __u32 byte_len;

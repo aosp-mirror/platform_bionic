@@ -29,6 +29,7 @@
 #define SETALL 17
 #define SEM_STAT 18
 #define SEM_INFO 19
+#define SEM_STAT_ANY 20
 struct __kernel_legacy_semid_ds {
   struct __kernel_legacy_ipc_perm sem_perm;
   __kernel_time_t sem_otime;

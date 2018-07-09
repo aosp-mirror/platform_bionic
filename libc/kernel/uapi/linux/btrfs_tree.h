@@ -164,6 +164,8 @@ struct btrfs_free_space_header {
 #define BTRFS_SUPER_FLAG_ERROR (1ULL << 2)
 #define BTRFS_SUPER_FLAG_SEEDING (1ULL << 32)
 #define BTRFS_SUPER_FLAG_METADUMP (1ULL << 33)
+#define BTRFS_SUPER_FLAG_METADUMP_V2 (1ULL << 34)
+#define BTRFS_SUPER_FLAG_CHANGING_FSID (1ULL << 35)
 struct btrfs_extent_item {
   __le64 refs;
   __le64 generation;

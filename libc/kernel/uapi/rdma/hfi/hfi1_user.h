@@ -75,8 +75,8 @@ struct hfi1_sdma_comp_entry {
   __u32 errcode;
 };
 struct hfi1_status {
-  __u64 dev;
-  __u64 port;
+  __aligned_u64 dev;
+  __aligned_u64 port;
   char freezemsg[0];
 };
 enum sdma_req_opcode {
@@ -94,19 +94,19 @@ struct sdma_req_info {
   __u16 npkts;
   __u16 fragsize;
   __u16 comp_idx;
-} __packed;
+} __attribute__((__packed__));
 struct hfi1_kdeth_header {
   __le32 ver_tid_offset;
   __le16 jkey;
   __le16 hcrc;
   __le32 swdata[7];
-} __packed;
+} __attribute__((__packed__));
 struct hfi1_pkt_header {
   __le16 pbc[4];
   __be16 lrh[4];
   __be32 bth[3];
   struct hfi1_kdeth_header kdeth;
-} __packed;
+} __attribute__((__packed__));
 enum hfi1_ureg {
   ur_rcvhdrtail = 0,
   ur_rcvhdrhead = 1,

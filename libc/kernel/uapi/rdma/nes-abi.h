@@ -39,13 +39,13 @@ struct nes_alloc_pd_resp {
   __u32 mmap_db_index;
 };
 struct nes_create_cq_req {
-  __u64 user_cq_buffer;
+  __aligned_u64 user_cq_buffer;
   __u32 mcrqf;
   __u8 reserved[4];
 };
 struct nes_create_qp_req {
-  __u64 user_wqe_buffers;
-  __u64 user_qp_buffer;
+  __aligned_u64 user_wqe_buffers;
+  __aligned_u64 user_qp_buffer;
 };
 enum iwnes_memreg_type {
   IWNES_MEMREG_TYPE_MEM = 0x0000,
