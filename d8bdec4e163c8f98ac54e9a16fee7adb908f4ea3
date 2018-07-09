@@ -46,6 +46,30 @@
       "revId": "d8bdec4e163c8f98ac54e9a16fee7adb908f4ea3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccc27f0a_2cfb3842",
+        "filename": ".editorconfig",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-09T16:11:49Z",
+      "side": 1,
+      "message": "yeah, i don\u0027t think .editorconfig makes any sense in 2018. if we do anything, we should just go straight to .clang-format.",
+      "parentUuid": "c0f76603_01a13ab8",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "d8bdec4e163c8f98ac54e9a16fee7adb908f4ea3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
