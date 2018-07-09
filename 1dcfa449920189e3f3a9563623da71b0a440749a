@@ -22,6 +22,30 @@
       "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad6767e4_5af01696",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2018-07-09T18:56:55Z",
+      "side": 1,
+      "message": "No, if it isn\u0027t defined, the conditional will evaluate to false.",
+      "parentUuid": "89ddcc5c_22c57716",
+      "range": {
+        "startLine": 330,
+        "startChar": 27,
+        "endLine": 330,
+        "endChar": 49
+      },
+      "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
