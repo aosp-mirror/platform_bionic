@@ -46,6 +46,30 @@
       "revId": "6c0eab9c5bb1e84548e441a836d41729eb6bb2a1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac3a9a6b_0b3d97a4",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-07-09T23:17:54Z",
+      "side": 1,
+      "message": "I guess it doesn\u0027t hit line 41 because we\u0027re using clang everywhere? I stand corrected.",
+      "parentUuid": "46a1c821_423ebece",
+      "range": {
+        "startLine": 330,
+        "startChar": 24,
+        "endLine": 330,
+        "endChar": 75
+      },
+      "revId": "6c0eab9c5bb1e84548e441a836d41729eb6bb2a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
