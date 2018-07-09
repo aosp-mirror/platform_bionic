@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "89ddcc5c_22c57716",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-09T18:55:06Z",
+      "side": 1,
+      "message": "(shouldn\u0027t this be ` || (defined(__cplusplus) \u0026\u0026 __cplusplus \u003e\u003d 201103L)`?)",
+      "range": {
+        "startLine": 330,
+        "startChar": 27,
+        "endLine": 330,
+        "endChar": 49
+      },
+      "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
