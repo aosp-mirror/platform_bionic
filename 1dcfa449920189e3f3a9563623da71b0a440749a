@@ -46,6 +46,30 @@
       "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9be12cba_d670cac6",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-09T18:57:44Z",
+      "side": 1,
+      "message": "i thought clang started warning about that?",
+      "parentUuid": "ad6767e4_5af01696",
+      "range": {
+        "startLine": 330,
+        "startChar": 27,
+        "endLine": 330,
+        "endChar": 49
+      },
+      "revId": "1dcfa449920189e3f3a9563623da71b0a440749a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
