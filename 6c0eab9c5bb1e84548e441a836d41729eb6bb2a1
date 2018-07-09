@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4347eef4_db64a9ba",
+        "filename": "libc/include/stdatomic.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-07-09T20:25:56Z",
+      "side": 1,
+      "message": "Should we be testing for this at all, given that we only include uchar.h in the bionic case?\n\nWe probably shouldn\u0027t get here anyway in the C++11 case, but ...",
+      "range": {
+        "startLine": 330,
+        "startChar": 24,
+        "endLine": 330,
+        "endChar": 75
+      },
+      "revId": "6c0eab9c5bb1e84548e441a836d41729eb6bb2a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
