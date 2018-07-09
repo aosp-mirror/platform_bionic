@@ -250,5 +250,6 @@ typedef int __bitwise __kernel_rwf_t;
 #define RWF_DSYNC ((__force __kernel_rwf_t) 0x00000002)
 #define RWF_SYNC ((__force __kernel_rwf_t) 0x00000004)
 #define RWF_NOWAIT ((__force __kernel_rwf_t) 0x00000008)
-#define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT)
+#define RWF_APPEND ((__force __kernel_rwf_t) 0x00000010)
+#define RWF_SUPPORTED (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT | RWF_APPEND)
 #endif

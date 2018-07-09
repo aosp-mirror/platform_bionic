@@ -42,6 +42,10 @@ struct fib_rule_uid_range {
   __u32 start;
   __u32 end;
 };
+struct fib_rule_port_range {
+  __u16 start;
+  __u16 end;
+};
 enum {
   FRA_UNSPEC,
   FRA_DST,
@@ -65,6 +69,10 @@ enum {
   FRA_PAD,
   FRA_L3MDEV,
   FRA_UID_RANGE,
+  FRA_PROTOCOL,
+  FRA_IP_PROTO,
+  FRA_SPORT_RANGE,
+  FRA_DPORT_RANGE,
   __FRA_MAX
 };
 #define FRA_MAX (__FRA_MAX - 1)

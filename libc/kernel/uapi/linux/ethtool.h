@@ -71,10 +71,13 @@ struct ethtool_value {
   __u32 cmd;
   __u32 data;
 };
+#define PFC_STORM_PREVENTION_AUTO 0xffff
+#define PFC_STORM_PREVENTION_DISABLE 0
 enum tunable_id {
   ETHTOOL_ID_UNSPEC,
   ETHTOOL_RX_COPYBREAK,
   ETHTOOL_TX_COPYBREAK,
+  ETHTOOL_PFC_PREVENTION_TOUT,
   __ETHTOOL_TUNABLE_COUNT,
 };
 enum tunable_type_id {
@@ -332,6 +335,7 @@ struct ethtool_rxfh {
   __u32 rsvd32;
   __u32 rss_config[0];
 };
+#define ETH_RXFH_CONTEXT_ALLOC 0xffffffff
 #define ETH_RXFH_INDIR_NO_CHANGE 0xffffffff
 struct ethtool_rx_ntuple_flow_spec {
   __u32 flow_type;
@@ -699,6 +703,7 @@ enum ethtool_link_mode_bit_indices {
 #define ETHER_FLOW 0x12
 #define FLOW_EXT 0x80000000
 #define FLOW_MAC_EXT 0x40000000
+#define FLOW_RSS 0x20000000
 #define RXH_L2DA (1 << 1)
 #define RXH_VLAN (1 << 2)
 #define RXH_L3_PROTO (1 << 3)
@@ -729,6 +734,7 @@ enum ethtool_reset_flags {
   ETH_RESET_MAC = 1 << 5,
   ETH_RESET_PHY = 1 << 6,
   ETH_RESET_RAM = 1 << 7,
+  ETH_RESET_AP = 1 << 8,
   ETH_RESET_DEDICATED = 0x0000ffff,
   ETH_RESET_ALL = 0xffffffff,
 };

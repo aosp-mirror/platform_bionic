@@ -155,16 +155,4 @@ enum nubus_display_res_id {
   NUBUS_RESID_FIFTHMODE = 0x0084,
   NUBUS_RESID_SIXTHMODE = 0x0085
 };
-struct nubus_dir {
-  unsigned char * base;
-  unsigned char * ptr;
-  int done;
-  int mask;
-};
-struct nubus_dirent {
-  unsigned char * base;
-  unsigned char type;
-  __u32 data;
-  int mask;
-};
 #endif
