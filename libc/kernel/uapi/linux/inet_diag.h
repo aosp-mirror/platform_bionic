@@ -78,6 +78,8 @@ enum {
   INET_DIAG_BC_D_COND,
   INET_DIAG_BC_DEV_COND,
   INET_DIAG_BC_MARK_COND,
+  INET_DIAG_BC_S_EQ,
+  INET_DIAG_BC_D_EQ,
 };
 struct inet_diag_hostcond {
   __u8 family;

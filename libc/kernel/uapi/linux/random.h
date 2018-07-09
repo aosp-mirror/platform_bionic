@@ -27,6 +27,7 @@
 #define RNDADDENTROPY _IOW('R', 0x03, int[2])
 #define RNDZAPENTCNT _IO('R', 0x04)
 #define RNDCLEARPOOL _IO('R', 0x06)
+#define RNDRESEEDCRNG _IO('R', 0x07)
 struct rand_pool_info {
   int entropy_count;
   int buf_size;

@@ -24,6 +24,7 @@
 #define SETUP_PCI 3
 #define SETUP_EFI 4
 #define SETUP_APPLE_PROPERTIES 5
+#define SETUP_JAILHOUSE 6
 #define RAMDISK_IMAGE_START_MASK 0x07FF
 #define RAMDISK_PROMPT_FLAG 0x8000
 #define RAMDISK_LOAD_FLAG 0x4000
@@ -115,6 +116,18 @@ struct boot_e820_entry {
   __u64 addr;
   __u64 size;
   __u32 type;
+} __attribute__((packed));
+#define JAILHOUSE_SETUP_REQUIRED_VERSION 1
+struct jailhouse_setup_data {
+  __u16 version;
+  __u16 compatible_version;
+  __u16 pm_timer_address;
+  __u16 num_cpus;
+  __u64 pci_mmconfig_base;
+  __u32 tsc_khz;
+  __u32 apic_khz;
+  __u8 standard_ioapic;
+  __u8 cpu_ids[255];
 } __attribute__((packed));
 struct boot_params {
   struct screen_info screen_info;
