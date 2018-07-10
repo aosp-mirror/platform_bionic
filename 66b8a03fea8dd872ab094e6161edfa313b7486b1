@@ -22,6 +22,30 @@
       "revId": "66b8a03fea8dd872ab094e6161edfa313b7486b1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "324d797e_84603547",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-10T22:33:03Z",
+      "side": 1,
+      "message": "short version: https://google.github.io/styleguide/cppguide.html#Use_of_constexpr\n\nlong version: https://en.cppreference.com/w/cpp/language/constexpr",
+      "parentUuid": "8a5e90dc_30ff610a",
+      "range": {
+        "startLine": 76,
+        "startChar": 16,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "66b8a03fea8dd872ab094e6161edfa313b7486b1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
