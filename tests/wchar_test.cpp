@@ -305,6 +305,28 @@ TEST(wchar, mbrtowc) {
   ASSERT_EQ(EILSEQ, errno);
 }
 
+TEST(wchar, mbrtowc_valid_non_characters) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  wchar_t out[8] = {};
+
+  ASSERT_EQ(3U, mbrtowc(out, "\xef\xbf\xbe", 3, nullptr));
+  ASSERT_EQ(static_cast<wchar_t>(0xfffe), out[0]);
+  ASSERT_EQ(3U, mbrtowc(out, "\xef\xbf\xbf", 3, nullptr));
+  ASSERT_EQ(static_cast<wchar_t>(0xffff), out[0]);
+}
+
+TEST(wchar, mbrtowc_out_of_range) {
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  wchar_t out[8] = {};
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtowc(out, "\xf5\x80\x80\x80", 4, nullptr));
+  ASSERT_EQ(EILSEQ, errno);
+}
+
 static void test_mbrtowc_incomplete(mbstate_t* ps) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);

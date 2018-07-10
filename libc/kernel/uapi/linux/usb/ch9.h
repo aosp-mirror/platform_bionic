@@ -508,7 +508,7 @@ struct usb_ptm_cap_descriptor {
   __u8 bDevCapabilityType;
 } __attribute__((packed));
 #define USB_DT_USB_PTM_ID_SIZE 3
-#define USB_DT_USB_SSP_CAP_SIZE(ssac) (16 + ssac * 4)
+#define USB_DT_USB_SSP_CAP_SIZE(ssac) (12 + (ssac + 1) * 4)
 struct usb_wireless_ep_comp_descriptor {
   __u8 bLength;
   __u8 bDescriptorType;

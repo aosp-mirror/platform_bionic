@@ -21,7 +21,7 @@
 #include <linux/types.h>
 #define QEDR_ABI_VERSION (8)
 struct qedr_alloc_ucontext_resp {
-  __u64 db_pa;
+  __aligned_u64 db_pa;
   __u32 db_size;
   __u32 max_send_wr;
   __u32 max_recv_wr;
@@ -33,28 +33,31 @@ struct qedr_alloc_ucontext_resp {
   __u8 dpm_enabled;
   __u8 wids_enabled;
   __u16 wid_count;
+  __u32 reserved;
 };
 struct qedr_alloc_pd_ureq {
-  __u64 rsvd1;
+  __aligned_u64 rsvd1;
 };
 struct qedr_alloc_pd_uresp {
   __u32 pd_id;
+  __u32 reserved;
 };
 struct qedr_create_cq_ureq {
-  __u64 addr;
-  __u64 len;
+  __aligned_u64 addr;
+  __aligned_u64 len;
 };
 struct qedr_create_cq_uresp {
   __u32 db_offset;
   __u16 icid;
+  __u16 reserved;
 };
 struct qedr_create_qp_ureq {
   __u32 qp_handle_hi;
   __u32 qp_handle_lo;
-  __u64 sq_addr;
-  __u64 sq_len;
-  __u64 rq_addr;
-  __u64 rq_len;
+  __aligned_u64 sq_addr;
+  __aligned_u64 sq_len;
+  __aligned_u64 rq_addr;
+  __aligned_u64 rq_len;
 };
 struct qedr_create_qp_uresp {
   __u32 qp_id;
@@ -64,5 +67,6 @@ struct qedr_create_qp_uresp {
   __u32 rq_db_offset;
   __u16 rq_icid;
   __u32 rq_db2_offset;
+  __u32 reserved;
 };
 #endif

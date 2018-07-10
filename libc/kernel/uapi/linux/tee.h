@@ -27,6 +27,7 @@
 #define TEE_MAX_ARG_SIZE 1024
 #define TEE_GEN_CAP_GP (1 << 0)
 #define TEE_GEN_CAP_PRIVILEGED (1 << 1)
+#define TEE_GEN_CAP_REG_MEM (1 << 2)
 #define TEE_IMPL_ID_OPTEE 1
 #define TEE_OPTEE_CAP_TZ (1 << 0)
 struct tee_ioctl_version_data {
@@ -53,6 +54,8 @@ struct tee_ioctl_buf_data {
 #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT 6
 #define TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT 7
 #define TEE_IOCTL_PARAM_ATTR_TYPE_MASK 0xff
+#define TEE_IOCTL_PARAM_ATTR_META 0x100
+#define TEE_IOCTL_PARAM_ATTR_MASK (TEE_IOCTL_PARAM_ATTR_TYPE_MASK | TEE_IOCTL_PARAM_ATTR_META)
 #define TEE_IOCTL_LOGIN_PUBLIC 0
 #define TEE_IOCTL_LOGIN_USER 1
 #define TEE_IOCTL_LOGIN_GROUP 2
@@ -109,4 +112,11 @@ struct tee_iocl_supp_send_arg {
   struct tee_ioctl_param params[];
 };
 #define TEE_IOC_SUPPL_SEND _IOR(TEE_IOC_MAGIC, TEE_IOC_BASE + 7, struct tee_ioctl_buf_data)
+struct tee_ioctl_shm_register_data {
+  __u64 addr;
+  __u64 length;
+  __u32 flags;
+  __s32 id;
+};
+#define TEE_IOC_SHM_REGISTER _IOWR(TEE_IOC_MAGIC, TEE_IOC_BASE + 9, struct tee_ioctl_shm_register_data)
 #endif

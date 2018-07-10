@@ -322,6 +322,35 @@ TEST(uchar, c32rtomb) {
 #endif
 }
 
+TEST(uchar, mbrtoc32_valid_non_characters) {
+#if HAVE_UCHAR
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  char32_t out[8] = {};
+  ASSERT_EQ(3U, mbrtoc32(out, "\xef\xbf\xbe", 3, nullptr));
+  ASSERT_EQ(0xfffeU, out[0]);
+  ASSERT_EQ(3U, mbrtoc32(out, "\xef\xbf\xbf", 3, nullptr));
+  ASSERT_EQ(0xffffU, out[0]);
+#else
+  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
+#endif
+}
+
+TEST(uchar, mbrtoc32_out_of_range) {
+#if HAVE_UCHAR
+  ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
+  uselocale(LC_GLOBAL_LOCALE);
+
+  char32_t out[8] = {};
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf5\x80\x80\x80", 4, nullptr));
+  ASSERT_EQ(EILSEQ, errno);
+#else
+  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
+#endif
+}
+
 TEST(uchar, mbrtoc32) {
 #if HAVE_UCHAR
   char32_t out[8];

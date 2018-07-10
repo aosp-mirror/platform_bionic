@@ -640,9 +640,6 @@
 #if defined(__NR_olduname)
   #define SYS_olduname __NR_olduname
 #endif
-#if defined(__NR_oldwait4)
-  #define SYS_oldwait4 __NR_oldwait4
-#endif
 #if defined(__NR_open)
   #define SYS_open __NR_open
 #endif

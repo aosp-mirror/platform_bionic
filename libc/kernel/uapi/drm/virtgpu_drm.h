@@ -44,6 +44,7 @@ struct drm_virtgpu_execbuffer {
   __u32 pad;
 };
 #define VIRTGPU_PARAM_3D_FEATURES 1
+#define VIRTGPU_PARAM_CAPSET_QUERY_FIX 2
 struct drm_virtgpu_getparam {
   __u64 param;
   __u64 value;

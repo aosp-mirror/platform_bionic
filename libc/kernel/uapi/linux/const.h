@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_CONST_H
-#define _LINUX_CONST_H
+#ifndef _UAPI_LINUX_CONST_H
+#define _UAPI_LINUX_CONST_H
 #ifdef __ASSEMBLY__
 #define _AC(X,Y) X
 #define _AT(T,X) X
@@ -26,6 +26,8 @@
 #define _AC(X,Y) __AC(X, Y)
 #define _AT(T,X) ((T) (X))
 #endif
-#define _BITUL(x) (_AC(1, UL) << (x))
-#define _BITULL(x) (_AC(1, ULL) << (x))
+#define _UL(x) (_AC(x, UL))
+#define _ULL(x) (_AC(x, ULL))
+#define _BITUL(x) (_UL(1) << (x))
+#define _BITULL(x) (_ULL(1) << (x))
 #endif

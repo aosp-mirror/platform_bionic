@@ -106,10 +106,14 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_OP_ALLOC_CTX 1
 #define AMDGPU_CTX_OP_FREE_CTX 2
 #define AMDGPU_CTX_OP_QUERY_STATE 3
+#define AMDGPU_CTX_OP_QUERY_STATE2 4
 #define AMDGPU_CTX_NO_RESET 0
 #define AMDGPU_CTX_GUILTY_RESET 1
 #define AMDGPU_CTX_INNOCENT_RESET 2
 #define AMDGPU_CTX_UNKNOWN_RESET 3
+#define AMDGPU_CTX_QUERY2_FLAGS_RESET (1 << 0)
+#define AMDGPU_CTX_QUERY2_FLAGS_VRAMLOST (1 << 1)
+#define AMDGPU_CTX_QUERY2_FLAGS_GUILTY (1 << 2)
 #define AMDGPU_CTX_PRIORITY_UNSET - 2048
 #define AMDGPU_CTX_PRIORITY_VERY_LOW - 1023
 #define AMDGPU_CTX_PRIORITY_LOW - 512
@@ -392,6 +396,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_SDMA 0x0b
 #define AMDGPU_INFO_FW_SOS 0x0c
 #define AMDGPU_INFO_FW_ASD 0x0d
+#define AMDGPU_INFO_FW_VCN 0x0e
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -415,6 +420,8 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_SENSOR_GPU_AVG_POWER 0x5
 #define AMDGPU_INFO_SENSOR_VDDNB 0x6
 #define AMDGPU_INFO_SENSOR_VDDGFX 0x7
+#define AMDGPU_INFO_SENSOR_STABLE_PSTATE_GFX_SCLK 0x8
+#define AMDGPU_INFO_SENSOR_STABLE_PSTATE_GFX_MCLK 0x9
 #define AMDGPU_INFO_NUM_VRAM_CPU_PAGE_FAULTS 0x1E
 #define AMDGPU_INFO_VRAM_LOST_COUNTER 0x1F
 #define AMDGPU_INFO_MMR_SE_INDEX_SHIFT 0
@@ -494,6 +501,7 @@ struct drm_amdgpu_info_firmware {
 #define AMDGPU_VRAM_TYPE_GDDR5 5
 #define AMDGPU_VRAM_TYPE_HBM 6
 #define AMDGPU_VRAM_TYPE_DDR3 7
+#define AMDGPU_VRAM_TYPE_DDR4 8
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -540,6 +548,8 @@ struct drm_amdgpu_info_device {
   __u32 max_gs_waves_per_vgt;
   __u32 _pad1;
   __u32 cu_ao_bitmap[4][4];
+  __u64 high_va_offset;
+  __u64 high_va_max;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;

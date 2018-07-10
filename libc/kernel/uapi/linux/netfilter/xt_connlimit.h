@@ -35,6 +35,6 @@ struct xt_connlimit_info {
   };
   unsigned int limit;
   __u32 flags;
-  struct xt_connlimit_data * data __attribute__((aligned(8)));
+  struct nf_conncount_data * data __attribute__((aligned(8)));
 };
 #endif
