@@ -1,0 +1,199 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53a7838d_f691102d",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "explain why this isn\u0027t just getpid?",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 0
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54fd5f05_103bdc40",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "can we word this in a way that an app developer can understand?",
+      "range": {
+        "startLine": 132,
+        "startChar": 17,
+        "endLine": 132,
+        "endChar": 45
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aea50146_a432edb3",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "so everyone calling vfork needs to do this? isn\u0027t that going to cause problems?",
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "472a8d44_aecd050c",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "is there a better name that makes the taking-ownership part clearer?\n\n(that should probably be in the comment.)",
+      "range": {
+        "startLine": 83,
+        "startChar": 5,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a353100_3fc953bd",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "seems like this is only true of fork, not vfork or clone?",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 68
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2902c32_afcd71f2",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "define \"immediately\". are you really trying to say \"...only useful called with `true` in situations like the zygote where there\u0027s no intention of execing, and fdsan should continue as if there was no fork\".\n\n(and maybe explain _why_ it\u0027s disabled automatically after a clone.)",
+      "range": {
+        "startLine": 90,
+        "startChar": 37,
+        "endLine": 90,
+        "endChar": 48
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c3f3f7d_121d5471",
+        "filename": "libc/private/bionic_fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "why `at` rather than `operator[]`?",
+      "range": {
+        "startLine": 57,
+        "startChar": 11,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e65dcb67_62c47973",
+        "filename": "libc/private/bionic_fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "`fdsan: mmap...`",
+      "range": {
+        "startLine": 89,
+        "startChar": 25,
+        "endLine": 89,
+        "endChar": 26
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6d23ba8_7370061e",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T21:16:40Z",
+      "side": 1,
+      "message": "why? give an example?",
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
