@@ -31,16 +31,6 @@
 
 // Some simple glue used to make BSD code thread-safe.
 
-static pthread_mutex_t g_atexit_lock = PTHREAD_MUTEX_INITIALIZER;
-
-void _thread_atexit_lock() {
-  pthread_mutex_lock(&g_atexit_lock);
-}
-
-void _thread_atexit_unlock() {
-  pthread_mutex_unlock(&g_atexit_lock);
-}
-
 static pthread_mutex_t g_arc4_lock = PTHREAD_MUTEX_INITIALIZER;
 
 void _thread_arc4_lock() {
