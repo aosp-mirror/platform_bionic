@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <wchar.h>
@@ -888,7 +889,7 @@ TEST(STDIO_TEST, fprintf_failures_7229520) {
   ASSERT_EQ(-1, fclose(fp));
 }
 
-TEST(STDIO_TEST, popen) {
+TEST(STDIO_TEST, popen_r) {
   FILE* fp = popen("cat /proc/version", "r");
   ASSERT_TRUE(fp != NULL);
 
@@ -898,6 +899,63 @@ TEST(STDIO_TEST, popen) {
   ASSERT_STREQ("Linux version", s);
 
   ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_socketpair) {
+  FILE* fp = popen("cat", "r+");
+  ASSERT_TRUE(fp != NULL);
+
+  fputs("hello\nworld\n", fp);
+  fflush(fp);
+
+  char buf[16];
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("hello\n", buf);
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("world\n", buf);
+
+  ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_socketpair_shutdown) {
+  FILE* fp = popen("uniq -c", "r+");
+  ASSERT_TRUE(fp != NULL);
+
+  fputs("a\na\na\na\nb\n", fp);
+  fflush(fp);
+  ASSERT_EQ(0, shutdown(fileno(fp), SHUT_WR));
+
+  char buf[16];
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("      4 a\n", buf);
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("      1 b\n", buf);
+
+  ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_return_value_0) {
+  FILE* fp = popen("true", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(0, WEXITSTATUS(status));
+}
+
+TEST(STDIO_TEST, popen_return_value_1) {
+  FILE* fp = popen("false", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(1, WEXITSTATUS(status));
+}
+
+TEST(STDIO_TEST, popen_return_value_signal) {
+  FILE* fp = popen("kill -7 $$", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFSIGNALED(status));
+  EXPECT_EQ(7, WTERMSIG(status));
 }
 
 TEST(STDIO_TEST, getc) {
