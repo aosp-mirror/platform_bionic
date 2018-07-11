@@ -73,27 +73,21 @@ char** get_envp() {
   return g_envp;
 }
 
-namespace testing {
-namespace internal {
+static constexpr const char* COLOR_RESET  = "\033[m";
+static constexpr const char* COLOR_RED    = "\033[0;31m";
+static constexpr const char* COLOR_GREEN  = "\033[0;32m";
+static constexpr const char* COLOR_YELLOW = "\033[0;33m";
 
-// Reuse of testing::internal::ColoredPrintf in gtest.
-enum GTestColor {
-  COLOR_DEFAULT,
-  COLOR_RED,
-  COLOR_GREEN,
-  COLOR_YELLOW
-};
+static void ColoredPrintf(const char* const color, const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
 
-void ColoredPrintf(GTestColor color, const char* fmt, ...);
+    printf("%s", color);
+    vprintf(fmt, args);
+    printf("%s", COLOR_RESET);
 
-}  // namespace internal
-}  // namespace testing
-
-using testing::internal::GTestColor;
-using testing::internal::COLOR_RED;
-using testing::internal::COLOR_GREEN;
-using testing::internal::COLOR_YELLOW;
-using testing::internal::ColoredPrintf;
+    va_end(args);
+}
 
 constexpr int DEFAULT_GLOBAL_TEST_RUN_DEADLINE_MS = 90000;
 constexpr int DEFAULT_GLOBAL_TEST_RUN_SLOW_THRESHOLD_MS = 2000;
