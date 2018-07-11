@@ -29,17 +29,22 @@
  *
  */
 
-#include <sys/types.h>
-#include <sys/mman.h>
+#include "atexit.h"
+
+#include <pthread.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "atexit.h"
-#include "private/thread_private.h"
+#include <sys/mman.h>
+#include <sys/types.h>
 
 /* BEGIN android-changed */
 #include "private/bionic_prctl.h"
 /* END android-changed */
+
+static pthread_mutex_t g_atexit_lock = PTHREAD_MUTEX_INITIALIZER;
+#define _ATEXIT_LOCK() pthread_mutex_lock(&g_atexit_lock)
+#define _ATEXIT_UNLOCK() pthread_mutex_unlock(&g_atexit_lock)
 
 struct atexit {
 	struct atexit *next;		/* next in list */
@@ -79,15 +84,14 @@ extern void __unregister_atfork(void* dso);
 int
 __cxa_atexit(void (*func)(void *), void *arg, void *dso)
 {
-	struct atexit *p = __atexit;
 	struct atexit_fn *fnp;
 	size_t pgsize = getpagesize();
 	int ret = -1;
 
-	if (pgsize < sizeof(*p))
+	if (pgsize < sizeof(struct atexit))
 		return (-1);
 	_ATEXIT_LOCK();
-	p = __atexit;
+	struct atexit *p = __atexit;
 	if (p != NULL) {
 		if (p->ind + 1 >= p->max)
 			p = NULL;
@@ -185,8 +189,7 @@ restart:
 	}
 	_ATEXIT_UNLOCK();
 
-  extern void __libc_stdio_cleanup(void);
-  __libc_stdio_cleanup();
+  fflush(NULL);
 
   /* BEGIN android-changed: call __unregister_atfork if dso is not null */
   if (dso != NULL) {

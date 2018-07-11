@@ -137,6 +137,9 @@ struct __sfileext {
   // Equivalent to `_seek` but for _FILE_OFFSET_BITS=64.
   // Callers should use this but fall back to `__sFILE::_seek`.
   off64_t (*_seek64)(void*, off64_t, int);
+
+  // The pid of the child if this FILE* is from popen(3).
+  pid_t _popen_pid;
 };
 
 // Values for `__sFILE::_flags`.
@@ -201,7 +204,6 @@ __LIBC32_LEGACY_PUBLIC__ int __sclose(void*);
 __LIBC32_LEGACY_PUBLIC__ int _fwalk(int (*)(FILE*));
 
 off64_t __sseek64(void*, off64_t, int);
-int __sflush_locked(FILE*);
 int __swhatbuf(FILE*, size_t*, int*);
 wint_t __fgetwc_unlock(FILE*);
 wint_t __ungetwc(wint_t, FILE*);
