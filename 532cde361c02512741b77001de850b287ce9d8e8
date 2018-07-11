@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1a455a74_a5580fb2",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T19:15:31Z",
+      "side": 1,
+      "message": "rewritten for clarity.",
+      "parentUuid": "7ad86ae6_2a9ead3c",
+      "range": {
+        "startLine": 77,
+        "startChar": 93,
+        "endLine": 77,
+        "endChar": 94
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "374438a5_73174c40",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "9ae1183e_b4380c25",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T19:15:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "374438a5_73174c40",
+      "range": {
+        "startLine": 188,
+        "startChar": 32,
+        "endLine": 188,
+        "endChar": 36
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcc8c4f7_fefbc95e",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -83,6 +131,30 @@
       "writtenOn": "2018-07-11T00:33:37Z",
       "side": 1,
       "message": "Does this work if you created the fds using sockpair?",
+      "range": {
+        "startLine": 1208,
+        "startChar": 22,
+        "endLine": 1208,
+        "endChar": 53
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f81ec6b4_7473c0bb",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-11T19:15:31Z",
+      "side": 1,
+      "message": "the man page has no special restrictions on what kind of fd, and it seems to work in practice.",
+      "parentUuid": "dcc8c4f7_fefbc95e",
       "range": {
         "startLine": 1208,
         "startChar": 22,
