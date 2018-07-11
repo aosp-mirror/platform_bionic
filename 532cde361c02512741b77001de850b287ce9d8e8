@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c623de4_f8eb8854",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-07-11T00:33:37Z",
+      "side": 1,
+      "message": "Should this be -1 instead since 0 is technically a valid fd.",
+      "range": {
+        "startLine": 77,
+        "startChar": 93,
+        "endLine": 77,
+        "endChar": 94
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "374438a5_73174c40",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-07-11T00:33:37Z",
+      "side": 1,
+      "message": "nullptr since other parts of the code are using nullptr.",
+      "range": {
+        "startLine": 188,
+        "startChar": 32,
+        "endLine": 188,
+        "endChar": 36
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcc8c4f7_fefbc95e",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1208,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-07-11T00:33:37Z",
+      "side": 1,
+      "message": "Does this work if you created the fds using sockpair?",
+      "range": {
+        "startLine": 1208,
+        "startChar": 22,
+        "endLine": 1208,
+        "endChar": 53
+      },
+      "revId": "532cde361c02512741b77001de850b287ce9d8e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
