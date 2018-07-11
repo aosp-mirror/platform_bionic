@@ -41,7 +41,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
@@ -64,33 +66,42 @@
     va_end(ap); \
     return result;
 
-#define std(flags, file) \
-    {0,0,0,flags,file,{0,0},0,__sF+file,__sclose,__sread,nullptr,__swrite, \
-    {(unsigned char *)(__sFext+file), 0},nullptr,0,{0},{0},{0,0},0,0}
-
-_THREAD_PRIVATE_MUTEX(__sfp_mutex);
-
-#define SBUF_INIT {}
-#define WCHAR_IO_DATA_INIT {}
+#define MAKE_STD_STREAM(flags, fd)                                          \
+  {                                                                         \
+    ._flags = flags, ._file = fd, ._cookie = __sF + fd, ._close = __sclose, \
+    ._read = __sread, ._write = __swrite, ._ext = {                         \
+      ._base = reinterpret_cast<uint8_t*>(__sFext + fd)                     \
+    }                                                                       \
+  }
 
 static struct __sfileext __sFext[3] = {
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
-  { SBUF_INIT, WCHAR_IO_DATA_INIT, PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP, false, __sseek64 },
+    {._lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,
+     ._caller_handles_locking = false,
+     ._seek64 = __sseek64,
+     ._popen_pid = 0},
+    {._lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,
+     ._caller_handles_locking = false,
+     ._seek64 = __sseek64,
+     ._popen_pid = 0},
+    {._lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP,
+     ._caller_handles_locking = false,
+     ._seek64 = __sseek64,
+     ._popen_pid = 0},
 };
 
 // __sF is exported for backwards compatibility. Until M, we didn't have symbols
 // for stdin/stdout/stderr; they were macros accessing __sF.
 FILE __sF[3] = {
-  std(__SRD, STDIN_FILENO),
-  std(__SWR, STDOUT_FILENO),
-  std(__SWR|__SNBF, STDERR_FILENO),
+    MAKE_STD_STREAM(__SRD, STDIN_FILENO),
+    MAKE_STD_STREAM(__SWR, STDOUT_FILENO),
+    MAKE_STD_STREAM(__SWR|__SNBF, STDERR_FILENO),
 };
 
 FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
 
+static pthread_mutex_t __stdio_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 struct glue __sglue = { nullptr, 3, __sF };
 static struct glue* lastglue = &__sglue;
 
@@ -108,8 +119,6 @@ class ScopedFileLock {
 };
 
 static glue* moreglue(int n) {
-  static FILE empty;
-
   char* data = new char[sizeof(glue) + ALIGNBYTES + n * sizeof(FILE) + n * sizeof(__sfileext)];
   if (data == nullptr) return nullptr;
 
@@ -120,7 +129,7 @@ static glue* moreglue(int n) {
   g->niobs = n;
   g->iobs = p;
   while (--n >= 0) {
-    *p = empty;
+    *p = {};
     _FILEEXT_SETUP(p, pext);
     p++;
     pext++;
@@ -143,7 +152,7 @@ FILE* __sfp(void) {
 	int n;
 	struct glue *g;
 
-	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
+	pthread_mutex_lock(&__stdio_mutex);
 	for (g = &__sglue; g != nullptr; g = g->next) {
 		for (fp = g->iobs, n = g->niobs; --n >= 0; fp++)
 			if (fp->_flags == 0)
@@ -151,15 +160,15 @@ FILE* __sfp(void) {
 	}
 
 	/* release lock while mallocing */
-	_THREAD_PRIVATE_MUTEX_UNLOCK(__sfp_mutex);
+	pthread_mutex_unlock(&__stdio_mutex);
 	if ((g = moreglue(NDYNAMIC)) == nullptr) return nullptr;
-	_THREAD_PRIVATE_MUTEX_LOCK(__sfp_mutex);
+	pthread_mutex_lock(&__stdio_mutex);
 	lastglue->next = g;
 	lastglue = g;
 	fp = g->iobs;
 found:
 	fp->_flags = 1;		/* reserve this slot; caller sets real flags */
-	_THREAD_PRIVATE_MUTEX_UNLOCK(__sfp_mutex);
+	pthread_mutex_unlock(&__stdio_mutex);
 	fp->_p = nullptr;		/* no current pointer */
 	fp->_w = 0;		/* nothing to read or write */
 	fp->_r = 0;
@@ -183,9 +192,20 @@ found:
 	return fp;
 }
 
-extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
-  // Equivalent to fflush(nullptr), but without all the locking since we're shutting down anyway.
-  _fwalk(__sflush);
+int _fwalk(int (*callback)(FILE*)) {
+  pthread_mutex_lock(&__stdio_mutex);
+  int result = 0;
+  for (glue* g = &__sglue; g != nullptr; g = g->next) {
+    FILE* fp = g->iobs;
+    for (int n = g->niobs; --n >= 0; ++fp) {
+      ScopedFileLock sfl(fp);
+      if (fp->_flags != 0 && (fp->_flags & __SIGN) == 0) {
+        result |= (*callback)(fp);
+      }
+    }
+  }
+  pthread_mutex_unlock(&__stdio_mutex);
+  return result;
 }
 
 static FILE* __fopen(int fd, int flags) {
@@ -383,6 +403,16 @@ int fclose(FILE* fp) {
   if (HASUB(fp)) FREEUB(fp);
   free_fgetln_buffer(fp);
 
+  // If we were created by popen(3), wait for the child.
+  pid_t pid = _EXT(fp)->_popen_pid;
+  if (pid > 0) {
+    int status;
+    if (TEMP_FAILURE_RETRY(wait4(pid, &status, 0, nullptr)) != -1) {
+      r = status;
+    }
+  }
+  _EXT(fp)->_popen_pid = 0;
+
   // Poison this FILE so accesses after fclose will be obvious.
   fp->_file = -1;
   fp->_r = fp->_w = 0;
@@ -391,6 +421,7 @@ int fclose(FILE* fp) {
   fp->_flags = 0;
   return r;
 }
+__strong_alias(pclose, fclose);
 
 int fileno_unlocked(FILE* fp) {
   CHECK_FP(fp);
@@ -463,11 +494,6 @@ int __sflush(FILE* fp) {
     n -= written, p += written;
   }
   return 0;
-}
-
-int __sflush_locked(FILE* fp) {
-  ScopedFileLock sfl(fp);
-  return __sflush(fp);
 }
 
 int __sread(void* cookie, char* buf, int n) {
@@ -707,18 +733,16 @@ int fgetc_unlocked(FILE* fp) {
   return getc_unlocked(fp);
 }
 
-/*
- * Read at most n-1 characters from the given file.
- * Stop when a newline has been read, or the count runs out.
- * Return first argument, or NULL if no characters were read.
- * Do not return NULL if n == 1.
- */
 char* fgets(char* buf, int n, FILE* fp) {
   CHECK_FP(fp);
   ScopedFileLock sfl(fp);
   return fgets_unlocked(buf, n, fp);
 }
 
+// Reads at most n-1 characters from the given file.
+// Stops when a newline has been read, or the count runs out.
+// Returns first argument, or nullptr if no characters were read.
+// Does not return nullptr if n == 1.
 char* fgets_unlocked(char* buf, int n, FILE* fp) {
   if (n <= 0) {
     errno = EINVAL;
@@ -1013,7 +1037,7 @@ int wscanf(const wchar_t* fmt, ...) {
 }
 
 static int fflush_all() {
-  return _fwalk(__sflush_locked);
+  return _fwalk(__sflush);
 }
 
 int fflush(FILE* fp) {
@@ -1120,6 +1144,80 @@ size_t fwrite_unlocked(const void* buf, size_t size, size_t count, FILE* fp) {
   // The usual case is success (__sfvwrite returns 0); skip the divide if this happens,
   // since divides are generally slow.
   return (__sfvwrite(fp, &uio) == 0) ? count : ((n - uio.uio_resid) / size);
+}
+
+static int __close_if_popened(FILE* fp) {
+  if (_EXT(fp)->_popen_pid > 0) close(fileno(fp));
+  return 0;
+}
+
+static FILE* __popen_fail(int fds[2]) {
+  ErrnoRestorer errno_restorer;
+  close(fds[0]);
+  close(fds[1]);
+  return nullptr;
+}
+
+FILE* popen(const char* cmd, const char* mode) {
+  bool close_on_exec = (strchr(mode, 'e') != nullptr);
+
+  // Was the request for a socketpair or just a pipe?
+  int fds[2];
+  bool bidirectional = false;
+  if (strchr(mode, '+') != nullptr) {
+    if (socketpair(AF_LOCAL, SOCK_CLOEXEC | SOCK_STREAM, 0, fds) == -1) return nullptr;
+    bidirectional = true;
+    mode = "r+";
+  } else {
+    if (pipe2(fds, O_CLOEXEC) == -1) return nullptr;
+    mode = strrchr(mode, 'r') ? "r" : "w";
+  }
+
+  // If the parent wants to read, the child's fd needs to be stdout.
+  int parent, child, desired_child_fd;
+  if (*mode == 'r') {
+    parent = 0;
+    child = 1;
+    desired_child_fd = STDOUT_FILENO;
+  } else {
+    parent = 1;
+    child = 0;
+    desired_child_fd = STDIN_FILENO;
+  }
+
+  // Ensure that the child fd isn't the desired child fd.
+  if (fds[child] == desired_child_fd) {
+    int new_fd = fcntl(fds[child], F_DUPFD_CLOEXEC, 0);
+    if (new_fd == -1) return __popen_fail(fds);
+    close(fds[child]);
+    fds[child] = new_fd;
+  }
+
+  pid_t pid = vfork();
+  if (pid == -1) return __popen_fail(fds);
+
+  if (pid == 0) {
+    close(fds[parent]);
+    // POSIX says "The popen() function shall ensure that any streams from previous popen() calls
+    // that remain open in the parent process are closed in the new child process."
+    _fwalk(__close_if_popened);
+    // dup2 so that the child fd isn't closed on exec.
+    if (dup2(fds[child], desired_child_fd) == -1) _exit(127);
+    close(fds[child]);
+    if (bidirectional) dup2(STDOUT_FILENO, STDIN_FILENO);
+    execl(_PATH_BSHELL, "sh", "-c", cmd, nullptr);
+    _exit(127);
+  }
+
+  FILE* fp = fdopen(fds[parent], mode);
+  if (fp == nullptr) return __popen_fail(fds);
+
+  // The caller didn't ask for their pipe to be O_CLOEXEC, so flip it back now the child has forked.
+  if (!close_on_exec) fcntl(fds[parent], F_SETFD, 0);
+  close(fds[child]);
+
+  _EXT(fp)->_popen_pid = pid;
+  return fp;
 }
 
 namespace {

@@ -333,7 +333,6 @@ cc_library_static {
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
         "upstream-netbsd/lib/libc/gen/nice.c",
-        "upstream-netbsd/lib/libc/gen/popen.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
         "upstream-netbsd/lib/libc/gen/utime.c",
         "upstream-netbsd/lib/libc/gen/utmp.c",
@@ -450,7 +449,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
-        "upstream-openbsd/lib/libc/stdio/fwalk.c",
         "upstream-openbsd/lib/libc/stdio/fwide.c",
         "upstream-openbsd/lib/libc/stdio/getdelim.c",
         "upstream-openbsd/lib/libc/stdio/gets.c",
