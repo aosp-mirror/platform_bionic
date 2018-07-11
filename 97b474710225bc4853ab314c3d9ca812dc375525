@@ -22,6 +22,30 @@
       "revId": "97b474710225bc4853ab314c3d9ca812dc375525",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b039a5f3_000c9ea4",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-07-11T23:50:06Z",
+      "side": 1,
+      "message": "It\u0027s not really possible since it would be mixing the fake liblog with a real implementation of liblog.\n\nThere might be a way to do it, but since these really are system tests and not unit tests any more, I decided to do it this way.",
+      "parentUuid": "2f126bf9_c7cddfe8",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 7
+      },
+      "revId": "97b474710225bc4853ab314c3d9ca812dc375525",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
