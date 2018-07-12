@@ -29,9 +29,25 @@
 extern void __cxa_finalize(void *);
 extern void *__dso_handle;
 
-__attribute__((visibility("hidden"),destructor))
-void __on_dlclose() {
+__attribute__((destructor))
+static void __on_dlclose(void) {
   __cxa_finalize(&__dso_handle);
+}
+
+/* Define a weak stub function here that will be overridden if the solib uses
+ * emutls. The function needs to be a definition, not just a declaration,
+ * because gold has a bug where it outputs weak+hidden symbols into the .dynsym
+ * table. */
+__attribute__((weak,visibility("hidden")))
+void __emutls_unregister_key(void) {
+}
+
+/* Use a priority of 0 to run after any ordinary destructor function. The
+ * priority setting moves the function towards the front of the .fini_array
+ * section. */
+__attribute__((destructor(0)))
+static void __on_dlclose_late(void) {
+  __emutls_unregister_key();
 }
 
 /* CRT_LEGACY_WORKAROUND should only be defined when building
