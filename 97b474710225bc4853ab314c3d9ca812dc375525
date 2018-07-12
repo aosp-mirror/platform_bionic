@@ -46,6 +46,30 @@
       "revId": "97b474710225bc4853ab314c3d9ca812dc375525",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "314a3344_0d7b5ed7",
+        "filename": "libc/malloc_debug/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-12T22:57:08Z",
+      "side": 1,
+      "message": "you should probably complain to tomcherry@ that that should be pluggable.\n\nthere\u0027s great comfort from knowing everyone\u0027s running your tests all the time...",
+      "parentUuid": "b039a5f3_000c9ea4",
+      "range": {
+        "startLine": 149,
+        "startChar": 0,
+        "endLine": 149,
+        "endChar": 7
+      },
+      "revId": "97b474710225bc4853ab314c3d9ca812dc375525",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
