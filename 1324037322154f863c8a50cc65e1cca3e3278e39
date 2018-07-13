@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ad36f8c2_c29d7317",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "moved implementation into getpid.cpp, and added a comment in the use below.",
+      "parentUuid": "53a7838d_f691102d",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 0
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54fd5f05_103bdc40",
         "filename": "libc/bionic/fdsan.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-11T21:16:40Z",
       "side": 1,
       "message": "can we word this in a way that an app developer can understand?",
+      "range": {
+        "startLine": 132,
+        "startChar": 17,
+        "endLine": 132,
+        "endChar": 45
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a03bbccb_e199c4d4",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "this might be a bit better?",
+      "parentUuid": "54fd5f05_103bdc40",
       "range": {
         "startLine": 132,
         "startChar": 17,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "c954af44_3a003b22",
+        "filename": "libc/bionic/spawn.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "This is unnecessary, but a marginal performance improvement. (the cached_pid vs syscall(__NR_getpid) check is enough, but adds a syscall per bad close.).\n\n(This is also incorrect, though, since if we vfork, we don\u0027t reset the value back to true. Deleted this instead.)",
+      "parentUuid": "aea50146_a432edb3",
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "472a8d44_aecd050c",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 9
@@ -76,6 +142,30 @@
       "writtenOn": "2018-07-11T21:16:40Z",
       "side": 1,
       "message": "is there a better name that makes the taking-ownership part clearer?\n\n(that should probably be in the comment.)",
+      "range": {
+        "startLine": 83,
+        "startChar": 5,
+        "endLine": 83,
+        "endChar": 37
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78f73050_8cb04d84",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "I was trying to separate the ownership semantics from actual implementation, since this could be useful outside that specific context. e.g. to track down one of the adb double closes, I tagged a bunch of the singleton fds with reinterpret_cast\u003cvoid*\u003e(1), 2, 3, etc. Do you think renaming close_tag to owner_tag is sufficient to get the point across?",
+      "parentUuid": "472a8d44_aecd050c",
       "range": {
         "startLine": 83,
         "startChar": 5,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "e7be9dc4_755cf36d",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a353100_3fc953bd",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 68
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2902c32_afcd71f2",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 9
@@ -122,6 +236,30 @@
       "writtenOn": "2018-07-11T21:16:40Z",
       "side": 1,
       "message": "define \"immediately\". are you really trying to say \"...only useful called with `true` in situations like the zygote where there\u0027s no intention of execing, and fdsan should continue as if there was no fork\".\n\n(and maybe explain _why_ it\u0027s disabled automatically after a clone.)",
+      "range": {
+        "startLine": 90,
+        "startChar": 37,
+        "endLine": 90,
+        "endChar": 48
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2932a79f_861b9031",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "reworded it a bit",
+      "parentUuid": "c2902c32_afcd71f2",
       "range": {
         "startLine": 90,
         "startChar": 37,
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "d2453c65_75823765",
+        "filename": "libc/private/bionic_fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "It can return nullptr (at isn\u0027t really the right name for this either, but it seemed better than making operator[] not return a reference)",
+      "parentUuid": "7c3f3f7d_121d5471",
+      "range": {
+        "startLine": 57,
+        "startChar": 11,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e65dcb67_62c47973",
         "filename": "libc/private/bionic_fdsan.h",
         "patchSetId": 9
@@ -180,6 +342,30 @@
     },
     {
       "key": {
+        "uuid": "5b1abd53_eb9a65ca",
+        "filename": "libc/private/bionic_fdsan.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e65dcb67_62c47973",
+      "range": {
+        "startLine": 89,
+        "startChar": 25,
+        "endLine": 89,
+        "endChar": 26
+      },
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6d23ba8_7370061e",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 9
@@ -191,6 +377,24 @@
       "writtenOn": "2018-07-11T21:16:40Z",
       "side": 1,
       "message": "why? give an example?",
+      "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ee9f5a0_408493b0",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-13T07:33:07Z",
+      "side": 1,
+      "message": "the example I had in mind was close(STDIN_FILENO); open(\"whatever\"), but on reflection, that\u0027s actually pretty dangerous, and maybe I shouldn\u0027t be excluding the standard streams...",
+      "parentUuid": "e6d23ba8_7370061e",
       "revId": "1324037322154f863c8a50cc65e1cca3e3278e39",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
