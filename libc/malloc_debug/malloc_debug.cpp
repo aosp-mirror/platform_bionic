@@ -254,6 +254,9 @@ void debug_finalize() {
     return;
   }
 
+  // Turn off capturing allocations calls.
+  DebugDisableSet(true);
+
   if (g_debug->config().options() & FREE_TRACK) {
     PointerData::VerifyAllFreed();
   }
@@ -263,14 +266,10 @@ void debug_finalize() {
   }
 
   if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
-    ScopedDisableDebugCalls disable;
     debug_dump_heap(android::base::StringPrintf("%s.%d.exit.txt",
                                                 g_debug->config().backtrace_dump_prefix().c_str(),
-                                                getpid())
-                        .c_str());
+                                                getpid()).c_str());
   }
-
-  DebugDisableSet(true);
 
   backtrace_shutdown();
 
