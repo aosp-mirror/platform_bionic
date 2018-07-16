@@ -22,6 +22,30 @@
       "revId": "0f63dc82e50408073cac0e03575de92eadfa8e5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7229ec25_355b75b6",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-07-16T22:48:28Z",
+      "side": 1,
+      "message": "Done. Wish it will keep being a string in the future. :)",
+      "parentUuid": "b33d39f1_9d1c4521",
+      "range": {
+        "startLine": 87,
+        "startChar": 62,
+        "endLine": 87,
+        "endChar": 70
+      },
+      "revId": "0f63dc82e50408073cac0e03575de92eadfa8e5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
