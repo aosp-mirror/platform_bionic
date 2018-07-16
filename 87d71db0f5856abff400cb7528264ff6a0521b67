@@ -140,6 +140,30 @@
       "revId": "87d71db0f5856abff400cb7528264ff6a0521b67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4710fc9d_4406d3fe",
+        "filename": "tests/gtest_main.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-16T20:41:07Z",
+      "side": 1,
+      "message": "it does for me. what terminal emulator are you running outside that?",
+      "parentUuid": "8897110e_953ee9fc",
+      "range": {
+        "startLine": 90,
+        "startChar": 34,
+        "endLine": 101,
+        "endChar": 32
+      },
+      "revId": "87d71db0f5856abff400cb7528264ff6a0521b67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
