@@ -1,4 +1,6 @@
-/*
+/*-
+ * SPDX-License-Identifier: BSD-4-Clause
+ *
  * Copyright (c) 1988, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -31,7 +33,7 @@
  * SUCH DAMAGE.
  *
  *	@(#)mathimpl.h	8.1 (Berkeley) 6/4/93
- * $FreeBSD$
+ * $FreeBSD: head/lib/msun/bsdsrc/mathimpl.h 325966 2017-11-18 14:26:50Z pfg $
  */
 
 #ifndef _MATHIMPL_H_
