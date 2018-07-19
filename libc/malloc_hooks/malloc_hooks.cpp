@@ -69,6 +69,7 @@ int hooks_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void hooks_malloc_disable();
 void hooks_malloc_enable();
+bool hooks_write_malloc_leak_info(FILE*);
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* hooks_pvalloc(size_t bytes);
@@ -214,6 +215,10 @@ void hooks_malloc_enable() {
 
 ssize_t hooks_malloc_backtrace(void*, uintptr_t*, size_t) {
   return 0;
+}
+
+bool hooks_write_malloc_leak_info(FILE*) {
+  return true;
 }
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
