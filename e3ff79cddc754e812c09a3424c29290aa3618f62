@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c5a45294_6b0f9f50",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f9566aee_3ade3a03",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d05aebd0_2bafaff2",
         "filename": "libc/bionic/fdsan.cpp",
         "patchSetId": 15
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "6092a482_660b09d4",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d05aebd0_2bafaff2",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c59ff6cf_c1df71d3",
         "filename": "libc/include/android/fdsan.h",
         "patchSetId": 15
@@ -47,6 +83,30 @@
       "writtenOn": "2018-07-19T15:23:14Z",
       "side": 1,
       "message": "are these more readable with underscores? (and with _JAVA_?)",
+      "range": {
+        "startLine": 91,
+        "startChar": 27,
+        "endLine": 91,
+        "endChar": 42
+      },
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f29a843_f547891a",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "not IMO. These are already obnoxiously long, ANDROID_FDSAN_OWNER_TYPE_JAVA_PARCEL_FILE_DESCRIPTOR seems even worse.",
+      "parentUuid": "c59ff6cf_c1df71d3",
       "range": {
         "startLine": 91,
         "startChar": 27,
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "390b6814_04353e35",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "\u003e seems like a bad name then?\n\nYeah, I\u0027m not sure what to call it\n\n\u003e and native pointers _may_ have the top bits set, right?\n\nOops, yes. Fixed.\n\n\u003e do we actually use this name for anything? better to just have this in the `enum` doc comment?\n\nIt\u0027s used in the switch to figure out how to print the tag.",
+      "parentUuid": "09d7d901_3cae54f7",
+      "range": {
+        "startLine": 109,
+        "startChar": 27,
+        "endLine": 109,
+        "endChar": 39
+      },
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c1185c8_cc0a053f",
         "filename": "libc/private/bionic_globals.h",
         "patchSetId": 15
@@ -93,6 +177,24 @@
       "writtenOn": "2018-07-19T15:23:14Z",
       "side": 1,
       "message": "why is this needed in the header?",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4634b283_05116009",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "IIRC I originally needed it for PAGE_SIZE? Removed.",
+      "parentUuid": "8c1185c8_cc0a053f",
       "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -113,6 +215,24 @@
       "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20e514db_a111ae48",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-07-19T20:53:04Z",
+      "side": 1,
+      "message": "The problem is that the standard streams don\u0027t really own their respective file descriptors, and people expect to be able to do stuff like `close(0); open(\"foo\")` if you\u0027re single threaded.\n\nExpanded the comment.",
+      "parentUuid": "e42d87c8_85f04633",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
