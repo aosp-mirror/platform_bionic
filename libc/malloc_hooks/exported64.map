@@ -18,6 +18,7 @@ LIBC_MALLOC_HOOKS {
     hooks_memalign;
     hooks_posix_memalign;
     hooks_realloc;
+    hooks_write_malloc_leak_info;
 
   local:
     *;
