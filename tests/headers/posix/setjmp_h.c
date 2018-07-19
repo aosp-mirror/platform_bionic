@@ -30,6 +30,12 @@
 
 #include "header_checks.h"
 
+// POSIX says it's undefined whether `setjmp` is a macro or a function,
+// but C11 says it's a macro, and the C standard always wins.
+#if !defined(setjmp)
+#error setjmp
+#endif
+
 static void setjmp_h() {
   TYPE(jmp_buf);
   TYPE(sigjmp_buf);
