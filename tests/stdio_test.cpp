@@ -192,12 +192,6 @@ TEST(STDIO_TEST, getdelim_invalid) {
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
-
-  // The underlying fd can't be closed.
-  ASSERT_EQ(0, close(fileno(fp)));
-  errno = 0;
-  ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
-  ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
 
@@ -268,12 +262,6 @@ TEST(STDIO_TEST, getline_invalid) {
   errno = 0;
   ASSERT_EQ(getline(&buffer, NULL, fp), -1);
   ASSERT_EQ(EINVAL, errno);
-
-  // The underlying fd can't be closed.
-  ASSERT_EQ(0, close(fileno(fp)));
-  errno = 0;
-  ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
-  ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
 
@@ -869,14 +857,16 @@ TEST(STDIO_TEST, fprintf) {
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
   FILE* fp;
+  int fd_rdonly = open("/dev/null", O_RDONLY);
+  ASSERT_NE(-1, fd_rdonly);
 
   // Unbuffered case where the fprintf(3) itself fails.
   ASSERT_NE(nullptr, fp = tmpfile());
   setbuf(fp, NULL);
   ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_NE(-1, dup2(fd_rdonly, fileno(fp)));
   ASSERT_EQ(-1, fprintf(fp, "fail"));
-  ASSERT_EQ(-1, fclose(fp));
+  ASSERT_EQ(0, fclose(fp));
 
   // Buffered case where we won't notice until the fclose(3).
   // It's likely this is what was actually seen in http://b/7229520,
@@ -884,7 +874,7 @@ TEST(STDIO_TEST, fprintf_failures_7229520) {
   // disappointment. Remember to check fclose(3)'s return value, kids!
   ASSERT_NE(nullptr, fp = tmpfile());
   ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_NE(-1, dup2(fd_rdonly, fileno(fp)));
   ASSERT_EQ(4, fprintf(fp, "fail"));
   ASSERT_EQ(-1, fclose(fp));
 }
@@ -1916,7 +1906,6 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
   AssertCloseOnExec(fileno(fp), true);
 
   fclose(fp);
-  close(fd);
 }
 
 TEST(STDIO_TEST, freopen_CLOEXEC) {

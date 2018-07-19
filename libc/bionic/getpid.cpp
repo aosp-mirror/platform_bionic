@@ -32,15 +32,21 @@
 
 extern "C" pid_t __getpid();
 
-pid_t getpid() {
+pid_t __get_cached_pid() {
   pthread_internal_t* self = __get_thread();
-
   if (__predict_true(self)) {
-    // Do we have a valid cached pid?
     pid_t cached_pid;
     if (__predict_true(self->get_cached_pid(&cached_pid))) {
       return cached_pid;
     }
+  }
+  return 0;
+}
+
+pid_t getpid() {
+  pid_t cached_pid = __get_cached_pid();
+  if (__predict_true(cached_pid != 0)) {
+    return cached_pid;
   }
 
   // We're still in the dynamic linker or we're in the middle of forking, so ask the kernel.

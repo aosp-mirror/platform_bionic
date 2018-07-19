@@ -78,6 +78,8 @@ __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 // protector.
 __attribute__((noinline))
 static void __libc_preinit_impl(KernelArgumentBlock& args) {
+  __libc_shared_globals = args.shared_globals;
+
   __libc_init_globals(args);
   __libc_init_common(args);
 
