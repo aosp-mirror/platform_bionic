@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9566aee_3ade3a03",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "(if we keep this, we might want to share the fancier logic from malloc debug. but this is fine for now.)",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d05aebd0_2bafaff2",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "log?",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c59ff6cf_c1df71d3",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "are these more readable with underscores? (and with _JAVA_?)",
+      "range": {
+        "startLine": 91,
+        "startChar": 27,
+        "endLine": 91,
+        "endChar": 42
+      },
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09d7d901_3cae54f7",
+        "filename": "libc/include/android/fdsan.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "seems like a bad name then? and native pointers _may_ have the top bits set, right?\n\ndo we actually use this name for anything? better to just have this in the `enum` doc comment?",
+      "range": {
+        "startLine": 109,
+        "startChar": 27,
+        "endLine": 109,
+        "endChar": 39
+      },
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c1185c8_cc0a053f",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "why is this needed in the header?",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e42d87c8_85f04633",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-19T15:23:14Z",
+      "side": 1,
+      "message": "example? is this just folks using freopen?",
+      "revId": "e3ff79cddc754e812c09a3424c29290aa3618f62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
