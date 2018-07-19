@@ -1341,6 +1341,12 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    __res_randomid;
+    timespec_get;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     android_getaddrinfofornet;
