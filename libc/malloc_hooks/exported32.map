@@ -20,6 +20,7 @@ LIBC_MALLOC_HOOKS {
     hooks_pvalloc;
     hooks_realloc;
     hooks_valloc;
+    hooks_write_malloc_leak_info;
 
   local:
     *;
