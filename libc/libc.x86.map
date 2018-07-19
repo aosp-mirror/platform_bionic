@@ -1405,6 +1405,11 @@ LIBC_P { # introduced=P
 LIBC_Q { # introduced=Q
   global:
     __res_randomid;
+    android_fdsan_close_with_tag;
+    android_fdsan_create_owner_tag;
+    android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
+    android_fdsan_set_error_level;
     timespec_get;
 } LIBC_P;
 
