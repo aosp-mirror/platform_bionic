@@ -71,6 +71,8 @@ void _longjmp(jmp_buf __env, int __value);
 int setjmp(jmp_buf __env);
 void longjmp(jmp_buf __env, int __value);
 
+#define setjmp(__env) setjmp(__env)
+
 int sigsetjmp(sigjmp_buf __env, int __save_signal_mask)
     __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(12);
 void siglongjmp(sigjmp_buf __env, int __value)
