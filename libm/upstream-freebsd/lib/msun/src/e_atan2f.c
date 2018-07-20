@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_atan2f.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include "math.h"
 #include "math_private.h"
@@ -41,7 +41,7 @@ __ieee754_atan2f(float y, float x)
 	iy = hy&0x7fffffff;
 	if((ix>0x7f800000)||
 	   (iy>0x7f800000))	/* x or y is NaN */
-	   return x+y;
+	    return nan_mix(x, y);
 	if(hx==0x3f800000) return atanf(y);   /* x=1.0 */
 	m = ((hy>>31)&1)|((hx>>30)&2);	/* 2*sign(x)+sign(y) */
 

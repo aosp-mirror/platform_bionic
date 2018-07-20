@@ -1,6 +1,8 @@
 /* from: FreeBSD: head/lib/msun/ld128/s_expl.c 251345 2013-06-03 20:09:22Z kargl */
 
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2009-2013 Steven G. Kargl
  * All rights reserved.
  *
@@ -29,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/k_expl.h 275819 2014-12-16 09:21:56Z ed $");
+__FBSDID("$FreeBSD: head/lib/msun/ld128/k_expl.h 326219 2017-11-26 02:00:33Z pfg $");
 
 /*
  * ld128 version of k_expl.h.  See ../ld80/s_expl.c for most comments.
