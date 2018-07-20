@@ -40,7 +40,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/catrigl.c 323003 2017-08-29 22:32:29Z rlibby $");
+__FBSDID("$FreeBSD: head/lib/msun/src/catrigl.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <complex.h>
 #include <float.h>
@@ -182,7 +182,7 @@ casinhl(long double complex z)
 			return (CMPLXL(y, x + x));
 		if (y == 0)
 			return (CMPLXL(x + x, y));
-		return (CMPLXL(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLXL(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON) {
@@ -241,7 +241,7 @@ cacosl(long double complex z)
 			return (CMPLXL(x + x, -y));
 		if (x == 0)
 			return (CMPLXL(pio2_hi + pio2_lo, y + y));
-		return (CMPLXL(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLXL(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON) {
@@ -380,7 +380,7 @@ catanhl(long double complex z)
 		if (isinf(y))
 			return (CMPLXL(copysignl(0, x),
 			    copysignl(pio2_hi + pio2_lo, y)));
-		return (CMPLXL(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLXL(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON)

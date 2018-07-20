@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_ctanhf.c 326219 2017-11-26 02:00:33Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_ctanhf.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <complex.h>
 #include <math.h>
@@ -53,8 +53,8 @@ ctanhf(float complex z)
 
 	if (ix >= 0x7f800000) {
 		if (ix & 0x7fffff)
-			return (CMPLXF((x + 0) * (y + 0),
-			    y == 0 ? y : (x + 0) * (y + 0)));
+			return (CMPLXF(nan_mix(x, y),
+			    y == 0 ? y : nan_mix(x, y)));
 		SET_FLOAT_WORD(x, hx - 0x40000000);
 		return (CMPLXF(x,
 		    copysignf(0, isinf(y) ? y : sinf(y) * cosf(y))));
