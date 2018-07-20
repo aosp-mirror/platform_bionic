@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_remquol.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <float.h>
 #include <stdint.h>
@@ -86,7 +86,7 @@ remquol(long double x, long double y, int *quo)
 	   (ux.bits.exp == BIAS + LDBL_MAX_EXP) ||	 /* or x not finite */
 	   (uy.bits.exp == BIAS + LDBL_MAX_EXP &&
 	    ((uy.bits.manh&~LDBL_NBIT)|uy.bits.manl)!=0)) /* or y is NaN */
-	    return (x*y)/(x*y);
+	    return nan_mix(x, y)/nan_mix(x, y);
 	if(ux.bits.exp<=uy.bits.exp) {
 	    if((ux.bits.exp<uy.bits.exp) ||
 	       (ux.bits.manh<=uy.bits.manh &&
