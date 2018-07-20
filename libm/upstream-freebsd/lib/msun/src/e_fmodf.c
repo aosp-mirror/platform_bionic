@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_fmodf.c 336362 2018-07-17 07:42:14Z bde $");
 
 /*
  * __ieee754_fmodf(x,y)
@@ -41,7 +41,7 @@ __ieee754_fmodf(float x, float y)
     /* purge off exception values */
 	if(hy==0||(hx>=0x7f800000)||		/* y=0,or x not finite */
 	   (hy>0x7f800000))			/* or y is NaN */
-	    return (x*y)/(x*y);
+	    return nan_mix(x, y)/nan_mix(x, y);
 	if(hx<hy) return x;			/* |x|<|y| return x */
 	if(hx==hy)
 	    return Zero[(u_int32_t)sx>>31];	/* |x|=|y| return x*0*/
