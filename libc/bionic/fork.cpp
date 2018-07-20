@@ -28,6 +28,8 @@
 
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
@@ -48,6 +50,11 @@ int fork() {
     // Update the cached pid, since clone() will not set it directly (as
     // self->tid is updated by the kernel).
     self->set_cached_pid(gettid());
+
+    // Disable fdsan post-fork, so we don't falsely trigger on processes that
+    // fork, close all of their fds blindly, and then exec.
+    android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+
     __bionic_atfork_run_child();
   } else {
     __bionic_atfork_run_parent();

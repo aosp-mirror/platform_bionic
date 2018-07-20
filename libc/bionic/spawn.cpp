@@ -35,6 +35,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#include <android/fdsan.h>
+
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
 
