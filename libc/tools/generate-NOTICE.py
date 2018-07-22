@@ -96,8 +96,6 @@ def extract_copyright_at(lines, i):
         line = re.sub("^ \* ", "", line)
         line = line.replace("** ", "")
         line = line.replace("# ", "")
-        if "SPDX-License-Identifier:" in line:
-            continue
         if line.startswith("++Copyright++"):
             continue
         line = line.replace("--Copyright--", "")
