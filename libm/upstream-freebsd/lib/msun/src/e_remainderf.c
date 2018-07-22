@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_remainderf.c 336362 2018-07-17 07:42:14Z bde $");
+__FBSDID("$FreeBSD$");
 
 #include "math.h"
 #include "math_private.h"
@@ -36,10 +36,10 @@ __ieee754_remainderf(float x, float p)
 	hx &= 0x7fffffff;
 
     /* purge off exception values */
-	if((hp==0)||			 	/* p = 0 */
-	  (hx>=0x7f800000)||			/* x not finite */
+	if(hp==0) return (x*p)/(x*p);	 	/* p = 0 */
+	if((hx>=0x7f800000)||			/* x not finite */
 	  ((hp>0x7f800000)))			/* p is NaN */
-	    return nan_mix(x, p)/nan_mix(x, p);
+	    return ((long double)x*p)/((long double)x*p);
 
 
 	if (hp<=0x7effffff) x = __ieee754_fmodf(x,p+p);	/* now x < 2p */
