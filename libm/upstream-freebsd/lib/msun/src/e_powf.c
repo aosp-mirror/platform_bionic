@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_powf.c 336362 2018-07-17 07:42:14Z bde $");
+__FBSDID("$FreeBSD$");
 
 #include "math.h"
 #include "math_private.h"
@@ -24,9 +24,6 @@ bp[] = {1.0, 1.5,},
 dp_h[] = { 0.0, 5.84960938e-01,}, /* 0x3f15c000 */
 dp_l[] = { 0.0, 1.56322085e-06,}, /* 0x35d1cfdc */
 zero    =  0.0,
-half    =  0.5,
-qrtr    =  0.25,
-thrd    =  3.33333343e-01, /* 0x3eaaaaab */
 one	=  1.0,
 two	=  2.0,
 two24	=  16777216.0,	/* 0x4b800000 */
@@ -76,7 +73,7 @@ __ieee754_powf(float x, float y)
     /* y!=zero: result is NaN if either arg is NaN */
 	if(ix > 0x7f800000 ||
 	   iy > 0x7f800000)
-	    return nan_mix(x, y);
+		return (x+0.0F)+(y+0.0F);
 
     /* determine if y is an odd int when x < 0
      * yisint = 0	... y is not an integer
@@ -141,7 +138,7 @@ __ieee754_powf(float x, float y)
 	/* now |1-x| is tiny <= 2**-20, suffice to compute
 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 	    t = ax-1;		/* t has 20 trailing zeros */
-	    w = (t*t)*(half-t*(thrd-t*qrtr));
+	    w = (t*t)*((float)0.5-t*((float)0.333333333333-t*(float)0.25));
 	    u = ivln2_h*t;	/* ivln2_h has 16 sig. bits */
 	    v = t*ivln2_l-w*ivln2;
 	    t1 = u+v;
@@ -180,10 +177,10 @@ __ieee754_powf(float x, float y)
 	    r = s2*s2*(L1+s2*(L2+s2*(L3+s2*(L4+s2*(L5+s2*L6)))));
 	    r += s_l*(s_h+s);
 	    s2  = s_h*s_h;
-	    t_h = 3+s2+r;
+	    t_h = (float)3.0+s2+r;
 	    GET_FLOAT_WORD(is,t_h);
 	    SET_FLOAT_WORD(t_h,is&0xfffff000);
-	    t_l = r-((t_h-3)-s2);
+	    t_l = r-((t_h-(float)3.0)-s2);
 	/* u+v = s*(1+...) */
 	    u = s_h*t_h;
 	    v = s_l*t_h+t_l*s;
@@ -195,7 +192,7 @@ __ieee754_powf(float x, float y)
 	    z_h = cp_h*p_h;		/* cp_h+cp_l = 2/(3*log2) */
 	    z_l = cp_l*p_h+p_l*cp+dp_l[k];
 	/* log2(ax) = (s+..)*2/(3*log2) = n + dp_h + z_h + z_l */
-	    t = n;
+	    t = (float)n;
 	    t1 = (((z_h+z_l)+dp_h[k])+t);
 	    GET_FLOAT_WORD(is,t1);
 	    SET_FLOAT_WORD(t1,is&0xfffff000);
