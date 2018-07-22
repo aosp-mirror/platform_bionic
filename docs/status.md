@@ -37,6 +37,10 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
+New libc functions in Q:
+  * `timespec_get` (C11 `<time.h>` addition)
+  * `res_randomid` (in `<resolv.h>`)
+
 New libc functions in P:
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
   * `endhostent`/`endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
