@@ -317,12 +317,64 @@ TEST(COMPLEX_TEST, ctanl) {
 
 TEST(COMPLEX_TEST, ctanh) {
   ASSERT_EQ(0.0, ctanh(0));
+
+  double complex z;
+
+  // If z is NaN+0i, the result is NaN+0i.
+  z = ctanh(nan("") + 0i);
+  ASSERT_TRUE(isnan(creal(z)));
+  ASSERT_EQ(0.0, cimag(z));
+
+  // If z is NaN+yi, the result is NaN+NaNi.
+  z = ctanh(nan("") + 2.0i);
+  ASSERT_TRUE(isnan(creal(z)));
+  ASSERT_TRUE(isnan(cimag(z)));
+
+  // If z is NaN+NaNi, the result is NaN+NaNi.
+  z = ctanh(nan("") + nan("") * I);
+  ASSERT_TRUE(isnan(creal(z)));
+  ASSERT_TRUE(isnan(cimag(z)));
 }
 
 TEST(COMPLEX_TEST, ctanhf) {
-  ASSERT_EQ(0.0, ctanhf(0));
+  ASSERT_EQ(0.0f, ctanhf(0.0f));
+
+  float complex z;
+
+  // If z is NaN+0i, the result is NaN+0i.
+  z = ctanhf(nanf("") + 0.0fi);
+  ASSERT_TRUE(isnan(crealf(z)));
+  ASSERT_EQ(0.0f, cimagf(z));
+
+  // If z is NaN+yi, the result is NaN+NaNi.
+  z = ctanhf(nanf("") + 2.0fi);
+  ASSERT_TRUE(isnan(crealf(z)));
+  ASSERT_TRUE(isnan(cimagf(z)));
+
+  // If z is NaN+NaNi, the result is NaN+NaNi.
+  z = ctanhf(nanf("") + nanf("") * I);
+  ASSERT_TRUE(isnan(crealf(z)));
+  ASSERT_TRUE(isnan(cimagf(z)));
 }
 
 TEST(COMPLEX_TEST, ctanhl) {
-  ASSERT_EQ(0.0, ctanhl(0));
+  ASSERT_EQ(0.0L, ctanhl(0.0L));
+
+  long double complex z;
+
+  // If z is NaN+0i, the result is NaN+0i.
+  z = ctanhl(nanl("") + 0.0Li);
+  ASSERT_TRUE(isnan(creall(z)));
+  // TODO: this case is currently broken in the netbsd ctanhl.
+  // ASSERT_EQ(0.0L, cimagl(z));
+
+  // If z is NaN+yi, the result is NaN+NaNi.
+  z = ctanhl(nanl("") + 2.0Li);
+  ASSERT_TRUE(isnan(creall(z)));
+  ASSERT_TRUE(isnan(cimagl(z)));
+
+  // If z is NaN+NaNi, the result is NaN+NaNi.
+  z = ctanhl(nanl("") + nanl("") * I);
+  ASSERT_TRUE(isnan(creall(z)));
+  ASSERT_TRUE(isnan(cimagl(z)));
 }
