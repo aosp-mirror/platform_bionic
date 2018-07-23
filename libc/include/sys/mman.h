@@ -56,14 +56,7 @@ __BEGIN_DECLS
  * preserve the old behavior for GCC and emit a useful diagnostic.
  */
 #if defined(__USE_FILE_OFFSET64)
-void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset)
-#  if !defined(__clang__) && __ANDROID_API__ < __ANDROID_API_L__
-      __attribute__((error("mmap is not available with _FILE_OFFSET_BITS=64 when using GCC until "
-                           "android-21. Either raise your minSdkVersion, disable "
-                           "_FILE_OFFSET_BITS=64, or switch to Clang.")));
-#  else
-    __RENAME(mmap64);
-#  endif
+void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset) __RENAME(mmap64);
 #else
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif

@@ -23,8 +23,8 @@
 
 __BEGIN_DECLS
 
-// Remove the workaround once b/37423073 is fixed.
-#if defined(__clang__) && !__has_attribute(alloc_size)
+// Remove this workaround once b/37423073 is fixed.
+#if !__has_attribute(alloc_size)
 #define __BIONIC_ALLOC_SIZE(...)
 #else
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
