@@ -49,6 +49,7 @@ int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
+#if defined(__clang__)
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 /*
  * Simple case: `format` can't have format specifiers, so we can just compare
@@ -140,4 +141,114 @@ char* fgets(char* const __pass_object_size dest, int size, FILE* stream)
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
+#else /* defined(__clang__) */
+
+size_t __fread_real(void*, size_t, size_t, FILE*) __RENAME(fread);
+__errordecl(__fread_too_big_error, "fread called with size * count bigger than buffer");
+__errordecl(__fread_overflow, "fread called with overflowing size * count");
+
+char* __fgets_real(char*, int, FILE*) __RENAME(fgets);
+__errordecl(__fgets_too_big_error, "fgets called with size bigger than buffer");
+__errordecl(__fgets_too_small_error, "fgets called with size less than zero");
+
+size_t __fwrite_real(const void*, size_t, size_t, FILE*) __RENAME(fwrite);
+__errordecl(__fwrite_too_big_error, "fwrite called with size * count bigger than buffer");
+__errordecl(__fwrite_overflow, "fwrite called with overflowing size * count");
+
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+__BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
+int snprintf(char* dest, size_t size, const char* format, ...) {
+    return __builtin___snprintf_chk(dest, size, 0, __bos(dest), format, __builtin_va_arg_pack());
+}
+
+__BIONIC_FORTIFY_VARIADIC __printflike(2, 3)
+int sprintf(char* dest, const char* format, ...) {
+    return __builtin___sprintf_chk(dest, 0, __bos(dest), format, __builtin_va_arg_pack());
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+
+#if __ANDROID_API__ >= __ANDROID_API_N__
+__BIONIC_FORTIFY_INLINE
+size_t fread(void* buf, size_t size, size_t count, FILE* stream) {
+    size_t bos = __bos0(buf);
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __fread_real(buf, size, count, stream);
+    }
+
+    if (__builtin_constant_p(size) && __builtin_constant_p(count)) {
+        size_t total;
+        if (__size_mul_overflow(size, count, &total)) {
+            __fread_overflow();
+        }
+
+        if (total > bos) {
+            __fread_too_big_error();
+        }
+
+        return __fread_real(buf, size, count, stream);
+    }
+
+    return __fread_chk(buf, size, count, stream, bos);
+}
+
+__BIONIC_FORTIFY_INLINE
+size_t fwrite(const void* buf, size_t size, size_t count, FILE* stream) {
+    size_t bos = __bos0(buf);
+
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __fwrite_real(buf, size, count, stream);
+    }
+
+    if (__builtin_constant_p(size) && __builtin_constant_p(count)) {
+        size_t total;
+        if (__size_mul_overflow(size, count, &total)) {
+            __fwrite_overflow();
+        }
+
+        if (total > bos) {
+            __fwrite_too_big_error();
+        }
+
+        return __fwrite_real(buf, size, count, stream);
+    }
+
+    return __fwrite_chk(buf, size, count, stream, bos);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+__BIONIC_FORTIFY_INLINE
+char *fgets(char* dest, int size, FILE* stream) {
+    size_t bos = __bos(dest);
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always negative. Force a compiler error.
+    if (__builtin_constant_p(size) && (size < 0)) {
+        __fgets_too_small_error();
+    }
+
+    // Compiler doesn't know destination size. Don't call __fgets_chk
+    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+        return __fgets_real(dest, size, stream);
+    }
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always <= the actual object size. Don't call __fgets_chk
+    if (__builtin_constant_p(size) && (size <= (int) bos)) {
+        return __fgets_real(dest, size, stream);
+    }
+
+    // Compiler can prove, at compile time, that the passed in size
+    // is always > the actual object size. Force a compiler error.
+    if (__builtin_constant_p(size) && (size > (int) bos)) {
+        __fgets_too_big_error();
+    }
+
+    return __fgets_chk(dest, size, stream, bos);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+
+#endif /* defined(__clang__) */
 #endif /* defined(__BIONIC_FORTIFY) */
