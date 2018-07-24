@@ -58,8 +58,8 @@ __BEGIN_DECLS
 #define PROP_ERROR_SET_FAILED 0x0024
 
 /*
-** Map the property area from the specified filename.  This
-** method is for testing only.
+** This was previously for testing, but now that SystemProperties is its own testable class,
+** there is never a reason to call this function and its implementation simply returns -1.
 */
 int __system_property_set_filename(const char* __filename);
 
