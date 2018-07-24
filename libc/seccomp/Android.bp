@@ -1,5 +1,6 @@
 cc_library {
     name: "libseccomp_policy",
+    recovery_available: true,
     srcs: [
         "seccomp_policy.cpp",
         "arm_app_policy.cpp",
