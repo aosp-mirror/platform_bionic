@@ -44,15 +44,9 @@ _Static_assert(__generic(_Complex_I, float _Complex, 1, 0),
 #define	I		_Complex_I
 
 #if __STDC_VERSION__ >= 201112L
-#ifdef __clang__
 #define	CMPLX(x, y)	((double complex){ x, y })
 #define	CMPLXF(x, y)	((float complex){ x, y })
 #define	CMPLXL(x, y)	((long double complex){ x, y })
-#else
-#define	CMPLX(x, y)	__builtin_complex((double)(x), (double)(y))
-#define	CMPLXF(x, y)	__builtin_complex((float)(x), (float)(y))
-#define	CMPLXL(x, y)	__builtin_complex((long double)(x), (long double)(y))
-#endif
 #endif
 
 __BEGIN_DECLS
