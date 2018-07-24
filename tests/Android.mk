@@ -68,25 +68,6 @@ LOCAL_ADDITIONAL_DEPENDENCIES := \
     $(LOCAL_PATH)/file-check-cxx \
     | $(HOST_OUT_EXECUTABLES)/FileCheck$(HOST_EXECUTABLE_SUFFIX) \
 
-LOCAL_CXX = $(LOCAL_PATH)/file-check-cxx \
-    $(HOST_OUT_EXECUTABLES)/FileCheck \
-    $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_CXX) \
-    GCC \
-
-LOCAL_CLANG := false
-LOCAL_MODULE := bionic-compile-time-tests-g++
-LOCAL_CPPFLAGS := -Wall -Werror
-# Disable color diagnostics so the warnings output matches the source
-LOCAL_CPPFLAGS += -fdiagnostics-color=never
-LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
-include $(BUILD_STATIC_LIBRARY)
-
-include $(CLEAR_VARS)
-LOCAL_ADDITIONAL_DEPENDENCIES := \
-    $(LOCAL_PATH)/Android.mk \
-    $(LOCAL_PATH)/file-check-cxx \
-    | $(HOST_OUT_EXECUTABLES)/FileCheck$(HOST_EXECUTABLE_SUFFIX) \
-
 LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
     $(HOST_OUT_EXECUTABLES)/FileCheck \
     $(LLVM_PREBUILTS_PATH)/clang++ \
