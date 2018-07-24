@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_ccoshf.c 326219 2017-11-26 02:00:33Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_ccoshf.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <complex.h>
 #include <math.h>
@@ -92,7 +92,8 @@ ccoshf(float complex z)
 		return (CMPLXF(INFINITY * cosf(y), x * sinf(y)));
 	}
 
-	return (CMPLXF((x * x) * (y - y), (x + x) * (y - y)));
+	return (CMPLXF(((long double)x * x) * (y - y),
+	    ((long double)x + x) * (y - y)));
 }
 
 float complex
