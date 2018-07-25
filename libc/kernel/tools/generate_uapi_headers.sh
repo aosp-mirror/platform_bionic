@@ -24,9 +24,9 @@
 ###  Options:
 ###   --skip-generation
 ###     Skip the step that generates all of the include files.
-###   --download-kernel
+###   --download-kernel <VERSION>
 ###     Automatically create a temporary git repository and check out the
-###     Android kernel source code.
+###     linux kernel source code for the given version.
 ###   --use-kernel-dir <DIR>
 ###     Do not check out the kernel source, use the kernel directory
 ###     pointed to by <DIR>.
@@ -39,7 +39,8 @@ set -eE
 
 TMPDIR=""
 ANDROID_DIR=""
-KERNEL_VERSION="android-3.10"
+KERNEL_VERSION=""
+KERNEL_REPO="git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git"
 KERNEL_DIR=""
 KERNEL_DOWNLOAD=0
 ARCH_LIST=("arm" "arm64" "mips" "x86")
@@ -142,6 +143,12 @@ while [ $# -gt 0 ]; do
       SKIP_GENERATION=1
       ;;
     "--download-kernel")
+      if [[ $# -lt 2 ]]; then
+        echo "--download-kernel requires an argument."
+        exit 1
+      fi
+      shift
+      KERNEL_VERSION="$1"
       KERNEL_DOWNLOAD=1
       ;;
     "--use-kernel-dir")
@@ -191,27 +198,15 @@ elif [[ ! -d "${ANDROID_KERNEL_DIR}" ]]; then
   exit 1
 fi
 
-if [[ -d "${KERNEL_DIR}/linux-stable" ]]; then
-  src_dir="linux-stable"
-else
-  src_dir="common"
-fi
-
-if [[ ${VERIFY_HEADERS_ONLY} -eq 1 ]]; then
-  # Verify if modified headers have changed.
-  verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
-                       "${ANDROID_KERNEL_DIR}/scsi" \
-                       "${KERNEL_DIR}/${src_dir}"
-  exit 0
-fi
+src_dir="linux-stable"
 
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
   cd "${TMPDIR}"
-  echo "Fetching android kernel source ${KERNEL_VERSION}"
-  git clone https://android.googlesource.com/kernel/common.git
-  cd "${src_dir}"
-  git checkout "${KERNEL_VERSION}"
+  echo "Fetching linux kernel source ${KERNEL_VERSION}"
+  git clone ${KERNEL_REPO}
+  cd ${src_dir}
+  git checkout tags/"${KERNEL_VERSION}"
   KERNEL_DIR="${TMPDIR}"
 elif [[ "${KERNEL_DIR}" == "" ]]; then
   echo "Must specify one of --use-kernel-dir or --download-kernel."
@@ -221,6 +216,14 @@ elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/${src_dir}" ]]; then
   exit 1
 else
   cd "${KERNEL_DIR}/${src_dir}"
+fi
+
+if [[ ${VERIFY_HEADERS_ONLY} -eq 1 ]]; then
+  # Verify if modified headers have changed.
+  verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+                       "${ANDROID_KERNEL_DIR}/scsi" \
+                       "${KERNEL_DIR}/${src_dir}"
+  exit 0
 fi
 
 if [[ ${SKIP_GENERATION} -eq 0 ]]; then
@@ -249,7 +252,7 @@ copy_hdrs "${KERNEL_DIR}/${src_dir}/drivers/staging/android/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi/linux" "no-copy-dirs"
 
 # Remove ion.h, it's not fully supported by the upstream kernel (see b/77976082).
-rm "${ANDROID_KERNEL_DIR}/uapi/linux/ion.h"
+rm -f "${ANDROID_KERNEL_DIR}/uapi/linux/ion.h"
 
 # Copy the generated headers.
 copy_hdrs "${KERNEL_DIR}/${src_dir}/include/generated/uapi" \
@@ -279,3 +282,4 @@ cp "${KERNEL_DIR}/${src_dir}/include/uapi/asm-generic/types.h" \
 verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
                      "${ANDROID_KERNEL_DIR}/scsi" \
                      "${KERNEL_DIR}/${src_dir}"
+echo "Headers updated."

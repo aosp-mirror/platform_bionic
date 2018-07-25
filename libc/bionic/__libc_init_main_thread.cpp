@@ -42,10 +42,6 @@ extern "C" int __set_tid_address(int* tid_address);
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
 
-void __libc_init_global_stack_chk_guard(KernelArgumentBlock& args) {
-  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
-}
-
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
 // globals from this function will apply to linker-private copies and will not
@@ -81,8 +77,7 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   // We don't want to free the main thread's stack even when the main thread exits
   // because things like environment variables with global scope live on it.
-  // We also can't free the pthread_internal_t itself, since that lives on the main
-  // thread's stack rather than on the heap.
+  // We also can't free the pthread_internal_t itself, since it is a static variable.
   // The main thread has no mmap allocated space for stack or pthread_internal_t.
   main_thread.mmap_size = 0;
 
@@ -97,14 +92,10 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
-  __libc_init_global_stack_chk_guard(args);
+  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
   __init_thread_stack_guard(&main_thread);
 
   __init_thread(&main_thread);
-
-  // Store a pointer to the kernel argument block in a TLS slot to be
-  // picked up by the libc constructor.
-  main_thread.tls[TLS_SLOT_BIONIC_PREINIT] = &args;
 
   __init_alternate_signal_stack(&main_thread);
 }

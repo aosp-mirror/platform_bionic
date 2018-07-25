@@ -29,6 +29,32 @@ enum i915_mocs_table_index {
   I915_MOCS_PTE,
   I915_MOCS_CACHED,
 };
+enum drm_i915_gem_engine_class {
+  I915_ENGINE_CLASS_RENDER = 0,
+  I915_ENGINE_CLASS_COPY = 1,
+  I915_ENGINE_CLASS_VIDEO = 2,
+  I915_ENGINE_CLASS_VIDEO_ENHANCE = 3,
+  I915_ENGINE_CLASS_INVALID = - 1
+};
+enum drm_i915_pmu_engine_sample {
+  I915_SAMPLE_BUSY = 0,
+  I915_SAMPLE_WAIT = 1,
+  I915_SAMPLE_SEMA = 2
+};
+#define I915_PMU_SAMPLE_BITS (4)
+#define I915_PMU_SAMPLE_MASK (0xf)
+#define I915_PMU_SAMPLE_INSTANCE_BITS (8)
+#define I915_PMU_CLASS_SHIFT (I915_PMU_SAMPLE_BITS + I915_PMU_SAMPLE_INSTANCE_BITS)
+#define __I915_PMU_ENGINE(class,instance,sample) ((class) << I915_PMU_CLASS_SHIFT | (instance) << I915_PMU_SAMPLE_BITS | (sample))
+#define I915_PMU_ENGINE_BUSY(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_BUSY)
+#define I915_PMU_ENGINE_WAIT(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_WAIT)
+#define I915_PMU_ENGINE_SEMA(class,instance) __I915_PMU_ENGINE(class, instance, I915_SAMPLE_SEMA)
+#define __I915_PMU_OTHER(x) (__I915_PMU_ENGINE(0xff, 0xff, 0xf) + 1 + (x))
+#define I915_PMU_ACTUAL_FREQUENCY __I915_PMU_OTHER(0)
+#define I915_PMU_REQUESTED_FREQUENCY __I915_PMU_OTHER(1)
+#define I915_PMU_INTERRUPTS __I915_PMU_OTHER(2)
+#define I915_PMU_RC6_RESIDENCY __I915_PMU_OTHER(3)
+#define I915_PMU_LAST I915_PMU_RC6_RESIDENCY
 #define I915_NR_TEX_REGIONS 255
 #define I915_LOG_MIN_TEX_REGION_SIZE 14
 typedef struct _drm_i915_init {
@@ -174,6 +200,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_I915_PERF_OPEN 0x36
 #define DRM_I915_PERF_ADD_CONFIG 0x37
 #define DRM_I915_PERF_REMOVE_CONFIG 0x38
+#define DRM_I915_QUERY 0x39
 #define DRM_IOCTL_I915_INIT DRM_IOW(DRM_COMMAND_BASE + DRM_I915_INIT, drm_i915_init_t)
 #define DRM_IOCTL_I915_FLUSH DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLUSH)
 #define DRM_IOCTL_I915_FLIP DRM_IO(DRM_COMMAND_BASE + DRM_I915_FLIP)
@@ -230,6 +257,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_IOCTL_I915_PERF_OPEN DRM_IOW(DRM_COMMAND_BASE + DRM_I915_PERF_OPEN, struct drm_i915_perf_open_param)
 #define DRM_IOCTL_I915_PERF_ADD_CONFIG DRM_IOW(DRM_COMMAND_BASE + DRM_I915_PERF_ADD_CONFIG, struct drm_i915_perf_oa_config)
 #define DRM_IOCTL_I915_PERF_REMOVE_CONFIG DRM_IOW(DRM_COMMAND_BASE + DRM_I915_PERF_REMOVE_CONFIG, __u64)
+#define DRM_IOCTL_I915_QUERY DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_QUERY, struct drm_i915_query)
 typedef struct drm_i915_batchbuffer {
   int start;
   int used;
@@ -304,6 +332,8 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_SUBSLICE_MASK 47
 #define I915_PARAM_HAS_EXEC_BATCH_FIRST 48
 #define I915_PARAM_HAS_EXEC_FENCE_ARRAY 49
+#define I915_PARAM_HAS_CONTEXT_ISOLATION 50
+#define I915_PARAM_CS_TIMESTAMP_FREQUENCY 51
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -720,6 +750,29 @@ struct drm_i915_perf_oa_config {
   __u64 mux_regs_ptr;
   __u64 boolean_regs_ptr;
   __u64 flex_regs_ptr;
+};
+struct drm_i915_query_item {
+  __u64 query_id;
+#define DRM_I915_QUERY_TOPOLOGY_INFO 1
+  __s32 length;
+  __u32 flags;
+  __u64 data_ptr;
+};
+struct drm_i915_query {
+  __u32 num_items;
+  __u32 flags;
+  __u64 items_ptr;
+};
+struct drm_i915_query_topology_info {
+  __u16 flags;
+  __u16 max_slices;
+  __u16 max_subslices;
+  __u16 max_eus_per_subslice;
+  __u16 subslice_offset;
+  __u16 subslice_stride;
+  __u16 eu_offset;
+  __u16 eu_stride;
+  __u8 data[];
 };
 #ifdef __cplusplus
 #endif

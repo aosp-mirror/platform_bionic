@@ -58,3 +58,21 @@ TEST(resolv, b64_pton) {
   ASSERT_EQ(static_cast<int>(strlen("hello")), b64_pton("aGVsbG8=", buf, sizeof(buf)));
   ASSERT_STREQ(reinterpret_cast<char*>(buf), "hello");
 }
+
+TEST(resolv, p_class) {
+  ASSERT_STREQ("IN", p_class(ns_c_in));
+  ASSERT_STREQ("BADCLASS", p_class(-1));
+}
+
+TEST(resolv, p_type) {
+  ASSERT_STREQ("AAAA", p_type(ns_t_aaaa));
+  ASSERT_STREQ("BADTYPE", p_type(-1));
+}
+
+TEST(resolv, res_init) {
+  ASSERT_EQ(0, res_init());
+}
+
+TEST(resolv, res_randomid) {
+  res_randomid();
+}

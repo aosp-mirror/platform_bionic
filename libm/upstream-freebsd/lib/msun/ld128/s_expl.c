@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2009-2013 Steven G. Kargl
  * All rights reserved.
  *
@@ -27,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/ld128/s_expl.c 326219 2017-11-26 02:00:33Z pfg $");
 
 /*
  * ld128 version of s_expl.c.  See ../ld80/s_expl.c for most comments.

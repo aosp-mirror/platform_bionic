@@ -213,7 +213,8 @@ static const char* EM_to_string(int em) {
 
 bool ElfReader::VerifyElfHeader() {
   if (memcmp(header_.e_ident, ELFMAG, SELFMAG) != 0) {
-    DL_ERR("\"%s\" has bad ELF magic", name_.c_str());
+    DL_ERR("\"%s\" has bad ELF magic: %02x%02x%02x%02x", name_.c_str(),
+           header_.e_ident[0], header_.e_ident[1], header_.e_ident[2], header_.e_ident[3]);
     return false;
   }
 
@@ -547,7 +548,10 @@ static void* ReserveAligned(void* hint, size_t size, size_t align) {
 
   uint8_t* first = align_up(mmap_ptr, align);
   uint8_t* last = align_down(mmap_ptr + mmap_size, align) - size;
-  size_t n = arc4random_uniform((last - first) / PAGE_SIZE + 1);
+
+  // arc4random* is not available in init because /dev/urandom hasn't yet been
+  // created. Don't randomize then.
+  size_t n = is_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
   uint8_t* start = first + n * PAGE_SIZE;
   munmap(mmap_ptr, start - mmap_ptr);
   munmap(start + size, mmap_ptr + mmap_size - (start + size));

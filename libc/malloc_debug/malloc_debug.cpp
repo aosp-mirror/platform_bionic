@@ -38,6 +38,7 @@
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/properties.h>
 #include <android-base/stringprintf.h>
 #include <private/bionic_malloc_dispatch.h>
 
@@ -47,6 +48,7 @@
 #include "debug_disable.h"
 #include "debug_log.h"
 #include "malloc_debug.h"
+#include "UnwindBacktrace.h"
 
 // ------------------------------------------------------------------------
 // Global Data
@@ -68,9 +70,10 @@ __BEGIN_DECLS
 bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
                       const char* options);
 void debug_finalize();
-bool debug_dump_heap(const char* file_name);
+void debug_dump_heap(const char* file_name);
 void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* info_size,
                                 size_t* total_memory, size_t* backtrace_size);
+bool debug_write_malloc_leak_info(FILE* fp);
 ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_count);
 void debug_free_malloc_leak_info(uint8_t* info);
 size_t debug_malloc_usable_size(void* pointer);
@@ -118,6 +121,26 @@ static void InitAtfork() {
   });
 }
 
+void BacktraceAndLog() {
+  if (g_debug->config().options() & BACKTRACE_FULL) {
+    std::vector<uintptr_t> frames;
+    std::vector<unwindstack::LocalFrameData> frames_info;
+    if (!Unwind(&frames, &frames_info, 256)) {
+      error_log("  Backtrace failed to get any frames.");
+    } else {
+      UnwindLog(frames_info);
+    }
+  } else {
+    std::vector<uintptr_t> frames(256);
+    size_t num_frames = backtrace_get(frames.data(), frames.size());
+    if (num_frames == 0) {
+      error_log("  Backtrace failed to get any frames.");
+    } else {
+      backtrace_log(frames.data(), num_frames);
+    }
+  }
+}
+
 static void LogError(const void* pointer, const char* error_str) {
   error_log(LOG_DIVIDER);
   error_log("+++ ALLOCATION %p %s", pointer, error_str);
@@ -128,14 +151,8 @@ static void LogError(const void* pointer, const char* error_str) {
     PointerData::LogFreeBacktrace(pointer);
   }
 
-  std::vector<uintptr_t> frames(128);
-  size_t num_frames = backtrace_get(frames.data(), frames.size());
-  if (num_frames == 0) {
-    error_log("Backtrace failed to get any frames.");
-  } else {
-    error_log("Backtrace at time of failure:");
-    backtrace_log(frames.data(), num_frames);
-  }
+  error_log("Backtrace at time of failure:");
+  BacktraceAndLog();
   error_log(LOG_DIVIDER);
 }
 
@@ -237,6 +254,9 @@ void debug_finalize() {
     return;
   }
 
+  // Turn off capturing allocations calls.
+  DebugDisableSet(true);
+
   if (g_debug->config().options() & FREE_TRACK) {
     PointerData::VerifyAllFreed();
   }
@@ -246,14 +266,10 @@ void debug_finalize() {
   }
 
   if ((g_debug->config().options() & BACKTRACE) && g_debug->config().backtrace_dump_on_exit()) {
-    ScopedDisableDebugCalls disable;
     debug_dump_heap(android::base::StringPrintf("%s.%d.exit.txt",
                                                 g_debug->config().backtrace_dump_prefix().c_str(),
-                                                getpid())
-                        .c_str());
+                                                getpid()).c_str());
   }
-
-  DebugDisableSet(true);
 
   backtrace_shutdown();
 
@@ -798,28 +814,11 @@ void* debug_valloc(size_t size) {
 
 static std::mutex g_dump_lock;
 
-bool debug_dump_heap(const char* file_name) {
-  ScopedDisableDebugCalls disable;
+static void write_dump(FILE* fp) {
+  fprintf(fp, "Android Native Heap Dump v1.2\n\n");
 
-  std::lock_guard<std::mutex> guard(g_dump_lock);
-
-  FILE* fp = fopen(file_name, "w+e");
-  if (fp == nullptr) {
-    error_log("Unable to create file: %s", file_name);
-    return false;
-  }
-  error_log("Dumping to file: %s\n", file_name);
-
-  if (!(g_debug->config().options() & BACKTRACE)) {
-    fprintf(fp, "Native heap dump not available. To enable, run these commands (requires root):\n");
-    fprintf(fp, "# adb shell stop\n");
-    fprintf(fp, "# adb shell setprop libc.debug.malloc.options backtrace\n");
-    fprintf(fp, "# adb shell start\n");
-    fclose(fp);
-    return false;
-  }
-
-  fprintf(fp, "Android Native Heap Dump v1.0\n\n");
+  std::string fingerprint = android::base::GetProperty("ro.build.fingerprint", "unknown");
+  fprintf(fp, "Build fingerprint: '%s'\n\n", fingerprint.c_str());
 
   PointerData::DumpLiveToFile(fp);
 
@@ -831,6 +830,33 @@ bool debug_dump_heap(const char* file_name) {
     fprintf(fp, "%s", content.c_str());
   }
   fprintf(fp, "END\n");
-  fclose(fp);
+}
+
+bool debug_write_malloc_leak_info(FILE* fp) {
+  ScopedDisableDebugCalls disable;
+
+  std::lock_guard<std::mutex> guard(g_dump_lock);
+
+  if (!(g_debug->config().options() & BACKTRACE)) {
+    return false;
+  }
+
+  write_dump(fp);
   return true;
+}
+
+void debug_dump_heap(const char* file_name) {
+  ScopedDisableDebugCalls disable;
+
+  std::lock_guard<std::mutex> guard(g_dump_lock);
+
+  FILE* fp = fopen(file_name, "w+e");
+  if (fp == nullptr) {
+    error_log("Unable to create file: %s", file_name);
+    return;
+  }
+
+  error_log("Dumping to file: %s\n", file_name);
+  write_dump(fp);
+  fclose(fp);
 }

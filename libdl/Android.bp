@@ -3,6 +3,7 @@
 //
 cc_library_static {
     name: "libdl_static",
+    recovery_available: true,
 
     srcs: [
         "libdl.cpp",
@@ -28,6 +29,7 @@ cc_library_static {
 
 cc_library {
     name: "libdl",
+    recovery_available: true,
     static_ndk_lib: true,
 
     defaults: ["linux_bionic_supported"],
@@ -47,6 +49,7 @@ cc_library {
     arch: {
         arm: {
             version_script: "libdl.arm.map",
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
         },
         arm64: {
@@ -59,6 +62,7 @@ cc_library {
             version_script: "libdl.mips64.map",
         },
         x86: {
+            pack_relocations: false,
             ldflags: [
                 "-Wl,--exclude-libs=libgcc_eh.a",
                 "-Wl,--hash-style=both",

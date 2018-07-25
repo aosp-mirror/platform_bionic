@@ -26,13 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__clang__)
 // clang interprets -fno-builtin more loosely than you might expect,
 // and thinks it's okay to still substitute builtins as long as they're
 // named __aeabi_* rather than __builtin_*, which causes infinite
 // recursion if we have the fortified memcpy visible in this file.
 #undef _FORTIFY_SOURCE
-#endif
 
 #include <stddef.h>
 #include <string.h>

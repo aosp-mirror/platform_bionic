@@ -45,6 +45,7 @@
 #define VIRTIO_NET_F_GUEST_ANNOUNCE 21
 #define VIRTIO_NET_F_MQ 22
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23
+#define VIRTIO_NET_F_SPEED_DUPLEX 63
 #ifndef VIRTIO_NET_NO_LEGACY
 #define VIRTIO_NET_F_GSO 6
 #endif
@@ -55,6 +56,8 @@ struct virtio_net_config {
   __u16 status;
   __u16 max_virtqueue_pairs;
   __u16 mtu;
+  __u32 speed;
+  __u8 duplex;
 } __attribute__((packed));
 struct virtio_net_hdr_v1 {
 #define VIRTIO_NET_HDR_F_NEEDS_CSUM 1

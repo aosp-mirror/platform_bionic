@@ -692,7 +692,7 @@ LIBC {
     pthread_cond_init;
     pthread_cond_signal;
     pthread_cond_timedwait;
-    pthread_cond_timedwait_monotonic_np; # introduced-arm=16 introduced-x86=16 introduced-mips=16 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
+    pthread_cond_timedwait_monotonic_np; # introduced-arm=9 introduced-x86=9 introduced-mips=9 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
     pthread_cond_wait;
     pthread_condattr_destroy;
     pthread_condattr_getclock; # introduced=21
@@ -1341,6 +1341,17 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    __res_randomid;
+    android_fdsan_close_with_tag;
+    android_fdsan_create_owner_tag;
+    android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
+    android_fdsan_set_error_level;
+    timespec_get;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     android_getaddrinfofornet;
@@ -1352,6 +1363,7 @@ LIBC_PRIVATE {
     free_malloc_leak_info;
     get_malloc_leak_info;
     gMallocLeakZygoteChild;
+    write_malloc_leak_info;
 } LIBC_P;
 
 LIBC_DEPRECATED {

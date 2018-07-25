@@ -18,34 +18,10 @@
  ****************************************************************************/
 #ifndef RDMA_USER_IOCTL_H
 #define RDMA_USER_IOCTL_H
-#include <linux/types.h>
-#include <linux/ioctl.h>
 #include <rdma/ib_user_mad.h>
 #include <rdma/hfi/hfi1_ioctl.h>
-#define RDMA_IOCTL_MAGIC 0x1b
+#include <rdma/rdma_user_ioctl_cmds.h>
 #define IB_IOCTL_MAGIC RDMA_IOCTL_MAGIC
-#define RDMA_VERBS_IOCTL _IOWR(RDMA_IOCTL_MAGIC, 1, struct ib_uverbs_ioctl_hdr)
-#define UVERBS_ID_NS_MASK 0xF000
-#define UVERBS_ID_NS_SHIFT 12
-enum {
-  UVERBS_ATTR_F_MANDATORY = 1U << 0,
-  UVERBS_ATTR_F_VALID_OUTPUT = 1U << 1,
-};
-struct ib_uverbs_attr {
-  __u16 attr_id;
-  __u16 len;
-  __u16 flags;
-  __u16 reserved;
-  __u64 data;
-};
-struct ib_uverbs_ioctl_hdr {
-  __u16 length;
-  __u16 object_id;
-  __u16 method_id;
-  __u16 num_attrs;
-  __u64 reserved;
-  struct ib_uverbs_attr attrs[0];
-};
 #define IB_USER_MAD_REGISTER_AGENT _IOWR(RDMA_IOCTL_MAGIC, 0x01, struct ib_user_mad_reg_req)
 #define IB_USER_MAD_UNREGISTER_AGENT _IOW(RDMA_IOCTL_MAGIC, 0x02, __u32)
 #define IB_USER_MAD_ENABLE_PKEY _IO(RDMA_IOCTL_MAGIC, 0x03)

@@ -45,6 +45,13 @@
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
+// Leave the variable uninitialized for the sake of the dynamic loader, which
+// links in this file. The loader will initialize this variable before
+// relocating itself.
+#if defined(__i386__)
+__LIBC_HIDDEN__ void* __libc_sysinfo;
+#endif
+
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
 static void call_array(void(**list)()) {
@@ -86,10 +93,14 @@ __noreturn void __libc_init(void* raw_args,
   BIONIC_STOP_UNWIND;
 
   KernelArgumentBlock args(raw_args);
-  __libc_init_main_thread(args);
 
   // Initializing the globals requires TLS to be available for errno.
-  __init_thread_stack_guard(__get_thread());
+  __libc_init_main_thread(args);
+
+  static libc_shared_globals shared_globals;
+  __libc_shared_globals = &shared_globals;
+  __libc_init_shared_globals(&shared_globals);
+
   __libc_init_globals(args);
 
   __libc_init_AT_SECURE(args);

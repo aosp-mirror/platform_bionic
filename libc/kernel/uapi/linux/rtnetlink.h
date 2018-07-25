@@ -389,8 +389,10 @@ struct tcmsg {
   int tcm_ifindex;
   __u32 tcm_handle;
   __u32 tcm_parent;
+#define tcm_block_index tcm_parent
   __u32 tcm_info;
 };
+#define TCM_IFINDEX_MAGIC_BLOCK (0xFFFFFFFFU)
 enum {
   TCA_UNSPEC,
   TCA_KIND,
@@ -405,6 +407,8 @@ enum {
   TCA_DUMP_INVISIBLE,
   TCA_CHAIN,
   TCA_HW_OFFLOAD,
+  TCA_INGRESS_BLOCK,
+  TCA_EGRESS_BLOCK,
   __TCA_MAX
 };
 #define TCA_MAX (__TCA_MAX - 1)

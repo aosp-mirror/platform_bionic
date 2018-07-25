@@ -50,7 +50,7 @@ ENTRY(memmove)
         bhi         .L_reversed_memcpy
 
 .L_jump_to_memcpy:
-        b           memcpy
+        b           __memcpy
 
 .L_reversed_memcpy:
         push        {r0, lr}
@@ -278,3 +278,5 @@ ENTRY(memmove)
         pop         {r0, pc}
 
 END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)

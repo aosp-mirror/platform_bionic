@@ -169,7 +169,4 @@
 #define __UAPI_DEF_XATTR 1
 #endif
 #endif
-#ifndef __UAPI_DEF_ETHHDR
-#define __UAPI_DEF_ETHHDR 1
-#endif
 #endif

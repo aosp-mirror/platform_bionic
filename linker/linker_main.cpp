@@ -197,12 +197,16 @@ extern "C" int __system_properties_init(void);
 static const char* get_executable_path() {
   static std::string executable_path;
   if (executable_path.empty()) {
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+    if (!is_init()) {
+      char path[PATH_MAX];
+      ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
+      if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+        async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
+      }
+      executable_path = std::string(path, path_len);
+    } else {
+      executable_path = "/init";
     }
-    executable_path = std::string(path, path_len);
   }
 
   return executable_path.c_str();
@@ -228,12 +232,7 @@ static void __linker_cannot_link(const char* argv0) {
   _exit(EXIT_FAILURE);
 }
 
-/*
- * This code is called after the linker has linked itself and
- * fixed it's own GOT. It is safe to make references to externs
- * and other non-local data at this point.
- */
-static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
+static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   ProtectedDataGuard guard;
 
 #if TIMING
@@ -293,8 +292,14 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
   // Stat "/proc/self/exe" instead of executable_path because
   // the executable could be unlinked by this point and it should
   // not cause a crash (see http://b/31084669)
-  if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
-    async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+  if (!is_init()) {
+    if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &file_stat)) != 0) {
+      async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
+    }
+  } else {
+    // /proc fs is not mounted when init starts. Therefore we can't use
+    // /proc/self/exe for init.
+    stat("/init", &file_stat);
   }
 
   const char* executable_path = get_executable_path();
@@ -414,6 +419,10 @@ static ElfW(Addr) __linker_init_post_relocation(KernelArgumentBlock& args) {
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);
 
+  // Store a pointer to the kernel argument block in a TLS slot to be
+  // picked up by the libc constructor.
+  __get_tls()[TLS_SLOT_BIONIC_PREINIT] = &args;
+
   si->call_pre_init_constructors();
 
   /* After the prelink_image, the si->load_bias is initialized.
@@ -494,6 +503,11 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
+static ElfW(Addr) __attribute__((noinline))
+__linker_init_post_relocation(KernelArgumentBlock& args,
+                              ElfW(Addr) linker_addr,
+                              soinfo& linker_so);
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -505,6 +519,10 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
+
+#if defined(__i386__)
+  __libc_init_sysinfo(args);
+#endif
 
   // AT_BASE is set to 0 in the case when linker is run by iself
   // so in order to link the linker it needs to calcuate AT_BASE
@@ -523,7 +541,6 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   linker_addr += reinterpret_cast<uintptr_t>(raw_args);
 #endif
 
-  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
@@ -548,21 +565,31 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // functions at this point.
   if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
 
-#if defined(__i386__)
-  // On x86, we can't make system calls before this point.
-  // We can't move this up because this needs to assign to a global.
-  // Note that until we call __libc_init_main_thread below we have
-  // no TLS, so you shouldn't make a system call that can fail, because
-  // it will SEGV when it tries to set errno.
-  __libc_init_sysinfo(args);
-#endif
+  return __linker_init_post_relocation(args, linker_addr, linker_so);
+}
 
+/*
+ * This code is called after the linker has linked itself and fixed its own
+ * GOT. It is safe to make references to externs and other non-local data at
+ * this point. The compiler sometimes moves GOT references earlier in a
+ * function, so avoid inlining this function (http://b/80503879).
+ */
+static ElfW(Addr) __attribute__((noinline))
+__linker_init_post_relocation(KernelArgumentBlock& args,
+                              ElfW(Addr) linker_addr,
+                              soinfo& linker_so) {
   // Initialize the main thread (including TLS, so system calls really work).
   __libc_init_main_thread(args);
 
   // We didn't protect the linker's RELRO pages in link_image because we
   // couldn't make system calls on x86 at that point, but we can now...
   if (!linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
+
+  // Initialize the linker/libc.so shared global inside the linker.
+  static libc_shared_globals shared_globals;
+  __libc_shared_globals = &shared_globals;
+  __libc_init_shared_globals(&shared_globals);
+  args.shared_globals = __libc_shared_globals;
 
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
@@ -581,6 +608,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   //
   // This happens when user tries to run 'adb shell /system/bin/linker'
   // see also https://code.google.com/p/android/issues/detail?id=63174
+  ElfW(Addr) entry_point = args.getauxval(AT_ENTRY);
   if (reinterpret_cast<ElfW(Addr)>(&_start) == entry_point) {
     async_safe_format_fd(STDOUT_FILENO,
                      "This is %s, the helper program for dynamic executables.\n",
@@ -596,10 +624,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   sonext = solist = get_libdl_info(kLinkerPath, linker_so, linker_link_map);
   g_default_namespace.add_soinfo(solist);
 
-  // We have successfully fixed our own relocations. It's safe to run
-  // the main part of the linker now.
   args.abort_message_ptr = &g_abort_message;
-  ElfW(Addr) start_address = __linker_init_post_relocation(args);
+  ElfW(Addr) start_address = linker_main(args);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 

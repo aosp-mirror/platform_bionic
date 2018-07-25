@@ -127,7 +127,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     // Malformed input; redundant encoding.
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
-  if ((c32 >= 0xd800 && c32 <= 0xdfff) || c32 == 0xfffe || c32 == 0xffff) {
+  if ((c32 >= 0xd800 && c32 <= 0xdfff) || (c32 > 0x10ffff)) {
     // Malformed input; invalid code points.
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }

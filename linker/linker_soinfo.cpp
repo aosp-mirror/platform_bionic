@@ -537,14 +537,6 @@ void soinfo::set_nodelete() {
   rtld_flags_ |= RTLD_NODELETE;
 }
 
-void soinfo::set_tls_nodelete() {
-  flags_ |= FLAG_TLS_NODELETE;
-}
-
-void soinfo::unset_tls_nodelete() {
-  flags_ &= ~FLAG_TLS_NODELETE;
-}
-
 const char* soinfo::get_realpath() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
@@ -660,8 +652,7 @@ bool soinfo::is_gnu_hash() const {
 bool soinfo::can_unload() const {
   return !is_linked() ||
          (
-             (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0 &&
-             (flags_ & FLAG_TLS_NODELETE) == 0
+             (get_rtld_flags() & (RTLD_NODELETE | RTLD_GLOBAL)) == 0
          );
 }
 
@@ -757,7 +748,14 @@ void soinfo::generate_handle() {
   // Make sure the handle is unique and does not collide
   // with special values which are RTLD_DEFAULT and RTLD_NEXT.
   do {
-    arc4random_buf(&handle_, sizeof(handle_));
+    if (!is_init()) {
+      arc4random_buf(&handle_, sizeof(handle_));
+    } else {
+      // arc4random* is not available in init because /dev/urandom hasn't yet been
+      // created. So, when running with init, use the monotonically increasing
+      // numbers as handles
+      handle_ += 2;
+    }
     // the least significant bit for the handle is always 1
     // making it easy to test the type of handle passed to
     // dl* functions.

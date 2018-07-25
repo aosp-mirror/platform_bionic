@@ -49,6 +49,8 @@
 #define TUNGETVNETLE _IOR('T', 221, int)
 #define TUNSETVNETBE _IOW('T', 222, int)
 #define TUNGETVNETBE _IOR('T', 223, int)
+#define TUNSETSTEERINGEBPF _IOR('T', 224, int)
+#define TUNSETFILTEREBPF _IOR('T', 225, int)
 #define IFF_TUN 0x0001
 #define IFF_TAP 0x0002
 #define IFF_NAPI 0x0010
