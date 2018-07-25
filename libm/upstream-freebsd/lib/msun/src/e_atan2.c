@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_atan2.c 329259 2018-02-14 07:59:30Z eadler $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_atan2.c 336362 2018-07-17 07:42:14Z bde $");
 
 /* __ieee754_atan2(y,x)
  * Method :
@@ -70,7 +70,7 @@ __ieee754_atan2(double y, double x)
 	iy = hy&0x7fffffff;
 	if(((ix|((lx|-lx)>>31))>0x7ff00000)||
 	   ((iy|((ly|-ly)>>31))>0x7ff00000))	/* x or y is NaN */
-	   return x+y;
+	    return nan_mix(x, y);
 	if(hx==0x3ff00000&&lx==0) return atan(y);   /* x=1.0 */
 	m = ((hy>>31)&1)|((hx>>30)&2);	/* 2*sign(x)+sign(y) */
 

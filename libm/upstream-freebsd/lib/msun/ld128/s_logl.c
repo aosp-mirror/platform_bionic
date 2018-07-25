@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
+ *
  * Copyright (c) 2007-2013 Bruce D. Evans
  * All rights reserved.
  *
@@ -25,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/ld128/s_logl.c 326219 2017-11-26 02:00:33Z pfg $");
 
 /**
  * Implementation of the natural logarithm of x for 128-bit format.

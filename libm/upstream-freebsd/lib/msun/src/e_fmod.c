@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_fmod.c 305380 2016-09-04 12:01:32Z bde $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_fmod.c 336663 2018-07-24 10:10:16Z bde $");
 
 /* 
  * __ieee754_fmod(x,y)
@@ -42,7 +42,7 @@ __ieee754_fmod(double x, double y)
     /* purge off exception values */
 	if((hy|ly)==0||(hx>=0x7ff00000)||	/* y=0,or x not finite */
 	  ((hy|((ly|-ly)>>31))>0x7ff00000))	/* or y is NaN */
-	    return (x*y)/(x*y);
+	    return nan_mix_op(x, y, *)/nan_mix_op(x, y, *);
 	if(hx<=hy) {
 	    if((hx<hy)||(lx<ly)) return x;	/* |x|<|y| return x */
 	    if(lx==ly) 
