@@ -39,7 +39,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_ccosh.c 326219 2017-11-26 02:00:33Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_ccosh.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <complex.h>
 #include <math.h>
@@ -146,7 +146,8 @@ ccosh(double complex z)
 	 * Optionally raises the invalid floating-point exception for finite
 	 * nonzero y.  Choice = don't raise (except for signaling NaNs).
 	 */
-	return (CMPLX((x * x) * (y - y), (x + x) * (y - y)));
+	return (CMPLX(((long double)x * x) * (y - y),
+	    ((long double)x + x) * (y - y)));
 }
 
 double complex
