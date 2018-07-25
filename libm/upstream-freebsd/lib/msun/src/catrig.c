@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/catrig.c 327232 2017-12-27 03:23:41Z eadler $");
+__FBSDID("$FreeBSD: head/lib/msun/src/catrig.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include <complex.h>
 #include <float.h>
@@ -300,7 +300,7 @@ casinh(double complex z)
 		 * C99 leaves it optional whether to raise invalid if one of
 		 * the arguments is not NaN, so we opt not to raise it.
 		 */
-		return (CMPLX(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLX(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON) {
@@ -384,7 +384,7 @@ cacos(double complex z)
 		 * C99 leaves it optional whether to raise invalid if one of
 		 * the arguments is not NaN, so we opt not to raise it.
 		 */
-		return (CMPLX(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLX(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON) {
@@ -601,7 +601,7 @@ catanh(double complex z)
 		 * C99 leaves it optional whether to raise invalid if one of
 		 * the arguments is not NaN, so we opt not to raise it.
 		 */
-		return (CMPLX(x + 0.0L + (y + 0), x + 0.0L + (y + 0)));
+		return (CMPLX(nan_mix(x, y), nan_mix(x, y)));
 	}
 
 	if (ax > RECIP_EPSILON || ay > RECIP_EPSILON)
