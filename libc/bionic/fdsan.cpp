@@ -30,6 +30,7 @@
 
 #include <errno.h>
 #include <inttypes.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdatomic.h>
 #include <string.h>
@@ -117,20 +118,26 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
 
   va_list va;
   va_start(va, fmt);
-  async_safe_fatal_va_list("fdsan", fmt, va);
+  if (error_level == ANDROID_FDSAN_ERROR_LEVEL_FATAL) {
+    async_safe_fatal_va_list("fdsan", fmt, va);
+  } else {
+    async_safe_format_log_va_list(ANDROID_LOG_ERROR, "fdsan", fmt, va);
+  }
   va_end(va);
 
   switch (error_level) {
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE:
       atomic_compare_exchange_strong(&fd_table->error_level, &error_level,
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+    case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
+      // DEBUGGER_SIGNAL
+      raise(__SIGRTMIN + 3);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
       abort();
 
     case ANDROID_FDSAN_ERROR_LEVEL_DISABLED:
-    case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
       break;
   }
 }
