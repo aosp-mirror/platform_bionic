@@ -771,7 +771,7 @@ LIBC {
     pthread_cond_signal;
     pthread_cond_timedwait;
     pthread_cond_timedwait_monotonic; # arm x86 mips
-    pthread_cond_timedwait_monotonic_np; # introduced-arm=16 introduced-x86=16 introduced-mips=16 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
+    pthread_cond_timedwait_monotonic_np; # introduced-arm=9 introduced-x86=9 introduced-mips=9 introduced-arm64=28 introduced-x64_64=28 introduced-mips64=28
     pthread_cond_timedwait_relative_np; # arm x86 mips
     pthread_cond_timeout_np; # arm x86 mips
     pthread_cond_wait;
@@ -1445,6 +1445,17 @@ LIBC_P { # introduced=P
     wcstoul_l;
 } LIBC_O;
 
+LIBC_Q { # introduced=Q
+  global:
+    __res_randomid;
+    android_fdsan_close_with_tag;
+    android_fdsan_create_owner_tag;
+    android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
+    android_fdsan_set_error_level;
+    timespec_get;
+} LIBC_P;
+
 LIBC_PRIVATE {
   global:
     ___Unwind_Backtrace; # arm
@@ -1660,6 +1671,7 @@ LIBC_PRIVATE {
     tkill; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
+    write_malloc_leak_info;
 } LIBC_P;
 
 LIBC_DEPRECATED {

@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_hypotf.c 336362 2018-07-17 07:42:14Z bde $");
 
 #include "math.h"
 #include "math_private.h"
@@ -37,7 +37,7 @@ __ieee754_hypotf(float x, float y)
 	if(ha > 0x58800000) {	/* a>2**50 */
 	   if(ha >= 0x7f800000) {	/* Inf or NaN */
 	       /* Use original arg order iff result is NaN; quieten sNaNs. */
-	       w = fabsf(x+0.0F)-fabsf(y+0.0F);
+	       w = fabsl(x+0.0L)-fabsf(y+0);
 	       if(ha == 0x7f800000) w = a;
 	       if(hb == 0x7f800000) w = b;
 	       return w;

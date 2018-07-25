@@ -62,6 +62,15 @@ extern "C" {
   extern int __cxa_atexit(void (*)(void *), void *, void *);
 };
 
+// Use an initializer so __libc_sysinfo will have a fallback implementation
+// while .preinit_array constructors run.
+#if defined(__i386__)
+static __attribute__((__naked__)) void __libc_int0x80() {
+  __asm__ volatile("int $0x80; ret");
+}
+__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
+#endif
+
 // We need a helper function for __libc_preinit because compiling with LTO may
 // inline functions requiring a stack protector check, but __stack_chk_guard is
 // not initialized at the start of __libc_preinit. __libc_preinit_impl will run
@@ -69,6 +78,8 @@ extern "C" {
 // protector.
 __attribute__((noinline))
 static void __libc_preinit_impl(KernelArgumentBlock& args) {
+  __libc_shared_globals = args.shared_globals;
+
   __libc_init_globals(args);
   __libc_init_common(args);
 
@@ -85,14 +96,11 @@ static void __libc_preinit_impl(KernelArgumentBlock& args) {
 // to run before any others (such as the jemalloc constructor), and lower
 // is better (http://b/68046352).
 __attribute__((constructor(1))) static void __libc_preinit() {
-  // Read the kernel argument block pointer from TLS.
+  // Read the kernel argument block pointer from TLS, then clear the slot so no
+  // other initializer sees its value.
   void** tls = __get_tls();
-  KernelArgumentBlock** args_slot = &reinterpret_cast<KernelArgumentBlock**>(tls)[TLS_SLOT_BIONIC_PREINIT];
-  KernelArgumentBlock* args = *args_slot;
-
-  // Clear the slot so no other initializer sees its value.
-  // __libc_init_common() will change the TLS area so the old one won't be accessible anyway.
-  *args_slot = NULL;
+  KernelArgumentBlock* args = static_cast<KernelArgumentBlock*>(tls[TLS_SLOT_BIONIC_PREINIT]);
+  tls[TLS_SLOT_BIONIC_PREINIT] = nullptr;
 
   // The linker has initialized its copy of the global stack_chk_guard, and filled in the main
   // thread's TLS slot with that value. Initialize the local global stack guard with its value.
@@ -102,9 +110,8 @@ __attribute__((constructor(1))) static void __libc_preinit() {
 }
 
 // This function is called from the executable's _start entry point
-// (see arch-$ARCH/bionic/crtbegin_dynamic.S), which is itself
-// called by the dynamic linker after it has loaded all shared
-// libraries the executable depends on.
+// (see arch-$ARCH/bionic/crtbegin.c), which is itself called by the dynamic
+// linker after it has loaded all shared libraries the executable depends on.
 //
 // Note that the dynamic linker has also run all constructors in the
 // executable at this point.

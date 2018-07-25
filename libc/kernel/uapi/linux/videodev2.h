@@ -314,6 +314,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L')
 #define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')
 #define V4L2_PIX_FMT_VP9 v4l2_fourcc('V', 'P', '9', '0')
+#define V4L2_PIX_FMT_HEVC v4l2_fourcc('H', 'E', 'V', 'C')
 #define V4L2_PIX_FMT_CPIA1 v4l2_fourcc('C', 'P', 'I', 'A')
 #define V4L2_PIX_FMT_WNVA v4l2_fourcc('W', 'N', 'V', 'A')
 #define V4L2_PIX_FMT_SN9C10X v4l2_fourcc('S', '9', '1', '0')
@@ -345,6 +346,10 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Z16 v4l2_fourcc('Z', '1', '6', ' ')
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
+#define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
+#define V4L2_PIX_FMT_IPU3_SGBRG10 v4l2_fourcc('i', 'p', '3', 'g')
+#define V4L2_PIX_FMT_IPU3_SGRBG10 v4l2_fourcc('i', 'p', '3', 'G')
+#define V4L2_PIX_FMT_IPU3_SRGGB10 v4l2_fourcc('i', 'p', '3', 'r')
 #define V4L2_SDR_FMT_CU8 v4l2_fourcc('C', 'U', '0', '8')
 #define V4L2_SDR_FMT_CU16LE v4l2_fourcc('C', 'U', '1', '6')
 #define V4L2_SDR_FMT_CS8 v4l2_fourcc('C', 'S', '0', '8')
@@ -359,6 +364,7 @@ struct v4l2_pix_format {
 #define V4L2_TCH_FMT_TU08 v4l2_fourcc('T', 'U', '0', '8')
 #define V4L2_META_FMT_VSP1_HGO v4l2_fourcc('V', 'S', 'P', 'H')
 #define V4L2_META_FMT_VSP1_HGT v4l2_fourcc('V', 'S', 'P', 'T')
+#define V4L2_META_FMT_UVC v4l2_fourcc('U', 'V', 'C', 'H')
 #define V4L2_PIX_FMT_PRIV_MAGIC 0xfeedcafe
 #define V4L2_PIX_FMT_FLAG_PREMUL_ALPHA 0x00000001
 struct v4l2_fmtdesc {

@@ -45,6 +45,10 @@ struct itimerval {
   struct timeval it_interval;
   struct timeval it_value;
 };
+struct __kernel_old_timeval {
+  __kernel_long_t tv_sec;
+  __kernel_long_t tv_usec;
+};
 #define CLOCK_REALTIME 0
 #define CLOCK_MONOTONIC 1
 #define CLOCK_PROCESS_CPUTIME_ID 2

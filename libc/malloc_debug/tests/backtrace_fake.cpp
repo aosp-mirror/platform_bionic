@@ -20,6 +20,8 @@
 #include <vector>
 #include <utility>
 
+#include <unwindstack/LocalUnwinder.h>
+
 #include "backtrace.h"
 #include "backtrace_fake.h"
 #include "debug_log.h"
@@ -56,4 +58,32 @@ void backtrace_log(const uintptr_t* frames, size_t frame_count) {
   for (size_t i = 0; i < frame_count; i++) {
     error_log("  #%02zd pc %p", i, reinterpret_cast<void*>(frames[i]));
   }
+}
+
+static std::deque<std::vector<unwindstack::LocalFrameData>> g_fake_local_frame_data;
+
+void BacktraceUnwindFakeClearAll() {
+  g_fake_local_frame_data.clear();
+}
+
+void BacktraceUnwindFake(const std::vector<unwindstack::LocalFrameData>& frames) {
+  g_fake_local_frame_data.push_back(frames);
+}
+
+bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameData>* info, size_t) {
+  if (g_fake_local_frame_data.empty()) {
+    return false;
+  }
+
+  *info = g_fake_local_frame_data.front();
+  g_fake_local_frame_data.pop_front();
+  frames->clear();
+  for (const auto& frame : *info) {
+    frames->push_back(frame.pc);
+  }
+
+  return true;
+}
+
+void UnwindLog(const std::vector<unwindstack::LocalFrameData>& /*frame_info*/) {
 }

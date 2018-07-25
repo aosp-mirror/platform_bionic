@@ -81,6 +81,9 @@ enum nf_tables_msg_types {
   NFT_MSG_GETOBJ,
   NFT_MSG_DELOBJ,
   NFT_MSG_GETOBJ_RESET,
+  NFT_MSG_NEWFLOWTABLE,
+  NFT_MSG_GETFLOWTABLE,
+  NFT_MSG_DELFLOWTABLE,
   NFT_MSG_MAX,
 };
 enum nft_list_attributes {
@@ -105,6 +108,8 @@ enum nft_table_attributes {
   NFTA_TABLE_NAME,
   NFTA_TABLE_FLAGS,
   NFTA_TABLE_USE,
+  NFTA_TABLE_HANDLE,
+  NFTA_TABLE_PAD,
   __NFTA_TABLE_MAX
 };
 #define NFTA_TABLE_MAX (__NFTA_TABLE_MAX - 1)
@@ -183,6 +188,7 @@ enum nft_set_attributes {
   NFTA_SET_USERDATA,
   NFTA_SET_PAD,
   NFTA_SET_OBJ_TYPE,
+  NFTA_SET_HANDLE,
   __NFTA_SET_MAX
 };
 #define NFTA_SET_MAX (__NFTA_SET_MAX - 1)
@@ -405,6 +411,7 @@ enum nft_meta_keys {
   NFT_META_OIFGROUP,
   NFT_META_CGROUP,
   NFT_META_PRANDOM,
+  NFT_META_SECPATH,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,
@@ -463,6 +470,10 @@ enum nft_ct_keys {
   NFT_CT_AVGPKT,
   NFT_CT_ZONE,
   NFT_CT_EVENTMASK,
+  NFT_CT_SRC_IP,
+  NFT_CT_DST_IP,
+  NFT_CT_SRC_IP6,
+  NFT_CT_DST_IP6,
 };
 enum nft_ct_attributes {
   NFTA_CT_UNSPEC,
@@ -473,6 +484,12 @@ enum nft_ct_attributes {
   __NFTA_CT_MAX
 };
 #define NFTA_CT_MAX (__NFTA_CT_MAX - 1)
+enum nft_offload_attributes {
+  NFTA_FLOW_UNSPEC,
+  NFTA_FLOW_TABLE_NAME,
+  __NFTA_FLOW_MAX,
+};
+#define NFTA_FLOW_MAX (__NFTA_FLOW_MAX - 1)
 enum nft_limit_type {
   NFT_LIMIT_PKTS,
   NFT_LIMIT_PKT_BYTES
@@ -664,9 +681,36 @@ enum nft_object_attributes {
   NFTA_OBJ_TYPE,
   NFTA_OBJ_DATA,
   NFTA_OBJ_USE,
+  NFTA_OBJ_HANDLE,
+  NFTA_OBJ_PAD,
   __NFTA_OBJ_MAX
 };
 #define NFTA_OBJ_MAX (__NFTA_OBJ_MAX - 1)
+enum nft_flowtable_attributes {
+  NFTA_FLOWTABLE_UNSPEC,
+  NFTA_FLOWTABLE_TABLE,
+  NFTA_FLOWTABLE_NAME,
+  NFTA_FLOWTABLE_HOOK,
+  NFTA_FLOWTABLE_USE,
+  NFTA_FLOWTABLE_HANDLE,
+  NFTA_FLOWTABLE_PAD,
+  __NFTA_FLOWTABLE_MAX
+};
+#define NFTA_FLOWTABLE_MAX (__NFTA_FLOWTABLE_MAX - 1)
+enum nft_flowtable_hook_attributes {
+  NFTA_FLOWTABLE_HOOK_UNSPEC,
+  NFTA_FLOWTABLE_HOOK_NUM,
+  NFTA_FLOWTABLE_HOOK_PRIORITY,
+  NFTA_FLOWTABLE_HOOK_DEVS,
+  __NFTA_FLOWTABLE_HOOK_MAX
+};
+#define NFTA_FLOWTABLE_HOOK_MAX (__NFTA_FLOWTABLE_HOOK_MAX - 1)
+enum nft_devices_attributes {
+  NFTA_DEVICE_UNSPEC,
+  NFTA_DEVICE_NAME,
+  __NFTA_DEVICE_MAX
+};
+#define NFTA_DEVICE_MAX (__NFTA_DEVICE_MAX - 1)
 enum nft_trace_attributes {
   NFTA_TRACE_UNSPEC,
   NFTA_TRACE_TABLE,

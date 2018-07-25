@@ -302,7 +302,14 @@ struct kvm_xcrs {
   struct kvm_xcr xcrs[KVM_MAX_XCRS];
   __u64 padding[16];
 };
+#define KVM_SYNC_X86_REGS (1UL << 0)
+#define KVM_SYNC_X86_SREGS (1UL << 1)
+#define KVM_SYNC_X86_EVENTS (1UL << 2)
+#define KVM_SYNC_X86_VALID_FIELDS (KVM_SYNC_X86_REGS | KVM_SYNC_X86_SREGS | KVM_SYNC_X86_EVENTS)
 struct kvm_sync_regs {
+  struct kvm_regs regs;
+  struct kvm_sregs sregs;
+  struct kvm_vcpu_events events;
 };
 #define KVM_X86_QUIRK_LINT0_REENABLED (1 << 0)
 #define KVM_X86_QUIRK_CD_NW_CLEARED (1 << 1)

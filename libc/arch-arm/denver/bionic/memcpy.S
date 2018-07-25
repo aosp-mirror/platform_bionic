@@ -65,13 +65,13 @@
         // arch. The code generated is exactly the same.
         .arch armv7-a
 
-ENTRY(memcpy)
+ENTRY(__memcpy)
         pld     [r1, #64]
         push    {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
-END(memcpy)
+END(__memcpy)
 
 #define MEMCPY_BASE         __memcpy_base
 #define MEMCPY_BASE_ALIGNED __memcpy_base_aligned

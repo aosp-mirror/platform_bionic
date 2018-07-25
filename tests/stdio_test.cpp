@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <sys/socket.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <wchar.h>
@@ -191,12 +192,6 @@ TEST(STDIO_TEST, getdelim_invalid) {
   errno = 0;
   ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
-
-  // The underlying fd can't be closed.
-  ASSERT_EQ(0, close(fileno(fp)));
-  errno = 0;
-  ASSERT_EQ(getdelim(&buffer, &buffer_length, ' ', fp), -1);
-  ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
 
@@ -267,12 +262,6 @@ TEST(STDIO_TEST, getline_invalid) {
   errno = 0;
   ASSERT_EQ(getline(&buffer, NULL, fp), -1);
   ASSERT_EQ(EINVAL, errno);
-
-  // The underlying fd can't be closed.
-  ASSERT_EQ(0, close(fileno(fp)));
-  errno = 0;
-  ASSERT_EQ(getline(&buffer, &buffer_length, fp), -1);
-  ASSERT_EQ(EBADF, errno);
   fclose(fp);
 }
 
@@ -868,14 +857,16 @@ TEST(STDIO_TEST, fprintf) {
 TEST(STDIO_TEST, fprintf_failures_7229520) {
   // http://b/7229520
   FILE* fp;
+  int fd_rdonly = open("/dev/null", O_RDONLY);
+  ASSERT_NE(-1, fd_rdonly);
 
   // Unbuffered case where the fprintf(3) itself fails.
   ASSERT_NE(nullptr, fp = tmpfile());
   setbuf(fp, NULL);
   ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_NE(-1, dup2(fd_rdonly, fileno(fp)));
   ASSERT_EQ(-1, fprintf(fp, "fail"));
-  ASSERT_EQ(-1, fclose(fp));
+  ASSERT_EQ(0, fclose(fp));
 
   // Buffered case where we won't notice until the fclose(3).
   // It's likely this is what was actually seen in http://b/7229520,
@@ -883,12 +874,12 @@ TEST(STDIO_TEST, fprintf_failures_7229520) {
   // disappointment. Remember to check fclose(3)'s return value, kids!
   ASSERT_NE(nullptr, fp = tmpfile());
   ASSERT_EQ(4, fprintf(fp, "epic"));
-  ASSERT_EQ(0, close(fileno(fp)));
+  ASSERT_NE(-1, dup2(fd_rdonly, fileno(fp)));
   ASSERT_EQ(4, fprintf(fp, "fail"));
   ASSERT_EQ(-1, fclose(fp));
 }
 
-TEST(STDIO_TEST, popen) {
+TEST(STDIO_TEST, popen_r) {
   FILE* fp = popen("cat /proc/version", "r");
   ASSERT_TRUE(fp != NULL);
 
@@ -898,6 +889,63 @@ TEST(STDIO_TEST, popen) {
   ASSERT_STREQ("Linux version", s);
 
   ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_socketpair) {
+  FILE* fp = popen("cat", "r+");
+  ASSERT_TRUE(fp != NULL);
+
+  fputs("hello\nworld\n", fp);
+  fflush(fp);
+
+  char buf[16];
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("hello\n", buf);
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("world\n", buf);
+
+  ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_socketpair_shutdown) {
+  FILE* fp = popen("uniq -c", "r+");
+  ASSERT_TRUE(fp != NULL);
+
+  fputs("a\na\na\na\nb\n", fp);
+  fflush(fp);
+  ASSERT_EQ(0, shutdown(fileno(fp), SHUT_WR));
+
+  char buf[16];
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("      4 a\n", buf);
+  ASSERT_NE(nullptr, fgets(buf, sizeof(buf), fp));
+  EXPECT_STREQ("      1 b\n", buf);
+
+  ASSERT_EQ(0, pclose(fp));
+}
+
+TEST(STDIO_TEST, popen_return_value_0) {
+  FILE* fp = popen("true", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(0, WEXITSTATUS(status));
+}
+
+TEST(STDIO_TEST, popen_return_value_1) {
+  FILE* fp = popen("false", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(1, WEXITSTATUS(status));
+}
+
+TEST(STDIO_TEST, popen_return_value_signal) {
+  FILE* fp = popen("kill -7 $$", "r");
+  ASSERT_TRUE(fp != NULL);
+  int status = pclose(fp);
+  EXPECT_TRUE(WIFSIGNALED(status));
+  EXPECT_EQ(7, WTERMSIG(status));
 }
 
 TEST(STDIO_TEST, getc) {
@@ -1858,7 +1906,6 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
   AssertCloseOnExec(fileno(fp), true);
 
   fclose(fp);
-  close(fd);
 }
 
 TEST(STDIO_TEST, freopen_CLOEXEC) {

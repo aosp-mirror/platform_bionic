@@ -246,3 +246,47 @@ TEST(linker_config, ns_link_shared_libs_invalid_settings) {
             "error: both shared_libs and allow_all_shared_libs are set for default->system link.",
             error_msg);
 }
+
+TEST(linker_config, dir_path_resolve) {
+  // This unit test ensures the linker resolves paths of dir.${section}
+  // properties to real path.
+
+  TemporaryDir tmp_dir;
+
+  std::string sub_dir = std::string(tmp_dir.path) + "/subdir";
+  mkdir(sub_dir.c_str(), 0755);
+
+  auto subdir_guard =
+      android::base::make_scope_guard([&sub_dir] { rmdir(sub_dir.c_str()); });
+
+  std::string symlink_path = std::string(tmp_dir.path) + "/symlink";
+  symlink(sub_dir.c_str(), symlink_path.c_str());
+
+  auto symlink_guard =
+      android::base::make_scope_guard([&symlink_path] { unlink(symlink_path.c_str()); });
+
+  std::string config_str =
+      "dir.test = " + symlink_path + "\n"
+      "\n"
+      "[test]\n";
+
+  TemporaryFile tmp_file;
+  close(tmp_file.fd);
+  tmp_file.fd = -1;
+
+  android::base::WriteStringToFile(config_str, tmp_file.path);
+
+  std::string executable_path = sub_dir + "/some-binary";
+
+  const Config* config = nullptr;
+  std::string error_msg;
+
+  ASSERT_TRUE(Config::read_binary_config(tmp_file.path,
+                                         executable_path.c_str(),
+                                         false,
+                                         &config,
+                                         &error_msg)) << error_msg;
+
+  ASSERT_TRUE(config != nullptr) << error_msg;
+  ASSERT_TRUE(error_msg.empty()) << error_msg;
+}

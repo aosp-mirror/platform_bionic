@@ -58,6 +58,7 @@ typedef __s32 sctp_assoc_t;
 #define SCTP_RECVRCVINFO 32
 #define SCTP_RECVNXTINFO 33
 #define SCTP_DEFAULT_SNDINFO 34
+#define SCTP_AUTH_DEACTIVATE_KEY 35
 #define SCTP_SOCKOPT_BINDX_ADD 100
 #define SCTP_SOCKOPT_BINDX_REM 101
 #define SCTP_SOCKOPT_PEELOFF 102
@@ -79,6 +80,8 @@ typedef __s32 sctp_assoc_t;
 #define SCTP_SOCKOPT_PEELOFF_FLAGS 122
 #define SCTP_STREAM_SCHEDULER 123
 #define SCTP_STREAM_SCHEDULER_VALUE 124
+#define SCTP_INTERLEAVING_SUPPORTED 125
+#define SCTP_SENDMSG_CONNECT 126
 #define SCTP_PR_SCTP_NONE 0x0000
 #define SCTP_PR_SCTP_TTL 0x0010
 #define SCTP_PR_SCTP_RTX 0x0020
@@ -143,11 +146,19 @@ struct sctp_nxtinfo {
   __u32 nxt_length;
   sctp_assoc_t nxt_assoc_id;
 };
+struct sctp_prinfo {
+  __u16 pr_policy;
+  __u32 pr_value;
+};
+struct sctp_authinfo {
+  __u16 auth_keynumber;
+};
 enum sctp_sinfo_flags {
   SCTP_UNORDERED = (1 << 0),
   SCTP_ADDR_OVER = (1 << 1),
   SCTP_ABORT = (1 << 2),
   SCTP_SACK_IMMEDIATELY = (1 << 3),
+  SCTP_SENDALL = (1 << 6),
   SCTP_NOTIFICATION = MSG_NOTIFICATION,
   SCTP_EOF = MSG_FIN,
 };
@@ -167,6 +178,14 @@ typedef enum sctp_cmsg_type {
 #define SCTP_RCVINFO SCTP_RCVINFO
   SCTP_NXTINFO,
 #define SCTP_NXTINFO SCTP_NXTINFO
+  SCTP_PRINFO,
+#define SCTP_PRINFO SCTP_PRINFO
+  SCTP_AUTHINFO,
+#define SCTP_AUTHINFO SCTP_AUTHINFO
+  SCTP_DSTADDRV4,
+#define SCTP_DSTADDRV4 SCTP_DSTADDRV4
+  SCTP_DSTADDRV6,
+#define SCTP_DSTADDRV6 SCTP_DSTADDRV6
 } sctp_cmsg_t;
 struct sctp_assoc_change {
   __u16 sac_type;
@@ -243,6 +262,8 @@ struct sctp_pdapi_event {
   __u32 pdapi_length;
   __u32 pdapi_indication;
   sctp_assoc_t pdapi_assoc_id;
+  __u32 pdapi_stream;
+  __u32 pdapi_seq;
 };
 enum {
   SCTP_PARTIAL_DELIVERY_ABORTED = 0,
@@ -257,7 +278,10 @@ struct sctp_authkey_event {
   sctp_assoc_t auth_assoc_id;
 };
 enum {
-  SCTP_AUTH_NEWKEY = 0,
+  SCTP_AUTH_NEW_KEY,
+#define SCTP_AUTH_NEWKEY SCTP_AUTH_NEW_KEY
+  SCTP_AUTH_FREE_KEY,
+  SCTP_AUTH_NO_AUTH,
 };
 struct sctp_sender_dry_event {
   __u16 sender_dry_type;

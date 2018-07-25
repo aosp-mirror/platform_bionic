@@ -105,8 +105,11 @@ static long double ldouble_subnormal() {
 TEST(MATH_TEST, fpclassify) {
   ASSERT_EQ(FP_INFINITE, fpclassify(INFINITY));
   ASSERT_EQ(FP_INFINITE, fpclassify(HUGE_VALF));
+  ASSERT_EQ(FP_INFINITE, fpclassify(-HUGE_VALF));
   ASSERT_EQ(FP_INFINITE, fpclassify(HUGE_VAL));
+  ASSERT_EQ(FP_INFINITE, fpclassify(-HUGE_VAL));
   ASSERT_EQ(FP_INFINITE, fpclassify(HUGE_VALL));
+  ASSERT_EQ(FP_INFINITE, fpclassify(-HUGE_VALL));
 
   ASSERT_EQ(FP_NAN, fpclassify(nanf("")));
   ASSERT_EQ(FP_NAN, fpclassify(nan("")));
@@ -130,8 +133,11 @@ TEST(MATH_TEST, isfinite) {
   ASSERT_TRUE(test_capture_isfinite(123.0));
   ASSERT_TRUE(test_capture_isfinite(123.0L));
   ASSERT_FALSE(test_capture_isfinite(HUGE_VALF));
+  ASSERT_FALSE(test_capture_isfinite(-HUGE_VALF));
   ASSERT_FALSE(test_capture_isfinite(HUGE_VAL));
+  ASSERT_FALSE(test_capture_isfinite(-HUGE_VAL));
   ASSERT_FALSE(test_capture_isfinite(HUGE_VALL));
+  ASSERT_FALSE(test_capture_isfinite(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isinf) {
@@ -139,8 +145,11 @@ TEST(MATH_TEST, isinf) {
   ASSERT_FALSE(test_capture_isinf(123.0));
   ASSERT_FALSE(test_capture_isinf(123.0L));
   ASSERT_TRUE(test_capture_isinf(HUGE_VALF));
+  ASSERT_TRUE(test_capture_isinf(-HUGE_VALF));
   ASSERT_TRUE(test_capture_isinf(HUGE_VAL));
+  ASSERT_TRUE(test_capture_isinf(-HUGE_VAL));
   ASSERT_TRUE(test_capture_isinf(HUGE_VALL));
+  ASSERT_TRUE(test_capture_isinf(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isnan) {
@@ -184,6 +193,7 @@ extern "C" int __fpclassifyl(long double);
 
 TEST(MATH_TEST, __fpclassify) {
   ASSERT_EQ(FP_INFINITE, __fpclassify(HUGE_VAL));
+  ASSERT_EQ(FP_INFINITE, __fpclassify(-HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassify(nan("")));
   ASSERT_EQ(FP_NORMAL, __fpclassify(1.0));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassify(double_subnormal()));
@@ -195,6 +205,7 @@ TEST(MATH_TEST, __fpclassifyd) {
 #define __fpclassifyd __fpclassify
 #endif
   ASSERT_EQ(FP_INFINITE, __fpclassifyd(HUGE_VAL));
+  ASSERT_EQ(FP_INFINITE, __fpclassifyd(-HUGE_VAL));
   ASSERT_EQ(FP_NAN, __fpclassifyd(nan("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyd(1.0));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyd(double_subnormal()));
@@ -203,6 +214,7 @@ TEST(MATH_TEST, __fpclassifyd) {
 
 TEST(MATH_TEST, __fpclassifyf) {
   ASSERT_EQ(FP_INFINITE, __fpclassifyf(HUGE_VALF));
+  ASSERT_EQ(FP_INFINITE, __fpclassifyf(-HUGE_VALF));
   ASSERT_EQ(FP_NAN, __fpclassifyf(nanf("")));
   ASSERT_EQ(FP_NORMAL, __fpclassifyf(1.0f));
   ASSERT_EQ(FP_SUBNORMAL, __fpclassifyf(float_subnormal()));
@@ -211,6 +223,7 @@ TEST(MATH_TEST, __fpclassifyf) {
 
 TEST(MATH_TEST, __fpclassifyl) {
   EXPECT_EQ(FP_INFINITE, __fpclassifyl(HUGE_VALL));
+  EXPECT_EQ(FP_INFINITE, __fpclassifyl(-HUGE_VALL));
   EXPECT_EQ(FP_NAN, __fpclassifyl(nanl("")));
   EXPECT_EQ(FP_NORMAL, __fpclassifyl(1.0L));
   EXPECT_EQ(FP_SUBNORMAL, __fpclassifyl(ldouble_subnormal()));
@@ -220,6 +233,7 @@ TEST(MATH_TEST, __fpclassifyl) {
 TEST(MATH_TEST, finitef) {
   ASSERT_TRUE(finitef(123.0f));
   ASSERT_FALSE(finitef(HUGE_VALF));
+  ASSERT_FALSE(finitef(-HUGE_VALF));
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
@@ -235,6 +249,7 @@ TEST(MATH_TEST, __isfinite) {
 #endif
   ASSERT_TRUE(__isfinite(123.0));
   ASSERT_FALSE(__isfinite(HUGE_VAL));
+  ASSERT_FALSE(__isfinite(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, __isfinitef) {
@@ -243,6 +258,7 @@ TEST(MATH_TEST, __isfinitef) {
 #endif
   ASSERT_TRUE(__isfinitef(123.0f));
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
+  ASSERT_FALSE(__isfinitef(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, isfinitef) {
@@ -251,6 +267,7 @@ TEST(MATH_TEST, isfinitef) {
 #endif
   ASSERT_TRUE(isfinitef(123.0f));
   ASSERT_FALSE(isfinitef(HUGE_VALF));
+  ASSERT_FALSE(isfinitef(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, __isfinitel) {
@@ -259,6 +276,7 @@ TEST(MATH_TEST, __isfinitel) {
 #endif
   ASSERT_TRUE(__isfinitel(123.0L));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
+  ASSERT_FALSE(__isfinitel(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isfinitel) {
@@ -267,17 +285,20 @@ TEST(MATH_TEST, isfinitel) {
 #endif
   ASSERT_TRUE(isfinitel(123.0L));
   ASSERT_FALSE(isfinitel(HUGE_VALL));
+  ASSERT_FALSE(isfinitel(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, finite) {
   ASSERT_TRUE(finite(123.0));
   ASSERT_FALSE(finite(HUGE_VAL));
+  ASSERT_FALSE(finite(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, isinf_function) {
   // The isinf macro deals with all three types; the isinf function is for doubles.
   ASSERT_FALSE((isinf)(123.0));
   ASSERT_TRUE((isinf)(HUGE_VAL));
+  ASSERT_TRUE((isinf)(-HUGE_VAL));
 }
 
 // Historical BSD cruft that isn't exposed in <math.h> any more.
@@ -290,26 +311,31 @@ extern "C" int isinfl(long double);
 TEST(MATH_TEST, __isinf) {
   ASSERT_FALSE(__isinf(123.0));
   ASSERT_TRUE(__isinf(HUGE_VAL));
+  ASSERT_TRUE(__isinf(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, __isinff) {
   ASSERT_FALSE(__isinff(123.0f));
   ASSERT_TRUE(__isinff(HUGE_VALF));
+  ASSERT_TRUE(__isinff(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, isinff) {
   ASSERT_FALSE(isinff(123.0f));
   ASSERT_TRUE(isinff(HUGE_VALF));
+  ASSERT_TRUE(isinff(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, __isinfl) {
   ASSERT_FALSE(__isinfl(123.0L));
   ASSERT_TRUE(__isinfl(HUGE_VALL));
+  ASSERT_TRUE(__isinfl(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isinfl) {
   ASSERT_FALSE(isinfl(123.0L));
   ASSERT_TRUE(isinfl(HUGE_VALL));
+  ASSERT_TRUE(isinfl(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isnan_function) {
@@ -772,26 +798,92 @@ TEST(MATH_TEST, ldexpl) {
 
 TEST(MATH_TEST, fmod) {
   ASSERT_DOUBLE_EQ(2.0, fmod(12.0, 10.0));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnan(fmod(HUGE_VAL, 10.0f)));
+  ASSERT_TRUE(isnan(fmod(-HUGE_VAL, 10.0f)));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnan(fmod(nan(""), 10.0)));
+  ASSERT_TRUE(isnan(fmod(12.0, nan(""))));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnan(fmod(3.0, 0.0)));
 }
 
 TEST(MATH_TEST, fmodf) {
   ASSERT_FLOAT_EQ(2.0f, fmodf(12.0f, 10.0f));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanf(fmodf(HUGE_VALF, 10.0f)));
+  ASSERT_TRUE(isnanf(fmodf(-HUGE_VALF, 10.0f)));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanf(fmodf(nanf(""), 10.0f)));
+  ASSERT_TRUE(isnanf(fmodf(12.0f, nan(""))));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanf(fmodf(3.0f, 0.0f)));
 }
 
 TEST(MATH_TEST, fmodl) {
   ASSERT_DOUBLE_EQ(2.0L, fmodl(12.0L, 10.0L));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanl(fmodl(HUGE_VALL, 10.0L)));
+  ASSERT_TRUE(isnanl(fmodl(-HUGE_VALL, 10.0L)));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanl(fmodl(nanl(""), 10.0L)));
+  ASSERT_TRUE(isnanl(fmodl(12.0L, nanl(""))));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanl(fmodl(3.0L, 0.0L)));
 }
 
 TEST(MATH_TEST, remainder) {
   ASSERT_DOUBLE_EQ(2.0, remainder(12.0, 10.0));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnan(remainder(nan(""), 10.0)));
+  ASSERT_TRUE(isnan(remainder(12.0, nan(""))));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnan(remainder(HUGE_VAL, 10.0)));
+  ASSERT_TRUE(isnan(remainder(-HUGE_VAL, 10.0)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnan(remainder(12.0, 0.0)));
 }
 
 TEST(MATH_TEST, remainderf) {
   ASSERT_FLOAT_EQ(2.0f, remainderf(12.0f, 10.0f));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanf(remainderf(nanf(""), 10.0f)));
+  ASSERT_TRUE(isnanf(remainderf(12.0f, nanf(""))));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanf(remainderf(HUGE_VALF, 10.0f)));
+  ASSERT_TRUE(isnanf(remainderf(-HUGE_VALF, 10.0f)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanf(remainderf(12.0f, 0.0f)));
 }
 
 TEST(MATH_TEST, remainderl) {
   ASSERT_DOUBLE_EQ(2.0L, remainderl(12.0L, 10.0L));
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanl(remainderl(nanl(""), 10.0L)));
+  ASSERT_TRUE(isnanl(remainderl(12.0L, nanl(""))));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanl(remainderl(HUGE_VALL, 10.0L)));
+  ASSERT_TRUE(isnanl(remainderl(-HUGE_VALL, 10.0L)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanl(remainderl(12.0L, 0.0L)));
 }
 
 TEST(MATH_TEST, drem) {
@@ -852,14 +944,44 @@ TEST(MATH_TEST, fmal) {
 
 TEST(MATH_TEST, hypot) {
   ASSERT_DOUBLE_EQ(5.0, hypot(3.0, 4.0));
+
+  // If x or y is an infinity, returns positive infinity.
+  ASSERT_EQ(HUGE_VAL, hypot(3.0, HUGE_VAL));
+  ASSERT_EQ(HUGE_VAL, hypot(3.0, -HUGE_VAL));
+  ASSERT_EQ(HUGE_VAL, hypot(HUGE_VAL, 4.0));
+  ASSERT_EQ(HUGE_VAL, hypot(-HUGE_VAL, 4.0));
+
+  // If x or y is a NaN, returns NaN.
+  ASSERT_TRUE(isnan(hypot(3.0, nan(""))));
+  ASSERT_TRUE(isnan(hypot(nan(""), 4.0)));
 }
 
 TEST(MATH_TEST, hypotf) {
   ASSERT_FLOAT_EQ(5.0f, hypotf(3.0f, 4.0f));
+
+  // If x or y is an infinity, returns positive infinity.
+  ASSERT_EQ(HUGE_VALF, hypotf(3.0f, HUGE_VALF));
+  ASSERT_EQ(HUGE_VALF, hypotf(3.0f, -HUGE_VALF));
+  ASSERT_EQ(HUGE_VALF, hypotf(HUGE_VALF, 4.0f));
+  ASSERT_EQ(HUGE_VALF, hypotf(-HUGE_VALF, 4.0f));
+
+  // If x or y is a NaN, returns NaN.
+  ASSERT_TRUE(isnanf(hypotf(3.0f, nanf(""))));
+  ASSERT_TRUE(isnanf(hypotf(nanf(""), 4.0f)));
 }
 
 TEST(MATH_TEST, hypotl) {
   ASSERT_DOUBLE_EQ(5.0L, hypotl(3.0L, 4.0L));
+
+  // If x or y is an infinity, returns positive infinity.
+  ASSERT_EQ(HUGE_VALL, hypotl(3.0L, HUGE_VALL));
+  ASSERT_EQ(HUGE_VALL, hypotl(3.0L, -HUGE_VALL));
+  ASSERT_EQ(HUGE_VALL, hypotl(HUGE_VALL, 4.0L));
+  ASSERT_EQ(HUGE_VALL, hypotl(-HUGE_VALL, 4.0L));
+
+  // If x or y is a NaN, returns NaN.
+  ASSERT_TRUE(isnanl(hypotl(3.0L, nanl(""))));
+  ASSERT_TRUE(isnanl(hypotl(nanl(""), 4.0L)));
 }
 
 TEST(MATH_TEST, erf) {
@@ -983,6 +1105,7 @@ TEST(MATH_TEST, ilogb) {
   ASSERT_EQ(FP_ILOGB0, ilogb(0.0));
   ASSERT_EQ(FP_ILOGBNAN, ilogb(nan("")));
   ASSERT_EQ(INT_MAX, ilogb(HUGE_VAL));
+  ASSERT_EQ(INT_MAX, ilogb(-HUGE_VAL));
   ASSERT_EQ(0, ilogb(1.0));
   ASSERT_EQ(3, ilogb(10.0));
 }
@@ -991,6 +1114,7 @@ TEST(MATH_TEST, ilogbf) {
   ASSERT_EQ(FP_ILOGB0, ilogbf(0.0f));
   ASSERT_EQ(FP_ILOGBNAN, ilogbf(nanf("")));
   ASSERT_EQ(INT_MAX, ilogbf(HUGE_VALF));
+  ASSERT_EQ(INT_MAX, ilogbf(-HUGE_VALF));
   ASSERT_EQ(0, ilogbf(1.0f));
   ASSERT_EQ(3, ilogbf(10.0f));
 }
@@ -999,6 +1123,7 @@ TEST(MATH_TEST, ilogbl) {
   ASSERT_EQ(FP_ILOGB0, ilogbl(0.0L));
   ASSERT_EQ(FP_ILOGBNAN, ilogbl(nanl("")));
   ASSERT_EQ(INT_MAX, ilogbl(HUGE_VALL));
+  ASSERT_EQ(INT_MAX, ilogbl(-HUGE_VALL));
   ASSERT_EQ(0L, ilogbl(1.0L));
   ASSERT_EQ(3L, ilogbl(10.0L));
 }
@@ -1007,6 +1132,7 @@ TEST(MATH_TEST, logb) {
   ASSERT_EQ(-HUGE_VAL, logb(0.0));
   ASSERT_TRUE(isnan(logb(nan(""))));
   ASSERT_TRUE(isinf(logb(HUGE_VAL)));
+  ASSERT_TRUE(isinf(logb(-HUGE_VAL)));
   ASSERT_EQ(0.0, logb(1.0));
   ASSERT_EQ(3.0, logb(10.0));
 }
@@ -1015,6 +1141,7 @@ TEST(MATH_TEST, logbf) {
   ASSERT_EQ(-HUGE_VALF, logbf(0.0f));
   ASSERT_TRUE(isnanf(logbf(nanf(""))));
   ASSERT_TRUE(isinff(logbf(HUGE_VALF)));
+  ASSERT_TRUE(isinff(logbf(-HUGE_VALF)));
   ASSERT_EQ(0.0f, logbf(1.0f));
   ASSERT_EQ(3.0f, logbf(10.0f));
 }
@@ -1023,6 +1150,7 @@ TEST(MATH_TEST, logbl) {
   ASSERT_EQ(-HUGE_VAL, logbl(0.0L));
   ASSERT_TRUE(isnan(logbl(nanl(""))));
   ASSERT_TRUE(isinf(logbl(HUGE_VALL)));
+  ASSERT_TRUE(isinf(logbl(-HUGE_VALL)));
   ASSERT_EQ(0.0L, logbl(1.0L));
   ASSERT_EQ(3.0L, logbl(10.0L));
 }
@@ -1031,6 +1159,7 @@ TEST(MATH_TEST, log1p) {
   ASSERT_EQ(-HUGE_VAL, log1p(-1.0));
   ASSERT_TRUE(isnan(log1p(nan(""))));
   ASSERT_TRUE(isinf(log1p(HUGE_VAL)));
+  ASSERT_TRUE(isnan(log1p(-HUGE_VAL)));
   ASSERT_DOUBLE_EQ(1.0, log1p(M_E - 1.0));
 }
 
@@ -1038,13 +1167,15 @@ TEST(MATH_TEST, log1pf) {
   ASSERT_EQ(-HUGE_VALF, log1pf(-1.0f));
   ASSERT_TRUE(isnanf(log1pf(nanf(""))));
   ASSERT_TRUE(isinff(log1pf(HUGE_VALF)));
+  ASSERT_TRUE(isnanf(log1pf(-HUGE_VALF)));
   ASSERT_FLOAT_EQ(1.0f, log1pf(static_cast<float>(M_E) - 1.0f));
 }
 
 TEST(MATH_TEST, log1pl) {
   ASSERT_EQ(-HUGE_VALL, log1pl(-1.0L));
-  ASSERT_TRUE(isnan(log1pl(nanl(""))));
-  ASSERT_TRUE(isinf(log1pl(HUGE_VALL)));
+  ASSERT_TRUE(isnanl(log1pl(nanl(""))));
+  ASSERT_TRUE(isinfl(log1pl(HUGE_VALL)));
+  ASSERT_TRUE(isnanl(log1pl(-HUGE_VALL)));
   ASSERT_DOUBLE_EQ(1.0L, log1pl(M_E - 1.0L));
 }
 
@@ -1075,6 +1206,7 @@ TEST(MATH_TEST, round) {
   ASSERT_DOUBLE_EQ(-0.0, round(-0.0));
   ASSERT_TRUE(isnan(round(nan(""))));
   ASSERT_DOUBLE_EQ(HUGE_VAL, round(HUGE_VAL));
+  ASSERT_DOUBLE_EQ(-HUGE_VAL, round(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, roundf) {
@@ -1086,6 +1218,7 @@ TEST(MATH_TEST, roundf) {
   ASSERT_FLOAT_EQ(-0.0f, roundf(-0.0f));
   ASSERT_TRUE(isnanf(roundf(nanf(""))));
   ASSERT_FLOAT_EQ(HUGE_VALF, roundf(HUGE_VALF));
+  ASSERT_FLOAT_EQ(-HUGE_VALF, roundf(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, roundl) {
@@ -1097,6 +1230,7 @@ TEST(MATH_TEST, roundl) {
   ASSERT_DOUBLE_EQ(-0.0L, roundl(-0.0L));
   ASSERT_TRUE(isnan(roundl(nanl(""))));
   ASSERT_DOUBLE_EQ(HUGE_VALL, roundl(HUGE_VALL));
+  ASSERT_DOUBLE_EQ(-HUGE_VALL, roundl(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, trunc) {
@@ -1108,6 +1242,7 @@ TEST(MATH_TEST, trunc) {
   ASSERT_DOUBLE_EQ(-0.0, trunc(-0.0));
   ASSERT_TRUE(isnan(trunc(nan(""))));
   ASSERT_DOUBLE_EQ(HUGE_VAL, trunc(HUGE_VAL));
+  ASSERT_DOUBLE_EQ(-HUGE_VAL, trunc(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, truncf) {
@@ -1119,6 +1254,7 @@ TEST(MATH_TEST, truncf) {
   ASSERT_FLOAT_EQ(-0.0f, truncf(-0.0f));
   ASSERT_TRUE(isnan(truncf(nanf(""))));
   ASSERT_FLOAT_EQ(HUGE_VALF, truncf(HUGE_VALF));
+  ASSERT_FLOAT_EQ(-HUGE_VALF, truncf(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, truncl) {
@@ -1130,6 +1266,7 @@ TEST(MATH_TEST, truncl) {
   ASSERT_DOUBLE_EQ(-0.0L, truncl(-0.0L));
   ASSERT_TRUE(isnan(truncl(nan(""))));
   ASSERT_DOUBLE_EQ(HUGE_VALL, truncl(HUGE_VALL));
+  ASSERT_DOUBLE_EQ(-HUGE_VALL, truncl(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, nextafter) {
@@ -1452,6 +1589,17 @@ TEST(MATH_TEST, remquo) {
   double d = remquo(13.0, 4.0, &q);
   ASSERT_EQ(3, q);
   ASSERT_DOUBLE_EQ(1.0, d);
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnan(remquo(nan(""), 10.0, &q)));
+  ASSERT_TRUE(isnan(remquo(12.0, nan(""), &q)));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnan(remquo(HUGE_VAL, 10.0, &q)));
+  ASSERT_TRUE(isnan(remquo(-HUGE_VAL, 10.0, &q)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnan(remquo(12.0, 0.0, &q)));
 }
 
 TEST(MATH_TEST, remquof) {
@@ -1459,6 +1607,17 @@ TEST(MATH_TEST, remquof) {
   float f = remquof(13.0f, 4.0f, &q);
   ASSERT_EQ(3, q);
   ASSERT_FLOAT_EQ(1.0, f);
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanf(remquof(nanf(""), 10.0f, &q)));
+  ASSERT_TRUE(isnanf(remquof(12.0f, nanf(""), &q)));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanf(remquof(HUGE_VALF, 10.0f, &q)));
+  ASSERT_TRUE(isnanf(remquof(-HUGE_VALF, 10.0f, &q)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanf(remquof(12.0f, 0.0f, &q)));
 }
 
 TEST(MATH_TEST, remquol) {
@@ -1466,6 +1625,17 @@ TEST(MATH_TEST, remquol) {
   long double ld = remquol(13.0L, 4.0L, &q);
   ASSERT_DOUBLE_EQ(3L, q);
   ASSERT_DOUBLE_EQ(1.0L, ld);
+
+  // If x or y is a NaN, NaN is returned.
+  ASSERT_TRUE(isnanl(remquol(nanl(""), 10.0L, &q)));
+  ASSERT_TRUE(isnanl(remquol(12.0L, nanl(""), &q)));
+
+  // If x is an infinity, NaN is returned.
+  ASSERT_TRUE(isnanl(remquol(HUGE_VALL, 10.0L, &q)));
+  ASSERT_TRUE(isnanl(remquol(-HUGE_VALL, 10.0L, &q)));
+
+  // If y is 0, NaN is returned.
+  ASSERT_TRUE(isnanl(remquol(12.0L, 0.0L, &q)));
 }
 
 // https://code.google.com/p/android/issues/detail?id=6697

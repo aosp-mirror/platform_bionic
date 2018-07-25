@@ -62,3 +62,5 @@ constexpr char LOG_DIVIDER[] = "*** *** *** *** *** *** *** *** *** *** *** *** 
 constexpr size_t FREE_TRACK_MEM_BUFFER_SIZE = 4096;
 
 extern const MallocDispatch* g_dispatch;
+
+void BacktraceAndLog();

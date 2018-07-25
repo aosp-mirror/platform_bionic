@@ -51,8 +51,6 @@ char* getcwd(char* buf, size_t size) {
     }
     buf = allocated_buf = static_cast<char*>(malloc(allocated_size));
     if (buf == NULL) {
-      // malloc should set errno, but valgrind's malloc wrapper doesn't.
-      errno = ENOMEM;
       return NULL;
     }
   }

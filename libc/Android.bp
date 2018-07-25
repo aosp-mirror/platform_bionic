@@ -73,6 +73,7 @@ cc_defaults {
         never: true,
     },
     native_coverage: false,
+    recovery_available: true,
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
@@ -101,7 +102,10 @@ cc_library_static {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
         },
         x86: {
-            srcs: ["arch-x86/bionic/__set_tls.cpp"],
+            srcs: [
+                "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/bionic/__set_tls.cpp",
+            ],
         },
         x86_64: {
             srcs: ["arch-x86_64/bionic/__set_tls.c"],
@@ -329,7 +333,6 @@ cc_library_static {
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
         "upstream-netbsd/lib/libc/gen/nice.c",
-        "upstream-netbsd/lib/libc/gen/popen.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
         "upstream-netbsd/lib/libc/gen/utime.c",
         "upstream-netbsd/lib/libc/gen/utmp.c",
@@ -446,7 +449,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/fputwc.c",
         "upstream-openbsd/lib/libc/stdio/fputws.c",
         "upstream-openbsd/lib/libc/stdio/fvwrite.c",
-        "upstream-openbsd/lib/libc/stdio/fwalk.c",
         "upstream-openbsd/lib/libc/stdio/fwide.c",
         "upstream-openbsd/lib/libc/stdio/getdelim.c",
         "upstream-openbsd/lib/libc/stdio/gets.c",
@@ -545,7 +547,6 @@ cc_library_static {
 
         // May be overriden by per-arch optimized versions
         "upstream-openbsd/lib/libc/string/memchr.c",
-        "upstream-openbsd/lib/libc/string/memmove.c",
         "upstream-openbsd/lib/libc/string/memrchr.c",
         "upstream-openbsd/lib/libc/string/stpcpy.c",
         "upstream-openbsd/lib/libc/string/stpncpy.c",
@@ -565,7 +566,6 @@ cc_library_static {
             ],
             neon: {
                 exclude_srcs: [
-                    "upstream-openbsd/lib/libc/string/memmove.c",
                     "upstream-openbsd/lib/libc/string/stpcpy.c",
                     "upstream-openbsd/lib/libc/string/strcat.c",
                 ],
@@ -574,7 +574,6 @@ cc_library_static {
         arm64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -583,7 +582,6 @@ cc_library_static {
         mips: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
@@ -591,7 +589,6 @@ cc_library_static {
         mips64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
@@ -599,7 +596,6 @@ cc_library_static {
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
@@ -619,7 +615,6 @@ cc_library_static {
 
         x86_64: {
             exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memmove.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/stpncpy.c",
                 "upstream-openbsd/lib/libc/string/strcat.c",
@@ -858,7 +853,7 @@ cc_library_static {
         arm: {
             srcs: [
                 "arch-arm/generic/bionic/memcmp.S",
-                "arch-arm/generic/bionic/memcpy.S",
+                "arch-arm/generic/bionic/memmove.S",
                 "arch-arm/generic/bionic/memset.S",
                 "arch-arm/generic/bionic/strcmp.S",
                 "arch-arm/generic/bionic/strcpy.S",
@@ -876,8 +871,8 @@ cc_library_static {
             ],
             cortex_a7: {
                 srcs: [
-                    "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/cortex-a7/bionic/memcpy.S",
+                    "arch-arm/cortex-a7/bionic/memset.S",
                 ],
                 exclude_srcs: [
                     "arch-arm/cortex-a15/bionic/memcpy.S",
@@ -896,8 +891,8 @@ cc_library_static {
                     "arch-arm/cortex-a9/bionic/strlen.S",
                 ],
                 exclude_srcs: [
-                    "arch-arm/cortex-a15/bionic/memset.S",
                     "arch-arm/cortex-a15/bionic/memcpy.S",
+                    "arch-arm/cortex-a15/bionic/memset.S",
 
                     "arch-arm/cortex-a15/bionic/stpcpy.S",
                     "arch-arm/cortex-a15/bionic/strcat.S",
@@ -1009,6 +1004,7 @@ cc_library_static {
                 ],
                 exclude_srcs: [
                     "arch-arm/generic/bionic/memcpy.S",
+                    "arch-arm/generic/bionic/memmove.S",
                     "arch-arm/generic/bionic/memset.S",
                     "arch-arm/generic/bionic/strcmp.S",
                     "arch-arm/generic/bionic/strcpy.S",
@@ -1046,43 +1042,13 @@ cc_library_static {
             denver64: {
                 srcs: [
                     "arch-arm64/denver64/bionic/memcpy.S",
+                    "arch-arm64/denver64/bionic/memmove.S",
                     "arch-arm64/denver64/bionic/memset.S",
                 ],
                 exclude_srcs: [
                     "arch-arm64/generic/bionic/memcpy.S",
+                    "arch-arm64/generic/bionic/memmove.S",
                     "arch-arm64/generic/bionic/memset.S",
-                ],
-            },
-            cortex_a53: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a55: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a73: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
-                ],
-            },
-            cortex_a75: {
-                srcs: [
-                    "arch-arm64/cortex-a53/bionic/memmove.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memmove.S",
                 ],
             },
         },
@@ -1156,7 +1122,6 @@ cc_library_static {
                 "arch-x86/atom/string/sse2-wcsrchr-atom.S",
                 "arch-x86/atom/string/sse2-wcslen-atom.S",
                 "arch-x86/atom/string/sse2-wcscmp-atom.S",
-                "arch-x86/silvermont/string/sse2-memcpy-slm.S",
                 "arch-x86/silvermont/string/sse2-memmove-slm.S",
                 "arch-x86/silvermont/string/sse2-memset-slm.S",
                 "arch-x86/silvermont/string/sse2-stpcpy-slm.S",
@@ -1185,14 +1150,12 @@ cc_library_static {
                     "arch-x86/atom/string/sse2-strlen-atom.S",
                     "arch-x86/atom/string/ssse3-memcmp-atom.S",
                     "arch-x86/atom/string/ssse3-memcpy-atom.S",
-                    "arch-x86/atom/string/ssse3-memmove-atom.S",
                     "arch-x86/atom/string/ssse3-strcpy-atom.S",
                     "arch-x86/atom/string/ssse3-strncpy-atom.S",
                     "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
                 ],
                 exclude_srcs: [
                     "arch-x86/generic/string/memcmp.S",
-                    "arch-x86/silvermont/string/sse2-memcpy-slm.S",
                     "arch-x86/silvermont/string/sse2-memmove-slm.S",
                     "arch-x86/silvermont/string/sse2-memset-slm.S",
                     "arch-x86/silvermont/string/sse2-strcpy-slm.S",
@@ -1229,7 +1192,6 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
-                "arch-x86_64/string/sse2-memcpy-slm.S",
                 "arch-x86_64/string/sse2-memmove-slm.S",
                 "arch-x86_64/string/sse2-memset-slm.S",
                 "arch-x86_64/string/sse2-stpcpy-slm.S",
@@ -1303,7 +1265,6 @@ cc_library_static {
         "bionic/clock_getcpuclockid.cpp",
         "bionic/clock_nanosleep.cpp",
         "bionic/clone.cpp",
-        "bionic/close.cpp",
         "bionic/connect.cpp",
         "bionic/ctype.cpp",
         "bionic/dirent.cpp",
@@ -1316,6 +1277,7 @@ cc_library_static {
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
+        "bionic/fdsan.cpp",
         "bionic/ffs.cpp",
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
@@ -1427,6 +1389,7 @@ cc_library_static {
         "bionic/tdestroy.cpp",
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
+        "bionic/timespec_get.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
@@ -1771,6 +1734,7 @@ cc_library {
     arch: {
         arm: {
             //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
@@ -1804,6 +1768,7 @@ cc_library {
         },
         x86: {
             //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
 
             // Don't re-export new/delete and friends, even if the compiler really wants to.
@@ -1835,6 +1800,7 @@ cc_library {
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: "libstdc++.arm.map",
         },
@@ -1848,6 +1814,7 @@ cc_library {
             version_script: "libstdc++.mips64.map",
         },
         x86: {
+            pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: "libstdc++.x86.map",
         },
@@ -1861,6 +1828,7 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
+    recovery_available: true,
 
     cflags: [
         "-Wno-gcc-compat",
@@ -2021,7 +1989,7 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
-preprocessed_ndk_headers {
+versioned_ndk_headers {
     name: "common_libc",
     from: "include",
     to: "",

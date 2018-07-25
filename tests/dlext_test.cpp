@@ -173,7 +173,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithInvalidOffset) {
   extinfo.library_fd_offset = 0;
   handle_ = android_dlopen_ext("libname_ignored", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle_ == nullptr);
-  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic", dlerror());
+  ASSERT_EQ("dlopen failed: \"" + lib_path + "\" has bad ELF magic: 504b0304", dlerror());
 
   // Check if dlsym works after unsuccessful dlopen().
   // Supply non-exiting one to make linker visit every soinfo.
@@ -1921,7 +1921,7 @@ TEST(dlext, ns_anonymous) {
   // some sanity checks..
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
-  ASSERT_EQ(3U, maps_to_copy.size());
+  ASSERT_TRUE(maps_to_copy.size() > 0);
   ASSERT_TRUE(ns_get_dlopened_string_addr > addr_start);
   ASSERT_TRUE(ns_get_dlopened_string_addr < addr_end);
 

@@ -31,9 +31,6 @@ typedef union sigval {
 #ifndef SI_PAD_SIZE
 #define SI_PAD_SIZE ((SI_MAX_SIZE - __ARCH_SI_PREAMBLE_SIZE) / sizeof(int))
 #endif
-#ifndef __ARCH_SI_UID_T
-#define __ARCH_SI_UID_T __kernel_uid32_t
-#endif
 #ifndef __ARCH_SI_BAND_T
 #define __ARCH_SI_BAND_T long
 #endif
@@ -43,32 +40,35 @@ typedef union sigval {
 #ifndef __ARCH_SI_ATTRIBUTES
 #define __ARCH_SI_ATTRIBUTES
 #endif
-#ifndef HAVE_ARCH_SIGINFO_T
 typedef struct siginfo {
   int si_signo;
+#ifndef __ARCH_HAS_SWAPPED_SIGINFO
   int si_errno;
   int si_code;
+#else
+  int si_code;
+  int si_errno;
+#endif
   union {
     int _pad[SI_PAD_SIZE];
     struct {
       __kernel_pid_t _pid;
-      __ARCH_SI_UID_T _uid;
+      __kernel_uid32_t _uid;
     } _kill;
     struct {
       __kernel_timer_t _tid;
       int _overrun;
-      char _pad[sizeof(__ARCH_SI_UID_T) - sizeof(int)];
       sigval_t _sigval;
       int _sys_private;
     } _timer;
     struct {
       __kernel_pid_t _pid;
-      __ARCH_SI_UID_T _uid;
+      __kernel_uid32_t _uid;
       sigval_t _sigval;
     } _rt;
     struct {
       __kernel_pid_t _pid;
-      __ARCH_SI_UID_T _uid;
+      __kernel_uid32_t _uid;
       int _status;
       __ARCH_SI_CLOCK_T _utime;
       __ARCH_SI_CLOCK_T _stime;
@@ -78,13 +78,23 @@ typedef struct siginfo {
 #ifdef __ARCH_SI_TRAPNO
       int _trapno;
 #endif
-      short _addr_lsb;
+#ifdef __ia64__
+      int _imm;
+      unsigned int _flags;
+      unsigned long _isr;
+#endif
+#define __ADDR_BND_PKEY_PAD (__alignof__(void *) < sizeof(short) ? sizeof(short) : __alignof__(void *))
       union {
+        short _addr_lsb;
         struct {
+          char _dummy_bnd[__ADDR_BND_PKEY_PAD];
           void __user * _lower;
           void __user * _upper;
         } _addr_bnd;
-        __u32 _pkey;
+        struct {
+          char _dummy_pkey[__ADDR_BND_PKEY_PAD];
+          __u32 _pkey;
+        } _addr_pkey;
       };
     } _sigfault;
     struct {
@@ -98,8 +108,6 @@ typedef struct siginfo {
     } _sigsys;
   } _sifields;
 } __ARCH_SI_ATTRIBUTES siginfo_t;
-#define __ARCH_SIGSYS
-#endif
 #define si_pid _sifields._kill._pid
 #define si_uid _sifields._kill._uid
 #define si_tid _sifields._timer._tid
@@ -118,14 +126,12 @@ typedef struct siginfo {
 #define si_addr_lsb _sifields._sigfault._addr_lsb
 #define si_lower _sifields._sigfault._addr_bnd._lower
 #define si_upper _sifields._sigfault._addr_bnd._upper
-#define si_pkey _sifields._sigfault._pkey
+#define si_pkey _sifields._sigfault._addr_pkey._pkey
 #define si_band _sifields._sigpoll._band
 #define si_fd _sifields._sigpoll._fd
-#ifdef __ARCH_SIGSYS
 #define si_call_addr _sifields._sigsys._call_addr
 #define si_syscall _sifields._sigsys._syscall
 #define si_arch _sifields._sigsys._arch
-#endif
 #define SI_USER 0
 #define SI_KERNEL 0x80
 #define SI_QUEUE - 1
@@ -135,6 +141,7 @@ typedef struct siginfo {
 #define SI_SIGIO - 5
 #define SI_TKILL - 6
 #define SI_DETHREAD - 7
+#define SI_ASYNCNL - 60
 #define SI_FROMUSER(siptr) ((siptr)->si_code <= 0)
 #define SI_FROMKERNEL(siptr) ((siptr)->si_code > 0)
 #define ILL_ILLOPC 1
@@ -145,7 +152,10 @@ typedef struct siginfo {
 #define ILL_PRVREG 6
 #define ILL_COPROC 7
 #define ILL_BADSTK 8
-#define NSIGILL 8
+#define ILL_BADIADDR 9
+#define __ILL_BREAK 10
+#define __ILL_BNDMOD 11
+#define NSIGILL 11
 #define FPE_INTDIV 1
 #define FPE_INTOVF 2
 #define FPE_FLTDIV 3
@@ -154,12 +164,26 @@ typedef struct siginfo {
 #define FPE_FLTRES 6
 #define FPE_FLTINV 7
 #define FPE_FLTSUB 8
-#define NSIGFPE 8
+#define __FPE_DECOVF 9
+#define __FPE_DECDIV 10
+#define __FPE_DECERR 11
+#define __FPE_INVASC 12
+#define __FPE_INVDEC 13
+#define FPE_FLTUNK 14
+#define FPE_CONDTRAP 15
+#define NSIGFPE 15
 #define SEGV_MAPERR 1
 #define SEGV_ACCERR 2
 #define SEGV_BNDERR 3
+#ifdef __ia64__
+#define __SEGV_PSTKOVF 4
+#else
 #define SEGV_PKUERR 4
-#define NSIGSEGV 4
+#endif
+#define SEGV_ACCADI 5
+#define SEGV_ADIDERR 6
+#define SEGV_ADIPERR 7
+#define NSIGSEGV 7
 #define BUS_ADRALN 1
 #define BUS_ADRERR 2
 #define BUS_OBJERR 3

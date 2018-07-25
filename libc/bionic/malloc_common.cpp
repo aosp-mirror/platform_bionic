@@ -39,6 +39,7 @@
 //                         allocations that are currently in use.
 //   free_malloc_leak_info: Frees the data allocated by the call to
 //                          get_malloc_leak_info.
+//   write_malloc_leak_info: Writes the leak info data to a file.
 
 #include <pthread.h>
 
@@ -211,6 +212,7 @@ enum FunctionEnum : uint8_t {
   FUNC_GET_MALLOC_LEAK_INFO,
   FUNC_FREE_MALLOC_LEAK_INFO,
   FUNC_MALLOC_BACKTRACE,
+  FUNC_WRITE_LEAK_INFO,
   FUNC_LAST,
 };
 static void* g_functions[FUNC_LAST];
@@ -219,6 +221,7 @@ typedef void (*finalize_func_t)();
 typedef bool (*init_func_t)(const MallocDispatch*, int*, const char*);
 typedef void (*get_malloc_leak_info_func_t)(uint8_t**, size_t*, size_t*, size_t*, size_t*);
 typedef void (*free_malloc_leak_info_func_t)(uint8_t*);
+typedef bool (*write_malloc_leak_info_func_t)(FILE*);
 typedef ssize_t (*malloc_backtrace_func_t)(void*, uintptr_t*, size_t);
 
 // =============================================================================
@@ -258,6 +261,26 @@ extern "C" void free_malloc_leak_info(uint8_t* info) {
     return;
   }
   reinterpret_cast<free_malloc_leak_info_func_t>(func)(info);
+}
+
+extern "C" void write_malloc_leak_info(FILE* fp) {
+  if (fp == nullptr) {
+    error_log("write_malloc_leak_info called with a nullptr");
+    return;
+  }
+
+  void* func = g_functions[FUNC_WRITE_LEAK_INFO];
+  bool written = false;
+  if (func != nullptr) {
+    written = reinterpret_cast<write_malloc_leak_info_func_t>(func)(fp);
+  }
+
+  if (!written) {
+    fprintf(fp, "Native heap dump not available. To enable, run these commands (requires root):\n");
+    fprintf(fp, "# adb shell stop\n");
+    fprintf(fp, "# adb shell setprop libc.debug.malloc.options backtrace\n");
+    fprintf(fp, "# adb shell start\n");
+  }
 }
 
 // =============================================================================
@@ -392,6 +415,7 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
     "get_malloc_leak_info",
     "free_malloc_leak_info",
     "malloc_backtrace",
+    "write_malloc_leak_info",
   };
   for (size_t i = 0; i < FUNC_LAST; i++) {
     char symbol[128];

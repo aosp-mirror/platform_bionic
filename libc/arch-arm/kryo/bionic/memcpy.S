@@ -34,7 +34,7 @@
 #define PLDSIZE (128) /* L2 cache line size */
 
         .code 32
-ENTRY(memcpy)
+ENTRY(__memcpy)
         push            {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0
@@ -123,4 +123,4 @@ ENTRY(memcpy)
         pop             {r0}
         bx              lr
 
-END(memcpy)
+END(__memcpy)

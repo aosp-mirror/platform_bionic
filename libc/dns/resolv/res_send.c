@@ -97,6 +97,7 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #include <errno.h>
 #include <fcntl.h>
 #include <netdb.h>
+#include <poll.h>
 #ifdef ANDROID_CHANGES
 #include "resolv_netid.h"
 #include "resolv_private.h"
@@ -133,8 +134,6 @@ __RCSID("$NetBSD: res_send.c,v 1.9 2006/01/24 17:41:25 christos Exp $");
 #define EXT(res) ((res)->_u._ext)
 #define DBG 0
 
-static const int highestFD = FD_SETSIZE - 1;
-
 /* Forward. */
 
 static int		get_salen __P((const struct sockaddr *));
@@ -150,16 +149,10 @@ static void		Aerror(const res_state, FILE *, const char *, int,
 			       const struct sockaddr *, int);
 static void		Perror(const res_state, FILE *, const char *, int);
 static int		sock_eq(struct sockaddr *, struct sockaddr *);
-#ifdef NEED_PSELECT
-static int		pselect(int, void *, void *, void *,
-				struct timespec *,
-				const sigset_t *);
-#endif
 void res_pquery(const res_state, const u_char *, int, FILE *);
 static int connect_with_timeout(int sock, const struct sockaddr *nsap,
 			socklen_t salen, int sec);
-static int retrying_select(const int sock, fd_set *readset, fd_set *writeset,
-			const struct timespec *finish);
+static int retrying_poll(const int sock, short events, const struct timespec* finish);
 
 /* BIONIC-BEGIN: implement source port randomization */
 typedef union {
@@ -802,10 +795,6 @@ send_vc(res_state statp,
 			res_nclose(statp);
 
 		statp->_vcsock = socket(nsap->sa_family, SOCK_STREAM | SOCK_CLOEXEC, 0);
-		if (statp->_vcsock > highestFD) {
-			res_nclose(statp);
-			errno = ENOTSOCK;
-		}
 		if (statp->_vcsock < 0) {
 			switch (errno) {
 			case EPROTONOSUPPORT:
@@ -849,7 +838,7 @@ send_vc(res_state statp,
 			 * determining whether this was really a timeout or e.g. ECONNREFUSED. Since
 			 * currently both cases are handled in the same way, there is no need to
 			 * change this (yet). If we ever need to reliably distinguish between these
-			 * cases, both connect_with_timeout() and retrying_select() need to be
+			 * cases, both connect_with_timeout() and retrying_poll() need to be
 			 * modified, though.
 			 */
 			*rcode = RCODE_TIMEOUT;
@@ -983,8 +972,6 @@ static int
 connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int sec)
 {
 	int res, origflags;
-	fd_set rset, wset;
-	struct timespec now, timeout, finish;
 
 	origflags = fcntl(sock, F_GETFL, 0);
 	fcntl(sock, F_SETFL, origflags | O_NONBLOCK);
@@ -995,14 +982,14 @@ connect_with_timeout(int sock, const struct sockaddr *nsap, socklen_t salen, int
 		goto done;
 	}
 	if (res != 0) {
-		now = evNowTime();
-		timeout = evConsTime((long)sec, 0L);
-		finish = evAddTime(now, timeout);
+		struct timespec now = evNowTime();
+		struct timespec timeout = evConsTime((long)sec, 0L);
+		struct timespec finish = evAddTime(now, timeout);
 		if (DBG) {
 			async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d send_vc\n", sock);
 		}
 
-		res = retrying_select(sock, &rset, &wset, &finish);
+		res = retrying_poll(sock, POLLIN | POLLOUT, &finish);
 		if (res <= 0) {
 			res = -1;
 		}
@@ -1017,37 +1004,25 @@ done:
 }
 
 static int
-retrying_select(const int sock, fd_set *readset, fd_set *writeset, const struct timespec *finish)
-{
+retrying_poll(const int sock, const short events, const struct timespec* finish) {
 	struct timespec now, timeout;
-	int n, error;
-	socklen_t len;
-
 
 retry:
 	if (DBG) {
-		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d retrying_select\n", sock);
+		async_safe_format_log(ANDROID_LOG_DEBUG, "libc", "  %d retrying_poll\n", sock);
 	}
 
 	now = evNowTime();
-	if (readset) {
-		FD_ZERO(readset);
-		FD_SET(sock, readset);
-	}
-	if (writeset) {
-		FD_ZERO(writeset);
-		FD_SET(sock, writeset);
-	}
 	if (evCmpTime(*finish, now) > 0)
 		timeout = evSubTime(*finish, now);
 	else
 		timeout = evConsTime(0L, 0L);
-
-	n = pselect(sock + 1, readset, writeset, NULL, &timeout, NULL);
+	struct pollfd fds = { .fd = sock, .events = events };
+	int n = ppoll(&fds, 1, &timeout, /*sigmask=*/NULL);
 	if (n == 0) {
 		if (DBG) {
 			async_safe_format_log(ANDROID_LOG_DEBUG, " libc",
-				"  %d retrying_select timeout\n", sock);
+				"  %d retrying_poll timeout\n", sock);
 		}
 		errno = ETIMEDOUT;
 		return 0;
@@ -1057,17 +1032,18 @@ retry:
 			goto retry;
 		if (DBG) {
 			async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
-				"  %d retrying_select got error %d\n",sock, n);
+				"  %d retrying_poll got error %d\n",sock, n);
 		}
 		return n;
 	}
-	if ((readset && FD_ISSET(sock, readset)) || (writeset && FD_ISSET(sock, writeset))) {
-		len = sizeof(error);
+	if (fds.revents & (POLLIN | POLLOUT | POLLERR)) {
+		int error;
+		socklen_t len = sizeof(error);
 		if (getsockopt(sock, SOL_SOCKET, SO_ERROR, &error, &len) < 0 || error) {
 			errno = error;
 			if (DBG) {
 				async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
-					"  %d retrying_select dot error2 %d\n", sock, errno);
+					"  %d retrying_poll dot error2 %d\n", sock, errno);
 			}
 
 			return -1;
@@ -1075,7 +1051,7 @@ retry:
 	}
 	if (DBG) {
 		async_safe_format_log(ANDROID_LOG_DEBUG, "libc",
-			"  %d retrying_select returning %d\n",sock, n);
+			"  %d retrying_poll returning %d\n",sock, n);
 	}
 
 	return n;
@@ -1095,7 +1071,6 @@ send_dg(res_state statp,
 	const struct sockaddr *nsap;
 	int nsaplen;
 	struct timespec now, timeout, finish, done;
-	fd_set dsmask;
 	struct sockaddr_storage from;
 	socklen_t fromlen;
 	int resplen, seconds, n, s;
@@ -1104,10 +1079,6 @@ send_dg(res_state statp,
 	nsaplen = get_salen(nsap);
 	if (EXT(statp).nssocks[ns] == -1) {
 		EXT(statp).nssocks[ns] = socket(nsap->sa_family, SOCK_DGRAM | SOCK_CLOEXEC, 0);
-		if (EXT(statp).nssocks[ns] > highestFD) {
-			res_nclose(statp);
-			errno = ENOTSOCK;
-		}
 		if (EXT(statp).nssocks[ns] < 0) {
 			switch (errno) {
 			case EPROTONOSUPPORT:
@@ -1185,7 +1156,7 @@ send_dg(res_state statp,
 	timeout = evConsTime((long)seconds, 0L);
 	finish = evAddTime(now, timeout);
 retry:
-	n = retrying_select(s, &dsmask, NULL, &finish);
+	n = retrying_poll(s, POLLIN, &finish);
 
 	if (n == 0) {
 		*rcode = RCODE_TIMEOUT;
@@ -1194,7 +1165,7 @@ retry:
 		return (0);
 	}
 	if (n < 0) {
-		Perror(statp, stderr, "select", errno);
+		Perror(statp, stderr, "poll", errno);
 		res_nclose(statp);
 		return (0);
 	}
@@ -1367,29 +1338,3 @@ sock_eq(struct sockaddr *a, struct sockaddr *b) {
 		return 0;
 	}
 }
-
-#ifdef NEED_PSELECT
-/* XXX needs to move to the porting library. */
-static int
-pselect(int nfds, void *rfds, void *wfds, void *efds,
-	struct timespec *tsp, const sigset_t *sigmask)
-{
-	struct timeval tv, *tvp;
-	sigset_t sigs;
-	int n;
-
-	if (tsp) {
-		tvp = &tv;
-		tv = evTimeVal(*tsp);
-	} else
-		tvp = NULL;
-	if (sigmask)
-		sigprocmask(SIG_SETMASK, sigmask, &sigs);
-	n = select(nfds, rfds, wfds, efds, tvp);
-	if (sigmask)
-		sigprocmask(SIG_SETMASK, &sigs, NULL);
-	if (tsp)
-		*tsp = evTimeSpec(tv);
-	return (n);
-}
-#endif
