@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_j1f.c 283032 2015-05-17 16:27:06Z kargl $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_j1f.c 336089 2018-07-08 16:26:13Z markj $");
 
 /*
  * See e_j1.c for complete comments.
@@ -32,7 +32,7 @@ huge    = 1e30,
 one	= 1.0,
 invsqrtpi=  5.6418961287e-01, /* 0x3f106ebb */
 tpi      =  6.3661974669e-01, /* 0x3f22f983 */
-	/* R0/S0 on [0,2] */
+/* R0/S0 on [0,2] */
 r00  = -6.2500000000e-02, /* 0xbd800000 */
 r01  =  1.4070566976e-03, /* 0x3ab86cfd */
 r02  = -1.5995563444e-05, /* 0xb7862e36 */

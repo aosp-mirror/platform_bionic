@@ -384,6 +384,9 @@ float ynf(int __n, float __x);
 float gammaf_r(float __x, int* __sign);
 float lgammaf_r(float __x, int* __sign);
 float significandf(float __x);
+void sincos(double __x, double* __sin, double* __cos);
+void sincosf(float __x, float* __sin, float* __cos);
+void sincosl(long double __x, long double* __sin, long double* __cos);
 #endif
 
 /* GNU extensions. */
@@ -402,9 +405,6 @@ float significandf(float __x);
 #define M_2_SQRTPIl     1.128379167095512573896158903121545172L /* 2/sqrt(pi) */
 #define M_SQRT2l        1.414213562373095048801688724209698079L /* sqrt(2) */
 #define M_SQRT1_2l      0.707106781186547524400844362104849039L /* 1/sqrt(2) */
-void sincos(double __x, double* __sin, double* __cos);
-void sincosf(float __x, float* __sin, float* __cos);
-void sincosl(long double __x, long double* __sin, long double* __cos);
 #endif
 
 __END_DECLS
