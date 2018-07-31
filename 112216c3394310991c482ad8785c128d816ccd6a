@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b2581248_e9df0b1c",
+        "filename": "libc/arch-arm/bionic/__aeabi_read_tp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "I filed it as https://bugs.llvm.org/show_bug.cgi?id\u003d38394.",
+      "parentUuid": "ab9cbe6c_3ef31d39",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 43
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eaf778ea_8d7765d8",
         "filename": "libc/bionic/elf_tls.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-31T15:23:23Z",
       "side": 1,
       "message": "explain why jemalloc? i was assuming i\u0027d see mmap...",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 0
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c6f4495_3eb2a52e",
+        "filename": "libc/bionic/elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "I think this should be replaced with some other allocator -- maybe I can adapt one of the linker\u0027s allocators. I think we want some kind of simple heap that uses mmap.\n\nRationale:\n\nA separate mapping for each TLS allocation would be wasteful. e.g. If a dlopen\u0027ed solib has a single thread_local void* variable, we don\u0027t want to map a page per thread, just for that variable. (I assume, anyway.)\n\nEach thread\u0027s DTV (Dynamic Thread Vector) grows as solibs are dlopen\u0027ed and added to the DTV (so we need realloc or at least malloc/free), and we want to free TLS blocks if solibs are unloaded.\n\nThe current use of jemalloc makes __tls_get_addr non-AS-safe, which makes some TLS variables more dangerous than they could be. musl\u0027s TLS is already AS-safe, and there was a discussion several years ago about making glibc AS-safe too. See:\n - https://sourceware.org/glibc/wiki/TLSandSignals\n - https://sourceware.org/ml/libc-alpha/2012-06/msg00335.html\n - https://sourceware.org/ml/libc-alpha/2013-09/msg00563.html",
+      "parentUuid": "eaf778ea_8d7765d8",
       "range": {
         "startLine": 44,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e285362d_78e50012",
+        "filename": "libc/bionic/elf_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "DTV \u003d\u003d Dynamic Thread Vector\n\nYeah, it should be defined, and a link to a spec added. The best spec currently is Drepper\u0027s TLS document, and the latest version of that is at https://www.akkadia.org/drepper/tls.pdf.",
+      "parentUuid": "13542f06_c79335c0",
+      "range": {
+        "startLine": 36,
+        "startChar": 10,
+        "endLine": 36,
+        "endChar": 13
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81351500_40a4ba04",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2018-07-31T15:23:23Z",
       "side": 1,
       "message": "why not with the pthread_internal_t?",
+      "range": {
+        "startLine": 130,
+        "startChar": 56,
+        "endLine": 130,
+        "endChar": 96
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce20cd1b_02eed373",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "When the user doesn\u0027t provide a stack, I think it could make sense to allocate all the fixed-sized thread state in one region (pthread_internal_t, slots, keys, static TLS block, stack). In that case, _exit_with_stack_teardown replaces __free_tcb below.\n\nIf the user *does* provide a stack, we currently allocate pthread_internal_t (which contains slots and keys) onto the user\u0027s stack. I don\u0027t think we\u0027d want to allocate the static TLS block (i.e. all thread_local variables from initial ELF files) onto the user stack. Maybe in that case, we\u0027d still mmap a region for pthread_internal_t+slots+keys+staticTLS, separate from the stack.\n\nIn that case, we\u0027d rename _exit_with_stack_teardown to _exit_with_munmap and use it for all threads.",
+      "parentUuid": "81351500_40a4ba04",
       "range": {
         "startLine": 130,
         "startChar": 56,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "39827155_bb209bd7",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "Part of my motivation was appcompat: for variant 2 TLS (x86/x86_64), the static linker assumes that an executable\u0027s TLS segment is located immediately before the thread pointer. We\u0027d need to place the slots at the very front of pthread_internal_t, but IIRC, some app code is reading some of the initial fields in pthread_internal_t.\n\nIn general, allocating pthread_internal_t and the TCB in the same place creates some bootstrapping trouble for the main thread. We (presumably?) want an initialized pthread_internal_t early on, before we know how large the program\u0027s TLS segments are. Once all the solibs are loaded, we need to move the TCB (and the pthread_internal_t). Normally, the address of the main thread\u0027s pthread_internal_t propagates elsewhere (__set_tid_address, __libc_add_main_thread). We could delay that work or fix it up later.",
+      "parentUuid": "66422513_d74bcf3d",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed9ef0e2_bac85596",
         "filename": "linker/Android.bp",
         "patchSetId": 1
@@ -128,6 +242,41 @@
     },
     {
       "key": {
+        "uuid": "06b5d572_764c9843",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "It mirrors the platform build:\n\nhttps://android.googlesource.com/platform/build/soong/+/be1b6f445e53f9ad53c609260f6f4ef5e2468322/cc/stl.go#152\n\nThe dynamic linker links the libc++_static STL manually, so it doesn\u0027t get the _USING_LIBCXX define.\n\nlinker_tls.cpp needs the macro because it uses both \u003cstdatomic.h\u003e (more directly) and \u003catomic\u003e (via another STL header, std::max -\u003e algorithm -\u003e memory -\u003e atomic). Apparently it\u0027s not possible to include both headers in the same C++ source file -- it doesn\u0027t compile. The _USING_LIBCXX macro makes Bionic\u0027s stdatomic.h instead include \u003catomic\u003e and do something similar to C11.\n\n_USING_LIBCXX isn\u0027t perfect, though. An std::atomic variable can\u0027t be copied, but a C11 atomic integer can be, so this code compiles with C11 or C++11, but not C++11 with _USING_LIBCXX:\n\n    #include \u003cstdatomic.h\u003e\n    #include \u003cstdint.h\u003e\n\n    struct A {\n      int foo;\n      atomic_uintptr_t bar;\n    };\n\n    void f() {\n      struct A x;\n      x \u003d (struct A) { 1, ATOMIC_VAR_INIT((uintptr_t)2) };\n    }\n\nMaybe it needs a comment here.",
+      "parentUuid": "ed9ef0e2_bac85596",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33b594fc_617c06ac",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "Here the linker opts out of the STL.",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7c47a6fa_c211af04",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -139,6 +288,24 @@
       "writtenOn": "2018-07-31T15:23:23Z",
       "side": 1,
       "message": "(not for this change, but i wonder if we should have one pass through the phdrs and collect all the things we need in one go? i guess it doesn\u0027t matter because there are only (ever?) ~20-30 phdrs?)",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26fa1889_e1921acc",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1065,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-07-31T23:35:28Z",
+      "side": 1,
+      "message": "There are usually under 10 phdrs, I think?\n\nMaybe it\u0027d be worth it.",
+      "parentUuid": "7c47a6fa_c211af04",
       "revId": "112216c3394310991c482ad8785c128d816ccd6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
