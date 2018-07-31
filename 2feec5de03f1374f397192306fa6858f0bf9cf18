@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9ae01b1_558a397b",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-31T23:30:10Z",
+      "side": 1,
+      "message": "Out of curiosity, why pass down the params as opposed to, say, just passing the timeout value itself?",
+      "range": {
+        "startLine": 727,
+        "startChar": 58,
+        "endLine": 727,
+        "endChar": 91
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dd4e662_4244e8db",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-31T23:30:10Z",
+      "side": 1,
+      "message": "At first glance I wanted to say \"why keep all this complicated logic to change the timeout based on the nameserver index, if the passed-in timeout is nonzero just use that\". But then I realized that I don\u0027t understand this code. As far as I can tell it looks like:\n\n- If there is one nameserver, the timeout is 5s\n- If there are two nameservers, the timeouts are 5s, 5s\n- If there are three nameservers, the timeouts are 5s, 3s, 6s\n- If there are four nameservers, the timeouts are 5s, 2s, 5s, 10s\n\nIs that right? If so, that seems pretty silly, and we\u0027d probably be better off with setting the same passed-in timeout equally on all the nameservers. So basically,\n\n    if (params-\u003ebase_timeout_msec !\u003d 0) {\n        msec \u003d params-\u003ebase_timeout_msec;\n    } else {\n        // Existing code...\n    }\n\n    // Convert millisecond number to timespec.",
+      "range": {
+        "startLine": 729,
+        "startChar": 0,
+        "endLine": 730,
+        "endChar": 52
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01a98a67_caf26f55",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-31T23:30:10Z",
+      "side": 1,
+      "message": "Indentation?",
+      "range": {
+        "startLine": 975,
+        "startChar": 2,
+        "endLine": 975,
+        "endChar": 7
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69ae27da_4d5fbf01",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-07-31T23:30:10Z",
+      "side": 1,
+      "message": "Remove?",
+      "range": {
+        "startLine": 1003,
+        "startChar": 22,
+        "endLine": 1003,
+        "endChar": 28
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
