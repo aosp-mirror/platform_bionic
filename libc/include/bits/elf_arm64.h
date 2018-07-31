@@ -83,8 +83,10 @@
 #define R_AARCH64_GLOB_DAT              1025    /* Create GOT entry.  */
 #define R_AARCH64_JUMP_SLOT             1026    /* Create PLT entry.  */
 #define R_AARCH64_RELATIVE              1027    /* Adjust by program base.  */
-#define R_AARCH64_TLS_TPREL64           1030
-#define R_AARCH64_TLS_DTPREL32          1031
+#define R_AARCH64_TLS_DTPREL64          1028    /* Module-relative offset. */
+#define R_AARCH64_TLS_DTPMOD64          1029    /* Module index. */
+#define R_AARCH64_TLS_TPREL64           1030    /* TP-relative offset. */
+#define R_AARCH64_TLSDESC               1031    /* 16-byte descriptor: resolver func + arg. */
 #define R_AARCH64_IRELATIVE             1032
 
 #endif /* _AARCH64_ELF_MACHDEP_H_ */

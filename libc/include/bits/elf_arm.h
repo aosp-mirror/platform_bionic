@@ -43,7 +43,8 @@
 #define R_ARM_THM_PC22		10
 #define R_ARM_THM_PC8		11
 #define R_ARM_AMP_VCALL9	12
-#define R_ARM_SWI24		13
+#define R_ARM_SWI24		13	/* obsolete static relocation */
+#define R_ARM_TLS_DESC		13	/* dynamic relocation */
 #define R_ARM_THM_SWI8		14
 #define R_ARM_XPC25		15
 #define R_ARM_THM_XPC22		16
