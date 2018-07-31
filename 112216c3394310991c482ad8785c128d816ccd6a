@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab9cbe6c_3ef31d39",
+        "filename": "libc/arch-arm/bionic/__aeabi_read_tp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "did you file a clang bug?",
+      "range": {
+        "startLine": 32,
+        "startChar": 8,
+        "endLine": 32,
+        "endChar": 43
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaf778ea_8d7765d8",
+        "filename": "libc/bionic/elf_tls.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "explain why jemalloc? i was assuming i\u0027d see mmap...",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 0
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13542f06_c79335c0",
+        "filename": "libc/bionic/elf_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "define DTV here?\n\n(and add a link to the spec for all this?)",
+      "range": {
+        "startLine": 36,
+        "startChar": 10,
+        "endLine": 36,
+        "endChar": 13
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81351500_40a4ba04",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "why not with the pthread_internal_t?",
+      "range": {
+        "startLine": 130,
+        "startChar": 56,
+        "endLine": 130,
+        "endChar": 96
+      },
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66422513_d74bcf3d",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "explain why this is separate from pthread_internal_t?",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed9ef0e2_bac85596",
+        "filename": "linker/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "?",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c47a6fa_c211af04",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1065,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-07-31T15:23:23Z",
+      "side": 1,
+      "message": "(not for this change, but i wonder if we should have one pass through the phdrs and collect all the things we need in one go? i guess it doesn\u0027t matter because there are only (ever?) ~20-30 phdrs?)",
+      "revId": "112216c3394310991c482ad8785c128d816ccd6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
