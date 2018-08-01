@@ -22,6 +22,30 @@
       "revId": "d6805f8104082a4af8c340a9f9ef0e3e0ee36995",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3421d991_1dc57e4a",
+        "filename": "libc/arch-arm64/generic/bionic/strcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-01T19:50:43Z",
+      "side": 0,
+      "message": "(still unresolved)",
+      "parentUuid": "39bb3633_849a40eb",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 0
+      },
+      "revId": "d6805f8104082a4af8c340a9f9ef0e3e0ee36995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
