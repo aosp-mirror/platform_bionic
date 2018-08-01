@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7e21408_7424a5d4",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-08-01T09:43:30Z",
+      "side": 1,
+      "message": "This is an int, so it\u0027s 2, right? Not 2.5?",
+      "range": {
+        "startLine": 735,
+        "startChar": 43,
+        "endLine": 735,
+        "endChar": 47
+      },
+      "revId": "4e6d6533fc091081d8c553a5cb3acf6872c6494e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b3b9969_d24494c3",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 742,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-08-01T09:43:30Z",
+      "side": 1,
+      "message": "Given that this is legacy behaviour, I\u0027d just leave this to 1000",
+      "range": {
+        "startLine": 742,
+        "startChar": 32,
+        "endLine": 742,
+        "endChar": 37
+      },
+      "revId": "4e6d6533fc091081d8c553a5cb3acf6872c6494e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
