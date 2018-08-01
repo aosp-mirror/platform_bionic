@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa2c020a_78275065",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-08-01T08:07:42Z",
+      "side": 1,
+      "message": "My intent was to hide the entire mechanism for computing the timeout inside this function, so that we could add new knobs in params without touching the client code.\n\n(admittedly, this is probably too simplistic for parallel lookups and dynamic timeouts, so we\u0027ll have to rethink it anyway).",
+      "parentUuid": "f9ae01b1_558a397b",
+      "range": {
+        "startLine": 727,
+        "startChar": 58,
+        "endLine": 727,
+        "endChar": 91
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6dd4e662_4244e8db",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-07-31T23:30:10Z",
       "side": 1,
       "message": "At first glance I wanted to say \"why keep all this complicated logic to change the timeout based on the nameserver index, if the passed-in timeout is nonzero just use that\". But then I realized that I don\u0027t understand this code. As far as I can tell it looks like:\n\n- If there is one nameserver, the timeout is 5s\n- If there are two nameservers, the timeouts are 5s, 5s\n- If there are three nameservers, the timeouts are 5s, 3s, 6s\n- If there are four nameservers, the timeouts are 5s, 2s, 5s, 10s\n\nIs that right? If so, that seems pretty silly, and we\u0027d probably be better off with setting the same passed-in timeout equally on all the nameservers. So basically,\n\n    if (params-\u003ebase_timeout_msec !\u003d 0) {\n        msec \u003d params-\u003ebase_timeout_msec;\n    } else {\n        // Existing code...\n    }\n\n    // Convert millisecond number to timespec.",
+      "range": {
+        "startLine": 729,
+        "startChar": 0,
+        "endLine": 730,
+        "endChar": 52
+      },
+      "revId": "2feec5de03f1374f397192306fa6858f0bf9cf18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "975db479_97e0e1e0",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-08-01T08:07:42Z",
+      "side": 1,
+      "message": "Yes, I stared at it for a while and reached your same conclusion: it doesn\u0027t make much sense.\n\nThis is the result of incremental tweaks which attempted to preserve the original fixed timeout of 5 seconds for the first nameserver.\n\nI agree that we should completely replace it rather than tweaking it even further. Scaling timeouts by nameserver *number* doesn\u0027t make any sense to me. If anything, we could scale the timeout by retry count (the \u0027try\u0027 counter in the outer for loop of res_nsend()).\n\nAnyway, if we make the first timeout any shorter than 5 seconds, we risk causing regressions for users who have a slow primary nameserver and a broken secondary nameserver. Do we care?",
+      "parentUuid": "6dd4e662_4244e8db",
       "range": {
         "startLine": 729,
         "startChar": 0,
