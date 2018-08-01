@@ -46,6 +46,30 @@
       "revId": "d6805f8104082a4af8c340a9f9ef0e3e0ee36995",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9de43000_d45d7148",
+        "filename": "libc/arch-arm64/generic/bionic/strcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-01T21:32:50Z",
+      "side": 0,
+      "message": "I did fix it, however I made some confusion with repo and it created a different branch that caused some confusion on gerrit. I will abandon all the patches and send it again.",
+      "parentUuid": "3421d991_1dc57e4a",
+      "range": {
+        "startLine": 60,
+        "startChar": 11,
+        "endLine": 60,
+        "endChar": 0
+      },
+      "revId": "d6805f8104082a4af8c340a9f9ef0e3e0ee36995",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
