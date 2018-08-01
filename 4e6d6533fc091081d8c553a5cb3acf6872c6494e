@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1100067c_a70bfaf4",
+        "filename": "libc/dns/resolv/res_send.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 735,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-08-01T09:56:43Z",
+      "side": 1,
+      "message": "Per-in person conversation: 2.5 is correct since this is now in milliseconds. This is technically a change in behaviour, but changing the timeouts from 2 to 2.5 doesn\u0027t matter.",
+      "parentUuid": "e7e21408_7424a5d4",
+      "range": {
+        "startLine": 735,
+        "startChar": 43,
+        "endLine": 735,
+        "endChar": 47
+      },
+      "revId": "4e6d6533fc091081d8c553a5cb3acf6872c6494e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8b3b9969_d24494c3",
         "filename": "libc/dns/resolv/res_send.c",
         "patchSetId": 2
