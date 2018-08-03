@@ -25,7 +25,7 @@ void* je_pvalloc(size_t bytes) {
   size_t pagesize = getpagesize();
   size_t size = __BIONIC_ALIGN(bytes, pagesize);
   if (size < bytes) {
-    return NULL;
+    return nullptr;
   }
   return je_memalign(pagesize, size);
 }

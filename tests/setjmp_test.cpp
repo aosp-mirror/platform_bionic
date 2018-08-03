@@ -84,7 +84,7 @@ struct SigSets {
 
 void AssertSigmaskEquals(const sigset64_t& expected) {
   sigset64_t actual;
-  sigprocmask64(SIG_SETMASK, NULL, &actual);
+  sigprocmask64(SIG_SETMASK, nullptr, &actual);
   size_t end = sizeof(expected) * 8;
   for (size_t i = 1; i <= end; ++i) {
     EXPECT_EQ(sigismember64(&expected, i), sigismember64(&actual, i)) << i;
@@ -99,7 +99,7 @@ TEST(setjmp, _setjmp_signal_mask) {
   sigprocmask64(SIG_SETMASK, &ss.one, nullptr);
   jmp_buf jb;
   if (_setjmp(jb) == 0) {
-    sigprocmask64(SIG_SETMASK, &ss.two, NULL);
+    sigprocmask64(SIG_SETMASK, &ss.two, nullptr);
     _longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
@@ -117,7 +117,7 @@ TEST(setjmp, setjmp_signal_mask) {
   sigprocmask64(SIG_SETMASK, &ss.one, nullptr);
   jmp_buf jb;
   if (setjmp(jb) == 0) {
-    sigprocmask64(SIG_SETMASK, &ss.two, NULL);
+    sigprocmask64(SIG_SETMASK, &ss.two, nullptr);
     longjmp(jb, 1);
     FAIL(); // Unreachable.
   } else {
@@ -139,7 +139,7 @@ TEST(setjmp, sigsetjmp_0_signal_mask) {
   sigprocmask64(SIG_SETMASK, &ss.one, nullptr);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 0) == 0) {
-    sigprocmask64(SIG_SETMASK, &ss.two, NULL);
+    sigprocmask64(SIG_SETMASK, &ss.two, nullptr);
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {
@@ -155,7 +155,7 @@ TEST(setjmp, sigsetjmp_1_signal_mask) {
   sigprocmask64(SIG_SETMASK, &ss.one, nullptr);
   sigjmp_buf sjb;
   if (sigsetjmp(sjb, 1) == 0) {
-    sigprocmask64(SIG_SETMASK, &ss.two, NULL);
+    sigprocmask64(SIG_SETMASK, &ss.two, nullptr);
     siglongjmp(sjb, 1);
     FAIL(); // Unreachable.
   } else {

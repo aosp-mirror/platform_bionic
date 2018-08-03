@@ -263,7 +263,7 @@ class TestCase {
 
 class TestResultPrinter : public testing::EmptyTestEventListener {
  public:
-  TestResultPrinter() : pinfo_(NULL) {}
+  TestResultPrinter() : pinfo_(nullptr) {}
   virtual void OnTestStart(const testing::TestInfo& test_info) {
     pinfo_ = &test_info; // Record test_info for use in OnTestPartResult.
   }
@@ -566,7 +566,7 @@ void OnTestIterationEndXmlPrint(const std::string& xml_output_filename,
                                 time_t epoch_iteration_start_time,
                                 int64_t elapsed_time_ns) {
   FILE* fp = fopen(xml_output_filename.c_str(), "we");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     fprintf(stderr, "failed to open '%s': %s\n", xml_output_filename.c_str(), strerror(errno));
     exit(1);
   }
@@ -683,7 +683,7 @@ static void ChildProcessFn(int argc, char** argv, const std::string& test_name) 
   strcpy(filter_arg, "--gtest_filter=");
   strcat(filter_arg, test_name.c_str());
   new_argv[argc] = filter_arg;
-  new_argv[argc + 1] = NULL;
+  new_argv[argc + 1] = nullptr;
 
   int new_argc = argc + 1;
   testing::InitGoogleTest(&new_argc, new_argv);
@@ -848,7 +848,7 @@ static void WaitChildProcs(std::vector<TestCase>& testcase_list,
     timespec sleep_time;
     sleep_time.tv_sec = 0;
     sleep_time.tv_nsec = 1000000;
-    nanosleep(&sleep_time, NULL);
+    nanosleep(&sleep_time, nullptr);
   }
 }
 
@@ -922,7 +922,7 @@ static bool RunTestInSeparateProc(int argc, char** argv, std::vector<TestCase>& 
        ++iteration) {
     OnTestIterationStartPrint(testcase_list, iteration, iteration_count, job_count);
     int64_t iteration_start_time_ns = NanoTime();
-    time_t epoch_iteration_start_time = time(NULL);
+    time_t epoch_iteration_start_time = time(nullptr);
 
     // Run up to job_count tests in parallel, each test in a child process.
     std::vector<ChildProcInfo> child_proc_list;
@@ -1159,8 +1159,8 @@ static bool PickOptions(std::vector<char*>& args, IsolationTestOptions& options)
         }
         // Make absolute path.
         if (success && output[0] != '/') {
-          char* cwd = getcwd(NULL, 0);
-          if (cwd != NULL) {
+          char* cwd = getcwd(nullptr, 0);
+          if (cwd != nullptr) {
             output = std::string(cwd) + "/" + output;
             free(cwd);
           } else {
@@ -1223,7 +1223,7 @@ int main(int argc, char** argv, char** envp) {
     std::vector<TestCase> testcase_list;
 
     argc = static_cast<int>(arg_list.size());
-    arg_list.push_back(NULL);
+    arg_list.push_back(nullptr);
     if (EnumerateTests(argc, arg_list.data(), testcase_list) == false) {
       return 1;
     }
@@ -1232,7 +1232,7 @@ int main(int argc, char** argv, char** envp) {
     return all_test_passed ? 0 : 1;
   } else {
     argc = static_cast<int>(arg_list.size());
-    arg_list.push_back(NULL);
+    arg_list.push_back(nullptr);
     testing::InitGoogleTest(&argc, arg_list.data());
     return RUN_ALL_TESTS();
   }

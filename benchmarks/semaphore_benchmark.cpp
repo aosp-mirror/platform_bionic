@@ -75,7 +75,7 @@ static void* BM_semaphore_sem_post_start_thread(void* arg) {
   while ((BM_semaphore_sem_post_running > 0) && !sem_wait(semaphore)) {
   }
   BM_semaphore_sem_post_running = -1;
-  return NULL;
+  return nullptr;
 }
 
 class SemaphoreFixture : public benchmark::Fixture {

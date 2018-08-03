@@ -43,7 +43,7 @@
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_attr_init(pthread_attr_t* attr) {
   attr->flags = 0;
-  attr->stack_base = NULL;
+  attr->stack_base = nullptr;
   attr->stack_size = PTHREAD_STACK_SIZE_DEFAULT;
   attr->guard_size = PTHREAD_GUARD_SIZE;
   attr->sched_policy = SCHED_NORMAL;
@@ -206,7 +206,7 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     async_safe_fatal("couldn't open /proc/self/maps: %s", strerror(errno));
   }
   char line[BUFSIZ];
-  while (fgets(line, sizeof(line), fp) != NULL) {
+  while (fgets(line, sizeof(line), fp) != nullptr) {
     uintptr_t lo, hi;
     if (sscanf(line, "%" SCNxPTR "-%" SCNxPTR, &lo, &hi) == 2) {
       if (lo <= startstack && startstack <= hi) {

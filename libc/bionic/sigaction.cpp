@@ -40,7 +40,7 @@ extern "C" int __rt_sigaction(int, const struct __kernel_sigaction*, struct __ke
 
 int sigaction(int signal, const struct sigaction* bionic_new_action, struct sigaction* bionic_old_action) {
   __kernel_sigaction kernel_new_action;
-  if (bionic_new_action != NULL) {
+  if (bionic_new_action != nullptr) {
     kernel_new_action.sa_flags = bionic_new_action->sa_flags;
     kernel_new_action.sa_handler = bionic_new_action->sa_handler;
     kernel_new_action.sa_mask = filter_reserved_signals(bionic_new_action->sa_mask);
@@ -62,11 +62,11 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
 
   __kernel_sigaction kernel_old_action;
   int result = __rt_sigaction(signal,
-                              (bionic_new_action != NULL) ? &kernel_new_action : NULL,
-                              (bionic_old_action != NULL) ? &kernel_old_action : NULL,
+                              (bionic_new_action != nullptr) ? &kernel_new_action : nullptr,
+                              (bionic_old_action != nullptr) ? &kernel_old_action : nullptr,
                               sizeof(sigset_t));
 
-  if (bionic_old_action != NULL) {
+  if (bionic_old_action != nullptr) {
     bionic_old_action->sa_flags = kernel_old_action.sa_flags;
     bionic_old_action->sa_handler = kernel_old_action.sa_handler;
     bionic_old_action->sa_mask = kernel_old_action.sa_mask;

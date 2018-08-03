@@ -228,7 +228,7 @@ int pthread_rwlock_init(pthread_rwlock_t* rwlock_interface, const pthread_rwlock
 
   memset(rwlock, 0, sizeof(pthread_rwlock_internal_t));
 
-  if (__predict_false(attr != NULL)) {
+  if (__predict_false(attr != nullptr)) {
     rwlock->pshared = __rwlockattr_getpshared(attr);
     int kind = __rwlockattr_getkind(attr);
     switch (kind) {

@@ -42,9 +42,9 @@
 #include "private/ScopedSignalBlocker.h"
 
 static FILE* __tmpfile_dir(const char* tmp_dir) {
-  char* path = NULL;
+  char* path = nullptr;
   if (asprintf(&path, "%s/tmp.XXXXXXXXXX", tmp_dir) == -1) {
-    return NULL;
+    return nullptr;
   }
 
   int fd;
@@ -53,7 +53,7 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
     fd = mkstemp(path);
     if (fd == -1) {
       free(path);
-      return NULL;
+      return nullptr;
     }
 
     // Unlink the file now so that it's removed when closed.
@@ -67,20 +67,20 @@ static FILE* __tmpfile_dir(const char* tmp_dir) {
     if (rc == -1) {
       ErrnoRestorer errno_restorer;
       close(fd);
-      return NULL;
+      return nullptr;
     }
   }
 
   // Turn the file descriptor into a FILE*.
   FILE* fp = fdopen(fd, "w+");
-  if (fp != NULL) {
+  if (fp != nullptr) {
     return fp;
   }
 
   // Failure. Clean up. We already unlinked, so we just need to close.
   ErrnoRestorer errno_restorer;
   close(fd);
-  return NULL;
+  return nullptr;
 }
 
 FILE* tmpfile() {
@@ -90,7 +90,7 @@ FILE* tmpfile() {
   // This means we can't do the usual trick of calling unlink before handing the file back.
 
   FILE* fp = __tmpfile_dir("/data/local/tmp");
-  if (fp == NULL) {
+  if (fp == nullptr) {
     // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try P_tmpdir before
     // giving up. This is potentially useful for bionic on the host anyway.
     fp = __tmpfile_dir(P_tmpdir);

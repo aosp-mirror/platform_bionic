@@ -39,7 +39,7 @@ int pthread_join(pthread_t t, void** return_value) {
   }
 
   pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
+  if (thread == nullptr) {
     return ESRCH;
   }
 
@@ -60,7 +60,7 @@ int pthread_join(pthread_t t, void** return_value) {
 
   // Wait for the thread to actually exit, if it hasn't already.
   while (*tid_ptr != 0) {
-    __futex_wait(tid_ptr, tid, NULL);
+    __futex_wait(tid_ptr, tid, nullptr);
   }
 
   if (return_value) {

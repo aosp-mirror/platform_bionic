@@ -23,8 +23,8 @@
 TEST(getcwd, auto_full) {
   // If we let the library do all the work, everything's fine.
   errno = 0;
-  char* cwd = getcwd(NULL, 0);
-  ASSERT_TRUE(cwd != NULL);
+  char* cwd = getcwd(nullptr, 0);
+  ASSERT_TRUE(cwd != nullptr);
   ASSERT_EQ(0, errno);
   ASSERT_GE(strlen(cwd), 1U);
   free(cwd);
@@ -33,8 +33,8 @@ TEST(getcwd, auto_full) {
 TEST(getcwd, auto_reasonable) {
   // If we ask the library to allocate a reasonable buffer, everything's fine.
   errno = 0;
-  char* cwd = getcwd(NULL, PATH_MAX);
-  ASSERT_TRUE(cwd != NULL);
+  char* cwd = getcwd(nullptr, PATH_MAX);
+  ASSERT_TRUE(cwd != nullptr);
   ASSERT_EQ(0, errno);
   ASSERT_GE(strlen(cwd), 1U);
   free(cwd);
@@ -43,16 +43,16 @@ TEST(getcwd, auto_reasonable) {
 TEST(getcwd, auto_too_small) {
   // If we ask the library to allocate a too-small buffer, ERANGE.
   errno = 0;
-  char* cwd = getcwd(NULL, 1);
-  ASSERT_TRUE(cwd == NULL);
+  char* cwd = getcwd(nullptr, 1);
+  ASSERT_TRUE(cwd == nullptr);
   ASSERT_EQ(ERANGE, errno);
 }
 
 TEST(getcwd, auto_too_large) {
   // If we ask the library to allocate an unreasonably large buffer, ERANGE.
   errno = 0;
-  char* cwd = getcwd(NULL, static_cast<size_t>(-1));
-  ASSERT_TRUE(cwd == NULL);
+  char* cwd = getcwd(nullptr, static_cast<size_t>(-1));
+  ASSERT_TRUE(cwd == nullptr);
   ASSERT_EQ(ENOMEM, errno);
 }
 
@@ -61,7 +61,7 @@ TEST(getcwd, manual_too_small) {
   char tiny_buf[1];
   errno = 0;
   char* cwd = getcwd(tiny_buf, sizeof(tiny_buf));
-  ASSERT_TRUE(cwd == NULL);
+  ASSERT_TRUE(cwd == nullptr);
   ASSERT_EQ(ERANGE, errno);
 }
 
@@ -70,7 +70,7 @@ TEST(getcwd, manual_zero) {
   char tiny_buf[1];
   errno = 0;
   char* cwd = getcwd(tiny_buf, 0);
-  ASSERT_TRUE(cwd == NULL);
+  ASSERT_TRUE(cwd == nullptr);
   ASSERT_EQ(EINVAL, errno);
 }
 

@@ -35,23 +35,23 @@ extern "C" int __getcwd(char* buf, size_t size);
 
 char* getcwd(char* buf, size_t size) {
   // You can't specify size 0 unless you're asking us to allocate for you.
-  if (buf != NULL && size == 0) {
+  if (buf != nullptr && size == 0) {
     errno = EINVAL;
-    return NULL;
+    return nullptr;
   }
 
   // Allocate a buffer if necessary.
-  char* allocated_buf = NULL;
+  char* allocated_buf = nullptr;
   size_t allocated_size = size;
-  if (buf == NULL) {
+  if (buf == nullptr) {
     if (size == 0) {
       // The Linux kernel won't return more than a page, so translate size 0 to 4KiB.
       // TODO: if we need to support paths longer than that, we'll have to walk the tree ourselves.
       allocated_size = getpagesize();
     }
     buf = allocated_buf = static_cast<char*>(malloc(allocated_size));
-    if (buf == NULL) {
-      return NULL;
+    if (buf == nullptr) {
+      return nullptr;
     }
   }
 
@@ -60,11 +60,11 @@ char* getcwd(char* buf, size_t size) {
   if (rc == -1) {
     free(allocated_buf);
     // __getcwd set errno.
-    return NULL;
+    return nullptr;
   }
 
   // If we allocated a whole page, only return as large an allocation as necessary.
-  if (allocated_buf != NULL) {
+  if (allocated_buf != nullptr) {
     if (size == 0) {
       buf = strdup(allocated_buf);
       free(allocated_buf);

@@ -27,7 +27,7 @@ struct node_t {
 // This is a GNU extension, not available from BSD.
 void tdestroy(void* root, void (*destroy_func)(void*)) {
   node_t* root_node = reinterpret_cast<node_t*>(root);
-  if (root_node == NULL) {
+  if (root_node == nullptr) {
     return;
   }
   if (root_node->llink) {
