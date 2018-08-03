@@ -89,10 +89,10 @@ TEST(sys_select, select_smoke) {
   int max = STDERR_FILENO + 1;
 
   // Invalid max fd.
-  ASSERT_EQ(-1, select(-1, &r, &w, &e, NULL));
+  ASSERT_EQ(-1, select(-1, &r, &w, &e, nullptr));
   ASSERT_EQ(EINVAL, errno);
 
-  int num_fds = select(max, &r, &w, &e, NULL);
+  int num_fds = select(max, &r, &w, &e, nullptr);
   // If there is data to be read on STDIN, then the number of
   // fds ready will be 3 instead of 2. Allow this case, but verify
   // every fd that is set.
@@ -117,7 +117,7 @@ TEST(sys_select, select_smoke) {
 
   FD_ZERO(&r);
   FD_SET(fd, &r);
-  ASSERT_EQ(1, select(fd+1, &r, NULL, NULL, &tv));
+  ASSERT_EQ(1, select(fd+1, &r, nullptr, nullptr, &tv));
   // Both tv_sec and tv_nsec should have been updated.
   ASSERT_EQ(0, tv.tv_sec);
   ASSERT_NE(0, tv.tv_usec);
@@ -144,13 +144,13 @@ TEST(sys_select, pselect_smoke) {
   int max = STDERR_FILENO + 1;
 
   // Invalid max fd.
-  ASSERT_EQ(-1, pselect(-1, &r, &w, &e, NULL, &ss));
+  ASSERT_EQ(-1, pselect(-1, &r, &w, &e, nullptr, &ss));
   ASSERT_EQ(EINVAL, errno);
 
   // If there is data to be read on STDIN, then the number of
   // fds ready will be 3 instead of 2. Allow this case, but verify
   // every fd that is set.
-  int num_fds = pselect(max, &r, &w, &e, NULL, &ss);
+  int num_fds = pselect(max, &r, &w, &e, nullptr, &ss);
   ASSERT_TRUE(num_fds == 2 || num_fds == 3) << "Num fds returned " << num_fds;
   ASSERT_TRUE(FD_ISSET(STDOUT_FILENO, &w));
   ASSERT_TRUE(FD_ISSET(STDERR_FILENO, &w));
@@ -172,7 +172,7 @@ TEST(sys_select, pselect_smoke) {
 
   FD_ZERO(&r);
   FD_SET(fd, &r);
-  ASSERT_EQ(1, pselect(fd+1, &r, NULL, NULL, &tv, NULL));
+  ASSERT_EQ(1, pselect(fd+1, &r, nullptr, nullptr, &tv, nullptr));
   // Neither tv_sec nor tv_nsec should have been updated.
   ASSERT_EQ(1, tv.tv_sec);
   ASSERT_EQ(0, tv.tv_nsec);

@@ -42,7 +42,7 @@ static inline constexpr bool is_low_surrogate(char16_t c16) {
 
 size_t c16rtomb(char* s, char16_t c16, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
   if (mbsinit(state)) {
     if (is_high_surrogate(c16)) {
       char32_t c32 = (c16 & ~0xd800) << 10;
@@ -62,6 +62,6 @@ size_t c16rtomb(char* s, char16_t c16, mbstate_t* ps) {
     char32_t c32 = ((mbstate_get_byte(state, 3) << 16) |
                     (mbstate_get_byte(state, 2) << 8) |
                     (c16 & ~0xdc00)) + 0x10000;
-    return mbstate_reset_and_return(c32rtomb(s, c32, NULL), state);
+    return mbstate_reset_and_return(c32rtomb(s, c32, nullptr), state);
   }
 }

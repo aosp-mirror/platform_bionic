@@ -290,7 +290,7 @@ char* __strchr_chk(const char* p, int ch, size_t s_len) {
       return const_cast<char*>(p);
     }
     if (*p == '\0') {
-      return NULL;
+      return nullptr;
     }
   }
 }
@@ -387,7 +387,7 @@ char* __strncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_
 }
 
 char* __strrchr_chk(const char* p, int ch, size_t s_len) {
-  for (const char* save = NULL;; ++p, s_len--) {
+  for (const char* save = nullptr;; ++p, s_len--) {
     if (s_len == 0) {
       __fortify_fatal("strrchr: prevented read past end of buffer");
     }

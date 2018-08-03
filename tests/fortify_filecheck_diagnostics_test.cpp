@@ -211,7 +211,7 @@ void test_recvfrom() {
   // NOLINTNEXTLINE(whitespace/line_length)
   // GCC: error: call to '__recvfrom_error' declared with attribute error: 'recvfrom' called with size bigger than buffer
   // CLANG: error: 'recvfrom' called with size bigger than buffer
-  recvfrom(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), NULL);
+  recvfrom(0, buf, 6, 0, reinterpret_cast<sockaddr*>(&addr), nullptr);
 }
 
 void test_recv() {
@@ -398,9 +398,9 @@ void test_realpath() {
   realpath(".", buf);
 
   // This is fine.
-  realpath(".", NULL);
+  realpath(".", nullptr);
 
   char bigbuf[PATH_MAX];
   // CLANG: error: 'realpath': NULL path is never correct; flipped arguments?
-  realpath(NULL, bigbuf);
+  realpath(nullptr, bigbuf);
 }

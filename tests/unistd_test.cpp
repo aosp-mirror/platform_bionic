@@ -273,7 +273,7 @@ TEST(UNISTD_TEST, getenv_unsetenv) {
   ASSERT_EQ(0, setenv("test-variable", "hello", 1));
   ASSERT_STREQ("hello", getenv("test-variable"));
   ASSERT_EQ(0, unsetenv("test-variable"));
-  ASSERT_TRUE(getenv("test-variable") == NULL);
+  ASSERT_TRUE(getenv("test-variable") == nullptr);
 }
 
 TEST(UNISTD_TEST, unsetenv_EINVAL) {
@@ -284,9 +284,9 @@ TEST(UNISTD_TEST, unsetenv_EINVAL) {
 }
 
 TEST(UNISTD_TEST, setenv_EINVAL) {
-  EXPECT_EQ(-1, setenv(NULL, "value", 0));
+  EXPECT_EQ(-1, setenv(nullptr, "value", 0));
   EXPECT_EQ(EINVAL, errno);
-  EXPECT_EQ(-1, setenv(NULL, "value", 1));
+  EXPECT_EQ(-1, setenv(nullptr, "value", 1));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv("", "value", 0));
   EXPECT_EQ(EINVAL, errno);
@@ -353,14 +353,14 @@ TEST(UNISTD_TEST, clearenv) {
 
   // Stash a copy.
   std::vector<char*> old_environ;
-  for (size_t i = 0; environ[i] != NULL; ++i) {
+  for (size_t i = 0; environ[i] != nullptr; ++i) {
     old_environ.push_back(strdup(environ[i]));
   }
 
   ASSERT_EQ(0, clearenv());
 
-  EXPECT_TRUE(environ == NULL || environ[0] == NULL);
-  EXPECT_EQ(NULL, getenv("test-variable"));
+  EXPECT_TRUE(environ == nullptr || environ[0] == nullptr);
+  EXPECT_EQ(nullptr, getenv("test-variable"));
   EXPECT_EQ(0, setenv("test-variable", "post-clear", 1));
   EXPECT_STREQ("post-clear", getenv("test-variable"));
 
@@ -539,7 +539,7 @@ TEST(UNISTD_TEST, gettid_caching_and_clone_process_settid) {
 
 static int CloneStartRoutine(int (*start_routine)(void*)) {
   void* child_stack[1024];
-  return clone(start_routine, &child_stack[1024], SIGCHLD, NULL);
+  return clone(start_routine, &child_stack[1024], SIGCHLD, nullptr);
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {
@@ -594,20 +594,20 @@ TEST(UNISTD_TEST, clone_fn_and_exit) {
 
 static void* GetPidCachingPthreadStartRoutine(void*) {
   AssertGetPidCorrect();
-  return NULL;
+  return nullptr;
 }
 
 TEST(UNISTD_TEST, getpid_caching_and_pthread_create) {
   pid_t parent_pid = getpid();
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, GetPidCachingPthreadStartRoutine, NULL));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, GetPidCachingPthreadStartRoutine, nullptr));
 
   ASSERT_EQ(parent_pid, getpid());
 
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
-  ASSERT_EQ(NULL, result);
+  ASSERT_EQ(nullptr, result);
 }
 
 static void* GetTidCachingPthreadStartRoutine(void*) {
@@ -620,7 +620,7 @@ TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
   pid_t parent_tid = GetTidForTest();
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, GetTidCachingPthreadStartRoutine, &parent_tid));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, GetTidCachingPthreadStartRoutine, &parent_tid));
 
   ASSERT_EQ(parent_tid, GetTidForTest());
 

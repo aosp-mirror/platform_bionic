@@ -52,7 +52,7 @@ TEST(error, smoke) {
 
   error_at_line(0, 0, "blah.c", 123, "hello %s", "world");
 
-  error_print_progname = NULL;
+  error_print_progname = nullptr;
 }
 
 TEST(error_DeathTest, error_exit) {

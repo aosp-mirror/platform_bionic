@@ -51,11 +51,11 @@ static inline __always_inline int __futex(volatile void* ftx, int op, int value,
 }
 
 static inline int __futex_wake(volatile void* ftx, int count) {
-  return __futex(ftx, FUTEX_WAKE, count, NULL, 0);
+  return __futex(ftx, FUTEX_WAKE, count, nullptr, 0);
 }
 
 static inline int __futex_wake_ex(volatile void* ftx, bool shared, int count) {
-  return __futex(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, NULL, 0);
+  return __futex(ftx, shared ? FUTEX_WAKE : FUTEX_WAKE_PRIVATE, count, nullptr, 0);
 }
 
 static inline int __futex_wait(volatile void* ftx, int value, const timespec* timeout) {

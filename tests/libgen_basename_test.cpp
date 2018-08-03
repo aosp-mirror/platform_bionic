@@ -49,7 +49,7 @@ static void __TestGnuBasename(const char* in, const char* expected_out, int line
 }
 
 static void __TestPosixBasename(const char* in, const char* expected_out, int line) {
-  char* writable_in = (in != NULL) ? strdup(in) : NULL;
+  char* writable_in = (in != nullptr) ? strdup(in) : nullptr;
   errno = 0;
   const char* out = posix_basename(&writable_in[0]);
   ASSERT_STREQ(expected_out, out) << "(" << line << "): " << in << std::endl;
@@ -76,7 +76,7 @@ TEST(libgen_basename, gnu_basename) {
 }
 
 TEST(libgen_basename, posix_basename) {
-  TestPosixBasename(NULL, ".");
+  TestPosixBasename(nullptr, ".");
   TestPosixBasename("", ".");
   TestPosixBasename("/usr/lib", "lib");
   TestPosixBasename("/system/bin/sh/", "sh");

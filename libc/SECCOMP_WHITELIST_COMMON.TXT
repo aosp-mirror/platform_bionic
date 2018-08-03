@@ -57,7 +57,7 @@ int	sigreturn:sigreturn(unsigned long __unused)	arm,x86,mips
 # Needed by sanitizers (b/34606909)
 # 5 (__NR_open) and 195 (__NR_stat64) are also required, but they are
 # already allowed.
-ssize_t	readlink:readlink(const char *path, char *buf, size_t bufsiz)	arm,x86,mips
+ssize_t	readlink:readlink(const char *path, char *buf, size_t bufsiz)	arm,x86,x86_64,mips
 
 # Useful new syscalls which we don't yet use in bionic.
 int sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int flags) all

@@ -19,20 +19,7 @@
 
 #include <gtest/gtest.h>
 
-#if defined(__BIONIC__) // Android's prebuilt gcc's header files don't include <sys/eventfd.h>.
 #include <sys/eventfd.h>
-#else
-// Include the necessary components of sys/eventfd.h right here.
-#include <stdint.h>
-
-typedef uint64_t eventfd_t;
-
-__BEGIN_DECLS
-extern int eventfd(int, int);
-extern int eventfd_read(int, eventfd_t*);
-extern int eventfd_write(int, eventfd_t);
-__END_DECLS
-#endif
 
 TEST(eventfd, smoke) {
   unsigned int initial_value = 2;

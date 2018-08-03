@@ -60,10 +60,10 @@ static size_t finish_surrogate(char16_t* pc16, mbstate_t* state) {
 
 size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
   char16_t __private_pc16;
-  if (pc16 == NULL) {
+  if (pc16 == nullptr) {
     pc16 = &__private_pc16;
   }
 

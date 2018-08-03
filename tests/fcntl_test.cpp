@@ -174,10 +174,10 @@ TEST(fcntl, splice) {
 
   TemporaryFile tf;
 
-  ssize_t bytes_read = splice(in, 0, pipe_fds[1], NULL, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_read = splice(in, nullptr, pipe_fds[1], nullptr, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_NE(bytes_read, -1);
 
-  ssize_t bytes_written = splice(pipe_fds[0], NULL, tf.fd, 0, bytes_read, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_written = splice(pipe_fds[0], nullptr, tf.fd, nullptr, bytes_read, SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_EQ(bytes_read, bytes_written);
 
   close(pipe_fds[0]);
@@ -200,8 +200,8 @@ TEST(fcntl, vmsplice) {
 
   char buf[BUFSIZ];
   FILE* fp = fdopen(pipe_fds[0], "r");
-  ASSERT_TRUE(fp != NULL);
-  ASSERT_TRUE(fgets(buf, sizeof(buf), fp) != NULL);
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_TRUE(fgets(buf, sizeof(buf), fp) != nullptr);
   fclose(fp);
   ASSERT_STREQ("hello world\n", buf);
 }
@@ -209,8 +209,8 @@ TEST(fcntl, vmsplice) {
 TEST(fcntl, tee) {
   char expected[BUFSIZ];
   FILE* expected_fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(expected_fp != NULL);
-  ASSERT_TRUE(fgets(expected, sizeof(expected), expected_fp) != NULL);
+  ASSERT_TRUE(expected_fp != nullptr);
+  ASSERT_TRUE(fgets(expected, sizeof(expected), expected_fp) != nullptr);
   fclose(expected_fp);
 
   int pipe1[2];
@@ -223,7 +223,7 @@ TEST(fcntl, tee) {
   ASSERT_NE(in, -1);
 
   // Write /proc/version into pipe1.
-  ssize_t bytes_read = splice(in, 0, pipe1[1], NULL, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
+  ssize_t bytes_read = splice(in, nullptr, pipe1[1], nullptr, 8*1024, SPLICE_F_MORE | SPLICE_F_MOVE);
   ASSERT_NE(bytes_read, -1);
   close(pipe1[1]);
 
@@ -235,14 +235,14 @@ TEST(fcntl, tee) {
   // The out fds of both pipe1 and pipe2 should now contain /proc/version.
   char buf1[BUFSIZ];
   FILE* fp1 = fdopen(pipe1[0], "r");
-  ASSERT_TRUE(fp1 != NULL);
-  ASSERT_TRUE(fgets(buf1, sizeof(buf1), fp1) != NULL);
+  ASSERT_TRUE(fp1 != nullptr);
+  ASSERT_TRUE(fgets(buf1, sizeof(buf1), fp1) != nullptr);
   fclose(fp1);
 
   char buf2[BUFSIZ];
   FILE* fp2 = fdopen(pipe2[0], "r");
-  ASSERT_TRUE(fp2 != NULL);
-  ASSERT_TRUE(fgets(buf2, sizeof(buf2), fp2) != NULL);
+  ASSERT_TRUE(fp2 != nullptr);
+  ASSERT_TRUE(fgets(buf2, sizeof(buf2), fp2) != nullptr);
   fclose(fp2);
 
   ASSERT_STREQ(expected, buf1);

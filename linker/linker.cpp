@@ -2965,8 +2965,8 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         TRACE_TYPE(RELO, "RELO TLS_TPREL64 *** %16llx <- %16llx - %16llx\n",
                    reloc, (sym_addr + addend), rel->r_offset);
         break;
-      case R_AARCH64_TLS_DTPREL32:
-        TRACE_TYPE(RELO, "RELO TLS_DTPREL32 *** %16llx <- %16llx - %16llx\n",
+      case R_AARCH64_TLSDESC:
+        TRACE_TYPE(RELO, "RELO TLSDESC *** %16llx <- %16llx - %16llx\n",
                    reloc, (sym_addr + addend), rel->r_offset);
         break;
 #elif defined(__x86_64__)
@@ -3486,11 +3486,11 @@ bool soinfo::prelink_image() {
         "(new hash type from the future?)", get_realpath());
     return false;
   }
-  if (strtab_ == 0) {
+  if (strtab_ == nullptr) {
     DL_ERR("empty/missing DT_STRTAB in \"%s\"", get_realpath());
     return false;
   }
-  if (symtab_ == 0) {
+  if (symtab_ == nullptr) {
     DL_ERR("empty/missing DT_SYMTAB in \"%s\"", get_realpath());
     return false;
   }

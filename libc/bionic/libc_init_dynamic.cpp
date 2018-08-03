@@ -130,7 +130,7 @@ __noreturn void __libc_init(void* raw_args,
   // so we need to ensure that these are called when the program exits
   // normally.
   if (structors->fini_array) {
-    __cxa_atexit(__libc_fini,structors->fini_array,NULL);
+    __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
 
   exit(slingshot(args.argc, args.argv, args.envp));

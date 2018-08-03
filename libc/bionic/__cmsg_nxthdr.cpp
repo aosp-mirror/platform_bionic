@@ -33,7 +33,7 @@ cmsghdr* __cmsg_nxthdr(msghdr* msg, cmsghdr* cmsg) {
   ptr = reinterpret_cast<cmsghdr*>(reinterpret_cast<char*>(cmsg) + CMSG_ALIGN(cmsg->cmsg_len));
   size_t len = reinterpret_cast<char*>(ptr+1) - reinterpret_cast<char*>(msg->msg_control);
   if (len > msg->msg_controllen) {
-    return NULL;
+    return nullptr;
   }
   return ptr;
 }
