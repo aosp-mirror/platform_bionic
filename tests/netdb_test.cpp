@@ -26,13 +26,13 @@
 
 // https://code.google.com/p/android/issues/detail?id=13228
 TEST(netdb, freeaddrinfo_NULL) {
-  freeaddrinfo(NULL);
+  freeaddrinfo(nullptr);
 }
 
 TEST(netdb, getaddrinfo_NULL_host) {
   // It's okay for the host argument to be NULL, as long as service isn't.
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo(NULL, "smtp", NULL, &ai));
+  addrinfo* ai = nullptr;
+  ASSERT_EQ(0, getaddrinfo(nullptr, "smtp", nullptr, &ai));
   // (sockaddr_in::sin_port and sockaddr_in6::sin6_port overlap.)
   ASSERT_EQ(25U, ntohs(reinterpret_cast<sockaddr_in*>(ai->ai_addr)->sin_port));
   freeaddrinfo(ai);
@@ -40,19 +40,19 @@ TEST(netdb, getaddrinfo_NULL_host) {
 
 TEST(netdb, getaddrinfo_NULL_service) {
   // It's okay for the service argument to be NULL, as long as host isn't.
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo("localhost", NULL, NULL, &ai));
-  ASSERT_TRUE(ai != NULL);
+  addrinfo* ai = nullptr;
+  ASSERT_EQ(0, getaddrinfo("localhost", nullptr, nullptr, &ai));
+  ASSERT_TRUE(ai != nullptr);
   freeaddrinfo(ai);
 }
 
 TEST(netdb, getaddrinfo_NULL_hints) {
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo("localhost", "9999", NULL, &ai));
+  addrinfo* ai = nullptr;
+  ASSERT_EQ(0, getaddrinfo("localhost", "9999", nullptr, &ai));
 
   bool saw_tcp = false;
   bool saw_udp = false;
-  for (addrinfo* p = ai; p != NULL; p = p->ai_next) {
+  for (addrinfo* p = ai; p != nullptr; p = p->ai_next) {
     ASSERT_TRUE(p->ai_family == AF_INET || p->ai_family == AF_INET6);
     if (p->ai_socktype == SOCK_STREAM) {
       ASSERT_EQ(IPPROTO_TCP, p->ai_protocol);
@@ -69,8 +69,8 @@ TEST(netdb, getaddrinfo_NULL_hints) {
 }
 
 TEST(netdb, getaddrinfo_service_lookup) {
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo("localhost", "smtp", NULL, &ai));
+  addrinfo* ai = nullptr;
+  ASSERT_EQ(0, getaddrinfo("localhost", "smtp", nullptr, &ai));
   ASSERT_EQ(SOCK_STREAM, ai->ai_socktype);
   ASSERT_EQ(IPPROTO_TCP, ai->ai_protocol);
   ASSERT_EQ(25, ntohs(reinterpret_cast<sockaddr_in*>(ai->ai_addr)->sin_port));
@@ -84,13 +84,13 @@ TEST(netdb, getaddrinfo_hints) {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_protocol = IPPROTO_TCP;
 
-  addrinfo* ai = NULL;
+  addrinfo* ai = nullptr;
   ASSERT_EQ(0, getaddrinfo( "localhost", "9999", &hints, &ai));
-  ASSERT_TRUE(ai != NULL);
+  ASSERT_TRUE(ai != nullptr);
   // In glibc, getaddrinfo() converts ::1 to 127.0.0.1 for localhost,
   // so one or two addrinfo may be returned.
   addrinfo* tai = ai;
-  while (tai != NULL) {
+  while (tai != nullptr) {
     ASSERT_EQ(AF_INET, tai->ai_family);
     ASSERT_EQ(SOCK_STREAM, tai->ai_socktype);
     ASSERT_EQ(IPPROTO_TCP, tai->ai_protocol);
@@ -100,11 +100,11 @@ TEST(netdb, getaddrinfo_hints) {
 }
 
 TEST(netdb, getaddrinfo_ip6_localhost) {
-  addrinfo* ai = NULL;
-  ASSERT_EQ(0, getaddrinfo("ip6-localhost", NULL, NULL, &ai));
-  ASSERT_TRUE(ai != NULL);
+  addrinfo* ai = nullptr;
+  ASSERT_EQ(0, getaddrinfo("ip6-localhost", nullptr, nullptr, &ai));
+  ASSERT_TRUE(ai != nullptr);
   ASSERT_GE(ai->ai_addrlen, static_cast<socklen_t>(sizeof(sockaddr_in6)));
-  ASSERT_TRUE(ai->ai_addr != NULL);
+  ASSERT_TRUE(ai->ai_addr != nullptr);
   sockaddr_in6 *addr = reinterpret_cast<sockaddr_in6*>(ai->ai_addr);
   ASSERT_EQ(addr->sin6_family, AF_INET6);
   ASSERT_EQ(0, memcmp(&addr->sin6_addr, &in6addr_loopback, sizeof(in6_addr)));
@@ -122,22 +122,22 @@ TEST(netdb, getnameinfo_salen) {
   socklen_t just_right = sizeof(sockaddr_in);
   socklen_t too_little = sizeof(sockaddr_in) - 1;
 
-  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
   ASSERT_STREQ("0.0.0.0", tmp);
-  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
   ASSERT_STREQ("0.0.0.0", tmp);
-  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
 
   ss.ss_family = AF_INET6;
   just_right = sizeof(sockaddr_in6);
   too_little = sizeof(sockaddr_in6) - 1;
   too_much = just_right + 1;
 
-  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, too_much, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
   ASSERT_STREQ("::", tmp);
-  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(0, getnameinfo(sa, just_right, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
   ASSERT_STREQ("::", tmp);
-  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), NULL, 0, NI_NUMERICHOST));
+  ASSERT_EQ(EAI_FAMILY, getnameinfo(sa, too_little, tmp, sizeof(tmp), nullptr, 0, NI_NUMERICHOST));
 }
 
 TEST(netdb, getnameinfo_localhost) {
@@ -147,7 +147,7 @@ TEST(netdb, getnameinfo_localhost) {
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = htonl(0x7f000001);
   ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
-                           host, sizeof(host), NULL, 0, 0));
+                           host, sizeof(host), nullptr, 0, 0));
   ASSERT_STREQ(host, "localhost");
 }
 
@@ -165,14 +165,14 @@ TEST(netdb, getnameinfo_ip6_localhost) {
   addr.sin6_family = AF_INET6;
   addr.sin6_addr = in6addr_loopback;
   ASSERT_EQ(0, getnameinfo(reinterpret_cast<sockaddr*>(&addr), sizeof(addr),
-                           host, sizeof(host), NULL, 0, 0));
+                           host, sizeof(host), nullptr, 0, 0));
   VerifyLocalhostName(host);
 }
 
 static void VerifyLocalhost(hostent *hent) {
-  ASSERT_TRUE(hent != NULL);
+  ASSERT_TRUE(hent != nullptr);
   VerifyLocalhostName(hent->h_name);
-  for (size_t i = 0; hent->h_aliases[i] != NULL; ++i) {
+  for (size_t i = 0; hent->h_aliases[i] != nullptr; ++i) {
     VerifyLocalhostName(hent->h_aliases[i]);
   }
   ASSERT_EQ(hent->h_addrtype, AF_INET);
@@ -273,7 +273,7 @@ TEST(netdb, gethostbyname_r_ERANGE) {
   int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, gethostbyname2_r_ERANGE) {
@@ -284,7 +284,7 @@ TEST(netdb, gethostbyname2_r_ERANGE) {
   int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, gethostbyaddr_r_ERANGE) {
@@ -296,7 +296,7 @@ TEST(netdb, gethostbyaddr_r_ERANGE) {
   int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, gethostbyname_r_HOST_NOT_FOUND) {
@@ -307,7 +307,7 @@ TEST(netdb, gethostbyname_r_HOST_NOT_FOUND) {
   int result = gethostbyname_r("does.not.exist.google.com", &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(HOST_NOT_FOUND, err);
   EXPECT_EQ(0, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, gethostbyname2_r_HOST_NOT_FOUND) {
@@ -318,7 +318,7 @@ TEST(netdb, gethostbyname2_r_HOST_NOT_FOUND) {
   int result = gethostbyname2_r("does.not.exist.google.com", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(HOST_NOT_FOUND, err);
   EXPECT_EQ(0, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, gethostbyaddr_r_HOST_NOT_FOUND) {
@@ -330,7 +330,7 @@ TEST(netdb, gethostbyaddr_r_HOST_NOT_FOUND) {
   int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(HOST_NOT_FOUND, err);
   EXPECT_EQ(0, result);
-  EXPECT_EQ(NULL, hp);
+  EXPECT_EQ(nullptr, hp);
 }
 
 TEST(netdb, getservbyname) {

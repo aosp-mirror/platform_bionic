@@ -25,7 +25,7 @@ const std::nothrow_t std::nothrow = {};
 
 void* operator new(std::size_t size) {
     void* p = malloc(size);
-    if (p == NULL) {
+    if (p == nullptr) {
         async_safe_fatal("new failed to allocate %zu bytes", size);
     }
     return p;
@@ -33,7 +33,7 @@ void* operator new(std::size_t size) {
 
 void* operator new[](std::size_t size) {
     void* p = malloc(size);
-    if (p == NULL) {
+    if (p == nullptr) {
         async_safe_fatal("new[] failed to allocate %zu bytes", size);
     }
     return p;

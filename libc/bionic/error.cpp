@@ -34,13 +34,13 @@
 #include <string.h>
 
 unsigned int error_message_count = 0;
-void (*error_print_progname)(void) = NULL;
+void (*error_print_progname)(void) = nullptr;
 int error_one_per_line = 0;
 
 static void __error_head() {
   ++error_message_count;
 
-  if (error_print_progname != NULL) {
+  if (error_print_progname != nullptr) {
     error_print_progname();
   } else {
     fflush(stdout);
@@ -77,7 +77,7 @@ void error_at_line(int status, int error, const char* file, unsigned int line, c
   if (error_one_per_line) {
     static const char* last_file;
     static unsigned int last_line;
-    if (last_line == line && last_file != NULL && strcmp(last_file, file) == 0) {
+    if (last_line == line && last_file != nullptr && strcmp(last_file, file) == 0) {
       return;
     }
     last_file = file;

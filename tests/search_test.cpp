@@ -151,18 +151,18 @@ TEST(search, insque_remque) {
 
   // Linear (not circular).
 
-  insque(&zero, NULL);
+  insque(&zero, nullptr);
   insque(&one, &zero);
   insque(&two, &one);
 
   int expected = 0;
-  for (q_node* q = &zero; q != NULL; q = q->next) {
+  for (q_node* q = &zero; q != nullptr; q = q->next) {
     ASSERT_EQ(expected, q->i);
     ++expected;
   }
   ASSERT_EQ(3, expected);
 
-  for (q_node* q = &two; q != NULL; q = q->prev) {
+  for (q_node* q = &two; q != nullptr; q = q->prev) {
     --expected;
     ASSERT_EQ(expected, q->i);
   }

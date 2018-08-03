@@ -88,7 +88,7 @@ void __init_thread_stack_guard(pthread_internal_t* thread) {
 
 void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
-  void* stack_base = mmap(NULL, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
     // Create a guard to catch stack overflows in signal handlers.
     if (mprotect(stack_base, PTHREAD_GUARD_SIZE, PROT_NONE) == -1) {
@@ -99,7 +99,7 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     ss.ss_sp = reinterpret_cast<uint8_t*>(stack_base) + PTHREAD_GUARD_SIZE;
     ss.ss_size = SIGNAL_STACK_SIZE - PTHREAD_GUARD_SIZE;
     ss.ss_flags = 0;
-    sigaltstack(&ss, NULL);
+    sigaltstack(&ss, nullptr);
     thread->alternate_signal_stack = stack_base;
 
     // We can only use const static allocated string for mapped region name, as Android kernel
@@ -166,13 +166,13 @@ static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_s
   // Create a new private anonymous map.
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE;
-  void* space = mmap(NULL, mmap_size, prot, flags, -1, 0);
+  void* space = mmap(nullptr, mmap_size, prot, flags, -1, 0);
   if (space == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN,
                       "libc",
                       "pthread_create failed: couldn't allocate %zu-bytes mapped space: %s",
                       mmap_size, strerror(errno));
-    return NULL;
+    return nullptr;
   }
 
   // Stack is at the lower end of mapped space, stack guard region is at the lower end of stack.
@@ -182,7 +182,7 @@ static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_s
                           "pthread_create failed: couldn't mprotect PROT_NONE %zu-byte stack guard region: %s",
                           stack_guard_size, strerror(errno));
     munmap(space, mmap_size);
-    return NULL;
+    return nullptr;
   }
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, space, stack_guard_size, "thread stack guard");
 
@@ -193,7 +193,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   size_t mmap_size;
   uint8_t* stack_top;
 
-  if (attr->stack_base == NULL) {
+  if (attr->stack_base == nullptr) {
     // The caller didn't provide a stack, so allocate one.
     // Make sure the stack size and guard size are multiples of PAGE_SIZE.
     if (__builtin_add_overflow(attr->stack_size, attr->guard_size, &mmap_size)) return EAGAIN;
@@ -201,7 +201,7 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
     mmap_size = __BIONIC_ALIGN(mmap_size, PAGE_SIZE);
     attr->guard_size = __BIONIC_ALIGN(attr->guard_size, PAGE_SIZE);
     attr->stack_base = __create_thread_mapped_space(mmap_size, attr->guard_size);
-    if (attr->stack_base == NULL) {
+    if (attr->stack_base == nullptr) {
       return EAGAIN;
     }
     stack_top = reinterpret_cast<uint8_t*>(attr->stack_base) + mmap_size;
@@ -261,7 +261,7 @@ static int __pthread_start(void* arg) {
 // going to run user code on it. We swap out the user's start routine for this and take advantage
 // of the regular thread teardown to free up resources.
 static void* __do_nothing(void*) {
-  return NULL;
+  return nullptr;
 }
 
 
@@ -271,15 +271,15 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   ErrnoRestorer errno_restorer;
 
   pthread_attr_t thread_attr;
-  if (attr == NULL) {
+  if (attr == nullptr) {
     pthread_attr_init(&thread_attr);
   } else {
     thread_attr = *attr;
-    attr = NULL; // Prevent misuse below.
+    attr = nullptr; // Prevent misuse below.
   }
 
-  pthread_internal_t* thread = NULL;
-  void* child_stack = NULL;
+  pthread_internal_t* thread = nullptr;
+  void* child_stack = nullptr;
   int result = __allocate_thread(&thread_attr, &thread, &child_stack);
   if (result != 0) {
     return result;

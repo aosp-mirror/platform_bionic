@@ -79,7 +79,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
     size_t called_destructor_count = 0;
     for (size_t i = 0; i < BIONIC_PTHREAD_KEY_COUNT; ++i) {
       uintptr_t seq = atomic_load_explicit(&key_map[i].seq, memory_order_relaxed);
-      if (SeqOfKeyInUse(seq) && seq == key_data[i].seq && key_data[i].data != NULL) {
+      if (SeqOfKeyInUse(seq) && seq == key_data[i].seq && key_data[i].data != nullptr) {
         // Other threads may be calling pthread_key_delete/pthread_key_create while current thread
         // is exiting. So we need to ensure we read the right key_destructor.
         // We can rely on a user-established happens-before relationship between the creation and
@@ -89,7 +89,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
         // right key_destructor, or the sequence number must have changed when we reread it below.
         key_destructor_t key_destructor = reinterpret_cast<key_destructor_t>(
           atomic_load_explicit(&key_map[i].key_destructor, memory_order_relaxed));
-        if (key_destructor == NULL) {
+        if (key_destructor == nullptr) {
           continue;
         }
         atomic_thread_fence(memory_order_acquire);
@@ -102,7 +102,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all() {
         // We don't do this if 'key_destructor == NULL' just in case another destructor
         // function is responsible for manually releasing the corresponding data.
         void* data = key_data[i].data;
-        key_data[i].data = NULL;
+        key_data[i].data = nullptr;
 
         (*key_destructor)(data);
         ++called_destructor_count;
@@ -154,7 +154,7 @@ int pthread_key_delete(pthread_key_t key) {
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void* pthread_getspecific(pthread_key_t key) {
   if (__predict_false(!KeyInValidRange(key))) {
-    return NULL;
+    return nullptr;
   }
   key &= ~KEY_VALID_FLAG;
   uintptr_t seq = atomic_load_explicit(&key_map[key].seq, memory_order_relaxed);
@@ -166,8 +166,8 @@ void* pthread_getspecific(pthread_key_t key) {
   }
   // We arrive here when current thread holds the seq of an deleted pthread key. So the
   // data is for the deleted pthread key, and should be cleared.
-  data->data = NULL;
-  return NULL;
+  data->data = nullptr;
+  return nullptr;
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE

@@ -53,7 +53,7 @@ int get_nprocs_conf() {
 
   int result = 0;
   dirent* entry;
-  while ((entry = reader.ReadEntry()) != NULL) {
+  while ((entry = reader.ReadEntry()) != nullptr) {
     if (entry->d_type == DT_DIR && __matches_cpuN(entry->d_name)) {
       ++result;
     }

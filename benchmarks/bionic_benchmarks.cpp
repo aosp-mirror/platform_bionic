@@ -78,12 +78,12 @@ std::mutex g_map_lock;
 
 static struct option g_long_options[] =
 {
-  {"bionic_cpu", required_argument, 0, 'c'},
-  {"bionic_xml", required_argument, 0, 'x'},
-  {"bionic_iterations", required_argument, 0, 'i'},
-  {"bionic_extra", required_argument, 0, 'a'},
-  {"help", no_argument, 0, 'h'},
-  {0, 0, 0, 0},
+  {"bionic_cpu", required_argument, nullptr, 'c'},
+  {"bionic_xml", required_argument, nullptr, 'x'},
+  {"bionic_iterations", required_argument, nullptr, 'i'},
+  {"bionic_extra", required_argument, nullptr, 'a'},
+  {"help", no_argument, nullptr, 'h'},
+  {nullptr, 0, nullptr, 0},
 };
 
 typedef std::vector<std::vector<int64_t>> args_vector_t;
@@ -100,7 +100,7 @@ void Usage() {
   int fake_argc = 2;
   char argv0[] = "bionic_benchmarks";
   char argv1[] = "--help";
-  char* fake_argv[3] {argv0, argv1, NULL};
+  char* fake_argv[3] {argv0, argv1, nullptr};
   benchmark::Initialize(&fake_argc, fake_argv);
   exit(1);
 }
@@ -132,7 +132,7 @@ void SanitizeOpts(int argc, char** argv, std::vector<char*>* new_argv) {
       }
     }
   }
-  new_argv->push_back(0);
+  new_argv->push_back(nullptr);
 }
 
 bench_opts_t ParseOpts(int argc, char** argv) {

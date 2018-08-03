@@ -56,6 +56,9 @@ extern "C" void _start();
 
 static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
+static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                   ElfW(Addr)* base, ElfW(Addr)* load_bias);
+
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
 // before linker links itself.
@@ -321,24 +324,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
   si->phnum = args.getauxval(AT_PHNUM);
 
-  /* Compute the value of si->base. We can't rely on the fact that
-   * the first entry is the PHDR because this will not be true
-   * for certain executables (e.g. some in the NDK unit test suite)
-   */
-  si->base = 0;
+  get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-  si->load_bias = 0;
-  for (size_t i = 0; i < si->phnum; ++i) {
-    if (si->phdr[i].p_type == PT_PHDR) {
-      si->load_bias = reinterpret_cast<ElfW(Addr)>(si->phdr) - si->phdr[i].p_vaddr;
-      si->base = reinterpret_cast<ElfW(Addr)>(si->phdr) - si->phdr[i].p_offset;
-      break;
-    }
-  }
-
-  if (si->base == 0) {
-    async_safe_fatal("Could not find a PHDR: broken executable?");
-  }
 
   si->dynamic = nullptr;
 
@@ -503,6 +490,23 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf) {
   return 0;
 }
 
+/* Find the load bias and base address of an executable or shared object loaded
+ * by the kernel. The ELF file's PHDR table must have a PT_PHDR entry.
+ *
+ * A VDSO doesn't have a PT_PHDR entry in its PHDR table.
+ */
+static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                   ElfW(Addr)* base, ElfW(Addr)* load_bias) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    if (phdr_table[i].p_type == PT_PHDR) {
+      *load_bias = reinterpret_cast<ElfW(Addr)>(phdr_table) - phdr_table[i].p_vaddr;
+      *base = reinterpret_cast<ElfW(Addr)>(phdr_table) - phdr_table[i].p_offset;
+      return;
+    }
+  }
+  async_safe_fatal("Could not find a PHDR: broken executable?");
+}
+
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args,
                               ElfW(Addr) linker_addr,
@@ -524,22 +528,17 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   __libc_init_sysinfo(args);
 #endif
 
-  // AT_BASE is set to 0 in the case when linker is run by iself
-  // so in order to link the linker it needs to calcuate AT_BASE
-  // using information at hand. The trick below takes advantage
-  // of the fact that the value of linktime_addr before relocations
-  // are run is an offset and this can be used to calculate AT_BASE.
-  static uintptr_t linktime_addr = reinterpret_cast<uintptr_t>(&linktime_addr);
-  ElfW(Addr) linker_addr = reinterpret_cast<uintptr_t>(&linktime_addr) - linktime_addr;
-
-#if defined(__clang_analyzer__)
-  // The analyzer assumes that linker_addr will always be null. Make it an
-  // unknown value so we don't have to mark N places with NOLINTs.
-  //
-  // (`+=`, rather than `=`, allows us to sidestep a potential "unused store"
-  // complaint)
-  linker_addr += reinterpret_cast<uintptr_t>(raw_args);
-#endif
+  ElfW(Addr) linker_addr = args.getauxval(AT_BASE);
+  if (linker_addr == 0) {
+    // When the linker is run by itself (rather than as an interpreter for
+    // another program), AT_BASE is 0. In that case, the AT_PHDR and AT_PHNUM
+    // aux values describe the linker, so use the phdr to find the linker's
+    // base address.
+    ElfW(Addr) load_bias;
+    get_elf_base_from_phdr(
+      reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR)), args.getauxval(AT_PHNUM),
+      &linker_addr, &load_bias);
+  }
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
