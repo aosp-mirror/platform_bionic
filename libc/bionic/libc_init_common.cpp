@@ -346,7 +346,7 @@ void __libc_fini(void* array) {
   const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
 
   // Sanity check - first entry must be -1.
-  if (array == NULL || fini_array[0] != minus1) {
+  if (array == nullptr || fini_array[0] != minus1) {
     return;
   }
 
@@ -355,7 +355,7 @@ void __libc_fini(void* array) {
 
   // Count the number of destructors.
   int count = 0;
-  while (fini_array[count] != NULL) {
+  while (fini_array[count] != nullptr) {
     ++count;
   }
 

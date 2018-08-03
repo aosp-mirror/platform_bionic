@@ -50,15 +50,15 @@ enum uid_type_t {
 
 static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid_type_t uid_type,
                          bool check_username) {
-  ASSERT_TRUE(pwd != NULL);
+  ASSERT_TRUE(pwd != nullptr);
   if (check_username) {
     EXPECT_STREQ(username, pwd->pw_name);
   }
   EXPECT_EQ(uid, pwd->pw_uid);
   EXPECT_EQ(uid, pwd->pw_gid);
-  EXPECT_EQ(NULL, pwd->pw_passwd);
+  EXPECT_EQ(nullptr, pwd->pw_passwd);
 #ifdef __LP64__
-  EXPECT_EQ(NULL, pwd->pw_gecos);
+  EXPECT_EQ(nullptr, pwd->pw_gecos);
 #endif
 
   if (uid_type == TYPE_SYSTEM) {
@@ -94,7 +94,7 @@ static void check_getpwuid_r(const char* username, uid_t uid, uid_type_t uid_typ
   int result;
 
   errno = 0;
-  passwd* pwd = NULL;
+  passwd* pwd = nullptr;
   result = getpwuid_r(uid, &pwd_storage, buf, sizeof(buf), &pwd);
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
@@ -109,7 +109,7 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
   int result;
 
   errno = 0;
-  passwd* pwd = NULL;
+  passwd* pwd = nullptr;
   result = getpwnam_r(username, &pwd_storage, buf, sizeof(buf), &pwd);
   ASSERT_EQ(0, result);
   ASSERT_EQ(0, errno);
@@ -264,15 +264,15 @@ TEST(pwd, getpwent_iterate) {
   std::set<uid_t> uids;
 
   setpwent();
-  while ((pwd = getpwent()) != NULL) {
-    ASSERT_TRUE(NULL != pwd->pw_name);
+  while ((pwd = getpwent()) != nullptr) {
+    ASSERT_TRUE(nullptr != pwd->pw_name);
 
     EXPECT_EQ(pwd->pw_gid, pwd->pw_uid) << "pwd->pw_uid: " << pwd->pw_uid;
-    EXPECT_EQ(NULL, pwd->pw_passwd) << "pwd->pw_uid: " << pwd->pw_uid;
+    EXPECT_EQ(nullptr, pwd->pw_passwd) << "pwd->pw_uid: " << pwd->pw_uid;
 #ifdef __LP64__
-    EXPECT_TRUE(NULL == pwd->pw_gecos) << "pwd->pw_uid: " << pwd->pw_uid;
+    EXPECT_TRUE(nullptr == pwd->pw_gecos) << "pwd->pw_uid: " << pwd->pw_uid;
 #endif
-    EXPECT_TRUE(NULL != pwd->pw_shell);
+    EXPECT_TRUE(nullptr != pwd->pw_shell);
     if (pwd->pw_uid < AID_APP_START || pwd->pw_uid == AID_OVERFLOWUID) {
       EXPECT_STREQ("/", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
     } else {
@@ -299,16 +299,16 @@ TEST(pwd, getpwent_iterate) {
 
 static void check_group(const group* grp, const char* group_name, gid_t gid,
                         bool check_groupname = true) {
-  ASSERT_TRUE(grp != NULL);
+  ASSERT_TRUE(grp != nullptr);
   if (check_groupname) {
     EXPECT_STREQ(group_name, grp->gr_name);
   }
   EXPECT_EQ(gid, grp->gr_gid);
-  ASSERT_TRUE(grp->gr_mem != NULL);
+  ASSERT_TRUE(grp->gr_mem != nullptr);
   if (check_groupname) {
     EXPECT_STREQ(group_name, grp->gr_mem[0]);
   }
-  EXPECT_TRUE(grp->gr_mem[1] == NULL);
+  EXPECT_TRUE(grp->gr_mem[1] == nullptr);
 }
 
 #if defined(__BIONIC__)
@@ -523,11 +523,11 @@ TEST(grp, getgrent_iterate) {
   std::set<gid_t> gids;
 
   setgrent();
-  while ((grp = getgrent()) != NULL) {
-    ASSERT_TRUE(grp->gr_name != NULL) << "grp->gr_gid: " << grp->gr_gid;
-    ASSERT_TRUE(grp->gr_mem != NULL) << "grp->gr_gid: " << grp->gr_gid;
+  while ((grp = getgrent()) != nullptr) {
+    ASSERT_TRUE(grp->gr_name != nullptr) << "grp->gr_gid: " << grp->gr_gid;
+    ASSERT_TRUE(grp->gr_mem != nullptr) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
-    EXPECT_TRUE(grp->gr_mem[1] == NULL) << "grp->gr_gid: " << grp->gr_gid;
+    EXPECT_TRUE(grp->gr_mem[1] == nullptr) << "grp->gr_gid: " << grp->gr_gid;
 
     // TODO(b/27999086): fix this check with the OEM range
     // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.

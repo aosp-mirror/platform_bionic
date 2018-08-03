@@ -69,7 +69,7 @@ size_t __fpending(FILE* fp) {
 
 void _flushlbf() {
   // If we flush all streams, we know we've flushed all the line-buffered streams.
-  fflush(NULL);
+  fflush(nullptr);
 }
 
 void __fseterr(FILE* fp) {

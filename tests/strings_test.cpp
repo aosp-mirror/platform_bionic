@@ -45,7 +45,7 @@ TEST(STRINGS_TEST, strcasecmp) {
 }
 
 TEST(STRINGS_TEST, strcasecmp_l) {
-  locale_t l = newlocale(LC_ALL, "C", 0);
+  locale_t l = newlocale(LC_ALL, "C", nullptr);
   ASSERT_EQ(0, strcasecmp_l("hello", "HELLO", l));
   ASSERT_LT(strcasecmp_l("hello1", "hello2", l), 0);
   ASSERT_GT(strcasecmp_l("hello2", "hello1", l), 0);
@@ -60,7 +60,7 @@ TEST(STRINGS_TEST, strncasecmp) {
 }
 
 TEST(STRINGS_TEST, strncasecmp_l) {
-  locale_t l = newlocale(LC_ALL, "C", 0);
+  locale_t l = newlocale(LC_ALL, "C", nullptr);
   ASSERT_EQ(0, strncasecmp_l("hello", "HELLO", 3, l));
   ASSERT_EQ(0, strncasecmp_l("abcXX", "ABCYY", 3, l));
   ASSERT_LT(strncasecmp_l("hello1", "hello2", 6, l), 0);

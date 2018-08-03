@@ -62,7 +62,7 @@ float_type wcstod(const wchar_t* str, wchar_t** end, float_type strtod_fn(const 
   f._bf._base = f._p = reinterpret_cast<unsigned char*>(ascii_str);
   f._bf._size = f._r = max_len;
   f._read = [](void*, char*, int) { return 0; }; // aka `eofread`, aka "no more data".
-  f._lb._base = NULL;
+  f._lb._base = nullptr;
 
   // Ask `parsefloat` to look at the same data more carefully.
 

@@ -93,7 +93,7 @@ TEST(stdio_ext, __fpurge) {
 
   char buf[16];
   char* s = fgets(buf, sizeof(buf), fp);
-  ASSERT_TRUE(s != NULL);
+  ASSERT_TRUE(s != nullptr);
   ASSERT_STREQ("b\n", s);
 
   fclose(fp);
