@@ -5,35 +5,37 @@
 
 #include "seccomp_bpfs.h"
 const sock_filter x86_64_system_filter[] = {
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 88),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 175, 43, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 79, 21, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 0, 0, 90),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 175, 45, 0),
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 89, 23, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 35, 11, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 8, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 5, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 3, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 2, 81, 80), //read|write
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4, 80, 79), //close
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 6, 79, 78), //fstat
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 2, 83, 82), //read|write
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 4, 82, 81), //close
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 6, 81, 80), //fstat
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 32, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 24, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 21, 76, 75), //lseek|mmap|mprotect|munmap|brk|rt_sigaction|rt_sigprocmask|rt_sigreturn|ioctl|pread64|pwrite64|readv|writev
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 29, 75, 74), //sched_yield|mremap|msync|mincore|madvise
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 33, 74, 73), //dup
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 21, 78, 77), //lseek|mmap|mprotect|munmap|brk|rt_sigaction|rt_sigprocmask|rt_sigreturn|ioctl|pread64|pwrite64|readv|writev
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 29, 77, 76), //sched_yield|mremap|msync|mincore|madvise
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 33, 76, 75), //dup
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 58, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 44, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 38, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 37, 70, 69), //nanosleep|getitimer
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 43, 69, 68), //setitimer|getpid|sendfile|socket|connect
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 57, 68, 67), //sendto|recvfrom|sendmsg|recvmsg|shutdown|bind|listen|getsockname|getpeername|socketpair|setsockopt|getsockopt|clone
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 37, 72, 71), //nanosleep|getitimer
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 43, 71, 70), //setitimer|getpid|sendfile|socket|connect
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 57, 70, 69), //sendto|recvfrom|sendmsg|recvmsg|shutdown|bind|listen|getsockname|getpeername|socketpair|setsockopt|getsockopt|clone
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 79, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 72, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 64, 66, 65), //vfork|execve|exit|wait4|kill|uname
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 78, 65, 64), //fcntl|flock|fsync|fdatasync|truncate|ftruncate
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 64, 67, 66), //vfork|execve|exit|wait4|kill|uname
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 78, 66, 65), //fcntl|flock|fsync|fdatasync|truncate|ftruncate
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 82, 65, 64), //getcwd|chdir|fchdir
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 137, 11, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 95, 5, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 93, 3, 0),
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 91, 1, 0),
-BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 82, 60, 59), //getcwd|chdir|fchdir
+BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 90, 60, 59), //readlink
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 92, 59, 58), //fchmod
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 94, 58, 57), //fchown
 BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, 135, 3, 0),
