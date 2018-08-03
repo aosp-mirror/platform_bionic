@@ -92,7 +92,7 @@ static void* __timer_thread_start(void* arg) {
     } else if (si.si_code == SI_TKILL) {
       // This signal was sent because someone wants us to exit.
       free(timer);
-      return NULL;
+      return nullptr;
     }
   }
 }
@@ -105,11 +105,11 @@ static void __timer_thread_stop(PosixTimer* timer) {
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/timer_create.html
 int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   PosixTimer* timer = reinterpret_cast<PosixTimer*>(malloc(sizeof(PosixTimer)));
-  if (timer == NULL) {
+  if (timer == nullptr) {
     return -1;
   }
 
-  timer->sigev_notify = (evp == NULL) ? SIGEV_SIGNAL : evp->sigev_notify;
+  timer->sigev_notify = (evp == nullptr) ? SIGEV_SIGNAL : evp->sigev_notify;
 
   // If not a SIGEV_THREAD timer, the kernel can handle it without our help.
   if (timer->sigev_notify != SIGEV_THREAD) {
@@ -128,7 +128,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
   atomic_init(&timer->deleted, false);
 
   // Check arguments that the kernel doesn't care about but we do.
-  if (timer->callback == NULL) {
+  if (timer->callback == nullptr) {
     free(timer);
     errno = EINVAL;
     return -1;
@@ -136,7 +136,7 @@ int timer_create(clockid_t clock_id, sigevent* evp, timer_t* timer_id) {
 
   // Create this timer's thread.
   pthread_attr_t thread_attributes;
-  if (evp->sigev_notify_attributes == NULL) {
+  if (evp->sigev_notify_attributes == nullptr) {
     pthread_attr_init(&thread_attributes);
   } else {
     thread_attributes = *reinterpret_cast<pthread_attr_t*>(evp->sigev_notify_attributes);

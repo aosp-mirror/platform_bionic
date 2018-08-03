@@ -25,7 +25,7 @@
 
 TEST(sys_stat, futimens) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   int fd = fileno(fp);
   ASSERT_NE(fd, -1);

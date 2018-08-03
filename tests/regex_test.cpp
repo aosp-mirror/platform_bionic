@@ -23,8 +23,8 @@ TEST(regex, smoke) {
   // A quick test of all the regex functions.
   regex_t re;
   ASSERT_EQ(0, regcomp(&re, "ab*c", 0));
-  ASSERT_EQ(0, regexec(&re, "abbbc", 0, NULL, 0));
-  ASSERT_EQ(REG_NOMATCH, regexec(&re, "foo", 0, NULL, 0));
+  ASSERT_EQ(0, regexec(&re, "abbbc", 0, nullptr, 0));
+  ASSERT_EQ(REG_NOMATCH, regexec(&re, "foo", 0, nullptr, 0));
 
   char buf[80];
   regerror(REG_NOMATCH, &re, buf, sizeof(buf));

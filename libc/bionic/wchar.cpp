@@ -54,12 +54,12 @@
 //
 
 int mbsinit(const mbstate_t* ps) {
-  return (ps == NULL || (*(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0));
+  return (ps == nullptr || (*(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0));
 }
 
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
   // Our wchar_t is UTF-32.
   return mbrtoc32(reinterpret_cast<char32_t*>(pwc), s, n, state);
@@ -67,7 +67,7 @@ size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
 
 size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
   size_t i, o, r;
 
   // The fast paths in the loops below are not safe if an ASCII
@@ -78,7 +78,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
   }
 
   // Measure only?
-  if (dst == NULL) {
+  if (dst == nullptr) {
     for (i = o = 0; i < nmc; i += r, o++) {
       if (static_cast<uint8_t>((*src)[i]) < 0x80) {
         // Fast path for plain ASCII characters.
@@ -87,7 +87,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
         }
         r = 1;
       } else {
-        r = mbrtowc(NULL, *src + i, nmc - i, state);
+        r = mbrtowc(nullptr, *src + i, nmc - i, state);
         if (r == __MB_ERR_ILLEGAL_SEQUENCE) {
           return mbstate_reset_and_return_illegal(EILSEQ, state);
         }
@@ -123,7 +123,7 @@ size_t mbsnrtowcs(wchar_t* dst, const char** src, size_t nmc, size_t len, mbstat
         return mbstate_reset_and_return_illegal(EILSEQ, state);
       }
       if (r == 0) {
-        *src = NULL;
+        *src = nullptr;
         return mbstate_reset_and_return(o, state);
       }
     }
@@ -138,7 +138,7 @@ size_t mbsrtowcs(wchar_t* dst, const char** src, size_t len, mbstate_t* ps) {
 
 size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
   // Our wchar_t is UTF-32.
   return c32rtomb(s, static_cast<char32_t>(wc), state);
@@ -146,7 +146,7 @@ size_t wcrtomb(char* s, wchar_t wc, mbstate_t* ps) {
 
 size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
   if (!mbsinit(state)) {
     return mbstate_reset_and_return_illegal(EILSEQ, state);
@@ -154,7 +154,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
 
   char buf[MB_LEN_MAX];
   size_t i, o, r;
-  if (dst == NULL) {
+  if (dst == nullptr) {
     for (i = o = 0; i < nwc; i++, o += r) {
       wchar_t wc = (*src)[i];
       if (static_cast<uint32_t>(wc) < 0x80) {
@@ -179,7 +179,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
       // Fast path for plain ASCII characters.
       dst[o] = wc;
       if (wc == 0) {
-        *src = NULL;
+        *src = nullptr;
         return o;
       }
       r = 1;

@@ -59,7 +59,7 @@ TEST(time, time) {
 TEST(time, gmtime) {
   time_t t = 0;
   tm* broken_down = gmtime(&t);
-  ASSERT_TRUE(broken_down != NULL);
+  ASSERT_TRUE(broken_down != nullptr);
   ASSERT_EQ(0, broken_down->tm_sec);
   ASSERT_EQ(0, broken_down->tm_min);
   ASSERT_EQ(0, broken_down->tm_hour);
@@ -86,11 +86,11 @@ static void* gmtime_no_stack_overflow_14313703_fn(void*) {
   // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
   setenv("TZ", "gmtime_stack_overflow_14313703", 1);
   tzset();
-  if (original_tz != NULL) {
+  if (original_tz != nullptr) {
     setenv("TZ", original_tz, 1);
   }
   tzset();
-  return NULL;
+  return nullptr;
 }
 
 TEST(time, gmtime_no_stack_overflow_14313703) {
@@ -102,7 +102,7 @@ TEST(time, gmtime_no_stack_overflow_14313703) {
   ASSERT_EQ(0, pthread_attr_setstacksize(&a, PTHREAD_STACK_MIN));
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, &a, gmtime_no_stack_overflow_14313703_fn, NULL));
+  ASSERT_EQ(0, pthread_create(&t, &a, gmtime_no_stack_overflow_14313703_fn, nullptr));
   ASSERT_EQ(0, pthread_join(t, nullptr));
 }
 
@@ -242,7 +242,7 @@ TEST(time, strftime_null_tm_zone) {
 }
 
 TEST(time, strftime_l) {
-  locale_t cloc = newlocale(LC_ALL, "C.UTF-8", 0);
+  locale_t cloc = newlocale(LC_ALL, "C.UTF-8", nullptr);
   locale_t old_locale = uselocale(cloc);
 
   setenv("TZ", "UTC", 1);
@@ -302,7 +302,7 @@ void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time
   ts.it_value.tv_nsec = value_ns;
   ts.it_interval.tv_sec = interval_s;
   ts.it_interval.tv_nsec = interval_ns;
-  ASSERT_EQ(0, timer_settime(t, 0, &ts, NULL));
+  ASSERT_EQ(0, timer_settime(t, 0, &ts, nullptr));
 }
 
 static void NoOpNotifyFunction(sigval_t) {
@@ -356,7 +356,7 @@ TEST(time, timer_create_SIGEV_SIGNAL) {
   ts.it_value.tv_nsec = 1;
   ts.it_interval.tv_sec = 0;
   ts.it_interval.tv_nsec = 0;
-  ASSERT_EQ(0, timer_settime(timer_id, 0, &ts, NULL));
+  ASSERT_EQ(0, timer_settime(timer_id, 0, &ts, nullptr));
 
   usleep(500000);
   ASSERT_EQ(1, timer_create_SIGEV_SIGNAL_signal_handler_invocation_count);
@@ -405,8 +405,8 @@ struct Counter {
 
   bool ValueUpdated() {
     int current_value = value;
-    time_t start = time(NULL);
-    while (current_value == value && (time(NULL) - start) < 5) {
+    time_t start = time(nullptr);
+    while (current_value == value && (time(nullptr) - start) < 5) {
     }
     return current_value != value;
   }
@@ -458,7 +458,7 @@ static void timer_create_NULL_signal_handler(int signal_number) {
 TEST(time, timer_create_NULL) {
   // A NULL sigevent* is equivalent to asking for SIGEV_SIGNAL for SIGALRM.
   timer_t timer_id;
-  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, nullptr, &timer_id));
 
   timer_create_NULL_signal_handler_invocation_count = 0;
   ScopedSignalHandler ssh(SIGALRM, timer_create_NULL_signal_handler);
@@ -476,7 +476,7 @@ TEST(time, timer_create_EINVAL) {
 
   // A SIGEV_SIGNAL timer is easy; the kernel does all that.
   timer_t timer_id;
-  ASSERT_EQ(-1, timer_create(invalid_clock, NULL, &timer_id));
+  ASSERT_EQ(-1, timer_create(invalid_clock, nullptr, &timer_id));
   ASSERT_EQ(EINVAL, errno);
 
   // A SIGEV_THREAD timer is more interesting because we have stuff to clean up.
@@ -490,7 +490,7 @@ TEST(time, timer_create_EINVAL) {
 
 TEST(time, timer_delete_multiple) {
   timer_t timer_id;
-  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, NULL, &timer_id));
+  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, nullptr, &timer_id));
   ASSERT_EQ(0, timer_delete(timer_id));
   ASSERT_EQ(-1, timer_delete(timer_id));
   ASSERT_EQ(EINVAL, errno);
@@ -593,10 +593,10 @@ TEST(time, timer_delete_from_timer_thread) {
   ts.it_value.tv_nsec = 0;
   ts.it_interval.tv_sec = 0;
   ts.it_interval.tv_nsec = 0;
-  ASSERT_EQ(0, timer_settime(tdd.timer_id, 0, &ts, NULL));
+  ASSERT_EQ(0, timer_settime(tdd.timer_id, 0, &ts, nullptr));
 
-  time_t cur_time = time(NULL);
-  while (!tdd.complete && (time(NULL) - cur_time) < 5);
+  time_t cur_time = time(nullptr);
+  while (!tdd.complete && (time(nullptr) - cur_time) < 5);
   ASSERT_TRUE(tdd.complete);
 
 #if defined(__BIONIC__)

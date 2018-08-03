@@ -49,5 +49,5 @@ extern "C" void* is_ctor_called_ifun() {
 
 extern "C" void* foo_ifunc() {
    char* choice = getenv("IFUNC_CHOICE");
-   return choice == NULL ? &v1 : &v2;
+   return choice == nullptr ? &v1 : &v2;
 }
