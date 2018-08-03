@@ -35,7 +35,7 @@
 
 size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
   // We should never get to a state which has all 4 bytes of the sequence set.
   // Full state verification is done when decoding the sequence (after we have
@@ -44,10 +44,10 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     return mbstate_reset_and_return_illegal(EINVAL, state);
   }
 
-  if (s == NULL) {
+  if (s == nullptr) {
     s = "";
     n = 1;
-    pc32 = NULL;
+    pc32 = nullptr;
   }
 
   if (n == 0) {
@@ -57,7 +57,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   uint8_t ch;
   if (mbsinit(state) && (((ch = static_cast<uint8_t>(*s)) & ~0x7f) == 0)) {
     // Fast path for plain ASCII characters.
-    if (pc32 != NULL) {
+    if (pc32 != nullptr) {
       *pc32 = ch;
     }
     return (ch != '\0' ? 1 : 0);
@@ -131,7 +131,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
     // Malformed input; invalid code points.
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
-  if (pc32 != NULL) {
+  if (pc32 != nullptr) {
     *pc32 = c32;
   }
   return mbstate_reset_and_return(c32 == U'\0' ? 0 : bytes_wanted, state);

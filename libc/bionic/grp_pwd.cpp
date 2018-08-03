@@ -83,7 +83,7 @@ static int do_getpw_r(int by_name, const char* name, uid_t uid,
   // getpwnam_r and getpwuid_r don't modify errno, but library calls we
   // make might.
   ErrnoRestorer errno_restorer;
-  *result = NULL;
+  *result = nullptr;
 
   // Our implementation of getpwnam(3) and getpwuid(3) use thread-local
   // storage, so we can call them as long as we copy everything out
@@ -92,7 +92,7 @@ static int do_getpw_r(int by_name, const char* name, uid_t uid,
 
   // POSIX allows failure to find a match to be considered a non-error.
   // Reporting success (0) but with *result NULL is glibc's behavior.
-  if (src == NULL) {
+  if (src == nullptr) {
     return (errno == ENOENT) ? 0 : errno;
   }
 
@@ -114,9 +114,9 @@ static int do_getpw_r(int by_name, const char* name, uid_t uid,
 
   // pw_passwd and pw_gecos are non-POSIX and unused (always NULL) in bionic.
   // Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL.
-  dst->pw_passwd = NULL;
+  dst->pw_passwd = nullptr;
 #if defined(__LP64__)
-  dst->pw_gecos = NULL;
+  dst->pw_gecos = nullptr;
 #endif
 
   // Copy the integral fields.
@@ -134,7 +134,7 @@ int getpwnam_r(const char* name, passwd* pwd,
 
 int getpwuid_r(uid_t uid, passwd* pwd,
                char* buf, size_t byte_count, passwd** result) {
-  return do_getpw_r(0, NULL, uid, pwd, buf, byte_count, result);
+  return do_getpw_r(0, nullptr, uid, pwd, buf, byte_count, result);
 }
 
 static passwd* android_iinfo_to_passwd(passwd_state_t* state,
@@ -169,7 +169,7 @@ static passwd* android_id_to_passwd(passwd_state_t* state, unsigned id) {
       return android_iinfo_to_passwd(state, android_ids + n);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 static passwd* android_name_to_passwd(passwd_state_t* state, const char* name) {
@@ -178,7 +178,7 @@ static passwd* android_name_to_passwd(passwd_state_t* state, const char* name) {
       return android_iinfo_to_passwd(state, android_ids + n);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 static group* android_id_to_group(group_state_t* state, unsigned id) {
@@ -187,7 +187,7 @@ static group* android_id_to_group(group_state_t* state, unsigned id) {
       return android_iinfo_to_group(state, android_ids + n);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 static group* android_name_to_group(group_state_t* state, const char* name) {
@@ -196,7 +196,7 @@ static group* android_name_to_group(group_state_t* state, const char* name) {
       return android_iinfo_to_group(state, android_ids + n);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 // These are a list of the reserved app ranges, and should never contain anything below
@@ -474,7 +474,7 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
   if (uid < AID_APP_START || !is_valid_app_id(uid)) {
     errno = ENOENT;
-    return NULL;
+    return nullptr;
   }
 
   print_app_name_from_uid(uid, state->name_buffer_, sizeof(state->name_buffer_));
@@ -502,7 +502,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
 static group* app_id_to_group(gid_t gid, group_state_t* state) {
   if (gid < AID_APP_START || !is_valid_app_id(gid)) {
     errno = ENOENT;
-    return NULL;
+    return nullptr;
   }
 
   print_app_name_from_gid(gid, state->group_name_buffer_, sizeof(state->group_name_buffer_));
@@ -516,17 +516,17 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
 
 passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
   passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
 
   passwd* pw = android_id_to_passwd(state, uid);
-  if (pw != NULL) {
+  if (pw != nullptr) {
     return pw;
   }
   // Handle OEM range.
   pw = oem_id_to_passwd(uid, state);
-  if (pw != NULL) {
+  if (pw != nullptr) {
     return pw;
   }
   return app_id_to_passwd(uid, state);
@@ -534,12 +534,12 @@ passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
 
 passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
 
   passwd* pw = android_name_to_passwd(state, login);
-  if (pw != NULL) {
+  if (pw != nullptr) {
     return pw;
   }
 
@@ -551,7 +551,7 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
 
   // Handle OEM range.
   pw = oem_id_to_passwd(oem_id_from_name(login), state);
-  if (pw != NULL) {
+  if (pw != nullptr) {
     return pw;
   }
   return app_id_to_passwd(app_id_from_name(login, false), state);
@@ -594,11 +594,11 @@ void endpwent() {
 
 passwd* getpwent() {
   passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
   if (state->getpwent_idx < 0) {
-    return NULL;
+    return nullptr;
   }
 
   size_t start = 0;
@@ -630,17 +630,17 @@ passwd* getpwent() {
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
-  return NULL;
+  return nullptr;
 }
 
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
   group* grp = android_id_to_group(state, gid);
-  if (grp != NULL) {
+  if (grp != nullptr) {
     return grp;
   }
   // Handle OEM range.
   grp = oem_id_to_group(gid, state);
-  if (grp != NULL) {
+  if (grp != nullptr) {
     return grp;
   }
   return app_id_to_group(gid, state);
@@ -648,15 +648,15 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
 
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
   group_state_t* state = __group_state();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
   return getgrgid_internal(gid, state);
 }
 
 static group* getgrnam_internal(const char* name, group_state_t* state) {
   group* grp = android_name_to_group(state, name);
-  if (grp != NULL) {
+  if (grp != nullptr) {
     return grp;
   }
 
@@ -668,7 +668,7 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
 
   // Handle OEM range.
   grp = oem_id_to_group(oem_id_from_name(name), state);
-  if (grp != NULL) {
+  if (grp != nullptr) {
     return grp;
   }
   return app_id_to_group(app_id_from_name(name, true), state);
@@ -676,8 +676,8 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
   group_state_t* state = __group_state();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
   return getgrnam_internal(name, state);
 }
@@ -685,7 +685,7 @@ group* getgrnam(const char* name) { // NOLINT: implementing bad function.
 static int getgroup_r(bool by_name, const char* name, gid_t gid, struct group* grp, char* buf,
                       size_t buflen, struct group** result) {
   ErrnoRestorer errno_restorer;
-  *result = NULL;
+  *result = nullptr;
   char* p = reinterpret_cast<char*>(
       __BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
   if (p + sizeof(group_state_t) > buf + buflen) {
@@ -694,7 +694,7 @@ static int getgroup_r(bool by_name, const char* name, gid_t gid, struct group* g
   group_state_t* state = reinterpret_cast<group_state_t*>(p);
   init_group_state(state);
   group* retval = (by_name ? getgrnam_internal(name, state) : getgrgid_internal(gid, state));
-  if (retval != NULL) {
+  if (retval != nullptr) {
     *grp = *retval;
     *result = grp;
     return 0;
@@ -703,7 +703,7 @@ static int getgroup_r(bool by_name, const char* name, gid_t gid, struct group* g
 }
 
 int getgrgid_r(gid_t gid, struct group* grp, char* buf, size_t buflen, struct group** result) {
-  return getgroup_r(false, NULL, gid, grp, buf, buflen, result);
+  return getgroup_r(false, nullptr, gid, grp, buf, buflen, result);
 }
 
 int getgrnam_r(const char* name, struct group* grp, char* buf, size_t buflen,
@@ -724,11 +724,11 @@ void endgrent() {
 
 group* getgrent() {
   group_state_t* state = get_group_tls_buffer();
-  if (state == NULL) {
-    return NULL;
+  if (state == nullptr) {
+    return nullptr;
   }
   if (state->getgrent_idx < 0) {
-    return NULL;
+    return nullptr;
   }
 
   size_t start = 0;
@@ -766,5 +766,5 @@ group* getgrent() {
   }
 
   // We are not reporting u1_a* and higher or we will be here forever
-  return NULL;
+  return nullptr;
 }

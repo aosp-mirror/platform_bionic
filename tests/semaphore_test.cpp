@@ -78,9 +78,9 @@ TEST(semaphore, sem_wait__sem_post) {
   ASSERT_EQ(0, sem_init(&s, 0, 0));
 
   pthread_t t1, t2, t3;
-  ASSERT_EQ(0, pthread_create(&t1, NULL, SemWaitThreadFn, &s));
-  ASSERT_EQ(0, pthread_create(&t2, NULL, SemWaitThreadFn, &s));
-  ASSERT_EQ(0, pthread_create(&t3, NULL, SemWaitThreadFn, &s));
+  ASSERT_EQ(0, pthread_create(&t1, nullptr, SemWaitThreadFn, &s));
+  ASSERT_EQ(0, pthread_create(&t2, nullptr, SemWaitThreadFn, &s));
+  ASSERT_EQ(0, pthread_create(&t3, nullptr, SemWaitThreadFn, &s));
 
   ASSERT_EQ(0, sem_post(&s));
   ASSERT_EQ(0, sem_post(&s));

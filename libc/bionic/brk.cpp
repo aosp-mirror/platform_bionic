@@ -48,8 +48,8 @@ int brk(void* end_data) {
 
 void* sbrk(ptrdiff_t increment) {
   // Initialize __bionic_brk if necessary.
-  if (__bionic_brk == NULL) {
-    __bionic_brk = __brk(NULL);
+  if (__bionic_brk == nullptr) {
+    __bionic_brk = __brk(nullptr);
   }
 
   // Don't ask the kernel if we already know the answer.

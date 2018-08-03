@@ -136,7 +136,7 @@ int pthread_cond_init(pthread_cond_t* cond_interface, const pthread_condattr_t* 
   pthread_cond_internal_t* cond = __get_internal_cond(cond_interface);
 
   unsigned int init_state = 0;
-  if (attr != NULL) {
+  if (attr != nullptr) {
     init_state = (*attr & COND_FLAGS_MASK);
   }
   atomic_init(&cond->state, init_state);

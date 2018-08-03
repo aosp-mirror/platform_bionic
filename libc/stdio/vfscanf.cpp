@@ -97,7 +97,7 @@ int __svfscanf(FILE* fp, const char* fmt0, va_list ap) {
   char buf[BUF];    /* buffer for numeric conversions */
   size_t nconv;     /* length of multibyte sequence converted */
   mbstate_t mbs;
-  void* allocation = NULL; // Allocated but unassigned result for %mc/%ms/%m[.
+  void* allocation = nullptr; // Allocated but unassigned result for %mc/%ms/%m[.
   size_t capacity = 0; // Number of char/wchar_t units allocated in `allocation`.
 
   /* `basefix' is used to avoid `if' tests in the integer scanner */
@@ -334,9 +334,9 @@ literal:
         if (flags & LONG) {
           if (flags & ALLOCATE) {
             allocation = wcp = reinterpret_cast<wchar_t*>(malloc(width * sizeof(wchar_t)));
-            if (allocation == NULL) goto allocation_failure;
+            if (allocation == nullptr) goto allocation_failure;
           } else if (flags & SUPPRESS) {
-            wcp = NULL;
+            wcp = nullptr;
           } else {
             wcp = va_arg(ap, wchar_t*);
           }
@@ -370,9 +370,9 @@ literal:
               break;
             }
           }
-          if (allocation != NULL) {
+          if (allocation != nullptr) {
             *va_arg(ap, wchar_t**) = reinterpret_cast<wchar_t*>(allocation);
-            allocation = NULL;
+            allocation = nullptr;
           }
           if (!(flags & SUPPRESS)) nassigned++;
         } else if (flags & SUPPRESS) {
@@ -397,15 +397,15 @@ literal:
         } else {
           if (flags & ALLOCATE) {
             allocation = p = reinterpret_cast<char*>(malloc(width));
-            if (allocation == NULL) goto allocation_failure;
+            if (allocation == nullptr) goto allocation_failure;
           } else {
             p = va_arg(ap, char*);
           }
           size_t r = fread(p, 1, width, fp);
           if (r == 0) goto input_failure;
-          if (allocation != NULL) {
+          if (allocation != nullptr) {
             *va_arg(ap, char**) = reinterpret_cast<char*>(allocation);
-            allocation = NULL;
+            allocation = nullptr;
           }
           nread += r;
           nassigned++;
@@ -423,9 +423,9 @@ literal:
           if (flags & ALLOCATE) {
             capacity = MIN(width, 32);
             allocation = wcp = reinterpret_cast<wchar_t*>(malloc(sizeof(wchar_t) * capacity));
-            if (allocation == NULL) goto allocation_failure;
+            if (allocation == nullptr) goto allocation_failure;
           } else if (flags & SUPPRESS) {
-            wcp = NULL;
+            wcp = nullptr;
           } else {
             wcp = va_arg(ap, wchar_t*);
           }
@@ -455,11 +455,11 @@ literal:
               }
               if (wcp) wcp[n] = wc;
               n++;
-              if (allocation != NULL && n == capacity) {
+              if (allocation != nullptr && n == capacity) {
                 capacity *= 2;
                 wchar_t* new_allocation =
                     reinterpret_cast<wchar_t*>(realloc(allocation, sizeof(wchar_t) * capacity));
-                if (new_allocation == NULL) goto allocation_failure;
+                if (new_allocation == nullptr) goto allocation_failure;
                 allocation = wcp = new_allocation;
               }
               nread += bytes;
@@ -478,9 +478,9 @@ literal:
             fp->_flags |= __SERR;
             goto input_failure;
           }
-          if (allocation != NULL) {
+          if (allocation != nullptr) {
             *va_arg(ap, wchar_t**) = reinterpret_cast<wchar_t*>(allocation);
-            allocation = NULL;
+            allocation = nullptr;
           }
         } else if (flags & SUPPRESS) {
           n = 0;
@@ -497,7 +497,7 @@ literal:
           if (flags & ALLOCATE) {
             capacity = MIN(width, 32);
             allocation = p = reinterpret_cast<char*>(malloc(capacity));
-            if (allocation == NULL) goto allocation_failure;
+            if (allocation == nullptr) goto allocation_failure;
           } else {
             p = va_arg(ap, char*);
           }
@@ -505,10 +505,10 @@ literal:
           while (ccltab[*fp->_p]) {
             fp->_r--;
             p[n++] = *fp->_p++;
-            if (allocation != NULL && n == capacity) {
+            if (allocation != nullptr && n == capacity) {
               capacity *= 2;
               char* new_allocation = reinterpret_cast<char*>(realloc(allocation, capacity));
-              if (new_allocation == NULL) goto allocation_failure;
+              if (new_allocation == nullptr) goto allocation_failure;
               allocation = p = new_allocation;
             }
             if (--width == 0) break;
@@ -518,9 +518,9 @@ literal:
             }
           }
           nread += n;
-          if (allocation != NULL) {
+          if (allocation != nullptr) {
             *va_arg(ap, char**) = reinterpret_cast<char*>(allocation);
-            allocation = NULL;
+            allocation = nullptr;
           }
         }
         if (c == CT_CCL && n == 0) goto match_failure;
@@ -671,9 +671,9 @@ literal:
 
           *p = '\0';
           if (flags & UNSIGNED) {
-            res = strtoumax(buf, NULL, base);
+            res = strtoumax(buf, nullptr, base);
           } else {
-            res = strtoimax(buf, NULL, base);
+            res = strtoimax(buf, nullptr, base);
           }
           if (flags & POINTER) {
             *va_arg(ap, void**) = (void*)(uintptr_t)res;

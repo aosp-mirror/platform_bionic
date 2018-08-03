@@ -95,7 +95,7 @@ TEST(STDIO_TEST, flockfile_18208568_stderr) {
 TEST(STDIO_TEST, flockfile_18208568_regular) {
   // We never had a bug for streams other than stdin/stdout/stderr, but test anyway.
   FILE* fp = fopen("/dev/null", "w");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   flockfile(fp);
   feof(fp);
   funlockfile(fp);
@@ -104,7 +104,7 @@ TEST(STDIO_TEST, flockfile_18208568_regular) {
 
 TEST(STDIO_TEST, tmpfile_fileno_fprintf_rewind_fgets) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   int fd = fileno(fp);
   ASSERT_NE(fd, -1);
@@ -135,7 +135,7 @@ TEST(STDIO_TEST, dprintf) {
 
   lseek(tf.fd, 0, SEEK_SET);
   FILE* tfile = fdopen(tf.fd, "r");
-  ASSERT_TRUE(tfile != NULL);
+  ASSERT_TRUE(tfile != nullptr);
 
   AssertFileIs(tfile, "hello\n");
   fclose(tfile);
@@ -143,7 +143,7 @@ TEST(STDIO_TEST, dprintf) {
 
 TEST(STDIO_TEST, getdelim) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   const char* line_written = "This  is a test";
   int rc = fprintf(fp, "%s", line_written);
@@ -151,7 +151,7 @@ TEST(STDIO_TEST, getdelim) {
 
   rewind(fp);
 
-  char* word_read = NULL;
+  char* word_read = nullptr;
   size_t allocated_length = 0;
 
   const char* expected[] = { "This ", " ", "is ", "a ", "test" };
@@ -178,26 +178,26 @@ TEST(STDIO_TEST, getdelim) {
 
 TEST(STDIO_TEST, getdelim_invalid) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
-  char* buffer = NULL;
+  char* buffer = nullptr;
   size_t buffer_length = 0;
 
   // The first argument can't be NULL.
   errno = 0;
-  ASSERT_EQ(getdelim(NULL, &buffer_length, ' ', fp), -1);
+  ASSERT_EQ(getdelim(nullptr, &buffer_length, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
 
   // The second argument can't be NULL.
   errno = 0;
-  ASSERT_EQ(getdelim(&buffer, NULL, ' ', fp), -1);
+  ASSERT_EQ(getdelim(&buffer, nullptr, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
 }
 
 TEST(STDIO_TEST, getdelim_directory) {
   FILE* fp = fopen("/proc", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   char* word_read;
   size_t allocated_length;
   ASSERT_EQ(-1, getdelim(&word_read, &allocated_length, ' ', fp));
@@ -206,7 +206,7 @@ TEST(STDIO_TEST, getdelim_directory) {
 
 TEST(STDIO_TEST, getline) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   const char* line_written = "This is a test for getline\n";
   const size_t line_count = 5;
@@ -218,7 +218,7 @@ TEST(STDIO_TEST, getline) {
 
   rewind(fp);
 
-  char* line_read = NULL;
+  char* line_read = nullptr;
   size_t allocated_length = 0;
 
   size_t read_line_count = 0;
@@ -248,19 +248,19 @@ TEST(STDIO_TEST, getline) {
 
 TEST(STDIO_TEST, getline_invalid) {
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
-  char* buffer = NULL;
+  char* buffer = nullptr;
   size_t buffer_length = 0;
 
   // The first argument can't be NULL.
   errno = 0;
-  ASSERT_EQ(getline(NULL, &buffer_length, fp), -1);
+  ASSERT_EQ(getline(nullptr, &buffer_length, fp), -1);
   ASSERT_EQ(EINVAL, errno);
 
   // The second argument can't be NULL.
   errno = 0;
-  ASSERT_EQ(getline(&buffer, NULL, fp), -1);
+  ASSERT_EQ(getline(&buffer, nullptr, fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
 }
@@ -300,7 +300,7 @@ TEST(STDIO_TEST, snprintf_C) { // Synonym for %lc.
 
 TEST(STDIO_TEST, snprintf_ls) {
   char buf[BUFSIZ];
-  wchar_t* ws = NULL;
+  wchar_t* ws = nullptr;
   EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%ls>", ws));
   EXPECT_STREQ("<(null)>", buf);
 
@@ -312,7 +312,7 @@ TEST(STDIO_TEST, snprintf_ls) {
 
 TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
   char buf[BUFSIZ];
-  wchar_t* ws = NULL;
+  wchar_t* ws = nullptr;
   EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%S>", ws));
   EXPECT_STREQ("<(null)>", buf);
 
@@ -348,7 +348,7 @@ TEST(STDIO_TEST, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a%sb", "01234");
   EXPECT_STREQ("a01234b", buf);
 
-  char* s = NULL;
+  char* s = nullptr;
   snprintf(buf, sizeof(buf), "a%sb", s);
   EXPECT_STREQ("a(null)b", buf);
 
@@ -409,7 +409,7 @@ TEST(STDIO_TEST, snprintf_smoke) {
   snprintf(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
   EXPECT_STREQ("a005:5:05z", buf);
 
-  void* p = NULL;
+  void* p = nullptr;
   snprintf(buf, sizeof(buf), "a%d,%pz", 5, p);
 #if defined(__BIONIC__)
   EXPECT_STREQ("a5,0x0z", buf);
@@ -786,7 +786,7 @@ TEST(STDIO_TEST, snprintf_negative_zero_5084292) {
 }
 
 TEST(STDIO_TEST, snprintf_utf8_15439554) {
-  locale_t cloc = newlocale(LC_ALL, "C.UTF-8", 0);
+  locale_t cloc = newlocale(LC_ALL, "C.UTF-8", nullptr);
   locale_t old_locale = uselocale(cloc);
 
   // http://b/15439554
@@ -862,7 +862,7 @@ TEST(STDIO_TEST, fprintf_failures_7229520) {
 
   // Unbuffered case where the fprintf(3) itself fails.
   ASSERT_NE(nullptr, fp = tmpfile());
-  setbuf(fp, NULL);
+  setbuf(fp, nullptr);
   ASSERT_EQ(4, fprintf(fp, "epic"));
   ASSERT_NE(-1, dup2(fd_rdonly, fileno(fp)));
   ASSERT_EQ(-1, fprintf(fp, "fail"));
@@ -881,7 +881,7 @@ TEST(STDIO_TEST, fprintf_failures_7229520) {
 
 TEST(STDIO_TEST, popen_r) {
   FILE* fp = popen("cat /proc/version", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   char buf[16];
   char* s = fgets(buf, sizeof(buf), fp);
@@ -893,7 +893,7 @@ TEST(STDIO_TEST, popen_r) {
 
 TEST(STDIO_TEST, popen_socketpair) {
   FILE* fp = popen("cat", "r+");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   fputs("hello\nworld\n", fp);
   fflush(fp);
@@ -909,7 +909,7 @@ TEST(STDIO_TEST, popen_socketpair) {
 
 TEST(STDIO_TEST, popen_socketpair_shutdown) {
   FILE* fp = popen("uniq -c", "r+");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   fputs("a\na\na\na\nb\n", fp);
   fflush(fp);
@@ -926,7 +926,7 @@ TEST(STDIO_TEST, popen_socketpair_shutdown) {
 
 TEST(STDIO_TEST, popen_return_value_0) {
   FILE* fp = popen("true", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   int status = pclose(fp);
   EXPECT_TRUE(WIFEXITED(status));
   EXPECT_EQ(0, WEXITSTATUS(status));
@@ -934,7 +934,7 @@ TEST(STDIO_TEST, popen_return_value_0) {
 
 TEST(STDIO_TEST, popen_return_value_1) {
   FILE* fp = popen("false", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   int status = pclose(fp);
   EXPECT_TRUE(WIFEXITED(status));
   EXPECT_EQ(1, WEXITSTATUS(status));
@@ -942,7 +942,7 @@ TEST(STDIO_TEST, popen_return_value_1) {
 
 TEST(STDIO_TEST, popen_return_value_signal) {
   FILE* fp = popen("kill -7 $$", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   int status = pclose(fp);
   EXPECT_TRUE(WIFSIGNALED(status));
   EXPECT_EQ(7, WTERMSIG(status));
@@ -950,7 +950,7 @@ TEST(STDIO_TEST, popen_return_value_signal) {
 
 TEST(STDIO_TEST, getc) {
   FILE* fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   ASSERT_EQ('L', getc(fp));
   ASSERT_EQ('i', getc(fp));
   ASSERT_EQ('n', getc(fp));
@@ -961,7 +961,7 @@ TEST(STDIO_TEST, getc) {
 
 TEST(STDIO_TEST, putc) {
   FILE* fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
   ASSERT_EQ(EOF, putc('x', fp));
   fclose(fp);
 }
@@ -1328,7 +1328,7 @@ TEST(STDIO_TEST, consistent_fpos_t) {
   uselocale(LC_GLOBAL_LOCALE);
 
   FILE* fp = tmpfile();
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   wchar_t mb_one_bytes = L'h';
   wchar_t mb_two_bytes = 0x00a2;
@@ -1398,7 +1398,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
 
   TemporaryFile tf;
   FILE* fp = fdopen(tf.fd, "w+");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   wchar_t mb_two_bytes = 0x00a2;
   wchar_t mb_three_bytes = 0x20ac;
@@ -1413,7 +1413,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   fclose(fp);
 
   fp = fopen(tf.filename, "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   // Store a valid position.
   fpos_t mb_two_bytes_pos;
@@ -1900,7 +1900,7 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
   AssertCloseOnExec(fd, false);
 
   FILE* fp = fdopen(fd, "re");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   // ...but the new one does.
   AssertCloseOnExec(fileno(fp), true);
@@ -1910,7 +1910,7 @@ TEST(STDIO_TEST, fdopen_CLOEXEC) {
 
 TEST(STDIO_TEST, freopen_CLOEXEC) {
   FILE* fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   // This FILE* doesn't have O_CLOEXEC...
   AssertCloseOnExec(fileno(fp), false);
@@ -1935,19 +1935,19 @@ TEST(STDIO_TEST, fopen64_freopen64) {
 // http://b/18556607
 TEST(STDIO_TEST, fread_unbuffered_pathological_performance) {
   FILE* fp = fopen("/dev/zero", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
   // Make this stream unbuffered.
-  setvbuf(fp, 0, _IONBF, 0);
+  setvbuf(fp, nullptr, _IONBF, 0);
 
   char buf[65*1024];
   memset(buf, 0xff, sizeof(buf));
 
-  time_t t0 = time(NULL);
+  time_t t0 = time(nullptr);
   for (size_t i = 0; i < 1024; ++i) {
     ASSERT_EQ(1U, fread(buf, 64*1024, 1, fp));
   }
-  time_t t1 = time(NULL);
+  time_t t1 = time(nullptr);
 
   fclose(fp);
 

@@ -36,7 +36,7 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%sb", "01234");
   EXPECT_STREQ("a01234b", buf);
 
-  char* s = NULL;
+  char* s = nullptr;
   async_safe_format_buffer(buf, sizeof(buf), "a%sb", s);
   EXPECT_STREQ("a(null)b", buf);
 
@@ -97,7 +97,7 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
   EXPECT_STREQ("a005:5:05z", buf);
 
-  void* p = NULL;
+  void* p = nullptr;
   async_safe_format_buffer(buf, sizeof(buf), "a%d,%pz", 5, p);
   EXPECT_STREQ("a5,0x0z", buf);
 

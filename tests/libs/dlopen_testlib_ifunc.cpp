@@ -61,7 +61,7 @@ extern "C" fn_ptr is_ctor_called_ifun() {
 
 extern "C" fn_ptr foo_ifunc() {
    char* choice = getenv("IFUNC_CHOICE");
-   return choice == NULL ? f1 : f2;
+   return choice == nullptr ? f1 : f2;
 }
 
 extern "C" const char* foo_library() {

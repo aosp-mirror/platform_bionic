@@ -74,14 +74,14 @@ TEST(stack_protector, same_guard_per_thread) {
   size_t thread_count = 9;
   for (size_t i = 1; i < thread_count; ++i) {
     pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, NULL, [](void* arg) -> void* {
+    ASSERT_EQ(0, pthread_create(&t, nullptr, [](void* arg) -> void* {
       stack_protector_checker* checker = reinterpret_cast<stack_protector_checker*>(arg);
       checker->Check();
       return nullptr;
     }, &checker));
     void* result;
     ASSERT_EQ(0, pthread_join(t, &result));
-    ASSERT_EQ(NULL, result);
+    ASSERT_EQ(nullptr, result);
   }
   ASSERT_EQ(thread_count, checker.tids.size());
 
