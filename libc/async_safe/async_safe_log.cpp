@@ -333,7 +333,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
     if (c == 's') {
       /* string */
       str = va_arg(args, const char*);
-      if (str == NULL) {
+      if (str == nullptr) {
         str = "(null)";
       }
     } else if (c == 'c') {

@@ -31,9 +31,9 @@
 
 int clearenv() {
   char** e = environ;
-  if (e != NULL) {
+  if (e != nullptr) {
     for (; *e; ++e) {
-      *e = NULL;
+      *e = nullptr;
     }
   }
   return 0;

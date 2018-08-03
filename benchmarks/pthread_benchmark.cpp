@@ -31,7 +31,7 @@ BIONIC_BENCHMARK(BM_pthread_self);
 
 static void BM_pthread_getspecific(benchmark::State& state) {
   pthread_key_t key;
-  pthread_key_create(&key, NULL);
+  pthread_key_create(&key, nullptr);
 
   while (state.KeepRunning()) {
     pthread_getspecific(key);
@@ -43,10 +43,10 @@ BIONIC_BENCHMARK(BM_pthread_getspecific);
 
 static void BM_pthread_setspecific(benchmark::State& state) {
   pthread_key_t key;
-  pthread_key_create(&key, NULL);
+  pthread_key_create(&key, nullptr);
 
   while (state.KeepRunning()) {
-    pthread_setspecific(key, NULL);
+    pthread_setspecific(key, nullptr);
   }
 
   pthread_key_delete(key);
@@ -147,7 +147,7 @@ BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE_PI);
 
 static void BM_pthread_rwlock_read(benchmark::State& state) {
   pthread_rwlock_t lock;
-  pthread_rwlock_init(&lock, NULL);
+  pthread_rwlock_init(&lock, nullptr);
 
   while (state.KeepRunning()) {
     pthread_rwlock_rdlock(&lock);
@@ -160,7 +160,7 @@ BIONIC_BENCHMARK(BM_pthread_rwlock_read);
 
 static void BM_pthread_rwlock_write(benchmark::State& state) {
   pthread_rwlock_t lock;
-  pthread_rwlock_init(&lock, NULL);
+  pthread_rwlock_init(&lock, nullptr);
 
   while (state.KeepRunning()) {
     pthread_rwlock_wrlock(&lock);
@@ -172,42 +172,42 @@ static void BM_pthread_rwlock_write(benchmark::State& state) {
 BIONIC_BENCHMARK(BM_pthread_rwlock_write);
 
 static void* IdleThread(void*) {
-  return NULL;
+  return nullptr;
 }
 
 static void BM_pthread_create(benchmark::State& state) {
   while (state.KeepRunning()) {
     pthread_t thread;
-    pthread_create(&thread, NULL, IdleThread, NULL);
+    pthread_create(&thread, nullptr, IdleThread, nullptr);
     state.PauseTiming();
-    pthread_join(thread, NULL);
+    pthread_join(thread, nullptr);
     state.ResumeTiming();
   }
 }
 BIONIC_BENCHMARK(BM_pthread_create);
 
 static void* RunThread(void*) {
-  return NULL;
+  return nullptr;
 }
 
 static void BM_pthread_create_and_run(benchmark::State& state) {
   while (state.KeepRunning()) {
     pthread_t thread;
-    pthread_create(&thread, NULL, RunThread, &state);
-    pthread_join(thread, NULL);
+    pthread_create(&thread, nullptr, RunThread, &state);
+    pthread_join(thread, nullptr);
   }
 }
 BIONIC_BENCHMARK(BM_pthread_create_and_run);
 
 static void* ExitThread(void*) {
-  pthread_exit(NULL);
+  pthread_exit(nullptr);
 }
 
 static void BM_pthread_exit_and_join(benchmark::State& state) {
   while (state.KeepRunning()) {
     pthread_t thread;
-    pthread_create(&thread, NULL, ExitThread, nullptr);
-    pthread_join(thread, NULL);
+    pthread_create(&thread, nullptr, ExitThread, nullptr);
+    pthread_join(thread, nullptr);
   }
 }
 BIONIC_BENCHMARK(BM_pthread_exit_and_join);
@@ -215,7 +215,7 @@ BIONIC_BENCHMARK(BM_pthread_exit_and_join);
 static void BM_pthread_key_create(benchmark::State& state) {
   while (state.KeepRunning()) {
     pthread_key_t key;
-    pthread_key_create(&key, NULL);
+    pthread_key_create(&key, nullptr);
 
     state.PauseTiming();
     pthread_key_delete(key);
@@ -228,7 +228,7 @@ static void BM_pthread_key_delete(benchmark::State& state) {
   while (state.KeepRunning()) {
     state.PauseTiming();
     pthread_key_t key;
-    pthread_key_create(&key, NULL);
+    pthread_key_create(&key, nullptr);
     state.ResumeTiming();
 
     pthread_key_delete(key);

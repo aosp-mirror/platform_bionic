@@ -24,7 +24,7 @@
 
 class UtfLocale {
  public:
-  UtfLocale() : l(newlocale(LC_ALL, "C.UTF-8", 0)) {}
+  UtfLocale() : l(newlocale(LC_ALL, "C.UTF-8", nullptr)) {}
   ~UtfLocale() { freelocale(l); }
   locale_t l;
 };
@@ -215,18 +215,18 @@ TEST(wctype, iswctype_l) {
 }
 
 TEST(wctype, towctrans) {
-  EXPECT_TRUE(wctrans("tolower") != 0);
-  EXPECT_TRUE(wctrans("toupper") != 0);
+  EXPECT_TRUE(wctrans("tolower") != nullptr);
+  EXPECT_TRUE(wctrans("toupper") != nullptr);
 
-  EXPECT_TRUE(wctrans("monkeys") == 0);
+  EXPECT_TRUE(wctrans("monkeys") == nullptr);
 }
 
 TEST(wctype, towctrans_l) {
   UtfLocale l;
-  EXPECT_TRUE(wctrans_l("tolower", l.l) != 0);
-  EXPECT_TRUE(wctrans_l("toupper", l.l) != 0);
+  EXPECT_TRUE(wctrans_l("tolower", l.l) != nullptr);
+  EXPECT_TRUE(wctrans_l("toupper", l.l) != nullptr);
 
-  EXPECT_TRUE(wctrans_l("monkeys", l.l) == 0);
+  EXPECT_TRUE(wctrans_l("monkeys", l.l) == nullptr);
 }
 
 TEST(wctype, wctrans) {

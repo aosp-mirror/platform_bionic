@@ -104,12 +104,12 @@ int fallocate(int fd, int mode, off_t offset, off_t length) {
 
 // There is no getrlimit64 system call, so we need to use prlimit64.
 int getrlimit64(int resource, rlimit64* limits64) {
-  return prlimit64(0, resource, NULL, limits64);
+  return prlimit64(0, resource, nullptr, limits64);
 }
 
 // There is no setrlimit64 system call, so we need to use prlimit64.
 int setrlimit64(int resource, const rlimit64* limits64) {
-  return prlimit64(0, resource, limits64, NULL);
+  return prlimit64(0, resource, limits64, nullptr);
 }
 
 // There is no prlimit system call, so we need to use prlimit64.

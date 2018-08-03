@@ -20,15 +20,15 @@
 
 TEST(mntent, mntent_smoke) {
   FILE* fp = setmntent("/proc/mounts", "r");
-  ASSERT_TRUE(fp != NULL);
+  ASSERT_TRUE(fp != nullptr);
 
-  ASSERT_TRUE(getmntent(fp) != NULL);
+  ASSERT_TRUE(getmntent(fp) != nullptr);
 
   bool saw_proc = false;
 
   struct mntent entry;
   char buf[BUFSIZ];
-  while (getmntent_r(fp, &entry, buf, sizeof(buf)) != NULL) {
+  while (getmntent_r(fp, &entry, buf, sizeof(buf)) != nullptr) {
     if (strcmp(entry.mnt_fsname, "proc") == 0 && strcmp(entry.mnt_dir, "/proc") == 0) {
       saw_proc = true;
     }

@@ -163,7 +163,7 @@ static void BM_property_read(benchmark::State& state) {
 
   size_t i = 0;
   while (state.KeepRunning()) {
-    pa.system_properties().Read(pinfo[i], 0, propvalue);
+    pa.system_properties().Read(pinfo[i], nullptr, propvalue);
     i = (i + 1) % nprops;
   }
 

@@ -111,7 +111,7 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
 
   wchar_t wc = 0;
   while (state.KeepRunning()) {
-    for (j = 0; buf_aligned[j]; j+=mbrtowc(&wc, buf_aligned + j, 4, NULL)) {
+    for (j = 0; buf_aligned[j]; j+=mbrtowc(&wc, buf_aligned + j, 4, nullptr)) {
     }
   }
 

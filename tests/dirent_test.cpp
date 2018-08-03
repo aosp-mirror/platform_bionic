@@ -51,11 +51,11 @@ void ScanEntries(DirEntT** entries, int entry_count,
 TEST(dirent, scandir_scandir64) {
   // Get everything from /proc/self...
   dirent** entries;
-  int entry_count = scandir("/proc/self", &entries, NULL, alphasort);
+  int entry_count = scandir("/proc/self", &entries, nullptr, alphasort);
   ASSERT_GE(entry_count, 0);
 
   dirent64** entries64;
-  int entry_count64 = scandir64("/proc/self", &entries64, NULL, alphasort64);
+  int entry_count64 = scandir64("/proc/self", &entries64, nullptr, alphasort64);
   ASSERT_EQ(entry_count, entry_count64);
 
   // Turn the directory entries into a set and vector of the names.
@@ -84,18 +84,18 @@ TEST(dirent, scandir_scandir64) {
 TEST(dirent, scandirat_scandirat64) {
   // Get everything from /proc/self...
   dirent** entries;
-  int entry_count = scandir("/proc/self", &entries, NULL, alphasort);
+  int entry_count = scandir("/proc/self", &entries, nullptr, alphasort);
   ASSERT_GE(entry_count, 0);
 
   int proc_fd = open("/proc", O_DIRECTORY);
   ASSERT_NE(-1, proc_fd);
 
   dirent** entries_at;
-  int entry_count_at = scandirat(proc_fd, "self", &entries_at, NULL, alphasort);
+  int entry_count_at = scandirat(proc_fd, "self", &entries_at, nullptr, alphasort);
   ASSERT_EQ(entry_count, entry_count_at);
 
   dirent64** entries_at64;
-  int entry_count_at64 = scandirat64(proc_fd, "self", &entries_at64, NULL, alphasort64);
+  int entry_count_at64 = scandirat64(proc_fd, "self", &entries_at64, nullptr, alphasort64);
   ASSERT_EQ(entry_count, entry_count_at64);
 
   close(proc_fd);
@@ -148,12 +148,12 @@ TEST(dirent, scandirat64_ENOENT) {
 }
 
 TEST(dirent, fdopendir_invalid) {
-  ASSERT_TRUE(fdopendir(-1) == NULL);
+  ASSERT_TRUE(fdopendir(-1) == nullptr);
   ASSERT_EQ(EBADF, errno);
 
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_NE(fd, -1);
-  ASSERT_TRUE(fdopendir(fd) == NULL);
+  ASSERT_TRUE(fdopendir(fd) == nullptr);
   ASSERT_EQ(ENOTDIR, errno);
   close(fd);
 }
@@ -161,7 +161,7 @@ TEST(dirent, fdopendir_invalid) {
 TEST(dirent, fdopendir) {
   int fd = open("/proc/self", O_RDONLY);
   DIR* d = fdopendir(fd);
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   dirent* e = readdir(d);
   ASSERT_STREQ(e->d_name, ".");
   ASSERT_EQ(closedir(d), 0);
@@ -172,40 +172,40 @@ TEST(dirent, fdopendir) {
 }
 
 TEST(dirent, opendir_invalid) {
-  ASSERT_TRUE(opendir("/does/not/exist") == NULL);
+  ASSERT_TRUE(opendir("/does/not/exist") == nullptr);
   ASSERT_EQ(ENOENT, errno);
 
-  ASSERT_TRUE(opendir("/dev/null") == NULL);
+  ASSERT_TRUE(opendir("/dev/null") == nullptr);
   ASSERT_EQ(ENOTDIR, errno);
 }
 
 TEST(dirent, opendir) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   dirent* e = readdir(d);
   ASSERT_STREQ(e->d_name, ".");
   ASSERT_EQ(closedir(d), 0);
 }
 
 TEST(dirent, closedir_invalid) {
-  DIR* d = NULL;
+  DIR* d = nullptr;
   ASSERT_EQ(closedir(d), -1);
   ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(dirent, closedir) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   ASSERT_EQ(closedir(d), 0);
 }
 
 TEST(dirent, readdir) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;
   errno = 0;
   dirent* e;
-  while ((e = readdir(d)) != NULL) {
+  while ((e = readdir(d)) != nullptr) {
     name_set.insert(e->d_name);
   }
   // Reading to the end of the directory is not an error.
@@ -218,11 +218,11 @@ TEST(dirent, readdir) {
 
 TEST(dirent, readdir64) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;
   errno = 0;
   dirent64* e;
-  while ((e = readdir64(d)) != NULL) {
+  while ((e = readdir64(d)) != nullptr) {
     name_set.insert(e->d_name);
   }
   // Reading to the end of the directory is not an error.
@@ -235,12 +235,12 @@ TEST(dirent, readdir64) {
 
 TEST(dirent, readdir_r) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;
   errno = 0;
   dirent storage;
-  dirent* e = NULL;
-  while (readdir_r(d, &storage, &e) == 0 && e != NULL) {
+  dirent* e = nullptr;
+  while (readdir_r(d, &storage, &e) == 0 && e != nullptr) {
     name_set.insert(e->d_name);
   }
   // Reading to the end of the directory is not an error.
@@ -253,12 +253,12 @@ TEST(dirent, readdir_r) {
 
 TEST(dirent, readdir64_r) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;
   errno = 0;
   dirent64 storage;
-  dirent64* e = NULL;
-  while (readdir64_r(d, &storage, &e) == 0 && e != NULL) {
+  dirent64* e = nullptr;
+  while (readdir64_r(d, &storage, &e) == 0 && e != nullptr) {
     name_set.insert(e->d_name);
   }
   // Reading to the end of the directory is not an error.
@@ -271,12 +271,12 @@ TEST(dirent, readdir64_r) {
 
 TEST(dirent, rewinddir) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
 
   // Get all the names once...
   std::vector<std::string> pass1;
   dirent* e;
-  while ((e = readdir(d)) != NULL) {
+  while ((e = readdir(d)) != nullptr) {
     pass1.push_back(e->d_name);
   }
 
@@ -285,7 +285,7 @@ TEST(dirent, rewinddir) {
 
   // ...and get all the names again.
   std::vector<std::string> pass2;
-  while ((e = readdir(d)) != NULL) {
+  while ((e = readdir(d)) != nullptr) {
     pass2.push_back(e->d_name);
   }
 
@@ -300,15 +300,15 @@ TEST(dirent, rewinddir) {
 
 TEST(dirent, seekdir_telldir) {
   DIR* d = opendir("/proc/self");
-  ASSERT_TRUE(d != NULL);
+  ASSERT_TRUE(d != nullptr);
   std::vector<long> offset_list;
   std::vector<std::string> name_list;
-  dirent* e = NULL;
+  dirent* e = nullptr;
 
   offset_list.push_back(telldir(d));
   ASSERT_EQ(0L, offset_list.back());
 
-  while ((e = readdir(d)) != NULL) {
+  while ((e = readdir(d)) != nullptr) {
     name_list.push_back(e->d_name);
     offset_list.push_back(telldir(d));
     // Make sure telldir() point to the next entry.
@@ -324,14 +324,14 @@ TEST(dirent, seekdir_telldir) {
     seekdir(d, offset_list[i]);
     ASSERT_EQ(offset_list[i], telldir(d));
     e = readdir(d);
-    ASSERT_TRUE(e != NULL);
+    ASSERT_TRUE(e != nullptr);
     ASSERT_STREQ(name_list[i].c_str(), e->d_name);
   }
   for (int i = static_cast<int>(offset_list.size()) - 1; i >= 0; --i) {
     seekdir(d, offset_list[i]);
     ASSERT_EQ(offset_list[i], telldir(d));
     e = readdir(d);
-    ASSERT_TRUE(e != NULL);
+    ASSERT_TRUE(e != nullptr);
     ASSERT_STREQ(name_list[i].c_str(), e->d_name);
   }
 
@@ -339,7 +339,7 @@ TEST(dirent, seekdir_telldir) {
   seekdir(d, end_offset);
   ASSERT_EQ(end_offset, telldir(d));
   errno = 0;
-  ASSERT_EQ(NULL, readdir(d));
+  ASSERT_EQ(nullptr, readdir(d));
   ASSERT_EQ(0, errno);
 
   ASSERT_EQ(0, closedir(d));
