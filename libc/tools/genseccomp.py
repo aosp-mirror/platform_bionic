@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import collections
 import os
+import re
 import textwrap
 from gensyscalls import SysCallsTxtParser
 from subprocess import Popen, PIPE
@@ -40,11 +41,35 @@ def merge_names(base_names, whitelist_names, blacklist_names):
   return (base_names - blacklist_names) | whitelist_names
 
 
+def get_clang_path():
+  # Inspect the global soong config to figure out the default version of clang.
+  global_go_path = os.path.join(os.environ["ANDROID_BUILD_TOP"],
+                                "build/soong/cc/config/global.go")
+  clang_default_version = None
+  CLANG_DEFAULT_VERSION_RE = re.compile(
+      r'^\s*ClangDefaultVersion\s*=\s*"([^"]+)"\s*$')
+  with open(global_go_path) as f:
+    for line in f:
+      m = CLANG_DEFAULT_VERSION_RE.match(line)
+      if not m:
+        continue
+      clang_default_version = m.group(1)
+      break
+    else:
+      raise Exception('Could not find ClangDefaultVersion in %s' %
+                      global_go_path)
+
+  # Gets the path of the clang prebuilt binary.
+  return os.path.join(os.environ["ANDROID_BUILD_TOP"],
+                      "prebuilts/clang/host/linux-x86", clang_default_version,
+                      "bin/clang")
+
+
 def convert_names_to_NRs(names, header_dir, extra_switches):
   # Run preprocessor over the __NR_syscall symbols, including unistd.h,
   # to get the actual numbers
   prefix = "__SECCOMP_"  # prefix to ensure no name collisions
-  cpp = Popen(["../../prebuilts/clang/host/linux-x86/clang-stable/bin/clang",
+  cpp = Popen([get_clang_path(),
                "-E", "-nostdinc", "-I" + header_dir, "-Ikernel/uapi/"]
                + extra_switches
                + ["-"],
