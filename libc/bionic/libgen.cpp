@@ -37,13 +37,13 @@
 #include "bionic/pthread_internal.h"
 
 static int __basename_r(const char* path, char* buffer, size_t buffer_size) {
-  const char* startp = NULL;
-  const char* endp = NULL;
+  const char* startp = nullptr;
+  const char* endp = nullptr;
   int len;
   int result;
 
   // Empty or NULL string gets treated as ".".
-  if (path == NULL || *path == '\0') {
+  if (path == nullptr || *path == '\0') {
     startp = ".";
     len = 1;
     goto Exit;
@@ -72,7 +72,7 @@ static int __basename_r(const char* path, char* buffer, size_t buffer_size) {
 
  Exit:
   result = len;
-  if (buffer == NULL) {
+  if (buffer == nullptr) {
     return result;
   }
   if (len > static_cast<int>(buffer_size) - 1) {
@@ -94,12 +94,12 @@ __LIBC32_LEGACY_PUBLIC__ int basename_r(const char* path, char* buffer, size_t b
 }
 
 static int __dirname_r(const char* path, char* buffer, size_t buffer_size) {
-  const char* endp = NULL;
+  const char* endp = nullptr;
   int len;
   int result;
 
   // Empty or NULL string gets treated as ".".
-  if (path == NULL || *path == '\0') {
+  if (path == nullptr || *path == '\0') {
     path = ".";
     len = 1;
     goto Exit;
@@ -135,7 +135,7 @@ static int __dirname_r(const char* path, char* buffer, size_t buffer_size) {
     errno = ENAMETOOLONG;
     return -1;
   }
-  if (buffer == NULL) {
+  if (buffer == nullptr) {
     return result;
   }
 
@@ -160,11 +160,11 @@ __LIBC32_LEGACY_PUBLIC__ int dirname_r(const char* path, char* buffer, size_t bu
 char* basename(const char* path) {
   char* buf = __get_bionic_tls().basename_buf;
   int rc = __basename_r(path, buf, sizeof(__get_bionic_tls().basename_buf));
-  return (rc < 0) ? NULL : buf;
+  return (rc < 0) ? nullptr : buf;
 }
 
 char* dirname(const char* path) {
   char* buf = __get_bionic_tls().dirname_buf;
   int rc = __dirname_r(path, buf, sizeof(__get_bionic_tls().dirname_buf));
-  return (rc < 0) ? NULL : buf;
+  return (rc < 0) ? nullptr : buf;
 }

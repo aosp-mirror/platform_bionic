@@ -22,18 +22,18 @@ struct Pair {
 };
 
 static const char* __code_string_lookup(const Pair* strings, int code) {
-  for (size_t i = 0; strings[i].msg != NULL; ++i) {
+  for (size_t i = 0; strings[i].msg != nullptr; ++i) {
     if (strings[i].code == code) {
       return strings[i].msg;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 static const Pair _sys_error_strings[] = {
 #define  __BIONIC_ERRDEF(x,y,z)  { x, z },
 #include "private/bionic_errdefs.h"
-  { 0, NULL }
+  { 0, nullptr }
 };
 
 extern "C" __LIBC_HIDDEN__ const char* __strerror_lookup(int error_number) {
@@ -43,7 +43,7 @@ extern "C" __LIBC_HIDDEN__ const char* __strerror_lookup(int error_number) {
 static const Pair _sys_signal_strings[] = {
 #define  __BIONIC_SIGDEF(signal_number, signal_description)  { signal_number, signal_description },
 #include "private/bionic_sigdefs.h"
-  { 0, NULL }
+  { 0, nullptr }
 };
 
 extern "C" __LIBC_HIDDEN__ const char* __strsignal_lookup(int signal_number) {
@@ -55,7 +55,7 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
   size_t length;
 
   const char* error_name = __strerror_lookup(error_number);
-  if (error_name != NULL) {
+  if (error_name != nullptr) {
     length = strlcpy(buf, error_name, buf_len);
   } else {
     length = async_safe_format_buffer(buf, buf_len, "Unknown error %d", error_number);
@@ -76,7 +76,7 @@ extern "C" char* __gnu_strerror_r(int error_number, char* buf, size_t buf_len) {
 
 extern "C" __LIBC_HIDDEN__ const char* __strsignal(int signal_number, char* buf, size_t buf_len) {
   const char* signal_name = __strsignal_lookup(signal_number);
-  if (signal_name != NULL) {
+  if (signal_name != nullptr) {
     return signal_name;
   }
 
@@ -87,7 +87,7 @@ extern "C" __LIBC_HIDDEN__ const char* __strsignal(int signal_number, char* buf,
   }
   size_t length = snprintf(buf, buf_len, "%s signal %d", prefix, signal_number);
   if (length >= buf_len) {
-    return NULL;
+    return nullptr;
   }
   return buf;
 }

@@ -50,8 +50,8 @@ static void MakeTree(const char* root) {
 }
 
 void sanity_check_ftw(const char* fpath, const struct stat* sb, int tflag) {
-  ASSERT_TRUE(fpath != NULL);
-  ASSERT_TRUE(sb != NULL);
+  ASSERT_TRUE(fpath != nullptr);
+  ASSERT_TRUE(sb != nullptr);
 
   // Was it a case where the struct stat we're given is meaningless?
   if (tflag == FTW_NS || tflag == FTW_SLN) {

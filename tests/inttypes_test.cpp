@@ -123,13 +123,13 @@ TEST(inttypes, strtoimax_hex) {
 
 TEST(inttypes, strtoimax_EINVAL) {
   errno = 0;
-  strtoimax("123", NULL, -1);
+  strtoimax("123", nullptr, -1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  strtoimax("123", NULL, 1);
+  strtoimax("123", nullptr, 1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  strtoimax("123", NULL, 37);
+  strtoimax("123", nullptr, 37);
   ASSERT_EQ(EINVAL, errno);
 }
 
@@ -153,37 +153,37 @@ TEST(inttypes, strtoumax_negative) {
 
 TEST(inttypes, strtoumax_EINVAL) {
   errno = 0;
-  strtoumax("123", NULL, -1);
+  strtoumax("123", nullptr, -1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  strtoumax("123", NULL, 1);
+  strtoumax("123", nullptr, 1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  strtoumax("123", NULL, 37);
+  strtoumax("123", nullptr, 37);
   ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(inttypes, wcstoimax_EINVAL) {
   errno = 0;
-  wcstoimax(L"123", NULL, -1);
+  wcstoimax(L"123", nullptr, -1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoimax(L"123", NULL, 1);
+  wcstoimax(L"123", nullptr, 1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoimax(L"123", NULL, 37);
+  wcstoimax(L"123", nullptr, 37);
   ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(inttypes, wcstoumax_EINVAL) {
   errno = 0;
-  wcstoumax(L"123", NULL, -1);
+  wcstoumax(L"123", nullptr, -1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoumax(L"123", NULL, 1);
+  wcstoumax(L"123", nullptr, 1);
   ASSERT_EQ(EINVAL, errno);
   errno = 0;
-  wcstoumax(L"123", NULL, 37);
+  wcstoumax(L"123", nullptr, 37);
   ASSERT_EQ(EINVAL, errno);
 }
 

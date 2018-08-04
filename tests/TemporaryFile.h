@@ -80,7 +80,7 @@ class TemporaryDir {
  private:
   bool init(const char* tmp_dir) {
     snprintf(dirname, sizeof(dirname), "%s/TemporaryDir-XXXXXX", tmp_dir);
-    return (mkdtemp(dirname) != NULL);
+    return (mkdtemp(dirname) != nullptr);
   }
 
   DISALLOW_COPY_AND_ASSIGN(TemporaryDir);

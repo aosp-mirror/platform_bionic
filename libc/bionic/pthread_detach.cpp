@@ -35,7 +35,7 @@
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_detach(pthread_t t) {
   pthread_internal_t* thread = __pthread_internal_find(t);
-  if (thread == NULL) {
+  if (thread == nullptr) {
     return ESRCH;
   }
 
@@ -48,7 +48,7 @@ int pthread_detach(pthread_t t) {
     return 0;
   } else if (old_state == THREAD_EXITED_NOT_JOINED) {
     // Use pthread_join to clean it up.
-    return pthread_join(t, NULL);
+    return pthread_join(t, nullptr);
   }
   return EINVAL;
 }

@@ -78,7 +78,7 @@ TEST(STRING_TEST, strerror_concurrent) {
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, ConcurrentStrErrorFn, NULL));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentStrErrorFn, nullptr));
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_TRUE(static_cast<bool>(result));
@@ -144,7 +144,7 @@ TEST(STRING_TEST, strsignal_concurrent) {
   ASSERT_STREQ("Unknown signal 1001", strsignal1001);
 
   pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, NULL, ConcurrentStrSignalFn, NULL));
+  ASSERT_EQ(0, pthread_create(&t, nullptr, ConcurrentStrSignalFn, nullptr));
   void* result;
   ASSERT_EQ(0, pthread_join(t, &result));
   ASSERT_TRUE(static_cast<bool>(result));
@@ -451,7 +451,7 @@ TEST(STRING_TEST, strchr) {
         if (seek_char == 0) {
           expected = state.ptr1 + state.len[i] - 1;
         } else {
-          expected = NULL;
+          expected = nullptr;
         }
       } else {
         state.ptr1[pos] = seek_char;
@@ -763,7 +763,7 @@ TEST(STRING_TEST, strrchr) {
         if (seek_char == 0) {
           expected = state.ptr1 + state.len[i] - 1;
         } else {
-          expected = NULL;
+          expected = nullptr;
         }
       } else {
         state.ptr1[pos] = seek_char;
@@ -785,7 +785,7 @@ TEST(STRING_TEST, memchr) {
       size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i]) {
-        expected = NULL;
+        expected = nullptr;
       } else {
         state.ptr1[pos] = seek_char;
         expected = state.ptr1 + pos;
@@ -800,8 +800,8 @@ TEST(STRING_TEST, memchr_zero) {
   uint8_t* buffer;
   ASSERT_EQ(0, posix_memalign(reinterpret_cast<void**>(&buffer), 64, 64));
   memset(buffer, 10, 64);
-  ASSERT_TRUE(NULL == memchr(buffer, 5, 0));
-  ASSERT_TRUE(NULL == memchr(buffer, 10, 0));
+  ASSERT_TRUE(nullptr == memchr(buffer, 5, 0));
+  ASSERT_TRUE(nullptr == memchr(buffer, 10, 0));
 }
 
 TEST(STRING_TEST, memrchr) {
@@ -814,7 +814,7 @@ TEST(STRING_TEST, memrchr) {
       size_t pos = random() % state.MAX_LEN;
       char* expected;
       if (pos >= state.len[i]) {
-        expected = NULL;
+        expected = nullptr;
       } else {
         state.ptr1[pos] = seek_char;
         expected = state.ptr1 + pos;
@@ -935,9 +935,9 @@ TEST(STRING_TEST, memmove_cache_size) {
   char* glob_ptr2 = reinterpret_cast<char*>(malloc(2 * sizeof(char) * len + max_alignment));
   size_t pos = 64;
 
-  ASSERT_TRUE(ptr != NULL);
-  ASSERT_TRUE(ptr1 != NULL);
-  ASSERT_TRUE(glob_ptr2 != NULL);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_TRUE(ptr1 != nullptr);
+  ASSERT_TRUE(glob_ptr2 != nullptr);
 
   for (int i = 0; i < 5; i++) {
     char* ptr2 = glob_ptr2 + alignments[i];
@@ -966,10 +966,10 @@ static void verify_memmove(char* src_copy, char* dst, char* src, size_t size) {
 
 TEST(STRING_TEST, memmove_check) {
   char* buffer = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
-  ASSERT_TRUE(buffer != NULL);
+  ASSERT_TRUE(buffer != nullptr);
 
   char* src_data = reinterpret_cast<char*>(malloc(MEMMOVE_DATA_SIZE));
-  ASSERT_TRUE(src_data != NULL);
+  ASSERT_TRUE(src_data != nullptr);
   // Initialize to a known pattern to copy into src for each test and
   // to compare dst against.
   for (size_t i = 0; i < MEMMOVE_DATA_SIZE; i++) {

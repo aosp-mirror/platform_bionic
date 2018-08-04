@@ -20,7 +20,7 @@
 #include <gtest/gtest.h>
 
 static void TestDirname(const char* in, const char* expected_out) {
-  char* writable_in = (in != NULL) ? strdup(in) : NULL;
+  char* writable_in = (in != nullptr) ? strdup(in) : nullptr;
   errno = 0;
   const char* out = dirname(&writable_in[0]);
   ASSERT_STREQ(expected_out, out) << in;
@@ -29,7 +29,7 @@ static void TestDirname(const char* in, const char* expected_out) {
 }
 
 TEST(libgen, dirname) {
-  TestDirname(NULL, ".");
+  TestDirname(nullptr, ".");
   TestDirname("", ".");
   TestDirname("/usr/lib", "/usr");
   TestDirname("/usr/", "/");
@@ -45,7 +45,7 @@ static void TestBasename(const char* in, const char* expected_out, int expected_
   errno = 0;
   int rc = basename_r(in, buf, buf_size);
   ASSERT_EQ(expected_rc, rc) << in;
-  if (rc != -1 && buf != NULL) {
+  if (rc != -1 && buf != nullptr) {
     ASSERT_STREQ(expected_out, buf) << in;
   }
   ASSERT_EQ(expected_errno, errno) << in;
@@ -56,7 +56,7 @@ static void TestDirname(const char* in, const char* expected_out, int expected_r
   errno = 0;
   int rc = dirname_r(in, buf, buf_size);
   ASSERT_EQ(expected_rc, rc) << in;
-  if (rc != -1 && buf != NULL) {
+  if (rc != -1 && buf != nullptr) {
     ASSERT_STREQ(expected_out, buf) << in;
   }
   ASSERT_EQ(expected_errno, errno) << in;
@@ -66,7 +66,7 @@ static void TestDirname(const char* in, const char* expected_out, int expected_r
 TEST(libgen, basename_r) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
-  TestBasename("", ".",  1, NULL, 0, 0);
+  TestBasename("", ".",  1, nullptr, 0, 0);
   TestBasename("", ".", -1, buf, 0, ERANGE);
   TestBasename("", ".", -1, buf, 1, ERANGE);
   TestBasename("", ".", 1, buf, 2, 0);
@@ -85,7 +85,7 @@ TEST(libgen, basename_r) {
 TEST(libgen, dirname_r) {
 #if defined(__BIONIC__) && !defined(__LP64__)
   char buf[256];
-  TestDirname("", ".",  1, NULL, 0, 0);
+  TestDirname("", ".",  1, nullptr, 0, 0);
   TestDirname("", ".", -1, buf, 0, ERANGE);
   TestDirname("", ".", -1, buf, 1, ERANGE);
   TestDirname("", ".", 1, buf, 2, 0);
