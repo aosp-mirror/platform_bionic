@@ -502,7 +502,7 @@ int pthread_mutex_init(pthread_mutex_t* mutex_interface, const pthread_mutexattr
 
     memset(mutex, 0, sizeof(pthread_mutex_internal_t));
 
-    if (__predict_true(attr == NULL)) {
+    if (__predict_true(attr == nullptr)) {
         atomic_init(&mutex->state, MUTEX_TYPE_BITS_NORMAL);
         return 0;
     }
@@ -800,7 +800,7 @@ int pthread_mutex_lock(pthread_mutex_t* mutex_interface) {
     // Some apps depend on being able to pass NULL as a mutex and get EINVAL
     // back. Don't need to worry about it for LP64 since the ABI is brand new,
     // but keep compatibility for LP32. http://b/19995172.
-    if (mutex_interface == NULL) {
+    if (mutex_interface == nullptr) {
         return EINVAL;
     }
 #endif
@@ -834,7 +834,7 @@ int pthread_mutex_unlock(pthread_mutex_t* mutex_interface) {
     // Some apps depend on being able to pass NULL as a mutex and get EINVAL
     // back. Don't need to worry about it for LP64 since the ABI is brand new,
     // but keep compatibility for LP32. http://b/19995172.
-    if (mutex_interface == NULL) {
+    if (mutex_interface == nullptr) {
         return EINVAL;
     }
 #endif

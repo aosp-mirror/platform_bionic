@@ -70,7 +70,7 @@ struct __locale_t {
 };
 
 size_t __ctype_get_mb_cur_max() {
-  locale_t l = uselocale(NULL);
+  locale_t l = uselocale(nullptr);
   if (l == LC_GLOBAL_LOCALE) {
     return __bionic_current_locale_is_utf8 ? 4 : 1;
   } else {
@@ -142,14 +142,14 @@ void freelocale(locale_t l) {
 
 locale_t newlocale(int category_mask, const char* locale_name, locale_t /*base*/) {
   // Are 'category_mask' and 'locale_name' valid?
-  if ((category_mask & ~LC_ALL_MASK) != 0 || locale_name == NULL) {
+  if ((category_mask & ~LC_ALL_MASK) != 0 || locale_name == nullptr) {
     errno = EINVAL;
-    return NULL;
+    return nullptr;
   }
 
   if (!__is_supported_locale(locale_name)) {
     errno = ENOENT;
-    return NULL;
+    return nullptr;
   }
 
   return new __locale_t(__is_utf8_locale(locale_name) ? 4 : 1);
@@ -159,15 +159,15 @@ char* setlocale(int category, const char* locale_name) {
   // Is 'category' valid?
   if (category < LC_CTYPE || category > LC_IDENTIFICATION) {
     errno = EINVAL;
-    return NULL;
+    return nullptr;
   }
 
   // Caller wants to set the locale rather than just query?
-  if (locale_name != NULL) {
+  if (locale_name != nullptr) {
     if (!__is_supported_locale(locale_name)) {
       // We don't support this locale.
       errno = ENOENT;
-      return NULL;
+      return nullptr;
     }
     __bionic_current_locale_is_utf8 = __is_utf8_locale(locale_name);
   }
@@ -187,11 +187,11 @@ locale_t uselocale(locale_t new_locale) {
   locale_t old_locale = *get_current_locale_ptr();
 
   // If this is the first call to uselocale(3) on this thread, we return LC_GLOBAL_LOCALE.
-  if (old_locale == NULL) {
+  if (old_locale == nullptr) {
     old_locale = LC_GLOBAL_LOCALE;
   }
 
-  if (new_locale != NULL) {
+  if (new_locale != nullptr) {
     *get_current_locale_ptr() = new_locale;
   }
 

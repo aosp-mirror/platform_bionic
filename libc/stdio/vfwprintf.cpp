@@ -64,7 +64,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
    * D:	expchar holds this character; '\0' if no exponent, e.g. %f
    * F:	at least two digits for decimal, at least one digit for hex
    */
-  char* decimal_point = NULL;
+  char* decimal_point = nullptr;
   int signflag; /* true if float is negative */
   union {       /* floating point arguments %[aAeEfFgG] */
     double dbl;
@@ -77,7 +77,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   int lead;                      /* sig figs before decimal or group sep */
   int ndig;                      /* actual number of digits returned by dtoa */
   CHAR_TYPE expstr[MAXEXPDIG + 2]; /* buffer for exponent string: e+ZZZ */
-  char* dtoaresult = NULL;
+  char* dtoaresult = nullptr;
 
   uintmax_t _umax;             /* integer arguments %[diouxX] */
   enum { OCT, DEC, HEX } base; /* base for %[diouxX] conversion */
@@ -135,14 +135,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   }
 
   CHAR_TYPE* fmt = const_cast<CHAR_TYPE*>(fmt0);
-  argtable = NULL;
+  argtable = nullptr;
   nextarg = 1;
   va_copy(orgap, ap);
   uio.uio_iov = iovp = iov;
   uio.uio_resid = 0;
   uio.uio_iovcnt = 0;
   ret = 0;
-  convbuf = NULL;
+  convbuf = nullptr;
 
   /*
    * Scan the format for conversions (`%' character).
@@ -215,7 +215,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         }
         if (ch == '$') {
           nextarg = n;
-          if (argtable == NULL) {
+          if (argtable == nullptr) {
             argtable = statargtable;
             if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) {
               ret = -1;
@@ -250,7 +250,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         } while (is_digit(ch));
         if (ch == '$') {
           nextarg = n;
-          if (argtable == NULL) {
+          if (argtable == nullptr) {
             argtable = statargtable;
             if (__find_arguments(fmt0, orgap, &argtable, &argtablesiz) == -1) {
               ret = -1;
@@ -331,14 +331,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (flags & LONGDBL) {
           fparg.ldbl = GETARG(long double);
           dtoaresult = __hldtoa(fparg.ldbl, xdigs, prec, &expt, &signflag, &dtoaend);
-          if (dtoaresult == NULL) {
+          if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
         } else {
           fparg.dbl = GETARG(double);
           dtoaresult = __hdtoa(fparg.dbl, xdigs, prec, &expt, &signflag, &dtoaend);
-          if (dtoaresult == NULL) {
+          if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
@@ -347,7 +347,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (expt == INT_MAX) ox[1] = '\0';
         free(convbuf);
         cp = convbuf = helpers::mbsconv(dtoaresult, -1);
-        if (cp == NULL) goto error;
+        if (cp == nullptr) goto error;
         ndig = dtoaend - dtoaresult;
         goto fp_common;
       case 'e':
@@ -372,14 +372,14 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (flags & LONGDBL) {
           fparg.ldbl = GETARG(long double);
           dtoaresult = __ldtoa(&fparg.ldbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
-          if (dtoaresult == NULL) {
+          if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
         } else {
           fparg.dbl = GETARG(double);
           dtoaresult = __dtoa(fparg.dbl, expchar ? 2 : 3, prec, &expt, &signflag, &dtoaend);
-          if (dtoaresult == NULL) {
+          if (dtoaresult == nullptr) {
             errno = ENOMEM;
             goto error;
           }
@@ -387,7 +387,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         }
         free(convbuf);
         cp = convbuf = helpers::mbsconv(dtoaresult, -1);
-        if (cp == NULL) goto error;
+        if (cp == nullptr) goto error;
         ndig = dtoaend - dtoaresult;
       fp_common:
         if (signflag) sign = '-';
@@ -461,13 +461,13 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         /*FALLTHROUGH*/
       case 's':
         if (flags & LONGINT) {
-          if ((cp = GETARG(wchar_t*)) == NULL) cp = const_cast<wchar_t*>(L"(null)");
+          if ((cp = GETARG(wchar_t*)) == nullptr) cp = const_cast<wchar_t*>(L"(null)");
         } else {
           char* mbsarg;
-          if ((mbsarg = GETARG(char*)) == NULL) mbsarg = const_cast<char*>("(null)");
+          if ((mbsarg = GETARG(char*)) == nullptr) mbsarg = const_cast<char*>("(null)");
           free(convbuf);
           convbuf = helpers::mbsconv(mbsarg, prec);
-          if (convbuf == NULL) {
+          if (convbuf == nullptr) {
             fp->_flags |= __SERR;
             goto error;
           } else {
@@ -606,7 +606,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
     if ((flags & FPT) == 0) {
       PRINT(cp, size);
     } else { /* glue together f_p fragments */
-      if (decimal_point == NULL) decimal_point = nl_langinfo(RADIXCHAR);
+      if (decimal_point == nullptr) decimal_point = nl_langinfo(RADIXCHAR);
       if (!expchar) { /* %[fF] or sufficiently short %[gG] */
         if (expt <= 0) {
           PRINT(zeroes, 1);
@@ -654,9 +654,9 @@ overflow:
 finish:
   free(convbuf);
   if (dtoaresult) __freedtoa(dtoaresult);
-  if (argtable != NULL && argtable != statargtable) {
+  if (argtable != nullptr && argtable != statargtable) {
     munmap(argtable, argtablesiz);
-    argtable = NULL;
+    argtable = nullptr;
   }
   return (ret);
 }

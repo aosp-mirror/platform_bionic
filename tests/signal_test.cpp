@@ -37,13 +37,13 @@ static int SIGNAL_MAX(SigSetT* set) {
 
 template <typename SigSetT>
 static void TestSigSet1(int (fn)(SigSetT*)) {
-  // NULL sigset_t*/sigset64_t*.
-  SigSetT* set_ptr = NULL;
+  // nullptr sigset_t*/sigset64_t*.
+  SigSetT* set_ptr = nullptr;
   errno = 0;
   ASSERT_EQ(-1, fn(set_ptr));
   ASSERT_EQ(EINVAL, errno);
 
-  // Non-NULL.
+  // Non-nullptr.
   SigSetT set = {};
   errno = 0;
   ASSERT_EQ(0, fn(&set));
@@ -52,8 +52,8 @@ static void TestSigSet1(int (fn)(SigSetT*)) {
 
 template <typename SigSetT>
 static void TestSigSet2(int (fn)(SigSetT*, int)) {
-  // NULL sigset_t*/sigset64_t*.
-  SigSetT* set_ptr = NULL;
+  // nullptr sigset_t*/sigset64_t*.
+  SigSetT* set_ptr = nullptr;
   errno = 0;
   ASSERT_EQ(-1, fn(set_ptr, SIGSEGV));
   ASSERT_EQ(EINVAL, errno);
@@ -281,9 +281,9 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
 
   // See what's currently set for this signal.
   SigActionT original_sa = {};
-  ASSERT_EQ(0, sigaction_fn(sig, NULL, &original_sa));
-  ASSERT_TRUE(original_sa.sa_handler == NULL);
-  ASSERT_TRUE(original_sa.sa_sigaction == NULL);
+  ASSERT_EQ(0, sigaction_fn(sig, nullptr, &original_sa));
+  ASSERT_TRUE(original_sa.sa_handler == nullptr);
+  ASSERT_TRUE(original_sa.sa_sigaction == nullptr);
   ASSERT_EQ(0U, original_sa.sa_flags & ~sa_restorer);
 #ifdef SA_RESTORER
   ASSERT_EQ(bool(original_sa.sa_flags & sa_restorer), bool(original_sa.sa_restorer));
@@ -295,11 +295,11 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   sigaddset_fn(&sa.sa_mask, sig);
   sa.sa_flags = SA_ONSTACK;
   sa.sa_handler = no_op_signal_handler;
-  ASSERT_EQ(0, sigaction_fn(sig, &sa, NULL));
+  ASSERT_EQ(0, sigaction_fn(sig, &sa, nullptr));
 
   // Check that we can read it back.
   sa = {};
-  ASSERT_EQ(0, sigaction_fn(sig, NULL, &sa));
+  ASSERT_EQ(0, sigaction_fn(sig, nullptr, &sa));
   ASSERT_TRUE(sa.sa_handler == no_op_signal_handler);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK), sa.sa_flags & ~sa_restorer);
@@ -313,11 +313,11 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
   sigaddset_fn(&sa.sa_mask, sig);
   sa.sa_flags = SA_ONSTACK | SA_SIGINFO;
   sa.sa_sigaction = no_op_sigaction;
-  ASSERT_EQ(0, sigaction_fn(sig, &sa, NULL));
+  ASSERT_EQ(0, sigaction_fn(sig, &sa, nullptr));
 
   // Check that we can read it back.
   sa = {};
-  ASSERT_EQ(0, sigaction_fn(sig, NULL, &sa));
+  ASSERT_EQ(0, sigaction_fn(sig, nullptr, &sa));
   ASSERT_TRUE(sa.sa_sigaction == no_op_sigaction);
   ASSERT_TRUE((void*) sa.sa_sigaction == (void*) sa.sa_handler);
   ASSERT_EQ(static_cast<unsigned>(SA_ONSTACK | SA_SIGINFO), sa.sa_flags & ~sa_restorer);
@@ -326,7 +326,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
 #endif
 
   // Put everything back how it was.
-  ASSERT_EQ(0, sigaction_fn(sig, &original_sa, NULL));
+  ASSERT_EQ(0, sigaction_fn(sig, &original_sa, nullptr));
 }
 
 TEST(signal, sigaction) {
@@ -547,7 +547,7 @@ TEST(signal, sigsetmask_filter) {
 
 TEST(signal, sys_signame) {
 #if defined(__BIONIC__)
-  ASSERT_TRUE(sys_signame[0] == NULL);
+  ASSERT_TRUE(sys_signame[0] == nullptr);
   ASSERT_STREQ("HUP", sys_signame[SIGHUP]);
 #else
   GTEST_LOG_(INFO) << "This test does nothing.\n";
@@ -555,7 +555,7 @@ TEST(signal, sys_signame) {
 }
 
 TEST(signal, sys_siglist) {
-  ASSERT_TRUE(sys_siglist[0] == NULL);
+  ASSERT_TRUE(sys_siglist[0] == nullptr);
   ASSERT_STREQ("Hangup", sys_siglist[SIGHUP]);
 }
 
@@ -708,7 +708,7 @@ TEST(signal, sigtimedwait_timeout) {
   ASSERT_EQ(EAGAIN, errno);
   ASSERT_GE(NanoTime() - start_time, 1000000);
 
-  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, NULL));
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, nullptr));
 }
 
 #if defined(__BIONIC__)
@@ -806,7 +806,7 @@ static void TestSigholdSigpauseSigrelse(int sig) {
 
   // sighold(SIGALRM/SIGRTMIN) should add SIGALRM/SIGRTMIN to the signal mask ...
   ASSERT_EQ(0, sighold(sig));
-  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+  ASSERT_EQ(0, sigprocmask(SIG_SETMASK, nullptr, &set));
   EXPECT_TRUE(sigismember(&set, sig));
 
   // ... preventing our SIGALRM/SIGRTMIN handler from running ...
@@ -819,12 +819,12 @@ static void TestSigholdSigpauseSigrelse(int sig) {
 
   if (sig >= SIGRTMIN && sizeof(void*) == 8) {
     // But sigpause(SIGALRM/SIGRTMIN) shouldn't permanently unblock SIGALRM/SIGRTMIN.
-    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, nullptr, &set));
     EXPECT_TRUE(sigismember(&set, sig));
 
     // Whereas sigrelse(SIGALRM/SIGRTMIN) should.
     ASSERT_EQ(0, sigrelse(sig));
-    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, 0, &set));
+    ASSERT_EQ(0, sigprocmask(SIG_SETMASK, nullptr, &set));
     EXPECT_FALSE(sigismember(&set, sig));
   } else {
     // sigismember won't work for SIGRTMIN on LP32.

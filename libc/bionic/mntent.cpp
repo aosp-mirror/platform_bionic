@@ -38,7 +38,7 @@ mntent* getmntent(FILE* fp) {
 
 mntent* getmntent_r(FILE* fp, struct mntent* e, char* buf, int buf_len) {
   memset(e, 0, sizeof(*e));
-  while (fgets(buf, buf_len, fp) != NULL) {
+  while (fgets(buf, buf_len, fp) != nullptr) {
     // Entries look like "proc /proc proc rw,nosuid,nodev,noexec,relatime 0 0".
     // That is: mnt_fsname mnt_dir mnt_type mnt_opts 0 0.
     int fsname0, fsname1, dir0, dir1, type0, type1, opts0, opts1;
@@ -60,7 +60,7 @@ mntent* getmntent_r(FILE* fp, struct mntent* e, char* buf, int buf_len) {
       return e;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 FILE* setmntent(const char* path, const char* mode) {
@@ -68,7 +68,7 @@ FILE* setmntent(const char* path, const char* mode) {
 }
 
 int endmntent(FILE* fp) {
-  if (fp != NULL) {
+  if (fp != nullptr) {
     fclose(fp);
   }
   return 1;

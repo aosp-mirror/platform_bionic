@@ -33,7 +33,7 @@
 #include <elf.h>
 #include <errno.h>
 
-__LIBC_HIDDEN__ ElfW(auxv_t)* __libc_auxv = NULL;
+__LIBC_HIDDEN__ ElfW(auxv_t)* __libc_auxv = nullptr;
 
 extern "C" unsigned long int getauxval(unsigned long int type) {
   for (ElfW(auxv_t)* v = __libc_auxv; v->a_type != AT_NULL; ++v) {

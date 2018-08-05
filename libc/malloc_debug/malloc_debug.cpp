@@ -284,7 +284,7 @@ void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* in
   ScopedDisableDebugCalls disable;
 
   // Verify the arguments.
-  if (info == nullptr || overall_size == nullptr || info_size == NULL || total_memory == nullptr ||
+  if (info == nullptr || overall_size == nullptr || info_size == nullptr || total_memory == nullptr ||
       backtrace_size == nullptr) {
     error_log("get_malloc_leak_info: At least one invalid parameter.");
     return;

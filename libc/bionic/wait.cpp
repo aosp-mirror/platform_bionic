@@ -32,14 +32,14 @@
 extern "C" int __waitid(idtype_t which, id_t id, siginfo_t* info, int options, struct rusage* ru);
 
 pid_t wait(int* status) {
-  return wait4(-1, status, 0, NULL);
+  return wait4(-1, status, 0, nullptr);
 }
 
 pid_t waitpid(pid_t pid, int* status, int options) {
-  return wait4(pid, status, options, NULL);
+  return wait4(pid, status, options, nullptr);
 }
 
 int waitid(idtype_t which, id_t id, siginfo_t* info, int options) {
   // The system call takes an optional struct rusage that we don't need.
-  return __waitid(which, id, info, options, NULL);
+  return __waitid(which, id, info, options, nullptr);
 }

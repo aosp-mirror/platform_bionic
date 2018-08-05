@@ -70,7 +70,7 @@ TEST_F(FdsanTest, unowned_incorrect_exchange) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
-                     "failed to exchange");
+                     "failed to exchange ownership");
 #endif
 }
 
@@ -136,5 +136,25 @@ TEST_F(FdsanTest, overflow) {
   for (auto [fd, tag] : fds) {
     android_fdsan_close_with_tag(fd, tag);
   }
+#endif
+}
+
+TEST_F(FdsanTest, owner_value_high) {
+#if defined(__BIONIC__)
+  int fd = open("/dev/null", O_RDONLY);
+  uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, ~0ULL);
+  android_fdsan_exchange_owner_tag(fd, 0, tag);
+  EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
+                     "0xffffffffffffffff");
+#endif
+}
+
+TEST_F(FdsanTest, owner_value_low) {
+#if defined(__BIONIC__)
+  int fd = open("/dev/null", O_RDONLY);
+  uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, 1);
+  android_fdsan_exchange_owner_tag(fd, 0, tag);
+  EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
+                     "0x1");
 #endif
 }

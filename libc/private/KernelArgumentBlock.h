@@ -42,7 +42,7 @@ class KernelArgumentBlock {
     // Skip over all environment variable definitions to find the aux vector.
     // The end of the environment block is marked by a NULL pointer.
     char** p = envp;
-    while (*p != NULL) {
+    while (*p != nullptr) {
       ++p;
     }
     ++p; // Skip the NULL itself.

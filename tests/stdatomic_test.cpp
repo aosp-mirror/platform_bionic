@@ -206,7 +206,7 @@ static void* writer(void* arg) {
     atomic_store_explicit(&a->z, i+1, memory_order_relaxed);
     atomic_store_explicit(&a->y, i+1, memory_order_release);
   }
-  return 0;
+  return nullptr;
 }
 
 static void* reader(void* arg) {
@@ -224,13 +224,13 @@ static void* reader(void* arg) {
       // Cant just ASSERT, since we are in a non-void function.
       ADD_FAILURE() << "acquire-release ordering violation: "
                     << zval << " < " << yval << ", " << xval << "\n";
-      return 0; // Only report once.
+      return nullptr; // Only report once.
     }
     if (xval < yval) {
       // Cant just ASSERT, since we are in a non-void function.
       ADD_FAILURE() << "acquire-release ordering violation: "
                     << xval << " < " << yval << ", " << zval <<  "\n";
-      return 0; // Only report once.
+      return nullptr; // Only report once.
     }
     if (repeat < repeat_limit) ++repeat;
   }
@@ -238,7 +238,7 @@ static void* reader(void* arg) {
   // But if it fails to hold, this test was useless, and we have a
   // serious scheduling issue that we should probably know about.
   EXPECT_EQ(repeat, repeat_limit);
-  return 0;
+  return nullptr;
 }
 
 TEST(stdatomic, ordering) {
@@ -249,12 +249,12 @@ TEST(stdatomic, ordering) {
   atomic_init(&a.y, 0ul);
   atomic_init(&a.z, 0ul);
   pthread_t t1,t2;
-  ASSERT_EQ(0, pthread_create(&t1, 0, reader, &a));
-  ASSERT_EQ(0, pthread_create(&t2, 0, writer, &a));
+  ASSERT_EQ(0, pthread_create(&t1, nullptr, reader, &a));
+  ASSERT_EQ(0, pthread_create(&t2, nullptr, writer, &a));
   ASSERT_EQ(0, pthread_join(t1, &result));
-  EXPECT_EQ(0, result);
+  EXPECT_EQ(nullptr, result);
   ASSERT_EQ(0, pthread_join(t2, &result));
-  EXPECT_EQ(0, result);
+  EXPECT_EQ(nullptr, result);
   EXPECT_EQ(atomic_load_explicit(&a.x, memory_order_consume), BIG + 1);
   EXPECT_EQ(atomic_load_explicit(&a.y, memory_order_seq_cst), BIG + 1);
   EXPECT_EQ(atomic_load(&a.z), BIG + 1);

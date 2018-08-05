@@ -34,9 +34,9 @@
 
 size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
   static mbstate_t __private_state;
-  mbstate_t* state = (ps == NULL) ? &__private_state : ps;
+  mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
-  if (s == NULL) {
+  if (s == nullptr) {
     // Equivalent to c32rtomb(buf, U'\0', ps).
     return mbstate_reset_and_return(1, state);
   }

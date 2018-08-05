@@ -1830,35 +1830,7 @@ static void soinfo_unload_impl(soinfo* root) {
         }
       }
     } else {
-#if !defined(__work_around_b_24465209__)
       async_safe_fatal("soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
-#else
-      PRINT("warning: soinfo for \"%s\"@%p has no version", si->get_realpath(), si);
-      for_each_dt_needed(si, [&] (const char* library_name) {
-        TRACE("deprecated (old format of soinfo): %s needs to unload %s",
-            si->get_realpath(), library_name);
-
-        soinfo* needed = find_library(si->get_primary_namespace(),
-                                      library_name, RTLD_NOLOAD, nullptr, nullptr);
-
-        if (needed != nullptr) {
-          // Not found: for example if symlink was deleted between dlopen and dlclose
-          // Since we cannot really handle errors at this point - print and continue.
-          PRINT("warning: couldn't find %s needed by %s on unload.",
-              library_name, si->get_realpath());
-          return;
-        } else if (local_unload_list.contains(needed)) {
-          // already visited
-          return;
-        } else if (needed->is_linked() && needed->get_local_group_root() != root) {
-          // external group
-          external_unload_list.push_back(needed);
-        } else {
-          // local group
-          unload_list.push_front(needed);
-        }
-      });
-#endif
     }
   }
 
@@ -3486,11 +3458,11 @@ bool soinfo::prelink_image() {
         "(new hash type from the future?)", get_realpath());
     return false;
   }
-  if (strtab_ == 0) {
+  if (strtab_ == nullptr) {
     DL_ERR("empty/missing DT_STRTAB in \"%s\"", get_realpath());
     return false;
   }
-  if (symtab_ == 0) {
+  if (symtab_ == nullptr) {
     DL_ERR("empty/missing DT_SYMTAB in \"%s\"", get_realpath());
     return false;
   }
