@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8a198c40_18887ff6",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T16:36:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6acc7009_c0c991c4",
+      "range": {
+        "startLine": 225,
+        "startChar": 53,
+        "endLine": 225,
+        "endChar": 57
+      },
+      "revId": "e4e592a81716420269b256572160b05ca9195465",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95a85ae3_c9c9b24d",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ea85f3e0_e3f7025e",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T16:36:56Z",
+      "side": 1,
+      "message": "Preparing for that moment with a couple of .lower() calls.",
+      "parentUuid": "95a85ae3_c9c9b24d",
+      "range": {
+        "startLine": 239,
+        "startChar": 27,
+        "endLine": 239,
+        "endChar": 30
+      },
+      "revId": "e4e592a81716420269b256572160b05ca9195465",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "419f0c20_27c7af8b",
         "filename": "libc/tools/gensyscalls.py",
         "patchSetId": 6
@@ -62,6 +110,24 @@
       "revId": "e4e592a81716420269b256572160b05ca9195465",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8cde473_e4330037",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T16:36:56Z",
+      "side": 1,
+      "message": "It was better before, but unfortunately soong-sandboxed tools cannot access the top directory. nor do they have the ANDROID_BUILD_TOP env variable available.\n\nI also thought about computing this in the __main__ part, but I wanted to keep changes to this file to a minimum for the time being.",
+      "parentUuid": "419f0c20_27c7af8b",
+      "revId": "e4e592a81716420269b256572160b05ca9195465",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
