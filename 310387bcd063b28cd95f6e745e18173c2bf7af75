@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "da267e58_9225c0c2",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2167,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "Maybe, but those files seldom change. I restricted it to kernel/uapi/**.",
+      "parentUuid": "4979135c_d4579842",
+      "range": {
+        "startLine": 2165,
+        "startChar": 4,
+        "endLine": 2167,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2fdac58b_8c08d1e9",
         "filename": "libc/Android.bp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fe0463f_779f120d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fdac58b_8c08d1e9",
+      "range": {
+        "startLine": 2183,
+        "startChar": 4,
+        "endLine": 2189,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d1e0b41f_072dd3a0",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2331,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "That doesn\u0027t work because cc_genrule cannot take defaults. also, the order of the sources matters for this script.",
+      "parentUuid": "5acb0850_a6207f31",
+      "range": {
+        "startLine": 2325,
+        "startChar": 0,
+        "endLine": 2331,
+        "endChar": 45
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c8a69e3_abd1db5d",
         "filename": "libc/Android.bp",
         "patchSetId": 7
@@ -91,6 +163,30 @@
       "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6c0bbf2_00193742",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "libseccomp_policy is compiled for both. at least one target links against it dynamically (crasher, in system/core/debuggerd/crasher/Android.bp)",
+      "parentUuid": "8c8a69e3_abd1db5d",
+      "range": {
+        "startLine": 2394,
+        "startChar": 4,
+        "endLine": 2399,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "331da8a2_b7a6a5fe",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "oops, left it from debugging.",
+      "parentUuid": "86b85dcd_1afd5d0a",
+      "range": {
+        "startLine": 5,
+        "startChar": 7,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e6795a9_d5cfd6a1",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 7
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "4f954842_8b84b368",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e6795a9_d5cfd6a1",
+      "range": {
+        "startLine": 223,
+        "startChar": 61,
+        "endLine": 223,
+        "endChar": 62
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8acf87f7_9776989e",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 7
@@ -160,6 +304,30 @@
       "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e47b952d_bc91a086",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-06T18:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8acf87f7_9776989e",
+      "range": {
+        "startLine": 225,
+        "startChar": 28,
+        "endLine": 228,
+        "endChar": 65
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
