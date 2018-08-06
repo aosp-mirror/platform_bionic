@@ -1178,8 +1178,6 @@ static FILE* __popen_fail(int fds[2]) {
 }
 
 FILE* popen(const char* cmd, const char* mode) {
-  bool close_on_exec = (strchr(mode, 'e') != nullptr);
-
   // Was the request for a socketpair or just a pipe?
   int fds[2];
   bool bidirectional = false;
@@ -1231,8 +1229,6 @@ FILE* popen(const char* cmd, const char* mode) {
   FILE* fp = fdopen(fds[parent], mode);
   if (fp == nullptr) return __popen_fail(fds);
 
-  // The caller didn't ask for their pipe to be O_CLOEXEC, so flip it back now the child has forked.
-  if (!close_on_exec) fcntl(fds[parent], F_SETFD, 0);
   close(fds[child]);
 
   _EXT(fp)->_popen_pid = pid;
