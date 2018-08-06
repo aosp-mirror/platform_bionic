@@ -146,6 +146,24 @@
       "revId": "e4e592a81716420269b256572160b05ca9195465",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ce463f43_d5e64de4",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2018-08-06T17:23:32Z",
+      "side": 1,
+      "message": "ANDROID_BUILD_TOP is not available in the build because it is set by envsetup.sh, which is not a prereq for a build (and the build servers don\u0027t use it).  It\u0027s usually unnecessary, as normal build rules are run from $ANDROID_BUILD_TOP.\n\ngenrules are even more restrictive in preparation for remote execution, where we will need to know the files to make available to the remote executor.  You can add references to specific files with tool_files: \"foo.txt\" and then pass them as arguments using $(location foo.txt), but we don\u0027t currently have an easy way to refer to a whole directory of files.",
+      "parentUuid": "af5d783d_e008dcf1",
+      "revId": "e4e592a81716420269b256572160b05ca9195465",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
