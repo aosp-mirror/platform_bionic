@@ -128,6 +128,24 @@
       "revId": "e4e592a81716420269b256572160b05ca9195465",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "af5d783d_e008dcf1",
+        "filename": "libc/tools/gensyscalls.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-06T17:09:18Z",
+      "side": 1,
+      "message": "+ccross.",
+      "parentUuid": "a8cde473_e4330037",
+      "revId": "e4e592a81716420269b256572160b05ca9195465",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
