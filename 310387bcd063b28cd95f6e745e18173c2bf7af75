@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4979135c_d4579842",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2167,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "would this generate many unnecessary dependencies?",
+      "range": {
+        "startLine": 2165,
+        "startChar": 4,
+        "endLine": 2167,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fdac58b_8c08d1e9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "If possible, could you create a cc_defaults rule for the common options?\n\nAlso, would be nice to add some comment there and/or around cc_object, that the output is not actual object but text (since it\u0027s not clear in the target name).",
+      "range": {
+        "startLine": 2183,
+        "startChar": 4,
+        "endLine": 2189,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5acb0850_a6207f31",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2331,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "similarly, how about cc_defaults?",
+      "range": {
+        "startLine": 2325,
+        "startChar": 0,
+        "endLine": 2331,
+        "endChar": 45
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c8a69e3_abd1db5d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2399,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "why both?",
+      "range": {
+        "startLine": 2394,
+        "startChar": 4,
+        "endLine": 2399,
+        "endChar": 6
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86b85dcd_1afd5d0a",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "not used",
+      "range": {
+        "startLine": 5,
+        "startChar": 7,
+        "endLine": 5,
+        "endChar": 11
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e6795a9_d5cfd6a1",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "nit: mention this is SYSCALLS.txt?",
+      "range": {
+        "startLine": 223,
+        "startChar": 61,
+        "endLine": 223,
+        "endChar": 62
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8acf87f7_9776989e",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1042276
+      },
+      "writtenOn": "2018-08-06T17:06:18Z",
+      "side": 1,
+      "message": "This doesn\u0027t mention files contain two different type of input files (to make it easier to write the build rule?).",
+      "range": {
+        "startLine": 225,
+        "startChar": 28,
+        "endLine": 228,
+        "endChar": 65
+      },
+      "revId": "310387bcd063b28cd95f6e745e18173c2bf7af75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
