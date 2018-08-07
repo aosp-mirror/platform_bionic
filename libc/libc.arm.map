@@ -1661,6 +1661,7 @@ LIBC_PLATFORM {
     __system_property_area_init;
     __system_property_set_filename;
     __system_property_update;
+    android_fdsan_get_fd_table;
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
