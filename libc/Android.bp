@@ -2152,3 +2152,227 @@ filegroup {
         "kernel/uapi/linux/input-event-codes.h",
     ],
 }
+
+// Generate a syscall name / number mapping. These objects are text files
+// (thanks to the -dD -E flags) and not binary files. They will then be
+// consumed by the genseccomp.py script and converted into C++ code.
+cc_defaults {
+    name: "libseccomp_gen_syscall_nrs_defaults",
+    recovery_available: true,
+    srcs: ["seccomp/gen_syscall_nrs.cpp"],
+    cflags: [
+        "-dD",
+        "-E",
+        "-Wall",
+        "-Werror",
+        "-nostdinc",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_arm",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    local_include_dirs: [
+        "kernel/uapi/asm-arm",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_arm64",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    local_include_dirs: [
+        "kernel/uapi/asm-arm64",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_x86",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    srcs: ["seccomp/gen_syscall_nrs_x86.cpp"],
+    exclude_srcs: ["seccomp/gen_syscall_nrs.cpp"],
+    local_include_dirs: [
+        "kernel/uapi/asm-x86",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_x86_64",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    srcs: ["seccomp/gen_syscall_nrs_x86_64.cpp"],
+    exclude_srcs: ["seccomp/gen_syscall_nrs.cpp"],
+    local_include_dirs: [
+        "kernel/uapi/asm-x86",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_mips",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    cflags: [
+        "-D_MIPS_SIM=_MIPS_SIM_ABI32",
+    ],
+    local_include_dirs: [
+        "kernel/uapi/asm-mips",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
+    name: "libseccomp_gen_syscall_nrs_mips64",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    cflags: [
+        "-D_MIPS_SIM=_MIPS_SIM_ABI64",
+    ],
+    local_include_dirs: [
+        "kernel/uapi/asm-mips",
+        "kernel/uapi",
+    ],
+}
+
+// Generate the C++ policy sources for app, system, and global seccomp-bpf
+// filters.
+python_binary_host {
+    name: "genseccomp",
+    main: "tools/genseccomp.py",
+
+    srcs: [
+        "tools/genseccomp.py",
+        "tools/gensyscalls.py",
+    ],
+
+    data: [
+        "kernel/uapi/**/*.h",
+    ],
+
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
+cc_genrule {
+    name: "libseccomp_policy_app_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
+
+    tools: [ "genseccomp" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        "SECCOMP_WHITELIST_COMMON.TXT",
+        "SECCOMP_WHITELIST_APP.TXT",
+        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_BLACKLIST_APP.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "arm64_app_policy.cpp",
+        "arm_app_policy.cpp",
+        "mips64_app_policy.cpp",
+        "mips_app_policy.cpp",
+        "x86_64_app_policy.cpp",
+        "x86_app_policy.cpp",
+    ],
+}
+
+cc_genrule {
+    name: "libseccomp_policy_system_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
+
+    tools: [ "genseccomp" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        "SECCOMP_WHITELIST_COMMON.TXT",
+        "SECCOMP_WHITELIST_SYSTEM.TXT",
+        "SECCOMP_BLACKLIST_COMMON.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "arm64_system_policy.cpp",
+        "arm_system_policy.cpp",
+        "mips64_system_policy.cpp",
+        "mips_system_policy.cpp",
+        "x86_64_system_policy.cpp",
+        "x86_system_policy.cpp",
+    ],
+}
+
+cc_genrule {
+    name: "libseccomp_policy_global_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=global $(in)",
+
+    tools: [ "genseccomp" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        "SECCOMP_WHITELIST_COMMON.TXT",
+        "SECCOMP_WHITELIST_SYSTEM.TXT",
+        "SECCOMP_WHITELIST_APP.TXT",
+        "SECCOMP_WHITELIST_GLOBAL.TXT",
+        "SECCOMP_BLACKLIST_COMMON.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "arm64_global_policy.cpp",
+        "arm_global_policy.cpp",
+        "mips64_global_policy.cpp",
+        "mips_global_policy.cpp",
+        "x86_64_global_policy.cpp",
+        "x86_global_policy.cpp",
+    ],
+}
+
+cc_library {
+    name: "libseccomp_policy",
+    recovery_available: true,
+    generated_sources: [
+        "libseccomp_policy_app_sources",
+        "libseccomp_policy_global_sources",
+        "libseccomp_policy_system_sources",
+    ],
+
+    srcs: [
+        "seccomp/seccomp_policy.cpp",
+    ],
+
+    export_include_dirs: ["seccomp/include"],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    shared: {
+        shared_libs: ["libbase"],
+    },
+    static: {
+        static_libs: ["libbase"],
+    },
+}
