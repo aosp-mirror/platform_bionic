@@ -139,6 +139,11 @@ static FdTable* GetFdTable() {
   return &__libc_shared_globals->fd_table;
 }
 
+// Exposed to the platform to allow crash_dump to print out the fd table.
+extern "C" void* android_fdsan_get_fd_table() {
+  return GetFdTable();
+}
+
 static FdEntry* GetFdEntry(int fd) {
   if (fd < 0) {
     return nullptr;
