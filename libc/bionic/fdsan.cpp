@@ -50,6 +50,60 @@ pid_t __get_cached_pid();
 
 static constexpr const char* kFdsanPropertyName = "debug.fdsan";
 
+template<size_t inline_fds>
+FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
+  if (idx < inline_fds) {
+    return &entries[idx];
+  }
+
+  // Try to create the overflow table ourselves.
+  FdTableOverflow* local_overflow = atomic_load(&overflow);
+  if (__predict_false(!local_overflow)) {
+    struct rlimit rlim = { .rlim_max = 32768 };
+    getrlimit(RLIMIT_NOFILE, &rlim);
+    rlim_t max = rlim.rlim_max;
+
+    if (max == RLIM_INFINITY) {
+      // This isn't actually possible (the kernel has a hard limit), but just
+      // in case...
+      max = 32768;
+    }
+
+    if (idx > max) {
+      // This can happen if an fd is created and then the rlimit is lowered.
+      // In this case, just return nullptr and ignore the fd.
+      return nullptr;
+    }
+
+    size_t required_count = max - inline_fds;
+    size_t required_size = sizeof(FdTableOverflow) + required_count * sizeof(FdEntry);
+    size_t aligned_size = __BIONIC_ALIGN(required_size, PAGE_SIZE);
+    size_t aligned_count = (aligned_size - sizeof(FdTableOverflow)) / sizeof(FdEntry);
+
+    void* allocation =
+        mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (allocation == MAP_FAILED) {
+      async_safe_fatal("fdsan: mmap failed: %s", strerror(errno));
+    }
+
+    FdTableOverflow* new_overflow = reinterpret_cast<FdTableOverflow*>(allocation);
+    new_overflow->len = aligned_count;
+
+    if (atomic_compare_exchange_strong(&overflow, &local_overflow, new_overflow)) {
+      local_overflow = new_overflow;
+    } else {
+      // Someone beat us to it. Deallocate and use theirs.
+      munmap(allocation, aligned_size);
+    }
+  }
+
+  size_t offset = idx - inline_fds;
+  if (local_overflow->len < offset) {
+    return nullptr;
+  }
+  return &local_overflow->entries[offset];
+}
+
 void __libc_init_fdsan() {
   constexpr auto default_level = ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE;
   const prop_info* pi = __system_property_find(kFdsanPropertyName);
@@ -77,12 +131,17 @@ void __libc_init_fdsan() {
       nullptr);
 }
 
-static FdTable<128>* GetFdTable() {
+static FdTable* GetFdTable() {
   if (!__libc_shared_globals) {
     return nullptr;
   }
 
   return &__libc_shared_globals->fd_table;
+}
+
+// Exposed to the platform to allow crash_dump to print out the fd table.
+extern "C" void* android_fdsan_get_fd_table() {
+  return GetFdTable();
 }
 
 static FdEntry* GetFdEntry(int fd) {
