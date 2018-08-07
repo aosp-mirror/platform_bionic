@@ -51,9 +51,10 @@ pid_t __get_cached_pid();
 static constexpr const char* kFdsanPropertyName = "debug.fdsan";
 
 void __libc_init_fdsan() {
+  constexpr auto default_level = ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE;
   const prop_info* pi = __system_property_find(kFdsanPropertyName);
   if (!pi) {
-    android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+    android_fdsan_set_error_level(default_level);
     return;
   }
   __system_property_read_callback(
@@ -70,7 +71,7 @@ void __libc_init_fdsan() {
             async_safe_format_log(ANDROID_LOG_ERROR, "libc",
                                   "debug.fdsan set to unknown value '%s', disabling", value);
           }
-          android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+          android_fdsan_set_error_level(default_level);
         }
       },
       nullptr);
