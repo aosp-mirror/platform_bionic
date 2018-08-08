@@ -38,8 +38,6 @@
 #include <sys/resource.h>
 #include <sys/user.h>
 
-#include <async_safe/log.h>
-
 struct FdEntry {
   _Atomic(uint64_t) close_tag;
 };
@@ -50,62 +48,14 @@ struct FdTableOverflow {
 };
 
 template <size_t inline_fds>
-struct FdTable {
+struct FdTableImpl {
+  uint32_t version;  // currently 0, and hopefully it'll stay that way.
   _Atomic(android_fdsan_error_level) error_level;
 
   FdEntry entries[inline_fds];
   _Atomic(FdTableOverflow*) overflow;
 
-  FdEntry* at(size_t idx) {
-    if (idx < inline_fds) {
-      return &entries[idx];
-    }
-
-    // Try to create the overflow table ourselves.
-    FdTableOverflow* local_overflow = atomic_load(&overflow);
-    if (__predict_false(!local_overflow)) {
-      struct rlimit rlim = { .rlim_max = 32768 };
-      getrlimit(RLIMIT_NOFILE, &rlim);
-      rlim_t max = rlim.rlim_max;
-
-      if (max == RLIM_INFINITY) {
-        // This isn't actually possible (the kernel has a hard limit), but just
-        // in case...
-        max = 32768;
-      }
-
-      if (idx > max) {
-        // This can happen if an fd is created and then the rlimit is lowered.
-        // In this case, just return nullptr and ignore the fd.
-        return nullptr;
-      }
-
-      size_t required_count = max - inline_fds;
-      size_t required_size = sizeof(FdTableOverflow) + required_count * sizeof(FdEntry);
-      size_t aligned_size = __BIONIC_ALIGN(required_size, PAGE_SIZE);
-      size_t aligned_count = (aligned_size - sizeof(FdTableOverflow)) / sizeof(FdEntry);
-
-      void* allocation =
-          mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-      if (allocation == MAP_FAILED) {
-        async_safe_fatal("fdsan: mmap failed: %s", strerror(errno));
-      }
-
-      FdTableOverflow* new_overflow = reinterpret_cast<FdTableOverflow*>(allocation);
-      new_overflow->len = aligned_count;
-
-      if (atomic_compare_exchange_strong(&overflow, &local_overflow, new_overflow)) {
-        local_overflow = new_overflow;
-      } else {
-        // Someone beat us to it. Deallocate and use theirs.
-        munmap(allocation, aligned_size);
-      }
-    }
-
-    size_t offset = idx - inline_fds;
-    if (local_overflow->len < offset) {
-      return nullptr;
-    }
-    return &local_overflow->entries[offset];
-  }
+  FdEntry* at(size_t idx);
 };
+
+using FdTable = FdTableImpl<128>;
