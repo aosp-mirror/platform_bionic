@@ -355,6 +355,9 @@ BIONIC_BENCHMARK(BM_math_powf_speccpu2017_latency);
 
 #include "logf_input.cpp"
 
+static const std::vector<double> log_input (logf_input.begin(),
+                                            logf_input.end());
+
 static void BM_math_logf_speccpu2017(benchmark::State& state) {
   f = 0.0;
   auto cin = logf_input.cbegin();
@@ -377,6 +380,28 @@ static void BM_math_logf_speccpu2017_latency(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_logf_speccpu2017_latency);
 
+static void BM_math_log_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log(*cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log_speccpu2017);
+
+static void BM_math_log_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log(d * zerod + *cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log_speccpu2017_latency);
+
 static void BM_math_log2f_speccpu2017(benchmark::State& state) {
   f = 0.0;
   auto cin = logf_input.cbegin();
@@ -387,6 +412,28 @@ static void BM_math_log2f_speccpu2017(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_log2f_speccpu2017);
+
+static void BM_math_log2_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log2(d * zerod + *cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log2_speccpu2017_latency);
+
+static void BM_math_log2_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log2(*cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log2_speccpu2017);
 
 static void BM_math_log2f_speccpu2017_latency(benchmark::State& state) {
   f = 0.0;
