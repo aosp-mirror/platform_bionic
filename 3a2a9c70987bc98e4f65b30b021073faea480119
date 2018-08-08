@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "99e3928c_59010522",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-08T13:53:22Z",
+      "side": 1,
+      "message": "can you please file a bug with a rough sketch of how to find clang-format?",
+      "parentUuid": "15aa38f5_16647d69",
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "937958d7_fde4a7e4",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -252,6 +270,30 @@
       "side": 1,
       "message": "Yes, it would be a lot better if these files were just built every time, rather than being pseudo-prebuilts. That way, they just pick up the proper toolchain without extra effort.",
       "parentUuid": "1f37e02d_6e204175",
+      "range": {
+        "startLine": 53,
+        "startChar": 55,
+        "endLine": 53,
+        "endChar": 77
+      },
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "848ef6fb_c3b576e0",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-08-08T13:53:22Z",
+      "side": 1,
+      "message": "Done: https://android-review.googlesource.com/c/platform/bionic/+/726158",
+      "parentUuid": "45997294_e9d84dc5",
       "range": {
         "startLine": 53,
         "startChar": 55,
