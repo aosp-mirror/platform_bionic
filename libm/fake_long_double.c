@@ -45,3 +45,12 @@ void sincosl(long double x, long double* s, long double* c) { sincos(x, (double*
 
 // FreeBSD doesn't have an ld128 implementations of tgammal, so both LP32 and LP64 need this.
 long double tgammal(long double x) { return tgamma(x); }
+
+// external/arm-optimized-routines does not provide the long double
+// wrappers for the routines it implements.
+#if (LDBL_MANT_DIG == 53)
+long double expl(long double x) { return exp(x); }
+long double exp2l(long double x) { return exp2(x); }
+long double logl(long double x) { return log(x); }
+long double log2l(long double x) { return log2(x); }
+#endif
