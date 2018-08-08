@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "15aa38f5_16647d69",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2018-08-08T06:04:51Z",
+      "side": 1,
+      "message": "I did this 100% on purpose. clang-stable was only ever meant to provide a path for clang-format (because of repo hooks). Even for that, I think we should move to having repo hooks process our Android.bp configuration to pick up the latest clang-format.",
+      "parentUuid": "25e08a07_5eb25b6c",
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "937958d7_fde4a7e4",
         "filename": "libc/tools/genseccomp.py",
         "patchSetId": 1
@@ -210,6 +228,30 @@
       "side": 1,
       "message": "\u003e next i\u0027m going to try to make an Android.bp change such that this is always run during build to avoid having to generate the .cc files by hand\n\nthat sounds ideal, so +2ing this to unblock you...",
       "parentUuid": "613ad166_815267e5",
+      "range": {
+        "startLine": 53,
+        "startChar": 55,
+        "endLine": 53,
+        "endChar": 77
+      },
+      "revId": "3a2a9c70987bc98e4f65b30b021073faea480119",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45997294_e9d84dc5",
+        "filename": "libc/tools/genseccomp.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2018-08-08T06:04:51Z",
+      "side": 1,
+      "message": "Yes, it would be a lot better if these files were just built every time, rather than being pseudo-prebuilts. That way, they just pick up the proper toolchain without extra effort.",
+      "parentUuid": "1f37e02d_6e204175",
       "range": {
         "startLine": 53,
         "startChar": 55,
