@@ -37,30 +37,11 @@
 /* PATH_MAX is unavailable without polluting the namespace, but it's always 4096 on Linux */
 #define __PATH_MAX 4096
 
-#if defined(__clang__)
 char* realpath(const char* path, char* resolved)
         __clang_error_if(__bos(resolved) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
                          __bos(resolved) < __PATH_MAX, __realpath_buf_too_small_str)
         __clang_error_if(!path, "'realpath': NULL path is never correct; flipped arguments?");
 /* No need for a definition; the only issues we can catch are at compile-time. */
-
-#else /* defined(__clang__) */
-
-char* __realpath_real(const char*, char*) __RENAME(realpath);
-__errordecl(__realpath_size_error, __realpath_buf_too_small_str);
-
-__BIONIC_FORTIFY_INLINE
-char* realpath(const char* path, char* resolved) {
-    size_t bos = __bos(resolved);
-
-    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE && bos < __PATH_MAX) {
-        __realpath_size_error();
-    }
-
-    return __realpath_real(path, resolved);
-}
-
-#endif /* defined(__clang__) */
 
 #undef __PATH_MAX
 #undef __realpath_buf_too_small_str
