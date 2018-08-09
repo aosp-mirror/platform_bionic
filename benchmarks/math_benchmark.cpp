@@ -331,6 +331,9 @@ BIONIC_BENCHMARK(BM_math_exp2_speccpu2017_latency);
 
 #include "powf_input.cpp"
 
+static const std::vector<std::pair<double, double>> pow_input
+  (powf_input.begin(), powf_input.end());
+
 static void BM_math_powf_speccpu2006(benchmark::State& state) {
   f = 0.0;
   auto cin = powf_input.cbegin();
@@ -352,6 +355,28 @@ static void BM_math_powf_speccpu2017_latency(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_powf_speccpu2017_latency);
+
+static void BM_math_pow_speccpu2006(benchmark::State& state) {
+  d = 0.0;
+  auto cin = pow_input.cbegin();
+  for (auto _ : state) {
+    f = pow(cin->first, cin->second);
+    if (++cin == pow_input.cend())
+      cin = pow_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_pow_speccpu2006);
+
+static void BM_math_pow_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = pow_input.cbegin();
+  for (auto _ : state) {
+    d = powf(d * zero + cin->first, cin->second);
+    if (++cin == pow_input.cend())
+      cin = pow_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_pow_speccpu2017_latency);
 
 #include "logf_input.cpp"
 
