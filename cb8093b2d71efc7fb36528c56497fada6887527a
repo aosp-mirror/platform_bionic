@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "30d26a14_5ab792c1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1333281
+      },
+      "writtenOn": "2018-08-10T14:12:18Z",
+      "side": 1,
+      "message": "Did you use -O2 -ffp-contract\u003dfast -mavx2 -mfma -DHAVE_FAST_FMA\u003d1?",
+      "parentUuid": "88fa51a2_9d87f9ee",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7669ca_5f8b9189",
         "filename": "libm/Android.bp",
         "patchSetId": 1
