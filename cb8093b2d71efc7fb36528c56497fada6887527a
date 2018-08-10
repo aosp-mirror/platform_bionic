@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "8de9c838_ff6a09a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-10T15:18:03Z",
+      "side": 1,
+      "message": "all architectures get these flags:\n\n    cflags: [\n        \"-Werror\",\n        \"-O2\",\n        \"-DWANT_ROUNDING\u003d0\",\n        \"-DWANT_ERRNO\u003d0\",\n        \"-DFLT_EVAL_METHOD\u003d0\",\n        \"-ffp-contract\u003dfast\",\n    ],\n\nbut currently only arm64 has HAVE_FAST_FMA:\n\n    arch: {\n        arm64: {\n            cflags: [\n                \"-DHAVE_FAST_FMA\u003d1\",\n            ],\n        },\n    },\n\nnote that the Android x86-64 ABI does not include AVX2:\n\n  https://developer.android.com/ndk/guides/abis#86-64\n\nyou\u0027d need to add avx2 to\n\n\tx86_64ArchFeatureCflags \u003d map[string][]string{\n\t\t\"ssse3\":  []string{\"-DUSE_SSSE3\", \"-mssse3\"},\n\t\t\"sse4\":   []string{\"-msse4\"},\n\t\t\"sse4_1\": []string{\"-msse4.1\"},\n\t\t\"sse4_2\": []string{\"-msse4.2\"},\n\t\t\"popcnt\": []string{\"-mpopcnt\"},\n\t\t\"avx\":    []string{\"-mavx\"},\n\t\t\"aes_ni\": []string{\"-maes\"},\n\t}\n\nin build/soong/cc/config/x86_64_device.go.\n\nalthough it looks like we do already automatically set -march\u003dcore-avx2 for haswell processors:\n\n\tx86_64ArchVariantCflags \u003d map[string][]string{\n\t\t\"\": []string{\n\t\t\t\"-march\u003dx86-64\",\n\t\t},\n\t\t\"haswell\": []string{\n\t\t\t\"-march\u003dcore-avx2\",\n\t\t},",
+      "parentUuid": "30d26a14_5ab792c1",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7669ca_5f8b9189",
         "filename": "libm/Android.bp",
         "patchSetId": 1
