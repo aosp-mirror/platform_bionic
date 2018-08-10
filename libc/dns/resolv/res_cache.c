@@ -1995,6 +1995,7 @@ _resolv_set_default_params(struct __res_params* params) {
     params->success_threshold = SUCCESS_THRESHOLD;
     params->min_samples = 0;
     params->max_samples = 0;
+    params->base_timeout_msec = 0;  // 0 = legacy algorithm
 }
 
 int
