@@ -1,0 +1,24 @@
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_0_ALIGN2_0_SIZE_SMALL</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_0_ALIGN2_0_SIZE_MEDIUM</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_0_ALIGN2_0_SIZE_LARGE</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_4_ALIGN2_4_SIZE_MEDIUM</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_4_ALIGN2_0_SIZE_MEDIUM</args>
+</fn>
+<fn>
+  <name>BM_string_memcmp</name>
+  <args>AT_TWOBUF_MANUAL_ALIGN1_0_ALIGN2_4_SIZE_MEDIUM</args>
+</fn>
