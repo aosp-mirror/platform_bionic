@@ -30,6 +30,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
 #define USE_AS_STRNCMP
-#define STRCMP  strncmp
+#define STRCMP  strncmp_ssse3
 #include "ssse3-strcmp-atom.S"
 

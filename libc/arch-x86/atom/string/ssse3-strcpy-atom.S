@@ -81,7 +81,7 @@ name:	\
 # define POP(REG)	popl REG; CFI_POP (REG)
 
 # ifndef STRCPY
-#  define STRCPY  strcpy
+#  define STRCPY  strcpy_atom
 # endif
 
 # ifdef USE_AS_STRNCPY

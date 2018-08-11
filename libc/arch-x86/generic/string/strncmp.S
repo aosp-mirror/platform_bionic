@@ -12,7 +12,7 @@
  * cache.
  */
 
-ENTRY(strncmp)
+ENTRY(strncmp_generic)
 	pushl	%ebx
 	movl	8(%esp),%eax
 	movl	12(%esp),%ecx
@@ -111,4 +111,4 @@ L3:	movzbl	(%eax),%eax		/* unsigned comparision */
 L4:	xorl	%eax,%eax
 	popl	%ebx
 	ret
-END(strncmp)
+END(strncmp_generic)

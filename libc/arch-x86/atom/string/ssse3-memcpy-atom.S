@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "cache.h"
 
 #ifndef MEMCPY
-# define MEMCPY	memcpy
+# define MEMCPY	memcpy_atom
 #endif
 
 #ifndef USE_AS_MEMMOVE
@@ -3133,4 +3133,4 @@ L(bk_ssse3_cpy):
 
 END (MEMCPY)
 
-ALIAS_SYMBOL(memmove, MEMCPY)
+ALIAS_SYMBOL(memmove_atom, MEMCPY)
