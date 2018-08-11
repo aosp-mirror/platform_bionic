@@ -34,6 +34,9 @@
 #include <tinyxml2.h>
 #include "util.h"
 
+#define _STR(x) #x
+#define STRINGFY(x) _STR(x)
+
 static const std::vector<int> kCommonSizes{
   8,
   64,
@@ -70,6 +73,12 @@ static const std::vector<int> kLargeSizes{
   512 * KB,
   1024 * KB,
   2048 * KB,
+};
+
+static std::map<std::string, const std::vector<int> &> kSizes{
+  { "SMALL",  kSmallSizes },
+  { "MEDIUM", kMediumSizes },
+  { "LARGE",  kLargeSizes },
 };
 
 std::map<std::string, std::pair<benchmark_func_t, std::string>> g_str_to_func;
@@ -213,40 +222,74 @@ void LockAndRun(benchmark::State& state, benchmark_func_t func_to_bench, int cpu
 static constexpr char kOnebufManualStr[] = "AT_ONEBUF_MANUAL_ALIGN_";
 static constexpr char kTwobufManualStr[] = "AT_TWOBUF_MANUAL_ALIGN1_";
 
-static bool ParseOnebufManualStr(std::string& arg, std::vector<int64_t>* values) {
+static bool ParseOnebufManualStr(std::string& arg, args_vector_t* to_populate) {
   // The format of this is:
   //   AT_ONEBUF_MANUAL_ALIGN_XX_SIZE_YY
   // Where:
   //   XX is the alignment
   //   YY is the size
+  // The YY size can be either a number or a string representing the pre-defined
+  // sets of values:
+  //   SMALL (for values between 1 and 256)
+  //   MEDIUM (for values between 512 and 128KB)
+  //   LARGE (for values between 256KB and 2048KB)
   int64_t align;
   int64_t size;
-  if (sscanf(arg.c_str(), "AT_ONEBUF_MANUAL_ALIGN_%" SCNd64 "_SIZE_%" SCNd64,
-             &align, &size) != 2) {
+  char sizes[32] = { 0 };
+  int ret;
+
+  ret = sscanf(arg.c_str(), "AT_ONEBUF_MANUAL_ALIGN_%" SCNd64 "_SIZE_%" SCNd64,
+               &align, &size);
+  if (ret == 1) {
+    ret = sscanf(arg.c_str(), "AT_ONEBUF_MANUAL_ALIGN_%" SCNd64 "_SIZE_"
+                              "%" STRINGFY(sizeof(sizes)-1) "s", &align, sizes);
+  }
+  if (ret != 2) {
     return false;
   }
 
+  // Verify the alignment is powers of 2.
   if (align != 0 && (align & (align - 1)) != 0) {
     return false;
   }
 
-  values->push_back(static_cast<int64_t>(size));
-  values->push_back(static_cast<int64_t>(align));
+  auto sit = kSizes.find(sizes);
+  if (sit == kSizes.cend()) {
+    to_populate->push_back({size, align});
+  } else {
+    for (auto ssize : sit->second) {
+      to_populate->push_back({ssize, align});
+    }
+  }
   return true;
 }
 
-static bool ParseTwobufManualStr(std::string& arg, std::vector<int64_t>* values) {
+static bool ParseTwobufManualStr(std::string& arg, args_vector_t* to_populate) {
   // The format of this is:
   //   AT_TWOBUF_MANUAL_ALIGN1_XX_ALIGN2_YY_SIZE_ZZ
   // Where:
   //   XX is the alignment of the first argument
   //   YY is the alignment of the second argument
   //   ZZ is the size
+  // The ZZ size can be either a number or a string representing the pre-defined
+  // sets of values:
+  //   SMALL (for values between 1 and 256)
+  //   MEDIUM (for values between 512 and 128KB)
+  //   LARGE (for values between 256KB and 2048KB)
   int64_t align1;
   int64_t align2;
   int64_t size;
-  if (sscanf(arg.c_str(), "AT_TWOBUF_MANUAL_ALIGN1_%" SCNd64 "_ALIGN2_%" SCNd64 "_SIZE_%" SCNd64,
-             &align1, &align2, &size) != 3) {
+  char sizes[32] = { 0 };
+  int ret;
+
+  ret = sscanf(arg.c_str(), "AT_TWOBUF_MANUAL_ALIGN1_%" SCNd64 "_ALIGN2_%" SCNd64 "_SIZE_%" SCNd64,
+                            &align1, &align2, &size);
+  if (ret == 2) {
+    ret = sscanf(arg.c_str(), "AT_TWOBUF_MANUAL_ALIGN1_%" SCNd64 "_ALIGN2_%" SCNd64 "_SIZE_"
+                               "%" STRINGFY(sizeof(sizes)-1) "s",
+                               &align1, &align2, sizes);
+  }
+  if (ret != 3) {
     return false;
   }
 
@@ -256,9 +299,14 @@ static bool ParseTwobufManualStr(std::string& arg, std::vector<int64_t>* values)
     return false;
   }
 
-  values->push_back(static_cast<int64_t>(size));
-  values->push_back(static_cast<int64_t>(align1));
-  values->push_back(static_cast<int64_t>(align2));
+  auto sit = kSizes.find(sizes);
+  if (sit == kSizes.cend()) {
+    to_populate->push_back({size, align1, align2});
+  } else {
+    for (auto ssize : sit->second) {
+      to_populate->push_back({ssize, align1, align2});
+    }
+  }
   return true;
 }
 
@@ -272,21 +320,17 @@ args_vector_t* ResolveArgs(args_vector_t* to_populate, std::string args,
   }
   // Check for free form macro.
   if (android::base::StartsWith(args, kOnebufManualStr)) {
-    std::vector<int64_t> values;
-    if (!ParseOnebufManualStr(args, &values)) {
+    if (!ParseOnebufManualStr(args, to_populate)) {
       errx(1, "ERROR: Bad format of macro %s, should be AT_ONEBUF_MANUAL_ALIGN_XX_SIZE_YY",
            args.c_str());
     }
-    to_populate->push_back(std::move(values));
     return to_populate;
   } else if (android::base::StartsWith(args, kTwobufManualStr)) {
-    std::vector<int64_t> values;
-    if (!ParseTwobufManualStr(args, &values)) {
+    if (!ParseTwobufManualStr(args, to_populate)) {
       errx(1,
            "ERROR: Bad format of macro %s, should be AT_TWOBUF_MANUAL_ALIGN1_XX_ALIGNE2_YY_SIZE_ZZ",
            args.c_str());
     }
-    to_populate->push_back(std::move(values));
     return to_populate;
   }
 
