@@ -107,8 +107,5 @@ cc_test {
         "libbase",
         "libBionicBenchmarksUtils",
     ],
-    data: [
-        "suites/*",
-        "test_suites/*",
-    ],
+    data: ["test_suites/*"],
 }
