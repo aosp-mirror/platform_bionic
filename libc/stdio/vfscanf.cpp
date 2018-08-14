@@ -43,6 +43,7 @@
 
 #include <private/bionic_ctype.h>
 #include <private/bionic_fortify.h>
+#include <private/bionic_macros.h>
 #include <private/bionic_mbstate.h>
 
 #define BUF 513 /* Maximum length of numeric string. */
@@ -189,7 +190,7 @@ literal:
        */
       case 'D': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'd':
         c = CT_INT;
         base = 10;
@@ -202,7 +203,7 @@ literal:
 
       case 'O': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'o':
         c = CT_INT;
         flags |= UNSIGNED;
