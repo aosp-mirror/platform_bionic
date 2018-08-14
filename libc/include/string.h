@@ -144,7 +144,7 @@ char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 
 /* Const-correct overloads. Placed after FORTIFY so we call those functions, if possible. */
-#if defined(__cplusplus) && defined(__clang__)
+#if defined(__cplusplus)
 /*
  * Use two enable_ifs so these overloads don't conflict with + are preferred over libcxx's. This can
  * be reduced to 1 after libcxx recognizes that we have const-correct overloads.

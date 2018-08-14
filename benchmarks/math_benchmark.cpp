@@ -33,6 +33,7 @@ volatile double v;
 volatile float f;
 
 static float zero = 0.0f;
+static double zerod = 0.0f;
 
 static void BM_math_sqrt(benchmark::State& state) {
   d = 0.0;
@@ -257,6 +258,33 @@ static void BM_math_expf_speccpu2017_latency(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_expf_speccpu2017_latency);
 
+// Create a double version of expf_input to avoid overhead of float to
+// double conversion.
+static const std::vector<double> exp_input (expf_input.begin(),
+                                            expf_input.end());
+
+static void BM_math_exp_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = exp_input.cbegin();
+  for (auto _ : state) {
+    d = exp(*cin);
+    if (++cin == exp_input.cend())
+      cin = exp_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp_speccpu2017);
+
+static void BM_math_exp_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = exp_input.cbegin();
+  for (auto _ : state) {
+    d = exp(d * zerod + *cin);
+    if (++cin == exp_input.cend())
+      cin = exp_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp_speccpu2017_latency);
+
 static void BM_math_exp2f_speccpu2017(benchmark::State& state) {
   f = 0.0;
   auto cin = expf_input.cbegin();
@@ -279,7 +307,32 @@ static void BM_math_exp2f_speccpu2017_latency(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_exp2f_speccpu2017_latency);
 
+static void BM_math_exp2_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = exp_input.cbegin();
+  for (auto _ : state) {
+    f = exp2(*cin);
+    if (++cin == exp_input.cend())
+      cin = exp_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp2_speccpu2017);
+
+static void BM_math_exp2_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = exp_input.cbegin();
+  for (auto _ : state) {
+    f = exp2(d * zero + *cin);
+    if (++cin == exp_input.cend())
+      cin = exp_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_exp2_speccpu2017_latency);
+
 #include "powf_input.cpp"
+
+static const std::vector<std::pair<double, double>> pow_input
+  (powf_input.begin(), powf_input.end());
 
 static void BM_math_powf_speccpu2006(benchmark::State& state) {
   f = 0.0;
@@ -303,7 +356,32 @@ static void BM_math_powf_speccpu2017_latency(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_powf_speccpu2017_latency);
 
+static void BM_math_pow_speccpu2006(benchmark::State& state) {
+  d = 0.0;
+  auto cin = pow_input.cbegin();
+  for (auto _ : state) {
+    f = pow(cin->first, cin->second);
+    if (++cin == pow_input.cend())
+      cin = pow_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_pow_speccpu2006);
+
+static void BM_math_pow_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = pow_input.cbegin();
+  for (auto _ : state) {
+    d = powf(d * zero + cin->first, cin->second);
+    if (++cin == pow_input.cend())
+      cin = pow_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_pow_speccpu2017_latency);
+
 #include "logf_input.cpp"
+
+static const std::vector<double> log_input (logf_input.begin(),
+                                            logf_input.end());
 
 static void BM_math_logf_speccpu2017(benchmark::State& state) {
   f = 0.0;
@@ -327,6 +405,28 @@ static void BM_math_logf_speccpu2017_latency(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_math_logf_speccpu2017_latency);
 
+static void BM_math_log_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log(*cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log_speccpu2017);
+
+static void BM_math_log_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log(d * zerod + *cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log_speccpu2017_latency);
+
 static void BM_math_log2f_speccpu2017(benchmark::State& state) {
   f = 0.0;
   auto cin = logf_input.cbegin();
@@ -337,6 +437,28 @@ static void BM_math_log2f_speccpu2017(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_math_log2f_speccpu2017);
+
+static void BM_math_log2_speccpu2017_latency(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log2(d * zerod + *cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log2_speccpu2017_latency);
+
+static void BM_math_log2_speccpu2017(benchmark::State& state) {
+  d = 0.0;
+  auto cin = log_input.cbegin();
+  for (auto _ : state) {
+    d = log2(*cin);
+    if (++cin == log_input.cend())
+      cin = log_input.cbegin();
+  }
+}
+BIONIC_BENCHMARK(BM_math_log2_speccpu2017);
 
 static void BM_math_log2f_speccpu2017_latency(benchmark::State& state) {
   f = 0.0;

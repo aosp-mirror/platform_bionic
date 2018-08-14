@@ -24,11 +24,13 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
-#include <unordered_map>
-
 #if defined(__BIONIC__)
 #include <android/fdsan.h>
 #endif
+
+#include <unordered_map>
+
+#include <android-base/unique_fd.h>
 
 #define FDSAN_TEST(test_name) TEST_F(FdsanTest, test_name)
 #define EXPECT_FDSAN_DEATH(expression, regex)                                                \
@@ -70,7 +72,7 @@ TEST_F(FdsanTest, unowned_incorrect_exchange) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
-                     "failed to exchange");
+                     "failed to exchange ownership");
 #endif
 }
 
@@ -136,5 +138,57 @@ TEST_F(FdsanTest, overflow) {
   for (auto [fd, tag] : fds) {
     android_fdsan_close_with_tag(fd, tag);
   }
+#endif
+}
+
+TEST_F(FdsanTest, owner_value_high) {
+#if defined(__BIONIC__)
+  int fd = open("/dev/null", O_RDONLY);
+  uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, ~0ULL);
+  android_fdsan_exchange_owner_tag(fd, 0, tag);
+  EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
+                     "0xffffffffffffffff");
+#endif
+}
+
+TEST_F(FdsanTest, owner_value_low) {
+#if defined(__BIONIC__)
+  int fd = open("/dev/null", O_RDONLY);
+  uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, 1);
+  android_fdsan_exchange_owner_tag(fd, 0, tag);
+  EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
+                     "0x1");
+#endif
+}
+
+TEST_F(FdsanTest, unique_fd_unowned_close) {
+#if defined(__BIONIC__)
+  android::base::unique_fd fd(open("/dev/null", O_RDONLY));
+  android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
+  EXPECT_FDSAN_DEATH(close(fd.get()), "expected to be unowned, actually owned by unique_fd");
+#endif
+}
+
+TEST_F(FdsanTest, unique_fd_untag_on_release) {
+  android::base::unique_fd fd(open("/dev/null", O_RDONLY));
+  close(fd.release());
+}
+
+TEST_F(FdsanTest, unique_fd_move) {
+  android::base::unique_fd fd(open("/dev/null", O_RDONLY));
+  android::base::unique_fd fd_moved = std::move(fd);
+  ASSERT_EQ(-1, fd.get());
+  ASSERT_GT(fd_moved.get(), -1);
+}
+
+TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
+#if defined(__BIONIC__)
+  android::base::unique_fd fd(open("/dev/null", O_RDONLY));
+  android::base::unique_fd fd_moved = std::move(fd);
+  ASSERT_EQ(-1, fd.get());
+  ASSERT_GT(fd_moved.get(), -1);
+
+  android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
+  EXPECT_FDSAN_DEATH(close(fd_moved.get()), "expected to be unowned, actually owned by unique_fd");
 #endif
 }

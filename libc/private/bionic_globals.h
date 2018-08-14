@@ -46,7 +46,7 @@ __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
-  FdTable<128> fd_table;
+  FdTable fd_table;
 };
 
 __LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;
