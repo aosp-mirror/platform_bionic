@@ -18,15 +18,15 @@ there is no major difference in performance on each.
 
 Benchmark 64 bit memcmp:
 
-    /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --bionic_xml=string.xml memcmp
+    /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --bionic_xml=string.xml --benchmark_filter=memcmp
 
 Benchmark 32 bit memcmp:
 
-    /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --bionic_xml=string.xml memcmp
+    /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --bionic_xml=string.xml --benchmark_filter=memcmp
 
 Locking to a specific cpu:
 
-    /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --bionic_cpu=2 --bionic_xml=string.xml memcmp
+    /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --bionic_cpu=2 --bionic_xml=string.xml --benchmark_filter=memcmp
 
 ## Performance
 The bionic benchmarks are used to verify the performance of changes to
@@ -56,7 +56,7 @@ Here is an example of how the benchmark should be executed. For this
 command to work, you need to change directory to one of the above
 directories.
 
-    bionic-benchmarks --bionic_xml=suites/string.xml memcmp
+    bionic-benchmarks --bionic_xml=string.xml --benchmark_filter=memcmp
 
 The last argument is the name of the one function that you want to
 benchmark.
@@ -101,6 +101,22 @@ or choose a device that is less likely to overheat. To detect these kind
 of issues, you can run a subset of the tests again. At the very least, it's
 always a good idea to rerun the suite a couple of times to verify that
 there isn't a high variation in the numbers.
+
+If you want to verify a single benchmark result, you can run a single test
+using a command like this:
+
+    bionic-benchmarks --bionic_xml=string.xml --benchmark_filter=BM_string_memcmp/1/1/0
+
+Where the argument to the filter argument is the name of the benchmark from
+the output. Sometimes this filter can still match multiple benchmarks, to
+guarantee that you only run the single benchmark, you can execute the benchmark
+like so:
+
+    bionic-benchmarks --bionic_xml=string.xml --benchmark_filter=BM_string_memcmp/1/1/0$
+
+NOTE: It is assumed that these commands are executed in adb as the shell user
+on device. If you are trying to run this using adb directly from a host
+machine, you might need to escape the special shell characters such as **$**.
 
 ## Testing
 

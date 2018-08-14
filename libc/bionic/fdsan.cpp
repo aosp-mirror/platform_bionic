@@ -50,10 +50,65 @@ pid_t __get_cached_pid();
 
 static constexpr const char* kFdsanPropertyName = "debug.fdsan";
 
+template<size_t inline_fds>
+FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
+  if (idx < inline_fds) {
+    return &entries[idx];
+  }
+
+  // Try to create the overflow table ourselves.
+  FdTableOverflow* local_overflow = atomic_load(&overflow);
+  if (__predict_false(!local_overflow)) {
+    struct rlimit rlim = { .rlim_max = 32768 };
+    getrlimit(RLIMIT_NOFILE, &rlim);
+    rlim_t max = rlim.rlim_max;
+
+    if (max == RLIM_INFINITY) {
+      // This isn't actually possible (the kernel has a hard limit), but just
+      // in case...
+      max = 32768;
+    }
+
+    if (idx > max) {
+      // This can happen if an fd is created and then the rlimit is lowered.
+      // In this case, just return nullptr and ignore the fd.
+      return nullptr;
+    }
+
+    size_t required_count = max - inline_fds;
+    size_t required_size = sizeof(FdTableOverflow) + required_count * sizeof(FdEntry);
+    size_t aligned_size = __BIONIC_ALIGN(required_size, PAGE_SIZE);
+    size_t aligned_count = (aligned_size - sizeof(FdTableOverflow)) / sizeof(FdEntry);
+
+    void* allocation =
+        mmap(nullptr, aligned_size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (allocation == MAP_FAILED) {
+      async_safe_fatal("fdsan: mmap failed: %s", strerror(errno));
+    }
+
+    FdTableOverflow* new_overflow = reinterpret_cast<FdTableOverflow*>(allocation);
+    new_overflow->len = aligned_count;
+
+    if (atomic_compare_exchange_strong(&overflow, &local_overflow, new_overflow)) {
+      local_overflow = new_overflow;
+    } else {
+      // Someone beat us to it. Deallocate and use theirs.
+      munmap(allocation, aligned_size);
+    }
+  }
+
+  size_t offset = idx - inline_fds;
+  if (local_overflow->len < offset) {
+    return nullptr;
+  }
+  return &local_overflow->entries[offset];
+}
+
 void __libc_init_fdsan() {
+  constexpr auto default_level = ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE;
   const prop_info* pi = __system_property_find(kFdsanPropertyName);
   if (!pi) {
-    android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+    android_fdsan_set_error_level(default_level);
     return;
   }
   __system_property_read_callback(
@@ -70,18 +125,23 @@ void __libc_init_fdsan() {
             async_safe_format_log(ANDROID_LOG_ERROR, "libc",
                                   "debug.fdsan set to unknown value '%s', disabling", value);
           }
-          android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+          android_fdsan_set_error_level(default_level);
         }
       },
       nullptr);
 }
 
-static FdTable<128>* GetFdTable() {
+static FdTable* GetFdTable() {
   if (!__libc_shared_globals) {
     return nullptr;
   }
 
   return &__libc_shared_globals->fd_table;
+}
+
+// Exposed to the platform to allow crash_dump to print out the fd table.
+extern "C" void* android_fdsan_get_fd_table() {
+  return GetFdTable();
 }
 
 static FdEntry* GetFdEntry(int fd) {
@@ -191,7 +251,8 @@ static const char* __tag_to_type(uint64_t tag) {
 }
 
 static uint64_t __tag_to_owner(uint64_t tag) {
-  return tag;
+  // Lop off the most significant byte and sign extend.
+  return static_cast<uint64_t>(static_cast<int64_t>(tag << 8) >> 8);
 }
 
 int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
@@ -207,21 +268,23 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
     const char* actual_type = __tag_to_type(tag);
     uint64_t actual_owner = __tag_to_owner(tag);
     if (expected_tag && tag) {
-      fdsan_error("attempted to close file descriptor %d, expected to be owned by %s 0x%" PRIx64
-                  ", actually owned by %s 0x%" PRIx64,
-                  fd, expected_type, expected_owner, actual_type, actual_owner);
+      fdsan_error(
+          "attempted to close file descriptor %d, "
+          "expected to be owned by %s 0x%" PRIx64 ", actually owned by %s 0x%" PRIx64,
+          fd, expected_type, expected_owner, actual_type, actual_owner);
     } else if (expected_tag && !tag) {
-      fdsan_error("attempted to close file descriptor %d, expected to be owned by %s 0x%" PRIx64
-                  ", actually unowned",
-                  fd, expected_type, expected_owner);
+      fdsan_error(
+          "attempted to close file descriptor %d, "
+          "expected to be owned by %s 0x%" PRIx64 ", actually unowned",
+          fd, expected_type, expected_owner);
     } else if (!expected_tag && tag) {
       fdsan_error(
-          "attempted to close file descriptor %d, expected to be unowned, actually owned by %s "
-          "0x%" PRIx64,
+          "attempted to close file descriptor %d, "
+          "expected to be unowned, actually owned by %s 0x%" PRIx64,
           fd, actual_type, actual_owner);
     } else if (!expected_tag && !tag) {
       // This should never happen: our CAS failed, but expected == actual?
-      async_safe_fatal("fdsan atomic_compare_exchange_strong failed unexpectedly");
+      async_safe_fatal("fdsan atomic_compare_exchange_strong failed unexpectedly while closing");
     }
   }
 
@@ -241,16 +304,26 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
 
   uint64_t tag = expected_tag;
   if (!atomic_compare_exchange_strong(&fde->close_tag, &tag, new_tag)) {
-    if (expected_tag == 0) {
+    if (expected_tag && tag) {
       fdsan_error(
-          "failed to take ownership of already-owned file descriptor: fd %d is owned by %s "
-          "%" PRIx64,
-          fd, __tag_to_type(tag), __tag_to_owner(tag));
-    } else {
+          "failed to exchange ownership of file descriptor: fd %d is "
+          "owned by %s 0x%" PRIx64 ", was expected to be owned by %s 0x%" PRIx64,
+          fd, __tag_to_type(tag), __tag_to_owner(tag), __tag_to_type(expected_tag),
+          __tag_to_owner(expected_tag));
+    } else if (expected_tag && !tag) {
       fdsan_error(
-          "failed to exchange ownership of unowned file descriptor: expected fd %d to be owned "
-          "by %s %" PRIx64,
+          "failed to exchange ownership of file descriptor: fd %d is "
+          "unowned, was expected to be owned by %s 0x%" PRIx64,
           fd, __tag_to_type(expected_tag), __tag_to_owner(expected_tag));
+    } else if (!expected_tag && tag) {
+      fdsan_error(
+          "failed to exchange ownership of file descriptor: fd %d is "
+          "owned by %s 0x%" PRIx64 ", was expected to be unowned",
+          fd, __tag_to_type(tag), __tag_to_owner(tag));
+    } else if (!expected_tag && !tag) {
+      // This should never happen: our CAS failed, but expected == actual?
+      async_safe_fatal(
+          "fdsan atomic_compare_exchange_strong failed unexpectedly while exchanging owner tag");
     }
   }
 }
