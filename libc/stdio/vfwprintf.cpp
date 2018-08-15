@@ -195,7 +195,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         if (width >= 0) goto rflag;
         if (width == INT_MIN) goto overflow;
         width = -width;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case '-':
         flags |= LADJUST;
         goto rflag;
@@ -294,7 +294,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         goto rflag;
       case 'C':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'c':
         if (flags & LONGINT)
           *(cp = buf) = (wchar_t)GETARG(wint_t);
@@ -305,7 +305,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         break;
       case 'D':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'd':
       case 'i':
         _umax = SARG();
@@ -438,7 +438,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         __fortify_fatal("%%n not allowed on Android");
       case 'O':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'o':
         _umax = UARG();
         base = OCT;
@@ -458,7 +458,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         goto nosign;
       case 'S':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 's':
         if (flags & LONGINT) {
           if ((cp = GETARG(wchar_t*)) == nullptr) cp = const_cast<wchar_t*>(L"(null)");
@@ -486,7 +486,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         break;
       case 'U':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'u':
         _umax = UARG();
         base = DEC;
