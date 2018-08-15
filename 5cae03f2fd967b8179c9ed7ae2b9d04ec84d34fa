@@ -22,6 +22,30 @@
       "revId": "5cae03f2fd967b8179c9ed7ae2b9d04ec84d34fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c430b905_cdbf91f9",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2018-08-15T17:27:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7478ab08_8661a0e7",
+      "range": {
+        "startLine": 334,
+        "startChar": 0,
+        "endLine": 336,
+        "endChar": 0
+      },
+      "revId": "5cae03f2fd967b8179c9ed7ae2b9d04ec84d34fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
