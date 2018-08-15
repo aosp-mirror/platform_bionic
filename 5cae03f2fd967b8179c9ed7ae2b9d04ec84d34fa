@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7478ab08_8661a0e7",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-15T15:42:45Z",
+      "side": 1,
+      "message": "given that Android code should use the libbase macro, maybe move this to bionic_macros.h until/unless we find that this is more generally useful?",
+      "range": {
+        "startLine": 334,
+        "startChar": 0,
+        "endLine": 336,
+        "endChar": 0
+      },
+      "revId": "5cae03f2fd967b8179c9ed7ae2b9d04ec84d34fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
