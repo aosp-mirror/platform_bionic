@@ -1087,17 +1087,17 @@ TEST(dlfcn, rtld_next_known_symbol) {
 
 // Check that RTLD_NEXT of a libc symbol works in dlopened library
 TEST(dlfcn, rtld_next_from_library) {
-  void* library_with_close = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
-  ASSERT_TRUE(library_with_close != nullptr) << dlerror();
-  void* expected_addr = dlsym(RTLD_DEFAULT, "close");
+  void* library_with_fclose = dlopen("libtest_check_rtld_next_from_library.so", RTLD_NOW);
+  ASSERT_TRUE(library_with_fclose != nullptr) << dlerror();
+  void* expected_addr = dlsym(RTLD_DEFAULT, "fclose");
   ASSERT_TRUE(expected_addr != nullptr) << dlerror();
-  typedef void* (*get_libc_close_ptr_fn_t)();
-  get_libc_close_ptr_fn_t get_libc_close_ptr =
-      reinterpret_cast<get_libc_close_ptr_fn_t>(dlsym(library_with_close, "get_libc_close_ptr"));
-  ASSERT_TRUE(get_libc_close_ptr != nullptr) << dlerror();
-  ASSERT_EQ(expected_addr, get_libc_close_ptr());
+  typedef void* (*get_libc_fclose_ptr_fn_t)();
+  get_libc_fclose_ptr_fn_t get_libc_fclose_ptr =
+      reinterpret_cast<get_libc_fclose_ptr_fn_t>(dlsym(library_with_fclose, "get_libc_fclose_ptr"));
+  ASSERT_TRUE(get_libc_fclose_ptr != nullptr) << dlerror();
+  ASSERT_EQ(expected_addr, get_libc_fclose_ptr());
 
-  dlclose(library_with_close);
+  dlclose(library_with_fclose);
 }
 
 
