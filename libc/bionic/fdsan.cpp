@@ -189,6 +189,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE:
       atomic_compare_exchange_strong(&fd_table->error_level, &error_level,
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
+      __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
       // DEBUGGER_SIGNAL
       raise(__SIGRTMIN + 3);
