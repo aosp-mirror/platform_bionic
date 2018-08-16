@@ -178,6 +178,8 @@ TEST_F(SystemTests, all_benchmarks) {
     "BM_atomic_store_seq_cst/iterations:1\n"
     "BM_inttypes_strtoimax/iterations:1\n"
     "BM_inttypes_strtoumax/iterations:1\n"
+    "BM_malloc_sql_trace_decay_time_0/iterations:1\n"
+    "BM_malloc_sql_trace_decay_time_1/iterations:1\n"
     "BM_math_cosf/0/iterations:1\n"
     "BM_math_cosf/1/iterations:1\n"
     "BM_math_cosf/2/iterations:1\n"
