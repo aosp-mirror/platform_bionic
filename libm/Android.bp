@@ -493,6 +493,7 @@ cc_library {
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
+        "-fno-math-errno",
         "-Wall",
         "-Werror",
         "-Wno-missing-braces",
