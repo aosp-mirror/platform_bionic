@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "22f6b4cd_fd732b6b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1331125
+      },
+      "writtenOn": "2018-08-17T21:17:31Z",
+      "side": 1,
+      "message": "\u003e Did you use -O2 -ffp-contract\u003dfast -mavx2 -mfma -DHAVE_FAST_FMA\u003d1?\n\nYes, however it seems to be something related to clang instead. With clang 6 and 7 I see performance regressions on throughput and a slight improvement in latency, while with clang 8 I do see higher improvements (~1.4x for throughput and ~1.3 latency).\n\n\u003e all architectures get these flags:\n\u003e \n\u003e     cflags: [\n\u003e         \"-Werror\",\n\u003e         \"-O2\",\n\u003e         \"-DWANT_ROUNDING\u003d0\",\n\u003e         \"-DWANT_ERRNO\u003d0\",\n\u003e         \"-DFLT_EVAL_METHOD\u003d0\",\n\u003e         \"-ffp-contract\u003dfast\",\n\u003e     ],\n\u003e \n\u003e but currently only arm64 has HAVE_FAST_FMA:\n\u003e \n\u003e     arch: {\n\u003e         arm64: {\n\u003e             cflags: [\n\u003e                 \"-DHAVE_FAST_FMA\u003d1\",\n\u003e             ],\n\u003e         },\n\u003e     },\n\u003e \n\u003e note that the Android x86-64 ABI does not include AVX2:\n\u003e \n\u003e   https://developer.android.com/ndk/guides/abis#86-64\n\u003e \n\u003e you\u0027d need to add avx2 to\n\u003e \n\u003e \tx86_64ArchFeatureCflags \u003d map[string][]string{\n\u003e \t\t\"ssse3\":  []string{\"-DUSE_SSSE3\", \"-mssse3\"},\n\u003e \t\t\"sse4\":   []string{\"-msse4\"},\n\u003e \t\t\"sse4_1\": []string{\"-msse4.1\"},\n\u003e \t\t\"sse4_2\": []string{\"-msse4.2\"},\n\u003e \t\t\"popcnt\": []string{\"-mpopcnt\"},\n\u003e \t\t\"avx\":    []string{\"-mavx\"},\n\u003e \t\t\"aes_ni\": []string{\"-maes\"},\n\u003e \t}\n\u003e \n\u003e in build/soong/cc/config/x86_64_device.go.\n\u003e \n\u003e although it looks like we do already automatically set -march\u003dcore-avx2 for haswell processors:\n\u003e \n\u003e \tx86_64ArchVariantCflags \u003d map[string][]string{\n\u003e \t\t\"\": []string{\n\u003e \t\t\t\"-march\u003dx86-64\",\n\u003e \t\t},\n\u003e \t\t\"haswell\": []string{\n\u003e \t\t\t\"-march\u003dcore-avx2\",\n\u003e \t\t},\n\nIt is not clear to me the necessity of sse3/sse4/sse4_1/popcnt build options since sse4.2/popcnt seems the baseline ABI for Android. In any case, the base abi flags (-march\u003dx86-64 -msse4.2 -mpopcnt -m64 -mtune\u003dintel) is not really helpful with pow.",
+      "parentUuid": "8de9c838_ff6a09a2",
+      "range": {
+        "startLine": 10,
+        "startChar": 21,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "cb8093b2d71efc7fb36528c56497fada6887527a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7669ca_5f8b9189",
         "filename": "libm/Android.bp",
         "patchSetId": 1
