@@ -48,6 +48,8 @@
 #include <unistd.h>
 #include <wchar.h>
 
+#include <private/bionic_macros.h>
+
 #include "fvwrite.h"
 #include "gdtoa.h"
 #include "local.h"
@@ -472,7 +474,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         goto rflag;
       case 'C':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'c':
         if (flags & LONGINT)
           ADDTYPE(T_WINT);
@@ -481,7 +483,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         break;
       case 'D':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'd':
       case 'i':
         ADDSARG();
@@ -503,7 +505,7 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         __fortify_fatal("%%n not allowed on Android");
       case 'O':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'o':
         ADDUARG();
         break;
@@ -512,13 +514,13 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
         break;
       case 'S':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 's':
         ADDTYPE((flags & LONGINT) ? TP_WCHAR : TP_CHAR);
         break;
       case 'U':
         flags |= LONGINT;
-        /*FALLTHROUGH*/
+        __BIONIC_FALLTHROUGH;
       case 'u':
       case 'X':
       case 'x':

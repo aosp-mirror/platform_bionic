@@ -637,6 +637,19 @@ For example, to enable malloc debug for the google search box (Android O or late
     adb shell setprop wrap.com.google.android.googlequicksearchbox '"LIBC_DEBUG_MALLOC_OPTIONS=backtrace logwrapper"'
     adb shell am force-stop com.google.android.googlequicksearchbox
 
+If you are setting multiple options and the app does not appear to start
+properly, check the logcat looking for this message
+(`adb logcat -d | grep "malloc debug"`):
+
+    08-16 15:54:16.060 26947 26947 I libc    : /system/bin/app_process64: malloc debug enabled
+
+If you do not see this message, then the wrap property was not set correctly.
+Run:
+
+    adb shell getprop | grep wrap
+
+And verify that any spaces are properly escaped.
+
 NOTE: On pre-O versions of the Android OS, property names had a length limit
 of 32. This meant that to create a wrap property with the name of the app, it
 was necessary to truncate the name to fit. On O, property names can be
