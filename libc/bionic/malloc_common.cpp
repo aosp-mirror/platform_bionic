@@ -47,8 +47,26 @@
 #include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
 
+#if __has_feature(hwaddress_sanitizer)
+// FIXME: implement these in HWASan allocator.
+extern "C" int __sanitizer_iterate(uintptr_t base __unused, size_t size __unused,
+                                   void (*callback)(uintptr_t base, size_t size, void* arg) __unused,
+                                   void* arg __unused) {
+  return 0;
+}
+
+extern "C" void __sanitizer_malloc_disable() {
+}
+
+extern "C" void __sanitizer_malloc_enable() {
+}
+#include <sanitizer/hwasan_interface.h>
+#define Malloc(function)  __sanitizer_ ## function
+
+#else // __has_feature(hwaddress_sanitizer)
 #include "jemalloc.h"
 #define Malloc(function)  je_ ## function
+#endif
 
 static constexpr MallocDispatch __libc_malloc_default_dispatch
   __attribute__((unused)) = {
