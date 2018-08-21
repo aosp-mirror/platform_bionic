@@ -26,24 +26,37 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ERRNO_H
-#define _ERRNO_H
+#pragma once
+
+/**
+ * @file errno.h
+ * @brief Standard C error handling.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/errno.h>
 
 __BEGIN_DECLS
 
-/* On Linux, ENOTSUP and EOPNOTSUPP are the same despite POSIX saying they should be distinct. */
 #ifndef ENOTSUP
+/** On Linux, ENOTSUP and EOPNOTSUPP are the same despite POSIX saying they should be distinct. */
 #define ENOTSUP EOPNOTSUPP
 #endif
 
+/**
+ * Returns the address of the calling thread's `errno` storage.
+ * Non-portable and should not be used directly. Use `errno` instead.
+ *
+ * @private
+ */
 int* __errno(void) __attribute_const__;
+
+/**
+ * [errno(3)](http://man7.org/linux/man-pages/man3/errno.3.html) is the last error on the calling
+ * thread.
+ */
 #define errno (*__errno())
 
 __END_DECLS
 
 #include <android/legacy_errno_inlines.h>
-
-#endif /* _ERRNO_H */

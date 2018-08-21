@@ -32,7 +32,10 @@
  * SUCH DAMAGE.
  */
 
-/*
+/**
+ * @file assert.h
+ * @brief Assertions.
+ *
  * There's no include guard in this file because <assert.h> may usefully be
  * included multiple times, with and without NDEBUG defined.
  */
@@ -42,6 +45,7 @@
 #undef assert
 #undef __assert_no_op
 
+/** Internal implementation detail. Do not use. */
 #define __assert_no_op __BIONIC_CAST(static_cast, void, 0)
 
 #ifdef NDEBUG
@@ -50,6 +54,12 @@
 # if defined(__cplusplus) || __STDC_VERSION__ >= 199901L
 #  define assert(e) ((e) ? __assert_no_op : __assert2(__FILE__, __LINE__, __PRETTY_FUNCTION__, #e))
 # else
+/**
+ * assert() aborts the program after logging an error message, if the
+ * expression evaluates to false.
+ *
+ * On Android, the error goes to both stderr and logcat.
+ */
 #  define assert(e) ((e) ? __assert_no_op : __assert(__FILE__, __LINE__, #e))
 # endif
 #endif
@@ -60,6 +70,17 @@
 #endif
 
 __BEGIN_DECLS
+
+/**
+ * __assert() is called by assert() on failure. Most users want assert()
+ * instead, but this can be useful for reporting other failures.
+ */
 void __assert(const char* __file, int __line, const char* __msg) __noreturn;
+
+/**
+ * __assert2() is called by assert() on failure. Most users want assert()
+ * instead, but this can be useful for reporting other failures.
+ */
 void __assert2(const char* __file, int __line, const char* __function, const char* __msg) __noreturn;
+
 __END_DECLS
