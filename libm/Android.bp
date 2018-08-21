@@ -504,6 +504,10 @@ cc_library {
         "-Wno-unused-variable",
     ],
 
+    ldflags: [
+        "-Wl,--Bsymbolic-functions",
+    ],
+
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
 
