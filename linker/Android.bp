@@ -228,6 +228,10 @@ cc_binary {
     // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
     // looking up symbols in the linker by mistake.
     prefix_symbols: "__dl_",
+
+    sanitize: {
+        hwaddress: false,
+    },
 }
 
 cc_library {

@@ -126,6 +126,7 @@ void pthread_exit(void* return_value) {
       // That's one last thing we can do before dropping to assembler.
       ScopedSignalBlocker ssb;
       __pthread_unmap_tls(thread);
+      __hwasan_thread_exit();
       _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
     }
   }
@@ -133,5 +134,6 @@ void pthread_exit(void* return_value) {
   // No need to free mapped space. Either there was no space mapped, or it is left for
   // the pthread_join caller to clean up.
   __pthread_unmap_tls(thread);
+  __hwasan_thread_exit();
   __exit(0);
 }

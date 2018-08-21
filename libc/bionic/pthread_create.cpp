@@ -249,6 +249,8 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
+  __hwasan_thread_enter();
+
   __init_alternate_signal_stack(thread);
 
   void* result = thread->start_routine(thread->start_routine_arg);
