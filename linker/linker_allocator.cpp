@@ -35,11 +35,10 @@
 
 #include <stdlib.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
-
-#include "private/bionic_prctl.h"
 
 //
 // LinkerMemeoryAllocator is general purpose allocator

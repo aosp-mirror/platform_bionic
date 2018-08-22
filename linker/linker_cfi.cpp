@@ -31,9 +31,9 @@
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "private/bionic_page.h"
-#include "private/bionic_prctl.h"
 
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <cstdint>
 

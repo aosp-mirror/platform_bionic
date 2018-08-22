@@ -36,11 +36,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
-
-/* BEGIN android-changed */
-#include "private/bionic_prctl.h"
-/* END android-changed */
 
 static pthread_mutex_t g_atexit_lock = PTHREAD_MUTEX_INITIALIZER;
 #define _ATEXIT_LOCK() pthread_mutex_lock(&g_atexit_lock)
