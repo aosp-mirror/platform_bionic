@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -38,7 +39,6 @@
 
 #include <async_safe/log.h>
 
-#include "private/bionic_prctl.h"
 #include "system_properties/system_properties.h"
 
 bool ContextsSerialized::InitializeContextNodes() {
