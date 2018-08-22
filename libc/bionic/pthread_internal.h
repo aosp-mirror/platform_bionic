@@ -31,6 +31,13 @@
 #include <pthread.h>
 #include <stdatomic.h>
 
+#if __has_feature(hwaddress_sanitizer)
+#include <sanitizer/hwasan_interface.h>
+#else
+#define __hwasan_thread_enter()
+#define __hwasan_thread_exit()
+#endif
+
 #include "private/bionic_lock.h"
 #include "private/bionic_tls.h"
 
