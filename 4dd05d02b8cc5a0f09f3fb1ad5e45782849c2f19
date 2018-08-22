@@ -22,6 +22,30 @@
       "revId": "4dd05d02b8cc5a0f09f3fb1ad5e45782849c2f19",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "050670bb_39586c0b",
+        "filename": "tests/link_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-08-22T20:16:49Z",
+      "side": 1,
+      "message": "That survived a copy-paste from my dump-module-list.c test program (https://bit.googleplex.com/#/rprichard/5830588267233280). I\u0027ll fix it.",
+      "parentUuid": "097a719c_12770bb4",
+      "range": {
+        "startLine": 112,
+        "startChar": 13,
+        "endLine": 112,
+        "endChar": 30
+      },
+      "revId": "4dd05d02b8cc5a0f09f3fb1ad5e45782849c2f19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
