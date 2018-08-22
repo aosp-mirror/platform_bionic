@@ -22,6 +22,30 @@
       "revId": "93f7ea2e36e2f2b142427669d2874972211f24f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7425ba7c_87a8bcc1",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-08-22T20:06:42Z",
+      "side": 1,
+      "message": "Yeah, that is better.",
+      "parentUuid": "8903fcd5_0634ad3b",
+      "range": {
+        "startLine": 176,
+        "startChar": 45,
+        "endLine": 176,
+        "endChar": 49
+      },
+      "revId": "93f7ea2e36e2f2b142427669d2874972211f24f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
