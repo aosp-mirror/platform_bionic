@@ -303,9 +303,7 @@ static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
-soinfo* get_libdl_info(const char* linker_path,
-                       const soinfo& linker_si,
-                       const link_map& linker_map) {
+soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si) {
   CHECK((linker_si.flags_ & FLAG_GNU_HASH) != 0);
 
   if (__libdl_info == nullptr) {
@@ -314,6 +312,8 @@ soinfo* get_libdl_info(const char* linker_path,
     __libdl_info->strtab_ = linker_si.strtab_;
     __libdl_info->symtab_ = linker_si.symtab_;
     __libdl_info->load_bias = linker_si.load_bias;
+    __libdl_info->phdr = linker_si.phdr;
+    __libdl_info->phnum = linker_si.phnum;
 
     __libdl_info->gnu_nbucket_ = linker_si.gnu_nbucket_;
     __libdl_info->gnu_maskwords_ = linker_si.gnu_maskwords_;
@@ -328,9 +328,6 @@ soinfo* get_libdl_info(const char* linker_path,
     __libdl_info->soname_ = linker_si.soname_;
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
     __libdl_info->generate_handle();
-    __libdl_info->link_map_head.l_addr = linker_map.l_addr;
-    __libdl_info->link_map_head.l_name = linker_map.l_name;
-    __libdl_info->link_map_head.l_ld = linker_map.l_ld;
 #if defined(__work_around_b_24465209__)
     strlcpy(__libdl_info->old_name_, __libdl_info->soname_, sizeof(__libdl_info->old_name_));
 #endif
