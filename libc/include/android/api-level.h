@@ -59,5 +59,6 @@
 #define __ANDROID_API_O__ 26
 #define __ANDROID_API_O_MR1__ 27
 #define __ANDROID_API_P__ 28
+#define __ANDROID_API_Q__ 29
 
 #endif
