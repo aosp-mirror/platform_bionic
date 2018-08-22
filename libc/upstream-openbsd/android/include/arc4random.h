@@ -26,10 +26,9 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 
 #include <async_safe/log.h>
-
-#include "private/bionic_prctl.h"
 
 // Android gets these from "thread_private.h".
 #include "thread_private.h"

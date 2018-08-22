@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -41,7 +42,6 @@
 #include "linker_debug.h"
 #include "linker_utils.h"
 
-#include "private/bionic_prctl.h"
 #include "private/CFIShadow.h" // For kLibraryAlignment
 
 static int GetTargetElfMachine() {
