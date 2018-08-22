@@ -289,8 +289,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
     }
   }
 
-  add_vdso(args);
-
   struct stat file_stat;
   // Stat "/proc/self/exe" instead of executable_path because
   // the executable could be unlinked by this point and it should
@@ -319,6 +317,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   map->l_name = const_cast<char*>(executable_path);
   insert_link_map_into_debug_map(map);
   insert_link_map_into_debug_map(&linker_link_map);
+
+  add_vdso(args);
 
   // Extract information passed from the kernel.
   si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
