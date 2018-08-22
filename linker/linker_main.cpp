@@ -67,6 +67,7 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 static soinfo* solist;
 static soinfo* sonext;
 static soinfo* somain; // main process, always the one after libdl_info
+static soinfo* solinker;
 static soinfo* vdso; // vdso if present
 
 void solist_add_soinfo(soinfo* si) {
@@ -170,29 +171,13 @@ static void add_vdso(KernelArgumentBlock& args) {
   vdso = si;
 }
 
-/* gdb expects the linker to be in the debug shared object list.
- * Without this, gdb has trouble locating the linker's ".text"
- * and ".plt" sections. Gdb could also potentially use this to
- * relocate the offset of our exported 'rtld_db_dlactivity' symbol.
- * Note that the linker shouldn't be on the soinfo list.
- */
-static link_map linker_link_map;
-
-static void init_linker_info_for_gdb(ElfW(Addr) linker_base, char* linker_path) {
-  linker_link_map.l_addr = linker_base;
-  linker_link_map.l_name = linker_path;
-
-  /*
-   * Set the dynamic field in the link map otherwise gdb will complain with
-   * the following:
-   *   warning: .dynamic section for "/system/bin/linker" is not at the
-   *   expected address (wrong library or version mismatch?)
-   */
-  ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_base);
-  ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_base + elf_hdr->e_phoff);
-  phdr_table_get_dynamic_section(phdr, elf_hdr->e_phnum, linker_base,
-                                 &linker_link_map.l_ld, nullptr);
-
+// Initializes an soinfo's link_map_head field using other fields from the
+// soinfo (phdr, phnum, load_bias).
+static void init_link_map_head(soinfo& info, const char* linker_path) {
+  auto& map = info.link_map_head;
+  map.l_addr = info.load_bias;
+  map.l_name = const_cast<char*>(linker_path);
+  phdr_table_get_dynamic_section(info.phdr, info.phnum, info.load_bias, &map.l_ld, nullptr);
 }
 
 extern "C" int __system_properties_init(void);
@@ -303,31 +288,31 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
     stat("/init", &file_stat);
   }
 
+  // Initialize the main exe's soinfo.
   const char* executable_path = get_executable_path();
   soinfo* si = soinfo_alloc(&g_default_namespace, executable_path, &file_stat, 0, RTLD_GLOBAL);
-
-  // Bootstrap the link map, the main exe always needs to be first.
+  somain = si;
+  si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
+  si->phnum = args.getauxval(AT_PHNUM);
+  get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
+  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
+  si->dynamic = nullptr;
   si->set_main_executable();
-  link_map* map = &(si->link_map_head);
+  init_link_map_head(*si, executable_path);
 
   // Register the main executable and the linker upfront to have
   // gdb aware of them before loading the rest of the dependency
   // tree.
-  map->l_addr = 0;
-  map->l_name = const_cast<char*>(executable_path);
-  insert_link_map_into_debug_map(map);
-  insert_link_map_into_debug_map(&linker_link_map);
+  //
+  // gdb expects the linker to be in the debug shared object list.
+  // Without this, gdb has trouble locating the linker's ".text"
+  // and ".plt" sections. Gdb could also potentially use this to
+  // relocate the offset of our exported 'rtld_db_dlactivity' symbol.
+  //
+  insert_link_map_into_debug_map(&si->link_map_head);
+  insert_link_map_into_debug_map(&solinker->link_map_head);
 
   add_vdso(args);
-
-  // Extract information passed from the kernel.
-  si->phdr = reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR));
-  si->phnum = args.getauxval(AT_PHNUM);
-
-  get_elf_base_from_phdr(si->phdr, si->phnum, &si->base, &si->load_bias);
-  si->size = phdr_table_get_load_size(si->phdr, si->phnum);
-
-  si->dynamic = nullptr;
 
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(si->base);
 
@@ -350,8 +335,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
-
-  somain = si;
 
   std::vector<android_namespace_t*> namespaces = init_default_namespaces(executable_path);
 
@@ -411,13 +394,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args) {
   __get_tls()[TLS_SLOT_BIONIC_PREINIT] = &args;
 
   si->call_pre_init_constructors();
-
-  /* After the prelink_image, the si->load_bias is initialized.
-   * For so lib, the map->l_addr will be updated in notify_gdb_of_load.
-   * We need to update this value for so exe here. So Unwind_Backtrace
-   * for some arch like x86 could work correctly within so exe.
-   */
-  map->l_addr = si->load_bias;
   si->call_constructors();
 
 #if TIMING
@@ -508,9 +484,7 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 }
 
 static ElfW(Addr) __attribute__((noinline))
-__linker_init_post_relocation(KernelArgumentBlock& args,
-                              ElfW(Addr) linker_addr,
-                              soinfo& linker_so);
+__linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 
 /*
  * This is the entry point for the linker, called from begin.S. This
@@ -543,18 +517,18 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  soinfo linker_so(nullptr, nullptr, nullptr, 0, 0);
+  soinfo tmp_linker_so(nullptr, nullptr, nullptr, 0, 0);
 
-  linker_so.base = linker_addr;
-  linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
-  linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
-  linker_so.dynamic = nullptr;
-  linker_so.phdr = phdr;
-  linker_so.phnum = elf_hdr->e_phnum;
-  linker_so.set_linker_flag();
+  tmp_linker_so.base = linker_addr;
+  tmp_linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
+  tmp_linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
+  tmp_linker_so.dynamic = nullptr;
+  tmp_linker_so.phdr = phdr;
+  tmp_linker_so.phnum = elf_hdr->e_phnum;
+  tmp_linker_so.set_linker_flag();
 
   // Prelink the linker so we can access linker globals.
-  if (!linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
+  if (!tmp_linker_so.prelink_image()) __linker_cannot_link(args.argv[0]);
 
   // This might not be obvious... The reasons why we pass g_empty_list
   // in place of local_group here are (1) we do not really need it, because
@@ -562,9 +536,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
+  if (!tmp_linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
 
-  return __linker_init_post_relocation(args, linker_addr, linker_so);
+  return __linker_init_post_relocation(args, tmp_linker_so);
 }
 
 /*
@@ -574,15 +548,13 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
  * function, so avoid inlining this function (http://b/80503879).
  */
 static ElfW(Addr) __attribute__((noinline))
-__linker_init_post_relocation(KernelArgumentBlock& args,
-                              ElfW(Addr) linker_addr,
-                              soinfo& linker_so) {
+__linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) {
   // Initialize the main thread (including TLS, so system calls really work).
   __libc_init_main_thread(args);
 
   // We didn't protect the linker's RELRO pages in link_image because we
   // couldn't make system calls on x86 at that point, but we can now...
-  if (!linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
+  if (!tmp_linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
 
   // Initialize the linker/libc.so shared global inside the linker.
   static libc_shared_globals shared_globals;
@@ -599,7 +571,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args,
   g_envp = args.envp;
 
   // Initialize the linker's own global variables
-  linker_so.call_constructors();
+  tmp_linker_so.call_constructors();
 
   // If the linker is not acting as PT_INTERP entry_point is equal to
   // _start. Which means that the linker is running as an executable and
@@ -615,13 +587,12 @@ __linker_init_post_relocation(KernelArgumentBlock& args,
     exit(0);
   }
 
-  init_linker_info_for_gdb(linker_addr, kLinkerPath);
-
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = get_libdl_info(kLinkerPath, linker_so, linker_link_map);
-  g_default_namespace.add_soinfo(solist);
+  sonext = solist = solinker = get_libdl_info(kLinkerPath, tmp_linker_so);
+  g_default_namespace.add_soinfo(solinker);
+  init_link_map_head(*solinker, kLinkerPath);
 
   args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = linker_main(args);
