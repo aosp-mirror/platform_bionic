@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "097a719c_12770bb4",
+        "filename": "tests/link_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-22T15:34:23Z",
+      "side": 1,
+      "message": "c++ cast? no need for `struct`?",
+      "range": {
+        "startLine": 112,
+        "startChar": 13,
+        "endLine": 112,
+        "endChar": 30
+      },
+      "revId": "4dd05d02b8cc5a0f09f3fb1ad5e45782849c2f19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
