@@ -2510,10 +2510,15 @@ TEST(STDIO_TEST, fseek_overflow_32bit) {
 TEST(STDIO_TEST, dev_std_files) {
   // POSIX only mentions /dev/stdout, but we should have all three (http://b/31824379).
   char path[PATH_MAX];
-  ASSERT_GT(readlink("/dev/stdin", path, sizeof(path)), 0);
-  ASSERT_STREQ("/proc/self/fd/0", path);
-  ASSERT_GT(readlink("/dev/stdout", path, sizeof(path)), 0);
-  ASSERT_STREQ("/proc/self/fd/1", path);
-  ASSERT_GT(readlink("/dev/stderr", path, sizeof(path)), 0);
-  ASSERT_STREQ("/proc/self/fd/2", path);
+  ssize_t length = readlink("/dev/stdin", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/0", std::string(path, length));
+
+  length = readlink("/dev/stdout", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/1", std::string(path, length));
+
+  length = readlink("/dev/stderr", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/2", std::string(path, length));
 }
