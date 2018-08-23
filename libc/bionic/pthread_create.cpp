@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
@@ -39,7 +40,6 @@
 
 #include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
-#include "private/bionic_prctl.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/ErrnoRestorer.h"

@@ -32,14 +32,13 @@
 #include <stdlib.h>
 #include <sys/cdefs.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <stddef.h>
 #include <unistd.h>
 
 #include <vector>
 
 #include <async_safe/log.h>
-
-#include "private/bionic_prctl.h"
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;

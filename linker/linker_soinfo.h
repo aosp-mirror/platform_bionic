@@ -361,9 +361,7 @@ struct soinfo {
   android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
-  friend soinfo* get_libdl_info(const char* linker_path,
-                                const soinfo& linker_si,
-                                const link_map& linker_map);
+  friend soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si);
 
   // version >= 4
   ElfW(Relr)* relr_;
