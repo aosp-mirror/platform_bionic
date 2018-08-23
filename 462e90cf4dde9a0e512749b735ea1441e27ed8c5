@@ -93,6 +93,30 @@
       "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58f433b0_09ad041e",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-08-23T19:13:54Z",
+      "side": 1,
+      "message": "\u003e This isn\u0027t the same as __attribute__((nonnull)), it doesn\u0027t imply that passing null to the function is UB.\n\nIf it\u0027s purely advisory, that\u0027s fine. I just don\u0027t want to break existing code.\n\nThat said, we _do_ want a real __attribute__((nonnull)) on some other for-real-not-nullable arguments in this CL, don\u0027t we?\n\n\u003e  it\u0027s not portable, and `nanosleep` is POSIX now so there\u0027s no reason to use this as a cheap trick to get short sleeps.\n\nFair enough.",
+      "parentUuid": "bccd1f1a_5de5250d",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 32
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
