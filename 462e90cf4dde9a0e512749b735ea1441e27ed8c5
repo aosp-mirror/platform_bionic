@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99f616b2_25ad826c",
+        "filename": "libc/include/alloca.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-08-23T19:04:01Z",
+      "side": 1,
+      "message": "It\u0027s not like malloc reports failure often either. Until std::dynarray finally makes it into C++, I\u0027d be gentler about discouraging alloca use and suggest that callers should have a good reason for using it, not that it shouldn\u0027t be used at all.",
+      "range": {
+        "startLine": 41,
+        "startChar": 45,
+        "endLine": 41,
+        "endChar": 67
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb7268af_29ec90b5",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-08-23T19:04:01Z",
+      "side": 1,
+      "message": "Why isn\u0027t NULL legal when count is zero? poll(NULL, 0, 1000) actually works on my system, and the _Nonnull_ would turn this call into assert_unreachable.",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 32
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
