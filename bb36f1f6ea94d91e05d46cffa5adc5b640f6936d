@@ -1,0 +1,273 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c5835a1_ea0ead10",
+        "filename": "libc/include/alloca.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "If you want any of these to show up in DAC (I\u0027m honestly thinking probably not, but maybe if we\u0027re careful about picking android-specific things or grouping them very carefully) then they need to be in a @defgroup, and the @defgroup needs to be outside the @file.",
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f0ed08b_77d0b150",
+        "filename": "libc/include/alloca.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "Do @return and @param work for macros?",
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d547260_0a4ed970",
+        "filename": "libc/include/ar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "Format?",
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f20ec06c_2d8e6aa0",
+        "filename": "libc/include/ar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "ID",
+      "range": {
+        "startLine": 62,
+        "startChar": 11,
+        "endLine": 62,
+        "endChar": 13
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "768037a1_0579c014",
+        "filename": "libc/include/ar.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "ID",
+      "range": {
+        "startLine": 64,
+        "startChar": 12,
+        "endLine": 64,
+        "endChar": 14
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c4d3dfa_e5837651",
+        "filename": "libc/include/fnmatch.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "Does this become part of the @brief since it\u0027s on the first line, or part of the description since it\u0027s in the second sentence? Should probably be in the description rather than the brief, but idr how this works.",
+      "range": {
+        "startLine": 43,
+        "startChar": 60,
+        "endLine": 43,
+        "endChar": 94
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5563744_e53d0961",
+        "filename": "libc/include/libgen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "Not related to this CL, but don\u0027t we need\n\n    #ifdef basename\n    #undef basename\n    #endif\n\nto avoid -Wmacro-redefined issues when string.h was included first?",
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49940a8b_9a14c046",
+        "filename": "libc/include/sys/sysconf.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "sysconf.h",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 33
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b88f6ab8_9b3f3960",
+        "filename": "libc/include/syscall.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "syscall",
+      "range": {
+        "startLine": 7,
+        "startChar": 29,
+        "endLine": 7,
+        "endChar": 35
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7917a48d_53b5b074",
+        "filename": "libc/include/sysexits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "Same question as earlier: does this format properly for @brief vs description, or is a blank line needed between the brief and the description?",
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5ba7509_26d06de3",
+        "filename": "libc/include/sysexits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "and?",
+      "range": {
+        "startLine": 68,
+        "startChar": 44,
+        "endLine": 68,
+        "endChar": 45
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d91c47fa_a1ee5b55",
+        "filename": "libc/include/sysexits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "reads more clearly as \"specified user\" imo. I thought you accidentally a word.",
+      "range": {
+        "startLine": 82,
+        "startChar": 7,
+        "endLine": 82,
+        "endChar": 21
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d7cbd52_f914cc55",
+        "filename": "libc/include/sysexits.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-08-23T05:56:19Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 88,
+        "startChar": 7,
+        "endLine": 88,
+        "endChar": 21
+      },
+      "revId": "bb36f1f6ea94d91e05d46cffa5adc5b640f6936d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
