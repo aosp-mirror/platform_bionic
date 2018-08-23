@@ -69,6 +69,30 @@
       "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bccd1f1a_5de5250d",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-23T19:11:43Z",
+      "side": 1,
+      "message": "this actually came up in one of the BSDs last week, and they didn\u0027t want to guarantee that this works any more than i do. it\u0027s not portable, and `nanosleep` is POSIX now so there\u0027s no reason to use this as a cheap trick to get short sleeps.",
+      "parentUuid": "a9335e2e_92ebbe40",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 32
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
