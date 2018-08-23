@@ -45,6 +45,30 @@
       "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9335e2e_92ebbe40",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-08-23T19:08:44Z",
+      "side": 1,
+      "message": "This isn\u0027t the same as __attribute__((nonnull)), it doesn\u0027t imply that passing null to the function is UB.",
+      "parentUuid": "fb7268af_29ec90b5",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 32
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
