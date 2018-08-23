@@ -117,6 +117,30 @@
       "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f91406c4_2ff96993",
+        "filename": "libc/include/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-08-23T19:20:23Z",
+      "side": 1,
+      "message": "\u003e That said, we _do_ want a real __attribute__((nonnull)) on some other for-real-not-nullable arguments in this CL, don\u0027t we?\n\nno. we never want to give the compiler an excuse to do the wrong thing, which is what that broken attribute does.",
+      "parentUuid": "58f433b0_09ad041e",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 32
+      },
+      "revId": "462e90cf4dde9a0e512749b735ea1441e27ed8c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
