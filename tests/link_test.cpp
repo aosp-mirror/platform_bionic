@@ -29,6 +29,12 @@
 #include <gtest/gtest.h>
 
 #include <link.h>
+#if __has_include(<sys/auxv.h>)
+#include <sys/auxv.h>
+#endif
+
+#include <string>
+#include <unordered_map>
 
 TEST(link, dl_iterate_phdr_early_exit) {
   static size_t call_count = 0;
@@ -40,7 +46,7 @@ TEST(link, dl_iterate_phdr_early_exit) {
 TEST(link, dl_iterate_phdr) {
   struct Functor {
     static int Callback(dl_phdr_info* i, size_t s, void* data) {
-      reinterpret_cast<Functor*>(data)->DoChecks(i, s);
+      static_cast<Functor*>(data)->DoChecks(i, s);
       return 0;
     }
     void DoChecks(dl_phdr_info* info, size_t s) {
@@ -48,7 +54,12 @@ TEST(link, dl_iterate_phdr) {
 
       ASSERT_TRUE(info->dlpi_name != nullptr);
 
+      // An ELF file must have at least a PT_LOAD program header.
+      ASSERT_NE(nullptr, info->dlpi_phdr);
+      ASSERT_NE(0, info->dlpi_phnum);
+
       // Find the first PT_LOAD program header so we can find the ELF header.
+      bool found_load = false;
       for (ElfW(Half) i = 0; i < info->dlpi_phnum; ++i) {
         const ElfW(Phdr)* phdr = reinterpret_cast<const ElfW(Phdr)*>(&info->dlpi_phdr[i]);
         if (phdr->p_type == PT_LOAD) {
@@ -58,13 +69,122 @@ TEST(link, dl_iterate_phdr) {
           ASSERT_EQ(0, memcmp(ehdr, ELFMAG, SELFMAG));
           // Does the e_phnum match what dl_iterate_phdr told us?
           ASSERT_EQ(info->dlpi_phnum, ehdr->e_phnum);
+          found_load = true;
           break;
         }
       }
+      ASSERT_EQ(true, found_load);
     }
     size_t count;
   } f = {};
   ASSERT_EQ(0, dl_iterate_phdr(Functor::Callback, &f));
+}
+
+struct ProgHdr {
+  const ElfW(Phdr)* table;
+  size_t size;
+};
+
+__attribute__((__unused__))
+static ElfW(Addr) find_exe_load_bias(const ProgHdr& phdr) {
+  for (size_t i = 0; i < phdr.size; ++i) {
+    if (phdr.table[i].p_type == PT_PHDR) {
+      return reinterpret_cast<ElfW(Addr)>(phdr.table) - phdr.table[i].p_vaddr;
+    }
+  }
+  return 0;
+}
+
+__attribute__((__unused__))
+static ElfW(Dyn)* find_dynamic(const ProgHdr& phdr, ElfW(Addr) load_bias) {
+  for (size_t i = 0; i < phdr.size; ++i) {
+    if (phdr.table[i].p_type == PT_DYNAMIC) {
+      return reinterpret_cast<ElfW(Dyn)*>(phdr.table[i].p_vaddr + load_bias);
+    }
+  }
+  return nullptr;
+}
+
+__attribute__((__unused__))
+static r_debug* find_exe_r_debug(ElfW(Dyn)* dynamic) {
+  for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_DEBUG) {
+      return reinterpret_cast<r_debug*>(d->d_un.d_val);
+    }
+  }
+  return nullptr;
+}
+
+// Walk the DT_DEBUG/_r_debug global module list and compare it with the same
+// information from dl_iterate_phdr. Verify that the executable appears first
+// in _r_debug.
+TEST(link, r_debug) {
+#if __has_include(<sys/auxv.h>)
+  // Find the executable's PT_DYNAMIC segment and DT_DEBUG value. The linker
+  // will write the address of its _r_debug global into the .dynamic section.
+  ProgHdr exe_phdr = {
+    .table = reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)),
+    .size = getauxval(AT_PHNUM)
+  };
+  ASSERT_NE(nullptr, exe_phdr.table);
+  ElfW(Addr) exe_load_bias = find_exe_load_bias(exe_phdr);
+  ASSERT_NE(0u, exe_load_bias);
+  ElfW(Dyn)* exe_dynamic = find_dynamic(exe_phdr, exe_load_bias);
+  ASSERT_NE(nullptr, exe_dynamic);
+  r_debug* dbg = find_exe_r_debug(exe_dynamic);
+  ASSERT_NE(nullptr, dbg);
+
+  // Use dl_iterate_phdr to build a table mapping from load bias values to
+  // solib names and PT_DYNAMIC segments.
+  struct DlIterateInfo {
+    std::string name;
+    ElfW(Dyn)* dynamic;
+  };
+  struct Functor {
+    std::unordered_map<ElfW(Addr), DlIterateInfo> dl_iter_mods;
+    static int Callback(dl_phdr_info* i, size_t s, void* data) {
+      static_cast<Functor*>(data)->AddModule(i, s);
+      return 0;
+    }
+    void AddModule(dl_phdr_info* info, size_t s) {
+      ASSERT_EQ(sizeof(dl_phdr_info), s);
+      ASSERT_TRUE(dl_iter_mods.find(info->dlpi_addr) == dl_iter_mods.end());
+      ASSERT_TRUE(info->dlpi_name != nullptr);
+      dl_iter_mods[info->dlpi_addr] = {
+        .name = info->dlpi_name,
+        .dynamic = find_dynamic({ info->dlpi_phdr, info->dlpi_phnum }, info->dlpi_addr)
+      };
+    }
+  } f = {};
+  ASSERT_EQ(0, dl_iterate_phdr(Functor::Callback, &f));
+
+  size_t map_size = 0;
+
+  for (link_map* map = dbg->r_map; map != nullptr; map = map->l_next) {
+    ASSERT_NE(0u, map->l_addr);
+    ASSERT_NE(nullptr, map->l_ld);
+    ASSERT_NE(nullptr, map->l_name);
+
+    auto it = f.dl_iter_mods.find(map->l_addr);
+    ASSERT_TRUE(it != f.dl_iter_mods.end());
+    const DlIterateInfo& info = it->second;
+    ASSERT_EQ(info.name, map->l_name);
+    ASSERT_EQ(info.dynamic, map->l_ld);
+
+    ++map_size;
+  }
+
+  // _r_debug and dl_iterate_phdr should report the same set of modules. We
+  // verified above that every _r_debug module was reported by dl_iterate_phdr,
+  // so checking the sizes verifies the converse.
+  ASSERT_EQ(f.dl_iter_mods.size(), map_size);
+
+  // Make sure the first entry is the executable. gdbserver assumes this and
+  // removes the first entry from its list of shared objects that it sends back
+  // to gdb.
+  ASSERT_EQ(exe_load_bias, dbg->r_map->l_addr);
+  ASSERT_EQ(exe_dynamic, dbg->r_map->l_ld);
+#endif
 }
 
 #if __arm__
