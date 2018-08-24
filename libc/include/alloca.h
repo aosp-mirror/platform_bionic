@@ -26,12 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ALLOCA_H
-#define _ALLOCA_H
+#pragma once
+
+/**
+ * @file alloca.h
+ * @brief Allocate space on the stack.
+ */
 
 #include <sys/cdefs.h>
 
+/**
+ * [alloca(3)](http://man7.org/linux/man-pages/man3/alloca.3.html) allocates space on the stack.
+ *
+ * New code should not use alloca because it cannot report failure.
+ * Use regular heap allocation instead.
+ *
+ * @return a pointer to the space on success, but has undefined behavior on failure.
+ */
 #define alloca(size)   __builtin_alloca(size)
-
-#endif /* _ALLOCA_H */
-

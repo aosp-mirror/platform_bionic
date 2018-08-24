@@ -26,14 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BYTESWAP_H_
-#define _BYTESWAP_H_
+#pragma once
+
+/**
+ * @file byteswap.h
+ * @brief Byte-swapping macros.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/endian.h>
 
+/**
+ * [bswap_16(3)](http://man7.org/linux/man-pages/man3/bswap_16.3.html) swaps the bytes in a
+ * 16-bit value.
+ */
 #define bswap_16(x) __swap16(x)
-#define bswap_32(x) __swap32(x)
-#define bswap_64(x) __swap64(x)
 
-#endif /* _BYTESWAP_H_ */
+/**
+ * [bswap_32(3)](http://man7.org/linux/man-pages/man3/bswap_32.3.html) swaps the bytes in a
+ * 32-bit value.
+ */
+#define bswap_32(x) __swap32(x)
+
+/**
+ * [bswap_64(3)](http://man7.org/linux/man-pages/man3/bswap_64.3.html) swaps the bytes in a
+ * 64-bit value.
+ */
+#define bswap_64(x) __swap64(x)
