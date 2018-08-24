@@ -26,23 +26,59 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _NL_TYPES_H_
-#define _NL_TYPES_H_
+#pragma once
+
+/**
+ * @file nl_types.h
+ * @brief Message catalogs.
+ *
+ * Android offers a dummy implementation of these functions to ease porting of historical software.
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/**
+ * catopen() flag to use the current locale.
+ */
 #define NL_CAT_LOCALE 1
+
+/**
+ * catgets() default set number.
+ */
 #define NL_SETD 1
 
+/** Message catalog type. */
 typedef void* nl_catd;
+
+/** The type of the constants in `<langinfo.h>`, used by nl_langinfo(). */
 typedef int nl_item;
 
+/**
+ * [catopen(3)](http://man7.org/linux/man-pages/man3/catopen.3.html) opens a message catalog.
+ *
+ * On Android, this always returns failure: `((nl_catd) -1)`.
+ *
+ * Available since API level 28.
+ */
 nl_catd catopen(const char* __name, int __flag) __INTRODUCED_IN(26);
+
+/**
+ * [catgets(3)](http://man7.org/linux/man-pages/man3/catgets.3.html) translates the given message
+ * using the given message catalog.
+ *
+ * On Android, this always returns `__msg`.
+ *
+ * Available since API level 28.
+ */
 char* catgets(nl_catd __catalog, int __set_number, int __msg_number, const char* __msg) __INTRODUCED_IN(26);
+
+/**
+ * [catclose(3)](http://man7.org/linux/man-pages/man3/catclose.3.html) closes a message catalog.
+ *
+ * On Android, this always returns -1 with `errno` set to `EBADF`.
+ */
 int catclose(nl_catd __catalog) __INTRODUCED_IN(26);
 
 __END_DECLS
-
-#endif

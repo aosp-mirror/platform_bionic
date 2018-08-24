@@ -26,34 +26,52 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _LIBGEN_H
-#define _LIBGEN_H
+#pragma once
+
+/**
+ * @file libgen.h
+ * @brief POSIX basename() and dirname().
+ *
+ * This file contains the POSIX basename() and dirname(). See `<string.h>` for the GNU basename().
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
 __BEGIN_DECLS
 
-/*
- * Including <string.h> will get you the GNU basename, unless <libgen.h> is
- * included, either before or after including <string.h>.
+/**
+ * [basename(3)](http://man7.org/linux/man-pages/man3/basename.3.html)
+ * returns the final component of the given path.
  *
- * Note that this has the wrong argument cv-qualifiers, but doesn't modify its
- * input and uses thread-local storage for the result if necessary.
+ * See `<string.h>` for the GNU basename(). Including `<libgen.h>`,
+ * either before or after including <string.h>, will override the GNU variant.
+ *
+ * Note that Android's cv-qualifiers differ from POSIX; Android's implementation doesn't
+ * modify its input and uses thread-local storage for the result if necessary.
  */
 char* __posix_basename(const char* __path) __RENAME(basename);
 
+/**
+ * This macro ensures that callers get the POSIX basename() if they include this header,
+ * no matter what order `<libgen.h>` and `<string.h>` are included in.
+ */
 #define basename __posix_basename
 
-/* This has the wrong argument cv-qualifiers, but doesn't modify its input and uses thread-local storage for the result if necessary. */
+/**
+ * [dirname(3)](http://man7.org/linux/man-pages/man3/dirname.3.html)
+ * returns all but the final component of the given path.
+ *
+ * Note that Android's cv-qualifiers differ from POSIX; Android's implementation doesn't
+ * modify its input and uses thread-local storage for the result if necessary.
+ */
 char* dirname(const char* __path);
 
 #if !defined(__LP64__)
-/* These non-standard functions are not needed on Android; basename and dirname use thread-local storage. */
+/** Deprecated. Use dirname() instead. */
 int dirname_r(const char* __path, char* __buf, size_t __n);
+/** Deprecated. Use basename() instead. */
 int basename_r(const char* __path, char* __buf, size_t __n);
 #endif
 
 __END_DECLS
-
-#endif
