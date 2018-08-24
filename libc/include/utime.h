@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _UTIME_H_
-#define _UTIME_H_
+#pragma once
+
+/**
+ * @file utime.h
+ * @brief Historical access/modification time functionality.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -35,8 +39,14 @@
 
 __BEGIN_DECLS
 
-int utime(const char* __filename, const struct utimbuf* __times);
+/**
+ * [utime(2)](http://man7.org/linux/man-pages/man2/utime.2.html) changes the access and
+ * modification time of `__filename`. If `__times` is null, the current time is used.
+ *
+ * New code should prefer utimensat().
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
+int utime(const char* _Nonnull __filename, const struct utimbuf* _Nullable __times);
 
 __END_DECLS
-
-#endif

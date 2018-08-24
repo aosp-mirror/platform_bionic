@@ -26,13 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _XLOCALE_H_
-#define _XLOCALE_H_
+#pragma once
+
+/**
+ * @file xlocale.h
+ * @brief `locale_t` definition.
+ *
+ * Most users will want `<locale.h>` instead. `<xlocale.h>` is used by the C
+ * library itself to export the `locale_t` type without exporting the
+ * `<locale.h>` functions in other headers that export locale-sensitive
+ * functions (such as `<string.h>`).
+ */
 
 #include <sys/cdefs.h>
 
-/* If we just use void* here, GCC exposes that in error messages. */
+/* If we just use void* in the typedef, the compiler exposes that in error messages. */
 struct __locale_t;
-typedef struct __locale_t* locale_t;
 
-#endif /* _XLOCALE_H_ */
+/**
+ * The `locale_t` type that represents a locale.
+ */
+typedef struct __locale_t* locale_t;

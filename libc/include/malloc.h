@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-#ifndef LIBC_INCLUDE_MALLOC_H_
-#define LIBC_INCLUDE_MALLOC_H_
+#pragma once
+
+/**
+ * @file malloc.h
+ * @brief Heap memory allocation.
+ *
+ * [Debugging Native Memory Use](https://source.android.com/devices/tech/debug/native-memory)
+ * is the canonical source for documentation on Android's heap debugging
+ * features.
+ */
 
 #include <sys/cdefs.h>
 #include <stddef.h>
@@ -30,35 +38,96 @@ __BEGIN_DECLS
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
 #endif
 
+/**
+ * [malloc(3)](http://man7.org/linux/man-pages/man3/malloc.3.html) allocates
+ * memory on the heap.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ */
 void* malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+
+/**
+ * [calloc(3)](http://man7.org/linux/man-pages/man3/calloc.3.html) allocates
+ * and clears memory on the heap.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ */
 void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+
+/**
+ * [realloc(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
+ * allocated memory on the heap.
+ *
+ * Returns a pointer (which may be different from `__ptr`) to the resized
+ * memory on success and returns a null pointer and sets `errno` on failure.
+ */
 void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
+
+/**
+ * [free(3)](http://man7.org/linux/man-pages/man3/free.3.html) deallocates
+ * memory on the heap.
+ */
 void free(void* __ptr);
 
+/**
+ * [memalign(3)](http://man7.org/linux/man-pages/man3/memalign.3.html) allocates
+ * memory on the heap with the required alignment.
+ *
+ * Returns a pointer to the allocated memory on success and returns a null
+ * pointer and sets `errno` on failure.
+ *
+ * See also posix_memalign().
+ */
 void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+
+/**
+ * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
+ * returns the actual size of the given heap block.
+ *
+ * Available since API level 17.
+ */
 size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
 
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
 struct mallinfo {
-  size_t arena;    /* Total number of non-mmapped bytes currently allocated from OS. */
-  size_t ordblks;  /* Number of free chunks. */
-  size_t smblks;   /* (Unused.) */
-  size_t hblks;    /* (Unused.) */
-  size_t hblkhd;   /* Total number of bytes in mmapped regions. */
-  size_t usmblks;  /* Maximum total allocated space; greater than total if trimming has occurred. */
-  size_t fsmblks;  /* (Unused.) */
-  size_t uordblks; /* Total allocated space (normal or mmapped.) */
-  size_t fordblks; /* Total free space. */
-  size_t keepcost; /* Upper bound on number of bytes releasable by malloc_trim. */
+  /** Total number of non-mmapped bytes currently allocated from OS. */
+  size_t arena;
+  /** Number of free chunks. */
+  size_t ordblks;
+  /** (Unused.) */
+  size_t smblks;
+  /** (Unused.) */
+  size_t hblks;
+  /** Total number of bytes in mmapped regions. */
+  size_t hblkhd;
+  /** Maximum total allocated space; greater than total if trimming has occurred. */
+  size_t usmblks;
+  /** (Unused.) */
+  size_t fsmblks;
+  /** Total allocated space (normal or mmapped.) */
+  size_t uordblks;
+  /** Total free space. */
+  size_t fordblks;
+  /** Upper bound on number of bytes releasable by a trim operation. */
+  size_t keepcost;
 };
-#endif  /* STRUCT_MALLINFO_DECLARED */
+#endif
 
+/**
+ * [mallinfo(3)](http://man7.org/linux/man-pages/man3/mallinfo.3.html) returns
+ * information about the current state of the heap.
+ */
 struct mallinfo mallinfo(void);
 
-/*
- * XML structure for malloc_info(3) is in the following format:
+/**
+ * [malloc_info(3)](http://man7.org/linux/man-pages/man3/malloc_info.3.html)
+ * writes information about the current state of the heap to the given stream.
  *
+ * The XML structure for malloc_info() is as follows:
+ * ```
  * <malloc version="jemalloc-1">
  *   <heap nr="INT">
  *     <allocated-large>INT</allocated-large>
@@ -74,21 +143,67 @@ struct mallinfo mallinfo(void);
  *   </heap>
  *   <!-- more heaps -->
  * </malloc>
+ * ```
+ *
+ * Available since API level 23.
  */
 int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 
-/* mallopt options */
+/** mallopt() option to set the decay time. Valid values are 0 and 1. */
 #define M_DECAY_TIME -100
+
+/**
+ * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
+ * heap behavior. Values of `__option` are the `M_` constants from this header.
+ *
+ * Returns 1 on success, 0 on error.
+ *
+ * Available since API level 26.
+ */
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 
-/*
- * Memory Allocation Hooks
+/**
+ * [__malloc_hook(3)](http://man7.org/linux/man-pages/man3/__malloc_hook.3.html)
+ * is called to implement malloc(). By default this points to the system's
+ * implementation.
+ *
+ * Available since API level 28.
+ *
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
  */
-extern void* (*volatile __malloc_hook)(size_t, const void*) __INTRODUCED_IN(28);
-extern void* (*volatile __realloc_hook)(void*, size_t, const void*) __INTRODUCED_IN(28);
-extern void (*volatile __free_hook)(void*, const void*) __INTRODUCED_IN(28);
-extern void* (*volatile __memalign_hook)(size_t, size_t, const void*) __INTRODUCED_IN(28);
+extern void* (*volatile __malloc_hook)(size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
+
+/**
+ * [__realloc_hook(3)](http://man7.org/linux/man-pages/man3/__realloc_hook.3.html)
+ * is called to implement realloc(). By default this points to the system's
+ * implementation.
+ *
+ * Available since API level 28.
+ *
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ */
+extern void* (*volatile __realloc_hook)(void* __ptr, size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
+
+/**
+ * [__free_hook(3)](http://man7.org/linux/man-pages/man3/__free_hook.3.html)
+ * is called to implement free(). By default this points to the system's
+ * implementation.
+ *
+ * Available since API level 28.
+ *
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ */
+extern void (*volatile __free_hook)(void* __ptr, const void* __caller) __INTRODUCED_IN(28);
+
+/**
+ * [__memalign_hook(3)](http://man7.org/linux/man-pages/man3/__memalign_hook.3.html)
+ * is called to implement memalign(). By default this points to the system's
+ * implementation.
+ *
+ * Available since API level 28.
+ *
+ * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
+ */
+extern void* (*volatile __memalign_hook)(size_t __alignment, size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
 
 __END_DECLS
-
-#endif  /* LIBC_INCLUDE_MALLOC_H_ */

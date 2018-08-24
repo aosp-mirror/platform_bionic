@@ -29,20 +29,37 @@
  *	@(#)paths.h	8.1 (Berkeley) 6/2/93
  */
 
-#ifndef _PATHS_H_
-#define	_PATHS_H_
+#pragma once
+
+/**
+ * @file paths.h
+ * @brief Default paths.
+ */
 
 #include <sys/cdefs.h>
 
 #ifndef _PATH_BSHELL
-#define	_PATH_BSHELL	"/system/bin/sh"
+/** Path to the default system shell. Historically the 'B' was to specify the Bourne shell. */
+#define _PATH_BSHELL "/system/bin/sh"
 #endif
-#define	_PATH_CONSOLE	"/dev/console"
-#define	_PATH_DEFPATH	"/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
-#define	_PATH_DEV	"/dev/"
-#define	_PATH_DEVNULL	"/dev/null"
-#define	_PATH_KLOG	"/proc/kmsg"
-#define	_PATH_MOUNTED	"/proc/mounts"
-#define	_PATH_TTY	"/dev/tty"
 
-#endif /* !_PATHS_H_ */
+/** Path to the system console. */
+#define _PATH_CONSOLE "/dev/console"
+
+/** Default shell search path. */
+#define _PATH_DEFPATH "/sbin:/system/sbin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
+
+/** Path to the directory containing device files. */
+#define _PATH_DEV "/dev/"
+
+/** Path to `/dev/null`. */
+#define _PATH_DEVNULL "/dev/null"
+
+/** Path to the kernel log. */
+#define _PATH_KLOG "/proc/kmsg"
+
+/** Path to `/proc/mounts` for setmntent(). */
+#define _PATH_MOUNTED "/proc/mounts"
+
+/** Path to the calling process' tty. */
+#define _PATH_TTY "/dev/tty"
