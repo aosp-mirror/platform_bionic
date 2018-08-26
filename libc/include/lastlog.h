@@ -1,2 +1,10 @@
-/* This is a BSD synonym for <utmp.h> that's also provided by glibc. */
+#pragma once
+
+/**
+ * @file lastlog.h
+ * @brief Historical alternative to `<utmp.h>`.
+ *
+ * New code should use `<utmp.h>` directly.
+ */
+
 #include <utmp.h>
