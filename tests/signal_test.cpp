@@ -597,6 +597,42 @@ TEST(signal, sigqueue) {
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
 }
 
+TEST(signal, pthread_sigqueue_self) {
+  ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
+  sigval_t sigval;
+  sigval.sival_int = 1;
+  errno = 0;
+  ASSERT_EQ(0, pthread_sigqueue(pthread_self(), SIGALRM, sigval));
+  ASSERT_EQ(0, errno);
+  ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
+}
+
+TEST(signal, pthread_sigqueue_other) {
+  ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
+  sigval_t sigval;
+  sigval.sival_int = 1;
+
+  sigset_t mask;
+  sigfillset(&mask);
+  pthread_sigmask(SIG_SETMASK, &mask, nullptr);
+  pthread_t thread;
+  int rc = pthread_create(&thread, nullptr,
+                          [](void*) -> void* {
+                            sigset_t mask;
+                            sigemptyset(&mask);
+                            sigsuspend(&mask);
+                            return nullptr;
+                          },
+                          nullptr);
+  ASSERT_EQ(0, rc);
+
+  errno = 0;
+  ASSERT_EQ(0, pthread_sigqueue(thread, SIGALRM, sigval));
+  ASSERT_EQ(0, errno);
+  pthread_join(thread, nullptr);
+  ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
+}
+
 TEST(signal, sigwaitinfo) {
   SignalMaskRestorer smr;
 
