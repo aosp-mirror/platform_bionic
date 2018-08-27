@@ -176,12 +176,20 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     return;
   }
 
+  struct {
+    size_t size;
+    char buf[512];
+  } abort_message;
+
   va_list va;
   va_start(va, fmt);
   if (error_level == ANDROID_FDSAN_ERROR_LEVEL_FATAL) {
     async_safe_fatal_va_list("fdsan", fmt, va);
   } else {
     async_safe_format_log_va_list(ANDROID_LOG_ERROR, "fdsan", fmt, va);
+    size_t len =
+        async_safe_format_buffer_va_list(abort_message.buf, sizeof(abort_message.buf), fmt, va);
+    abort_message.size = len + sizeof(size_t);
   }
   va_end(va);
 
@@ -192,7 +200,9 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
       // DEBUGGER_SIGNAL
-      raise(__SIGRTMIN + 3);
+      sigval abort_msg;
+      abort_msg.sival_ptr = &abort_message;
+      pthread_sigqueue(pthread_self(), __SIGRTMIN + 3, abort_msg);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
