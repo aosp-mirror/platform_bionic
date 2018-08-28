@@ -235,6 +235,8 @@ static const char* __tag_to_type(uint64_t tag) {
       return "RandomAccessFile";
     case ANDROID_FDSAN_OWNER_TYPE_PARCELFILEDESCRIPTOR:
       return "ParcelFileDescriptor";
+    case ANDROID_FDSAN_OWNER_TYPE_SQLITE:
+      return "sqlite";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
