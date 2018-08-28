@@ -1456,6 +1456,7 @@ cc_library_static {
         "bionic/pthread_mutex.cpp",
         "bionic/pthread_once.cpp",
         "bionic/pthread_rwlock.cpp",
+        "bionic/pthread_sigqueue.cpp",
         "bionic/pthread_self.cpp",
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",

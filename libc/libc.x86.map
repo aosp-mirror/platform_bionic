@@ -1413,6 +1413,7 @@ LIBC_Q { # introduced=Q
     android_fdsan_get_tag_value;
     android_fdsan_get_error_level;
     android_fdsan_set_error_level;
+    pthread_sigqueue;
     timespec_get;
 } LIBC_P;
 
