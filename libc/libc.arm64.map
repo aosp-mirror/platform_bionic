@@ -1347,6 +1347,9 @@ LIBC_Q { # introduced=Q
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
+    android_fdsan_get_owner_tag;
+    android_fdsan_get_tag_type;
+    android_fdsan_get_tag_value;
     android_fdsan_get_error_level;
     android_fdsan_set_error_level;
     timespec_get;
