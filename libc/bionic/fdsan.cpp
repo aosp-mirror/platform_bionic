@@ -218,7 +218,7 @@ uint64_t android_fdsan_create_owner_tag(android_fdsan_owner_type type, uint64_t 
   return result;
 }
 
-static const char* __tag_to_type(uint64_t tag) {
+const char* android_fdsan_get_tag_type(uint64_t tag) {
   uint64_t type = tag >> 56;
   switch (type) {
     case ANDROID_FDSAN_OWNER_TYPE_FILE:
@@ -253,7 +253,7 @@ static const char* __tag_to_type(uint64_t tag) {
   }
 }
 
-static uint64_t __tag_to_owner(uint64_t tag) {
+uint64_t android_fdsan_get_tag_value(uint64_t tag) {
   // Lop off the most significant byte and sign extend.
   return static_cast<uint64_t>(static_cast<int64_t>(tag << 8) >> 8);
 }
@@ -266,10 +266,10 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
 
   uint64_t tag = expected_tag;
   if (!atomic_compare_exchange_strong(&fde->close_tag, &tag, 0)) {
-    const char* expected_type = __tag_to_type(expected_tag);
-    uint64_t expected_owner = __tag_to_owner(expected_tag);
-    const char* actual_type = __tag_to_type(tag);
-    uint64_t actual_owner = __tag_to_owner(tag);
+    const char* expected_type = android_fdsan_get_tag_type(expected_tag);
+    uint64_t expected_owner = android_fdsan_get_tag_value(expected_tag);
+    const char* actual_type = android_fdsan_get_tag_type(tag);
+    uint64_t actual_owner = android_fdsan_get_tag_value(tag);
     if (expected_tag && tag) {
       fdsan_error(
           "attempted to close file descriptor %d, "
@@ -299,6 +299,14 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
   return rc;
 }
 
+uint64_t android_fdsan_get_owner_tag(int fd) {
+  FdEntry* fde = GetFdEntry(fd);
+  if (!fde) {
+    return 0;
+  }
+  return fde->close_tag;
+}
+
 void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t new_tag) {
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
@@ -311,18 +319,18 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "owned by %s 0x%" PRIx64 ", was expected to be owned by %s 0x%" PRIx64,
-          fd, __tag_to_type(tag), __tag_to_owner(tag), __tag_to_type(expected_tag),
-          __tag_to_owner(expected_tag));
+          fd, android_fdsan_get_tag_type(tag), android_fdsan_get_tag_value(tag),
+          android_fdsan_get_tag_type(expected_tag), android_fdsan_get_tag_value(expected_tag));
     } else if (expected_tag && !tag) {
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "unowned, was expected to be owned by %s 0x%" PRIx64,
-          fd, __tag_to_type(expected_tag), __tag_to_owner(expected_tag));
+          fd, android_fdsan_get_tag_type(expected_tag), android_fdsan_get_tag_value(expected_tag));
     } else if (!expected_tag && tag) {
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "owned by %s 0x%" PRIx64 ", was expected to be unowned",
-          fd, __tag_to_type(tag), __tag_to_owner(tag));
+          fd, android_fdsan_get_tag_type(tag), android_fdsan_get_tag_value(tag));
     } else if (!expected_tag && !tag) {
       // This should never happen: our CAS failed, but expected == actual?
       async_safe_fatal(
