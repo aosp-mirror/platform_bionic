@@ -132,6 +132,25 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
  */
 int android_fdsan_close_with_tag(int fd, uint64_t tag) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
 
+/*
+ * Get a file descriptor's current owner tag.
+ *
+ * Returns 0 for untagged and invalid file descriptors.
+ */
+uint64_t android_fdsan_get_owner_tag(int fd);
+
+/*
+ * Get an owner tag's string representation.
+ *
+ * The return value points to memory with static lifetime, do not attempt to modify it.
+ */
+const char* android_fdsan_get_tag_type(uint64_t tag);
+
+/*
+ * Get an owner tag's value, with the type masked off.
+ */
+uint64_t android_fdsan_get_tag_value(uint64_t tag);
+
 enum android_fdsan_error_level {
   // No errors.
   ANDROID_FDSAN_ERROR_LEVEL_DISABLED,
