@@ -17,15 +17,15 @@
 #ifndef ANDROID_VERSIONING_H
 #define ANDROID_VERSIONING_H
 
-#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
+#define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" __STRING(api_level))))
 #define __INTRODUCED_IN_FUTURE __attribute__((annotate("introduced_in_future")))
-#define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
-#define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
-#define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
-#define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" #api_level)))
-#define __INTRODUCED_IN_ARM(api_level) __attribute__((annotate("introduced_in_arm=" #api_level)))
-#define __INTRODUCED_IN_X86(api_level) __attribute__((annotate("introduced_in_x86=" #api_level)))
-#define __INTRODUCED_IN_MIPS(api_level) __attribute__((annotate("introduced_in_mips=" #api_level)))
+#define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" __STRING(api_level))))
+#define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" __STRING(api_level))))
+#define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" __STRING(api_level))))
+#define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" __STRING(api_level))))
+#define __INTRODUCED_IN_ARM(api_level) __attribute__((annotate("introduced_in_arm=" __STRING(api_level))))
+#define __INTRODUCED_IN_X86(api_level) __attribute__((annotate("introduced_in_x86=" __STRING(api_level))))
+#define __INTRODUCED_IN_MIPS(api_level) __attribute__((annotate("introduced_in_mips=" __STRING(api_level))))
 
 #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
 

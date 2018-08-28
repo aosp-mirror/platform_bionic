@@ -38,7 +38,6 @@
 #define	_SYS_CDEFS_H_
 
 #include <android/api-level.h>
-#include <android/versioning.h>
 
 #define __BIONIC__ 1
 
@@ -100,6 +99,8 @@
 #if defined(__cplusplus)
 #define	__inline	inline		/* convert to C++ keyword */
 #endif /* !__cplusplus */
+
+#include <android/versioning.h>
 
 #include <android/versioning.h>
 
