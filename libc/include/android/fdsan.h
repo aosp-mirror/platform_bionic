@@ -97,6 +97,9 @@ enum android_fdsan_owner_type {
   /* android::base::unique_fd */
   ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD = 3,
 
+  /* sqlite-owned file descriptors */
+  ANDROID_FDSAN_OWNER_TYPE_SQLITE = 4,
+
   /* java.io.FileInputStream */
   ANDROID_FDSAN_OWNER_TYPE_FILEINPUTSTREAM = 251,
 
