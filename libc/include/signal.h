@@ -113,6 +113,10 @@ void psiginfo(const siginfo_t* __info, const char* __msg) __INTRODUCED_IN(17);
 void psignal(int __signal, const char* __msg) __INTRODUCED_IN(17);
 
 int pthread_kill(pthread_t __pthread, int __signal);
+#if defined(__USE_GNU)
+int pthread_sigqueue(pthread_t __pthread, int __signal, const union sigval __value) __INTRODUCED_IN(__ANDROID_API_Q__);
+#endif
+
 int pthread_sigmask(int __how, const sigset_t* __new_set, sigset_t* __old_set);
 int pthread_sigmask64(int __how, const sigset64_t* __new_set, sigset64_t* __old_set) __INTRODUCED_IN(28);
 
