@@ -68,8 +68,7 @@
  * 11 - rounding (down)toward minus infinity (RM)
  */
 
-#ifndef _BITS_FENV_MIPS_H_
-#define _BITS_FENV_MIPS_H_
+#pragma once
 
 #include <sys/types.h>
 
@@ -94,5 +93,3 @@ typedef __uint32_t fexcept_t;
 #define FE_DOWNWARD   0x0003
 
 __END_DECLS
-
-#endif
