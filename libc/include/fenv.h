@@ -27,8 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _FENV_H_
-#define _FENV_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -79,11 +78,12 @@ int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_MIPS(21) __INTRODU
  * environment, namely fesetenv() and feupdateenv().
  */
 extern const fenv_t __fe_dfl_env;
-#define FE_DFL_ENV  (&__fe_dfl_env)
+#define FE_DFL_ENV (&__fe_dfl_env)
 
 __END_DECLS
 
+#if defined(__arm__)
 #include <android/legacy_fenv_inlines_arm.h>
+#elif defined(__mips__)
 #include <android/legacy_fenv_inlines_mips.h>
-
-#endif  /* ! _FENV_H_ */
+#endif
