@@ -112,6 +112,7 @@ cc_test_library {
         "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
+        "poll_test.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
         "regex_test.cpp",
