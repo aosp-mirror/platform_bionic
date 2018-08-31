@@ -111,6 +111,9 @@ enum android_fdsan_owner_type {
 
   /* android.os.ParcelFileDescriptor */
   ANDROID_FDSAN_OWNER_TYPE_PARCELFILEDESCRIPTOR = 8,
+
+  /* ART FdFile */
+  ANDROID_FDSAN_OWNER_TYPE_ART_FDFILE = 9,
 };
 
 /*
