@@ -37,11 +37,11 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
-New libc functions in Q:
+New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
   * `res_randomid` (in `<resolv.h>`)
 
-New libc functions in P:
+New libc functions in P (API level 28):
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
   * `endhostent`/`endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
   * `fexecve`
@@ -58,12 +58,12 @@ New libc functions in P:
   * `swab`
   * `syncfs`
 
-New libc behavior in P:
+New libc behavior in P (API level 28):
   * `%C` and `%S` support in the printf family (previously only the wprintf family supported these)
   * `%mc`/`%ms`/`%m[` support in the scanf family
   * `%s` support in strptime (strftime already supported it)
 
-New libc functions in O:
+New libc functions in O (API level 26):
   * `sendto` FORTIFY support
   * `__system_property_read_callback`/`__system_property_wait`
   * legacy `bsd_signal`
@@ -86,17 +86,89 @@ New libc functions in O:
   * `strtod_l`/`strtof_l`/`strtol_l`/`strtoul_l`
   * <wctype.h> `towctrans`/`towctrans_l`/`wctrans`/`wctrans_l`
 
-New libc functions in N:
+New libc functions in N (API level 24):
   * more FORTIFY support functions (`fread`/`fwrite`/`getcwd`/`pwrite`/`write`)
   * all remaining `_FILE_OFFSET_BITS=64` functions, completing `_FILE_OFFSET_BITS=64` support in bionic (8)
   * all 7 `pthread_barrier*` functions
   * all 5 `pthread_spin*` functions
   * `lockf`/`preadv`/`pwritev`/`scandirat` and `off64_t` variants
   * `adjtimex`/`clock_adjtime`
-  * `getifaddrs`/`freeifaddrs`/`if_freenameindex`/`if_nameindex`
+  * <ifaddrs.h> `getifaddrs`/`freeifaddrs`/`if_freenameindex`/`if_nameindex`
   * `getgrgid_r`/`getgrnam_r`
   * GNU extensions `fileno_unlocked`/`strchrnul`
   * 32-bit `prlimit`
+
+New libc functions in M (API level 23):
+  * <dirent.h> `telldir`, `seekdir`.
+  * <malloc.h> `malloc_info`.
+  * <netdb.h> `gethostbyaddr_r`, `gethostbyname2_r`.
+  * <pthread.h> `pthread_rwlockattr_getkind_np`/`pthread_rwlockattr_setkind_np`.
+  * <pty.h> `forkpty`, `openpty`.
+  * <signal.h> `sigqueue`, `sigtimedwait`, `sigwaitinfo`.
+  * <stdio.h> `fmemopen`, `open_memstream`, `feof_unlocked`, `ferror_unlocked`, `clearerr_unlocked`.
+  * <stdio_ext.h> `__flbf`, `__freadable`, `__fsetlocking`, `__fwritable`, `__fbufsize`, `__fpending`, `_flushlbf`, `__fpurge`.
+  * <stdlib.h> `mkostemp`/`mkostemps`, `lcong48`.
+  * <string.h> `basename`, `strerror_l`, `strerror_r`, `mempcpy`.
+  * <sys/sysinfo.h> `get_nprocs_conf`/`get_nprocs`, `get_phys_pages`, `get_avphys_pages`.
+  * <sys/uio.h> `process_vm_readv`/`process_vm_writev`.
+  * `clock_getcpuclockid`, `login_tty`, `mkfifoat`, `posix_madvise`, `sethostname`, `strcasecmp_l`/`strncasecmp_l`.
+  * <wchar.h> `open_wmemstream`, `wcscasecmp_l`/`wcsncasecmp_l`, `wmempcpy`.
+  * all of <error.h>.
+  * re-introduced various <resolv.h> functions: `ns_format_ttl`, `ns_get16`, `ns_get32`, `ns_initparse`, `ns_makecanon`, `ns_msg_getflag`, `ns_name_compress`, `ns_name_ntol`, `ns_name_ntop`, `ns_name_pack`, `ns_name_pton`, `ns_name_rollback`, `ns_name_skip`, `ns_name_uncompress`, `ns_name_unpack`, `ns_parserr`, `ns_put16`, `ns_put32`, `ns_samename`, `ns_skiprr`, `ns_sprintrr`, and `ns_sprintrrf`.
+
+New libc functions in L (API level 21):
+  * <android/dlext.h>.
+  * <android/set_abort_message.h>.
+  * <arpa/inet.h> `inet_lnaof`, `inet_netof`, `inet_network`, `inet_makeaddr`.
+  * <wctype.h> `iswblank`.
+  * <ctype.h> `isalnum_l`, `isalpha_l`, `isblank_l`, `icntrl_l`, `isdigit_l`, `isgraph_l`, `islower_l`, `isprint_l`, `ispunct_l`, `isspace_l`, `isupper_l`, `isxdigit_l`, `_tolower`, `tolower_l`, `_toupper`, `toupper_l`.
+  * <fcntl.h> `fallocate`, `posix_fadvise`, `posix_fallocate`, `splice`, `tee`, `vmsplice`.
+  * <inttypes.h> `wcstoimax`, `wcstoumax`.
+  * <link.h> `dl_iterate_phdr`.
+  * <mntent.h> `setmntent`, `endmntent`, `getmntent_r`.
+  * <poll.h> `ppoll`.
+  * <pthread.h> `pthread_condattr_getclock`, `pthread_condattr_setclock`, `pthread_mutex_timedlock`, `pthread_gettid_np`.
+  * <sched.h> `setns`.
+  * <search.h> `insque`, `remque`, `lfind`, `lsearch`, `twalk`.
+  * <stdio.h> `dprintf`, `vdprintf`.
+  * <stdlib.h> `initstate`, `setstate`, `getprogname`/`setprogname`, `atof`/`strtof`, `at_quick_exit`/`_Exit`/`quick_exit`, `grantpt`, `mbtowc`/`wctomb`, `posix_openpt`, `rand_r`/`rand`/`random`/`srand`/`srandom`, `strtold_l`/`strtoll_l`/`strtoull_l`.
+  * <string.h> `strcoll_l`/`strxfrm_l`, `stpcpy`/`stpncpy`.
+  * <sys/resource.h> `prlimit`.
+  * <sys/socket.h> `accept4`, `sendmmsg`.
+  * <sys/stat.h> `mkfifo`/`mknodat`.
+  * <time.h> `strftime_l`.
+  * <unistd.h> `dup3`, `execvpe`, `getpagesize`, `linkat`/`symlinkat`/`readlinkat`, `truncate`.
+  * <wchar.h> `wcstof`, `vfwscanf`/`vswscanf`/`vwscanf`, `wcstold_l`/`wcstoll`/`wcstoll_l`/`wcstoull`/`wcstoull_l`, `mbsnrtowcs`/`wcsnrtombs`, `wcscoll_l`/`wcsxfrm_l`.
+  * <wctype.h> `iswalnum_l`/`iswalpha_l`/`iswblank_l`/`iswcntrl_l`/`iswctype_l`/`iswdigit_l`/`iswgraph_l`/`iswlower_l`/`iswprint_l`/`iswpunct_l`/`iswspace_l`/`iswupper_l`/`iswxdigit_l`, `wctype_l`, `towlower_l`/`towupper_l`.
+  * all of <fts.h>.
+  * all of <locale.h>.
+  * all of <sys/epoll.h>.
+  * all of <sys/fsuid.h>.
+  * all of <sys/inotify.h>.
+  * all of <uchar.h>.
+
+New libc functions in K (API level 19):
+  * <inttypes.h> `imaxabs`, `imaxdiv`.
+  * <stdlib.h> `abs`, `labs`, `llabs`.
+  * <sys/stat.h> `futimens`.
+  * all of <sys/statvfs.h>.
+  * all of <sys/swap.h>.
+  * all of <sys/timerfd.h>.
+
+New libc functions in J-MR2 (API level 18):
+  * <stdio.h> `getdelim` and `getline`.
+  * <sys/auxv.h> `getauxval`.
+  * <sys/signalfd.h> `signalfd`.
+
+New libc functions in J-MR1 (API level 17):
+  * <ftw.h>.
+  * <signal.h> `psiginfo` and `psignal`.
+  * `getsid`, `malloc_usable_size`, `mlockall`/`munlockall`, `posix_memalign`, `unshare`.
+
+New libc functions in J (API level 16):
+  * the <search.h> tree functions `tdelete`, `tdestroy`, `tfind`, and `tsearch`.
+  * `faccessat`, `readahead`, `tgkill`.
+  * all of <sys/xattr.h>.
 
 libc function count over time:
   G 803, H 825, I 826, J 846, J-MR1 873, J-MR2 881, K 896, L 1116, M 1181, N 1226, O 1278
@@ -112,7 +184,19 @@ Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/
 
 0 remaining missing POSIX libm functions.
 
-19 new libm functions in O: complex trig/exp/log functions.
+New libm functions in O (API level 26):
+  * <complex.h> `clog`/`clogf`, `cpow`/`cpowf` functions.
+
+New libm functions in M (API level 23):
+  * <complex.h> `cabs`, `carg`, `cimag`, `cacos`, `cacosh`, `casin`, `casinh`, `catan`, `catanh`, `ccos`, `ccosh`, `cexp`, `conj`, `cproj`, `csin`, `csinh`, `csqrt`, `ctan`, `ctanh`, `creal`, `cabsf`, `cargf`, `cimagf`, `cacosf`, `cacoshf`, `casinf`, `casinhf`, `catanf`, `catanhf`, `ccosf`, `ccoshf`, `cexpf`, `conjf`, `cprojf`, `csinf`, `csinhf`, `csqrtf`, `ctanf`, `ctanhf`, `crealf`, `cabsl`, `cprojl`, `csqrtl`.
+  * <math.h> `lgammal_r`.
+
+New libm functions in L (API level 21):
+  * <complex.h> `cabsl`, `cprojl`, `csqrtl`.
+  * <math.h> `isinf`, `significandl`.
+
+New libm functions in J-MR2 (API level 18):
+  * <math.h> `log2`, `log2f`.
 
 libm function count over time:
   G 158, J-MR2 164, L 220, M 265, O 284
