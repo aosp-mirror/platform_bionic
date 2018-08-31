@@ -247,6 +247,8 @@ const char* android_fdsan_get_tag_type(uint64_t tag) {
       return "ParcelFileDescriptor";
     case ANDROID_FDSAN_OWNER_TYPE_SQLITE:
       return "sqlite";
+    case ANDROID_FDSAN_OWNER_TYPE_ART_FDFILE:
+      return "ART FdFile";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
