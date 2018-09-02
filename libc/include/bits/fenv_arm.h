@@ -26,8 +26,7 @@
  * $FreeBSD: src/lib/msun/arm/fenv.h,v 1.5 2005/03/16 19:03:45 das Exp $
  */
 
-#ifndef _BITS_FENV_ARM_H_
-#define _BITS_FENV_ARM_H_
+#pragma once
 
 #include <sys/types.h>
 
@@ -73,5 +72,3 @@ typedef __uint32_t fexcept_t;
 #define FE_TOWARDZERO 0x3
 
 __END_DECLS
-
-#endif

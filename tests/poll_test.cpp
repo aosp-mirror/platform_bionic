@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,18 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-/**
- * @file legacy_fenv_inlines_arm.h
- * @brief Inline ARM-specific definitions of fenv for old API levels.
- */
+#include <errno.h>
+#include <poll.h>
 
-#include <sys/cdefs.h>
+TEST(poll, poll_null_fds) {
+  // Because nanosleep(2) is relatively new to POSIX, code sometimes abuses poll.
+  errno = 0;
+  ASSERT_EQ(0, poll(nullptr, 0, 1));
+  ASSERT_EQ(0, errno);
+}
 
-#if __ANDROID_API__ < __ANDROID_API_L__ && defined(__arm__)
+TEST(poll, ppoll_null_fds) {
+  // Because nanosleep(2) is relatively new to POSIX, code sometimes abuses poll.
+  errno = 0;
+  timespec ts = { .tv_nsec = 100 };
+  ASSERT_EQ(0, ppoll(nullptr, 0, &ts, nullptr));
+  ASSERT_EQ(0, errno);
+}
 
-#define __BIONIC_FENV_INLINE static __inline
-#include <bits/fenv_inlines_arm.h>
-
+TEST(poll, ppoll64_null_fds) {
+#if __BIONIC__
+  // Because nanosleep(2) is relatively new to POSIX, code sometimes abuses poll.
+  errno = 0;
+  timespec ts = { .tv_nsec = 100 };
+  ASSERT_EQ(0, ppoll64(nullptr, 0, &ts, nullptr));
+  ASSERT_EQ(0, errno);
 #endif
+}
