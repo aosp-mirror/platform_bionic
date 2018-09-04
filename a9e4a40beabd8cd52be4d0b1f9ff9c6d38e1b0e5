@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a05902d8_f5c869fb",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-04T16:42:20Z",
+      "side": 1,
+      "message": "if you\u0027re going to read `errno`, you should definitely set it to 0 first :-)",
+      "revId": "a9e4a40beabd8cd52be4d0b1f9ff9c6d38e1b0e5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
