@@ -2356,6 +2356,32 @@ TEST(STDIO_TEST, sprintf_30445072) {
   ASSERT_EQ(buf, "hello");
 }
 
+TEST(STDIO_TEST, printf_m) {
+  char buf[BUFSIZ];
+  errno = 0;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Success>", buf);
+  errno = -1;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Unknown error -1>", buf);
+  errno = EINVAL;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Invalid argument>", buf);
+}
+
+TEST(STDIO_TEST, wprintf_m) {
+  wchar_t buf[BUFSIZ];
+  errno = 0;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Success>"), buf);
+  errno = -1;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Unknown error -1>"), buf);
+  errno = EINVAL;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Invalid argument>"), buf);
+}
+
 TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
   TemporaryFile tf;
   SetFileTo(tf.filename, "0123456789");
