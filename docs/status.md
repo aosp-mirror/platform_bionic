@@ -40,6 +40,12 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
   * `res_randomid` (in `<resolv.h>`)
+  * `pthread_sigqueue` (GNU extension)
+
+New libc behavior in Q (API level 29):
+  * Whole printf family now supports the GNU `%m` extension, rather than a special-case hack in `syslog`
+  * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension
+  * Bug fixes to handling of UTF-8 U+fffe/U+ffff and code points above U+10ffff
 
 New libc functions in P (API level 28):
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
