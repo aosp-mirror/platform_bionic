@@ -16,6 +16,24 @@
       "revId": "9adc06a150b6c8929084b2b3066f537b3f38d6d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a732aae7_7a2c2682",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1071150
+      },
+      "writtenOn": "2018-09-05T20:32:28Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "08290857_83c9c5b5",
+      "revId": "9adc06a150b6c8929084b2b3066f537b3f38d6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
