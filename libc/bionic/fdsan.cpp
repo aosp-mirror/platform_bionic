@@ -43,6 +43,7 @@
 #include <sys/system_properties.h>
 
 #include "private/bionic_globals.h"
+#include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
 
 extern "C" int ___close(int fd);
@@ -200,12 +201,11 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
       // DEBUGGER_SIGNAL
-      sigval abort_msg;
-      abort_msg.sival_ptr = &abort_message;
-      pthread_sigqueue(pthread_self(), __SIGRTMIN + 3, abort_msg);
+      inline_raise(__SIGRTMIN + 3, &abort_message);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
+      inline_raise(SIGABRT);
       abort();
 
     case ANDROID_FDSAN_ERROR_LEVEL_DISABLED:
