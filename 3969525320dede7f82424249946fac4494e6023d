@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97d3e735_94be77df",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T15:34:46Z",
+      "side": 1,
+      "message": "g_ for globals.",
+      "range": {
+        "startLine": 533,
+        "startChar": 20,
+        "endLine": 533,
+        "endChar": 46
+      },
+      "revId": "3969525320dede7f82424249946fac4494e6023d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c887c4b_9c6f9c0f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T15:34:46Z",
+      "side": 1,
+      "message": "?",
+      "revId": "3969525320dede7f82424249946fac4494e6023d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60ef70e7_dfe6df36",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T15:34:46Z",
+      "side": 1,
+      "message": "log on error?\n\ndon\u0027t you want a detached thread?",
+      "revId": "3969525320dede7f82424249946fac4494e6023d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
