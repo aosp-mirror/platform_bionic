@@ -1,13 +1,17 @@
-Using bionic
-============
+# bionic
 
-See the [additional documentation](docs/).
+[bionic](https://en.wikipedia.org/wiki/Bionic_(software)) is Android's
+C library, math library, and dynamic linker.
 
-Working on bionic
-=================
+# Using bionic as an app developer
 
-What are the big pieces of bionic?
-----------------------------------
+See the [user documentation](docs/).
+
+# Working on bionic itself
+
+This documentation is about making changes to bionic itself.
+
+## What are the big pieces of bionic?
 
 #### libc/ --- libc.so, libc.a
 
@@ -51,10 +55,9 @@ publicly-exported header file.
 The `benchmarks/` directory contains benchmarks, with its own [documentation](benchmarks/README.md).
 
 
-What's in libc/?
-----------------
+## What's in libc/?
 
-<pre>
+```
 libc/
   arch-arm/
   arch-arm64/
@@ -69,12 +72,6 @@ libc/
     bionic/
       # Every architecture needs a handful of machine-specific assembler files.
       # They live here.
-    include/
-      machine/
-        # The majority of header files are actually in libc/include/, but many
-        # of them pull in a <machine/something.h> for things like limits,
-        # endianness, and how floating point numbers are represented. Those
-        # headers live here.
     string/
       # Most architectures have a handful of optional assembler files
       # implementing optimized versions of various routines. The <string.h>
@@ -141,11 +138,10 @@ libc/
   zoneinfo/
     # Android-format time zone data.
     # See 'Updating tzdata' later.
-</pre>
+```
 
 
-Adding libc wrappers for system calls
--------------------------------------
+## Adding libc wrappers for system calls
 
 The first question you should ask is "should I add a libc wrapper for
 this system call?". The answer is usually "no".
@@ -183,8 +179,7 @@ Adding a system call usually involves:
      correct system call is being made.)
 
 
-Updating kernel header files
-----------------------------
+## Updating kernel header files
 
 As mentioned above, this is currently a two-step process:
 
@@ -197,8 +192,7 @@ build your device drivers, you shouldn't modify bionic. Instead use
 `TARGET_DEVICE_KERNEL_HEADERS` and friends described in [config.mk](https://android.googlesource.com/platform/build/+/master/core/config.mk#186).
 
 
-Updating tzdata
----------------
+## Updating tzdata
 
 This is fully automated (and these days handled by the libcore team, because
 they own icu, and that needs to be updated in sync with bionic):
@@ -206,8 +200,7 @@ they own icu, and that needs to be updated in sync with bionic):
   1. Run update-tzdata.py in external/icu/tools/.
 
 
-Verifying changes
------------------
+## Verifying changes
 
 If you make a change that is likely to have a wide effect on the tree (such as a
 libc header change), you should run `make checkbuild`. A regular `make` will
@@ -218,8 +211,7 @@ either, as `make tests` covers a few additional modules, but generally speaking
 `make checkbuild` is enough.
 
 
-Running the tests
------------------
+## Running the tests
 
 The tests are all built from the tests/ directory.
 
@@ -285,8 +277,7 @@ the host's glibc.
     $ ./tests/run-on-host.sh glibc
 
 
-Gathering test coverage
------------------------
+## Gathering test coverage
 
 For either host or target coverage, you must first:
 
@@ -319,8 +310,7 @@ First, build and run the host tests as usual (see above).
 The coverage report is now available at `covreport/index.html`.
 
 
-Attaching GDB to the tests
---------------------------
+## Attaching GDB to the tests
 
 Bionic's test runner will run each test in its own process by default to prevent
 tests failures from impacting other tests. This also has the added benefit of
@@ -330,7 +320,6 @@ However, this also makes it difficult to run the tests under GDB. To prevent
 each test from being forked, run the tests with the flag `--no-isolate`.
 
 
-32-bit ABI bugs
----------------
+## 32-bit ABI bugs
 
 See [32-bit ABI bugs](docs/32-bit-abi.md).
