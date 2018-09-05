@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0d8653f8_1cf70998",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-09-05T08:45:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0eeec30a_0477134d",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "ba76da37a410d02f3d47dd069ec8c91b1d4c1fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7a208e2a_05fc06ae",
         "filename": "libc/bionic/NetdClient.cpp",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "ba76da37a410d02f3d47dd069ec8c91b1d4c1fe4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75ddbc2c_97fb270d",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2018-09-05T08:45:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a208e2a_05fc06ae",
+      "revId": "ba76da37a410d02f3d47dd069ec8c91b1d4c1fe4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
