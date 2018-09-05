@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16895881_88db8089",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T21:48:39Z",
+      "side": 1,
+      "message": "return",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 12
+      },
+      "revId": "8aac84c7f8c6f1f082d9d32b45508285a1984f88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56638714_12a7ebb6",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T21:48:39Z",
+      "side": 1,
+      "message": "make this a function, and have a separate TEST for each kind?\n\nyabinc has similar precedent where he factors out the HasMemBarrier() test and just has\n\n  if (!HasMemBarrier()) return;\n\nat the start of each test.",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 55
+      },
+      "revId": "8aac84c7f8c6f1f082d9d32b45508285a1984f88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
