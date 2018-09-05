@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b68e6ee_f99ff52d",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-09-05T01:06:28Z",
+      "side": 1,
+      "message": "Can we do something like struct magic_abort_msg_t { uint64_t magic; abort_msg_t msg; }, and pass a pointer to msg instead, to avoid potential version mismatch problems? (I\u0027m vaguely worried about stuff like old static vendor binaries)\n\nThis also makes it so that we don\u0027t need to change anything on the other end.",
+      "revId": "327da06061dce039b949fe5d1ce864eb13322c6f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
