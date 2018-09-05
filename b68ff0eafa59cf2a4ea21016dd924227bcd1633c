@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "71fb1c23_96de4507",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-05T10:48:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04ad3833_dadfe780",
+      "range": {
+        "startLine": 227,
+        "startChar": 43,
+        "endLine": 227,
+        "endChar": 55
+      },
+      "revId": "b68ff0eafa59cf2a4ea21016dd924227bcd1633c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ea178f5_1d1630b6",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 5
@@ -39,6 +63,24 @@
       "revId": "b68ff0eafa59cf2a4ea21016dd924227bcd1633c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b52d951_49a6a240",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-05T10:48:25Z",
+      "side": 1,
+      "message": "This is from the existing code that I split into two functions.",
+      "parentUuid": "5ea178f5_1d1630b6",
+      "revId": "b68ff0eafa59cf2a4ea21016dd924227bcd1633c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
