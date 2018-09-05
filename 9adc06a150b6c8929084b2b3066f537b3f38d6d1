@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08290857_83c9c5b5",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-05T15:26:33Z",
+      "side": 1,
+      "message": "sorry, didn\u0027t spot this earlier. you want -1 here and an `ASSERT_EQ(EPERM, errno);` on the next line.\n\ntypically we\u0027d `errno \u003d 0;` on the line before the system call too, just to make this part of the test robust against changes to other parts of the test.",
+      "revId": "9adc06a150b6c8929084b2b3066f537b3f38d6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
