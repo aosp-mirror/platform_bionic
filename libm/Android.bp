@@ -315,6 +315,8 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
+                "upstream-freebsd/lib/msun/src/s_nearbyintf.c",
+                "upstream-freebsd/lib/msun/src/s_nearbyint.c",
                 "upstream-freebsd/lib/msun/src/s_rint.c",
                 "upstream-freebsd/lib/msun/src/s_rintf.c",
                 "upstream-freebsd/lib/msun/src/s_round.c",
