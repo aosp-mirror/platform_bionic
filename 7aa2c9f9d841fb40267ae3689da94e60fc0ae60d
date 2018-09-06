@@ -22,6 +22,30 @@
       "revId": "7aa2c9f9d841fb40267ae3689da94e60fc0ae60d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5f7500d_b3151ded",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-09-06T22:19:57Z",
+      "side": 1,
+      "message": "welp, fixed. I guess even with ASan this would have hit https://github.com/google/sanitizers/issues/348.",
+      "parentUuid": "d72469ac_a5678a6a",
+      "range": {
+        "startLine": 87,
+        "startChar": 23,
+        "endLine": 87,
+        "endChar": 34
+      },
+      "revId": "7aa2c9f9d841fb40267ae3689da94e60fc0ae60d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
