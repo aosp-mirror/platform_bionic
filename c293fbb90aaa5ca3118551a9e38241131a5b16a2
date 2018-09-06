@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4cb641ee_7f700751",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-06T18:21:34Z",
+      "side": 1,
+      "message": "const char",
+      "range": {
+        "startLine": 463,
+        "startChar": 49,
+        "endLine": 463,
+        "endChar": 53
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f473a4df_c346334c",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-06T18:21:34Z",
+      "side": 1,
+      "message": "What\u0027s the expected case if you get the signal again. I think it\u0027s that it does nothing, but I wanted to verify that.",
+      "range": {
+        "startLine": 521,
+        "startChar": 2,
+        "endLine": 521,
+        "endChar": 50
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0e08e1b_1a76b8fa",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-06T18:21:34Z",
+      "side": 1,
+      "message": "Add #include \u003cstdatomic.h\u003e at the top. Even though you are getting it from another header, it\u0027s better to be explicit.",
+      "range": {
+        "startLine": 534,
+        "startChar": 6,
+        "endLine": 534,
+        "endChar": 14
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a53eeb2_1c365abf",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-06T18:21:34Z",
+      "side": 1,
+      "message": "It\u0027s not clear why you have this prototype. The function isn\u0027t used before it\u0027s declared down below.",
+      "range": {
+        "startLine": 535,
+        "startChar": 0,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10bbd331_e7e6a711",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-06T18:21:34Z",
+      "side": 1,
+      "message": "Is this operation guaranteed to be atomic on all architectures?",
+      "range": {
+        "startLine": 548,
+        "startChar": 6,
+        "endLine": 548,
+        "endChar": 47
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
