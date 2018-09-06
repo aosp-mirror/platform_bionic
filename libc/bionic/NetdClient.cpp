@@ -24,6 +24,8 @@
 
 #include <dlfcn.h>
 #include <pthread.h>
+#include <string.h>
+#include <unistd.h>
 
 template <typename FunctionType>
 static void netdClientInitFunction(void* handle, const char* symbol, FunctionType* function) {
@@ -35,6 +37,14 @@ static void netdClientInitFunction(void* handle, const char* symbol, FunctionTyp
 }
 
 static void netdClientInitImpl() {
+    // Prevent netd from looping back fwmarkd connections to itself. It would work, but it's
+    // a deadlock hazard and unnecessary overhead for the resolver.
+    if (getuid() == 0 && strcmp(getprogname(), "netd") == 0) {
+        async_safe_format_log(ANDROID_LOG_INFO, "netdClient",
+                              "Skipping libnetd_client init since *we* are netd");
+        return;
+    }
+
     void* netdClientHandle = dlopen("libnetd_client.so", RTLD_NOW);
     if (netdClientHandle == NULL) {
         // If the library is not available, it's not an error. We'll just use
@@ -54,6 +64,6 @@ static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
 
 extern "C" __LIBC_HIDDEN__ void netdClientInit() {
     if (pthread_once(&netdClientInitOnce, netdClientInitImpl)) {
-        async_safe_format_log(ANDROID_LOG_ERROR, "netdClient", "Failed to initialize netd_client");
+        async_safe_format_log(ANDROID_LOG_ERROR, "netdClient", "Failed to initialize libnetd_client");
     }
 }
