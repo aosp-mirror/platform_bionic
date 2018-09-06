@@ -254,6 +254,30 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "086601c5_98276aec",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-09-06T20:25:00Z",
+      "side": 1,
+      "message": "The requirement that pthread_create not deadlock if reentered via some internal call to malloc doesn\u0027t seem to be written down anywhere. It might be worth mentioning it explicitly.",
+      "parentUuid": "f2ef4e4d_eeae58eb",
+      "range": {
+        "startLine": 551,
+        "startChar": 24,
+        "endLine": 552,
+        "endChar": 74
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
