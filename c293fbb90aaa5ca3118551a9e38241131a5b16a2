@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "32df8f9d_1db758f4",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-09-06T18:34:27Z",
+      "side": 1,
+      "message": "libc already contains special code that ignores attempts by applications to block signals used for various internal purposes. Do you think that this list needs to be extended to include this signal?",
+      "range": {
+        "startLine": 229,
+        "startChar": 17,
+        "endLine": 229,
+        "endChar": 33
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4cb641ee_7f700751",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 8
@@ -18,6 +41,29 @@
         "startChar": 49,
         "endLine": 463,
         "endChar": 53
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "836afa37_574eb715",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-09-06T18:34:27Z",
+      "side": 1,
+      "message": "Nit: not going to -1 over it or anything, but I *strongly* prefer to see sigaction in the codebase instead of old signal call. sigaction is much more explicit about which signal-handling options are being selected.",
+      "range": {
+        "startLine": 495,
+        "startChar": 2,
+        "endLine": 495,
+        "endChar": 8
       },
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
@@ -110,6 +156,53 @@
         "startChar": 6,
         "endLine": 548,
         "endChar": 47
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35b3aaf0_e280ce11",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-09-06T18:34:27Z",
+      "side": 1,
+      "message": "+1. Using an atomic store will not hurt, and it would ensure proper ordering with the exchange.",
+      "parentUuid": "10bbd331_e7e6a711",
+      "range": {
+        "startLine": 548,
+        "startChar": 6,
+        "endLine": 548,
+        "endChar": 47
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2259b76_dc5bbc62",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-09-06T18:34:27Z",
+      "side": 1,
+      "message": "Can you please name the thread?",
+      "range": {
+        "startLine": 552,
+        "startChar": 8,
+        "endLine": 552,
+        "endChar": 22
       },
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
