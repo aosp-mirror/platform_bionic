@@ -26,39 +26,80 @@
  * SUCH DAMAGE.
  */
 
-#ifndef ANDROID_API_LEVEL_H
-#define ANDROID_API_LEVEL_H
+#pragma once
+
+/**
+ * @file android/api-level.h
+ * @brief Functions and constants for dealing with multiple API levels.
+ */
 
 #include <sys/cdefs.h>
 
-/*
- * Magic version number for a current development build, which has
- * not yet turned into an official release.
- */
 #ifndef __ANDROID_API_FUTURE__
+/**
+ * Magic version number for an Android OS build which has
+ * not yet turned into an official release,
+ * for comparisons against __ANDROID_API__.
+ */
 #define __ANDROID_API_FUTURE__ 10000
 #endif
 
 #ifndef __ANDROID_API__
+/**
+ * `__ANDROID_API__` is the API level being targeted. For the OS,
+ * this is `__ANDROID_API_FUTURE__`. For the NDK, this is set by the
+ * compiler/build system based on the API level you claimed to target.
+ */
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
 #else
+/**
+ * `__ANDROID_NDK__` is defined for code that's built by the NDK
+ * rather than as part of the OS.
+ */
 #define __ANDROID_NDK__ 1
 #endif
 
+/** Names the Gingerbread API level (9), for comparisons against __ANDROID_API__. */
 #define __ANDROID_API_G__ 9
-#define __ANDROID_API_I__ 14
-#define __ANDROID_API_J__ 16
-#define __ANDROID_API_J_MR1__ 17
-#define __ANDROID_API_J_MR2__ 18
-#define __ANDROID_API_K__ 19
-#define __ANDROID_API_L__ 21
-#define __ANDROID_API_L_MR1__ 22
-#define __ANDROID_API_M__ 23
-#define __ANDROID_API_N__ 24
-#define __ANDROID_API_N_MR1__ 25
-#define __ANDROID_API_O__ 26
-#define __ANDROID_API_O_MR1__ 27
-#define __ANDROID_API_P__ 28
-#define __ANDROID_API_Q__ 29
 
-#endif
+/** Names the Ice-Cream Sandwich API level (14), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_I__ 14
+
+/** Names the Jellybean API level (16), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_J__ 16
+
+/** Names the Jellybean MR1 API level (17), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_J_MR1__ 17
+
+/** Names the Jellybean MR2 API level (18), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_J_MR2__ 18
+
+/** Names the KitKat API level (19), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_K__ 19
+
+/** Names the Lollipop API level (21), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_L__ 21
+
+/** Names the Lollipop MR1 API level (22), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_L_MR1__ 22
+
+/** Names the Marshmallow API level (23), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_M__ 23
+
+/** Names the Nougat API level (24), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_N__ 24
+
+/** Names the Nougat MR1 API level (25), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_N_MR1__ 25
+
+/** Names the Oreo API level (26), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_O__ 26
+
+/** Names the Oreo MR1 API level (27), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_O_MR1__ 27
+
+/** Names the Pie API level (28), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_P__ 28
+
+/** Names the "Q" API level (29), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_Q__ 29

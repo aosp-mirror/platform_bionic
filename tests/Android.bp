@@ -65,6 +65,7 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     srcs: [
         "alloca_test.cpp",
+        "android_get_device_api_level.cpp",
         "arpa_inet_test.cpp",
         "async_safe_test.cpp",
         "assert_test.cpp",
