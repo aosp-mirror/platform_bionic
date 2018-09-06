@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d72469ac_a5678a6a",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-09-06T21:01:01Z",
+      "side": 1,
+      "message": "This should be magic_abort_msg_t.",
+      "range": {
+        "startLine": 87,
+        "startChar": 23,
+        "endLine": 87,
+        "endChar": 34
+      },
+      "revId": "7aa2c9f9d841fb40267ae3689da94e60fc0ae60d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
