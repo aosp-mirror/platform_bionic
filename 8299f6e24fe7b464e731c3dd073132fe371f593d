@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "462d7f7f_ed8c164d",
+        "filename": "libc/bionic/android_set_abort_message.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1066743
+      },
+      "writtenOn": "2018-09-06T15:59:34Z",
+      "side": 1,
+      "message": "Note that I had to use this instead of the packed attribute since taking the address of a member of a packed structure does not guarantee correct alignment. Plus it gives slightly better diagnostic messages if things break.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 57,
+        "endChar": 13
+      },
+      "revId": "8299f6e24fe7b464e731c3dd073132fe371f593d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
