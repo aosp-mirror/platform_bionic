@@ -453,7 +453,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'n':
         __fortify_fatal("%%n not allowed on Android");
       case 'm':
-        cp = strerror(caller_errno);
+        cp = strerror_r(caller_errno, buf, sizeof(buf));
         goto string;
       case 'O':
         flags |= LONGINT;
