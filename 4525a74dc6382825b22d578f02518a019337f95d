@@ -219,6 +219,24 @@
     },
     {
       "key": {
+        "uuid": "003d5d44_f9bb4f60",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-09-06T21:40:33Z",
+      "side": 1,
+      "message": "Wrote out a full example that should be clearer? I\u0027m vaguely worried that it\u0027s hard to read docs that are giant blocks of code with single lines of discussion separating them, but maybe it\u0027s okay?",
+      "parentUuid": "6d63bedd_034592ec",
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "db7134ec_7e26b34f",
         "filename": "docs/fdsan.md",
         "patchSetId": 4
