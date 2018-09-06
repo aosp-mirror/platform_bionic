@@ -207,6 +207,29 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4355f727_44338eea",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2018-09-06T20:13:29Z",
+      "side": 1,
+      "message": "This can deadlock if the signal is received during a pthread_create (the obvious case is during __pthread_internal_add, but there might be other ones as well?)",
+      "range": {
+        "startLine": 551,
+        "startChar": 24,
+        "endLine": 552,
+        "endChar": 74
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
