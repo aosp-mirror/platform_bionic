@@ -201,6 +201,24 @@
     },
     {
       "key": {
+        "uuid": "6d63bedd_034592ec",
+        "filename": "docs/fdsan.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-06T01:08:38Z",
+      "side": 1,
+      "message": "yeah, but i think at the moment it\u0027s really not clear *what* other function. if you think it\u0027s clearer to explain in words what you\u0027d see instead, that\u0027s fine too. but i think we need to say something more specific than \"much more useful\". how? why?",
+      "parentUuid": "2e80dc26_5911d589",
+      "revId": "4525a74dc6382825b22d578f02518a019337f95d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "db7134ec_7e26b34f",
         "filename": "docs/fdsan.md",
         "patchSetId": 4
