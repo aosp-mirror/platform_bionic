@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ebe56f9_a081bf43",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-07T15:22:15Z",
+      "side": 1,
+      "message": "you\u0027re already in a C++ file, so you don\u0027t need this. _GNU_SOURCE is the default.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 0
+      },
+      "revId": "7c24941bfb58e6f2628e54a9ead631491bd400a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f2f5655_a28a380f",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-07T15:22:15Z",
+      "side": 1,
+      "message": "i did wonder about this at the time, but stupidly assumed that init was doing the opposite!",
+      "revId": "7c24941bfb58e6f2628e54a9ead631491bd400a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
