@@ -5,7 +5,7 @@
 ### Background
 *What problem is fdsan trying to solve? Why should I care?*
 
-fdsan (file descriptor sanitizer) detects mishandling of file descriptor ownership, which tend to manifest as *use-after-close* and *double-close*. These errors are direct analogues of the memory allocation *use-after-free* and *double-free* bugs, but tend to be much more difficult to diagnose and fix. With `malloc` and `free`, implementations have free reign to detect errors and abort on double free. File descriptors, on the other hand, are mandated by the C standard to be allocated with the lowest available number being returned for new allocations. As a result, many file descriptor bugs can *never* be noticed on the thread on which the error occurred, and will manifest as "impossible" behavior on another thread.
+fdsan (file descriptor sanitizer) detects mishandling of file descriptor ownership, which tend to manifest as *use-after-close* and *double-close*. These errors are direct analogues of the memory allocation *use-after-free* and *double-free* bugs, but tend to be much more difficult to diagnose and fix. With `malloc` and `free`, implementations have free reign to detect errors and abort on double free. File descriptors, on the other hand, are mandated by the POSIX standard to be allocated with the lowest available number being returned for new allocations. As a result, many file descriptor bugs can *never* be noticed on the thread on which the error occurred, and will manifest as "impossible" behavior on another thread.
 
 For example, given two threads running the following code:
 ```cpp
