@@ -253,6 +253,8 @@ const char* android_fdsan_get_tag_type(uint64_t tag) {
       return "DatagramSocketImpl";
     case ANDROID_FDSAN_OWNER_TYPE_SOCKETIMPL:
       return "SocketImpl";
+    case ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE:
+      return "ZipArchive";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
