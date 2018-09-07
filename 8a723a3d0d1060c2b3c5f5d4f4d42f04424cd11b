@@ -22,6 +22,30 @@
       "revId": "8a723a3d0d1060c2b3c5f5d4f4d42f04424cd11b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8e2e59c_22f3fa81",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-07T17:08:51Z",
+      "side": 1,
+      "message": "interestingly, my incremental build works fine (which is presumably why most of the treehugger builds passed too?). but, yeah, one treehugger build failed like this:\n\nFAILED: ninja: \u0027bionic/libc/libc.arm.map\u0027, needed by \u0027out/target/product/vsoc_x86/obj_arm/SHARED_LIBRARIES/libndk_translation_guest_libc_intermediates/dotdot/dotdot/dotdot/dotdot/bionic/libc/arch-common/bionic/crtbrand.o\u0027, missing and no known rule to make it",
+      "parentUuid": "4a275775_bb68ff4a",
+      "range": {
+        "startLine": 1780,
+        "startChar": 21,
+        "endLine": 1780,
+        "endChar": 47
+      },
+      "revId": "8a723a3d0d1060c2b3c5f5d4f4d42f04424cd11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
