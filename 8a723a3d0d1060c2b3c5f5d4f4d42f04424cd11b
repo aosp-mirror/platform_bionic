@@ -46,6 +46,30 @@
       "revId": "8a723a3d0d1060c2b3c5f5d4f4d42f04424cd11b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "725a3072_87dd0148",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-07T17:17:26Z",
+      "side": 1,
+      "message": "neither bionic-generate-version-script nor :bionic-generate-version-script seems to work with location?",
+      "parentUuid": "b8e2e59c_22f3fa81",
+      "range": {
+        "startLine": 1780,
+        "startChar": 21,
+        "endLine": 1780,
+        "endChar": 47
+      },
+      "revId": "8a723a3d0d1060c2b3c5f5d4f4d42f04424cd11b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
