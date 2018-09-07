@@ -32,6 +32,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/random.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
@@ -86,7 +87,7 @@ void __init_thread_stack_guard(pthread_internal_t* thread) {
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
 }
 
-void __init_alternate_signal_stack(pthread_internal_t* thread) {
+static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
@@ -107,6 +108,32 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PTHREAD_GUARD_SIZE, "thread signal stack guard");
   }
+}
+
+static void __init_shadow_call_stack(pthread_internal_t* thread) {
+  (void)thread;
+#ifdef __aarch64__
+  char* scs_guard_region = reinterpret_cast<char*>(
+      mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
+  thread->shadow_call_stack_guard_region = scs_guard_region;
+
+  // We need to page align scs_offset and ensure that [scs_offset,scs_offset+SCS_SIZE) is in the
+  // guard region. We can't use arc4random_uniform in init because /dev/urandom might not have
+  // been created yet.
+  size_t scs_offset =
+      (getpid() == 1) ? 0 : (arc4random_uniform(SCS_GUARD_REGION_SIZE / SCS_SIZE) * SCS_SIZE);
+
+  // Allocate the stack and store its address in register x18. This is deliberately the only place
+  // where the address is stored.
+  __asm__ __volatile__(
+      "mov x18, %0" ::"r"(mmap(scs_guard_region + scs_offset, SCS_SIZE, PROT_READ | PROT_WRITE,
+                               MAP_PRIVATE | MAP_ANON | MAP_FIXED, -1, 0)));
+#endif
+}
+
+void __init_additional_stacks(pthread_internal_t* thread) {
+  __init_alternate_signal_stack(thread);
+  __init_shadow_call_stack(thread);
 }
 
 int __init_thread(pthread_internal_t* thread) {
@@ -252,7 +279,7 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
-  __init_alternate_signal_stack(thread);
+  __init_additional_stacks(thread);
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
