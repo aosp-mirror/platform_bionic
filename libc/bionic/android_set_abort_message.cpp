@@ -29,6 +29,8 @@
 #include <android/set_abort_message.h>
 
 #include <pthread.h>
+#include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
 
@@ -41,8 +43,31 @@ struct abort_msg_t {
   size_t size;
   char msg[0];
 };
+static_assert(
+    offsetof(abort_msg_t, msg) == sizeof(size_t),
+    "The in-memory layout of abort_msg_t is not consistent with what libdebuggerd expects.");
+
+struct magic_abort_msg_t {
+  uint64_t magic1;
+  uint64_t magic2;
+  abort_msg_t msg;
+};
+static_assert(offsetof(magic_abort_msg_t, msg) == 2 * sizeof(uint64_t),
+              "The in-memory layout of magic_abort_msg_t is not consistent with what automated "
+              "tools expect.");
 
 abort_msg_t** __abort_message_ptr; // Accessible to __libc_init_common.
+
+[[clang::optnone]]
+static void fill_abort_message_magic(magic_abort_msg_t* new_magic_abort_message) {
+  // 128-bit magic for the abort message. Chosen by fair dice roll.
+  // This function is intentionally deoptimized to avoid the magic to be present
+  // in the final binary. This causes clang to only use instructions where parts
+  // of the magic are encoded into immediate arguments for the instructions in
+  // all supported architectures.
+  new_magic_abort_message->magic1 = 0xb18e40886ac388f0ULL;
+  new_magic_abort_message->magic2 = 0xc6dfba755a1de0b5ULL;
+}
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void android_set_abort_message(const char* msg) {
@@ -59,14 +84,15 @@ void android_set_abort_message(const char* msg) {
     return;
   }
 
-  size_t size = sizeof(abort_msg_t) + strlen(msg) + 1;
+  size_t size = sizeof(magic_abort_msg_t) + strlen(msg) + 1;
   void* map = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (map == MAP_FAILED) {
     return;
   }
 
-  abort_msg_t* new_abort_message = reinterpret_cast<abort_msg_t*>(map);
-  new_abort_message->size = size;
-  strcpy(new_abort_message->msg, msg);
-  *__abort_message_ptr = new_abort_message;
+  magic_abort_msg_t* new_magic_abort_message = reinterpret_cast<magic_abort_msg_t*>(map);
+  fill_abort_message_magic(new_magic_abort_message);
+  new_magic_abort_message->msg.size = size;
+  strcpy(new_magic_abort_message->msg.msg, msg);
+  *__abort_message_ptr = &new_magic_abort_message->msg;
 }
