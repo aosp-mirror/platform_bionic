@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cd41ee51_c57e6444",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "The changes in sigrtmin.h should cause this to happen. cferris@ can you confirm that?",
+      "parentUuid": "32df8f9d_1db758f4",
+      "range": {
+        "startLine": 229,
+        "startChar": 17,
+        "endLine": 229,
+        "endChar": 33
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4cb641ee_7f700751",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6727359_1530835e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cb641ee_7f700751",
+      "range": {
+        "startLine": 463,
+        "startChar": 49,
+        "endLine": 463,
+        "endChar": 53
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "afbc6b0b_62314294",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "836afa37_574eb715",
+      "range": {
+        "startLine": 495,
+        "startChar": 2,
+        "endLine": 495,
+        "endChar": 8
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f473a4df_c346334c",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 8
@@ -91,6 +163,30 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8bcc937_e4898af2",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 521,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f473a4df_c346334c",
+      "range": {
+        "startLine": 521,
+        "startChar": 2,
+        "endLine": 521,
+        "endChar": 50
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0354bf64_c90e7392",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0e08e1b_1a76b8fa",
+      "range": {
+        "startLine": 534,
+        "startChar": 6,
+        "endLine": 534,
+        "endChar": 14
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a53eeb2_1c365abf",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 8
@@ -137,6 +257,30 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "244a832c_cddab312",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Sorry, I had that before I reordered stuff and then forgot.",
+      "parentUuid": "8a53eeb2_1c365abf",
+      "range": {
+        "startLine": 535,
+        "startChar": 0,
+        "endLine": 535,
+        "endChar": 45
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -184,6 +328,30 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a02912f_b1337006",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35b3aaf0_e280ce11",
+      "range": {
+        "startLine": 548,
+        "startChar": 6,
+        "endLine": 548,
+        "endChar": 47
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -278,6 +446,54 @@
       "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a16498c0_7a23dbe3",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "This is only a problem if pthread_create calls malloc.\n\nAFAIK it only uses mmap directly for allocations. Chris could you confirm?",
+      "parentUuid": "086601c5_98276aec",
+      "range": {
+        "startLine": 551,
+        "startChar": 24,
+        "endLine": 552,
+        "endChar": 74
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "351c4f03_cde49944",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-09-07T17:43:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2259b76_dc5bbc62",
+      "range": {
+        "startLine": 552,
+        "startChar": 8,
+        "endLine": 552,
+        "endChar": 22
+      },
+      "revId": "c293fbb90aaa5ca3118551a9e38241131a5b16a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
