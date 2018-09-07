@@ -439,7 +439,8 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         __fortify_fatal("%%n not allowed on Android");
       case 'm':
         free(convbuf);
-        convbuf = helpers::mbsconv(strerror(caller_errno), prec);
+        convbuf = helpers::mbsconv(strerror_r(caller_errno,
+                                              reinterpret_cast<char*>(buf), sizeof(buf)), prec);
         if (convbuf == nullptr) {
             fp->_flags |= __SERR;
             goto error;
