@@ -104,6 +104,7 @@ cc_test_library {
         "malloc_test.cpp",
         "math_test.cpp",
         "math_force_long_double_test.cpp",
+        "membarrier_test.cpp",
         "mntent_test.cpp",
         "netdb_test.cpp",
         "net_if_test.cpp",
