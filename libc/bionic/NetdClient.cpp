@@ -39,7 +39,7 @@ static void netdClientInitFunction(void* handle, const char* symbol, FunctionTyp
 static void netdClientInitImpl() {
     // Prevent netd from looping back fwmarkd connections to itself. It would work, but it's
     // a deadlock hazard and unnecessary overhead for the resolver.
-    if (getuid() == 0 && strcmp(getprogname(), "netd") == 0) {
+    if (getuid() == 0 && strcmp(basename(getprogname()), "netd") == 0) {
         async_safe_format_log(ANDROID_LOG_INFO, "netdClient",
                               "Skipping libnetd_client init since *we* are netd");
         return;
