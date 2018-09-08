@@ -28,9 +28,9 @@ class ScopedErrnoCleaner {
   ~ScopedErrnoCleaner() { errno = 0; }
 };
 
-bool HasMembarrier() {
+bool HasMembarrier(int membarrier_cmd) {
   ScopedErrnoCleaner errno_cleaner;
-  bool present = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0) > 0;
+  bool present = syscall(__NR_membarrier, membarrier_cmd, 0) > 0;
   return present;
 }
 
@@ -45,7 +45,8 @@ TEST(membarrier, query) {
 }
 
 TEST(membarrier, global_barrier) {
-  if (!HasMembarrier()) {
+  if (!HasMembarrier(MEMBARRIER_CMD_GLOBAL)) {
+    GTEST_LOG_(INFO) << "MEMBARRIER_CMD_GLOBAL not supported, skipping test.";
     return;
   }
 
@@ -58,9 +59,39 @@ TEST(membarrier, global_barrier) {
   }
 }
 
+static const char* MembarrierCommandToName(int membarrier_cmd) {
+  switch (membarrier_cmd) {
+  case MEMBARRIER_CMD_QUERY:
+    return "MEMBARRIER_CMD_QUERY";
+  case MEMBARRIER_CMD_GLOBAL:
+    return "MEMBARRIER_CMD_GLOBAL";
+  case MEMBARRIER_CMD_GLOBAL_EXPEDITED:
+    return "MEMBARRIER_CMD_GLOBAL_EXPEDITED";
+  case MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED:
+    return "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED";
+  case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
+    return "MEMBARRIER_CMD_PRIVATE_EXPEDITED";
+  case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED:
+    return "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED";
+  case MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE:
+    return "MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE";
+  case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
+    return "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE";
+  default:
+    return "MEMBARRIER_UNKNOWN";
+  }
+}
+
 static void TestRegisterAndBarrierCommands(int membarrier_cmd_register,
                                            int membarrier_cmd_barrier) {
-  if (!HasMembarrier()) {
+  if (!HasMembarrier(membarrier_cmd_register)) {
+    GTEST_LOG_(INFO) << MembarrierCommandToName(membarrier_cmd_register)
+        << " not supported, skipping test.";
+    return;
+  }
+  if (!HasMembarrier(membarrier_cmd_barrier)) {
+    GTEST_LOG_(INFO) << MembarrierCommandToName(membarrier_cmd_barrier)
+        << " not supported, skipping test.";
     return;
   }
 
