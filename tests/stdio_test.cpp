@@ -2369,6 +2369,16 @@ TEST(STDIO_TEST, printf_m) {
   ASSERT_STREQ("<Invalid argument>", buf);
 }
 
+TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
+  char buf[BUFSIZ];
+  const char* m = strerror(-1);
+  ASSERT_STREQ("Unknown error -1", m);
+  errno = -2;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Unknown error -2>", buf);
+  ASSERT_STREQ("Unknown error -1", m);
+}
+
 TEST(STDIO_TEST, wprintf_m) {
   wchar_t buf[BUFSIZ];
   errno = 0;
@@ -2380,6 +2390,16 @@ TEST(STDIO_TEST, wprintf_m) {
   errno = EINVAL;
   swprintf(buf, sizeof(buf), L"<%m>");
   ASSERT_EQ(std::wstring(L"<Invalid argument>"), buf);
+}
+
+TEST(STDIO_TEST, wprintf_m_does_not_clobber_strerror) {
+  wchar_t buf[BUFSIZ];
+  const char* m = strerror(-1);
+  ASSERT_STREQ("Unknown error -1", m);
+  errno = -2;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Unknown error -2>"), buf);
+  ASSERT_STREQ("Unknown error -1", m);
 }
 
 TEST(STDIO_TEST, fopen_append_mode_and_ftell) {

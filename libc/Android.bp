@@ -1298,6 +1298,7 @@ cc_library_static {
         "bionic/getpid.cpp",
         "bionic/getpriority.cpp",
         "bionic/gettid.cpp",
+        "bionic/get_device_api_level.cpp",
         "bionic/grp_pwd.cpp",
         "bionic/grp_pwd_file.cpp",
         "bionic/iconv.cpp",
