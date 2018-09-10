@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d3346f1_f98a3bc0",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1071150
+      },
+      "writtenOn": "2018-09-10T08:36:41Z",
+      "side": 1,
+      "message": "Ouch, yes, thanks :-)",
+      "range": {
+        "startLine": 87,
+        "startChar": 1,
+        "endLine": 94,
+        "endChar": 44
+      },
+      "revId": "795034cab8f6cb6244e887eb45238f6fba2e7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
