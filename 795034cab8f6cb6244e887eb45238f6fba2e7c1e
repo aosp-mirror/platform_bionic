@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1bbc317f_bc3f1522",
+        "filename": "tests/membarrier_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1071150
+      },
+      "writtenOn": "2018-09-10T09:12:06Z",
+      "side": 1,
+      "message": "This is executing the membarrier_cmd rather than probing it. We\u0027re skipping tests because the commands return 0.\n\nCL coming.",
+      "range": {
+        "startLine": 33,
+        "startChar": 25,
+        "endLine": 33,
+        "endChar": 65
+      },
+      "revId": "795034cab8f6cb6244e887eb45238f6fba2e7c1e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d3346f1_f98a3bc0",
         "filename": "tests/membarrier_test.cpp",
         "patchSetId": 2
