@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5922b5a3_4efd39bb",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2018-09-11T01:03:26Z",
+      "side": 1,
+      "message": "You should probably do arc4random_uniform instead.",
+      "revId": "3264c6a85a6ce0e85f0c81ad8830d88211b4eba6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
