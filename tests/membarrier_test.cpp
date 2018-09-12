@@ -30,8 +30,8 @@ class ScopedErrnoCleaner {
 
 bool HasMembarrier(int membarrier_cmd) {
   ScopedErrnoCleaner errno_cleaner;
-  bool present = syscall(__NR_membarrier, membarrier_cmd, 0) > 0;
-  return present;
+  int supported_cmds = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
+  return (supported_cmds > 0) && ((supported_cmds & membarrier_cmd) != 0);
 }
 
 TEST(membarrier, query) {
@@ -49,14 +49,7 @@ TEST(membarrier, global_barrier) {
     GTEST_LOG_(INFO) << "MEMBARRIER_CMD_GLOBAL not supported, skipping test.";
     return;
   }
-
-  ScopedErrnoCleaner errno_cleaner;
-  int supported = syscall(__NR_membarrier, MEMBARRIER_CMD_QUERY, 0);
-  ASSERT_LE(0, supported);
-
-  if ((supported & MEMBARRIER_CMD_GLOBAL) != 0) {
-    ASSERT_EQ(0, syscall(__NR_membarrier, MEMBARRIER_CMD_GLOBAL, 0));
-  }
+  ASSERT_EQ(0, syscall(__NR_membarrier, MEMBARRIER_CMD_GLOBAL, 0));
 }
 
 static const char* MembarrierCommandToName(int membarrier_cmd) {
