@@ -16,6 +16,24 @@
       "revId": "74cdb253bae513197c5f96545b3c87cd3920e841",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e4e992d_c61e5431",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1042203
+      },
+      "writtenOn": "2018-09-12T21:32:05Z",
+      "side": 1,
+      "message": "I\u0027d prefer to not have to update Breakpad. We\u0027re trying to replace it with Crashpad, so it\u0027s effectively in maintenance mode. Crashpad calls Libc rather than raw syscalls, so we can remove these after we integrate it into Chromium (happening Real Soon Now).",
+      "parentUuid": "2bca1f26_8b167834",
+      "revId": "74cdb253bae513197c5f96545b3c87cd3920e841",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
