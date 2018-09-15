@@ -27,7 +27,7 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
 Missing functionality:
   * `<aio.h>`
   * `<wordexp.h>`
-  * Thread cancellation
+  * Thread cancellation (`pthread_cancel`).
   * Robust mutexes
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
