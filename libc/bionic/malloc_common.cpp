@@ -184,6 +184,15 @@ extern "C" void* realloc(void* old_mem, size_t bytes) {
   return Malloc(realloc)(old_mem, bytes);
 }
 
+extern "C" void* reallocarray(void* old_mem, size_t item_count, size_t item_size) {
+  size_t new_size;
+  if (__builtin_mul_overflow(item_count, item_size, &new_size)) {
+    errno = ENOMEM;
+    return nullptr;
+  }
+  return realloc(old_mem, new_size);
+}
+
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
   auto _pvalloc = __libc_globals->malloc_dispatch.pvalloc;

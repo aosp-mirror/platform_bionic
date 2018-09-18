@@ -66,6 +66,18 @@ void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLO
 void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 
 /**
+ * [reallocarray(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
+ * allocated memory on the heap.
+ *
+ * Equivalent to `realloc(__ptr, __item_count * __item_size)` but fails if the
+ * multiplication overflows.
+ *
+ * Returns a pointer (which may be different from `__ptr`) to the resized
+ * memory on success and returns a null pointer and sets `errno` on failure.
+ */
+void* reallocarray(void* __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
+
+/**
  * [free(3)](http://man7.org/linux/man-pages/man3/free.3.html) deallocates
  * memory on the heap.
  */
