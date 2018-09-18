@@ -257,8 +257,10 @@ bool ElfReader::VerifyElfHeader() {
   }
 
   if (header_.e_machine != GetTargetElfMachine()) {
-    DL_ERR("\"%s\" has unexpected e_machine: %d (%s)", name_.c_str(), header_.e_machine,
-           EM_to_string(header_.e_machine));
+    DL_ERR("\"%s\" is for %s (%d) instead of %s (%d)",
+           name_.c_str(),
+           EM_to_string(header_.e_machine), header_.e_machine,
+           EM_to_string(GetTargetElfMachine()), GetTargetElfMachine());
     return false;
   }
 
