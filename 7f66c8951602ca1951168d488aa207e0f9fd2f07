@@ -22,6 +22,29 @@
       "revId": "7f66c8951602ca1951168d488aa207e0f9fd2f07",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54e45661_a567163c",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-09-19T21:30:21Z",
+      "side": 1,
+      "message": "defined?",
+      "range": {
+        "startLine": 508,
+        "startChar": 4,
+        "endLine": 508,
+        "endChar": 21
+      },
+      "revId": "7f66c8951602ca1951168d488aa207e0f9fd2f07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
