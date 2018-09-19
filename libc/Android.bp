@@ -189,7 +189,6 @@ cc_library_static {
 
         "upstream-netbsd/lib/libc/isc/ev_streams.c",
         "upstream-netbsd/lib/libc/isc/ev_timers.c",
-        "upstream-netbsd/lib/libc/resolv/mtctxres.c",
     ],
 
     cflags: [
