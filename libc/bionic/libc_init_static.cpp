@@ -127,19 +127,24 @@ __noreturn static void __real_libc_init(void *raw_args,
   exit(slingshot(args.argc, args.argv, args.envp));
 }
 
-#if __has_feature(hwaddress_sanitizer)
+extern "C" void __hwasan_init();
+
 __attribute__((no_sanitize("hwaddress")))
-#endif
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
                             int (*slingshot)(int, char**, char**),
                             structors_array_t const * const structors) {
 #if __has_feature(hwaddress_sanitizer)
-  __hwasan_shadow_init();
+  // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
+  // all we need is access to TLS_SLOT_TSAN.
+  pthread_internal_t* main_thread = __get_main_thread();
+  __set_tls(main_thread->tls);
+  // Initialize HWASan. This sets up TLS_SLOT_TSAN, among other things.
+  __hwasan_init();
+  // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
   __real_libc_init(raw_args, onexit, slingshot, structors);
 }
-
 
 static uint32_t g_target_sdk_version{__ANDROID_API__};
 
