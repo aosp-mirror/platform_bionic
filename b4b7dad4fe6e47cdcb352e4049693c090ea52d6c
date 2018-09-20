@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa757fe8_ddfed56f",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-20T17:36:14Z",
+      "side": 1,
+      "message": "T* here and elsewhere.",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 20
+      },
+      "revId": "b4b7dad4fe6e47cdcb352e4049693c090ea52d6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b86b4ba_a3eed1ef",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-20T17:36:14Z",
+      "side": 1,
+      "message": "put this in pthread_internal.h instead?",
+      "revId": "b4b7dad4fe6e47cdcb352e4049693c090ea52d6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16710af3_b9334378",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-20T17:36:14Z",
+      "side": 1,
+      "message": "move this there too, and remove the extern from __libc_init_main_thread.cpp now we have two call sites?",
+      "revId": "b4b7dad4fe6e47cdcb352e4049693c090ea52d6c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
