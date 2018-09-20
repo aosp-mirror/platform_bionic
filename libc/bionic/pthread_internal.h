@@ -151,6 +151,9 @@ static inline __always_inline bionic_tls& __get_bionic_tls() {
   return *__get_thread()->bionic_tls;
 }
 
+extern __LIBC_HIDDEN__ pthread_internal_t* __get_main_thread();
+extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);
+
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
 // Address space is precious on LP32, so use the minimum unit: one page.

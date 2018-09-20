@@ -41,6 +41,7 @@ extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_t
 extern "C" __noreturn void __exit(int status);
 
 // Called from the __bionic_clone assembler to call the thread function then exit.
+__attribute__((no_sanitize("hwaddress")))
 extern "C" __LIBC_HIDDEN__ void __start_thread(int (*fn)(void*), void* arg) {
   BIONIC_STOP_UNWIND;
 
