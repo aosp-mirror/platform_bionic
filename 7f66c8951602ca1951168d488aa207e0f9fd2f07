@@ -45,6 +45,30 @@
       "revId": "7f66c8951602ca1951168d488aa207e0f9fd2f07",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52a3961e_c32bcc53",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-09-20T20:42:36Z",
+      "side": 1,
+      "message": "it has to be like this so the __GLIBC_PREREQ trick works.",
+      "parentUuid": "54e45661_a567163c",
+      "range": {
+        "startLine": 508,
+        "startChar": 4,
+        "endLine": 508,
+        "endChar": 21
+      },
+      "revId": "7f66c8951602ca1951168d488aa207e0f9fd2f07",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
