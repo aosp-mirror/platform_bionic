@@ -81,7 +81,7 @@ using namespace std::chrono_literals;
 using std::this_thread::sleep_for;
 
 void victim() {
-  sleep_for(200ms);
+  sleep_for(300ms);
   int fd = dup(STDOUT_FILENO);
   sleep_for(200ms);
   ssize_t rc = write(fd, "good\n", 5);
@@ -94,7 +94,7 @@ void victim() {
 void bystander() {
   sleep_for(100ms);
   int fd = dup(STDOUT_FILENO);
-  sleep_for(200ms);
+  sleep_for(300ms);
   close(fd);
 }
 
@@ -116,7 +116,20 @@ int main() {
 }
 ```
 
-Running the program above will result in the `write` in `victim` failing, giving us the error:
+When running the program, the threads' executions will be interleaved as follows:
+
+```cpp
+// victim                         bystander                       offender
+                                                                  int fd = dup(1); // 3
+                                                                  close(3);
+                                  int fd = dup(1); // 3
+                                                                  close(3);
+int fd = dup(1); // 3
+                                  close(3);
+write(3, "good\n") = 😞;
+```
+
+which results in the following output:
 
     fdsan_test: good failed to write?!: Bad file descriptor
 
