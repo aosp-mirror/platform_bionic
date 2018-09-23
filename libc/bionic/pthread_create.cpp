@@ -240,16 +240,17 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
   return 0;
 }
 
+__attribute__((no_sanitize("hwaddress")))
 static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
+
+  __hwasan_thread_enter();
 
   // Wait for our creating thread to release us. This lets it have time to
   // notify gdb about this thread before we start doing anything.
   // This also provides the memory barrier needed to ensure that all memory
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
-
-  __hwasan_thread_enter();
 
   __init_alternate_signal_stack(thread);
 

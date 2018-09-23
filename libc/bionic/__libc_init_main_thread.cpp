@@ -36,11 +36,17 @@
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
 
-extern "C" int __set_tls(void* ptr);
 extern "C" int __set_tid_address(int* tid_address);
 
 // Declared in "private/bionic_ssp.h".
 uintptr_t __stack_chk_guard = 0;
+
+static pthread_internal_t main_thread;
+
+__attribute__((no_sanitize("hwaddress")))
+pthread_internal_t* __get_main_thread() {
+  return &main_thread;
+}
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
@@ -61,8 +67,6 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 #if defined(__i386__)
   __libc_init_sysinfo(args);
 #endif
-
-  static pthread_internal_t main_thread;
 
   // The -fstack-protector implementation uses TLS, so make sure that's
   // set up before we call any function that might get a stack check inserted.

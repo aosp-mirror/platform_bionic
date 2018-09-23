@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_NETBSD_REENTRANT_H_included
-#define _BIONIC_NETBSD_REENTRANT_H_included
+#pragma once
 
 #define _REENTRANT
 
@@ -23,18 +22,10 @@
 #include <signal.h>
 
 //
-// Map NetBSD libc internal locking to pthread locking.
+// Map NetBSD libc internal locking onto regular pthread locking.
 //
 
 #define MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 #define mutex_t pthread_mutex_t
 #define mutex_lock(x) pthread_mutex_lock(x)
 #define mutex_unlock(x) pthread_mutex_unlock(x)
-
-#define RWLOCK_INITIALIZER PTHREAD_RWLOCK_INITIALIZER
-#define rwlock_t pthread_rwlock_t
-#define rwlock_rdlock pthread_rwlock_rdlock
-#define rwlock_unlock pthread_rwlock_unlock
-#define rwlock_wrlock pthread_rwlock_wrlock
-
-#endif
