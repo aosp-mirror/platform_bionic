@@ -40,11 +40,13 @@ cc_defaults {
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
     ],
-    shared_libs: ["libtinyxml2"],
+    shared_libs: ["liblog"],
     static_libs: [
         "libbase",
         "libBionicBenchmarksUtils",
+        "libtinyxml2",
     ],
+    stl: "libc++_static",
 }
 
 cc_defaults {
