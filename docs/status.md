@@ -39,6 +39,7 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
+  * `reallocarray` (BSD/GNU extension in `<malloc.h>` and `<stdlib.h>`)
   * `res_randomid` (in `<resolv.h>`)
   * `pthread_sigqueue` (GNU extension)
 

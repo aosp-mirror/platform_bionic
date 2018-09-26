@@ -44,9 +44,6 @@
 /* Redirect internal C library calls to the public function. */
 #define _nanosleep nanosleep
 
-/* FreeBSD has this as API, but we just use it internally. */
-void* reallocarray(void*, size_t, size_t);
-
 /* FreeBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
 
