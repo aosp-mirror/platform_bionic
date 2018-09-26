@@ -80,7 +80,15 @@ void* realloc(void* p, size_t byte_count) {
   return get_allocator().realloc(p, byte_count);
 }
 
+void* reallocarray(void* p, size_t item_count, size_t item_size) {
+  size_t byte_count;
+  if (__builtin_mul_overflow(item_count, item_size, &byte_count)) {
+    errno = ENOMEM;
+    return nullptr;
+  }
+  return get_allocator().realloc(p, byte_count);
+}
+
 void free(void* ptr) {
   get_allocator().free(ptr);
 }
-
