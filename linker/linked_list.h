@@ -84,7 +84,7 @@ class LinkedList {
     clear();
   }
 
-  LinkedList(LinkedList&& that) {
+  LinkedList(LinkedList&& that) noexcept {
     this->head_ = that.head_;
     this->tail_ = that.tail_;
     that.head_ = that.tail_ = nullptr;
