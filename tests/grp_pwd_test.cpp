@@ -42,8 +42,9 @@ using android::base::Split;
 using android::base::StartsWith;
 
 enum uid_type_t {
+  TYPE_APP,
   TYPE_SYSTEM,
-  TYPE_APP
+  TYPE_VENDOR,
 };
 
 #if defined(__BIONIC__)
@@ -61,12 +62,17 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   EXPECT_EQ(nullptr, pwd->pw_gecos);
 #endif
 
-  if (uid_type == TYPE_SYSTEM) {
-    EXPECT_STREQ("/", pwd->pw_dir);
-  } else {
+  if (uid_type == TYPE_APP) {
     EXPECT_STREQ("/data", pwd->pw_dir);
+  } else {
+    EXPECT_STREQ("/", pwd->pw_dir);
   }
-  EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
+
+  if (uid_type == TYPE_VENDOR) {
+    EXPECT_STREQ("/vendor/bin/sh", pwd->pw_shell);
+  } else {
+    EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
+  }
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
@@ -155,19 +161,19 @@ TEST(pwd, getpwnam_app_id_radio) {
 }
 
 TEST(pwd, getpwnam_oem_id_5000) {
-  check_get_passwd("oem_5000", 5000, TYPE_SYSTEM, false);
+  check_get_passwd("oem_5000", 5000, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_5999) {
-  check_get_passwd("oem_5999", 5999, TYPE_SYSTEM, false);
+  check_get_passwd("oem_5999", 5999, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2900) {
-  check_get_passwd("oem_2900", 2900, TYPE_SYSTEM, false);
+  check_get_passwd("oem_2900", 2900, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2999) {
-  check_get_passwd("oem_2999", 2999, TYPE_SYSTEM, false);
+  check_get_passwd("oem_2999", 2999, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_app_id_nobody) {
