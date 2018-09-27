@@ -309,7 +309,6 @@ static bool EnumerateTests(int argc, char** argv, std::vector<TestCase>& testcas
   posix_spawn_file_actions_init(&fa);
   posix_spawn_file_actions_addclose(&fa, read_fd);
   posix_spawn_file_actions_adddup2(&fa, write_fd, 1);
-  posix_spawn_file_actions_adddup2(&fa, write_fd, 2);
   posix_spawn_file_actions_addclose(&fa, write_fd);
 
   pid_t pid;
