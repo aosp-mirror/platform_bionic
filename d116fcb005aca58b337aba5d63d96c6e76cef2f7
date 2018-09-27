@@ -22,6 +22,30 @@
       "revId": "d116fcb005aca58b337aba5d63d96c6e76cef2f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb0f6b7e_5d1c6746",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1348424
+      },
+      "writtenOn": "2018-09-27T10:27:52Z",
+      "side": 1,
+      "message": "I have added a few test cases (netd_integration_test) for this commit in aosp/725873. Let\u0027s discuss in 9/28 meeting if getnameinfo() have to support DNS64. Then, we could invite bionic owner to help us review.\n\naosp/725873 - patchset 17\ntests/resolver_test.cpp\nGetNameInfo_ReverseDns64Query\nGetNameInfo_ReverseDns64QueryFromHostFile\nGetNameInfo_ReverseDnsQueryWithHavingDns64Prefix",
+      "parentUuid": "e3ae9663_0cae3258",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 50
+      },
+      "revId": "d116fcb005aca58b337aba5d63d96c6e76cef2f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
