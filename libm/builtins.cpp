@@ -46,6 +46,12 @@ long double fabsl(long double x) {
 #endif
 
 #if defined(__aarch64__)
+float ceilf(float x) { return __builtin_ceilf(x); }
+double ceil(double x) { return __builtin_ceil(x); }
+
+float floorf(float x) { return __builtin_floorf(x); }
+double floor(double x) { return __builtin_floor(x); }
+
 float fmaf(float x, float y, float z) { return __builtin_fmaf(x, y, z); }
 double fma(double x, double y, double z) { return __builtin_fma(x, y, z); }
 
@@ -55,6 +61,12 @@ double fmax(double x, double y) { return __builtin_fmax(x, y); }
 float fminf(float x, float y) { return __builtin_fminf(x, y); }
 double fmin(double x, double y) { return __builtin_fmin(x, y); }
 
+float rintf(float x) { return __builtin_rintf(x); }
+double rint(double x) { return __builtin_rint(x); }
+
 float roundf(float x) { return __builtin_roundf(x); }
 double round(double x) { return __builtin_round(x); }
+
+float truncf(float x) { return __builtin_truncf(x); }
+double trunc(double x) { return __builtin_trunc(x); }
 #endif
