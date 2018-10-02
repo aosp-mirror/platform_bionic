@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6b924d13_f7e479c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-02T16:57:07Z",
+      "side": 1,
+      "message": "both, though i suspect that the truth is \"both, but we have too many places that aren\u0027t passing any ldflags: at all, and i missed some that matter\".\n\ngiven that this is a good fix for other reasons, i think i\u0027m going to just live with icf in libc until it causes other problems...",
+      "parentUuid": "19c8f9f5_fea65114",
+      "revId": "8a3106987e70850d7e1c80582d5000dbb7d86375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "868fd3ee_dd8355cc",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2018-10-01T21:25:45Z",
       "side": 1,
       "message": "Mark as static?",
+      "revId": "8a3106987e70850d7e1c80582d5000dbb7d86375",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "422b172c_f3bd04c9",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-02T16:57:07Z",
+      "side": 1,
+      "message": "d\u0027oh. left non-static from one of my earlier experiments. fixed.",
+      "parentUuid": "868fd3ee_dd8355cc",
       "revId": "8a3106987e70850d7e1c80582d5000dbb7d86375",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
