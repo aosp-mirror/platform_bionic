@@ -133,7 +133,9 @@ __noreturn void __libc_init(void* raw_args,
     __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
 
-  exit(slingshot(args.argc, args.argv, args.envp));
+  exit(slingshot(args.argc - __libc_shared_globals->initial_linker_arg_count,
+                 args.argv + __libc_shared_globals->initial_linker_arg_count,
+                 args.envp));
 }
 
 extern "C" uint32_t android_get_application_target_sdk_version();

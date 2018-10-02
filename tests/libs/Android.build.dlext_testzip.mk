@@ -32,7 +32,9 @@ include $(BUILD_SYSTEM)/base_rules.mk
 
 my_shared_libs := \
   $(call intermediates-dir-for,SHARED_LIBRARIES,libdlext_test_zip,,,$(bionic_2nd_arch_prefix))/libdlext_test_zip.so \
-  $(call intermediates-dir-for,SHARED_LIBRARIES,libatest_simple_zip,,,$(bionic_2nd_arch_prefix))/libatest_simple_zip.so
+  $(call intermediates-dir-for,SHARED_LIBRARIES,libatest_simple_zip,,,$(bionic_2nd_arch_prefix))/libatest_simple_zip.so \
+  $(call intermediates-dir-for,NATIVE_TESTS,exec_linker_helper,,,$(bionic_2nd_arch_prefix))/exec_linker_helper \
+  $(call intermediates-dir-for,SHARED_LIBRARIES,exec_linker_helper_lib,,,$(bionic_2nd_arch_prefix))/exec_linker_helper_lib.so
 
 $(LOCAL_BUILT_MODULE): PRIVATE_SHARED_LIBS := $(my_shared_libs)
 $(LOCAL_BUILT_MODULE): $(my_shared_libs) $(BIONIC_TESTS_ZIPALIGN)
