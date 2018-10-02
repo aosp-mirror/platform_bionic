@@ -3,6 +3,9 @@ cc_binary_host {
 
     cpp_std: "gnu++17",
 
+    // b/117120485 bugprone-exception-escape hangs with DeclarationDatabase.cpp
+    tidy_checks: ["-bugprone-exception-escape"],
+
     srcs: [
         "versioner.cpp",
         "Arch.cpp",
