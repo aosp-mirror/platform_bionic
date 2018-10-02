@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2012 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,9 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-#include <gtest_extras/IsolateMain.h>
+#pragma once
 
-#include "gtest_utils.h"
-
-static int g_argc;
-static char** g_argv;
-static char** g_envp;
-
-int GetArgc() {
-  return g_argc;
-}
-
-char** GetArgv() {
-  return g_argv;
-}
-
-char** GetEnvp() {
-  return g_envp;
-}
-
-int main(int argc, char** argv, char** envp) {
-  g_argc = argc;
-  g_argv = argv;
-  g_envp = envp;
-
-  return IsolateMain(argc, argv, envp);
-}
+// Access to argc/argv/envp
+int GetArgc();
+char** GetArgv();
+char** GetEnvp();
