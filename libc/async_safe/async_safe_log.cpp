@@ -424,13 +424,18 @@ int async_safe_format_buffer(char* buffer, size_t buffer_size, const char* forma
   return buffer_len;
 }
 
-int async_safe_format_fd(int fd, const char* format, ...) {
+int async_safe_format_fd_va_list(int fd, const char* format, va_list args) {
   FdOutputStream os(fd);
+  out_vformat(os, format, args);
+  return os.total;
+}
+
+int async_safe_format_fd(int fd, const char* format, ...) {
   va_list args;
   va_start(args, format);
-  out_vformat(os, format, args);
+  int result = async_safe_format_fd_va_list(fd, format, args);
   va_end(args);
-  return os.total;
+  return result;
 }
 
 static int write_stderr(const char* tag, const char* msg) {
