@@ -96,7 +96,7 @@ TEST(dl, exec_linker) {
 
 TEST(dl, preinit_system_calls) {
 #if defined(__BIONIC__)
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/preinit_syscall_test_helper/preinit_syscall_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
@@ -107,7 +107,7 @@ TEST(dl, preinit_system_calls) {
 
 TEST(dl, xfail_preinit_getauxval) {
 #if defined(__BIONIC__)
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
@@ -119,7 +119,7 @@ TEST(dl, xfail_preinit_getauxval) {
 
 TEST(dl, exec_without_ld_preload) {
 #if defined(__BIONIC__)
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/ld_preload_test_helper/ld_preload_test_helper";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
@@ -130,9 +130,9 @@ TEST(dl, exec_without_ld_preload) {
 
 TEST(dl, exec_with_ld_preload) {
 #if defined(__BIONIC__)
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/ld_preload_test_helper/ld_preload_test_helper";
-  std::string env = std::string("LD_PRELOAD=") + get_testlib_root() + "/ld_preload_test_helper_lib2.so";
+  std::string env = std::string("LD_PRELOAD=") + GetTestlibRoot() + "/ld_preload_test_helper_lib2.so";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -157,8 +157,8 @@ TEST(dl, exec_with_ld_preload) {
 // The two libs are in ns2/ subdir.
 TEST(dl, exec_without_ld_config_file) {
 #if defined(__BIONIC__)
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + get_testlib_root() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
-  std::string helper = get_testlib_root() +
+  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
@@ -174,13 +174,13 @@ static void create_ld_config_file(const char* config_file) {
   android_get_LD_LIBRARY_PATH(default_search_paths, sizeof(default_search_paths));
 
   std::ofstream fout(config_file, std::ios::out);
-  fout << "dir.test = " << get_testlib_root() << "/ld_config_test_helper/" << std::endl
+  fout << "dir.test = " << GetTestlibRoot() << "/ld_config_test_helper/" << std::endl
        << "[test]" << std::endl
        << "additional.namespaces = ns2" << std::endl
-       << "namespace.default.search.paths = " << get_testlib_root() << std::endl
+       << "namespace.default.search.paths = " << GetTestlibRoot() << std::endl
        << "namespace.default.links = ns2" << std::endl
        << "namespace.default.link.ns2.shared_libs = libc.so:libm.so:libdl.so:ld_config_test_helper_lib1.so" << std::endl
-       << "namespace.ns2.search.paths = " << default_search_paths << ":" << get_testlib_root() << "/ns2" << std::endl;
+       << "namespace.ns2.search.paths = " << default_search_paths << ":" << GetTestlibRoot() << "/ns2" << std::endl;
   fout.close();
 }
 #endif
@@ -199,7 +199,7 @@ TEST(dl, exec_with_ld_config_file) {
     // LD_CONFIG_FILE is not supported on user build
     return;
   }
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.filename);
@@ -221,12 +221,12 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
     // LD_CONFIG_FILE is not supported on user build
     return;
   }
-  std::string helper = get_testlib_root() +
+  std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.filename);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
-  std::string env2 = std::string("LD_PRELOAD=") + get_testlib_root() + "/ld_config_test_helper_lib3.so";
+  std::string env2 = std::string("LD_PRELOAD=") + GetTestlibRoot() + "/ld_config_test_helper_lib3.so";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -250,8 +250,8 @@ TEST(dl, disable_ld_config_file) {
     return;
   }
 
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + get_testlib_root() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
-  std::string helper = get_testlib_root() +
+  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.filename);

@@ -23,12 +23,9 @@
 
 #include <string>
 
-static std::string init_testlib_root() {
+std::string GetTestlibRoot() {
   // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
-  std::string path = get_executable_path();
-
-  path = android::base::Dirname(path);
-  path += "/..";
+  std::string path = android::base::Dirname(android::base::GetExecutablePath()) + "/..";
 
   std::string out_path;
   if (!android::base::Realpath(path.c_str(), &out_path)) {
@@ -46,9 +43,3 @@ static std::string init_testlib_root() {
 
   return real_path;
 }
-
-const std::string& get_testlib_root() {
-  static const std::string testlib_root = init_testlib_root();
-  return testlib_root;
-}
-
