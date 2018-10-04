@@ -43,7 +43,13 @@ cc_library {
     //
     // DO NOT REMOVE --exclude-libs!
 
-    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
+    ldflags: [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
 
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {
