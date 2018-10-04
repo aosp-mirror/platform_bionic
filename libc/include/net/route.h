@@ -26,13 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _NET_ROUTE_H_
-#define _NET_ROUTE_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/socket.h>
 #include <linux/route.h>
 #include <linux/in6.h>
 #include <linux/ipv6_route.h>
-
-#endif

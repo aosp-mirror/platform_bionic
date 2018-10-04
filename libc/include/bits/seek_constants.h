@@ -26,11 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_SEEK_CONSTANTS_H_
-#define _BITS_SEEK_CONSTANTS_H_
+#pragma once
 
+/**
+ * @file bits/seek_constants.h
+ * @brief The `SEEK_` constants.
+ */
+
+/** Seek to an absolute offset. */
 #define SEEK_SET 0
+/** Seek relative to the current offset. */
 #define SEEK_CUR 1
+/** Seek relative to the end of the file. */
 #define SEEK_END 2
-
-#endif

@@ -26,18 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_AUXVEC_H_
-#define _BITS_AUXVEC_H_
+#pragma once
+
+/**
+ * @file bits/auxvec.h
+ * @brief Constants for use with getauxval().
+ */
 
 #include <sys/cdefs.h>
 
 #include <linux/auxvec.h>
 
-/* Historical arch-specific cruft. */
-#define AT_FPUCW 18 /* SuperH */
-#define AT_DCACHEBSIZE 19 /* PowerPC */
-#define AT_ICACHEBSIZE 20 /* PowerPC */
-#define AT_UCACHEBSIZE 21 /* PowerPC */
-#define AT_IGNOREPPC 22 /* PowerPC */
-
-#endif
+/** Historical SuperH cruft. Irrelevant on Android. */
+#define AT_FPUCW 18
+/** Historical PowerPC cruft. Irrelevant on Android. */
+#define AT_DCACHEBSIZE 19
+/** Historical PowerPC cruft. Irrelevant on Android. */
+#define AT_ICACHEBSIZE 20
+/** Historical PowerPC cruft. Irrelevant on Android. */
+#define AT_UCACHEBSIZE 21
+/** Historical PowerPC cruft. Irrelevant on Android. */
+#define AT_IGNOREPPC 22

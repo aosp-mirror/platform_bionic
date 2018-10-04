@@ -26,20 +26,63 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_SYSINFO_H_
-#define _SYS_SYSINFO_H_
+#pragma once
+
+/**
+ * @file sys/sysinfo.h
+ * @brief System information.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/kernel.h>
 
 __BEGIN_DECLS
 
+/**
+ * [sysinfo(2)](http://man7.org/linux/man-pages/man2/sysinfo.2.html) queries system information.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int sysinfo(struct sysinfo* __info);
+
+/**
+ * [get_nprocs_conf(3)](http://man7.org/linux/man-pages/man3/get_nprocs_conf.3.html) returns
+ * the total number of processors in the system.
+ *
+ * Available since API level 23.
+ *
+ * See also sysconf().
+ */
 int get_nprocs_conf(void) __INTRODUCED_IN(23);
+
+/**
+ * [get_nprocs(3)](http://man7.org/linux/man-pages/man3/get_nprocs.3.html) returns
+ * the number of processors in the system that are currently on-line.
+ *
+ * Available since API level 23.
+ *
+ * See also sysconf().
+ */
 int get_nprocs(void) __INTRODUCED_IN(23);
+
+/**
+ * [get_phys_pages(3)](http://man7.org/linux/man-pages/man3/get_phys_pages.3.html) returns
+ * the total number of physical pages in the system.
+ *
+ * Available since API level 23.
+ *
+ * See also sysconf().
+ */
 long get_phys_pages(void) __INTRODUCED_IN(23);
+
+/**
+ * [get_avphys_pages(3)](http://man7.org/linux/man-pages/man3/get_avphys_pages.3.html) returns
+ * the number of physical pages in the system that are currently available.
+ *
+ * Available since API level 23.
+ *
+ * See also sysconf().
+ */
 long get_avphys_pages(void) __INTRODUCED_IN(23);
 
 __END_DECLS
-
-#endif
