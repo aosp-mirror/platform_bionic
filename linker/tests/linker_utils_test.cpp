@@ -58,6 +58,9 @@ TEST(linker_utils, normalize_path_smoke) {
   ASSERT_TRUE(normalize_path("/a/../../b", &output));
   ASSERT_EQ("/b", output);
 
+  ASSERT_TRUE(normalize_path("/..", &output));
+  ASSERT_EQ("/", output);
+
   output = "unchanged";
   ASSERT_FALSE(normalize_path("root///dir/.///dir2/somedir/../zipfile!/dir/dir9//..///afile", &output));
   ASSERT_EQ("unchanged", output);
