@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MOUNT_H
-#define _SYS_MOUNT_H
+#pragma once
+
+/**
+ * @file sys/mount.h
+ * @brief Mounting and unmounting filesystems.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/ioctl.h>
@@ -35,16 +39,38 @@
 
 __BEGIN_DECLS
 
-/* umount2 flags. */
+/** The umount2() flag to force unmounting. */
 #define MNT_FORCE 1
+/** The umount2() flag to lazy unmount. */
 #define MNT_DETACH 2
+/** The umount2() flag to mark a mount point as expired. */
 #define MNT_EXPIRE 4
+
+/** The umount2() flag to not dereference the mount point path if it's a symbolic link. */
 #define UMOUNT_NOFOLLOW 8
 
+/**
+ * [mount(2)](http://man7.org/linux/man-pages/man2/mount.2.html) mounts the filesystem `source` at
+ * the mount point `target`.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int mount(const char* __source, const char* __target, const char* __fs_type, unsigned long __flags, const void* __data);
+
+/**
+ * [umount(2)](http://man7.org/linux/man-pages/man2/umount.2.html) unmounts the filesystem at
+ * the given mount point.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int umount(const char* __target);
+
+/**
+ * [umount2(2)](http://man7.org/linux/man-pages/man2/umount2.2.html) unmounts the filesystem at
+ * the given mount point, according to the supplied flags.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int umount2(const char* __target, int __flags);
 
 __END_DECLS
-
-#endif

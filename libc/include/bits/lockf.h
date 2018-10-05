@@ -26,22 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_LOCKF_H_
-#define _BITS_LOCKF_H_
+#pragma once
+
+/**
+ * @file bits/lockf.h
+ * @brief The lockf() function.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
+/** lockf() command to unlock a section of a file. */
 #define F_ULOCK 0
+/** lockf() command to block until it locks a section of a file. */
 #define F_LOCK 1
+/** lockf() command to try to lock a section of a file. */
 #define F_TLOCK 2
+/** lockf() command to test whether a section of a file is unlocked (or locked by the caller). */
 #define F_TEST 3
 
 __BEGIN_DECLS
 
+/**
+ * [lockf(3)](http://man7.org/linux/man-pages/man3/lockf.3.html) manipulates POSIX file locks.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 24.
+ *
+ * See also flock().
+ */
 int lockf(int __fd, int __cmd, off_t __length) __RENAME_IF_FILE_OFFSET64(lockf64) __INTRODUCED_IN(24);
+
+/**
+ * Like lockf() but allows using a 64-bit length
+ * even from a 32-bit process without `__FILE_OFFSET_BITS=64`.
+ */
 int lockf64(int __fd, int __cmd, off64_t __length) __INTRODUCED_IN(24);
 
 __END_DECLS
-
-#endif

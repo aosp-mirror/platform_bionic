@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_STRCASECMP_H_
-#define _BITS_STRCASECMP_H_
+#pragma once
+
+/**
+ * @file bits/strcasecmp.h
+ * @brief Case-insensitive string comparison.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -35,11 +39,33 @@
 
 __BEGIN_DECLS
 
+/**
+ * [strcasecmp(3)](http://man7.org/linux/man-pages/man3/strcasecmp.3.html) compares two strings
+ * ignoring case.
+ *
+ * Returns an integer less than, equal to, or greater than zero if the first string is less than,
+ * equal to, or greater than the second string (ignoring case).
+ */
 int strcasecmp(const char* __s1, const char* __s2) __attribute_pure__;
+
+/**
+ * Like strcasecmp() but taking a `locale_t`.
+ */
 int strcasecmp_l(const char* __s1, const char* __s2, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
+
+/**
+ * [strncasecmp(3)](http://man7.org/linux/man-pages/man3/strncasecmp.3.html) compares the first
+ * `n` bytes of two strings ignoring case.
+ *
+ * Returns an integer less than, equal to, or greater than zero if the first `n` bytes of the
+ * first string is less than, equal to, or greater than the first `n` bytes of the second
+ * string (ignoring case).
+ */
 int strncasecmp(const char* __s1, const char* __s2, size_t __n) __attribute_pure__;
+
+/**
+ * Like strncasecmp() but taking a `locale_t`.
+ */
 int strncasecmp_l(const char* __s1, const char* __s2, size_t __n, locale_t __l) __attribute_pure__ __INTRODUCED_IN(23);
 
 __END_DECLS
-
-#endif

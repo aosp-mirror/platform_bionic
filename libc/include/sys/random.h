@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_RANDOM_H_
-#define _SYS_RANDOM_H_
+#pragma once
+
+/**
+ * @file sys/random.h
+ * @brief The getentropy() and getrandom() functions.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -36,12 +40,28 @@
 
 __BEGIN_DECLS
 
-/* See also arc4random_buf in <stdlib.h>, which is available in all API levels. */
-
+/**
+ * [getentropy(3)](http://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
+ * with random bytes.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 28.
+ *
+ * See also arc4random_buf() which is available in all API levels.
+ */
 int getentropy(void* __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
 
+/**
+ * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
+ * with random bytes.
+ *
+ * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 28.
+ *
+ * See also arc4random_buf() which is available in all API levels.
+ */
 ssize_t getrandom(void* __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
 
 __END_DECLS
-
-#endif

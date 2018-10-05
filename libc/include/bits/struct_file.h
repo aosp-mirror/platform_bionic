@@ -26,13 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#ifndef BITS_FILE_H
-#define BITS_FILE_H
+#pragma once
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/** The opaque structure implementing `FILE`. Do not make any assumptions about its content. */
 struct __sFILE {
 #if defined(__LP64__)
   char __private[152];
@@ -42,5 +42,3 @@ struct __sFILE {
 } __attribute__((aligned(sizeof(void*))));
 
 __END_DECLS
-
-#endif /* BITS_FILE_H */
