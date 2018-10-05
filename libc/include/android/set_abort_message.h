@@ -26,15 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SET_ABORT_MESSAGE_H
-#define _SET_ABORT_MESSAGE_H
+#pragma once
+
+/**
+ * @file android/set_abort_message.h
+ * @brief The android_set_abort_message() function.
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/**
+ * android_set_abort_message() sets the abort message that will be shown
+ * by [debuggerd](https://source.android.com/devices/tech/debug/native-crash).
+ * This is meant for use by libraries that deliberately abort so that they can
+ * provide an explanation. It is used within bionic to implement assert() and
+ * all FORTIFY/fdsan aborts.
+ *
+ * Available since API level 21.
+ */
 void android_set_abort_message(const char* __msg) __INTRODUCED_IN(21);
 
 __END_DECLS
-
-#endif

@@ -26,24 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_REBOOT_H_
-#define _SYS_REBOOT_H_
+#pragma once
+
+/**
+ * @file sys/reboot.h
+ * @brief The reboot() function.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/reboot.h>
 
 __BEGIN_DECLS
 
-/* use glibc names as well */
+/** The glibc name for the reboot() flag `LINUX_REBOOT_CMD_RESTART`. */
+#define RB_AUTOBOOT LINUX_REBOOT_CMD_RESTART
+/** The glibc name for the reboot() flag `LINUX_REBOOT_CMD_HALT`. */
+#define RB_HALT_SYSTEM LINUX_REBOOT_CMD_HALT
+/** The glibc name for the reboot() flag `LINUX_REBOOT_CMD_CAD_ON`. */
+#define RB_ENABLE_CAD LINUX_REBOOT_CMD_CAD_ON
+/** The glibc name for the reboot() flag `LINUX_REBOOT_CMD_CAD_OFF`. */
+#define RB_DISABLE_CAD LINUX_REBOOT_CMD_CAD_OFF
+/** The glibc name for the reboot() flag `LINUX_REBOOT_CMD_POWER_OFF`. */
+#define RB_POWER_OFF LINUX_REBOOT_CMD_POWER_OFF
 
-#define RB_AUTOBOOT     LINUX_REBOOT_CMD_RESTART
-#define RB_HALT_SYSTEM  LINUX_REBOOT_CMD_HALT
-#define RB_ENABLE_CAD   LINUX_REBOOT_CMD_CAD_ON
-#define RB_DISABLE_CAD  LINUX_REBOOT_CMD_CAD_OFF
-#define RB_POWER_OFF    LINUX_REBOOT_CMD_POWER_OFF
-
+/**
+ * [reboot(2)](http://man7.org/linux/man-pages/man2/reboot.2.html) reboots the device.
+ *
+ * Does not return on successful reboot, returns 0 if CAD was successfully enabled/disabled,
+ * and returns -1 and sets `errno` on failure.
+ */
 int reboot(int __cmd);
 
 __END_DECLS
-
-#endif

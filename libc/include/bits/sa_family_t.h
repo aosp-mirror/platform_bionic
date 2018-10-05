@@ -26,11 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_SA_FAMILY_T_H_
-#define _BITS_SA_FAMILY_T_H_
+#pragma once
+
+/**
+ * @file bits/sa_family_t.h
+ * @brief The `sa_family_t` type.
+ */
 
 #include <sys/cdefs.h>
 
+/** The type of fields like `sa_family`. */
 typedef unsigned short sa_family_t;
-
-#endif

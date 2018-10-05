@@ -26,12 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_IP_MSFILTER_H_
-#define _BITS_IP_MSFILTER_H_
+#pragma once
+
+/**
+ * @file bits/ip_msfilter.h
+ * @brief IPv4 multicast filtering.
+ */
 
 #include <sys/cdefs.h>
 #include <bits/in_addr.h>
 
+/** The type representing an IPv4 multicast filter. */
 struct ip_msfilter {
   struct in_addr imsf_multiaddr;
   struct in_addr imsf_interface;
@@ -39,5 +44,3 @@ struct ip_msfilter {
   uint32_t imsf_numsrc;
   struct in_addr imsf_slist[1];
 };
-
-#endif

@@ -26,28 +26,46 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_KLOG_H_
-#define _SYS_KLOG_H_
+#pragma once
+
+/**
+ * @file sys/klog.h
+ * @brief
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
-/* These correspond to the kernel's SYSLOG_ACTION_whatever constants. */
-#define KLOG_CLOSE         0
-#define KLOG_OPEN          1
-#define KLOG_READ          2
-#define KLOG_READ_ALL      3
-#define KLOG_READ_CLEAR    4
-#define KLOG_CLEAR         5
-#define KLOG_CONSOLE_OFF   6
-#define KLOG_CONSOLE_ON    7
+/** Used with klogctl(). */
+#define KLOG_CLOSE 0
+/** Used with klogctl(). */
+#define KLOG_OPEN 1
+/** Used with klogctl(). */
+#define KLOG_READ 2
+/** Used with klogctl(). */
+#define KLOG_READ_ALL 3
+/** Used with klogctl(). */
+#define KLOG_READ_CLEAR 4
+/** Used with klogctl(). */
+#define KLOG_CLEAR 5
+/** Used with klogctl(). */
+#define KLOG_CONSOLE_OFF 6
+/** Used with klogctl(). */
+#define KLOG_CONSOLE_ON 7
+/** Used with klogctl(). */
 #define KLOG_CONSOLE_LEVEL 8
-#define KLOG_SIZE_UNREAD   9
-#define KLOG_SIZE_BUFFER   10
+/** Used with klogctl(). */
+#define KLOG_SIZE_UNREAD 9
+/** Used with klogctl(). */
+#define KLOG_SIZE_BUFFER 10
 
+/**
+ * [klogctl(2)](http://man7.org/linux/man-pages/man2/syslog.2.html) operates on the kernel log.
+ *
+ * This system call is not available to applications.
+ * Use syslog() or `<android/log.h>` instead.
+ */
 int klogctl(int __type, char* __buf, int __buf_size);
 
 __END_DECLS
-
-#endif

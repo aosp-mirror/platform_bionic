@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_TIMERFD_H_
-#define _SYS_TIMERFD_H_
+#pragma once
+
+/**
+ * @file sys/timerfd.h
+ * @brief Timer file descriptors.
+ */
 
 #include <fcntl.h> /* For O_CLOEXEC and O_NONBLOCK. */
 #include <time.h>
@@ -36,16 +40,44 @@
 
 __BEGIN_DECLS
 
-#define TFD_TIMER_ABSTIME (1 << 0)
-#define TFD_TIMER_CANCEL_ON_SET (1 << 1)
-
+/** The timerfd_create() flag for a close-on-exec file descriptor. */
 #define TFD_CLOEXEC O_CLOEXEC
+/** The timerfd_create() flag for a non-blocking file descriptor. */
 #define TFD_NONBLOCK O_NONBLOCK
 
+/**
+ * [timerfd_create(2)](http://man7.org/linux/man-pages/man2/timerfd_create.2.html) creates a
+ * timer file descriptor.
+ *
+ * Returns the new file descriptor on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 19.
+ */
 int timerfd_create(clockid_t __clock, int __flags) __INTRODUCED_IN(19);
+
+/** The timerfd_settime() flag to use absolute rather than relative times. */
+#define TFD_TIMER_ABSTIME (1 << 0)
+/** The timerfd_settime() flag to cancel an absolute timer if the realtime clock changes. */
+#define TFD_TIMER_CANCEL_ON_SET (1 << 1)
+
+/**
+ * [timerfd_settime(2)](http://man7.org/linux/man-pages/man2/timerfd_settime.2.html) starts or
+ * stops a timer.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 19.
+ */
 int timerfd_settime(int __fd, int __flags, const struct itimerspec* __new_value, struct itimerspec* __old_value) __INTRODUCED_IN(19);
+
+/**
+ * [timerfd_gettime(2)](http://man7.org/linux/man-pages/man2/timerfd_gettime.2.html) queries the
+ * current timer settings.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 19.
+ */
 int timerfd_gettime(int __fd, struct itimerspec* __current_value) __INTRODUCED_IN(19);
 
 __END_DECLS
-
-#endif
