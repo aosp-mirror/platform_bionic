@@ -26,26 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_UTSNAME_H_
-#define _SYS_UTSNAME_H_
+#pragma once
+
+/**
+ * @file sys/utsname.h
+ * @brief The uname() function.
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/** The maximum length of any field in `struct utsname`. */
 #define SYS_NMLN 65
 
+/** The information returned by uname(). */
 struct utsname {
+  /** The OS name. "Linux" on Android. */
   char sysname[SYS_NMLN];
+  /** The name on the network. Typically "localhost" on Android. */
   char nodename[SYS_NMLN];
+  /** The OS release. Typically something like "4.4.115-g442ad7fba0d" on Android. */
   char release[SYS_NMLN];
+  /** The OS version. Typically something like "#1 SMP PREEMPT" on Android. */
   char version[SYS_NMLN];
+  /** The hardware architecture. Typically "aarch64" on Android. */
   char machine[SYS_NMLN];
+  /** The domain name set by setdomainname(). Typically "localdomain" on Android. */
   char domainname[SYS_NMLN];
 };
 
+/**
+ * [uname(2)](http://man7.org/linux/man-pages/man2/uname.2.html) returns information
+ * about the kernel.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int uname(struct utsname* __buf);
 
 __END_DECLS
-
-#endif

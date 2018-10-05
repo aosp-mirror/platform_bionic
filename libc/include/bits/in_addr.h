@@ -26,16 +26,20 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_IN_ADDR_H_
-#define _BITS_IN_ADDR_H_
+#pragma once
+
+/**
+ * @file bits/in_addr.h
+ * @brief IPv4 address types.
+ */
 
 #include <sys/cdefs.h>
 #include <stdint.h>
 
+/** An integral type representing an IPv4 address. */
 typedef uint32_t in_addr_t;
 
+/** A structure representing an IPv4 address. */
 struct in_addr {
   in_addr_t s_addr;
 };
-
-#endif

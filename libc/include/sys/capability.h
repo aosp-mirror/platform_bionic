@@ -26,17 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BIONIC_SYS_CAPABILITY_H
-#define _BIONIC_SYS_CAPABILITY_H
+#pragma once
+
+/**
+ * @file sys/capability.h
+ * @brief Capabilities.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/capability.h>
 
 __BEGIN_DECLS
 
+/**
+ * [capget(2)](http://man7.org/linux/man-pages/man2/capget.2.html) gets the calling
+ * thread's capabilities.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int capget(cap_user_header_t __hdr_ptr, cap_user_data_t __data_ptr);
+
+/**
+ * [capset(2)](http://man7.org/linux/man-pages/man2/capset.2.html) sets the calling
+ * thread's capabilities.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int capset(cap_user_header_t __hdr_ptr, const cap_user_data_t __data_ptr);
 
 __END_DECLS
-
-#endif

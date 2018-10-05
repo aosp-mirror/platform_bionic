@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_SHM_H_
-#define _SYS_SHM_H_
+#pragma once
+
+/**
+ * @file sys/shm.h
+ * @brief System V shared memory. Not useful on Android because it's disallowed by SELinux.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/ipc.h>
@@ -42,11 +46,13 @@ __BEGIN_DECLS
 
 typedef unsigned long shmatt_t;
 
+/** Not useful on Android; disallowed by SELinux. */
 void* shmat(int __shm_id, const void* __addr, int __flags) __INTRODUCED_IN(26);
+/** Not useful on Android; disallowed by SELinux. */
 int shmctl(int __shm_id, int __cmd, struct shmid_ds* __buf) __INTRODUCED_IN(26);
+/** Not useful on Android; disallowed by SELinux. */
 int shmdt(const void* __addr) __INTRODUCED_IN(26);
+/** Not useful on Android; disallowed by SELinux. */
 int shmget(key_t __key, size_t __size, int __flags) __INTRODUCED_IN(26);
 
 __END_DECLS
-
-#endif
