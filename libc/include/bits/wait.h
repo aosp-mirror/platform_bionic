@@ -26,24 +26,43 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_WAIT_H_
-#define _BITS_WAIT_H_
+#pragma once
+
+/**
+ * @file bits/wait.h
+ * @brief Process exit status macros.
+ */
 
 #include <sys/cdefs.h>
 
 #include <linux/wait.h>
 
-#define WEXITSTATUS(s) (((s) & 0xff00) >> 8)
-#define WCOREDUMP(s)   ((s) & 0x80)
-#define WTERMSIG(s)    ((s) & 0x7f)
-#define WSTOPSIG(s)    WEXITSTATUS(s)
+/** Returns the exit status from a process for which `WIFEXITED` is true. */
+#define WEXITSTATUS(__status) (((__status) & 0xff00) >> 8)
 
-#define WIFEXITED(s)    (WTERMSIG(s) == 0)
-#define WIFSTOPPED(s)   (WTERMSIG(s) == 0x7f)
-#define WIFSIGNALED(s)  (WTERMSIG((s)+1) >= 2)
-#define WIFCONTINUED(s) ((s) == 0xffff)
+/** Returns true if a process dumped core. */
+#define WCOREDUMP(__status) ((__status) & 0x80)
 
-#define W_EXITCODE(ret, sig) ((ret) << 8 | (sig))
-#define W_STOPCODE(sig)      ((sig) << 8 | 0x7f)
+/** Returns the terminating signal from a process, or 0 if it exited normally. */
+#define WTERMSIG(__status) ((__status) & 0x7f)
 
-#endif
+/** Returns the signal that stopped the process, if `WIFSTOPPED` is true. */
+#define WSTOPSIG(__status) WEXITSTATUS(__status)
+
+/** Returns true if the process exited normally. */
+#define WIFEXITED(__status) (WTERMSIG(__status) == 0)
+
+/** Returns true if the process was stopped by a signal. */
+#define WIFSTOPPED(__status) (WTERMSIG(__status) == 0x7f)
+
+/** Returns true if the process was terminated by a signal. */
+#define WIFSIGNALED(__status) (WTERMSIG((__status)+1) >= 2)
+
+/** Returns true if the process was resumed . */
+#define WIFCONTINUED(__status) ((__status) == 0xffff)
+
+/** Constructs a status value from the given exit code and signal number. */
+#define W_EXITCODE(__exit_code, __signal_number) ((__exit_code) << 8 | (__signal_number))
+
+/** Constructs a status value for a process stopped by the given signal. */
+#define W_STOPCODE(__signal_number) ((__signal_number) << 8 | 0x7f)
