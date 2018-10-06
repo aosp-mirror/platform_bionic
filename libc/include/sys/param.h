@@ -33,6 +33,7 @@
  * @brief Various macros.
  */
 
+#include <endian.h>
 #include <limits.h>
 #include <linux/param.h>
 #include <sys/cdefs.h>
