@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0415057_be349fd6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-06T16:49:00Z",
+      "side": 1,
+      "message": "that seems like a bug in itself. presumably we can fix that, since this isn\u0027t NDK API?",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "41b632246e3373405ce7a1d6958ff8522f70f421",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
