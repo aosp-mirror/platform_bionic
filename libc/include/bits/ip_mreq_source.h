@@ -26,16 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_IP_MREQ_SOURCE_H_
-#define _BITS_IP_MREQ_SOURCE_H_
+#pragma once
+
+/**
+ * @file bits/ip_mreq_source.h
+ * @brief The `ip_mreq_source` type.
+ */
 
 #include <sys/cdefs.h>
 #include <bits/in_addr.h>
 
+/**
+ * The type representing an IPv4 multicast source.
+ */
 struct ip_mreq_source {
   struct in_addr imr_multiaddr;
   struct in_addr imr_interface;
   struct in_addr imr_sourceaddr;
 };
-
-#endif

@@ -26,16 +26,22 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_MBSTATE_T_H_
-#define _BITS_MBSTATE_T_H_
+#pragma once
+
+/**
+ * @file bits/mbstate_t.h
+ * @brief The `mbstate_t` type.
+ */
 
 #include <sys/cdefs.h>
 
+/**
+ * An opaque type used by the multibyte conversion functions.
+ * Do not make assumptions about the content of this type.
+ */
 typedef struct {
   unsigned char __seq[4];
 #ifdef __LP64__
   unsigned char __reserved[4];
 #endif
 } mbstate_t;
-
-#endif
