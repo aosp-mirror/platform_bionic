@@ -918,8 +918,7 @@ bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle
 
   if (OpenArchiveFd(fd, "", handle) != 0) {
     // invalid zip-file (?)
-    CloseArchive(handle);
-    close(fd);
+    CloseArchive(*handle);
     return false;
   }
 
