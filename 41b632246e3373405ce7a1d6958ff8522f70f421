@@ -22,6 +22,30 @@
       "revId": "41b632246e3373405ce7a1d6958ff8522f70f421",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c3290dc_f32eedc2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-08T20:30:43Z",
+      "side": 1,
+      "message": "libziparchive.so is part of the VNDK, but I think we can still change the type. (Some mangled C++ symbols will be renamed.) I have a few CLs that I\u0027ll upload soon.",
+      "parentUuid": "a0415057_be349fd6",
+      "range": {
+        "startLine": 11,
+        "startChar": 17,
+        "endLine": 11,
+        "endChar": 56
+      },
+      "revId": "41b632246e3373405ce7a1d6958ff8522f70f421",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
