@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1930ba33_dd2cc92b",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-09T23:07:34Z",
+      "side": 1,
+      "message": "Maybe? None of the implementations I\u0027ve tested (musl,glibc,freebsd) leave argv[0] as the linker, though, and removing the initial linker args allows most programs to run.\n\nI don\u0027t think musl/glibc shift arguments down like this, though. Looking at the alignment of \u0026argv[0], they appear to be passing (argv+n, argc-n) to main and possibly writing argc-n to argv[n-1].\n\nmusl doesn\u0027t change the AT_xxx values, but glibc modifies only these four:\n\n    AT_PHDR 3\n    AT_PHNUM 5\n    AT_ENTRY 9\n    AT_EXECFN 31\n\nChanging the values in the kernel argument block doesn\u0027t change them via /proc/self/auxv.\n\nNeither glibc nor musl appear to touch any of /proc/self/{exe,cmdline,auxv,stat}.",
+      "parentUuid": "50e3617b_f9a41bab",
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "20396ac3_b3e2c2d3",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 4
