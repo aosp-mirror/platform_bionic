@@ -33,6 +33,10 @@
 #include <android-base/strings.h>
 #include <private/android_filesystem_config.h>
 
+#if defined(__BIONIC__)
+#include <android-base/properties.h>
+#endif
+
 // Generated android_ids array
 #include "generated_android_ids.h"
 
@@ -217,6 +221,7 @@ TEST(pwd, getpwnam_app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
 }
 
+#if defined(__BIONIC__)
 template <typename T>
 static void expect_ids(const T& ids) {
   std::set<typename T::key_type> expected_ids;
@@ -243,6 +248,12 @@ static void expect_ids(const T& ids) {
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
+  // Upgrading devices launched before API level 28 may not comply with the below check.
+  // Due to the difficulty in changing uids after launch, it is waived for these devices.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) < 28) {
+    return;
+  }
+
   // Ensure that no other ids were returned.
   auto return_differences = [&ids, &expected_ids] {
     std::vector<typename T::key_type> missing_from_ids;
@@ -263,6 +274,7 @@ static void expect_ids(const T& ids) {
   };
   EXPECT_EQ(expected_ids, ids) << return_differences();
 }
+#endif
 
 TEST(pwd, getpwent_iterate) {
 #if defined(__BIONIC__)
