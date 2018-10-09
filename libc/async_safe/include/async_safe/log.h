@@ -90,6 +90,7 @@ int async_safe_format_buffer(char* buf, size_t size, const char* fmt, ...) __pri
 int async_safe_format_buffer_va_list(char* buffer, size_t buffer_size, const char* format, va_list args);
 
 int async_safe_format_fd(int fd, const char* format , ...) __printflike(2, 3);
+int async_safe_format_fd_va_list(int fd, const char* format, va_list args);
 int async_safe_format_log(int pri, const char* tag, const char* fmt, ...) __printflike(3, 4);
 int async_safe_format_log_va_list(int pri, const char* tag, const char* fmt, va_list ap);
 int async_safe_write_log(int pri, const char* tag, const char* msg);
