@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0043dafe_ce4ec627",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-09T03:55:51Z",
+      "side": 1,
+      "message": "The argument block is a list of pointers/words, and we\u0027re trying to shift \"i\" words from the end of the block towards the front.",
+      "parentUuid": "afbf2bfa_fe8e19db",
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a5d7802c_644a3d7a",
         "filename": "libc/private/KernelArgumentBlock.h",
         "patchSetId": 1
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "f1b4d2a4_a7373dbf",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-09T03:55:51Z",
+      "side": 1,
+      "message": "argc is an int, but it\u0027s stored in the first word of the argument block, which is a size_t/uintptr_t. It\u0027s writing the entire uintptr_t, and init() reads the entire uintptr_t:\n\n    void init(void* raw_args) {\n      uintptr_t* args \u003d reinterpret_cast\u003cuintptr_t*\u003e(raw_args);\n      argc \u003d static_cast\u003cint\u003e(*args);\n      ...",
+      "parentUuid": "a5d7802c_644a3d7a",
+      "range": {
+        "startLine": 61,
+        "startChar": 22,
+        "endLine": 61,
+        "endChar": 31
+      },
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "213a34a1_58268a87",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2018-10-06T09:31:51Z",
       "side": 1,
       "message": "? seems like this contradicts the code",
+      "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83a21290_07014668",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-09T03:55:51Z",
+      "side": 1,
+      "message": "I tried to clarify the comment. The kernel could theoretically omit the PT_BASE entry because its value is 0, but because it doesn\u0027t omit it, the linker can change it here to its own base address.",
+      "parentUuid": "213a34a1_58268a87",
       "revId": "2685d01be3354bdc60722452d3aec34b38632ebc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
