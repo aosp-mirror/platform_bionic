@@ -73,6 +73,7 @@
 #define _SC_XOPEN_LEGACY        0x0024
 #define _SC_ATEXIT_MAX          0x0025
 #define _SC_IOV_MAX             0x0026
+#define _SC_UIO_MAXIOV _SC_IOV_MAX
 #define _SC_PAGESIZE            0x0027
 #define _SC_PAGE_SIZE           0x0028
 #define _SC_XOPEN_UNIX          0x0029
