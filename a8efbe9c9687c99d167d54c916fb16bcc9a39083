@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "50e3617b_f9a41bab",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:31:03Z",
+      "side": 1,
+      "message": "we don\u0027t actually want to do this, though, do we? the default behavior seems WAI?",
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20396ac3_b3e2c2d3",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:31:03Z",
+      "side": 1,
+      "message": "prefer `result`.",
+      "range": {
+        "startLine": 189,
+        "startChar": 14,
+        "endLine": 189,
+        "endChar": 17
+      },
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cb30064_9c72a524",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:31:03Z",
+      "side": 1,
+      "message": "though it seems like you don\u0027t even need a name. just `return` directly?",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 200,
+        "endChar": 13
+      },
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "807326b5_e97c78a3",
+        "filename": "tests/libs/exec_linker_helper.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-09T20:31:03Z",
+      "side": 1,
+      "message": "(BSD copyright headers in these new files.)",
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
