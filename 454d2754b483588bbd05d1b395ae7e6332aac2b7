@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60b5e041_eac0b06e",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-10T19:59:09Z",
+      "side": 1,
+      "message": "stray space here got copy \u0026 pasted into all the new tests.\n\ni wish we could have clang-format on for our code but not all the upstream BSD stuff :-(",
+      "range": {
+        "startLine": 93,
+        "startChar": 13,
+        "endLine": 93,
+        "endChar": 16
+      },
+      "revId": "454d2754b483588bbd05d1b395ae7e6332aac2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cedd9289_56be24bc",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-10T19:59:09Z",
+      "side": 1,
+      "message": "you don\u0027t want any test for the \"show the help\" case?",
+      "revId": "454d2754b483588bbd05d1b395ae7e6332aac2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
