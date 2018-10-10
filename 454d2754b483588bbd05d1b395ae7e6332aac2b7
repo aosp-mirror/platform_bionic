@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a2177c2e_862cff1d",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T21:40:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60b5e041_eac0b06e",
+      "range": {
+        "startLine": 93,
+        "startChar": 13,
+        "endLine": 93,
+        "endChar": 16
+      },
+      "revId": "454d2754b483588bbd05d1b395ae7e6332aac2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cedd9289_56be24bc",
         "filename": "tests/dl_test.cpp",
         "patchSetId": 6
@@ -36,6 +60,24 @@
       "writtenOn": "2018-10-10T19:59:09Z",
       "side": 1,
       "message": "you don\u0027t want any test for the \"show the help\" case?",
+      "revId": "454d2754b483588bbd05d1b395ae7e6332aac2b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9099b1dd_ce7ebe6d",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T21:40:08Z",
+      "side": 1,
+      "message": "I had removed the usage/help check because I made the help string a lot longer, and I didn\u0027t want to repeat the whole string here. I added a usage prefix check above (in dl.exec_linker) using a new eth.GetOutput() method.",
+      "parentUuid": "cedd9289_56be24bc",
       "revId": "454d2754b483588bbd05d1b395ae7e6332aac2b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
