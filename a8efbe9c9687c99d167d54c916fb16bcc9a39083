@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "49bd759b_0fb419d0",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T01:14:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20396ac3_b3e2c2d3",
+      "range": {
+        "startLine": 189,
+        "startChar": 14,
+        "endLine": 189,
+        "endChar": 17
+      },
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4cb30064_9c72a524",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 4
@@ -71,6 +95,30 @@
       "writtenOn": "2018-10-09T20:31:03Z",
       "side": 1,
       "message": "though it seems like you don\u0027t even need a name. just `return` directly?",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 200,
+        "endChar": 13
+      },
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11529b30_9d63b255",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T01:14:04Z",
+      "side": 1,
+      "message": "I replaced the function with get_executable_info.",
+      "parentUuid": "4cb30064_9c72a524",
       "range": {
         "startLine": 196,
         "startChar": 4,
@@ -97,6 +145,24 @@
       "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d6d3d8a_1dd1da58",
+        "filename": "tests/libs/exec_linker_helper.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T01:14:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "807326b5_e97c78a3",
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
