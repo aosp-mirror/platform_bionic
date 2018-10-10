@@ -396,7 +396,13 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
   // Check that's what happens...
   ProcStatus ps = {};
   GetChildStatus(&sa, &ps);
-  EXPECT_EQ(static_cast<uint64_t>(1 << (SIGALRM - 1)), ps.sigblk);
+
+  // TIMER_SIGNAL should also be blocked.
+  uint64_t expected_blocked = 0;
+  SignalSetAdd(&expected_blocked, SIGALRM);
+  SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
+  EXPECT_EQ(expected_blocked, ps.sigblk);
+
   EXPECT_EQ(static_cast<uint64_t>(0), ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
@@ -421,8 +427,15 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
   // Check that's what happens...
   ProcStatus ps = {};
   GetChildStatus(&sa, &ps);
-  EXPECT_EQ(static_cast<uint64_t>(0), ps.sigblk);
-  EXPECT_EQ(static_cast<uint64_t>(1 << (SIGCONT - 1)), ps.sigign);
+
+  // TIMER_SIGNAL should be blocked.
+  uint64_t expected_blocked = 0;
+  SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
+  EXPECT_EQ(expected_blocked, ps.sigblk);
+
+  uint64_t expected_ignored = 0;
+  SignalSetAdd(&expected_ignored, SIGCONT);
+  EXPECT_EQ(expected_ignored, ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
 }
