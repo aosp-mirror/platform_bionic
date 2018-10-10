@@ -16,6 +16,24 @@
       "revId": "fbd0a2310db10d57f09d1c968b64bbf2f08f00a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f57f6c14_c57fbfe2",
+        "filename": "tests/libs/exec_linker_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-10T09:03:29Z",
+      "side": 1,
+      "message": "I switched it to 2-clause BSD. Most of the other files in bionic/tests are ASL-2...",
+      "parentUuid": "10be0ea8_22976aa3",
+      "revId": "fbd0a2310db10d57f09d1c968b64bbf2f08f00a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
