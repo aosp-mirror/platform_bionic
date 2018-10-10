@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10be0ea8_22976aa3",
+        "filename": "tests/libs/exec_linker_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-10-10T08:32:43Z",
+      "side": 1,
+      "message": "linker uses 2-clause BSD license...",
+      "revId": "fbd0a2310db10d57f09d1c968b64bbf2f08f00a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
