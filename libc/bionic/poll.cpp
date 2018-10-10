@@ -71,7 +71,7 @@ int ppoll64(pollfd* fds, nfds_t fd_count, const timespec* ts, const sigset64_t* 
   sigset64_t mutable_ss;
   sigset64_t* mutable_ss_ptr = nullptr;
   if (ss != nullptr) {
-    mutable_ss = filter_reserved_signals(*ss);
+    mutable_ss = filter_reserved_signals(*ss, SIG_SETMASK);
     mutable_ss_ptr = &mutable_ss;
   }
 
@@ -121,7 +121,7 @@ int pselect64(int fd_count, fd_set* read_fds, fd_set* write_fds, fd_set* error_f
   sigset64_t mutable_ss;
   sigset64_t* mutable_ss_ptr = nullptr;
   if (ss != nullptr) {
-    mutable_ss = filter_reserved_signals(*ss);
+    mutable_ss = filter_reserved_signals(*ss, SIG_SETMASK);
     mutable_ss_ptr = &mutable_ss;
   }
 
