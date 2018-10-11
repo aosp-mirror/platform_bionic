@@ -43,7 +43,7 @@ int sigaction(int signal, const struct sigaction* bionic_new_action, struct siga
   if (bionic_new_action != nullptr) {
     kernel_new_action.sa_flags = bionic_new_action->sa_flags;
     kernel_new_action.sa_handler = bionic_new_action->sa_handler;
-    kernel_new_action.sa_mask = filter_reserved_signals(bionic_new_action->sa_mask);
+    kernel_new_action.sa_mask = filter_reserved_signals(bionic_new_action->sa_mask, SIG_SETMASK);
 #if defined(SA_RESTORER)
     kernel_new_action.sa_restorer = bionic_new_action->sa_restorer;
 #if defined(__aarch64__)
@@ -122,7 +122,7 @@ int sigaction64(int signal, const struct sigaction64* bionic_new, struct sigacti
       kernel_new.sa_restorer = (kernel_new.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
     }
 #endif
-    kernel_new.sa_mask = filter_reserved_signals(kernel_new.sa_mask);
+    kernel_new.sa_mask = filter_reserved_signals(kernel_new.sa_mask, SIG_SETMASK);
   }
 
   return __rt_sigaction(signal,
