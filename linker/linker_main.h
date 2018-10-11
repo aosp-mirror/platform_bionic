@@ -50,7 +50,7 @@ class ElfReader;
 
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path);
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
-                     struct stat* file_stat, off64_t file_offset,
+                     const struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags);
 
 bool find_libraries(android_namespace_t* ns,

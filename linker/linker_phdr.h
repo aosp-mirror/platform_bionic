@@ -54,6 +54,7 @@ class ElfReader {
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
   const char* get_string(ElfW(Word) index) const;
   bool is_mapped_by_caller() const { return mapped_by_caller_; }
+  ElfW(Addr) entry_point() const { return header_.e_entry + load_bias_; }
 
  private:
   bool ReadElfHeader();
