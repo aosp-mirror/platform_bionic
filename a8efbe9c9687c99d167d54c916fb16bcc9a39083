@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1e29e822_a0eb31de",
+        "filename": "libc/private/KernelArgumentBlock.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-11T01:04:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1930ba33_dd2cc92b",
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20396ac3_b3e2c2d3",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 4
@@ -128,6 +146,30 @@
       "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0994516_521cf062",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-11T01:04:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11529b30_9d63b255",
+      "range": {
+        "startLine": 196,
+        "startChar": 4,
+        "endLine": 200,
+        "endChar": 13
+      },
+      "revId": "a8efbe9c9687c99d167d54c916fb16bcc9a39083",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {

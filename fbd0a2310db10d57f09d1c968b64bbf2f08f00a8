@@ -52,6 +52,24 @@
       "revId": "fbd0a2310db10d57f09d1c968b64bbf2f08f00a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cb5441b_cc54f67b",
+        "filename": "tests/libs/exec_linker_helper.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-11T01:04:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5435cfff_d93711a8",
+      "revId": "fbd0a2310db10d57f09d1c968b64bbf2f08f00a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
