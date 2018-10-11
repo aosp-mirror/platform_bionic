@@ -106,8 +106,8 @@ void LinkerLogger::ResetState() {
   static CachedProperty debug_ld_all("debug.ld.all");
   flags_ |= ParseProperty(debug_ld_all.Get());
 
-  // Ignore processes started without argv (http://b/33276926).
-  if (g_argv[0] == nullptr) {
+  // Safeguard against a NULL g_argv. Ignore processes started without argv (http://b/33276926).
+  if (g_argv == nullptr || g_argv[0] == nullptr) {
     return;
   }
 

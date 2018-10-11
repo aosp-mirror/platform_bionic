@@ -466,6 +466,8 @@ cc_test {
     required: [
         "cfi_test_helper",
         "cfi_test_helper2",
+        "exec_linker_helper",
+        "exec_linker_helper_lib",
         "libtest_dt_runpath_a",
         "libtest_dt_runpath_b",
         "libtest_dt_runpath_c",
