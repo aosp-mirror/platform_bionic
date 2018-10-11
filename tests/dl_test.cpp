@@ -79,18 +79,58 @@ TEST(dl, lib_does_not_preempt_global_protected) {
   ASSERT_EQ(3370318, lib_global_protected_get_serial());
 }
 
-TEST(dl, exec_linker) {
 #if defined(__BIONIC__)
 #if defined(__LP64__)
   static constexpr const char* kPathToLinker = "/system/bin/linker64";
 #else
   static constexpr const char* kPathToLinker = "/system/bin/linker";
 #endif
+#endif
+
+TEST(dl, exec_linker) {
+#if defined(__BIONIC__)
+  std::string usage_prefix = std::string("Usage: ") + kPathToLinker;
   ExecTestHelper eth;
-  std::string expected_output = std::string("This is ") + kPathToLinker +
-                                ", the helper program for dynamic executables.\n";
-  eth.SetArgs( { kPathToLinker, nullptr });
+  eth.SetArgs({ kPathToLinker, nullptr });
+  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_EQ(0u, eth.GetOutput().find(usage_prefix)) << "Test output:\n" << eth.GetOutput();
+#endif
+}
+
+TEST(dl, exec_linker_load_file) {
+#if defined(__BIONIC__)
+  std::string helper = GetTestlibRoot() +
+      "/exec_linker_helper/exec_linker_helper";
+  std::string expected_output =
+      "ctor: argc=1 argv[0]=" + helper + "\n" +
+      "main: argc=1 argv[0]=" + helper + "\n" +
+      "helper_func called\n";
+  ExecTestHelper eth;
+  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
   eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+#endif
+}
+
+TEST(dl, exec_linker_load_from_zip) {
+#if defined(__BIONIC__)
+  std::string helper = GetTestlibRoot() +
+      "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip!/libdir/exec_linker_helper";
+  std::string expected_output =
+      "ctor: argc=1 argv[0]=" + helper + "\n" +
+      "main: argc=1 argv[0]=" + helper + "\n" +
+      "helper_func called\n";
+  ExecTestHelper eth;
+  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+#endif
+}
+
+TEST(dl, exec_linker_load_self) {
+#if defined(__BIONIC__)
+  std::string error_message = "error: linker cannot load itself\n";
+  ExecTestHelper eth;
+  eth.SetArgs({ kPathToLinker, kPathToLinker, nullptr });
+  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
 
