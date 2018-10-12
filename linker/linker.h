@@ -103,6 +103,8 @@ soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si);
 
 soinfo* find_containing_library(const void* p);
 
+int open_executable(const char* path, off64_t* file_offset, std::string* realpath);
+
 void do_android_get_LD_LIBRARY_PATH(char*, size_t);
 void do_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 void* do_dlopen(const char* name,

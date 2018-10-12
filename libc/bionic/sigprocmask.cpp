@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <errno.h>
 #include <signal.h>
 
 #include "private/sigrtmin.h"
@@ -65,10 +66,16 @@ int sigprocmask(int how,
 int sigprocmask64(int how,
                   const sigset64_t* new_set,
                   sigset64_t* old_set) __attribute__((__noinline__)) {
+  // how is only checked for validity if new_set is provided.
+  if (new_set && how != SIG_BLOCK && how != SIG_UNBLOCK && how != SIG_SETMASK) {
+    errno = EINVAL;
+    return -1;
+  }
+
   sigset64_t mutable_new_set;
   sigset64_t* mutable_new_set_ptr = nullptr;
   if (new_set) {
-    mutable_new_set = filter_reserved_signals(*new_set);
+    mutable_new_set = filter_reserved_signals(*new_set, how);
     mutable_new_set_ptr = &mutable_new_set;
   }
   return __rt_sigprocmask(how, mutable_new_set_ptr, old_set, sizeof(*new_set));

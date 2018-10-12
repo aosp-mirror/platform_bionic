@@ -74,6 +74,8 @@ struct SigSets {
     sigset64_t ss;
     sigemptyset64(&ss);
     sigaddset64(&ss, SIGUSR1 + offset);
+    // TIMER_SIGNAL.
+    sigaddset64(&ss, __SIGRTMIN);
     sigaddset64(&ss, SIGRTMIN + offset);
     return ss;
   }

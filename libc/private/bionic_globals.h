@@ -47,6 +47,11 @@ __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
   FdTable fd_table;
+
+  // When the linker is invoked on a binary (e.g. `linker64 /system/bin/date`),
+  // record the number of arguments passed to the linker itself rather than to
+  // the program it's loading. Typically 0, sometimes 1.
+  int initial_linker_arg_count;
 };
 
 __LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;

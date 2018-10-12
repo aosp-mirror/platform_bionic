@@ -26,47 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+// Verify that the linker can find exec_linker_helper_lib.so using the
+// executable's $ORIGIN runpath, even when the executable is inside a zip file.
 
-#include <sys/cdefs.h>
-
-#include <signal.h>
-
-#include "bionic_macros.h"
-
-// Realtime signals reserved for internal use:
-//   32 (__SIGRTMIN + 0)        POSIX timers
-//   33 (__SIGRTMIN + 1)        libbacktrace
-//   34 (__SIGRTMIN + 2)        libcore
-//   35 (__SIGRTMIN + 3)        debuggerd -b
-//
-// If you change this, also change __ndk_legacy___libc_current_sigrtmin
-// in <android/legacy_signal_inlines.h> to match.
-
-#define __SIGRT_RESERVED 4
-static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
-  int (*block)(sigset64_t*, int);
-  int (*unblock)(sigset64_t*, int);
-  switch (how) {
-    case SIG_BLOCK:
-      __BIONIC_FALLTHROUGH;
-    case SIG_SETMASK:
-      block = sigaddset64;
-      unblock = sigdelset64;
-      break;
-
-    case SIG_UNBLOCK:
-      block = sigdelset64;
-      unblock = sigaddset64;
-      break;
-  }
-
-  // The POSIX timer signal must be blocked.
-  block(&sigset, __SIGRTMIN + 0);
-
-  // Everything else must remain unblocked.
-  unblock(&sigset, __SIGRTMIN + 1);
-  unblock(&sigset, __SIGRTMIN + 2);
-  unblock(&sigset, __SIGRTMIN + 3);
-  return sigset;
+const char* helper_func() {
+  return "helper_func called";
 }
