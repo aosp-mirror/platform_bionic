@@ -55,3 +55,12 @@ class SignalMaskRestorer {
  private:
   sigset64_t old_mask_;
 };
+
+// uint64_t equivalents of sigsetops.
+static inline void SignalSetAdd(uint64_t* sigset, int signo) {
+  *sigset |= 1ULL << (signo - 1);
+}
+
+static inline void SignalSetDel(uint64_t* sigset, int signo) {
+  *sigset &= ~(1ULL << (signo - 1));
+}

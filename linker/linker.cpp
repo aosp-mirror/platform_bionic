@@ -289,7 +289,7 @@ void NamespaceListAllocator::free(LinkedListEntry<android_namespace_t>* entry) {
 }
 
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
-                     struct stat* file_stat, off64_t file_offset,
+                     const struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags) {
   if (strlen(name) >= PATH_MAX) {
     async_safe_fatal("library name \"%s\" too long", name);
@@ -1011,6 +1011,28 @@ static bool format_path(char* buf, size_t buf_size, const char* path, const char
   return true;
 }
 
+static int open_library_at_path(ZipArchiveCache* zip_archive_cache,
+                                const char* path, off64_t* file_offset,
+                                std::string* realpath) {
+  int fd = -1;
+  if (strstr(path, kZipFileSeparator) != nullptr) {
+    fd = open_library_in_zipfile(zip_archive_cache, path, file_offset, realpath);
+  }
+
+  if (fd == -1) {
+    fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
+    if (fd != -1) {
+      *file_offset = 0;
+      if (!realpath_fd(fd, realpath)) {
+        PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", path);
+        *realpath = path;
+      }
+    }
+  }
+
+  return fd;
+}
+
 static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
                                  const char* name, off64_t* file_offset,
                                  const std::vector<std::string>& paths,
@@ -1021,22 +1043,7 @@ static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
       continue;
     }
 
-    int fd = -1;
-    if (strstr(buf, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(zip_archive_cache, buf, file_offset, realpath);
-    }
-
-    if (fd == -1) {
-      fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
-      if (fd != -1) {
-        *file_offset = 0;
-        if (!realpath_fd(fd, realpath)) {
-          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", buf);
-          *realpath = buf;
-        }
-      }
-    }
-
+    int fd = open_library_at_path(zip_archive_cache, buf, file_offset, realpath);
     if (fd != -1) {
       return fd;
     }
@@ -1096,6 +1103,11 @@ static int open_library(android_namespace_t* ns,
   // END OF WORKAROUND
 
   return fd;
+}
+
+int open_executable(const char* path, off64_t* file_offset, std::string* realpath) {
+  ZipArchiveCache zip_archive_cache;
+  return open_library_at_path(&zip_archive_cache, path, file_offset, realpath);
 }
 
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {

@@ -26,47 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <stdio.h>
 
-#include <sys/cdefs.h>
+extern "C" void _start();
+const char* helper_func();
 
-#include <signal.h>
+__attribute__((constructor))
+static void ctor(int argc, char* argv[]) {
+  printf("ctor: argc=%d argv[0]=%s\n", argc, argv[0]);
+}
 
-#include "bionic_macros.h"
-
-// Realtime signals reserved for internal use:
-//   32 (__SIGRTMIN + 0)        POSIX timers
-//   33 (__SIGRTMIN + 1)        libbacktrace
-//   34 (__SIGRTMIN + 2)        libcore
-//   35 (__SIGRTMIN + 3)        debuggerd -b
-//
-// If you change this, also change __ndk_legacy___libc_current_sigrtmin
-// in <android/legacy_signal_inlines.h> to match.
-
-#define __SIGRT_RESERVED 4
-static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
-  int (*block)(sigset64_t*, int);
-  int (*unblock)(sigset64_t*, int);
-  switch (how) {
-    case SIG_BLOCK:
-      __BIONIC_FALLTHROUGH;
-    case SIG_SETMASK:
-      block = sigaddset64;
-      unblock = sigdelset64;
-      break;
-
-    case SIG_UNBLOCK:
-      block = sigdelset64;
-      unblock = sigaddset64;
-      break;
-  }
-
-  // The POSIX timer signal must be blocked.
-  block(&sigset, __SIGRTMIN + 0);
-
-  // Everything else must remain unblocked.
-  unblock(&sigset, __SIGRTMIN + 1);
-  unblock(&sigset, __SIGRTMIN + 2);
-  unblock(&sigset, __SIGRTMIN + 3);
-  return sigset;
+int main(int argc, char* argv[]) {
+  printf("main: argc=%d argv[0]=%s\n", argc, argv[0]);
+  printf("%s\n", helper_func());
+  return 0;
 }
