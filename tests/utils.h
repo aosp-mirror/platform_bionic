@@ -184,6 +184,9 @@ class ExecTestHelper {
   char** GetEnv() {
     return const_cast<char**>(env_.data());
   }
+  const std::string& GetOutput() {
+    return output_;
+  }
 
   void SetArgs(const std::vector<const char*>& args) {
     args_ = args;
@@ -212,24 +215,25 @@ class ExecTestHelper {
 
     // Parent.
     close(fds[1]);
-    std::string output;
+    output_.clear();
     char buf[BUFSIZ];
     ssize_t bytes_read;
     while ((bytes_read = TEMP_FAILURE_RETRY(read(fds[0], buf, sizeof(buf)))) > 0) {
-      output.append(buf, bytes_read);
+      output_.append(buf, bytes_read);
     }
     close(fds[0]);
 
-    std::string error_msg("Test output:\n" + output);
+    std::string error_msg("Test output:\n" + output_);
     AssertChildExited(pid, expected_exit_status, &error_msg);
     if (expected_output != nullptr) {
-      ASSERT_EQ(expected_output, output);
+      ASSERT_EQ(expected_output, output_);
     }
   }
 
  private:
   std::vector<const char*> args_;
   std::vector<const char*> env_;
+  std::string output_;
 };
 #endif
 
