@@ -163,6 +163,7 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 
 /** mallopt() option to set the decay time. Valid values are 0 and 1. */
 #define M_DECAY_TIME -100
+#define M_PURGE -101
 
 /**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
