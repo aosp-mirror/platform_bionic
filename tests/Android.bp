@@ -108,6 +108,7 @@ cc_test_library {
         "limits_test.cpp",
         "linux_swab_test.cpp",
         "locale_test.cpp",
+        "malloc_iterate_test.cpp",
         "malloc_test.cpp",
         "math_test.cpp",
         "math_force_long_double_test.cpp",
@@ -202,6 +203,7 @@ cc_test_library {
         bionic: {
             whole_static_libs: [
                 "libasync_safe",
+                "libprocinfo",
                 "libsystemproperties",
             ],
         },
