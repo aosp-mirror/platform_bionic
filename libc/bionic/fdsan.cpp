@@ -188,6 +188,8 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     async_safe_fatal_va_list("fdsan", fmt, va);
   } else {
     async_safe_format_log_va_list(ANDROID_LOG_ERROR, "fdsan", fmt, va);
+    va_end(va);
+    va_start(va, fmt);
     size_t len =
         async_safe_format_buffer_va_list(abort_message.buf, sizeof(abort_message.buf), fmt, va);
     abort_message.size = len + sizeof(size_t);
