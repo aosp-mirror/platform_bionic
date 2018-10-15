@@ -79,6 +79,18 @@ int je_mallopt(int param, int value) {
       }
     }
     return 1;
+  } else if (param == M_PURGE) {
+    unsigned narenas;
+    size_t sz = sizeof(unsigned);
+    if (je_mallctl("arenas.narenas", &narenas, &sz, nullptr, 0) != 0) {
+      return 0;
+    }
+    char buffer[100];
+    snprintf(buffer, sizeof(buffer), "arena.%u.purge", narenas);
+    if (je_mallctl(buffer, nullptr, nullptr, nullptr, 0) != 0) {
+      return 0;
+    }
+    return 1;
   }
   return 0;
 }
