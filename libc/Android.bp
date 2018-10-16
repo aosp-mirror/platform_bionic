@@ -792,6 +792,16 @@ cc_library_static {
                     "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
                 ],
             },
+            cortex_a76: {
+                srcs: [
+                    "arch-arm/denver/bionic/__strcat_chk.S",
+                    "arch-arm/denver/bionic/__strcpy_chk.S",
+                ],
+                exclude_srcs: [
+                    "arch-arm/cortex-a15/bionic/__strcat_chk.S",
+                    "arch-arm/cortex-a15/bionic/__strcpy_chk.S",
+                ],
+            },
             denver: {
                 srcs: [
                     "arch-arm/denver/bionic/__strcat_chk.S",
@@ -952,6 +962,19 @@ cc_library_static {
                 ],
             },
             cortex_a75: {
+                srcs: [
+                    "arch-arm/cortex-a7/bionic/memset.S",
+                    "arch-arm/denver/bionic/memcpy.S",
+
+                    "arch-arm/krait/bionic/strcmp.S",
+                ],
+                exclude_srcs: [
+                    "arch-arm/cortex-a15/bionic/memset.S",
+                    "arch-arm/cortex-a15/bionic/memcpy.S",
+                    "arch-arm/cortex-a15/bionic/strcmp.S",
+                ],
+            },
+            cortex_a76: {
                 srcs: [
                     "arch-arm/cortex-a7/bionic/memset.S",
                     "arch-arm/denver/bionic/memcpy.S",
