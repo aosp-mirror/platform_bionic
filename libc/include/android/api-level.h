@@ -51,12 +51,6 @@
  * compiler/build system based on the API level you claimed to target.
  */
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
-#else
-/**
- * `__ANDROID_NDK__` is defined for code that's built by the NDK
- * rather than as part of the OS.
- */
-#define __ANDROID_NDK__ 1
 #endif
 
 /** Names the Gingerbread API level (9), for comparisons against __ANDROID_API__. */
