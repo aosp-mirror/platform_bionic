@@ -114,6 +114,29 @@ enum {
    */
   ANDROID_DLEXT_USE_NAMESPACE = 0x200,
 
+  /**
+   * Instructs dlopen to apply `ANDROID_DLEXT_RESERVED_ADDRESS`,
+   * `ANDROID_DLEXT_RESERVED_ADDRESS_HINT`, `ANDROID_DLEXT_WRITE_RELRO` and
+   * `ANDROID_DLEXT_USE_RELRO` to any libraries loaded as dependencies of the
+   * main library as well.
+   *
+   * This means that if the main library depends on one or more not-already-loaded libraries, they
+   * will be loaded consecutively into the region starting at `reserved_addr`, and `reserved_size`
+   * must be large enough to contain all of the libraries. The libraries will be loaded in the
+   * deterministic order constructed from the DT_NEEDED entries, rather than the more secure random
+   * order used by default.
+   *
+   * Each library's GNU RELRO sections will be written out to `relro_fd` in the same order they were
+   * loaded. This will mean that the resulting file is dependent on which of the libraries were
+   * already loaded, as only the newly loaded libraries will be included, not any already-loaded
+   * dependencies. The caller should ensure that the set of libraries newly loaded is consistent
+   * for this to be effective.
+   *
+   * This is mainly useful for the system WebView implementation.
+   */
+  ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE = 0x400,
+
+
   /** Mask of valid bits. */
   ANDROID_DLEXT_VALID_FLAG_BITS       = ANDROID_DLEXT_RESERVED_ADDRESS |
                                         ANDROID_DLEXT_RESERVED_ADDRESS_HINT |
@@ -122,7 +145,8 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
-                                        ANDROID_DLEXT_USE_NAMESPACE,
+                                        ANDROID_DLEXT_USE_NAMESPACE |
+                                        ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE,
 };
 
 struct android_namespace_t;
