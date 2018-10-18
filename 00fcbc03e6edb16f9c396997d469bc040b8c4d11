@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "743da07f_c1c4ad9a",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-10-18T23:15:38Z",
+      "side": 1,
+      "message": "So the stuff outside the loop is not included in the timing at all? Sounds good.\n\nI added 5 threads. Unfortunately that actually does slow it down to nearly 2 microseconds on walleye. But you think that should be stable in the presence of more allocations? It looked like it to me when I first checked, but I know the code much less well.\n\nSo long as it stays at 2 useconds, I can probably compensate by decreasing the sampling rate a bit.",
+      "parentUuid": "0fc176d2_3ed54595",
+      "range": {
+        "startLine": 34,
+        "startChar": 11,
+        "endLine": 35,
+        "endChar": 3
+      },
+      "revId": "00fcbc03e6edb16f9c396997d469bc040b8c4d11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80ffcb89_fb3dab35",
         "filename": "benchmarks/get_heap_size_benchmark.cpp",
         "patchSetId": 1
