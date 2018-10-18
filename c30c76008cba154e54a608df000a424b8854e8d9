@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fa6e41b_87185a0c",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-18T20:22:50Z",
+      "side": 1,
+      "message": "Does this mean the below functions are doing some allocations? I think we should probably fix that rather than depend on ordering.",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 28
+      },
+      "revId": "c30c76008cba154e54a608df000a424b8854e8d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
