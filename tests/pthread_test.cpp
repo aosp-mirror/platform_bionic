@@ -31,6 +31,7 @@
 #include <unwind.h>
 
 #include <atomic>
+#include <future>
 #include <vector>
 
 #include <android-base/parseint.h>
@@ -537,6 +538,25 @@ static void pthread_kill__in_signal_handler_helper(int signal_number) {
 TEST(pthread, pthread_kill__in_signal_handler) {
   ScopedSignalHandler ssh(SIGALRM, pthread_kill__in_signal_handler_helper);
   ASSERT_EQ(0, pthread_kill(pthread_self(), SIGALRM));
+}
+
+TEST(pthread, pthread_kill__exited_thread) {
+  static std::promise<pid_t> tid_promise;
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr,
+                              [](void*) -> void* {
+                                tid_promise.set_value(gettid());
+                                return nullptr;
+                              },
+                              nullptr));
+
+  pid_t tid = tid_promise.get_future().get();
+  while (TEMP_FAILURE_RETRY(syscall(__NR_tgkill, getpid(), tid, 0)) != -1) {
+    continue;
+  }
+  ASSERT_EQ(ESRCH, errno);
+
+  ASSERT_EQ(ESRCH, pthread_kill(thread, 0));
 }
 
 TEST_F(pthread_DeathTest, pthread_detach__no_such_thread) {
