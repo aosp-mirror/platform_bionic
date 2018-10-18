@@ -22,6 +22,30 @@
       "revId": "c30c76008cba154e54a608df000a424b8854e8d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1190781c_e1371243",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-10-18T20:39:29Z",
+      "side": 1,
+      "message": "Clarified comment. This is just to prevent wrong data in the heap dump by observing a malloc but missing the corresponding free, thus having an allocation that seems alive indefinitely.",
+      "parentUuid": "3fa6e41b_87185a0c",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 28
+      },
+      "revId": "c30c76008cba154e54a608df000a424b8854e8d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
