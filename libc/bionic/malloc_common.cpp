@@ -42,6 +42,7 @@
 //   write_malloc_leak_info: Writes the leak info data to a file.
 
 #include <pthread.h>
+#include <stdatomic.h>
 
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
@@ -67,6 +68,17 @@ extern "C" void __sanitizer_malloc_enable() {
 #include "jemalloc.h"
 #define Malloc(function)  je_ ## function
 #endif
+
+template <typename T>
+static T* RemoveConst(const T* x) {
+  return const_cast<T*>(x);
+}
+
+// RemoveConst is a workaround for bug in current libcxx. Fix in
+// https://reviews.llvm.org/D47613
+#define atomic_load_explicit_const(obj, order) atomic_load_explicit(RemoveConst(obj), order)
+
+static constexpr memory_order default_read_memory_order = memory_order_acquire;
 
 static constexpr MallocDispatch __libc_malloc_default_dispatch
   __attribute__((unused)) = {
@@ -104,7 +116,9 @@ int gMallocLeakZygoteChild = 0;
 // Allocation functions
 // =============================================================================
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
-  auto _calloc = __libc_globals->malloc_dispatch.calloc;
+  auto _calloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.calloc,
+      default_read_memory_order);
   if (__predict_false(_calloc != nullptr)) {
     return _calloc(n_elements, elem_size);
   }
@@ -112,7 +126,9 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
 }
 
 extern "C" void free(void* mem) {
-  auto _free = __libc_globals->malloc_dispatch.free;
+  auto _free = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.free,
+      default_read_memory_order);
   if (__predict_false(_free != nullptr)) {
     _free(mem);
   } else {
@@ -121,7 +137,9 @@ extern "C" void free(void* mem) {
 }
 
 extern "C" struct mallinfo mallinfo() {
-  auto _mallinfo = __libc_globals->malloc_dispatch.mallinfo;
+  auto _mallinfo = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.mallinfo,
+      default_read_memory_order);
   if (__predict_false(_mallinfo != nullptr)) {
     return _mallinfo();
   }
@@ -129,7 +147,9 @@ extern "C" struct mallinfo mallinfo() {
 }
 
 extern "C" int mallopt(int param, int value) {
-  auto _mallopt = __libc_globals->malloc_dispatch.mallopt;
+  auto _mallopt = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.mallopt,
+      default_read_memory_order);
   if (__predict_false(_mallopt != nullptr)) {
     return _mallopt(param, value);
   }
@@ -137,7 +157,9 @@ extern "C" int mallopt(int param, int value) {
 }
 
 extern "C" void* malloc(size_t bytes) {
-  auto _malloc = __libc_globals->malloc_dispatch.malloc;
+  auto _malloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.malloc,
+      default_read_memory_order);
   if (__predict_false(_malloc != nullptr)) {
     return _malloc(bytes);
   }
@@ -145,7 +167,9 @@ extern "C" void* malloc(size_t bytes) {
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
-  auto _malloc_usable_size = __libc_globals->malloc_dispatch.malloc_usable_size;
+  auto _malloc_usable_size = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.malloc_usable_size,
+      default_read_memory_order);
   if (__predict_false(_malloc_usable_size != nullptr)) {
     return _malloc_usable_size(mem);
   }
@@ -153,7 +177,9 @@ extern "C" size_t malloc_usable_size(const void* mem) {
 }
 
 extern "C" void* memalign(size_t alignment, size_t bytes) {
-  auto _memalign = __libc_globals->malloc_dispatch.memalign;
+  auto _memalign = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.memalign,
+      default_read_memory_order);
   if (__predict_false(_memalign != nullptr)) {
     return _memalign(alignment, bytes);
   }
@@ -161,7 +187,9 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
-  auto _posix_memalign = __libc_globals->malloc_dispatch.posix_memalign;
+  auto _posix_memalign = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.posix_memalign,
+      default_read_memory_order);
   if (__predict_false(_posix_memalign != nullptr)) {
     return _posix_memalign(memptr, alignment, size);
   }
@@ -169,7 +197,9 @@ extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
 }
 
 extern "C" void* aligned_alloc(size_t alignment, size_t size) {
-  auto _aligned_alloc = __libc_globals->malloc_dispatch.aligned_alloc;
+  auto _aligned_alloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.aligned_alloc,
+      default_read_memory_order);
   if (__predict_false(_aligned_alloc != nullptr)) {
     return _aligned_alloc(alignment, size);
   }
@@ -177,7 +207,9 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
 }
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
-  auto _realloc = __libc_globals->malloc_dispatch.realloc;
+  auto _realloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.realloc,
+      default_read_memory_order);
   if (__predict_false(_realloc != nullptr)) {
     return _realloc(old_mem, bytes);
   }
@@ -195,7 +227,9 @@ extern "C" void* reallocarray(void* old_mem, size_t item_count, size_t item_size
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
-  auto _pvalloc = __libc_globals->malloc_dispatch.pvalloc;
+  auto _pvalloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.pvalloc,
+      default_read_memory_order);
   if (__predict_false(_pvalloc != nullptr)) {
     return _pvalloc(bytes);
   }
@@ -203,7 +237,9 @@ extern "C" void* pvalloc(size_t bytes) {
 }
 
 extern "C" void* valloc(size_t bytes) {
-  auto _valloc = __libc_globals->malloc_dispatch.valloc;
+  auto _valloc = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.valloc,
+      default_read_memory_order);
   if (__predict_false(_valloc != nullptr)) {
     return _valloc(bytes);
   }
@@ -232,6 +268,10 @@ static const char* DEBUG_SHARED_LIB = "libc_malloc_debug.so";
 static const char* DEBUG_PROPERTY_OPTIONS = "libc.debug.malloc.options";
 static const char* DEBUG_PROPERTY_PROGRAM = "libc.debug.malloc.program";
 static const char* DEBUG_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
+
+static const char* HEAPPROFD_SHARED_LIB = "heapprofd_client.so";
+static const char* HEAPPROFD_PREFIX = "heapprofd";
+static const int HEAPPROFD_SIGNAL = __SIGRTMIN + 4;
 
 enum FunctionEnum : uint8_t {
   FUNC_INITIALIZE,
@@ -313,7 +353,7 @@ extern "C" void write_malloc_leak_info(FILE* fp) {
 // =============================================================================
 
 template<typename FunctionType>
-static bool InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
+static bool InitMallocFunction(void* malloc_impl_handler, _Atomic(FunctionType)* func, const char* prefix, const char* suffix) {
   char symbol[128];
   snprintf(symbol, sizeof(symbol), "%s_%s", prefix, suffix);
   *func = reinterpret_cast<FunctionType>(dlsym(malloc_impl_handler, symbol));
@@ -325,10 +365,16 @@ static bool InitMallocFunction(void* malloc_impl_handler, FunctionType* func, co
 }
 
 static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const char* prefix) {
-  if (!InitMallocFunction<MallocCalloc>(impl_handler, &table->calloc, prefix, "calloc")) {
+  // We initialize free first to prevent the following situation:
+  // Heapprofd's MallocMalloc is installed, and an allocation is observed
+  // and logged to the heap dump. The corresponding free happens before
+  // heapprofd's MallocFree is installed, and is not logged in the heap
+  // dump. This leads to the allocation wrongly being active in the heap
+  // dump indefinitely.
+  if (!InitMallocFunction<MallocFree>(impl_handler, &table->free, prefix, "free")) {
     return false;
   }
-  if (!InitMallocFunction<MallocFree>(impl_handler, &table->free, prefix, "free")) {
+  if (!InitMallocFunction<MallocCalloc>(impl_handler, &table->calloc, prefix, "calloc")) {
     return false;
   }
   if (!InitMallocFunction<MallocMallinfo>(impl_handler, &table->mallinfo, prefix, "mallinfo")) {
@@ -465,24 +511,8 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
   return impl_handle;
 }
 
-// Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
-  const char* prefix;
-  const char* shared_lib;
-  char prop[PROP_VALUE_MAX];
-  char* options = prop;
-  // Prefer malloc debug since it existed first and is a more complete
-  // malloc interceptor than the hooks.
-  if (CheckLoadMallocDebug(&options)) {
-    prefix = "debug";
-    shared_lib = DEBUG_SHARED_LIB;
-  } else if (CheckLoadMallocHooks(&options)) {
-    prefix = "hooks";
-    shared_lib = HOOKS_SHARED_LIB;
-  } else {
-    return;
-  }
-
+static void install_hooks(libc_globals* globals, const char* options,
+                          const char* prefix, const char* shared_lib) {
   MallocDispatch dispatch_table;
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
   if (impl_handle == nullptr) {
@@ -510,11 +540,89 @@ static void malloc_init_impl(libc_globals* globals) {
   }
 }
 
+extern "C" void InstallInitHeapprofdHook(int);
+
+// Initializes memory allocation framework once per process.
+static void malloc_init_impl(libc_globals* globals) {
+  struct sigaction action = {};
+  action.sa_handler = InstallInitHeapprofdHook;
+  sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
+
+  const char* prefix;
+  const char* shared_lib;
+  char prop[PROP_VALUE_MAX];
+  char* options = prop;
+  // Prefer malloc debug since it existed first and is a more complete
+  // malloc interceptor than the hooks.
+  if (CheckLoadMallocDebug(&options)) {
+    prefix = "debug";
+    shared_lib = DEBUG_SHARED_LIB;
+  } else if (CheckLoadMallocHooks(&options)) {
+    prefix = "hooks";
+    shared_lib = HOOKS_SHARED_LIB;
+  } else {
+    return;
+  }
+  install_hooks(globals, options, prefix, shared_lib);
+}
+
 // Initializes memory allocation framework.
 // This routine is called from __libc_init routines in libc_init_dynamic.cpp.
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
+
+// The logic for triggering heapprofd below is as following.
+// 1. HEAPPROFD_SIGNAL is received by the process.
+// 2a. If the signal is currently being handled (g_heapprofd_init_in_progress
+//     is true), no action is taken.
+// 2b. Otherwise, The signal handler (InstallInitHeapprofdHook) installs a
+//     temporary malloc hook (InitHeapprofdHook).
+// 3. When this hook gets run the first time, it uninstalls itself and spawns
+//    a thread running InitHeapprofd that loads heapprofd.so and installs the
+//    hooks within.
+//
+// This roundabout way is needed because we are running non AS-safe code, so
+// we cannot run it directly in the signal handler. The other approach of
+// running a standby thread and signalling through write(2) and read(2) would
+// significantly increase the number of active threads in the system.
+
+static _Atomic bool g_heapprofd_init_in_progress = false;
+static _Atomic bool g_init_heapprofd_ran = false;
+
+static void* InitHeapprofd(void*) {
+  __libc_globals.mutate([](libc_globals* globals) {
+    install_hooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
+  });
+  atomic_store(&g_heapprofd_init_in_progress, false);
+  return nullptr;
+}
+
+static void* InitHeapprofdHook(size_t bytes) {
+  if (!atomic_exchange(&g_init_heapprofd_ran, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      atomic_store(&globals->malloc_dispatch.malloc, nullptr);
+    });
+
+    pthread_t thread_id;
+    if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) == -1)
+      error_log("%s: heapprofd: failed to pthread_create.", getprogname());
+    else if (pthread_detach(thread_id) == -1)
+      error_log("%s: heapprofd: failed to pthread_detach", getprogname());
+    if (pthread_setname_np(thread_id, "heapprofdinit") == -1)
+      error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
+  }
+  return Malloc(malloc)(bytes);
+}
+
+extern "C" void InstallInitHeapprofdHook(int) {
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->malloc_dispatch.malloc = InitHeapprofdHook;
+    });
+  }
+}
+
 #endif  // !LIBC_STATIC
 
 // =============================================================================
@@ -525,7 +633,9 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 // [base, base+size).  Must be called between malloc_disable and malloc_enable.
 extern "C" int malloc_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
-  auto _iterate = __libc_globals->malloc_dispatch.iterate;
+  auto _iterate = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.iterate,
+      default_read_memory_order);
   if (__predict_false(_iterate != nullptr)) {
     return _iterate(base, size, callback, arg);
   }
@@ -535,7 +645,9 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
 // Disable calls to malloc so malloc_iterate gets a consistent view of
 // allocated memory.
 extern "C" void malloc_disable() {
-  auto _malloc_disable = __libc_globals->malloc_dispatch.malloc_disable;
+  auto _malloc_disable = atomic_load_explicit_const(
+     & __libc_globals->malloc_dispatch.malloc_disable,
+      default_read_memory_order);
   if (__predict_false(_malloc_disable != nullptr)) {
     return _malloc_disable();
   }
@@ -544,7 +656,9 @@ extern "C" void malloc_disable() {
 
 // Re-enable calls to malloc after a previous call to malloc_disable.
 extern "C" void malloc_enable() {
-  auto _malloc_enable = __libc_globals->malloc_dispatch.malloc_enable;
+  auto _malloc_enable = atomic_load_explicit_const(
+      &__libc_globals->malloc_dispatch.malloc_enable,
+      default_read_memory_order);
   if (__predict_false(_malloc_enable != nullptr)) {
     return _malloc_enable();
   }
