@@ -22,6 +22,30 @@
       "revId": "890c251ae75495f9851ea733a206a06013494f47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6bdc538_cff09a3f",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2018-10-19T00:26:59Z",
+      "side": 1,
+      "message": "It seemed to me that this is a bit more robust against changes in malloc internals, since there is no opportunity to notice that the arenas are empty and no longer needed.\n\nAre you concerned that the other threads may still be starting up during the loop? I guess that is a concern, though I would expect the effect to be minor. It would be easy enough to explicitly wait for the allocations to complete before entering the loop. Would that resolve your concern?",
+      "parentUuid": "5d4f56e4_0fbfeabf",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 3
+      },
+      "revId": "890c251ae75495f9851ea733a206a06013494f47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
