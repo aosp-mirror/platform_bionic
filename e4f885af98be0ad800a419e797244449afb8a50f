@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1ae99bc_e6af1438",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T23:24:32Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem necessary since you have the static_function_dispatch.S file to do the dispatching.",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 14
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9db6f286_24166958",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T23:24:32Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 584,
+        "startChar": 12,
+        "endLine": 586,
+        "endChar": 14
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0049f82_c637439f",
+        "filename": "libc/arch-x86/static_function_dispatch.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T23:24:32Z",
+      "side": 1,
+      "message": "Couldn\u0027t you use __strong_alias here for this? Or does the compiler balk at that?",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
