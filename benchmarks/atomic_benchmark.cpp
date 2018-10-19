@@ -37,13 +37,13 @@
 // We assume that the compiler is not smart enough to optimize away fences in a single-threaded
 // program. If that changes, we'll need to add a second thread.
 
-volatile unsigned counter;
+static volatile unsigned counter;
 
 std::atomic<int> test_loc(0);
 
-volatile unsigned sink;
+static volatile unsigned sink;
 
-std::mutex mtx;
+static std::mutex mtx;
 
 void BM_atomic_empty(benchmark::State& state) {
   while (state.KeepRunning()) {
