@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5d4f56e4_0fbfeabf",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T00:01:26Z",
+      "side": 1,
+      "message": "I\u0027d change this to do the join before the loop. The idea is just to force some allocations that would cause arenas to be created.\n\nOnce the arenas are created, the mallinfo call should take the same amount of time whether there are a lot of live allocations or not. There is a caveat, that if you are trying to do a mallinfo while allocations are occurring, it will change the call time of mallinfo. I don\u0027t know if this is something you care about though.",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 3
+      },
+      "revId": "890c251ae75495f9851ea733a206a06013494f47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
