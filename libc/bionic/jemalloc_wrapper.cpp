@@ -52,11 +52,11 @@ int je_mallopt(int param, int value) {
   // The only parameter we currently understand is M_DECAY_TIME.
   if (param == M_DECAY_TIME) {
     // Only support setting the value to 1 or 0.
-    ssize_t decay_time;
+    ssize_t decay_time_ms;
     if (value) {
-      decay_time = 1;
+      decay_time_ms = 1000;
     } else {
-      decay_time = 0;
+      decay_time_ms = 0;
     }
     // First get the total number of arenas.
     unsigned narenas;
@@ -66,15 +66,22 @@ int je_mallopt(int param, int value) {
     }
 
     // Set the decay time for any arenas that will be created in the future.
-    if (je_mallctl("arenas.decay_time", nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
+    if (je_mallctl("arenas.dirty_decay_ms", nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
+      return 0;
+    }
+    if (je_mallctl("arenas.muzzy_decay_ms", nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
       return 0;
     }
 
     // Change the decay on the already existing arenas.
     char buffer[100];
     for (unsigned i = 0; i < narenas; i++) {
-      snprintf(buffer, sizeof(buffer), "arena.%d.decay_time", i);
-      if (je_mallctl(buffer, nullptr, nullptr, &decay_time, sizeof(decay_time)) != 0) {
+      snprintf(buffer, sizeof(buffer), "arena.%d.dirty_decay_ms", i);
+      if (je_mallctl(buffer, nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
+        break;
+      }
+      snprintf(buffer, sizeof(buffer), "arena.%d.muzzy_decay_ms", i);
+      if (je_mallctl(buffer, nullptr, nullptr, &decay_time_ms, sizeof(decay_time_ms)) != 0) {
         break;
       }
     }
