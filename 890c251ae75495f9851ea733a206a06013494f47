@@ -46,6 +46,30 @@
       "revId": "890c251ae75495f9851ea733a206a06013494f47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "830572d4_46235a4c",
+        "filename": "benchmarks/get_heap_size_benchmark.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T00:29:49Z",
+      "side": 1,
+      "message": "Yes, making sure everything is allocated before the loop would make me feel better. I was mostly worried that there would be allocations occuring at the same time as the mallinfo call, and that will probably change the timing significantly.",
+      "parentUuid": "c6bdc538_cff09a3f",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 3
+      },
+      "revId": "890c251ae75495f9851ea733a206a06013494f47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
