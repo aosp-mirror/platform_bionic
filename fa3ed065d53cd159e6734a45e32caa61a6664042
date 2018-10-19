@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9cd64ee_9bf498a9",
+        "filename": "libc/arch-x86/function_dispatch.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-10-19T07:27:07Z",
+      "side": 1,
+      "message": "Compiler bug? Add a decl to set visibility to hidden?\nhttps://android.googlesource.com/toolchain/clang/+/master/lib/CodeGen/CGBuiltin.cpp#8930",
+      "revId": "fa3ed065d53cd159e6734a45e32caa61a6664042",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
