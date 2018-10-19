@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dabec414_a07121b4",
+        "filename": "libc/arch-x86/generic/string/memcmp.S",
+        "patchSetId": 5
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-19T17:31:53Z",
+      "side": 1,
+      "message": "Rather than use this method, I think it would be better to have a single file for the static library that explicitly sets these aliases, or calls them directly. That would allow for an easy method to override them, and it would be explicit that static linking gets these lowest common denominator versions.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 41
+      },
+      "revId": "189dba88ef3023791788baa37d0c18d36cdeb6c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
