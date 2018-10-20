@@ -38,7 +38,7 @@ class SystemTests : public ::testing::Test {
   void SanitizeOutput();
 
   void Exec(std::vector<const char*> args);
-  void RunTest(std::vector<const char*> extra_args = {});
+  void RunTest(int expected_exitcode, std::vector<const char*> extra_args = {});
   void Verify(const std::string& expected_output, int expected_exitcode,
               std::vector<const char*> extra_args = {}, bool sanitize = true);
 
@@ -48,6 +48,14 @@ class SystemTests : public ::testing::Test {
   pid_t pid_;
   int fd_;
 };
+
+static const char* GetBenchmarkExe() {
+#if defined(__LP64__)
+  return "/data/benchmarktest64/bionic-benchmarks/bionic-benchmarks";
+#else
+  return "/data/benchmarktest/bionic-benchmarks/bionic-benchmarks";
+#endif
+}
 
 static std::string GetBionicXmlArg(const char* xml_file) {
   return "--bionic_xml=" + android::base::GetExecutableDirectory() + "/test_suites/" + xml_file;
@@ -67,14 +75,6 @@ void SystemTests::SanitizeOutput() {
   sanitized_output_.erase(sanitized_output_.find_last_of("BM_\\S+\n") + 1);
 }
 
-static void GetExe(std::string* exe_name) {
-  char path[PATH_MAX];
-  ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-  ASSERT_TRUE(path_len >= 0);
-  *exe_name = std::string(std::regex_replace(path, std::regex("nativetest"), "benchmarktest"));
-  *exe_name = std::regex_replace(*exe_name, std::regex("-tests"), "");
-}
-
 void SystemTests::Exec(std::vector<const char*> args) {
   int fds[2];
   ASSERT_NE(-1, pipe(fds));
@@ -90,9 +90,7 @@ void SystemTests::Exec(std::vector<const char*> args) {
     ASSERT_NE(0, dup2(fds[1], STDERR_FILENO));
     close(fds[1]);
 
-    std::string exe_name;
-    GetExe(&exe_name);
-    args.insert(args.begin(), exe_name.c_str());
+    args.insert(args.begin(), GetBenchmarkExe());
     args.push_back(nullptr);
     execv(args[0], reinterpret_cast<char* const*>(const_cast<char**>(args.data())));
     exit(1);
@@ -105,6 +103,17 @@ void SystemTests::Exec(std::vector<const char*> args) {
 
 void SystemTests::Verify(const std::string& expected_output,
                          int expected_exitcode, std::vector<const char*> extra_args, bool sanitize) {
+  RunTest(expected_exitcode, extra_args);
+
+  if (sanitize) {
+    SanitizeOutput();
+    ASSERT_EQ(expected_output, sanitized_output_);
+  } else {
+    ASSERT_EQ(expected_output, raw_output_);
+  }
+}
+
+void SystemTests::RunTest(int expected_exitcode, std::vector<const char*> extra_args) {
   std::vector<const char*> args;
   for (const auto& arg : extra_args) {
     args.push_back(arg);
@@ -132,13 +141,15 @@ void SystemTests::Verify(const std::string& expected_output,
   ASSERT_EQ(pid_, TEMP_FAILURE_RETRY(waitpid(pid_, &status, 0))) << "Test output:\n" << raw_output_;
   exitcode_ = WEXITSTATUS(status);
   ASSERT_EQ(expected_exitcode, exitcode_) << "Test output:\n" << raw_output_;
+}
 
-  if (sanitize) {
-    SanitizeOutput();
-    ASSERT_EQ(expected_output, sanitized_output_);
-  } else {
-    ASSERT_EQ(expected_output, raw_output_);
-  }
+TEST_F(SystemTests, check_benchmark_exe) {
+  // Verify that the benchmark exe is present.
+  const char* exe = GetBenchmarkExe();
+
+  struct stat st;
+  ASSERT_NE(-1, stat(exe, &st)) << "Stat of " << exe << " failed";
+  ASSERT_TRUE(S_ISREG(st.st_mode)) << exe << " is not a file, or doesn't exist.";
 }
 
 TEST_F(SystemTests, help) {
@@ -165,423 +176,20 @@ TEST_F(SystemTests, help) {
 }
 
 TEST_F(SystemTests, all_benchmarks) {
-  std::string expected =
-    "BM_atomic_acquire_fence/iterations:1\n"
-    "BM_atomic_empty/iterations:1\n"
-    "BM_atomic_fetch_add_cs/iterations:1\n"
-    "BM_atomic_fetch_add_relaxed/iterations:1\n"
-    "BM_atomic_fetch_add_seq_cst/iterations:1\n"
-    "BM_atomic_load_acquire/iterations:1\n"
-    "BM_atomic_load_relaxed/iterations:1\n"
-    "BM_atomic_seq_cst_fence/iterations:1\n"
-    "BM_atomic_store_release/iterations:1\n"
-    "BM_atomic_store_seq_cst/iterations:1\n"
-    "BM_inttypes_strtoimax/iterations:1\n"
-    "BM_inttypes_strtoumax/iterations:1\n"
-    "BM_malloc_sql_trace_decay_time_0/iterations:1\n"
-    "BM_malloc_sql_trace_decay_time_1/iterations:1\n"
-    "BM_math_cosf/0/iterations:1\n"
-    "BM_math_cosf/1/iterations:1\n"
-    "BM_math_cosf/2/iterations:1\n"
-    "BM_math_cosf/3/iterations:1\n"
-    "BM_math_cosf/4/iterations:1\n"
-    "BM_math_cosf/5/iterations:1\n"
-    "BM_math_cosf/6/iterations:1\n"
-    "BM_math_cosf/7/iterations:1\n"
-    "BM_math_cosf_latency/0/iterations:1\n"
-    "BM_math_cosf_latency/1/iterations:1\n"
-    "BM_math_cosf_latency/2/iterations:1\n"
-    "BM_math_cosf_latency/3/iterations:1\n"
-    "BM_math_cosf_latency/4/iterations:1\n"
-    "BM_math_cosf_latency/5/iterations:1\n"
-    "BM_math_cosf_latency/6/iterations:1\n"
-    "BM_math_cosf_latency/7/iterations:1\n"
-    "BM_math_exp2_speccpu2017/iterations:1\n"
-    "BM_math_exp2_speccpu2017_latency/iterations:1\n"
-    "BM_math_exp2f_speccpu2017/iterations:1\n"
-    "BM_math_exp2f_speccpu2017_latency/iterations:1\n"
-    "BM_math_exp_speccpu2017/iterations:1\n"
-    "BM_math_exp_speccpu2017_latency/iterations:1\n"
-    "BM_math_expf_speccpu2017/iterations:1\n"
-    "BM_math_expf_speccpu2017_latency/iterations:1\n"
-    "BM_math_fabs/0/iterations:1\n"
-    "BM_math_fabs/1/iterations:1\n"
-    "BM_math_fabs/2/iterations:1\n"
-    "BM_math_fabs/3/iterations:1\n"
-    "BM_math_fabs_macro/0/iterations:1\n"
-    "BM_math_fabs_macro/1/iterations:1\n"
-    "BM_math_fabs_macro/2/iterations:1\n"
-    "BM_math_fabs_macro/3/iterations:1\n"
-    "BM_math_fpclassify/0/iterations:1\n"
-    "BM_math_fpclassify/1/iterations:1\n"
-    "BM_math_fpclassify/2/iterations:1\n"
-    "BM_math_fpclassify/3/iterations:1\n"
-    "BM_math_isfinite/0/iterations:1\n"
-    "BM_math_isfinite/1/iterations:1\n"
-    "BM_math_isfinite/2/iterations:1\n"
-    "BM_math_isfinite/3/iterations:1\n"
-    "BM_math_isfinite_macro/0/iterations:1\n"
-    "BM_math_isfinite_macro/1/iterations:1\n"
-    "BM_math_isfinite_macro/2/iterations:1\n"
-    "BM_math_isfinite_macro/3/iterations:1\n"
-    "BM_math_isinf/0/iterations:1\n"
-    "BM_math_isinf/1/iterations:1\n"
-    "BM_math_isinf/2/iterations:1\n"
-    "BM_math_isinf/3/iterations:1\n"
-    "BM_math_isinf_macro/0/iterations:1\n"
-    "BM_math_isinf_macro/1/iterations:1\n"
-    "BM_math_isinf_macro/2/iterations:1\n"
-    "BM_math_isinf_macro/3/iterations:1\n"
-    "BM_math_isnan/0/iterations:1\n"
-    "BM_math_isnan/1/iterations:1\n"
-    "BM_math_isnan/2/iterations:1\n"
-    "BM_math_isnan/3/iterations:1\n"
-    "BM_math_isnan_macro/0/iterations:1\n"
-    "BM_math_isnan_macro/1/iterations:1\n"
-    "BM_math_isnan_macro/2/iterations:1\n"
-    "BM_math_isnan_macro/3/iterations:1\n"
-    "BM_math_isnormal/0/iterations:1\n"
-    "BM_math_isnormal/1/iterations:1\n"
-    "BM_math_isnormal/2/iterations:1\n"
-    "BM_math_isnormal/3/iterations:1\n"
-    "BM_math_isnormal_macro/0/iterations:1\n"
-    "BM_math_isnormal_macro/1/iterations:1\n"
-    "BM_math_isnormal_macro/2/iterations:1\n"
-    "BM_math_isnormal_macro/3/iterations:1\n"
-    "BM_math_log10/iterations:1\n"
-    "BM_math_log2_speccpu2017/iterations:1\n"
-    "BM_math_log2_speccpu2017_latency/iterations:1\n"
-    "BM_math_log2f_speccpu2017/iterations:1\n"
-    "BM_math_log2f_speccpu2017_latency/iterations:1\n"
-    "BM_math_log_speccpu2017/iterations:1\n"
-    "BM_math_log_speccpu2017_latency/iterations:1\n"
-    "BM_math_logb/iterations:1\n"
-    "BM_math_logf_speccpu2017/iterations:1\n"
-    "BM_math_logf_speccpu2017_latency/iterations:1\n"
-    "BM_math_pow_speccpu2006/iterations:1\n"
-    "BM_math_pow_speccpu2017_latency/iterations:1\n"
-    "BM_math_powf_speccpu2006/iterations:1\n"
-    "BM_math_powf_speccpu2017_latency/iterations:1\n"
-    "BM_math_signbit/0/iterations:1\n"
-    "BM_math_signbit/1/iterations:1\n"
-    "BM_math_signbit/2/iterations:1\n"
-    "BM_math_signbit/3/iterations:1\n"
-    "BM_math_signbit_macro/0/iterations:1\n"
-    "BM_math_signbit_macro/1/iterations:1\n"
-    "BM_math_signbit_macro/2/iterations:1\n"
-    "BM_math_signbit_macro/3/iterations:1\n"
-    "BM_math_sin_fast/iterations:1\n"
-    "BM_math_sin_fesetenv/iterations:1\n"
-    "BM_math_sin_feupdateenv/iterations:1\n"
-    "BM_math_sincos/iterations:1\n"
-    "BM_math_sincosf/0/iterations:1\n"
-    "BM_math_sincosf/1/iterations:1\n"
-    "BM_math_sincosf/2/iterations:1\n"
-    "BM_math_sincosf/3/iterations:1\n"
-    "BM_math_sincosf/4/iterations:1\n"
-    "BM_math_sincosf/5/iterations:1\n"
-    "BM_math_sincosf/6/iterations:1\n"
-    "BM_math_sincosf/7/iterations:1\n"
-    "BM_math_sincosf_latency/0/iterations:1\n"
-    "BM_math_sincosf_latency/1/iterations:1\n"
-    "BM_math_sincosf_latency/2/iterations:1\n"
-    "BM_math_sincosf_latency/3/iterations:1\n"
-    "BM_math_sincosf_latency/4/iterations:1\n"
-    "BM_math_sincosf_latency/5/iterations:1\n"
-    "BM_math_sincosf_latency/6/iterations:1\n"
-    "BM_math_sincosf_latency/7/iterations:1\n"
-    "BM_math_sinf/0/iterations:1\n"
-    "BM_math_sinf/1/iterations:1\n"
-    "BM_math_sinf/2/iterations:1\n"
-    "BM_math_sinf/3/iterations:1\n"
-    "BM_math_sinf/4/iterations:1\n"
-    "BM_math_sinf/5/iterations:1\n"
-    "BM_math_sinf/6/iterations:1\n"
-    "BM_math_sinf/7/iterations:1\n"
-    "BM_math_sinf_latency/0/iterations:1\n"
-    "BM_math_sinf_latency/1/iterations:1\n"
-    "BM_math_sinf_latency/2/iterations:1\n"
-    "BM_math_sinf_latency/3/iterations:1\n"
-    "BM_math_sinf_latency/4/iterations:1\n"
-    "BM_math_sinf_latency/5/iterations:1\n"
-    "BM_math_sinf_latency/6/iterations:1\n"
-    "BM_math_sinf_latency/7/iterations:1\n"
-    "BM_math_sqrt/iterations:1\n"
-    "BM_property_find/1/iterations:1\n"
-    "BM_property_find/4/iterations:1\n"
-    "BM_property_find/16/iterations:1\n"
-    "BM_property_find/64/iterations:1\n"
-    "BM_property_find/128/iterations:1\n"
-    "BM_property_find/256/iterations:1\n"
-    "BM_property_find/512/iterations:1\n"
-    "BM_property_get/1/iterations:1\n"
-    "BM_property_get/4/iterations:1\n"
-    "BM_property_get/16/iterations:1\n"
-    "BM_property_get/64/iterations:1\n"
-    "BM_property_get/128/iterations:1\n"
-    "BM_property_get/256/iterations:1\n"
-    "BM_property_get/512/iterations:1\n"
-    "BM_property_read/1/iterations:1\n"
-    "BM_property_read/4/iterations:1\n"
-    "BM_property_read/16/iterations:1\n"
-    "BM_property_read/64/iterations:1\n"
-    "BM_property_read/128/iterations:1\n"
-    "BM_property_read/256/iterations:1\n"
-    "BM_property_read/512/iterations:1\n"
-    "BM_property_serial/1/iterations:1\n"
-    "BM_property_serial/4/iterations:1\n"
-    "BM_property_serial/16/iterations:1\n"
-    "BM_property_serial/64/iterations:1\n"
-    "BM_property_serial/128/iterations:1\n"
-    "BM_property_serial/256/iterations:1\n"
-    "BM_property_serial/512/iterations:1\n"
-    "BM_pthread_create/iterations:1\n"
-    "BM_pthread_create_and_run/iterations:1\n"
-    "BM_pthread_exit_and_join/iterations:1\n"
-    "BM_pthread_getspecific/iterations:1\n"
-    "BM_pthread_key_create/iterations:1\n"
-    "BM_pthread_key_delete/iterations:1\n"
-    "BM_pthread_mutex_lock/iterations:1\n"
-    "BM_pthread_mutex_lock_ERRORCHECK/iterations:1\n"
-    "BM_pthread_mutex_lock_ERRORCHECK_PI/iterations:1\n"
-    "BM_pthread_mutex_lock_PI/iterations:1\n"
-    "BM_pthread_mutex_lock_RECURSIVE/iterations:1\n"
-    "BM_pthread_mutex_lock_RECURSIVE_PI/iterations:1\n"
-    "BM_pthread_once/iterations:1\n"
-    "BM_pthread_rwlock_read/iterations:1\n"
-    "BM_pthread_rwlock_write/iterations:1\n"
-    "BM_pthread_self/iterations:1\n"
-    "BM_pthread_setspecific/iterations:1\n"
-    "BM_semaphore_sem_getvalue/iterations:1\n"
-    "BM_semaphore_sem_wait_sem_post/iterations:1\n"
-    "BM_stdio_fopen_fgetc_fclose_locking/1024/iterations:1\n"
-    "BM_stdio_fopen_fgetc_fclose_no_locking/1024/iterations:1\n"
-    "BM_stdio_fopen_fgetln_fclose_locking/iterations:1\n"
-    "BM_stdio_fopen_fgetln_fclose_no_locking/iterations:1\n"
-    "BM_stdio_fopen_fgets_fclose_locking/iterations:1\n"
-    "BM_stdio_fopen_fgets_fclose_no_locking/iterations:1\n"
-    "BM_stdio_fopen_getline_fclose_locking/iterations:1\n"
-    "BM_stdio_fopen_getline_fclose_no_locking/iterations:1\n"
-    "BM_stdio_fread/8/iterations:1\n"
-    "BM_stdio_fread/64/iterations:1\n"
-    "BM_stdio_fread/512/iterations:1\n"
-    "BM_stdio_fread/1024/iterations:1\n"
-    "BM_stdio_fread/8192/iterations:1\n"
-    "BM_stdio_fread/16384/iterations:1\n"
-    "BM_stdio_fread/32768/iterations:1\n"
-    "BM_stdio_fread/65536/iterations:1\n"
-    "BM_stdio_fread/131072/iterations:1\n"
-    "BM_stdio_fread_unbuffered/8/iterations:1\n"
-    "BM_stdio_fread_unbuffered/64/iterations:1\n"
-    "BM_stdio_fread_unbuffered/512/iterations:1\n"
-    "BM_stdio_fread_unbuffered/1024/iterations:1\n"
-    "BM_stdio_fread_unbuffered/8192/iterations:1\n"
-    "BM_stdio_fread_unbuffered/16384/iterations:1\n"
-    "BM_stdio_fread_unbuffered/32768/iterations:1\n"
-    "BM_stdio_fread_unbuffered/65536/iterations:1\n"
-    "BM_stdio_fread_unbuffered/131072/iterations:1\n"
-    "BM_stdio_fwrite/8/iterations:1\n"
-    "BM_stdio_fwrite/64/iterations:1\n"
-    "BM_stdio_fwrite/512/iterations:1\n"
-    "BM_stdio_fwrite/1024/iterations:1\n"
-    "BM_stdio_fwrite/8192/iterations:1\n"
-    "BM_stdio_fwrite/16384/iterations:1\n"
-    "BM_stdio_fwrite/32768/iterations:1\n"
-    "BM_stdio_fwrite/65536/iterations:1\n"
-    "BM_stdio_fwrite/131072/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/8/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/64/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/512/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/1024/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/8192/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/16384/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/32768/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/65536/iterations:1\n"
-    "BM_stdio_fwrite_unbuffered/131072/iterations:1\n"
-    "BM_stdio_printf_1$s/iterations:1\n"
-    "BM_stdio_printf_d/iterations:1\n"
-    "BM_stdio_printf_literal/iterations:1\n"
-    "BM_stdio_printf_s/iterations:1\n"
-    "BM_stdio_scanf_d/iterations:1\n"
-    "BM_stdio_scanf_maps/iterations:1\n"
-    "BM_stdio_scanf_maps_baseline/iterations:1\n"
-    "BM_stdio_scanf_s/iterations:1\n"
-    "BM_stdlib_atoi/iterations:1\n"
-    "BM_stdlib_atol/iterations:1\n"
-    "BM_stdlib_malloc_free/8/iterations:1\n"
-    "BM_stdlib_malloc_free/64/iterations:1\n"
-    "BM_stdlib_malloc_free/512/iterations:1\n"
-    "BM_stdlib_malloc_free/1024/iterations:1\n"
-    "BM_stdlib_malloc_free/8192/iterations:1\n"
-    "BM_stdlib_malloc_free/16384/iterations:1\n"
-    "BM_stdlib_malloc_free/32768/iterations:1\n"
-    "BM_stdlib_malloc_free/65536/iterations:1\n"
-    "BM_stdlib_malloc_free/131072/iterations:1\n"
-    "BM_stdlib_mbrtowc/0/iterations:1\n"
-    "BM_stdlib_mbstowcs/0/0/iterations:1\n"
-    "BM_stdlib_strtol/iterations:1\n"
-    "BM_stdlib_strtoll/iterations:1\n"
-    "BM_stdlib_strtoul/iterations:1\n"
-    "BM_stdlib_strtoull/iterations:1\n"
-    "BM_string_memcmp/8/0/0/iterations:1\n"
-    "BM_string_memcmp/64/0/0/iterations:1\n"
-    "BM_string_memcmp/512/0/0/iterations:1\n"
-    "BM_string_memcmp/1024/0/0/iterations:1\n"
-    "BM_string_memcmp/8192/0/0/iterations:1\n"
-    "BM_string_memcmp/16384/0/0/iterations:1\n"
-    "BM_string_memcmp/32768/0/0/iterations:1\n"
-    "BM_string_memcmp/65536/0/0/iterations:1\n"
-    "BM_string_memcmp/131072/0/0/iterations:1\n"
-    "BM_string_memcpy/8/0/0/iterations:1\n"
-    "BM_string_memcpy/64/0/0/iterations:1\n"
-    "BM_string_memcpy/512/0/0/iterations:1\n"
-    "BM_string_memcpy/1024/0/0/iterations:1\n"
-    "BM_string_memcpy/8192/0/0/iterations:1\n"
-    "BM_string_memcpy/16384/0/0/iterations:1\n"
-    "BM_string_memcpy/32768/0/0/iterations:1\n"
-    "BM_string_memcpy/65536/0/0/iterations:1\n"
-    "BM_string_memcpy/131072/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/8/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/64/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/512/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/1024/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/8192/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/16384/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/32768/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/65536/0/0/iterations:1\n"
-    "BM_string_memmove_non_overlapping/131072/0/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/8/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/64/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/512/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/1024/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/8192/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/16384/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/32768/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/65536/0/iterations:1\n"
-    "BM_string_memmove_overlap_dst_before_src/131072/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/8/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/64/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/512/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/1024/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/8192/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/16384/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/32768/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/65536/0/iterations:1\n"
-    "BM_string_memmove_overlap_src_before_dst/131072/0/iterations:1\n"
-    "BM_string_memset/8/0/iterations:1\n"
-    "BM_string_memset/64/0/iterations:1\n"
-    "BM_string_memset/512/0/iterations:1\n"
-    "BM_string_memset/1024/0/iterations:1\n"
-    "BM_string_memset/8192/0/iterations:1\n"
-    "BM_string_memset/16384/0/iterations:1\n"
-    "BM_string_memset/32768/0/iterations:1\n"
-    "BM_string_memset/65536/0/iterations:1\n"
-    "BM_string_memset/131072/0/iterations:1\n"
-    "BM_string_strcat_copy_only/8/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/64/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/512/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/1024/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/8192/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/16384/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/32768/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/65536/0/0/iterations:1\n"
-    "BM_string_strcat_copy_only/131072/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/8/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/64/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/512/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/1024/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/8192/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/16384/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/32768/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/65536/0/0/iterations:1\n"
-    "BM_string_strcat_half_copy_half_seek/131072/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/8/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/64/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/512/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/1024/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/8192/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/16384/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/32768/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/65536/0/0/iterations:1\n"
-    "BM_string_strcat_seek_only/131072/0/0/iterations:1\n"
-    "BM_string_strchr/8/0/iterations:1\n"
-    "BM_string_strchr/64/0/iterations:1\n"
-    "BM_string_strchr/512/0/iterations:1\n"
-    "BM_string_strchr/1024/0/iterations:1\n"
-    "BM_string_strchr/8192/0/iterations:1\n"
-    "BM_string_strchr/16384/0/iterations:1\n"
-    "BM_string_strchr/32768/0/iterations:1\n"
-    "BM_string_strchr/65536/0/iterations:1\n"
-    "BM_string_strchr/131072/0/iterations:1\n"
-    "BM_string_strcmp/8/0/0/iterations:1\n"
-    "BM_string_strcmp/64/0/0/iterations:1\n"
-    "BM_string_strcmp/512/0/0/iterations:1\n"
-    "BM_string_strcmp/1024/0/0/iterations:1\n"
-    "BM_string_strcmp/8192/0/0/iterations:1\n"
-    "BM_string_strcmp/16384/0/0/iterations:1\n"
-    "BM_string_strcmp/32768/0/0/iterations:1\n"
-    "BM_string_strcmp/65536/0/0/iterations:1\n"
-    "BM_string_strcmp/131072/0/0/iterations:1\n"
-    "BM_string_strcpy/8/0/0/iterations:1\n"
-    "BM_string_strcpy/64/0/0/iterations:1\n"
-    "BM_string_strcpy/512/0/0/iterations:1\n"
-    "BM_string_strcpy/1024/0/0/iterations:1\n"
-    "BM_string_strcpy/8192/0/0/iterations:1\n"
-    "BM_string_strcpy/16384/0/0/iterations:1\n"
-    "BM_string_strcpy/32768/0/0/iterations:1\n"
-    "BM_string_strcpy/65536/0/0/iterations:1\n"
-    "BM_string_strcpy/131072/0/0/iterations:1\n"
-    "BM_string_strlen/8/0/iterations:1\n"
-    "BM_string_strlen/64/0/iterations:1\n"
-    "BM_string_strlen/512/0/iterations:1\n"
-    "BM_string_strlen/1024/0/iterations:1\n"
-    "BM_string_strlen/8192/0/iterations:1\n"
-    "BM_string_strlen/16384/0/iterations:1\n"
-    "BM_string_strlen/32768/0/iterations:1\n"
-    "BM_string_strlen/65536/0/iterations:1\n"
-    "BM_string_strlen/131072/0/iterations:1\n"
-    "BM_string_strncmp/8/0/0/iterations:1\n"
-    "BM_string_strncmp/64/0/0/iterations:1\n"
-    "BM_string_strncmp/512/0/0/iterations:1\n"
-    "BM_string_strncmp/1024/0/0/iterations:1\n"
-    "BM_string_strncmp/8192/0/0/iterations:1\n"
-    "BM_string_strncmp/16384/0/0/iterations:1\n"
-    "BM_string_strncmp/32768/0/0/iterations:1\n"
-    "BM_string_strncmp/65536/0/0/iterations:1\n"
-    "BM_string_strncmp/131072/0/0/iterations:1\n"
-    "BM_string_strstr/8/0/0/iterations:1\n"
-    "BM_string_strstr/64/0/0/iterations:1\n"
-    "BM_string_strstr/512/0/0/iterations:1\n"
-    "BM_string_strstr/1024/0/0/iterations:1\n"
-    "BM_string_strstr/8192/0/0/iterations:1\n"
-    "BM_string_strstr/16384/0/0/iterations:1\n"
-    "BM_string_strstr/32768/0/0/iterations:1\n"
-    "BM_string_strstr/65536/0/0/iterations:1\n"
-    "BM_string_strstr/131072/0/0/iterations:1\n"
-    "BM_time_clock_getres/iterations:1\n"
-    "BM_time_clock_getres_BOOTTIME/iterations:1\n"
-    "BM_time_clock_getres_MONOTONIC_COARSE/iterations:1\n"
-    "BM_time_clock_getres_MONOTONIC_RAW/iterations:1\n"
-    "BM_time_clock_getres_REALTIME/iterations:1\n"
-    "BM_time_clock_getres_REALTIME_COARSE/iterations:1\n"
-    "BM_time_clock_getres_syscall/iterations:1\n"
-    "BM_time_clock_gettime/iterations:1\n"
-    "BM_time_clock_gettime_BOOTTIME/iterations:1\n"
-    "BM_time_clock_gettime_MONOTONIC_COARSE/iterations:1\n"
-    "BM_time_clock_gettime_MONOTONIC_RAW/iterations:1\n"
-    "BM_time_clock_gettime_REALTIME/iterations:1\n"
-    "BM_time_clock_gettime_REALTIME_COARSE/iterations:1\n"
-    "BM_time_clock_gettime_syscall/iterations:1\n"
-    "BM_time_gettimeofday/iterations:1\n"
-    "BM_time_gettimeofday_syscall/iterations:1\n"
-    "BM_time_localtime/iterations:1\n"
-    "BM_time_localtime_r/iterations:1\n"
-    "BM_time_time/iterations:1\n"
-    "BM_unistd_getpid/iterations:1\n"
-    "BM_unistd_getpid_syscall/iterations:1\n"
-    "BM_unistd_gettid/iterations:1\n"
-    "BM_unistd_gettid_syscall/iterations:1\n";
-  Verify(expected, 0, std::vector<const char*>{"--bionic_iterations=1"});
+  RunTest(0, std::vector<const char*>{"--bionic_iterations=1"});
+  // Count the number of benchmarks.
+  // Rather than make every person who adds a benchmark add one here, just
+  // make sure the count is not zero and some large number to verify
+  // that something has not gone horribly wrong.
+  std::regex benchmark_re("BM_\\S+/iterations:1");
+  std::smatch sm;
+  size_t num_tests = 0;
+  std::string output(raw_output_);
+  while (std::regex_search(output, sm, benchmark_re)) {
+    num_tests++;
+    output = sm.suffix();
+  }
+  ASSERT_LT(400U, num_tests) << "Only " << num_tests << " found:\n" << raw_output_;
 }
 
 TEST_F(SystemTests, small) {
