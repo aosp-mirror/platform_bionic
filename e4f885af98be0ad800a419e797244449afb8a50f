@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "10aa0c36_565d68eb",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-10-20T22:06:42Z",
+      "side": 1,
+      "message": "This is necessary because I only have one static_function_dispatch.S for x86 for now. But lots of sources in freebsd/openbsd are shared between architectures. If we use ifunc for all arch in the future, we can remove this.",
+      "parentUuid": "a1ae99bc_e6af1438",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 14
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9db6f286_24166958",
         "filename": "libc/Android.bp",
         "patchSetId": 6
@@ -59,6 +83,30 @@
       "writtenOn": "2018-10-19T23:24:32Z",
       "side": 1,
       "message": "Couldn\u0027t you use __strong_alias here for this? Or does the compiler balk at that?",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dc1cf46_dca652c9",
+        "filename": "libc/arch-x86/static_function_dispatch.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-10-20T22:06:42Z",
+      "side": 1,
+      "message": "__strong_alias only works in the same translation unit. But all these functions are defined in different files.",
+      "parentUuid": "f0049f82_c637439f",
       "range": {
         "startLine": 36,
         "startChar": 0,
