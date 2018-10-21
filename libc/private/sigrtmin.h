@@ -39,11 +39,12 @@
 //   33 (__SIGRTMIN + 1)        libbacktrace
 //   34 (__SIGRTMIN + 2)        libcore
 //   35 (__SIGRTMIN + 3)        debuggerd -b
+//   36 (__SIGRTMIN + 4)        heapprofd
 //
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
 
-#define __SIGRT_RESERVED 4
+#define __SIGRT_RESERVED 5
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
   int (*block)(sigset64_t*, int);
   int (*unblock)(sigset64_t*, int);
@@ -68,5 +69,6 @@ static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigs
   unblock(&sigset, __SIGRTMIN + 1);
   unblock(&sigset, __SIGRTMIN + 2);
   unblock(&sigset, __SIGRTMIN + 3);
+  unblock(&sigset, __SIGRTMIN + 4);
   return sigset;
 }

@@ -28,6 +28,7 @@ cc_defaults {
     srcs: [
         "bionic_benchmarks.cpp",
         "atomic_benchmark.cpp",
+        "get_heap_size_benchmark.cpp",
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
         "math_benchmark.cpp",
@@ -101,6 +102,7 @@ cc_library_static {
 
 cc_test {
     name: "bionic-benchmarks-tests",
+    isolated: true,
     defaults: ["bionic-benchmarks-extras-defaults"],
     srcs: [
         "tests/benchmark_test.cpp",

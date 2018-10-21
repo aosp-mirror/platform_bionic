@@ -36,7 +36,9 @@ int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
   pid_t tid = pthread_gettid_np(t);
-  if (tid == -1) return ESRCH;
+
+  // tid gets reset to 0 on thread exit by CLONE_CHILD_CLEARTID.
+  if (tid == 0 || tid == -1) return ESRCH;
 
   return (tgkill(getpid(), tid, sig) == -1) ? errno : 0;
 }
