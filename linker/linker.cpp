@@ -1318,6 +1318,15 @@ static bool load_library(android_namespace_t* ns,
     }
   }
 
+#if !defined(__ANDROID__)
+  // Bionic on the host currently uses some Android prebuilts, which don't set
+  // DT_RUNPATH with any relative paths, so they can't find their dependencies.
+  // b/118058804
+  if (si->get_dt_runpath().empty()) {
+    si->set_dt_runpath("$ORIGIN/../lib64:$ORIGIN/lib64");
+  }
+#endif
+
   for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
     load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
   });
