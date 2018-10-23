@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b3f5271_d6e33c1b",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-23T19:46:58Z",
+      "side": 1,
+      "message": "Can you update the comment above for this new situation?\n\nAlso, I\u0027m not sure how this works. There doesn\u0027t appear to be a way to revert to the old hooks, so it seems like doing a reinit might be bad. What happens if someone triggers a reinit while everything is still running?",
+      "range": {
+        "startLine": 591,
+        "startChar": 20,
+        "endLine": 591,
+        "endChar": 51
+      },
+      "revId": "1ed4fbf9c720b81b124c695c1600560edebdfe1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
