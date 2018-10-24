@@ -1314,6 +1314,7 @@ cc_library_static {
         "bionic/getdomainname.cpp",
         "bionic/getentropy.cpp",
         "bionic/gethostname.cpp",
+        "bionic/getloadavg.cpp",
         "bionic/getpagesize.cpp",
         "bionic/getpgrp.cpp",
         "bionic/getpid.cpp",
