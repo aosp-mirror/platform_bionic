@@ -1432,6 +1432,7 @@ LIBC_Q { # introduced=Q
     android_fdsan_get_error_level;
     android_fdsan_set_error_level;
     android_get_device_api_level;
+    getloadavg;
     pthread_sigqueue;
     reallocarray;
     timespec_get;
