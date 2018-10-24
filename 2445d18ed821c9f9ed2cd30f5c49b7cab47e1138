@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3713e82b_6424a985",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-24T22:44:50Z",
+      "side": 1,
+      "message": "The situation I\u0027m not clear about:\n\n- Signal is sent, shared library is dlopen\u0027d, hooks installed.\n- At some point in the future, another signal is sent, the same shared library is dlopen\u0027d again, hooks installed again.\n\nHow are you preventing that second dlopen? It\u0027s not a good idea to continue trying to dlopen the same shared library over and over.",
+      "range": {
+        "startLine": 607,
+        "startChar": 2,
+        "endLine": 607,
+        "endChar": 56
+      },
+      "revId": "2445d18ed821c9f9ed2cd30f5c49b7cab47e1138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
