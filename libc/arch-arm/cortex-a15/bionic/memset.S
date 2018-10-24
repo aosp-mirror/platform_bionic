@@ -41,7 +41,7 @@
         // arch. The code generated is exactly the same.
         .arch armv7-a
 
-ENTRY(__memset_chk)
+ENTRY(__memset_chk_a15)
         cmp         r2, r3
         bls         memset
 
@@ -51,9 +51,9 @@ ENTRY(__memset_chk)
         .cfi_rel_offset lr, 0
 
         bl          __memset_chk_fail
-END(__memset_chk)
+END(__memset_chk_a15)
 
-ENTRY(memset)
+ENTRY(memset_a15)
         stmfd       sp!, {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0
@@ -171,4 +171,4 @@ ENTRY(memset)
         strbcs      r1, [r0], #1
         ldmfd       sp!, {r0}
         bx          lr
-END(memset)
+END(memset_a15)

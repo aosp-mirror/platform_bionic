@@ -100,9 +100,9 @@
     .endm // m_copy_byte
 
 #if defined(STPCPY)
-ENTRY(stpcpy)
+ENTRY(stpcpy_a15)
 #else
-ENTRY(strcpy)
+ENTRY(strcpy_a15)
 #endif
     // For short copies, hard-code checking the first 8 bytes since this
     // new code doesn't win until after about 8 bytes.
@@ -514,7 +514,7 @@ ENTRY(strcpy)
     strb    r4, [r0]
     m_pop
 #if defined(STPCPY)
-END(stpcpy)
+END(stpcpy_a15)
 #else
-END(strcpy)
+END(strcpy_a15)
 #endif
