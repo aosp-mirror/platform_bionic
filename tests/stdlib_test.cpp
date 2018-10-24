@@ -816,3 +816,35 @@ TEST(stdlib, llabs) {
   ASSERT_EQ(LLONG_MAX, llabs(-LLONG_MAX));
   ASSERT_EQ(LLONG_MAX, llabs(LLONG_MAX));
 }
+
+TEST(stdlib, getloadavg) {
+  double load[3];
+
+  // The second argument should have been size_t.
+  ASSERT_EQ(-1, getloadavg(load, -1));
+  ASSERT_EQ(-1, getloadavg(load, INT_MIN));
+
+  // Zero is a no-op.
+  ASSERT_EQ(0, getloadavg(load, 0));
+
+  // The Linux kernel doesn't support more than 3 (but you can ask for fewer).
+  ASSERT_EQ(1, getloadavg(load, 1));
+  ASSERT_EQ(2, getloadavg(load, 2));
+  ASSERT_EQ(3, getloadavg(load, 3));
+  ASSERT_EQ(3, getloadavg(load, 4));
+  ASSERT_EQ(3, getloadavg(load, INT_MAX));
+
+  // Read /proc/loadavg and check that it's "close enough".
+  load[0] = nan("");
+  double expected[3];
+  std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/proc/loadavg", "re"), fclose};
+  ASSERT_EQ(3, fscanf(fp.get(), "%lf %lf %lf", &expected[0], &expected[1], &expected[2]));
+  ASSERT_EQ(3, getloadavg(load, 3));
+
+  // It's probably too flaky if we look at the 1-minute average, so we just place a NaN there
+  // and check that it's overwritten with _something_.
+  ASSERT_FALSE(isnan(load[0]));
+  // For the others, rounding to an integer is pessimistic but at least gives us a sanity check.
+  ASSERT_DOUBLE_EQ(rint(expected[1]), rint(load[1]));
+  ASSERT_DOUBLE_EQ(rint(expected[2]), rint(load[2]));
+}
