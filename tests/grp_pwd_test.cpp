@@ -250,7 +250,9 @@ static void expect_ids(const T& ids) {
 
   // Upgrading devices launched before API level 28 may not comply with the below check.
   // Due to the difficulty in changing uids after launch, it is waived for these devices.
-  if (android::base::GetIntProperty("ro.product.first_api_level", 0) < 28) {
+  // Also grant this check for device launched with 28(P) to give the vendor time to
+  // adopt the AID scheme.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
     return;
   }
 
@@ -584,6 +586,10 @@ static void TestAidNamePrefix(const std::string& file_path) {
 
 TEST(pwd, vendor_prefix_users) {
 #if defined(__BIONIC__)
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+    return;
+  }
+
   TestAidNamePrefix("/vendor/etc/passwd");
 #else
   print_no_getpwnam_test_info();
@@ -592,6 +598,10 @@ TEST(pwd, vendor_prefix_users) {
 
 TEST(pwd, vendor_prefix_groups) {
 #if defined(__BIONIC__)
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+    return;
+  }
+
   TestAidNamePrefix("/vendor/etc/group");
 #else
   print_no_getgrnam_test_info();
