@@ -22,6 +22,30 @@
       "revId": "1ed4fbf9c720b81b124c695c1600560edebdfe1a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c5b74b7_8131de6a",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-10-24T09:21:06Z",
+      "side": 1,
+      "message": "In another CL I am working on making our hooks re-initializable.\n\nUpdated CL.",
+      "parentUuid": "1b3f5271_d6e33c1b",
+      "range": {
+        "startLine": 591,
+        "startChar": 20,
+        "endLine": 591,
+        "endChar": 51
+      },
+      "revId": "1ed4fbf9c720b81b124c695c1600560edebdfe1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
