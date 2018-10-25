@@ -22,6 +22,30 @@
       "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21d2996b_c4374c30",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T20:59:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cda1288_6e3e60ca",
+      "range": {
+        "startLine": 84,
+        "startChar": 65,
+        "endLine": 84,
+        "endChar": 77
+      },
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
