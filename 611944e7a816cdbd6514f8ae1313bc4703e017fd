@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "8044a5b7_958e99a3",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-10-25T23:26:08Z",
+      "side": 1,
+      "message": "My current plan is to use a \"variant 1\" TLS layout on all architectures with an extra large 16-word TCB size, which reserves enough space for the existing Bionic slots. The slots need to be the very last field in pthread_internal_t. That\u0027s not the case in aosp/master, because I still need to cherry-pick http://ag/5318651 from goog/master. (That CL also needed a change to an internal project.) I\u0027ll do that cherry-pick in a moment.\n\nIn that CL, I put the pthread keys as the second-to-last field on the theory that someone fixing the golang runtime to work on Q might scan both directions looking for the golang \"G\" register/pthread-key, so it\u0027s good to keep the pthread keys immediately next to the slots.\n\nIf I were to instead use a \"variant 2\" TLS layout on all architectures, then adding fields at the end would be correct.",
+      "parentUuid": "f173f2a1_43441f0e",
+      "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5ba003a_6f6272f9",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 5
