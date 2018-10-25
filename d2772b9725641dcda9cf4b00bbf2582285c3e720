@@ -2,6 +2,63 @@
   "comments": [
     {
       "key": {
+        "uuid": "1a7dd7ed_abcc9af2",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-25T21:05:32Z",
+      "side": 1,
+      "message": "this should be in its own new function.",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 0
+      },
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47351ff5_e44e34ec",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-25T21:05:32Z",
+      "side": 1,
+      "message": "why is this in a TLS slot? why not just maintain it like we maintain `alternate_signal_stack`? fields in a struct are a less precious resource.",
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d3cb86c_cc45c287",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-25T21:05:32Z",
+      "side": 1,
+      "message": "was there a system health review?",
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0cda1288_6e3e60ca",
         "filename": "libc/private/bionic_tls.h",
         "patchSetId": 3
