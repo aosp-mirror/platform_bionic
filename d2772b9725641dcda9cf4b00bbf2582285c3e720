@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ff038f41_ef12e47c",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T21:38:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a7dd7ed_abcc9af2",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 0
+      },
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "47351ff5_e44e34ec",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 3
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "58f9a991_ba7a86d3",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T21:38:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47351ff5_e44e34ec",
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d3cb86c_cc45c287",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 3
@@ -53,6 +95,24 @@
       "writtenOn": "2018-10-25T21:05:32Z",
       "side": 1,
       "message": "was there a system health review?",
+      "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea8f9a1a_5dc459a9",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T21:38:34Z",
+      "side": 1,
+      "message": "Yes, see b/112907825",
+      "parentUuid": "5d3cb86c_cc45c287",
       "revId": "d2772b9725641dcda9cf4b00bbf2582285c3e720",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
