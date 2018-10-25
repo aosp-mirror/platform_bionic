@@ -30,7 +30,7 @@
 
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include <android-base/macros.h>
 
 class MappedFileFragment {
  public:

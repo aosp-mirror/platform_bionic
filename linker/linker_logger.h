@@ -30,8 +30,10 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include "private/bionic_macros.h"
+
 #include "private/bionic_systrace.h"
+
+#include <android-base/macros.h>
 
 #define LD_LOG(type, x...) \
   { \
