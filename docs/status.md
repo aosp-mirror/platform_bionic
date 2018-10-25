@@ -42,6 +42,7 @@ New libc functions in Q (API level 29):
   * `reallocarray` (BSD/GNU extension in `<malloc.h>` and `<stdlib.h>`)
   * `res_randomid` (in `<resolv.h>`)
   * `pthread_sigqueue` (GNU extension)
+  * `getloadavg` (BSD/GNU extension in <stdlib.h>)
 
 New libc behavior in Q (API level 29):
   * Whole printf family now supports the GNU `%m` extension, rather than a special-case hack in `syslog`
