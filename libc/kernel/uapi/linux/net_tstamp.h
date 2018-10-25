@@ -73,4 +73,14 @@ struct scm_ts_pktinfo {
   __u32 pkt_length;
   __u32 reserved[2];
 };
+enum txtime_flags {
+  SOF_TXTIME_DEADLINE_MODE = (1 << 0),
+  SOF_TXTIME_REPORT_ERRORS = (1 << 1),
+  SOF_TXTIME_FLAGS_LAST = SOF_TXTIME_REPORT_ERRORS,
+  SOF_TXTIME_FLAGS_MASK = (SOF_TXTIME_FLAGS_LAST - 1) | SOF_TXTIME_FLAGS_LAST
+};
+struct sock_txtime {
+  clockid_t clockid;
+  __u32 flags;
+};
 #endif

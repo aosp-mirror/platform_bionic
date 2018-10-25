@@ -185,6 +185,7 @@ struct virtio_gpu_cmd_submit {
   __le32 padding;
 };
 #define VIRTIO_GPU_CAPSET_VIRGL 1
+#define VIRTIO_GPU_CAPSET_VIRGL2 2
 struct virtio_gpu_get_capset_info {
   struct virtio_gpu_ctrl_hdr hdr;
   __le32 capset_index;

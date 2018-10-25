@@ -228,7 +228,8 @@ struct ib_uverbs_query_port_resp {
   __u8 active_speed;
   __u8 phys_state;
   __u8 link_layer;
-  __u8 reserved[2];
+  __u8 flags;
+  __u8 reserved;
 };
 struct ib_uverbs_alloc_pd {
   __aligned_u64 response;
@@ -828,6 +829,18 @@ struct ib_uverbs_flow_spec_action_handle {
   __u32 handle;
   __u32 reserved1;
 };
+struct ib_uverbs_flow_spec_action_count {
+  union {
+    struct ib_uverbs_flow_spec_hdr hdr;
+    struct {
+      __u32 type;
+      __u16 size;
+      __u16 reserved;
+    };
+  };
+  __u32 handle;
+  __u32 reserved1;
+};
 struct ib_uverbs_flow_tunnel_filter {
   __be32 tunnel_id;
 };
@@ -858,6 +871,38 @@ struct ib_uverbs_flow_spec_esp {
   };
   struct ib_uverbs_flow_spec_esp_filter val;
   struct ib_uverbs_flow_spec_esp_filter mask;
+};
+struct ib_uverbs_flow_gre_filter {
+  __be16 c_ks_res0_ver;
+  __be16 protocol;
+  __be32 key;
+};
+struct ib_uverbs_flow_spec_gre {
+  union {
+    struct ib_uverbs_flow_spec_hdr hdr;
+    struct {
+      __u32 type;
+      __u16 size;
+      __u16 reserved;
+    };
+  };
+  struct ib_uverbs_flow_gre_filter val;
+  struct ib_uverbs_flow_gre_filter mask;
+};
+struct ib_uverbs_flow_mpls_filter {
+  __be32 label;
+};
+struct ib_uverbs_flow_spec_mpls {
+  union {
+    struct ib_uverbs_flow_spec_hdr hdr;
+    struct {
+      __u32 type;
+      __u16 size;
+      __u16 reserved;
+    };
+  };
+  struct ib_uverbs_flow_mpls_filter val;
+  struct ib_uverbs_flow_mpls_filter mask;
 };
 struct ib_uverbs_flow_attr {
   __u32 type;

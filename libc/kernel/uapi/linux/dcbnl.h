@@ -71,6 +71,13 @@ struct ieee_pfc {
   __u64 requests[IEEE_8021QAZ_MAX_TCS];
   __u64 indications[IEEE_8021QAZ_MAX_TCS];
 };
+#define IEEE_8021Q_MAX_PRIORITIES 8
+#define DCBX_MAX_BUFFERS 8
+struct dcbnl_buffer {
+  __u8 prio2buffer[IEEE_8021Q_MAX_PRIORITIES];
+  __u32 buffer_size[DCBX_MAX_BUFFERS];
+  __u32 total_size;
+};
 #define CEE_DCBX_MAX_PGS 8
 #define CEE_DCBX_MAX_PRIO 8
 struct cee_pg {
@@ -170,6 +177,7 @@ enum ieee_attrs {
   DCB_ATTR_IEEE_MAXRATE,
   DCB_ATTR_IEEE_QCN,
   DCB_ATTR_IEEE_QCN_STATS,
+  DCB_ATTR_DCB_BUFFER,
   __DCB_ATTR_IEEE_MAX
 };
 #define DCB_ATTR_IEEE_MAX (__DCB_ATTR_IEEE_MAX - 1)

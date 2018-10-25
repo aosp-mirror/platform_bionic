@@ -91,6 +91,8 @@ struct drm_vc4_submit_cl {
   __u32 flags;
   __u64 seqno;
   __u32 perfmonid;
+  __u32 in_sync;
+  __u32 out_sync;
   __u32 pad2;
 };
 struct drm_vc4_wait_seqno {
