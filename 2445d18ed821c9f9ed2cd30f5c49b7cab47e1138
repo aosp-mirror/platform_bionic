@@ -22,6 +22,30 @@
       "revId": "2445d18ed821c9f9ed2cd30f5c49b7cab47e1138",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dab8f15_d6196630",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-10-25T14:33:05Z",
+      "side": 1,
+      "message": "As far as I understood that only incremented the reference count, so that did not seem very malicious. Added extra code to prevent reopening the library.",
+      "parentUuid": "3713e82b_6424a985",
+      "range": {
+        "startLine": 607,
+        "startChar": 2,
+        "endLine": 607,
+        "endChar": 56
+      },
+      "revId": "2445d18ed821c9f9ed2cd30f5c49b7cab47e1138",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
