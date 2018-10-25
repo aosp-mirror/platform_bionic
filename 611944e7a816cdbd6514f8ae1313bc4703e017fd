@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f173f2a1_43441f0e",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-25T23:07:27Z",
+      "side": 1,
+      "message": "i think he\u0027s thinking of `struct soinfo`.\n\nhere you only need to be *after* `tid` because a number of apps cast pthread_t and dereference that field :-/\n\nuntil last week that was pretty much it. rprichard will be along shortly with the canonical answer about his ELF TLS changes though...",
+      "parentUuid": "fc995563_e4f0ca1c",
+      "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5ba003a_6f6272f9",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 5
