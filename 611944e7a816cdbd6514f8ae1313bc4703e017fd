@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fc995563_e4f0ca1c",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T23:04:23Z",
+      "side": 1,
+      "message": "Okay. I heard from eugenis that new fields needed to be put at the end for compatibility reasons. If that\u0027s not the case then I\u0027ll move it next to alternate_signal_stack.",
+      "parentUuid": "2c211eec_026aeae3",
+      "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5ba003a_6f6272f9",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "43d64d12_8fb46167",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T23:04:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5ba003a_6f6272f9",
+      "range": {
+        "startLine": 205,
+        "startChar": 17,
+        "endLine": 205,
+        "endChar": 21
+      },
+      "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b4a455a_6fa88e23",
         "filename": "libc/bionic/pthread_internal.h",
         "patchSetId": 5
@@ -62,6 +104,30 @@
       "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc65d926_47c276b3",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T23:04:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b4a455a_6fa88e23",
+      "range": {
+        "startLine": 209,
+        "startChar": 30,
+        "endLine": 209,
+        "endChar": 38
+      },
+      "revId": "611944e7a816cdbd6514f8ae1313bc4703e017fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
