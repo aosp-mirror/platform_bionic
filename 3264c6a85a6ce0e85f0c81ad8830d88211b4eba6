@@ -16,6 +16,24 @@
       "revId": "3264c6a85a6ce0e85f0c81ad8830d88211b4eba6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "719b0d04_53158b9e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-10-25T01:48:48Z",
+      "side": 1,
+      "message": "Yes, that does make things simpler.",
+      "parentUuid": "5922b5a3_4efd39bb",
+      "revId": "3264c6a85a6ce0e85f0c81ad8830d88211b4eba6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
