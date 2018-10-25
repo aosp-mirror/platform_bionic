@@ -248,6 +248,13 @@ struct btrfs_ioctl_ino_lookup_args {
   __u64 objectid;
   char name[BTRFS_INO_LOOKUP_PATH_MAX];
 };
+#define BTRFS_INO_LOOKUP_USER_PATH_MAX (4080 - BTRFS_VOL_NAME_MAX - 1)
+struct btrfs_ioctl_ino_lookup_user_args {
+  __u64 dirid;
+  __u64 treeid;
+  char name[BTRFS_VOL_NAME_MAX + 1];
+  char path[BTRFS_INO_LOOKUP_USER_PATH_MAX];
+};
 struct btrfs_ioctl_search_key {
   __u64 tree_id;
   __u64 min_objectid;
@@ -406,6 +413,36 @@ struct btrfs_ioctl_send_args {
   __u64 flags;
   __u64 reserved[4];
 };
+struct btrfs_ioctl_get_subvol_info_args {
+  __u64 treeid;
+  char name[BTRFS_VOL_NAME_MAX + 1];
+  __u64 parent_id;
+  __u64 dirid;
+  __u64 generation;
+  __u64 flags;
+  __u8 uuid[BTRFS_UUID_SIZE];
+  __u8 parent_uuid[BTRFS_UUID_SIZE];
+  __u8 received_uuid[BTRFS_UUID_SIZE];
+  __u64 ctransid;
+  __u64 otransid;
+  __u64 stransid;
+  __u64 rtransid;
+  struct btrfs_ioctl_timespec ctime;
+  struct btrfs_ioctl_timespec otime;
+  struct btrfs_ioctl_timespec stime;
+  struct btrfs_ioctl_timespec rtime;
+  __u64 reserved[8];
+};
+#define BTRFS_MAX_ROOTREF_BUFFER_NUM 255
+struct btrfs_ioctl_get_subvol_rootref_args {
+  __u64 min_treeid;
+  struct {
+    __u64 treeid;
+    __u64 dirid;
+  } rootref[BTRFS_MAX_ROOTREF_BUFFER_NUM];
+  __u8 num_items;
+  __u8 align[7];
+};
 enum btrfs_err_code {
   BTRFS_ERROR_DEV_RAID1_MIN_NOT_MET = 1,
   BTRFS_ERROR_DEV_RAID10_MIN_NOT_MET,
@@ -472,4 +509,7 @@ enum btrfs_err_code {
 #define BTRFS_IOC_GET_SUPPORTED_FEATURES _IOR(BTRFS_IOCTL_MAGIC, 57, struct btrfs_ioctl_feature_flags[3])
 #define BTRFS_IOC_RM_DEV_V2 _IOW(BTRFS_IOCTL_MAGIC, 58, struct btrfs_ioctl_vol_args_v2)
 #define BTRFS_IOC_LOGICAL_INO_V2 _IOWR(BTRFS_IOCTL_MAGIC, 59, struct btrfs_ioctl_logical_ino_args)
+#define BTRFS_IOC_GET_SUBVOL_INFO _IOR(BTRFS_IOCTL_MAGIC, 60, struct btrfs_ioctl_get_subvol_info_args)
+#define BTRFS_IOC_GET_SUBVOL_ROOTREF _IOWR(BTRFS_IOCTL_MAGIC, 61, struct btrfs_ioctl_get_subvol_rootref_args)
+#define BTRFS_IOC_INO_LOOKUP_USER _IOWR(BTRFS_IOCTL_MAGIC, 62, struct btrfs_ioctl_ino_lookup_user_args)
 #endif

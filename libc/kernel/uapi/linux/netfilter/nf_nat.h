@@ -25,8 +25,9 @@
 #define NF_NAT_RANGE_PROTO_RANDOM (1 << 2)
 #define NF_NAT_RANGE_PERSISTENT (1 << 3)
 #define NF_NAT_RANGE_PROTO_RANDOM_FULLY (1 << 4)
+#define NF_NAT_RANGE_PROTO_OFFSET (1 << 5)
 #define NF_NAT_RANGE_PROTO_RANDOM_ALL (NF_NAT_RANGE_PROTO_RANDOM | NF_NAT_RANGE_PROTO_RANDOM_FULLY)
-#define NF_NAT_RANGE_MASK (NF_NAT_RANGE_MAP_IPS | NF_NAT_RANGE_PROTO_SPECIFIED | NF_NAT_RANGE_PROTO_RANDOM | NF_NAT_RANGE_PERSISTENT | NF_NAT_RANGE_PROTO_RANDOM_FULLY)
+#define NF_NAT_RANGE_MASK (NF_NAT_RANGE_MAP_IPS | NF_NAT_RANGE_PROTO_SPECIFIED | NF_NAT_RANGE_PROTO_RANDOM | NF_NAT_RANGE_PERSISTENT | NF_NAT_RANGE_PROTO_RANDOM_FULLY | NF_NAT_RANGE_PROTO_OFFSET)
 struct nf_nat_ipv4_range {
   unsigned int flags;
   __be32 min_ip;
@@ -44,5 +45,13 @@ struct nf_nat_range {
   union nf_inet_addr max_addr;
   union nf_conntrack_man_proto min_proto;
   union nf_conntrack_man_proto max_proto;
+};
+struct nf_nat_range2 {
+  unsigned int flags;
+  union nf_inet_addr min_addr;
+  union nf_inet_addr max_addr;
+  union nf_conntrack_man_proto min_proto;
+  union nf_conntrack_man_proto max_proto;
+  union nf_conntrack_man_proto base_proto;
 };
 #endif

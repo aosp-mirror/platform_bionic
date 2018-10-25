@@ -21,13 +21,14 @@
 #include <asm/bitsperlong.h>
 struct semid64_ds {
   struct ipc64_perm sem_perm;
+#if __BITS_PER_LONG == 64
   __kernel_time_t sem_otime;
-#if __BITS_PER_LONG != 64
-  unsigned long __unused1;
-#endif
   __kernel_time_t sem_ctime;
-#if __BITS_PER_LONG != 64
-  unsigned long __unused2;
+#else
+  unsigned long sem_otime;
+  unsigned long sem_otime_high;
+  unsigned long sem_ctime;
+  unsigned long sem_ctime_high;
 #endif
   unsigned long sem_nsems;
   unsigned long __unused3;

@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#if defined(__BIONIC__)
+
 #include <sys/sem.h>
 
 #include "header_checks.h"
@@ -48,8 +50,14 @@ static void sys_sem_h() {
 #else
   STRUCT_MEMBER(struct semid_ds, unsigned short, sem_nsems);
 #endif
+#if defined(__LP64__)
   STRUCT_MEMBER(struct semid_ds, time_t, sem_otime);
   STRUCT_MEMBER(struct semid_ds, time_t, sem_ctime);
+#else
+  // Starting at kernel v4.19, 32 bit changed these to unsigned values.
+  STRUCT_MEMBER(struct semid_ds, unsigned long, sem_otime);
+  STRUCT_MEMBER(struct semid_ds, unsigned long, sem_ctime);
+#endif
 
   TYPE(pid_t);
   TYPE(size_t);
@@ -64,3 +72,5 @@ static void sys_sem_h() {
   FUNCTION(semget, int (*f)(key_t, int, int));
   FUNCTION(semop, int (*f)(int, struct sembuf*, size_t));
 }
+
+#endif
