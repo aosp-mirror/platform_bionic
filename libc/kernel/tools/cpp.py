@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import site
+import unittest
 import utils
 
 top = os.getenv('ANDROID_BUILD_TOP')
@@ -309,75 +310,50 @@ class CppFileTokenizer(CppTokenizer):
 
 # Unit testing
 #
-class CppTokenizerTester(object):
-    """A class used to test CppTokenizer classes."""
+class CppTokenizerTests(unittest.TestCase):
+    """CppTokenizer tests."""
 
-    def __init__(self, tokenizer=None):
-        self._tokenizer = tokenizer
-        self._token = None
+    def get_tokens(self, token_string, line_col=False):
+        tokens = CppStringTokenizer(token_string)
+        token_list = []
+        while True:
+            token = tokens.nextToken()
+            if not token:
+                break
+            if line_col:
+                token_list.append((token.id, token.location.line,
+                                   token.location.column))
+            else:
+                token_list.append(token.id)
+        return token_list
 
-    def setTokenizer(self, tokenizer):
-        self._tokenizer = tokenizer
+    def test_hash(self):
+        self.assertEqual(self.get_tokens("#an/example  && (01923_xy)"),
+                         ["#", "an", "/", "example", tokLOGICAND, tokLPAREN,
+                          "01923_xy", tokRPAREN])
 
-    def expect(self, id):
-        self._token = self._tokenizer.nextToken()
-        if self._token is None:
-            tokid = ''
-        else:
-            tokid = self._token.id
-        if tokid == id:
-            return
-        raise BadExpectedToken("###  BAD TOKEN: '%s' expecting '%s'" % (
-            tokid, id))
+    def test_parens(self):
+        self.assertEqual(self.get_tokens("FOO(BAR) && defined(BAZ)"),
+                         ["FOO", tokLPAREN, "BAR", tokRPAREN, tokLOGICAND,
+                          "defined", tokLPAREN, "BAZ", tokRPAREN])
 
-    def expectToken(self, id, line, col):
-        self.expect(id)
-        if self._token.location.line != line:
-            raise BadExpectedToken(
-                "###  BAD LINENO: token '%s' got '%d' expecting '%d'" % (
-                    id, self._token.lineno, line))
-        if self._token.location.column != col:
-            raise BadExpectedToken("###  BAD COLNO: '%d' expecting '%d'" % (
-                self._token.colno, col))
+    def test_comment(self):
+        self.assertEqual(self.get_tokens("/*\n#\n*/"), [])
 
-    def expectTokens(self, tokens):
-        for id, line, col in tokens:
-            self.expectToken(id, line, col)
+    def test_line_cross(self):
+        self.assertEqual(self.get_tokens("first\nsecond"), ["first", "second"])
 
-    def expectList(self, list_):
-        for item in list_:
-            self.expect(item)
+    def test_line_cross_line_col(self):
+        self.assertEqual(self.get_tokens("first second\n  third", True),
+                         [("first", 1, 1), ("second", 1, 7), ("third", 2, 3)])
 
+    def test_comment_line_col(self):
+        self.assertEqual(self.get_tokens("boo /* what the\nhell */", True),
+                         [("boo", 1, 1)])
 
-def test_CppTokenizer():
-    tester = CppTokenizerTester()
-
-    tester.setTokenizer(CppStringTokenizer("#an/example  && (01923_xy)"))
-    tester.expectList(["#", "an", "/", "example", tokLOGICAND, tokLPAREN,
-                       "01923_xy", tokRPAREN])
-
-    tester.setTokenizer(CppStringTokenizer("FOO(BAR) && defined(BAZ)"))
-    tester.expectList(["FOO", tokLPAREN, "BAR", tokRPAREN, tokLOGICAND,
-                       "defined", tokLPAREN, "BAZ", tokRPAREN])
-
-    tester.setTokenizer(CppStringTokenizer("/*\n#\n*/"))
-    tester.expectList([])
-
-    tester.setTokenizer(CppStringTokenizer("first\nsecond"))
-    tester.expectList(["first", "second"])
-
-    tester.setTokenizer(CppStringTokenizer("first second\n  third"))
-    tester.expectTokens([("first", 1, 1),
-                         ("second", 1, 7),
-                         ("third", 2, 3)])
-
-    tester.setTokenizer(CppStringTokenizer("boo /* what the\nhell */"))
-    tester.expectTokens([("boo", 1, 1)])
-
-    tester.setTokenizer(CppStringTokenizer("an \\\n example"))
-    tester.expectTokens([("an", 1, 1),
-                         ("example", 2, 2)])
-    return True
+    def test_escapes(self):
+        self.assertEqual(self.get_tokens("an \\\n example", True),
+                         [("an", 1, 1), ("example", 2, 2)])
 
 
 ################################################################################
@@ -829,134 +805,137 @@ class CppExpr(object):
             macros = {}
         self.expr = self.optimize_node(self.expr, macros)
 
+class CppExprTest(unittest.TestCase):
+    """CppExpr unit tests."""
 
-def test_cpp_expr(expr, expected):
-    e = CppExpr(CppStringTokenizer(expr).tokens)
-    s1 = repr(e)
-    if s1 != expected:
-        print ("[FAIL]: expression '%s' generates '%s', should be "
-               "'%s'" % (expr, s1, expected))
-        global failure_count
-        failure_count += 1
+    def get_expr(self, expr):
+        return repr(CppExpr(CppStringTokenizer(expr).tokens))
 
+    def test_cpp_expr(self):
+        self.assertEqual(self.get_expr("0"), "(int 0)")
+        self.assertEqual(self.get_expr("1"), "(int 1)")
+        self.assertEqual(self.get_expr("-5"), "(int -5)")
+        self.assertEqual(self.get_expr("+1"), "(int 1)")
+        self.assertEqual(self.get_expr("0U"), "(int 0)")
+        self.assertEqual(self.get_expr("015"), "(oct 015)")
+        self.assertEqual(self.get_expr("015l"), "(oct 015)")
+        self.assertEqual(self.get_expr("0x3e"), "(hex 0x3e)")
+        self.assertEqual(self.get_expr("(0)"), "(int 0)")
+        self.assertEqual(self.get_expr("1 && 1"), "(&& (int 1) (int 1))")
+        self.assertEqual(self.get_expr("1 && 0"), "(&& (int 1) (int 0))")
+        self.assertEqual(self.get_expr("EXAMPLE"), "(ident EXAMPLE)")
+        self.assertEqual(self.get_expr("EXAMPLE - 3"),
+                         "(- (ident EXAMPLE) (int 3))")
+        self.assertEqual(self.get_expr("defined(EXAMPLE)"),
+                         "(defined EXAMPLE)")
+        self.assertEqual(self.get_expr("defined ( EXAMPLE ) "),
+                         "(defined EXAMPLE)")
+        self.assertEqual(self.get_expr("!defined(EXAMPLE)"),
+                         "(! (defined EXAMPLE))")
+        self.assertEqual(self.get_expr("defined(ABC) || defined(BINGO)"),
+                         "(|| (defined ABC) (defined BINGO))")
+        self.assertEqual(self.get_expr("FOO(BAR,5)"), "(call FOO [BAR,5])")
+        self.assertEqual(self.get_expr("A == 1 || defined(B)"),
+                         "(|| (== (ident A) (int 1)) (defined B))")
 
-def test_cpp_expr_optim(expr, expected, macros=None):
-    if macros is None:
-        macros = {}
-    e = CppExpr(CppStringTokenizer(expr).tokens)
-    e.optimize(macros)
-    s1 = repr(e)
-    if s1 != expected:
-        print ("[FAIL]: optimized expression '%s' generates '%s' with "
-               "macros %s, should be '%s'" % (expr, s1, macros, expected))
-        global failure_count
-        failure_count += 1
+    def get_expr_optimize(self, expr, macros=None):
+        if macros is None:
+            macros = {}
+        e = CppExpr(CppStringTokenizer(expr).tokens)
+        e.optimize(macros)
+        return repr(e)
 
-
-def test_cpp_expr_source(expr, expected):
-    e = CppExpr(CppStringTokenizer(expr).tokens)
-    s1 = str(e)
-    if s1 != expected:
-        print ("[FAIL]: source expression '%s' generates '%s', should "
-               "be '%s'" % (expr, s1, expected))
-        global failure_count
-        failure_count += 1
-
-
-def test_CppExpr():
-    test_cpp_expr("0", "(int 0)")
-    test_cpp_expr("1", "(int 1)")
-    test_cpp_expr("-5", "(int -5)")
-    test_cpp_expr("+1", "(int 1)")
-    test_cpp_expr("0U", "(int 0)")
-    test_cpp_expr("015", "(oct 015)")
-    test_cpp_expr("015l", "(oct 015)")
-    test_cpp_expr("0x3e", "(hex 0x3e)")
-    test_cpp_expr("(0)", "(int 0)")
-    test_cpp_expr("1 && 1", "(&& (int 1) (int 1))")
-    test_cpp_expr("1 && 0", "(&& (int 1) (int 0))")
-    test_cpp_expr("EXAMPLE", "(ident EXAMPLE)")
-    test_cpp_expr("EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))")
-    test_cpp_expr("defined(EXAMPLE)", "(defined EXAMPLE)")
-    test_cpp_expr("defined ( EXAMPLE ) ", "(defined EXAMPLE)")
-    test_cpp_expr("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
-    test_cpp_expr("defined(ABC) || defined(BINGO)",
-                  "(|| (defined ABC) (defined BINGO))")
-    test_cpp_expr("FOO(BAR,5)", "(call FOO [BAR,5])")
-    test_cpp_expr("A == 1 || defined(B)",
-                  "(|| (== (ident A) (int 1)) (defined B))")
-
-    test_cpp_expr_optim("0", "(int 0)")
-    test_cpp_expr_optim("1", "(int 1)")
-    test_cpp_expr_optim("1 && 1", "(int 1)")
-    test_cpp_expr_optim("1 && +1", "(int 1)")
-    test_cpp_expr_optim("0x1 && 01", "(oct 01)")
-    test_cpp_expr_optim("1 && 0", "(int 0)")
-    test_cpp_expr_optim("0 && 1", "(int 0)")
-    test_cpp_expr_optim("0 && 0", "(int 0)")
-    test_cpp_expr_optim("1 || 1", "(int 1)")
-    test_cpp_expr_optim("1 || 0", "(int 1)")
-    test_cpp_expr_optim("0 || 1", "(int 1)")
-    test_cpp_expr_optim("0 || 0", "(int 0)")
-    test_cpp_expr_optim("A", "(ident A)")
-    test_cpp_expr_optim("A", "(int 1)", {"A": 1})
-    test_cpp_expr_optim("A || B", "(int 1)", {"A": 1})
-    test_cpp_expr_optim("A || B", "(int 1)", {"B": 1})
-    test_cpp_expr_optim("A && B", "(ident B)", {"A": 1})
-    test_cpp_expr_optim("A && B", "(ident A)", {"B": 1})
-    test_cpp_expr_optim("A && B", "(&& (ident A) (ident B))")
-    test_cpp_expr_optim("EXAMPLE", "(ident EXAMPLE)")
-    test_cpp_expr_optim("EXAMPLE - 3", "(- (ident EXAMPLE) (int 3))")
-    test_cpp_expr_optim("defined(EXAMPLE)", "(defined EXAMPLE)")
-    test_cpp_expr_optim("defined(EXAMPLE)", "(defined XOWOE)",
-                        {"EXAMPLE": "XOWOE"})
-    test_cpp_expr_optim("defined(EXAMPLE)", "(int 0)",
-                        {"EXAMPLE": kCppUndefinedMacro})
-    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined EXAMPLE))")
-    test_cpp_expr_optim("!defined(EXAMPLE)", "(! (defined XOWOE))",
-                        {"EXAMPLE": "XOWOE"})
-    test_cpp_expr_optim("!defined(EXAMPLE)", "(int 1)",
-                        {"EXAMPLE": kCppUndefinedMacro})
-    test_cpp_expr_optim("defined(A) || defined(B)",
+    def test_cpp_expr_optimize(self):
+        self.assertEqual(self.get_expr_optimize("0"), "(int 0)")
+        self.assertEqual(self.get_expr_optimize("1"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("1 && 1"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("1 && +1"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("0x1 && 01"), "(oct 01)")
+        self.assertEqual(self.get_expr_optimize("1 && 0"), "(int 0)")
+        self.assertEqual(self.get_expr_optimize("0 && 1"), "(int 0)")
+        self.assertEqual(self.get_expr_optimize("0 && 0"), "(int 0)")
+        self.assertEqual(self.get_expr_optimize("1 || 1"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("1 || 0"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("0 || 1"), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("0 || 0"), "(int 0)")
+        self.assertEqual(self.get_expr_optimize("A"), "(ident A)")
+        self.assertEqual(self.get_expr_optimize("A", {"A": 1}), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("A || B", {"A": 1}), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("A || B", {"B": 1}), "(int 1)")
+        self.assertEqual(self.get_expr_optimize("A && B", {"A": 1}), "(ident B)")
+        self.assertEqual(self.get_expr_optimize("A && B", {"B": 1}), "(ident A)")
+        self.assertEqual(self.get_expr_optimize("A && B"), "(&& (ident A) (ident B))")
+        self.assertEqual(self.get_expr_optimize("EXAMPLE"), "(ident EXAMPLE)")
+        self.assertEqual(self.get_expr_optimize("EXAMPLE - 3"), "(- (ident EXAMPLE) (int 3))")
+        self.assertEqual(self.get_expr_optimize("defined(EXAMPLE)"), "(defined EXAMPLE)")
+        self.assertEqual(self.get_expr_optimize("defined(EXAMPLE)",
+                                                {"EXAMPLE": "XOWOE"}),
+                         "(defined XOWOE)")
+        self.assertEqual(self.get_expr_optimize("defined(EXAMPLE)",
+                                                {"EXAMPLE": kCppUndefinedMacro}),
+                         "(int 0)")
+        self.assertEqual(self.get_expr_optimize("!defined(EXAMPLE)"), "(! (defined EXAMPLE))")
+        self.assertEqual(self.get_expr_optimize("!defined(EXAMPLE)",
+                                                {"EXAMPLE": "XOWOE"}),
+                         "(! (defined XOWOE))")
+        self.assertEqual(self.get_expr_optimize("!defined(EXAMPLE)",
+                                                {"EXAMPLE": kCppUndefinedMacro}),
+                         "(int 1)")
+        self.assertEqual(self.get_expr_optimize("defined(A) || defined(B)"),
                         "(|| (defined A) (defined B))")
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", {"A": "1"})
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 1)", {"B": "1"})
-    test_cpp_expr_optim("defined(A) || defined(B)", "(defined A)",
-                        {"B": kCppUndefinedMacro})
-    test_cpp_expr_optim("defined(A) || defined(B)", "(int 0)",
-                        {"A": kCppUndefinedMacro, "B": kCppUndefinedMacro})
-    test_cpp_expr_optim("defined(A) && defined(B)",
-                        "(&& (defined A) (defined B))")
-    test_cpp_expr_optim("defined(A) && defined(B)",
-                        "(defined B)", {"A": "1"})
-    test_cpp_expr_optim("defined(A) && defined(B)",
-                        "(defined A)", {"B": "1"})
-    test_cpp_expr_optim("defined(A) && defined(B)", "(int 0)",
-                        {"B": kCppUndefinedMacro})
-    test_cpp_expr_optim("defined(A) && defined(B)",
-                        "(int 0)", {"A": kCppUndefinedMacro})
-    test_cpp_expr_optim("A == 1 || defined(B)",
-                        "(|| (== (ident A) (int 1)) (defined B))")
-    test_cpp_expr_optim(
-        "defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)",
-        "(|| (! (defined __GLIBC__)) (< (ident __GLIBC__) (int 2)))",
-        {"__KERNEL__": kCppUndefinedMacro})
+        self.assertEqual(self.get_expr_optimize("defined(A) || defined(B)",
+                                                {"A": "1"}),
+                         "(int 1)")
+        self.assertEqual(self.get_expr_optimize("defined(A) || defined(B)",
+                                                {"B": "1"}),
+                         "(int 1)")
+        self.assertEqual(self.get_expr_optimize("defined(A) || defined(B)",
+                                                {"B": kCppUndefinedMacro}),
+                         "(defined A)")
+        self.assertEqual(self.get_expr_optimize("defined(A) || defined(B)",
+                                                {"A": kCppUndefinedMacro,
+                                                 "B": kCppUndefinedMacro}),
+                         "(int 0)")
+        self.assertEqual(self.get_expr_optimize("defined(A) && defined(B)"),
+                         "(&& (defined A) (defined B))")
+        self.assertEqual(self.get_expr_optimize("defined(A) && defined(B)",
+                                                {"A": "1"}),
+                         "(defined B)")
+        self.assertEqual(self.get_expr_optimize("defined(A) && defined(B)",
+                                                {"B": "1"}),
+                         "(defined A)")
+        self.assertEqual(self.get_expr_optimize("defined(A) && defined(B)",
+                                                {"B": kCppUndefinedMacro}),
+                        "(int 0)")
+        self.assertEqual(self.get_expr_optimize("defined(A) && defined(B)",
+                                                {"A": kCppUndefinedMacro}),
+                        "(int 0)")
+        self.assertEqual(self.get_expr_optimize("A == 1 || defined(B)"),
+                         "(|| (== (ident A) (int 1)) (defined B))")
+        self.assertEqual(self.get_expr_optimize(
+              "defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)",
+              {"__KERNEL__": kCppUndefinedMacro}),
+              "(|| (! (defined __GLIBC__)) (< (ident __GLIBC__) (int 2)))")
 
-    test_cpp_expr_source("0", "0")
-    test_cpp_expr_source("1", "1")
-    test_cpp_expr_source("1 && 1", "1 && 1")
-    test_cpp_expr_source("1 && 0", "1 && 0")
-    test_cpp_expr_source("0 && 1", "0 && 1")
-    test_cpp_expr_source("0 && 0", "0 && 0")
-    test_cpp_expr_source("1 || 1", "1 || 1")
-    test_cpp_expr_source("1 || 0", "1 || 0")
-    test_cpp_expr_source("0 || 1", "0 || 1")
-    test_cpp_expr_source("0 || 0", "0 || 0")
-    test_cpp_expr_source("EXAMPLE", "EXAMPLE")
-    test_cpp_expr_source("EXAMPLE - 3", "EXAMPLE - 3")
-    test_cpp_expr_source("defined(EXAMPLE)", "defined(EXAMPLE)")
-    test_cpp_expr_source("defined EXAMPLE", "defined(EXAMPLE)")
-    test_cpp_expr_source("A == 1 || defined(B)", "A == 1 || defined(B)")
+    def get_expr_string(self, expr):
+        return str(CppExpr(CppStringTokenizer(expr).tokens))
+
+    def test_cpp_expr_string(self):
+        self.assertEqual(self.get_expr_string("0"), "0")
+        self.assertEqual(self.get_expr_string("1"), "1")
+        self.assertEqual(self.get_expr_string("1 && 1"), "1 && 1")
+        self.assertEqual(self.get_expr_string("1 && 0"), "1 && 0")
+        self.assertEqual(self.get_expr_string("0 && 1"), "0 && 1")
+        self.assertEqual(self.get_expr_string("0 && 0"), "0 && 0")
+        self.assertEqual(self.get_expr_string("1 || 1"), "1 || 1")
+        self.assertEqual(self.get_expr_string("1 || 0"), "1 || 0")
+        self.assertEqual(self.get_expr_string("0 || 1"), "0 || 1")
+        self.assertEqual(self.get_expr_string("0 || 0"), "0 || 0")
+        self.assertEqual(self.get_expr_string("EXAMPLE"), "EXAMPLE")
+        self.assertEqual(self.get_expr_string("EXAMPLE - 3"), "EXAMPLE - 3")
+        self.assertEqual(self.get_expr_string("defined(EXAMPLE)"), "defined(EXAMPLE)")
+        self.assertEqual(self.get_expr_string("defined EXAMPLE"), "defined(EXAMPLE)")
+        self.assertEqual(self.get_expr_string("A == 1 || defined(B)"), "A == 1 || defined(B)")
 
 
 ################################################################################
@@ -1605,31 +1584,30 @@ class BlockParser(object):
         return self.getBlocks(CppFileTokenizer(path))
 
 
-def test_block_parsing(lines, expected):
-    """Helper method to test the correctness of BlockParser.parse."""
-    blocks = BlockParser().parse(CppStringTokenizer('\n'.join(lines)))
-    if len(blocks) != len(expected):
-        raise BadExpectedToken("BlockParser.parse() returned '%s' expecting "
-                               "'%s'" % (str(blocks), repr(expected)))
-    for n in range(len(blocks)):
-        if str(blocks[n]) != expected[n]:
-            raise BadExpectedToken("BlockParser.parse()[%d] is '%s', "
-                                   "expecting '%s'" % (n, str(blocks[n]),
-                                                       expected[n]))
+class BlockParserTests(unittest.TestCase):
+    """BlockParser unit tests."""
 
+    def get_blocks(self, lines):
+        blocks = BlockParser().parse(CppStringTokenizer('\n'.join(lines)))
+        return map(lambda a: str(a), blocks)
 
-def test_BlockParser():
-    test_block_parsing(["#error hello"], ["#error hello"])
-    test_block_parsing(["foo", "", "bar"], ["foo bar"])
+    def test_hash(self):
+        self.assertEqual(self.get_blocks(["#error hello"]), ["#error hello"])
 
-    # We currently cannot handle the following case with libclang properly.
-    # Fortunately it doesn't appear in current headers.
-    # test_block_parsing(["foo", "  #  ", "bar"], ["foo", "bar"])
+    def test_empty_line(self):
+        self.assertEqual(self.get_blocks(["foo", "", "bar"]), ["foo bar"])
 
-    test_block_parsing(["foo",
-                        "  #  /* ahah */ if defined(__KERNEL__) /* more */",
-                        "bar", "#endif"],
-                       ["foo", "#ifdef __KERNEL__", "bar", "#endif"])
+    def test_hash_with_space(self):
+        # We currently cannot handle the following case with libclang properly.
+        # Fortunately it doesn't appear in current headers.
+        #self.assertEqual(self.get_blocks(["foo", "  #  ", "bar"]), ["foo", "bar"])
+        pass
+
+    def test_with_comment(self):
+        self.assertEqual(self.get_blocks(["foo",
+                                          "  #  /* ahah */ if defined(__KERNEL__) /* more */",
+                                          "bar", "#endif"]),
+                         ["foo", "#ifdef __KERNEL__", "bar", "#endif"])
 
 
 ################################################################################
@@ -1684,6 +1662,7 @@ def optimize_if01(blocks):
 
         if r == 0:
             # if 0 => skip everything until the corresponding #endif
+            start_dir = blocks[j].directive
             j = find_matching_endif(blocks, j + 1)
             if j >= n:
                 # unterminated #if 0, finish here
@@ -1692,18 +1671,27 @@ def optimize_if01(blocks):
             if dir_ == "endif":
                 logging.debug("remove 'if 0' .. 'endif' (lines %d to %d)",
                               blocks[i].lineno, blocks[j].lineno)
+                if start_dir == "elif":
+                    # Put an endif since we started with an elif.
+                    result += blocks[j:j+1]
                 i = j + 1
             elif dir_ == "else":
                 # convert 'else' into 'if 1'
                 logging.debug("convert 'if 0' .. 'else' into 'if 1' (lines %d "
                               "to %d)", blocks[i].lineno, blocks[j-1].lineno)
-                blocks[j].directive = "if"
+                if start_dir == "elif":
+                    blocks[j].directive = "elif"
+                else:
+                    blocks[j].directive = "if"
                 blocks[j].expr = CppExpr(CppStringTokenizer("1").tokens)
                 i = j
             elif dir_ == "elif":
                 # convert 'elif' into 'if'
                 logging.debug("convert 'if 0' .. 'elif' into 'if'")
-                blocks[j].directive = "if"
+                if start_dir == "elif":
+                    blocks[j].directive = "elif"
+                else:
+                    blocks[j].directive = "if"
                 i = j
             continue
 
@@ -1715,18 +1703,33 @@ def optimize_if01(blocks):
             result += blocks[j+1:k]
             break
 
+        start_dir = blocks[j].directive
         dir_ = blocks[k].directive
         if dir_ == "endif":
             logging.debug("convert 'if 1' .. 'endif' (lines %d to %d)",
                           blocks[j].lineno, blocks[k].lineno)
+            if start_dir == "elif":
+                # Add the elif in to the results and convert it to an elif 1.
+                blocks[j].tokens = CppStringTokenizer("1").tokens
+                result += blocks[j:j+1]
             result += optimize_if01(blocks[j+1:k])
+            if start_dir == "elif":
+                # Add the endif in to the results.
+                result += blocks[k:k+1]
             i = k + 1
         elif dir_ == "else":
             # convert 'else' into 'if 0'
             logging.debug("convert 'if 1' .. 'else' (lines %d to %d)",
                           blocks[j].lineno, blocks[k].lineno)
+            if start_dir == "elif":
+                # Add the elif in to the results and convert it to an elif 1.
+                blocks[j].tokens = CppStringTokenizer("1").tokens
+                result += blocks[j:j+1]
             result += optimize_if01(blocks[j+1:k])
-            blocks[k].directive = "if"
+            if start_dir == "elif":
+                blocks[k].directive = "elif"
+            else:
+                blocks[k].directive = "if"
             blocks[k].expr = CppExpr(CppStringTokenizer("0").tokens)
             i = k
         elif dir_ == "elif":
@@ -1738,85 +1741,203 @@ def optimize_if01(blocks):
             i = k
     return result
 
+class OptimizerTests(unittest.TestCase):
+    def parse(self, text, macros=None):
+        out = utils.StringOutput()
+        blocks = BlockParser().parse(CppStringTokenizer(text))
+        blocks.replaceTokens(kernel_token_replacements)
+        blocks.optimizeAll(macros)
+        blocks.write(out)
+        return out.get()
 
-def test_optimizeAll():
-    text = """\
+    def test_if1(self):
+        text = """\
 #if 1
-#define  GOOD_1
+#define  GOOD
 #endif
-#if 0
-#define  BAD_2
-#define  BAD_3
-#endif
+"""
+        expected = """\
+#define GOOD
+"""
+        self.assertEqual(self.parse(text), expected)
 
+    def test_if0(self):
+        text = """\
+#if 0
+#define  SHOULD_SKIP1
+#define  SHOULD_SKIP2
+#endif
+"""
+        expected = ""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_if1_else(self):
+        text = """\
 #if 1
-#define  GOOD_2
+#define  GOOD
 #else
-#define  BAD_4
+#define  BAD
 #endif
+"""
+        expected = """\
+#define GOOD
+"""
+        self.assertEqual(self.parse(text), expected)
 
+    def test_if0_else(self):
+        text = """\
 #if 0
-#define  BAD_5
+#define  BAD
 #else
-#define  GOOD_3
+#define  GOOD
 #endif
+"""
+        expected = """\
+#define GOOD
+"""
+        self.assertEqual(self.parse(text), expected)
 
+    def test_if_elif1(self):
+        text = """\
+#if defined(something)
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        expected = """\
+#ifdef something
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_if_elif1_macro(self):
+        text = """\
+#if defined(something)
+#define EXISTS
+#elif defined(WILL_BE_ONE)
+#define GOOD
+#endif
+"""
+        expected = """\
+#ifdef something
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        self.assertEqual(self.parse(text, {"WILL_BE_ONE": "1"}), expected)
+
+
+    def test_if_elif1_else(self):
+        text = """\
+#if defined(something)
+#define EXISTS
+#elif 1
+#define GOOD
+#else
+#define BAD
+#endif
+"""
+        expected = """\
+#ifdef something
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_if_elif1_else_macro(self):
+        text = """\
+#if defined(something)
+#define EXISTS
+#elif defined(WILL_BE_ONE)
+#define GOOD
+#else
+#define BAD
+#endif
+"""
+        expected = """\
+#ifdef something
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        self.assertEqual(self.parse(text, {"WILL_BE_ONE": "1"}), expected)
+
+
+    def test_if_elif1_else_macro(self):
+        text = """\
+#if defined(something)
+#define EXISTS
+#elif defined(WILL_BE_ONE)
+#define GOOD
+#else
+#define BAD
+#endif
+"""
+        expected = """\
+#ifdef something
+#define EXISTS
+#elif 1
+#define GOOD
+#endif
+"""
+        self.assertEqual(self.parse(text, {"WILL_BE_ONE": "1"}), expected)
+
+    def test_macro_set_to_undefined_single(self):
+        text = """\
 #if defined(__KERNEL__)
 #define BAD_KERNEL
 #endif
+"""
+        expected = ""
+        macros = {"__KERNEL__": kCppUndefinedMacro}
+        self.assertEqual(self.parse(text, macros), expected)
 
+    def test_macro_set_to_undefined_if(self):
+        text = """\
 #if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
-#define X
+#define CHECK
 #endif
+"""
+        expected = """\
+#if !defined(__GLIBC__) || __GLIBC__ < 2
+#define CHECK
+#endif
+"""
+        macros = {"__KERNEL__": kCppUndefinedMacro}
+        self.assertEqual(self.parse(text, macros), expected)
 
+    def test_endif_comment_removed(self):
+        text = """\
 #ifndef SIGRTMAX
 #define SIGRTMAX 123
 #endif /* SIGRTMAX */
-
-#if 0
-#if 1
-#define  BAD_6
-#endif
-#endif\
 """
-
-    expected = """\
-#define GOOD_1
-#define GOOD_2
-#define GOOD_3
-#if !defined(__GLIBC__) || __GLIBC__ < 2
-#define X
-#endif
+        expected = """\
 #ifndef __SIGRTMAX
 #define __SIGRTMAX 123
 #endif
 """
+        self.assertEqual(self.parse(text), expected)
 
-    out = utils.StringOutput()
-    blocks = BlockParser().parse(CppStringTokenizer(text))
-    blocks.replaceTokens(kernel_token_replacements)
-    blocks.optimizeAll({"__KERNEL__": kCppUndefinedMacro})
-    blocks.write(out)
-    if out.get() != expected:
-        print "[FAIL]: macro optimization failed\n"
-        print "<<<< expecting '",
-        print expected,
-        print "'\n>>>> result '",
-        print out.get(),
-        print "'\n----"
-        global failure_count
-        failure_count += 1
+    def test_multilevel_if0(self):
+        text = """\
+#if 0
+#if 1
+#define  BAD_6
+#endif
+#endif
+"""
+        expected = ""
+        self.assertEqual(self.parse(text), expected)
 
 
-def runUnitTests():
-    """Always run all unit tests for this program."""
-    test_CppTokenizer()
-    test_CppExpr()
-    test_optimizeAll()
-    test_BlockParser()
-
-
-failure_count = 0
-runUnitTests()
-if failure_count != 0:
-    utils.panic("Unit tests failed in cpp.py.\n")
+if __name__ == '__main__':
+    unittest.main()
