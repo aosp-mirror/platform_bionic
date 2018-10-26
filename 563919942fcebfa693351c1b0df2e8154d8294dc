@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "014dc7fe_73520f44",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-10-26T19:36:37Z",
+      "side": 1,
+      "message": "After getting confused by this a bit, I think really what you are trying to do is call the init function again. I think it would be useful to explain that\u0027s exactly what a reinitialize is doing.",
+      "range": {
+        "startLine": 601,
+        "startChar": 41,
+        "endLine": 601,
+        "endChar": 54
+      },
+      "revId": "563919942fcebfa693351c1b0df2e8154d8294dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
