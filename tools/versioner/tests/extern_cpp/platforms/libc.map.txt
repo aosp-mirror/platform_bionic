@@ -1,0 +1,4 @@
+LIBC {
+  global:
+    __gnu_basename;  # introduced=23
+};
