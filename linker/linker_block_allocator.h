@@ -30,7 +30,8 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include "private/bionic_macros.h"
+
+#include <android-base/macros.h>
 
 struct LinkerBlockAllocatorPage;
 

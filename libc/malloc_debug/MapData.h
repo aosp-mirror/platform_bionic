@@ -68,5 +68,5 @@ class MapData {
   std::mutex m_;
   std::set<MapEntry*, compare_entries> entries_;
 
-  DISALLOW_COPY_AND_ASSIGN(MapData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(MapData);
 };

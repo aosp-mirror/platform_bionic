@@ -46,5 +46,5 @@ class ScopedSignalBlocker {
 
   sigset64_t old_set_;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedSignalBlocker);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedSignalBlocker);
 };
