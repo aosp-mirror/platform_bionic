@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef KERNEL_ARGUMENT_BLOCK_H
-#define KERNEL_ARGUMENT_BLOCK_H
+#pragma once
 
 #include <elf.h>
 #include <link.h>
@@ -71,7 +70,5 @@ class KernelArgumentBlock {
   libc_shared_globals* shared_globals;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(KernelArgumentBlock);
 };
-
-#endif // KERNEL_ARGUMENT_BLOCK_H

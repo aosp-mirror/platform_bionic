@@ -90,7 +90,7 @@ class ScandirResult {
     return copy;
   }
 
-  DISALLOW_COPY_AND_ASSIGN(ScandirResult);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScandirResult);
 };
 
 int scandirat(int parent_fd, const char* dir_name, dirent*** name_list,

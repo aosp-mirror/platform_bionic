@@ -45,7 +45,7 @@ class MmapFile {
   bool FindByName(const char* name, Line* line);
   void Unmap();
 
-  DISALLOW_COPY_AND_ASSIGN(MmapFile);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(MmapFile);
 
  private:
   enum class FileStatus {
@@ -78,7 +78,7 @@ class PasswdFile {
     mmap_file_.Unmap();
   }
 
-  DISALLOW_COPY_AND_ASSIGN(PasswdFile);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(PasswdFile);
 
  private:
   MmapFile mmap_file_;
@@ -94,7 +94,7 @@ class GroupFile {
     mmap_file_.Unmap();
   }
 
-  DISALLOW_COPY_AND_ASSIGN(GroupFile);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(GroupFile);
 
  private:
   MmapFile mmap_file_;

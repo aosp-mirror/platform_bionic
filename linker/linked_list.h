@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "private/bionic_macros.h"
+#include <android-base/macros.h>
 
 template<typename T>
 struct LinkedListEntry {

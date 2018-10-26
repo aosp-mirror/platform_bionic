@@ -53,7 +53,7 @@ private:
   FILE* fp;
   const char* name;
 
-  DISALLOW_COPY_AND_ASSIGN(Elem);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(Elem);
 };
 
 int malloc_info(int options, FILE* fp) {

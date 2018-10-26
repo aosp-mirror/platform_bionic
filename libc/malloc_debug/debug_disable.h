@@ -57,5 +57,5 @@ class ScopedDisableDebugCalls {
  private:
   bool disabled_;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedDisableDebugCalls);
 };

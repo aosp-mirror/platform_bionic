@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef SCOPED_READDIR_H
-#define SCOPED_READDIR_H
+#pragma once
 
 #include <dirent.h>
 
@@ -47,7 +46,5 @@ class ScopedReaddir {
  private:
   DIR* dir_;
 
-  DISALLOW_COPY_AND_ASSIGN(ScopedReaddir);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedReaddir);
 };
-
-#endif // SCOPED_READDIR_H
