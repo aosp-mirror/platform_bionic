@@ -86,7 +86,7 @@ struct prop_bt {
   }
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(prop_bt);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(prop_bt);
 };
 
 class prop_area {
@@ -158,5 +158,5 @@ class prop_area {
   uint32_t reserved_[28];
   char data_[0];
 
-  DISALLOW_COPY_AND_ASSIGN(prop_area);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(prop_area);
 };

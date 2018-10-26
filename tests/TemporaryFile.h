@@ -17,7 +17,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include <android-base/macros.h>
 
 template <typename T = int (*)(char*)>
 class GenericTemporaryFile {
