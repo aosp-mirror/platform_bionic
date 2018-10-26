@@ -49,7 +49,7 @@ class RecordEntry {
   pid_t tid_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(RecordEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordEntry);
 };
 
 class ThreadCompleteEntry : public RecordEntry {
@@ -60,7 +60,7 @@ class ThreadCompleteEntry : public RecordEntry {
   std::string GetString() const override;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(ThreadCompleteEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ThreadCompleteEntry);
 };
 
 class AllocEntry : public RecordEntry {
@@ -72,7 +72,7 @@ class AllocEntry : public RecordEntry {
   void* pointer_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(AllocEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(AllocEntry);
 };
 
 class MallocEntry : public AllocEntry {
@@ -86,7 +86,7 @@ class MallocEntry : public AllocEntry {
   size_t size_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(MallocEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(MallocEntry);
 };
 
 class FreeEntry : public AllocEntry {
@@ -97,7 +97,7 @@ class FreeEntry : public AllocEntry {
   std::string GetString() const override;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(FreeEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(FreeEntry);
 };
 
 class CallocEntry : public MallocEntry {
@@ -111,7 +111,7 @@ class CallocEntry : public MallocEntry {
   size_t nmemb_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(CallocEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(CallocEntry);
 };
 
 class ReallocEntry : public MallocEntry {
@@ -125,7 +125,7 @@ class ReallocEntry : public MallocEntry {
   void* old_pointer_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(ReallocEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ReallocEntry);
 };
 
 // aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
@@ -140,7 +140,7 @@ class MemalignEntry : public MallocEntry {
   size_t alignment_;
 
  private:
-  DISALLOW_COPY_AND_ASSIGN(MemalignEntry);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(MemalignEntry);
 };
 
 class Config;
@@ -170,5 +170,5 @@ class RecordData {
   std::atomic_bool dump_;
   std::string dump_file_;
 
-  DISALLOW_COPY_AND_ASSIGN(RecordData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);
 };

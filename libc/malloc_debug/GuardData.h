@@ -56,7 +56,7 @@ class GuardData : public OptionData {
 
   virtual const char* GetTypeName() = 0;
 
-  DISALLOW_COPY_AND_ASSIGN(GuardData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(GuardData);
 };
 
 class FrontGuardData : public GuardData {
@@ -75,7 +75,7 @@ class FrontGuardData : public GuardData {
 
   size_t offset_ = 0;
 
-  DISALLOW_COPY_AND_ASSIGN(FrontGuardData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(FrontGuardData);
 };
 
 class RearGuardData : public GuardData {
@@ -90,5 +90,5 @@ class RearGuardData : public GuardData {
  private:
   const char* GetTypeName() override { return "REAR"; }
 
-  DISALLOW_COPY_AND_ASSIGN(RearGuardData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(RearGuardData);
 };

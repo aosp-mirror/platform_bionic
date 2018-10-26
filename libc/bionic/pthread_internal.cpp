@@ -54,7 +54,7 @@ template <bool write> class ScopedRWLock {
 
  private:
   pthread_rwlock_t* rwlock_;
-  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
 };
 
 typedef ScopedRWLock<true> ScopedWriteLock;

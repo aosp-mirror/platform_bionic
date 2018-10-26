@@ -34,12 +34,12 @@
 #include <future>
 #include <vector>
 
+#include <android-base/macros.h>
 #include <android-base/parseint.h>
 #include <android-base/scopeguard.h>
 #include <android-base/strings.h>
 
 #include "private/bionic_constants.h"
-#include "private/bionic_macros.h"
 #include "BionicDeathTest.h"
 #include "SignalUtils.h"
 #include "utils.h"

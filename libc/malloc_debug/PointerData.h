@@ -184,5 +184,5 @@ class PointerData : public OptionData {
   static std::mutex free_pointer_mutex_;
   static std::deque<FreePointerInfoType> free_pointers_;
 
-  DISALLOW_COPY_AND_ASSIGN(PointerData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(PointerData);
 };

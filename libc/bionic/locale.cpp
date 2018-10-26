@@ -66,7 +66,7 @@ struct __locale_t {
     }
   }
 
-  DISALLOW_COPY_AND_ASSIGN(__locale_t);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(__locale_t);
 };
 
 size_t __ctype_get_mb_cur_max() {
