@@ -17,6 +17,10 @@
 #ifndef ANDROID_VERSIONING_H
 #define ANDROID_VERSIONING_H
 
+#ifndef __STRING
+#define __STRING(x) #x
+#endif
+
 #define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" __STRING(api_level))))
 #define __INTRODUCED_IN_FUTURE __attribute__((annotate("introduced_in_future")))
 #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" __STRING(api_level))))

@@ -20,8 +20,10 @@
 
 #include <array>
 #include <initializer_list>
+#include <optional>
 #include <set>
 #include <string>
+#include <unordered_map>
 
 enum class Arch : size_t {
   arm = 0,
@@ -33,7 +35,7 @@ enum class Arch : size_t {
 };
 
 std::string to_string(const Arch& arch);
-Arch arch_from_string(const std::string& name);
+std::optional<Arch> arch_from_string(const std::string& name);
 
 template <typename T>
 class ArchMapIterator;
@@ -136,7 +138,7 @@ static ArchMap<std::string> arch_targets = {
   { Arch::x86_64, "x86_64-linux-android" },
 };
 
-static const std::set<int> default_levels = { 14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27 };
+static const std::set<int> default_levels = { 14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28 };
 
 static const ArchMap<int> arch_min_api = {
   { Arch::arm, 9 },
@@ -145,4 +147,24 @@ static const ArchMap<int> arch_min_api = {
   { Arch::mips64, 21 },
   { Arch::x86, 9 },
   { Arch::x86_64, 21 },
+};
+
+static constexpr int future_api = 10000;
+
+static const std::unordered_map<std::string, int> api_codename_map{
+  {"G", 9},
+  {"I", 14},
+  {"J", 16},
+  {"J-MR1", 17},
+  {"J-MR2", 18},
+  {"K", 19},
+  {"L", 21},
+  {"L-MR1", 22},
+  {"M", 23},
+  {"N", 24},
+  {"N-MR1", 25},
+  {"O", 26},
+  {"O-MR1", 27},
+  {"P", 28},
+  {"Q", 9001},
 };

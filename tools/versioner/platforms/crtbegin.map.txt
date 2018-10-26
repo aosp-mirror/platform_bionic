@@ -1,0 +1,7 @@
+# This file lists the libc functions are included in `crtbegin.o` and not
+# exported by `libc.so`.
+
+CRTBEGIN {
+  global:
+    atexit;  # arm64 x86 x86_64 mips mips64
+};
