@@ -14,6 +14,7 @@ cc_binary_host {
         "Driver.cpp",
         "Preprocessor.cpp",
         "SymbolDatabase.cpp",
+        "SymbolFileParser.cpp",
         "Utils.cpp",
         "VFS.cpp",
     ],

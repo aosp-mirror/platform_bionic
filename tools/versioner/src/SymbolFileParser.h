@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,21 +17,13 @@
 #pragma once
 
 #include <map>
-#include <optional>
-#include <set>
 #include <string>
-#include <unordered_set>
+#include <optional>
 
 #include "DeclarationDatabase.h"
+#include "SymbolDatabase.h"
 
-using LibrarySymbolDatabase = std::unordered_set<std::string>;
-std::unordered_set<std::string> getSymbols(const std::string& filename);
+using SymbolMap = std::map<std::string, NdkSymbolType>;
 
-enum class NdkSymbolType {
-  function,
-  variable,
-};
-
-using NdkSymbolDatabase = std::map<std::string, std::map<CompilationType, NdkSymbolType>>;
-std::optional<NdkSymbolDatabase> parsePlatforms(const std::set<CompilationType>& types,
-                                                const std::string& platform_dir);
+std::optional<SymbolMap> parseSymbolFile(const std::string &file,
+                                         const CompilationType& type);
