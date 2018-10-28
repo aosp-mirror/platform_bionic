@@ -32,12 +32,13 @@
 
 #include <stdlib.h>
 #include <limits.h>
-#include "private/bionic_macros.h"
 
 #include <memory>
 #include <string>
 #include <vector>
 #include <unordered_map>
+
+#include <android-base/macros.h>
 
 class NamespaceLinkConfig {
  public:

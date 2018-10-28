@@ -17,6 +17,7 @@
 #pragma once
 
 #include <map>
+#include <optional>
 #include <set>
 #include <string>
 #include <unordered_set>
@@ -32,3 +33,5 @@ enum class NdkSymbolType {
 };
 
 using NdkSymbolDatabase = std::map<std::string, std::map<CompilationType, NdkSymbolType>>;
+std::optional<NdkSymbolDatabase> parsePlatforms(const std::set<CompilationType>& types,
+                                                const std::string& platform_dir);

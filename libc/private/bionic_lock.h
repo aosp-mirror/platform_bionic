@@ -25,8 +25,8 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _BIONIC_LOCK_H
-#define _BIONIC_LOCK_H
+
+#pragma once
 
 #include <stdatomic.h>
 #include "private/bionic_futex.h"
@@ -85,10 +85,8 @@ class LockGuard {
     lock_.unlock();
   }
 
-  DISALLOW_COPY_AND_ASSIGN(LockGuard);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(LockGuard);
 
  private:
   Lock& lock_;
 };
-
-#endif  // _BIONIC_LOCK_H

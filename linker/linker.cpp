@@ -1086,6 +1086,7 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath(), realpath);
     // Check if the library is accessible
     if (fd != -1 && !ns->is_accessible(*realpath)) {
+      close(fd);
       fd = -1;
     }
   }

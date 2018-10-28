@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef BIONIC_SYSTRACE_H
-#define BIONIC_SYSTRACE_H
+#pragma once
 
 #include "bionic_macros.h"
 
@@ -31,10 +30,8 @@ class __LIBC_HIDDEN__ ScopedTrace {
   void End();
  private:
   bool called_end_;
-  DISALLOW_COPY_AND_ASSIGN(ScopedTrace);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedTrace);
 };
 
 void bionic_trace_begin(const char* message);
 void bionic_trace_end();
-
-#endif

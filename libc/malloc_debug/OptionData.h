@@ -39,5 +39,5 @@ class OptionData {
  protected:
   DebugData* debug_;
 
-  DISALLOW_COPY_AND_ASSIGN(OptionData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(OptionData);
 };

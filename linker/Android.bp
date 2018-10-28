@@ -15,7 +15,7 @@ cc_library_static {
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
 
-    static_libs: ["libasync_safe"],
+    static_libs: ["libasync_safe", "libbase"],
 }
 
 // This is used for bionic on (host) Linux to bootstrap our linker embedded into
