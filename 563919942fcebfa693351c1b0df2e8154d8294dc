@@ -22,6 +22,30 @@
       "revId": "563919942fcebfa693351c1b0df2e8154d8294dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38a76083_be7b3fda",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-10-29T12:29:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "014dc7fe_73520f44",
+      "range": {
+        "startLine": 601,
+        "startChar": 41,
+        "endLine": 601,
+        "endChar": 54
+      },
+      "revId": "563919942fcebfa693351c1b0df2e8154d8294dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
