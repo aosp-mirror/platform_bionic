@@ -144,11 +144,12 @@ class pthread_internal_t {
 
   bionic_tls* bionic_tls;
 
-  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
-
   // The thread pointer (__get_tls()) points at this field. This field must come last so that
   // an executable's TLS segment can be allocated at a fixed offset after the thread pointer.
   void* tls[BIONIC_TLS_SLOTS];
+
+  // The golang runtime currently expects this field to come after the slots.
+  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
 };
 
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
