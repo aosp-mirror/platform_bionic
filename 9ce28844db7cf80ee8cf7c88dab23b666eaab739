@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8723eb9e_936cea5a",
+        "filename": "tests/headers/posix/sys_msg_h.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-10-30T17:34:02Z",
+      "side": 1,
+      "message": "(this is pretty annoying, and if we actually cared about these APIs we should probably hide the kernel struct and work around this in libc. but since no apps can use these APIs anyway...)",
+      "revId": "9ce28844db7cf80ee8cf7c88dab23b666eaab739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
