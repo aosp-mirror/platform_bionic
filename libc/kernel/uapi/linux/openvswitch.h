@@ -425,6 +425,7 @@ enum ovs_action_attr {
   OVS_ACTION_ATTR_PUSH_NSH,
   OVS_ACTION_ATTR_POP_NSH,
   OVS_ACTION_ATTR_METER,
+  OVS_ACTION_ATTR_CLONE,
   __OVS_ACTION_ATTR_MAX,
 };
 #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
@@ -467,4 +468,25 @@ enum ovs_meter_band_type {
   __OVS_METER_BAND_TYPE_MAX
 };
 #define OVS_METER_BAND_TYPE_MAX (__OVS_METER_BAND_TYPE_MAX - 1)
+#define OVS_CT_LIMIT_FAMILY "ovs_ct_limit"
+#define OVS_CT_LIMIT_MCGROUP "ovs_ct_limit"
+#define OVS_CT_LIMIT_VERSION 0x1
+enum ovs_ct_limit_cmd {
+  OVS_CT_LIMIT_CMD_UNSPEC,
+  OVS_CT_LIMIT_CMD_SET,
+  OVS_CT_LIMIT_CMD_DEL,
+  OVS_CT_LIMIT_CMD_GET
+};
+enum ovs_ct_limit_attr {
+  OVS_CT_LIMIT_ATTR_UNSPEC,
+  OVS_CT_LIMIT_ATTR_ZONE_LIMIT,
+  __OVS_CT_LIMIT_ATTR_MAX
+};
+#define OVS_CT_LIMIT_ATTR_MAX (__OVS_CT_LIMIT_ATTR_MAX - 1)
+#define OVS_ZONE_LIMIT_DEFAULT_ZONE - 1
+struct ovs_zone_limit {
+  int zone_id;
+  __u32 limit;
+  __u32 count;
+};
 #endif

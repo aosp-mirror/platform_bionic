@@ -44,4 +44,5 @@
 #define KPF_BALLOON 23
 #define KPF_ZERO_PAGE 24
 #define KPF_IDLE 25
+#define KPF_PGTABLE 26
 #endif

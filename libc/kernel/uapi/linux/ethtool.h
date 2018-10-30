@@ -320,6 +320,17 @@ struct ethtool_rx_flow_spec {
 #define ETHTOOL_RX_FLOW_SPEC_RING 0x00000000FFFFFFFFLL
 #define ETHTOOL_RX_FLOW_SPEC_RING_VF 0x000000FF00000000LL
 #define ETHTOOL_RX_FLOW_SPEC_RING_VF_OFF 32
+struct ethtool_rxnfc {
+  __u32 cmd;
+  __u32 flow_type;
+  __u64 data;
+  struct ethtool_rx_flow_spec fs;
+  union {
+    __u32 rule_cnt;
+    __u32 rss_context;
+  };
+  __u32 rule_locs[0];
+};
 struct ethtool_rxfh_indir {
   __u32 cmd;
   __u32 size;
@@ -683,6 +694,7 @@ enum ethtool_link_mode_bit_indices {
 #define WAKE_ARP (1 << 4)
 #define WAKE_MAGIC (1 << 5)
 #define WAKE_MAGICSECURE (1 << 6)
+#define WAKE_FILTER (1 << 7)
 #define TCP_V4_FLOW 0x01
 #define UDP_V4_FLOW 0x02
 #define SCTP_V4_FLOW 0x03
@@ -713,6 +725,7 @@ enum ethtool_link_mode_bit_indices {
 #define RXH_L4_B_2_3 (1 << 7)
 #define RXH_DISCARD (1 << 31)
 #define RX_CLS_FLOW_DISC 0xffffffffffffffffULL
+#define RX_CLS_FLOW_WAKE 0xfffffffffffffffeULL
 #define RX_CLS_LOC_SPECIAL 0x80000000
 #define RX_CLS_LOC_ANY 0xffffffff
 #define RX_CLS_LOC_FIRST 0xfffffffe

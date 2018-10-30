@@ -24,6 +24,7 @@
 #define TCMU_MAILBOX_VERSION 2
 #define ALIGN_SIZE 64
 #define TCMU_MAILBOX_FLAG_CAP_OOOC (1 << 0)
+#define TCMU_MAILBOX_FLAG_CAP_READ_LEN (1 << 1)
 struct tcmu_mailbox {
   __u16 version;
   __u16 flags;
@@ -41,6 +42,7 @@ struct tcmu_cmd_entry_hdr {
   __u16 cmd_id;
   __u8 kflags;
 #define TCMU_UFLAG_UNKNOWN_OP 0x1
+#define TCMU_UFLAG_READ_LEN 0x2
   __u8 uflags;
 } __packed;
 #define TCMU_OP_MASK 0x7
@@ -61,7 +63,7 @@ struct tcmu_cmd_entry {
       __u8 scsi_status;
       __u8 __pad1;
       __u16 __pad2;
-      __u32 __pad3;
+      __u32 read_len;
       char sense_buffer[TCMU_SENSE_BUFFERSIZE];
     } rsp;
   };

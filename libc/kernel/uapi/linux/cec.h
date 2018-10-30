@@ -132,6 +132,8 @@ struct cec_log_addrs {
 #define CEC_EVENT_PIN_CEC_HIGH 4
 #define CEC_EVENT_PIN_HPD_LOW 5
 #define CEC_EVENT_PIN_HPD_HIGH 6
+#define CEC_EVENT_PIN_5V_LOW 7
+#define CEC_EVENT_PIN_5V_HIGH 8
 #define CEC_EVENT_FL_INITIAL_STATE (1 << 0)
 #define CEC_EVENT_FL_DROPPED_EVENTS (1 << 1)
 struct cec_event_state_change {
