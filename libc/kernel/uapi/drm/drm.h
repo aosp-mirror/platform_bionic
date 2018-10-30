@@ -369,6 +369,8 @@ struct drm_get_cap {
 #define DRM_CLIENT_CAP_STEREO_3D 1
 #define DRM_CLIENT_CAP_UNIVERSAL_PLANES 2
 #define DRM_CLIENT_CAP_ATOMIC 3
+#define DRM_CLIENT_CAP_ASPECT_RATIO 4
+#define DRM_CLIENT_CAP_WRITEBACK_CONNECTORS 5
 struct drm_set_client_cap {
   __u64 capability;
   __u64 value;

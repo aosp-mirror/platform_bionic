@@ -26,16 +26,6 @@ typedef enum {
   VIDEO_FORMAT_221_1
 } video_format_t;
 typedef enum {
-  VIDEO_SYSTEM_PAL,
-  VIDEO_SYSTEM_NTSC,
-  VIDEO_SYSTEM_PALN,
-  VIDEO_SYSTEM_PALNc,
-  VIDEO_SYSTEM_PALM,
-  VIDEO_SYSTEM_NTSC60,
-  VIDEO_SYSTEM_PAL60,
-  VIDEO_SYSTEM_PALM60
-} video_system_t;
-typedef enum {
   VIDEO_PAN_SCAN,
   VIDEO_LETTER_BOX,
   VIDEO_CENTER_CUT_OUT
@@ -107,27 +97,6 @@ struct video_still_picture {
   char __user * iFrame;
   __s32 size;
 };
-typedef struct video_highlight {
-  int active;
-  __u8 contrast1;
-  __u8 contrast2;
-  __u8 color1;
-  __u8 color2;
-  __u32 ypos;
-  __u32 xpos;
-} video_highlight_t;
-typedef struct video_spu {
-  int active;
-  int stream_id;
-} video_spu_t;
-typedef struct video_spu_palette {
-  int length;
-  __u8 __user * palette;
-} video_spu_palette_t;
-typedef struct video_navi_pack {
-  int length;
-  __u8 data[1024];
-} video_navi_pack_t;
 typedef __u16 video_attributes_t;
 #define VIDEO_CAP_MPEG1 1
 #define VIDEO_CAP_MPEG2 2
@@ -150,17 +119,9 @@ typedef __u16 video_attributes_t;
 #define VIDEO_SLOWMOTION _IO('o', 32)
 #define VIDEO_GET_CAPABILITIES _IOR('o', 33, unsigned int)
 #define VIDEO_CLEAR_BUFFER _IO('o', 34)
-#define VIDEO_SET_ID _IO('o', 35)
 #define VIDEO_SET_STREAMTYPE _IO('o', 36)
 #define VIDEO_SET_FORMAT _IO('o', 37)
-#define VIDEO_SET_SYSTEM _IO('o', 38)
-#define VIDEO_SET_HIGHLIGHT _IOW('o', 39, video_highlight_t)
-#define VIDEO_SET_SPU _IOW('o', 50, video_spu_t)
-#define VIDEO_SET_SPU_PALETTE _IOW('o', 51, video_spu_palette_t)
-#define VIDEO_GET_NAVI _IOR('o', 52, video_navi_pack_t)
-#define VIDEO_SET_ATTRIBUTES _IO('o', 53)
 #define VIDEO_GET_SIZE _IOR('o', 55, video_size_t)
-#define VIDEO_GET_FRAME_RATE _IOR('o', 56, unsigned int)
 #define VIDEO_GET_PTS _IOR('o', 57, __u64)
 #define VIDEO_GET_FRAME_COUNT _IOR('o', 58, __u64)
 #define VIDEO_COMMAND _IOWR('o', 59, struct video_command)

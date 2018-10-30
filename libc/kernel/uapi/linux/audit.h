@@ -110,13 +110,16 @@
 #define AUDIT_INTEGRITY_HASH 1803
 #define AUDIT_INTEGRITY_PCR 1804
 #define AUDIT_INTEGRITY_RULE 1805
+#define AUDIT_INTEGRITY_EVM_XATTR 1806
+#define AUDIT_INTEGRITY_POLICY_RULE 1807
 #define AUDIT_KERNEL 2000
 #define AUDIT_FILTER_USER 0x00
 #define AUDIT_FILTER_TASK 0x01
 #define AUDIT_FILTER_ENTRY 0x02
 #define AUDIT_FILTER_WATCH 0x03
 #define AUDIT_FILTER_EXIT 0x04
-#define AUDIT_FILTER_TYPE 0x05
+#define AUDIT_FILTER_EXCLUDE 0x05
+#define AUDIT_FILTER_TYPE AUDIT_FILTER_EXCLUDE
 #define AUDIT_FILTER_FS 0x06
 #define AUDIT_NR_FILTERS 7
 #define AUDIT_FILTER_PREPEND 0x10
@@ -335,6 +338,7 @@ struct audit_tty_status {
   __u32 log_passwd;
 };
 #define AUDIT_UID_UNSET (unsigned int) - 1
+#define AUDIT_SID_UNSET ((unsigned int) - 1)
 struct audit_rule_data {
   __u32 flags;
   __u32 action;

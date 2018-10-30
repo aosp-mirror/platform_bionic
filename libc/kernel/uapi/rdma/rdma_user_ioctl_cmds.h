@@ -37,7 +37,10 @@ struct ib_uverbs_attr {
     } enum_data;
     __u16 reserved;
   } attr_data;
-  __aligned_u64 data;
+  union {
+    __aligned_u64 data;
+    __s64 data_s64;
+  };
 };
 struct ib_uverbs_ioctl_hdr {
   __u16 length;
