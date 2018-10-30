@@ -90,6 +90,7 @@
 #define TIPC_MIN_LINK_WIN 16
 #define TIPC_DEF_LINK_WIN 50
 #define TIPC_MAX_LINK_WIN 8191
+#define TIPC_DEF_LINK_UDP_MTU 14000
 struct tipc_node_info {
   __be32 addr;
   __be32 up;

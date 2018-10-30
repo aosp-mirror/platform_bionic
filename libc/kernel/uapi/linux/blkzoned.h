@@ -50,7 +50,7 @@ struct blk_zone_report {
   __u32 nr_zones;
   __u8 reserved[4];
   struct blk_zone zones[0];
-} __packed;
+};
 struct blk_zone_range {
   __u64 sector;
   __u64 nr_sectors;

@@ -51,6 +51,8 @@ enum iio_chan_type {
   IIO_COUNT,
   IIO_INDEX,
   IIO_GRAVITY,
+  IIO_POSITIONRELATIVE,
+  IIO_PHASE,
 };
 enum iio_modifier {
   IIO_NO_MOD,
@@ -90,6 +92,7 @@ enum iio_modifier {
   IIO_MOD_CO2,
   IIO_MOD_VOC,
   IIO_MOD_LIGHT_UV,
+  IIO_MOD_LIGHT_DUV,
 };
 enum iio_event_type {
   IIO_EV_TYPE_THRESH,

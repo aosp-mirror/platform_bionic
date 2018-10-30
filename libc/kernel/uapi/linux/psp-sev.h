@@ -27,6 +27,7 @@ enum {
   SEV_PDH_GEN,
   SEV_PDH_CERT_EXPORT,
   SEV_PEK_CERT_IMPORT,
+  SEV_GET_ID,
   SEV_MAX,
 };
 typedef enum {
@@ -77,6 +78,10 @@ struct sev_user_data_pdh_cert_export {
   __u32 pdh_cert_len;
   __u64 cert_chain_address;
   __u32 cert_chain_len;
+} __packed;
+struct sev_user_data_get_id {
+  __u8 socket1[64];
+  __u8 socket2[64];
 } __packed;
 struct sev_issue_cmd {
   __u32 cmd;

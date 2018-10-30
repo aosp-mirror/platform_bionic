@@ -37,6 +37,7 @@ enum {
   IFA_CACHEINFO,
   IFA_MULTICAST,
   IFA_FLAGS,
+  IFA_RT_PRIORITY,
   __IFA_MAX,
 };
 #define IFA_MAX (__IFA_MAX - 1)

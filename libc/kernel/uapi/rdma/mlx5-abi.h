@@ -20,6 +20,7 @@
 #define MLX5_ABI_USER_H
 #include <linux/types.h>
 #include <linux/if_ether.h>
+#include <rdma/ib_user_ioctl_verbs.h>
 enum {
   MLX5_QP_FLAG_SIGNATURE = 1 << 0,
   MLX5_QP_FLAG_SCATTER_CQE = 1 << 1,
@@ -42,6 +43,9 @@ struct mlx5_ib_alloc_ucontext_req {
 enum mlx5_lib_caps {
   MLX5_LIB_CAP_4K_UAR = (__u64) 1 << 0,
 };
+enum mlx5_ib_alloc_uctx_v2_flags {
+  MLX5_IB_ALLOC_UCTX_DEVX = 1 << 0,
+};
 struct mlx5_ib_alloc_ucontext_req_v2 {
   __u32 total_num_bfregs;
   __u32 num_low_latency_bfregs;
@@ -55,6 +59,7 @@ struct mlx5_ib_alloc_ucontext_req_v2 {
 };
 enum mlx5_ib_alloc_ucontext_resp_mask {
   MLX5_IB_ALLOC_UCONTEXT_RESP_MASK_CORE_CLOCK_OFFSET = 1UL << 0,
+  MLX5_IB_ALLOC_UCONTEXT_RESP_MASK_DUMP_FILL_MKEY = 1UL << 1,
 };
 enum mlx5_user_cmds_supp_uhw {
   MLX5_USER_CMDS_SUPP_UHW_QUERY_DEVICE = 1 << 0,
@@ -96,7 +101,7 @@ struct mlx5_ib_alloc_ucontext_resp {
   __u32 log_uar_size;
   __u32 num_uars_per_page;
   __u32 num_dyn_bfregs;
-  __u32 reserved3;
+  __u32 dump_fill_mkey;
 };
 struct mlx5_ib_alloc_pd_resp {
   __u32 pdn;
@@ -113,7 +118,7 @@ struct mlx5_ib_rss_caps {
 enum mlx5_ib_cqe_comp_res_format {
   MLX5_IB_CQE_RES_FORMAT_HASH = 1 << 0,
   MLX5_IB_CQE_RES_FORMAT_CSUM = 1 << 1,
-  MLX5_IB_CQE_RES_RESERVED = 1 << 2,
+  MLX5_IB_CQE_RES_FORMAT_CSUM_STRIDX = 1 << 2,
 };
 struct mlx5_ib_cqe_comp_caps {
   __u32 max_num;
@@ -158,7 +163,9 @@ enum mlx5_ib_query_dev_resp_flags {
 enum mlx5_ib_tunnel_offloads {
   MLX5_IB_TUNNELED_OFFLOADS_VXLAN = 1 << 0,
   MLX5_IB_TUNNELED_OFFLOADS_GRE = 1 << 1,
-  MLX5_IB_TUNNELED_OFFLOADS_GENEVE = 1 << 2
+  MLX5_IB_TUNNELED_OFFLOADS_GENEVE = 1 << 2,
+  MLX5_IB_TUNNELED_OFFLOADS_MPLS_GRE = 1 << 3,
+  MLX5_IB_TUNNELED_OFFLOADS_MPLS_UDP = 1 << 4,
 };
 struct mlx5_ib_query_device_resp {
   __u32 comp_mask;
@@ -327,5 +334,19 @@ enum {
 };
 enum {
   MLX5_IB_CLOCK_INFO_V1 = 0,
+};
+struct mlx5_ib_flow_counters_desc {
+  __u32 description;
+  __u32 index;
+};
+struct mlx5_ib_flow_counters_data {
+  RDMA_UAPI_PTR(struct mlx5_ib_flow_counters_desc *, counters_data);
+  __u32 ncounters;
+  __u32 reserved;
+};
+struct mlx5_ib_create_flow {
+  __u32 ncounters_data;
+  __u32 reserved;
+  struct mlx5_ib_flow_counters_data data[];
 };
 #endif

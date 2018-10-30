@@ -739,6 +739,11 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_S390_BPB 152
 #define KVM_CAP_GET_MSR_FEATURES 153
 #define KVM_CAP_HYPERV_EVENTFD 154
+#define KVM_CAP_HYPERV_TLBFLUSH 155
+#define KVM_CAP_S390_HPAGE_1M 156
+#define KVM_CAP_NESTED_STATE 157
+#define KVM_CAP_ARM_INJECT_SERROR_ESR 158
+#define KVM_CAP_MSR_PLATFORM_INFO 159
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1048,6 +1053,8 @@ struct kvm_enc_region {
 #define KVM_MEMORY_ENCRYPT_REG_REGION _IOR(KVMIO, 0xbb, struct kvm_enc_region)
 #define KVM_MEMORY_ENCRYPT_UNREG_REGION _IOR(KVMIO, 0xbc, struct kvm_enc_region)
 #define KVM_HYPERV_EVENTFD _IOW(KVMIO, 0xbd, struct kvm_hyperv_eventfd)
+#define KVM_GET_NESTED_STATE _IOWR(KVMIO, 0xbe, struct kvm_nested_state)
+#define KVM_SET_NESTED_STATE _IOW(KVMIO, 0xbf, struct kvm_nested_state)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,

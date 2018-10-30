@@ -100,6 +100,7 @@ enum perf_event_sample_format {
   PERF_SAMPLE_REGS_INTR = 1U << 18,
   PERF_SAMPLE_PHYS_ADDR = 1U << 19,
   PERF_SAMPLE_MAX = 1U << 20,
+  __PERF_SAMPLE_CALLCHAIN_EARLY = 1ULL << 63,
 };
 enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_USER_SHIFT = 0,
