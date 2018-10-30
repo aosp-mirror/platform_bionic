@@ -18,20 +18,12 @@
  ****************************************************************************/
 #ifndef _ASM_MSGBUF_H
 #define _ASM_MSGBUF_H
+#ifdef __mips64
 struct msqid64_ds {
   struct ipc64_perm msg_perm;
   __kernel_time_t msg_stime;
-#ifndef __mips64
-  unsigned long __unused1;
-#endif
   __kernel_time_t msg_rtime;
-#ifndef __mips64
-  unsigned long __unused2;
-#endif
   __kernel_time_t msg_ctime;
-#ifndef __mips64
-  unsigned long __unused3;
-#endif
   unsigned long msg_cbytes;
   unsigned long msg_qnum;
   unsigned long msg_qbytes;
@@ -40,4 +32,22 @@ struct msqid64_ds {
   unsigned long __unused4;
   unsigned long __unused5;
 };
+#elif 1
+struct msqid64_ds {
+  struct ipc64_perm msg_perm;
+  unsigned long msg_stime;
+  unsigned long msg_stime_high;
+  unsigned long msg_rtime;
+  unsigned long msg_rtime_high;
+  unsigned long msg_ctime;
+  unsigned long msg_ctime_high;
+  unsigned long msg_cbytes;
+  unsigned long msg_qnum;
+  unsigned long msg_qbytes;
+  __kernel_pid_t msg_lspid;
+  __kernel_pid_t msg_lrpid;
+  unsigned long __unused4;
+  unsigned long __unused5;
+};
+#endif
 #endif

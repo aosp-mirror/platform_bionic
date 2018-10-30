@@ -59,6 +59,7 @@ typedef __s32 sctp_assoc_t;
 #define SCTP_RECVNXTINFO 33
 #define SCTP_DEFAULT_SNDINFO 34
 #define SCTP_AUTH_DEACTIVATE_KEY 35
+#define SCTP_REUSE_PORT 36
 #define SCTP_SOCKOPT_BINDX_ADD 100
 #define SCTP_SOCKOPT_BINDX_REM 101
 #define SCTP_SOCKOPT_PEELOFF 102
@@ -159,6 +160,7 @@ enum sctp_sinfo_flags {
   SCTP_ABORT = (1 << 2),
   SCTP_SACK_IMMEDIATELY = (1 << 3),
   SCTP_SENDALL = (1 << 6),
+  SCTP_PR_SCTP_ALL = (1 << 7),
   SCTP_NOTIFICATION = MSG_NOTIFICATION,
   SCTP_EOF = MSG_FIN,
 };
@@ -428,6 +430,8 @@ enum sctp_spp_flags {
   SPP_SACKDELAY_DISABLE = 1 << 6,
   SPP_SACKDELAY = SPP_SACKDELAY_ENABLE | SPP_SACKDELAY_DISABLE,
   SPP_HB_TIME_IS_ZERO = 1 << 7,
+  SPP_IPV6_FLOWLABEL = 1 << 8,
+  SPP_DSCP = 1 << 9,
 };
 struct sctp_paddrparams {
   sctp_assoc_t spp_assoc_id;
@@ -437,6 +441,8 @@ struct sctp_paddrparams {
   __u32 spp_pathmtu;
   __u32 spp_sackdelay;
   __u32 spp_flags;
+  __u32 spp_ipv6_flowlabel;
+  __u8 spp_dscp;
 } __attribute__((packed, aligned(4)));
 struct sctp_authchunk {
   __u8 sauth_chunk;

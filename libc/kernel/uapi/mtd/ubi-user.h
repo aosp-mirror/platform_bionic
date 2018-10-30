@@ -56,12 +56,16 @@ struct ubi_attach_req {
   __s16 max_beb_per1024;
   __s8 padding[10];
 };
+enum {
+  UBI_VOL_SKIP_CRC_CHECK_FLG = 0x1,
+};
+#define UBI_VOL_VALID_FLGS (UBI_VOL_SKIP_CRC_CHECK_FLG)
 struct ubi_mkvol_req {
   __s32 vol_id;
   __s32 alignment;
   __s64 bytes;
   __s8 vol_type;
-  __s8 padding1;
+  __u8 flags;
   __s16 name_len;
   __s8 padding2[4];
   char name[UBI_MAX_VOLUME_NAME + 1];

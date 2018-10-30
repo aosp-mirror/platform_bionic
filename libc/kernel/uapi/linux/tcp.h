@@ -89,6 +89,12 @@ enum {
 #define TCP_MD5SIG_EXT 32
 #define TCP_FASTOPEN_KEY 33
 #define TCP_FASTOPEN_NO_COOKIE 34
+#define TCP_ZEROCOPY_RECEIVE 35
+#define TCP_INQ 36
+#define TCP_CM_INQ TCP_INQ
+#define TCP_REPAIR_ON 1
+#define TCP_REPAIR_OFF 0
+#define TCP_REPAIR_OFF_NO_WP - 1
 struct tcp_repair_opt {
   __u32 opt_code;
   __u32 opt_val;
@@ -171,6 +177,12 @@ struct tcp_info {
   __u64 tcpi_busy_time;
   __u64 tcpi_rwnd_limited;
   __u64 tcpi_sndbuf_limited;
+  __u32 tcpi_delivered;
+  __u32 tcpi_delivered_ce;
+  __u64 tcpi_bytes_sent;
+  __u64 tcpi_bytes_retrans;
+  __u32 tcpi_dsack_dups;
+  __u32 tcpi_reord_seen;
 };
 enum {
   TCP_NLA_PAD,
@@ -189,6 +201,12 @@ enum {
   TCP_NLA_SNDQ_SIZE,
   TCP_NLA_CA_STATE,
   TCP_NLA_SND_SSTHRESH,
+  TCP_NLA_DELIVERED,
+  TCP_NLA_DELIVERED_CE,
+  TCP_NLA_BYTES_SENT,
+  TCP_NLA_BYTES_RETRANS,
+  TCP_NLA_DSACK_DUPS,
+  TCP_NLA_REORD_SEEN,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 #define TCP_MD5SIG_FLAG_PREFIX 1
@@ -206,5 +224,10 @@ struct tcp_diag_md5sig {
   __u16 tcpm_keylen;
   __be32 tcpm_addr[4];
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
+};
+struct tcp_zerocopy_receive {
+  __u64 address;
+  __u32 length;
+  __u32 recv_skip_hint;
 };
 #endif
