@@ -240,7 +240,9 @@ static void expect_ids(const T& ids) {
 
   // Upgrading devices launched before API level 28 may not comply with the below check.
   // Due to the difficulty in changing uids after launch, it is waived for these devices.
-  if (android::base::GetIntProperty("ro.product.first_api_level", 0) < 28) {
+  // Also grant this check for device launched with 28(P) to give the vendor time to
+  // adopt the AID scheme.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
     return;
   }
 
