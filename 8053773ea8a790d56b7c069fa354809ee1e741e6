@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9fdfa61_b0060331",
+        "filename": "tools/versioner/src/Driver.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2018-10-31T06:58:06Z",
+      "side": 1,
+      "message": "This is not fixed in this CL because enabling fortify will lead to inline mismatch.",
+      "range": {
+        "startLine": 128,
+        "startChar": 57,
+        "endLine": 128,
+        "endChar": 80
+      },
+      "revId": "8053773ea8a790d56b7c069fa354809ee1e741e6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
