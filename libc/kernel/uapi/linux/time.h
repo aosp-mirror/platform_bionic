@@ -45,6 +45,18 @@ struct itimerval {
   struct timeval it_interval;
   struct timeval it_value;
 };
+#ifndef __kernel_timespec
+struct __kernel_timespec {
+  __kernel_time64_t tv_sec;
+  long long tv_nsec;
+};
+#endif
+#ifndef __kernel_itimerspec
+struct __kernel_itimerspec {
+  struct __kernel_timespec it_interval;
+  struct __kernel_timespec it_value;
+};
+#endif
 struct __kernel_old_timeval {
   __kernel_long_t tv_sec;
   __kernel_long_t tv_usec;

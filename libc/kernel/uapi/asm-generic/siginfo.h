@@ -194,7 +194,8 @@ typedef struct siginfo {
 #define TRAP_TRACE 2
 #define TRAP_BRANCH 3
 #define TRAP_HWBKPT 4
-#define NSIGTRAP 4
+#define TRAP_UNK 5
+#define NSIGTRAP 5
 #define CLD_EXITED 1
 #define CLD_KILLED 2
 #define CLD_DUMPED 3

@@ -39,6 +39,7 @@ enum {
   ILA_CMD_ADD,
   ILA_CMD_DEL,
   ILA_CMD_GET,
+  ILA_CMD_FLUSH,
   __ILA_CMD_MAX,
 };
 #define ILA_CMD_MAX (__ILA_CMD_MAX - 1)
