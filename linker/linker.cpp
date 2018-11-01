@@ -3712,6 +3712,15 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
+// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/<exec>
+static std::string get_ld_config_file_apex_path(const char* executable_path) {
+  std::vector<std::string> paths = android::base::Split(executable_path, "/");
+  if (paths.size() == 5 && paths[1] == "apex" && paths[3] == "bin") {
+    return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
+  }
+  return "";
+}
+
 static std::string get_ld_config_file_vndk_path() {
   if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
     return kLdConfigVndkLiteFilePath;
@@ -3726,7 +3735,7 @@ static std::string get_ld_config_file_vndk_path() {
   return ld_config_file_vndk;
 }
 
-static std::string get_ld_config_file_path() {
+static std::string get_ld_config_file_path(const char* executable_path) {
 #ifdef USE_LD_CONFIG_FILE
   // This is a debugging/testing only feature. Must not be available on
   // production builds.
@@ -3736,13 +3745,23 @@ static std::string get_ld_config_file_path() {
   }
 #endif
 
-  if (file_exists(kLdConfigArchFilePath)) {
-    return kLdConfigArchFilePath;
+  std::string path = get_ld_config_file_apex_path(executable_path);
+  if (!path.empty()) {
+    if (file_exists(path.c_str())) {
+      return path;
+    }
+    DL_WARN("Warning: couldn't read config file \"%s\" for \"%s\"",
+            path.c_str(), executable_path);
   }
 
-  std::string ld_config_file_vndk = get_ld_config_file_vndk_path();
-  if (file_exists(ld_config_file_vndk.c_str())) {
-    return ld_config_file_vndk;
+  path = kLdConfigArchFilePath;
+  if (file_exists(path.c_str())) {
+    return path;
+  }
+
+  path = get_ld_config_file_vndk_path();
+  if (file_exists(path.c_str())) {
+    return path;
   }
 
   return kLdConfigFilePath;
@@ -3765,7 +3784,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string error_msg;
 
-  std::string ld_config_file_path = get_ld_config_file_path();
+  std::string ld_config_file_path = get_ld_config_file_path(executable_path);
 
   if (!Config::read_binary_config(ld_config_file_path.c_str(),
                                   executable_path,
