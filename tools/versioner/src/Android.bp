@@ -1,6 +1,8 @@
 cc_binary_host {
     name: "versioner",
 
+    defaults: ["llvm-build-host-tools-defaults"],
+
     cpp_std: "gnu++17",
 
     // b/117120485 bugprone-exception-escape hangs with DeclarationDatabase.cpp
@@ -20,14 +22,9 @@ cc_binary_host {
     ],
 
     shared_libs: [
-        "libclang_android",
-        "libLLVM_android",
+        "libclang_cxx_host",
+        "libLLVM_host",
         "libbase",
-    ],
-
-    header_libs: [
-        "llvm-headers",
-        "clang-headers",
     ],
 
     cflags: [
