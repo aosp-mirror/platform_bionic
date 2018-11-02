@@ -68,6 +68,13 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.53 2012/09/26 23:13:00 christos Exp $");
 #include <stddef.h>
 #include <string.h>
 
+/* This macro is modelled after the ones in <netinet/in6.h>. */
+/* RFC 6052, section 2.1 */
+#define IN6_IS_ADDR_WKP(a) \
+  ((((a)->s6_addr32[0]) == ntohl(0x0064ff9b)) && \
+   (((a)->s6_addr32[1]) == 0) && \
+   (((a)->s6_addr32[2]) == 0))
+
 static const struct afd {
 	int		a_af;
 	socklen_t	a_addrlen;
@@ -247,6 +254,8 @@ getnameinfo_inet(const struct sockaddr* sa, socklen_t salen,
 			if (IN6_IS_ADDR_V4MAPPED(&sin6->sin6_addr))
 				;
 			else if (IN6_IS_ADDR_LOOPBACK(&sin6->sin6_addr))
+				;
+			else if (IN6_IS_ADDR_WKP(&sin6->sin6_addr))
 				;
 			else
 				flags |= NI_NUMERICHOST;
