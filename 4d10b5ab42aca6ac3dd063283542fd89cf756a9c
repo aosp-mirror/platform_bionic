@@ -16,6 +16,24 @@
       "revId": "4d10b5ab42aca6ac3dd063283542fd89cf756a9c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff63781f_e545bf6c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-02T17:12:56Z",
+      "side": 1,
+      "message": "\u003e And this is not uncommon for these to have duplicates.\n\nYes, although my reading of the code is that if we see a duplicate soname (or duplicate file) we never call read() or load() on the second load task.\n\n\u003e Do bionic-unit-tests pass this change?\n\nYes.",
+      "parentUuid": "34ce30e0_c74df307",
+      "revId": "4d10b5ab42aca6ac3dd063283542fd89cf756a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
