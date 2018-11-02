@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34ce30e0_c74df307",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1317,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-11-02T09:45:54Z",
+      "side": 1,
+      "message": "we create a load_task for every dt_needed link. And this is not uncommon for these to have duplicates. example:\n\nliba.so\n-\u003e libc.so\n-\u003e libb.so\n   -\u003e libc.so\n\nIn this case there are going to be 2 load tasks for libc.so.\n\nDo bionic-unit-tests pass this change?",
+      "revId": "4d10b5ab42aca6ac3dd063283542fd89cf756a9c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
