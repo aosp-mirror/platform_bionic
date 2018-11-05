@@ -525,14 +525,10 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
-static void* ReserveAligned(void* hint, size_t size, size_t align) {
+static void* ReserveAligned(size_t size, size_t align) {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-  // Address hint is only used in Art for the image mapping, and it is pretty important. Don't mess
-  // with it.
-  // FIXME: try an aligned allocation and fall back to plain mmap() if the former does not provide a
-  // mapping at the requested address?
-  if (align == PAGE_SIZE || hint != nullptr) {
-    void* mmap_ptr = mmap(hint, size, PROT_NONE, mmap_flags, -1, 0);
+  if (align == PAGE_SIZE) {
+    void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
     }
@@ -575,9 +571,6 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
   void* start;
   size_t reserved_size = 0;
   bool reserved_hint = true;
-  bool strict_hint = false;
-  // Assume position independent executable by default.
-  void* mmap_hint = nullptr;
 
   if (extinfo != nullptr) {
     if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS) {
@@ -585,13 +578,6 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
       reserved_hint = false;
     } else if (extinfo->flags & ANDROID_DLEXT_RESERVED_ADDRESS_HINT) {
       reserved_size = extinfo->reserved_size;
-    }
-
-    if (addr != nullptr && (extinfo->flags & ANDROID_DLEXT_FORCE_FIXED_VADDR) != 0) {
-      mmap_hint = addr;
-    } else if ((extinfo->flags & ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS) != 0) {
-      mmap_hint = extinfo->reserved_addr;
-      strict_hint = true;
     }
   }
 
@@ -601,15 +587,9 @@ bool ElfReader::ReserveAddressSpace(const android_dlextinfo* extinfo) {
              reserved_size - load_size_, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveAligned(mmap_hint, load_size_, kLibraryAlignment);
+    start = ReserveAligned(load_size_, kLibraryAlignment);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
-      return false;
-    }
-    if (strict_hint && (start != mmap_hint)) {
-      munmap(start, load_size_);
-      DL_ERR("couldn't reserve %zd bytes of address space at %p for \"%s\"",
-             load_size_, mmap_hint, name_.c_str());
       return false;
     }
   } else {

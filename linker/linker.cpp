@@ -2074,13 +2074,6 @@ void* do_dlopen(const char* name, int flags,
       return nullptr;
     }
 
-    if ((extinfo->flags & ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS) != 0 &&
-        (extinfo->flags & (ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_HINT)) != 0) {
-      DL_ERR("invalid extended flag combination: ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS is not "
-             "compatible with ANDROID_DLEXT_RESERVED_ADDRESS/ANDROID_DLEXT_RESERVED_ADDRESS_HINT");
-      return nullptr;
-    }
-
     if ((extinfo->flags & ANDROID_DLEXT_USE_NAMESPACE) != 0) {
       if (extinfo->library_namespace == nullptr) {
         DL_ERR("ANDROID_DLEXT_USE_NAMESPACE is set but extinfo->library_namespace is null");
