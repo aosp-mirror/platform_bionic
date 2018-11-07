@@ -25,14 +25,14 @@
 #include <string>
 
 #include <android-base/unique_fd.h>
-#include <clang/Basic/VirtualFileSystem.h>
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
 #include <llvm/Support/MemoryBuffer.h>
+#include <llvm/Support/VirtualFileSystem.h>
 
 #include "Utils.h"
 
 using android::base::unique_fd;
-using namespace clang::vfs;
+using namespace llvm::vfs;
 
 static void addDirectoryToVFS(InMemoryFileSystem* vfs, const std::string& path) {
   char* paths[] = { const_cast<char*>(path.c_str()), nullptr };
