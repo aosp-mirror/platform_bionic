@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fce0846_a9de6d21",
+        "filename": "libc/arch-x86/dynamic_function_dispatch.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-07T17:12:31Z",
+      "side": 1,
+      "message": "should probably have a comment and a link to the bug that this is a workaround for...",
+      "revId": "de03d6c018dc1816f4de680017fc109d970d2392",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3578a021_55f2adcf",
+        "filename": "libc/arch-x86/dynamic_function_dispatch.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-07T17:12:31Z",
+      "side": 1,
+      "message": "static constexpr?",
+      "range": {
+        "startLine": 43,
+        "startChar": 0,
+        "endLine": 43,
+        "endChar": 5
+      },
+      "revId": "de03d6c018dc1816f4de680017fc109d970d2392",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
