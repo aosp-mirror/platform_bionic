@@ -35,6 +35,8 @@
 #include <limits>
 #include <string>
 
+#include "utils.h"
+
 #if defined(__BIONIC__)
   #define ALIGNED_ALLOC_AVAILABLE 1
 #elif defined(__GLIBC_PREREQ)
@@ -191,6 +193,7 @@ TEST(stdlib, mrand48_distribution) {
 }
 
 TEST(stdlib, posix_memalign_sweep) {
+  SKIP_WITH_HWASAN;
   void* ptr;
 
   // These should all fail.
@@ -230,11 +233,13 @@ TEST(stdlib, posix_memalign_various_sizes) {
 }
 
 TEST(stdlib, posix_memalign_overflow) {
+  SKIP_WITH_HWASAN;
   void* ptr;
   ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
 }
 
 TEST(stdlib, aligned_alloc_sweep) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   // Verify powers of 2 up to 2048 allocate, and verify that all other
   // alignment values between the powers of 2 fail.
@@ -259,6 +264,7 @@ TEST(stdlib, aligned_alloc_sweep) {
 }
 
 TEST(stdlib, aligned_alloc_overflow) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   ASSERT_TRUE(aligned_alloc(16, SIZE_MAX) == nullptr);
 #else
@@ -267,6 +273,7 @@ TEST(stdlib, aligned_alloc_overflow) {
 }
 
 TEST(stdlib, aligned_alloc_size_not_multiple_of_alignment) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   for (size_t size = 1; size <= 2048; size++) {
     void* ptr = aligned_alloc(2048, size);
