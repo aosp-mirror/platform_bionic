@@ -27,11 +27,13 @@ extern "C" __attribute__((weak)) void __cfi_slowpath(uint64_t, void*);
 static int g_count;
 
 // Mock a CFI-enabled library without relying on the compiler.
-extern "C" __attribute__((aligned(4096))) void __cfi_check(uint64_t /*CallSiteTypeId*/,
-                                                           void* /*TargetAddr*/, void* /*Diag*/) {
+extern "C" __attribute__((no_sanitize("hwaddress")))  __attribute__((aligned(4096)))
+void __cfi_check(uint64_t /*CallSiteTypeId*/, void* /*TargetAddr*/, void* /*Diag*/) {
   ++g_count;
 }
 
+// This code runs before hwasan is initialized.
+__attribute__((no_sanitize("hwaddress")))
 void preinit_ctor() {
   CHECK(g_count == 0);
   __cfi_slowpath(42, reinterpret_cast<void*>(&preinit_ctor));

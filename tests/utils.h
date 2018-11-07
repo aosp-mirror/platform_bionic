@@ -58,6 +58,14 @@ static inline bool have_dl() {
   return (dlopen("libc.so", 0) != nullptr);
 }
 
+extern "C" void __hwasan_init() __attribute__((weak));
+
+static inline bool running_with_hwasan() {
+  return &__hwasan_init != 0;
+}
+
+#define SKIP_WITH_HWASAN if (running_with_hwasan()) { return; }
+
 #if defined(__linux__)
 
 #include <sys/sysmacros.h>
