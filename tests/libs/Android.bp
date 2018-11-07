@@ -531,8 +531,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_global.cpp"],
     ldflags: ["-Wl,-z,global"],
-    // b/80109858, clang lld ignores -z,global
-    use_clang_lld: false,
 
     target: {
         host: {
@@ -561,8 +559,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dl_df_1_global_dummy.cpp"],
     ldflags: ["-Wl,-z,global"],
-    // b/80109858, clang lld ignores -z,global
-    use_clang_lld: false,
 
     target: {
         host: {
