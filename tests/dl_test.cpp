@@ -153,6 +153,9 @@ TEST(dl, xfail_preinit_getauxval) {
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+#else
+  // Force a failure when not compiled for bionic so the test is considered a pass.
+  ASSERT_TRUE(false);
 #endif
 }
 
