@@ -26,6 +26,8 @@
 
 #include <procinfo/process_map.h>
 
+#include "utils.h"
+
 extern "C" void malloc_disable();
 extern "C" void malloc_enable();
 extern "C" int malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t base,
@@ -130,6 +132,7 @@ static void AllocateSizes(TestDataType* test_data, const std::vector<size_t>& si
 // Verify that small allocs can be found properly.
 TEST(malloc_iterate, small_allocs) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN;
   TestDataType test_data;
 
   // Try to cycle through all of the different small bins.
@@ -153,6 +156,7 @@ TEST(malloc_iterate, small_allocs) {
 // Verify that large allocs can be found properly.
 TEST(malloc_iterate, large_allocs) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN;
   TestDataType test_data;
 
   // Try some larger sizes.
@@ -172,6 +176,7 @@ TEST(malloc_iterate, large_allocs) {
 // non-allocated pointers.
 TEST(malloc_iterate, invalid_pointers) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN;
   TestDataType test_data = {};
 
   // Find all of the maps that are not [anon:libc_malloc].
@@ -192,6 +197,7 @@ TEST(malloc_iterate, invalid_pointers) {
 
 TEST(malloc_iterate, malloc_disable_prevents_allocs) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN;
   pid_t pid;
   if ((pid = fork()) == 0) {
     malloc_disable();

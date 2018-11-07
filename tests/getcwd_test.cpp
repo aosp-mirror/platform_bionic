@@ -20,6 +20,8 @@
 #include <limits.h>
 #include <unistd.h>
 
+#include "utils.h"
+
 TEST(getcwd, auto_full) {
   // If we let the library do all the work, everything's fine.
   errno = 0;
@@ -49,6 +51,7 @@ TEST(getcwd, auto_too_small) {
 }
 
 TEST(getcwd, auto_too_large) {
+  SKIP_WITH_HWASAN; // allocation size too large
   // If we ask the library to allocate an unreasonably large buffer, ERANGE.
   errno = 0;
   char* cwd = getcwd(nullptr, static_cast<size_t>(-1));

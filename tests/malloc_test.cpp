@@ -25,6 +25,7 @@
 #include <tinyxml2.h>
 
 #include "private/bionic_config.h"
+#include "utils.h"
 
 #if defined(__BIONIC__)
 #define HAVE_REALLOCARRAY 1
@@ -41,6 +42,7 @@ TEST(malloc, malloc_std) {
 }
 
 TEST(malloc, malloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, malloc(SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
@@ -59,12 +61,14 @@ TEST(malloc, calloc_std) {
 }
 
 TEST(malloc, calloc_illegal) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(-1, 100));
   ASSERT_EQ(ENOMEM, errno);
 }
 
 TEST(malloc, calloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(1, SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
@@ -80,6 +84,7 @@ TEST(malloc, calloc_overflow) {
 }
 
 TEST(malloc, memalign_multiple) {
+  SKIP_WITH_HWASAN; // hwasan requires power of 2 alignment.
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
@@ -94,10 +99,12 @@ TEST(malloc, memalign_multiple) {
 }
 
 TEST(malloc, memalign_overflow) {
+  SKIP_WITH_HWASAN;
   ASSERT_EQ(nullptr, memalign(4096, SIZE_MAX));
 }
 
 TEST(malloc, memalign_non_power2) {
+  SKIP_WITH_HWASAN;
   void* ptr;
   for (size_t align = 0; align <= 256; align++) {
     ptr = memalign(align, 1024);
@@ -280,6 +287,7 @@ TEST(malloc, calloc_multiple_realloc) {
 }
 
 TEST(malloc, realloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, realloc(nullptr, SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
