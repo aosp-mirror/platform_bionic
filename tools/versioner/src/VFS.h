@@ -20,8 +20,8 @@
 #include <string>
 
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
-#include <clang/Basic/VirtualFileSystem.h>
+#include <llvm/Support/VirtualFileSystem.h>
 
-llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> createCommonVFS(const std::string& header_dir,
-                                                                 const std::string& dependency_dir,
-                                                                 bool add_versioning_header);
+llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> createCommonVFS(const std::string& header_dir,
+                                                                const std::string& dependency_dir,
+                                                                bool add_versioning_header);
