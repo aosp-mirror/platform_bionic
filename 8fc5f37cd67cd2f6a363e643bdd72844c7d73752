@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9df08bda_db5484a6",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:58:11Z",
+      "side": 1,
+      "message": "You should probably do a __builtin_add_overflow just in case. Otherwise, this could overflow and pass when it really would have failed. It\u0027s probably very unlikely to overflow without triggering some other overflow condition though.",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 56
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56589881_b2a43825",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:58:11Z",
+      "side": 1,
+      "message": "You probably want to check for an overflow condition.",
+      "range": {
+        "startLine": 239,
+        "startChar": 11,
+        "endLine": 239,
+        "endChar": 73
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d56c3115_cab20a96",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:58:11Z",
+      "side": 1,
+      "message": "Since you might get more bytes allocated than you requested, you can pass the check_limit but actually wind up larger than the limit because the usable size is larger. The total bytes allocated should still be completely accurate though. Also, multiple threads allocating at the same time could push you past the limit.\n\nI would assume this is best effort, so maybe that\u0027s okay.",
+      "range": {
+        "startLine": 255,
+        "startChar": 19,
+        "endLine": 255,
+        "endChar": 24
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b242c2db_a2c29b8f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:58:11Z",
+      "side": 1,
+      "message": "This check isn\u0027t correct. You need to do some manual checking here.\n\nSpecifically, if old_mem !\u003d nullptr and bytes \u003c\u003d malloc_usable_size(old_mem), then you could either make the realloc call, or do nothing and return the original pointer.",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 282,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a6c9881_ae3b9389",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:58:11Z",
+      "side": 1,
+      "message": "These mallctl calls are deeply tied to the implementation of the allocator. You can\u0027t use this because there are already two allocators in use for Q.\n\nInstead you should replace this with something like:\n\natomic_init(\u0026gAllocated, mallinfo().uordblks);\n\nAnd you\u0027ll have to deal with the fact that it\u0027s going to be close but not completely accurate unless the system isn\u0027t doing anything.",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 314,
+        "endChar": 46
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
