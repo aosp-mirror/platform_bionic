@@ -488,23 +488,6 @@ TEST(time, timer_create_EINVAL) {
   ASSERT_EQ(EINVAL, errno);
 }
 
-TEST(time, timer_delete_multiple) {
-  timer_t timer_id;
-  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, nullptr, &timer_id));
-  ASSERT_EQ(0, timer_delete(timer_id));
-  ASSERT_EQ(-1, timer_delete(timer_id));
-  ASSERT_EQ(EINVAL, errno);
-
-  sigevent_t se;
-  memset(&se, 0, sizeof(se));
-  se.sigev_notify = SIGEV_THREAD;
-  se.sigev_notify_function = NoOpNotifyFunction;
-  ASSERT_EQ(0, timer_create(CLOCK_MONOTONIC, &se, &timer_id));
-  ASSERT_EQ(0, timer_delete(timer_id));
-  ASSERT_EQ(-1, timer_delete(timer_id));
-  ASSERT_EQ(EINVAL, errno);
-}
-
 TEST(time, timer_create_multiple) {
   Counter counter1(Counter::CountNotifyFunction);
   Counter counter2(Counter::CountNotifyFunction);

@@ -106,6 +106,29 @@ class pthread_internal_t {
 
   void* alternate_signal_stack;
 
+  // The start address of the shadow call stack's guard region (arm64 only).
+  // This address is only used to deallocate the shadow call stack on thread
+  // exit; the address of the stack itself is stored only in the x18 register.
+  // Because the protection offered by SCS relies on the secrecy of the stack
+  // address, storing the address here weakens the protection, but only
+  // slightly, because it is relatively easy for an attacker to discover the
+  // address of the guard region anyway (e.g. it can be discovered by reference
+  // to other allocations), but not the stack itself, which is <0.1% of the size
+  // of the guard region.
+  //
+  // There are at least two other options for discovering the start address of
+  // the guard region on thread exit, but they are not as simple as storing in
+  // TLS.
+  // 1) Derive it from the value of the x18 register. This is only possible in
+  //    processes that do not contain legacy code that might clobber x18,
+  //    therefore each process must declare early during process startup whether
+  //    it might load legacy code.
+  // 2) Mark the guard region as such using prctl(PR_SET_VMA_ANON_NAME) and
+  //    discover its address by reading /proc/self/maps. One issue with this is
+  //    that reading /proc/self/maps can race with allocations, so we may need
+  //    code to handle retries.
+  void* shadow_call_stack_guard_region;
+
   Lock startup_handshake_lock;
 
   size_t mmap_size;

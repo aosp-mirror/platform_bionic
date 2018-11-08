@@ -63,7 +63,7 @@ static std::string GetBionicXmlArg(const char* xml_file) {
 
 void SystemTests::SanitizeOutput() {
   // Cut off anything after the arguments, since that varies with time.
-  sanitized_output_ = std::regex_replace(raw_output_, std::regex(".+(BM_\\S+) +.+"), "$1");
+  sanitized_output_ = std::regex_replace(raw_output_, std::regex(".*(BM_\\S+)\\s+.+"), "$1");
 
   // Remove everything before the header.
   sanitized_output_.erase(0, sanitized_output_.find("------------------------------------------------"));
@@ -165,7 +165,8 @@ TEST_F(SystemTests, help) {
     "          [--benchmark_filter=<regex>]\n"
     "          [--benchmark_min_time=<min_time>]\n"
     "          [--benchmark_repetitions=<num_repetitions>]\n"
-    "          [--benchmark_report_aggregates_only={true|false}\n"
+    "          [--benchmark_report_aggregates_only={true|false}]\n"
+    "          [--benchmark_display_aggregates_only={true|false}]\n"
     "          [--benchmark_format=<console|json|csv>]\n"
     "          [--benchmark_out=<filename>]\n"
     "          [--benchmark_out_format=<json|console|csv>]\n"
