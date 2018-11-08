@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f88c087_e5b80b83",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T19:29:36Z",
+      "side": 1,
+      "message": "This seems like it would be extremely expensive implemented this way. Do you have any perf measurements for this?\n\nAlso, you could probably implement this a lot easier with a single atomic size_t value that represents the total memory used.",
+      "range": {
+        "startLine": 229,
+        "startChar": 0,
+        "endLine": 229,
+        "endChar": 26
+      },
+      "revId": "35c6384222c5f34d99297a1e8a2547e869a5fe11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
