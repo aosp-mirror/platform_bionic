@@ -354,7 +354,9 @@ static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   async_safe_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
-    PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    if (!is_first_stage_init()) {
+      PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    }
     return false;
   }
 
@@ -993,8 +995,10 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   if (realpath_fd(fd, realpath)) {
     *realpath += separator;
   } else {
-    PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-          normalized_path.c_str());
+    if (!is_first_stage_init()) {
+      PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+            normalized_path.c_str());
+    }
     *realpath = normalized_path;
   }
 
@@ -1024,7 +1028,10 @@ static int open_library_at_path(ZipArchiveCache* zip_archive_cache,
     if (fd != -1) {
       *file_offset = 0;
       if (!realpath_fd(fd, realpath)) {
-        PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", path);
+        if (!is_first_stage_init()) {
+          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+                path);
+        }
         *realpath = path;
       }
     }
@@ -1071,7 +1078,10 @@ static int open_library(android_namespace_t* ns,
       if (fd != -1) {
         *file_offset = 0;
         if (!realpath_fd(fd, realpath)) {
-          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", name);
+          if (!is_first_stage_init()) {
+            PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+                  name);
+          }
           *realpath = name;
         }
       }
@@ -1354,8 +1364,12 @@ static bool load_library(android_namespace_t* ns,
     }
 
     if (!realpath_fd(extinfo->library_fd, &realpath)) {
-      PRINT("warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
-            "Will use given name.", name);
+      if (!is_first_stage_init()) {
+        PRINT(
+            "warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
+            "Will use given name.",
+            name);
+      }
       realpath = name;
     }
 
@@ -1510,9 +1524,9 @@ static bool find_library_internal(android_namespace_t* ns,
 static void soinfo_unload(soinfo* si);
 
 static void shuffle(std::vector<LoadTask*>* v) {
-  if (is_init()) {
-    // arc4random* is not available in init because /dev/random hasn't yet been
-    // created.
+  if (is_first_stage_init()) {
+    // arc4random* is not available in first stage init because /dev/random
+    // hasn't yet been created.
     return;
   }
   for (size_t i = 0, size = v->size(); i < size; ++i) {
