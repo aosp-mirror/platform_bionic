@@ -31,12 +31,7 @@
 
 __BEGIN_DECLS
 
-// Remove this workaround once b/37423073 is fixed.
-#if !__has_attribute(alloc_size)
-#define __BIONIC_ALLOC_SIZE(...)
-#else
 #define __BIONIC_ALLOC_SIZE(...) __attribute__((__alloc_size__(__VA_ARGS__)))
-#endif
 
 /**
  * [malloc(3)](http://man7.org/linux/man-pages/man3/malloc.3.html) allocates
