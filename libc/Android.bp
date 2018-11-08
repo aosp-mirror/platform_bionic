@@ -2346,6 +2346,7 @@ cc_genrule {
 cc_library {
     name: "libseccomp_policy",
     recovery_available: true,
+    generated_headers: ["func_to_syscall_nrs"],
     generated_sources: [
         "libseccomp_policy_app_sources",
         "libseccomp_policy_app_zygote_sources",
