@@ -100,34 +100,11 @@ enum {
    */
   ANDROID_DLEXT_FORCE_LOAD = 0x40,
 
-  /**
-   * When set, if the minimum `p_vaddr` of the ELF file's `PT_LOAD` segments is non-zero,
-   * the dynamic linker will load it at that address.
-   *
-   * This flag is for ART internal use only.
-   */
-  ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80,
-
-  /**
-   * Instructs dlopen to load the library at the address specified by reserved_addr.
-   *
-   * The difference between `ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS` and
-   * `ANDROID_DLEXT_RESERVED_ADDRESS` is that for `ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS` the linker
-   * reserves memory at `reserved_addr` whereas for `ANDROID_DLEXT_RESERVED_ADDRESS` the linker
-   * relies on the caller to reserve the memory.
-   *
-   * This flag can be used with `ANDROID_DLEXT_FORCE_FIXED_VADDR`. When
-   * `ANDROID_DLEXT_FORCE_FIXED_VADDR` is set and `load_bias` is not 0 (`load_bias` is the
-   * minimum `p_vaddr` of all `PT_LOAD` segments) this flag is ignored because the linker has to
-   * pick one address over the other and this way is more convenient for ART.
-   * Note that `ANDROID_DLEXT_FORCE_FIXED_VADDR` does not generate an error when the minimum
-   * `p_vaddr` is 0.
-   *
-   * Cannot be used with `ANDROID_DLEXT_RESERVED_ADDRESS` or `ANDROID_DLEXT_RESERVED_ADDRESS_HINT`.
-   *
-   * This flag is for ART internal use only.
-   */
-  ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100,
+  // Historically we had two other options for ART.
+  // They were last available in Android P.
+  // Reuse these bits last!
+  // ANDROID_DLEXT_FORCE_FIXED_VADDR = 0x80
+  // ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS = 0x100
 
   /**
    * This flag used to load library in a different namespace. The namespace is
@@ -145,8 +122,6 @@ enum {
                                         ANDROID_DLEXT_USE_LIBRARY_FD |
                                         ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET |
                                         ANDROID_DLEXT_FORCE_LOAD |
-                                        ANDROID_DLEXT_FORCE_FIXED_VADDR |
-                                        ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS |
                                         ANDROID_DLEXT_USE_NAMESPACE,
 };
 

@@ -367,48 +367,6 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
   EXPECT_EQ(4, f());
 }
 
-TEST_F(DlExtTest, LoadAtFixedAddress) {
-  void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  ASSERT_TRUE(start != MAP_FAILED);
-  munmap(start, kLibSize);
-
-  android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
-  extinfo.reserved_addr = start;
-
-  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
-  ASSERT_DL_NOTNULL(handle_);
-  fn f = reinterpret_cast<fn>(dlsym(handle_, "getRandomNumber"));
-  ASSERT_DL_NOTNULL(f);
-  EXPECT_GE(reinterpret_cast<void*>(f), start);
-  EXPECT_LT(reinterpret_cast<void*>(f), reinterpret_cast<char*>(start) + kLibSize);
-
-  EXPECT_EQ(4, f());
-  dlclose(handle_);
-  handle_ = nullptr;
-
-  // Check that dlclose unmapped the file
-  void* addr = mmap(start, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  ASSERT_EQ(start, addr) << "dlclose did not unmap the memory";
-}
-
-TEST_F(DlExtTest, LoadAtFixedAddressTooSmall) {
-  void* start = mmap(nullptr, kLibSize + PAGE_SIZE, PROT_NONE,
-                         MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  ASSERT_TRUE(start != MAP_FAILED);
-  munmap(start, kLibSize + PAGE_SIZE);
-  void* new_addr = mmap(reinterpret_cast<uint8_t*>(start) + PAGE_SIZE, kLibSize, PROT_NONE,
-                        MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-  ASSERT_TRUE(new_addr != MAP_FAILED);
-
-  android_dlextinfo extinfo;
-  extinfo.flags = ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS;
-  extinfo.reserved_addr = start;
-
-  handle_ = android_dlopen_ext(kLibName, RTLD_NOW, &extinfo);
-  ASSERT_TRUE(handle_ == nullptr);
-}
-
 class DlExtRelroSharingTest : public DlExtTest {
 protected:
   virtual void SetUp() {
