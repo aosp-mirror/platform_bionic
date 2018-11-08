@@ -22,6 +22,30 @@
       "revId": "35c6384222c5f34d99297a1e8a2547e869a5fe11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12183723_d9949315",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-08T19:41:19Z",
+      "side": 1,
+      "message": "I tried to measure the perf impact of this change by patching bionic_benchmarks.cpp like this:\n\ndiff --git a/benchmarks/bionic_benchmarks.cpp b/benchmarks/bionic_benchmarks.cpp\nindex 7139cfa6b..539d64e40 100644\n--- a/benchmarks/bionic_benchmarks.cpp\n+++ b/benchmarks/bionic_benchmarks.cpp\n@@ -34,6 +34,8 @@\n #include \u003ctinyxml2.h\u003e\n #include \"util.h\"\n \n+extern \"C\" void android_set_allocation_limit(size_t limit);\n+\n #define _STR(x) #x\n #define STRINGFY(x) _STR(x)\n \n@@ -565,6 +567,8 @@ void RegisterAllBenchmarks(const bench_opts_t\u0026 opts,\n }\n \n int main(int argc, char** argv) {\n+  android_set_allocation_limit(32 * 1024 * 1024);\n+\n   std::map\u003cstd::string, args_vector_t\u003e args_shorthand \u003d GetShorthand();\n   bench_opts_t opts \u003d ParseOpts(argc, argv);\n   std::vector\u003cchar*\u003e new_argv(argc);\n\nand looking at the before/after perf results for \"adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --benchmark_filter\u003dmalloc\". I didn\u0027t see a difference at the time (which I was very surprised by), but upon further investigation it turns out that that was because I didn\u0027t rebuild properly and the cost is something like 50x slowdown. So yeah, that seems too high.\n\nI\u0027ll look into the atomic size_t, and if that\u0027s not enough I\u0027ll look closer at jemalloc to see if there\u0027s anything that we can do there.",
+      "parentUuid": "7f88c087_e5b80b83",
+      "range": {
+        "startLine": 229,
+        "startChar": 0,
+        "endLine": 229,
+        "endChar": 26
+      },
+      "revId": "35c6384222c5f34d99297a1e8a2547e869a5fe11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
