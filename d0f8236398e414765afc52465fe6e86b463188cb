@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3b55a4a8_c632848f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-08T16:59:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "545574fe_8026f00f",
+      "revId": "d0f8236398e414765afc52465fe6e86b463188cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b2270d4_9bc397e8",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2018-11-08T16:33:45Z",
       "side": 1,
       "message": "don\u0027t we already have a better way of dealing with this in the other places in bionic?",
+      "revId": "d0f8236398e414765afc52465fe6e86b463188cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d81b1b09_9833e18e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-08T16:59:04Z",
+      "side": 1,
+      "message": "Could be elaborate on \"this\"? Concatenating the heapprofd.${progname}?",
+      "parentUuid": "7b2270d4_9bc397e8",
       "revId": "d0f8236398e414765afc52465fe6e86b463188cb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
