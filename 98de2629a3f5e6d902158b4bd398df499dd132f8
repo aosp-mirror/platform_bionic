@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2e599fa5_4314e82d",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:22:23Z",
+      "side": 1,
+      "message": "Should be \u003e\u003d. Technically, if it\u0027s equal, that means that last character was dropped and replaced with a \u0027\\0\u0027 character.",
+      "range": {
+        "startLine": 489,
+        "startChar": 42,
+        "endLine": 489,
+        "endChar": 44
+      },
+      "revId": "98de2629a3f5e6d902158b4bd398df499dd132f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bb79b37_1ff0eec9",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-08T23:22:23Z",
+      "side": 1,
+      "message": "You should add an error log message here to indicate that something went wrong. That will helpe if there is ever a really long process name.",
+      "range": {
+        "startLine": 490,
+        "startChar": 4,
+        "endLine": 490,
+        "endChar": 17
+      },
+      "revId": "98de2629a3f5e6d902158b4bd398df499dd132f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
