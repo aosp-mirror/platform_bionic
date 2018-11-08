@@ -63,11 +63,6 @@ cc_library {
         },
     },
 
-    // Clang lld link flags do not work with special link rules
-    // for libunwind_llvm yet. Linked aosp_arm-eng image failed to
-    // boot up in the emulator. http://b/78118944.
-    use_clang_lld: false,
-
     static_libs: [
         "libasync_safe",
         "libbase",
