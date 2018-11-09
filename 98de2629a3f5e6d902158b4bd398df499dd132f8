@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6cce6278_66c42948",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-09T10:51:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e599fa5_4314e82d",
+      "range": {
+        "startLine": 489,
+        "startChar": 42,
+        "endLine": 489,
+        "endChar": 44
+      },
+      "revId": "98de2629a3f5e6d902158b4bd398df499dd132f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9bb79b37_1ff0eec9",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "98de2629a3f5e6d902158b4bd398df499dd132f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bab50e95_7e58a6f4",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-09T10:51:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bb79b37_1ff0eec9",
+      "range": {
+        "startLine": 490,
+        "startChar": 4,
+        "endLine": 490,
+        "endChar": 17
+      },
+      "revId": "98de2629a3f5e6d902158b4bd398df499dd132f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
