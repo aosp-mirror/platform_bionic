@@ -28,18 +28,20 @@
 
 #pragma once
 
-#include <stdlib.h>
 #include <sys/cdefs.h>
-#include <sys/system_properties.h>
 
 #if !defined(__BIONIC_GET_DEVICE_API_LEVEL_INLINE)
-#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
+#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static inline /* for versioner */
 #endif
 
 __BEGIN_DECLS
 
+// Avoid circular dependencies since this is exposed from <sys/cdefs.h>.
+int __system_property_get(const char* __name, char* __value);
+int atoi(const char* __s) __attribute_pure__;
+
 __BIONIC_GET_DEVICE_API_LEVEL_INLINE int android_get_device_api_level() {
-  char value[PROP_VALUE_MAX] = { 0 };
+  char value[92] = { 0 };
   if (__system_property_get("ro.build.version.sdk", value) < 1) return -1;
   int api_level = atoi(value);
   return (api_level > 0) ? api_level : -1;

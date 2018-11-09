@@ -29,7 +29,7 @@
 #include <gtest/gtest.h>
 
 #if __BIONIC__
-#include <android/get_device_api_level.h>
+#include <android/api-level.h>
 #endif
 
 TEST(android_get_device_api_level, smoke) {

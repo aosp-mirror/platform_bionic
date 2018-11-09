@@ -137,9 +137,3 @@ __noreturn void __libc_init(void* raw_args,
                  args.argv + __libc_shared_globals->initial_linker_arg_count,
                  args.envp));
 }
-
-extern "C" int android_get_application_target_sdk_version();
-
-int bionic_get_application_target_sdk_version() {
-  return android_get_application_target_sdk_version();
-}

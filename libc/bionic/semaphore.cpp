@@ -41,7 +41,6 @@
 
 #include "private/bionic_constants.h"
 #include "private/bionic_futex.h"
-#include "private/bionic_sdk_version.h"
 #include "private/bionic_time_conversions.h"
 
 // In this implementation, a semaphore contains a
@@ -222,7 +221,7 @@ int sem_wait(sem_t* sem) {
     }
 
     int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
-    if (bionic_get_application_target_sdk_version() >= __ANDROID_API_N__) {
+    if (android_get_application_target_sdk_version() >= __ANDROID_API_N__) {
       if (result ==-EINTR) {
         errno = EINTR;
         return -1;
