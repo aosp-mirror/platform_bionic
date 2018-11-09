@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "4227e8d1_5e28b079",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-09T00:52:58Z",
+      "side": 1,
+      "message": "Yes, exactly.",
+      "parentUuid": "d56c3115_cab20a96",
+      "range": {
+        "startLine": 255,
+        "startChar": 19,
+        "endLine": 255,
+        "endChar": 24
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b242c2db_a2c29b8f",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -105,6 +129,30 @@
       "writtenOn": "2018-11-08T23:58:11Z",
       "side": 1,
       "message": "These mallctl calls are deeply tied to the implementation of the allocator. You can\u0027t use this because there are already two allocators in use for Q.\n\nInstead you should replace this with something like:\n\natomic_init(\u0026gAllocated, mallinfo().uordblks);\n\nAnd you\u0027ll have to deal with the fact that it\u0027s going to be close but not completely accurate unless the system isn\u0027t doing anything.",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 314,
+        "endChar": 46
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1beda7e1_670f44fd",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-09T00:52:58Z",
+      "side": 1,
+      "message": "As best as I can tell, Scudo works by adding a library to an executable\u0027s DT_NEEDED that interposes the regular libc allocator. That means that none of bionic\u0027s malloc_dispatch mechanism actually comes into play when Scudo is in use.\n\nSo, what is the effect of calling android_set_allocation_limit() in a Scudo-enabled process? It seems like there would be no effect at all because this function only modifies globals that are ultimately unused in such a process. So if Scudo wants this function to work properly, it seems like it should also interpose that function.\n\nThat said, there has been a change to limitProcessMemory to make it check for Scudo and call its version of android_set_allocation_limit if it is present: https://android-review.googlesource.com/c/platform/frameworks/av/+/793077\n\nSo it seems like there will be nothing to do once Scudo is integrated into the media processes, but it might be a good idea to add an interceptor to Scudo in order to make sure that calling android_set_allocation_limit() has an effect and to simplify the implementation of limitProcessMemory a little.",
+      "parentUuid": "3a6c9881_ae3b9389",
       "range": {
         "startLine": 305,
         "startChar": 0,
