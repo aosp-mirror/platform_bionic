@@ -5,7 +5,7 @@
 # return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
 #
 # where:
-#       arch_list ::= "all" | arch+
+#       arch_list ::= "all" | "lp32" | "lp64" | arch+
 #       arch      ::= "arm" | "arm64" | "mips" | "mips64" | "x86" | "x86_64"
 #
 # Note:
@@ -68,11 +68,11 @@ int setpriority(int, id_t, int)   all
 # On 32-bit systems we use prlimit64 to implement the rlimit64 functions.
 int getrlimit:ugetrlimit(int, struct rlimit*)  arm,x86
 int getrlimit(int, struct rlimit*)  mips
-int getrlimit|getrlimit64(int, struct rlimit*)  arm64,mips64,x86_64
-int setrlimit(int, const struct rlimit*)  arm,mips,x86
-int setrlimit|setrlimit64(int, const struct rlimit*)  arm64,mips64,x86_64
-int prlimit64|prlimit(pid_t, int, struct rlimit64*, const struct rlimit64*)  arm64,mips64,x86_64
-int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  arm,mips,x86
+int getrlimit|getrlimit64(int, struct rlimit*)  lp64
+int setrlimit(int, const struct rlimit*)  lp32
+int setrlimit|setrlimit64(int, const struct rlimit*)  lp64
+int prlimit64|prlimit(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp64
+int prlimit64(pid_t, int, struct rlimit64*, const struct rlimit64*)  lp32
 
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
 int     setgroups:setgroups(int, const gid_t*)     arm64,mips,mips64,x86_64
@@ -90,19 +90,19 @@ int     acct(const char*  filepath)  all
 # file descriptors
 ssize_t     read(int, void*, size_t)        all
 ssize_t     write(int, const void*, size_t)       all
-ssize_t     pread64(int, void*, size_t, off64_t) arm,mips,x86
-ssize_t     pread64|pread(int, void*, size_t, off_t) arm64,mips64,x86_64
-ssize_t     pwrite64(int, void*, size_t, off64_t) arm,mips,x86
-ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) arm64,mips64,x86_64
+ssize_t     pread64(int, void*, size_t, off64_t) lp32
+ssize_t     pread64|pread(int, void*, size_t, off_t) lp64
+ssize_t     pwrite64(int, void*, size_t, off64_t) lp32
+ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) lp64
 
 # On LP32, preadv/pwritev don't use off64_t --- they use pairs of 32-bit
 # arguments to avoid problems on architectures like ARM where 64-bit arguments
 # must be in a register pair starting with an even-numbered register.
 # See linux/fs/read_write.c and https://lwn.net/Articles/311630/.
-ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) arm,mips,x86
-ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
-ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) arm,mips,x86
-ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) arm64,mips64,x86_64
+ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) lp32
+ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) lp64
+ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) lp32
+ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) lp64
 
 int         ___close:close(int)  all
 pid_t       __getpid:getpid()  all
@@ -119,8 +119,8 @@ int         mincore(void*  start, size_t  length, unsigned char*  vec)   all
 int         __ioctl:ioctl(int, int, void*)  all
 ssize_t     readv(int, const struct iovec*, int)   all
 ssize_t     writev(int, const struct iovec*, int)  all
-int         __fcntl64:fcntl64(int, int, void*)  arm,mips,x86
-int         fcntl(int, int, void*)  arm64,mips64,x86_64
+int         __fcntl64:fcntl64(int, int, void*)  lp32
+int         fcntl(int, int, void*)  lp64
 int         flock(int, int)   all
 int         ___fchmod:fchmod(int, mode_t)  all
 int         dup(int)  all
@@ -143,7 +143,7 @@ int __openat:openat(int, const char*, int, mode_t) all
 int ___faccessat:faccessat(int, const char*, int)  all
 int ___fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
-int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   arm,mips,x86
+int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
 int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
@@ -158,23 +158,23 @@ int utimensat(int, const char*, const struct timespec times[2], int)  all
 # sizeof(off_t) == sizeof(off64_t), so there we emit two symbols that are
 # aliases. On 32-bit systems, we have two different system calls.
 # That means that every system call in this section should take three lines.
-off_t lseek(int, off_t, int) arm,mips,x86
-int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,mips,x86
-off_t lseek|lseek64(int, off_t, int) arm64,mips64,x86_64
-int ftruncate64(int, off64_t) arm,mips,x86
-int ftruncate|ftruncate64(int, off_t) arm64,mips64,x86_64
-ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) arm,mips,x86
-ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) arm,mips,x86
-ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) arm64,mips64,x86_64
-int truncate(const char*, off_t) arm,mips,x86
-int truncate64(const char*, off64_t) arm,mips,x86
-int truncate|truncate64(const char*, off_t) arm64,mips64,x86_64
+off_t lseek(int, off_t, int) lp32
+int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) lp32
+off_t lseek|lseek64(int, off_t, int) lp64
+int ftruncate64(int, off64_t) lp32
+int ftruncate|ftruncate64(int, off_t) lp64
+ssize_t sendfile(int out_fd, int in_fd, off_t* offset, size_t count) lp32
+ssize_t sendfile64(int out_fd, int in_fd, off64_t* offset, size_t count) lp32
+ssize_t sendfile|sendfile64(int out_fd, int in_fd, off_t* offset, size_t count) lp64
+int truncate(const char*, off_t) lp32
+int truncate64(const char*, off64_t) lp32
+int truncate|truncate64(const char*, off_t) lp64
 # (mmap only gets two lines because we only used the 64-bit variant on 32-bit systems.)
-void* __mmap2:mmap2(void*, size_t, int, int, int, long)   arm,mips,x86
-void* mmap|mmap64(void*, size_t, int, int, int, off_t)  arm64,mips64,x86_64
+void* __mmap2:mmap2(void*, size_t, int, int, int, long)   lp32
+void* mmap|mmap64(void*, size_t, int, int, int, off_t)  lp64
 # (fallocate only gets two lines because there is no 32-bit variant.)
-int fallocate64:fallocate(int, int, off64_t, off64_t) arm,mips,x86
-int fallocate|fallocate64(int, int, off_t, off_t) arm64,mips64,x86_64
+int fallocate64:fallocate(int, int, off64_t, off64_t) lp32
+int fallocate|fallocate64(int, int, off_t, off_t) lp64
 
 # posix_fadvise64 is awkward: arm has shuffled arguments,
 # the POSIX functions don't set errno, and no architecture has posix_fadvise.
@@ -182,12 +182,12 @@ int __arm_fadvise64_64:arm_fadvise64_64(int, int, off64_t, off64_t) arm
 int __fadvise64:fadvise64_64(int, off64_t, off64_t, int) x86
 int __fadvise64:fadvise64(int, off64_t, off64_t, int) arm64,mips,mips64,x86_64
 
-int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  arm,mips,x86
-int __fstatfs:fstatfs(int, struct statfs*)  arm64,mips64,x86_64
-int __statfs64:statfs64(const char*, size_t, struct statfs*)  arm,mips,x86
-int __statfs:statfs(const char*, struct statfs*)  arm64,mips64,x86_64
+int __fstatfs64:fstatfs64(int, size_t, struct statfs*)  lp32
+int __fstatfs:fstatfs(int, struct statfs*)  lp64
+int __statfs64:statfs64(const char*, size_t, struct statfs*)  lp32
+int __statfs:statfs(const char*, struct statfs*)  lp64
 
-int     fstat64|fstat:fstat64(int, struct stat*)    arm,mips,x86
+int     fstat64|fstat:fstat64(int, struct stat*)    lp32
 int     fstat64|fstat:fstat(int, struct stat*)    arm64,x86_64
 
 # file system
@@ -227,7 +227,7 @@ int           adjtimex(struct timex*)   all
 int           clock_adjtime(clockid_t, struct timex*)   all
 
 # signals
-int     __sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  arm,mips,x86
+int     __sigaction:sigaction(int, const struct sigaction*, struct sigaction*)  lp32
 int     __rt_sigaction:rt_sigaction(int, const struct sigaction*, struct sigaction*, size_t)  all
 int     __rt_sigpending:rt_sigpending(sigset64_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t)  all
