@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "653e5296_559d3f71",
+        "filename": "docs/elf-tls.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-11-10T00:39:03Z",
+      "side": 1,
+      "message": "Out of curiosity: why doesn\u0027t this operation fail outright instead?",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 87
+      },
+      "revId": "9491c54619e254823730c56abeb5ea21e295c624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
