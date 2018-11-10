@@ -22,6 +22,30 @@
       "revId": "9491c54619e254823730c56abeb5ea21e295c624",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4a4669c_91707197",
+        "filename": "docs/elf-tls.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-10T01:00:44Z",
+      "side": 1,
+      "message": "I\u0027m not sure. When I first tested dlsym on a TLS variable with other libc\u0027s, I expected it to either fail outright or return an offset to the TLS variable (e.g. from the variable\u0027s TLS segment).\n\nIt is documented in various places online, e.g.:\nhttp://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2659.htm\n\nI think this dlsym behavior makes it possible, in a single binary, to use ELF TLS on newer platforms, and fall back to something else on older platforms. The binary would contain a PT_TLS segment and STT_TLS symbols that older loaders would ignore. Accessing the variable then requires dlsym (because a relocation to a TLS symbol would prevent loading on older platforms). If Bionic reserved static surplus TLS memory, then I think the Golang runtime could use this trick to opt into ELF TLS for their \"g\" register. (See the section below about the Go runtime on Android.)",
+      "parentUuid": "653e5296_559d3f71",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 87
+      },
+      "revId": "9491c54619e254823730c56abeb5ea21e295c624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
