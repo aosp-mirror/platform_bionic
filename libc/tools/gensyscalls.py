@@ -489,6 +489,14 @@ class SysCallsTxtParser:
         if arch_list == "all":
             for arch in all_arches:
                 t[arch] = True
+        elif arch_list == "lp32":
+            for arch in all_arches:
+                if "64" not in arch:
+                    t[arch] = True
+        elif arch_list == "lp64":
+            for arch in all_arches:
+                if "64" in arch:
+                    t[arch] = True
         else:
             for arch in string.split(arch_list, ','):
                 if arch in all_arches:
