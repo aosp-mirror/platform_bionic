@@ -190,9 +190,14 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
 // SIGSTKSZ (8KiB) is not big enough.
 // An snprintf to a stack buffer of size PATH_MAX consumes ~7KiB of stack.
-// Also, on 64-bit, logging uses more than 8KiB by itself:
-// https://code.google.com/p/android/issues/detail?id=187064
+// On 64-bit, logging uses more than 8KiB by itself, ucontext is comically
+// large on aarch64, and we have effectively infinite address space, so double
+// the signal stack size.
+#if defined(__LP64__)
+#define SIGNAL_STACK_SIZE_WITHOUT_GUARD (32 * 1024)
+#else
 #define SIGNAL_STACK_SIZE_WITHOUT_GUARD (16 * 1024)
+#endif
 
 // Traditionally we gave threads a 1MiB stack. When we started
 // allocating per-thread alternate signal stacks to ease debugging of

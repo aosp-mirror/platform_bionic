@@ -512,6 +512,27 @@ TEST(malloc, mallopt_smoke) {
   ASSERT_EQ(0, errno);
 }
 
+TEST(malloc, mallopt_decay) {
+#if defined(__BIONIC__)
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
+TEST(malloc, mallopt_purge) {
+#if defined(__BIONIC__)
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
 TEST(malloc, reallocarray_overflow) {
 #if HAVE_REALLOCARRAY
   // Values that cause overflow to a result small enough (8 on LP64) that malloc would "succeed".
