@@ -46,6 +46,30 @@
       "revId": "9491c54619e254823730c56abeb5ea21e295c624",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f4c6eeb_8ec4dca3",
+        "filename": "docs/elf-tls.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-12T20:47:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4a4669c_91707197",
+      "range": {
+        "startLine": 368,
+        "startChar": 0,
+        "endLine": 369,
+        "endChar": 87
+      },
+      "revId": "9491c54619e254823730c56abeb5ea21e295c624",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
