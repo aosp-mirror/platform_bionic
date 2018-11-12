@@ -60,6 +60,24 @@
     },
     {
       "key": {
+        "uuid": "c387c1a7_9cec65c7",
+        "filename": "libc/include/android/get_application_target_sdk_version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-11-12T18:17:21Z",
+      "side": 1,
+      "message": "Probably makes sense to put this in android/api-level.h imo.",
+      "parentUuid": "922ea04b_d919c5a5",
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e3587fd_1878e6c4",
         "filename": "libdl/libdl.map.txt",
         "patchSetId": 1
@@ -71,6 +89,30 @@
       "writtenOn": "2018-11-10T00:39:26Z",
       "side": 1,
       "message": "I\u0027m not sure we\u0027d want to, but I think we could expose this symbol for older API levels if we omitted the version tag in the stub library.",
+      "range": {
+        "startLine": 43,
+        "startChar": 9,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6898131_39996c54",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2018-11-12T18:17:21Z",
+      "side": 1,
+      "message": "Retconning it would be nice. There\u0027s an `versioned\u003d29` tag you can use to cause the NDK to have an unversioned stub until a given API level.",
+      "parentUuid": "2e3587fd_1878e6c4",
       "range": {
         "startLine": 43,
         "startChar": 9,
