@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0913969e_4e893175",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-12T23:59:54Z",
+      "side": 1,
+      "message": "android_get_device_api_level",
+      "range": {
+        "startLine": 119,
+        "startChar": 3,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "0349f3c75c45526ebdfb7dc5c96d2f926cfed038",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
