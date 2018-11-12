@@ -1656,6 +1656,30 @@ cc_library_static {
 }
 
 // ========================================================
+// libc_common_static.a For static binaries.
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    name: "libc_common_static",
+
+    whole_static_libs: [
+        "libc_common",
+    ],
+}
+
+// ========================================================
+// libc_common_shared.a For shared libraries.
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    name: "libc_common_shared",
+
+    whole_static_libs: [
+        "libc_common",
+    ],
+}
+
+// ========================================================
 // libc_nomalloc.a
 // ========================================================
 //
@@ -1679,7 +1703,7 @@ cc_library_static {
     cflags: ["-DLIBC_STATIC"],
 
     whole_static_libs: [
-        "libc_common",
+        "libc_common_static",
         "libc_init_static",
     ],
 }
@@ -1714,7 +1738,10 @@ cc_library {
             "bionic/malloc_common.cpp",
         ],
         cflags: ["-DLIBC_STATIC"],
-        whole_static_libs: ["libc_init_static"],
+        whole_static_libs: [
+            "libc_init_static",
+            "libc_common_static",
+        ],
     },
     shared: {
         srcs: [
@@ -1725,7 +1752,10 @@ cc_library {
             "bionic/NetdClient.cpp",
             "arch-common/bionic/crtend_so.S",
         ],
-        whole_static_libs: ["libc_init_dynamic"],
+        whole_static_libs: [
+            "libc_init_dynamic",
+            "libc_common_shared",
+        ],
     },
 
     required: ["tzdata"],
@@ -1752,7 +1782,6 @@ cc_library {
         "libdl",
     ],
     whole_static_libs: [
-        "libc_common",
         "libjemalloc",
     ],
 
