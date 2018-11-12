@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "922ea04b_d919c5a5",
+        "filename": "libc/include/android/get_application_target_sdk_version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-12T17:23:03Z",
+      "side": 1,
+      "message": "i\u0027ll give danalbert chance to comment for the NDK but i think we\u0027ve been going for more, smaller headers. (see also the other \u003candroid/get_...\u003e header.)\n\ni don\u0027t think developers tend to have any clue about what libraries provide what. and hopefully modules will allow us to hide that completely by having the compiler \"just know\" what libraries are needed for the headers you used.\n\nand even though i don\u0027t think \u003candroid/dlext.h\u003e is a good place for these functions, i do wonder whether it makes sense to have header files with only a single function in them. my inner Java programmer thinks \"one thing per file\" but i especially wonder whether both of these functions should just be in \u003candroid/api-level.h\u003e (and from there, transitively available whenever you include _any_ bionic header).",
+      "parentUuid": "5c7ea846_676cc234",
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e3587fd_1878e6c4",
         "filename": "libdl/libdl.map.txt",
         "patchSetId": 1
