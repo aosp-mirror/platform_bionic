@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "5c7ea846_676cc234",
+        "filename": "libc/include/android/get_application_target_sdk_version.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-11-12T10:12:41Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be in andorid/dlext.h? since this is exported by libdl?",
+      "revId": "9afa8ce6c2643130eeb7667a83574df127604701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e3587fd_1878e6c4",
         "filename": "libdl/libdl.map.txt",
         "patchSetId": 1
