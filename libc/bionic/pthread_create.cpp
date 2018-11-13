@@ -32,6 +32,7 @@
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/random.h>
 #include <unistd.h>
 
 #include "pthread_internal.h"
@@ -86,7 +87,7 @@ void __init_thread_stack_guard(pthread_internal_t* thread) {
   thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
 }
 
-void __init_alternate_signal_stack(pthread_internal_t* thread) {
+static void __init_alternate_signal_stack(pthread_internal_t* thread) {
   // Create and set an alternate signal stack.
   void* stack_base = mmap(nullptr, SIGNAL_STACK_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
   if (stack_base != MAP_FAILED) {
@@ -107,6 +108,25 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PTHREAD_GUARD_SIZE, "thread signal stack guard");
   }
+}
+
+static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
+#ifdef __aarch64__
+  // Allocate the stack and store its address in register x18.
+  // TODO(pcc): We ought to allocate a guard region here and then allocate the SCS at a random
+  // location within it. This will provide greater security since it would mean that an attacker who
+  // can read the pthread_internal_t won't be able to discover the address of the SCS. However,
+  // doing so is blocked on a solution to b/118642754.
+  char* scs = reinterpret_cast<char*>(
+      mmap(nullptr, SCS_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0));
+  thread->shadow_call_stack_guard_region = scs;
+  __asm__ __volatile__("mov x18, %0" ::"r"(scs));
+#endif
+}
+
+void __init_additional_stacks(pthread_internal_t* thread) {
+  __init_alternate_signal_stack(thread);
+  __init_shadow_call_stack(thread);
 }
 
 int __init_thread(pthread_internal_t* thread) {
@@ -252,7 +272,7 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
-  __init_alternate_signal_stack(thread);
+  __init_additional_stacks(thread);
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
