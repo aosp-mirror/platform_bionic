@@ -34,10 +34,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # define MEMCPY	memcpy_atom
 #endif
 
-#ifndef USE_AS_MEMMOVE
-# define USE_AS_MEMMOVE
-#endif
-
 #ifndef L
 # define L(label)	.L##label
 #endif
@@ -69,12 +65,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	.p2align 4;		\
 name:		\
 	cfi_startproc
-#endif
-
-#ifndef ALIAS_SYMBOL
-# define ALIAS_SYMBOL(alias, original) \
-	.globl alias; \
-	.equ alias, original
 #endif
 
 #ifndef END
@@ -3132,5 +3122,3 @@ L(bk_ssse3_cpy):
 #endif
 
 END (MEMCPY)
-
-ALIAS_SYMBOL(memmove_atom, MEMCPY)

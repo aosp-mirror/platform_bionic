@@ -93,18 +93,16 @@ DEFINE_IFUNC_FOR(__memset_chk) {
     RETURN_FUNC(__memset_chk_func, __memset_chk_generic);
 }
 
-typedef void* memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC_FOR(memcpy) {
-    __builtin_cpu_init();
-    if (cpu_is(ATOM)) RETURN_FUNC(memcpy_func, memcpy_atom);
-    RETURN_FUNC(memcpy_func, memcpy_generic);
-}
-
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
 DEFINE_IFUNC_FOR(memmove) {
     __builtin_cpu_init();
     if (cpu_is(ATOM)) RETURN_FUNC(memmove_func, memmove_atom);
     RETURN_FUNC(memmove_func, memmove_generic);
+}
+
+typedef void* memcpy_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcpy) {
+    return memmove_resolver();
 }
 
 typedef char* strcpy_func(char* __dst, const char* __src);
