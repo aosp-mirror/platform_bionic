@@ -16,6 +16,24 @@
       "revId": "dbf7f9eaf67ca2d2709b936fb507072bff0279ac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11e93f76_7e607a44",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-13T18:32:49Z",
+      "side": 1,
+      "message": "Oops, I didn\u0027t mean to include these in the change. Let me fix that.\n\nThis is basically a copy of the cts test, but I think it might be useful to have them in bionic and remove the cts test.",
+      "parentUuid": "41dbc7fe_08f9bc68",
+      "revId": "dbf7f9eaf67ca2d2709b936fb507072bff0279ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
