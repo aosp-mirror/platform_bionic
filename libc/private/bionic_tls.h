@@ -64,14 +64,15 @@ enum {
   TLS_SLOT_OPENGL = 4,
 
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
-  TLS_SLOT_DLERROR,
+
+  // TLS slot 6 was used for dlerror but is now free.
 
   // Fast storage for Thread::Current() in ART.
-  TLS_SLOT_ART_THREAD_SELF,
+  TLS_SLOT_ART_THREAD_SELF = 7,
 
   // Lets TSAN avoid using pthread_getspecific for finding the current thread
   // state.
-  TLS_SLOT_TSAN,
+  TLS_SLOT_TSAN = 8,
 
   BIONIC_TLS_SLOTS // Must come last!
 };
