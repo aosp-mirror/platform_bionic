@@ -1,0 +1,232 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "488bf625_9621aa42",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "static constexpr?",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdf79638_204291b6",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "static constexpr (or at least const --- we want this in a read-only section to avoid waste at runtime).",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d6cda1a_b4936a94",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "sorting the others newest-first makes sense to me, but should these two really come first?",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 1
+      },
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "426b8e61_3eafe212",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "T* on all this.",
+      "range": {
+        "startLine": 65,
+        "startChar": 25,
+        "endLine": 65,
+        "endChar": 31
+      },
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df895941_410b5b83",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "C++ casts.\n\n(why is this file .c rather than .cpp anyway?)",
+      "range": {
+        "startLine": 67,
+        "startChar": 37,
+        "endLine": 67,
+        "endChar": 43
+      },
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c916468f_603dba78",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "probably best calling these `ifunc_` or something instead, since we already have __ and ___ system call stubs.",
+      "range": {
+        "startLine": 112,
+        "startChar": 13,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba7e5bd_d13b5bfd",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "the raw system calls will return -errno, so you either need to clean up the return values or (probably better+easier) use `\u003c 0` here. (if you dislike that, you could always hide it in a macro and have something like `if (RAW_SYSCALL_ERROR(fd)) ...`.)",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b35544a3_278e912e",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "probably clearer without these macros and just using DEFINE_IFUNC and switch directly?",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97bfb314_393fe175",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "tab\n\n(be consistent too: either all of them on one line or all of them split across multiple lines.)",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e44c8fec_ecce934e",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "why do we need to know this? (if there is a reason, put _that_ in the comment instead :-) )",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "747eb4a3_ec2aaf83",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.c",
+        "patchSetId": 11
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "and does it help anyone to list the filenames? i\u0027m not sure what i\u0027d do with that information. i can always search if i\u0027m looking for the routine. and that keeps working even if the files are moved around.",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f2d0fda_7cdc3271",
+        "filename": "libc/arch-arm/static_function_dispatch.S",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T16:48:10Z",
+      "side": 1,
+      "message": "i don\u0027t really care about static binaries, but i\u0027m mildly curious what effect this has on performance relative to the dynamic binaries.\n\n(i\u0027m interested in light of the thread about Punch Hero, and the possibility that we might end up with a fallback that involves indirecting through function pointers...)",
+      "revId": "d89aaec4de2200bf8a1148294cc7c79400c28111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
