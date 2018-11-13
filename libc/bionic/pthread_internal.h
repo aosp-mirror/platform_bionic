@@ -155,7 +155,7 @@ class pthread_internal_t {
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ bool __init_tls(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_thread_stack_guard(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_alternate_signal_stack(pthread_internal_t*);
+__LIBC_HIDDEN__ void __init_additional_stacks(pthread_internal_t*);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
@@ -208,6 +208,9 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 
 // Leave room for a guard page in the internally created signal stacks.
 #define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD + PTHREAD_GUARD_SIZE)
+
+// Size of the shadow call stack.
+#define SCS_SIZE (8 * 1024)
 
 // Needed by fork.
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
