@@ -174,7 +174,7 @@ TEST(semaphore, sem_getvalue) {
   ASSERT_EQ(1, i);
 }
 
-extern "C" void android_set_application_target_sdk_version(uint32_t target);
+extern "C" void android_set_application_target_sdk_version(int target);
 
 static void sem_wait_test_signal_handler(int) {
 }
