@@ -31,7 +31,7 @@
 #include <fstream>
 
 #include "gtest_globals.h"
-#include "TemporaryFile.h"
+#include <android-base/file.h>
 #include "utils.h"
 
 extern "C" int main_global_default_serial() {
@@ -247,8 +247,8 @@ TEST(dl, exec_with_ld_config_file) {
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
-  create_ld_config_file(config_file.filename);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
+  create_ld_config_file(config_file.path);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -270,8 +270,8 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
-  create_ld_config_file(config_file.filename);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
+  create_ld_config_file(config_file.path);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
   std::string env2 = std::string("LD_PRELOAD=") + GetTestlibRoot() + "/ld_config_test_helper_lib3.so";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
@@ -300,8 +300,8 @@ TEST(dl, disable_ld_config_file) {
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
-  create_ld_config_file(config_file.filename);
-  std::string env = std::string("LD_CONFIG_FILE=") + config_file.filename;
+  create_ld_config_file(config_file.path);
+  std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });

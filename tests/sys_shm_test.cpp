@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
-
 #include <errno.h>
 #include <sys/shm.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
+#include <gtest/gtest.h>
 
 TEST(sys_shm, smoke) {
   if (shmctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
@@ -41,7 +40,7 @@ TEST(sys_shm, smoke) {
 
   // Create a segment.
   TemporaryDir dir;
-  key_t key = ftok(dir.dirname, 1);
+  key_t key = ftok(dir.path, 1);
   int id = shmget(key, 1234, IPC_CREAT|0666);
   ASSERT_NE(id, -1);
 

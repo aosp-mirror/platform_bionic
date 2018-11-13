@@ -18,7 +18,7 @@
 
 #include <gtest/gtest.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
 
 #if defined(__BIONIC__)
 #include "../libc/bionic/grp_pwd_file.cpp"
@@ -94,7 +94,7 @@ TEST(grp_pwd_file, passwd_file_one_entry) {
   static const char test_string[] = "name:password:1:2:user_info:dir:shell\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  PasswdFile passwd_file(file.filename, nullptr);
+  PasswdFile passwd_file(file.path, nullptr);
   FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "name", 1, 2, "dir", "shell");
@@ -114,7 +114,7 @@ TEST(grp_pwd_file, group_file_one_entry) {
   static const char test_string[] = "name:password:1:one,two,three\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  GroupFile group_file(file.filename, nullptr);
+  GroupFile group_file(file.path, nullptr);
   FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "name", 1);
@@ -150,7 +150,7 @@ TEST(grp_pwd_file, passwd_file_many_entries) {
 
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  PasswdFile passwd_file(file.filename, nullptr);
+  PasswdFile passwd_file(file.path, nullptr);
   FileUnmapper unmapper(passwd_file);
 
   FindAndCheckPasswdEntry(&passwd_file, "first", 1, 2, "dir", "shell");
@@ -186,7 +186,7 @@ TEST(grp_pwd_file, group_file_many_entries) {
 
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  GroupFile group_file(file.filename, nullptr);
+  GroupFile group_file(file.path, nullptr);
   FileUnmapper unmapper(group_file);
 
   FindAndCheckGroupEntry(&group_file, "first", 1);
@@ -210,7 +210,7 @@ TEST(grp_pwd_file, passwd_file_required_prefix) {
       "vendor_name:password:3:4:user_info:dir:shell\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  PasswdFile passwd_file(file.filename, "vendor_");
+  PasswdFile passwd_file(file.path, "vendor_");
   FileUnmapper unmapper(passwd_file);
 
   EXPECT_FALSE(passwd_file.FindByName("name", nullptr));
@@ -232,7 +232,7 @@ TEST(grp_pwd_file, group_file_required_prefix) {
       "vendor_name:password:2:one,two,three\n";
   write(file.fd, test_string, sizeof(test_string) - 1);
 
-  GroupFile group_file(file.filename, "vendor_");
+  GroupFile group_file(file.path, "vendor_");
   FileUnmapper unmapper(group_file);
 
   EXPECT_FALSE(group_file.FindByName("name", nullptr));
