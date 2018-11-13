@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea753bb8_83c889ca",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T23:24:47Z",
+      "side": 1,
+      "message": "https://google.github.io/styleguide/cppguide.html#Type_Names (for the struct too).",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 16
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f2de1af_96b8e05f",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T23:24:47Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be _generic?\n\nif not, shouldn\u0027t the a15 code replace the generic code?",
+      "range": {
+        "startLine": 129,
+        "startChar": 30,
+        "endLine": 129,
+        "endChar": 40
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ceefe10_56c486c8",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-13T23:24:47Z",
+      "side": 1,
+      "message": "why not just `static CpuVariant cpu_variant \u003d init_cpu_variant();`? does this code run too early for that to work?",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 0
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
