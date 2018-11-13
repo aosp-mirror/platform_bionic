@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "3b8c1228_e7d2747b",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-13T17:39:10Z",
+      "side": 1,
+      "message": "I considered that, but decided against it because the second argument to mallopt is an int and it\u0027s entirely possible that we\u0027ll want to set the limit to \u003e2GB on 64-bit machines. We could work around that by having the argument mean the number of pages or something like that, but it seems like that would be less clear than a separate function.\n\nAnother reason is that mallopt is exposed to the NDK, and there\u0027s no real benefit to exposing this function to the NDK; it could even cause compatibility problems if apps start using this function and the platform starts allocating more memory.",
+      "parentUuid": "32739768_801996f5",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
