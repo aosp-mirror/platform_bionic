@@ -52,6 +52,24 @@
       "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70a99393_2be85dfe",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2018-11-14T21:58:27Z",
+      "side": 1,
+      "message": "how about this - we keep both slots available for a while. We switch sanitizers to slot 6 ASAP, then once the toolchain is rolled forward the old slot can be removed.\n\nThis will break new toolchain with old devices. Not an issue for\n* hwasan - does not support old devices; Q will release with the new slot number.\n* scudo - always built as part of platform, AFAIK\n* tsan - has no users",
+      "parentUuid": "ac7ea4a9_8d588b3a",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
