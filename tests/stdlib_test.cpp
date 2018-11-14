@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
-#include "BionicDeathTest.h"
-#include "math_data_test.h"
-#include "TemporaryFile.h"
-#include "utils.h"
-
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
@@ -31,10 +24,16 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include <limits>
 #include <string>
 
+#include <android-base/macros.h>
+#include <gtest/gtest.h>
+
+#include "BionicDeathTest.h"
+#include "math_data_test.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
@@ -44,6 +43,41 @@
     #define ALIGNED_ALLOC_AVAILABLE 1
   #endif
 #endif
+
+template <typename T = int (*)(char*)>
+class GenericTemporaryFile {
+ public:
+  explicit GenericTemporaryFile(T mk_fn = mkstemp) : mk_fn_(mk_fn) {
+    // Since we might be running on the host or the target, and if we're
+    // running on the host we might be running under bionic or glibc,
+    // let's just try both possible temporary directories and take the
+    // first one that works.
+    init("/data/local/tmp");
+    if (fd == -1) {
+      init("/tmp");
+    }
+  }
+
+  ~GenericTemporaryFile() {
+    close(fd);
+    unlink(path);
+  }
+
+  int fd;
+  char path[1024];
+
+ private:
+  T mk_fn_;
+
+  void init(const char* tmp_dir) {
+    snprintf(path, sizeof(path), "%s/TemporaryFile-XXXXXX", tmp_dir);
+    fd = mk_fn_(path);
+  }
+
+  DISALLOW_COPY_AND_ASSIGN(GenericTemporaryFile);
+};
+
+typedef GenericTemporaryFile<> MyTemporaryFile;
 
 // The random number generator tests all set the seed, get four values, reset the seed and check
 // that they get the first two values repeated, and then reset the seed and check two more values
@@ -386,24 +420,24 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
 }
 
 TEST(stdlib, mkostemp64) {
-  TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
+  MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkostemp) {
-  TemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
+  MyTemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
   AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkstemp64) {
-  TemporaryFile tf(mkstemp64);
+  MyTemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
   ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
 
 TEST(stdlib, mkstemp) {
-  TemporaryFile tf;
+  MyTemporaryFile tf(mkstemp);
   struct stat sb;
   ASSERT_EQ(0, fstat(tf.fd, &sb));
 }

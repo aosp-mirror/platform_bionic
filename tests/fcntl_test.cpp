@@ -22,8 +22,7 @@
 #include <sys/utsname.h>
 #include <sys/vfs.h>
 
-#include "TemporaryFile.h"
-
+#include <android-base/file.h>
 #include <android-base/stringprintf.h>
 
 // Glibc v2.19 doesn't include these in fcntl.h so host builds will fail without.
@@ -307,7 +306,7 @@ TEST(fcntl, open_O_TMPFILE_mode) {
   // Without O_EXCL, we're allowed to give this a name later.
   // (This is unrelated to the O_CREAT interaction with O_EXCL.)
   const mode_t perms = S_IRUSR | S_IWUSR;
-  int fd = open(dir.dirname, O_TMPFILE | O_RDWR, perms);
+  int fd = open(dir.path, O_TMPFILE | O_RDWR, perms);
 
   // Ignore kernels without O_TMPFILE support (< 3.11).
   if (fd == -1 && (errno == EISDIR || errno == EINVAL || errno == EOPNOTSUPP)) return;
@@ -322,7 +321,7 @@ TEST(fcntl, open_O_TMPFILE_mode) {
   // On Android if we're not root, we won't be able to create links anyway...
   if (getuid() != 0) return;
 
-  std::string final_path = android::base::StringPrintf("%s/named_now", dir.dirname);
+  std::string final_path = android::base::StringPrintf("%s/named_now", dir.path);
   ASSERT_EQ(0, linkat(AT_FDCWD, android::base::StringPrintf("/proc/self/fd/%d", fd).c_str(),
                       AT_FDCWD, final_path.c_str(),
                       AT_SYMLINK_FOLLOW));
@@ -333,11 +332,11 @@ TEST(fcntl, open_O_TMPFILE_mode) {
   ASSERT_EQ(perms, (sb.st_mode & ~S_IFMT));
 
   // With O_EXCL, you're not allowed to add a name later.
-  fd = open(dir.dirname, O_TMPFILE | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
+  fd = open(dir.path, O_TMPFILE | O_RDWR | O_EXCL, S_IRUSR | S_IWUSR);
   ASSERT_TRUE(fd != -1) << strerror(errno);
   errno = 0;
   ASSERT_EQ(-1, linkat(AT_FDCWD, android::base::StringPrintf("/proc/self/fd/%d", fd).c_str(),
-                       AT_FDCWD, android::base::StringPrintf("%s/no_chance", dir.dirname).c_str(),
+                       AT_FDCWD, android::base::StringPrintf("%s/no_chance", dir.path).c_str(),
                        AT_SYMLINK_FOLLOW));
   ASSERT_EQ(ENOENT, errno);
   ASSERT_EQ(0, close(fd));
