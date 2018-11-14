@@ -2067,14 +2067,19 @@ _resolv_set_nameservers_for_net(unsigned netid, const char** servers, unsigned n
             // max_samples actually change, in practice the overhead of checking is higher than the
             // cost, and overflows are unlikely
             ++cache_info->revision_id;
-        } else if (cache_info->params.max_samples != old_max_samples) {
-            // If the maximum number of samples changes, the overhead of keeping the most recent
-            // samples around is not considered worth the effort, so they are cleared instead. All
-            // other parameters do not affect shared state: Changing these parameters does not
-            // invalidate the samples, as they only affect aggregation and the conditions under
-            // which servers are considered usable.
-            _res_cache_clear_stats_locked(cache_info);
-            ++cache_info->revision_id;
+        } else {
+            if (cache_info->params.max_samples != old_max_samples) {
+                // If the maximum number of samples changes, the overhead of keeping the most recent
+                // samples around is not considered worth the effort, so they are cleared instead.
+                // All other parameters do not affect shared state: Changing these parameters does
+                // not invalidate the samples, as they only affect aggregation and the conditions
+                // under which servers are considered usable.
+                _res_cache_clear_stats_locked(cache_info);
+                ++cache_info->revision_id;
+            }
+            for (unsigned j = 0; j < numservers; j++) {
+                freeaddrinfo(nsaddrinfo[j]);
+            }
         }
 
         // Always update the search paths, since determining whether they actually changed is
