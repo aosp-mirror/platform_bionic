@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9866ab37_859b7363",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T06:22:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea753bb8_83c889ca",
+      "range": {
+        "startLine": 34,
+        "startChar": 5,
+        "endLine": 34,
+        "endChar": 16
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f2de1af_96b8e05f",
         "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
         "patchSetId": 15
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "69e08a2d_a5eb7641",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T06:22:16Z",
+      "side": 1,
+      "message": "The _generic suffix is used by non neon routines. These ifuncs will never return non neon ones.\n\nI basically named them after the directory they are in. E.g. .*_a15 are in cortex-a15/. .*_generic are in generic/.",
+      "parentUuid": "8f2de1af_96b8e05f",
+      "range": {
+        "startLine": 129,
+        "startChar": 30,
+        "endLine": 129,
+        "endChar": 40
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ceefe10_56c486c8",
         "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
         "patchSetId": 15
@@ -68,6 +116,30 @@
       "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c3bdc4c_acbde162",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T06:22:16Z",
+      "side": 1,
+      "message": "That seems to work. And generates very similar code. But it uses __cxa_guard_acquire / __cxa_guard_release. I think it is better to avoid such big dependencies.",
+      "parentUuid": "5ceefe10_56c486c8",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 146,
+        "endChar": 0
+      },
+      "revId": "ec27891a6318c3a1f76f05597f7d53b678a0da7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
