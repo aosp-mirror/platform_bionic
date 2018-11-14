@@ -18,7 +18,6 @@
 
 #include "BionicDeathTest.h"
 #include "SignalUtils.h"
-#include "TemporaryFile.h"
 #include "utils.h"
 
 #include <errno.h>
@@ -166,20 +165,20 @@ TEST(UNISTD_TEST, sbrk_ENOMEM) {
 TEST(UNISTD_TEST, truncate) {
   TemporaryFile tf;
   ASSERT_EQ(0, close(tf.fd));
-  ASSERT_EQ(0, truncate(tf.filename, 123));
+  ASSERT_EQ(0, truncate(tf.path, 123));
 
   struct stat sb;
-  ASSERT_EQ(0, stat(tf.filename, &sb));
+  ASSERT_EQ(0, stat(tf.path, &sb));
   ASSERT_EQ(123, sb.st_size);
 }
 
 TEST(UNISTD_TEST, truncate64) {
   TemporaryFile tf;
   ASSERT_EQ(0, close(tf.fd));
-  ASSERT_EQ(0, truncate64(tf.filename, 123));
+  ASSERT_EQ(0, truncate64(tf.path, 123));
 
   struct stat sb;
-  ASSERT_EQ(0, stat(tf.filename, &sb));
+  ASSERT_EQ(0, stat(tf.path, &sb));
   ASSERT_EQ(123, sb.st_size);
 }
 
@@ -189,7 +188,7 @@ TEST(UNISTD_TEST, ftruncate) {
   ASSERT_EQ(0, close(tf.fd));
 
   struct stat sb;
-  ASSERT_EQ(0, stat(tf.filename, &sb));
+  ASSERT_EQ(0, stat(tf.path, &sb));
   ASSERT_EQ(123, sb.st_size);
 }
 
@@ -199,7 +198,7 @@ TEST(UNISTD_TEST, ftruncate64) {
   ASSERT_EQ(0, close(tf.fd));
 
   struct stat sb;
-  ASSERT_EQ(0, stat(tf.filename, &sb));
+  ASSERT_EQ(0, stat(tf.path, &sb));
   ASSERT_EQ(123, sb.st_size);
 }
 
@@ -389,11 +388,11 @@ static void TestSyncFunction(int (*fn)(int)) {
 
   EXPECT_EQ(0, fn(tf.fd));
 
-  ASSERT_NE(-1, fd = open(tf.filename, O_RDONLY));
+  ASSERT_NE(-1, fd = open(tf.path, O_RDONLY));
   EXPECT_EQ(0, fn(fd));
   close(fd);
 
-  ASSERT_NE(-1, fd = open(tf.filename, O_RDWR));
+  ASSERT_NE(-1, fd = open(tf.path, O_RDWR));
   EXPECT_EQ(0, fn(fd));
   close(fd);
 
@@ -671,11 +670,11 @@ TEST(UNISTD_TEST, pathconf_fpathconf) {
   long rc = 0L;
   // As a file system's block size is always power of 2, the configure values
   // for ALLOC and XFER should be power of 2 as well.
-  rc = pathconf(tf.filename, _PC_ALLOC_SIZE_MIN);
+  rc = pathconf(tf.path, _PC_ALLOC_SIZE_MIN);
   ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = pathconf(tf.filename, _PC_REC_MIN_XFER_SIZE);
+  rc = pathconf(tf.path, _PC_REC_MIN_XFER_SIZE);
   ASSERT_TRUE(rc > 0 && powerof2(rc));
-  rc = pathconf(tf.filename, _PC_REC_XFER_ALIGN);
+  rc = pathconf(tf.path, _PC_REC_XFER_ALIGN);
   ASSERT_TRUE(rc > 0 && powerof2(rc));
 
   rc = fpathconf(tf.fd, _PC_ALLOC_SIZE_MIN);
@@ -1343,38 +1342,38 @@ TEST(UNISTD_TEST, execvpe) {
 TEST(UNISTD_TEST, execvpe_ENOEXEC) {
   // Create a shell script with #!.
   TemporaryFile tf;
-  ASSERT_TRUE(android::base::WriteStringToFile("#!" BIN_DIR "sh\necho script\n", tf.filename));
+  ASSERT_TRUE(android::base::WriteStringToFile("#!" BIN_DIR "sh\necho script\n", tf.path));
 
   // Set $PATH so we can find it.
-  setenv("PATH", dirname(tf.filename), 1);
+  setenv("PATH", dirname(tf.path), 1);
 
   ExecTestHelper eth;
-  eth.SetArgs({basename(tf.filename), nullptr});
+  eth.SetArgs({basename(tf.path), nullptr});
 
   // It's not inherently executable.
   errno = 0;
-  ASSERT_EQ(-1, execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(-1, execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()));
   ASSERT_EQ(EACCES, errno);
 
   // Make it executable (and keep it writable because we're going to rewrite it below).
-  ASSERT_EQ(0, chmod(tf.filename, 0777));
+  ASSERT_EQ(0, chmod(tf.path, 0777));
 
   // TemporaryFile will have a writable fd, so we can test ETXTBSY while we're here...
   errno = 0;
-  ASSERT_EQ(-1, execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(-1, execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()));
   ASSERT_EQ(ETXTBSY, errno);
 
   // 1. The simplest test: the kernel should handle this.
   ASSERT_EQ(0, close(tf.fd));
-  eth.Run([&]() { execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
+  eth.Run([&]() { execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
 
   // 2. Try again without a #!. We should have to handle this ourselves.
-  ASSERT_TRUE(android::base::WriteStringToFile("echo script\n", tf.filename));
-  eth.Run([&]() { execvpe(basename(tf.filename), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
+  ASSERT_TRUE(android::base::WriteStringToFile("echo script\n", tf.path));
+  eth.Run([&]() { execvpe(basename(tf.path), eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
 
   // 3. Again without a #!, but also with a leading '/', since that's a special case in the
   // implementation.
-  eth.Run([&]() { execvpe(tf.filename, eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
+  eth.Run([&]() { execvpe(tf.path, eth.GetArgs(), eth.GetEnv()); }, 0, "script\n");
 }
 
 TEST(UNISTD_TEST, execvp_libcore_test_55017) {
