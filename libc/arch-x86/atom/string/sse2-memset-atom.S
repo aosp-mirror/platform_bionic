@@ -86,7 +86,7 @@ __x86.get_pc_thunk.bx:
 	movl	(%esp), %ebx
 	ret
 
-ENTRY(__memset_chk)
+ENTRY(__memset_chk_atom)
   ENTRANCE
 
   movl LEN(%esp), %ecx
@@ -95,11 +95,11 @@ ENTRY(__memset_chk)
 
   POP(%ebx) // Undo ENTRANCE without returning.
   jmp __memset_chk_fail
-END(__memset_chk)
+END(__memset_chk_atom)
 
 	.section .text.sse2,"ax",@progbits
 	ALIGN(4)
-ENTRY(memset)
+ENTRY(memset_atom)
 	ENTRANCE
 
 	movl	LEN(%esp), %ecx
@@ -839,4 +839,4 @@ L(aligned_16_15bytes):
 	SETRTNVAL
 	RETURN_END
 
-END(memset)
+END(memset_atom)

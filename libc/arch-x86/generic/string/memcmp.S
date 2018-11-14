@@ -6,7 +6,7 @@
 
 #include <private/bionic_asm.h>
 
-ENTRY(memcmp)
+ENTRY(memcmp_generic)
 	pushl	%edi
 	pushl	%esi
 	movl	12(%esp),%edi
@@ -41,4 +41,4 @@ L6:	movzbl  -1(%edi),%eax		/* Perform unsigned comparison	*/
 	popl	%esi
 	popl	%edi
 	ret
-END(memcmp)
+END(memcmp_generic)
