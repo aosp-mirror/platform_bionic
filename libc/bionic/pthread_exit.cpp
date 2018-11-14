@@ -103,6 +103,11 @@ void pthread_exit(void* return_value) {
     thread->alternate_signal_stack = nullptr;
   }
 
+#ifdef __aarch64__
+  // Free the shadow call stack and guard pages.
+  munmap(thread->shadow_call_stack_guard_region, SCS_SIZE);
+#endif
+
   ThreadJoinState old_state = THREAD_NOT_JOINED;
   while (old_state == THREAD_NOT_JOINED &&
          !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {

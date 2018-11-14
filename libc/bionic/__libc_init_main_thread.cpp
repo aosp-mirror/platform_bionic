@@ -101,5 +101,5 @@ void __libc_init_main_thread(KernelArgumentBlock& args) {
 
   __init_thread(&main_thread);
 
-  __init_alternate_signal_stack(&main_thread);
+  __init_additional_stacks(&main_thread);
 }
