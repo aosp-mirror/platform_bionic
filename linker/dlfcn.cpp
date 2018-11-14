@@ -57,7 +57,7 @@ void* __loader_android_dlopen_ext(const char* filename,
                            const android_dlextinfo* extinfo,
                            const void* caller_addr) __LINKER_PUBLIC__;
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) __LINKER_PUBLIC__;
-uint32_t __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
+int __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) __LINKER_PUBLIC__;
 android_namespace_t* __loader_android_get_exported_namespace(const char* name) __LINKER_PUBLIC__;
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
@@ -67,7 +67,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
 bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
                                                android_namespace_t* namespace_to) __LINKER_PUBLIC__;
-void __loader_android_set_application_target_sdk_version(uint32_t target) __LINKER_PUBLIC__;
+void __loader_android_set_application_target_sdk_version(int target) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
                        void* Ptr,
@@ -204,13 +204,13 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
 }
 #endif
 
-void __loader_android_set_application_target_sdk_version(uint32_t target) {
+void __loader_android_set_application_target_sdk_version(int target) {
   // lock to avoid modification in the middle of dlopen.
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   set_application_target_sdk_version(target);
 }
 
-uint32_t __loader_android_get_application_target_sdk_version() {
+int __loader_android_get_application_target_sdk_version() {
   return get_application_target_sdk_version();
 }
 
