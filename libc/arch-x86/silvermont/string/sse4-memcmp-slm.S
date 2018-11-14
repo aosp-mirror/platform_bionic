@@ -76,7 +76,7 @@ name:                            \
 #endif
 
 #ifndef MEMCMP
-# define MEMCMP	memcmp
+# define MEMCMP	memcmp_sse4
 #endif
 
 #define CFI_PUSH(REG)	\

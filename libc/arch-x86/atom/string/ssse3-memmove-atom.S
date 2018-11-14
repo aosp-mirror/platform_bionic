@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011, Intel Corporation
+Copyright (c) 2010, Intel Corporation
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -28,6 +28,7 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#define USE_AS_STRNCPY
-#define STRCPY strncpy_atom
-#include "ssse3-strcpy-atom.S"
+
+#define MEMCPY memmove_atom
+#define USE_AS_MEMMOVE
+#include "ssse3-memcpy-atom.S"

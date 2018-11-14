@@ -29,5 +29,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define USE_AS_WMEMCMP
-#define MEMCMP wmemcmp
+#define MEMCMP wmemcmp_sse4
 #include "sse4-memcmp-slm.S"
