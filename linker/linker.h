@@ -131,8 +131,8 @@ int do_dladdr(const void* addr, Dl_info* info);
 // void ___cfi_slowpath_diag(uint64_t CallSiteTypeId, void *Ptr, void *DiagData, void *Ret);
 void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 
-void set_application_target_sdk_version(uint32_t target);
-uint32_t get_application_target_sdk_version();
+void set_application_target_sdk_version(int target);
+int get_application_target_sdk_version();
 
 enum {
   /* A regular namespace is the namespace with a custom search path that does

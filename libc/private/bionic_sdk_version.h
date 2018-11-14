@@ -19,6 +19,6 @@
 
 #include <stdint.h>
 
-uint32_t bionic_get_application_target_sdk_version();
+int bionic_get_application_target_sdk_version();
 
 #endif  // _BIONIC_SDK_VERSION_H_
