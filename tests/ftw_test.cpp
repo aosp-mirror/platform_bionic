@@ -16,6 +16,7 @@
 
 #include <ftw.h>
 
+#include <fcntl.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,8 +24,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "TemporaryFile.h"
-
+#include <android-base/file.h>
 #include <android-base/stringprintf.h>
 #include <gtest/gtest.h>
 
@@ -102,26 +102,26 @@ int check_nftw64(const char* fpath, const struct stat64* sb, int tflag, FTW* ftw
 
 TEST(ftw, ftw) {
   TemporaryDir root;
-  MakeTree(root.dirname);
-  ASSERT_EQ(0, ftw(root.dirname, check_ftw, 128));
+  MakeTree(root.path);
+  ASSERT_EQ(0, ftw(root.path, check_ftw, 128));
 }
 
 TEST(ftw, ftw64) {
   TemporaryDir root;
-  MakeTree(root.dirname);
-  ASSERT_EQ(0, ftw64(root.dirname, check_ftw64, 128));
+  MakeTree(root.path);
+  ASSERT_EQ(0, ftw64(root.path, check_ftw64, 128));
 }
 
 TEST(ftw, nftw) {
   TemporaryDir root;
-  MakeTree(root.dirname);
-  ASSERT_EQ(0, nftw(root.dirname, check_nftw, 128, 0));
+  MakeTree(root.path);
+  ASSERT_EQ(0, nftw(root.path, check_nftw, 128, 0));
 }
 
 TEST(ftw, nftw64) {
   TemporaryDir root;
-  MakeTree(root.dirname);
-  ASSERT_EQ(0, nftw64(root.dirname, check_nftw64, 128, 0));
+  MakeTree(root.path);
+  ASSERT_EQ(0, nftw64(root.path, check_nftw64, 128, 0));
 }
 
 template <typename StatT>
@@ -145,13 +145,13 @@ TEST(ftw, bug_28197840) {
 
   TemporaryDir root;
 
-  std::string path = android::base::StringPrintf("%s/unreadable-directory", root.dirname);
+  std::string path = android::base::StringPrintf("%s/unreadable-directory", root.path);
   ASSERT_EQ(0, mkdir(path.c_str(), 0000)) << path;
 
-  ASSERT_EQ(0, ftw(root.dirname, bug_28197840_ftw<struct stat>, 128));
-  ASSERT_EQ(0, ftw64(root.dirname, bug_28197840_ftw<struct stat64>, 128));
-  ASSERT_EQ(0, nftw(root.dirname, bug_28197840_nftw<struct stat>, 128, FTW_PHYS));
-  ASSERT_EQ(0, nftw64(root.dirname, bug_28197840_nftw<struct stat64>, 128, FTW_PHYS));
+  ASSERT_EQ(0, ftw(root.path, bug_28197840_ftw<struct stat>, 128));
+  ASSERT_EQ(0, ftw64(root.path, bug_28197840_ftw<struct stat64>, 128));
+  ASSERT_EQ(0, nftw(root.path, bug_28197840_nftw<struct stat>, 128, FTW_PHYS));
+  ASSERT_EQ(0, nftw64(root.path, bug_28197840_nftw<struct stat64>, 128, FTW_PHYS));
 }
 
 template <typename StatT>

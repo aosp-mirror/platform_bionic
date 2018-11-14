@@ -29,7 +29,8 @@
 #include <wchar.h>
 #include <locale.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
+
 #include "utils.h"
 
 TEST(stdio_ext, __fbufsize) {

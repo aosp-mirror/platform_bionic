@@ -40,7 +40,6 @@
 #include <ziparchive/zip_archive.h>
 
 #include "gtest_globals.h"
-#include "TemporaryFile.h"
 #include "utils.h"
 #include "dlext_private.h"
 #include "dlfcn_symlink_support.h"
@@ -435,7 +434,7 @@ TEST_F(DlExtRelroSharingTest, ChildWritesGoodData) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path));
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibName));
 
   // Use destructor of tf to close and unlink the file.
@@ -446,7 +445,7 @@ TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
   TemporaryFile tf; // // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameNoRelro, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameNoRelro, tf.path));
   ASSERT_NO_FATAL_FAILURE(TryUsingRelro(kLibNameNoRelro));
 
   // Use destructor of tf to close and unlink the file.
@@ -466,14 +465,14 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
 
-  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.filename));
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibName, tf.path));
 
   int pipefd[2];
   ASSERT_NOERROR(pipe(pipefd));
 
   size_t without_sharing, with_sharing;
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.filename, false, &without_sharing));
-  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.filename, true, &with_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.path, false, &without_sharing));
+  ASSERT_NO_FATAL_FAILURE(SpawnChildrenAndMeasurePss(kLibName, tf.path, true, &with_sharing));
   ASSERT_LT(with_sharing, without_sharing);
 
   // We expect the sharing to save at least 50% of the library's total PSS.
