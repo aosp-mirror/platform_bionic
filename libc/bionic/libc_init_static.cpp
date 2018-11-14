@@ -146,16 +146,16 @@ __noreturn void __libc_init(void* raw_args,
   __real_libc_init(raw_args, onexit, slingshot, structors);
 }
 
-static uint32_t g_target_sdk_version{__ANDROID_API__};
+static int g_target_sdk_version{__ANDROID_API__};
 
-extern "C" uint32_t android_get_application_target_sdk_version() {
+extern "C" int android_get_application_target_sdk_version() {
   return g_target_sdk_version;
 }
 
-uint32_t bionic_get_application_target_sdk_version() {
+int bionic_get_application_target_sdk_version() {
   return android_get_application_target_sdk_version();
 }
 
-extern "C" void android_set_application_target_sdk_version(uint32_t target) {
+extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }
