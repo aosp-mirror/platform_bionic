@@ -165,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "2043ba4d_e15e7073",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-11-14T03:31:41Z",
+      "side": 1,
+      "message": "Another option would be adding a new general-purpose mallopt2 with an improved signature. I\u0027m not worried about giving NDK applications being able to shoot themselves in the foot: they can already call things like sigaction(2).\n\nPersonally, though, I think a new function is fine. cferris, what makes you prefer mallopt?",
+      "parentUuid": "3b8c1228_e7d2747b",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
