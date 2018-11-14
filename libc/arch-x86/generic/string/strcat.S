@@ -19,7 +19,7 @@
  * cache.
  */
 
-ENTRY(strcat)
+ENTRY(strcat_generic)
 	pushl	%edi			/* save edi */
 	movl	8(%esp),%edi		/* dst address */
 	movl	12(%esp),%edx		/* src address */
@@ -71,4 +71,4 @@ L1:	movb	(%edx),%al		/* unroll loop, but not too much */
 L2:	popl	%eax			/* pop destination address */
 	popl	%edi			/* restore edi */
 	ret
-END(strcat)
+END(strcat_generic)
