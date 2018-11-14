@@ -268,23 +268,11 @@ cc_library_static {
                 "upstream-freebsd/lib/libc/string/wcscmp.c",
                 "upstream-freebsd/lib/libc/string/wcslen.c",
                 "upstream-freebsd/lib/libc/string/wcsrchr.c",
+                "upstream-freebsd/lib/libc/string/wmemcmp.c",
+                "upstream-freebsd/lib/libc/string/wcscat.c",
+                "upstream-freebsd/lib/libc/string/wcscpy.c",
+                "upstream-freebsd/lib/libc/string/wmemcmp.c",
             ],
-            atom: {
-                exclude_srcs: [
-                    "upstream-freebsd/lib/libc/string/wmemcmp.c",
-                ],
-            },
-            ssse3: {
-                exclude_srcs: [
-                    "upstream-freebsd/lib/libc/string/wcscat.c",
-                    "upstream-freebsd/lib/libc/string/wcscpy.c",
-                ],
-            },
-            sse4: {
-                exclude_srcs: [
-                    "upstream-freebsd/lib/libc/string/wmemcmp.c",
-                ],
-            },
         },
     },
 
@@ -603,14 +591,10 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
                 "upstream-openbsd/lib/libc/string/strncpy.c",
+                "upstream-openbsd/lib/libc/string/strlcat.c",
+                "upstream-openbsd/lib/libc/string/strlcpy.c",
+                "upstream-openbsd/lib/libc/string/strncat.c",
             ],
-            ssse3: {
-                exclude_srcs: [
-                    "upstream-openbsd/lib/libc/string/strlcat.c",
-                    "upstream-openbsd/lib/libc/string/strlcpy.c",
-                    "upstream-openbsd/lib/libc/string/strncat.c",
-                ],
-            },
         },
 
         x86_64: {
@@ -1136,6 +1120,14 @@ cc_library_static {
                 "arch-x86/generic/string/strcmp.S",
                 "arch-x86/generic/string/strncmp.S",
                 "arch-x86/generic/string/strcat.S",
+
+                "arch-x86/generic/string/strlcat.c",
+                "arch-x86/generic/string/strlcpy.c",
+                "arch-x86/generic/string/strncat.c",
+                "arch-x86/generic/string/wcscat.c",
+                "arch-x86/generic/string/wcscpy.c",
+                "arch-x86/generic/string/wmemcmp.c",
+
                 "arch-x86/atom/string/sse2-memchr-atom.S",
                 "arch-x86/atom/string/sse2-memrchr-atom.S",
                 "arch-x86/atom/string/sse2-strchr-atom.S",
@@ -1160,6 +1152,29 @@ cc_library_static {
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
+
+                // ssse3 functions
+                "arch-x86/atom/string/ssse3-strcat-atom.S",
+                "arch-x86/atom/string/ssse3-strcmp-atom.S",
+                "arch-x86/atom/string/ssse3-strlcat-atom.S",
+                "arch-x86/atom/string/ssse3-strlcpy-atom.S",
+                "arch-x86/atom/string/ssse3-strncat-atom.S",
+                "arch-x86/atom/string/ssse3-strncmp-atom.S",
+                "arch-x86/atom/string/ssse3-wcscat-atom.S",
+                "arch-x86/atom/string/ssse3-wcscpy-atom.S",
+
+                // sse4 functions
+                "arch-x86/silvermont/string/sse4-memcmp-slm.S",
+                "arch-x86/silvermont/string/sse4-wmemcmp-slm.S",
+
+                // atom functions
+                "arch-x86/atom/string/sse2-memset-atom.S",
+                "arch-x86/atom/string/sse2-strlen-atom.S",
+                "arch-x86/atom/string/ssse3-memcmp-atom.S",
+                "arch-x86/atom/string/ssse3-memmove-atom.S",
+                "arch-x86/atom/string/ssse3-strcpy-atom.S",
+                "arch-x86/atom/string/ssse3-strncpy-atom.S",
+                "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
             ],
 
             exclude_srcs: [
@@ -1167,51 +1182,6 @@ cc_library_static {
                 "bionic/strnlen.c",
                 "bionic/strrchr.cpp",
             ],
-            atom: {
-                srcs: [
-                    "arch-x86/atom/string/sse2-memset-atom.S",
-                    "arch-x86/atom/string/sse2-strlen-atom.S",
-                    "arch-x86/atom/string/ssse3-memcmp-atom.S",
-                    "arch-x86/atom/string/ssse3-memcpy-atom.S",
-                    "arch-x86/atom/string/ssse3-strcpy-atom.S",
-                    "arch-x86/atom/string/ssse3-strncpy-atom.S",
-                    "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
-                ],
-                exclude_srcs: [
-                    "arch-x86/generic/string/memcmp.S",
-                    "arch-x86/silvermont/string/sse2-memmove-slm.S",
-                    "arch-x86/silvermont/string/sse2-memset-slm.S",
-                    "arch-x86/silvermont/string/sse2-strcpy-slm.S",
-                    "arch-x86/silvermont/string/sse2-strlen-slm.S",
-                    "arch-x86/silvermont/string/sse2-strncpy-slm.S",
-                ],
-            },
-            ssse3: {
-                srcs: [
-                    "arch-x86/atom/string/ssse3-strncat-atom.S",
-                    "arch-x86/atom/string/ssse3-strlcat-atom.S",
-                    "arch-x86/atom/string/ssse3-strlcpy-atom.S",
-                    "arch-x86/atom/string/ssse3-strcat-atom.S",
-                    "arch-x86/atom/string/ssse3-strcmp-atom.S",
-                    "arch-x86/atom/string/ssse3-strncmp-atom.S",
-                    "arch-x86/atom/string/ssse3-wcscat-atom.S",
-                    "arch-x86/atom/string/ssse3-wcscpy-atom.S",
-                ],
-                exclude_srcs: [
-                    "arch-x86/generic/string/strcmp.S",
-                    "arch-x86/generic/string/strncmp.S",
-                    "arch-x86/generic/string/strcat.S",
-                ],
-            },
-            sse4: {
-                srcs: [
-                    "arch-x86/silvermont/string/sse4-memcmp-slm.S",
-                    "arch-x86/silvermont/string/sse4-wmemcmp-slm.S",
-                ],
-                exclude_srcs: [
-                    "arch-x86/generic/string/memcmp.S",
-                ],
-            },
         },
         x86_64: {
             srcs: [
@@ -1662,6 +1632,12 @@ cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_common_static",
 
+    arch: {
+        x86: {
+            srcs: ["arch-x86/static_function_dispatch.S"],
+        },
+    },
+
     whole_static_libs: [
         "libc_common",
     ],
@@ -1673,6 +1649,16 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     name: "libc_common_shared",
+
+    cflags: [
+        "-fno-stack-protector",
+        "-fno-jump-tables",
+    ],
+    arch: {
+        x86: {
+            srcs: ["arch-x86/dynamic_function_dispatch.cpp"],
+        },
+    },
 
     whole_static_libs: [
         "libc_common",

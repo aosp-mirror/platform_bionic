@@ -87,7 +87,7 @@ name:					\
 #define POP(REG)	popl REG; CFI_POP (REG)
 
 #ifndef STRCAT
-# define STRCAT	strcat
+# define STRCAT	strcat_ssse3
 #endif
 
 #define PARMS	4
@@ -617,4 +617,4 @@ L(StrncpyExit8Bytes):
 	RETURN1
 
 #endif
-END (STRCAT)
+END (STRCAT_ssse3)
