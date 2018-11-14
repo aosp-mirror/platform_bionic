@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a9d46e30_4e2dac52",
+        "filename": "libc/arch-x86/function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T04:35:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ae3b0ce_5ef472fd",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 19
+      },
+      "revId": "8f9dfccec74d2dc7253157e00fb8cbc8107bbe0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9024b755_225e69b0",
         "filename": "libc/arch-x86/generic/string/memcmp.S",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "8f9dfccec74d2dc7253157e00fb8cbc8107bbe0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e8c7111_0232ae92",
+        "filename": "libc/arch-x86/generic/string/memcmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T04:35:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75c6f132_bac6e35e",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 41
+      },
+      "revId": "8f9dfccec74d2dc7253157e00fb8cbc8107bbe0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "cf67a066_d69879ea",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T04:35:42Z",
+      "side": 1,
+      "message": "Removed,",
+      "parentUuid": "10aa0c36_565d68eb",
+      "range": {
+        "startLine": 266,
+        "startChar": 0,
+        "endLine": 268,
+        "endChar": 14
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9db6f286_24166958",
         "filename": "libc/Android.bp",
         "patchSetId": 6
@@ -69,6 +93,30 @@
       "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e83a3a_ad6ff772",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T04:35:42Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "9db6f286_24166958",
+      "range": {
+        "startLine": 584,
+        "startChar": 12,
+        "endLine": 586,
+        "endChar": 14
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -116,6 +164,30 @@
       "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cde46bf_bb31f9b6",
+        "filename": "libc/arch-x86/static_function_dispatch.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-14T04:35:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1dc1cf46_dca652c9",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 17
+      },
+      "revId": "e4f885af98be0ad800a419e797244449afb8a50f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
