@@ -20,7 +20,7 @@
 #include <stdio_ext.h>
 #include <stdlib.h>
 
-#include <android-base/test_utils.h>
+#include <android-base/file.h>
 #include <benchmark/benchmark.h>
 #include "util.h"
 

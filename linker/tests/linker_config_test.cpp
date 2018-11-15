@@ -37,10 +37,9 @@
 
 #include <unistd.h>
 
+#include <android-base/file.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
-#include <android-base/file.h>
-#include <android-base/test_utils.h>
 
 #if defined(__LP64__)
 #define ARCH_SUFFIX "64"
