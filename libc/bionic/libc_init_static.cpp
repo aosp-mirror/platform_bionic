@@ -152,10 +152,6 @@ extern "C" int android_get_application_target_sdk_version() {
   return g_target_sdk_version;
 }
 
-int bionic_get_application_target_sdk_version() {
-  return android_get_application_target_sdk_version();
-}
-
 extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }

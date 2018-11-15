@@ -36,7 +36,6 @@
 #include <async_safe/log.h>
 
 #include "private/bionic_futex.h"
-#include "private/bionic_sdk_version.h"
 #include "private/bionic_tls.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
@@ -114,7 +113,7 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
   }
 
   // Historically we'd return null, but
-  if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
+  if (android_get_application_target_sdk_version() >= __ANDROID_API_O__) {
     if (thread == nullptr) {
       // This seems to be a common mistake, and it's relatively harmless because
       // there will never be a valid thread at address 0, whereas other invalid

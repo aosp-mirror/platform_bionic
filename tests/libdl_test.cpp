@@ -18,7 +18,6 @@
 
 #include <android/api-level.h>
 
-extern "C" int android_get_application_target_sdk_version();
 extern "C" void android_set_application_target_sdk_version(int target);
 
 TEST(libdl, application_sdk_versions_smoke) {
