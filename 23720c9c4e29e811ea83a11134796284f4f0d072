@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "791a1cf6_56a8464b",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-11-15T09:50:22Z",
+      "side": 1,
+      "message": "Is this safe? Last time I tried to use pragma once someone pointed me at https://yaqs.googleplex.com/eng/q/5768278562045952 Hopefully this is no longer the case...",
+      "revId": "23720c9c4e29e811ea83a11134796284f4f0d072",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
