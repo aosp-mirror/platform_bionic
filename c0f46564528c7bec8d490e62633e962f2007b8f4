@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ca26bb3_74e9bff8",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-15T21:59:02Z",
+      "side": 1,
+      "message": "I think this should be be android_get_device_api_level. There wasn\u0027t/isn\u0027t a static inline for android_get_application_target_sdk_version AFAICT.",
+      "range": {
+        "startLine": 119,
+        "startChar": 3,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "c0f46564528c7bec8d490e62633e962f2007b8f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
