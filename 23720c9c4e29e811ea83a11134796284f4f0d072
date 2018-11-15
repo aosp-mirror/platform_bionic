@@ -16,6 +16,24 @@
       "revId": "23720c9c4e29e811ea83a11134796284f4f0d072",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "536d34d5_a5d25ad1",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-11-15T16:50:50Z",
+      "side": 1,
+      "message": "we\u0027re using it all over these days, including a significant chunk of the C library already.",
+      "parentUuid": "791a1cf6_56a8464b",
+      "revId": "23720c9c4e29e811ea83a11134796284f4f0d072",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
