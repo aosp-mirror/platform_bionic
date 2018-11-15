@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "linker.h"
-#include <android/api-level.h>
-#include <atomic>
+#include <upstream-openbsd/android/include/openbsd-compat.h>
 
-static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
-
-void set_application_target_sdk_version(int target) {
-  // translate current sdk_version to platform sdk_version
-  if (target == 0) {
-    target = __ANDROID_API__;
-  }
-  g_target_sdk_version = target;
-}
-
-int get_application_target_sdk_version() {
-  return g_target_sdk_version;
-}
-
+#define strlcpy strlcpy_openbsd
+#include <upstream-openbsd/lib/libc/string/strlcpy.c>

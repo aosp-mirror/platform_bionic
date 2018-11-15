@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#include "linker.h"
-#include <android/api-level.h>
-#include <atomic>
+#include <private/bionic_asm.h>
 
-static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    jmp impl; \
+END(name)
 
-void set_application_target_sdk_version(int target) {
-  // translate current sdk_version to platform sdk_version
-  if (target == 0) {
-    target = __ANDROID_API__;
-  }
-  g_target_sdk_version = target;
-}
-
-int get_application_target_sdk_version() {
-  return g_target_sdk_version;
-}
-
+FUNCTION_DELEGATE(memcmp, memcmp_generic)
+FUNCTION_DELEGATE(memset, memset_generic)
+FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
+FUNCTION_DELEGATE(memcpy, memmove_generic)
+FUNCTION_DELEGATE(memmove, memmove_generic)
+FUNCTION_DELEGATE(strcpy, strcpy_generic)
+FUNCTION_DELEGATE(strncpy, strncpy_generic)
+FUNCTION_DELEGATE(strlen, strlen_generic)
+FUNCTION_DELEGATE(strcmp, strcmp_generic)
+FUNCTION_DELEGATE(strncmp, strncmp_generic)
+FUNCTION_DELEGATE(strcat, strcat_generic)
+FUNCTION_DELEGATE(wmemcmp, wmemcmp_freebsd)
+FUNCTION_DELEGATE(wcscat, wcscat_freebsd)
+FUNCTION_DELEGATE(strncat, strncat_openbsd)
+FUNCTION_DELEGATE(strlcat, strlcat_openbsd)
+FUNCTION_DELEGATE(strlcpy, strlcpy_openbsd)
+FUNCTION_DELEGATE(wcscpy, wcscpy_freebsd)

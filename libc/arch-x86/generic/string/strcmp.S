@@ -12,7 +12,7 @@
  * cache.
  */
 
-ENTRY(strcmp)
+ENTRY(strcmp_generic)
 	movl	0x04(%esp),%eax
 	movl	0x08(%esp),%edx
 	jmp	L2			/* Jump into the loop! */
@@ -79,4 +79,4 @@ L3:	movzbl	(%eax),%eax		/* unsigned comparison */
 	movzbl	(%edx),%edx
 	subl	%edx,%eax
 	ret
-END(strcmp)
+END(strcmp_generic)

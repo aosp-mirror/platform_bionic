@@ -44,7 +44,7 @@
 // TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
 bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym);
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
-uint32_t get_application_target_sdk_version();
+int get_application_target_sdk_version();
 
 soinfo::soinfo(android_namespace_t* ns, const char* realpath,
                const struct stat* file_stat, off64_t file_offset,
@@ -719,7 +719,7 @@ bool soinfo::is_mapped_by_caller() const {
 // This function returns api-level at the time of
 // dlopen/load. Note that libraries opened by system
 // will always have 'current' api level.
-uint32_t soinfo::get_target_sdk_version() const {
+int soinfo::get_target_sdk_version() const {
   if (!has_min_version(2)) {
     return __ANDROID_API__;
   }

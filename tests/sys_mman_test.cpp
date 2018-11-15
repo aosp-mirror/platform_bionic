@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
+#include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/user.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
+#include <gtest/gtest.h>
 
 TEST(sys_mman, mmap_std) {
   void* map = mmap(nullptr, 4096, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
@@ -82,7 +82,7 @@ TEST(sys_mman, mmap_file_write) {
 
   ASSERT_EQ(0, munmap(map, sizeof(STRING_MSG)));
 
-  tf.reopen();
+  tf.fd = open(tf.path, O_RDWR);
   char buf[sizeof(STRING_MSG)];
   memset(buf, 0, sizeof(STRING_MSG));
   ASSERT_EQ(STR_SSIZE(STRING_MSG), read(tf.fd, buf, sizeof(STRING_MSG)));
@@ -153,7 +153,7 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   memcpy(map, NEWPAGE1_MSG, sizeof(NEWPAGE1_MSG));
   ASSERT_EQ(0, munmap(map, pagesize));
 
-  tf.reopen();
+  tf.fd = open(tf.path, O_RDWR);
   map = mmap(nullptr, pagesize, PROT_WRITE, MAP_SHARED, tf.fd, 2 * pagesize);
   ASSERT_NE(MAP_FAILED, map);
   close(tf.fd);
@@ -161,7 +161,7 @@ TEST(sys_mman, mmap_file_write_at_offset) {
   memcpy(map, NEWPAGE2_MSG, sizeof(NEWPAGE2_MSG));
   ASSERT_EQ(0, munmap(map, pagesize));
 
-  tf.reopen();
+  tf.fd = open(tf.path, O_RDWR);
   char buf[pagesize];
   ASSERT_EQ(static_cast<ssize_t>(pagesize), read(tf.fd, buf, pagesize));
   ASSERT_STREQ(PAGE0_MSG, buf);

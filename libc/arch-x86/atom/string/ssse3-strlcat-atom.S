@@ -82,7 +82,7 @@ name:	\
 #define LEN	SRC+4
 
 	.text
-ENTRY (strlcat)
+ENTRY (strlcat_ssse3)
 	mov	DST(%esp), %edx
 	PUSH	(%ebx)
 	mov	LEN(%esp), %ebx
