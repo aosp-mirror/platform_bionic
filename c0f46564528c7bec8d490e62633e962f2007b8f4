@@ -46,6 +46,30 @@
       "revId": "c0f46564528c7bec8d490e62633e962f2007b8f4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c268b52_d21edb90",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-15T22:02:10Z",
+      "side": 1,
+      "message": "sgtm",
+      "parentUuid": "42d63861_9f75665e",
+      "range": {
+        "startLine": 119,
+        "startChar": 3,
+        "endLine": 119,
+        "endChar": 45
+      },
+      "revId": "c0f46564528c7bec8d490e62633e962f2007b8f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
