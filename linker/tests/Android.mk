@@ -51,6 +51,6 @@ LOCAL_SRC_FILES := \
   ../linker_config.cpp \
   ../linker_utils.cpp \
 
-LOCAL_STATIC_LIBRARIES += libasync_safe libbase
+LOCAL_STATIC_LIBRARIES += libasync_safe libbase liblog
 
 include $(BUILD_NATIVE_TEST)
