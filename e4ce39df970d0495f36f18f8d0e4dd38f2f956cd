@@ -22,6 +22,30 @@
       "revId": "e4ce39df970d0495f36f18f8d0e4dd38f2f956cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c5a62a8_66b79fde",
+        "filename": "tests/scs_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-15T03:59:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6425d394_a84493e5",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 0
+      },
+      "revId": "e4ce39df970d0495f36f18f8d0e4dd38f2f956cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
