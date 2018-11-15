@@ -22,6 +22,30 @@
       "revId": "37e9e71dea158cc1ea3c026b847e2f852e4a39cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca8d6b09_7282eae6",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-15T22:16:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5055ab92_8bda8b7b",
+      "range": {
+        "startLine": 131,
+        "startChar": 10,
+        "endLine": 131,
+        "endChar": 16
+      },
+      "revId": "37e9e71dea158cc1ea3c026b847e2f852e4a39cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
