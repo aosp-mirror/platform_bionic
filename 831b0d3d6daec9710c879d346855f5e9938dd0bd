@@ -70,6 +70,24 @@
       "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98b806d5_fb552750",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-15T22:32:35Z",
+      "side": 1,
+      "message": "Yeah, that seems like a workable transition plan.",
+      "parentUuid": "70a99393_2be85dfe",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
