@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4b6178a9_85c0883e",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-16T22:38:28Z",
+      "side": 1,
+      "message": "I\u0027ve addressed this with a comment at the definition of SCS_SIZE.",
+      "parentUuid": "ade2799c_4fd985fb",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 31
+      },
+      "revId": "4427c57a64374f73385dc6c1467a75355da0e259",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f60abf63_5ad036aa",
         "filename": "libc/arch-arm64/bionic/setjmp.S",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2018-11-15T08:47:09Z",
       "side": 1,
       "message": "It\u0027s vaguely worrying to me that this will result in mysterious explosions up the stack if you (invoke UB and) longjmp across threads. Maybe we should store the tid in jmp_buf buffer and validate it?",
+      "range": {
+        "startLine": 262,
+        "startChar": 0,
+        "endLine": 265,
+        "endChar": 18
+      },
+      "revId": "4427c57a64374f73385dc6c1467a75355da0e259",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e20a5c4_13b48db2",
+        "filename": "libc/arch-arm64/bionic/setjmp.S",
+        "patchSetId": 6
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-16T22:38:28Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem worth it to me. Even with UB it would be very difficult to arrange to longjmp across threads in a way that would actually work right now (basically the first thread would need to setjmp and then suspend itself in a way that would never terminate so that the second thread can longjmp into it -- this would then leak the first thread), so anyone who tries to do that will probably crash for other reasons. Also note that this would only affect code compiled with SCS so even if there were code like that I\u0027d expect the problem to be detected when SCS is turned on.",
+      "parentUuid": "f60abf63_5ad036aa",
       "range": {
         "startLine": 262,
         "startChar": 0,
