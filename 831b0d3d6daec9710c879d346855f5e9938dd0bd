@@ -88,6 +88,24 @@
       "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a0ba13d_b654cb9c",
+        "filename": "libc/private/bionic_tls.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2018-11-16T19:27:43Z",
+      "side": 1,
+      "message": "OK. Let\u0027s take this opportunity to rename slot 6 to TLS_SLOT_SANITIZER or something like that.\nI\u0027ll make the LLVM change once this one is merged.",
+      "parentUuid": "98b806d5_fb552750",
+      "revId": "831b0d3d6daec9710c879d346855f5e9938dd0bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
