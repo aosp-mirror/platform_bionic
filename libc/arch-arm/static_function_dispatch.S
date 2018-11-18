@@ -26,15 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#include <private/bionic_asm.h>
 
-#if __BIONIC__
-#include <android/api-level.h>
-#endif
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    b impl; \
+END(name)
 
-TEST(android_get_device_api_level, smoke) {
-#if __BIONIC__
-  // This will fail if you run the tests on an old device, but who does that?
-  ASSERT_GE(29, android_get_device_api_level());
-#endif
-}
+FUNCTION_DELEGATE(memmove, memmove_generic)
+FUNCTION_DELEGATE(memcpy, memmove_generic)
+FUNCTION_DELEGATE(memset, memset_generic)
+FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
+FUNCTION_DELEGATE(strcpy, strcpy_generic)
+FUNCTION_DELEGATE(stpcpy, stpcpy_generic)
+FUNCTION_DELEGATE(strcat, strcat_generic)
+FUNCTION_DELEGATE(strcmp, strcmp_generic)
+FUNCTION_DELEGATE(strlen, strlen_generic)

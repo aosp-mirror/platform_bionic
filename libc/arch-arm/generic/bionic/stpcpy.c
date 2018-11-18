@@ -26,29 +26,5 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
-
-/**
- * @file android/get_device_api_level.h
- * @brief Check the API level of the device we're actually running on.
- */
-
-#include <sys/cdefs.h>
-
-__BEGIN_DECLS
-
-#if __ANDROID_API__ >= __ANDROID_API_Q__
-// This file is implemented as static inlines before API level 29.
-
-/**
- * Returns the API level of the device we're actually running on, or -1 on failure.
- * The returned values correspond to the named constants in <android/api-level.h>,
- * and is equivalent to the Java `Build.VERSION.SDK_INT` API.
- */
-int android_get_device_api_level() __INTRODUCED_IN(29);
-
-#endif
-
-__END_DECLS
-
-#include <android/legacy_get_device_api_level_inlines.h>
+#define stpcpy stpcpy_generic
+#include <upstream-openbsd/lib/libc/string/stpcpy.c>

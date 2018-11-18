@@ -35,6 +35,8 @@
 
 #include <sys/cdefs.h>
 
+__BEGIN_DECLS
+
 #ifndef __ANDROID_API_FUTURE__
 /**
  * Magic version number for an Android OS build which has
@@ -97,3 +99,39 @@
 
 /** Names the "Q" API level (29), for comparisons against __ANDROID_API__. */
 #define __ANDROID_API_Q__ 29
+
+/**
+ * Returns the `targetSdkVersion` of the caller, or `__ANDROID_API_FUTURE__`
+ * if there is no known target SDK version (for code not running in the
+ * context of an app).
+ *
+ * The returned values correspond to the named constants in `<android/api-level.h>`,
+ * and is equivalent to the AndroidManifest.xml `targetSdkVersion`.
+ *
+ * See also android_get_device_api_level().
+ *
+ * Available since API level 24.
+ */
+int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
+
+#if __ANDROID_API__ < __ANDROID_API_Q__
+
+// android_get_device_api_level is a static inline before API level 29.
+#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
+#include <bits/get_device_api_level_inlines.h>
+#undef __BIONIC_GET_DEVICE_API_LEVEL_INLINE
+
+#else
+
+/**
+ * Returns the API level of the device we're actually running on, or -1 on failure.
+ * The returned values correspond to the named constants in `<android/api-level.h>`,
+ * and is equivalent to the Java `Build.VERSION.SDK_INT` API.
+ *
+ * See also android_get_application_target_sdk_version().
+ */
+int android_get_device_api_level() __INTRODUCED_IN(29);
+
+#endif
+
+__END_DECLS

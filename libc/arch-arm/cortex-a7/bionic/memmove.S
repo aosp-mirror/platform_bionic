@@ -26,13 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#define MEMMOVE memmove_a7
+#define MEMCPY __memcpy_a7
 
-#include <sys/cdefs.h>
-
-#if __ANDROID_API__ < __ANDROID_API_Q__
-
-#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline
-#include <bits/get_device_api_level_inlines.h>
-
-#endif
+#include <arch-arm/denver/bionic/memmove.S>

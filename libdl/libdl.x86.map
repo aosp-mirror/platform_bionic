@@ -30,6 +30,7 @@ LIBC {
 
 LIBC_N {
   global:
+    android_get_application_target_sdk_version; # introduced=24 versioned=29
     dlvsym; # introduced=24
 } LIBC;
 
@@ -44,7 +45,6 @@ LIBC_PLATFORM {
   global:
     __cfi_init;
     android_dlwarning;
-    android_get_application_target_sdk_version;
     android_set_application_target_sdk_version;
     android_get_LD_LIBRARY_PATH;
     android_update_LD_LIBRARY_PATH;

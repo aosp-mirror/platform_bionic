@@ -26,15 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#define MEMMOVE memmove_a15
+#define MEMCPY __memcpy_a15
 
-#if __BIONIC__
-#include <android/api-level.h>
-#endif
-
-TEST(android_get_device_api_level, smoke) {
-#if __BIONIC__
-  // This will fail if you run the tests on an old device, but who does that?
-  ASSERT_GE(29, android_get_device_api_level());
-#endif
-}
+#include <arch-arm/denver/bionic/memmove.S>

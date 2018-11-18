@@ -29,6 +29,14 @@
 
 #include <private/bionic_asm.h>
 
+#ifndef MEMMOVE
+# define MEMMOVE memmove_denver
+#endif
+
+#ifndef MEMCPY
+# define MEMCPY __memcpy_denver
+#endif
+
         .text
         .syntax unified
         .fpu    neon
@@ -40,7 +48,7 @@
 #define PREFETCH_DISTANCE_MID   (CACHE_LINE_SIZE*4)
 #define PREFETCH_DISTANCE_FAR   (CACHE_LINE_SIZE*16)
 
-ENTRY(memmove)
+ENTRY(MEMMOVE)
         cmp         r2, #0
         cmpne       r0, r1
         bxeq        lr
@@ -50,7 +58,7 @@ ENTRY(memmove)
         bhi         .L_reversed_memcpy
 
 .L_jump_to_memcpy:
-        b           __memcpy
+        b           MEMCPY
 
 .L_reversed_memcpy:
         push        {r0, lr}
@@ -277,6 +285,4 @@ ENTRY(memmove)
 
         pop         {r0, pc}
 
-END(memmove)
-
-ALIAS_SYMBOL(memcpy, memmove)
+END(MEMMOVE)
