@@ -57,7 +57,7 @@
         .thumb_func
 #endif
 
-ENTRY(strcmp_krait)
+ENTRY(strcmp)
       /* Use LDRD whenever possible.  */
 
 /* The main thing to look out for when comparing large blocks is that
@@ -482,4 +482,4 @@ ENTRY(strcmp_krait)
     .cfi_restore r7
 
 	bx	lr
-END(strcmp_krait)
+END(strcmp)

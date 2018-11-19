@@ -80,7 +80,7 @@
     \cmd    \reg, \label
     .endm // m_copy_byte
 
-ENTRY(strcat_a9)
+ENTRY(strcat)
     // Quick check to see if src is empty.
     ldrb        r2, [r1]
     pld         [r1, #0]
@@ -552,4 +552,4 @@ ENTRY(strcat_a9)
 .Lstrcat_r0_update:
     sub     r0, r0, #1
     b .Lstrcat_r0_scan_done
-END(strcat_a9)
+END(strcat)
