@@ -39,7 +39,7 @@
         .fpu        neon
         .syntax     unified
 
-ENTRY(__memset_chk_denver)
+ENTRY(__memset_chk)
         cmp         r2, r3
         bls         memset
 
@@ -49,9 +49,9 @@ ENTRY(__memset_chk_denver)
         .cfi_rel_offset lr, 0
 
         bl          __memset_chk_fail
-END(__memset_chk_denver)
+END(__memset_chk)
 
-ENTRY(memset_denver)
+ENTRY(memset)
         pldw        [r0]
         mov         r3, r0
 
@@ -183,4 +183,4 @@ ENTRY(memset_denver)
         strbcs      r1, [r3]
 2:
         bx          lr
-END(memset_denver)
+END(memset)
