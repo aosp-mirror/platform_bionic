@@ -39,6 +39,7 @@
 
 #include <async_safe/log.h>
 
+#include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
@@ -112,14 +113,19 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
 #ifdef __aarch64__
-  // Allocate the stack and store its address in register x18.
-  // TODO(pcc): We ought to allocate a guard region here and then allocate the SCS at a random
-  // location within it. This will provide greater security since it would mean that an attacker who
-  // can read the pthread_internal_t won't be able to discover the address of the SCS. However,
-  // doing so is blocked on a solution to b/118642754.
-  char* scs = reinterpret_cast<char*>(
-      mmap(nullptr, SCS_SIZE, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0));
-  thread->shadow_call_stack_guard_region = scs;
+  // Allocate the stack and store its address in register x18. The address is aligned to SCS_SIZE so
+  // that we only need to store the lower log2(SCS_SIZE) bits in jmp_buf.
+  // TODO(pcc): We ought to allocate a larger guard region here and then allocate the SCS at a
+  // random location within it. This will provide greater security since it would mean that an
+  // attacker who can read the pthread_internal_t won't be able to discover the address of the SCS.
+  // However, doing so is blocked on a solution to b/118642754.
+  char* scs_guard_region = reinterpret_cast<char*>(
+      mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
+  thread->shadow_call_stack_guard_region = scs_guard_region;
+
+  char* scs =
+      reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
+  mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #endif
 }

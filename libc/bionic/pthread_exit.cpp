@@ -33,6 +33,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
+#include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"
@@ -105,7 +106,7 @@ void pthread_exit(void* return_value) {
 
 #ifdef __aarch64__
   // Free the shadow call stack and guard pages.
-  munmap(thread->shadow_call_stack_guard_region, SCS_SIZE);
+  munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif
 
   ThreadJoinState old_state = THREAD_NOT_JOINED;
