@@ -264,3 +264,14 @@ TEST(setjmp, setjmp_cookie_checksum) {
     fprintf(stderr, "setjmp_cookie_checksum: longjmp succeeded?");
   }
 }
+
+__attribute__((noinline)) void call_longjmp(jmp_buf buf) {
+  longjmp(buf, 123);
+}
+
+TEST(setjmp, setjmp_stack) {
+  jmp_buf buf;
+  int value = setjmp(buf);
+  if (value == 0) call_longjmp(buf);
+  EXPECT_EQ(123, value);
+}
