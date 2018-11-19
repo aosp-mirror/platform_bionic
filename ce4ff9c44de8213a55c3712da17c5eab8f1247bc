@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39614334_135acfa7",
+        "filename": "libc/arch-arm/kryo/bionic/memcpy.S",
+        "patchSetId": 20
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1133997
+      },
+      "writtenOn": "2018-11-19T14:11:29Z",
+      "side": 1,
+      "message": "this change",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 20
+      },
+      "revId": "ce4ff9c44de8213a55c3712da17c5eab8f1247bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
