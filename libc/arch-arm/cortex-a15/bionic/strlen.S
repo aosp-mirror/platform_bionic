@@ -60,7 +60,7 @@
     .thumb
     .thumb_func
 
-ENTRY(strlen_a15)
+ENTRY(strlen)
     pld     [r0, #0]
     mov     r1, r0
 
@@ -162,4 +162,4 @@ ENTRY(strlen_a15)
 .L_sub2_and_return:
     sub     r0, r0, #2
     bx      lr
-END(strlen_a15)
+END(strlen)
