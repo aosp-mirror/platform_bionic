@@ -565,34 +565,6 @@ gethostbyname2_r(const char *name, int af, struct hostent *hp, char *buf,
 	return h_errno_to_result(errorp);
 }
 
-__LIBC_HIDDEN__ FILE* android_open_proxy() {
-	const char* cache_mode = getenv("ANDROID_DNS_MODE");
-	bool use_proxy = (cache_mode == NULL || strcmp(cache_mode, "local") != 0);
-	if (!use_proxy) {
-		return NULL;
-	}
-
-	int s = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0);
-	if (s == -1) {
-		return NULL;
-	}
-
-	const int one = 1;
-	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &one, sizeof(one));
-
-	struct sockaddr_un proxy_addr;
-	memset(&proxy_addr, 0, sizeof(proxy_addr));
-	proxy_addr.sun_family = AF_UNIX;
-	strlcpy(proxy_addr.sun_path, "/dev/socket/dnsproxyd", sizeof(proxy_addr.sun_path));
-
-	if (TEMP_FAILURE_RETRY(connect(s, (const struct sockaddr*) &proxy_addr, sizeof(proxy_addr))) != 0) {
-		close(s);
-		return NULL;
-	}
-
-	return fdopen(s, "r+");
-}
-
 static struct hostent *
 android_read_hostent(FILE* proxy, struct hostent* hp, char* hbuf, size_t hbuflen, int *he)
 {
@@ -816,18 +788,16 @@ fake:
 	return hp;
 }
 
-// very similar in proxy-ness to android_getaddrinfo_proxy
 static struct hostent *
 gethostbyname_internal(const char *name, int af, res_state res, struct hostent *hp, char *hbuf,
                        size_t hbuflen, int *errorp, const struct android_net_context *netcontext)
 {
-	FILE* proxy = android_open_proxy();
+	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
 		res_setnetcontext(res, netcontext);
 		return gethostbyname_internal_real(name, af, res, hp, hbuf, hbuflen, errorp);
 	}
-
 	unsigned netid = __netdClientDispatch.netIdForResolv(netcontext->app_netid);
 
 	// This is writing to system/netd/server/DnsProxyListener.cpp and changes
@@ -925,12 +895,11 @@ android_gethostbyaddrfornetcontext_proxy_internal(const void* addr, socklen_t le
                              struct hostent *hp, char *hbuf, size_t hbuflen, int *he,
                              const struct android_net_context *netcontext)
 {
-	FILE* proxy = android_open_proxy();
+	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		// Either we're not supposed to be using the proxy or the proxy is unavailable.
 		return android_gethostbyaddrfornetcontext_real(addr,len, af, hp, hbuf, hbuflen, he, netcontext);
 	}
-
 	char buf[INET6_ADDRSTRLEN];  //big enough for IPv4 and IPv6
 	const char * addrStr = inet_ntop(af, addr, buf, sizeof(buf));
 	if (addrStr == NULL) {
