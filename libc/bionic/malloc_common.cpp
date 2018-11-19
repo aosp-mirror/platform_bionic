@@ -271,6 +271,7 @@ static const char* DEBUG_ENV_OPTIONS = "LIBC_DEBUG_MALLOC_OPTIONS";
 
 static const char* HEAPPROFD_SHARED_LIB = "heapprofd_client.so";
 static const char* HEAPPROFD_PREFIX = "heapprofd";
+static const char* HEAPPROFD_PROPERTY_ENABLE = "heapprofd.enable";
 static const int HEAPPROFD_SIGNAL = __SIGRTMIN + 4;
 
 enum FunctionEnum : uint8_t {
@@ -469,6 +470,39 @@ static bool CheckLoadMallocDebug(char** options) {
   return true;
 }
 
+static bool CheckLoadHeapprofd() {
+  // First check for heapprofd.enable. If it is set to "all", enable
+  // heapprofd for all processes. Otherwise, check heapprofd.enable.${prog},
+  // if it is set and not 0, enable heap profiling for this process.
+  char property_value[PROP_VALUE_MAX];
+  if (__system_property_get(HEAPPROFD_PROPERTY_ENABLE, property_value) == 0) {
+    return false;
+  }
+  if (strcmp(property_value, "all") == 0) {
+    return true;
+  }
+
+  char program_property[128];
+  int ret = snprintf(program_property, sizeof(program_property), "%s.%s",
+                     HEAPPROFD_PROPERTY_ENABLE, getprogname());
+
+  if (ret < 0 || static_cast<size_t>(ret) >= sizeof(program_property)) {
+    if (ret < 0) {
+      error_log("Failed to concatenate heapprofd property %s.%s: %s",
+                HEAPPROFD_PROPERTY_ENABLE, getprogname(), strerror(errno));
+    } else {
+      error_log("Overflow in concatenating heapprofd property");
+    }
+    return false;
+  }
+
+  if (__system_property_get(program_property, property_value) == 0) {
+    return false;
+  }
+
+  return program_property[0] != '\0';
+}
+
 static void ClearGlobalFunctions() {
   for (size_t i = 0; i < FUNC_LAST; i++) {
     g_functions[i] = nullptr;
@@ -572,6 +606,9 @@ static void malloc_init_impl(libc_globals* globals) {
   } else if (CheckLoadMallocHooks(&options)) {
     prefix = "hooks";
     shared_lib = HOOKS_SHARED_LIB;
+  } else if (CheckLoadHeapprofd()) {
+    prefix = "heapprofd";
+    shared_lib = HEAPPROFD_SHARED_LIB;
   } else {
     return;
   }
