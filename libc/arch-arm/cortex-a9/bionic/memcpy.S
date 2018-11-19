@@ -39,15 +39,15 @@
         .thumb
         .thumb_func
 
-ENTRY(__memcpy)
+ENTRY(__memcpy_a9)
         pld     [r1, #0]
         stmfd   sp!, {r0, lr}
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0
         .cfi_rel_offset lr, 4
         pld     [r1, #64]
-END(__memcpy)
+END(__memcpy_a9)
 
-#define MEMCPY_BASE         __memcpy_base
-#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned
+#define MEMCPY_BASE         __memcpy_base_a9
+#define MEMCPY_BASE_ALIGNED __memcpy_base_aligned_a9
 #include "memcpy_base.S"

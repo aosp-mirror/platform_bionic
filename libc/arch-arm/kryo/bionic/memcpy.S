@@ -33,8 +33,14 @@
 #define PLDOFFS (16)
 #define PLDSIZE (128) /* L2 cache line size */
 
+        .syntax unified
+
+        // To avoid warning about deprecated instructions, add an explicit
+        // arch. The code generated is exactly the same.
+        .arch armv7-a
+
         .code 32
-ENTRY(__memcpy)
+ENTRY(__memcpy_kryo)
         push            {r0}
         .cfi_def_cfa_offset 4
         .cfi_rel_offset r0, 0
@@ -123,4 +129,4 @@ ENTRY(__memcpy)
         pop             {r0}
         bx              lr
 
-END(__memcpy)
+END(__memcpy_kryo)

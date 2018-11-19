@@ -29,7 +29,7 @@
 #include <string.h>
 #include <stdint.h>
 
-size_t strlen(const char *s)
+size_t strlen_generic(const char *s)
 {
     __builtin_prefetch(s);
     __builtin_prefetch(s+32);
