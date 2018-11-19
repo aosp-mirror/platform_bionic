@@ -50,7 +50,7 @@
 #define magic1(REG) REG
 #define magic2(REG) REG, lsl #7
 
-ENTRY(strcmp_generic)
+ENTRY(strcmp)
 	pld	[r0, #0]
 	pld	[r1, #0]
 	eor	r2, r0, r1
@@ -313,4 +313,4 @@ ENTRY(strcmp_generic)
 	ldr	r4, [sp], #4
 	ldr	r5, [sp], #4
 	bx	lr
-END(strcmp_generic)
+END(strcmp)

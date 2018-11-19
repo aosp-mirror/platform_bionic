@@ -57,7 +57,7 @@
         .thumb_func
 #endif
 
-ENTRY(strcmp_a9)
+ENTRY(strcmp)
       /* Use LDRD whenever possible.  */
 
 /* The main thing to look out for when comparing large blocks is that
@@ -544,4 +544,4 @@ ENTRY(strcmp_a9)
     adds    sp, sp, #16
 
 	bx	lr
-END(strcmp_a9)
+END(strcmp)
