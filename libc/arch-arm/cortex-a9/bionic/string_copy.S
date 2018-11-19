@@ -100,9 +100,9 @@
     .endm // m_copy_byte
 
 #if defined(STPCPY)
-ENTRY(stpcpy_a9)
+ENTRY(stpcpy)
 #else
-ENTRY(strcpy_a9)
+ENTRY(strcpy)
 #endif
     // Unroll the first 8 bytes that will be copied.
     m_push
@@ -536,7 +536,7 @@ ENTRY(strcpy_a9)
 #endif
     m_ret   inst=pop
 #if defined(STPCPY)
-END(stpcpy_a9)
+END(stpcpy)
 #else
-END(strcpy_a9)
+END(strcpy)
 #endif

@@ -464,8 +464,10 @@ ENTRY_PRIVATE(bsd_safe_memcpy)
 	b	.Lmemcpy_bl4
 END(bsd_safe_memcpy)
 
-ENTRY(memmove_generic)
+ENTRY(memmove)
         stmfd   sp!, {r0, lr}
         bl      bsd_safe_memcpy
         ldmfd   sp!, {r0, pc}
-END(memmove_generic)
+END(memmove)
+
+ALIAS_SYMBOL(memcpy, memmove)
