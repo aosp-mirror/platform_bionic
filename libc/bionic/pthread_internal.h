@@ -209,9 +209,6 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 // Leave room for a guard page in the internally created signal stacks.
 #define SIGNAL_STACK_SIZE (SIGNAL_STACK_SIZE_WITHOUT_GUARD + PTHREAD_GUARD_SIZE)
 
-// Size of the shadow call stack.
-#define SCS_SIZE (8 * 1024)
-
 // Needed by fork.
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();

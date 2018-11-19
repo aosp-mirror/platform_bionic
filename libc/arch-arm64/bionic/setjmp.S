@@ -27,6 +27,7 @@
  */
 
 #include <private/bionic_asm.h>
+#include <private/bionic_constants.h>
 
 // According to AARCH64 PCS document we need to save the following
 // registers:
@@ -44,10 +45,12 @@
 // word   name            description
 // 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
 // 1      sigmask         signal mask (not used with _setjmp / _longjmp)
-// 2      core_base       base of core registers (x19-x30, sp)
-// 15     float_base      base of float registers (d8-d15)
-// 23     checksum        checksum of core registers
-// 24     reserved        reserved entries (room to grow)
+// 2      core_base       base of core registers (x18-x30, sp)
+//                        (We only store the low bits of x18 to avoid leaking the
+//                        shadow call stack address into memory.)
+// 16     float_base      base of float registers (d8-d15)
+// 24     checksum        checksum of core registers
+// 25     reserved        reserved entries (room to grow)
 // 32
 
 #define _JB_SIGFLAG     0
@@ -58,18 +61,20 @@
 #define _JB_X24_X25     (_JB_X26_X27 + 2)
 #define _JB_X22_X23     (_JB_X24_X25 + 2)
 #define _JB_X20_X21     (_JB_X22_X23 + 2)
-#define _JB_X19         (_JB_X20_X21 + 2)
-#define _JB_D14_D15     (_JB_X19 + 1)
+#define _JB_SCS_X19     (_JB_X20_X21 + 2)
+#define _JB_D14_D15     (_JB_SCS_X19 + 2)
 #define _JB_D12_D13     (_JB_D14_D15 + 2)
 #define _JB_D10_D11     (_JB_D12_D13 + 2)
 #define _JB_D8_D9       (_JB_D10_D11 + 2)
 #define _JB_CHECKSUM    (_JB_D8_D9 + 2)
 
+#define SCS_MASK (SCS_SIZE - 1)
 #define MANGLE_REGISTERS 1
 #define USE_CHECKSUM 1
 
 .macro m_mangle_registers reg, sp_reg
 #if MANGLE_REGISTERS
+  eor x3, x3, \reg
   eor x19, x19, \reg
   eor x20, x20, \reg
   eor x21, x21, \reg
@@ -88,7 +93,7 @@
 
 .macro m_calculate_checksum dst, src, scratch
   mov \dst, #0
-  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
+  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
     ldr \scratch, [\src, #(\i * 8)]
     eor \dst, \dst, \scratch
   .endr
@@ -151,6 +156,9 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   // Mask off the signal flag bit.
   bic x1, x1, #1
 
+  // Mask off the high bits of the shadow call stack pointer.
+  and x3, x18, #SCS_MASK
+
   // Save core registers.
   mov x10, sp
   m_mangle_registers x1, sp_reg=x10
@@ -160,7 +168,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   stp x24, x25, [x0, #(_JB_X24_X25 * 8)]
   stp x22, x23, [x0, #(_JB_X22_X23 * 8)]
   stp x20, x21, [x0, #(_JB_X20_X21 * 8)]
-  str x19,      [x0, #(_JB_X19     * 8)]
+  stp x3,  x19, [x0, #(_JB_SCS_X19 * 8)]
   m_unmangle_registers x1, sp_reg=x10
 
   // Save floating point registers.
@@ -248,9 +256,13 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   ldp x24, x25, [x0, #(_JB_X24_X25 * 8)]
   ldp x22, x23, [x0, #(_JB_X22_X23 * 8)]
   ldp x20, x21, [x0, #(_JB_X20_X21 * 8)]
-  ldr x19,      [x0, #(_JB_X19     * 8)]
+  ldp x3,  x19, [x0, #(_JB_SCS_X19 * 8)]
   m_unmangle_registers x2, sp_reg=x10
   mov sp, x10
+
+  // Restore the low bits of the shadow call stack pointer.
+  and x18, x18, #~SCS_MASK
+  orr x18, x3, x18
 
   stp x0, x1, [sp, #-16]!
   .cfi_adjust_cfa_offset 16
