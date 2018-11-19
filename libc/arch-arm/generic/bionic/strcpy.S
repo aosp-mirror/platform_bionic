@@ -33,7 +33,7 @@
 
 .syntax unified
 
-ENTRY(strcpy_generic)
+ENTRY(strcpy)
 	pld	[r1, #0]
 	eor	r2, r0, r1
 	mov	ip, r0
@@ -131,4 +131,4 @@ ENTRY(strcpy_generic)
 	cmp	r2, #0
 	bne	4b
 	bx	lr
-END(strcpy_generic)
+END(strcpy)

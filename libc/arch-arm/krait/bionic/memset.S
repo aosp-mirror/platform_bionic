@@ -37,7 +37,7 @@
     .fpu    neon
     .syntax unified
 
-ENTRY(__memset_chk_krait)
+ENTRY(__memset_chk)
         cmp         r2, r3
         bls         memset
 
@@ -47,10 +47,10 @@ ENTRY(__memset_chk_krait)
         .cfi_rel_offset lr, 0
 
         bl          __memset_chk_fail
-END(__memset_chk_krait)
+END(__memset_chk)
 
 /* memset() returns its first argument.  */
-ENTRY(memset_krait)
+ENTRY(memset)
         mov         r3, r0
         vdup.8      q0, r1
 
@@ -82,4 +82,4 @@ ENTRY(memset_krait)
         strbcs      r1, [r3], #1
         strbcs      r1, [r3], #1
         bx          lr
-END(memset_krait)
+END(memset)

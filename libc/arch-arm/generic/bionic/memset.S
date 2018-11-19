@@ -36,14 +36,14 @@
 
          .syntax unified
 
-ENTRY(__memset_chk_generic)
+ENTRY(__memset_chk)
         cmp         r2, r3
         bls         memset
 
         bl          __memset_chk_fail
-END(__memset_chk_generic)
+END(__memset_chk)
 
-ENTRY(memset_generic)
+ENTRY(memset)
         /* compute the offset to align the destination
          * offset = (4-(src&3))&3 = -src & 3
          */
@@ -108,4 +108,4 @@ ENTRY(memset_generic)
         movs        r2, r2, lsl #2
         strbcs      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, pc}
-END(memset_generic)
+END(memset)
