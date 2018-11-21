@@ -127,6 +127,7 @@ cc_test_library {
         "regex_test.cpp",
         "resolv_test.cpp",
         "sched_test.cpp",
+        "scs_test.cpp",
         "scsi_sg_test.cpp",
         "search_test.cpp",
         "semaphore_test.cpp",
