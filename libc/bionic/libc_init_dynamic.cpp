@@ -85,7 +85,7 @@ static void __libc_preinit_impl(KernelArgumentBlock& args) {
 #endif
 
   __libc_init_globals(args);
-  __libc_init_common(args);
+  __libc_init_common();
 
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);

@@ -28,7 +28,8 @@
 
 #include <stdio.h>
 
-extern "C" void _start();
+extern "C" const char* __progname;
+
 const char* helper_func();
 
 __attribute__((constructor))
@@ -38,6 +39,7 @@ static void ctor(int argc, char* argv[]) {
 
 int main(int argc, char* argv[]) {
   printf("main: argc=%d argv[0]=%s\n", argc, argv[0]);
+  printf("__progname=%s\n", __progname);
   printf("%s\n", helper_func());
   return 0;
 }

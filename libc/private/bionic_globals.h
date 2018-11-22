@@ -58,6 +58,10 @@ struct libc_shared_globals {
 
   pthread_mutex_t abort_msg_lock;
   abort_msg_t* abort_msg;
+
+  // Values passed from the linker to libc.so.
+  const char* init_progname;
+  char** init_environ;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
