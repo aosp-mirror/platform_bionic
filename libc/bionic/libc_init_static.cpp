@@ -98,8 +98,8 @@ __noreturn static void __real_libc_init(void *raw_args,
   // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
   __libc_init_main_thread_early(args);
-  __libc_init_main_thread_late(args);
-  __libc_init_globals(args);
+  __libc_init_main_thread_late();
+  __libc_init_globals();
   __libc_shared_globals()->init_progname = args.argv[0];
   __libc_init_AT_SECURE(args.envp);
   __libc_init_common();

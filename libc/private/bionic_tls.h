@@ -63,12 +63,6 @@ enum {
   TLS_SLOT_OPENGL_API = 3,
   TLS_SLOT_OPENGL = 4,
 
-  // This slot is only used to pass information from the dynamic linker to
-  // libc.so when the C library is loaded in to memory. The C runtime init
-  // function will then clear it. Since its use is extremely temporary,
-  // we reuse an existing location that isn't needed during libc startup.
-  TLS_SLOT_BIONIC_PREINIT = TLS_SLOT_OPENGL_API,
-
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
   TLS_SLOT_DLERROR,
 
@@ -133,7 +127,7 @@ __END_DECLS
 #if defined(__cplusplus)
 class KernelArgumentBlock;
 extern void __libc_init_main_thread_early(KernelArgumentBlock& args);
-extern void __libc_init_main_thread_late(KernelArgumentBlock& args);
+extern void __libc_init_main_thread_late();
 #endif
 
 #endif /* __BIONIC_PRIVATE_BIONIC_TLS_H_ */
