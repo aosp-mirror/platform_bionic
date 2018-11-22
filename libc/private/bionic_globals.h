@@ -54,8 +54,7 @@ struct libc_shared_globals {
   int initial_linker_arg_count;
 };
 
-__LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;
-__LIBC_HIDDEN__ void __libc_init_shared_globals(libc_shared_globals*);
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
 __LIBC_HIDDEN__ void __libc_init_fdsan();
 
 class KernelArgumentBlock;

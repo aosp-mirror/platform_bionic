@@ -21,6 +21,7 @@
     __loader_android_get_exported_namespace;
     __loader_add_thread_local_dtor;
     __loader_remove_thread_local_dtor;
+    __loader_shared_globals;
     rtld_db_dlactivity;
   local:
     *;

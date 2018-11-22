@@ -84,7 +84,6 @@ static void __libc_preinit_impl(KernelArgumentBlock& args) {
   __libc_init_sysinfo(args);
 #endif
 
-  __libc_shared_globals = args.shared_globals;
   __libc_init_globals(args);
   __libc_init_common(args);
 
@@ -138,7 +137,13 @@ __noreturn void __libc_init(void* raw_args,
     __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
 
-  exit(slingshot(args.argc - __libc_shared_globals->initial_linker_arg_count,
-                 args.argv + __libc_shared_globals->initial_linker_arg_count,
+  exit(slingshot(args.argc - __libc_shared_globals()->initial_linker_arg_count,
+                 args.argv + __libc_shared_globals()->initial_linker_arg_count,
                  args.envp));
+}
+
+extern "C" libc_shared_globals* __loader_shared_globals();
+
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
+  return __loader_shared_globals();
 }

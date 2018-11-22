@@ -622,12 +622,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // couldn't make system calls on x86 at that point, but we can now...
   if (!tmp_linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
 
-  // Initialize the linker/libc.so shared global inside the linker.
-  static libc_shared_globals shared_globals;
-  __libc_shared_globals = &shared_globals;
-  __libc_init_shared_globals(&shared_globals);
-  args.shared_globals = __libc_shared_globals;
-
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
 
@@ -655,12 +649,12 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
       exit(0);
     }
     exe_to_load = args.argv[1];
-    __libc_shared_globals->initial_linker_arg_count = 1;
+    __libc_shared_globals()->initial_linker_arg_count = 1;
   }
 
   // store argc/argv/envp to use them for calling constructors
-  g_argc = args.argc - __libc_shared_globals->initial_linker_arg_count;
-  g_argv = args.argv + __libc_shared_globals->initial_linker_arg_count;
+  g_argc = args.argc - __libc_shared_globals()->initial_linker_arg_count;
+  g_argv = args.argv + __libc_shared_globals()->initial_linker_arg_count;
   g_envp = args.envp;
 
   // Initialize static variables. Note that in order to
