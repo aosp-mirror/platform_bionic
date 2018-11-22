@@ -43,7 +43,6 @@
 
 #include <async_safe/log.h>
 
-#include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
@@ -58,14 +57,14 @@ __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
-void __libc_init_globals(KernelArgumentBlock& args) {
+void __libc_init_globals() {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
   __libc_globals.initialize();
-  __libc_globals.mutate([&args](libc_globals* globals) {
-    __libc_init_vdso(globals, args);
-    __libc_init_setjmp_cookie(globals, args);
+  __libc_globals.mutate([](libc_globals* globals) {
+    __libc_init_vdso(globals);
+    __libc_init_setjmp_cookie(globals);
   });
 }
 

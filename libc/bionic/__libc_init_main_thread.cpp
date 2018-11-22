@@ -72,7 +72,7 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_main_thread_early(KernelArgumentBlock& args) {
   __libc_shared_globals()->auxv = args.auxv;
 #if defined(__i386__)
-  __libc_init_sysinfo(args);
+  __libc_init_sysinfo();
 #endif
   __set_tls(main_thread.tls);
   __init_tls(&main_thread);
@@ -82,7 +82,7 @@ void __libc_init_main_thread_early(KernelArgumentBlock& args) {
 
 // Finish initializing the main thread.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread_late(KernelArgumentBlock& args) {
+void __libc_init_main_thread_late() {
   main_thread.bionic_tls = __allocate_bionic_tls();
   if (main_thread.bionic_tls == nullptr) {
     // Avoid strerror because it might need bionic_tls.
@@ -109,7 +109,7 @@ void __libc_init_main_thread_late(KernelArgumentBlock& args) {
   // The TLS stack guard is set from the global, so ensure that we've initialized the global
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
-  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard), args);
+  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
   __init_tls_stack_guard(&main_thread);
 
   __init_thread(&main_thread);

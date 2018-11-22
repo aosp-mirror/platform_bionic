@@ -38,11 +38,10 @@
 
 #include "private/bionic_arc4random.h"
 #include "private/bionic_globals.h"
-#include "private/KernelArgumentBlock.h"
 
-void __libc_init_setjmp_cookie(libc_globals* globals, KernelArgumentBlock& args) {
+void __libc_init_setjmp_cookie(libc_globals* globals) {
   long value;
-  __libc_safe_arc4random_buf(&value, sizeof(value), args);
+  __libc_safe_arc4random_buf(&value, sizeof(value));
 
   // Mask off the last bit to store the signal flag.
   globals->setjmp_cookie = value & ~1;
