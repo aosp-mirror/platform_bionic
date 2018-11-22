@@ -30,7 +30,6 @@
 
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_arc4random.h"
-#include "private/bionic_auxv.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
@@ -71,7 +70,7 @@ pthread_internal_t* __get_main_thread() {
 // are hazardous, such as accessing non-hidden global variables.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_main_thread_early(KernelArgumentBlock& args) {
-  __libc_auxv = args.auxv;
+  __libc_shared_globals()->auxv = args.auxv;
 #if defined(__i386__)
   __libc_init_sysinfo(args);
 #endif

@@ -45,7 +45,6 @@
 
 #include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
-#include "private/bionic_auxv.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"

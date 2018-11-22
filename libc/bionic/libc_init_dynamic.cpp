@@ -51,7 +51,6 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
-#include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
@@ -79,7 +78,6 @@ __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 // protector.
 __attribute__((noinline))
 static void __libc_preinit_impl(KernelArgumentBlock& args) {
-  __libc_auxv = args.auxv;
 #if defined(__i386__)
   __libc_init_sysinfo(args);
 #endif
