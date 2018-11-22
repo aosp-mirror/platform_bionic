@@ -116,7 +116,6 @@ soinfo* solist_get_vdso() {
 }
 
 int g_ld_debug_verbosity;
-abort_msg_t* g_abort_message = nullptr; // For debuggerd.
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -300,7 +299,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #ifdef __ANDROID__
   debuggerd_callbacks_t callbacks = {
     .get_abort_message = []() {
-      return g_abort_message;
+      return __libc_shared_globals()->abort_msg;
     },
     .post_dump = &notify_gdb_of_libraries,
   };
@@ -664,7 +663,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_default_namespace.add_soinfo(solinker);
   init_link_map_head(*solinker, kLinkerPath);
 
-  args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));

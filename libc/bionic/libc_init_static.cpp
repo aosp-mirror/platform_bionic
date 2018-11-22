@@ -153,6 +153,8 @@ extern "C" void android_set_application_target_sdk_version(int target) {
 }
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  static libc_shared_globals globals;
+  static libc_shared_globals globals = {
+    .abort_msg_lock = PTHREAD_MUTEX_INITIALIZER,
+  };
   return &globals;
 }

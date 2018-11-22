@@ -52,7 +52,6 @@
 #include "private/thread_private.h"
 #include "pthread_internal.h"
 
-extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
@@ -97,7 +96,6 @@ void __libc_init_common(KernelArgumentBlock& args) {
   environ = args.envp;
   errno = 0;
   __progname = args.argv[0] ? args.argv[0] : "<unknown>";
-  __abort_message_ptr = args.abort_message_ptr;
 
 #if !defined(__LP64__)
   __check_max_thread_id();
@@ -297,8 +295,6 @@ static void __initialize_personality() {
 }
 
 void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
-  __abort_message_ptr = args.abort_message_ptr;
-
   // Check that the kernel provided a value for AT_SECURE.
   errno = 0;
   unsigned long is_AT_SECURE = getauxval(AT_SECURE);
