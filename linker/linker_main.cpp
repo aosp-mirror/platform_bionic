@@ -559,11 +559,9 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
  * function, or other GOT reference will generate a segfault.
  */
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
+  // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
-
-#if defined(__i386__)
-  __libc_init_sysinfo(args);
-#endif
+  __libc_init_main_thread_early(args);
 
   // When the linker is run by itself (rather than as an interpreter for
   // another program), AT_BASE is 0.
@@ -622,8 +620,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
  */
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) {
-  // Initialize the main thread (including TLS, so system calls really work).
-  __libc_init_main_thread(args);
+  // Finish initializing the main thread.
+  __libc_init_main_thread_late(args);
 
   // We didn't protect the linker's RELRO pages in link_image because we
   // couldn't make system calls on x86 at that point, but we can now...

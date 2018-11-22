@@ -34,7 +34,7 @@
 
 __BEGIN_DECLS
 
-extern ElfW(auxv_t)* __libc_auxv;
+__LIBC_HIDDEN__ extern ElfW(auxv_t)* __libc_auxv;
 
 __END_DECLS
 
