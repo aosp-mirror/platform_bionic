@@ -41,7 +41,7 @@
         // arch. The code generated is exactly the same.
         .arch armv7-a
 
-ENTRY(__memset_chk)
+ENTRY(__memset_chk_a7)
         cmp         r2, r3
         bls         memset
 
@@ -51,9 +51,9 @@ ENTRY(__memset_chk)
         .cfi_rel_offset lr, 0
 
         bl          __memset_chk_fail
-END(__memset_chk)
+END(__memset_chk_a7)
 
-ENTRY(memset)
+ENTRY(memset_a7)
         mov         r3, r0
         // At this point only d0, d1 are going to be used below.
         vdup.8      q0, r1
@@ -160,4 +160,4 @@ ENTRY(memset)
         strbcs      r1, [r3], #1
         strbcs      r1, [r3], #1
         bx          lr
-END(memset)
+END(memset_a7)
