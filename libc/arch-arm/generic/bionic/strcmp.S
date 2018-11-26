@@ -31,6 +31,10 @@
 
 	.text
 
+        // To avoid warning about deprecated instructions, add an explicit
+        // arch. The code generated is exactly the same.
+        .arch armv7-a
+
 #ifdef __ARMEB__
 #define SHFT2LSB lsl
 #define SHFT2LSBEQ lsleq
@@ -50,7 +54,7 @@
 #define magic1(REG) REG
 #define magic2(REG) REG, lsl #7
 
-ENTRY(strcmp)
+ENTRY(strcmp_generic)
 	pld	[r0, #0]
 	pld	[r1, #0]
 	eor	r2, r0, r1
@@ -313,4 +317,4 @@ ENTRY(strcmp)
 	ldr	r4, [sp], #4
 	ldr	r5, [sp], #4
 	bx	lr
-END(strcmp)
+END(strcmp_generic)
