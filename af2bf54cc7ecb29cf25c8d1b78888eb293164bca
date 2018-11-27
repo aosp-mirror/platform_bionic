@@ -16,6 +16,24 @@
       "revId": "af2bf54cc7ecb29cf25c8d1b78888eb293164bca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ae32633_ed60ab07",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-27T23:24:09Z",
+      "side": 1,
+      "message": "Maybe? I made it a reference to signal that it couldn\u0027t be null, but I could change it.",
+      "parentUuid": "953042eb_b6b2bb02",
+      "revId": "af2bf54cc7ecb29cf25c8d1b78888eb293164bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
