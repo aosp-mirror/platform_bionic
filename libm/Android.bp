@@ -514,6 +514,9 @@ cc_library {
         integer_overflow: false,
     },
     stl: "none",
+
+    // TODO(ivanlozano): Remove after b/118321713
+    xom: false,
 }
 
 ndk_library {
