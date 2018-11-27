@@ -57,6 +57,10 @@
 
     .syntax unified
 
+    // To avoid warning about deprecated instructions, add an explicit
+    // arch. The code generated is exactly the same.
+    .arch armv7-a
+
     .thumb
     .thumb_func
 
@@ -80,7 +84,7 @@
     \cmd    \reg, \label
     .endm // m_copy_byte
 
-ENTRY(strcat)
+ENTRY(strcat_a9)
     // Quick check to see if src is empty.
     ldrb        r2, [r1]
     pld         [r1, #0]
@@ -552,4 +556,4 @@ ENTRY(strcat)
 .Lstrcat_r0_update:
     sub     r0, r0, #1
     b .Lstrcat_r0_scan_done
-END(strcat)
+END(strcat_a9)

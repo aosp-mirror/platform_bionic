@@ -36,7 +36,7 @@
     .fpu    neon
     .syntax unified
 
-ENTRY(__memset_chk)
+ENTRY(__memset_chk_a9)
         cmp         r2, r3
         bls         memset
 
@@ -46,10 +46,10 @@ ENTRY(__memset_chk)
         .cfi_rel_offset lr, 0
 
         bl          __memset_chk_fail
-END(__memset_chk)
+END(__memset_chk_a9)
 
 /* memset() returns its first argument.  */
-ENTRY(memset)
+ENTRY(memset_a9)
         // The neon memset only wins for less than 132.
         cmp         r2, #132
         bhi         .L_memset_large_copy
@@ -158,4 +158,4 @@ ENTRY(memset)
         movs        r2, r2, lsl #2
         strbcs      r1, [r0]
         ldmfd       sp!, {r0, r4-r7, pc}
-END(memset)
+END(memset_a9)
