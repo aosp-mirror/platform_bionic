@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "953042eb_b6b2bb02",
+        "filename": "libc/bionic/fdsan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-11-27T14:16:49Z",
+      "side": 1,
+      "message": "https://google.github.io/styleguide/cppguide.html#Reference_Arguments, seems like this should also apply to return values even though it is not spelled explicitly in the style-guide. I am not sure about this thought.",
+      "revId": "af2bf54cc7ecb29cf25c8d1b78888eb293164bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
