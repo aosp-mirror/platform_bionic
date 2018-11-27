@@ -33,7 +33,11 @@
 
 .syntax unified
 
-ENTRY(strcpy)
+// To avoid warning about deprecated instructions, add an explicit
+// arch. The code generated is exactly the same.
+.arch armv7-a
+
+ENTRY(strcpy_generic)
 	pld	[r1, #0]
 	eor	r2, r0, r1
 	mov	ip, r0
@@ -131,4 +135,4 @@ ENTRY(strcpy)
 	cmp	r2, #0
 	bne	4b
 	bx	lr
-END(strcpy)
+END(strcpy_generic)
