@@ -235,6 +235,13 @@ void resolve_paths(std::vector<std::string>& paths,
         }
 
         resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
+      } else {
+        struct stat s;
+        if (stat(normalized_path.c_str(), &s) == 0 && S_ISDIR(s.st_mode)) {
+          // Path is not a zip path, but an existing directory. Then add it
+          // although we failed to resolve it. b/119656753
+          resolved_paths->push_back(normalized_path);
+        }
       }
     }
   }
