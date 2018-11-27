@@ -33,9 +33,13 @@
     .thumb
     .thumb_func
 
+    // To avoid warning about deprecated instructions, add an explicit
+    // arch. The code generated is exactly the same.
+    .arch armv7-a
+
 // Get the length of the source string first, then do a memcpy of the data
 // instead of a strcpy.
-ENTRY(__strcpy_chk)
+ENTRY(__strcpy_chk_a9)
     pld     [r0, #0]
     push    {r0, lr}
     .cfi_def_cfa_offset 8
@@ -159,8 +163,8 @@ ENTRY(__strcpy_chk)
     bhi     __strcpy_chk_fail
 
     // Fall through into the memcpy_base function.
-END(__strcpy_chk)
+END(__strcpy_chk_a9)
 
-#define MEMCPY_BASE         __strcpy_chk_memcpy_base
-#define MEMCPY_BASE_ALIGNED __strcpy_chk_memcpy_base_aligned
+#define MEMCPY_BASE         __strcpy_chk_a9_memcpy_base
+#define MEMCPY_BASE_ALIGNED __strcpy_chk_a9_memcpy_base_aligned
 #include "memcpy_base.S"
