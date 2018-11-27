@@ -366,12 +366,6 @@ static bool InitMallocFunction(void* malloc_impl_handler, _Atomic(FunctionType)*
 }
 
 static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const char* prefix) {
-  // We initialize free first to prevent the following situation:
-  // Heapprofd's MallocMalloc is installed, and an allocation is observed
-  // and logged to the heap dump. The corresponding free happens before
-  // heapprofd's MallocFree is installed, and is not logged in the heap
-  // dump. This leads to the allocation wrongly being active in the heap
-  // dump indefinitely.
   if (!InitMallocFunction<MallocFree>(impl_handler, &table->free, prefix, "free")) {
     return false;
   }
@@ -572,6 +566,16 @@ static void install_hooks(libc_globals* globals, const char* options,
   }
 
   atomic_store(&g_heapprofd_init_func, init_func);
+  // We assign free  first explicitly to prevent the case where we observe a
+  // alloc, but miss the corresponding free because of initialization order.
+  //
+  // This is safer than relying on the declaration order inside
+  // MallocDispatch at the cost of an extra atomic pointer write on
+  // initialization.
+  atomic_store(&globals->malloc_dispatch.free, dispatch_table.free);
+  // The struct gets assigned elementwise and each of the elements is an
+  // _Atomic. Assigning to an _Atomic is an atomic_store operation.
+  // The assignment is done in declaration order.
   globals->malloc_dispatch = dispatch_table;
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
@@ -679,7 +683,7 @@ static void* InitHeapprofdHook(size_t bytes) {
 extern "C" void InstallInitHeapprofdHook(int) {
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
-      globals->malloc_dispatch.malloc = InitHeapprofdHook;
+      atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
     });
   }
 }
