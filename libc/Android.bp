@@ -76,6 +76,9 @@ cc_defaults {
     },
     native_coverage: false,
     recovery_available: true,
+
+    // TODO(ivanlozano): Remove after b/118321713
+    xom: false,
 }
 
 // ANDROIDMK TRANSLATION ERROR: unsupported directive
