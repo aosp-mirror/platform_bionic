@@ -16,6 +16,24 @@
       "revId": "aef7486452baebd420d37820568620b75607086d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44eacbbd_a7a47b7f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-11-28T05:30:56Z",
+      "side": 1,
+      "message": "exec_linker_helper.cpp already prints argv[0] from both main and a constructor function. I think I can have it print __progname too.",
+      "parentUuid": "500eaaa7_4c40cf8e",
+      "revId": "aef7486452baebd420d37820568620b75607086d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
