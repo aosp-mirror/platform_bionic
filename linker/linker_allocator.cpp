@@ -222,6 +222,8 @@ void LinkerSmallObjectAllocator::alloc_page() {
   first_block->free_blocks_cnt = free_blocks_cnt;
 
   free_blocks_list_ = first_block;
+
+  free_pages_cnt_++;
 }
 
 
