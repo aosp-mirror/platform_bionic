@@ -64,7 +64,7 @@
         .arch armv7-a
 
 // Prototype: void *memcpy (void *dst, const void *src, size_t count).
-ENTRY(__memcpy)
+ENTRY(__memcpy_a15)
         pld     [r1, #64]
         push    {r0, lr}
         .cfi_def_cfa_offset 8
@@ -72,4 +72,4 @@ ENTRY(__memcpy)
         .cfi_rel_offset lr, 4
 
 #include "memcpy_base.S"
-END(__memcpy)
+END(__memcpy_a15)

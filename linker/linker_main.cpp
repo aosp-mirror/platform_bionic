@@ -28,6 +28,9 @@
 
 #include "linker_main.h"
 
+#include <link.h>
+#include <sys/auxv.h>
+
 #include "linker_debug.h"
 #include "linker_cfi.h"
 #include "linker_gdb_support.h"
@@ -35,7 +38,6 @@
 #include "linker_phdr.h"
 #include "linker_utils.h"
 
-#include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -48,11 +50,9 @@
 #endif
 
 #include <async_safe/log.h>
+#include <bionic/libc_init_common.h>
 
 #include <vector>
-
-extern void __libc_init_globals(KernelArgumentBlock&);
-extern void __libc_init_AT_SECURE(KernelArgumentBlock&);
 
 __LIBC_HIDDEN__ extern "C" void _start();
 
