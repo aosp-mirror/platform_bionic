@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2144b37_3169787b",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-28T20:53:21Z",
+      "side": 1,
+      "message": "I think it would be better to make this function be something like GetHeapprofdProgramProperty().\n\nThen code could look like:\n\nGet...(program_property, sizeof(program_property));",
+      "range": {
+        "startLine": 530,
+        "startChar": 15,
+        "endLine": 530,
+        "endChar": 35
+      },
+      "revId": "67ac8da0031c56d401253c4340e3b49cd09f952c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b3c954b_d118115e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-28T20:53:21Z",
+      "side": 1,
+      "message": "Is it worth falling back to getprogname() in this case?",
+      "range": {
+        "startLine": 533,
+        "startChar": 1,
+        "endLine": 533,
+        "endChar": 17
+      },
+      "revId": "67ac8da0031c56d401253c4340e3b49cd09f952c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
