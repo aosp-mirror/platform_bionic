@@ -58,6 +58,8 @@ static void netdClientInitImpl() {
     netdClientInitFunction(netdClientHandle, "netdClientInitNetIdForResolv",
                            &__netdClientDispatch.netIdForResolv);
     netdClientInitFunction(netdClientHandle, "netdClientInitSocket", &__netdClientDispatch.socket);
+    netdClientInitFunction(netdClientHandle, "netdClientInitDnsOpenProxy",
+                           &__netdClientDispatch.dnsOpenProxy);
 }
 
 static pthread_once_t netdClientInitOnce = PTHREAD_ONCE_INIT;
