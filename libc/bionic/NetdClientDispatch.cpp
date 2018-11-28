@@ -30,6 +30,10 @@ static unsigned fallBackNetIdForResolv(unsigned netId) {
     return netId;
 }
 
+static int fallBackDnsOpenProxy() {
+    return -1;
+}
+
 // This structure is modified only at startup (when libc.so is loaded) and never
 // afterwards, so it's okay that it's read later at runtime without a lock.
 __LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(32))) = {
@@ -37,4 +41,5 @@ __LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(3
     __connect,
     __socket,
     fallBackNetIdForResolv,
+    fallBackDnsOpenProxy,
 };

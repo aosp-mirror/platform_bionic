@@ -422,11 +422,10 @@ android_getaddrinfo_proxy(
 		return EAI_NODATA;
 	}
 
-	FILE* proxy = android_open_proxy();
+	FILE* proxy = fdopen(__netdClientDispatch.dnsOpenProxy(), "r+");
 	if (proxy == NULL) {
 		return EAI_SYSTEM;
 	}
-
 	netid = __netdClientDispatch.netIdForResolv(netid);
 
 	// Send the request.
