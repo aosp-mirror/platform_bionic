@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f183336d_e8bbf895",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "seems unnecessary.",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 16
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9df08bda_db5484a6",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -13,6 +36,30 @@
       "writtenOn": "2018-11-08T23:58:11Z",
       "side": 1,
       "message": "You should probably do a __builtin_add_overflow just in case. Otherwise, this could overflow and pass when it really would have failed. It\u0027s probably very unlikely to overflow without triggering some other overflow condition though.",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 56
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c5a3e3e_bb28245f",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "if this is speculative, you could use memory_order_relaxed here.  if you like more accuracy, you could use memory_order_acquire.\n\nsize_t temp;\nreturn !builtin_add_overflow(atomic_load_explicit(\u0026gAllocated, memory_order_acquire), bytes, \u0026temp) \u0026\u0026 temp \u003c\u003d gAllocLimit;",
+      "parentUuid": "9df08bda_db5484a6",
       "range": {
         "startLine": 235,
         "startChar": 9,
@@ -41,6 +88,76 @@
         "startChar": 11,
         "endLine": 239,
         "endChar": 73
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5eee4212_51bb04c1",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "shouldn\u0027t overflow as is size_t",
+      "parentUuid": "56589881_b2a43825",
+      "range": {
+        "startLine": 239,
+        "startChar": 11,
+        "endLine": 239,
+        "endChar": 73
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97e2846b_113f1c55",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "could overflow, but really calloc should fail.",
+      "range": {
+        "startLine": 244,
+        "startChar": 19,
+        "endLine": 244,
+        "endChar": 41
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52b2dc73_469e7736",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "this could go below 0 (and underflow) due to untracked memory (can this happen due to estimate on line 306)?  Perhaps we should clamp to 0 (and track the underflow amount) - the technically correct method is the following, but not sure if an approximate method is better or adding an substantial 32GB symmetric offset to gAllocated and gAllocLimit (assuming we\u0027re 64b size_t).\n\nconst size_t size \u003d Malloc(malloc_usable_size)(mem);\ndo {\n  const size_t allocated \u003d atomic_load_explicit(\u0026gAllocated, memory_order_acquire);\n  const size_t newAllocated \u003d allocated \u003e size ? allocated - size : 0;\n} while (!atomic_compare_exchange_weak(\u0026gAllocated, allocated, newAllocated, memory_order_acq_rel));\n\nlimit_realloc and limit_posix_memalign need some modification to use this.",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 250,
+        "endChar": 65
       },
       "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
@@ -189,6 +306,30 @@
     },
     {
       "key": {
+        "uuid": "cf8262ce_25ed3273",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "if you\u0027re adding new functionality, what about\n\nandroid_get_current_allocation()?",
+      "parentUuid": "2043ba4d_e15e7073",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -229,6 +370,53 @@
         "startChar": 0,
         "endLine": 314,
         "endChar": 46
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46935206_05c279f9",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "i\u0027ll need to check on Scudo :-).",
+      "parentUuid": "1beda7e1_670f44fd",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 314,
+        "endChar": 46
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a4e0c0c_0659f972",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T00:33:23Z",
+      "side": 1,
+      "message": "should this be all or none  (not sure if that would be more race-free)  Doesn\u0027t seem that WriteProtected is thread-safe...\n\ne.g. if (globals-\u003emalloc_dispatch.calloc \u003d\u003d nullptr \u0026\u0026 ... \u003d\u003d nullptr \u0026\u0026...) {\n}",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 334,
+        "endChar": 5
       },
       "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
