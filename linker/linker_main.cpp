@@ -195,11 +195,19 @@ struct ExecutableInfo {
 static ExecutableInfo get_executable_info(KernelArgumentBlock& args) {
   ExecutableInfo result = {};
 
-  if (is_init()) {
-    // /proc fs is not mounted when init starts. Therefore we can't use
-    // /proc/self/exe for init.
+  if (is_first_stage_init()) {
+    // /proc fs is not mounted when first stage init starts. Therefore we can't
+    // use /proc/self/exe for init.
     stat("/init", &result.file_stat);
-    result.path = "/init";
+
+    // /init may be a symlink, so try to read it as such.
+    char path[PATH_MAX];
+    ssize_t path_len = readlink("/init", path, sizeof(path));
+    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+      result.path = "/init";
+    } else {
+      result.path = std::string(path, path_len);
+    }
   } else {
     // Stat "/proc/self/exe" instead of executable_path because
     // the executable could be unlinked by this point and it should
