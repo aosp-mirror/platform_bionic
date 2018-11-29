@@ -40,7 +40,7 @@
 // Get the length of src string, then get the source of the dst string.
 // Check that the two lengths together don't exceed the threshold, then
 // do a memcpy of the data.
-ENTRY(__strcat_chk)
+ENTRY(__strcat_chk_denver)
     pld     [r0, #0]
     push    {r0, lr}
     .cfi_def_cfa_offset 8
@@ -190,9 +190,9 @@ ENTRY(__strcat_chk)
     mov     r2, r4
     add     r0, r0, r3
     pop     {r4, r5}
-END(__strcat_chk)
+END(__strcat_chk_denver)
 
-#define MEMCPY_BASE         __strcat_chk_memcpy_base
-#define MEMCPY_BASE_ALIGNED __strcat_chk_memcpy_base_aligned
+#define MEMCPY_BASE         __strcat_chk_denver_memcpy_base
+#define MEMCPY_BASE_ALIGNED __strcat_chk_denver_memcpy_base_aligned
 
 #include "memcpy_base.S"
