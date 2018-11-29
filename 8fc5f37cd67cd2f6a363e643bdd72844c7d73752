@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "32bf91bc_54c0cb71",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "f183336d_e8bbf895",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 234,
+        "endChar": 16
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9df08bda_db5484a6",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "side": 1,
       "message": "if this is speculative, you could use memory_order_relaxed here.  if you like more accuracy, you could use memory_order_acquire.\n\nsize_t temp;\nreturn !builtin_add_overflow(atomic_load_explicit(\u0026gAllocated, memory_order_acquire), bytes, \u0026temp) \u0026\u0026 temp \u003c\u003d gAllocLimit;",
       "parentUuid": "9df08bda_db5484a6",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 56
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccd39576_edcb03f5",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "It\u0027s fine for this to be less accurate, I think. We\u0027re already forced to be rather inaccurate as a result of relying on malloc_usable_size which we can only query after an allocation.\n\nRegarding overflow, it seems like in any situation where this would overflow (except in the realloc case discussed below) the allocator *must* fail since it would otherwise need to allocate more than the size of the available address space. And that would result in the intended behaviour.",
+      "parentUuid": "7c5a3e3e_bb28245f",
       "range": {
         "startLine": 235,
         "startChar": 9,
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "2ac7aeca_6f9996ba",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "Right. Again, for this to overflow we would need to exceed the size of the address space.",
+      "parentUuid": "5eee4212_51bb04c1",
+      "range": {
+        "startLine": 239,
+        "startChar": 11,
+        "endLine": 239,
+        "endChar": 73
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97e2846b_113f1c55",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -142,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "f239f41c_70ae3202",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "Yes, let\u0027s just let calloc fail instead of us in that case.",
+      "parentUuid": "97e2846b_113f1c55",
+      "range": {
+        "startLine": 244,
+        "startChar": 19,
+        "endLine": 244,
+        "endChar": 41
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52b2dc73_469e7736",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -153,6 +249,30 @@
       "writtenOn": "2018-11-29T00:33:23Z",
       "side": 1,
       "message": "this could go below 0 (and underflow) due to untracked memory (can this happen due to estimate on line 306)?  Perhaps we should clamp to 0 (and track the underflow amount) - the technically correct method is the following, but not sure if an approximate method is better or adding an substantial 32GB symmetric offset to gAllocated and gAllocLimit (assuming we\u0027re 64b size_t).\n\nconst size_t size \u003d Malloc(malloc_usable_size)(mem);\ndo {\n  const size_t allocated \u003d atomic_load_explicit(\u0026gAllocated, memory_order_acquire);\n  const size_t newAllocated \u003d allocated \u003e size ? allocated - size : 0;\n} while (!atomic_compare_exchange_weak(\u0026gAllocated, allocated, newAllocated, memory_order_acq_rel));\n\nlimit_realloc and limit_posix_memalign need some modification to use this.",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 250,
+        "endChar": 65
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efb175e6_6f575537",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "As far as I know the value from stats.allocated is intended to be accurate and not an estimate (see jemalloc man page http://jemalloc.net/jemalloc.3.html). So it\u0027s not clear to me that we need any of that.",
+      "parentUuid": "52b2dc73_469e7736",
       "range": {
         "startLine": 250,
         "startChar": 0,
@@ -223,6 +343,30 @@
       "writtenOn": "2018-11-08T23:58:11Z",
       "side": 1,
       "message": "This check isn\u0027t correct. You need to do some manual checking here.\n\nSpecifically, if old_mem !\u003d nullptr and bytes \u003c\u003d malloc_usable_size(old_mem), then you could either make the realloc call, or do nothing and return the original pointer.",
+      "range": {
+        "startLine": 282,
+        "startChar": 0,
+        "endLine": 282,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f19c0e8_66e2de29",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 282,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "In the case where bytes \u003c old_usable_size we will underflow here and produce a large positive number equal to 2^ptrsize - (old_usable_size - bytes). This will cause the calculation in check_limit to overflow and have the effect of subtracting (old_usable_size - bytes) from the value of gAllocated, which will result in the intended behaviour. Maybe that\u0027s too subtle though?",
+      "parentUuid": "b242c2db_a2c29b8f",
       "range": {
         "startLine": 282,
         "startChar": 0,
@@ -330,6 +474,30 @@
     },
     {
       "key": {
+        "uuid": "fa15014f_a8c80626",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "It seems like a new function is the best option for now. Since it\u0027s a platform private function, we always have the option of exposing this as part of the NDK interface (either as a general-purpose function like mallopt or a specific one) later if there proves to be a need.\n\nAnother reason why I\u0027d prefer not to expose this functionality to the NDK is that it seems like it would require us to implement a separate allocator limiter in ndk_translation for the reasons mentioned in https://googleplex-android-review.git.corp.google.com/c/platform/vendor/unbundled_google/libs/ndk_translation/+/5471053 , and ideally bionic and ndk_translation should diverge as little as possible (unless we say that the effect of the function is optional for NDK users, but then, what would be the point of exposing the function?)\n\nahung, would that be a function for getting the allocation limit? There\u0027s no use case for that at present so it would basically be dead code.",
+      "parentUuid": "cf8262ce_25ed3273",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -412,6 +580,30 @@
       "writtenOn": "2018-11-29T00:33:23Z",
       "side": 1,
       "message": "should this be all or none  (not sure if that would be more race-free)  Doesn\u0027t seem that WriteProtected is thread-safe...\n\ne.g. if (globals-\u003emalloc_dispatch.calloc \u003d\u003d nullptr \u0026\u0026 ... \u003d\u003d nullptr \u0026\u0026...) {\n}",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 334,
+        "endChar": 5
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0d2a7a3_301c7086",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T21:18:58Z",
+      "side": 1,
+      "message": "This function is not intended to be thread safe, the intent is that it will only be called once at the start of the program before starting any threads. I can add a comment to make that clear.",
+      "parentUuid": "7a4e0c0c_0659f972",
       "range": {
         "startLine": 319,
         "startChar": 0,
