@@ -40,7 +40,7 @@
 // Get the length of src string, then get the source of the dst string.
 // Check that the two lengths together don't exceed the threshold, then
 // do a memcpy of the data.
-ENTRY(__strcat_chk)
+ENTRY(__strcat_chk_a7)
     pld     [r0, #0]
     push    {r0, lr}
     .cfi_def_cfa_offset 8
@@ -200,4 +200,4 @@ ENTRY(__strcat_chk)
     .cfi_adjust_cfa_offset 8
     .cfi_rel_offset r4, 0
     .cfi_rel_offset r5, 4
-END(__strcat_chk)
+END(__strcat_chk_a7)

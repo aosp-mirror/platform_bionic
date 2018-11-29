@@ -27,6 +27,7 @@ struct NetdClientDispatch {
     int (*connect)(int, const struct sockaddr*, socklen_t);
     int (*socket)(int, int, int);
     unsigned (*netIdForResolv)(unsigned);
+    int (*dnsOpenProxy)();
 };
 
 extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
