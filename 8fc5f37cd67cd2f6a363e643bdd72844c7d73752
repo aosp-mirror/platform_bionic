@@ -357,6 +357,30 @@
     },
     {
       "key": {
+        "uuid": "28293609_037bf070",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T23:00:29Z",
+      "side": 1,
+      "message": "I found hooks_arena_new_hook but it doesn\u0027t look like it can be used to abort an allocation, so it isn\u0027t clear how useful it would be. It also wouldn\u0027t work with the hwasan allocator, either.",
+      "parentUuid": "2e0fdfc6_c86fd997",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 250,
+        "endChar": 65
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d56c3115_cab20a96",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -594,6 +618,30 @@
     },
     {
       "key": {
+        "uuid": "da96cb04_31f7a331",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T23:00:29Z",
+      "side": 1,
+      "message": "\u003e could report it back in the dumpsys.\n\nIt\u0027s possible, but we can always just add the function if/when we add this to dumpsys.\n\n\u003e btw, has this been tested with debug malloc?\n\n$ adb shell LIBC_DEBUG_MALLOC_OPTIONS\u003dbacktrace  /data/nativetest64/bionic-unit-tests/bionic-unit-tests --gtest_filter\u003dmalloc.android_set_allocation_limit\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test case (8 jobs).\n[    OK    ] malloc.android_set_allocation_limit (831 ms)\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test case ran. (834 ms total)\n[   PASS   ] 1 test.",
+      "parentUuid": "36dbd3fc_01d248a3",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -724,6 +772,30 @@
       "side": 1,
       "message": "would prefer to make comments on the assumptions that are being made.  this logic is a bit weird, the selective replacement of functions.",
       "parentUuid": "a0d2a7a3_301c7086",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 334,
+        "endChar": 5
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "207b0a0d_42e9ccfb",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2018-11-29T23:00:29Z",
+      "side": 1,
+      "message": "Added comment. Unfortunately hooks make this code more complicated than I\u0027d like.",
+      "parentUuid": "ec02e2ff_10d8fa23",
       "range": {
         "startLine": 319,
         "startChar": 0,
