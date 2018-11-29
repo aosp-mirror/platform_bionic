@@ -748,7 +748,7 @@ void soinfo::generate_handle() {
   // Make sure the handle is unique and does not collide
   // with special values which are RTLD_DEFAULT and RTLD_NEXT.
   do {
-    if (!is_init()) {
+    if (!is_first_stage_init()) {
       arc4random_buf(&handle_, sizeof(handle_));
     } else {
       // arc4random* is not available in init because /dev/urandom hasn't yet been
