@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e216eda1_159a611d",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-29T22:38:22Z",
+      "side": 1,
+      "message": "I thought all the things should be at least 4 bytes aligned..? Add alignas explicitly.",
+      "parentUuid": "bf534a99_6c499475",
+      "range": {
+        "startLine": 109,
+        "startChar": 1,
+        "endLine": 109,
+        "endChar": 52
+      },
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "601d65b4_cbd1a273",
         "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "809657d1_909e9055",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-29T22:38:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "601d65b4_cbd1a273",
+      "range": {
+        "startLine": 111,
+        "startChar": 9,
+        "endLine": 111,
+        "endChar": 17
+      },
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a8fd585_a4704fb4",
         "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
         "patchSetId": 1
@@ -62,6 +110,24 @@
       "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4764a7f9_af93f7be",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-11-29T22:38:22Z",
+      "side": 1,
+      "message": "Done. They compile to the same code.",
+      "parentUuid": "9a8fd585_a4704fb4",
+      "revId": "7c6ee115894450760e689ce61ae1566046d91db4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
