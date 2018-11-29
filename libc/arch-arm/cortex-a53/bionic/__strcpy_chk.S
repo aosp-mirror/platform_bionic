@@ -39,7 +39,7 @@
 
 // Get the length of the source string first, then do a memcpy of the data
 // instead of a strcpy.
-ENTRY(__strcpy_chk)
+ENTRY(__strcpy_chk_a53)
     pld     [r0, #0]
     push    {r0, lr}
     .cfi_def_cfa_offset 8
@@ -162,4 +162,4 @@ ENTRY(__strcpy_chk)
 
 #include "memcpy_base.S"
 
-END(__strcpy_chk)
+END(__strcpy_chk_a53)
