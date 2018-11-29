@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "d8fcac95_c753f815",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T21:53:26Z",
+      "side": 1,
+      "message": "sgtm. unsigned integer overflow is not undefined behavior, unless we tell Clang to sanitize it as such :-).  could use acquire-release atomicity, but sequentially consistent is fine.",
+      "parentUuid": "ccd39576_edcb03f5",
+      "range": {
+        "startLine": 235,
+        "startChar": 9,
+        "endLine": 235,
+        "endChar": 56
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "56589881_b2a43825",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -238,6 +262,30 @@
     },
     {
       "key": {
+        "uuid": "ed7d88cf_a6d8042d",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T21:53:26Z",
+      "side": 1,
+      "message": "sgtm. unsigned integer overflow isn\u0027t undefined.",
+      "parentUuid": "f239f41c_70ae3202",
+      "range": {
+        "startLine": 244,
+        "startChar": 19,
+        "endLine": 244,
+        "endChar": 41
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52b2dc73_469e7736",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -273,6 +321,30 @@
       "side": 1,
       "message": "As far as I know the value from stats.allocated is intended to be accurate and not an estimate (see jemalloc man page http://jemalloc.net/jemalloc.3.html). So it\u0027s not clear to me that we need any of that.",
       "parentUuid": "52b2dc73_469e7736",
+      "range": {
+        "startLine": 250,
+        "startChar": 0,
+        "endLine": 250,
+        "endChar": 65
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e0fdfc6_c86fd997",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T21:53:26Z",
+      "side": 1,
+      "message": "if one is so sure that jemalloc is being used, i think jemalloc\u0027s arena hooks could be used to track memory usage as well.",
+      "parentUuid": "efb175e6_6f575537",
       "range": {
         "startLine": 250,
         "startChar": 0,
@@ -498,6 +570,30 @@
     },
     {
       "key": {
+        "uuid": "36dbd3fc_01d248a3",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T21:53:26Z",
+      "side": 1,
+      "message": "could report it back in the dumpsys.  btw, has this been tested with debug malloc? e.g.\n\nlibc.debug.malloc.program",
+      "parentUuid": "fa15014f_a8c80626",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -604,6 +700,30 @@
       "side": 1,
       "message": "This function is not intended to be thread safe, the intent is that it will only be called once at the start of the program before starting any threads. I can add a comment to make that clear.",
       "parentUuid": "7a4e0c0c_0659f972",
+      "range": {
+        "startLine": 319,
+        "startChar": 0,
+        "endLine": 334,
+        "endChar": 5
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec02e2ff_10d8fa23",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1040213
+      },
+      "writtenOn": "2018-11-29T21:53:26Z",
+      "side": 1,
+      "message": "would prefer to make comments on the assumptions that are being made.  this logic is a bit weird, the selective replacement of functions.",
+      "parentUuid": "a0d2a7a3_301c7086",
       "range": {
         "startLine": 319,
         "startChar": 0,
