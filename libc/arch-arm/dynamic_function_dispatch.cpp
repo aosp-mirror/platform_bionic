@@ -220,6 +220,26 @@ DEFINE_IFUNC(strcpy) {
     }
 }
 
+typedef char* __strcpy_chk_func(char* dst, const char* src, size_t dst_len);
+DEFINE_IFUNC(__strcpy_chk) {
+    switch(get_cpu_variant()) {
+        case kCortexA7:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a7);
+        case kCortexA9:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a9);
+        case kKrait:
+        case kKryo:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_krait);
+        case kCortexA53:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a53);
+        case kCortexA55:
+        case kDenver:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_denver);
+        default:
+            RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a15);
+    }
+}
+
 typedef char* stpcpy_func(char* __dst, const char* __src);
 DEFINE_IFUNC(stpcpy) {
     switch(get_cpu_variant()) {
@@ -237,6 +257,26 @@ DEFINE_IFUNC(strcat) {
             RETURN_FUNC(strcat_func, strcat_a9);
         default:
             RETURN_FUNC(strcat_func, strcat_a15);
+    }
+}
+
+typedef char* __strcat_chk_func(char* dst, const char* src, size_t dst_buf_size);
+DEFINE_IFUNC(__strcat_chk) {
+    switch(get_cpu_variant()) {
+        case kCortexA7:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_a7);
+        case kCortexA9:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_a9);
+        case kKrait:
+        case kKryo:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_krait);
+        case kCortexA53:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_a53);
+        case kCortexA55:
+        case kDenver:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_denver);
+        default:
+            RETURN_FUNC(__strcat_chk_func, __strcat_chk_a15);
     }
 }
 
