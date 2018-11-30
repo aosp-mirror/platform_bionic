@@ -642,6 +642,30 @@
     },
     {
       "key": {
+        "uuid": "6a4b060d_3bff2b13",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-11-30T22:42:39Z",
+      "side": 1,
+      "message": "I would prefer that you make this a mallopt where the argument is the size in MB. That should allow you all the range you need.\n\nUnless there is a really strong reason to do this, we prefer not to add new functions. As soon as you add this, some app will use it. It has happened before and it will happen again. Leaving it as mallopt, if we do decide to nop it or change it in some way, we don\u0027t have to worry about much in the way of app compat. You would be surprised at the weird way apps link against things and then don\u0027t even use that function.\n\nAnd either way, this is exactly the kind of thing that mallopt was invented for.",
+      "parentUuid": "da96cb04_31f7a331",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
