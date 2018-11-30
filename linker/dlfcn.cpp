@@ -38,6 +38,7 @@
 #include <android/api-level.h>
 
 #include <bionic/pthread_internal.h>
+#include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
@@ -86,6 +87,7 @@ void* __loader_dlvsym(void* handle,
                       const void* caller_addr) __LINKER_PUBLIC__;
 void __loader_add_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
 void __loader_remove_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
+libc_shared_globals* __loader_shared_globals() __LINKER_PUBLIC__;
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_PUBLIC__;
 #endif
@@ -297,6 +299,10 @@ void __loader_add_thread_local_dtor(void* dso_handle) {
 void __loader_remove_thread_local_dtor(void* dso_handle) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   decrement_dso_handle_reference_counter(dso_handle);
+}
+
+libc_shared_globals* __loader_shared_globals() {
+  return __libc_shared_globals();
 }
 
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));

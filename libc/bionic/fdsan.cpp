@@ -132,17 +132,13 @@ void __libc_init_fdsan() {
       nullptr);
 }
 
-static FdTable* GetFdTable() {
-  if (!__libc_shared_globals) {
-    return nullptr;
-  }
-
-  return &__libc_shared_globals->fd_table;
+static FdTable& GetFdTable() {
+  return __libc_shared_globals()->fd_table;
 }
 
 // Exposed to the platform to allow crash_dump to print out the fd table.
 extern "C" void* android_fdsan_get_fd_table() {
-  return GetFdTable();
+  return &GetFdTable();
 }
 
 static FdEntry* GetFdEntry(int fd) {
@@ -150,21 +146,13 @@ static FdEntry* GetFdEntry(int fd) {
     return nullptr;
   }
 
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    return nullptr;
-  }
-
-  return fd_table->at(fd);
+  return GetFdTable().at(fd);
 }
 
 __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    return;
-  }
+  auto& fd_table = GetFdTable();
 
-  auto error_level = atomic_load(&fd_table->error_level);
+  auto error_level = atomic_load(&fd_table.error_level);
   if (error_level == ANDROID_FDSAN_ERROR_LEVEL_DISABLED) {
     return;
   }
@@ -198,7 +186,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
 
   switch (error_level) {
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE:
-      atomic_compare_exchange_strong(&fd_table->error_level, &error_level,
+      atomic_compare_exchange_strong(&fd_table.error_level, &error_level,
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
@@ -360,21 +348,11 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
 }
 
 android_fdsan_error_level android_fdsan_get_error_level() {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    async_safe_fatal("attempted to get fdsan error level before libc initialization?");
-  }
-
-  return fd_table->error_level;
+  return GetFdTable().error_level;
 }
 
 android_fdsan_error_level android_fdsan_set_error_level(android_fdsan_error_level new_level) {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    async_safe_fatal("attempted to get fdsan error level before libc initialization?");
-  }
-
-  return atomic_exchange(&fd_table->error_level, new_level);
+  return atomic_exchange(&GetFdTable().error_level, new_level);
 }
 
 int close(int fd) {
