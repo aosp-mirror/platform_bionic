@@ -666,6 +666,30 @@
     },
     {
       "key": {
+        "uuid": "bafb5cb5_6d0149d7",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2018-11-30T22:55:31Z",
+      "side": 1,
+      "message": "\u003e  Leaving it as mallopt, if we do decide to nop it or change it in some way, we don\u0027t have to worry about much in the way of app compat. \n\nHow so? Suppose we want to ignore allocation limits in the future. In the mallopt case, you need to have a switch-case entry matching the allocation limit mallopt option and ignore it; in the android_set_allocation_limit case, we\u0027d end up with a little function that did nothing. I don\u0027t see how one is better than the other from that perspective. What am I missing?\n\nAs a rule of thumb, I tend to disfavor \"multiplexer\" functions like ioctl, mallopt, and prctl. Each multiplexer is effectively just a different ways of calling one of a family of functions, and this call mechanism is usually more awkward than a direct call to the functionality one needs.",
+      "parentUuid": "6a4b060d_3bff2b13",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
