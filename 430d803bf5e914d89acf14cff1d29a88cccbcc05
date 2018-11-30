@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "25340f5c_2a3593d3",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 513,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-30T11:15:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf43e4d6_af22950e",
+      "range": {
+        "startLine": 513,
+        "startChar": 41,
+        "endLine": 513,
+        "endChar": 47
+      },
+      "revId": "430d803bf5e914d89acf14cff1d29a88cccbcc05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10818755_a6ce199e",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "92fb091c_ca90f71e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-30T11:15:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10818755_a6ce199e",
+      "range": {
+        "startLine": 522,
+        "startChar": 0,
+        "endLine": 522,
+        "endChar": 27
+      },
+      "revId": "430d803bf5e914d89acf14cff1d29a88cccbcc05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2705b7f8_f464fd44",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 6
@@ -68,6 +116,30 @@
       "revId": "430d803bf5e914d89acf14cff1d29a88cccbcc05",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c063aec7_c885d0d3",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2018-11-30T11:15:13Z",
+      "side": 1,
+      "message": "OK, this was on purpose to make the null termination explicit, but I can also fold it into the memcpy.",
+      "parentUuid": "2705b7f8_f464fd44",
+      "range": {
+        "startLine": 532,
+        "startChar": 2,
+        "endLine": 532,
+        "endChar": 47
+      },
+      "revId": "430d803bf5e914d89acf14cff1d29a88cccbcc05",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
