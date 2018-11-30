@@ -104,6 +104,7 @@ TEST(dl, exec_linker_load_file) {
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
+      "__progname=" + helper + "\n" +
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
@@ -118,6 +119,7 @@ TEST(dl, exec_linker_load_from_zip) {
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
+      "__progname=" + helper + "\n" +
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
