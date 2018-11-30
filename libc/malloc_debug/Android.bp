@@ -123,3 +123,26 @@ cc_test {
         "-Wno-error=format-zero-length",
     ],
 }
+
+// ==============================================================
+// System Tests
+// ==============================================================
+cc_test {
+    name: "malloc_debug_system_tests",
+
+    srcs: [
+        "tests/malloc_debug_system_tests.cpp",
+    ],
+
+    shared_libs: [
+        "libbase",
+        "liblog",
+        "libunwindstack",
+    ],
+
+    cflags: [
+        "-Wall",
+        "-Werror",
+        "-O0",
+    ],
+}
