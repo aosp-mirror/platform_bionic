@@ -52,11 +52,9 @@
 #include "private/thread_private.h"
 #include "pthread_internal.h"
 
-extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
-__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals;
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
@@ -70,9 +68,6 @@ void __libc_init_globals(KernelArgumentBlock& args) {
     __libc_init_vdso(globals, args);
     __libc_init_setjmp_cookie(globals, args);
   });
-}
-
-void __libc_init_shared_globals(libc_shared_globals*) {
 }
 
 #if !defined(__LP64__)
@@ -96,12 +91,11 @@ void __libc_add_main_thread() {
   __pthread_internal_add(main_thread);
 }
 
-void __libc_init_common(KernelArgumentBlock& args) {
+void __libc_init_common() {
   // Initialize various globals.
-  environ = args.envp;
+  environ = __libc_shared_globals()->init_environ;
   errno = 0;
-  __progname = args.argv[0] ? args.argv[0] : "<unknown>";
-  __abort_message_ptr = args.abort_message_ptr;
+  __progname = __libc_shared_globals()->init_progname ?: "<unknown>";
 
 #if !defined(__LP64__)
   __check_max_thread_id();
@@ -300,9 +294,7 @@ static void __initialize_personality() {
 #endif
 }
 
-void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
-  __abort_message_ptr = args.abort_message_ptr;
-
+void __libc_init_AT_SECURE(char** env) {
   // Check that the kernel provided a value for AT_SECURE.
   errno = 0;
   unsigned long is_AT_SECURE = getauxval(AT_SECURE);
@@ -313,11 +305,11 @@ void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
     // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
     __nullify_closed_stdio();
 
-    __sanitize_environment_variables(args.envp);
+    __sanitize_environment_variables(env);
   }
 
   // Now the environment has been sanitized, make it available.
-  environ = args.envp;
+  environ = __libc_shared_globals()->init_environ = env;
 
   __initialize_personality();
 }

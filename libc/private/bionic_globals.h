@@ -30,6 +30,7 @@
 #define _PRIVATE_BIONIC_GLOBALS_H
 
 #include <sys/cdefs.h>
+#include <pthread.h>
 
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
@@ -44,6 +45,8 @@ struct libc_globals {
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
+struct abort_msg_t;
+
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
   FdTable fd_table;
@@ -52,10 +55,16 @@ struct libc_shared_globals {
   // record the number of arguments passed to the linker itself rather than to
   // the program it's loading. Typically 0, sometimes 1.
   int initial_linker_arg_count;
+
+  pthread_mutex_t abort_msg_lock;
+  abort_msg_t* abort_msg;
+
+  // Values passed from the linker to libc.so.
+  const char* init_progname;
+  char** init_environ;
 };
 
-__LIBC_HIDDEN__ extern libc_shared_globals* __libc_shared_globals;
-__LIBC_HIDDEN__ void __libc_init_shared_globals(libc_shared_globals*);
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
 __LIBC_HIDDEN__ void __libc_init_fdsan();
 
 class KernelArgumentBlock;
