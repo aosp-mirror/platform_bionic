@@ -841,18 +841,6 @@ cc_library_static {
                 "bionic/strchr.cpp",
                 "bionic/strnlen.c",
             ],
-            denver64: {
-                srcs: [
-                    "arch-arm64/denver64/bionic/memcpy.S",
-                    "arch-arm64/denver64/bionic/memmove.S",
-                    "arch-arm64/denver64/bionic/memset.S",
-                ],
-                exclude_srcs: [
-                    "arch-arm64/generic/bionic/memcpy.S",
-                    "arch-arm64/generic/bionic/memmove.S",
-                    "arch-arm64/generic/bionic/memset.S",
-                ],
-            },
         },
 
         mips: {
