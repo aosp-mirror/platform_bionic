@@ -35,9 +35,8 @@
 #include <sys/mman.h>
 
 #include "private/bionic_defs.h"
+#include "private/bionic_globals.h"
 #include "private/ScopedPthreadMutexLocker.h"
-
-static pthread_mutex_t g_abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
 
 struct abort_msg_t {
   size_t size;
@@ -56,8 +55,6 @@ static_assert(offsetof(magic_abort_msg_t, msg) == 2 * sizeof(uint64_t),
               "The in-memory layout of magic_abort_msg_t is not consistent with what automated "
               "tools expect.");
 
-abort_msg_t** __abort_message_ptr; // Accessible to __libc_init_common.
-
 [[clang::optnone]]
 static void fill_abort_message_magic(magic_abort_msg_t* new_magic_abort_message) {
   // 128-bit magic for the abort message. Chosen by fair dice roll.
@@ -71,14 +68,9 @@ static void fill_abort_message_magic(magic_abort_msg_t* new_magic_abort_message)
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void android_set_abort_message(const char* msg) {
-  ScopedPthreadMutexLocker locker(&g_abort_msg_lock);
+  ScopedPthreadMutexLocker locker(&__libc_shared_globals()->abort_msg_lock);
 
-  if (__abort_message_ptr == nullptr) {
-    // We must have crashed _very_ early.
-    return;
-  }
-
-  if (*__abort_message_ptr != nullptr) {
+  if (__libc_shared_globals()->abort_msg != nullptr) {
     // We already have an abort message.
     // Assume that the first crash is the one most worth reporting.
     return;
@@ -94,5 +86,5 @@ void android_set_abort_message(const char* msg) {
   fill_abort_message_magic(new_magic_abort_message);
   new_magic_abort_message->msg.size = size;
   strcpy(new_magic_abort_message->msg.msg, msg);
-  *__abort_message_ptr = &new_magic_abort_message->msg;
+  __libc_shared_globals()->abort_msg = &new_magic_abort_message->msg;
 }

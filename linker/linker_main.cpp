@@ -116,7 +116,6 @@ soinfo* solist_get_vdso() {
 }
 
 int g_ld_debug_verbosity;
-abort_msg_t* g_abort_message = nullptr; // For debuggerd.
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -195,11 +194,19 @@ struct ExecutableInfo {
 static ExecutableInfo get_executable_info(KernelArgumentBlock& args) {
   ExecutableInfo result = {};
 
-  if (is_init()) {
-    // /proc fs is not mounted when init starts. Therefore we can't use
-    // /proc/self/exe for init.
+  if (is_first_stage_init()) {
+    // /proc fs is not mounted when first stage init starts. Therefore we can't
+    // use /proc/self/exe for init.
     stat("/init", &result.file_stat);
-    result.path = "/init";
+
+    // /init may be a symlink, so try to read it as such.
+    char path[PATH_MAX];
+    ssize_t path_len = readlink("/init", path, sizeof(path));
+    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
+      result.path = "/init";
+    } else {
+      result.path = std::string(path, path_len);
+    }
   } else {
     // Stat "/proc/self/exe" instead of executable_path because
     // the executable could be unlinked by this point and it should
@@ -291,7 +298,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #endif
 
   // Sanitize the environment.
-  __libc_init_AT_SECURE(args);
+  __libc_init_AT_SECURE(args.envp);
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
@@ -300,7 +307,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #ifdef __ANDROID__
   debuggerd_callbacks_t callbacks = {
     .get_abort_message = []() {
-      return g_abort_message;
+      return __libc_shared_globals()->abort_msg;
     },
     .post_dump = &notify_gdb_of_libraries,
   };
@@ -622,12 +629,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // couldn't make system calls on x86 at that point, but we can now...
   if (!tmp_linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
 
-  // Initialize the linker/libc.so shared global inside the linker.
-  static libc_shared_globals shared_globals;
-  __libc_shared_globals = &shared_globals;
-  __libc_init_shared_globals(&shared_globals);
-  args.shared_globals = __libc_shared_globals;
-
   // Initialize the linker's static libc's globals
   __libc_init_globals(args);
 
@@ -655,13 +656,14 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
       exit(0);
     }
     exe_to_load = args.argv[1];
-    __libc_shared_globals->initial_linker_arg_count = 1;
+    __libc_shared_globals()->initial_linker_arg_count = 1;
   }
 
   // store argc/argv/envp to use them for calling constructors
-  g_argc = args.argc - __libc_shared_globals->initial_linker_arg_count;
-  g_argv = args.argv + __libc_shared_globals->initial_linker_arg_count;
+  g_argc = args.argc - __libc_shared_globals()->initial_linker_arg_count;
+  g_argv = args.argv + __libc_shared_globals()->initial_linker_arg_count;
   g_envp = args.envp;
+  __libc_shared_globals()->init_progname = g_argv[0];
 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
@@ -670,7 +672,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   g_default_namespace.add_soinfo(solinker);
   init_link_map_head(*solinker, kLinkerPath);
 
-  args.abort_message_ptr = &g_abort_message;
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));

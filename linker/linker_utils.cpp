@@ -247,7 +247,7 @@ void resolve_paths(std::vector<std::string>& paths,
   }
 }
 
-bool is_init() {
-  static bool ret = (getpid() == 1);
+bool is_first_stage_init() {
+  static bool ret = (getpid() == 1 && access("/proc/self/exe", F_OK) == -1);
   return ret;
 }
