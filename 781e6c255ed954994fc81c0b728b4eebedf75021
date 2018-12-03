@@ -22,6 +22,30 @@
       "revId": "781e6c255ed954994fc81c0b728b4eebedf75021",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7886d6b_bec77a4f",
+        "filename": "libc/bionic/strerror.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-03T16:48:03Z",
+      "side": 1,
+      "message": "done, and i\u0027ve tightened a test so we would have caught this.\n\n(it\u0027s inherently a fragile test since there\u0027s no ELAST, but that\u0027s fine... new errno values aren\u0027t added very often.)",
+      "parentUuid": "42d0333e_c72aae6c",
+      "range": {
+        "startLine": 182,
+        "startChar": 38,
+        "endLine": 182,
+        "endChar": 41
+      },
+      "revId": "781e6c255ed954994fc81c0b728b4eebedf75021",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
