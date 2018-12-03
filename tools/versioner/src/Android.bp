@@ -3,8 +3,6 @@ cc_binary_host {
 
     defaults: ["llvm-build-host-tools-defaults"],
 
-    cpp_std: "gnu++17",
-
     // b/117120485 bugprone-exception-escape hangs with DeclarationDatabase.cpp
     tidy_checks: ["-bugprone-exception-escape"],
 
