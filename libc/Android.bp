@@ -1623,8 +1623,14 @@ cc_library {
     ],
     name: "libstdc++",
     static_ndk_lib: true,
-    system_shared_libs: ["libc"],
     static_libs: ["libasync_safe"],
+
+    static: {
+        system_shared_libs: [],
+    },
+    shared: {
+        system_shared_libs: ["libc"],
+    },
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
