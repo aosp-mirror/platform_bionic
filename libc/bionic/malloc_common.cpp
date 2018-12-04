@@ -44,6 +44,7 @@
 #include <pthread.h>
 #include <stdatomic.h>
 
+#include <private/bionic_defs.h>
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -671,6 +672,7 @@ static void malloc_init_impl(libc_globals* globals) {
 
 // Initializes memory allocation framework.
 // This routine is called from __libc_init routines in libc_init_dynamic.cpp.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
