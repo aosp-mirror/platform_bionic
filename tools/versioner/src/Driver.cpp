@@ -41,6 +41,7 @@
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
+#include <llvm/Option/Option.h>
 #include <llvm/Support/VirtualFileSystem.h>
 
 #include "Arch.h"
@@ -168,7 +169,7 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSyste
   }
 
   const driver::Command& driver_cmd = llvm::cast<driver::Command>(*jobs.begin());
-  const driver::ArgStringList& cc_args = driver_cmd.getArguments();
+  const llvm::opt::ArgStringList& cc_args = driver_cmd.getArguments();
 
   if (cc_args.size() == 0) {
     errx(1, "driver returned empty command for %s", to_string(type).c_str());
