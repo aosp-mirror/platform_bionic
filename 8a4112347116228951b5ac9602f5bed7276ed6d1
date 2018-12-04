@@ -22,6 +22,30 @@
       "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eb51238_8fcf6fdb",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-12-04T06:37:24Z",
+      "side": 1,
+      "message": "_generic is occupied by non-neon so not an option.\n\nHistorically neon generic routines are all from a15, except this one. You can also find other examples in this file where one _a15 routine is also used for a7. Also see:\nhttps://android.googlesource.com/platform/bionic/+/9690b121e342676453c58f5940964350762085a0/libc/Android.bp#999\n\n(Maybe we tend to name them by the oldest core? Seems A15 was launched before A7)",
+      "parentUuid": "a5dcc7c3_afded53c",
+      "range": {
+        "startLine": 158,
+        "startChar": 30,
+        "endLine": 158,
+        "endChar": 41
+      },
+      "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
