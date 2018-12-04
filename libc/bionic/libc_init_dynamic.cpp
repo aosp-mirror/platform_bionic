@@ -51,7 +51,6 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
-#include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
@@ -78,13 +77,12 @@ __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 // after __stack_chk_guard is initialized and therefore can safely have a stack
 // protector.
 __attribute__((noinline))
-static void __libc_preinit_impl(KernelArgumentBlock& args) {
-  __libc_auxv = args.auxv;
+static void __libc_preinit_impl() {
 #if defined(__i386__)
-  __libc_init_sysinfo(args);
+  __libc_init_sysinfo();
 #endif
 
-  __libc_init_globals(args);
+  __libc_init_globals();
   __libc_init_common();
 
   // Hooks for various libraries to let them know that we're starting up.
@@ -100,17 +98,11 @@ static void __libc_preinit_impl(KernelArgumentBlock& args) {
 // to run before any others (such as the jemalloc constructor), and lower
 // is better (http://b/68046352).
 __attribute__((constructor(1))) static void __libc_preinit() {
-  // Read the kernel argument block pointer from TLS, then clear the slot so no
-  // other initializer sees its value.
-  void** tls = __get_tls();
-  KernelArgumentBlock* args = static_cast<KernelArgumentBlock*>(tls[TLS_SLOT_BIONIC_PREINIT]);
-  tls[TLS_SLOT_BIONIC_PREINIT] = nullptr;
-
   // The linker has initialized its copy of the global stack_chk_guard, and filled in the main
   // thread's TLS slot with that value. Initialize the local global stack guard with its value.
-  __stack_chk_guard = reinterpret_cast<uintptr_t>(tls[TLS_SLOT_STACK_GUARD]);
+  __stack_chk_guard = reinterpret_cast<uintptr_t>(__get_tls()[TLS_SLOT_STACK_GUARD]);
 
-  __libc_preinit_impl(*args);
+  __libc_preinit_impl();
 }
 
 // This function is called from the executable's _start entry point

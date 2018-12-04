@@ -148,7 +148,7 @@ TEST(dl, preinit_system_calls) {
 #endif
 }
 
-TEST(dl, xfail_preinit_getauxval) {
+TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
   std::string helper = GetTestlibRoot() +
       "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
