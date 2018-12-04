@@ -61,7 +61,7 @@ TEST(STRING_TEST, strerror) {
 
   // Invalid.
   ASSERT_STREQ("Unknown error -1", strerror(-1));
-  ASSERT_STREQ("Unknown error 1234", strerror(1234));
+  ASSERT_STREQ("Unknown error 134", strerror(EHWPOISON + 1));
 }
 
 #if defined(__BIONIC__)
