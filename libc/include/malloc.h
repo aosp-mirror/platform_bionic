@@ -79,6 +79,7 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 
 /* mallopt options */
 #define M_DECAY_TIME -100
+#define M_PURGE -101
 int mallopt(int __option, int __value) __INTRODUCED_IN(26);
 
 /*
