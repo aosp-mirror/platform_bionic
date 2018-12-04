@@ -46,6 +46,30 @@
       "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86715376_4c885dee",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-04T17:15:55Z",
+      "side": 1,
+      "message": "yes, i was trying to make sure we named this after the oldest one, but i forgot that they\u0027re not actually in numerical order!",
+      "parentUuid": "0eb51238_8fcf6fdb",
+      "range": {
+        "startLine": 158,
+        "startChar": 30,
+        "endLine": 158,
+        "endChar": 41
+      },
+      "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
