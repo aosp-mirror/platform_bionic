@@ -22,6 +22,7 @@ cc_library_static {
     include_dirs: ["bionic/libc"],
 
     stl: "none",
+    system_shared_libs: [],
 
     sanitize: {
         never: true,

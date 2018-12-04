@@ -283,6 +283,7 @@ cc_binary {
             suffix: "64",
         },
     },
+    system_shared_libs: [],
     target: {
         android: {
             static_libs: ["libdebuggerd_handler_fallback"],
