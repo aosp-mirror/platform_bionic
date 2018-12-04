@@ -1142,7 +1142,6 @@ cc_library_static {
         "bionic/stdlib_l.cpp",
         "bionic/strchrnul.cpp",
         "bionic/strerror.cpp",
-        "bionic/strerror_r.cpp",
         "bionic/string_l.cpp",
         "bionic/strings_l.cpp",
         "bionic/strsignal.cpp",
