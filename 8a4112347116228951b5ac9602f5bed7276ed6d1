@@ -70,6 +70,30 @@
       "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6acf840a_93ecebd3",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2018-12-04T20:48:48Z",
+      "side": 1,
+      "message": "Also A8 is even older than both A15 and A7. Thanks ARM for all the names. :)",
+      "parentUuid": "86715376_4c885dee",
+      "range": {
+        "startLine": 158,
+        "startChar": 30,
+        "endLine": 158,
+        "endChar": 41
+      },
+      "revId": "8a4112347116228951b5ac9602f5bed7276ed6d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
