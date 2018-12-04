@@ -37,31 +37,18 @@
     // arch. The code generated is exactly the same.
     .arch armv7-a
 
-// Get the length of src string, then get the source of the dst string.
-// Check that the two lengths together don't exceed the threshold, then
-// do a memcpy of the data.
-ENTRY(__strcat_chk_denver)
+// Get the length of the source string first, then do a memcpy of the data
+// instead of a strcpy.
+ENTRY(__strcpy_chk_a55)
     pld     [r0, #0]
     push    {r0, lr}
     .cfi_def_cfa_offset 8
     .cfi_rel_offset r0, 0
     .cfi_rel_offset lr, 4
-    push    {r4, r5}
-    .cfi_adjust_cfa_offset 8
-    .cfi_rel_offset r4, 0
-    .cfi_rel_offset r5, 4
 
     mov     lr, r2
-
-    // Save the dst register to r5
-    mov     r5, r0
-
-    // Zero out r4
-    eor     r4, r4, r4
-
-    // r1 contains the address of the string to count.
-.L_strlen_start:
     mov     r0, r1
+
     ands    r3, r1, #7
     beq     .L_mainloop
 
@@ -70,7 +57,7 @@ ENTRY(__strcat_chk_denver)
     lsls    ip, r3, #31
     beq     .L_align_to_32
 
-    ldrb    r2, [r1], #1
+    ldrb    r2, [r0], #1
     cbz     r2, .L_update_count_and_finish
 
 .L_align_to_32:
@@ -78,15 +65,15 @@ ENTRY(__strcat_chk_denver)
     ands    ip, r3, #2
     beq     .L_align_to_64
 
-    ldrb    r2, [r1], #1
+    ldrb    r2, [r0], #1
     cbz     r2, .L_update_count_and_finish
-    ldrb    r2, [r1], #1
+    ldrb    r2, [r0], #1
     cbz     r2, .L_update_count_and_finish
 
 .L_align_to_64:
     tst     r3, #4
     beq     .L_mainloop
-    ldr     r3, [r1], #4
+    ldr     r3, [r0], #4
 
     sub     ip, r3, #0x01010101
     bic     ip, ip, r3
@@ -95,9 +82,9 @@ ENTRY(__strcat_chk_denver)
 
     .p2align 2
 .L_mainloop:
-    ldrd    r2, r3, [r1], #8
+    ldrd    r2, r3, [r0], #8
 
-    pld     [r1, #64]
+    pld     [r0, #64]
 
     sub     ip, r2, #0x01010101
     bic     ip, ip, r2
@@ -111,12 +98,12 @@ ENTRY(__strcat_chk_denver)
     b       .L_mainloop
 
 .L_update_count_and_finish:
-    sub     r3, r1, r0
+    sub     r3, r0, r1
     sub     r3, r3, #1
-    b       .L_finish
+    b       .L_check_size
 
 .L_zero_in_first_register:
-    sub     r3, r1, r0
+    sub     r3, r0, r1
     lsls    r2, ip, #17
     bne     .L_sub8_and_finish
     bcs     .L_sub7_and_finish
@@ -124,22 +111,22 @@ ENTRY(__strcat_chk_denver)
     bne     .L_sub6_and_finish
 
     sub     r3, r3, #5
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub8_and_finish:
     sub     r3, r3, #8
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub7_and_finish:
     sub     r3, r3, #7
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub6_and_finish:
     sub     r3, r3, #6
-    b       .L_finish
+    b       .L_check_size
 
 .L_zero_in_second_register:
-    sub     r3, r1, r0
+    sub     r3, r0, r1
     lsls    r2, ip, #17
     bne     .L_sub4_and_finish
     bcs     .L_sub3_and_finish
@@ -147,52 +134,35 @@ ENTRY(__strcat_chk_denver)
     bne     .L_sub2_and_finish
 
     sub     r3, r3, #1
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub4_and_finish:
     sub     r3, r3, #4
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub3_and_finish:
     sub     r3, r3, #3
-    b       .L_finish
+    b       .L_check_size
 
 .L_sub2_and_finish:
     sub     r3, r3, #2
 
-.L_finish:
-    cmp     r4, #0
-    bne     .L_strlen_done
+.L_check_size:
+    pld     [r1, #0]
+    pld     [r1, #64]
+    ldr     r0, [sp]
 
-    // Time to get the dst string length.
-    mov     r1, r5
+    // Add 1 for copy length to get the string terminator.
+    add     r2, r3, #1
 
-    // Save the original source address to r5.
-    mov     r5, r0
-
-    // Save the current length (adding 1 for the terminator).
-    add     r4, r3, #1
-    b       .L_strlen_start
-
-    // r0 holds the pointer to the dst string.
-    // r3 holds the dst string length.
-    // r4 holds the src string length + 1.
-.L_strlen_done:
-    add     r2, r3, r4
     cmp     r2, lr
     itt     hi
-    movhi   r0, lr
-    bhi     __strcat_chk_fail
+    movhi   r0, r2
+    bhi     __strcpy_chk_fail
 
-    // Set up the registers for the memcpy code.
-    mov     r1, r5
-    pld     [r1, #64]
-    mov     r2, r4
-    add     r0, r0, r3
-    pop     {r4, r5}
-END(__strcat_chk_denver)
+    // Fall through into the memcpy_base function.
+END(__strcpy_chk_a55)
 
-#define MEMCPY_BASE         __strcat_chk_denver_memcpy_base
-#define MEMCPY_BASE_ALIGNED __strcat_chk_denver_memcpy_base_aligned
-
+#define MEMCPY_BASE         __strcpy_chk_a55_memcpy_base
+#define MEMCPY_BASE_ALIGNED __strcpy_chk_a55_memcpy_base_aligned
 #include "memcpy_base.S"
