@@ -50,9 +50,7 @@ __END_DECLS
 
 #if defined(__cplusplus)
 
-class KernelArgumentBlock;
-
-__LIBC_HIDDEN__ void __libc_init_globals(KernelArgumentBlock& args);
+__LIBC_HIDDEN__ void __libc_init_globals();
 
 __LIBC_HIDDEN__ void __libc_init_common();
 
