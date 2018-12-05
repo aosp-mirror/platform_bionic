@@ -1491,6 +1491,39 @@ cc_library_static {
     name: "libc_malloc",
 }
 
+filegroup {
+    name: "libc_sources_shared",
+    srcs: [
+        "arch-common/bionic/crtbegin_so.c",
+        "arch-common/bionic/crtbrand.S",
+        "bionic/icu.cpp",
+        "bionic/malloc_common.cpp",
+        "bionic/NetdClient.cpp",
+        "arch-common/bionic/crtend_so.S",
+    ],
+}
+
+filegroup {
+    name: "libc_sources_static",
+    srcs: [
+        "bionic/dl_iterate_phdr_static.cpp",
+        "bionic/malloc_common.cpp",
+    ],
+}
+
+filegroup {
+    name: "libc_sources_shared_arm",
+    srcs: [
+        "arch-arm/bionic/exidx_dynamic.c",
+        "arch-arm/bionic/atexit_legacy.c",
+    ],
+}
+
+filegroup {
+    name: "libc_sources_static_arm",
+    srcs: [ "arch-arm/bionic/exidx_static.c" ],
+}
+
 // ========================================================
 // libc.a + libc.so
 // ========================================================
@@ -1505,10 +1538,7 @@ cc_library {
         },
     },
     static: {
-        srcs: [
-            "bionic/dl_iterate_phdr_static.cpp",
-            "bionic/malloc_common.cpp",
-        ],
+        srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "libc_init_static",
@@ -1516,14 +1546,7 @@ cc_library {
         ],
     },
     shared: {
-        srcs: [
-            "arch-common/bionic/crtbegin_so.c",
-            "arch-common/bionic/crtbrand.S",
-            "bionic/icu.cpp",
-            "bionic/malloc_common.cpp",
-            "bionic/NetdClient.cpp",
-            "arch-common/bionic/crtend_so.S",
-        ],
+        srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "libc_init_dynamic",
             "libc_common_shared",
@@ -1569,17 +1592,12 @@ cc_library {
             version_script: "libc.arm.map",
 
             shared: {
-                srcs: [
-                    "arch-arm/bionic/exidx_dynamic.c",
-
-                    // special for arm
-                    "arch-arm/bionic/atexit_legacy.c",
-                ],
+                srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
             },
             static: {
-                srcs: ["arch-arm/bionic/exidx_static.c"],
+                srcs: [":libc_sources_static_arm"],
             },
         },
         arm64: {
