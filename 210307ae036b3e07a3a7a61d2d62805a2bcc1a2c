@@ -94,6 +94,30 @@
       "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a59ddf93_8e23ef73",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-05T16:24:09Z",
+      "side": 1,
+      "message": "Here: https://android-review.googlesource.com/c/platform/bionic/+/842116",
+      "parentUuid": "f11695a2_15cb140e",
+      "range": {
+        "startLine": 92,
+        "startChar": 45,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
