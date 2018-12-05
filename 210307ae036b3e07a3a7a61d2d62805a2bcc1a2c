@@ -46,6 +46,30 @@
       "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0b97238_b3ac97cb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-05T14:48:21Z",
+      "side": 1,
+      "message": "My plan is to have bionic fallbacks on /system though it won\u0027t be /system/lib but somewhere like /system/lib/bootstrap. (b/119274217)\n\nRoland, is the change in this file a must for you? I know that the dep_path change in the other file is a must, but I am not sure about this one. These paths are used only when the linker fails to find a matching linker namespace config from ld.config.txt.\n\nIf so, why don\u0027t you proceed only with the dep_path change to unblock other stuffs?",
+      "parentUuid": "ecdcf90b_868c2e1d",
+      "range": {
+        "startLine": 92,
+        "startChar": 45,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
