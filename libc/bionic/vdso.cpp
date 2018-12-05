@@ -20,11 +20,11 @@
 #include <limits.h>
 #include <link.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <sys/cdefs.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
-#include "private/KernelArgumentBlock.h"
 
 static inline int vdso_return(int result) {
   if (__predict_true(result == 0)) return 0;
@@ -73,7 +73,7 @@ time_t time(time_t* t) {
   return tv.tv_sec;
 }
 
-void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
+void __libc_init_vdso(libc_globals* globals) {
   auto&& vdso = globals->vdso;
   vdso[VDSO_CLOCK_GETTIME] = { VDSO_CLOCK_GETTIME_SYMBOL, nullptr };
   vdso[VDSO_CLOCK_GETRES] = { VDSO_CLOCK_GETRES_SYMBOL, nullptr };
@@ -81,7 +81,7 @@ void __libc_init_vdso(libc_globals* globals, KernelArgumentBlock& args) {
   vdso[VDSO_TIME] = { VDSO_TIME_SYMBOL, nullptr };
 
   // Do we have a vdso?
-  uintptr_t vdso_ehdr_addr = args.getauxval(AT_SYSINFO_EHDR);
+  uintptr_t vdso_ehdr_addr = getauxval(AT_SYSINFO_EHDR);
   ElfW(Ehdr)* vdso_ehdr = reinterpret_cast<ElfW(Ehdr)*>(vdso_ehdr_addr);
   if (vdso_ehdr == nullptr) {
     return;

@@ -30,17 +30,27 @@
 #include <sys/cdefs.h>
 #include <sys/auxv.h>
 #include <private/bionic_auxv.h>
+#include <private/bionic_globals.h>
 #include <elf.h>
 #include <errno.h>
 
-__LIBC_HIDDEN__ ElfW(auxv_t)* __libc_auxv = nullptr;
-
-extern "C" unsigned long int getauxval(unsigned long int type) {
-  for (ElfW(auxv_t)* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
+// This function needs to be safe to call before TLS is set up, so it can't
+// access errno or the stack protector.
+__attribute__((no_stack_protector))
+__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
+  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == type) {
+      exists = true;
       return v->a_un.a_val;
     }
   }
-  errno = ENOENT;
+  exists = false;
   return 0;
+}
+
+extern "C" unsigned long getauxval(unsigned long type) {
+  bool exists;
+  unsigned long result = __bionic_getauxval(type, exists);
+  if (!exists) errno = ENOENT;
+  return result;
 }
