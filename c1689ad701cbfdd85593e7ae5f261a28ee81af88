@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2436f901_75f1998e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-05T17:32:22Z",
+      "side": 1,
+      "message": "following on from what dimitry said... best to say _how_ you measured this, ideally in a form that folks touching this code in future can just copy \u0026 paste to reproduce. (though that might be better as a code comment in the allocator itself.)",
+      "revId": "c1689ad701cbfdd85593e7ae5f261a28ee81af88",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
