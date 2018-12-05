@@ -22,6 +22,30 @@
       "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecdcf90b_868c2e1d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-05T14:29:54Z",
+      "side": 1,
+      "message": "I thought the plan was not to have a Bionic fallback on /system (and static-link everything on /system)…\n\nI\u0027d like to submit this CL ASAP, as this is blocking progress on the effort to boot devices with the Runtime APEX.",
+      "parentUuid": "fdaa0e36_e3c68212",
+      "range": {
+        "startLine": 92,
+        "startChar": 45,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
