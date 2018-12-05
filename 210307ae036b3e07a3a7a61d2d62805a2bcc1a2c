@@ -70,6 +70,30 @@
       "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f11695a2_15cb140e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-05T15:35:56Z",
+      "side": 1,
+      "message": "My motivations here are:\n1. we should not regress or change existing behavior unless there\u0027s a good reason; as we are moving libraries (Bionic) that used to be in /system/lib[64] to /apex/com.android.runtime/lib[64], I think we should keep them in the default search path;\n2. we should work incrementally (doing two or more things at the same times makes it harder to identify issues), i.e. extend the linker search path to maintain existing functionality, then prune it we think some of the directories are not required (provided that this does not break stuff).\n\nI\u0027ll spin the `_PATH_DEFPATH` change out of this CL.",
+      "parentUuid": "a0b97238_b3ac97cb",
+      "range": {
+        "startLine": 92,
+        "startChar": 45,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "210307ae036b3e07a3a7a61d2d62805a2bcc1a2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
