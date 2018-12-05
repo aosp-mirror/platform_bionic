@@ -31,13 +31,11 @@
 
 #include <stddef.h>
 
-#include "private/KernelArgumentBlock.h"
-
 // arc4random(3) aborts if it's unable to fetch entropy, which is always
 // the case for init on devices. GCE kernels have a workaround to ensure
 // sufficient entropy during early boot, but no device kernels do. This
 // wrapper falls back to AT_RANDOM if the kernel doesn't have enough
 // entropy for getrandom(2) or /dev/urandom.
-void __libc_safe_arc4random_buf(void* buf, size_t n, KernelArgumentBlock& args);
+void __libc_safe_arc4random_buf(void* buf, size_t n);
 
 #endif

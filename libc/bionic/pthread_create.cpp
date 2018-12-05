@@ -53,39 +53,43 @@ void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
 // This code is used both by each new pthread and the code that initializes the main thread.
-bool __init_tls(pthread_internal_t* thread) {
+__attribute__((no_stack_protector))
+void __init_tls(pthread_internal_t* thread) {
   // Slot 0 must point to itself. The x86 Linux kernel reads the TLS from %fs:0.
   thread->tls[TLS_SLOT_SELF] = thread->tls;
   thread->tls[TLS_SLOT_THREAD_ID] = thread;
+}
 
+__attribute__((no_stack_protector))
+void __init_tls_stack_guard(pthread_internal_t* thread) {
+  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
+  thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
+}
+
+bionic_tls* __allocate_bionic_tls() {
   // Add a guard before and after.
   size_t allocation_size = BIONIC_TLS_SIZE + (2 * PTHREAD_GUARD_SIZE);
   void* allocation = mmap(nullptr, allocation_size, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (allocation == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "pthread_create failed: couldn't allocate TLS: %s", strerror(errno));
-    return false;
+    return nullptr;
   }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard");
 
   // Carve out the writable TLS section.
-  thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
+  bionic_tls* result = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
                                                      PTHREAD_GUARD_SIZE);
-  if (mprotect(thread->bionic_tls, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
+  if (mprotect(result, BIONIC_TLS_SIZE, PROT_READ | PROT_WRITE) != 0) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "pthread_create failed: couldn't mprotect TLS: %s", strerror(errno));
     munmap(allocation, allocation_size);
-    return false;
+    return nullptr;
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->bionic_tls, BIONIC_TLS_SIZE, "bionic TLS");
-  return true;
-}
-
-void __init_thread_stack_guard(pthread_internal_t* thread) {
-  // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
-  thread->tls[TLS_SLOT_STACK_GUARD] = reinterpret_cast<void*>(__stack_chk_guard);
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, result, BIONIC_TLS_SIZE, "bionic TLS");
+  return result;
 }
 
 static void __init_alternate_signal_stack(pthread_internal_t* thread) {
@@ -255,11 +259,15 @@ static int __allocate_thread(pthread_attr_t* attr, pthread_internal_t** threadp,
 
   thread->mmap_size = mmap_size;
   thread->attr = *attr;
-  if (!__init_tls(thread)) {
+
+  thread->bionic_tls = __allocate_bionic_tls();
+  if (thread->bionic_tls == nullptr) {
     if (thread->mmap_size != 0) munmap(thread->attr.stack_base, thread->mmap_size);
     return EAGAIN;
   }
-  __init_thread_stack_guard(thread);
+
+  __init_tls(thread);
+  __init_tls_stack_guard(thread);
 
   *threadp = thread;
   *child_stack = stack_top;
