@@ -140,6 +140,30 @@
       "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7361b29d_ecc81186",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-06T05:40:22Z",
+      "side": 1,
+      "message": ".",
+      "parentUuid": "905c6b09_bbc303c7",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 70
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
