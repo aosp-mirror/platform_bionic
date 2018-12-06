@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55fda110_9a794378",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-12-06T08:55:23Z",
+      "side": 1,
+      "message": "add check for page_free_block_list !\u003d nullptr anyways?",
+      "revId": "bd37ddc60b284023a49fa16cf1037b08493f3c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0543a6dc_00f9462e",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2018-12-06T08:55:23Z",
+      "side": 1,
+      "message": "why only in this functions? also for non-pointers maybe const size_t?",
+      "range": {
+        "startLine": 205,
+        "startChar": 9,
+        "endLine": 205,
+        "endChar": 14
+      },
+      "revId": "bd37ddc60b284023a49fa16cf1037b08493f3c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
