@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ce2f8c71_a206fbb1",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-06T05:39:46Z",
+      "side": 1,
+      "message": "Thanks! Didn\u0027t know there\u0027s this nice macro. Done.",
+      "parentUuid": "c5a38045_7f37a334",
+      "range": {
+        "startLine": 69,
+        "startChar": 40,
+        "endLine": 69,
+        "endChar": 77
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "abcd3d1c_826fda02",
         "filename": "linker/linker_allocator.cpp",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "166ab2a5_60e4398e",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-06T05:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "abcd3d1c_826fda02",
+      "range": {
+        "startLine": 198,
+        "startChar": 6,
+        "endLine": 198,
+        "endChar": 65
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02c30f8d_4a5dac30",
         "filename": "linker/linker_allocator.h",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2018-12-05T08:21:05Z",
       "side": 1,
       "message": "For run-time performance, I think it\u0027d be better if we stored this count as a field in LinkerSmallObjectAllocator. block_size_ is a power of two, but the compiler probably can\u0027t figure that out, so it\u0027ll call __aeabi_uidiv on arm32.",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 98,
+        "endChar": 70
+      },
+      "revId": "243e115612c211306bd1d48b6b62cc95f868bf9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "905c6b09_bbc303c7",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-06T05:39:46Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t want to add another variable for this, but I suppose it\u0027s fairly cheap and there\u0027s no reason to save 8 bytes and hurt runtime performance.",
+      "parentUuid": "02c30f8d_4a5dac30",
       "range": {
         "startLine": 98,
         "startChar": 4,
