@@ -81,12 +81,6 @@ cc_defaults {
     xom: false,
 }
 
-// ANDROIDMK TRANSLATION ERROR: unsupported directive
-// ifeq ($(strip $(DEBUG_BIONIC_LIBC)),true)
-//libc_common_cflags += ["-DDEBUG"]
-// ANDROIDMK TRANSLATION ERROR: unsupported directive
-// endif
-
 // ========================================================
 // libc_stack_protector.a - stack protector code
 // ========================================================
