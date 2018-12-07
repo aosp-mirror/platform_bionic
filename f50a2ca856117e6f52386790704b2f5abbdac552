@@ -52,6 +52,24 @@
       "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "37853e7c_325e1ad1",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-12-07T09:42:50Z",
+      "side": 1,
+      "message": "Added comment about the relative ordering for the APK mechanism.",
+      "parentUuid": "a712b557_73043d27",
+      "revId": "f50a2ca856117e6f52386790704b2f5abbdac552",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
