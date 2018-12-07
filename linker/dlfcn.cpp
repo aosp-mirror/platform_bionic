@@ -96,10 +96,9 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static char* __bionic_set_dlerror(char* new_value) {
-  char** dlerror_slot = &reinterpret_cast<char**>(__get_tls())[TLS_SLOT_DLERROR];
+  char* old_value = __get_thread()->current_dlerror;
+  __get_thread()->current_dlerror = new_value;
 
-  char* old_value = *dlerror_slot;
-  *dlerror_slot = new_value;
   if (new_value != nullptr) LD_LOG(kLogErrors, "dlerror set to \"%s\"", new_value);
   return old_value;
 }
