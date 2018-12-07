@@ -145,6 +145,8 @@ class pthread_internal_t {
 
   bionic_tls* bionic_tls;
 
+  int errno_value;
+
   // The thread pointer (__get_tls()) points at this field. This field must come last so that
   // an executable's TLS segment can be allocated at a fixed offset after the thread pointer.
   void* tls[BIONIC_TLS_SLOTS];
