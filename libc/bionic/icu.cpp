@@ -58,8 +58,7 @@ static int __icu_dat_file_filter(const dirent* dirp) {
 
 static bool __find_icu() {
   dirent** namelist = nullptr;
-  int n = scandir("/apex/com.android.runtime/etc/icu", &namelist, &__icu_dat_file_filter,
-                  alphasort);
+  int n = scandir("/system/usr/icu", &namelist, &__icu_dat_file_filter, alphasort);
   int max_version = -1;
   while (n--) {
     // We prefer the latest version available.
