@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "444e88ab_5e091e2b",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-11T19:00:47Z",
+      "side": 1,
+      "message": "Martin and I just observed that this probably broke ART chroot-based device testing; I\u0027m working on a quick fix.",
+      "range": {
+        "startLine": 61,
+        "startChar": 18,
+        "endLine": 61,
+        "endChar": 53
+      },
+      "revId": "68c6bd8b43f03f7d2ffc81d3490a754e21803a30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
