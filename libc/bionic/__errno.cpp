@@ -29,8 +29,8 @@
 #include <errno.h>
 #include <stdint.h>
 
-#include "private/bionic_tls.h"
+#include "pthread_internal.h"
 
 int*  __errno() {
-  return reinterpret_cast<int*>(&(__get_tls()[TLS_SLOT_ERRNO]));
+  return &__get_thread()->errno_value;
 }
