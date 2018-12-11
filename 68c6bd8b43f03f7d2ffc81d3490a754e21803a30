@@ -22,6 +22,30 @@
       "revId": "68c6bd8b43f03f7d2ffc81d3490a754e21803a30",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f2bbbd9_1adabee1",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-11T19:29:54Z",
+      "side": 1,
+      "message": "Mitigation proposal here: https://android-review.googlesource.com/c/platform/art/+/847276.",
+      "parentUuid": "444e88ab_5e091e2b",
+      "range": {
+        "startLine": 61,
+        "startChar": 18,
+        "endLine": 61,
+        "endChar": 53
+      },
+      "revId": "68c6bd8b43f03f7d2ffc81d3490a754e21803a30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
