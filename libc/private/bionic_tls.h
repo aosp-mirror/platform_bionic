@@ -56,7 +56,8 @@ __BEGIN_DECLS
 enum {
   TLS_SLOT_SELF = 0, // The kernel requires this specific slot for x86.
   TLS_SLOT_THREAD_ID,
-  TLS_SLOT_ERRNO,
+
+  // TLS slot 2 was used for errno but is now free.
 
   // These two aren't used by bionic itself, but allow the graphics code to
   // access TLS directly rather than using the pthread API.
