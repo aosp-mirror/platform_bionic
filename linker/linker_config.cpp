@@ -489,7 +489,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
 
   g_config.set_target_sdk_version(target_sdk_version);
 
-  for (auto ns_config_it : namespace_configs) {
+  for (const auto& ns_config_it : namespace_configs) {
     auto& name = ns_config_it.first;
     NamespaceConfig* ns_config = ns_config_it.second;
 

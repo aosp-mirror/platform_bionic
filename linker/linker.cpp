@@ -3879,7 +3879,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::vector<android_namespace_t*> created_namespaces;
   created_namespaces.reserve(namespaces.size());
-  for (auto kv : namespaces) {
+  for (const auto& kv : namespaces) {
     created_namespaces.push_back(kv.second);
   }
   return created_namespaces;
