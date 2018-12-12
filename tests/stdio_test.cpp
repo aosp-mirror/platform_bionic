@@ -761,7 +761,7 @@ TEST(STDIO_TEST, snprintf_e) {
   snprintf(buf, sizeof(buf), "%e", 1.5);
   EXPECT_STREQ("1.500000e+00", buf);
 
-  snprintf(buf, sizeof(buf), "%Le", 1.5l);
+  snprintf(buf, sizeof(buf), "%Le", 1.5L);
   EXPECT_STREQ("1.500000e+00", buf);
 }
 
