@@ -66,7 +66,9 @@ enum {
 
   TLS_SLOT_STACK_GUARD = 5, // GCC requires this specific slot for x86.
 
-  // TLS slot 6 was used for dlerror but is now free.
+  // Lets sanitizers avoid using pthread_getspecific for finding the current
+  // thread state. (Slot 6 was historically used for dlerror instead.)
+  TLS_SLOT_SANITIZER = 6,
 
   // Fast storage for Thread::Current() in ART.
   TLS_SLOT_ART_THREAD_SELF = 7,
