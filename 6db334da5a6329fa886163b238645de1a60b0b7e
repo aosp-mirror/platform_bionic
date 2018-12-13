@@ -117,6 +117,30 @@
       "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e61fb5f9_044f430b",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-13T01:38:11Z",
+      "side": 1,
+      "message": "Obviously I\u0027m not good at reading... Done.",
+      "parentUuid": "c278481b_f62e556a",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 32
+      },
+      "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
