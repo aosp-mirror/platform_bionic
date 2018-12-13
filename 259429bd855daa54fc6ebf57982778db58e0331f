@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "450fb280_8937d8d3",
+        "filename": "linker/linker_allocator.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2018-12-13T01:40:30Z",
+      "side": 1,
+      "message": "Also fixed ordering here.",
+      "range": {
+        "startLine": 208,
+        "startChar": 2,
+        "endLine": 208,
+        "endChar": 17
+      },
+      "revId": "259429bd855daa54fc6ebf57982778db58e0331f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
