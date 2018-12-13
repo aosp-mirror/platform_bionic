@@ -93,6 +93,30 @@
       "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c278481b_f62e556a",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-13T01:32:59Z",
+      "side": 1,
+      "message": "type_ is still \"uint32_t const type_;\", should be \"const uint32_t type_;\"",
+      "parentUuid": "d261e124_58b9ba93",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 32
+      },
+      "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
