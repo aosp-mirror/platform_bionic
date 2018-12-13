@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eed6bb41_0056d843",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-13T00:19:05Z",
+      "side": 1,
+      "message": "Can we inline blocks_per_page_? Both the member and the accessor function are private.",
+      "range": {
+        "startLine": 97,
+        "startChar": 2,
+        "endLine": 97,
+        "endChar": 38
+      },
+      "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c125bb2_a3415488",
+        "filename": "linker/linker_allocator.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2018-12-13T00:19:05Z",
+      "side": 1,
+      "message": "I think we\u0027re preferring const before the type for non-pointers.",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 32
+      },
+      "revId": "6db334da5a6329fa886163b238645de1a60b0b7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
