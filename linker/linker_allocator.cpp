@@ -74,6 +74,10 @@ static const size_t kSmallObjectMaxSize = 1 << kSmallObjectMaxSizeLog2;
 // This type is used for large allocations (with size >1k)
 static const uint32_t kLargeObject = 111;
 
+// Allocated pointers must be at least 16-byte aligned.  Round up the size of
+// page_info to multiple of 16.
+static constexpr size_t kPageInfoSize = __BIONIC_ALIGN(sizeof(page_info), 16);
+
 static inline uint16_t log2(size_t number) {
   uint16_t result = 0;
   number--;
@@ -90,6 +94,8 @@ LinkerSmallObjectAllocator::LinkerSmallObjectAllocator(uint32_t type,
                                                        size_t block_size)
     : type_(type),
       block_size_(block_size),
+      blocks_per_page_((PAGE_SIZE - sizeof(small_object_page_info)) /
+                       block_size),
       free_pages_cnt_(0),
       page_list_(nullptr) {}
 
@@ -118,12 +124,11 @@ void* LinkerSmallObjectAllocator::alloc() {
     page->free_block_list = block_record->next;
   }
 
-  if (page->allocated_blocks_cnt == 0) {
+  if (page->free_blocks_cnt == blocks_per_page_) {
     free_pages_cnt_--;
   }
 
   page->free_blocks_cnt--;
-  page->allocated_blocks_cnt++;
 
   memset(block_record, 0, block_size_);
 
@@ -137,7 +142,7 @@ void* LinkerSmallObjectAllocator::alloc() {
 }
 
 void LinkerSmallObjectAllocator::free_page(small_object_page_info* page) {
-  CHECK(page->allocated_blocks_cnt == 0);
+  CHECK(page->free_blocks_cnt == blocks_per_page_);
   if (page->prev_page) {
     page->prev_page->next_page = page->next_page;
   }
@@ -156,10 +161,7 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
       reinterpret_cast<small_object_page_info*>(
           PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
 
-  const ssize_t offset =
-      reinterpret_cast<uintptr_t>(ptr) - sizeof(small_object_page_info);
-
-  if (offset % block_size_ != 0) {
+  if (reinterpret_cast<uintptr_t>(ptr) % block_size_ != 0) {
     async_safe_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
   }
 
@@ -172,9 +174,8 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
 
   page->free_block_list = block_record;
   page->free_blocks_cnt++;
-  page->allocated_blocks_cnt--;
 
-  if (page->allocated_blocks_cnt == 0) {
+  if (page->free_blocks_cnt == blocks_per_page_) {
     if (++free_pages_cnt_ > 1) {
       // if we already have a free page - unmap this one.
       free_page(page);
@@ -186,8 +187,6 @@ void LinkerSmallObjectAllocator::free(void* ptr) {
 }
 
 void LinkerSmallObjectAllocator::alloc_page() {
-  static_assert(sizeof(small_object_page_info) % 16 == 0,
-                "sizeof(small_object_page_info) is not multiple of 16");
   void* const map_ptr = mmap(nullptr, PAGE_SIZE, PROT_READ | PROT_WRITE,
                              MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (map_ptr == MAP_FAILED) {
@@ -203,16 +202,16 @@ void LinkerSmallObjectAllocator::alloc_page() {
   page->info.type = type_;
   page->info.allocator_addr = this;
 
-  const size_t free_blocks_cnt =
-      (PAGE_SIZE - sizeof(small_object_page_info)) / block_size_;
+  page->free_blocks_cnt = blocks_per_page_;
 
-  page->free_blocks_cnt = free_blocks_cnt;
-  page->allocated_blocks_cnt = 0;
-
+  // Align the first block to block_size_.
+  const uintptr_t first_block_addr =
+      __BIONIC_ALIGN(reinterpret_cast<uintptr_t>(page + 1), block_size_);
   small_object_block_record* const first_block =
-      reinterpret_cast<small_object_block_record*>(page + 1);
+      reinterpret_cast<small_object_block_record*>(first_block_addr);
+
   first_block->next = nullptr;
-  first_block->free_blocks_cnt = free_blocks_cnt;
+  first_block->free_blocks_cnt = blocks_per_page_;
 
   page->free_block_list = first_block;
 
@@ -262,7 +261,7 @@ void LinkerMemoryAllocator::initialize_allocators() {
 }
 
 void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
-  size_t allocated_size = PAGE_END(size + sizeof(page_info));
+  size_t allocated_size = PAGE_END(size + kPageInfoSize);
   void* map_ptr = mmap(nullptr, allocated_size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
                        -1, 0);
 
@@ -277,7 +276,8 @@ void* LinkerMemoryAllocator::alloc_mmap(size_t size) {
   info->type = kLargeObject;
   info->allocated_size = allocated_size;
 
-  return info + 1;
+  return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(info) +
+                                 kPageInfoSize);
 }
 
 void* LinkerMemoryAllocator::alloc(size_t size) {
@@ -323,7 +323,7 @@ void* LinkerMemoryAllocator::realloc(void* ptr, size_t size) {
   size_t old_size = 0;
 
   if (info->type == kLargeObject) {
-    old_size = info->allocated_size - sizeof(page_info);
+    old_size = info->allocated_size - kPageInfoSize;
   } else {
     LinkerSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
     if (allocator != info->allocator_addr) {
