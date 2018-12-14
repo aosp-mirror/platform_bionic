@@ -30,9 +30,6 @@
 #include "linker_debug.h"
 #include "linker.h"
 
-#include <algorithm>
-#include <vector>
-
 #include <stdlib.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -56,9 +53,19 @@
 // the memory.
 //
 // For a pointer allocated using SmallObjectAllocator it adds
-// the block to free_blocks_list_. If the number of free pages reaches 2,
-// SmallObjectAllocator munmaps one of the pages keeping the other one
-// in reserve.
+// the block to free_blocks_list in the corresponding page. If the number of
+// free pages reaches 2, SmallObjectAllocator munmaps one of the pages keeping
+// the other one in reserve.
+
+// Memory management for large objects is fairly straightforward, but for small
+// objects it is more complicated.  If you are changing this code, one simple
+// way to evaluate the memory usage change is by running 'dd' and examine the
+// memory usage by 'showmap $(pidof dd)'.  'dd' is nice in that:
+//   1. It links in quite a few libraries, so you get some linker memory use.
+//   2. When run with no arguments, it sits waiting for input, so it is easy to
+//      examine its memory usage with showmap.
+//   3. Since it does nothing while waiting for input, the memory usage is
+//      determinisitic.
 
 static const char kSignature[4] = {'L', 'M', 'A', 1};
 
@@ -66,10 +73,6 @@ static const size_t kSmallObjectMaxSize = 1 << kSmallObjectMaxSizeLog2;
 
 // This type is used for large allocations (with size >1k)
 static const uint32_t kLargeObject = 111;
-
-bool operator<(const small_object_page_record& one, const small_object_page_record& two) {
-  return one.page_addr < two.page_addr;
-}
 
 static inline uint16_t log2(size_t number) {
   uint16_t result = 0;
@@ -83,149 +86,164 @@ static inline uint16_t log2(size_t number) {
   return result;
 }
 
-LinkerSmallObjectAllocator::LinkerSmallObjectAllocator(uint32_t type, size_t block_size)
-    : type_(type), block_size_(block_size), free_pages_cnt_(0), free_blocks_list_(nullptr) {}
+LinkerSmallObjectAllocator::LinkerSmallObjectAllocator(uint32_t type,
+                                                       size_t block_size)
+    : type_(type),
+      block_size_(block_size),
+      free_pages_cnt_(0),
+      page_list_(nullptr) {}
 
 void* LinkerSmallObjectAllocator::alloc() {
   CHECK(block_size_ != 0);
 
-  if (free_blocks_list_ == nullptr) {
+  if (page_list_ == nullptr) {
     alloc_page();
   }
 
-  small_object_block_record* block_record = free_blocks_list_;
+  // Fully allocated pages are de-managed and removed from the page list, so
+  // every page from the page list must be useable.  Let's just take the first
+  // one.
+  small_object_page_info* page = page_list_;
+  CHECK(page->free_block_list != nullptr);
+
+  small_object_block_record* const block_record = page->free_block_list;
   if (block_record->free_blocks_cnt > 1) {
-    small_object_block_record* next_free = reinterpret_cast<small_object_block_record*>(
-        reinterpret_cast<uint8_t*>(block_record) + block_size_);
+    small_object_block_record* next_free =
+        reinterpret_cast<small_object_block_record*>(
+            reinterpret_cast<uint8_t*>(block_record) + block_size_);
     next_free->next = block_record->next;
     next_free->free_blocks_cnt = block_record->free_blocks_cnt - 1;
-    free_blocks_list_ = next_free;
+    page->free_block_list = next_free;
   } else {
-    free_blocks_list_ = block_record->next;
+    page->free_block_list = block_record->next;
   }
 
-  // bookkeeping...
-  auto page_record = find_page_record(block_record);
-
-  if (page_record->allocated_blocks_cnt == 0) {
+  if (page->allocated_blocks_cnt == 0) {
     free_pages_cnt_--;
   }
 
-  page_record->free_blocks_cnt--;
-  page_record->allocated_blocks_cnt++;
+  page->free_blocks_cnt--;
+  page->allocated_blocks_cnt++;
 
   memset(block_record, 0, block_size_);
+
+  if (page->free_blocks_cnt == 0) {
+    // De-manage fully allocated pages.  These pages will be managed again if
+    // a block is freed.
+    remove_from_page_list(page);
+  }
 
   return block_record;
 }
 
-void LinkerSmallObjectAllocator::free_page(linker_vector_t::iterator page_record) {
-  void* page_start = reinterpret_cast<void*>(page_record->page_addr);
-  void* page_end = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(page_start) + PAGE_SIZE);
-
-  while (free_blocks_list_ != nullptr &&
-      free_blocks_list_ > page_start &&
-      free_blocks_list_ < page_end) {
-    free_blocks_list_ = free_blocks_list_->next;
+void LinkerSmallObjectAllocator::free_page(small_object_page_info* page) {
+  CHECK(page->allocated_blocks_cnt == 0);
+  if (page->prev_page) {
+    page->prev_page->next_page = page->next_page;
   }
-
-  small_object_block_record* current = free_blocks_list_;
-
-  while (current != nullptr) {
-    while (current->next > page_start && current->next < page_end) {
-      current->next = current->next->next;
-    }
-
-    current = current->next;
+  if (page->next_page) {
+    page->next_page->prev_page = page->prev_page;
   }
-
-  munmap(page_start, PAGE_SIZE);
-  page_records_.erase(page_record);
+  if (page_list_ == page) {
+    page_list_ = page->next_page;
+  }
+  munmap(page, PAGE_SIZE);
   free_pages_cnt_--;
 }
 
 void LinkerSmallObjectAllocator::free(void* ptr) {
-  auto page_record = find_page_record(ptr);
+  small_object_page_info* const page =
+      reinterpret_cast<small_object_page_info*>(
+          PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
 
-  ssize_t offset = reinterpret_cast<uintptr_t>(ptr) - sizeof(page_info);
+  const ssize_t offset =
+      reinterpret_cast<uintptr_t>(ptr) - sizeof(small_object_page_info);
 
   if (offset % block_size_ != 0) {
     async_safe_fatal("invalid pointer: %p (block_size=%zd)", ptr, block_size_);
   }
 
   memset(ptr, 0, block_size_);
-  small_object_block_record* block_record = reinterpret_cast<small_object_block_record*>(ptr);
+  small_object_block_record* const block_record =
+      reinterpret_cast<small_object_block_record*>(ptr);
 
-  block_record->next = free_blocks_list_;
+  block_record->next = page->free_block_list;
   block_record->free_blocks_cnt = 1;
 
-  free_blocks_list_ = block_record;
+  page->free_block_list = block_record;
+  page->free_blocks_cnt++;
+  page->allocated_blocks_cnt--;
 
-  page_record->free_blocks_cnt++;
-  page_record->allocated_blocks_cnt--;
-
-  if (page_record->allocated_blocks_cnt == 0) {
-    if (free_pages_cnt_++ > 1) {
+  if (page->allocated_blocks_cnt == 0) {
+    if (++free_pages_cnt_ > 1) {
       // if we already have a free page - unmap this one.
-      free_page(page_record);
+      free_page(page);
     }
+  } else if (page->free_blocks_cnt == 1) {
+    // We just freed from a full page.  Add this page back to the list.
+    add_to_page_list(page);
   }
-}
-
-linker_vector_t::iterator LinkerSmallObjectAllocator::find_page_record(void* ptr) {
-  void* addr = reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(ptr)));
-  small_object_page_record boundary;
-  boundary.page_addr = addr;
-  linker_vector_t::iterator it = std::lower_bound(
-      page_records_.begin(), page_records_.end(), boundary);
-
-  if (it == page_records_.end() || it->page_addr != addr) {
-    // not found...
-    async_safe_fatal("page record for %p was not found (block_size=%zd)", ptr, block_size_);
-  }
-
-  return it;
-}
-
-void LinkerSmallObjectAllocator::create_page_record(void* page_addr, size_t free_blocks_cnt) {
-  small_object_page_record record;
-  record.page_addr = page_addr;
-  record.free_blocks_cnt = free_blocks_cnt;
-  record.allocated_blocks_cnt = 0;
-
-  linker_vector_t::iterator it = std::lower_bound(
-      page_records_.begin(), page_records_.end(), record);
-  page_records_.insert(it, record);
 }
 
 void LinkerSmallObjectAllocator::alloc_page() {
-  static_assert(sizeof(page_info) % 16 == 0, "sizeof(page_info) is not multiple of 16");
-  void* map_ptr = mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  static_assert(sizeof(small_object_page_info) % 16 == 0,
+                "sizeof(small_object_page_info) is not multiple of 16");
+  void* const map_ptr = mmap(nullptr, PAGE_SIZE, PROT_READ | PROT_WRITE,
+                             MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   if (map_ptr == MAP_FAILED) {
     async_safe_fatal("mmap failed: %s", strerror(errno));
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE, "linker_alloc_small_objects");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map_ptr, PAGE_SIZE,
+        "linker_alloc_small_objects");
 
-  page_info* info = reinterpret_cast<page_info*>(map_ptr);
-  memcpy(info->signature, kSignature, sizeof(kSignature));
-  info->type = type_;
-  info->allocator_addr = this;
+  small_object_page_info* const page =
+      reinterpret_cast<small_object_page_info*>(map_ptr);
+  memcpy(page->info.signature, kSignature, sizeof(kSignature));
+  page->info.type = type_;
+  page->info.allocator_addr = this;
 
-  size_t free_blocks_cnt = (PAGE_SIZE - sizeof(page_info))/block_size_;
+  const size_t free_blocks_cnt =
+      (PAGE_SIZE - sizeof(small_object_page_info)) / block_size_;
 
-  create_page_record(map_ptr, free_blocks_cnt);
+  page->free_blocks_cnt = free_blocks_cnt;
+  page->allocated_blocks_cnt = 0;
 
-  small_object_block_record* first_block = reinterpret_cast<small_object_block_record*>(info + 1);
-
-  first_block->next = free_blocks_list_;
+  small_object_block_record* const first_block =
+      reinterpret_cast<small_object_block_record*>(page + 1);
+  first_block->next = nullptr;
   first_block->free_blocks_cnt = free_blocks_cnt;
 
-  free_blocks_list_ = first_block;
+  page->free_block_list = first_block;
+
+  add_to_page_list(page);
 
   free_pages_cnt_++;
 }
 
+void LinkerSmallObjectAllocator::add_to_page_list(small_object_page_info* page) {
+  page->next_page = page_list_;
+  page->prev_page = nullptr;
+  if (page_list_) {
+    page_list_->prev_page = page;
+  }
+  page_list_ = page;
+}
+
+void LinkerSmallObjectAllocator::remove_from_page_list(
+    small_object_page_info* page) {
+  if (page->prev_page) {
+    page->prev_page->next_page = page->next_page;
+  }
+  if (page->next_page) {
+    page->next_page->prev_page = page->prev_page;
+  }
+  if (page_list_ == page) {
+    page_list_ = page->next_page;
+  }
+  page->prev_page = nullptr;
+  page->next_page = nullptr;
+}
 
 void LinkerMemoryAllocator::initialize_allocators() {
   if (allocators_ != nullptr) {
