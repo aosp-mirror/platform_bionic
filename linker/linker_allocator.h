@@ -36,8 +36,6 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <vector>
-
 #include <async_safe/log.h>
 
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
@@ -57,58 +55,31 @@ struct page_info {
     // and allocator_addr for small ones.
     LinkerSmallObjectAllocator* allocator_addr;
   };
-} __attribute__((aligned(16)));
-
-struct small_object_page_record {
-  void* page_addr;
-  size_t free_blocks_cnt;
-  size_t allocated_blocks_cnt;
 };
-
-// for lower_bound...
-bool operator<(const small_object_page_record& one, const small_object_page_record& two);
 
 struct small_object_block_record {
   small_object_block_record* next;
   size_t free_blocks_cnt;
 };
 
-// This is implementation for std::vector allocator
-template <typename T>
-class linker_vector_allocator {
- public:
-  typedef T value_type;
-  typedef T* pointer;
-  typedef const T* const_pointer;
-  typedef T& reference;
-  typedef const T& const_reference;
-  typedef size_t size_type;
-  typedef ptrdiff_t difference_type;
+// This structure is placed at the beginning of each page managed by
+// LinkerSmallObjectAllocator.  Note that a page_info struct is expected at the
+// beginning of each page as well, and therefore this structure contains a
+// page_info as its *first* field.
+struct small_object_page_info {
+  page_info info;  // Must be the first field.
 
-  T* allocate(size_t n, const T* hint = nullptr) {
-    size_t size = n * sizeof(T);
-    void* ptr = mmap(const_cast<T*>(hint), size, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS,
-                     -1, 0);
-    if (ptr == MAP_FAILED) {
-      // Spec says we need to throw std::bad_alloc here but because our
-      // code does not support exception handling anyways - we are going to abort.
-      async_safe_fatal("mmap failed: %s", strerror(errno));
-    }
+  // Doubly linked list for traversing all pages allocated by a
+  // LinkerSmallObjectAllocator.
+  small_object_page_info* next_page;
+  small_object_page_info* prev_page;
 
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ptr, size, "linker_alloc_vector");
+  // Linked list containing all free blocks in this page.
+  small_object_block_record* free_block_list;
 
-    return reinterpret_cast<T*>(ptr);
-  }
-
-  void deallocate(T* ptr, size_t n) {
-    munmap(ptr, n * sizeof(T));
-  }
+  // Free blocks counter.
+  size_t free_blocks_cnt;
 };
-
-typedef
-    std::vector<small_object_page_record, linker_vector_allocator<small_object_page_record>>
-    linker_vector_t;
-
 
 class LinkerSmallObjectAllocator {
  public:
@@ -119,18 +90,17 @@ class LinkerSmallObjectAllocator {
   size_t get_block_size() const { return block_size_; }
  private:
   void alloc_page();
-  void free_page(linker_vector_t::iterator page_record);
-  linker_vector_t::iterator find_page_record(void* ptr);
-  void create_page_record(void* page_addr, size_t free_blocks_cnt);
+  void free_page(small_object_page_info* page);
+  void add_to_page_list(small_object_page_info* page);
+  void remove_from_page_list(small_object_page_info* page);
 
-  uint32_t type_;
-  size_t block_size_;
+  const uint32_t type_;
+  const size_t block_size_;
+  const size_t blocks_per_page_;
 
   size_t free_pages_cnt_;
-  small_object_block_record* free_blocks_list_;
 
-  // sorted vector of page records
-  linker_vector_t page_records_;
+  small_object_page_info* page_list_;
 };
 
 class LinkerMemoryAllocator {

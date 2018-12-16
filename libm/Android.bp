@@ -504,6 +504,9 @@ cc_library {
         "-Wl,--Bsymbolic-functions",
     ],
 
+    // b/120614316, non-critical readibility check
+    tidy_checks: ["-cert-dcl16-c"],
+
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
 
