@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1dc370cd_615c8af8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-17T18:24:12Z",
+      "side": 1,
+      "message": "__ANDROID__ is \"on the device\".\n\n__BIONIC__ (which is implicit for all of this code) can be device or host.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 0
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11fe7363_3ce3a559",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2018-12-17T18:24:12Z",
+      "side": 1,
+      "message": "is this set on the host when running ART tests and the like?",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 54
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
