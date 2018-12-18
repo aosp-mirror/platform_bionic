@@ -207,7 +207,6 @@ LIBC {
     _ctype_; # var
     _Exit; # introduced=21
     _exit;
-    _flush_cache; # mips
     _flushlbf; # introduced=23
     _getlong;
     _getshort;

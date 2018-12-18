@@ -56,18 +56,12 @@ cc_library {
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {
         arm: {
-            version_script: "libdl.arm.map",
+            version_script: ":libdl.arm.map",
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
         },
         arm64: {
-            version_script: "libdl.arm64.map",
-        },
-        mips: {
-            version_script: "libdl.mips.map",
-        },
-        mips64: {
-            version_script: "libdl.mips64.map",
+            version_script: ":libdl.arm64.map",
         },
         x86: {
             pack_relocations: false,
@@ -75,11 +69,11 @@ cc_library {
                 "-Wl,--exclude-libs=libgcc_eh.a",
                 "-Wl,--hash-style=both",
             ],
-            version_script: "libdl.x86.map",
+            version_script: ":libdl.x86.map",
         },
         x86_64: {
             ldflags: ["-Wl,--exclude-libs=libgcc_eh.a"],
-            version_script: "libdl.x86_64.map",
+            version_script: ":libdl.x86_64.map",
         },
     },
     shared: {
@@ -117,4 +111,36 @@ ndk_library {
 llndk_library {
     name: "libdl",
     symbol_file: "libdl.map.txt",
+}
+
+genrule {
+    name: "libdl.arm.map",
+    out: ["libdl.arm.map"],
+    srcs: ["libdl.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libdl.arm64.map",
+    out: ["libdl.arm64.map"],
+    srcs: ["libdl.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libdl.x86.map",
+    out: ["libdl.x86.map"],
+    srcs: ["libdl.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libdl.x86_64.map",
+    out: ["libdl.x86_64.map"],
+    srcs: ["libdl.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
 }

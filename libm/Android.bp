@@ -285,7 +285,7 @@ cc_library {
             instruction_set: "arm",
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libm.arm.map",
+            version_script: ":libm.arm.map",
         },
 
         arm64: {
@@ -318,17 +318,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_trunc.c",
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
-            version_script: "libm.arm64.map",
-        },
-
-        mips: {
-            srcs: ["mips/fenv.c"],
-            version_script: "libm.mips.map",
-        },
-
-        mips64: {
-            srcs: ["mips/fenv.c"],
-            version_script: "libm.mips64.map",
+            version_script: ":libm.arm64.map",
         },
 
         x86: {
@@ -403,7 +393,7 @@ cc_library {
             local_include_dirs: ["i387"],
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libm.x86.map",
+            version_script: ":libm.x86.map",
         },
 
         x86_64: {
@@ -474,7 +464,7 @@ cc_library {
                     "upstream-freebsd/lib/msun/src/s_truncf.c",
                 ],
             },
-            version_script: "libm.x86_64.map",
+            version_script: ":libm.x86_64.map",
         },
     },
 
@@ -531,4 +521,36 @@ ndk_library {
 llndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
+}
+
+genrule {
+    name: "libm.arm.map",
+    out: ["libm.arm.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libm.arm64.map",
+    out: ["libm.arm64.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.x86.map",
+    out: ["libm.x86.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.x86_64.map",
+    out: ["libm.x86_64.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
 }
