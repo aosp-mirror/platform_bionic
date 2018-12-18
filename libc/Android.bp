@@ -1576,12 +1576,11 @@ cc_library {
 
     arch: {
         arm: {
-            //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
 
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.arm.map",
+            version_script: ":libc.arm.map",
 
             shared: {
                 srcs: [":libc_sources_shared_arm"],
@@ -1593,35 +1592,57 @@ cc_library {
             },
         },
         arm64: {
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.arm64.map",
-        },
-        mips: {
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.mips.map",
-        },
-        mips64: {
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.mips64.map",
+            version_script: ":libc.arm64.map",
         },
         x86: {
-            //TODO: This is to work around b/24465209. Remove after root cause is fixed
+            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
 
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.x86.map",
+            version_script: ":libc.x86.map",
         },
         x86_64: {
-            // Don't re-export new/delete and friends, even if the compiler really wants to.
-            version_script: "libc.x86_64.map",
+            version_script: ":libc.x86_64.map",
         },
     },
 }
 
+genrule {
+    name: "libc.arm.map",
+    out: ["libc.arm.map"],
+    srcs: ["libc.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libc.arm64.map",
+    out: ["libc.arm64.map"],
+    srcs: ["libc.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libc.x86.map",
+    out: ["libc.x86.map"],
+    srcs: ["libc.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libc.x86_64.map",
+    out: ["libc.x86_64.map"],
+    srcs: ["libc.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+}
+
 // ========================================================
-// libstdc++.so + libstdc++.a
+// libstdc++.so and libstdc++.a.
 // ========================================================
+
 cc_library {
     defaults: ["libc_defaults"],
     include_dirs: ["bionic/libstdc++/include"],
@@ -1644,29 +1665,60 @@ cc_library {
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
     arch: {
         arm: {
+            // TODO: This is to work around b/24465209. Remove after root cause is fixed.
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libstdc++.arm.map",
+            version_script: ":libstdc++.arm.map",
         },
         arm64: {
-            version_script: "libstdc++.arm64.map",
-        },
-        mips: {
-            version_script: "libstdc++.mips.map",
-        },
-        mips64: {
-            version_script: "libstdc++.mips64.map",
+            version_script: ":libstdc++.arm64.map",
         },
         x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libstdc++.x86.map",
+            version_script: ":libstdc++.x86.map",
         },
         x86_64: {
-            version_script: "libstdc++.x86_64.map",
+            version_script: ":libstdc++.x86_64.map",
         },
     },
 }
+
+genrule {
+    name: "libstdc++.arm.map",
+    out: ["libstdc++.arm.map"],
+    srcs: ["libstdc++.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libstdc++.arm64.map",
+    out: ["libstdc++.arm64.map"],
+    srcs: ["libstdc++.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libstdc++.x86.map",
+    out: ["libstdc++.x86.map"],
+    srcs: ["libstdc++.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libstdc++.x86_64.map",
+    out: ["libstdc++.x86_64.map"],
+    srcs: ["libstdc++.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+}
+
+// ========================================================
+// crt object files.
+// ========================================================
 
 cc_defaults {
     name: "crt_defaults",
@@ -1702,7 +1754,6 @@ cc_defaults {
     stl: "none",
 }
 
-// crt obj files
 cc_object {
     name: "crtbrand",
     // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
@@ -1833,6 +1884,10 @@ cc_object {
 
     defaults: ["crt_defaults"],
 }
+
+// ========================================================
+// NDK headers.
+// ========================================================
 
 versioned_ndk_headers {
     name: "common_libc",
