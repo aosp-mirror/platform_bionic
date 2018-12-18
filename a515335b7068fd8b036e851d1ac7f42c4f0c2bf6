@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "10dfe6e6_58a0089b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-18T17:37:48Z",
+      "side": 1,
+      "message": "Put into quotes to improve legibility?",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1dc370cd_615c8af8",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -65,6 +88,29 @@
         "startChar": 0,
         "endLine": 18,
         "endChar": 54
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a666baa7_09088ea8",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2018-12-18T17:37:48Z",
+      "side": 1,
+      "message": "This looks like this could be refactored (possibly in another CL).",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 25
       },
       "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
