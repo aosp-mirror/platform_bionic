@@ -45,6 +45,30 @@
       "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa9c8ffe_4841bbbc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2018-12-18T11:20:50Z",
+      "side": 1,
+      "message": "Possibly - I\u0027ve made changes to art scripts to introduce ANDROID_RUNTIME_ROOT where I can see ANDROID_ROOT being set in prior commits. Not sure I\u0027ve caught them all as my last attempt broke the ART team\u0027s chroot environment.\n\nIf it\u0027s not in all environments, I think it should be set to keep things as similar as possible.\n\nHalf the problem with these changes is that ART runs various weird and wonderful environments that I don\u0027t know how to test, but I think it\u0027s mostly on the runtime folks to keep those working (or tell me I\u0027m going to break them and how to avoid that).\n\nThis is one of the few places OTTOMH \"knows\" about host data files and does something explicitly different. I\u0027m inclined in a future change to try to collapse the two branches TBH because we rely on environment variables in several other places and I\u0027d like to have one set of \"dynamic runtime libc\" behavior. With the upcoming \"static libc\" / \"bootstrap libc\" / \"runtime APEX libc\" split we probably need\n\nif (static libc || bootstrap libc) {\n  do X\n} else {\n  // runtime libc\n  do Y\n}",
+      "parentUuid": "11fe7363_3ce3a559",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 54
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
