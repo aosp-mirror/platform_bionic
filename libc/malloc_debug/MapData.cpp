@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/mman.h>
 
 #include <vector>
 
@@ -44,6 +45,7 @@ static MapEntry* parse_line(char* line) {
   uintptr_t start;
   uintptr_t end;
   uintptr_t offset;
+  int flags;
   char permissions[5];
   int name_pos;
   if (sscanf(line, "%" PRIxPTR "-%" PRIxPTR " %4s %" PRIxPTR " %*x:%*x %*d %n", &start, &end,
@@ -57,18 +59,27 @@ static MapEntry* parse_line(char* line) {
     name_len -= 1;
   }
 
-  MapEntry* entry = new MapEntry(start, end, offset, name, name_len);
-  if (permissions[0] != 'r') {
-    // Any unreadable map will just get a zero load base.
-    entry->load_base = 0;
-    entry->load_base_read = true;
+  flags = 0;
+  if (permissions[0] == 'r') {
+    flags |= PROT_READ;
+  }
+  if (permissions[2] == 'x') {
+    flags |= PROT_EXEC;
+  }
+
+  MapEntry* entry = new MapEntry(start, end, offset, name, name_len, flags);
+  if (!(flags & PROT_READ)) {
+    // Any unreadable map will just get a zero load bias.
+    entry->load_bias = 0;
+    entry->init = true;
+    entry->valid = false;
   }
   return entry;
 }
 
 template <typename T>
 static inline bool get_val(MapEntry* entry, uintptr_t addr, T* store) {
-  if (addr < entry->start || addr + sizeof(T) > entry->end) {
+  if (!(entry->flags & PROT_READ) || addr < entry->start || addr + sizeof(T) > entry->end) {
     return false;
   }
   // Make sure the address is aligned properly.
@@ -79,9 +90,18 @@ static inline bool get_val(MapEntry* entry, uintptr_t addr, T* store) {
   return true;
 }
 
-static void read_loadbase(MapEntry* entry) {
-  entry->load_base = 0;
-  entry->load_base_read = true;
+static bool valid_elf(MapEntry* entry) {
+  uintptr_t addr = entry->start;
+  uintptr_t end;
+  if (__builtin_add_overflow(addr, SELFMAG, &end) || end >= entry->end) {
+    return false;
+  }
+
+  return memcmp(reinterpret_cast<void*>(addr), ELFMAG, SELFMAG) == 0;
+}
+
+static void read_loadbias(MapEntry* entry) {
+  entry->load_bias = 0;
   uintptr_t addr = entry->start;
   ElfW(Ehdr) ehdr;
   if (!get_val<ElfW(Half)>(entry, addr + offsetof(ElfW(Ehdr), e_phnum), &ehdr.e_phnum)) {
@@ -103,10 +123,21 @@ static void read_loadbase(MapEntry* entry) {
       if (!get_val<ElfW(Addr)>(entry, addr + offsetof(ElfW(Phdr), p_vaddr), &phdr.p_vaddr)) {
         return;
       }
-      entry->load_base = phdr.p_vaddr;
+      entry->load_bias = phdr.p_vaddr;
       return;
     }
     addr += sizeof(phdr);
+  }
+}
+
+static void inline init(MapEntry* entry) {
+  if (entry->init) {
+    return;
+  }
+  entry->init = true;
+  if (valid_elf(entry)) {
+    entry->valid = true;
+    read_loadbias(entry);
   }
 }
 
@@ -158,11 +189,25 @@ const MapEntry* MapData::find(uintptr_t pc, uintptr_t* rel_pc) {
   }
 
   MapEntry* entry = *it;
-  if (!entry->load_base_read) {
-    read_loadbase(entry);
-  }
-  if (rel_pc) {
-    *rel_pc = pc - entry->start + entry->load_base;
+  init(entry);
+
+  if (rel_pc != nullptr) {
+    // Need to check to see if this is a read-execute map and the read-only
+    // map is the previous one.
+    if (!entry->valid && it != entries_.begin()) {
+      MapEntry* prev_entry = *--it;
+      if (prev_entry->flags == PROT_READ && prev_entry->offset < entry->offset &&
+          prev_entry->name == entry->name) {
+        init(prev_entry);
+
+        if (prev_entry->valid) {
+          entry->elf_start_offset = prev_entry->offset;
+          *rel_pc = pc - entry->start + entry->offset + prev_entry->load_bias;
+          return entry;
+        }
+      }
+    }
+    *rel_pc = pc - entry->start + entry->load_bias;
   }
   return entry;
 }
