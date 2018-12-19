@@ -16,6 +16,24 @@
       "revId": "b233fab925ca9b8370e83c2577610b26cb143619",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9c705c6_b9752072",
+        "filename": "libc/malloc_debug/MapData.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2018-12-19T17:11:31Z",
+      "side": 1,
+      "message": "Yes, for now. If this ever changes, then there are a couple of other things that could be broken in more subtle ways. So if I make the dependency really strong, and the linker changes, I\u0027ll see breakages quickly.",
+      "parentUuid": "46d82ac3_463a806d",
+      "revId": "b233fab925ca9b8370e83c2577610b26cb143619",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
