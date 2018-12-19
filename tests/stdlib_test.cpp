@@ -876,16 +876,18 @@ TEST(stdlib, getloadavg) {
   ASSERT_EQ(3, getloadavg(load, INT_MAX));
 
   // Read /proc/loadavg and check that it's "close enough".
-  load[0] = nan("");
   double expected[3];
   std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/proc/loadavg", "re"), fclose};
   ASSERT_EQ(3, fscanf(fp.get(), "%lf %lf %lf", &expected[0], &expected[1], &expected[2]));
+  load[0] = load[1] = load[2] = nan("");
   ASSERT_EQ(3, getloadavg(load, 3));
 
-  // It's probably too flaky if we look at the 1-minute average, so we just place a NaN there
-  // and check that it's overwritten with _something_.
+  // Check that getloadavg(3) at least overwrote the NaNs.
   ASSERT_FALSE(isnan(load[0]));
-  // For the others, rounding to an integer is pessimistic but at least gives us a sanity check.
-  ASSERT_DOUBLE_EQ(rint(expected[1]), rint(load[1]));
-  ASSERT_DOUBLE_EQ(rint(expected[2]), rint(load[2]));
+  ASSERT_FALSE(isnan(load[1]));
+  ASSERT_FALSE(isnan(load[2]));
+  // And that the difference between /proc/loadavg and getloadavg(3) is "small".
+  ASSERT_TRUE(fabs(expected[0] - load[0]) < 0.5) << expected[0] << ' ' << load[0];
+  ASSERT_TRUE(fabs(expected[1] - load[1]) < 0.5) << expected[1] << ' ' << load[1];
+  ASSERT_TRUE(fabs(expected[2] - load[2]) < 0.5) << expected[2] << ' ' << load[2];
 }
