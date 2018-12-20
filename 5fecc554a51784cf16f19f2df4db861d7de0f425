@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "e0e3ff26_b9314221",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1450,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "These are no longer required with http://aosp/856229",
+      "parentUuid": "a22c751e_98880cc4",
+      "range": {
+        "startLine": 1449,
+        "startChar": 0,
+        "endLine": 1450,
+        "endChar": 37
+      },
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "557dd99b_8cbeea23",
         "filename": "libc/libc.map.txt",
         "patchSetId": 6
@@ -88,6 +112,24 @@
     },
     {
       "key": {
+        "uuid": "d35591f7_1a29cbd1",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": ":)",
+      "parentUuid": "35e567c8_6e6d5d61",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20a2fa55_ac0fdc52",
         "filename": "libc/libc.map.txt",
         "patchSetId": 6
@@ -102,6 +144,24 @@
       "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b553eabd_398c6644",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "This is no longer required with http://aosp/856229",
+      "parentUuid": "20a2fa55_ac0fdc52",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -122,6 +182,24 @@
     },
     {
       "key": {
+        "uuid": "36d6501c_5c250ff6",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "Will comment again in the next PS.",
+      "parentUuid": "06c74538_9bf14e12",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4683e529_965b9d89",
         "filename": "libc/libc.map.txt",
         "patchSetId": 6
@@ -136,6 +214,24 @@
       "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29508baa_cf5c6251",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1467,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "Will comment again in the next PS.",
+      "parentUuid": "4683e529_965b9d89",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -156,6 +252,24 @@
     },
     {
       "key": {
+        "uuid": "d28185dc_0c81a723",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "This is no longer required with http://aosp/856229",
+      "parentUuid": "7dfde982_c46e939c",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5c4633cd_205517c0",
         "filename": "libc/libc.map.txt",
         "patchSetId": 6
@@ -170,6 +284,24 @@
       "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c513918c_cbcfc1be",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1479,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:06:31Z",
+      "side": 1,
+      "message": "Will comment again in the next PS.",
+      "parentUuid": "5c4633cd_205517c0",
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
