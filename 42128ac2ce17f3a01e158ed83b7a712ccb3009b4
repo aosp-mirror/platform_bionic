@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67aae84b_577be8a4",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:18:38Z",
+      "side": 1,
+      "message": "tomcherry@,\n\nAs you know well, these are from init. In fact, because init will be using the bootstrap bionic libraries (since APEXes won\u0027t be available when init starts), we shouldn\u0027t add these here. init will link to libc without using stubs. However, until when we build the bootstrap bionic, I would like to put these here. Are you okay with that?\n\nIn addition, the _init function is used by libselinux as well and thus we need to have the symbol here even after the bootstrap bionic work is done. What do you think?",
+      "range": {
+        "startLine": 1466,
+        "startChar": 0,
+        "endLine": 1469,
+        "endChar": 36
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b19d99e_2cd6a896",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1475,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:18:38Z",
+      "side": 1,
+      "message": "cferris@,\n\nThese symbols are used by libmemunreachable,so I think the bionic lib in the runtime APEX should keep these symbols intact in order not to break libmemunreachable with the runtime APEX update. What do you think?",
+      "range": {
+        "startLine": 1471,
+        "startChar": 0,
+        "endLine": 1475,
+        "endChar": 26
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2431f940_60e4678c",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1480,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:18:38Z",
+      "side": 1,
+      "message": "cferris@\n\nThese are from libmediautils. Same question as above.",
+      "range": {
+        "startLine": 1477,
+        "startChar": 0,
+        "endLine": 1480,
+        "endChar": 32
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f6f5ce2_9e80a53e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:18:38Z",
+      "side": 1,
+      "message": "lorenzo@\n\nDo you have any concern about keeping this symbol across the runtime APEX and platform? Do you have any other option?",
+      "range": {
+        "startLine": 1482,
+        "startChar": 0,
+        "endLine": 1483,
+        "endChar": 37
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "920d51f7_5f464d66",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1486,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-20T18:18:38Z",
+      "side": 1,
+      "message": "cferris@\n\nFrom enh@: \"probably should be converted into a mallopt?\"",
+      "range": {
+        "startLine": 1485,
+        "startChar": 0,
+        "endLine": 1486,
+        "endChar": 34
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
