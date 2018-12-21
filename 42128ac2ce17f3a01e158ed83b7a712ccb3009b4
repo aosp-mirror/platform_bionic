@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "a888463c_bdd7b458",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-12-21T17:42:53Z",
+      "side": 1,
+      "message": "I still don\u0027t understand.  Why won\u0027t they just link to the real libc, etc?  What is the harm in that?  Or alternatively, what is the motivating factor here?  Is something broken without this?  I don\u0027t fully understand what this is doing and I definitely don\u0027t understand why this is wanted.\n\nEspecially in the init/system_properties case: init will link against the bootstrap libc, etc and get those full symbols.  Other processes shouldn\u0027t be using those symbols, but if they are it really doesn\u0027t matter; why bother stubbing them out?  The only tangible change I see here is that it means we can\u0027t run system properties tests again the libc in apex, which is a negative.\n\nUnless I totally don\u0027t get this?",
+      "parentUuid": "1989d4a0_20590f45",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "I am not sure I understood the question correctly. The source code for the stub library is generated from the map file and the implementation of each function (or variable) is no-op. (e.g. void foo() {} )",
       "parentUuid": "606055eb_49d3cc6c",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea3b9e7b_1bc4e5e8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-12-21T17:42:53Z",
+      "side": 1,
+      "message": "Yes, that\u0027s what I was confirming, so sounds good.",
+      "parentUuid": "03248c0f_45e668bf",
       "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
