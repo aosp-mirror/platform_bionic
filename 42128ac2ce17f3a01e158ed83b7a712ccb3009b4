@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "45da93c6_d3ffdfc1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T17:55:55Z",
+      "side": 1,
+      "message": "This is to be able to update the bionic libs via the runtime APEX. Since we want the updated bionic to be used by as many processes as possible, we will make the updated ones available to all processes launched after the runtime APEX is mounted.\n\nHowever, since we don\u0027t guarantee the stability of \u0027all\u0027 symbols in the bionic libs, we should prevent things outside of the runtime APEX from using private symbols from the bionic libs in the runtime APEX. Otherwise, things could break when we update the APEX.\n\nAt build time, we achieve this by hiding private symbols by letting them (things outside of the runtime APEX) to link against the stubs having only the symbols that we guarantee stability.\n\nBTW, early processes like init will use the bootstrap (\u003dnon-updatable) bionic. So they can link against the full (the real) library. However, the reason why I added the sysprop APIs to the map file is just because the build system does not (or cannot) identify early binaries.",
+      "parentUuid": "a888463c_bdd7b458",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
