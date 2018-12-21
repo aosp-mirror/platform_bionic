@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "d061b42a_04e15d7c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-12-21T18:15:01Z",
+      "side": 1,
+      "message": "Okay is this a correct understanding then:\n\nWe\u0027re going to hide all private symbols except the specific symbols called out in this CL.  We\u0027ll guarantee the stability of these symbols, but only early processes that use the bootstrap libraries will get the functionality, otherwise they\u0027ll get stub functionality?\n\n(I still wonder why we wouldn\u0027t provide the full functionality and people use them at their own risks?)",
+      "parentUuid": "45da93c6_d3ffdfc1",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
