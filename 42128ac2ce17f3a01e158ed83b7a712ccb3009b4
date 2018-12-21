@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "20b2eeda_03de7696",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T18:32:52Z",
+      "side": 1,
+      "message": "It\u0027s partially correct.\n\n\u003e We\u0027re going to hide all private symbols except the specific symbols called out in this CL\n\nYes.\n\n\u003e  We\u0027ll guarantee the stability of these symbols\n\nYes.\n\n\u003e  but only early processes that use the bootstrap libraries will get the functionality, otherwise they\u0027ll get stub functionality\n\nNo. stub lib is a build-time only artifact. At runtime, a process will use either /system/bootstrap/lib/lib{c|dl|m}.so or /apex/..../lib{c|dl|m}.so depending on whether it is started after or before the runtime APEX is mounted.\nThe purpose of linking with stub is to prevent things that might not be updated in sync with the runtime APEX from using private symbols.",
+      "parentUuid": "d061b42a_04e15d7c",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
