@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "eb45f8bf_b29b77fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T11:24:10Z",
+      "side": 1,
+      "message": "If ld.config.txt doesn\u0027t exist in the APEX, an executable in the APEX is run with /system/etc/ld.config.txt.",
+      "parentUuid": "1e8e3848_2ae7ade2",
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c25ef59_f1a615eb",
         "filename": "libc/Android.bp",
         "patchSetId": 1
