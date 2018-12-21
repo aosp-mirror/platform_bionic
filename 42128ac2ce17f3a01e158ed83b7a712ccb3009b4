@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "246b9264_55047288",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-12-21T20:46:08Z",
+      "side": 1,
+      "message": "Okay, got it.  I think for posterity, it\u0027d be good if we rephrased the commit message a bit for this, since even re-reading it, I barely follow from the commit message to this understanding.",
+      "parentUuid": "20b2eeda_03de7696",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
