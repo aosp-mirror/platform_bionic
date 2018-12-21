@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1989d4a0_20590f45",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T06:59:00Z",
+      "side": 1,
+      "message": "Processes that started \u0027before\u0027 apexd: they will use /system/bootstrap/lib/lib{c|dl|m}.so\n\nProcesses that started \u0027after\u0027 apexd:\n1) process started in platform (/system/bin)\n2) process started in APEX other than the runtime APEX (/apex/foo/bin)\n3) process started in the runtime APEX (/apex/com.android.runtime/bin)\n\nAll 1, 2, 3 will use /apex/com.android.runtime/lib/lib{c|dl|m}.so at runtime.\nBut at build time, 1) and 2) are linking against stubs of libc/dl/m. Only 3) directly link to \u0027real\u0027 libc/dl/m.",
+      "parentUuid": "53004bfe_ad55e743",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2018-12-20T18:31:40Z",
       "side": 1,
       "message": "Just to clarify, we\u0027re still going to keep the symbols for these available just that their functionality is going to be stubbed out to be a no-op, right?",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03248c0f_45e668bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T06:59:00Z",
+      "side": 1,
+      "message": "I am not sure I understood the question correctly. The source code for the stub library is generated from the map file and the implementation of each function (or variable) is no-op. (e.g. void foo() {} )",
+      "parentUuid": "606055eb_49d3cc6c",
       "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "01133265_fb55bdca",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1464,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T06:59:00Z",
+      "side": 1,
+      "message": "Done. Curse my laptop keyboard :(",
+      "parentUuid": "7d155b44_fd75a9e7",
+      "range": {
+        "startLine": 1464,
+        "startChar": 6,
+        "endLine": 1464,
+        "endChar": 14
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d234c039_cd64c806",
         "filename": "libc/libc.map.txt",
         "patchSetId": 7
@@ -79,6 +139,30 @@
       "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3bbbfd1_259165ef",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1465,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T06:59:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d234c039_cd64c806",
+      "range": {
+        "startLine": 1465,
+        "startChar": 23,
+        "endLine": 1465,
+        "endChar": 34
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +201,30 @@
       "side": 1,
       "message": "__system_properties_init() is used by more than just libselinux and init, it\u0027s used in the linker to create the mappings to system properties during process initialization.  It needs to be available to the linker (both of them) for all processes.",
       "parentUuid": "67aae84b_577be8a4",
+      "range": {
+        "startLine": 1466,
+        "startChar": 0,
+        "endLine": 1469,
+        "endChar": 36
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "448ddaec_4ef973fd",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-21T06:59:00Z",
+      "side": 1,
+      "message": "linker (system/bin/linker) will be packaged in the runtime APEX along with libc/dl/m. As the libs and the linker are within the same APEX, the linker can access all symbols in them.\n\nThis change is for things external to the runtime APEX. If I remove these lines, only init and libselinux are breaking.",
+      "parentUuid": "0b442b95_56d7ee3a",
       "range": {
         "startLine": 1466,
         "startChar": 0,
