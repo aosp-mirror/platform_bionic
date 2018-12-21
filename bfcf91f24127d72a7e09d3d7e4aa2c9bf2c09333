@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1e8e3848_2ae7ade2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2018-12-21T11:21:09Z",
+      "side": 1,
+      "message": "I thought those without ld.config.txt also needed one. None of the sections in the system ld.config.txt would apply to them (if the linker would even look there).",
+      "parentUuid": "2d54b230_95955368",
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c25ef59_f1a615eb",
         "filename": "libc/Android.bp",
         "patchSetId": 1
