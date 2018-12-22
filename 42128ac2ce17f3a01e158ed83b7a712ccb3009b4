@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "d8c0fb58_02003345",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-22T02:44:55Z",
+      "side": 1,
+      "message": "Sorry for making you feel difficult, and thanks for the patience :) \nUpdated.",
+      "parentUuid": "246b9264_55047288",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
