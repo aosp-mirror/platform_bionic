@@ -414,6 +414,30 @@
     },
     {
       "key": {
+        "uuid": "8eaebd9d_11b699ae",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2018-12-22T01:50:08Z",
+      "side": 1,
+      "message": "I\u0027m not sure I fully understand the question yet, but I think the question is as follows: is it OK for processes in /system/bin and processes in APEXes to call android_getaddrinfofornet?\n\nIf that\u0027s the question, then I think I\u0027d prefer the answer to be no, because it would expose a method that takes an implementation detail (the fact that the netId is an integer). The variant that is long-term supported is android_getaddrinfofornetwork, which takes an opaque net_handle_t.\n\nWhat was the reason you included android_getaddrinfofornet in this CL? Was it because callers such as libcore call it? If so, then we can probably make those callers use android_getaddrinfofornetcontext instead.",
+      "parentUuid": "7f6f5ce2_9e80a53e",
+      "range": {
+        "startLine": 1482,
+        "startChar": 0,
+        "endLine": 1483,
+        "endChar": 37
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "920d51f7_5f464d66",
         "filename": "libc/libc.map.txt",
         "patchSetId": 7
