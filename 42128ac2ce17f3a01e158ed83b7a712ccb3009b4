@@ -438,6 +438,30 @@
     },
     {
       "key": {
+        "uuid": "94539929_158c08c0",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-22T02:19:42Z",
+      "side": 1,
+      "message": "Thank you. Yes, that was the question.\n\n\u003e What was the reason you included android_getaddrinfofornet in this CL? \n\nIt was because libandroid_net which remains in the system is using this.\n\n\u003e Was it because callers such as libcore call it?\n\nlibcore (to be specific, the native shared library libjavacore) is using this, but the library is used by nobody.\n\n\u003e The variant that is long-term supported is android_getaddrinfofornetwork, which takes an opaque net_handle_t.\n\nWe can\u0027t use that because the very function (which is in libandroid_net) is using android_getaddrinfofornet  :)\n\n\u003e  If so, then we can probably make those callers use android_getaddrinfofornetcontext instead.\n\nGreat. I see that android_getaddrinfofornet is implemented using android_getaddrinfofornetcontext. We could just do the same inside libandroid_net. I will upload a CL and then remove this line.",
+      "parentUuid": "8eaebd9d_11b699ae",
+      "range": {
+        "startLine": 1482,
+        "startChar": 0,
+        "endLine": 1483,
+        "endChar": 37
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "920d51f7_5f464d66",
         "filename": "libc/libc.map.txt",
         "patchSetId": 7
