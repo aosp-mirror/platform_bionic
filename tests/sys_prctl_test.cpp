@@ -20,6 +20,7 @@
 #include <sys/capability.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/utsname.h>
 #include <unistd.h>
 
 #include <string>
@@ -75,10 +76,14 @@ TEST(sys_prctl, pr_cap_ambient) {
       "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/"
       "?id=b7f76ea2ef6739ee484a165ffbac98deb855d3d3";
 
+  utsname u = {};
+  ASSERT_EQ(0, uname(&u));
+
+  errno = 0;
   auto err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL, 0, 0, 0);
   EXPECT_EQ(0, err);
   // EINVAL -> unrecognized prctl option
-  ASSERT_NE(EINVAL, errno) << "kernel missing required commits:\n"
+  ASSERT_NE(EINVAL, errno) << "kernel (" << u.release << ") missing required commits:\n"
                            << caps_sha << "\n"
                            << caps_typo_sha << "\n";
 

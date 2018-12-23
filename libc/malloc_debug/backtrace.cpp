@@ -156,8 +156,8 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
     }
 
     char offset_buf[128];
-    if (entry != nullptr && entry->offset != 0) {
-      snprintf(offset_buf, sizeof(offset_buf), " (offset 0x%" PRIxPTR ")", entry->offset);
+    if (entry != nullptr && entry->elf_start_offset != 0) {
+      snprintf(offset_buf, sizeof(offset_buf), " (offset 0x%" PRIxPTR ")", entry->elf_start_offset);
     } else {
       offset_buf[0] = '\0';
     }

@@ -37,17 +37,20 @@
 #include <private/bionic_macros.h>
 
 struct MapEntry {
-  MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len)
-      : start(start), end(end), offset(offset), name(name, name_len) {}
+  MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len, int flags)
+      : start(start), end(end), offset(offset), name(name, name_len), flags(flags) {}
 
   explicit MapEntry(uintptr_t pc) : start(pc), end(pc) {}
 
   uintptr_t start;
   uintptr_t end;
   uintptr_t offset;
-  uintptr_t load_base;
-  bool load_base_read = false;
+  uintptr_t load_bias;
+  uintptr_t elf_start_offset = 0;
   std::string name;
+  int flags;
+  bool init = false;
+  bool valid = false;
 };
 
 // Ordering comparator that returns equivalence for overlapping entries
