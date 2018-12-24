@@ -480,6 +480,30 @@
     },
     {
       "key": {
+        "uuid": "f626f908_d91bcccc",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-24T06:22:15Z",
+      "side": 1,
+      "message": "Wait, I see android_getaddrinfofornetcontext is not a public API either. So, in order to use it, we have to tag it with \"# apex\" as well. Are you okay with this?\n\nBTW, to me, android_getaddrinfofornet seems to be more appropriate as it is (slightly) higher-level function than android_getaddrinfofornetcontext; (the former is implemented using the latter).",
+      "parentUuid": "94539929_158c08c0",
+      "range": {
+        "startLine": 1482,
+        "startChar": 0,
+        "endLine": 1483,
+        "endChar": 37
+      },
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "920d51f7_5f464d66",
         "filename": "libc/libc.map.txt",
         "patchSetId": 7
