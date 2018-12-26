@@ -145,6 +145,24 @@
     },
     {
       "key": {
+        "uuid": "64537ebc_16d97446",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2018-12-26T13:41:27Z",
+      "side": 1,
+      "message": "Tom, I\u0027ve managed to remove following symbols from the list. (with http://r.android.com/858450 and http://r.android.com/856229)\n    __system_property_add;\n    __system_property_area_init;\n    __system_property_update;",
+      "parentUuid": "d8c0fb58_02003345",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
