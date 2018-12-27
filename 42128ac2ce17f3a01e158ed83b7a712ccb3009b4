@@ -163,6 +163,24 @@
     },
     {
       "key": {
+        "uuid": "2f2eaf39_1380c458",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2018-12-27T15:07:14Z",
+      "side": 1,
+      "message": "Glad to hear, thank you!  And thanks for updating the commit message too.",
+      "parentUuid": "64537ebc_16d97446",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "606055eb_49d3cc6c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
