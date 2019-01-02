@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37cf74a9_df6e3041",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-02T22:57:37Z",
+      "side": 1,
+      "message": "In a later WIP CL, I\u0027ve replaced this function with a reserve_exe_segment_and_tcb function that deals with variant 1 versus variant 2 TLS layout (and issues a fatal error on executables with insufficient TLS alignment).",
+      "range": {
+        "startLine": 55,
+        "startChar": 7,
+        "endLine": 55,
+        "endChar": 18
+      },
+      "revId": "2ea9684ae6ae6dcee7474f7e86ec88f9868bfd7b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
