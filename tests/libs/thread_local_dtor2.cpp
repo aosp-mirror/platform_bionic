@@ -30,7 +30,7 @@ namespace {
 
 class TestClass {
  public:
-  TestClass(bool* flag) : flag_(flag) {}
+  explicit TestClass(bool* flag) : flag_(flag) {}
   ~TestClass() {
     *flag_ = true;
   }

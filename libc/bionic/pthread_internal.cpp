@@ -43,7 +43,7 @@ static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
 
 template <bool write> class ScopedRWLock {
  public:
-  ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
+  explicit ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
     (write ? pthread_rwlock_wrlock : pthread_rwlock_rdlock)(rwlock_);
   }
 
