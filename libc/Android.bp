@@ -2165,6 +2165,52 @@ python_binary_host {
     },
 }
 
+python_binary_host {
+    name: "genfunctosyscallnrs",
+    main: "tools/genfunctosyscallnrs.py",
+
+    srcs: [
+        "tools/genseccomp.py",
+        "tools/genfunctosyscallnrs.py",
+        "tools/gensyscalls.py",
+    ],
+
+    data: [
+        "kernel/uapi/**/*.h",
+    ],
+
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
+cc_genrule {
+    name: "func_to_syscall_nrs",
+    recovery_available: true,
+    cmd: "$(location genfunctosyscallnrs) --out-dir=$(genDir) $(in)",
+
+    tools: [ "genfunctosyscallnrs" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "func_to_syscall_nrs.h",
+    ],
+}
+
 cc_genrule {
     name: "libseccomp_policy_app_sources",
     recovery_available: true,

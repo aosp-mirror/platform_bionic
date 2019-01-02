@@ -27,7 +27,6 @@
 
 #include "seccomp_bpfs.h"
 
-
 #if defined __arm__ || defined __aarch64__
 
 #define DUAL_ARCH
