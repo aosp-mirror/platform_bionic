@@ -26,7 +26,7 @@
 template <typename T>
 class FileUnmapper {
  public:
-  FileUnmapper(T& file) : file_(file) {
+  explicit FileUnmapper(T& file) : file_(file) {
   }
   ~FileUnmapper() {
     file_.Unmap();
