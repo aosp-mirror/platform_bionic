@@ -21,6 +21,6 @@ __attribute__((noinline)) void modify_stack_protector_test() {
   // the line of defense *after* that.
   // Without volatile, the generic x86/x86-64 targets don't write to the stack.
   volatile char* p = buf;
-  int size = static_cast<int>(sizeof(buf) + 1);
+  int size = static_cast<int>(sizeof(buf) + sizeof(void*));
   while ((p - buf) < size) *p++ = '\0';
 }
