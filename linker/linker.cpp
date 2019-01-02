@@ -65,8 +65,10 @@
 #include "linker_phdr.h"
 #include "linker_relocs.h"
 #include "linker_reloc_iterators.h"
+#include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
@@ -1652,6 +1654,7 @@ bool find_libraries(android_namespace_t* ns,
     if (!si->is_linked() && !si->prelink_image()) {
       return false;
     }
+    register_soinfo_tls(si);
   }
 
   // Step 4: Construct the global group. Note: DF_1_GLOBAL bit of a library is
@@ -1887,6 +1890,7 @@ static void soinfo_unload_impl(soinfo* root) {
            si->get_realpath(),
            si);
     notify_gdb_of_unload(si);
+    unregister_soinfo_tls(si);
     get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
@@ -3072,6 +3076,12 @@ bool soinfo::prelink_image() {
   (void) phdr_table_get_arm_exidx(phdr, phnum, load_bias,
                                   &ARM_exidx, &ARM_exidx_count);
 #endif
+
+  TlsSegment tls_segment;
+  if (__bionic_get_tls_segment(phdr, phnum, load_bias, get_realpath(), &tls_segment)) {
+    tls_ = std::make_unique<soinfo_tls>();
+    tls_->segment = tls_segment;
+  }
 
   // Extract useful information from dynamic section.
   // Note that: "Except for the DT_NULL element at the end of the array,

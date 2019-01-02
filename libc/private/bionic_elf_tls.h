@@ -29,6 +29,8 @@
 #pragma once
 
 #include <link.h>
+#include <pthread.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
 
@@ -78,4 +80,38 @@ private:
   }
 
   size_t round_up_with_overflow_check(size_t value, size_t alignment);
+};
+
+// A descriptor for a single ELF TLS module.
+struct TlsModule {
+  TlsSegment segment;
+
+  // Offset into the static TLS block or SIZE_MAX for a dynamic module.
+  size_t static_offset = SIZE_MAX;
+
+  // The generation in which this module was loaded. Dynamic TLS lookups use
+  // this field to detect when a module has been unloaded.
+  size_t first_generation = 0;
+
+  // Used by the dynamic linker to track the associated soinfo* object.
+  void* soinfo_ptr = nullptr;
+};
+
+// Table of the ELF TLS modules. Either the dynamic linker or the static
+// initialization code prepares this table, and it's then used during thread
+// creation and for dynamic TLS lookups.
+struct TlsModules {
+  constexpr TlsModules() {}
+
+  // A generation counter. The value is incremented each time an solib is loaded
+  // or unloaded.
+  _Atomic(size_t) generation = 0;
+
+  // Access to the TlsModule[] table requires taking this lock.
+  pthread_rwlock_t rwlock = PTHREAD_RWLOCK_INITIALIZER;
+
+  // Pointer to a block of TlsModule objects. The first module has ID 1 and
+  // is stored at index 0 in this table.
+  size_t module_count = 0;
+  TlsModule* module_table = nullptr;
 };
