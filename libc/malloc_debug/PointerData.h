@@ -112,7 +112,7 @@ struct ListInfoType {
 
 class PointerData : public OptionData {
  public:
-  PointerData(DebugData* debug_data);
+  explicit PointerData(DebugData* debug_data);
   virtual ~PointerData() = default;
 
   bool Initialize(const Config& config);

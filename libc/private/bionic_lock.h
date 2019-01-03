@@ -78,7 +78,7 @@ class Lock {
 
 class LockGuard {
  public:
-  LockGuard(Lock& lock) : lock_(lock) {
+  explicit LockGuard(Lock& lock) : lock_(lock) {
     lock_.lock();
   }
   ~LockGuard() {
