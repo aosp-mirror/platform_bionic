@@ -2582,9 +2582,9 @@ TEST(pthread, pthread_create__mmap_failures) {
     ASSERT_EQ(0, munmap(pages[i], kPageSize));
   }
 
-  // Creating a thread uses at least six VMAs: the stack, the TLS, and a guard each side of both.
-  // So we should have seen at least six failures.
-  ASSERT_GE(EAGAIN_count, 6U);
+  // Creating a thread uses at least three VMAs: the combined stack and TLS, and a guard on each
+  // side. So we should have seen at least three failures.
+  ASSERT_GE(EAGAIN_count, 3U);
 
   for (; i < pages.size(); ++i) {
     ASSERT_EQ(0, munmap(pages[i], kPageSize));

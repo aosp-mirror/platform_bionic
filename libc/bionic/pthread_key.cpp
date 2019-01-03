@@ -70,7 +70,7 @@ static inline bool KeyInValidRange(pthread_key_t key) {
 }
 
 static inline pthread_key_data_t* get_thread_key_data() {
-  return __get_thread()->key_data;
+  return __get_bionic_tls().key_data;
 }
 
 // Called from pthread_exit() to remove all pthread keys. This must call the destructor of
