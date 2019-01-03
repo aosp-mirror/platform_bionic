@@ -33,6 +33,7 @@
 #include <link.h>
 #include <pthread.h>
 
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
@@ -66,6 +67,8 @@ struct libc_shared_globals {
 
   pthread_mutex_t abort_msg_lock = PTHREAD_MUTEX_INITIALIZER;
   abort_msg_t* abort_msg = nullptr;
+
+  StaticTlsLayout static_tls_layout;
 
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
