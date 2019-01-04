@@ -69,6 +69,30 @@
       "revId": "bf530ad3fb382654270c97d6571ec594e54ea7bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "775eb146_ee5ab0bb",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-04T00:48:31Z",
+      "side": 1,
+      "message": "The braces are necessary here to make the constexpr constructor happy.\n\n(Maybe I can fix it by adding a constexpr constructor to FdTable, though...)",
+      "parentUuid": "8e3ac83d_106b8bb9",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "bf530ad3fb382654270c97d6571ec594e54ea7bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
