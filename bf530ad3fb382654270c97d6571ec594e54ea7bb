@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "191ad150_9601ab86",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-01-04T00:33:28Z",
+      "side": 1,
+      "message": "Maybe just omit the braces? This makes me think you\u0027re trying to zero initialize.",
+      "range": {
+        "startLine": 155,
+        "startChar": 29,
+        "endLine": 155,
+        "endChar": 40
+      },
+      "revId": "bf530ad3fb382654270c97d6571ec594e54ea7bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e3ac83d_106b8bb9",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-01-04T00:33:28Z",
+      "side": 1,
+      "message": "(same here)",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 22
+      },
+      "revId": "bf530ad3fb382654270c97d6571ec594e54ea7bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
