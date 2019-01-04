@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1b17b319_f52c9ae5",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-04T00:37:26Z",
+      "side": 1,
+      "message": "Yeah, I can do that.",
+      "parentUuid": "191ad150_9601ab86",
+      "range": {
+        "startLine": 155,
+        "startChar": 29,
+        "endLine": 155,
+        "endChar": 40
+      },
+      "revId": "bf530ad3fb382654270c97d6571ec594e54ea7bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8e3ac83d_106b8bb9",
         "filename": "libc/private/bionic_globals.h",
         "patchSetId": 1
