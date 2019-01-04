@@ -139,6 +139,30 @@
       "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61aeac13_b2f52ec8",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2019-01-04T18:40:23Z",
+      "side": 1,
+      "message": "Sure, no worries.",
+      "parentUuid": "3ffcd0a7_a835f426",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 246,
+        "endChar": 25
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
