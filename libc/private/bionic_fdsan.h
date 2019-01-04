@@ -39,21 +39,23 @@
 #include <sys/user.h>
 
 struct FdEntry {
-  _Atomic(uint64_t) close_tag;
+  _Atomic(uint64_t) close_tag = 0;
 };
 
 struct FdTableOverflow {
-  size_t len;
+  size_t len = 0;
   FdEntry entries[0];
 };
 
 template <size_t inline_fds>
 struct FdTableImpl {
-  uint32_t version;  // currently 0, and hopefully it'll stay that way.
-  _Atomic(android_fdsan_error_level) error_level;
+  constexpr FdTableImpl() {}
+
+  uint32_t version = 0;  // currently 0, and hopefully it'll stay that way.
+  _Atomic(android_fdsan_error_level) error_level = ANDROID_FDSAN_ERROR_LEVEL_DISABLED;
 
   FdEntry entries[inline_fds];
-  _Atomic(FdTableOverflow*) overflow;
+  _Atomic(FdTableOverflow*) overflow = nullptr;
 
   FdEntry* at(size_t idx);
 };
