@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "c67636b0_5410b648",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2019-01-07T21:04:24Z",
+      "side": 1,
+      "message": "I\u0027m going to assert that setting $ANDROID_RUNTIME_ROOT is going to just be a requirement of the environment when running on host, just as ANDROID_ROOT is today.\n\nWe also require it in libcore in all cases (not just host).\n\nI guess that if libc is used on the host independently of libcore then there are more cases to worry about. There will certainly be an issue generally when we (probably) remove the ANDROID_ROOT fallback case. I still have no idea how to predict those cases or report them in a way that will come back to me. I think all I can do is submit and wait for people to complain. That won\u0027t happen until we (probably) drop the reference to ANDROID_ROOT for some or all cases.\n\n[Also, FWIW, the presence of the \"ANDROID_RUNTIME_ROOT\" string is a good signal that something needs to happen here if we have to change course.]",
+      "parentUuid": "aa9c8ffe_4841bbbc",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 54
+      },
+      "revId": "a515335b7068fd8b036e851d1ac7f42c4f0c2bf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a666baa7_09088ea8",
         "filename": "libc/tzcode/bionic.cpp",
         "patchSetId": 1
