@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48ae8c34_cd151d6e",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-08T00:45:56Z",
+      "side": 1,
+      "message": "new_tls to match new_tcb?",
+      "range": {
+        "startLine": 127,
+        "startChar": 11,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "78f70b4fbbd18744214c135e2b6788a76c46e679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
