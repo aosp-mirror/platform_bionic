@@ -760,6 +760,7 @@ cc_library_static {
                 "arch-arm/generic/bionic/strcpy.S",
                 "arch-arm/generic/bionic/strlen.c",
 
+                "arch-arm/bionic/__aeabi_read_tp.S",
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
                 "arch-arm/bionic/_exit_with_stack_teardown.S",
