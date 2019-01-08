@@ -1446,6 +1446,7 @@ LIBC_P { # introduced=P
 
 LIBC_Q { # introduced=Q
   global:
+    __aeabi_read_tp; # arm
     __res_randomid;
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
