@@ -22,6 +22,30 @@
       "revId": "78f70b4fbbd18744214c135e2b6788a76c46e679",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f78603e_9a5ebb6a",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-01-08T04:40:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48ae8c34_cd151d6e",
+      "range": {
+        "startLine": 127,
+        "startChar": 11,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "78f70b4fbbd18744214c135e2b6788a76c46e679",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
