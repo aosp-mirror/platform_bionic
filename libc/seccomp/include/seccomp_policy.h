@@ -20,5 +20,6 @@
 #include <linux/filter.h>
 
 bool set_app_seccomp_filter();
+bool set_app_zygote_seccomp_filter();
 bool set_system_seccomp_filter();
 bool set_global_seccomp_filter();

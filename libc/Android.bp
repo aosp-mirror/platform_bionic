@@ -2211,6 +2211,45 @@ cc_genrule {
     ],
 }
 
+// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+genrule {
+    name: "generate_app_zygote_blacklist",
+    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
+}
+
+cc_genrule {
+    name: "libseccomp_policy_app_zygote_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
+
+    tools: [ "genseccomp" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        "SECCOMP_WHITELIST_COMMON.TXT",
+        "SECCOMP_WHITELIST_APP.TXT",
+        "SECCOMP_BLACKLIST_COMMON.TXT",
+        ":generate_app_zygote_blacklist",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "arm64_app_zygote_policy.cpp",
+        "arm_app_zygote_policy.cpp",
+        "mips64_app_zygote_policy.cpp",
+        "mips_app_zygote_policy.cpp",
+        "x86_64_app_zygote_policy.cpp",
+        "x86_app_zygote_policy.cpp",
+    ],
+}
+
 cc_genrule {
     name: "libseccomp_policy_app_sources",
     recovery_available: true,
@@ -2309,6 +2348,7 @@ cc_library {
     recovery_available: true,
     generated_sources: [
         "libseccomp_policy_app_sources",
+        "libseccomp_policy_app_zygote_sources",
         "libseccomp_policy_global_sources",
         "libseccomp_policy_system_sources",
     ],
