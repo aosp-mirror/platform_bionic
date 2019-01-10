@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 27
+#define FUSE_KERNEL_MINOR_VERSION 28
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -72,6 +72,7 @@ struct fuse_file_lock {
 #define FOPEN_DIRECT_IO (1 << 0)
 #define FOPEN_KEEP_CACHE (1 << 1)
 #define FOPEN_NONSEEKABLE (1 << 2)
+#define FOPEN_CACHE_DIR (1 << 3)
 #define FUSE_ASYNC_READ (1 << 0)
 #define FUSE_POSIX_LOCKS (1 << 1)
 #define FUSE_FILE_OPS (1 << 2)
@@ -94,6 +95,8 @@ struct fuse_file_lock {
 #define FUSE_HANDLE_KILLPRIV (1 << 19)
 #define FUSE_POSIX_ACL (1 << 20)
 #define FUSE_ABORT_ERROR (1 << 21)
+#define FUSE_MAX_PAGES (1 << 22)
+#define FUSE_CACHE_SYMLINKS (1 << 23)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -154,6 +157,7 @@ enum fuse_opcode {
   FUSE_READDIRPLUS = 44,
   FUSE_RENAME2 = 45,
   FUSE_LSEEK = 46,
+  FUSE_COPY_FILE_RANGE = 47,
   CUSE_INIT = 4096,
 };
 enum fuse_notify_code {
@@ -341,7 +345,9 @@ struct fuse_init_out {
   uint16_t congestion_threshold;
   uint32_t max_write;
   uint32_t time_gran;
-  uint32_t unused[9];
+  uint16_t max_pages;
+  uint16_t padding;
+  uint32_t unused[8];
 };
 #define CUSE_INIT_INFO_MAX 4096
 struct cuse_init_in {
@@ -487,5 +493,14 @@ struct fuse_lseek_in {
 };
 struct fuse_lseek_out {
   uint64_t offset;
+};
+struct fuse_copy_file_range_in {
+  uint64_t fh_in;
+  uint64_t off_in;
+  uint64_t nodeid_out;
+  uint64_t fh_out;
+  uint64_t off_out;
+  uint64_t len;
+  uint64_t flags;
 };
 #endif

@@ -98,7 +98,7 @@ struct arpreq {
   struct sockaddr arp_ha;
   int arp_flags;
   struct sockaddr arp_netmask;
-  char arp_dev[16];
+  char arp_dev[IFNAMSIZ];
 };
 struct arpreq_old {
   struct sockaddr arp_pa;

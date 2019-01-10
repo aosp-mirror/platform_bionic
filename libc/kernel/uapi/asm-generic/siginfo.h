@@ -24,13 +24,7 @@ typedef union sigval {
   int sival_int;
   void __user * sival_ptr;
 } sigval_t;
-#ifndef __ARCH_SI_PREAMBLE_SIZE
-#define __ARCH_SI_PREAMBLE_SIZE (3 * sizeof(int))
-#endif
 #define SI_MAX_SIZE 128
-#ifndef SI_PAD_SIZE
-#define SI_PAD_SIZE ((SI_MAX_SIZE - __ARCH_SI_PREAMBLE_SIZE) / sizeof(int))
-#endif
 #ifndef __ARCH_SI_BAND_T
 #define __ARCH_SI_BAND_T long
 #endif
@@ -40,73 +34,75 @@ typedef union sigval {
 #ifndef __ARCH_SI_ATTRIBUTES
 #define __ARCH_SI_ATTRIBUTES
 #endif
-typedef struct siginfo {
-  int si_signo;
-#ifndef __ARCH_HAS_SWAPPED_SIGINFO
-  int si_errno;
-  int si_code;
-#else
-  int si_code;
-  int si_errno;
-#endif
-  union {
-    int _pad[SI_PAD_SIZE];
-    struct {
-      __kernel_pid_t _pid;
-      __kernel_uid32_t _uid;
-    } _kill;
-    struct {
-      __kernel_timer_t _tid;
-      int _overrun;
-      sigval_t _sigval;
-      int _sys_private;
-    } _timer;
-    struct {
-      __kernel_pid_t _pid;
-      __kernel_uid32_t _uid;
-      sigval_t _sigval;
-    } _rt;
-    struct {
-      __kernel_pid_t _pid;
-      __kernel_uid32_t _uid;
-      int _status;
-      __ARCH_SI_CLOCK_T _utime;
-      __ARCH_SI_CLOCK_T _stime;
-    } _sigchld;
-    struct {
-      void __user * _addr;
+union __sifields {
+  struct {
+    __kernel_pid_t _pid;
+    __kernel_uid32_t _uid;
+  } _kill;
+  struct {
+    __kernel_timer_t _tid;
+    int _overrun;
+    sigval_t _sigval;
+    int _sys_private;
+  } _timer;
+  struct {
+    __kernel_pid_t _pid;
+    __kernel_uid32_t _uid;
+    sigval_t _sigval;
+  } _rt;
+  struct {
+    __kernel_pid_t _pid;
+    __kernel_uid32_t _uid;
+    int _status;
+    __ARCH_SI_CLOCK_T _utime;
+    __ARCH_SI_CLOCK_T _stime;
+  } _sigchld;
+  struct {
+    void __user * _addr;
 #ifdef __ARCH_SI_TRAPNO
-      int _trapno;
+    int _trapno;
 #endif
 #ifdef __ia64__
-      int _imm;
-      unsigned int _flags;
-      unsigned long _isr;
+    int _imm;
+    unsigned int _flags;
+    unsigned long _isr;
 #endif
 #define __ADDR_BND_PKEY_PAD (__alignof__(void *) < sizeof(short) ? sizeof(short) : __alignof__(void *))
-      union {
-        short _addr_lsb;
-        struct {
-          char _dummy_bnd[__ADDR_BND_PKEY_PAD];
-          void __user * _lower;
-          void __user * _upper;
-        } _addr_bnd;
-        struct {
-          char _dummy_pkey[__ADDR_BND_PKEY_PAD];
-          __u32 _pkey;
-        } _addr_pkey;
-      };
-    } _sigfault;
-    struct {
-      __ARCH_SI_BAND_T _band;
-      int _fd;
-    } _sigpoll;
-    struct {
-      void __user * _call_addr;
-      int _syscall;
-      unsigned int _arch;
-    } _sigsys;
-  } _sifields;
+    union {
+      short _addr_lsb;
+      struct {
+        char _dummy_bnd[__ADDR_BND_PKEY_PAD];
+        void __user * _lower;
+        void __user * _upper;
+      } _addr_bnd;
+      struct {
+        char _dummy_pkey[__ADDR_BND_PKEY_PAD];
+        __u32 _pkey;
+      } _addr_pkey;
+    };
+  } _sigfault;
+  struct {
+    __ARCH_SI_BAND_T _band;
+    int _fd;
+  } _sigpoll;
+  struct {
+    void __user * _call_addr;
+    int _syscall;
+    unsigned int _arch;
+  } _sigsys;
+};
+#ifndef __ARCH_HAS_SWAPPED_SIGINFO
+#define __SIGINFO struct { int si_signo; int si_errno; int si_code; union __sifields _sifields; \
+}
+#else
+#define __SIGINFO struct { int si_signo; int si_code; int si_errno; union __sifields _sifields; \
+}
+#endif
+typedef struct siginfo {
+  union {
+    __SIGINFO;
+    int _si_pad[SI_MAX_SIZE / sizeof(int)];
+  };
 } __ARCH_SI_ATTRIBUTES siginfo_t;
 #define si_pid _sifields._kill._pid
 #define si_uid _sifields._kill._uid
@@ -212,6 +208,8 @@ typedef struct siginfo {
 #define NSIGPOLL 6
 #define SYS_SECCOMP 1
 #define NSIGSYS 1
+#define EMT_TAGOVF 1
+#define NSIGEMT 1
 #define SIGEV_SIGNAL 0
 #define SIGEV_NONE 1
 #define SIGEV_THREAD 2

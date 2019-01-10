@@ -80,7 +80,7 @@ enum txtime_flags {
   SOF_TXTIME_FLAGS_MASK = (SOF_TXTIME_FLAGS_LAST - 1) | SOF_TXTIME_FLAGS_LAST
 };
 struct sock_txtime {
-  clockid_t clockid;
+  __kernel_clockid_t clockid;
   __u32 flags;
 };
 #endif

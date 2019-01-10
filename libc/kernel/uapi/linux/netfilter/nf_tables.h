@@ -419,6 +419,7 @@ enum nft_rt_keys {
   NFT_RT_NEXTHOP4,
   NFT_RT_NEXTHOP6,
   NFT_RT_TCPMSS,
+  NFT_RT_XFRM,
   __NFT_RT_MAX
 };
 #define NFT_RT_MAX (__NFT_RT_MAX - 1)
@@ -596,6 +597,13 @@ enum nft_quota_attributes {
   __NFTA_QUOTA_MAX
 };
 #define NFTA_QUOTA_MAX (__NFTA_QUOTA_MAX - 1)
+enum nft_secmark_attributes {
+  NFTA_SECMARK_UNSPEC,
+  NFTA_SECMARK_CTX,
+  __NFTA_SECMARK_MAX,
+};
+#define NFTA_SECMARK_MAX (__NFTA_SECMARK_MAX - 1)
+#define NFT_SECMARK_CTX_MAXLEN 256
 enum nft_reject_types {
   NFT_REJECT_ICMP_UNREACH,
   NFT_REJECT_TCP_RST,
@@ -737,7 +745,8 @@ enum nft_ct_timeout_timeout_attributes {
 #define NFT_OBJECT_CONNLIMIT 5
 #define NFT_OBJECT_TUNNEL 6
 #define NFT_OBJECT_CT_TIMEOUT 7
-#define __NFT_OBJECT_MAX 8
+#define NFT_OBJECT_SECMARK 8
+#define __NFT_OBJECT_MAX 9
 #define NFT_OBJECT_MAX (__NFT_OBJECT_MAX - 1)
 enum nft_object_attributes {
   NFTA_OBJ_UNSPEC,
@@ -773,6 +782,7 @@ enum nft_flowtable_hook_attributes {
 enum nft_osf_attributes {
   NFTA_OSF_UNSPEC,
   NFTA_OSF_DREG,
+  NFTA_OSF_TTL,
   __NFTA_OSF_MAX,
 };
 #define NFTA_OSF_MAX (__NFTA_OSF_MAX - 1)
@@ -782,6 +792,26 @@ enum nft_devices_attributes {
   __NFTA_DEVICE_MAX
 };
 #define NFTA_DEVICE_MAX (__NFTA_DEVICE_MAX - 1)
+enum nft_xfrm_attributes {
+  NFTA_XFRM_UNSPEC,
+  NFTA_XFRM_DREG,
+  NFTA_XFRM_KEY,
+  NFTA_XFRM_DIR,
+  NFTA_XFRM_SPNUM,
+  __NFTA_XFRM_MAX
+};
+#define NFTA_XFRM_MAX (__NFTA_XFRM_MAX - 1)
+enum nft_xfrm_keys {
+  NFT_XFRM_KEY_UNSPEC,
+  NFT_XFRM_KEY_DADDR_IP4,
+  NFT_XFRM_KEY_DADDR_IP6,
+  NFT_XFRM_KEY_SADDR_IP4,
+  NFT_XFRM_KEY_SADDR_IP6,
+  NFT_XFRM_KEY_REQID,
+  NFT_XFRM_KEY_SPI,
+  __NFT_XFRM_KEY_MAX,
+};
+#define NFT_XFRM_KEY_MAX (__NFT_XFRM_KEY_MAX - 1)
 enum nft_trace_attributes {
   NFTA_TRACE_UNSPEC,
   NFTA_TRACE_TABLE,
