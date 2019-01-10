@@ -20,6 +20,7 @@
 #define __ETNAVIV_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 struct drm_etnaviv_timespec {
   __s64 tv_sec;
@@ -193,5 +194,6 @@ struct drm_etnaviv_pm_signal {
 #define DRM_IOCTL_ETNAVIV_PM_QUERY_DOM DRM_IOWR(DRM_COMMAND_BASE + DRM_ETNAVIV_PM_QUERY_DOM, struct drm_etnaviv_pm_domain)
 #define DRM_IOCTL_ETNAVIV_PM_QUERY_SIG DRM_IOWR(DRM_COMMAND_BASE + DRM_ETNAVIV_PM_QUERY_SIG, struct drm_etnaviv_pm_signal)
 #ifdef __cplusplus
+}
 #endif
 #endif

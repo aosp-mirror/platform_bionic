@@ -20,6 +20,7 @@
 #define __SIS_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define NOT_USED_0_3
 #define DRM_SIS_FB_ALLOC 0x04
@@ -48,5 +49,6 @@ typedef struct {
   unsigned long offset, size;
 } drm_sis_fb_t;
 #ifdef __cplusplus
+}
 #endif
 #endif
