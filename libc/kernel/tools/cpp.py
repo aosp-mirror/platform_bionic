@@ -1037,11 +1037,14 @@ class Block(object):
             if t.id == '{':
                 buf += ' {'
                 result.append(strip_space(buf))
-                indent += 2
+                # Do not indent if this is extern "C" {
+                if i < 2 or tokens[i-2].id != 'extern' or tokens[i-1].id != '"C"':
+                    indent += 2
                 buf = ''
                 newline = True
             elif t.id == '}':
-                indent -= 2
+                if indent >= 2:
+                    indent -= 2
                 if not newline:
                     result.append(strip_space(buf))
                 # Look ahead to determine if it's the end of line.
@@ -1221,133 +1224,140 @@ class BlockList(object):
         function declarations are removed. We only accept typedefs and
         enum/structs/union declarations.
 
+        In addition, remove any macros expanding in the headers. Usually,
+        these macros are static inline functions, which is why they are
+        removed.
+
         However, we keep the definitions corresponding to the set of known
         static inline functions in the set 'keep', which is useful
         for optimized byteorder swap functions and stuff like that.
         """
 
-        # NOTE: It's also removing function-like macros, such as __SYSCALL(...)
-        # in uapi/asm-generic/unistd.h, or KEY_FIELD(...) in linux/bcache.h.
-        # It could be problematic when we have function-like macros but without
-        # '}' following them. It will skip all the tokens/blocks until seeing a
-        # '}' as the function end. Fortunately we don't have such cases in the
-        # current kernel headers.
+        # state = NORMAL => normal (i.e. LN + spaces)
+        # state = OTHER_DECL => typedef/struct encountered, ends with ";"
+        # state = VAR_DECL => var declaration encountered, ends with ";"
+        # state = FUNC_DECL => func declaration encountered, ends with "}"
+        NORMAL = 0
+        OTHER_DECL = 1
+        VAR_DECL = 2
+        FUNC_DECL = 3
 
-        # state = 0 => normal (i.e. LN + spaces)
-        # state = 1 => typedef/struct encountered, ends with ";"
-        # state = 2 => var declaration encountered, ends with ";"
-        # state = 3 => func declaration encountered, ends with "}"
-
-        state = 0
+        state = NORMAL
         depth = 0
-        blocks2 = []
-        skipTokens = False
-        for b in self.blocks:
-            if b.isDirective():
-                blocks2.append(b)
-            else:
-                n = len(b.tokens)
-                i = 0
-                if skipTokens:
-                    first = n
-                else:
-                    first = 0
-                while i < n:
-                    tok = b.tokens[i]
-                    tokid = tok.id
-                    # If we are not looking for the start of a new
-                    # type/var/func, then skip over tokens until
-                    # we find our terminator, managing the depth of
-                    # accolades as we go.
-                    if state > 0:
-                        terminator = False
-                        if tokid == '{':
-                            depth += 1
-                        elif tokid == '}':
-                            if depth > 0:
-                                depth -= 1
-                            if (depth == 0) and (state == 3):
-                                terminator = True
-                        elif tokid == ';' and depth == 0:
-                            terminator = True
-
-                        if terminator:
-                            # we found the terminator
-                            state = 0
-                            if skipTokens:
-                                skipTokens = False
-                                first = i + 1
-
-                        i += 1
-                        continue
-
-                    # Is it a new type definition, then start recording it
-                    if tok.id in ['struct', 'typedef', 'enum', 'union',
-                                  '__extension__']:
-                        state = 1
-                        i += 1
-                        continue
-
-                    # Is it a variable or function definition. If so, first
-                    # try to determine which type it is, and also extract
-                    # its name.
-                    #
-                    # We're going to parse the next tokens of the same block
-                    # until we find a semicolon or a left parenthesis.
-                    #
-                    # The semicolon corresponds to a variable definition,
-                    # the left-parenthesis to a function definition.
-                    #
-                    # We also assume that the var/func name is the last
-                    # identifier before the terminator.
-                    #
-                    j = i + 1
-                    ident = ""
-                    while j < n:
-                        tokid = b.tokens[j].id
-                        if tokid == '(':  # a function declaration
-                            state = 3
-                            break
-                        elif tokid == ';':  # a variable declaration
-                            state = 2
-                            break
-                        if b.tokens[j].kind == TokenKind.IDENTIFIER:
-                            ident = b.tokens[j].id
-                        j += 1
-
-                    if j >= n:
-                        # This can only happen when the declaration
-                        # does not end on the current block (e.g. with
-                        # a directive mixed inside it.
-                        #
-                        # We will treat it as malformed because
-                        # it's very hard to recover from this case
-                        # without making our parser much more
-                        # complex.
-                        #
-                        logging.debug("### skip unterminated static '%s'",
-                                      ident)
-                        break
-
-                    if ident in keep:
-                        logging.debug("### keep var/func '%s': %s", ident,
-                                      repr(b.tokens[i:j]))
+        blocksToKeep = []
+        blocksInProgress = []
+        blocksOfDirectives = []
+        ident = ""
+        state_token = ""
+        macros = set()
+        for block in self.blocks:
+            if block.isDirective():
+                # Record all macros.
+                if block.directive == 'define':
+                    macro_name = block.define_id
+                    paren_index = macro_name.find('(')
+                    if paren_index == -1:
+                        macros.add(macro_name)
                     else:
-                        # We're going to skip the tokens for this declaration
-                        logging.debug("### skip var/func '%s': %s", ident,
-                                      repr(b.tokens[i:j]))
-                        if i > first:
-                            blocks2.append(Block(b.tokens[first:i]))
-                        skipTokens = True
-                        first = n
+                        macros.add(macro_name[0:paren_index])
+                blocksInProgress.append(block)
+                # If this is in a function/variable declaration, we might need
+                # to emit the directives alone, so save them separately.
+                blocksOfDirectives.append(block)
+                continue
 
-                    i += 1
+            numTokens = len(block.tokens)
+            lastTerminatorIndex = 0
+            i = 0
+            while i < numTokens:
+                token_id = block.tokens[i].id
+                terminator = False
+                if token_id == '{':
+                    depth += 1
+                    if (i >= 2 and block.tokens[i-2].id == 'extern' and
+                        block.tokens[i-1].id == '"C"'):
+                        # For an extern "C" { pretend as though this is depth 0.
+                        depth -= 1
+                elif token_id == '}':
+                    if depth > 0:
+                        depth -= 1
+                    if depth == 0:
+                        if state == OTHER_DECL:
+                            # Loop through until we hit the ';'
+                            i += 1
+                            while i < numTokens:
+                                if block.tokens[i].id == ';':
+                                    token_id = ';'
+                                    break
+                                i += 1
+                            # If we didn't hit the ';', just consider this the
+                            # terminator any way.
+                        terminator = True
+                elif depth == 0:
+                    if token_id == ';':
+                        if state == NORMAL:
+                            blocksToKeep.extend(blocksInProgress)
+                            blocksInProgress = []
+                            blocksOfDirectives = []
+                            state = FUNC_DECL
+                        terminator = True
+                    elif (state == NORMAL and token_id == '(' and i >= 1 and
+                          block.tokens[i-1].kind == TokenKind.IDENTIFIER and
+                          block.tokens[i-1].id in macros):
+                        # This is a plain macro being expanded in the header
+                        # which needs to be removed.
+                        blocksToKeep.extend(blocksInProgress)
+                        if lastTerminatorIndex < i - 1:
+                            blocksToKeep.append(Block(block.tokens[lastTerminatorIndex:i-1]))
+                        blocksInProgress = []
+                        blocksOfDirectives = []
 
-                if i > first:
-                    #print "### final '%s'" % repr(b.tokens[first:i])
-                    blocks2.append(Block(b.tokens[first:i]))
+                        # Skip until we see the terminating ')'
+                        i += 1
+                        paren_depth = 1
+                        while i < numTokens:
+                            if block.tokens[i].id == ')':
+                                paren_depth -= 1
+                                if paren_depth == 0:
+                                    break
+                            elif block.tokens[i].id == '(':
+                                paren_depth += 1
+                            i += 1
+                        lastTerminatorIndex = i + 1
+                    elif (state != FUNC_DECL and token_id == '(' and
+                          state_token != 'typedef'):
+                        blocksToKeep.extend(blocksInProgress)
+                        blocksInProgress = []
+                        blocksOfDirectives = []
+                        state = VAR_DECL
+                    elif state == NORMAL and token_id in ['struct', 'typedef',
+                                                          'enum', 'union',
+                                                          '__extension__']:
+                        state = OTHER_DECL
+                        state_token = token_id
+                    elif block.tokens[i].kind == TokenKind.IDENTIFIER:
+                        if state != VAR_DECL or ident == "":
+                            ident = token_id
 
-        self.blocks = blocks2
+                if terminator:
+                    if state != VAR_DECL and state != FUNC_DECL or ident in keep:
+                        blocksInProgress.append(Block(block.tokens[lastTerminatorIndex:i+1]))
+                        blocksToKeep.extend(blocksInProgress)
+                    else:
+                        # Only keep the directives found.
+                        blocksToKeep.extend(blocksOfDirectives)
+                    lastTerminatorIndex = i + 1
+                    blocksInProgress = []
+                    blocksOfDirectives = []
+                    state = NORMAL
+                    ident = ""
+                    state_token = ""
+                i += 1
+            if lastTerminatorIndex < numTokens:
+                blocksInProgress.append(Block(block.tokens[lastTerminatorIndex:numTokens]))
+        if len(blocksInProgress) > 0:
+            blocksToKeep.extend(blocksInProgress)
+        self.blocks = blocksToKeep
 
     def replaceTokens(self, replacements):
         """Replace tokens according to the given dict."""
@@ -1936,6 +1946,299 @@ class OptimizerTests(unittest.TestCase):
 #endif
 """
         expected = ""
+        self.assertEqual(self.parse(text), expected)
+
+class FullPathTest(unittest.TestCase):
+    """Test of the full path parsing."""
+
+    def parse(self, text, keep=None):
+        if not keep:
+            keep = set()
+        out = utils.StringOutput()
+        blocks = BlockParser().parse(CppStringTokenizer(text))
+        blocks.removeVarsAndFuncs(keep)
+        blocks.replaceTokens(kernel_token_replacements)
+        blocks.optimizeAll(None)
+        blocks.write(out)
+        return out.get()
+
+    def test_function_removed(self):
+        text = """\
+static inline __u64 function()
+{
+}
+"""
+        expected = ""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_function_removed_with_struct(self):
+        text = """\
+static inline struct something* function()
+{
+}
+"""
+        expected = ""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_function_kept(self):
+        text = """\
+static inline __u64 function()
+{
+}
+"""
+        expected = """\
+static inline __u64 function() {
+}
+"""
+        self.assertEqual(self.parse(text, set(["function"])), expected)
+
+    def test_var_removed(self):
+        text = "__u64 variable;"
+        expected = ""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_var_kept(self):
+        text = "__u64 variable;"
+        expected = "__u64 variable;\n"
+        self.assertEqual(self.parse(text, set(["variable"])), expected)
+
+    def test_keep_function_typedef(self):
+        text = "typedef void somefunction_t(void);"
+        expected = "typedef void somefunction_t(void);\n"
+        self.assertEqual(self.parse(text), expected)
+
+    def test_struct_keep_attribute(self):
+        text = """\
+struct something_s {
+  __u32 s1;
+  __u32 s2;
+} __attribute__((packed));
+"""
+        expected = """\
+struct something_s {
+  __u32 s1;
+  __u32 s2;
+} __attribute__((packed));
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_function_keep_attribute_structs(self):
+        text = """\
+static __inline__ struct some_struct1 * function(struct some_struct2 * e) {
+}
+"""
+        expected = """\
+static __inline__ struct some_struct1 * function(struct some_struct2 * e) {
+}
+"""
+        self.assertEqual(self.parse(text, set(["function"])), expected)
+
+    def test_struct_after_struct(self):
+        text = """\
+struct first {
+};
+
+struct second {
+  unsigned short s1;
+#define SOMETHING 8
+  unsigned short s2;
+};
+"""
+        expected = """\
+struct first {
+};
+struct second {
+  unsigned short s1;
+#define SOMETHING 8
+  unsigned short s2;
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_other_not_removed(self):
+        text = """\
+typedef union {
+  __u64 tu1;
+  __u64 tu2;
+} typedef_name;
+
+union {
+  __u64 u1;
+  __u64 u2;
+};
+
+struct {
+  __u64 s1;
+  __u64 s2;
+};
+
+enum {
+  ENUM1 = 0,
+  ENUM2,
+};
+
+__extension__ typedef __signed__ long long __s64;
+"""
+        expected = """\
+typedef union {
+  __u64 tu1;
+  __u64 tu2;
+} typedef_name;
+union {
+  __u64 u1;
+  __u64 u2;
+};
+struct {
+  __u64 s1;
+  __u64 s2;
+};
+enum {
+  ENUM1 = 0,
+  ENUM2,
+};
+__extension__ typedef __signed__ long long __s64;
+"""
+
+        self.assertEqual(self.parse(text), expected)
+
+    def test_semicolon_after_function(self):
+        text = """\
+static inline __u64 function()
+{
+};
+
+struct should_see {
+        __u32                           field;
+};
+"""
+        expected = """\
+struct should_see {
+  __u32 field;
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_define_in_middle_keep(self):
+        text = """\
+enum {
+  ENUM0 = 0x10,
+  ENUM1 = 0x20,
+#define SOMETHING SOMETHING_ELSE
+  ENUM2 = 0x40,
+};
+"""
+        expected = """\
+enum {
+  ENUM0 = 0x10,
+  ENUM1 = 0x20,
+#define SOMETHING SOMETHING_ELSE
+  ENUM2 = 0x40,
+};
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_define_in_middle_remove(self):
+        text = """\
+static inline function() {
+#define SOMETHING1 SOMETHING_ELSE1
+  i = 0;
+  {
+    i = 1;
+  }
+#define SOMETHING2 SOMETHING_ELSE2
+}
+"""
+        expected = """\
+#define SOMETHING1 SOMETHING_ELSE1
+#define SOMETHING2 SOMETHING_ELSE2
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_define_in_middle_force_keep(self):
+        text = """\
+static inline function() {
+#define SOMETHING1 SOMETHING_ELSE1
+  i = 0;
+  {
+    i = 1;
+  }
+#define SOMETHING2 SOMETHING_ELSE2
+}
+"""
+        expected = """\
+static inline function() {
+#define SOMETHING1 SOMETHING_ELSE1
+  i = 0;
+ {
+    i = 1;
+  }
+#define SOMETHING2 SOMETHING_ELSE2
+}
+"""
+        self.assertEqual(self.parse(text, set(["function"])), expected)
+
+    def test_define_before_remove(self):
+        text = """\
+#define SHOULD_BE_KEPT NOTHING1
+#define ANOTHER_TO_KEEP NOTHING2
+static inline function() {
+#define SOMETHING1 SOMETHING_ELSE1
+  i = 0;
+  {
+    i = 1;
+  }
+#define SOMETHING2 SOMETHING_ELSE2
+}
+"""
+        expected = """\
+#define SHOULD_BE_KEPT NOTHING1
+#define ANOTHER_TO_KEEP NOTHING2
+#define SOMETHING1 SOMETHING_ELSE1
+#define SOMETHING2 SOMETHING_ELSE2
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_extern_C(self):
+        text = """\
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
+struct something {
+};
+
+#if defined(__cplusplus)
+}
+#endif
+"""
+        expected = """\
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct something {
+};
+#ifdef __cplusplus
+}
+#endif
+"""
+        self.assertEqual(self.parse(text), expected)
+
+    def test_macro_definition_removed(self):
+        text = """\
+#define MACRO_FUNCTION_NO_PARAMS static inline some_func() {}
+MACRO_FUNCTION_NO_PARAMS()
+
+#define MACRO_FUNCTION_PARAMS(a) static inline some_func() { a; }
+MACRO_FUNCTION_PARAMS(a = 1)
+
+something that should still be kept
+MACRO_FUNCTION_PARAMS(b)
+"""
+        expected = """\
+#define MACRO_FUNCTION_NO_PARAMS static inline some_func() { }
+#define MACRO_FUNCTION_PARAMS(a) static inline some_func() { a; }
+something that should still be kept
+"""
         self.assertEqual(self.parse(text), expected)
 
 
