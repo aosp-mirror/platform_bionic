@@ -20,6 +20,7 @@
 #define _UAPI_VGEM_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_VGEM_FENCE_ATTACH 0x1
 #define DRM_VGEM_FENCE_SIGNAL 0x2
@@ -37,5 +38,6 @@ struct drm_vgem_fence_signal {
   __u32 flags;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

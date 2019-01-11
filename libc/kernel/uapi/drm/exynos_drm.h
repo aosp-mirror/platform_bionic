@@ -20,6 +20,7 @@
 #define _UAPI_EXYNOS_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 struct drm_exynos_gem_create {
   __u64 size;
@@ -225,5 +226,6 @@ struct drm_exynos_ipp_event {
   __u64 reserved;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

@@ -20,6 +20,7 @@
 #define _VIA_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef _VIA_DEFINES_
 #define _VIA_DEFINES_
@@ -196,5 +197,6 @@ typedef struct drm_via_dmablit {
   drm_via_blitsync_t sync;
 } drm_via_dmablit_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

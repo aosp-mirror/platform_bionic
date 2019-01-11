@@ -20,6 +20,7 @@
 #define __SAVAGE_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef __SAVAGE_SAREA_DEFINES__
 #define __SAVAGE_SAREA_DEFINES__
@@ -151,5 +152,6 @@ union drm_savage_cmd_header {
   } clear1;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

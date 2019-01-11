@@ -20,6 +20,7 @@
 #define __R128_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef __R128_SAREA_DEFINES__
 #define __R128_SAREA_DEFINES__
@@ -229,5 +230,6 @@ typedef struct drm_r128_getparam {
   void __user * value;
 } drm_r128_getparam_t;
 #ifdef __cplusplus
+}
 #endif
 #endif
