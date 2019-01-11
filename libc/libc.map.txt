@@ -1481,6 +1481,14 @@ LIBC_Q { # introduced=Q
 
     # Used by libandroid_runtime
     gMallocLeakZygoteChild; # apex
+
+    # TODO(b/120266448) hide these symbols again
+    # Used by libndk_translation
+    __getdents64; # arm x86 mips apex
+    tkill; # arm x86 mips apex
+    # Used by PtsBionicDeviceTestCases
+    __bionic_brk; # arm x86 mips apex
+    __system_property_add; # apex
 } LIBC_P;
 
 LIBC_PRIVATE {
@@ -1557,7 +1565,6 @@ LIBC_PRIVATE {
     __arm_fadvise64_64; # arm
     __ashldi3; # arm
     __ashrdi3; # arm
-    __bionic_brk; # arm x86 mips
     __bionic_libgcc_compat_symbols; # arm x86
     __cmpdf2; # arm
     __divdf3; # arm
@@ -1583,7 +1590,6 @@ LIBC_PRIVATE {
     __gedf2; # arm
     __get_thread; # arm x86 mips
     __get_tls; # arm x86 mips
-    __getdents64; # arm x86 mips
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
     __gnu_Unwind_Backtrace; # arm
@@ -1691,7 +1697,6 @@ LIBC_PRIVATE {
     strntoumax; # arm x86 mips
     strtotimeval; # arm x86 mips
     sysv_signal; # arm x86 mips
-    tkill; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
 } LIBC_Q;
@@ -1703,7 +1708,6 @@ LIBC_DEPRECATED {
 
 LIBC_PLATFORM {
   global:
-    __system_property_add;
     __system_property_area__; # var
     __system_property_area_init;
     __system_property_set_filename;
