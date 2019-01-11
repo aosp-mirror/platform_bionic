@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fff69a08_b8b80dbc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-11T16:49:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ba76d59_9e95075c",
+      "range": {
+        "startLine": 15,
+        "startChar": 57,
+        "endLine": 15,
+        "endChar": 61
+      },
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a22c751e_98880cc4",
         "filename": "libc/libc.map.txt",
         "patchSetId": 6
@@ -92,6 +116,30 @@
       "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1225fc5_c641178a",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 1455,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-11T16:49:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "557dd99b_8cbeea23",
+      "range": {
+        "startLine": 1452,
+        "startChar": 4,
+        "endLine": 1455,
+        "endChar": 36
+      },
+      "revId": "5fecc554a51784cf16f19f2df4db861d7de0f425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {

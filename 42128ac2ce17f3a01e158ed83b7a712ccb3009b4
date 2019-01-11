@@ -252,6 +252,24 @@
     },
     {
       "key": {
+        "uuid": "d0aa61a2_40683def",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-11T16:49:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea3b9e7b_1bc4e5e8",
+      "revId": "42128ac2ce17f3a01e158ed83b7a712ccb3009b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d155b44_fd75a9e7",
         "filename": "libc/libc.map.txt",
         "patchSetId": 7
