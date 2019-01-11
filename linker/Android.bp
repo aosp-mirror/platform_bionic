@@ -86,6 +86,7 @@ filegroup {
         "linker_phdr.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
     ],

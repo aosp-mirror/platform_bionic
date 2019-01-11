@@ -65,12 +65,6 @@ void __pthread_cleanup_pop(__pthread_cleanup_t* c, int execute) {
   }
 }
 
-static void __pthread_unmap_tls(pthread_internal_t* thread) {
-  // Unmap the bionic TLS, including guard pages.
-  void* allocation = reinterpret_cast<char*>(thread->bionic_tls) - PTHREAD_GUARD_SIZE;
-  munmap(allocation, BIONIC_TLS_SIZE + 2 * PTHREAD_GUARD_SIZE);
-}
-
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void pthread_exit(void* return_value) {
   // Call dtors for thread_local objects first.
@@ -131,15 +125,13 @@ void pthread_exit(void* return_value) {
       // We don't want to take a signal after we've unmapped the stack.
       // That's one last thing we can do before dropping to assembler.
       ScopedSignalBlocker ssb;
-      __pthread_unmap_tls(thread);
       __hwasan_thread_exit();
-      _exit_with_stack_teardown(thread->attr.stack_base, thread->mmap_size);
+      _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size);
     }
   }
 
   // No need to free mapped space. Either there was no space mapped, or it is left for
   // the pthread_join caller to clean up.
-  __pthread_unmap_tls(thread);
   __hwasan_thread_exit();
   __exit(0);
 }

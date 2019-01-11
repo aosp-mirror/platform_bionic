@@ -1199,6 +1199,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
+        "bionic/bionic_elf_tls.cpp",
         "bionic/pthread_atfork.cpp",
         "bionic/pthread_attr.cpp",
         "bionic/pthread_barrier.cpp",
