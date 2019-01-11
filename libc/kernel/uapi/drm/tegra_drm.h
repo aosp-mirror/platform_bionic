@@ -20,6 +20,7 @@
 #define _UAPI_TEGRA_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_TEGRA_GEM_CREATE_TILED (1 << 0)
 #define DRM_TEGRA_GEM_CREATE_BOTTOM_UP (1 << 1)
@@ -163,5 +164,6 @@ struct drm_tegra_gem_get_flags {
 #define DRM_IOCTL_TEGRA_GEM_SET_FLAGS DRM_IOWR(DRM_COMMAND_BASE + DRM_TEGRA_GEM_SET_FLAGS, struct drm_tegra_gem_set_flags)
 #define DRM_IOCTL_TEGRA_GEM_GET_FLAGS DRM_IOWR(DRM_COMMAND_BASE + DRM_TEGRA_GEM_GET_FLAGS, struct drm_tegra_gem_get_flags)
 #ifdef __cplusplus
+}
 #endif
 #endif

@@ -20,6 +20,7 @@
 #define __MSM_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define MSM_PIPE_NONE 0x00
 #define MSM_PIPE_2D0 0x01
@@ -158,5 +159,6 @@ struct drm_msm_submitqueue {
 #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
 #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE DRM_IOW(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
 #ifdef __cplusplus
+}
 #endif
 #endif

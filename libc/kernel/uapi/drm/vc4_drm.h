@@ -20,6 +20,7 @@
 #define _UAPI_VC4_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_VC4_SUBMIT_CL 0x00
 #define DRM_VC4_WAIT_SEQNO 0x01
@@ -233,5 +234,6 @@ struct drm_vc4_perfmon_get_values {
   __u64 values_ptr;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

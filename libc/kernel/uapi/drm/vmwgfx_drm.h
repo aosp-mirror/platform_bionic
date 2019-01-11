@@ -20,6 +20,7 @@
 #define __VMWGFX_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_VMW_MAX_SURFACE_FACES 6
 #define DRM_VMW_MAX_MIP_LEVELS 24
@@ -350,5 +351,6 @@ union drm_vmw_gb_surface_reference_ext_arg {
   struct drm_vmw_surface_arg req;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

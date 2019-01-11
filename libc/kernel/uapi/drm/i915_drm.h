@@ -20,6 +20,7 @@
 #define _UAPI_I915_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define I915_L3_PARITY_UEVENT "L3_PARITY_ERROR"
 #define I915_ERROR_UEVENT "ERROR"
@@ -775,5 +776,6 @@ struct drm_i915_query_topology_info {
   __u8 data[];
 };
 #ifdef __cplusplus
+}
 #endif
 #endif
