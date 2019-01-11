@@ -1451,16 +1451,44 @@ LIBC_Q { # introduced=Q
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
+    android_fdsan_get_error_level;
     android_fdsan_get_owner_tag;
     android_fdsan_get_tag_type;
     android_fdsan_get_tag_value;
-    android_fdsan_get_error_level;
     android_fdsan_set_error_level;
     android_get_device_api_level;
     getloadavg;
     pthread_sigqueue;
     reallocarray;
     timespec_get;
+
+    # Used by libselinux
+    __system_properties_init; # apex
+
+    # Used by libmemunreachable
+    malloc_backtrace; # apex
+    malloc_disable; # apex
+    malloc_enable; # apex
+    malloc_iterate; # apex
+
+    # Used by libmediautils
+    write_malloc_leak_info; # apex
+    free_malloc_leak_info; # apex
+    get_malloc_leak_info; # apex
+
+    # Used by libandroid_net
+    android_getaddrinfofornet; # apex
+
+    # Used by libandroid_runtime
+    gMallocLeakZygoteChild; # apex
+
+    # TODO(b/120266448) hide these symbols again
+    # Used by libndk_translation
+    __getdents64; # arm x86 mips apex
+    tkill; # arm x86 mips apex
+    # Used by PtsBionicDeviceTestCases
+    __bionic_brk; # arm x86 mips apex
+    __system_property_add; # apex
 } LIBC_P;
 
 LIBC_PRIVATE {
@@ -1537,7 +1565,6 @@ LIBC_PRIVATE {
     __arm_fadvise64_64; # arm
     __ashldi3; # arm
     __ashrdi3; # arm
-    __bionic_brk; # arm x86 mips
     __bionic_libgcc_compat_symbols; # arm x86
     __cmpdf2; # arm
     __divdf3; # arm
@@ -1563,7 +1590,6 @@ LIBC_PRIVATE {
     __gedf2; # arm
     __get_thread; # arm x86 mips
     __get_tls; # arm x86 mips
-    __getdents64; # arm x86 mips
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
     __gnu_Unwind_Backtrace; # arm
@@ -1640,7 +1666,6 @@ LIBC_PRIVATE {
     _Unwind_VRS_Get; # arm
     _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
-    android_getaddrinfofornet;
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
     android_gethostbyaddrfornetcontext;
@@ -1655,12 +1680,9 @@ LIBC_PRIVATE {
     dlmalloc_inspect_all; # arm x86 mips
     dlmalloc_trim; # arm x86 mips
     dlmalloc_usable_size; # arm x86 mips
-    free_malloc_leak_info;
     ftime; # arm x86 mips
-    get_malloc_leak_info;
     getdents; # arm x86 mips
     getdtablesize; # arm x86 mips
-    gMallocLeakZygoteChild;
     index; # arm x86 mips
     issetugid; # arm x86 mips
     memswap; # arm x86 mips
@@ -1675,10 +1697,8 @@ LIBC_PRIVATE {
     strntoumax; # arm x86 mips
     strtotimeval; # arm x86 mips
     sysv_signal; # arm x86 mips
-    tkill; # arm x86 mips
     wait3; # arm x86 mips
     wcswcs; # arm x86 mips
-    write_malloc_leak_info;
 } LIBC_Q;
 
 LIBC_DEPRECATED {
@@ -1688,9 +1708,7 @@ LIBC_DEPRECATED {
 
 LIBC_PLATFORM {
   global:
-    __system_properties_init;
     __system_property_area__; # var
-    __system_property_add;
     __system_property_area_init;
     __system_property_set_filename;
     __system_property_update;
@@ -1698,8 +1716,4 @@ LIBC_PLATFORM {
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
-    malloc_backtrace;
-    malloc_disable;
-    malloc_enable;
-    malloc_iterate;
 } LIBC_Q;
