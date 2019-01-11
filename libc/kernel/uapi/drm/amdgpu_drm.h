@@ -20,6 +20,7 @@
 #define __AMDGPU_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_AMDGPU_GEM_CREATE 0x00
 #define DRM_AMDGPU_GEM_MMAP 0x01
@@ -593,5 +594,6 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_AI 141
 #define AMDGPU_FAMILY_RV 142
 #ifdef __cplusplus
+}
 #endif
 #endif

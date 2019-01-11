@@ -20,6 +20,7 @@
 #define _DRM_SAREA_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifdef __alpha__
 #define SAREA_MAX 0x2000U
@@ -54,5 +55,6 @@ typedef struct drm_sarea_drawable drm_sarea_drawable_t;
 typedef struct drm_sarea_frame drm_sarea_frame_t;
 typedef struct drm_sarea drm_sarea_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

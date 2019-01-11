@@ -39,6 +39,16 @@ enum {
 #define NILFS_CPINFO_FNS(flag,name) static inline int nilfs_cpinfo_ ##name(const struct nilfs_cpinfo * cpinfo) \
 { return ! ! (cpinfo->ci_flags & (1UL << NILFS_CPINFO_ ##flag)); \
 }
+struct nilfs_suinfo {
+  __u64 sui_lastmod;
+  __u32 sui_nblocks;
+  __u32 sui_flags;
+};
+enum {
+  NILFS_SUINFO_ACTIVE,
+  NILFS_SUINFO_DIRTY,
+  NILFS_SUINFO_ERROR,
+};
 #define NILFS_SUINFO_FNS(flag,name) static inline int nilfs_suinfo_ ##name(const struct nilfs_suinfo * si) \
 { return si->sui_flags & (1UL << NILFS_SUINFO_ ##flag); \
 }
@@ -61,6 +71,15 @@ enum {
 } static inline int nilfs_suinfo_update_ ##name(const struct nilfs_suinfo_update * sup) \
 { return ! ! (sup->sup_flags & (1UL << NILFS_SUINFO_UPDATE_ ##flag)); \
 }
+enum {
+  NILFS_CHECKPOINT,
+  NILFS_SNAPSHOT,
+};
+struct nilfs_cpmode {
+  __u64 cm_cno;
+  __u32 cm_mode;
+  __u32 cm_pad;
+};
 struct nilfs_argv {
   __u64 v_base;
   __u32 v_nmembs;

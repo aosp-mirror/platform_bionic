@@ -20,6 +20,7 @@
 #define QXL_DRM_H
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define QXL_GEM_DOMAIN_CPU 0
 #define QXL_GEM_DOMAIN_VRAM 1
@@ -97,5 +98,6 @@ struct drm_qxl_alloc_surf {
 #define DRM_IOCTL_QXL_CLIENTCAP DRM_IOW(DRM_COMMAND_BASE + DRM_QXL_CLIENTCAP, struct drm_qxl_clientcap)
 #define DRM_IOCTL_QXL_ALLOC_SURF DRM_IOWR(DRM_COMMAND_BASE + DRM_QXL_ALLOC_SURF, struct drm_qxl_alloc_surf)
 #ifdef __cplusplus
+}
 #endif
 #endif

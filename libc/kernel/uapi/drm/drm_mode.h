@@ -20,6 +20,7 @@
 #define _DRM_MODE_H
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_DISPLAY_INFO_LEN 32
 #define DRM_CONNECTOR_NAME_LEN 32
@@ -463,5 +464,6 @@ struct drm_mode_revoke_lease {
   __u32 lessee_id;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif
