@@ -20,6 +20,7 @@
 #define _V3D_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_V3D_SUBMIT_CL 0x00
 #define DRM_V3D_WAIT_BO 0x01
@@ -83,5 +84,6 @@ struct drm_v3d_get_bo_offset {
   __u32 offset;
 };
 #ifdef __cplusplus
+}
 #endif
 #endif
