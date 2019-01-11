@@ -236,6 +236,30 @@
       "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d10b8cf1_c65fc0bc",
+        "filename": "libc/libc.arm.map",
+        "patchSetId": 1
+      },
+      "lineNbr": 1426,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-11T16:50:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f3aa605_90f1a6e5",
+      "range": {
+        "startLine": 1426,
+        "startChar": 30,
+        "endLine": 1426,
+        "endChar": 36
+      },
+      "revId": "bfcf91f24127d72a7e09d3d7e4aa2c9bf2c09333",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
