@@ -52,12 +52,6 @@
 #define PTHREAD_ATTR_FLAG_INHERIT 0x00000004
 #define PTHREAD_ATTR_FLAG_EXPLICIT 0x00000008
 
-class pthread_key_data_t {
- public:
-  uintptr_t seq; // Use uintptr_t just for alignment, as we use pointer below.
-  void* data;
-};
-
 enum ThreadJoinState {
   THREAD_NOT_JOINED,
   THREAD_EXITED_NOT_JOINED,
@@ -131,6 +125,7 @@ class pthread_internal_t {
 
   Lock startup_handshake_lock;
 
+  void* mmap_base;
   size_t mmap_size;
 
   thread_local_dtor* thread_local_dtors;
@@ -146,42 +141,44 @@ class pthread_internal_t {
   bionic_tls* bionic_tls;
 
   int errno_value;
-
-  // The thread pointer (__get_tls()) points at this field. This field must come last so that
-  // an executable's TLS segment can be allocated at a fixed offset after the thread pointer.
-  void* tls[BIONIC_TLS_SLOTS];
-
-  // The golang runtime currently expects this field to come after the slots.
-  pthread_key_data_t key_data[BIONIC_PTHREAD_KEY_COUNT];
 };
 
-__LIBC_HIDDEN__ void __init_tls(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void __init_tls_stack_guard(pthread_internal_t* thread);
-__LIBC_HIDDEN__ bionic_tls* __allocate_bionic_tls();
+struct ThreadMapping {
+  char* mmap_base;
+  size_t mmap_size;
+
+  char* static_tls;
+  char* stack_base;
+  char* stack_top;
+};
+
+__LIBC_HIDDEN__ void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __init_tcb_stack_guard(bionic_tcb* tcb);
+__LIBC_HIDDEN__ void __init_bionic_tls_ptrs(bionic_tcb* tcb, bionic_tls* tls);
+__LIBC_HIDDEN__ bionic_tls* __allocate_temp_bionic_tls();
+__LIBC_HIDDEN__ void __free_temp_bionic_tls(bionic_tls* tls);
 __LIBC_HIDDEN__ void __init_additional_stacks(pthread_internal_t*);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
+__LIBC_HIDDEN__ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size);
 
 __LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
 __LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
 __LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
 
+static inline __always_inline bionic_tcb* __get_bionic_tcb() {
+  return reinterpret_cast<bionic_tcb*>(&__get_tls()[MIN_TLS_SLOT]);
+}
+
 // Make __get_thread() inlined for performance reason. See http://b/19825434.
 static inline __always_inline pthread_internal_t* __get_thread() {
-  void** tls = __get_tls();
-  if (__predict_true(tls)) {
-    return reinterpret_cast<pthread_internal_t*>(tls[TLS_SLOT_THREAD_ID]);
-  }
-
-  // This happens when called during libc initialization before TLS has been initialized.
-  return nullptr;
+  return static_cast<pthread_internal_t*>(__get_tls()[TLS_SLOT_THREAD_ID]);
 }
 
 static inline __always_inline bionic_tls& __get_bionic_tls() {
-  return *__get_thread()->bionic_tls;
+  return *static_cast<bionic_tls*>(__get_tls()[TLS_SLOT_BIONIC_TLS]);
 }
 
-extern __LIBC_HIDDEN__ pthread_internal_t* __get_main_thread();
 extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);
 
 __LIBC_HIDDEN__ void pthread_key_clean_all(void);
