@@ -28,9 +28,12 @@
 
 #include "libc_init_common.h"
 
+#include <async_safe/log.h>
+
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_arc4random.h"
 #include "private/bionic_defs.h"
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_ssp.h"
 #include "pthread_internal.h"
@@ -42,11 +45,6 @@ extern "C" int __set_tid_address(int* tid_address);
 uintptr_t __stack_chk_guard = 0;
 
 static pthread_internal_t main_thread;
-
-__attribute__((no_sanitize("hwaddress")))
-pthread_internal_t* __get_main_thread() {
-  return &main_thread;
-}
 
 // Setup for the main thread. For dynamic executables, this is called by the
 // linker _before_ libc is mapped in memory. This means that all writes to
@@ -69,34 +67,27 @@ pthread_internal_t* __get_main_thread() {
 // linker, the linker binary hasn't been relocated yet, so certain kinds of code
 // are hazardous, such as accessing non-hidden global variables.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread_early(KernelArgumentBlock& args) {
+extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
+                                              bionic_tcb* temp_tcb) {
   __libc_shared_globals()->auxv = args.auxv;
 #if defined(__i386__)
-  __libc_init_sysinfo();
+  __libc_init_sysinfo(); // uses AT_SYSINFO auxv entry
 #endif
-  __set_tls(main_thread.tls);
-  __init_tls(&main_thread);
+  __init_tcb(temp_tcb, &main_thread);
+  __set_tls(&temp_tcb->tls_slot(0));
   main_thread.tid = __getpid();
   main_thread.set_cached_pid(main_thread.tid);
 }
 
 // Finish initializing the main thread.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-void __libc_init_main_thread_late() {
-  main_thread.bionic_tls = __allocate_bionic_tls();
-  if (main_thread.bionic_tls == nullptr) {
-    // Avoid strerror because it might need bionic_tls.
-    async_safe_fatal("failed to allocate bionic_tls: error %d", errno);
-  }
+extern "C" void __libc_init_main_thread_late() {
+  __init_bionic_tls_ptrs(__get_bionic_tcb(), __allocate_temp_bionic_tls());
 
   // Tell the kernel to clear our tid field when we exit, so we're like any other pthread.
+  // For threads created by pthread_create, this setup happens during the clone syscall (i.e.
+  // CLONE_CHILD_CLEARTID).
   __set_tid_address(&main_thread.tid);
-
-  // We don't want to free the main thread's stack even when the main thread exits
-  // because things like environment variables with global scope live on it.
-  // We also can't free the pthread_internal_t itself, since it is a static variable.
-  // The main thread has no mmap allocated space for stack or pthread_internal_t.
-  main_thread.mmap_size = 0;
 
   pthread_attr_init(&main_thread.attr);
   // We don't want to explicitly set the main thread's scheduler attributes (http://b/68328561).
@@ -110,9 +101,40 @@ void __libc_init_main_thread_late() {
   // before we initialize the TLS. Dynamic executables will initialize their copy of the global
   // stack protector from the one in the main thread's TLS.
   __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
-  __init_tls_stack_guard(&main_thread);
+  __init_tcb_stack_guard(__get_bionic_tcb());
 
   __init_thread(&main_thread);
 
   __init_additional_stacks(&main_thread);
+}
+
+// Once all ELF modules are loaded, allocate the final copy of the main thread's
+// static TLS memory.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+extern "C" void __libc_init_main_thread_final() {
+  bionic_tcb* temp_tcb = __get_bionic_tcb();
+  bionic_tls* temp_tls = &__get_bionic_tls();
+
+  // Allocate the main thread's static TLS. (This mapping doesn't include a
+  // stack.)
+  ThreadMapping mapping = __allocate_thread_mapping(0, PTHREAD_GUARD_SIZE);
+  if (mapping.mmap_base == nullptr) {
+    async_safe_fatal("failed to mmap main thread static TLS: %s", strerror(errno));
+  }
+
+  const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  auto new_tcb = reinterpret_cast<bionic_tcb*>(mapping.static_tls + layout.offset_bionic_tcb());
+  auto new_tls = reinterpret_cast<bionic_tls*>(mapping.static_tls + layout.offset_bionic_tls());
+
+  new_tcb->copy_from_bootstrap(temp_tcb);
+  new_tls->copy_from_bootstrap(temp_tls);
+  __init_tcb(new_tcb, &main_thread);
+  __init_bionic_tls_ptrs(new_tcb, new_tls);
+
+  main_thread.mmap_base = mapping.mmap_base;
+  main_thread.mmap_size = mapping.mmap_size;
+
+  __set_tls(&new_tcb->tls_slot(0));
+
+  __free_temp_bionic_tls(temp_tls);
 }
