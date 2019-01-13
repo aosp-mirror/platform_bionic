@@ -254,6 +254,11 @@ enum {
 } static inline int nilfs_checkpoint_ ##name(const struct nilfs_checkpoint * cp) \
 { return ! ! (le32_to_cpu(cp->cp_flags) & (1UL << NILFS_CHECKPOINT_ ##flag)); \
 }
+struct nilfs_cpfile_header {
+  __le64 ch_ncheckpoints;
+  __le64 ch_nsnapshots;
+  struct nilfs_snapshot_list ch_snapshot_list;
+};
 #define NILFS_CPFILE_FIRST_CHECKPOINT_OFFSET ((sizeof(struct nilfs_cpfile_header) + sizeof(struct nilfs_checkpoint) - 1) / sizeof(struct nilfs_checkpoint))
 struct nilfs_segment_usage {
   __le64 su_lastmod;

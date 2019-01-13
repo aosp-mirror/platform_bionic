@@ -20,6 +20,7 @@
 #define _I810_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef _I810_DEFINES_
 #define _I810_DEFINES_
@@ -214,5 +215,6 @@ typedef struct _drm_i810_mc {
   unsigned int last_render;
 } drm_i810_mc_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

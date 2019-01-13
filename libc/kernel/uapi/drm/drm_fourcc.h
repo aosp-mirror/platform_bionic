@@ -20,6 +20,7 @@
 #define DRM_FOURCC_H
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define fourcc_code(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define DRM_FORMAT_BIG_ENDIAN (1 << 31)
@@ -156,5 +157,6 @@
 #define AFBC_FORMAT_MOD_TILED (1ULL << 8)
 #define AFBC_FORMAT_MOD_SC (1ULL << 9)
 #ifdef __cplusplus
+}
 #endif
 #endif

@@ -1199,6 +1199,7 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
+        "bionic/bionic_elf_tls.cpp",
         "bionic/pthread_atfork.cpp",
         "bionic/pthread_attr.cpp",
         "bionic/pthread_barrier.cpp",
@@ -1605,6 +1606,11 @@ cc_library {
         x86_64: {
             version_script: ":libc.x86_64.map",
         },
+    },
+
+    stubs: {
+        symbol_file: "libc.map.txt",
+        versions: ["10000"],
     },
 }
 
