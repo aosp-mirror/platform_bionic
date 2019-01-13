@@ -58,7 +58,8 @@ static int __icu_dat_file_filter(const dirent* dirp) {
 
 static bool __find_icu() {
   dirent** namelist = nullptr;
-  int n = scandir("/system/usr/icu", &namelist, &__icu_dat_file_filter, alphasort);
+  int n = scandir("/apex/com.android.runtime/etc/icu", &namelist, &__icu_dat_file_filter,
+                  alphasort);
   if (n < 0) {
     async_safe_write_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find ICU folder");
     return false;
