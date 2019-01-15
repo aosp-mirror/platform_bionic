@@ -13,8 +13,8 @@ Running the benchmarks
     $ mma
     $ adb remount
     $ adb sync
-    $ adb shell /data/nativetest/bionic-benchmarks/bionic-benchmarks
-    $ adb shell /data/nativetest64/bionic-benchmarks/bionic-benchmarks
+    $ adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks
+    $ adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks
 
 When operated without specifying an xml file, the default is to run all
 of the benchmarks in alphabetical order.

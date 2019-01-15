@@ -404,8 +404,7 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
 }
 __strong_alias(freopen64, freopen);
 
-int fclose(FILE* fp) {
-  CHECK_FP(fp);
+static int __FILE_close(FILE* fp) {
   if (fp->_flags == 0) {
     // Already freed!
     errno = EBADF;
@@ -440,7 +439,11 @@ int fclose(FILE* fp) {
   fp->_flags = 0;
   return r;
 }
-__strong_alias(pclose, fclose);
+
+int fclose(FILE* fp) {
+  CHECK_FP(fp);
+  return __FILE_close(fp);
+}
 
 int fileno_unlocked(FILE* fp) {
   CHECK_FP(fp);
@@ -459,6 +462,7 @@ int fileno(FILE* fp) {
 }
 
 void clearerr_unlocked(FILE* fp) {
+  CHECK_FP(fp);
   return __sclearerr(fp);
 }
 
@@ -1233,6 +1237,11 @@ FILE* popen(const char* cmd, const char* mode) {
 
   _EXT(fp)->_popen_pid = pid;
   return fp;
+}
+
+int pclose(FILE* fp) {
+  CHECK_FP(fp);
+  return __FILE_close(fp);
 }
 
 namespace {

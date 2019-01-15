@@ -43,6 +43,7 @@
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
+  int caller_errno = errno;
   int n, n2;
   CHAR_TYPE* cp;            /* handy char pointer (short term usage) */
   CHAR_TYPE sign;           /* sign prefix (' ', '+', '-', or \0) */
@@ -451,6 +452,9 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         break;
       case 'n':
         __fortify_fatal("%%n not allowed on Android");
+      case 'm':
+        cp = strerror_r(caller_errno, buf, sizeof(buf));
+        goto string;
       case 'O':
         flags |= LONGINT;
         __BIONIC_FALLTHROUGH;
@@ -493,6 +497,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         } else if ((cp = GETARG(char*)) == nullptr) {
           cp = const_cast<char*>("(null)");
         }
+  string:
         if (prec >= 0) {
           size = CHAR_TYPE_STRNLEN(cp, prec);
         } else {

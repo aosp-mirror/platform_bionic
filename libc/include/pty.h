@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PTY_H
-#define _PTY_H
+#pragma once
+
+/**
+ * @file pty.h
+ * @brief Pseudoterminal functions.
+ */
 
 #include <sys/cdefs.h>
 
@@ -36,9 +40,25 @@
 
 __BEGIN_DECLS
 
-int openpty(int* __master_fd, int* __slave_fd, char* __slave_name, const struct termios* __termios_ptr, const struct winsize* __winsize_ptr) __INTRODUCED_IN(23);
-int forkpty(int* __master_fd, char* __slave_name, const struct termios* __termios_ptr, const struct winsize* __winsize_ptr) __INTRODUCED_IN(23);
+/**
+ * [openpty(3)](http://man7.org/linux/man-pages/man3/openpty.3.html) finds
+ * a free pseudoterminal and configures it with the given terminal and window
+ * size settings.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 23.
+ */
+int openpty(int* _Nonnull __master_fd, int* _Nonnull __slave_fd, char* _Nullable __slave_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
+
+/**
+ * [forkpty(3)](http://man7.org/linux/man-pages/man3/forkpty.3.html) creates
+ * a new process connected to a pseudoterminal from openpty().
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 23.
+ */
+int forkpty(int* _Nonnull __master_fd, char* _Nullable __slave_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
 
 __END_DECLS
-
-#endif

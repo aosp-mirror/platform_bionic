@@ -33,7 +33,7 @@ class ScopedSignalHandler {
     sigaction64(signal_number_, &action_, &old_action_);
   }
 
-  ScopedSignalHandler(int signal_number) : signal_number_(signal_number) {
+  explicit ScopedSignalHandler(int signal_number) : signal_number_(signal_number) {
     sigaction64(signal_number, nullptr, &old_action_);
   }
 

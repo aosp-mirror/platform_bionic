@@ -44,20 +44,19 @@ std::string to_string(const Arch& arch) {
   errx(1, "unknown arch '%zu'", size_t(arch));
 }
 
-Arch arch_from_string(const std::string& name) {
-  if (name == "arm") {
-    return Arch::arm;
-  } else if (name == "arm64") {
-    return Arch::arm64;
-  } else if (name == "mips") {
-    return Arch::mips;
-  } else if (name == "mips64") {
-    return Arch::mips64;
-  } else if (name == "x86") {
-    return Arch::x86;
-  } else if (name == "x86_64") {
-    return Arch::x86_64;
-  }
+static const std::unordered_map<std::string, Arch> arch_name_map{
+  {"arm", Arch::arm},
+  {"arm64", Arch::arm64},
+  {"mips", Arch::mips},
+  {"mips64", Arch::mips64},
+  {"x86", Arch::x86},
+  {"x86_64", Arch::x86_64},
+};
 
-  errx(1, "unknown architecture '%s'", name.c_str());
+std::optional<Arch> arch_from_string(const std::string& name) {
+  auto it = arch_name_map.find(name);
+  if (it == arch_name_map.end()) {
+    return std::nullopt;
+  }
+  return std::make_optional(it->second);
 }

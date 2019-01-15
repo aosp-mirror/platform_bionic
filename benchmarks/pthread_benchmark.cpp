@@ -100,7 +100,7 @@ namespace {
 struct PIMutex {
   pthread_mutex_t mutex;
 
-  PIMutex(int type) {
+  explicit PIMutex(int type) {
     pthread_mutexattr_t attr;
     pthread_mutexattr_init(&attr);
     pthread_mutexattr_settype(&attr, type);

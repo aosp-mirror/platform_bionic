@@ -73,4 +73,32 @@ struct ioctl_gntdev_grant_copy {
 };
 #define UNMAP_NOTIFY_CLEAR_BYTE 0x1
 #define UNMAP_NOTIFY_SEND_EVENT 0x2
+#define GNTDEV_DMA_FLAG_WC (1 << 0)
+#define GNTDEV_DMA_FLAG_COHERENT (1 << 1)
+#define IOCTL_GNTDEV_DMABUF_EXP_FROM_REFS _IOC(_IOC_NONE, 'G', 9, sizeof(struct ioctl_gntdev_dmabuf_exp_from_refs))
+struct ioctl_gntdev_dmabuf_exp_from_refs {
+  __u32 flags;
+  __u32 count;
+  __u32 fd;
+  __u32 domid;
+  __u32 refs[1];
+};
+#define IOCTL_GNTDEV_DMABUF_EXP_WAIT_RELEASED _IOC(_IOC_NONE, 'G', 10, sizeof(struct ioctl_gntdev_dmabuf_exp_wait_released))
+struct ioctl_gntdev_dmabuf_exp_wait_released {
+  __u32 fd;
+  __u32 wait_to_ms;
+};
+#define IOCTL_GNTDEV_DMABUF_IMP_TO_REFS _IOC(_IOC_NONE, 'G', 11, sizeof(struct ioctl_gntdev_dmabuf_imp_to_refs))
+struct ioctl_gntdev_dmabuf_imp_to_refs {
+  __u32 fd;
+  __u32 count;
+  __u32 domid;
+  __u32 reserved;
+  __u32 refs[1];
+};
+#define IOCTL_GNTDEV_DMABUF_IMP_RELEASE _IOC(_IOC_NONE, 'G', 12, sizeof(struct ioctl_gntdev_dmabuf_imp_release))
+struct ioctl_gntdev_dmabuf_imp_release {
+  __u32 fd;
+  __u32 reserved;
+};
 #endif

@@ -26,17 +26,40 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_PRCTL_H
-#define _SYS_PRCTL_H
+#pragma once
+
+/**
+ * @file sys/prctl.h
+ * @brief Process-specific operations.
+ */
 
 #include <sys/cdefs.h>
 
 #include <linux/prctl.h>
 
+/**
+ * Names a VMA (mmap'ed region). The second argument must be `PR_SET_VMA_ANON_NAME`,
+ * the third and fourth are a `void*` pointer to the VMA and its `size_t` length in
+ * bytes, and the final argument is a `const char*` pointer to the name.
+ *
+ * Note that the kernel keeps the pointer to the name rather than copying the name,
+ * so the lifetime of the string should be at least as long as that of the VMA.
+ */
+#define PR_SET_VMA 0x53564d41
+
+/**
+ * For use with `PR_SET_VMA`.
+ */
+#define PR_SET_VMA_ANON_NAME 0
+
 __BEGIN_DECLS
 
+/**
+ * [prctl(2)](http://man7.org/linux/man-pages/man2/prctl.2.html) performs a variety of
+ * operations based on the `PR_` constant passed as the first argument.
+ *
+ * Returns -1 and sets `errno` on failure; success values vary by option.
+ */
 int prctl(int __option, ...);
 
 __END_DECLS
-
-#endif

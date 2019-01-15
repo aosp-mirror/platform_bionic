@@ -28,7 +28,7 @@
 
 #pragma once
 
-#include "private/bionic_macros.h"
+#include <android-base/macros.h>
 
 template<typename T>
 struct LinkedListEntry {
@@ -84,7 +84,7 @@ class LinkedList {
     clear();
   }
 
-  LinkedList(LinkedList&& that) {
+  LinkedList(LinkedList&& that) noexcept {
     this->head_ = that.head_;
     this->tail_ = that.tail_;
     that.head_ = that.tail_ = nullptr;

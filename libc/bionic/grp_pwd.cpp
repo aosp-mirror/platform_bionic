@@ -435,7 +435,7 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
 
   snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
-  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/vendor/bin/sh");
 
   passwd* pw = &state->passwd_;
   pw->pw_name  = state->name_buffer_;

@@ -100,6 +100,7 @@ enum perf_event_sample_format {
   PERF_SAMPLE_REGS_INTR = 1U << 18,
   PERF_SAMPLE_PHYS_ADDR = 1U << 19,
   PERF_SAMPLE_MAX = 1U << 20,
+  __PERF_SAMPLE_CALLCHAIN_EARLY = 1ULL << 63,
 };
 enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_USER_SHIFT = 0,
@@ -285,6 +286,7 @@ struct perf_event_mmap_page {
 #define PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT (1 << 12)
 #define PERF_RECORD_MISC_MMAP_DATA (1 << 13)
 #define PERF_RECORD_MISC_COMM_EXEC (1 << 13)
+#define PERF_RECORD_MISC_FORK_EXEC (1 << 13)
 #define PERF_RECORD_MISC_SWITCH_OUT (1 << 13)
 #define PERF_RECORD_MISC_EXACT_IP (1 << 14)
 #define PERF_RECORD_MISC_SWITCH_OUT_PREEMPT (1 << 14)

@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_TIMESPEC_H_
-#define _BITS_TIMESPEC_H_
+#pragma once
+
+/**
+ * @file bits/timespec.h
+ * @brief The `timespec` struct.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -38,10 +42,11 @@
  */
 #ifndef _STRUCT_TIMESPEC
 #define _STRUCT_TIMESPEC
+/** Represents a time. */
 struct timespec {
+  /** Number of seconds. */
   time_t tv_sec;
+  /** Number of nanoseconds. Must be less than 1,000,000. */
   long tv_nsec;
 };
-#endif
-
 #endif

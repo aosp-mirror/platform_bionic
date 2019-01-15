@@ -18,17 +18,24 @@
 #include <langinfo.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <benchmark/benchmark.h>
 #include "util.h"
 
 static void BM_stdlib_malloc_free(benchmark::State& state) {
   const size_t nbytes = state.range(0);
+  int pagesize = getpagesize();
 
-  void* c;
-  while (state.KeepRunning()) {
-    c = malloc(nbytes);
-    free(c);
+  void* ptr;
+  for (auto _ : state) {
+    ptr = malloc(nbytes);
+    // Make the entire allocation resident.
+    uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
+    for (size_t i = 0; i < nbytes; i += pagesize) {
+      data[i] = 1;
+    }
+    free(ptr);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
@@ -70,7 +77,7 @@ static void BM_stdlib_mbstowcs(benchmark::State& state) {
   buf[l++] = 0;
 
   volatile size_t c __attribute__((unused)) = 0;
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     c = mbstowcs(widebuf_aligned, buf_aligned, 500000);
   }
 
@@ -110,7 +117,7 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
   buf[l++] = 0;
 
   wchar_t wc = 0;
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     for (j = 0; buf_aligned[j]; j+=mbrtowc(&wc, buf_aligned + j, 4, nullptr)) {
     }
   }
@@ -120,42 +127,42 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
 BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc, "0");
 
 void BM_stdlib_atoi(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(atoi(" -123"));
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_atoi);
 
 void BM_stdlib_atol(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(atol(" -123"));
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_atol);
 
 void BM_stdlib_strtol(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(strtol(" -123", nullptr, 0));
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_strtol);
 
 void BM_stdlib_strtoll(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(strtoll(" -123", nullptr, 0));
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_strtoll);
 
 void BM_stdlib_strtoul(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(strtoul(" -123", nullptr, 0));
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_strtoul);
 
 void BM_stdlib_strtoull(benchmark::State& state) {
-  while (state.KeepRunning()) {
+  for (auto _ : state) {
     benchmark::DoNotOptimize(strtoull(" -123", nullptr, 0));
   }
 }

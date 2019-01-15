@@ -24,8 +24,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_FENV_X86_64_H_
-#define _BITS_FENV_X86_64_H_
+#pragma once
 
 #include <sys/types.h>
 
@@ -91,5 +90,3 @@ typedef struct {
 typedef __uint32_t fexcept_t;
 
 __END_DECLS
-
-#endif

@@ -26,10 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _FEATURES_H_
-#define _FEATURES_H_
+#pragma once
 
-/* Our <features.h> macro fun is all in <sys/cdefs.h>. */
+/**
+ * @file features.h
+ * @brief Synonym for `<sys/cdefs.h>` for source compatibility with glibc.
+ */
+
 #include <sys/cdefs.h>
-
-#endif /* _FEATURES_H_ */

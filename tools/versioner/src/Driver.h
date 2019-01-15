@@ -31,10 +31,10 @@ struct CompilationRequirements {
   std::vector<std::string> dependencies;
 };
 
-void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
                                   const std::set<CompilationType>& types,
                                   const std::unordered_map<Arch, CompilationRequirements>& reqs);
 
-void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+void compileHeader(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
                    HeaderDatabase* header_database, CompilationType type,
                    const std::string& filename);

@@ -31,8 +31,9 @@
 #include <string>
 #include <vector>
 
+#include <android-base/file.h>
+
 #include "BionicDeathTest.h"
-#include "TemporaryFile.h"
 #include "utils.h"
 
 #if defined(NOFORTIFY)
@@ -760,7 +761,7 @@ TEST(STDIO_TEST, snprintf_e) {
   snprintf(buf, sizeof(buf), "%e", 1.5);
   EXPECT_STREQ("1.500000e+00", buf);
 
-  snprintf(buf, sizeof(buf), "%Le", 1.5l);
+  snprintf(buf, sizeof(buf), "%Le", 1.5L);
   EXPECT_STREQ("1.500000e+00", buf);
 }
 
@@ -1412,7 +1413,7 @@ TEST(STDIO_TEST, fpos_t_and_seek) {
   fflush(fp);
   fclose(fp);
 
-  fp = fopen(tf.filename, "r");
+  fp = fopen(tf.path, "r");
   ASSERT_TRUE(fp != nullptr);
 
   // Store a valid position.
@@ -2041,7 +2042,7 @@ TEST(STDIO_TEST, fwrite_after_fread_fast_path) {
 TEST(STDIO_TEST, fread_after_fseek) {
   TemporaryFile tf;
 
-  FILE* fp = fopen(tf.filename, "w+");
+  FILE* fp = fopen(tf.path, "w+");
   ASSERT_TRUE(fp != nullptr);
 
   char file_data[12288];
@@ -2051,7 +2052,7 @@ TEST(STDIO_TEST, fread_after_fseek) {
   ASSERT_EQ(12288U, fwrite(file_data, 1, 12288, fp));
   fclose(fp);
 
-  fp = fopen(tf.filename, "r");
+  fp = fopen(tf.path, "r");
   ASSERT_TRUE(fp != nullptr);
 
   char buffer[8192];
@@ -2080,10 +2081,10 @@ TEST(STDIO_TEST, fread_EOF_184847) {
   TemporaryFile tf;
   char buf[6] = {0};
 
-  FILE* fw = fopen(tf.filename, "w");
+  FILE* fw = fopen(tf.path, "w");
   ASSERT_TRUE(fw != nullptr);
 
-  FILE* fr = fopen(tf.filename, "r");
+  FILE* fr = fopen(tf.path, "r");
   ASSERT_TRUE(fr != nullptr);
 
   fwrite("a", 1, 1, fw);
@@ -2197,7 +2198,7 @@ TEST(STDIO_TEST, lots_of_concurrent_files) {
   for (size_t i = 0; i < 256; ++i) {
     TemporaryFile* tf = new TemporaryFile;
     tfs.push_back(tf);
-    FILE* fp = fopen(tf->filename, "w+");
+    FILE* fp = fopen(tf->path, "w+");
     fps.push_back(fp);
     fprintf(fp, "hello %zu!\n", i);
     fflush(fp);
@@ -2313,21 +2314,21 @@ TEST(STDIO_TEST, remove) {
   struct stat sb;
 
   TemporaryFile tf;
-  ASSERT_EQ(0, remove(tf.filename));
-  ASSERT_EQ(-1, lstat(tf.filename, &sb));
+  ASSERT_EQ(0, remove(tf.path));
+  ASSERT_EQ(-1, lstat(tf.path, &sb));
   ASSERT_EQ(ENOENT, errno);
 
   TemporaryDir td;
-  ASSERT_EQ(0, remove(td.dirname));
-  ASSERT_EQ(-1, lstat(td.dirname, &sb));
+  ASSERT_EQ(0, remove(td.path));
+  ASSERT_EQ(-1, lstat(td.path, &sb));
   ASSERT_EQ(ENOENT, errno);
 
   errno = 0;
-  ASSERT_EQ(-1, remove(tf.filename));
+  ASSERT_EQ(-1, remove(tf.path));
   ASSERT_EQ(ENOENT, errno);
 
   errno = 0;
-  ASSERT_EQ(-1, remove(td.dirname));
+  ASSERT_EQ(-1, remove(td.path));
   ASSERT_EQ(ENOENT, errno);
 }
 
@@ -2356,10 +2357,56 @@ TEST(STDIO_TEST, sprintf_30445072) {
   ASSERT_EQ(buf, "hello");
 }
 
+TEST(STDIO_TEST, printf_m) {
+  char buf[BUFSIZ];
+  errno = 0;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Success>", buf);
+  errno = -1;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Unknown error -1>", buf);
+  errno = EINVAL;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Invalid argument>", buf);
+}
+
+TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
+  char buf[BUFSIZ];
+  const char* m = strerror(-1);
+  ASSERT_STREQ("Unknown error -1", m);
+  errno = -2;
+  snprintf(buf, sizeof(buf), "<%m>");
+  ASSERT_STREQ("<Unknown error -2>", buf);
+  ASSERT_STREQ("Unknown error -1", m);
+}
+
+TEST(STDIO_TEST, wprintf_m) {
+  wchar_t buf[BUFSIZ];
+  errno = 0;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Success>"), buf);
+  errno = -1;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Unknown error -1>"), buf);
+  errno = EINVAL;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Invalid argument>"), buf);
+}
+
+TEST(STDIO_TEST, wprintf_m_does_not_clobber_strerror) {
+  wchar_t buf[BUFSIZ];
+  const char* m = strerror(-1);
+  ASSERT_STREQ("Unknown error -1", m);
+  errno = -2;
+  swprintf(buf, sizeof(buf), L"<%m>");
+  ASSERT_EQ(std::wstring(L"<Unknown error -2>"), buf);
+  ASSERT_STREQ("Unknown error -1", m);
+}
+
 TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
   TemporaryFile tf;
-  SetFileTo(tf.filename, "0123456789");
-  FILE* fp = fopen(tf.filename, "a");
+  SetFileTo(tf.path, "0123456789");
+  FILE* fp = fopen(tf.path, "a");
   EXPECT_EQ(10, ftell(fp));
   ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
   EXPECT_EQ(2, ftell(fp));
@@ -2369,13 +2416,13 @@ TEST(STDIO_TEST, fopen_append_mode_and_ftell) {
   ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
   EXPECT_EQ(13, ftell(fp));
   ASSERT_EQ(0, fclose(fp));
-  AssertFileIs(tf.filename, "0123456789xxx");
+  AssertFileIs(tf.path, "0123456789xxx");
 }
 
 TEST(STDIO_TEST, fdopen_append_mode_and_ftell) {
   TemporaryFile tf;
-  SetFileTo(tf.filename, "0123456789");
-  int fd = open(tf.filename, O_RDWR);
+  SetFileTo(tf.path, "0123456789");
+  int fd = open(tf.path, O_RDWR);
   ASSERT_NE(-1, fd);
   // POSIX: "The file position indicator associated with the new stream is set to the position
   // indicated by the file offset associated with the file descriptor."
@@ -2390,14 +2437,14 @@ TEST(STDIO_TEST, fdopen_append_mode_and_ftell) {
   ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
   EXPECT_EQ(13, ftell(fp));
   ASSERT_EQ(0, fclose(fp));
-  AssertFileIs(tf.filename, "0123456789xxx");
+  AssertFileIs(tf.path, "0123456789xxx");
 }
 
 TEST(STDIO_TEST, freopen_append_mode_and_ftell) {
   TemporaryFile tf;
-  SetFileTo(tf.filename, "0123456789");
+  SetFileTo(tf.path, "0123456789");
   FILE* other_fp = fopen("/proc/version", "r");
-  FILE* fp = freopen(tf.filename, "a", other_fp);
+  FILE* fp = freopen(tf.path, "a", other_fp);
   EXPECT_EQ(10, ftell(fp));
   ASSERT_EQ(0, fseek(fp, 2, SEEK_SET));
   EXPECT_EQ(2, ftell(fp));
@@ -2407,7 +2454,7 @@ TEST(STDIO_TEST, freopen_append_mode_and_ftell) {
   ASSERT_EQ(0, fseek(fp, 0, SEEK_END));
   EXPECT_EQ(13, ftell(fp));
   ASSERT_EQ(0, fclose(fp));
-  AssertFileIs(tf.filename, "0123456789xxx");
+  AssertFileIs(tf.path, "0123456789xxx");
 }
 
 TEST(STDIO_TEST, constants) {
@@ -2430,7 +2477,7 @@ TEST(STDIO_TEST, puts) {
 TEST(STDIO_TEST, unlocked) {
   TemporaryFile tf;
 
-  FILE* fp = fopen(tf.filename, "w+");
+  FILE* fp = fopen(tf.path, "w+");
   ASSERT_TRUE(fp != nullptr);
 
   clearerr_unlocked(fp);
@@ -2475,7 +2522,7 @@ TEST(STDIO_TEST, unlocked) {
 
 TEST(STDIO_TEST, fseek_64bit) {
   TemporaryFile tf;
-  FILE* fp = fopen64(tf.filename, "w+");
+  FILE* fp = fopen64(tf.path, "w+");
   ASSERT_TRUE(fp != nullptr);
   ASSERT_EQ(0, fseeko64(fp, 0x2'0000'0000, SEEK_SET));
   ASSERT_EQ(0x2'0000'0000, ftello64(fp));
@@ -2488,7 +2535,7 @@ TEST(STDIO_TEST, fseek_64bit) {
 // isn't representable in long/off_t.
 TEST(STDIO_TEST, fseek_overflow_32bit) {
   TemporaryFile tf;
-  FILE* fp = fopen64(tf.filename, "w+");
+  FILE* fp = fopen64(tf.path, "w+");
   ASSERT_EQ(0, ftruncate64(fileno(fp), 0x2'0000'0000));
 
   // Bionic implements overflow checking for SEEK_CUR, but glibc doesn't.
@@ -2505,4 +2552,20 @@ TEST(STDIO_TEST, fseek_overflow_32bit) {
   ASSERT_EQ(0x2'0000'0000, ftello64(fp));
 
   fclose(fp);
+}
+
+TEST(STDIO_TEST, dev_std_files) {
+  // POSIX only mentions /dev/stdout, but we should have all three (http://b/31824379).
+  char path[PATH_MAX];
+  ssize_t length = readlink("/dev/stdin", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/0", std::string(path, length));
+
+  length = readlink("/dev/stdout", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/1", std::string(path, length));
+
+  length = readlink("/dev/stderr", path, sizeof(path));
+  ASSERT_LT(0, length);
+  ASSERT_EQ("/proc/self/fd/2", std::string(path, length));
 }

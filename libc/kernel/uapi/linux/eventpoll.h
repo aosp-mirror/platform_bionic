@@ -37,10 +37,10 @@
 #define EPOLLWRBAND (__force __poll_t) 0x00000200
 #define EPOLLMSG (__force __poll_t) 0x00000400
 #define EPOLLRDHUP (__force __poll_t) 0x00002000
-#define EPOLLEXCLUSIVE (__force __poll_t) (1U << 28)
-#define EPOLLWAKEUP (__force __poll_t) (1U << 29)
-#define EPOLLONESHOT (__force __poll_t) (1U << 30)
-#define EPOLLET (__force __poll_t) (1U << 31)
+#define EPOLLEXCLUSIVE ((__force __poll_t) (1U << 28))
+#define EPOLLWAKEUP ((__force __poll_t) (1U << 29))
+#define EPOLLONESHOT ((__force __poll_t) (1U << 30))
+#define EPOLLET ((__force __poll_t) (1U << 31))
 #ifdef __x86_64__
 #define EPOLL_PACKED __attribute__((packed))
 #else

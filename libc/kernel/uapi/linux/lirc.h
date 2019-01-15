@@ -92,6 +92,7 @@
 #define LIRC_SET_MEASURE_CARRIER_MODE _IOW('i', 0x0000001d, __u32)
 #define LIRC_SET_REC_CARRIER_RANGE _IOW('i', 0x0000001f, __u32)
 #define LIRC_SET_WIDEBAND_RECEIVER _IOW('i', 0x00000023, __u32)
+#define LIRC_GET_REC_TIMEOUT _IOR('i', 0x00000024, __u32)
 struct lirc_scancode {
   __u64 timestamp;
   __u16 flags;

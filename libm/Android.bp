@@ -285,18 +285,14 @@ cc_library {
             instruction_set: "arm",
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libm.arm.map",
+            version_script: ":libm.arm.map",
         },
 
         arm64: {
             srcs: [
-                "arm64/ceil.S",
                 "arm64/fenv.c",
-                "arm64/floor.S",
                 "arm64/lrint.S",
-                "arm64/rint.S",
                 "arm64/sqrt.S",
-                "arm64/trunc.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/e_sqrt.c",
@@ -322,17 +318,7 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_trunc.c",
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
-            version_script: "libm.arm64.map",
-        },
-
-        mips: {
-            srcs: ["mips/fenv.c"],
-            version_script: "libm.mips.map",
-        },
-
-        mips64: {
-            srcs: ["mips/fenv.c"],
-            version_script: "libm.mips64.map",
+            version_script: ":libm.arm64.map",
         },
 
         x86: {
@@ -407,7 +393,7 @@ cc_library {
             local_include_dirs: ["i387"],
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
-            version_script: "libm.x86.map",
+            version_script: ":libm.x86.map",
         },
 
         x86_64: {
@@ -478,7 +464,7 @@ cc_library {
                     "upstream-freebsd/lib/msun/src/s_truncf.c",
                 ],
             },
-            version_script: "libm.x86_64.map",
+            version_script: ":libm.x86_64.map",
         },
     },
 
@@ -493,6 +479,7 @@ cc_library {
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
+        "-fno-math-errno",
         "-Wall",
         "-Werror",
         "-Wno-missing-braces",
@@ -502,6 +489,13 @@ cc_library {
         "-Wno-unused-const-variable",
         "-Wno-unused-variable",
     ],
+
+    ldflags: [
+        "-Wl,--Bsymbolic-functions",
+    ],
+
+    // b/120614316, non-critical readibility check
+    tidy_checks: ["-cert-dcl16-c"],
 
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
@@ -513,6 +507,14 @@ cc_library {
         integer_overflow: false,
     },
     stl: "none",
+
+    // TODO(ivanlozano): Remove after b/118321713
+    xom: false,
+
+    stubs: {
+        symbol_file: "libm.map.txt",
+        versions: ["10000"],
+    },
 }
 
 ndk_library {
@@ -524,4 +526,36 @@ ndk_library {
 llndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
+}
+
+genrule {
+    name: "libm.arm.map",
+    out: ["libm.arm.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+}
+
+genrule {
+    name: "libm.arm64.map",
+    out: ["libm.arm64.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.x86.map",
+    out: ["libm.x86.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.x86_64.map",
+    out: ["libm.x86_64.map"],
+    srcs: ["libm.map.txt"],
+    tool_files: [":bionic-generate-version-script"],
+    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
 }

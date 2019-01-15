@@ -37,6 +37,7 @@ typedef size_t __kernel_size_t;
 typedef unsigned long drm_handle_t;
 #endif
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_NAME "drm"
 #define DRM_MIN_ORDER 5
@@ -369,6 +370,8 @@ struct drm_get_cap {
 #define DRM_CLIENT_CAP_STEREO_3D 1
 #define DRM_CLIENT_CAP_UNIVERSAL_PLANES 2
 #define DRM_CLIENT_CAP_ATOMIC 3
+#define DRM_CLIENT_CAP_ASPECT_RATIO 4
+#define DRM_CLIENT_CAP_WRITEBACK_CONNECTORS 5
 struct drm_set_client_cap {
   __u64 capability;
   __u64 value;
@@ -427,9 +430,11 @@ struct drm_crtc_queue_sequence {
   __u64 user_data;
 };
 #ifdef __cplusplus
+}
 #endif
 #include "drm_mode.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_IOCTL_BASE 'd'
 #define DRM_IO(nr) _IO(DRM_IOCTL_BASE, nr)
@@ -601,5 +606,6 @@ typedef struct drm_agp_info drm_agp_info_t;
 typedef struct drm_scatter_gather drm_scatter_gather_t;
 typedef struct drm_set_version drm_set_version_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

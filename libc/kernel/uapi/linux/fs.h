@@ -170,6 +170,7 @@ struct fsxattr {
 #define FICLONE _IOW(0x94, 9, int)
 #define FICLONERANGE _IOW(0x94, 13, struct file_clone_range)
 #define FIDEDUPERANGE _IOWR(0x94, 54, struct file_dedupe_range)
+#define FSLABEL_MAX 256
 #define FS_IOC_GETFLAGS _IOR('f', 1, long)
 #define FS_IOC_SETFLAGS _IOW('f', 2, long)
 #define FS_IOC_GETVERSION _IOR('v', 1, long)
@@ -181,6 +182,8 @@ struct fsxattr {
 #define FS_IOC32_SETVERSION _IOW('v', 2, int)
 #define FS_IOC_FSGETXATTR _IOR('X', 31, struct fsxattr)
 #define FS_IOC_FSSETXATTR _IOW('X', 32, struct fsxattr)
+#define FS_IOC_GETFSLABEL _IOR(0x94, 49, char[FSLABEL_MAX])
+#define FS_IOC_SETFSLABEL _IOW(0x94, 50, char[FSLABEL_MAX])
 #define FS_KEY_DESCRIPTOR_SIZE 8
 #define FS_POLICY_FLAGS_PAD_4 0x00
 #define FS_POLICY_FLAGS_PAD_8 0x01
@@ -195,6 +198,8 @@ struct fsxattr {
 #define FS_ENCRYPTION_MODE_AES_256_CTS 4
 #define FS_ENCRYPTION_MODE_AES_128_CBC 5
 #define FS_ENCRYPTION_MODE_AES_128_CTS 6
+#define FS_ENCRYPTION_MODE_SPECK128_256_XTS 7
+#define FS_ENCRYPTION_MODE_SPECK128_256_CTS 8
 struct fscrypt_policy {
   __u8 version;
   __u8 contents_encryption_mode;

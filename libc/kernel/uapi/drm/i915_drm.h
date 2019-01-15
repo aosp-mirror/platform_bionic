@@ -20,6 +20,7 @@
 #define _UAPI_I915_DRM_H_
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define I915_L3_PARITY_UEVENT "L3_PARITY_ERROR"
 #define I915_ERROR_UEVENT "ERROR"
@@ -334,6 +335,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_HAS_EXEC_FENCE_ARRAY 49
 #define I915_PARAM_HAS_CONTEXT_ISOLATION 50
 #define I915_PARAM_CS_TIMESTAMP_FREQUENCY 51
+#define I915_PARAM_MMAP_GTT_COHERENT 52
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -775,5 +777,6 @@ struct drm_i915_query_topology_info {
   __u8 data[];
 };
 #ifdef __cplusplus
+}
 #endif
 #endif

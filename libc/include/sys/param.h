@@ -26,27 +26,35 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_PARAM_H_
-#define _SYS_PARAM_H_
+#pragma once
 
+/**
+ * @file sys/param.h
+ * @brief Various macros.
+ */
+
+#include <endian.h>
 #include <limits.h>
 #include <linux/param.h>
 #include <sys/cdefs.h>
 
+/** The unit of `st_blocks` in `struct stat`. */
 #define DEV_BSIZE 512
 
+/** A historical name for PATH_MAX. */
 #define MAXPATHLEN  PATH_MAX
+
 #define MAXSYMLINKS 8
 
-/* Macros for counting and rounding. */
 #ifndef howmany
 #define howmany(x, y)   (((x)+((y)-1))/(y))
 #endif
 #define roundup(x, y)   ((((x)+((y)-1))/(y))*(y))
-#define powerof2(x)     ((((x)-1)&(x))==0)
 
-/* Macros for min/max. */
+/** Returns true if the argument is a power of two. */
+#define powerof2(x) ((((x)-1)&(x))==0)
+
+/** Returns the lesser of its two arguments. */
 #define MIN(a,b) (((a)<(b))?(a):(b))
+/** Returns the greater of its two arguments. */
 #define MAX(a,b) (((a)>(b))?(a):(b))
-
-#endif

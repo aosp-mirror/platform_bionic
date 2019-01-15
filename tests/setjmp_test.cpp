@@ -74,6 +74,8 @@ struct SigSets {
     sigset64_t ss;
     sigemptyset64(&ss);
     sigaddset64(&ss, SIGUSR1 + offset);
+    // TIMER_SIGNAL.
+    sigaddset64(&ss, __SIGRTMIN);
     sigaddset64(&ss, SIGRTMIN + offset);
     return ss;
   }
@@ -261,4 +263,15 @@ TEST(setjmp, setjmp_cookie_checksum) {
   } else {
     fprintf(stderr, "setjmp_cookie_checksum: longjmp succeeded?");
   }
+}
+
+__attribute__((noinline)) void call_longjmp(jmp_buf buf) {
+  longjmp(buf, 123);
+}
+
+TEST(setjmp, setjmp_stack) {
+  jmp_buf buf;
+  int value = setjmp(buf);
+  if (value == 0) call_longjmp(buf);
+  EXPECT_EQ(123, value);
 }

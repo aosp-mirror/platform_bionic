@@ -50,11 +50,13 @@ struct blk_zone_report {
   __u32 nr_zones;
   __u8 reserved[4];
   struct blk_zone zones[0];
-} __packed;
+};
 struct blk_zone_range {
   __u64 sector;
   __u64 nr_sectors;
 };
 #define BLKREPORTZONE _IOWR(0x12, 130, struct blk_zone_report)
 #define BLKRESETZONE _IOW(0x12, 131, struct blk_zone_range)
+#define BLKGETZONESZ _IOR(0x12, 132, __u32)
+#define BLKGETNRZONES _IOR(0x12, 133, __u32)
 #endif

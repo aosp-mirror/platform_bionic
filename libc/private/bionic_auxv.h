@@ -25,17 +25,9 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#ifndef _PRIVATE_BIONIC_AUXV_H_
-#define _PRIVATE_BIONIC_AUXV_H_
 
-#include <elf.h>
-#include <link.h>
+#pragma once
+
 #include <sys/cdefs.h>
 
-__BEGIN_DECLS
-
-extern ElfW(auxv_t)* __libc_auxv;
-
-__END_DECLS
-
-#endif /* _PRIVATE_BIONIC_AUXV_H_ */
+__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists);

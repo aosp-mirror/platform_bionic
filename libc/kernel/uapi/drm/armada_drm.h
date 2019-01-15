@@ -20,6 +20,7 @@
 #define DRM_ARMADA_IOCTL_H
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_ARMADA_GEM_CREATE 0x00
 #define DRM_ARMADA_GEM_MMAP 0x02
@@ -46,5 +47,6 @@ struct drm_armada_gem_pwrite {
 };
 #define DRM_IOCTL_ARMADA_GEM_PWRITE ARMADA_IOCTL(IOW, GEM_PWRITE, gem_pwrite)
 #ifdef __cplusplus
+}
 #endif
 #endif

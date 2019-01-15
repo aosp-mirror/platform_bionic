@@ -29,7 +29,6 @@
 #include <clang/AST/ASTConsumer.h>
 #include <clang/Basic/Diagnostic.h>
 #include <clang/Basic/TargetInfo.h>
-#include <clang/Basic/VirtualFileSystem.h>
 #include <clang/Driver/Compilation.h>
 #include <clang/Driver/Driver.h>
 #include <clang/Frontend/CompilerInstance.h>
@@ -42,7 +41,8 @@
 #include <llvm/ADT/IntrusiveRefCntPtr.h>
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
-#include <llvm/Config/config.h>
+#include <llvm/Option/Option.h>
+#include <llvm/Support/VirtualFileSystem.h>
 
 #include "Arch.h"
 #include "DeclarationDatabase.h"
@@ -94,7 +94,7 @@ static IntrusiveRefCntPtr<DiagnosticsEngine> constructDiags() {
 // Run it once to generate flags for each target, and memoize the results.
 static std::unordered_map<CompilationType, std::vector<std::string>> cc1_flags;
 static const char* filename_placeholder = "__VERSIONER_PLACEHOLDER__";
-static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
                                    CompilationType type,
                                    const std::vector<std::string>& include_dirs) {
   std::vector<std::string> cmd = { "versioner" };
@@ -169,7 +169,7 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<clang::vfs::FileSyst
   }
 
   const driver::Command& driver_cmd = llvm::cast<driver::Command>(*jobs.begin());
-  const driver::ArgStringList& cc_args = driver_cmd.getArguments();
+  const llvm::opt::ArgStringList& cc_args = driver_cmd.getArguments();
 
   if (cc_args.size() == 0) {
     errx(1, "driver returned empty command for %s", to_string(type).c_str());
@@ -208,7 +208,7 @@ static std::vector<const char*> getCC1Command(CompilationType type, const std::s
   return result;
 }
 
-void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
                                   const std::set<CompilationType>& types,
                                   const std::unordered_map<Arch, CompilationRequirements>& reqs) {
   if (!cc1_flags.empty()) {
@@ -243,7 +243,7 @@ void initializeTargetCC1FlagCache(llvm::IntrusiveRefCntPtr<clang::vfs::FileSyste
   }
 }
 
-void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
+void compileHeader(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
                    HeaderDatabase* header_database, CompilationType type,
                    const std::string& filename) {
   auto diags = constructDiags();
@@ -256,13 +256,7 @@ void compileHeader(llvm::IntrusiveRefCntPtr<clang::vfs::FileSystem> vfs,
 
   clang::CompilerInstance Compiler;
 
-// Remove the workaround once b/35936936 is fixed.
-#if LLVM_VERSION_MAJOR >= 5
   Compiler.setInvocation(std::move(invocation));
-#else
-  Compiler.setInvocation(invocation.release());
-#endif
-
   Compiler.setDiagnostics(diags.get());
   Compiler.setVirtualFileSystem(vfs);
 

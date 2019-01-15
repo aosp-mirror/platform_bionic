@@ -26,21 +26,60 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ERROR_H
-#define _ERROR_H 1
+#pragma once
+
+/**
+ * @file error.h
+ * @brief GNU error reporting functions.
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/**
+ * [error_print_progname(3)](http://man7.org/linux/man-pages/man3/error_print_progname.3.html) is
+ * a function pointer that, if non-null, is called by error() instead of prefixing errors with the
+ * program name.
+ *
+ * Available since API level 23.
+ */
 extern void (*error_print_progname)(void) __INTRODUCED_IN(23);
+
+/**
+ * [error_message_count(3)](http://man7.org/linux/man-pages/man3/error_message_count.3.html) is
+ * a global count of the number of calls to error() and error_at_line().
+ *
+ * Available since API level 23.
+ */
 extern unsigned int error_message_count __INTRODUCED_IN(23);
+
+/**
+ * [error_one_per_line(3)](http://man7.org/linux/man-pages/man3/error_one_per_line.3.html) is
+ * a global flag that if non-zero disables printing multiple errors with the same filename and
+ * line number.
+ *
+ * Available since API level 23.
+ */
 extern int error_one_per_line __INTRODUCED_IN(23);
 
+/**
+ * [error(3)](http://man7.org/linux/man-pages/man3/error.3.html) formats the given printf()-like
+ * error message, preceded by the program name. Calls exit if `__status` is non-zero, and appends
+ * the result of strerror() if `__errno` is non-zero.
+ *
+ * Available since API level 23.
+ */
 void error(int __status, int __errno, const char* __fmt, ...) __printflike(3, 4) __INTRODUCED_IN(23);
-void error_at_line(int __status, int __errno, const char* __filename, unsigned int __line_number, const char* __fmt, ...)
-    __printflike(5, 6) __INTRODUCED_IN(23);
+
+/**
+ * [error_at_line(3)](http://man7.org/linux/man-pages/man3/error_at_line.3.html) formats the given
+ * printf()-like error message, preceded by the program name and the given filename and line number.
+ * Calls exit if `__status` is non-zero, and appends the result of strerror() if `__errno` is
+ * non-zero.
+ *
+ * Available since API level 23.
+ */
+void error_at_line(int __status, int __errno, const char* __filename, unsigned int __line_number, const char* __fmt, ...) __printflike(5, 6) __INTRODUCED_IN(23);
 
 __END_DECLS
-
-#endif

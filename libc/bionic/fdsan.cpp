@@ -43,6 +43,7 @@
 #include <sys/system_properties.h>
 
 #include "private/bionic_globals.h"
+#include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
 
 extern "C" int ___close(int fd);
@@ -131,17 +132,13 @@ void __libc_init_fdsan() {
       nullptr);
 }
 
-static FdTable* GetFdTable() {
-  if (!__libc_shared_globals) {
-    return nullptr;
-  }
-
-  return &__libc_shared_globals->fd_table;
+static FdTable& GetFdTable() {
+  return __libc_shared_globals()->fd_table;
 }
 
 // Exposed to the platform to allow crash_dump to print out the fd table.
 extern "C" void* android_fdsan_get_fd_table() {
-  return GetFdTable();
+  return &GetFdTable();
 }
 
 static FdEntry* GetFdEntry(int fd) {
@@ -149,21 +146,13 @@ static FdEntry* GetFdEntry(int fd) {
     return nullptr;
   }
 
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    return nullptr;
-  }
-
-  return fd_table->at(fd);
+  return GetFdTable().at(fd);
 }
 
 __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    return;
-  }
+  auto& fd_table = GetFdTable();
 
-  auto error_level = atomic_load(&fd_table->error_level);
+  auto error_level = atomic_load(&fd_table.error_level);
   if (error_level == ANDROID_FDSAN_ERROR_LEVEL_DISABLED) {
     return;
   }
@@ -176,26 +165,37 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     return;
   }
 
+  struct {
+    size_t size;
+    char buf[512];
+  } abort_message;
+
   va_list va;
   va_start(va, fmt);
   if (error_level == ANDROID_FDSAN_ERROR_LEVEL_FATAL) {
     async_safe_fatal_va_list("fdsan", fmt, va);
   } else {
     async_safe_format_log_va_list(ANDROID_LOG_ERROR, "fdsan", fmt, va);
+    va_end(va);
+    va_start(va, fmt);
+    size_t len =
+        async_safe_format_buffer_va_list(abort_message.buf, sizeof(abort_message.buf), fmt, va);
+    abort_message.size = len + sizeof(size_t);
   }
   va_end(va);
 
   switch (error_level) {
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE:
-      atomic_compare_exchange_strong(&fd_table->error_level, &error_level,
+      atomic_compare_exchange_strong(&fd_table.error_level, &error_level,
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
       // DEBUGGER_SIGNAL
-      raise(__SIGRTMIN + 3);
+      inline_raise(__SIGRTMIN + 3, &abort_message);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
+      inline_raise(SIGABRT);
       abort();
 
     case ANDROID_FDSAN_ERROR_LEVEL_DISABLED:
@@ -218,7 +218,7 @@ uint64_t android_fdsan_create_owner_tag(android_fdsan_owner_type type, uint64_t 
   return result;
 }
 
-static const char* __tag_to_type(uint64_t tag) {
+const char* android_fdsan_get_tag_type(uint64_t tag) {
   uint64_t type = tag >> 56;
   switch (type) {
     case ANDROID_FDSAN_OWNER_TYPE_FILE:
@@ -235,6 +235,16 @@ static const char* __tag_to_type(uint64_t tag) {
       return "RandomAccessFile";
     case ANDROID_FDSAN_OWNER_TYPE_PARCELFILEDESCRIPTOR:
       return "ParcelFileDescriptor";
+    case ANDROID_FDSAN_OWNER_TYPE_SQLITE:
+      return "sqlite";
+    case ANDROID_FDSAN_OWNER_TYPE_ART_FDFILE:
+      return "ART FdFile";
+    case ANDROID_FDSAN_OWNER_TYPE_DATAGRAMSOCKETIMPL:
+      return "DatagramSocketImpl";
+    case ANDROID_FDSAN_OWNER_TYPE_SOCKETIMPL:
+      return "SocketImpl";
+    case ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE:
+      return "ZipArchive";
 
     case ANDROID_FDSAN_OWNER_TYPE_GENERIC_00:
     default:
@@ -251,7 +261,7 @@ static const char* __tag_to_type(uint64_t tag) {
   }
 }
 
-static uint64_t __tag_to_owner(uint64_t tag) {
+uint64_t android_fdsan_get_tag_value(uint64_t tag) {
   // Lop off the most significant byte and sign extend.
   return static_cast<uint64_t>(static_cast<int64_t>(tag << 8) >> 8);
 }
@@ -264,10 +274,10 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
 
   uint64_t tag = expected_tag;
   if (!atomic_compare_exchange_strong(&fde->close_tag, &tag, 0)) {
-    const char* expected_type = __tag_to_type(expected_tag);
-    uint64_t expected_owner = __tag_to_owner(expected_tag);
-    const char* actual_type = __tag_to_type(tag);
-    uint64_t actual_owner = __tag_to_owner(tag);
+    const char* expected_type = android_fdsan_get_tag_type(expected_tag);
+    uint64_t expected_owner = android_fdsan_get_tag_value(expected_tag);
+    const char* actual_type = android_fdsan_get_tag_type(tag);
+    uint64_t actual_owner = android_fdsan_get_tag_value(tag);
     if (expected_tag && tag) {
       fdsan_error(
           "attempted to close file descriptor %d, "
@@ -297,6 +307,14 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
   return rc;
 }
 
+uint64_t android_fdsan_get_owner_tag(int fd) {
+  FdEntry* fde = GetFdEntry(fd);
+  if (!fde) {
+    return 0;
+  }
+  return fde->close_tag;
+}
+
 void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t new_tag) {
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
@@ -309,18 +327,18 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "owned by %s 0x%" PRIx64 ", was expected to be owned by %s 0x%" PRIx64,
-          fd, __tag_to_type(tag), __tag_to_owner(tag), __tag_to_type(expected_tag),
-          __tag_to_owner(expected_tag));
+          fd, android_fdsan_get_tag_type(tag), android_fdsan_get_tag_value(tag),
+          android_fdsan_get_tag_type(expected_tag), android_fdsan_get_tag_value(expected_tag));
     } else if (expected_tag && !tag) {
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "unowned, was expected to be owned by %s 0x%" PRIx64,
-          fd, __tag_to_type(expected_tag), __tag_to_owner(expected_tag));
+          fd, android_fdsan_get_tag_type(expected_tag), android_fdsan_get_tag_value(expected_tag));
     } else if (!expected_tag && tag) {
       fdsan_error(
           "failed to exchange ownership of file descriptor: fd %d is "
           "owned by %s 0x%" PRIx64 ", was expected to be unowned",
-          fd, __tag_to_type(tag), __tag_to_owner(tag));
+          fd, android_fdsan_get_tag_type(tag), android_fdsan_get_tag_value(tag));
     } else if (!expected_tag && !tag) {
       // This should never happen: our CAS failed, but expected == actual?
       async_safe_fatal(
@@ -330,21 +348,11 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
 }
 
 android_fdsan_error_level android_fdsan_get_error_level() {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    async_safe_fatal("attempted to get fdsan error level before libc initialization?");
-  }
-
-  return fd_table->error_level;
+  return GetFdTable().error_level;
 }
 
 android_fdsan_error_level android_fdsan_set_error_level(android_fdsan_error_level new_level) {
-  auto* fd_table = GetFdTable();
-  if (!fd_table) {
-    async_safe_fatal("attempted to get fdsan error level before libc initialization?");
-  }
-
-  return atomic_exchange(&fd_table->error_level, new_level);
+  return atomic_exchange(&GetFdTable().error_level, new_level);
 }
 
 int close(int fd) {

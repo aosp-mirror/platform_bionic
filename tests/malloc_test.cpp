@@ -25,6 +25,13 @@
 #include <tinyxml2.h>
 
 #include "private/bionic_config.h"
+#include "utils.h"
+
+#if defined(__BIONIC__)
+#define HAVE_REALLOCARRAY 1
+#else
+#define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
+#endif
 
 TEST(malloc, malloc_std) {
   // Simple malloc test.
@@ -35,6 +42,7 @@ TEST(malloc, malloc_std) {
 }
 
 TEST(malloc, malloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, malloc(SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
@@ -53,12 +61,14 @@ TEST(malloc, calloc_std) {
 }
 
 TEST(malloc, calloc_illegal) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(-1, 100));
   ASSERT_EQ(ENOMEM, errno);
 }
 
 TEST(malloc, calloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, calloc(1, SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
@@ -74,6 +84,7 @@ TEST(malloc, calloc_overflow) {
 }
 
 TEST(malloc, memalign_multiple) {
+  SKIP_WITH_HWASAN; // hwasan requires power of 2 alignment.
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
@@ -88,10 +99,12 @@ TEST(malloc, memalign_multiple) {
 }
 
 TEST(malloc, memalign_overflow) {
+  SKIP_WITH_HWASAN;
   ASSERT_EQ(nullptr, memalign(4096, SIZE_MAX));
 }
 
 TEST(malloc, memalign_non_power2) {
+  SKIP_WITH_HWASAN;
   void* ptr;
   for (size_t align = 0; align <= 256; align++) {
     ptr = memalign(align, 1024);
@@ -274,6 +287,7 @@ TEST(malloc, calloc_multiple_realloc) {
 }
 
 TEST(malloc, realloc_overflow) {
+  SKIP_WITH_HWASAN;
   errno = 0;
   ASSERT_EQ(nullptr, realloc(nullptr, SIZE_MAX));
   ASSERT_EQ(ENOMEM, errno);
@@ -496,4 +510,94 @@ TEST(malloc, mallopt_smoke) {
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
+}
+
+TEST(malloc, mallopt_decay) {
+#if defined(__BIONIC__)
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
+  ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
+TEST(malloc, mallopt_purge) {
+#if defined(__BIONIC__)
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
+TEST(malloc, reallocarray_overflow) {
+#if HAVE_REALLOCARRAY
+  // Values that cause overflow to a result small enough (8 on LP64) that malloc would "succeed".
+  size_t a = static_cast<size_t>(INTPTR_MIN + 4);
+  size_t b = 2;
+
+  errno = 0;
+  ASSERT_TRUE(reallocarray(nullptr, a, b) == nullptr);
+  ASSERT_EQ(ENOMEM, errno);
+
+  errno = 0;
+  ASSERT_TRUE(reallocarray(nullptr, b, a) == nullptr);
+  ASSERT_EQ(ENOMEM, errno);
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+#endif
+}
+
+TEST(malloc, reallocarray) {
+#if HAVE_REALLOCARRAY
+  void* p = reallocarray(nullptr, 2, 32);
+  ASSERT_TRUE(p != nullptr);
+  ASSERT_GE(malloc_usable_size(p), 64U);
+#else
+  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+#endif
+}
+
+TEST(malloc, mallinfo) {
+#if defined(__BIONIC__)
+  static size_t sizes[] = {
+    8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
+  };
+
+  constexpr static size_t kMaxAllocs = 50;
+
+  for (size_t size : sizes) {
+    // If some of these allocations are stuck in a thread cache, then keep
+    // looping until we make an allocation that changes the total size of the
+    // memory allocated.
+    // jemalloc implementations counts the thread cache allocations against
+    // total memory allocated.
+    void* ptrs[kMaxAllocs] = {};
+    bool pass = false;
+    for (size_t i = 0; i < kMaxAllocs; i++) {
+      size_t allocated = mallinfo().uordblks;
+      ptrs[i] = malloc(size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+      size_t new_allocated = mallinfo().uordblks;
+      if (allocated != new_allocated) {
+        size_t usable_size = malloc_usable_size(ptrs[i]);
+        ASSERT_GE(new_allocated, allocated + usable_size)
+            << "Failed at size " << size << " usable size " << usable_size;
+        pass = true;
+        break;
+      }
+    }
+    for (void* ptr : ptrs) {
+      free(ptr);
+    }
+    ASSERT_TRUE(pass)
+        << "For size " << size << " allocated bytes did not increase after "
+        << kMaxAllocs << " allocations.";
+  }
+#else
+  GTEST_LOG_(INFO) << "Host glibc does not pass this test, skipping.\n";
+#endif
 }

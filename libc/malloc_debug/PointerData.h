@@ -112,7 +112,7 @@ struct ListInfoType {
 
 class PointerData : public OptionData {
  public:
-  PointerData(DebugData* debug_data);
+  explicit PointerData(DebugData* debug_data);
   virtual ~PointerData() = default;
 
   bool Initialize(const Config& config);
@@ -184,5 +184,5 @@ class PointerData : public OptionData {
   static std::mutex free_pointer_mutex_;
   static std::deque<FreePointerInfoType> free_pointers_;
 
-  DISALLOW_COPY_AND_ASSIGN(PointerData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(PointerData);
 };

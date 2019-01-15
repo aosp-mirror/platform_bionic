@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_IOCTL_H_
-#define _SYS_IOCTL_H_
+#pragma once
+
+/**
+ * @file sys/ioctl.h
+ * @brief The ioctl() function.
+ */
 
 #include <sys/cdefs.h>
 #include <linux/ioctl.h>
@@ -39,5 +43,3 @@
 #include <linux/tty.h>
 
 #include <bits/ioctl.h>
-
-#endif

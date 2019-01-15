@@ -41,7 +41,12 @@
 #endif
 
 	.text
+	.syntax unified
 	.fpu    neon
+
+	// To avoid warning about deprecated instructions, add an explicit
+	// arch. The code generated is exactly the same.
+	.arch armv7-a
 
 .L_memcpy_base:
 	cmp	r2, #4

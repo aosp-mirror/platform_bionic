@@ -34,36 +34,9 @@
  *	@(#)cdefs.h	8.8 (Berkeley) 1/9/95
  */
 
-#ifndef	_SYS_CDEFS_H_
-#define	_SYS_CDEFS_H_
-
-#include <android/api-level.h>
-#include <android/versioning.h>
+#pragma once
 
 #define __BIONIC__ 1
-
-/*
- * Testing against Clang-specific extensions.
- */
-#ifndef __has_extension
-#define __has_extension         __has_feature
-#endif
-#ifndef __has_feature
-#define __has_feature(x)        0
-#endif
-#ifndef __has_include
-#define __has_include(x)        0
-#endif
-#ifndef __has_builtin
-#define __has_builtin(x)        0
-#endif
-#ifndef __has_attribute
-#define __has_attribute(x)      0
-#endif
-
-#define __strong_alias(alias, sym) \
-    __asm__(".global " #alias "\n" \
-            #alias " = " #sym);
 
 #if defined(__cplusplus)
 #define __BEGIN_DECLS extern "C" {
@@ -72,6 +45,10 @@
 #define __BEGIN_DECLS
 #define __END_DECLS
 #endif
+
+#define __strong_alias(alias, sym) \
+    __asm__(".global " #alias "\n" \
+            #alias " = " #sym);
 
 #if defined(__cplusplus)
 #define __BIONIC_CAST(_k,_t,_v) (_k<_t>(_v))
@@ -89,25 +66,18 @@
  * strings produced by the __STRING macro, but this only works with ANSI C.
  */
 
-#define	___STRING(x)	__STRING(x)
-#define	___CONCAT(x,y)	__CONCAT(x,y)
-
-#if defined(__STDC__) || defined(__cplusplus)
 #define	__P(protos)	protos		/* full-blown ANSI C */
+
 #define	__CONCAT1(x,y)	x ## y
 #define	__CONCAT(x,y)	__CONCAT1(x,y)
+#define	___CONCAT(x,y)	__CONCAT(x,y)
+
 #define	__STRING(x)	#x
+#define	___STRING(x)	__STRING(x)
 
 #if defined(__cplusplus)
 #define	__inline	inline		/* convert to C++ keyword */
 #endif /* !__cplusplus */
-
-#else	/* !(__STDC__ || __cplusplus) */
-#define	__P(protos)	()		/* traditional C preprocessor */
-#define	__CONCAT(x,y)	x/**/y
-#define	__STRING(x)	"x"
-
-#endif	/* !(__STDC__ || __cplusplus) */
 
 #define __always_inline __attribute__((__always_inline__))
 #define __attribute_const__ __attribute__((__const__))
@@ -364,4 +334,5 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
  */
 #define __unsafe_check_mul_overflow(x, y) ((__SIZE_TYPE__)-1 / (x) < (y))
 
-#endif /* !_SYS_CDEFS_H_ */
+#include <android/versioning.h>
+#include <android/api-level.h>

@@ -40,6 +40,10 @@ struct signalfd_siginfo {
   __u64 ssi_stime;
   __u64 ssi_addr;
   __u16 ssi_addr_lsb;
-  __u8 __pad[46];
+  __u16 __pad2;
+  __s32 ssi_syscall;
+  __u64 ssi_call_addr;
+  __u32 ssi_arch;
+  __u8 __pad[28];
 };
 #endif

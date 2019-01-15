@@ -43,40 +43,29 @@
 
 #include <async_safe/log.h>
 
-#include "private/KernelArgumentBlock.h"
 #include "private/WriteProtected.h"
-#include "private/bionic_auxv.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/thread_private.h"
 #include "pthread_internal.h"
 
-extern "C" abort_msg_t** __abort_message_ptr;
 extern "C" int __system_properties_init(void);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
-__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals;
 
 // Not public, but well-known in the BSDs.
 const char* __progname;
 
-void __libc_init_globals(KernelArgumentBlock& args) {
-#if defined(__i386__)
-  __libc_init_sysinfo(args);
-#endif
+void __libc_init_globals() {
   // Initialize libc globals that are needed in both the linker and in libc.
   // In dynamic binaries, this is run at least twice for different copies of the
   // globals, once for the linker's copy and once for the one in libc.so.
-  __libc_auxv = args.auxv;
   __libc_globals.initialize();
-  __libc_globals.mutate([&args](libc_globals* globals) {
-    __libc_init_vdso(globals, args);
-    __libc_init_setjmp_cookie(globals, args);
+  __libc_globals.mutate([](libc_globals* globals) {
+    __libc_init_vdso(globals);
+    __libc_init_setjmp_cookie(globals);
   });
-}
-
-void __libc_init_shared_globals(libc_shared_globals*) {
 }
 
 #if !defined(__LP64__)
@@ -100,12 +89,11 @@ void __libc_add_main_thread() {
   __pthread_internal_add(main_thread);
 }
 
-void __libc_init_common(KernelArgumentBlock& args) {
+void __libc_init_common() {
   // Initialize various globals.
-  environ = args.envp;
+  environ = __libc_shared_globals()->init_environ;
   errno = 0;
-  __progname = args.argv[0] ? args.argv[0] : "<unknown>";
-  __abort_message_ptr = args.abort_message_ptr;
+  __progname = __libc_shared_globals()->init_progname ?: "<unknown>";
 
 #if !defined(__LP64__)
   __check_max_thread_id();
@@ -275,7 +263,6 @@ static bool __is_unsafe_environment_variable(const char* name) {
 }
 
 static void __sanitize_environment_variables(char** env) {
-  bool is_AT_SECURE = getauxval(AT_SECURE);
   char** src = env;
   char** dst = env;
   for (; src[0] != nullptr; ++src) {
@@ -283,7 +270,7 @@ static void __sanitize_environment_variables(char** env) {
       continue;
     }
     // Remove various unsafe environment variables if we're loading a setuid program.
-    if (is_AT_SECURE && __is_unsafe_environment_variable(src[0])) {
+    if (__is_unsafe_environment_variable(src[0])) {
       continue;
     }
     dst[0] = src[0];
@@ -305,30 +292,22 @@ static void __initialize_personality() {
 #endif
 }
 
-void __libc_init_AT_SECURE(KernelArgumentBlock& args) {
-  __libc_auxv = args.auxv;
-  __abort_message_ptr = args.abort_message_ptr;
-
+void __libc_init_AT_SECURE(char** env) {
   // Check that the kernel provided a value for AT_SECURE.
-  bool found_AT_SECURE = false;
-  for (ElfW(auxv_t)* v = __libc_auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == AT_SECURE) {
-      found_AT_SECURE = true;
-      break;
-    }
-  }
-  if (!found_AT_SECURE) __early_abort(__LINE__);
+  errno = 0;
+  unsigned long is_AT_SECURE = getauxval(AT_SECURE);
+  if (errno != 0) __early_abort(__LINE__);
 
-  if (getauxval(AT_SECURE)) {
+  if (is_AT_SECURE) {
     // If this is a setuid/setgid program, close the security hole described in
     // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
     __nullify_closed_stdio();
 
-    __sanitize_environment_variables(args.envp);
+    __sanitize_environment_variables(env);
   }
 
   // Now the environment has been sanitized, make it available.
-  environ = args.envp;
+  environ = __libc_shared_globals()->init_environ = env;
 
   __initialize_personality();
 }

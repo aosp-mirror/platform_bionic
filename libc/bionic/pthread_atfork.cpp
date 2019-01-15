@@ -107,7 +107,7 @@ class atfork_list_t {
   atfork_t* first_;
   atfork_t* last_;
 
-  DISALLOW_COPY_AND_ASSIGN(atfork_list_t);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(atfork_list_t);
 };
 
 static pthread_mutex_t g_atfork_list_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
@@ -180,4 +180,3 @@ extern "C" __LIBC_HIDDEN__ void __unregister_atfork(void* dso) {
   });
   pthread_mutex_unlock(&g_atfork_list_mutex);
 }
-

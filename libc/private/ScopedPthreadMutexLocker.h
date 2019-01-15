@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef SCOPED_PTHREAD_MUTEX_LOCKER_H
-#define SCOPED_PTHREAD_MUTEX_LOCKER_H
+#pragma once
 
 #include <pthread.h>
 
@@ -34,7 +33,5 @@ class ScopedPthreadMutexLocker {
  private:
   pthread_mutex_t* mu_;
 
-  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedPthreadMutexLocker);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedPthreadMutexLocker);
 };
-
-#endif // SCOPED_PTHREAD_MUTEX_LOCKER_H

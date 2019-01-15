@@ -1,6 +1,3 @@
-/*	$OpenBSD: ar.h,v 1.3 2003/06/02 19:34:12 millert Exp $	*/
-/*	$NetBSD: ar.h,v 1.4 1994/10/26 00:55:43 cgd Exp $	*/
-
 /*-
  * Copyright (c) 1991, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -40,29 +37,36 @@
  *	@(#)ar.h	8.2 (Berkeley) 1/21/94
  */
 
-#ifndef _AR_H_
-#define	_AR_H_
+#pragma once
+
+/**
+ * @file ar.h
+ * @brief Constants for reading/writing `.a` files.
+ */
 
 #include <sys/cdefs.h>
 
-/* Pre-4BSD archives had these magic numbers in them. */
-#define	OARMAG1	0177555
-#define	OARMAG2	0177545
+/** The magic at the beginning of a `.a` file. */
+#define ARMAG  "!<arch>\n"
+/** The length of the magic at the beginning of a `.a` file. */
+#define SARMAG  8
 
-#define	ARMAG		"!<arch>\n"	/* ar "magic number" */
-#define	SARMAG		8		/* strlen(ARMAG); */
-
-#define	AR_EFMT1	"#1/"		/* extended format #1 */
+/** The contents of every `ar_hdr::ar_fmag` field.*/
+#define	ARFMAG	"`\n"
 
 struct ar_hdr {
-	char ar_name[16];		/* name */
-	char ar_date[12];		/* modification time */
-	char ar_uid[6];			/* user id */
-	char ar_gid[6];			/* group id */
-	char ar_mode[8];		/* octal file permissions */
-	char ar_size[10];		/* size in bytes */
-#define	ARFMAG	"`\n"
-	char ar_fmag[2];		/* consistency check */
+  /* Name. */
+  char ar_name[16];
+  /* Modification time. */
+  char ar_date[12];
+  /** User id. */
+  char ar_uid[6];
+  /** Group id. */
+  char ar_gid[6];
+  /** Octal file permissions. */
+  char ar_mode[8];
+  /** Size in bytes. */
+  char ar_size[10];
+  /** Consistency check. Always contains `ARFMAG`. */
+  char ar_fmag[2];
 };
-
-#endif /* !_AR_H_ */

@@ -61,7 +61,7 @@
         // arch. The code generated is exactly the same.
         .arch armv7-a
 
-ENTRY(strcmp)
+ENTRY(strcmp_a15)
       /* Use LDRD whenever possible.  */
 
 /* The main thing to look out for when comparing large blocks is that
@@ -376,4 +376,4 @@ ENTRY(strcmp)
         it      ls
         sbcls   r0, r0, r0
         bx      lr
-END(strcmp)
+END(strcmp_a15)

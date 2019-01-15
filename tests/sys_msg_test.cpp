@@ -31,7 +31,7 @@
 #include <errno.h>
 #include <sys/msg.h>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
 
 TEST(sys_msg, smoke) {
   if (msgctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
@@ -41,7 +41,7 @@ TEST(sys_msg, smoke) {
 
   // Create a queue.
   TemporaryDir dir;
-  key_t key = ftok(dir.dirname, 1);
+  key_t key = ftok(dir.path, 1);
   int id = msgget(key, IPC_CREAT|0666);
   ASSERT_NE(id, -1);
 

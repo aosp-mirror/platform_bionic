@@ -29,5 +29,5 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #define USE_AS_STRNCPY
-#define STRCPY strncpy
+#define STRCPY strncpy_atom
 #include "ssse3-strcpy-atom.S"

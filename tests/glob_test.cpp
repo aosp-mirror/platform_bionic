@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "TemporaryFile.h"
+#include <android-base/file.h>
 
 #if defined(__BIONIC__)
 #define ASSERT_MATCH_COUNT(n_,g_) ASSERT_EQ(n_, g_.gl_matchc)
@@ -140,22 +140,22 @@ TEST(glob, glob_GLOB_ERR) {
 TEST(glob, glob_GLOB_MARK) {
   TemporaryDir td;
   // The pattern we're about to pass doesn't have a trailing '/'...
-  ASSERT_NE('/', std::string(td.dirname).back());
+  ASSERT_NE('/', std::string(td.path).back());
 
   glob_t g = {};
   // Using GLOB_MARK gets you a trailing '/' on a directory...
-  ASSERT_EQ(0, glob(td.dirname, GLOB_MARK, nullptr, &g));
+  ASSERT_EQ(0, glob(td.path, GLOB_MARK, nullptr, &g));
   ASSERT_EQ(1U, g.gl_pathc);
   ASSERT_MATCH_COUNT(1U, g);
-  ASSERT_EQ(std::string(td.dirname) + "/", g.gl_pathv[0]);
+  ASSERT_EQ(std::string(td.path) + "/", g.gl_pathv[0]);
   ASSERT_EQ(nullptr, g.gl_pathv[1]);
 
   TemporaryFile tf;
   // But not on a file...
-  ASSERT_EQ(0, glob(tf.filename, GLOB_MARK, nullptr, &g));
+  ASSERT_EQ(0, glob(tf.path, GLOB_MARK, nullptr, &g));
   ASSERT_EQ(1U, g.gl_pathc);
   ASSERT_MATCH_COUNT(1U, g);
-  ASSERT_STREQ(tf.filename, g.gl_pathv[0]);
+  ASSERT_STREQ(tf.path, g.gl_pathv[0]);
   ASSERT_EQ(nullptr, g.gl_pathv[1]);
 
   globfree(&g);

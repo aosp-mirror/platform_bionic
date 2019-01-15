@@ -26,19 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_WCHAR_LIMITS_H_
-#define _BITS_WCHAR_LIMITS_H_
+#pragma once
+
+/**
+ * @file bits/wchar_limits.h
+ * @brief `wchar_t` limits.
+ */
 
 #include <sys/cdefs.h>
 
-/* Both GCC and clang define __WCHAR_MAX__. */
+/** The maximum value of a `wchar_t`. */
 #define WCHAR_MAX __WCHAR_MAX__
 
 /* As of 3.4, clang still doesn't define __WCHAR_MIN__. */
 #if defined(__WCHAR_UNSIGNED__)
+/** The minimum value of a `wchar_t`. */
 #  define WCHAR_MIN L'\0'
 #else
+/** The minimum value of a `wchar_t`. */
 #  define WCHAR_MIN (-(WCHAR_MAX) - 1)
-#endif
-
 #endif

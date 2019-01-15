@@ -1,0 +1,4 @@
+LIBC {
+  global:
+    foo;
+};

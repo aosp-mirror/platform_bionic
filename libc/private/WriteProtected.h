@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _PRIVATE_WRITEPROTECTED_H
-#define _PRIVATE_WRITEPROTECTED_H
+#pragma once
 
 #include <errno.h>
 #include <string.h>
@@ -26,7 +25,6 @@
 #include <async_safe/log.h>
 
 #include "private/bionic_macros.h"
-#include "private/bionic_prctl.h"
 
 template <typename T>
 union WriteProtectedContents {
@@ -34,7 +32,7 @@ union WriteProtectedContents {
   char padding[PAGE_SIZE];
 
   WriteProtectedContents() = default;
-  DISALLOW_COPY_AND_ASSIGN(WriteProtectedContents);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtectedContents);
 } __attribute__((aligned(PAGE_SIZE)));
 
 // Write protected wrapper class that aligns its contents to a page boundary,
@@ -50,7 +48,7 @@ class WriteProtected {
 
  public:
   WriteProtected() = default;
-  DISALLOW_COPY_AND_ASSIGN(WriteProtected);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtected);
 
   void initialize() {
     // Not strictly necessary, but this will hopefully segfault if we initialize
@@ -83,5 +81,3 @@ class WriteProtected {
     }
   }
 };
-
-#endif

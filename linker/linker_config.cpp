@@ -241,11 +241,15 @@ static bool parse_config_file(const char* ld_config_file_path,
       if (realpath(value.c_str(), buf)) {
         resolved_path = buf;
       } else if (errno != ENOENT)  {
-        DL_WARN("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
-                ld_config_file_path,
-                cp.lineno(),
-                value.c_str(),
-                strerror(errno));
+        // realpath is expected to fail with EPERM in some situations, so log
+        // the failure with INFO rather than DL_WARN. e.g. A binary in
+        // /data/local/tmp may attempt to stat /postinstall. See
+        // http://b/120996057.
+        INFO("%s:%zd: warning: path \"%s\" couldn't be resolved: %s",
+             ld_config_file_path,
+             cp.lineno(),
+             value.c_str(),
+             strerror(errno));
         resolved_path = value;
       } else {
         // ENOENT: no need to test if binary is under the path
@@ -489,7 +493,7 @@ bool Config::read_binary_config(const char* ld_config_file_path,
 
   g_config.set_target_sdk_version(target_sdk_version);
 
-  for (auto ns_config_it : namespace_configs) {
+  for (const auto& ns_config_it : namespace_configs) {
     auto& name = ns_config_it.first;
     NamespaceConfig* ns_config = ns_config_it.second;
 

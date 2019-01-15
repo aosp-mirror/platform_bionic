@@ -14,13 +14,6 @@
  * limitations under the License.
  */
 
-#include <gtest/gtest.h>
-
-#include "BionicDeathTest.h"
-#include "math_data_test.h"
-#include "TemporaryFile.h"
-#include "utils.h"
-
 #include <errno.h>
 #include <fcntl.h>
 #include <libgen.h>
@@ -31,9 +24,17 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include <limits>
 #include <string>
+
+#include <android-base/macros.h>
+#include <gtest/gtest.h>
+
+#include "BionicDeathTest.h"
+#include "math_data_test.h"
+#include "utils.h"
 
 #if defined(__BIONIC__)
   #define ALIGNED_ALLOC_AVAILABLE 1
@@ -42,6 +43,41 @@
     #define ALIGNED_ALLOC_AVAILABLE 1
   #endif
 #endif
+
+template <typename T = int (*)(char*)>
+class GenericTemporaryFile {
+ public:
+  explicit GenericTemporaryFile(T mk_fn = mkstemp) : mk_fn_(mk_fn) {
+    // Since we might be running on the host or the target, and if we're
+    // running on the host we might be running under bionic or glibc,
+    // let's just try both possible temporary directories and take the
+    // first one that works.
+    init("/data/local/tmp");
+    if (fd == -1) {
+      init("/tmp");
+    }
+  }
+
+  ~GenericTemporaryFile() {
+    close(fd);
+    unlink(path);
+  }
+
+  int fd;
+  char path[1024];
+
+ private:
+  T mk_fn_;
+
+  void init(const char* tmp_dir) {
+    snprintf(path, sizeof(path), "%s/TemporaryFile-XXXXXX", tmp_dir);
+    fd = mk_fn_(path);
+  }
+
+  DISALLOW_COPY_AND_ASSIGN(GenericTemporaryFile);
+};
+
+typedef GenericTemporaryFile<> MyTemporaryFile;
 
 // The random number generator tests all set the seed, get four values, reset the seed and check
 // that they get the first two values repeated, and then reset the seed and check two more values
@@ -191,6 +227,7 @@ TEST(stdlib, mrand48_distribution) {
 }
 
 TEST(stdlib, posix_memalign_sweep) {
+  SKIP_WITH_HWASAN;
   void* ptr;
 
   // These should all fail.
@@ -230,11 +267,13 @@ TEST(stdlib, posix_memalign_various_sizes) {
 }
 
 TEST(stdlib, posix_memalign_overflow) {
+  SKIP_WITH_HWASAN;
   void* ptr;
   ASSERT_NE(0, posix_memalign(&ptr, 16, SIZE_MAX));
 }
 
 TEST(stdlib, aligned_alloc_sweep) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   // Verify powers of 2 up to 2048 allocate, and verify that all other
   // alignment values between the powers of 2 fail.
@@ -259,6 +298,7 @@ TEST(stdlib, aligned_alloc_sweep) {
 }
 
 TEST(stdlib, aligned_alloc_overflow) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   ASSERT_TRUE(aligned_alloc(16, SIZE_MAX) == nullptr);
 #else
@@ -267,6 +307,7 @@ TEST(stdlib, aligned_alloc_overflow) {
 }
 
 TEST(stdlib, aligned_alloc_size_not_multiple_of_alignment) {
+  SKIP_WITH_HWASAN;
 #if defined(ALIGNED_ALLOC_AVAILABLE)
   for (size_t size = 1; size <= 2048; size++) {
     void* ptr = aligned_alloc(2048, size);
@@ -379,24 +420,24 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
 }
 
 TEST(stdlib, mkostemp64) {
-  TemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
+  MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkostemp) {
-  TemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
+  MyTemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
   AssertCloseOnExec(tf.fd, true);
 }
 
 TEST(stdlib, mkstemp64) {
-  TemporaryFile tf(mkstemp64);
+  MyTemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
   ASSERT_EQ(O_LARGEFILE, fcntl(tf.fd, F_GETFL) & O_LARGEFILE);
 }
 
 TEST(stdlib, mkstemp) {
-  TemporaryFile tf;
+  MyTemporaryFile tf(mkstemp);
   struct stat sb;
   ASSERT_EQ(0, fstat(tf.fd, &sb));
 }
@@ -815,4 +856,38 @@ TEST(stdlib, labs) {
 TEST(stdlib, llabs) {
   ASSERT_EQ(LLONG_MAX, llabs(-LLONG_MAX));
   ASSERT_EQ(LLONG_MAX, llabs(LLONG_MAX));
+}
+
+TEST(stdlib, getloadavg) {
+  double load[3];
+
+  // The second argument should have been size_t.
+  ASSERT_EQ(-1, getloadavg(load, -1));
+  ASSERT_EQ(-1, getloadavg(load, INT_MIN));
+
+  // Zero is a no-op.
+  ASSERT_EQ(0, getloadavg(load, 0));
+
+  // The Linux kernel doesn't support more than 3 (but you can ask for fewer).
+  ASSERT_EQ(1, getloadavg(load, 1));
+  ASSERT_EQ(2, getloadavg(load, 2));
+  ASSERT_EQ(3, getloadavg(load, 3));
+  ASSERT_EQ(3, getloadavg(load, 4));
+  ASSERT_EQ(3, getloadavg(load, INT_MAX));
+
+  // Read /proc/loadavg and check that it's "close enough".
+  double expected[3];
+  std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/proc/loadavg", "re"), fclose};
+  ASSERT_EQ(3, fscanf(fp.get(), "%lf %lf %lf", &expected[0], &expected[1], &expected[2]));
+  load[0] = load[1] = load[2] = nan("");
+  ASSERT_EQ(3, getloadavg(load, 3));
+
+  // Check that getloadavg(3) at least overwrote the NaNs.
+  ASSERT_FALSE(isnan(load[0]));
+  ASSERT_FALSE(isnan(load[1]));
+  ASSERT_FALSE(isnan(load[2]));
+  // And that the difference between /proc/loadavg and getloadavg(3) is "small".
+  ASSERT_TRUE(fabs(expected[0] - load[0]) < 0.5) << expected[0] << ' ' << load[0];
+  ASSERT_TRUE(fabs(expected[1] - load[1]) < 0.5) << expected[1] << ' ' << load[1];
+  ASSERT_TRUE(fabs(expected[2] - load[2]) < 0.5) << expected[2] << ' ' << load[2];
 }

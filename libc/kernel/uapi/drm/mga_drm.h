@@ -20,6 +20,7 @@
 #define __MGA_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef __MGA_SAREA_DEFINES__
 #define __MGA_SAREA_DEFINES__
@@ -240,5 +241,6 @@ typedef struct drm_mga_getparam {
   void __user * value;
 } drm_mga_getparam_t;
 #ifdef __cplusplus
+}
 #endif
 #endif

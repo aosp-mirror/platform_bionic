@@ -33,6 +33,10 @@
 #include <android-base/strings.h>
 #include <private/android_filesystem_config.h>
 
+#if defined(__BIONIC__)
+#include <android-base/properties.h>
+#endif
+
 // Generated android_ids array
 #include "generated_android_ids.h"
 
@@ -42,8 +46,9 @@ using android::base::Split;
 using android::base::StartsWith;
 
 enum uid_type_t {
+  TYPE_APP,
   TYPE_SYSTEM,
-  TYPE_APP
+  TYPE_VENDOR,
 };
 
 #if defined(__BIONIC__)
@@ -61,12 +66,17 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
   EXPECT_EQ(nullptr, pwd->pw_gecos);
 #endif
 
-  if (uid_type == TYPE_SYSTEM) {
-    EXPECT_STREQ("/", pwd->pw_dir);
-  } else {
+  if (uid_type == TYPE_APP) {
     EXPECT_STREQ("/data", pwd->pw_dir);
+  } else {
+    EXPECT_STREQ("/", pwd->pw_dir);
   }
-  EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
+
+  if (uid_type == TYPE_VENDOR) {
+    EXPECT_STREQ("/vendor/bin/sh", pwd->pw_shell);
+  } else {
+    EXPECT_STREQ("/system/bin/sh", pwd->pw_shell);
+  }
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
@@ -155,19 +165,19 @@ TEST(pwd, getpwnam_app_id_radio) {
 }
 
 TEST(pwd, getpwnam_oem_id_5000) {
-  check_get_passwd("oem_5000", 5000, TYPE_SYSTEM, false);
+  check_get_passwd("oem_5000", 5000, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_5999) {
-  check_get_passwd("oem_5999", 5999, TYPE_SYSTEM, false);
+  check_get_passwd("oem_5999", 5999, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2900) {
-  check_get_passwd("oem_2900", 2900, TYPE_SYSTEM, false);
+  check_get_passwd("oem_2900", 2900, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_oem_id_2999) {
-  check_get_passwd("oem_2999", 2999, TYPE_SYSTEM, false);
+  check_get_passwd("oem_2999", 2999, TYPE_VENDOR, false);
 }
 
 TEST(pwd, getpwnam_app_id_nobody) {
@@ -211,6 +221,7 @@ TEST(pwd, getpwnam_app_id_u1_i0) {
   check_get_passwd("u1_i0", 199000, TYPE_APP);
 }
 
+#if defined(__BIONIC__)
 template <typename T>
 static void expect_ids(const T& ids) {
   std::set<typename T::key_type> expected_ids;
@@ -237,6 +248,14 @@ static void expect_ids(const T& ids) {
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
+  // Upgrading devices launched before API level 28 may not comply with the below check.
+  // Due to the difficulty in changing uids after launch, it is waived for these devices.
+  // Also grant this check for device launched with 28(P) to give the vendor time to
+  // adopt the AID scheme.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+    return;
+  }
+
   // Ensure that no other ids were returned.
   auto return_differences = [&ids, &expected_ids] {
     std::vector<typename T::key_type> missing_from_ids;
@@ -257,6 +276,7 @@ static void expect_ids(const T& ids) {
   };
   EXPECT_EQ(expected_ids, ids) << return_differences();
 }
+#endif
 
 TEST(pwd, getpwent_iterate) {
 #if defined(__BIONIC__)
@@ -566,6 +586,10 @@ static void TestAidNamePrefix(const std::string& file_path) {
 
 TEST(pwd, vendor_prefix_users) {
 #if defined(__BIONIC__)
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+    return;
+  }
+
   TestAidNamePrefix("/vendor/etc/passwd");
 #else
   print_no_getpwnam_test_info();
@@ -574,6 +598,10 @@ TEST(pwd, vendor_prefix_users) {
 
 TEST(pwd, vendor_prefix_groups) {
 #if defined(__BIONIC__)
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+    return;
+  }
+
   TestAidNamePrefix("/vendor/etc/group");
 #else
   print_no_getgrnam_test_info();

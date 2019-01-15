@@ -30,17 +30,27 @@ struct smc_diag_req {
 struct smc_diag_msg {
   __u8 diag_family;
   __u8 diag_state;
-  __u8 diag_fallback;
+  union {
+    __u8 diag_mode;
+    __u8 diag_fallback;
+  };
   __u8 diag_shutdown;
   struct inet_diag_sockid id;
   __u32 diag_uid;
-  __u64 diag_inode;
+  __aligned_u64 diag_inode;
+};
+enum {
+  SMC_DIAG_MODE_SMCR,
+  SMC_DIAG_MODE_FALLBACK_TCP,
+  SMC_DIAG_MODE_SMCD,
 };
 enum {
   SMC_DIAG_NONE,
   SMC_DIAG_CONNINFO,
   SMC_DIAG_LGRINFO,
   SMC_DIAG_SHUTDOWN,
+  SMC_DIAG_DMBINFO,
+  SMC_DIAG_FALLBACK,
   __SMC_DIAG_MAX,
 };
 #define SMC_DIAG_MAX (__SMC_DIAG_MAX - 1)
@@ -76,5 +86,16 @@ struct smc_diag_linkinfo {
 struct smc_diag_lgrinfo {
   struct smc_diag_linkinfo lnk[1];
   __u8 role;
+};
+struct smc_diag_fallback {
+  __u32 reason;
+  __u32 peer_diagnosis;
+};
+struct smcd_diag_dmbinfo {
+  __u32 linkid;
+  __aligned_u64 peer_gid;
+  __aligned_u64 my_gid;
+  __aligned_u64 token;
+  __aligned_u64 peer_token;
 };
 #endif
