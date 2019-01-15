@@ -26,8 +26,7 @@
  * $FreeBSD: src/lib/msun/i387/fenv.h,v 1.4 2005/03/17 22:21:46 das Exp $
  */
 
-#ifndef _BITS_FENV_X86_H_
-#define _BITS_FENV_X86_H_
+#pragma once
 
 #include <sys/types.h>
 
@@ -65,5 +64,3 @@ typedef __uint16_t fexcept_t;
 #define FE_TOWARDZERO 0x0c00
 
 __END_DECLS
-
-#endif

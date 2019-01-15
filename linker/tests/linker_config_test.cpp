@@ -37,10 +37,9 @@
 
 #include <unistd.h>
 
+#include <android-base/file.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
-#include <android-base/file.h>
-#include <android-base/test_utils.h>
 
 #if defined(__LP64__)
 #define ARCH_SUFFIX "64"
@@ -144,7 +143,7 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(config != nullptr);
   ASSERT_TRUE(error_msg.empty());
 
-  ASSERT_EQ(113U, config->target_sdk_version());
+  ASSERT_EQ(113, config->target_sdk_version());
 
   const NamespaceConfig* default_ns_config = config->default_namespace_config();
   ASSERT_TRUE(default_ns_config != nullptr);

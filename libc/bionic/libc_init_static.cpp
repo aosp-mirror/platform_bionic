@@ -39,11 +39,16 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_page.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
+
+#if __has_feature(hwaddress_sanitizer)
+#include <sanitizer/hwasan_interface.h>
+#endif
 
 // Leave the variable uninitialized for the sake of the dynamic loader, which
 // links in this file. The loader will initialize this variable before
@@ -78,6 +83,13 @@ static void apply_gnu_relro() {
   }
 }
 
+static void layout_static_tls() {
+  StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  layout.reserve_bionic_tls();
+  layout.reserve_tcb();
+  layout.finish_layout();
+}
+
 // The program startup function __libc_init() defined here is
 // used for static executables only (i.e. those that don't depend
 // on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
@@ -85,26 +97,23 @@ static void apply_gnu_relro() {
 //
 // The 'structors' parameter contains pointers to various initializer
 // arrays that must be run before the program's 'main' routine is launched.
-
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+__noreturn static void __real_libc_init(void *raw_args,
+                                        void (*onexit)(void) __unused,
+                                        int (*slingshot)(int, char**, char**),
+                                        structors_array_t const * const structors,
+                                        bionic_tcb* temp_tcb) {
   BIONIC_STOP_UNWIND;
 
+  // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
-
-  // Initializing the globals requires TLS to be available for errno.
-  __libc_init_main_thread(args);
-
-  static libc_shared_globals shared_globals;
-  __libc_shared_globals = &shared_globals;
-  __libc_init_shared_globals(&shared_globals);
-
-  __libc_init_globals(args);
-
-  __libc_init_AT_SECURE(args);
-  __libc_init_common(args);
+  __libc_init_main_thread_early(args, temp_tcb);
+  __libc_init_main_thread_late();
+  __libc_init_globals();
+  __libc_shared_globals()->init_progname = args.argv[0];
+  __libc_init_AT_SECURE(args.envp);
+  layout_static_tls();
+  __libc_init_main_thread_final();
+  __libc_init_common();
 
   apply_gnu_relro();
 
@@ -124,16 +133,36 @@ __noreturn void __libc_init(void* raw_args,
   exit(slingshot(args.argc, args.argv, args.envp));
 }
 
-static uint32_t g_target_sdk_version{__ANDROID_API__};
+extern "C" void __hwasan_init();
 
-extern "C" uint32_t android_get_application_target_sdk_version() {
+__attribute__((no_sanitize("hwaddress")))
+__noreturn void __libc_init(void* raw_args,
+                            void (*onexit)(void) __unused,
+                            int (*slingshot)(int, char**, char**),
+                            structors_array_t const * const structors) {
+  bionic_tcb temp_tcb = {};
+#if __has_feature(hwaddress_sanitizer)
+  // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
+  // all we need is access to TLS_SLOT_SANITIZER.
+  __set_tls(&temp_tcb.tls_slot(0));
+  // Initialize HWASan. This sets up TLS_SLOT_SANITIZER, among other things.
+  __hwasan_init();
+  // We are ready to run HWASan-instrumented code, proceed with libc initialization...
+#endif
+  __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
+}
+
+static int g_target_sdk_version{__ANDROID_API__};
+
+extern "C" int android_get_application_target_sdk_version() {
   return g_target_sdk_version;
 }
 
-uint32_t bionic_get_application_target_sdk_version() {
-  return android_get_application_target_sdk_version();
+extern "C" void android_set_application_target_sdk_version(int target) {
+  g_target_sdk_version = target;
 }
 
-extern "C" void android_set_application_target_sdk_version(uint32_t target) {
-  g_target_sdk_version = target;
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
+  static libc_shared_globals globals;
+  return &globals;
 }

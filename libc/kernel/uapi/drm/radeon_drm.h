@@ -20,6 +20,7 @@
 #define __RADEON_DRM_H__
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #ifndef __RADEON_SAREA_DEFINES__
 #define __RADEON_SAREA_DEFINES__
@@ -801,5 +802,6 @@ struct drm_radeon_info {
 #define SI_TILE_MODE_DEPTH_STENCIL_2D_8AA 2
 #define CIK_TILE_MODE_DEPTH_STENCIL_1D 5
 #ifdef __cplusplus
+}
 #endif
 #endif

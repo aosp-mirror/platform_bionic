@@ -170,7 +170,7 @@ class SocketWriter {
   uint32_t uint_buf_[kUintBufSize];
   size_t uint_buf_index_;
 
-  DISALLOW_IMPLICIT_CONSTRUCTORS(SocketWriter);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(SocketWriter);
 };
 
 struct prop_msg {

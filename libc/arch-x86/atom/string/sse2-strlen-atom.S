@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef USE_AS_STRCAT
 
 # ifndef STRLEN
-#  define STRLEN strlen
+#  define STRLEN strlen_atom
 # endif
 
 # ifndef L

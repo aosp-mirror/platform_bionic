@@ -30,9 +30,8 @@
 #include <inttypes.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <unistd.h>
-
-#include "private/bionic_prctl.h"
 
 // the multiplier should be power of 2
 static constexpr size_t round_up(size_t size, size_t multiplier) {

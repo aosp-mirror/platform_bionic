@@ -26,12 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_EPOLL_EVENT_H_
-#define _BITS_EPOLL_EVENT_H_
+#pragma once
+
+/**
+ * @file bits/epoll_event.h
+ * @brief Types for epoll().
+ */
 
 #include <sys/cdefs.h>
 #include <stdint.h>
 
+/** The union of possible data types for an `epoll_event`. */
 typedef union epoll_data {
   void* ptr;
   int fd;
@@ -39,6 +44,7 @@ typedef union epoll_data {
   uint64_t u64;
 } epoll_data_t;
 
+/** The type representing an epoll() event. */
 struct epoll_event {
   uint32_t events;
   epoll_data_t data;
@@ -47,5 +53,3 @@ struct epoll_event {
 __packed
 #endif
 ;
-
-#endif

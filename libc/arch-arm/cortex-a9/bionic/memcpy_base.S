@@ -32,6 +32,12 @@
  * cache line.
  */
 
+        .syntax unified
+
+        // To avoid warning about deprecated instructions, add an explicit
+        // arch. The code generated is exactly the same.
+        .arch armv7-a
+
 ENTRY_PRIVATE(MEMCPY_BASE)
         .cfi_def_cfa_offset 8
         .cfi_rel_offset r0, 0

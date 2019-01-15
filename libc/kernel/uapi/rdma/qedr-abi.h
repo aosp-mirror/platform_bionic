@@ -69,4 +69,14 @@ struct qedr_create_qp_uresp {
   __u32 rq_db2_offset;
   __u32 reserved;
 };
+struct qedr_create_srq_ureq {
+  __aligned_u64 prod_pair_addr;
+  __aligned_u64 srq_addr;
+  __aligned_u64 srq_len;
+};
+struct qedr_create_srq_uresp {
+  __u16 srq_id;
+  __u16 reserved0;
+  __u32 reserved1;
+};
 #endif

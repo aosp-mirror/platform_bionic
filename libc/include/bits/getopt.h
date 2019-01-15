@@ -26,18 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_GETOPT_H_
-#define _BITS_GETOPT_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/**
+ * [getopt(3)](http://man7.org/linux/man-pages/man3/getopt.3.html) parses command-line options.
+ *
+ * Returns the next option character on success, returns -1 if all options have been parsed, and
+ * returns `'?'` on error.
+ */
 int getopt(int __argc, char* const __argv[], const char* __options);
 
+/**
+ * Points to the text of the corresponding value for options that take an argument.
+ */
 extern char* optarg;
-extern int optind, opterr, optopt;
+
+/**
+ * The index of the next element to be processed.
+ * On Android, callers should set `optreset = 1` rather than trying to reset `optind` to
+ * scan a new argument vector.
+ */
+extern int optind;
+
+/**
+ * Determines whether getopt() outputs error messages.
+ * Callers should set this to `0` to disable error messages.
+ * Defaults to non-zero.
+ */
+extern int opterr;
+
+/**
+ * The last unrecognized option character, valid when getopt() returns `'?'`.
+ */
+extern int optopt;
 
 __END_DECLS
-
-#endif

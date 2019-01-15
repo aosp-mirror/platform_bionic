@@ -28,9 +28,27 @@
 
 #include "private/KernelArgumentBlock.h"
 
-extern const char linker_code_start;
-extern const char original_start;
-extern const char linker_entry;
+extern const char linker_offset;
+
+// This will be replaced by host_bionic_inject, but must be non-zero
+// here so that it's placed in the data section.
+uintptr_t original_start = 42;
+
+/* Find the load bias and base address of an executable or shared object loaded
+ * by the kernel. The ELF file's PHDR table must have a PT_PHDR entry.
+ *
+ * A VDSO doesn't have a PT_PHDR entry in its PHDR table.
+ */
+static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                   ElfW(Addr)* base, ElfW(Addr)* load_bias) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    if (phdr_table[i].p_type == PT_PHDR) {
+      *load_bias = reinterpret_cast<ElfW(Addr)>(phdr_table) - phdr_table[i].p_vaddr;
+      *base = reinterpret_cast<ElfW(Addr)>(phdr_table) - phdr_table[i].p_offset;
+      return;
+    }
+  }
+}
 
 /*
  * This is the entry point for the linker wrapper, which finds
@@ -39,21 +57,26 @@ extern const char linker_entry;
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
 
-  static uintptr_t linker_offset = reinterpret_cast<uintptr_t>(&linker_code_start);
-  static uintptr_t linktime_addr = reinterpret_cast<uintptr_t>(&linktime_addr);
-  ElfW(Addr) my_addr = reinterpret_cast<uintptr_t>(&linktime_addr) - linktime_addr;
+  ElfW(Addr) base_addr = 0;
+  ElfW(Addr) load_bias = 0;
+  get_elf_base_from_phdr(
+    reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR)), args.getauxval(AT_PHNUM),
+    &base_addr, &load_bias);
 
-  // Set AT_ENTRY to the proper entry point
+  ElfW(Addr) linker_addr = base_addr + reinterpret_cast<uintptr_t>(&linker_offset);
+  ElfW(Addr) linker_entry_offset = reinterpret_cast<ElfW(Ehdr)*>(linker_addr)->e_entry;
+
   for (ElfW(auxv_t)* v = args.auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == AT_BASE) {
-      v->a_un.a_val = my_addr + linker_offset;
+      // Set AT_BASE to the embedded linker
+      v->a_un.a_val = linker_addr;
     }
     if (v->a_type == AT_ENTRY) {
-      v->a_un.a_val = my_addr + reinterpret_cast<uintptr_t>(&original_start);
+      // Set AT_ENTRY to the proper entry point
+      v->a_un.a_val = base_addr + original_start;
     }
   }
 
-  // Return address of linker entry point -- may need to ensure that raw_args
-  // was saved.
-  return my_addr + linker_offset + reinterpret_cast<uintptr_t>(&linker_entry);
+  // Return address of linker entry point
+  return linker_addr + linker_entry_offset;
 }

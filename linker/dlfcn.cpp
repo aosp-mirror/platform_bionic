@@ -38,6 +38,7 @@
 #include <android/api-level.h>
 
 #include <bionic/pthread_internal.h>
+#include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/ScopedPthreadMutexLocker.h"
 
@@ -57,7 +58,7 @@ void* __loader_android_dlopen_ext(const char* filename,
                            const android_dlextinfo* extinfo,
                            const void* caller_addr) __LINKER_PUBLIC__;
 void __loader_android_dlwarning(void* obj, void (*f)(void*, const char*)) __LINKER_PUBLIC__;
-uint32_t __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
+int __loader_android_get_application_target_sdk_version() __LINKER_PUBLIC__;
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) __LINKER_PUBLIC__;
 android_namespace_t* __loader_android_get_exported_namespace(const char* name) __LINKER_PUBLIC__;
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
@@ -67,7 +68,7 @@ bool __loader_android_link_namespaces(android_namespace_t* namespace_from,
                                       const char* shared_libs_sonames) __LINKER_PUBLIC__;
 bool __loader_android_link_namespaces_all_libs(android_namespace_t* namespace_from,
                                                android_namespace_t* namespace_to) __LINKER_PUBLIC__;
-void __loader_android_set_application_target_sdk_version(uint32_t target) __LINKER_PUBLIC__;
+void __loader_android_set_application_target_sdk_version(int target) __LINKER_PUBLIC__;
 void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path) __LINKER_PUBLIC__;
 void __loader_cfi_fail(uint64_t CallSiteTypeId,
                        void* Ptr,
@@ -86,6 +87,7 @@ void* __loader_dlvsym(void* handle,
                       const void* caller_addr) __LINKER_PUBLIC__;
 void __loader_add_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
 void __loader_remove_thread_local_dtor(void* dso_handle) __LINKER_PUBLIC__;
+libc_shared_globals* __loader_shared_globals() __LINKER_PUBLIC__;
 #if defined(__arm__)
 _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_PUBLIC__;
 #endif
@@ -94,10 +96,9 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) __LINKER_
 static pthread_mutex_t g_dl_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
 static char* __bionic_set_dlerror(char* new_value) {
-  char** dlerror_slot = &reinterpret_cast<char**>(__get_tls())[TLS_SLOT_DLERROR];
+  char* old_value = __get_thread()->current_dlerror;
+  __get_thread()->current_dlerror = new_value;
 
-  char* old_value = *dlerror_slot;
-  *dlerror_slot = new_value;
   if (new_value != nullptr) LD_LOG(kLogErrors, "dlerror set to \"%s\"", new_value);
   return old_value;
 }
@@ -204,13 +205,13 @@ _Unwind_Ptr __loader_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
 }
 #endif
 
-void __loader_android_set_application_target_sdk_version(uint32_t target) {
+void __loader_android_set_application_target_sdk_version(int target) {
   // lock to avoid modification in the middle of dlopen.
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   set_application_target_sdk_version(target);
 }
 
-uint32_t __loader_android_get_application_target_sdk_version() {
+int __loader_android_get_application_target_sdk_version() {
   return get_application_target_sdk_version();
 }
 
@@ -299,13 +300,15 @@ void __loader_remove_thread_local_dtor(void* dso_handle) {
   decrement_dso_handle_reference_counter(dso_handle);
 }
 
+libc_shared_globals* __loader_shared_globals() {
+  return __libc_shared_globals();
+}
+
 static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
-soinfo* get_libdl_info(const char* linker_path,
-                       const soinfo& linker_si,
-                       const link_map& linker_map) {
+soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si) {
   CHECK((linker_si.flags_ & FLAG_GNU_HASH) != 0);
 
   if (__libdl_info == nullptr) {
@@ -314,6 +317,8 @@ soinfo* get_libdl_info(const char* linker_path,
     __libdl_info->strtab_ = linker_si.strtab_;
     __libdl_info->symtab_ = linker_si.symtab_;
     __libdl_info->load_bias = linker_si.load_bias;
+    __libdl_info->phdr = linker_si.phdr;
+    __libdl_info->phnum = linker_si.phnum;
 
     __libdl_info->gnu_nbucket_ = linker_si.gnu_nbucket_;
     __libdl_info->gnu_maskwords_ = linker_si.gnu_maskwords_;
@@ -328,9 +333,6 @@ soinfo* get_libdl_info(const char* linker_path,
     __libdl_info->soname_ = linker_si.soname_;
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
     __libdl_info->generate_handle();
-    __libdl_info->link_map_head.l_addr = linker_map.l_addr;
-    __libdl_info->link_map_head.l_name = linker_map.l_name;
-    __libdl_info->link_map_head.l_ld = linker_map.l_ld;
 #if defined(__work_around_b_24465209__)
     strlcpy(__libdl_info->old_name_, __libdl_info->soname_, sizeof(__libdl_info->old_name_));
 #endif

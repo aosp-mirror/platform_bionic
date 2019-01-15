@@ -32,32 +32,9 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-// We call tgkill(2) directly instead of raise (or even the libc tgkill wrapper), to reduce the
-// number of uninteresting stack frames at the top of a crash.
-static inline __always_inline void inline_tgkill(pid_t pid, pid_t tid, int sig) {
-#if defined(__arm__)
-  register int r0 __asm__("r0") = pid;
-  register int r1 __asm__("r1") = tid;
-  register int r2 __asm__("r2") = sig;
-  register int r7 __asm__("r7") = __NR_tgkill;
-  __asm__("swi #0" : "=r"(r0) : "r"(r0), "r"(r1), "r"(r2), "r"(r7) : "memory");
-#elif defined(__aarch64__)
-  register long x0 __asm__("x0") = pid;
-  register long x1 __asm__("x1") = tid;
-  register long x2 __asm__("x2") = sig;
-  register long x8 __asm__("x8") = __NR_tgkill;
-  __asm__("svc #0" : "=r"(x0) : "r"(x0), "r"(x1), "r"(x2), "r"(x8) : "memory");
-#else
-  syscall(__NR_tgkill, pid, tid, sig);
-#endif
-}
+#include "private/bionic_inline_raise.h"
 
 void abort() {
-  // Protect ourselves against stale cached PID/TID values by fetching them via syscall.
-  // http://b/37769298
-  pid_t pid = syscall(__NR_getpid);
-  pid_t tid = syscall(__NR_gettid);
-
   // Don't block SIGABRT to give any signal handler a chance; we ignore
   // any errors -- X311J doesn't allow abort to return anyway.
   sigset64_t mask;
@@ -65,7 +42,7 @@ void abort() {
   sigdelset64(&mask, SIGABRT);
 
   sigprocmask64(SIG_SETMASK, &mask, nullptr);
-  inline_tgkill(pid, tid, SIGABRT);
+  inline_raise(SIGABRT);
 
   // If SIGABRT is ignored or it's caught and the handler returns,
   // remove the SIGABRT signal handler and raise SIGABRT again.
@@ -73,7 +50,7 @@ void abort() {
   sigaction64(SIGABRT, &sa, nullptr);
 
   sigprocmask64(SIG_SETMASK, &mask, nullptr);
-  inline_tgkill(pid, tid, SIGABRT);
+  inline_raise(SIGABRT);
 
   // If we get this far, just exit.
   _exit(127);

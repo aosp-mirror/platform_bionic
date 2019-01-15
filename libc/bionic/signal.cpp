@@ -263,7 +263,7 @@ int sigsuspend64(const sigset64_t* set) {
   sigset64_t mutable_set;
   sigset64_t* mutable_set_ptr = nullptr;
   if (set) {
-    mutable_set = filter_reserved_signals(*set);
+    mutable_set = filter_reserved_signals(*set, SIG_SETMASK);
     mutable_set_ptr = &mutable_set;
   }
   return __rt_sigsuspend(mutable_set_ptr, sizeof(*set));
@@ -279,7 +279,7 @@ int sigtimedwait64(const sigset64_t* set, siginfo_t* info, const timespec* timeo
   sigset64_t mutable_set;
   sigset64_t* mutable_set_ptr = nullptr;
   if (set) {
-    mutable_set = filter_reserved_signals(*set);
+    mutable_set = filter_reserved_signals(*set, SIG_SETMASK);
     mutable_set_ptr = &mutable_set;
   }
   return __rt_sigtimedwait(mutable_set_ptr, info, timeout, sizeof(*set));

@@ -18,17 +18,16 @@
 
 #include <android/api-level.h>
 
-extern "C" uint32_t android_get_application_target_sdk_version();
-extern "C" void android_set_application_target_sdk_version(uint32_t target);
+extern "C" void android_set_application_target_sdk_version(int target);
 
 TEST(libdl, application_sdk_versions_smoke) {
   // Check initial values
-  ASSERT_EQ(static_cast<uint32_t>(__ANDROID_API__), android_get_application_target_sdk_version());
+  ASSERT_EQ(__ANDROID_API__, android_get_application_target_sdk_version());
 
-  android_set_application_target_sdk_version(20U);
-  ASSERT_EQ(20U, android_get_application_target_sdk_version());
+  android_set_application_target_sdk_version(20);
+  ASSERT_EQ(20, android_get_application_target_sdk_version());
 
-  android_set_application_target_sdk_version(22U);
-  ASSERT_EQ(22U, android_get_application_target_sdk_version());
+  android_set_application_target_sdk_version(22);
+  ASSERT_EQ(22, android_get_application_target_sdk_version());
 }
 

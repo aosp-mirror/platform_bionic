@@ -20,6 +20,7 @@
 #define VIRTGPU_DRM_H
 #include "drm.h"
 #ifdef __cplusplus
+extern "C" {
 #endif
 #define DRM_VIRTGPU_MAP 0x01
 #define DRM_VIRTGPU_EXECBUFFER 0x02
@@ -113,5 +114,6 @@ struct drm_virtgpu_get_caps {
 #define DRM_IOCTL_VIRTGPU_WAIT DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_WAIT, struct drm_virtgpu_3d_wait)
 #define DRM_IOCTL_VIRTGPU_GET_CAPS DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_GET_CAPS, struct drm_virtgpu_get_caps)
 #ifdef __cplusplus
+}
 #endif
 #endif

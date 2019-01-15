@@ -31,6 +31,8 @@
 #include <android/dlext.h>
 #include "linked_list.h"
 
+#include <android-base/macros.h>
+
 // TODO(dimitry): move this to linker_defines.h? Unless it is removed by
 // consequent refactoring steps.
 

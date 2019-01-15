@@ -21,7 +21,6 @@
 #include <stdint.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
-#include <linux/version.h>
 struct media_device_info {
   char driver[16];
   char model[32];
@@ -48,8 +47,6 @@ struct media_device_info {
 #define MEDIA_ENT_F_CAM_SENSOR (MEDIA_ENT_F_OLD_SUBDEV_BASE + 1)
 #define MEDIA_ENT_F_FLASH (MEDIA_ENT_F_OLD_SUBDEV_BASE + 2)
 #define MEDIA_ENT_F_LENS (MEDIA_ENT_F_OLD_SUBDEV_BASE + 3)
-#define MEDIA_ENT_F_ATV_DECODER (MEDIA_ENT_F_OLD_SUBDEV_BASE + 4)
-#define MEDIA_ENT_F_DTV_DECODER (MEDIA_ENT_F_BASE + 0x6001)
 #define MEDIA_ENT_F_TUNER (MEDIA_ENT_F_OLD_SUBDEV_BASE + 5)
 #define MEDIA_ENT_F_IF_VID_DECODER (MEDIA_ENT_F_BASE + 0x02001)
 #define MEDIA_ENT_F_IF_AUD_DECODER (MEDIA_ENT_F_BASE + 0x02002)
@@ -62,8 +59,13 @@ struct media_device_info {
 #define MEDIA_ENT_F_PROC_VIDEO_LUT (MEDIA_ENT_F_BASE + 0x4004)
 #define MEDIA_ENT_F_PROC_VIDEO_SCALER (MEDIA_ENT_F_BASE + 0x4005)
 #define MEDIA_ENT_F_PROC_VIDEO_STATISTICS (MEDIA_ENT_F_BASE + 0x4006)
+#define MEDIA_ENT_F_PROC_VIDEO_ENCODER (MEDIA_ENT_F_BASE + 0x4007)
+#define MEDIA_ENT_F_PROC_VIDEO_DECODER (MEDIA_ENT_F_BASE + 0x4008)
 #define MEDIA_ENT_F_VID_MUX (MEDIA_ENT_F_BASE + 0x5001)
 #define MEDIA_ENT_F_VID_IF_BRIDGE (MEDIA_ENT_F_BASE + 0x5002)
+#define MEDIA_ENT_F_ATV_DECODER (MEDIA_ENT_F_OLD_SUBDEV_BASE + 4)
+#define MEDIA_ENT_F_DV_DECODER (MEDIA_ENT_F_BASE + 0x6001)
+#define MEDIA_ENT_F_DV_ENCODER (MEDIA_ENT_F_BASE + 0x6002)
 #define MEDIA_ENT_FL_DEFAULT (1 << 0)
 #define MEDIA_ENT_FL_CONNECTOR (1 << 1)
 #define MEDIA_ENT_ID_FLAG_NEXT (1 << 31)
@@ -139,11 +141,13 @@ struct media_links_enum {
 #define MEDIA_INTF_T_V4L_SUBDEV (MEDIA_INTF_T_V4L_BASE + 3)
 #define MEDIA_INTF_T_V4L_SWRADIO (MEDIA_INTF_T_V4L_BASE + 4)
 #define MEDIA_INTF_T_V4L_TOUCH (MEDIA_INTF_T_V4L_BASE + 5)
+#define MEDIA_V2_ENTITY_HAS_FLAGS(media_version) ((media_version) >= ((4 << 16) | (19 << 8) | 0))
 struct media_v2_entity {
   __u32 id;
   char name[64];
   __u32 function;
-  __u32 reserved[6];
+  __u32 flags;
+  __u32 reserved[5];
 } __attribute__((packed));
 struct media_v2_intf_devnode {
   __u32 major;
@@ -159,11 +163,13 @@ struct media_v2_interface {
     __u32 raw[16];
   };
 } __attribute__((packed));
+#define MEDIA_V2_PAD_HAS_INDEX(media_version) ((media_version) >= ((4 << 16) | (19 << 8) | 0))
 struct media_v2_pad {
   __u32 id;
   __u32 entity_id;
   __u32 flags;
-  __u32 reserved[5];
+  __u32 index;
+  __u32 reserved[4];
 } __attribute__((packed));
 struct media_v2_link {
   __u32 id;
@@ -192,6 +198,9 @@ struct media_v2_topology {
 #define MEDIA_IOC_ENUM_LINKS _IOWR('|', 0x02, struct media_links_enum)
 #define MEDIA_IOC_SETUP_LINK _IOWR('|', 0x03, struct media_link_desc)
 #define MEDIA_IOC_G_TOPOLOGY _IOWR('|', 0x04, struct media_v2_topology)
+#define MEDIA_IOC_REQUEST_ALLOC _IOR('|', 0x05, int)
+#define MEDIA_REQUEST_IOC_QUEUE _IO('|', 0x80)
+#define MEDIA_REQUEST_IOC_REINIT _IO('|', 0x81)
 #define MEDIA_ENT_TYPE_SHIFT 16
 #define MEDIA_ENT_TYPE_MASK 0x00ff0000
 #define MEDIA_ENT_SUBTYPE_MASK 0x0000ffff
@@ -209,6 +218,7 @@ struct media_v2_topology {
 #define MEDIA_ENT_T_V4L2_SUBDEV_LENS MEDIA_ENT_F_LENS
 #define MEDIA_ENT_T_V4L2_SUBDEV_DECODER MEDIA_ENT_F_ATV_DECODER
 #define MEDIA_ENT_T_V4L2_SUBDEV_TUNER MEDIA_ENT_F_TUNER
+#define MEDIA_ENT_F_DTV_DECODER MEDIA_ENT_F_DV_DECODER
 #define MEDIA_INTF_T_ALSA_BASE 0x00000300
 #define MEDIA_INTF_T_ALSA_PCM_CAPTURE (MEDIA_INTF_T_ALSA_BASE)
 #define MEDIA_INTF_T_ALSA_PCM_PLAYBACK (MEDIA_INTF_T_ALSA_BASE + 1)
@@ -218,5 +228,5 @@ struct media_v2_topology {
 #define MEDIA_INTF_T_ALSA_HWDEP (MEDIA_INTF_T_ALSA_BASE + 5)
 #define MEDIA_INTF_T_ALSA_SEQUENCER (MEDIA_INTF_T_ALSA_BASE + 6)
 #define MEDIA_INTF_T_ALSA_TIMER (MEDIA_INTF_T_ALSA_BASE + 7)
-#define MEDIA_API_VERSION KERNEL_VERSION(0, 1, 0)
+#define MEDIA_API_VERSION ((0 << 16) | (1 << 8) | 0)
 #endif

@@ -97,17 +97,32 @@ enum android_fdsan_owner_type {
   /* android::base::unique_fd */
   ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD = 3,
 
+  /* sqlite-owned file descriptors */
+  ANDROID_FDSAN_OWNER_TYPE_SQLITE = 4,
+
   /* java.io.FileInputStream */
-  ANDROID_FDSAN_OWNER_TYPE_FILEINPUTSTREAM = 251,
+  ANDROID_FDSAN_OWNER_TYPE_FILEINPUTSTREAM = 5,
 
   /* java.io.FileOutputStream */
-  ANDROID_FDSAN_OWNER_TYPE_FILEOUTPUTSTREAM = 252,
+  ANDROID_FDSAN_OWNER_TYPE_FILEOUTPUTSTREAM = 6,
 
   /* java.io.RandomAccessFile */
-  ANDROID_FDSAN_OWNER_TYPE_RANDOMACCESSFILE = 253,
+  ANDROID_FDSAN_OWNER_TYPE_RANDOMACCESSFILE = 7,
 
   /* android.os.ParcelFileDescriptor */
-  ANDROID_FDSAN_OWNER_TYPE_PARCELFILEDESCRIPTOR = 254,
+  ANDROID_FDSAN_OWNER_TYPE_PARCELFILEDESCRIPTOR = 8,
+
+  /* ART FdFile */
+  ANDROID_FDSAN_OWNER_TYPE_ART_FDFILE = 9,
+
+  /* java.net.DatagramSocketImpl */
+  ANDROID_FDSAN_OWNER_TYPE_DATAGRAMSOCKETIMPL = 10,
+
+  /* java.net.SocketImpl */
+  ANDROID_FDSAN_OWNER_TYPE_SOCKETIMPL = 11,
+
+  /* libziparchive's ZipArchive */
+  ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE = 12,
 };
 
 /*
@@ -128,6 +143,25 @@ void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t ne
  * Logs and aborts if the tag is incorrect.
  */
 int android_fdsan_close_with_tag(int fd, uint64_t tag) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+
+/*
+ * Get a file descriptor's current owner tag.
+ *
+ * Returns 0 for untagged and invalid file descriptors.
+ */
+uint64_t android_fdsan_get_owner_tag(int fd);
+
+/*
+ * Get an owner tag's string representation.
+ *
+ * The return value points to memory with static lifetime, do not attempt to modify it.
+ */
+const char* android_fdsan_get_tag_type(uint64_t tag);
+
+/*
+ * Get an owner tag's value, with the type masked off.
+ */
+uint64_t android_fdsan_get_tag_value(uint64_t tag);
 
 enum android_fdsan_error_level {
   // No errors.

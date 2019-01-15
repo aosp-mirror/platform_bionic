@@ -29,9 +29,11 @@
 #include <string>
 #include <thread>
 
+#include <android-base/file.h>
 #include <android-base/scopeguard.h>
 
 #include "gtest_globals.h"
+#include "gtest_utils.h"
 #include "dlfcn_symlink_support.h"
 #include "utils.h"
 
@@ -72,9 +74,9 @@ extern "C" void ctor_function(int argc, char** argv, char** envp) {
 
 TEST(dlfcn, ctor_function_call) {
   ASSERT_EQ(17, g_ctor_function_called);
-  ASSERT_TRUE(g_ctor_argc = get_argc());
-  ASSERT_TRUE(g_ctor_argv = get_argv());
-  ASSERT_TRUE(g_ctor_envp = get_envp());
+  ASSERT_TRUE(g_ctor_argc = GetArgc());
+  ASSERT_TRUE(g_ctor_argv = GetArgv());
+  ASSERT_TRUE(g_ctor_envp = GetEnvp());
 }
 
 TEST(dlfcn, dlsym_in_executable) {
@@ -928,7 +930,7 @@ TEST(dlfcn, dladdr_executable) {
   ASSERT_NE(rc, 0); // Zero on error, non-zero on success.
 
   // Get the name of this executable.
-  const std::string& executable_path = get_executable_path();
+  const std::string executable_path = android::base::GetExecutablePath();
 
   // The filename should be that of this executable.
   char dli_realpath[PATH_MAX];
@@ -962,7 +964,7 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
   void* handle1 = dlopen(nullptr, RTLD_NOW);
   ASSERT_TRUE(handle1 != nullptr) << dlerror();
 
-  void* handle2 = dlopen(get_executable_path().c_str(), RTLD_NOW);
+  void* handle2 = dlopen(android::base::GetExecutablePath().c_str(), RTLD_NOW);
   ASSERT_TRUE(handle2 != nullptr) << dlerror();
 
 #if defined(__BIONIC__)
@@ -1315,7 +1317,7 @@ TEST(dlfcn, dt_runpath_smoke) {
 }
 
 TEST(dlfcn, dt_runpath_absolute_path) {
-  std::string libpath = get_testlib_root() + "/libtest_dt_runpath_d.so";
+  std::string libpath = GetTestlibRoot() + "/libtest_dt_runpath_d.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
@@ -1635,7 +1637,7 @@ TEST(dlext, compat_elf_hash_and_relocation_tables) {
 #endif //  defined(__arm__)
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
@@ -1645,7 +1647,7 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
 }
 
 TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-unaligned_shdr_offset.so";
 
@@ -1656,7 +1658,7 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shentsize) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shentsize.so";
 
@@ -1667,7 +1669,7 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shstrndx.so";
 
@@ -1678,7 +1680,7 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
 }
 
 TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-empty_shdr_table.so";
 
@@ -1689,7 +1691,7 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shdr_table_offset.so";
 
@@ -1700,7 +1702,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-zero_shdr_table_content.so";
 
@@ -1711,7 +1713,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-textrels.so";
 
@@ -1722,7 +1724,7 @@ TEST(dlfcn, dlopen_invalid_textrels) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels2) {
-  const std::string libpath = get_testlib_root() +
+  const std::string libpath = GetTestlibRoot() +
                               "/" + kPrebuiltElfDir +
                               "/libtest_invalid-textrels2.so";
 

@@ -147,6 +147,15 @@ typedef struct {
 
 lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const__;
 
+/**
+ * [getloadavg(3)](http://man7.org/linux/man-pages/man3/getloadavg.3.html) queries the
+ * number of runnable processes averaged over time. The Linux kernel supports averages
+ * over the last 1, 5, and 15 minutes.
+ *
+ * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
+ */
+int getloadavg(double __averages[], int __n) __INTRODUCED_IN_FUTURE;
+
 /* BSD compatibility. */
 const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char* __name) __INTRODUCED_IN(21);

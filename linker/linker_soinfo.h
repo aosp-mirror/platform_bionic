@@ -276,7 +276,7 @@ struct soinfo {
   ElfW(Addr) get_verdef_ptr() const;
   size_t get_verdef_cnt() const;
 
-  uint32_t get_target_sdk_version() const;
+  int get_target_sdk_version() const;
 
   void set_dt_runpath(const char *);
   const std::vector<std::string>& get_dt_runpath() const;
@@ -353,7 +353,7 @@ struct soinfo {
   ElfW(Addr) verneed_ptr_;
   size_t verneed_cnt_;
 
-  uint32_t target_sdk_version_;
+  int target_sdk_version_;
 
   // version >= 3
   std::vector<std::string> dt_runpath_;
@@ -361,9 +361,7 @@ struct soinfo {
   android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
-  friend soinfo* get_libdl_info(const char* linker_path,
-                                const soinfo& linker_si,
-                                const link_map& linker_map);
+  friend soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si);
 
   // version >= 4
   ElfW(Relr)* relr_;

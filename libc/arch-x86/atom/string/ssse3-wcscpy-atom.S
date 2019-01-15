@@ -88,7 +88,7 @@ name:	\
 # define LEN	STR2+4
 
 .text
-ENTRY (wcscpy)
+ENTRY (wcscpy_ssse3)
 	mov	STR1(%esp), %edx
 	mov	STR2(%esp), %ecx
 
@@ -648,5 +648,5 @@ L(ExitTail16):
 	ret
 
 #ifndef USE_AS_WCSCAT
-END (wcscpy)
+END (wcscpy_ssse3)
 #endif

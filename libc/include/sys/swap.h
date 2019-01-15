@@ -26,21 +26,47 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_SWAP_H_
-#define _SYS_SWAP_H_
+#pragma once
+
+/**
+ * @file sys/swap.h
+ * @brief Swap control.
+ */
 
 #include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
+/** swapon() flag to discard pages. */
 #define SWAP_FLAG_DISCARD 0x10000
+
+/**
+ * swapon() flag to give this swap area a non-default priority.
+ * The priority is also encoded in the flags:
+ * `(priority << SWAP_FLAG_PRIO_SHIFT) & SWAP_FLAG_PRIO_MASK`.
+ */
 #define SWAP_FLAG_PREFER 0x8000
+/** See SWAP_FLAG_PREFER. */
 #define SWAP_FLAG_PRIO_MASK 0x7fff
+/** See SWAP_FLAG_PREFER. */
 #define SWAP_FLAG_PRIO_SHIFT 0
 
+/**
+ * [swapon(2)](http://man7.org/linux/man-pages/man2/swapon.2.html) enables swapping.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 19.
+ */
 int swapon(const char* __path,  int __flags) __INTRODUCED_IN(19);
+
+/**
+ * [swapoff(2)](http://man7.org/linux/man-pages/man2/swapoff.2.html) disables swapping.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 19.
+ */
 int swapoff(const char* __path) __INTRODUCED_IN(19);
 
 __END_DECLS
-
-#endif

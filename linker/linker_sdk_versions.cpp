@@ -30,9 +30,9 @@
 #include <android/api-level.h>
 #include <atomic>
 
-static std::atomic<uint32_t> g_target_sdk_version(__ANDROID_API__);
+static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
 
-void set_application_target_sdk_version(uint32_t target) {
+void set_application_target_sdk_version(int target) {
   // translate current sdk_version to platform sdk_version
   if (target == 0) {
     target = __ANDROID_API__;
@@ -40,7 +40,7 @@ void set_application_target_sdk_version(uint32_t target) {
   g_target_sdk_version = target;
 }
 
-uint32_t get_application_target_sdk_version() {
+int get_application_target_sdk_version() {
   return g_target_sdk_version;
 }
 

@@ -119,15 +119,21 @@ struct tipc_group_req {
   __u32 scope;
   __u32 flags;
 };
+#define TIPC_NODEID_LEN 16
 #define TIPC_MAX_MEDIA_NAME 16
 #define TIPC_MAX_IF_NAME 16
 #define TIPC_MAX_BEARER_NAME 32
 #define TIPC_MAX_LINK_NAME 68
 #define SIOCGETLINKNAME SIOCPROTOPRIVATE
+#define SIOCGETNODEID (SIOCPROTOPRIVATE + 1)
 struct tipc_sioc_ln_req {
   __u32 peer;
   __u32 bearer_id;
   char linkname[TIPC_MAX_LINK_NAME];
+};
+struct tipc_sioc_nodeid_req {
+  __u32 peer;
+  char node_id[TIPC_NODEID_LEN];
 };
 #define TIPC_CFG_SRV 0
 #define TIPC_ZONE_SCOPE 1

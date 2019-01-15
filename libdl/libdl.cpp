@@ -67,10 +67,10 @@ void* __loader_android_dlopen_ext(const char* filename,
                                   const void* caller_addr);
 
 __attribute__((__weak__, visibility("default")))
-void __loader_android_set_application_target_sdk_version(uint32_t target);
+void __loader_android_set_application_target_sdk_version(int target);
 
 __attribute__((__weak__, visibility("default")))
-uint32_t __loader_android_get_application_target_sdk_version();
+int __loader_android_get_application_target_sdk_version();
 
 __attribute__((__weak__, visibility("default")))
 bool __loader_android_init_anonymous_namespace(const char* shared_libs_sonames,
@@ -165,12 +165,12 @@ void* android_dlopen_ext(const char* filename, int flag, const android_dlextinfo
 }
 
 __attribute__((__weak__))
-void android_set_application_target_sdk_version(uint32_t target) {
+void android_set_application_target_sdk_version(int target) {
   __loader_android_set_application_target_sdk_version(target);
 }
 
 __attribute__((__weak__))
-uint32_t android_get_application_target_sdk_version() {
+int android_get_application_target_sdk_version() {
   return __loader_android_get_application_target_sdk_version();
 }
 

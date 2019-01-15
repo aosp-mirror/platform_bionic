@@ -120,10 +120,11 @@ struct input_mask {
 #define BUS_RMI 0x1D
 #define BUS_CEC 0x1E
 #define BUS_INTEL_ISHTP 0x1F
-#define MT_TOOL_FINGER 0
-#define MT_TOOL_PEN 1
-#define MT_TOOL_PALM 2
-#define MT_TOOL_MAX 2
+#define MT_TOOL_FINGER 0x00
+#define MT_TOOL_PEN 0x01
+#define MT_TOOL_PALM 0x02
+#define MT_TOOL_DIAL 0x0a
+#define MT_TOOL_MAX 0x0f
 #define FF_STATUS_STOPPED 0x00
 #define FF_STATUS_PLAYING 0x01
 #define FF_STATUS_MAX 0x01

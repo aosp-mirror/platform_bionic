@@ -26,14 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include "private/KernelArgumentBlock.h"
+#include "private/bionic_auxv.h"
 #include "private/bionic_globals.h"
 
 // This file is compiled without stack protection, because it runs before TLS
 // has been set up.
 
-__LIBC_HIDDEN__ void __libc_init_sysinfo(KernelArgumentBlock& args) {
-  __libc_sysinfo = reinterpret_cast<void*>(args.getauxval(AT_SYSINFO));
+__LIBC_HIDDEN__ void __libc_init_sysinfo() {
+  bool dummy;
+  __libc_sysinfo = reinterpret_cast<void*>(__bionic_getauxval(AT_SYSINFO, dummy));
 }
 
 // TODO: lose this function and just access __libc_sysinfo directly.

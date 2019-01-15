@@ -36,7 +36,6 @@
 #include <async_safe/log.h>
 
 #include "private/bionic_futex.h"
-#include "private/bionic_sdk_version.h"
 #include "private/bionic_tls.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
@@ -44,7 +43,7 @@ static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
 
 template <bool write> class ScopedRWLock {
  public:
-  ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
+  explicit ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
     (write ? pthread_rwlock_wrlock : pthread_rwlock_rdlock)(rwlock_);
   }
 
@@ -54,7 +53,7 @@ template <bool write> class ScopedRWLock {
 
  private:
   pthread_rwlock_t* rwlock_;
-  DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
 };
 
 typedef ScopedRWLock<true> ScopedWriteLock;
@@ -89,7 +88,7 @@ void __pthread_internal_remove(pthread_internal_t* thread) {
 static void __pthread_internal_free(pthread_internal_t* thread) {
   if (thread->mmap_size != 0) {
     // Free mapped space, including thread stack and pthread_internal_t.
-    munmap(thread->attr.stack_base, thread->mmap_size);
+    munmap(thread->mmap_base, thread->mmap_size);
   }
 }
 
@@ -114,7 +113,7 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
   }
 
   // Historically we'd return null, but
-  if (bionic_get_application_target_sdk_version() >= __ANDROID_API_O__) {
+  if (android_get_application_target_sdk_version() >= __ANDROID_API_O__) {
     if (thread == nullptr) {
       // This seems to be a common mistake, and it's relatively harmless because
       // there will never be a valid thread at address 0, whereas other invalid

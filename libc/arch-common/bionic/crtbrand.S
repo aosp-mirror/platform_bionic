@@ -33,7 +33,12 @@ abitag:
   .long 2f-1f                 // int32_t namesz
   .long 3f-2f                 // int32_t descsz
   .long 1                     // int32_t type
+#ifdef __ANDROID__
 1:.ascii "Android\0"          // char name[]
 2:.long PLATFORM_SDK_VERSION  // int32_t android_api
+#else
+1:.ascii "LinuxBionic\0"      // char name[]
+2:
+#endif
 3:
   .size abitag, .-abitag

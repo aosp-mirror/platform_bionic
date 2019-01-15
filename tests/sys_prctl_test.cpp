@@ -20,6 +20,7 @@
 #include <sys/capability.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
+#include <sys/utsname.h>
 #include <unistd.h>
 
 #include <string>
@@ -29,11 +30,10 @@
 
 #include "android-base/file.h"
 #include "android-base/strings.h"
-#include "private/bionic_prctl.h"
 
 // http://b/20017123.
 TEST(sys_prctl, bug_20017123) {
-#if defined(__ANDROID__) // PR_SET_VMA is only available in Android kernels.
+#if defined(PR_SET_VMA) // PR_SET_VMA is only available in Android kernels.
   size_t page_size = static_cast<size_t>(sysconf(_SC_PAGESIZE));
   void* p = mmap(NULL, page_size * 3, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, p);
@@ -76,10 +76,14 @@ TEST(sys_prctl, pr_cap_ambient) {
       "https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/"
       "?id=b7f76ea2ef6739ee484a165ffbac98deb855d3d3";
 
+  utsname u = {};
+  ASSERT_EQ(0, uname(&u));
+
+  errno = 0;
   auto err = prctl(PR_CAP_AMBIENT, PR_CAP_AMBIENT_CLEAR_ALL, 0, 0, 0);
   EXPECT_EQ(0, err);
   // EINVAL -> unrecognized prctl option
-  ASSERT_NE(EINVAL, errno) << "kernel missing required commits:\n"
+  ASSERT_NE(EINVAL, errno) << "kernel (" << u.release << ") missing required commits:\n"
                            << caps_sha << "\n"
                            << caps_typo_sha << "\n";
 

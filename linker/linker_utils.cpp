@@ -98,8 +98,8 @@ bool normalize_path(const char* path, std::string* normalized_path) {
           while (out_ptr > buf && *--out_ptr != '/') {
           }
           if (in_ptr[0] == 0) {
-            // retain '/'
-            out_ptr++;
+            // retain '/' (or write the initial '/' for "/..")
+            *out_ptr++ = '/';
           }
           continue;
         }
@@ -235,12 +235,19 @@ void resolve_paths(std::vector<std::string>& paths,
         }
 
         resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
+      } else {
+        struct stat s;
+        if (stat(normalized_path.c_str(), &s) == 0 && S_ISDIR(s.st_mode)) {
+          // Path is not a zip path, but an existing directory. Then add it
+          // although we failed to resolve it. b/119656753
+          resolved_paths->push_back(normalized_path);
+        }
       }
     }
   }
 }
 
-bool is_init() {
-  static bool ret = (getpid() == 1);
+bool is_first_stage_init() {
+  static bool ret = (getpid() == 1 && access("/proc/self/exe", F_OK) == -1);
   return ret;
 }

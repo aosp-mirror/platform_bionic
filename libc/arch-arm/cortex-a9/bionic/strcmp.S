@@ -52,12 +52,16 @@
 
 .syntax         unified
 
+// To avoid warning about deprecated instructions, add an explicit
+// arch. The code generated is exactly the same.
+.arch armv7-a
+
 #if defined (__thumb__)
         .thumb
         .thumb_func
 #endif
 
-ENTRY(strcmp)
+ENTRY(strcmp_a9)
       /* Use LDRD whenever possible.  */
 
 /* The main thing to look out for when comparing large blocks is that
@@ -544,4 +548,4 @@ ENTRY(strcmp)
     adds    sp, sp, #16
 
 	bx	lr
-END(strcmp)
+END(strcmp_a9)

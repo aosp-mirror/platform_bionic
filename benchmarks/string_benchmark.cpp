@@ -248,6 +248,25 @@ static void BM_string_strcmp(benchmark::State& state) {
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_string_strcmp, "AT_ALIGNED_TWOBUF");
 
+static void BM_string_strncmp(benchmark::State& state) {
+  const size_t nbytes = state.range(0);
+  const size_t s1_alignment = state.range(1);
+  const size_t s2_alignment = state.range(2);
+
+  std::vector<char> s1;
+  std::vector<char> s2;
+  char* s1_aligned = GetAlignedPtrFilled(&s1, s1_alignment, nbytes, 'x');
+  char* s2_aligned = GetAlignedPtrFilled(&s2, s2_alignment, nbytes, 'x');
+
+  volatile int c __attribute__((unused));
+  for (auto _ : state) {
+    c = strncmp(s1_aligned, s2_aligned, nbytes);
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_string_strncmp, "AT_ALIGNED_TWOBUF");
+
 static void BM_string_strstr(benchmark::State& state) {
   const size_t nbytes = state.range(0);
   const size_t haystack_alignment = state.range(1);

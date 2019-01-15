@@ -15,7 +15,7 @@ cc_library_static {
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
 
-    static_libs: ["libasync_safe"],
+    static_libs: ["libasync_safe", "libbase"],
 }
 
 // This is used for bionic on (host) Linux to bootstrap our linker embedded into
@@ -66,8 +66,8 @@ cc_object {
     include_dirs: ["bionic/libc"],
 }
 
-cc_binary {
-    defaults: ["linux_bionic_supported"],
+filegroup {
+    name: "linker_sources",
     srcs: [
         "dlfcn.cpp",
         "linker.cpp",
@@ -86,51 +86,77 @@ cc_binary {
         "linker_phdr.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
     ],
+}
 
+filegroup {
+    name: "linker_sources_arm",
+    srcs: [
+        "arch/arm/begin.S",
+        "linker_exidx_static.c",
+    ],
+}
+
+filegroup {
+    name: "linker_sources_arm64",
+    srcs: [
+        "arch/arm64/begin.S",
+    ],
+}
+
+filegroup {
+    name: "linker_sources_x86",
+    srcs: [
+        "arch/x86/begin.S",
+    ],
+}
+
+filegroup {
+    name: "linker_sources_x86_64",
+    srcs: [
+        "arch/x86_64/begin.S",
+    ],
+}
+
+filegroup {
+    name: "linker_sources_mips",
+    srcs: [
+        "arch/mips/begin.S",
+        "linker_mips.cpp",
+    ],
+}
+
+filegroup {
+    name: "linker_sources_mips64",
+    srcs: [
+        "arch/mips64/begin.S",
+        "linker_mips.cpp",
+    ],
+}
+
+filegroup {
+    name: "linker_version_script",
+    srcs: ["linker.generic.map"],
+}
+
+filegroup {
+    name: "linker_version_script_arm",
+    srcs: ["linker.arm.map"],
+}
+
+cc_defaults {
+    name: "linker_defaults",
     arch: {
         arm: {
-            srcs: [
-                "arch/arm/begin.S",
-                "linker_exidx_static.c",
-            ],
-
             cflags: ["-D__work_around_b_24465209__"],
-            version_script: "linker.arm.map",
-        },
-        arm64: {
-            srcs: ["arch/arm64/begin.S"],
-            version_script: "linker.generic.map",
         },
         x86: {
-            srcs: ["arch/x86/begin.S"],
             cflags: ["-D__work_around_b_24465209__"],
-            version_script: "linker.generic.map",
-        },
-        x86_64: {
-            srcs: ["arch/x86_64/begin.S"],
-            version_script: "linker.generic.map",
-        },
-        mips: {
-            srcs: [
-                "arch/mips/begin.S",
-                "linker_mips.cpp",
-            ],
-            version_script: "linker.generic.map",
-        },
-        mips64: {
-            srcs: [
-                "arch/mips64/begin.S",
-                "linker_mips.cpp",
-            ],
-            version_script: "linker.generic.map",
         },
     },
-
-    // We need to access Bionic private headers in the linker.
-    include_dirs: ["bionic/libc"],
 
     // -shared is used to overwrite the -Bstatic and -static
     // flags triggered by LOCAL_FORCE_STATIC_EXECUTABLE.
@@ -141,10 +167,6 @@ cc_binary {
         "-Wl,--exclude-libs,ALL",
         "-Wl,-soname,ld-android.so",
     ],
-
-    // lld bug: https://bugs.llvm.org/show_bug.cgi?id=36295
-    // error: symbol __aeabi_*@@LIBC_N has undefined version LIBC_N
-    use_clang_lld: false,
 
     cflags: [
         "-fno-stack-protector",
@@ -185,6 +207,57 @@ cc_binary {
     // just for this module
     nocrt: true,
 
+    static_executable: true,
+
+    // Leave the symbols in the shared library so that stack unwinders can produce
+    // meaningful name resolution.
+    strip: {
+        keep_symbols: true,
+    },
+
+    // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
+    // looking up symbols in the linker by mistake.
+    prefix_symbols: "__dl_",
+
+    sanitize: {
+        hwaddress: false,
+    },
+}
+
+cc_binary {
+    defaults: ["linux_bionic_supported", "linker_defaults"],
+    srcs: [ ":linker_sources" ],
+
+    arch: {
+        arm: {
+            srcs: [ ":linker_sources_arm" ],
+            version_script: ":linker_version_script_arm",
+        },
+        arm64: {
+            srcs: [":linker_sources_arm64"],
+            version_script: ":linker_version_script",
+        },
+        x86: {
+            srcs: [":linker_sources_x86"],
+            version_script: ":linker_version_script",
+        },
+        x86_64: {
+            srcs: [":linker_sources_x86_64"],
+            version_script: ":linker_version_script",
+        },
+        mips: {
+            srcs: [":linker_sources_mips"],
+            version_script: ":linker_version_script",
+        },
+        mips64: {
+            srcs: [":linker_sources_mips64"],
+            version_script: ":linker_version_script",
+        },
+    },
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
     static_libs: [
         "libc_nomalloc",
         "libm",
@@ -202,7 +275,6 @@ cc_binary {
         // to overwrite any other malloc implementations by other static libraries.
         "liblinker_malloc",
     ],
-    static_executable: true,
 
     name: "linker",
     symlinks: ["linker_asan"],
@@ -212,22 +284,14 @@ cc_binary {
             suffix: "64",
         },
     },
+    system_shared_libs: [],
     target: {
         android: {
             static_libs: ["libdebuggerd_handler_fallback"],
         },
     },
     compile_multilib: "both",
-
-    // Leave the symbols in the shared library so that stack unwinders can produce
-    // meaningful name resolution.
-    strip: {
-        keep_symbols: true,
-    },
-
-    // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
-    // looking up symbols in the linker by mistake.
-    prefix_symbols: "__dl_",
+    xom: false,
 }
 
 cc_library {
@@ -240,7 +304,13 @@ cc_library {
     //
     // DO NOT REMOVE --exclude-libs!
 
-    ldflags: ["-Wl,--exclude-libs=libgcc.a"],
+    ldflags: [
+        "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
+    ],
 
     // for x86, exclude libgcc_eh.a for the same reasons as above
     arch: {

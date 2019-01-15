@@ -43,6 +43,7 @@
 #include "printf_common.h"
 
 int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
+  int caller_errno = errno;
   int n, n2;
   CHAR_TYPE* cp;   /* handy char pointer (short term usage) */
   CHAR_TYPE sign;  /* sign prefix (' ', '+', '-', or \0) */
@@ -436,6 +437,17 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         break;
       case 'n':
         __fortify_fatal("%%n not allowed on Android");
+      case 'm':
+        free(convbuf);
+        convbuf = helpers::mbsconv(strerror_r(caller_errno,
+                                              reinterpret_cast<char*>(buf), sizeof(buf)), prec);
+        if (convbuf == nullptr) {
+            fp->_flags |= __SERR;
+            goto error;
+        } else {
+            cp = convbuf;
+        }
+        goto string;
       case 'O':
         flags |= LONGINT;
         __BIONIC_FALLTHROUGH;
@@ -474,6 +486,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
             cp = convbuf;
           }
         }
+  string:
         if (prec >= 0) {
           size = CHAR_TYPE_STRNLEN(cp, prec);
         } else {

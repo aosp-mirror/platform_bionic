@@ -60,9 +60,19 @@
 #define KEYCTL_INVALIDATE 21
 #define KEYCTL_GET_PERSISTENT 22
 #define KEYCTL_DH_COMPUTE 23
+#define KEYCTL_PKEY_QUERY 24
+#define KEYCTL_PKEY_ENCRYPT 25
+#define KEYCTL_PKEY_DECRYPT 26
+#define KEYCTL_PKEY_SIGN 27
+#define KEYCTL_PKEY_VERIFY 28
 #define KEYCTL_RESTRICT_KEYRING 29
 struct keyctl_dh_params {
-  __s32 __linux_private;
+  union {
+#ifndef __cplusplus
+    __s32 __linux_private;
+#endif
+    __s32 priv;
+  };
   __s32 prime;
   __s32 base;
 };
@@ -71,5 +81,27 @@ struct keyctl_kdf_params {
   char __user * otherinfo;
   __u32 otherinfolen;
   __u32 __spare[8];
+};
+#define KEYCTL_SUPPORTS_ENCRYPT 0x01
+#define KEYCTL_SUPPORTS_DECRYPT 0x02
+#define KEYCTL_SUPPORTS_SIGN 0x04
+#define KEYCTL_SUPPORTS_VERIFY 0x08
+struct keyctl_pkey_query {
+  __u32 supported_ops;
+  __u32 key_size;
+  __u16 max_data_size;
+  __u16 max_sig_size;
+  __u16 max_enc_size;
+  __u16 max_dec_size;
+  __u32 __spare[10];
+};
+struct keyctl_pkey_params {
+  __s32 key_id;
+  __u32 in_len;
+  union {
+    __u32 out_len;
+    __u32 in2_len;
+  };
+  __u32 __spare[7];
 };
 #endif

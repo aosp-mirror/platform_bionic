@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_TIMES_H_
-#define _SYS_TIMES_H_
+#pragma once
+
+/**
+ * @file sys/times.h
+ * @brief The times() function.
+ */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -35,8 +39,13 @@
 
 __BEGIN_DECLS
 
+/**
+ * [times(2)](http://man7.org/linux/man-pages/man2/times.2.html) fills a buffer with the
+ * calling process' CPU usage.
+ *
+ * Returns a (possibly overflowed) absolute time on success,
+ * and returns -1 and sets `errno` on failure.
+ */
 clock_t times(struct tms* __buf);
 
 __END_DECLS
-
-#endif

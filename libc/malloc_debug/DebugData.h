@@ -94,7 +94,7 @@ class DebugData {
 
   Config config_;
 
-  DISALLOW_COPY_AND_ASSIGN(DebugData);
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(DebugData);
 };
 
 extern DebugData* g_debug;

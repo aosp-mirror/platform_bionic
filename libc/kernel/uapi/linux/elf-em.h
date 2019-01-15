@@ -52,6 +52,7 @@
 #define EM_TILEPRO 188
 #define EM_MICROBLAZE 189
 #define EM_TILEGX 191
+#define EM_RISCV 243
 #define EM_BPF 247
 #define EM_FRV 0x5441
 #define EM_ALPHA 0x9026

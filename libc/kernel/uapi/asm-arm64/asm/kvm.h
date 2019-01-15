@@ -32,6 +32,7 @@
 #define __KVM_HAVE_GUEST_DEBUG
 #define __KVM_HAVE_IRQ_LINE
 #define __KVM_HAVE_READONLY_MEM
+#define __KVM_HAVE_VCPU_EVENTS
 #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
 #define KVM_REG_SIZE(id) (1U << (((id) & KVM_REG_SIZE_MASK) >> KVM_REG_SIZE_SHIFT))
 struct kvm_regs {
@@ -60,6 +61,7 @@ struct kvm_regs {
 #define KVM_VGIC_V3_ADDR_TYPE_DIST 2
 #define KVM_VGIC_V3_ADDR_TYPE_REDIST 3
 #define KVM_VGIC_ITS_ADDR_TYPE 4
+#define KVM_VGIC_V3_ADDR_TYPE_REDIST_REGION 5
 #define KVM_VGIC_V3_DIST_SIZE SZ_64K
 #define KVM_VGIC_V3_REDIST_SIZE (2 * SZ_64K)
 #define KVM_VGIC_V3_ITS_SIZE (2 * SZ_64K)
@@ -92,6 +94,15 @@ struct kvm_sync_regs {
   __u64 device_irq_level;
 };
 struct kvm_arch_memory_slot {
+};
+struct kvm_vcpu_events {
+  struct {
+    __u8 serror_pending;
+    __u8 serror_has_esr;
+    __u8 pad[6];
+    __u64 serror_esr;
+  } exception;
+  __u32 reserved[12];
 };
 #define KVM_REG_ARM_COPROC_MASK 0x000000000FFF0000
 #define KVM_REG_ARM_COPROC_SHIFT 16

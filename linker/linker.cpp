@@ -289,7 +289,7 @@ void NamespaceListAllocator::free(LinkedListEntry<android_namespace_t>* entry) {
 }
 
 soinfo* soinfo_alloc(android_namespace_t* ns, const char* name,
-                     struct stat* file_stat, off64_t file_offset,
+                     const struct stat* file_stat, off64_t file_offset,
                      uint32_t rtld_flags) {
   if (strlen(name) >= PATH_MAX) {
     async_safe_fatal("library name \"%s\" too long", name);
@@ -354,7 +354,9 @@ static bool realpath_fd(int fd, std::string* realpath) {
   std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
   async_safe_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
   if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
-    PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    if (!is_first_stage_init()) {
+      PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+    }
     return false;
   }
 
@@ -918,8 +920,7 @@ bool ZipArchiveCache::get_or_open(const char* zip_path, ZipArchiveHandle* handle
 
   if (OpenArchiveFd(fd, "", handle) != 0) {
     // invalid zip-file (?)
-    CloseArchive(handle);
-    close(fd);
+    CloseArchive(*handle);
     return false;
   }
 
@@ -994,8 +995,10 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   if (realpath_fd(fd, realpath)) {
     *realpath += separator;
   } else {
-    PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-          normalized_path.c_str());
+    if (!is_first_stage_init()) {
+      PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+            normalized_path.c_str());
+    }
     *realpath = normalized_path;
   }
 
@@ -1012,6 +1015,31 @@ static bool format_path(char* buf, size_t buf_size, const char* path, const char
   return true;
 }
 
+static int open_library_at_path(ZipArchiveCache* zip_archive_cache,
+                                const char* path, off64_t* file_offset,
+                                std::string* realpath) {
+  int fd = -1;
+  if (strstr(path, kZipFileSeparator) != nullptr) {
+    fd = open_library_in_zipfile(zip_archive_cache, path, file_offset, realpath);
+  }
+
+  if (fd == -1) {
+    fd = TEMP_FAILURE_RETRY(open(path, O_RDONLY | O_CLOEXEC));
+    if (fd != -1) {
+      *file_offset = 0;
+      if (!realpath_fd(fd, realpath)) {
+        if (!is_first_stage_init()) {
+          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+                path);
+        }
+        *realpath = path;
+      }
+    }
+  }
+
+  return fd;
+}
+
 static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
                                  const char* name, off64_t* file_offset,
                                  const std::vector<std::string>& paths,
@@ -1022,22 +1050,7 @@ static int open_library_on_paths(ZipArchiveCache* zip_archive_cache,
       continue;
     }
 
-    int fd = -1;
-    if (strstr(buf, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(zip_archive_cache, buf, file_offset, realpath);
-    }
-
-    if (fd == -1) {
-      fd = TEMP_FAILURE_RETRY(open(buf, O_RDONLY | O_CLOEXEC));
-      if (fd != -1) {
-        *file_offset = 0;
-        if (!realpath_fd(fd, realpath)) {
-          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", buf);
-          *realpath = buf;
-        }
-      }
-    }
-
+    int fd = open_library_at_path(zip_archive_cache, buf, file_offset, realpath);
     if (fd != -1) {
       return fd;
     }
@@ -1065,7 +1078,10 @@ static int open_library(android_namespace_t* ns,
       if (fd != -1) {
         *file_offset = 0;
         if (!realpath_fd(fd, realpath)) {
-          PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.", name);
+          if (!is_first_stage_init()) {
+            PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
+                  name);
+          }
           *realpath = name;
         }
       }
@@ -1080,6 +1096,7 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath(), realpath);
     // Check if the library is accessible
     if (fd != -1 && !ns->is_accessible(*realpath)) {
+      close(fd);
       fd = -1;
     }
   }
@@ -1097,6 +1114,11 @@ static int open_library(android_namespace_t* ns,
   // END OF WORKAROUND
 
   return fd;
+}
+
+int open_executable(const char* path, off64_t* file_offset, std::string* realpath) {
+  ZipArchiveCache zip_archive_cache;
+  return open_library_at_path(&zip_archive_cache, path, file_offset, realpath);
 }
 
 const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
@@ -1307,6 +1329,15 @@ static bool load_library(android_namespace_t* ns,
     }
   }
 
+#if !defined(__ANDROID__)
+  // Bionic on the host currently uses some Android prebuilts, which don't set
+  // DT_RUNPATH with any relative paths, so they can't find their dependencies.
+  // b/118058804
+  if (si->get_dt_runpath().empty()) {
+    si->set_dt_runpath("$ORIGIN/../lib64:$ORIGIN/lib64");
+  }
+#endif
+
   for_each_dt_needed(task->get_elf_reader(), [&](const char* name) {
     load_tasks->push_back(LoadTask::create(name, si, ns, task->get_readers_map()));
   });
@@ -1333,8 +1364,12 @@ static bool load_library(android_namespace_t* ns,
     }
 
     if (!realpath_fd(extinfo->library_fd, &realpath)) {
-      PRINT("warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
-            "Will use given name.", name);
+      if (!is_first_stage_init()) {
+        PRINT(
+            "warning: unable to get realpath for the library \"%s\" by extinfo->library_fd. "
+            "Will use given name.",
+            name);
+      }
       realpath = name;
     }
 
@@ -1489,9 +1524,9 @@ static bool find_library_internal(android_namespace_t* ns,
 static void soinfo_unload(soinfo* si);
 
 static void shuffle(std::vector<LoadTask*>* v) {
-  if (is_init()) {
-    // arc4random* is not available in init because /dev/random hasn't yet been
-    // created.
+  if (is_first_stage_init()) {
+    // arc4random* is not available in first stage init because /dev/random
+    // hasn't yet been created.
     return;
   }
   for (size_t i = 0, size = v->size(); i < size; ++i) {
@@ -2050,13 +2085,6 @@ void* do_dlopen(const char* name, int flags,
         (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
       DL_ERR("invalid extended flag combination (ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET without "
           "ANDROID_DLEXT_USE_LIBRARY_FD): 0x%" PRIx64, extinfo->flags);
-      return nullptr;
-    }
-
-    if ((extinfo->flags & ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS) != 0 &&
-        (extinfo->flags & (ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_HINT)) != 0) {
-      DL_ERR("invalid extended flag combination: ANDROID_DLEXT_LOAD_AT_FIXED_ADDRESS is not "
-             "compatible with ANDROID_DLEXT_RESERVED_ADDRESS/ANDROID_DLEXT_RESERVED_ADDRESS_HINT");
       return nullptr;
     }
 
@@ -3691,6 +3719,15 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
+// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/<exec>
+static std::string get_ld_config_file_apex_path(const char* executable_path) {
+  std::vector<std::string> paths = android::base::Split(executable_path, "/");
+  if (paths.size() == 5 && paths[1] == "apex" && paths[3] == "bin") {
+    return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
+  }
+  return "";
+}
+
 static std::string get_ld_config_file_vndk_path() {
   if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
     return kLdConfigVndkLiteFilePath;
@@ -3705,7 +3742,7 @@ static std::string get_ld_config_file_vndk_path() {
   return ld_config_file_vndk;
 }
 
-static std::string get_ld_config_file_path() {
+static std::string get_ld_config_file_path(const char* executable_path) {
 #ifdef USE_LD_CONFIG_FILE
   // This is a debugging/testing only feature. Must not be available on
   // production builds.
@@ -3715,13 +3752,23 @@ static std::string get_ld_config_file_path() {
   }
 #endif
 
-  if (file_exists(kLdConfigArchFilePath)) {
-    return kLdConfigArchFilePath;
+  std::string path = get_ld_config_file_apex_path(executable_path);
+  if (!path.empty()) {
+    if (file_exists(path.c_str())) {
+      return path;
+    }
+    DL_WARN("Warning: couldn't read config file \"%s\" for \"%s\"",
+            path.c_str(), executable_path);
   }
 
-  std::string ld_config_file_vndk = get_ld_config_file_vndk_path();
-  if (file_exists(ld_config_file_vndk.c_str())) {
-    return ld_config_file_vndk;
+  path = kLdConfigArchFilePath;
+  if (file_exists(path.c_str())) {
+    return path;
+  }
+
+  path = get_ld_config_file_vndk_path();
+  if (file_exists(path.c_str())) {
+    return path;
   }
 
   return kLdConfigFilePath;
@@ -3744,7 +3791,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::string error_msg;
 
-  std::string ld_config_file_path = get_ld_config_file_path();
+  std::string ld_config_file_path = get_ld_config_file_path(executable_path);
 
   if (!Config::read_binary_config(ld_config_file_path.c_str(),
                                   executable_path,
@@ -3832,7 +3879,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   std::vector<android_namespace_t*> created_namespaces;
   created_namespaces.reserve(namespaces.size());
-  for (auto kv : namespaces) {
+  for (const auto& kv : namespaces) {
     created_namespaces.push_back(kv.second);
   }
   return created_namespaces;

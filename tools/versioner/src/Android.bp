@@ -1,7 +1,7 @@
 cc_binary_host {
     name: "versioner",
 
-    cpp_std: "gnu++17",
+    defaults: ["llvm-build-host-tools-defaults"],
 
     srcs: [
         "versioner.cpp",
@@ -11,19 +11,15 @@ cc_binary_host {
         "Driver.cpp",
         "Preprocessor.cpp",
         "SymbolDatabase.cpp",
+        "SymbolFileParser.cpp",
         "Utils.cpp",
         "VFS.cpp",
     ],
 
     shared_libs: [
-        "libclang_android",
-        "libLLVM_android",
+        "libclang_cxx_host",
+        "libLLVM_host",
         "libbase",
-    ],
-
-    header_libs: [
-        "llvm-headers",
-        "clang-headers",
     ],
 
     cflags: [

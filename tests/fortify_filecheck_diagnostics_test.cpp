@@ -291,7 +291,10 @@ void test_memset_args_flipped() {
   char from[4] = {0};
   // NOLINTNEXTLINE(whitespace/line_length)
   // CLANG: 'memset' will set 0 bytes; maybe the arguments got flipped?
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmemset-transposed-args"
   memset(from, sizeof(from), 0);
+#pragma clang diagnostic pop
 }
 
 void test_sendto() {
