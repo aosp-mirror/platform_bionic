@@ -200,9 +200,12 @@ struct sockaddr_in {
 #define IN_CLASSC_HOST (0xffffffff & ~IN_CLASSC_NET)
 #define IN_CLASSD(a) ((((long int) (a)) & 0xf0000000) == 0xe0000000)
 #define IN_MULTICAST(a) IN_CLASSD(a)
-#define IN_MULTICAST_NET 0xF0000000
-#define IN_EXPERIMENTAL(a) ((((long int) (a)) & 0xf0000000) == 0xf0000000)
-#define IN_BADCLASS(a) IN_EXPERIMENTAL((a))
+#define IN_MULTICAST_NET 0xe0000000
+#define IN_BADCLASS(a) (((long int) (a)) == (long int)0xffffffff)
+#define IN_EXPERIMENTAL(a) IN_BADCLASS((a))
+#define IN_CLASSE(a) ((((long int) (a)) & 0xf0000000) == 0xf0000000)
+#define IN_CLASSE_NET 0xffffffff
+#define IN_CLASSE_NSHIFT 0
 #define INADDR_ANY ((unsigned long int) 0x00000000)
 #define INADDR_BROADCAST ((unsigned long int) 0xffffffff)
 #define INADDR_NONE ((unsigned long int) 0xffffffff)

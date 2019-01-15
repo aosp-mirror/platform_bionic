@@ -198,6 +198,9 @@ struct media_v2_topology {
 #define MEDIA_IOC_ENUM_LINKS _IOWR('|', 0x02, struct media_links_enum)
 #define MEDIA_IOC_SETUP_LINK _IOWR('|', 0x03, struct media_link_desc)
 #define MEDIA_IOC_G_TOPOLOGY _IOWR('|', 0x04, struct media_v2_topology)
+#define MEDIA_IOC_REQUEST_ALLOC _IOR('|', 0x05, int)
+#define MEDIA_REQUEST_IOC_QUEUE _IO('|', 0x80)
+#define MEDIA_REQUEST_IOC_REINIT _IO('|', 0x81)
 #define MEDIA_ENT_TYPE_SHIFT 16
 #define MEDIA_ENT_TYPE_MASK 0x00ff0000
 #define MEDIA_ENT_SUBTYPE_MASK 0x0000ffff

@@ -248,6 +248,7 @@ struct kvm_reinject_control {
 #define KVM_VCPUEVENT_VALID_SIPI_VECTOR 0x00000002
 #define KVM_VCPUEVENT_VALID_SHADOW 0x00000004
 #define KVM_VCPUEVENT_VALID_SMM 0x00000008
+#define KVM_VCPUEVENT_VALID_PAYLOAD 0x00000010
 #define KVM_X86_SHADOW_INT_MOV_SS 0x01
 #define KVM_X86_SHADOW_INT_STI 0x02
 struct kvm_vcpu_events {
@@ -255,7 +256,7 @@ struct kvm_vcpu_events {
     __u8 injected;
     __u8 nr;
     __u8 has_error_code;
-    __u8 pad;
+    __u8 pending;
     __u32 error_code;
   } exception;
   struct {
@@ -278,7 +279,9 @@ struct kvm_vcpu_events {
     __u8 smm_inside_nmi;
     __u8 latched_init;
   } smi;
-  __u32 reserved[9];
+  __u8 reserved[27];
+  __u8 exception_has_payload;
+  __u64 exception_payload;
 };
 struct kvm_debugregs {
   __u64 db[4];
@@ -316,6 +319,7 @@ struct kvm_sync_regs {
 #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE (1 << 2)
 #define KVM_STATE_NESTED_GUEST_MODE 0x00000001
 #define KVM_STATE_NESTED_RUN_PENDING 0x00000002
+#define KVM_STATE_NESTED_EVMCS 0x00000004
 #define KVM_STATE_NESTED_SMM_GUEST_MODE 0x00000001
 #define KVM_STATE_NESTED_SMM_VMXON 0x00000002
 struct kvm_vmx_nested_state {
