@@ -23,8 +23,6 @@
 typedef long long __kernel_si_clock_t __attribute__((aligned(4)));
 #define __ARCH_SI_CLOCK_T __kernel_si_clock_t
 #define __ARCH_SI_ATTRIBUTES __attribute__((aligned(8)))
-#else
-#define __ARCH_SI_PREAMBLE_SIZE (4 * sizeof(int))
 #endif
 #endif
 #include <asm-generic/siginfo.h>

@@ -23,6 +23,7 @@
 #include <linux/if_ether.h>
 #include <linux/if_vlan.h>
 #include <linux/if_pppox.h>
+#include <limits.h>
 #define NF_BR_PRE_ROUTING 0
 #define NF_BR_LOCAL_IN 1
 #define NF_BR_FORWARD 2
