@@ -115,3 +115,5 @@ struct TlsModules {
   size_t module_count = 0;
   TlsModule* module_table = nullptr;
 };
+
+void __init_static_tls(void* static_tls);

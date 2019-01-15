@@ -29,9 +29,12 @@
 #include "private/bionic_elf_tls.h"
 
 #include <async_safe/log.h>
+#include <string.h>
 #include <sys/param.h>
 #include <unistd.h>
 
+#include "private/ScopedRWLock.h"
+#include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_tls.h"
 
@@ -146,4 +149,34 @@ size_t StaticTlsLayout::round_up_with_overflow_check(size_t value, size_t alignm
   value = __BIONIC_ALIGN(value, alignment);
   if (value < old_value) overflowed_ = true;
   return value;
+}
+
+// Copy each TLS module's initialization image into a newly-allocated block of
+// static TLS memory. To reduce dirty pages, this function only writes to pages
+// within the static TLS that need initialization. The memory should already be
+// zero-initialized on entry.
+void __init_static_tls(void* static_tls) {
+  // The part of the table we care about (i.e. static TLS modules) never changes
+  // after startup, but we still need the mutex because the table could grow,
+  // moving the initial part. If this locking is too slow, we can duplicate the
+  // static part of the table.
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  ScopedReadLock locker(&modules.rwlock);
+
+  for (size_t i = 0; i < modules.module_count; ++i) {
+    TlsModule& module = modules.module_table[i];
+    if (module.static_offset == SIZE_MAX) {
+      // All of the static modules come before all of the dynamic modules, so
+      // once we see the first dynamic module, we're done.
+      break;
+    }
+    if (module.segment.init_size == 0) {
+      // Skip the memcpy call for TLS segments with no initializer, which is
+      // common.
+      continue;
+    }
+    memcpy(static_cast<char*>(static_tls) + module.static_offset,
+           module.segment.init_ptr,
+           module.segment.init_size);
+  }
 }
