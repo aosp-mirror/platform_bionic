@@ -12,6 +12,7 @@ cc_library_static {
     recovery_available: true,
 
     include_dirs: ["bionic/libc"],
+    header_libs: ["libc_headers"],
 
     export_include_dirs: ["include"],
 }
