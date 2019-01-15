@@ -135,7 +135,8 @@ struct boot_params {
   __u8 _pad2[4];
   __u64 tboot_addr;
   struct ist_info ist_info;
-  __u8 _pad3[16];
+  __u64 acpi_rsdp_addr;
+  __u8 _pad3[8];
   __u8 hd0_info[16];
   __u8 hd1_info[16];
   struct sys_desc_table sys_desc_table;
