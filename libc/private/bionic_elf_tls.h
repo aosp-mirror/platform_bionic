@@ -61,6 +61,7 @@ private:
 public:
   size_t offset_bionic_tcb() const { return offset_bionic_tcb_; }
   size_t offset_bionic_tls() const { return offset_bionic_tls_; }
+  size_t offset_thread_pointer() const;
 
   size_t size() const { return offset_; }
   size_t alignment() const { return alignment_; }

@@ -71,6 +71,10 @@ bool __bionic_check_tls_alignment(size_t* alignment) {
   return true;
 }
 
+size_t StaticTlsLayout::offset_thread_pointer() const {
+  return offset_bionic_tcb_ + (-MIN_TLS_SLOT * sizeof(void*));
+}
+
 // Reserves space for the Bionic TCB and the executable's TLS segment. Returns
 // the offset of the executable's TLS segment.
 size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* exe_segment,
