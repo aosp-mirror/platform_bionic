@@ -20,13 +20,6 @@
 #define _UAPI_ASM_SIGINFO_H
 #define __ARCH_SIGEV_PREAMBLE_SIZE (sizeof(long) + 2 * sizeof(int))
 #undef __ARCH_SI_TRAPNO
-#if _MIPS_SZLONG == 32
-#define __ARCH_SI_PREAMBLE_SIZE (3 * sizeof(int))
-#elif _MIPS_SZLONG==64
-#define __ARCH_SI_PREAMBLE_SIZE (4 * sizeof(int))
-#else
-#error _MIPS_SZLONG neither 32 nor 64
-#endif
 #define __ARCH_HAS_SWAPPED_SIGINFO
 #include <asm-generic/siginfo.h>
 #undef SI_ASYNCIO

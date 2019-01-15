@@ -33,4 +33,16 @@ struct xt_cgroup_info_v1 {
   __u32 classid;
   void * priv __attribute__((aligned(8)));
 };
+#define XT_CGROUP_PATH_MAX 512
+struct xt_cgroup_info_v2 {
+  __u8 has_path;
+  __u8 has_classid;
+  __u8 invert_path;
+  __u8 invert_classid;
+  union {
+    char path[XT_CGROUP_PATH_MAX];
+    __u32 classid;
+  };
+  void * priv __attribute__((aligned(8)));
+};
 #endif

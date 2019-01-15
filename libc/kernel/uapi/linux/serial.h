@@ -100,4 +100,15 @@ struct serial_rs485 {
   __u32 delay_rts_after_send;
   __u32 padding[5];
 };
+struct serial_iso7816 {
+  __u32 flags;
+#define SER_ISO7816_ENABLED (1 << 0)
+#define SER_ISO7816_T_PARAM (0x0f << 4)
+#define SER_ISO7816_T(t) (((t) & 0x0f) << 4)
+  __u32 tg;
+  __u32 sc_fi;
+  __u32 sc_di;
+  __u32 clk;
+  __u32 reserved[5];
+};
 #endif
