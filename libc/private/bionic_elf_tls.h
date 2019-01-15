@@ -63,8 +63,11 @@ public:
   size_t alignment() const { return alignment_; }
   bool overflowed() const { return overflowed_; }
 
-  void reserve_tcb();
+  size_t reserve_exe_segment_and_tcb(const TlsSegment* exe_segment, const char* progname);
   void reserve_bionic_tls();
+  size_t reserve_solib_segment(const TlsSegment& segment) {
+    return reserve(segment.size, segment.alignment);
+  }
   void finish_layout();
 
 private:

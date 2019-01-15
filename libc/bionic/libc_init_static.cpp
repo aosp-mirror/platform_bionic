@@ -86,7 +86,7 @@ static void apply_gnu_relro() {
 static void layout_static_tls() {
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
   layout.reserve_bionic_tls();
-  layout.reserve_tcb();
+  layout.reserve_exe_segment_and_tcb(nullptr);
   layout.finish_layout();
 }
 

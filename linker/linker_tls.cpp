@@ -41,7 +41,7 @@ extern "C" void __linker_reserve_bionic_tls_in_static_tls() {
 // Stub for linker static TLS layout.
 void layout_linker_static_tls() {
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
-  layout.reserve_tcb();
+  layout.reserve_exe_segment_and_tcb(nullptr);
 
   // The pthread key data is located at the very front of bionic_tls. As a
   // temporary workaround, allocate bionic_tls just after the thread pointer so

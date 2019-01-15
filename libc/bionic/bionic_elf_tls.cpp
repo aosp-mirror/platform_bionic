@@ -65,8 +65,57 @@ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return false;
 }
 
-void StaticTlsLayout::reserve_tcb() {
-  offset_bionic_tcb_ = reserve_type<bionic_tcb>();
+// Reserves space for the Bionic TCB and the executable's TLS segment. Returns
+// the offset of the executable's TLS segment.
+size_t StaticTlsLayout::reserve_exe_segment_and_tcb(const TlsSegment* exe_segment,
+                                                    const char* progname __attribute__((unused))) {
+  // Special case: if the executable has no TLS segment, then just allocate a
+  // TCB and skip the minimum alignment check on ARM.
+  if (exe_segment == nullptr) {
+    offset_bionic_tcb_ = reserve_type<bionic_tcb>();
+    return 0;
+  }
+
+#if defined(__arm__) || defined(__aarch64__)
+
+  // First reserve enough space for the TCB before the executable segment.
+  reserve(sizeof(bionic_tcb), 1);
+
+  // Then reserve the segment itself.
+  const size_t result = reserve(exe_segment->size, exe_segment->alignment);
+
+  // The variant 1 ABI that ARM linkers follow specifies a 2-word TCB between
+  // the thread pointer and the start of the executable's TLS segment, but both
+  // the thread pointer and the TLS segment are aligned appropriately for the
+  // TLS segment. Calculate the distance between the thread pointer and the
+  // EXE's segment.
+  const size_t exe_tpoff = __BIONIC_ALIGN(sizeof(void*) * 2, exe_segment->alignment);
+
+  const size_t min_bionic_alignment = BIONIC_ROUND_UP_POWER_OF_2(MAX_TLS_SLOT) * sizeof(void*);
+  if (exe_tpoff < min_bionic_alignment) {
+    async_safe_fatal("error: \"%s\": executable's TLS segment is underaligned: "
+                     "alignment is %zu, needs to be at least %zu for %s Bionic",
+                     progname, exe_segment->alignment, min_bionic_alignment,
+                     (sizeof(void*) == 4 ? "ARM" : "ARM64"));
+  }
+
+  offset_bionic_tcb_ = result - exe_tpoff - (-MIN_TLS_SLOT * sizeof(void*));
+  return result;
+
+#elif defined(__i386__) || defined(__x86_64__)
+
+  // x86 uses variant 2 TLS layout. The executable's segment is located just
+  // before the TCB.
+  static_assert(MIN_TLS_SLOT == 0, "First slot of bionic_tcb must be slot #0 on x86");
+  const size_t exe_size = round_up_with_overflow_check(exe_segment->size, exe_segment->alignment);
+  reserve(exe_size, 1);
+  const size_t max_align = MAX(alignof(bionic_tcb), exe_segment->alignment);
+  offset_bionic_tcb_ = reserve(sizeof(bionic_tcb), max_align);
+  return offset_bionic_tcb_ - exe_size;
+
+#else
+#error "Unrecognized architecture"
+#endif
 }
 
 void StaticTlsLayout::reserve_bionic_tls() {
@@ -76,6 +125,10 @@ void StaticTlsLayout::reserve_bionic_tls() {
 void StaticTlsLayout::finish_layout() {
   // Round the offset up to the alignment.
   offset_ = round_up_with_overflow_check(offset_, alignment_);
+
+  if (overflowed_) {
+    async_safe_fatal("error: TLS segments in static TLS overflowed");
+  }
 }
 
 // The size is not required to be a multiple of the alignment. The alignment
