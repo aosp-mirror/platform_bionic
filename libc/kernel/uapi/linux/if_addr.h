@@ -38,6 +38,7 @@ enum {
   IFA_MULTICAST,
   IFA_FLAGS,
   IFA_RT_PRIORITY,
+  IFA_TARGET_NETNSID,
   __IFA_MAX,
 };
 #define IFA_MAX (__IFA_MAX - 1)

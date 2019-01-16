@@ -85,6 +85,8 @@
 #define TIOCGPTLCK _IOR('T', 0x39, int)
 #define TIOCGEXCL _IOR('T', 0x40, int)
 #define TIOCGPTPEER _IO('T', 0x41)
+#define TIOCGISO7816 _IOR('T', 0x42, struct serial_iso7816)
+#define TIOCSISO7816 _IOWR('T', 0x43, struct serial_iso7816)
 #define TIOCSCTTY 0x5480
 #define TIOCGSOFTCAR 0x5481
 #define TIOCSSOFTCAR 0x5482

@@ -137,6 +137,7 @@ struct prctl_mm_map {
 #define PR_GET_SPECULATION_CTRL 52
 #define PR_SET_SPECULATION_CTRL 53
 #define PR_SPEC_STORE_BYPASS 0
+#define PR_SPEC_INDIRECT_BRANCH 1
 #define PR_SPEC_NOT_AFFECTED 0
 #define PR_SPEC_PRCTL (1UL << 0)
 #define PR_SPEC_ENABLE (1UL << 1)

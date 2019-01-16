@@ -173,6 +173,7 @@ struct rdma_nla_ls_gid {
 enum rdma_nldev_command {
   RDMA_NLDEV_CMD_UNSPEC,
   RDMA_NLDEV_CMD_GET,
+  RDMA_NLDEV_CMD_SET,
   RDMA_NLDEV_CMD_PORT_GET = 5,
   RDMA_NLDEV_CMD_RES_GET = 9,
   RDMA_NLDEV_CMD_RES_QP_GET,

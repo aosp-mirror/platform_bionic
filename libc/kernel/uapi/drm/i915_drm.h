@@ -335,6 +335,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_HAS_EXEC_FENCE_ARRAY 49
 #define I915_PARAM_HAS_CONTEXT_ISOLATION 50
 #define I915_PARAM_CS_TIMESTAMP_FREQUENCY 51
+#define I915_PARAM_MMAP_GTT_COHERENT 52
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
