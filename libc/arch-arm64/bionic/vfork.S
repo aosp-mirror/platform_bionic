@@ -27,6 +27,7 @@
  */
 
 #include <private/bionic_asm.h>
+#include <private/bionic_asm_tls.h>
 #include <asm/signal.h>
 #include <linux/sched.h>
 
@@ -34,7 +35,7 @@ ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
     mrs     x0, tpidr_el0
-    ldr     x0, [x0, #8]
+    ldr     x0, [x0, #(TLS_SLOT_THREAD_ID * 8)]
     str     wzr, [x0, #20]
 
     mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)

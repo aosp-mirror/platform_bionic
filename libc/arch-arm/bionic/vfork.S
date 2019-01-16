@@ -27,12 +27,13 @@
  */
 
 #include <private/bionic_asm.h>
+#include <private/bionic_asm_tls.h>
 
 ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
     mrc     p15, 0, r3, c13, c0, 3
-    ldr     r3, [r3, #4]
+    ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
     mov     r0, #0
     str     r0, [r3, #12]
 
