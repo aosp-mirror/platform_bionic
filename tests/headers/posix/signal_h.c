@@ -53,7 +53,7 @@ static void signal_h() {
   STRUCT_MEMBER(struct sigevent, int, sigev_signo);
   STRUCT_MEMBER(struct sigevent, union sigval, sigev_value);
   STRUCT_MEMBER_FUNCTION_POINTER(struct sigevent, void (*f)(union sigval), sigev_notify_function);
-#if defined(__BIONIC__) || defined(__GLIBC__)
+#if defined(__BIONIC__)
   STRUCT_MEMBER(struct sigevent, void*, sigev_notify_attributes);
 #else
   STRUCT_MEMBER(struct sigevent, pthread_attr_t*, sigev_notify_attributes);
