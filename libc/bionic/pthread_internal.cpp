@@ -35,29 +35,12 @@
 
 #include <async_safe/log.h>
 
+#include "private/ScopedRWLock.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
 
 static pthread_internal_t* g_thread_list = nullptr;
 static pthread_rwlock_t g_thread_list_lock = PTHREAD_RWLOCK_INITIALIZER;
-
-template <bool write> class ScopedRWLock {
- public:
-  explicit ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
-    (write ? pthread_rwlock_wrlock : pthread_rwlock_rdlock)(rwlock_);
-  }
-
-  ~ScopedRWLock() {
-    pthread_rwlock_unlock(rwlock_);
-  }
-
- private:
-  pthread_rwlock_t* rwlock_;
-  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
-};
-
-typedef ScopedRWLock<true> ScopedWriteLock;
-typedef ScopedRWLock<false> ScopedReadLock;
 
 pthread_t __pthread_internal_add(pthread_internal_t* thread) {
   ScopedWriteLock locker(&g_thread_list_lock);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,18 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#include "private/__get_tls.h"
+#include <pthread.h>
 
-#if defined(__arm__)
-extern "C" void* __aeabi_read_tp();
-#endif
+#include "private/bionic_macros.h"
 
-TEST(aeabi, read_tp) {
-#if defined(__arm__)
-  ASSERT_EQ(__aeabi_read_tp(), static_cast<void*>(__get_tls()));
-#else
-  GTEST_LOG_(INFO) << "__aeabi_read_tp is only available on arm32.\n";
-#endif
-}
+template <bool write> class ScopedRWLock {
+ public:
+  explicit ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
+    (write ? pthread_rwlock_wrlock : pthread_rwlock_rdlock)(rwlock_);
+  }
+
+  ~ScopedRWLock() {
+    pthread_rwlock_unlock(rwlock_);
+  }
+
+ private:
+  pthread_rwlock_t* rwlock_;
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
+};
+
+typedef ScopedRWLock<true> ScopedWriteLock;
+typedef ScopedRWLock<false> ScopedReadLock;
