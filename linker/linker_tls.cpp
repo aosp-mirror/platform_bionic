@@ -28,20 +28,75 @@
 
 #include "linker_tls.h"
 
+#include <vector>
+
+#include "private/ScopedRWLock.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/linker_native_bridge.h"
+#include "linker_main.h"
+#include "linker_soinfo.h"
+
+static bool g_static_tls_finished;
+static std::vector<TlsModule> g_tls_modules;
+
+static size_t get_unused_module_index() {
+  for (size_t i = 0; i < g_tls_modules.size(); ++i) {
+    if (g_tls_modules[i].soinfo_ptr == nullptr) {
+      return i;
+    }
+  }
+  g_tls_modules.push_back({});
+  __libc_shared_globals()->tls_modules.module_count = g_tls_modules.size();
+  __libc_shared_globals()->tls_modules.module_table = g_tls_modules.data();
+  return g_tls_modules.size() - 1;
+}
+
+static void register_tls_module(soinfo* si, size_t static_offset) {
+  // The global TLS module table points at the std::vector of modules declared
+  // in this file, so acquire a write lock before modifying the std::vector.
+  ScopedWriteLock locker(&__libc_shared_globals()->tls_modules.rwlock);
+
+  size_t module_idx = get_unused_module_index();
+  TlsModule* module = &g_tls_modules[module_idx];
+
+  soinfo_tls* si_tls = si->get_tls();
+  si_tls->module_id = module_idx + 1;
+  si_tls->module = module;
+
+  *module = {
+    .segment = si_tls->segment,
+    .static_offset = static_offset,
+    .first_generation = ++__libc_shared_globals()->tls_modules.generation,
+    .soinfo_ptr = si,
+  };
+}
+
+static void unregister_tls_module(soinfo* si) {
+  ScopedWriteLock locker(&__libc_shared_globals()->tls_modules.rwlock);
+
+  soinfo_tls* si_tls = si->get_tls();
+  CHECK(si_tls->module->static_offset == SIZE_MAX);
+  CHECK(si_tls->module->soinfo_ptr == si);
+  *si_tls->module = {};
+  si_tls->module_id = kUninitializedModuleId;
+  si_tls->module = nullptr;
+}
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 extern "C" void __linker_reserve_bionic_tls_in_static_tls() {
   __libc_shared_globals()->static_tls_layout.reserve_bionic_tls();
 }
 
-// Stub for linker static TLS layout.
-void layout_linker_static_tls() {
+void linker_setup_exe_static_tls(const char* progname) {
+  soinfo* somain = solist_get_somain();
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
-  layout.reserve_tcb();
+  if (somain->get_tls() == nullptr) {
+    layout.reserve_exe_segment_and_tcb(nullptr, progname);
+  } else {
+    register_tls_module(somain, layout.reserve_exe_segment_and_tcb(&somain->get_tls()->segment, progname));
+  }
 
   // The pthread key data is located at the very front of bionic_tls. As a
   // temporary workaround, allocate bionic_tls just after the thread pointer so
@@ -49,8 +104,32 @@ void layout_linker_static_tls() {
   // small enough. Specifically, Golang scans forward 384 words from the TP on
   // ARM.
   //  - http://b/118381796
-  //  - https://groups.google.com/d/msg/golang-dev/yVrkFnYrYPE/2G3aFzYqBgAJ
+  //  - https://github.com/golang/go/issues/29674
   __linker_reserve_bionic_tls_in_static_tls();
+}
 
-  layout.finish_layout();
+void linker_finalize_static_tls() {
+  g_static_tls_finished = true;
+  __libc_shared_globals()->static_tls_layout.finish_layout();
+}
+
+void register_soinfo_tls(soinfo* si) {
+  soinfo_tls* si_tls = si->get_tls();
+  if (si_tls == nullptr || si_tls->module_id != kUninitializedModuleId) {
+    return;
+  }
+  size_t static_offset = SIZE_MAX;
+  if (!g_static_tls_finished) {
+    StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+    static_offset = layout.reserve_solib_segment(si_tls->segment);
+  }
+  register_tls_module(si, static_offset);
+}
+
+void unregister_soinfo_tls(soinfo* si) {
+  soinfo_tls* si_tls = si->get_tls();
+  if (si_tls == nullptr || si_tls->module_id == kUninitializedModuleId) {
+    return;
+  }
+  return unregister_tls_module(si);
 }
