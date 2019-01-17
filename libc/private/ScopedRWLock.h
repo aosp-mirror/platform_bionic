@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
-#include <private/bionic_asm_tls.h>
+#pragma once
 
-ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-    mrc     p15, 0, r3, c13, c0, 3
-    ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
-    mov     r0, #0
-    str     r0, [r3, #12]
+#include <pthread.h>
 
-    mov     ip, r7
-    ldr     r7, =__NR_vfork
-    swi     #0
-    mov     r7, ip
-    cmn     r0, #(MAX_ERRNO + 1)
-    bxls    lr
-    neg     r0, r0
-    b       __set_errno_internal
-END(vfork)
+#include "private/bionic_macros.h"
+
+template <bool write> class ScopedRWLock {
+ public:
+  explicit ScopedRWLock(pthread_rwlock_t* rwlock) : rwlock_(rwlock) {
+    (write ? pthread_rwlock_wrlock : pthread_rwlock_rdlock)(rwlock_);
+  }
+
+  ~ScopedRWLock() {
+    pthread_rwlock_unlock(rwlock_);
+  }
+
+ private:
+  pthread_rwlock_t* rwlock_;
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(ScopedRWLock);
+};
+
+typedef ScopedRWLock<true> ScopedWriteLock;
+typedef ScopedRWLock<false> ScopedReadLock;

@@ -641,42 +641,6 @@ static void install_hooks(libc_globals* globals, const char* options,
   }
 }
 
-extern "C" void InstallInitHeapprofdHook(int);
-
-// Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
-  struct sigaction action = {};
-  action.sa_handler = InstallInitHeapprofdHook;
-  sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
-
-  const char* prefix;
-  const char* shared_lib;
-  char prop[PROP_VALUE_MAX];
-  char* options = prop;
-  // Prefer malloc debug since it existed first and is a more complete
-  // malloc interceptor than the hooks.
-  if (CheckLoadMallocDebug(&options)) {
-    prefix = "debug";
-    shared_lib = DEBUG_SHARED_LIB;
-  } else if (CheckLoadMallocHooks(&options)) {
-    prefix = "hooks";
-    shared_lib = HOOKS_SHARED_LIB;
-  } else if (CheckLoadHeapprofd()) {
-    prefix = "heapprofd";
-    shared_lib = HEAPPROFD_SHARED_LIB;
-  } else {
-    return;
-  }
-  install_hooks(globals, options, prefix, shared_lib);
-}
-
-// Initializes memory allocation framework.
-// This routine is called from __libc_init routines in libc_init_dynamic.cpp.
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE
-__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
-  malloc_init_impl(globals);
-}
-
 // The logic for triggering heapprofd below is as following.
 // 1. HEAPPROFD_SIGNAL is received by the process.
 // 2. If neither InitHeapprofd nor InitHeapprofdHook are currently installed
@@ -703,6 +667,45 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 
 static _Atomic bool g_heapprofd_init_in_progress = false;
 static _Atomic bool g_heapprofd_init_hook_installed = false;
+
+extern "C" void InstallInitHeapprofdHook(int);
+
+// Initializes memory allocation framework once per process.
+static void malloc_init_impl(libc_globals* globals) {
+  struct sigaction action = {};
+  action.sa_handler = InstallInitHeapprofdHook;
+  sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
+
+  const char* prefix;
+  const char* shared_lib;
+  char prop[PROP_VALUE_MAX];
+  char* options = prop;
+  // Prefer malloc debug since it existed first and is a more complete
+  // malloc interceptor than the hooks.
+  if (CheckLoadMallocDebug(&options)) {
+    prefix = "debug";
+    shared_lib = DEBUG_SHARED_LIB;
+  } else if (CheckLoadMallocHooks(&options)) {
+    prefix = "hooks";
+    shared_lib = HOOKS_SHARED_LIB;
+  } else if (CheckLoadHeapprofd()) {
+    prefix = "heapprofd";
+    shared_lib = HEAPPROFD_SHARED_LIB;
+  } else {
+    return;
+  }
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    install_hooks(globals, options, prefix, shared_lib);
+    atomic_store(&g_heapprofd_init_in_progress, false);
+  }
+}
+
+// Initializes memory allocation framework.
+// This routine is called from __libc_init routines in libc_init_dynamic.cpp.
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+__LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
+  malloc_init_impl(globals);
+}
 
 static void* InitHeapprofd(void*) {
   __libc_globals.mutate([](libc_globals* globals) {

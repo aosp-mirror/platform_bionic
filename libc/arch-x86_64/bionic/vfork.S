@@ -27,6 +27,7 @@
  */
 
 #include <private/bionic_asm.h>
+#include <private/bionic_asm_tls.h>
 
 // This custom code preserves the return address across the system call.
 
@@ -36,7 +37,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
 
   // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
   mov    %fs:0, %rax
-  mov    8(%rax), %rax
+  mov    (TLS_SLOT_THREAD_ID * 8)(%rax), %rax
   movl   $0, 20(%rax)
 
   movl    $__NR_vfork, %eax
