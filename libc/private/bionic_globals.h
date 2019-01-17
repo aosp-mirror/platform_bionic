@@ -69,6 +69,7 @@ struct libc_shared_globals {
   abort_msg_t* abort_msg = nullptr;
 
   StaticTlsLayout static_tls_layout;
+  TlsModules tls_modules;
 
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;

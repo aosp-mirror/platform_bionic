@@ -83,10 +83,29 @@ static void apply_gnu_relro() {
   }
 }
 
-static void layout_static_tls() {
+static void layout_static_tls(KernelArgumentBlock& args) {
   StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
   layout.reserve_bionic_tls();
-  layout.reserve_tcb();
+
+  const char* progname = args.argv[0];
+  ElfW(Phdr)* phdr_start = reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR));
+  size_t phdr_ct = getauxval(AT_PHNUM);
+
+  static TlsModule mod;
+  if (__bionic_get_tls_segment(phdr_start, phdr_ct, 0, &mod.segment)) {
+    if (!__bionic_check_tls_alignment(&mod.segment.alignment)) {
+      async_safe_fatal("error: TLS segment alignment in \"%s\" is not a power of 2: %zu\n",
+                       progname, mod.segment.alignment);
+    }
+    mod.static_offset = layout.reserve_exe_segment_and_tcb(&mod.segment, progname);
+    mod.first_generation = 1;
+    __libc_shared_globals()->tls_modules.generation = 1;
+    __libc_shared_globals()->tls_modules.module_count = 1;
+    __libc_shared_globals()->tls_modules.module_table = &mod;
+  } else {
+    layout.reserve_exe_segment_and_tcb(nullptr, progname);
+  }
+
   layout.finish_layout();
 }
 
@@ -111,7 +130,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_globals();
   __libc_shared_globals()->init_progname = args.argv[0];
   __libc_init_AT_SECURE(args.envp);
-  layout_static_tls();
+  layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
 
