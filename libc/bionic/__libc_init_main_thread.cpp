@@ -126,6 +126,7 @@ extern "C" void __libc_init_main_thread_final() {
   auto new_tcb = reinterpret_cast<bionic_tcb*>(mapping.static_tls + layout.offset_bionic_tcb());
   auto new_tls = reinterpret_cast<bionic_tls*>(mapping.static_tls + layout.offset_bionic_tls());
 
+  __init_static_tls(mapping.static_tls);
   new_tcb->copy_from_bootstrap(temp_tcb);
   new_tls->copy_from_bootstrap(temp_tls);
   __init_tcb(new_tcb, &main_thread);

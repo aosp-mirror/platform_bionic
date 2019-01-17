@@ -288,7 +288,8 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   auto tcb = reinterpret_cast<bionic_tcb*>(mapping.static_tls + layout.offset_bionic_tcb());
   auto tls = reinterpret_cast<bionic_tls*>(mapping.static_tls + layout.offset_bionic_tls());
 
-  // (Re)initialize TLS pointers.
+  // Initialize TLS memory.
+  __init_static_tls(mapping.static_tls);
   __init_tcb(tcb, thread);
   __init_tcb_stack_guard(tcb);
   __init_bionic_tls_ptrs(tcb, tls);
