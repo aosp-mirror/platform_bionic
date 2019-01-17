@@ -41,24 +41,13 @@
 // Search for a TLS segment in the given phdr table. Returns true if it has a
 // TLS segment and false otherwise.
 bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                              ElfW(Addr) load_bias, const char* mod_name,
-                              TlsSegment* out) {
+                              ElfW(Addr) load_bias, TlsSegment* out) {
   for (size_t i = 0; i < phdr_count; ++i) {
     const ElfW(Phdr)& phdr = phdr_table[i];
     if (phdr.p_type == PT_TLS) {
-      // N.B. The size does not need to be a multiple of the alignment. With
-      // ld.bfd (or after using binutils' strip), the TLS segment's size isn't
-      // rounded up.
-      size_t alignment = phdr.p_align;
-      if (alignment == 0 || !powerof2(alignment)) {
-        async_safe_fatal("error: \"%s\": TLS segment alignment is not a power of 2: %zu",
-                         mod_name, alignment);
-      }
-      // Bionic only respects TLS alignment up to one page.
-      alignment = MIN(alignment, PAGE_SIZE);
       *out = TlsSegment {
         phdr.p_memsz,
-        alignment,
+        phdr.p_align,
         reinterpret_cast<void*>(load_bias + phdr.p_vaddr),
         phdr.p_filesz,
       };
@@ -66,6 +55,20 @@ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
     }
   }
   return false;
+}
+
+// Return true if the alignment of a TLS segment is a valid power-of-two. Also
+// cap the alignment if it's too high.
+bool __bionic_check_tls_alignment(size_t* alignment) {
+  // N.B. The size does not need to be a multiple of the alignment. With
+  // ld.bfd (or after using binutils' strip), the TLS segment's size isn't
+  // rounded up.
+  if (*alignment == 0 || !powerof2(*alignment)) {
+    return false;
+  }
+  // Bionic only respects TLS alignment up to one page.
+  *alignment = MIN(*alignment, PAGE_SIZE);
+  return true;
 }
 
 // Reserves space for the Bionic TCB and the executable's TLS segment. Returns

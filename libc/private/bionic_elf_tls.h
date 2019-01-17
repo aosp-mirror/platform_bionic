@@ -42,8 +42,9 @@ struct TlsSegment {
 };
 
 __LIBC_HIDDEN__ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                              ElfW(Addr) load_bias, const char* mod_name,
-                                              TlsSegment* out);
+                                              ElfW(Addr) load_bias, TlsSegment* out);
+
+__LIBC_HIDDEN__ bool __bionic_check_tls_alignment(size_t* alignment);
 
 struct StaticTlsLayout {
   constexpr StaticTlsLayout() {}

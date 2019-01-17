@@ -3078,7 +3078,14 @@ bool soinfo::prelink_image() {
 #endif
 
   TlsSegment tls_segment;
-  if (__bionic_get_tls_segment(phdr, phnum, load_bias, get_realpath(), &tls_segment)) {
+  if (__bionic_get_tls_segment(phdr, phnum, load_bias, &tls_segment)) {
+    if (!__bionic_check_tls_alignment(&tls_segment.alignment)) {
+      if (!relocating_linker) {
+        DL_ERR("TLS segment alignment in \"%s\" is not a power of 2: %zu",
+               get_realpath(), tls_segment.alignment);
+      }
+      return false;
+    }
     tls_ = std::make_unique<soinfo_tls>();
     tls_->segment = tls_segment;
   }

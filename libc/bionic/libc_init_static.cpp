@@ -91,13 +91,17 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   ElfW(Phdr)* phdr_start = reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR));
   size_t phdr_ct = getauxval(AT_PHNUM);
 
-  static TlsModule module;
-  if (__bionic_get_tls_segment(phdr_start, phdr_ct, 0, progname, &module.segment)) {
-    module.static_offset = layout.reserve_exe_segment_and_tcb(&module.segment, progname);
-    module.first_generation = 1;
+  static TlsModule mod;
+  if (__bionic_get_tls_segment(phdr_start, phdr_ct, 0, &mod.segment)) {
+    if (!__bionic_check_tls_alignment(&mod.segment.alignment)) {
+      async_safe_fatal("error: TLS segment alignment in \"%s\" is not a power of 2: %zu\n",
+                       progname, mod.segment.alignment);
+    }
+    mod.static_offset = layout.reserve_exe_segment_and_tcb(&mod.segment, progname);
+    mod.first_generation = 1;
     __libc_shared_globals()->tls_modules.generation = 1;
     __libc_shared_globals()->tls_modules.module_count = 1;
-    __libc_shared_globals()->tls_modules.module_table = &module;
+    __libc_shared_globals()->tls_modules.module_table = &mod;
   } else {
     layout.reserve_exe_segment_and_tcb(nullptr, progname);
   }
