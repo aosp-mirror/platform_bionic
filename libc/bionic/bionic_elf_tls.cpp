@@ -28,10 +28,42 @@
 
 #include "private/bionic_elf_tls.h"
 
+#include <async_safe/log.h>
 #include <sys/param.h>
+#include <unistd.h>
 
 #include "private/bionic_macros.h"
 #include "private/bionic_tls.h"
+
+// Search for a TLS segment in the given phdr table. Returns true if it has a
+// TLS segment and false otherwise.
+bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                              ElfW(Addr) load_bias, const char* mod_name,
+                              TlsSegment* out) {
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)& phdr = phdr_table[i];
+    if (phdr.p_type == PT_TLS) {
+      // N.B. The size does not need to be a multiple of the alignment. With
+      // ld.bfd (or after using binutils' strip), the TLS segment's size isn't
+      // rounded up.
+      size_t alignment = phdr.p_align;
+      if (alignment == 0 || !powerof2(alignment)) {
+        async_safe_fatal("error: \"%s\": TLS segment alignment is not a power of 2: %zu",
+                         mod_name, alignment);
+      }
+      // Bionic only respects TLS alignment up to one page.
+      alignment = MIN(alignment, PAGE_SIZE);
+      *out = TlsSegment {
+        phdr.p_memsz,
+        alignment,
+        reinterpret_cast<void*>(load_bias + phdr.p_vaddr),
+        phdr.p_filesz,
+      };
+      return true;
+    }
+  }
+  return false;
+}
 
 void StaticTlsLayout::reserve_tcb() {
   offset_bionic_tcb_ = reserve_type<bionic_tcb>();

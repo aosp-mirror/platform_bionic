@@ -28,7 +28,20 @@
 
 #pragma once
 
+#include <link.h>
 #include <stdint.h>
+#include <sys/cdefs.h>
+
+struct TlsSegment {
+  size_t size = 0;
+  size_t alignment = 1;
+  const void* init_ptr = "";    // Field is non-null even when init_size is 0.
+  size_t init_size = 0;
+};
+
+__LIBC_HIDDEN__ bool __bionic_get_tls_segment(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                              ElfW(Addr) load_bias, const char* mod_name,
+                                              TlsSegment* out);
 
 struct StaticTlsLayout {
   constexpr StaticTlsLayout() {}

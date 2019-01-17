@@ -87,11 +87,9 @@
 #define TLS_SLOT_STACK_GUARD      5
 #define TLS_SLOT_SANITIZER        6 // was historically used for dlerror
 #define TLS_SLOT_ART_THREAD_SELF  7
-#define TLS_SLOT_TSAN             8 // should be replaced with TLS_SLOT_SANITIZER
 
 // The maximum slot is fixed by the minimum TLS alignment in Bionic executables.
-// It should be changed to 7 once TLS_SLOT_TSAN is removed.
-#define MAX_TLS_SLOT              8
+#define MAX_TLS_SLOT              7
 
 #elif defined(__i386__) || defined(__x86_64__)
 
@@ -109,10 +107,9 @@
 #define TLS_SLOT_STACK_GUARD      5
 #define TLS_SLOT_SANITIZER        6 // was historically used for dlerror
 #define TLS_SLOT_ART_THREAD_SELF  7
-#define TLS_SLOT_TSAN             8 // should be replaced with TLS_SLOT_SANITIZER
-#define TLS_SLOT_DTV              9
-#define TLS_SLOT_BIONIC_TLS       10
-#define MAX_TLS_SLOT              10 // update this value when reserving a slot
+#define TLS_SLOT_DTV              8
+#define TLS_SLOT_BIONIC_TLS       9
+#define MAX_TLS_SLOT              9 // update this value when reserving a slot
 
 #endif
 
