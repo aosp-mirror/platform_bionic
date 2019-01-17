@@ -280,7 +280,7 @@
  */
 #  define __BIONIC_FORTIFY_VARIADIC static __inline__
 /* Error functions don't have bodies, so they can just be static. */
-#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static
+#  define __BIONIC_ERROR_FUNCTION_VISIBILITY static __attribute__((unused))
 #else
 /* Further increase sharing for some inline functions */
 #  define __pass_object_size_n(n)
