@@ -601,6 +601,9 @@ class LoadTask {
   }
 
   void set_fd(int fd, bool assume_ownership) {
+    if (fd_ != -1 && close_fd_) {
+      close(fd_);
+    }
     fd_ = fd;
     close_fd_ = assume_ownership;
   }
