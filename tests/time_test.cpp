@@ -607,9 +607,9 @@ TEST(time, clock_gettime) {
     ts2.tv_nsec += NS_PER_S;
   }
 
-  // Should be less than (a very generous, to try to avoid flakiness) 1000000ns.
+  // To try to avoid flakiness we'll accept answers within 10,000,000ns (0.01s).
   ASSERT_EQ(0, ts2.tv_sec);
-  ASSERT_LT(ts2.tv_nsec, 1000000);
+  ASSERT_LT(ts2.tv_nsec, 10'000'000);
 }
 
 TEST(time, clock_gettime_CLOCK_REALTIME) {
