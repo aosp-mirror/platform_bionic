@@ -35,10 +35,10 @@
 
 #include <android-base/macros.h>
 
-#define LD_LOG(type, x...) \
-  { \
-    g_linker_logger.Log(type, x); \
-  }
+#define LD_LOG(type, x...)                                       \
+  do {                                                           \
+    if (g_linker_logger.IsEnabled(type)) g_linker_logger.Log(x); \
+  } while (0)
 
 constexpr const uint32_t kLogErrors = 1 << 0;
 constexpr const uint32_t kLogDlopen = 1 << 1;
@@ -49,7 +49,12 @@ class LinkerLogger {
   LinkerLogger() : flags_(0) { }
 
   void ResetState();
-  void Log(uint32_t type, const char* format, ...);
+  void Log(const char* format, ...);
+
+  uint32_t IsEnabled(uint32_t type) {
+    return flags_ & type;
+  }
+
  private:
   uint32_t flags_;
 
