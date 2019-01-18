@@ -110,7 +110,6 @@ static constexpr size_t kUninitializedModuleId = 0;
 struct soinfo_tls {
   TlsSegment segment;
   size_t module_id = kUninitializedModuleId;
-  TlsModule* module = nullptr;
 };
 
 #if defined(__work_around_b_24465209__)
