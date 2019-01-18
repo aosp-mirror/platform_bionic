@@ -74,6 +74,7 @@ extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
   __libc_init_sysinfo(); // uses AT_SYSINFO auxv entry
 #endif
   __init_tcb(temp_tcb, &main_thread);
+  __init_tcb_dtv(temp_tcb);
   __set_tls(&temp_tcb->tls_slot(0));
   main_thread.tid = __getpid();
   main_thread.set_cached_pid(main_thread.tid);
