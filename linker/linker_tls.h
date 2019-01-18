@@ -28,6 +28,9 @@
 
 #pragma once
 
+#include <stdlib.h>
+
+struct TlsModule;
 struct soinfo;
 
 void linker_setup_exe_static_tls(const char* progname);
@@ -35,3 +38,5 @@ void linker_finalize_static_tls();
 
 void register_soinfo_tls(soinfo* si);
 void unregister_soinfo_tls(soinfo* si);
+
+const TlsModule& get_tls_module(size_t module_id);
