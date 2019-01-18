@@ -41,6 +41,9 @@
 static bool g_static_tls_finished;
 static std::vector<TlsModule> g_tls_modules;
 
+static inline size_t module_id_to_idx(size_t id) { return id - 1; }
+static inline size_t module_idx_to_id(size_t idx) { return idx + 1; }
+
 static size_t get_unused_module_index() {
   for (size_t i = 0; i < g_tls_modules.size(); ++i) {
     if (g_tls_modules[i].soinfo_ptr == nullptr) {
@@ -59,13 +62,11 @@ static void register_tls_module(soinfo* si, size_t static_offset) {
   ScopedWriteLock locker(&__libc_shared_globals()->tls_modules.rwlock);
 
   size_t module_idx = get_unused_module_index();
-  TlsModule* module = &g_tls_modules[module_idx];
 
   soinfo_tls* si_tls = si->get_tls();
-  si_tls->module_id = module_idx + 1;
-  si_tls->module = module;
+  si_tls->module_id = module_idx_to_id(module_idx);
 
-  *module = {
+  g_tls_modules[module_idx] = {
     .segment = si_tls->segment,
     .static_offset = static_offset,
     .first_generation = ++__libc_shared_globals()->tls_modules.generation,
@@ -77,11 +78,18 @@ static void unregister_tls_module(soinfo* si) {
   ScopedWriteLock locker(&__libc_shared_globals()->tls_modules.rwlock);
 
   soinfo_tls* si_tls = si->get_tls();
-  CHECK(si_tls->module->static_offset == SIZE_MAX);
-  CHECK(si_tls->module->soinfo_ptr == si);
-  *si_tls->module = {};
+  TlsModule& mod = g_tls_modules[module_id_to_idx(si_tls->module_id)];
+  CHECK(mod.static_offset == SIZE_MAX);
+  CHECK(mod.soinfo_ptr == si);
+  mod = {};
   si_tls->module_id = kUninitializedModuleId;
-  si_tls->module = nullptr;
+}
+
+// The reference is valid until a TLS module is registered or unregistered.
+const TlsModule& get_tls_module(size_t module_id) {
+  size_t module_idx = module_id_to_idx(module_id);
+  CHECK(module_idx < g_tls_modules.size());
+  return g_tls_modules[module_idx];
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
