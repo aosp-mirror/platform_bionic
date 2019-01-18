@@ -118,11 +118,7 @@ void LinkerLogger::ResetState() {
   flags_ |= ParseProperty(debug_ld_app);
 }
 
-void LinkerLogger::Log(uint32_t type, const char* format, ...) {
-  if ((flags_ & type) == 0) {
-    return;
-  }
-
+void LinkerLogger::Log(const char* format, ...) {
   va_list ap;
   va_start(ap, format);
   async_safe_format_log_va_list(ANDROID_LOG_DEBUG, "linker", format, ap);
