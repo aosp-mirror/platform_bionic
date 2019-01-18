@@ -2925,8 +2925,9 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
             // Unresolved weak relocation. Leave tpoff at 0 to resolve
             // &weak_tls_symbol to __get_tls().
           } else if (soinfo_tls* lsi_tls = lsi->get_tls()) {
-            if (lsi_tls->module->static_offset != SIZE_MAX) {
-              tpoff += lsi_tls->module->static_offset - tls_tp_base;
+            const TlsModule& mod = get_tls_module(lsi_tls->module_id);
+            if (mod.static_offset != SIZE_MAX) {
+              tpoff += mod.static_offset - tls_tp_base;
             } else {
               DL_ERR("TLS symbol \"%s\" in dlopened \"%s\" referenced from \"%s\" using IE access model",
                      sym_name, lsi->get_realpath(), get_realpath());
