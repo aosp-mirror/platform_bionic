@@ -21,11 +21,12 @@
 #
 # Dependencies
 #
-# libtest_dt_runpath_d.so                       runpath: ${ORIGIN}/dt_runpath_b_c_x
+# libtest_dt_runpath_d.so                       runpath: ${ORIGIN}/dt_runpath_b_c_x, ${ORIGIN}/dt_runpath_y/${LIB}
 # |-> dt_runpath_b_c_x/libtest_dt_runpath_b.so  runpath: ${ORIGIN}/../dt_runpath_a
 # |   |-> dt_runpath_a/libtest_dt_runpath_a.so
 # |-> dt_runpath_b_c_x/libtest_dt_runpath_c.so  runpath: ${ORIGIN}/invalid_dt_runpath
 # |   |-> libtest_dt_runpath_a.so (soname)
+# |-> dt_runpath_y/lib[64]/libtest_dt_runpath_y.so
 #
 # This one is used to test dlopen
 # dt_runpath_b_c_x/libtest_dt_runpath_x.so
@@ -61,12 +62,18 @@ libtest_dt_runpath_c_relative_path := dt_runpath_b_c_x
 module := libtest_dt_runpath_c
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
-# D depends on B and C with DT_RUNPATH.
+# D depends on B, C, and Y with DT_RUNPATH.
 libtest_dt_runpath_d_src_files := \
     dlopen_b.cpp
 
-libtest_dt_runpath_d_shared_libraries := libtest_dt_runpath_b libtest_dt_runpath_c
-libtest_dt_runpath_d_ldflags := -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x -Wl,--enable-new-dtags
+libtest_dt_runpath_d_shared_libraries := \
+    libtest_dt_runpath_b \
+    libtest_dt_runpath_c \
+    libtest_dt_runpath_y
+libtest_dt_runpath_d_ldflags := \
+    -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x \
+    -Wl,--rpath,\$${ORIGIN}/dt_runpath_y/\$${LIB} \
+    -Wl,--enable-new-dtags
 libtest_dt_runpath_d_ldlibs := -ldl
 module := libtest_dt_runpath_d
 include $(LOCAL_PATH)/Android.build.testlib.mk
@@ -77,8 +84,14 @@ module := libtest_dt_runpath_d_zip
 libtest_dt_runpath_d_zip_src_files := \
     dlopen_b.cpp
 
-libtest_dt_runpath_d_zip_shared_libraries := libtest_dt_runpath_b libtest_dt_runpath_c
-libtest_dt_runpath_d_zip_ldflags := -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x -Wl,--enable-new-dtags
+libtest_dt_runpath_d_zip_shared_libraries := \
+    libtest_dt_runpath_b \
+    libtest_dt_runpath_c \
+    libtest_dt_runpath_y
+libtest_dt_runpath_d_zip_ldflags := \
+    -Wl,--rpath,\$${ORIGIN}/dt_runpath_b_c_x \
+    -Wl,--rpath,\$${ORIGIN}/dt_runpath_y/\$${LIB} \
+    -Wl,--enable-new-dtags
 libtest_dt_runpath_d_zip_ldlibs := -ldl
 libtest_dt_runpath_d_zip_install_to_native_tests_dir := $(module)
 
@@ -96,3 +109,20 @@ libtest_dt_runpath_x_relative_path := dt_runpath_b_c_x
 module := libtest_dt_runpath_x
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
+# A leaf library in lib or lib64 directory
+libtest_dt_runpath_y_src_files := \
+    empty.cpp
+
+ifeq ($(TARGET_TRANSLATE_2ND_ARCH),true)
+libtest_dt_runpath_y_install_to_native_tests_dir_32 := bionic-loader-test-libs/dt_runpath_y/lib/$(TARGET_2ND_ARCH)
+else
+libtest_dt_runpath_y_install_to_native_tests_dir_32 := bionic-loader-test-libs/dt_runpath_y/lib
+endif
+ifeq ($(TARGET_IS_64_BIT),true)
+libtest_dt_runpath_y_install_to_native_tests_dir_64 := bionic-loader-test-libs/dt_runpath_y/lib64
+else
+libtest_dt_runpath_y_install_to_native_tests_dir_64 := bionic-loader-test-libs/dt_runpath_y/lib
+endif
+
+module := libtest_dt_runpath_y
+include $(LOCAL_PATH)/Android.build.testlib.mk
