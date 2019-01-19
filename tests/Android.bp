@@ -520,6 +520,7 @@ cc_test {
         "libtest_dt_runpath_b",
         "libtest_dt_runpath_c",
         "libtest_dt_runpath_x",
+        "libtest_dt_runpath_y",
         "libatest_simple_zip",
         "libcfi-test",
         "libcfi-test-bad",
