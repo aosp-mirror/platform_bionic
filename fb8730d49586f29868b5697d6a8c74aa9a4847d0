@@ -46,6 +46,29 @@
       "revId": "fb8730d49586f29868b5697d6a8c74aa9a4847d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cacddeb_235cc751",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2723,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-01-20T16:14:02Z",
+      "side": 1,
+      "message": "are there other cases of STB_LOCAL in dynsym? maybe it should result in error for non_tls relocs as well?",
+      "range": {
+        "startLine": 2723,
+        "startChar": 52,
+        "endLine": 2723,
+        "endChar": 61
+      },
+      "revId": "fb8730d49586f29868b5697d6a8c74aa9a4847d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
