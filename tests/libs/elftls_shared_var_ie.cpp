@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,44 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+// Accessing a symbol in libtest_elftls_shared_var.so using an IE access should
+// work iff the solib is part of static TLS.
+__attribute__((tls_model("initial-exec"))) extern "C" __thread int elftls_shared_var;
 
-#include <stdlib.h>
-#include <limits.h>
-
-#include "private/bionic_systrace.h"
-
-#include <android-base/macros.h>
-
-#define LD_LOG(type, x...)                                       \
-  do {                                                           \
-    if (g_linker_logger.IsEnabled(type)) g_linker_logger.Log(x); \
-  } while (0)
-
-constexpr const uint32_t kLogErrors = 1 << 0;
-constexpr const uint32_t kLogDlopen = 1 << 1;
-constexpr const uint32_t kLogDlsym  = 1 << 2;
-
-class LinkerLogger {
- public:
-  LinkerLogger() : flags_(0) { }
-
-  void ResetState();
-  void Log(const char* format, ...);
-
-  uint32_t IsEnabled(uint32_t type) {
-    return flags_ & type;
-  }
-
- private:
-  uint32_t flags_;
-
-  DISALLOW_COPY_AND_ASSIGN(LinkerLogger);
-};
-
-extern LinkerLogger g_linker_logger;
-extern char** g_argv;
-
-// If the system property debug.ld.greylist_disabled is true, we'll not use the greylist
-// regardless of API level.
-extern bool g_greylist_disabled;
+extern "C" int bump_shared_var() {
+  return ++elftls_shared_var;
+}

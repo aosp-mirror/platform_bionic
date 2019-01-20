@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,44 +26,26 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+// This shared object tests TPREL relocations in the dynamic linker. It's always
+// part of static TLS.
 
-#include <stdlib.h>
-#include <limits.h>
+// For accesses to these variables, the bfd and lld linkers generate a TPREL
+// relocation with no symbol but a non-zero addend.
+__attribute__((tls_model("initial-exec"))) static __thread int tls_var_1 = 3;
+__attribute__((tls_model("initial-exec"))) static __thread int tls_var_2 = 7;
 
-#include "private/bionic_systrace.h"
+extern "C" int bump_static_tls_var_1() {
+  return ++tls_var_1;
+}
 
-#include <android-base/macros.h>
+extern "C" int bump_static_tls_var_2() {
+  return ++tls_var_2;
+}
 
-#define LD_LOG(type, x...)                                       \
-  do {                                                           \
-    if (g_linker_logger.IsEnabled(type)) g_linker_logger.Log(x); \
-  } while (0)
+__attribute__((tls_model("initial-exec"), weak)) extern "C" __thread int missing_weak_tls;
 
-constexpr const uint32_t kLogErrors = 1 << 0;
-constexpr const uint32_t kLogDlopen = 1 << 1;
-constexpr const uint32_t kLogDlsym  = 1 << 2;
-
-class LinkerLogger {
- public:
-  LinkerLogger() : flags_(0) { }
-
-  void ResetState();
-  void Log(const char* format, ...);
-
-  uint32_t IsEnabled(uint32_t type) {
-    return flags_ & type;
-  }
-
- private:
-  uint32_t flags_;
-
-  DISALLOW_COPY_AND_ASSIGN(LinkerLogger);
-};
-
-extern LinkerLogger g_linker_logger;
-extern char** g_argv;
-
-// If the system property debug.ld.greylist_disabled is true, we'll not use the greylist
-// regardless of API level.
-extern bool g_greylist_disabled;
+extern "C" int* missing_weak_tls_addr() {
+  // The dynamic linker should resolve a TPREL relocation to this symbol to 0,
+  // which this function adds to the thread pointer.
+  return &missing_weak_tls;
+}

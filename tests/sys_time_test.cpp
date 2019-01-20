@@ -147,7 +147,7 @@ TEST(sys_time, gettimeofday) {
     tv2.tv_usec += 1000000;
   }
 
-  // Should be less than (a very generous, to try to avoid flakiness) 5ms (5000us).
+  // To try to avoid flakiness we'll accept answers within 10,000us (0.01s).
   ASSERT_EQ(0, tv2.tv_sec);
-  ASSERT_LT(tv2.tv_usec, 5000);
+  ASSERT_LT(tv2.tv_usec, 10'000);
 }
