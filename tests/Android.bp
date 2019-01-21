@@ -390,7 +390,7 @@ cc_test_library {
                 "libdl_test.cpp",
             ],
             static_libs: [
-                "libpagemap",
+                "libmeminfo",
                 "libziparchive",
                 "libLLVMObject",
                 "libLLVMBitReader",
@@ -475,7 +475,7 @@ cc_defaults {
             static_libs: [
                 // The order of these libraries matters, do not shuffle them.
                 "libbase",
-                "libpagemap",
+                "libmeminfo",
                 "libziparchive",
                 "libz",
                 "libutils",
