@@ -29,17 +29,21 @@
 # This file is processed by a python script named genseccomp.py.
 
 # Note: Some privileged syscalls are still needed in app process after fork before uid change,
-# including capset and setresuid.
+# including capset and setresuid. This is because the seccomp filter must be installed while
+# the process still has CAP_SYS_ADMIN; changing the uid would remove that capability.
 
 # syscalls to modify IDs
 int     setgid:setgid32(gid_t)     arm,x86
 int     setgid:setgid(gid_t)       arm64,mips,mips64,x86_64
 int     setuid:setuid32(uid_t)    arm,x86
 int     setuid:setuid(uid_t)      arm64,mips,mips64,x86_64
+int     setregid:setregid32(gid_t, gid_t)  arm,x86
+int     setregid:setregid(gid_t, gid_t)    arm64,mips,mips64,x86_64
 int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
 int     setreuid:setreuid(uid_t, uid_t)     arm64,mips,mips64,x86_64
 int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
 int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
+# setresuid is explicitly allowed, see above.
 int     setfsgid(gid_t)  all
 int     setfsuid(uid_t)  all
 int     setgroups:setgroups32(int, const gid_t*)   arm,x86
