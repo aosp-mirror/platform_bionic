@@ -16,6 +16,24 @@
       "revId": "96a46f41c7917340c6f076c8525e4ab062dae7a9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7eb13f6_ecb28737",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-23T13:26:56Z",
+      "side": 1,
+      "message": "Good idea. Done.\n\nlib/arm for linker_arm is done in the internal gerrit. ag/6145761",
+      "parentUuid": "65c4ed64_3c2baf89",
+      "revId": "96a46f41c7917340c6f076c8525e4ab062dae7a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
