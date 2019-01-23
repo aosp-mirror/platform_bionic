@@ -17,8 +17,14 @@
 #pragma once
 
 #include <stddef.h>
+#include <stdint.h>
 #include <linux/filter.h>
 
 bool set_app_seccomp_filter();
+bool set_app_zygote_seccomp_filter();
 bool set_system_seccomp_filter();
 bool set_global_seccomp_filter();
+
+// Installs a filter that limits setresuid/setresgid to a range of
+// [uid_gid_min..uid_gid_max] (for the real-, effective- and super-ids).
+bool install_setuidgid_seccomp_filter(uint32_t uid_gid_min, uint32_t uid_gid_max);
