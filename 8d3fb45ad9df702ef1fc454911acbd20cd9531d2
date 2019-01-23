@@ -16,6 +16,24 @@
       "revId": "8d3fb45ad9df702ef1fc454911acbd20cd9531d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57c58ebd_d00d111d",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-23T14:18:05Z",
+      "side": 1,
+      "message": "Yes that\u0027s better, but if we do this before ag/6145761, the linker_arm will break.\nMay I add that after this and ag/6145761 land?",
+      "parentUuid": "c5c974b3_02c3f606",
+      "revId": "8d3fb45ad9df702ef1fc454911acbd20cd9531d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
