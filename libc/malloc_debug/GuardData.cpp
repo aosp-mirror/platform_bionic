@@ -64,6 +64,9 @@ void GuardData::LogFailure(const Header* header, const void* pointer, const void
   error_log("Backtrace at time of failure:");
   BacktraceAndLog();
   error_log(LOG_DIVIDER);
+  if (g_debug->config().options() & ABORT_ON_ERROR) {
+    abort();
+  }
 }
 
 FrontGuardData::FrontGuardData(DebugData* debug_data, const Config& config, size_t* offset)

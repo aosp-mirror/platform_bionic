@@ -394,6 +394,13 @@ malloc\_usable\_size, realloc.
 
 **NOTE**: This option is not available until the P release of Android.
 
+### abort\_on\_error
+When malloc debug detects an error, abort after sending the error
+log message.
+
+**NOTE**: If leak\_track is enabled, no abort occurs if leaks have been
+detected when the process is exiting.
+
 Additional Errors
 -----------------
 There are a few other error messages that might appear in the log.

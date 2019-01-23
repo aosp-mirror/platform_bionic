@@ -2380,3 +2380,59 @@ TEST_F(MallocDebugTest, verify_pointers) {
   expected_log += DIVIDER;
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugTest, abort_on_error_log_error) {
+  Init("abort_on_error verify_pointers");
+
+  void* pointer = debug_malloc(10);
+  memset(pointer, 0, 10);
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+
+  EXPECT_DEATH(debug_free(pointer), "");
+}
+
+TEST_F(MallocDebugTest, abort_on_error_guard_corrupted) {
+  Init("abort_on_error front_guard=32");
+
+  uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
+  ASSERT_TRUE(pointer != nullptr);
+  pointer[-16] = 0x00;
+  EXPECT_DEATH(debug_free(pointer), "");
+  pointer[-16] = 0xaa;
+  debug_free(pointer);
+}
+
+TEST_F(MallocDebugTest, abort_on_error_use_after_free) {
+  Init("abort_on_error free_track=100 free_track_backtrace_num_frames=0");
+
+  uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 100);
+  debug_free(pointer);
+
+  pointer[56] = 0x91;
+
+  EXPECT_DEATH(debug_finalize(), "");
+
+  pointer[56] = 0xef;
+}
+
+TEST_F(MallocDebugTest, abort_on_error_header_tag_corrupted) {
+  Init("abort_on_error free_track=100 free_track_backtrace_num_frames=0 rear_guard");
+
+  uint8_t* pointer = reinterpret_cast<uint8_t*>(debug_malloc(100));
+  ASSERT_TRUE(pointer != nullptr);
+  memset(pointer, 0, 100);
+  debug_free(pointer);
+
+  uint8_t tag_value = pointer[-get_tag_offset()];
+  pointer[-get_tag_offset()] = 0x00;
+
+  EXPECT_DEATH(debug_finalize(), "");
+
+  pointer[-get_tag_offset()] = tag_value;
+}
+

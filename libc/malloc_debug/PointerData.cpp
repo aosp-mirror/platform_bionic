@@ -206,7 +206,7 @@ void PointerData::Remove(const void* ptr) {
     std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
     auto entry = pointers_.find(pointer);
     if (entry == pointers_.end()) {
-      // Error.
+      // Attempt to remove unknown pointer.
       error_log("No tracked pointer found for 0x%" PRIxPTR, pointer);
       return;
     }
@@ -283,6 +283,9 @@ void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_si
   }
 
   error_log(LOG_DIVIDER);
+  if (g_debug->config().options() & ABORT_ON_ERROR) {
+    abort();
+  }
 }
 
 void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
@@ -295,6 +298,9 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
       error_log("+++ ALLOCATION 0x%" PRIxPTR " HAS CORRUPTED HEADER TAG 0x%x AFTER FREE",
                 info.pointer, header->tag);
       error_log(LOG_DIVIDER);
+      if (g_debug->config().options() & ABORT_ON_ERROR) {
+        abort();
+      }
 
       // Stop processing here, it is impossible to tell how the header
       // may have been damaged.
