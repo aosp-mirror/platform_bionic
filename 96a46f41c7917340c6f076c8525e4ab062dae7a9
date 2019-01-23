@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "65c4ed64_3c2baf89",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2019-01-23T12:19:09Z",
+      "side": 1,
+      "message": "what about lib/\u003carch\u003e on native_bridge enabled environments? maybe move this to -D and have soong generate correct path?",
+      "revId": "96a46f41c7917340c6f076c8525e4ab062dae7a9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
