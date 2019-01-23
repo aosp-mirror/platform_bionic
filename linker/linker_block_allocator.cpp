@@ -33,6 +33,9 @@
 #include <sys/prctl.h>
 #include <unistd.h>
 
+static constexpr size_t kAllocateSize = PAGE_SIZE * 100;
+static_assert(kAllocateSize % PAGE_SIZE == 0, "Invalid kAllocateSize.");
+
 // the multiplier should be power of 2
 static constexpr size_t round_up(size_t size, size_t multiplier) {
   return (size + (multiplier - 1)) & ~(multiplier-1);
@@ -40,7 +43,7 @@ static constexpr size_t round_up(size_t size, size_t multiplier) {
 
 struct LinkerBlockAllocatorPage {
   LinkerBlockAllocatorPage* next;
-  uint8_t bytes[PAGE_SIZE - 16] __attribute__((aligned(16)));
+  uint8_t bytes[kAllocateSize - 16] __attribute__((aligned(16)));
 };
 
 struct FreeBlockInfo {
@@ -113,28 +116,28 @@ void LinkerBlockAllocator::free(void* block) {
 
 void LinkerBlockAllocator::protect_all(int prot) {
   for (LinkerBlockAllocatorPage* page = page_list_; page != nullptr; page = page->next) {
-    if (mprotect(page, PAGE_SIZE, prot) == -1) {
+    if (mprotect(page, kAllocateSize, prot) == -1) {
       abort();
     }
   }
 }
 
 void LinkerBlockAllocator::create_new_page() {
-  static_assert(sizeof(LinkerBlockAllocatorPage) == PAGE_SIZE,
+  static_assert(sizeof(LinkerBlockAllocatorPage) == kAllocateSize,
                 "Invalid sizeof(LinkerBlockAllocatorPage)");
 
   LinkerBlockAllocatorPage* page = reinterpret_cast<LinkerBlockAllocatorPage*>(
-      mmap(nullptr, PAGE_SIZE, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0));
+      mmap(nullptr, kAllocateSize, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0));
 
   if (page == MAP_FAILED) {
     abort(); // oom
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, PAGE_SIZE, "linker_alloc");
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, kAllocateSize, "linker_alloc");
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
-  first_block->num_free_blocks = (PAGE_SIZE - sizeof(LinkerBlockAllocatorPage*))/block_size_;
+  first_block->num_free_blocks = (kAllocateSize - sizeof(LinkerBlockAllocatorPage*))/block_size_;
 
   free_block_list_ = first_block;
 
@@ -150,7 +153,7 @@ LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
   LinkerBlockAllocatorPage* page = page_list_;
   while (page != nullptr) {
     const uint8_t* page_ptr = reinterpret_cast<const uint8_t*>(page);
-    if (block >= (page_ptr + sizeof(page->next)) && block < (page_ptr + PAGE_SIZE)) {
+    if (block >= (page_ptr + sizeof(page->next)) && block < (page_ptr + kAllocateSize)) {
       return page;
     }
 
@@ -168,7 +171,7 @@ void LinkerBlockAllocator::free_all_pages() {
   LinkerBlockAllocatorPage* page = page_list_;
   while (page) {
     LinkerBlockAllocatorPage* next = page->next;
-    munmap(page, PAGE_SIZE);
+    munmap(page, kAllocateSize);
     page = next;
   }
   page_list_ = nullptr;
