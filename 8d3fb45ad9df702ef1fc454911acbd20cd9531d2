@@ -34,6 +34,24 @@
       "revId": "8d3fb45ad9df702ef1fc454911acbd20cd9531d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff3f32c8_140b3ac7",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-23T14:41:18Z",
+      "side": 1,
+      "message": "Oh, you approved the internal one. #error added.",
+      "parentUuid": "57c58ebd_d00d111d",
+      "revId": "8d3fb45ad9df702ef1fc454911acbd20cd9531d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
