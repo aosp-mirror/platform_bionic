@@ -52,7 +52,8 @@ LinkerBlockAllocator::LinkerBlockAllocator(size_t block_size)
   : block_size_(
       round_up(block_size < sizeof(FreeBlockInfo) ? sizeof(FreeBlockInfo) : block_size, 16)),
     page_list_(nullptr),
-    free_block_list_(nullptr)
+    free_block_list_(nullptr),
+    allocated_(0)
 {}
 
 void* LinkerBlockAllocator::alloc() {
@@ -72,6 +73,8 @@ void* LinkerBlockAllocator::alloc() {
   }
 
   memset(block_info, 0, block_size_);
+
+  ++allocated_;
 
   return block_info;
 }
@@ -101,6 +104,11 @@ void LinkerBlockAllocator::free(void* block) {
   block_info->num_free_blocks = 1;
 
   free_block_list_ = block_info;
+
+  --allocated_;
+  if (allocated_ == 0) {
+    free_all_pages();
+  }
 }
 
 void LinkerBlockAllocator::protect_all(int prot) {
@@ -150,4 +158,19 @@ LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
   }
 
   abort();
+}
+
+void LinkerBlockAllocator::free_all_pages() {
+  if (allocated_) {
+    abort();
+  }
+
+  LinkerBlockAllocatorPage* page = page_list_;
+  while (page) {
+    LinkerBlockAllocatorPage* next = page->next;
+    munmap(page, PAGE_SIZE);
+    page = next;
+  }
+  page_list_ = nullptr;
+  free_block_list_ = nullptr;
 }
