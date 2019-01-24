@@ -25,6 +25,7 @@
 #include <tinyxml2.h>
 
 #include "private/bionic_config.h"
+#include "private/bionic_malloc.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
@@ -601,3 +602,32 @@ TEST(malloc, mallinfo) {
   GTEST_LOG_(INFO) << "Host glibc does not pass this test, skipping.\n";
 #endif
 }
+
+TEST(android_mallopt, error_on_unexpected_option) {
+#if defined(__BIONIC__)
+  const int unrecognized_option = -1;
+  errno = 0;
+  EXPECT_EQ(false, android_mallopt(unrecognized_option, nullptr, 0));
+  EXPECT_EQ(ENOTSUP, errno);
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
+TEST(android_mallopt, init_zygote_child_profiling) {
+#if defined(__BIONIC__)
+  // Successful call.
+  errno = 0;
+  EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+  EXPECT_EQ(0, errno);
+
+  // Unexpected arguments rejected.
+  errno = 0;
+  char unexpected = 0;
+  EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, &unexpected, 1));
+  EXPECT_EQ(EINVAL, errno);
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
