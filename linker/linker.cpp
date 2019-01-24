@@ -3528,13 +3528,14 @@ bool soinfo::prelink_image() {
         // this is parsed after we have strtab initialized (see below).
         break;
 
+      case DT_TLSDESC_GOT:
+      case DT_TLSDESC_PLT:
+        // These DT entries are used for lazy TLSDESC relocations. Bionic
+        // resolves everything eagerly, so these can be ignored.
+        break;
+
       default:
         if (!relocating_linker) {
-          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
-            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
-            return false;
-          }
-
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";
