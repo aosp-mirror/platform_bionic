@@ -105,13 +105,16 @@ class BionicAllocator {
  public:
   constexpr BionicAllocator() : allocators_(nullptr), allocators_buf_() {}
   void* alloc(size_t size);
+  void* memalign(size_t align, size_t size);
 
   // Note that this implementation of realloc never shrinks allocation
   void* realloc(void* ptr, size_t size);
   void free(void* ptr);
  private:
-  void* alloc_mmap(size_t size);
-  page_info* get_page_info(void* ptr);
+  void* alloc_mmap(size_t align, size_t size);
+  inline void* alloc_impl(size_t align, size_t size);
+  inline page_info* get_page_info_unchecked(void* ptr);
+  inline page_info* get_page_info(void* ptr);
   BionicSmallObjectAllocator* get_small_object_allocator(uint32_t type);
   void initialize_allocators();
 

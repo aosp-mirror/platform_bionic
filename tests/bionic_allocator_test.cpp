@@ -212,4 +212,49 @@ TEST(bionic_allocator, test_large) {
   allocator.free(ptr_to_free);
 }
 
+TEST(bionic_allocator, test_memalign_small) {
+  BionicAllocator allocator;
+  void* ptr;
 
+  // simple case
+  ptr = allocator.memalign(0x100, 0x100);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // small objects are automatically aligned to their size.
+  ptr = allocator.alloc(0x200);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x200);
+  allocator.free(ptr);
+
+  // the size (0x10) is bumped up to the alignment (0x100)
+  ptr = allocator.memalign(0x100, 0x10);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+}
+
+TEST(bionic_allocator, test_memalign_large) {
+  BionicAllocator allocator;
+  void* ptr;
+
+  // a large object with alignment < PAGE_SIZE
+  ptr = allocator.memalign(0x100, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // a large object with alignment == PAGE_SIZE
+  ptr = allocator.memalign(0x1000, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x1000);
+  allocator.free(ptr);
+
+  // A large object with alignment > PAGE_SIZE is only guaranteed to have page
+  // alignment.
+  ptr = allocator.memalign(0x2000, 0x4000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x1000);
+  allocator.free(ptr);
+}
