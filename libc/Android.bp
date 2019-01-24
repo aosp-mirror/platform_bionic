@@ -1014,6 +1014,7 @@ cc_library_static {
         "bionic/arpa_inet.cpp",
         "bionic/assert.cpp",
         "bionic/atof.cpp",
+        "bionic/bionic_allocator.cpp",
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",

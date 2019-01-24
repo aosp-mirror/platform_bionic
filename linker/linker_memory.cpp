@@ -26,7 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include "linker_allocator.h"
+#include "private/bionic_allocator.h"
 
 #include <stdlib.h>
 #include <sys/cdefs.h>
@@ -36,7 +36,7 @@
 
 #include <async_safe/log.h>
 
-static LinkerMemoryAllocator g_linker_allocator;
+static BionicAllocator g_bionic_allocator;
 static std::atomic<pid_t> fallback_tid(0);
 
 // Used by libdebuggerd_handler to switch allocators during a crash dump, in
@@ -56,16 +56,16 @@ extern "C" void __linker_disable_fallback_allocator() {
   }
 }
 
-static LinkerMemoryAllocator& get_fallback_allocator() {
-  static LinkerMemoryAllocator fallback_allocator;
+static BionicAllocator& get_fallback_allocator() {
+  static BionicAllocator fallback_allocator;
   return fallback_allocator;
 }
 
-static LinkerMemoryAllocator& get_allocator() {
+static BionicAllocator& get_allocator() {
   if (__predict_false(fallback_tid) && __predict_false(gettid() == fallback_tid)) {
     return get_fallback_allocator();
   }
-  return g_linker_allocator;
+  return g_bionic_allocator;
 }
 
 void* malloc(size_t byte_count) {

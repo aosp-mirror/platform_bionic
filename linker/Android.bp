@@ -4,7 +4,6 @@ cc_library_static {
     recovery_available: true,
 
     srcs: [
-        "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
     cflags: [
