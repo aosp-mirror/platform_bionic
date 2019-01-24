@@ -154,6 +154,9 @@ static void LogError(const void* pointer, const char* error_str) {
   error_log("Backtrace at time of failure:");
   BacktraceAndLog();
   error_log(LOG_DIVIDER);
+  if (g_debug->config().options() & ABORT_ON_ERROR) {
+    abort();
+  }
 }
 
 static bool VerifyPointer(const void* pointer, const char* function_name) {
