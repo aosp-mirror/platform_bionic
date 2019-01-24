@@ -22,6 +22,30 @@
       "revId": "7d9c89b356b770690b2db4099f88f324553838b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0074486d_9c9b9895",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2019-01-24T23:23:39Z",
+      "side": 1,
+      "message": "doh, yes. I\u0027ll fix it. I actually may have to do this in internal master first, there seems to be some pixel test dependency :(",
+      "parentUuid": "7736fb75_d97122f1",
+      "range": {
+        "startLine": 500,
+        "startChar": 10,
+        "endLine": 500,
+        "endChar": 51
+      },
+      "revId": "7d9c89b356b770690b2db4099f88f324553838b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
