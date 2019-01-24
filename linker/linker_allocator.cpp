@@ -27,15 +27,18 @@
  */
 
 #include "linker_allocator.h"
-#include "linker_debug.h"
-#include "linker.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <unistd.h>
 
+#include <new>
+
 #include <async_safe/log.h>
+
+#include "private/bionic_page.h"
 
 //
 // LinkerMemeoryAllocator is general purpose allocator

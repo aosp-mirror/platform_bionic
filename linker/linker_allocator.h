@@ -36,8 +36,6 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <async_safe/log.h>
-
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;
 const uint32_t kSmallObjectAllocatorsCount = kSmallObjectMaxSizeLog2 - kSmallObjectMinSizeLog2 + 1;
