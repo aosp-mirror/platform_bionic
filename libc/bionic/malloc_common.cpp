@@ -47,6 +47,7 @@
 #include <private/bionic_defs.h>
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
+#include <private/bionic_malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 
 #if __has_feature(hwaddress_sanitizer)
@@ -303,6 +304,13 @@ typedef ssize_t (*malloc_backtrace_func_t)(void*, uintptr_t*, size_t);
 #define info_log(format, ...)  \
     async_safe_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
 // =============================================================================
+
+// In a Zygote child process, this is set to true if profiling of this process
+// is allowed. Note that this set at a later time than the above
+// gMallocLeakZygoteChild. The latter is set during the fork (while still in
+// zygote's SELinux domain). While this bit is set after the child is
+// specialized (and has transferred SELinux domains if applicable).
+static _Atomic bool gMallocZygoteChildProfileable = false;
 
 // =============================================================================
 // Exported for use by ddms.
@@ -641,39 +649,36 @@ static void install_hooks(libc_globals* globals, const char* options,
   }
 }
 
-// The logic for triggering heapprofd below is as following.
-// 1. HEAPPROFD_SIGNAL is received by the process.
-// 2. If neither InitHeapprofd nor InitHeapprofdHook are currently installed
-//    (g_heapprofd_init_hook_installed is false), InitHeapprofdHook is
-//    installed and g_heapprofd_init_in_progress is set to true.
-//
-// On the next subsequent malloc, InitHeapprofdHook is called and
-// 3a. If the signal is currently being handled (g_heapprofd_init_in_progress
-//     is true), no action is taken.
-// 3b. Otherwise, The signal handler (InstallInitHeapprofdHook) installs a
-//     temporary malloc hook (InitHeapprofdHook).
-// 4. When this hook gets run the first time, it uninstalls itself and spawns
-//    a thread running InitHeapprofd that loads heapprofd.so and installs the
-//    hooks within.
+// The logic for triggering heapprofd (at runtime) is as follows:
+// 1. HEAPPROFD_SIGNAL is received by the process, entering the
+//    MaybeInstallInitHeapprofdHook signal handler.
+// 2. If the initialization is not already in flight
+//    (g_heapprofd_init_in_progress is false), the malloc hook is set to
+//    point at InitHeapprofdHook, and g_heapprofd_init_in_progress is set to
+//    true.
+// 3. The next malloc call enters InitHeapprofdHook, which removes the malloc
+//    hook, and spawns a detached pthread to run the InitHeapprofd task.
+//    (g_heapprofd_init_hook_installed atomic is used to perform this once.)
+// 4. InitHeapprofd, on a dedicated pthread, loads the heapprofd client library,
+//    installs the full set of heapprofd hooks, and invokes the client's
+//    initializer. The dedicated pthread then terminates.
 // 5. g_heapprofd_init_in_progress and g_heapprofd_init_hook_installed are
-//    reset to false so heapprofd can be reinitialized. Reinitialization
-//    means that a new profiling session is started and any still active is
+//    reset to false such that heapprofd can be reinitialized. Reinitialization
+//    means that a new profiling session is started, and any still active is
 //    torn down.
 //
-// This roundabout way is needed because we are running non AS-safe code, so
-// we cannot run it directly in the signal handler. The other approach of
-// running a standby thread and signalling through write(2) and read(2) would
-// significantly increase the number of active threads in the system.
+// The incremental hooking and a dedicated task thread are used since we cannot
+// do heavy work within a signal handler, or when blocking a malloc invocation.
 
 static _Atomic bool g_heapprofd_init_in_progress = false;
 static _Atomic bool g_heapprofd_init_hook_installed = false;
 
-extern "C" void InstallInitHeapprofdHook(int);
+extern "C" void MaybeInstallInitHeapprofdHook(int);
 
 // Initializes memory allocation framework once per process.
 static void malloc_init_impl(libc_globals* globals) {
   struct sigaction action = {};
-  action.sa_handler = InstallInitHeapprofdHook;
+  action.sa_handler = MaybeInstallInitHeapprofdHook;
   sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
 
   const char* prefix;
@@ -735,7 +740,13 @@ static void* InitHeapprofdHook(size_t bytes) {
   return Malloc(malloc)(bytes);
 }
 
-extern "C" void InstallInitHeapprofdHook(int) {
+extern "C" void MaybeInstallInitHeapprofdHook(int) {
+  // Zygote child processes must be marked profileable.
+  if (gMallocLeakZygoteChild &&
+      !atomic_load_explicit_const(&gMallocZygoteChildProfileable, memory_order_acquire)) {
+    return;
+  }
+
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
       atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
@@ -744,6 +755,46 @@ extern "C" void InstallInitHeapprofdHook(int) {
 }
 
 #endif  // !LIBC_STATIC
+
+// =============================================================================
+// Platform-internal mallopt variant.
+// =============================================================================
+
+#if !defined(LIBC_STATIC)
+// Marks this process as a profileable zygote child.
+bool HandleInitZygoteChildProfiling() {
+  atomic_store_explicit(&gMallocZygoteChildProfileable, true,
+                        memory_order_release);
+
+  // Conditionally start "from startup" profiling.
+  if (CheckLoadHeapprofd()) {
+    // Directly call the signal handler (will correctly guard against
+    // concurrent signal delivery).
+    MaybeInstallInitHeapprofdHook(HEAPPROFD_SIGNAL);
+  }
+  return true;
+}
+
+#else
+
+bool HandleInitZygoteChildProfiling() {
+  return true;
+}
+
+#endif  // !defined(LIBC_STATIC)
+
+bool android_mallopt(int opcode, void* arg, size_t arg_size) {
+  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    return HandleInitZygoteChildProfiling();
+  }
+
+  errno = ENOTSUP;
+  return false;
+}
 
 // =============================================================================
 // Exported for use by libmemunreachable.
