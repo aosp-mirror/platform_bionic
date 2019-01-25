@@ -392,11 +392,19 @@ TEST(signal, sigaction_filter) {
   static uint64_t sigset;
   struct sigaction sa = {};
   sa.sa_handler = [](int) { sigset = GetSignalMask(); };
+  sa.sa_flags = SA_ONSTACK | SA_NODEFER;
   sigfillset(&sa.sa_mask);
   sigaction(SIGUSR1, &sa, nullptr);
   raise(SIGUSR1);
-  ASSERT_NE(0ULL, sigset);
-  TestSignalMaskFiltered(sigset);
+
+  // On LP32, struct sigaction::sa_mask is only 32-bits wide.
+  unsigned long expected_sigset = ~0UL;
+
+  // SIGKILL and SIGSTOP are always blocked.
+  expected_sigset &= ~(1UL << (SIGKILL - 1));
+  expected_sigset &= ~(1UL << (SIGSTOP - 1));
+
+  ASSERT_EQ(static_cast<uint64_t>(expected_sigset), sigset);
 }
 
 TEST(signal, sigaction64_filter) {
@@ -404,11 +412,18 @@ TEST(signal, sigaction64_filter) {
   static uint64_t sigset;
   struct sigaction64 sa = {};
   sa.sa_handler = [](int) { sigset = GetSignalMask(); };
+  sa.sa_flags = SA_ONSTACK | SA_NODEFER;
   sigfillset64(&sa.sa_mask);
   sigaction64(SIGUSR1, &sa, nullptr);
   raise(SIGUSR1);
-  ASSERT_NE(0ULL, sigset);
-  TestSignalMaskFiltered(sigset);
+
+  uint64_t expected_sigset = ~0ULL;
+
+  // SIGKILL and SIGSTOP are always blocked.
+  expected_sigset &= ~(1ULL << (SIGKILL - 1));
+  expected_sigset &= ~(1ULL << (SIGSTOP - 1));
+
+  ASSERT_EQ(expected_sigset, sigset);
 }
 
 TEST(signal, sigprocmask_setmask_filter) {
