@@ -44,6 +44,7 @@
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
+#include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
 #include "private/ErrnoRestorer.h"
 
@@ -338,6 +339,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   ErrnoRestorer errno_restorer;
 
   pthread_attr_t thread_attr;
+  ScopedTrace trace("pthread_create");
   if (attr == nullptr) {
     pthread_attr_init(&thread_attr);
   } else {
