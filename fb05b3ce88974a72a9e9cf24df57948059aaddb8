@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b366c966_b40ede66",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-01-25T00:45:46Z",
+      "side": 1,
+      "message": "Small nit, but should be else if to avoid an unnecessary check.",
+      "range": {
+        "startLine": 817,
+        "startChar": 2,
+        "endLine": 817,
+        "endChar": 5
+      },
+      "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
