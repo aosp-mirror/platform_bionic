@@ -41,6 +41,7 @@
 
 #include <limits.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include <string>
 #include <unordered_map>
@@ -238,9 +239,17 @@ static bool parse_config_file(const char* ld_config_file_path,
       // If the path can be resolved, resolve it
       char buf[PATH_MAX];
       std::string resolved_path;
-      if (realpath(value.c_str(), buf)) {
+      if (access(value.c_str(), R_OK) != 0) {
+        if (errno == ENOENT) {
+          // no need to test for non-existing path. skip.
+          continue;
+        }
+        // If not accessible, don't call realpath as it will just cause
+        // SELinux denial spam. Use the path unresolved.
+        resolved_path = value;
+      } else if (realpath(value.c_str(), buf)) {
         resolved_path = buf;
-      } else if (errno != ENOENT)  {
+      } else {
         // realpath is expected to fail with EPERM in some situations, so log
         // the failure with INFO rather than DL_WARN. e.g. A binary in
         // /data/local/tmp may attempt to stat /postinstall. See
@@ -251,9 +260,6 @@ static bool parse_config_file(const char* ld_config_file_path,
              value.c_str(),
              strerror(errno));
         resolved_path = value;
-      } else {
-        // ENOENT: no need to test if binary is under the path
-        continue;
       }
 
       if (file_is_under_dir(binary_realpath, resolved_path)) {
