@@ -714,6 +714,30 @@
     },
     {
       "key": {
+        "uuid": "0f02439f_9e21029b",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-01-25T21:13:27Z",
+      "side": 1,
+      "message": "We don\u0027t like adding new functions (outside of new posix or new C standard functions), we are trying to keep the signature as close to any other libc as possible.\n\nAs mentioned above, mallopt is already the place where these kind of things are done.",
+      "parentUuid": "bafb5cb5_6d0149d7",
+      "range": {
+        "startLine": 303,
+        "startChar": 16,
+        "endLine": 303,
+        "endChar": 44
+      },
+      "revId": "8fc5f37cd67cd2f6a363e643bdd72844c7d73752",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a6c9881_ae3b9389",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
