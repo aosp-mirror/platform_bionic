@@ -65,6 +65,9 @@
 //
 //  - TLS_SLOT_BIONIC_TLS: Optimizes accesses to bionic_tls by one load versus
 //    finding it using __get_thread().
+//
+//  - TLS_SLOT_APP: Available for use by apps in Android Q and later. (This slot
+//    was used for errno in P and earlier.)
 
 #if defined(__arm__) || defined(__aarch64__)
 
@@ -81,7 +84,7 @@
 #define TLS_SLOT_BIONIC_TLS       -1
 #define TLS_SLOT_DTV              0
 #define TLS_SLOT_THREAD_ID        1
-// Slot 2 is free (was historically used for TLS_SLOT_ERRNO)
+#define TLS_SLOT_APP              2 // was historically used for errno
 #define TLS_SLOT_OPENGL           3
 #define TLS_SLOT_OPENGL_API       4
 #define TLS_SLOT_STACK_GUARD      5
@@ -101,7 +104,7 @@
 
 #define TLS_SLOT_SELF             0
 #define TLS_SLOT_THREAD_ID        1
-// Slot 2 is free (was historically used for TLS_SLOT_ERRNO)
+#define TLS_SLOT_APP              2 // was historically used for errno
 #define TLS_SLOT_OPENGL           3
 #define TLS_SLOT_OPENGL_API       4
 #define TLS_SLOT_STACK_GUARD      5

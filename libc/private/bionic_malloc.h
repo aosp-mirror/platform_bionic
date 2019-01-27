@@ -28,11 +28,16 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 // Opcodes for android_mallopt.
 
 // Marks the calling process as a profileable zygote child, possibly
 // initializing profiling infrastructure.
-#define  M_INIT_ZYGOTE_CHILD_PROFILING 1
+enum {
+  M_INIT_ZYGOTE_CHILD_PROFILING = 1,
+#define M_INIT_ZYGOTE_CHILD_PROFILING M_INIT_ZYGOTE_CHILD_PROFILING
+};
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
 // malloc. Only for use by the Android platform itself.

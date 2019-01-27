@@ -285,7 +285,11 @@ cc_binary {
     symlinks: ["linker_asan"],
     recovery_available: true,
     multilib: {
+        lib32: {
+            cflags: ["-DLIB_PATH=\"lib\""],
+        },
         lib64: {
+            cflags: ["-DLIB_PATH=\"lib64\""],
             suffix: "64",
         },
     },
