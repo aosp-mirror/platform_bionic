@@ -22,6 +22,30 @@
       "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2b46533_2918cef5",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-01-28T14:22:30Z",
+      "side": 1,
+      "message": "All branches of the previous if return, so this is only going to be run in the else case, or am I missing something?",
+      "parentUuid": "b366c966_b40ede66",
+      "range": {
+        "startLine": 817,
+        "startChar": 2,
+        "endLine": 817,
+        "endChar": 5
+      },
+      "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
