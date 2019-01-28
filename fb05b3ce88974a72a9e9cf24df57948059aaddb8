@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "50f3040b_cbb2cc60",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-01-28T17:29:25Z",
+      "side": 1,
+      "message": "Fair enough, I do think if we add enough cases, we can use a switch statement. Although, I always prefer if else if because I assumed it would be easier for a compiler to optimize it.",
+      "parentUuid": "e2b46533_2918cef5",
+      "range": {
+        "startLine": 817,
+        "startChar": 2,
+        "endLine": 817,
+        "endChar": 5
+      },
+      "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "87c90351_397a447b",
         "filename": "libc/private/bionic_malloc.h",
         "patchSetId": 13
