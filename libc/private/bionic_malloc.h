@@ -32,11 +32,13 @@
 
 // Opcodes for android_mallopt.
 
-// Marks the calling process as a profileable zygote child, possibly
-// initializing profiling infrastructure.
 enum {
+  // Marks the calling process as a profileable zygote child, possibly
+  // initializing profiling infrastructure.
   M_INIT_ZYGOTE_CHILD_PROFILING = 1,
 #define M_INIT_ZYGOTE_CHILD_PROFILING M_INIT_ZYGOTE_CHILD_PROFILING
+  M_RESET_HOOKS = 2,
+#define M_RESET_HOOKS M_RESET_HOOKS
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
