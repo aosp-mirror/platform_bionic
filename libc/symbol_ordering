@@ -86,7 +86,6 @@ __malloc_hook
 __realloc_hook
 __free_hook
 __memalign_hook
-_ZL21g_heapprofd_init_func
 je_malloc_conf
 malloc_initializer
 a0
