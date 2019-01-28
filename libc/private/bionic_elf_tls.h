@@ -34,6 +34,8 @@
 #include <stdint.h>
 #include <sys/cdefs.h>
 
+__LIBC_HIDDEN__ extern _Atomic(size_t) __libc_tls_generation_copy;
+
 struct TlsSegment {
   size_t size = 0;
   size_t alignment = 1;
@@ -84,6 +86,16 @@ private:
   size_t round_up_with_overflow_check(size_t value, size_t alignment);
 };
 
+static constexpr size_t kTlsGenerationNone = 0;
+static constexpr size_t kTlsGenerationFirst = 1;
+
+// The first ELF TLS module has ID 1. Zero is reserved for the first word of
+// the DTV, a generation count. Unresolved weak symbols also use module ID 0.
+static constexpr size_t kTlsUninitializedModuleId = 0;
+
+static inline size_t __tls_module_id_to_idx(size_t id) { return id - 1; }
+static inline size_t __tls_module_idx_to_id(size_t idx) { return idx + 1; }
+
 // A descriptor for a single ELF TLS module.
 struct TlsModule {
   TlsSegment segment;
@@ -93,7 +105,7 @@ struct TlsModule {
 
   // The generation in which this module was loaded. Dynamic TLS lookups use
   // this field to detect when a module has been unloaded.
-  size_t first_generation = 0;
+  size_t first_generation = kTlsGenerationNone;
 
   // Used by the dynamic linker to track the associated soinfo* object.
   void* soinfo_ptr = nullptr;
@@ -105,9 +117,10 @@ struct TlsModule {
 struct TlsModules {
   constexpr TlsModules() {}
 
-  // A generation counter. The value is incremented each time an solib is loaded
-  // or unloaded.
-  _Atomic(size_t) generation = 0;
+  // A pointer to the TLS generation counter in libc.so. The counter is
+  // incremented each time an solib is loaded or unloaded.
+  _Atomic(size_t) generation = kTlsGenerationFirst;
+  _Atomic(size_t) *generation_libc_so = nullptr;
 
   // Access to the TlsModule[] table requires taking this lock.
   pthread_rwlock_t rwlock = PTHREAD_RWLOCK_INITIALIZER;
@@ -119,3 +132,46 @@ struct TlsModules {
 };
 
 void __init_static_tls(void* static_tls);
+
+// Dynamic Thread Vector. Each thread has a different DTV. For each module
+// (executable or solib), the DTV has a pointer to that module's TLS memory. The
+// DTV is initially empty and is allocated on-demand. It grows as more modules
+// are dlopen'ed. See https://www.akkadia.org/drepper/tls.pdf.
+//
+// The layout of the DTV is specified in various documents, but it is not part
+// of Bionic's public ABI. A compiler can't generate code to access it directly,
+// because it can't access libc's global generation counter.
+struct TlsDtv {
+  // Number of elements in this object's modules field.
+  size_t count;
+
+  // A pointer to an older TlsDtv object that should be freed when the thread
+  // exits. The objects aren't immediately freed because a DTV could be
+  // reallocated by a signal handler that interrupted __tls_get_addr's fast
+  // path.
+  TlsDtv* next;
+
+  // The DTV slot points at this field, which allows omitting an add instruction
+  // on the fast path for a TLS lookup. The arm64 tlsdesc_resolver.S depends on
+  // the layout of fields past this point.
+  size_t generation;
+  void* modules[];
+};
+
+struct TlsIndex {
+  size_t module_id;
+  size_t offset;
+};
+
+#if defined(__i386__)
+#define TLS_GET_ADDR_CCONV __attribute__((regparm(1)))
+#define TLS_GET_ADDR ___tls_get_addr
+#else
+#define TLS_GET_ADDR_CCONV
+#define TLS_GET_ADDR __tls_get_addr
+#endif
+
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV;
+
+struct bionic_tcb;
+void __free_dynamic_tls(bionic_tcb* tcb);

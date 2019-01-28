@@ -36,13 +36,11 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <async_safe/log.h>
-
 const uint32_t kSmallObjectMaxSizeLog2 = 10;
 const uint32_t kSmallObjectMinSizeLog2 = 4;
 const uint32_t kSmallObjectAllocatorsCount = kSmallObjectMaxSizeLog2 - kSmallObjectMinSizeLog2 + 1;
 
-class LinkerSmallObjectAllocator;
+class BionicSmallObjectAllocator;
 
 // This structure is placed at the beginning of each addressable page
 // and has all information we need to find the corresponding memory allocator.
@@ -53,7 +51,7 @@ struct page_info {
     // we use allocated_size for large objects allocator
     size_t allocated_size;
     // and allocator_addr for small ones.
-    LinkerSmallObjectAllocator* allocator_addr;
+    BionicSmallObjectAllocator* allocator_addr;
   };
 };
 
@@ -63,14 +61,14 @@ struct small_object_block_record {
 };
 
 // This structure is placed at the beginning of each page managed by
-// LinkerSmallObjectAllocator.  Note that a page_info struct is expected at the
+// BionicSmallObjectAllocator.  Note that a page_info struct is expected at the
 // beginning of each page as well, and therefore this structure contains a
 // page_info as its *first* field.
 struct small_object_page_info {
   page_info info;  // Must be the first field.
 
   // Doubly linked list for traversing all pages allocated by a
-  // LinkerSmallObjectAllocator.
+  // BionicSmallObjectAllocator.
   small_object_page_info* next_page;
   small_object_page_info* prev_page;
 
@@ -81,9 +79,9 @@ struct small_object_page_info {
   size_t free_blocks_cnt;
 };
 
-class LinkerSmallObjectAllocator {
+class BionicSmallObjectAllocator {
  public:
-  LinkerSmallObjectAllocator(uint32_t type, size_t block_size);
+  BionicSmallObjectAllocator(uint32_t type, size_t block_size);
   void* alloc();
   void free(void* ptr);
 
@@ -103,20 +101,23 @@ class LinkerSmallObjectAllocator {
   small_object_page_info* page_list_;
 };
 
-class LinkerMemoryAllocator {
+class BionicAllocator {
  public:
-  constexpr LinkerMemoryAllocator() : allocators_(nullptr), allocators_buf_() {}
+  constexpr BionicAllocator() : allocators_(nullptr), allocators_buf_() {}
   void* alloc(size_t size);
+  void* memalign(size_t align, size_t size);
 
   // Note that this implementation of realloc never shrinks allocation
   void* realloc(void* ptr, size_t size);
   void free(void* ptr);
  private:
-  void* alloc_mmap(size_t size);
-  page_info* get_page_info(void* ptr);
-  LinkerSmallObjectAllocator* get_small_object_allocator(uint32_t type);
+  void* alloc_mmap(size_t align, size_t size);
+  inline void* alloc_impl(size_t align, size_t size);
+  inline page_info* get_page_info_unchecked(void* ptr);
+  inline page_info* get_page_info(void* ptr);
+  BionicSmallObjectAllocator* get_small_object_allocator(uint32_t type);
   void initialize_allocators();
 
-  LinkerSmallObjectAllocator* allocators_;
-  uint8_t allocators_buf_[sizeof(LinkerSmallObjectAllocator)*kSmallObjectAllocatorsCount];
+  BionicSmallObjectAllocator* allocators_;
+  uint8_t allocators_buf_[sizeof(BionicSmallObjectAllocator)*kSmallObjectAllocatorsCount];
 };

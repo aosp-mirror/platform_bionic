@@ -34,9 +34,22 @@
 #include <unistd.h>
 
 #include "private/ScopedRWLock.h"
+#include "private/ScopedSignalBlocker.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_tls.h"
+#include "pthread_internal.h"
+
+// Every call to __tls_get_addr needs to check the generation counter, so
+// accesses to the counter need to be as fast as possible. Keep a copy of it in
+// a hidden variable, which can be accessed without using the GOT. The linker
+// will update this variable when it updates its counter.
+//
+// To allow the linker to update this variable, libc.so's constructor passes its
+// address to the linker. To accommodate a possible __tls_get_addr call before
+// libc.so's constructor, this local copy is initialized to SIZE_MAX, forcing
+// __tls_get_addr to initially use the slow path.
+__LIBC_HIDDEN__ _Atomic(size_t) __libc_tls_generation_copy = SIZE_MAX;
 
 // Search for a TLS segment in the given phdr table. Returns true if it has a
 // TLS segment and false otherwise.
@@ -168,6 +181,7 @@ void __init_static_tls(void* static_tls) {
   // moving the initial part. If this locking is too slow, we can duplicate the
   // static part of the table.
   TlsModules& modules = __libc_shared_globals()->tls_modules;
+  ScopedSignalBlocker ssb;
   ScopedReadLock locker(&modules.rwlock);
 
   for (size_t i = 0; i < modules.module_count; ++i) {
@@ -186,4 +200,167 @@ void __init_static_tls(void* static_tls) {
            module.segment.init_ptr,
            module.segment.init_size);
   }
+}
+
+static inline size_t dtv_size_in_bytes(size_t module_count) {
+  return sizeof(TlsDtv) + module_count * sizeof(void*);
+}
+
+// Calculates the number of module slots to allocate in a new DTV. For small
+// objects (up to 1KiB), the TLS allocator allocates memory in power-of-2 sizes,
+// so for better space usage, ensure that the DTV size (header + slots) is a
+// power of 2.
+//
+// The lock on TlsModules must be held.
+static size_t calculate_new_dtv_count() {
+  size_t loaded_cnt = __libc_shared_globals()->tls_modules.module_count;
+  size_t bytes = dtv_size_in_bytes(MAX(1, loaded_cnt));
+  if (!powerof2(bytes)) {
+    bytes = BIONIC_ROUND_UP_POWER_OF_2(bytes);
+  }
+  return (bytes - sizeof(TlsDtv)) / sizeof(void*);
+}
+
+// This function must be called with signals blocked and a write lock on
+// TlsModules held.
+static void update_tls_dtv(bionic_tcb* tcb) {
+  const TlsModules& modules = __libc_shared_globals()->tls_modules;
+  BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
+
+  // Use the generation counter from the shared globals instead of the local
+  // copy, which won't be initialized yet if __tls_get_addr is called before
+  // libc.so's constructor.
+  if (__get_tcb_dtv(tcb)->generation == atomic_load(&modules.generation)) {
+    return;
+  }
+
+  const size_t old_cnt = __get_tcb_dtv(tcb)->count;
+
+  // If the DTV isn't large enough, allocate a larger one. Because a signal
+  // handler could interrupt the fast path of __tls_get_addr, we don't free the
+  // old DTV. Instead, we add the old DTV to a list, then free all of a thread's
+  // DTVs at thread-exit. Each time the DTV is reallocated, its size at least
+  // doubles.
+  if (modules.module_count > old_cnt) {
+    size_t new_cnt = calculate_new_dtv_count();
+    TlsDtv* const old_dtv = __get_tcb_dtv(tcb);
+    TlsDtv* const new_dtv = static_cast<TlsDtv*>(allocator.alloc(dtv_size_in_bytes(new_cnt)));
+    memcpy(new_dtv, old_dtv, dtv_size_in_bytes(old_cnt));
+    new_dtv->count = new_cnt;
+    new_dtv->next = old_dtv;
+    __set_tcb_dtv(tcb, new_dtv);
+  }
+
+  TlsDtv* const dtv = __get_tcb_dtv(tcb);
+
+  const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+  char* static_tls = reinterpret_cast<char*>(tcb) - layout.offset_bionic_tcb();
+
+  // Initialize static TLS modules and free unloaded modules.
+  for (size_t i = 0; i < dtv->count; ++i) {
+    if (i < modules.module_count) {
+      const TlsModule& mod = modules.module_table[i];
+      if (mod.static_offset != SIZE_MAX) {
+        dtv->modules[i] = static_tls + mod.static_offset;
+        continue;
+      }
+      if (mod.first_generation != kTlsGenerationNone &&
+          mod.first_generation <= dtv->generation) {
+        continue;
+      }
+    }
+    allocator.free(dtv->modules[i]);
+    dtv->modules[i] = nullptr;
+  }
+
+  dtv->generation = atomic_load(&modules.generation);
+}
+
+__attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti) {
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  bionic_tcb* tcb = __get_bionic_tcb();
+
+  // Block signals and lock TlsModules. We may need the allocator, so take
+  // a write lock.
+  ScopedSignalBlocker ssb;
+  ScopedWriteLock locker(&modules.rwlock);
+
+  update_tls_dtv(tcb);
+
+  TlsDtv* dtv = __get_tcb_dtv(tcb);
+  const size_t module_idx = __tls_module_id_to_idx(ti->module_id);
+  void* mod_ptr = dtv->modules[module_idx];
+  if (mod_ptr == nullptr) {
+    const TlsSegment& segment = modules.module_table[module_idx].segment;
+    mod_ptr = __libc_shared_globals()->tls_allocator.memalign(segment.alignment, segment.size);
+    if (segment.init_size > 0) {
+      memcpy(mod_ptr, segment.init_ptr, segment.init_size);
+    }
+    dtv->modules[module_idx] = mod_ptr;
+  }
+
+  return static_cast<char*>(mod_ptr) + ti->offset;
+}
+
+// Returns the address of a thread's TLS memory given a module ID and an offset
+// into that module's TLS segment. This function is called on every access to a
+// dynamic TLS variable on targets that don't use TLSDESC. arm64 uses TLSDESC,
+// so it only calls this function on a thread's first access to a module's TLS
+// segment.
+//
+// On most targets, this accessor function is __tls_get_addr and
+// TLS_GET_ADDR_CCONV is unset. 32-bit x86 uses ___tls_get_addr instead and a
+// regparm() calling convention.
+extern "C" void* TLS_GET_ADDR(const TlsIndex* ti) TLS_GET_ADDR_CCONV {
+  TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
+
+  // TODO: See if we can use a relaxed memory ordering here instead.
+  size_t generation = atomic_load(&__libc_tls_generation_copy);
+  if (__predict_true(generation == dtv->generation)) {
+    void* mod_ptr = dtv->modules[__tls_module_id_to_idx(ti->module_id)];
+    if (__predict_true(mod_ptr != nullptr)) {
+      return static_cast<char*>(mod_ptr) + ti->offset;
+    }
+  }
+
+  return tls_get_addr_slow_path(ti);
+}
+
+// This function frees:
+//  - TLS modules referenced by the current DTV.
+//  - The list of DTV objects associated with the current thread.
+//
+// The caller must have already blocked signals.
+void __free_dynamic_tls(bionic_tcb* tcb) {
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  BionicAllocator& allocator = __libc_shared_globals()->tls_allocator;
+
+  // If we didn't allocate any dynamic memory, skip out early without taking
+  // the lock.
+  TlsDtv* dtv = __get_tcb_dtv(tcb);
+  if (dtv->generation == kTlsGenerationNone) {
+    return;
+  }
+
+  // We need the write lock to use the allocator.
+  ScopedWriteLock locker(&modules.rwlock);
+
+  // First free everything in the current DTV.
+  for (size_t i = 0; i < dtv->count; ++i) {
+    if (i < modules.module_count && modules.module_table[i].static_offset != SIZE_MAX) {
+      // This module's TLS memory is allocated statically, so don't free it here.
+      continue;
+    }
+    allocator.free(dtv->modules[i]);
+  }
+
+  // Now free the thread's list of DTVs.
+  while (dtv->generation != kTlsGenerationNone) {
+    TlsDtv* next = dtv->next;
+    allocator.free(dtv);
+    dtv = next;
+  }
+
+  // Clear the DTV slot. The DTV must not be used again with this thread.
+  tcb->tls_slot(TLS_SLOT_DTV) = nullptr;
 }
