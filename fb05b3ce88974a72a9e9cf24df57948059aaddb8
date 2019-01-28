@@ -69,6 +69,30 @@
       "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc833011_af35cd58",
+        "filename": "libc/private/bionic_malloc.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-01-28T15:02:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87c90351_397a447b",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
