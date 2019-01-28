@@ -53,12 +53,10 @@ class LinkerBlockAllocator {
  private:
   void create_new_page();
   LinkerBlockAllocatorPage* find_page(void* block);
-  void free_all_pages();
 
   size_t block_size_;
   LinkerBlockAllocatorPage* page_list_;
   void* free_block_list_;
-  size_t allocated_;
 
   DISALLOW_COPY_AND_ASSIGN(LinkerBlockAllocator);
 };
@@ -75,8 +73,7 @@ class LinkerBlockAllocator {
  *    513 this allocator will use 516 (520 for lp64) bytes of data where
  *    generalized implementation is going to use 1024 sized blocks.
  *
- * 2. Unless all allocated memory is freed, this allocator does not munmap
- *    allocated memory, where BionicAllocator does.
+ * 2. This allocator does not munmap allocated memory, where BionicAllocator does.
  *
  * 3. This allocator provides mprotect services to the user, where BionicAllocator
  *    always treats its memory as READ|WRITE.
