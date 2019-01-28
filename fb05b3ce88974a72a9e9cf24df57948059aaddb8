@@ -46,6 +46,29 @@
       "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87c90351_397a447b",
+        "filename": "libc/private/bionic_malloc.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2019-01-28T14:57:28Z",
+      "side": 1,
+      "message": "nit: this comment only applies to the first opcode, so probably should be brought inside the enum declaration.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 41
+      },
+      "revId": "fb05b3ce88974a72a9e9cf24df57948059aaddb8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

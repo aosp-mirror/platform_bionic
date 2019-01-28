@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a5cacac_8d0f3dd5",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 773,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2019-01-28T14:57:28Z",
+      "side": 1,
+      "message": "Should the mallopt return false (+EAGAIN?) if we don\u0027t enter the conditional block? Otherwise the caller can\u0027t tell if it in fact NOP\u0027d.",
+      "range": {
+        "startLine": 773,
+        "startChar": 7,
+        "endLine": 773,
+        "endChar": 22
+      },
+      "revId": "dba9d35bd8ec4946fb68370690837e1331fcb6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "981a549a_ce0bac17",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2019-01-28T14:57:28Z",
+      "side": 1,
+      "message": "should the store be inside the conditional?",
+      "range": {
+        "startLine": 777,
+        "startChar": 4,
+        "endLine": 777,
+        "endChar": 16
+      },
+      "revId": "dba9d35bd8ec4946fb68370690837e1331fcb6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbb45cdf_e672dbb8",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 780,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2019-01-28T14:57:28Z",
+      "side": 1,
+      "message": "set errno",
+      "range": {
+        "startLine": 780,
+        "startChar": 9,
+        "endLine": 780,
+        "endChar": 14
+      },
+      "revId": "dba9d35bd8ec4946fb68370690837e1331fcb6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
