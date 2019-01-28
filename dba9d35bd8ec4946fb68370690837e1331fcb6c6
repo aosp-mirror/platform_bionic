@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "ca24a335_134017e3",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2019-01-28T15:41:04Z",
+      "side": 1,
+      "message": "ah sry, the lambda threw me off for the nth time.",
+      "parentUuid": "a5d4f4b6_3ce93ff6",
+      "range": {
+        "startLine": 777,
+        "startChar": 4,
+        "endLine": 777,
+        "endChar": 16
+      },
+      "revId": "dba9d35bd8ec4946fb68370690837e1331fcb6c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbb45cdf_e672dbb8",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 16
