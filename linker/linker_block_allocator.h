@@ -68,18 +68,18 @@ class LinkerBlockAllocator {
  * of a single fixed-size type. Allocations are backed by page-sized private
  * anonymous mmaps.
  *
- * The differences between this allocator and LinkerMemoryAllocator are:
- * 1. This allocator manages space more efficiently. LinkerMemoryAllocator
- *    operates in power-of-two sized blocks up to 1k, when this implementation
- *    splits the page to aligned size of structure; For example for structures
- *    with size 513 this allocator will use 516 (520 for lp64) bytes of data
- *    where generalized implementation is going to use 1024 sized blocks.
+ * The differences between this allocator and BionicAllocator are:
+ * 1. This allocator manages space more efficiently. BionicAllocator operates in
+ *    power-of-two sized blocks up to 1k, when this implementation splits the
+ *    page to aligned size of structure; For example for structures with size
+ *    513 this allocator will use 516 (520 for lp64) bytes of data where
+ *    generalized implementation is going to use 1024 sized blocks.
  *
  * 2. Unless all allocated memory is freed, this allocator does not munmap
- *    allocated memory, where LinkerMemoryAllocator does.
+ *    allocated memory, where BionicAllocator does.
  *
- * 3. This allocator provides mprotect services to the user, where LinkerMemoryAllocator
- *    always treats it's memory as READ|WRITE.
+ * 3. This allocator provides mprotect services to the user, where BionicAllocator
+ *    always treats its memory as READ|WRITE.
  */
 template<typename T>
 class LinkerTypeAllocator {
