@@ -70,6 +70,14 @@ void __init_tcb_stack_guard(bionic_tcb* tcb) {
   tcb->tls_slot(TLS_SLOT_STACK_GUARD) = reinterpret_cast<void*>(__stack_chk_guard);
 }
 
+__attribute__((no_stack_protector))
+void __init_tcb_dtv(bionic_tcb* tcb) {
+  // Initialize the DTV slot to a statically-allocated empty DTV. The first
+  // access to a dynamic TLS variable allocates a new DTV.
+  static const TlsDtv zero_dtv = {};
+  __set_tcb_dtv(tcb, const_cast<TlsDtv*>(&zero_dtv));
+}
+
 void __init_bionic_tls_ptrs(bionic_tcb* tcb, bionic_tls* tls) {
   tcb->thread()->bionic_tls = tls;
   tcb->tls_slot(TLS_SLOT_BIONIC_TLS) = tls;
@@ -291,6 +299,7 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   // Initialize TLS memory.
   __init_static_tls(mapping.static_tls);
   __init_tcb(tcb, thread);
+  __init_tcb_dtv(tcb);
   __init_tcb_stack_guard(tcb);
   __init_bionic_tls_ptrs(tcb, tls);
 

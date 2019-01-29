@@ -2722,7 +2722,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     soinfo* lsi = nullptr;
 
     if (sym == 0) {
-      // Do nothing.
+      // By convention in ld.bfd and lld, an omitted symbol on a TLS relocation
+      // is a reference to the current module.
+      if (is_tls_reloc(type)) {
+        lsi = this;
+      }
     } else if (ELF_ST_BIND(symtab_[sym].st_info) == STB_LOCAL && is_tls_reloc(type)) {
       // In certain situations, the Gold linker accesses a TLS symbol using a
       // relocation to an STB_LOCAL symbol in .dynsym of either STT_SECTION or
@@ -2830,6 +2834,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    sym_name, get_realpath());
             return false;
           }
+          if (lsi->get_tls() == nullptr) {
+            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
+                   sym_name, lsi->get_realpath());
+            return false;
+          }
           sym_addr = s->st_value;
         } else {
           if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
@@ -2916,16 +2925,12 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         MARK(rel->r_offset);
         {
           ElfW(Addr) tpoff = 0;
-          if (sym == 0) {
-            // By convention in ld.bfd and lld, an omitted symbol
-            // (ELFW(R_SYM) == 0) refers to the local module.
-            lsi = this;
-          }
           if (lsi == nullptr) {
             // Unresolved weak relocation. Leave tpoff at 0 to resolve
             // &weak_tls_symbol to __get_tls().
-          } else if (soinfo_tls* lsi_tls = lsi->get_tls()) {
-            const TlsModule& mod = get_tls_module(lsi_tls->module_id);
+          } else {
+            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
+            const TlsModule& mod = get_tls_module(lsi->get_tls()->module_id);
             if (mod.static_offset != SIZE_MAX) {
               tpoff += mod.static_offset - tls_tp_base;
             } else {
@@ -2933,10 +2938,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                      sym_name, lsi->get_realpath(), get_realpath());
               return false;
             }
-          } else {
-            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
-                   sym_name, lsi->get_realpath());
-            return false;
           }
           tpoff += sym_addr + addend;
           TRACE_TYPE(RELO, "RELO TLS_TPREL %16p <- %16p %s\n",
@@ -2945,6 +2946,35 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
+
+#if !defined(__aarch64__)
+      // Omit support for DTPMOD/DTPREL on arm64, at least until
+      // http://b/123385182 is fixed. arm64 uses TLSDESC instead.
+      case R_GENERIC_TLS_DTPMOD:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        {
+          size_t module_id = 0;
+          if (lsi == nullptr) {
+            // Unresolved weak relocation. Evaluate the module ID to 0.
+          } else {
+            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
+            module_id = lsi->get_tls()->module_id;
+          }
+          TRACE_TYPE(RELO, "RELO TLS_DTPMOD %16p <- %zu %s\n",
+                     reinterpret_cast<void*>(reloc), module_id, sym_name);
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = module_id;
+        }
+        break;
+      case R_GENERIC_TLS_DTPREL:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
+        break;
+#endif  // !defined(__aarch64__)
 
 #if defined(__aarch64__)
       case R_AARCH64_ABS64:
@@ -3528,13 +3558,14 @@ bool soinfo::prelink_image() {
         // this is parsed after we have strtab initialized (see below).
         break;
 
+      case DT_TLSDESC_GOT:
+      case DT_TLSDESC_PLT:
+        // These DT entries are used for lazy TLSDESC relocations. Bionic
+        // resolves everything eagerly, so these can be ignored.
+        break;
+
       default:
         if (!relocating_linker) {
-          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
-            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
-            return false;
-          }
-
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";

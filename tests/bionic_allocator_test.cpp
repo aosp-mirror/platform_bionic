@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../linker_allocator.h"
+#include "private/bionic_allocator.h"
 
 #include <unistd.h>
 
@@ -61,20 +61,20 @@ struct test_struct_512 {
 
 static size_t kPageSize = sysconf(_SC_PAGE_SIZE);
 
-TEST(linker_memory, test_alloc_0) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_alloc_0) {
+  BionicAllocator allocator;
   void* ptr = allocator.alloc(0);
   ASSERT_TRUE(ptr != nullptr);
   allocator.free(ptr);
 }
 
-TEST(linker_memory, test_free_nullptr) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_free_nullptr) {
+  BionicAllocator allocator;
   allocator.free(nullptr);
 }
 
-TEST(linker_memory, test_realloc) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_realloc) {
+  BionicAllocator allocator;
   uint32_t* array = reinterpret_cast<uint32_t*>(allocator.alloc(512));
   const size_t array_size = 512 / sizeof(uint32_t);
 
@@ -127,8 +127,8 @@ TEST(linker_memory, test_realloc) {
   ASSERT_EQ(nullptr, allocator.realloc(reallocated_ptr, 0));
 }
 
-TEST(linker_memory, test_small_smoke) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_small_smoke) {
+  BionicAllocator allocator;
 
   uint8_t zeros[16];
   memset(zeros, 0, sizeof(zeros));
@@ -150,8 +150,8 @@ TEST(linker_memory, test_small_smoke) {
   allocator.free(ptr2);
 }
 
-TEST(linker_memory, test_huge_smoke) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_huge_smoke) {
+  BionicAllocator allocator;
 
   // this should trigger proxy-to-mmap
   test_struct_huge* ptr1 =
@@ -170,8 +170,8 @@ TEST(linker_memory, test_huge_smoke) {
   allocator.free(ptr1);
 }
 
-TEST(linker_memory, test_large) {
-  LinkerMemoryAllocator allocator;
+TEST(bionic_allocator, test_large) {
+  BionicAllocator allocator;
 
   test_struct_large* ptr1 =
       reinterpret_cast<test_struct_large*>(allocator.alloc(sizeof(test_struct_large)));
@@ -212,4 +212,49 @@ TEST(linker_memory, test_large) {
   allocator.free(ptr_to_free);
 }
 
+TEST(bionic_allocator, test_memalign_small) {
+  BionicAllocator allocator;
+  void* ptr;
 
+  // simple case
+  ptr = allocator.memalign(0x100, 0x100);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // small objects are automatically aligned to their size.
+  ptr = allocator.alloc(0x200);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x200);
+  allocator.free(ptr);
+
+  // the size (0x10) is bumped up to the alignment (0x100)
+  ptr = allocator.memalign(0x100, 0x10);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+}
+
+TEST(bionic_allocator, test_memalign_large) {
+  BionicAllocator allocator;
+  void* ptr;
+
+  // a large object with alignment < PAGE_SIZE
+  ptr = allocator.memalign(0x100, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x100);
+  allocator.free(ptr);
+
+  // a large object with alignment == PAGE_SIZE
+  ptr = allocator.memalign(0x1000, 0x2000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x1000);
+  allocator.free(ptr);
+
+  // A large object with alignment > PAGE_SIZE is only guaranteed to have page
+  // alignment.
+  ptr = allocator.memalign(0x2000, 0x4000);
+  ASSERT_TRUE(ptr != nullptr);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) % 0x1000);
+  allocator.free(ptr);
+}
