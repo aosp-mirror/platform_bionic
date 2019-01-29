@@ -661,6 +661,13 @@ cc_test {
         "gtest_preinit_debuggerd.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+
+        // The Bionic allocator has its own C++ API. It isn't packaged into its
+        // own library, so it can only be tested when it's part of libc.a.
+        "bionic_allocator_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
     ],
     whole_static_libs: [
         "libBionicTests",

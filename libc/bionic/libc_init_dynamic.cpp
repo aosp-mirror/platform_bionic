@@ -51,6 +51,7 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
 #include "private/bionic_ssp.h"
@@ -81,6 +82,12 @@ static void __libc_preinit_impl() {
 #if defined(__i386__)
   __libc_init_sysinfo();
 #endif
+
+  // Register libc.so's copy of the TLS generation variable so the linker can
+  // update it when it loads or unloads a shared object.
+  TlsModules& tls_modules = __libc_shared_globals()->tls_modules;
+  tls_modules.generation_libc_so = &__libc_tls_generation_copy;
+  __libc_tls_generation_copy = tls_modules.generation;
 
   __libc_init_globals();
   __libc_init_common();

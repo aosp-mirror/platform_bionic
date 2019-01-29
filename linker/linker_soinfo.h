@@ -35,6 +35,7 @@
 
 #include "private/bionic_elf_tls.h"
 #include "linker_namespaces.h"
+#include "linker_tls.h"
 
 #define FLAG_LINKED           0x00000001
 #define FLAG_EXE              0x00000004 // The main executable
@@ -102,14 +103,9 @@ struct version_info {
 // TODO(dimitry): remove reference from soinfo member functions to this class.
 class VersionTracker;
 
-// The first ELF TLS module has ID 1. Zero is reserved for the first word of
-// the DTV, a generation count, and unresolved weak symbols also use module
-// ID 0.
-static constexpr size_t kUninitializedModuleId = 0;
-
 struct soinfo_tls {
   TlsSegment segment;
-  size_t module_id = kUninitializedModuleId;
+  size_t module_id = kTlsUninitializedModuleId;
 };
 
 #if defined(__work_around_b_24465209__)
