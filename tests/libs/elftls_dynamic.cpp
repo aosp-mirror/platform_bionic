@@ -26,40 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+// This shared object test library is dlopen'ed by the main test executable.
+// This variable comes from libtest_elftls_shared_var.so, which is part of
+// static TLS. Verify that a GD-model access can access the variable.
+//
+// Accessing the static TLS variable from an solib prevents the static linker
+// from relaxing the GD access to IE and lets us test that __tls_get_addr and
+// the tlsdesc resolver handle a static TLS variable.
+extern "C" __thread int elftls_shared_var;
 
-#include <stdlib.h>
+extern "C" int bump_shared_var() {
+  return ++elftls_shared_var;
+}
 
-#include "private/bionic_elf_tls.h"
+// The static linker denotes the current module by omitting the symbol from
+// the DTPMOD/TLSDESC relocations.
+static __thread int local_var_1 = 15;
+static __thread int local_var_2 = 25;
 
-struct TlsModule;
-struct soinfo;
+extern "C" int bump_local_vars() {
+  return ++local_var_1 + ++local_var_2;
+}
 
-void linker_setup_exe_static_tls(const char* progname);
-void linker_finalize_static_tls();
+__attribute__((weak)) extern "C" __thread int missing_weak_dyn_tls;
 
-void register_soinfo_tls(soinfo* si);
-void unregister_soinfo_tls(soinfo* si);
-
-const TlsModule& get_tls_module(size_t module_id);
-
-typedef size_t TlsDescResolverFunc(size_t);
-
-struct TlsDescriptor {
-#if defined(__arm__)
-  size_t arg;
-  TlsDescResolverFunc* func;
-#else
-  TlsDescResolverFunc* func;
-  size_t arg;
-#endif
-};
-
-struct TlsDynamicResolverArg {
-  size_t generation;
-  TlsIndex index;
-};
-
-__LIBC_HIDDEN__ extern "C" size_t tlsdesc_resolver_static(size_t);
-__LIBC_HIDDEN__ extern "C" size_t tlsdesc_resolver_dynamic(size_t);
-__LIBC_HIDDEN__ extern "C" size_t tlsdesc_resolver_unresolved_weak(size_t);
+extern "C" int* missing_weak_dyn_tls_addr() {
+  return &missing_weak_dyn_tls;
+}

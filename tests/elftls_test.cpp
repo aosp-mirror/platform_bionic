@@ -83,3 +83,17 @@ TEST(elftls, tprel_addend) {
     ASSERT_EQ(8, bump_static_tls_var_2());
   }).join();
 }
+
+// Because this C++ source file is built with -fpic, the compiler will access
+// this variable using a GD model. Typically, the static linker will relax the
+// GD to LE, but the arm32 linker doesn't do TLS relaxations, so we can test
+// calling __tls_get_addr in a static executable. The static linker knows that
+// the main executable's TlsIndex::module_id is 1 and writes that into the GOT.
+__thread int tlsvar_general = 30;
+
+TEST(elftls, general) {
+  ASSERT_EQ(31, ++tlsvar_general);
+  std::thread([] {
+    ASSERT_EQ(31, ++tlsvar_general);
+  }).join();
+}
