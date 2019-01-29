@@ -32,6 +32,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "private/bionic_elf_tls.h"
 #include "linker_namespaces.h"
@@ -379,6 +380,7 @@ struct soinfo {
 
   // version >= 5
   std::unique_ptr<soinfo_tls> tls_;
+  std::vector<TlsDynamicResolverArg> tlsdesc_args_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
