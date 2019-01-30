@@ -1082,19 +1082,6 @@ TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
   ASSERT_SUBSTR("libsysv-hash-table-library.so", dlinfo.dli_fname);
 }
 
-TEST(dlfcn, dlopen_library_with_ELF_TLS) {
-// TODO: Remove this test. Once ELF TLS is implemented, this test will be
-// replaced with a larger set of tests. Removing the test requires matching CLs
-// in CTS and in internal test suites.
-#if 0
-  dlerror(); // Clear any pending errors.
-  void* handle = dlopen("libelf-tls-library.so", RTLD_NOW);
-  ASSERT_TRUE(handle == nullptr);
-  ASSERT_SUBSTR("unknown reloc type ", dlerror());
-#endif
-  GTEST_LOG_(INFO) << "This test is disabled pending replacement with dynamic ELF TLS tests.\n";
-}
-
 TEST(dlfcn, dlopen_bad_flags) {
   dlerror(); // Clear any pending errors.
   void* handle;
