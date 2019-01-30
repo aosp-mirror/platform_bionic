@@ -604,9 +604,8 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
   return impl_handle;
 }
 
-// A function pointer to heapprofds init function. Used to re-initialize
-// heapprofd. This will start a new profiling session and tear down the old
-// one in case it is still active.
+// The handle returned by dlopen when previously loading the heapprofd
+// hooks. nullptr if they had not been loaded before.
 static _Atomic (void*) g_heapprofd_handle = nullptr;
 
 static void install_hooks(libc_globals* globals, const char* options,
@@ -614,7 +613,8 @@ static void install_hooks(libc_globals* globals, const char* options,
   MallocDispatch dispatch_table;
 
   void* impl_handle = atomic_load(&g_heapprofd_handle);
-  if (impl_handle != nullptr) {
+  bool reusing_handle = impl_handle != nullptr;
+  if (reusing_handle) {
     if (!InitSharedLibrary(impl_handle, shared_lib, prefix, &dispatch_table)) {
       return;
     }
@@ -627,7 +627,11 @@ static void install_hooks(libc_globals* globals, const char* options,
   init_func_t init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
     error_log("%s: failed to enable malloc %s", getprogname(), prefix);
-    dlclose(impl_handle);
+    if (!reusing_handle) {
+      // We should not close if we are re-using an old handle, as we cannot be
+      // sure other threads are not currently in the hooks.
+      dlclose(impl_handle);
+    }
     ClearGlobalFunctions();
     return;
   }
