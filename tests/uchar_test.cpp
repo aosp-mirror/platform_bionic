@@ -15,12 +15,7 @@
  */
 
 
-#include <sys/cdefs.h>
-#if defined(__BIONIC__)
-#define HAVE_UCHAR 1
-#elif defined(__GLIBC__)
-#define HAVE_UCHAR __GLIBC_PREREQ(2, 16)
-#endif
+#include <uchar.h>
 
 #include <gtest/gtest.h>
 
@@ -29,21 +24,12 @@
 #include <locale.h>
 #include <stdint.h>
 
-#if HAVE_UCHAR
-#include <uchar.h>
-#endif
-
 TEST(uchar, sizeof_uchar_t) {
-#if HAVE_UCHAR
   EXPECT_EQ(2U, sizeof(char16_t));
   EXPECT_EQ(4U, sizeof(char32_t));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, start_state) {
-#if HAVE_UCHAR
   char out[MB_LEN_MAX];
   mbstate_t ps;
 
@@ -64,31 +50,19 @@ TEST(uchar, start_state) {
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xf0\xa4", 1, &ps));
   EXPECT_EQ(1U, c32rtomb(out, L'\0', &ps));
   EXPECT_TRUE(mbsinit(&ps));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c16rtomb_null_out) {
-#if HAVE_UCHAR
   EXPECT_EQ(1U, c16rtomb(nullptr, L'\0', nullptr));
   EXPECT_EQ(1U, c16rtomb(nullptr, L'h', nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c16rtomb_null_char) {
-#if HAVE_UCHAR
   char bytes[MB_LEN_MAX];
   EXPECT_EQ(1U, c16rtomb(bytes, L'\0', nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c16rtomb) {
-#if HAVE_UCHAR
   char bytes[MB_LEN_MAX];
 
   memset(bytes, 0, sizeof(bytes));
@@ -113,13 +87,9 @@ TEST(uchar, c16rtomb) {
   EXPECT_EQ('\xe2', bytes[0]);
   EXPECT_EQ('\x82', bytes[1]);
   EXPECT_EQ('\xac', bytes[2]);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c16rtomb_surrogate) {
-#if HAVE_UCHAR
   char bytes[MB_LEN_MAX];
 
   memset(bytes, 0, sizeof(bytes));
@@ -129,13 +99,9 @@ TEST(uchar, c16rtomb_surrogate) {
   EXPECT_EQ('\x8a', bytes[1]);
   EXPECT_EQ('\xaf', bytes[2]);
   EXPECT_EQ('\x8d', bytes[3]);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c16rtomb_invalid) {
-#if HAVE_UCHAR
   char bytes[MB_LEN_MAX];
 
   memset(bytes, 0, sizeof(bytes));
@@ -143,21 +109,13 @@ TEST(uchar, c16rtomb_invalid) {
 
   EXPECT_EQ(0U, c16rtomb(bytes, 0xdbea, nullptr));
   EXPECT_EQ(static_cast<size_t>(-1), c16rtomb(bytes, 0xdbea, nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16_null) {
-#if HAVE_UCHAR
   ASSERT_EQ(0U, mbrtoc16(nullptr, nullptr, 0, nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16_zero_len) {
-#if HAVE_UCHAR
   char16_t out;
 
   out = L'x';
@@ -168,13 +126,9 @@ TEST(uchar, mbrtoc16_zero_len) {
   ASSERT_EQ(0U, mbrtoc16(&out, "", 0, nullptr));
   ASSERT_EQ(1U, mbrtoc16(&out, "hello", 1, nullptr));
   ASSERT_EQ(L'h', out);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16) {
-#if HAVE_UCHAR
   char16_t out;
 
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
@@ -189,13 +143,9 @@ TEST(uchar, mbrtoc16) {
   // 3-byte UTF-8.
   ASSERT_EQ(3U, mbrtoc16(&out, "\xe2\x82\xac" "def", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16_surrogate) {
-#if HAVE_UCHAR
   char16_t out;
 
   ASSERT_EQ(static_cast<size_t>(-3),
@@ -203,32 +153,20 @@ TEST(uchar, mbrtoc16_surrogate) {
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16_reserved_range) {
-#if HAVE_UCHAR
   char16_t out;
   ASSERT_EQ(static_cast<size_t>(-1),
             mbrtoc16(&out, "\xf0\x80\xbf\xbf", 6, nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc16_beyond_range) {
-#if HAVE_UCHAR
   char16_t out;
   ASSERT_EQ(static_cast<size_t>(-1),
             mbrtoc16(&out, "\xf5\x80\x80\x80", 6, nullptr));
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
-#if HAVE_UCHAR
 void test_mbrtoc16_incomplete(mbstate_t* ps) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
@@ -259,22 +197,16 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\x20" "cdef", 5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
-#endif
 
 TEST(uchar, mbrtoc16_incomplete) {
-#if HAVE_UCHAR
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
   test_mbrtoc16_incomplete(&ps);
   test_mbrtoc16_incomplete(nullptr);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, c32rtomb) {
-#if HAVE_UCHAR
   EXPECT_EQ(1U, c32rtomb(nullptr, L'\0', nullptr));
   EXPECT_EQ(1U, c32rtomb(nullptr, L'h', nullptr));
 
@@ -317,13 +249,9 @@ TEST(uchar, c32rtomb) {
   // Invalid code point.
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(bytes, 0xffffffff, nullptr));
   EXPECT_EQ(EILSEQ, errno);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc32_valid_non_characters) {
-#if HAVE_UCHAR
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
@@ -332,13 +260,9 @@ TEST(uchar, mbrtoc32_valid_non_characters) {
   ASSERT_EQ(0xfffeU, out[0]);
   ASSERT_EQ(3U, mbrtoc32(out, "\xef\xbf\xbf", 3, nullptr));
   ASSERT_EQ(0xffffU, out[0]);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc32_out_of_range) {
-#if HAVE_UCHAR
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
 
@@ -346,13 +270,9 @@ TEST(uchar, mbrtoc32_out_of_range) {
   errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf5\x80\x80\x80", 4, nullptr));
   ASSERT_EQ(EILSEQ, errno);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
 TEST(uchar, mbrtoc32) {
-#if HAVE_UCHAR
   char32_t out[8];
 
   out[0] = L'x';
@@ -393,12 +313,8 @@ TEST(uchar, mbrtoc32) {
   // Illegal over-long sequence.
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf0\x82\x82\xac" "ef", 6, nullptr));
   ASSERT_EQ(EILSEQ, errno);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
 
-#if HAVE_UCHAR
 void test_mbrtoc32_incomplete(mbstate_t* ps) {
   ASSERT_STREQ("C.UTF-8", setlocale(LC_CTYPE, "C.UTF-8"));
   uselocale(LC_GLOBAL_LOCALE);
@@ -427,16 +343,11 @@ void test_mbrtoc32_incomplete(mbstate_t* ps) {
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(&out, "\x20" "cdef", 5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
-#endif
 
 TEST(uchar, mbrtoc32_incomplete) {
-#if HAVE_UCHAR
   mbstate_t ps;
   memset(&ps, 0, sizeof(ps));
 
   test_mbrtoc32_incomplete(&ps);
   test_mbrtoc32_incomplete(nullptr);
-#else
-  GTEST_LOG_(INFO) << "uchar.h is unavailable.\n";
-#endif
 }
