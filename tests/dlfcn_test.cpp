@@ -1082,13 +1082,6 @@ TEST(dlfcn, dlopen_library_with_only_sysv_hash) {
   ASSERT_SUBSTR("libsysv-hash-table-library.so", dlinfo.dli_fname);
 }
 
-TEST(dlfcn, dlopen_library_with_ELF_TLS) {
-  dlerror(); // Clear any pending errors.
-  void* handle = dlopen("libelf-tls-library.so", RTLD_NOW);
-  ASSERT_TRUE(handle == nullptr);
-  ASSERT_SUBSTR("unknown reloc type ", dlerror());
-}
-
 TEST(dlfcn, dlopen_bad_flags) {
   dlerror(); // Clear any pending errors.
   void* handle;

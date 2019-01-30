@@ -4,7 +4,6 @@ cc_library_static {
     recovery_available: true,
 
     srcs: [
-        "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
     cflags: [
@@ -104,6 +103,7 @@ filegroup {
     name: "linker_sources_arm64",
     srcs: [
         "arch/arm64/begin.S",
+        "arch/arm64/tlsdesc_resolver.S",
     ],
 }
 

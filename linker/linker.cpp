@@ -2698,6 +2698,7 @@ template<typename ElfRelIteratorT>
 bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
                       const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
   const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
+  std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
 
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
@@ -2722,7 +2723,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     soinfo* lsi = nullptr;
 
     if (sym == 0) {
-      // Do nothing.
+      // By convention in ld.bfd and lld, an omitted symbol on a TLS relocation
+      // is a reference to the current module.
+      if (is_tls_reloc(type)) {
+        lsi = this;
+      }
     } else if (ELF_ST_BIND(symtab_[sym].st_info) == STB_LOCAL && is_tls_reloc(type)) {
       // In certain situations, the Gold linker accesses a TLS symbol using a
       // relocation to an STB_LOCAL symbol in .dynsym of either STT_SECTION or
@@ -2830,6 +2835,11 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    sym_name, get_realpath());
             return false;
           }
+          if (lsi->get_tls() == nullptr) {
+            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
+                   sym_name, lsi->get_realpath());
+            return false;
+          }
           sym_addr = s->st_value;
         } else {
           if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
@@ -2916,16 +2926,12 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         MARK(rel->r_offset);
         {
           ElfW(Addr) tpoff = 0;
-          if (sym == 0) {
-            // By convention in ld.bfd and lld, an omitted symbol
-            // (ELFW(R_SYM) == 0) refers to the local module.
-            lsi = this;
-          }
           if (lsi == nullptr) {
             // Unresolved weak relocation. Leave tpoff at 0 to resolve
             // &weak_tls_symbol to __get_tls().
-          } else if (soinfo_tls* lsi_tls = lsi->get_tls()) {
-            const TlsModule& mod = get_tls_module(lsi_tls->module_id);
+          } else {
+            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
+            const TlsModule& mod = get_tls_module(lsi->get_tls()->module_id);
             if (mod.static_offset != SIZE_MAX) {
               tpoff += mod.static_offset - tls_tp_base;
             } else {
@@ -2933,10 +2939,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                      sym_name, lsi->get_realpath(), get_realpath());
               return false;
             }
-          } else {
-            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
-                   sym_name, lsi->get_realpath());
-            return false;
           }
           tpoff += sym_addr + addend;
           TRACE_TYPE(RELO, "RELO TLS_TPREL %16p <- %16p %s\n",
@@ -2945,6 +2947,78 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
+
+#if !defined(__aarch64__)
+      // Omit support for DTPMOD/DTPREL on arm64, at least until
+      // http://b/123385182 is fixed. arm64 uses TLSDESC instead.
+      case R_GENERIC_TLS_DTPMOD:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        {
+          size_t module_id = 0;
+          if (lsi == nullptr) {
+            // Unresolved weak relocation. Evaluate the module ID to 0.
+          } else {
+            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
+            module_id = lsi->get_tls()->module_id;
+          }
+          TRACE_TYPE(RELO, "RELO TLS_DTPMOD %16p <- %zu %s\n",
+                     reinterpret_cast<void*>(reloc), module_id, sym_name);
+          *reinterpret_cast<ElfW(Addr)*>(reloc) = module_id;
+        }
+        break;
+      case R_GENERIC_TLS_DTPREL:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
+                   reinterpret_cast<void*>(reloc),
+                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
+        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
+        break;
+#endif  // !defined(__aarch64__)
+
+#if defined(__aarch64__)
+      // Bionic currently only implements TLSDESC for arm64. This implementation should work with
+      // other architectures, as long as the resolver functions are implemented.
+      case R_GENERIC_TLSDESC:
+        count_relocation(kRelocRelative);
+        MARK(rel->r_offset);
+        {
+          TlsDescriptor* desc = reinterpret_cast<TlsDescriptor*>(reloc);
+          if (lsi == nullptr) {
+            // Unresolved weak relocation.
+            desc->func = tlsdesc_resolver_unresolved_weak;
+            desc->arg = addend;
+            TRACE_TYPE(RELO, "RELO TLSDESC %16p <- unresolved weak 0x%zx %s\n",
+                       reinterpret_cast<void*>(reloc), static_cast<size_t>(addend), sym_name);
+          } else {
+            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
+            size_t module_id = lsi->get_tls()->module_id;
+            const TlsModule& mod = get_tls_module(module_id);
+            if (mod.static_offset != SIZE_MAX) {
+              desc->func = tlsdesc_resolver_static;
+              desc->arg = mod.static_offset - tls_tp_base + sym_addr + addend;
+              TRACE_TYPE(RELO, "RELO TLSDESC %16p <- static (0x%zx - 0x%zx + 0x%zx + 0x%zx) %s\n",
+                         reinterpret_cast<void*>(reloc), mod.static_offset, tls_tp_base,
+                         static_cast<size_t>(sym_addr), static_cast<size_t>(addend), sym_name);
+            } else {
+              tlsdesc_args_.push_back({
+                .generation = mod.first_generation,
+                .index.module_id = module_id,
+                .index.offset = sym_addr + addend,
+              });
+              // Defer the TLSDESC relocation until the address of the TlsDynamicResolverArg object
+              // is finalized.
+              deferred_tlsdesc_relocs.push_back({ desc, tlsdesc_args_.size() - 1 });
+              const TlsDynamicResolverArg& desc_arg = tlsdesc_args_.back();
+              TRACE_TYPE(RELO, "RELO TLSDESC %16p <- dynamic (gen %zu, mod %zu, off %zu) %s",
+                         reinterpret_cast<void*>(reloc), desc_arg.generation,
+                         desc_arg.index.module_id, desc_arg.index.offset, sym_name);
+            }
+          }
+        }
+        break;
+#endif  // defined(R_GENERIC_TLSDESC)
 
 #if defined(__aarch64__)
       case R_AARCH64_ABS64:
@@ -3115,6 +3189,13 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         return false;
     }
   }
+
+  for (const std::pair<TlsDescriptor*, size_t>& pair : deferred_tlsdesc_relocs) {
+    TlsDescriptor* desc = pair.first;
+    desc->func = tlsdesc_resolver_dynamic;
+    desc->arg = reinterpret_cast<size_t>(&tlsdesc_args_[pair.second]);
+  }
+
   return true;
 }
 #endif  // !defined(__mips__)
@@ -3528,13 +3609,14 @@ bool soinfo::prelink_image() {
         // this is parsed after we have strtab initialized (see below).
         break;
 
+      case DT_TLSDESC_GOT:
+      case DT_TLSDESC_PLT:
+        // These DT entries are used for lazy TLSDESC relocations. Bionic
+        // resolves everything eagerly, so these can be ignored.
+        break;
+
       default:
         if (!relocating_linker) {
-          if (d->d_tag == DT_TLSDESC_GOT || d->d_tag == DT_TLSDESC_PLT) {
-            DL_ERR("unsupported ELF TLS DT entry in \"%s\"", get_realpath());
-            return false;
-          }
-
           const char* tag_name;
           if (d->d_tag == DT_RPATH) {
             tag_name = "DT_RPATH";
