@@ -22,6 +22,30 @@
       "revId": "1cc9d508c97b93bda399627ba6f93f8f8ca3f7a3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "712d5d61_20c63ee9",
+        "filename": "build/bionic.go",
+        "patchSetId": 22
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-01-30T13:29:20Z",
+      "side": 1,
+      "message": "Done (in front of the init() method which introduces this module type)",
+      "parentUuid": "8ac4bdd5_f2bb8496",
+      "range": {
+        "startLine": 90,
+        "startChar": 1,
+        "endLine": 90,
+        "endChar": 62
+      },
+      "revId": "1cc9d508c97b93bda399627ba6f93f8f8ca3f7a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
