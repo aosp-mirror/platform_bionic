@@ -1548,7 +1548,7 @@ cc_library {
         ],
     },
 
-    required: ["tzdata"],
+    required: ["tzdata", "libc.mountpoint"],
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.

@@ -14,29 +14,14 @@
  * limitations under the License.
  */
 
+#include <sys/auxv.h>
+
 #include <errno.h>
 #include <sys/cdefs.h>
 #include <sys/utsname.h>
 #include <gtest/gtest.h>
 
-// getauxval() was only added as of glibc version 2.16.
-// See: http://lwn.net/Articles/519085/
-// Don't try to compile this code on older glibc versions.
-
-#if defined(__BIONIC__)
-  #define GETAUXVAL_CAN_COMPILE 1
-#elif defined(__GLIBC_PREREQ)
-  #if __GLIBC_PREREQ(2, 16)
-    #define GETAUXVAL_CAN_COMPILE 1
-  #endif
-#endif
-
-#if defined(GETAUXVAL_CAN_COMPILE)
-#include <sys/auxv.h>
-#endif
-
 TEST(getauxval, expected_values) {
-#if defined(GETAUXVAL_CAN_COMPILE)
   ASSERT_EQ(0UL, getauxval(AT_SECURE));
   ASSERT_EQ(getuid(), getauxval(AT_UID));
   ASSERT_EQ(geteuid(), getauxval(AT_EUID));
@@ -48,19 +33,12 @@ TEST(getauxval, expected_values) {
   ASSERT_NE(0UL, getauxval(AT_PHNUM));
   ASSERT_NE(0UL, getauxval(AT_ENTRY));
   ASSERT_NE(0UL, getauxval(AT_PAGESZ));
-#else
-  GTEST_LOG_(INFO) << "This test requires a C library with getauxval.\n";
-#endif
 }
 
 TEST(getauxval, unexpected_values) {
-#if defined(GETAUXVAL_CAN_COMPILE)
   errno = 0;
   ASSERT_EQ(0UL, getauxval(0xdeadbeef));
   ASSERT_EQ(ENOENT, errno);
-#else
-  GTEST_LOG_(INFO) << "This test requires a C library with getauxval.\n";
-#endif
 }
 
 TEST(getauxval, arm_has_AT_HWCAP2) {

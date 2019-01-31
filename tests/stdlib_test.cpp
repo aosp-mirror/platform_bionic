@@ -36,14 +36,6 @@
 #include "math_data_test.h"
 #include "utils.h"
 
-#if defined(__BIONIC__)
-  #define ALIGNED_ALLOC_AVAILABLE 1
-#elif defined(__GLIBC_PREREQ)
-  #if __GLIBC_PREREQ(2, 16)
-    #define ALIGNED_ALLOC_AVAILABLE 1
-  #endif
-#endif
-
 template <typename T = int (*)(char*)>
 class GenericTemporaryFile {
  public:
@@ -274,7 +266,6 @@ TEST(stdlib, posix_memalign_overflow) {
 
 TEST(stdlib, aligned_alloc_sweep) {
   SKIP_WITH_HWASAN;
-#if defined(ALIGNED_ALLOC_AVAILABLE)
   // Verify powers of 2 up to 2048 allocate, and verify that all other
   // alignment values between the powers of 2 fail.
   size_t last_align = 1;
@@ -292,31 +283,20 @@ TEST(stdlib, aligned_alloc_sweep) {
     free(ptr);
     last_align = align;
   }
-#else
-  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
-#endif
 }
 
 TEST(stdlib, aligned_alloc_overflow) {
   SKIP_WITH_HWASAN;
-#if defined(ALIGNED_ALLOC_AVAILABLE)
   ASSERT_TRUE(aligned_alloc(16, SIZE_MAX) == nullptr);
-#else
-  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
-#endif
 }
 
 TEST(stdlib, aligned_alloc_size_not_multiple_of_alignment) {
   SKIP_WITH_HWASAN;
-#if defined(ALIGNED_ALLOC_AVAILABLE)
   for (size_t size = 1; size <= 2048; size++) {
     void* ptr = aligned_alloc(2048, size);
     ASSERT_TRUE(ptr != nullptr) << "Failed at size " << std::to_string(size);
     free(ptr);
   }
-#else
-  GTEST_LOG_(INFO) << "This test requires a C library that has aligned_alloc.\n";
-#endif
 }
 
 TEST(stdlib, realpath__NULL_filename) {
