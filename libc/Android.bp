@@ -1429,12 +1429,7 @@ cc_library_static {
             srcs: ["arch-x86/dynamic_function_dispatch.cpp"],
         },
         arm: {
-            srcs: [
-                "arch-arm/dynamic_function_dispatch.cpp",
-
-                // Workaround for b/120254692.
-                "arch-arm/dynamic_function_wrapper.S",
-            ],
+            srcs: ["arch-arm/dynamic_function_dispatch.cpp"],
         },
     },
 
