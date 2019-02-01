@@ -1,0 +1,1 @@
+This file serves as a mount point for bionic files either from /system partition or from /apex/com.android.runtime. This file is never meant to be accessed directly.

@@ -4,7 +4,6 @@ cc_library_static {
     recovery_available: true,
 
     srcs: [
-        "linker_allocator.cpp",
         "linker_memory.cpp",
     ],
     cflags: [
@@ -104,6 +103,7 @@ filegroup {
     name: "linker_sources_arm64",
     srcs: [
         "arch/arm64/begin.S",
+        "arch/arm64/tlsdesc_resolver.S",
     ],
 }
 
@@ -176,6 +176,11 @@ cc_defaults {
         "-Wextra",
         "-Wunused",
         "-Werror",
+
+        // Define _USING_LIBCXX so <stdatomic.h> defers to the <atomic> header. When a Soong module
+        // uses the platform libc++, Soong automatically passes this macro, but the dynamic linker
+        // links against libc++ manually.
+        "-D_USING_LIBCXX",
     ],
 
     // TODO: split out the asflags.
@@ -278,9 +283,15 @@ cc_binary {
 
     name: "linker",
     symlinks: ["linker_asan"],
+    // The linker in the system partition is now only for bootstrapping
+    relative_install_path: "bootstrap",
     recovery_available: true,
     multilib: {
+        lib32: {
+            cflags: ["-DLIB_PATH=\"lib\""],
+        },
         lib64: {
+            cflags: ["-DLIB_PATH=\"lib64\""],
             suffix: "64",
         },
     },
@@ -292,6 +303,7 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
+    required: ["linker.mountpoint"],
 }
 
 cc_library {

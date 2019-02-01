@@ -415,6 +415,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     }
   }
 
+  linker_setup_exe_static_tls(g_argv[0]);
+
   // Load ld_preloads and dependencies.
   std::vector<const char*> needed_library_name_list;
   size_t ld_preloads_count = 0;
@@ -452,8 +454,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
     si->increment_ref_count();
   }
 
-  layout_linker_static_tls();
-
+  linker_finalize_static_tls();
   __libc_init_main_thread_final();
 
   if (!get_cfi_shadow()->InitialLinkDone(solist)) __linker_cannot_link(g_argv[0]);

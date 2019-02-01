@@ -20,13 +20,14 @@
 #include <linux/audit.h>
 #include <linux/seccomp.h>
 #include <sys/prctl.h>
+#include <sys/syscall.h>
 
 #include <vector>
 
 #include <android-base/logging.h>
 
+#include "func_to_syscall_nrs.h"
 #include "seccomp_bpfs.h"
-
 
 #if defined __arm__ || defined __aarch64__
 
@@ -34,63 +35,95 @@
 #define PRIMARY_ARCH AUDIT_ARCH_AARCH64
 static const struct sock_filter* primary_app_filter = arm64_app_filter;
 static const size_t primary_app_filter_size = arm64_app_filter_size;
+static const struct sock_filter* primary_app_zygote_filter = arm64_app_zygote_filter;
+static const size_t primary_app_zygote_filter_size = arm64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = arm64_system_filter;
 static const size_t primary_system_filter_size = arm64_system_filter_size;
 static const struct sock_filter* primary_global_filter = arm64_global_filter;
 static const size_t primary_global_filter_size = arm64_global_filter_size;
+
+static const long primary_setresgid = __arm64_setresgid;
+static const long primary_setresuid = __arm64_setresuid;
 #define SECONDARY_ARCH AUDIT_ARCH_ARM
 static const struct sock_filter* secondary_app_filter = arm_app_filter;
 static const size_t secondary_app_filter_size = arm_app_filter_size;
+static const struct sock_filter* secondary_app_zygote_filter = arm_app_zygote_filter;
+static const size_t secondary_app_zygote_filter_size = arm_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = arm_system_filter;
 static const size_t secondary_system_filter_size = arm_system_filter_size;
 static const struct sock_filter* secondary_global_filter = arm_global_filter;
 static const size_t secondary_global_filter_size = arm_global_filter_size;
 
+static const long secondary_setresgid = __arm_setresgid;
+static const long secondary_setresuid = __arm_setresuid;
 #elif defined __i386__ || defined __x86_64__
 
 #define DUAL_ARCH
 #define PRIMARY_ARCH AUDIT_ARCH_X86_64
 static const struct sock_filter* primary_app_filter = x86_64_app_filter;
 static const size_t primary_app_filter_size = x86_64_app_filter_size;
+static const struct sock_filter* primary_app_zygote_filter = x86_64_app_zygote_filter;
+static const size_t primary_app_zygote_filter_size = x86_64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = x86_64_system_filter;
 static const size_t primary_system_filter_size = x86_64_system_filter_size;
 static const struct sock_filter* primary_global_filter = x86_64_global_filter;
 static const size_t primary_global_filter_size = x86_64_global_filter_size;
+
+static const long primary_setresgid = __x86_64_setresgid;
+static const long primary_setresuid = __x86_64_setresuid;
 #define SECONDARY_ARCH AUDIT_ARCH_I386
 static const struct sock_filter* secondary_app_filter = x86_app_filter;
 static const size_t secondary_app_filter_size = x86_app_filter_size;
+static const struct sock_filter* secondary_app_zygote_filter = x86_app_zygote_filter;
+static const size_t secondary_app_zygote_filter_size = x86_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = x86_system_filter;
 static const size_t secondary_system_filter_size = x86_system_filter_size;
 static const struct sock_filter* secondary_global_filter = x86_global_filter;
 static const size_t secondary_global_filter_size = x86_global_filter_size;
 
+static const long secondary_setresgid = __x86_setresgid;
+static const long secondary_setresuid = __x86_setresuid;
 #elif defined __mips__ || defined __mips64__
 
 #define DUAL_ARCH
 #define PRIMARY_ARCH AUDIT_ARCH_MIPSEL64
 static const struct sock_filter* primary_app_filter = mips64_app_filter;
 static const size_t primary_app_filter_size = mips64_app_filter_size;
+static const struct sock_filter* primary_app_zygote_filter = mips64_app_zygote_filter;
+static const size_t primary_app_zygote_filter_size = mips64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = mips64_system_filter;
 static const size_t primary_system_filter_size = mips64_system_filter_size;
 static const struct sock_filter* primary_global_filter = mips64_global_filter;
 static const size_t primary_global_filter_size = mips64_global_filter_size;
+
+static const long primary_setresgid = __mips64_setresgid;
+static const long primary_setresuid = __mips64_setresuid;
 #define SECONDARY_ARCH AUDIT_ARCH_MIPSEL
 static const struct sock_filter* secondary_app_filter = mips_app_filter;
 static const size_t secondary_app_filter_size = mips_app_filter_size;
+static const struct sock_filter* secondary_app_zygote_filter = mips_app_zygote_filter;
+static const size_t secondary_app_zygote_filter_size = mips_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = mips_system_filter;
 static const size_t secondary_system_filter_size = mips_system_filter_size;
 static const struct sock_filter* secondary_global_filter = mips_global_filter;
 static const size_t secondary_global_filter_size = mips_global_filter_size;
 
+static const long secondary_setresgid = __mips_setresgid;
+static const long secondary_setresuid = __mips_setresuid;
 #else
 #error No architecture was defined!
 #endif
 
 
 #define syscall_nr (offsetof(struct seccomp_data, nr))
+#define syscall_arg(_n) (offsetof(struct seccomp_data, args[_n]))
 #define arch_nr (offsetof(struct seccomp_data, arch))
 
 typedef std::vector<sock_filter> filter;
+
+inline void Allow(filter& f) {
+    f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW));
+}
 
 inline void Disallow(filter& f) {
     f.push_back(BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_TRAP));
@@ -128,6 +161,49 @@ static void ValidateArchitecture(filter& f) {
 }
 #endif
 
+static void ValidateSyscallArgInRange(filter& f, __u32 arg_num, __u32 range_min, __u32 range_max) {
+    const __u32 syscall_arg = syscall_arg(arg_num);
+
+    if (range_max == UINT32_MAX) {
+        LOG(FATAL) << "range_max exceeds maximum argument range.";
+        return;
+    }
+
+    f.push_back(BPF_STMT(BPF_LD|BPF_W|BPF_ABS, syscall_arg));
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, range_min, 0, 1));
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, range_max + 1, 0, 1));
+    Disallow(f);
+}
+
+// This filter is meant to be installed in addition to a regular whitelist filter.
+// Therefore, it's default action has to be Allow, except when the evaluated
+// system call matches setresuid/setresgid and the arguments don't fall within the
+// passed in range.
+//
+// The regular whitelist only allows setresuid/setresgid for UID/GID changes, so
+// that's the only system call we need to check here. A CTS test ensures the other
+// calls will remain blocked.
+static void ValidateSetUidGid(filter& f, uint32_t uid_gid_min, uint32_t uid_gid_max, bool primary) {
+    // Check setresuid(ruid, euid, sguid) fall within range
+    ExamineSyscall(f);
+    __u32 setresuid_nr = primary ? primary_setresuid : secondary_setresuid;
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, setresuid_nr, 0, 12));
+    for (int arg = 0; arg < 3; arg++) {
+        ValidateSyscallArgInRange(f, arg, uid_gid_min, uid_gid_max);
+    }
+
+    // Check setresgid(rgid, egid, sgid) fall within range
+    ExamineSyscall(f);
+    __u32 setresgid_nr = primary ? primary_setresgid : secondary_setresgid;
+    f.push_back(BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, setresgid_nr, 0, 12));
+    for (int arg = 0; arg < 3; arg++) {
+        ValidateSyscallArgInRange(f, arg, uid_gid_min, uid_gid_max);
+    }
+
+    // Default is to allow; other filters may still reject this call.
+    Allow(f);
+}
+
 static bool install_filter(filter const& f) {
     struct sock_fprog prog = {
         static_cast<unsigned short>(f.size()),
@@ -141,8 +217,33 @@ static bool install_filter(filter const& f) {
     return true;
 }
 
+bool _install_setuidgid_filter(uint32_t uid_gid_min, uint32_t uid_gid_max) {
+    filter f;
+#ifdef DUAL_ARCH
+    // Note that for mixed 64/32 bit architectures, ValidateArchitecture inserts a
+    // jump that must be changed to point to the start of the 32-bit policy
+    // 32 bit syscalls will not hit the policy between here and the call to SetJump
+    auto offset_to_secondary_filter = ValidateArchitectureAndJumpIfNeeded(f);
+#else
+    ValidateArchitecture(f);
+#endif
+
+    ValidateSetUidGid(f, uid_gid_min, uid_gid_max, true /* primary */);
+
+#ifdef DUAL_ARCH
+    if (!SetValidateArchitectureJumpTarget(offset_to_secondary_filter, f)) {
+        return false;
+    }
+
+    ValidateSetUidGid(f, uid_gid_min, uid_gid_max, false /* primary */);
+#endif
+
+    return install_filter(f);
+}
+
 enum FilterType {
   APP,
+  APP_ZYGOTE,
   SYSTEM,
   GLOBAL
 };
@@ -158,6 +259,12 @@ bool _set_seccomp_filter(FilterType type) {
         p_size = primary_app_filter_size;
         s = secondary_app_filter;
         s_size = secondary_app_filter_size;
+        break;
+      case APP_ZYGOTE:
+        p = primary_app_zygote_filter;
+        p_size = primary_app_zygote_filter_size;
+        s = secondary_app_zygote_filter;
+        s_size = secondary_app_zygote_filter_size;
         break;
       case SYSTEM:
         p = primary_system_filter;
@@ -210,10 +317,18 @@ bool set_app_seccomp_filter() {
     return _set_seccomp_filter(FilterType::APP);
 }
 
+bool set_app_zygote_seccomp_filter() {
+    return _set_seccomp_filter(FilterType::APP_ZYGOTE);
+}
+
 bool set_system_seccomp_filter() {
     return _set_seccomp_filter(FilterType::SYSTEM);
 }
 
 bool set_global_seccomp_filter() {
     return _set_seccomp_filter(FilterType::GLOBAL);
+}
+
+bool install_setuidgid_seccomp_filter(uint32_t uid_gid_min, uint32_t uid_gid_max) {
+    return _install_setuidgid_filter(uid_gid_min, uid_gid_max);
 }

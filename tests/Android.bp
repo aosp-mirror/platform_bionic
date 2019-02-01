@@ -218,6 +218,44 @@ cc_test_library {
     generated_headers: ["generated_android_ids"],
 }
 
+cc_test_library {
+    name: "libBionicElfTlsTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "elftls_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    shared: {
+        enabled: false,
+    },
+    cflags: [
+        "-fno-emulated-tls",
+    ],
+}
+
+cc_test_library {
+    name: "libBionicElfTlsLoaderTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "elftls_dl_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    static_libs: [
+        "liblog",
+        "libbase",
+    ],
+    shared: {
+        enabled: false,
+    },
+    cflags: [
+        "-fno-emulated-tls",
+    ],
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -306,6 +344,7 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     whole_static_libs: [
         "libBionicStandardTests",
+        "libBionicElfTlsTests",
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],
@@ -345,7 +384,7 @@ cc_test_library {
                 "libdl_test.cpp",
             ],
             static_libs: [
-                "libpagemap",
+                "libmeminfo",
                 "libziparchive",
                 "libLLVMObject",
                 "libLLVMBitReader",
@@ -389,6 +428,7 @@ cc_defaults {
     whole_static_libs: [
         "libBionicTests",
         "libBionicLoaderTests",
+        "libBionicElfTlsLoaderTests",
     ],
 
     static_libs: [
@@ -423,11 +463,13 @@ cc_defaults {
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
                 "libdl_test_df_1_global",
+                "libtest_elftls_shared_var",
+                "libtest_elftls_tprel",
             ],
             static_libs: [
                 // The order of these libraries matters, do not shuffle them.
                 "libbase",
-                "libpagemap",
+                "libmeminfo",
                 "libziparchive",
                 "libz",
                 "libutils",
@@ -471,12 +513,14 @@ cc_test {
     required: [
         "cfi_test_helper",
         "cfi_test_helper2",
+        "elftls_dlopen_ie_error_helper",
         "exec_linker_helper",
         "exec_linker_helper_lib",
         "libtest_dt_runpath_a",
         "libtest_dt_runpath_b",
         "libtest_dt_runpath_c",
         "libtest_dt_runpath_x",
+        "libtest_dt_runpath_y",
         "libatest_simple_zip",
         "libcfi-test",
         "libcfi-test-bad",
@@ -490,7 +534,6 @@ cc_test {
         "libdl_preempt_test_1",
         "libdl_preempt_test_2",
         "libdl_test_df_1_global",
-        "libelf-tls-library",
         "libgnu-hash-table-library",
         "libsysv-hash-table-library",
         "libtestshared",
@@ -528,6 +571,13 @@ cc_test {
         "libtest_dlsym_from_this",
         "libtest_dlsym_weak_func",
         "libtest_dt_runpath_d",
+        "libtest_elftls_dynamic",
+        "libtest_elftls_dynamic_filler_1",
+        "libtest_elftls_dynamic_filler_2",
+        "libtest_elftls_dynamic_filler_3",
+        "libtest_elftls_shared_var",
+        "libtest_elftls_shared_var_ie",
+        "libtest_elftls_tprel",
         "libtest_empty",
         "libtest_ifunc_variable_impl",
         "libtest_ifunc_variable",
@@ -615,6 +665,13 @@ cc_test {
         "gtest_preinit_debuggerd.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+
+        // The Bionic allocator has its own C++ API. It isn't packaged into its
+        // own library, so it can only be tested when it's part of libc.a.
+        "bionic_allocator_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
     ],
     whole_static_libs: [
         "libBionicTests",
@@ -629,6 +686,8 @@ cc_test {
         "libbase",
         "libdebuggerd_handler",
         "libgtest_isolated",
+        "libtest_elftls_shared_var",
+        "libtest_elftls_tprel",
     ],
 
     static_executable: true,
@@ -662,12 +721,15 @@ cc_test_host {
     shared_libs: [
         "libdl_preempt_test_1",
         "libdl_preempt_test_2",
-
         "libdl_test_df_1_global",
+        "libtest_elftls_shared_var",
+        "libtest_elftls_tprel",
     ],
 
     whole_static_libs: [
         "libBionicStandardTests",
+        "libBionicElfTlsTests",
+        "libBionicElfTlsLoaderTests",
         "libfortify1-tests-clang",
         "libfortify2-tests-clang",
     ],

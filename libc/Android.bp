@@ -1014,6 +1014,7 @@ cc_library_static {
         "bionic/arpa_inet.cpp",
         "bionic/assert.cpp",
         "bionic/atof.cpp",
+        "bionic/bionic_allocator.cpp",
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
@@ -1547,7 +1548,7 @@ cc_library {
         ],
     },
 
-    required: ["tzdata"],
+    required: ["tzdata", "libc.mountpoint"],
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.
@@ -1612,6 +1613,8 @@ cc_library {
         symbol_file: "libc.map.txt",
         versions: ["10000"],
     },
+
+    symbol_ordering_file: "symbol_ordering",
 }
 
 genrule {
@@ -1644,6 +1647,59 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+}
+
+// libc_headers for libasync_safe and libpropertyinfoparser
+cc_library_headers {
+    name: "libc_headers",
+
+    host_supported: true,
+    vendor_available: true,
+    recovery_available: true,
+
+    no_libcrt: true,
+    no_libgcc: true,
+    stl: "none",
+    system_shared_libs: [],
+
+    export_include_dirs: [
+        "include",
+        "kernel/uapi",
+        "kernel/android/uapi",
+    ],
+
+    arch: {
+        arm: {
+            export_include_dirs: [
+                "kernel/uapi/asm-arm",
+            ],
+        },
+        arm64: {
+            export_include_dirs: [
+                "kernel/uapi/asm-arm64",
+            ],
+        },
+        mips: {
+            export_include_dirs: [
+                "kernel/uapi/asm-mips",
+            ],
+        },
+        mips64: {
+            export_include_dirs: [
+                "kernel/uapi/asm-mips",
+            ],
+        },
+        x86: {
+            export_include_dirs: [
+                "kernel/uapi/asm-x86",
+            ],
+        },
+        x86_64: {
+            export_include_dirs: [
+                "kernel/uapi/asm-x86",
+            ],
+        },
+    },
 }
 
 // ========================================================
@@ -1999,47 +2055,39 @@ llndk_library {
     symbol_file: "libc.map.txt",
     export_headers_as_system: true,
     export_preprocessed_headers: ["include"],
+    export_include_dirs: [
+        "kernel/android/uapi",
+        "kernel/uapi",
+    ],
     arch: {
         arm: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-arm",
-                "kernel/android/uapi",
             ],
         },
         arm64: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-arm64",
-                "kernel/android/uapi",
             ],
         },
         mips: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-mips",
-                "kernel/android/uapi",
             ],
         },
         mips64: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-mips",
-                "kernel/android/uapi",
             ],
         },
         x86: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-x86",
-                "kernel/android/uapi",
             ],
         },
         x86_64: {
             export_include_dirs: [
-                "kernel/uapi",
                 "kernel/uapi/asm-x86",
-                "kernel/android/uapi",
             ],
         },
     },
@@ -2165,6 +2213,91 @@ python_binary_host {
     },
 }
 
+python_binary_host {
+    name: "genfunctosyscallnrs",
+    main: "tools/genfunctosyscallnrs.py",
+
+    srcs: [
+        "tools/genseccomp.py",
+        "tools/genfunctosyscallnrs.py",
+        "tools/gensyscalls.py",
+    ],
+
+    data: [
+        "kernel/uapi/**/*.h",
+    ],
+
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
+cc_genrule {
+    name: "func_to_syscall_nrs",
+    recovery_available: true,
+    cmd: "$(location genfunctosyscallnrs) --out-dir=$(genDir) $(in)",
+
+    tools: [ "genfunctosyscallnrs" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "func_to_syscall_nrs.h",
+    ],
+}
+
+// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+genrule {
+    name: "generate_app_zygote_blacklist",
+    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
+}
+
+cc_genrule {
+    name: "libseccomp_policy_app_zygote_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
+
+    tools: [ "genseccomp" ],
+
+    srcs: [
+        "SYSCALLS.TXT",
+        "SECCOMP_WHITELIST_COMMON.TXT",
+        "SECCOMP_WHITELIST_APP.TXT",
+        "SECCOMP_BLACKLIST_COMMON.TXT",
+        ":generate_app_zygote_blacklist",
+        ":libseccomp_gen_syscall_nrs_arm",
+        ":libseccomp_gen_syscall_nrs_arm64",
+        ":libseccomp_gen_syscall_nrs_mips",
+        ":libseccomp_gen_syscall_nrs_mips64",
+        ":libseccomp_gen_syscall_nrs_x86",
+        ":libseccomp_gen_syscall_nrs_x86_64",
+    ],
+
+    out: [
+        "arm64_app_zygote_policy.cpp",
+        "arm_app_zygote_policy.cpp",
+        "mips64_app_zygote_policy.cpp",
+        "mips_app_zygote_policy.cpp",
+        "x86_64_app_zygote_policy.cpp",
+        "x86_app_zygote_policy.cpp",
+    ],
+}
+
 cc_genrule {
     name: "libseccomp_policy_app_sources",
     recovery_available: true,
@@ -2261,8 +2394,10 @@ cc_genrule {
 cc_library {
     name: "libseccomp_policy",
     recovery_available: true,
+    generated_headers: ["func_to_syscall_nrs"],
     generated_sources: [
         "libseccomp_policy_app_sources",
+        "libseccomp_policy_app_zygote_sources",
         "libseccomp_policy_global_sources",
         "libseccomp_policy_system_sources",
     ],

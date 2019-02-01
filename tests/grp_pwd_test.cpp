@@ -198,7 +198,7 @@ TEST(pwd, getpwnam_app_id_u0_a49999) {
 }
 
 TEST(pwd, getpwnam_app_id_u0_i1) {
-  check_get_passwd("u0_i1", 99001, TYPE_APP);
+  check_get_passwd("u0_i1", 90001, TYPE_APP);
 }
 
 TEST(pwd, getpwnam_app_id_u1_root) {
@@ -218,9 +218,8 @@ TEST(pwd, getpwnam_app_id_u1_a40000) {
 }
 
 TEST(pwd, getpwnam_app_id_u1_i0) {
-  check_get_passwd("u1_i0", 199000, TYPE_APP);
+  check_get_passwd("u1_i0", 190000, TYPE_APP);
 }
-
 #if defined(__BIONIC__)
 template <typename T>
 static void expect_ids(const T& ids) {
@@ -464,7 +463,7 @@ TEST(grp, getgrnam_app_id_all_a9999) {
 }
 
 TEST(grp, getgrnam_app_id_u0_i1) {
-  check_get_group("u0_i1", 99001);
+  check_get_group("u0_i1", 90001);
 }
 
 TEST(grp, getgrnam_app_id_u1_root) {
@@ -484,7 +483,7 @@ TEST(grp, getgrnam_app_id_u1_a40000) {
 }
 
 TEST(grp, getgrnam_app_id_u1_i0) {
-  check_get_group("u1_i0", 199000);
+  check_get_group("u1_i0", 190000);
 }
 
 TEST(grp, getgrnam_r_reentrancy) {
