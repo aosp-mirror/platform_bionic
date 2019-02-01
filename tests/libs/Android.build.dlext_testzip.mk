@@ -59,21 +59,38 @@ lib_a := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_a,,,$(
 lib_b := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_b,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_b.so
 lib_c := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_c,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_c.so
 lib_x := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_x,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_x.so
+lib_y := $(call intermediates-dir-for,SHARED_LIBRARIES,libtest_dt_runpath_y,,,$(bionic_2nd_arch_prefix))/libtest_dt_runpath_y.so
 
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_D := $(lib_d)
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_A := $(lib_a)
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_B := $(lib_b)
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_C := $(lib_c)
 $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_X := $(lib_x)
-$(LOCAL_BUILT_MODULE) : $(lib_d) $(lib_a) $(lib_b) $(lib_c) $(lib_x) $(BIONIC_TESTS_ZIPALIGN)
+$(LOCAL_BUILT_MODULE) : PRIVATE_LIB_Y := $(lib_y)
+ifeq ($(TARGET_IS_64_BIT),true)
+  ifeq ($(TARGET_TRANSLATE_2ND_ARCH),true)
+    $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_OR_LIB64 := $(if $(LOCAL_2ND_ARCH_VAR_PREFIX),lib/$(TARGET_2ND_ARCH),lib64)
+  else
+    $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_OR_LIB64 := $(if $(LOCAL_2ND_ARCH_VAR_PREFIX),lib,lib64)
+  endif
+else
+  ifeq ($(TARGET_TRANSLATE_2ND_ARCH),true)
+    $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_OR_LIB64 := $(if $(LOCAL_2ND_ARCH_VAR_PREFIX),lib/$(TARGET_2ND_ARCH),lib)
+  else
+    $(LOCAL_BUILT_MODULE) : PRIVATE_LIB_OR_LIB64 := lib
+  endif
+endif
+$(LOCAL_BUILT_MODULE) : $(lib_d) $(lib_a) $(lib_b) $(lib_c) $(lib_x) $(lib_y) $(BIONIC_TESTS_ZIPALIGN)
 	@echo "Aligning zip: $@"
 	$(hide) rm -rf $@.unaligned $@ $(dir $@)/zipdir && mkdir -p $(dir $@)/zipdir/libdir && \
-    mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_a && mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+    mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_a && mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_b_c_x && \
+    mkdir -p $(dir $@)/zipdir/libdir/dt_runpath_y/$(PRIVATE_LIB_OR_LIB64)
 	$(hide) cp $(PRIVATE_LIB_D) $(dir $@)/zipdir/libdir
 	$(hide) cp $(PRIVATE_LIB_A) $(dir $@)/zipdir/libdir/dt_runpath_a
 	$(hide) cp $(PRIVATE_LIB_B) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
 	$(hide) cp $(PRIVATE_LIB_C) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
 	$(hide) cp $(PRIVATE_LIB_X) $(dir $@)/zipdir/libdir/dt_runpath_b_c_x
+	$(hide) cp $(PRIVATE_LIB_Y) $(dir $@)/zipdir/libdir/dt_runpath_y/$(PRIVATE_LIB_OR_LIB64)
 	$(hide) touch $(dir $@)/zipdir/empty_file.txt
 	$(hide) (cd $(dir $@)/zipdir && zip -qrD0 ../$(notdir $@).unaligned .)
 	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@

@@ -355,9 +355,14 @@ void* dlmalloc(size_t size) {
   return malloc(size);
 }
 
+} // extern "C"
+
 #define __get_thread __real_get_thread
 #include "pthread_internal.h"
 #undef __get_thread
+
+extern "C" {
+
 // Various third-party apps contain a backport of our pthread_rwlock implementation that uses this.
 pthread_internal_t* __get_thread() {
   return __real_get_thread();

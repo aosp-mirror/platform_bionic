@@ -44,6 +44,7 @@ constexpr uint64_t TRACK_ALLOCS = 0x80;
 constexpr uint64_t LEAK_TRACK = 0x100;
 constexpr uint64_t RECORD_ALLOCS = 0x200;
 constexpr uint64_t BACKTRACE_FULL = 0x400;
+constexpr uint64_t ABORT_ON_ERROR = 0x800;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.

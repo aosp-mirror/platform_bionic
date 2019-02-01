@@ -98,15 +98,22 @@ void pthread_exit(void* return_value) {
     thread->alternate_signal_stack = nullptr;
   }
 
+  ThreadJoinState old_state = THREAD_NOT_JOINED;
+  while (old_state == THREAD_NOT_JOINED &&
+         !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
+  }
+
+  // We don't want to take a signal after unmapping the stack, the shadow call
+  // stack, or dynamic TLS memory.
+  ScopedSignalBlocker ssb;
+
 #ifdef __aarch64__
   // Free the shadow call stack and guard pages.
   munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif
 
-  ThreadJoinState old_state = THREAD_NOT_JOINED;
-  while (old_state == THREAD_NOT_JOINED &&
-         !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
-  }
+  // Free the ELF TLS DTV and all dynamically-allocated ELF TLS memory.
+  __free_dynamic_tls(__get_bionic_tcb());
 
   if (old_state == THREAD_DETACHED) {
     // The thread is detached, no one will use pthread_internal_t after pthread_exit.
@@ -121,10 +128,6 @@ void pthread_exit(void* return_value) {
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
       // That's not something we can do in C.
-
-      // We don't want to take a signal after we've unmapped the stack.
-      // That's one last thing we can do before dropping to assembler.
-      ScopedSignalBlocker ssb;
       __hwasan_thread_exit();
       _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size);
     }

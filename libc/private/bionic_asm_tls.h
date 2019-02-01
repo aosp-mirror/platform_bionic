@@ -65,6 +65,9 @@
 //
 //  - TLS_SLOT_BIONIC_TLS: Optimizes accesses to bionic_tls by one load versus
 //    finding it using __get_thread().
+//
+//  - TLS_SLOT_APP: Available for use by apps in Android Q and later. (This slot
+//    was used for errno in P and earlier.)
 
 #if defined(__arm__) || defined(__aarch64__)
 
@@ -81,17 +84,15 @@
 #define TLS_SLOT_BIONIC_TLS       -1
 #define TLS_SLOT_DTV              0
 #define TLS_SLOT_THREAD_ID        1
-// Slot 2 is free (was historically used for TLS_SLOT_ERRNO)
+#define TLS_SLOT_APP              2 // was historically used for errno
 #define TLS_SLOT_OPENGL           3
 #define TLS_SLOT_OPENGL_API       4
 #define TLS_SLOT_STACK_GUARD      5
 #define TLS_SLOT_SANITIZER        6 // was historically used for dlerror
 #define TLS_SLOT_ART_THREAD_SELF  7
-#define TLS_SLOT_TSAN             8 // should be replaced with TLS_SLOT_SANITIZER
 
 // The maximum slot is fixed by the minimum TLS alignment in Bionic executables.
-// It should be changed to 7 once TLS_SLOT_TSAN is removed.
-#define MAX_TLS_SLOT              8
+#define MAX_TLS_SLOT              7
 
 #elif defined(__i386__) || defined(__x86_64__)
 
@@ -103,16 +104,15 @@
 
 #define TLS_SLOT_SELF             0
 #define TLS_SLOT_THREAD_ID        1
-// Slot 2 is free (was historically used for TLS_SLOT_ERRNO)
+#define TLS_SLOT_APP              2 // was historically used for errno
 #define TLS_SLOT_OPENGL           3
 #define TLS_SLOT_OPENGL_API       4
 #define TLS_SLOT_STACK_GUARD      5
 #define TLS_SLOT_SANITIZER        6 // was historically used for dlerror
 #define TLS_SLOT_ART_THREAD_SELF  7
-#define TLS_SLOT_TSAN             8 // should be replaced with TLS_SLOT_SANITIZER
-#define TLS_SLOT_DTV              9
-#define TLS_SLOT_BIONIC_TLS       10
-#define MAX_TLS_SLOT              10 // update this value when reserving a slot
+#define TLS_SLOT_DTV              8
+#define TLS_SLOT_BIONIC_TLS       9
+#define MAX_TLS_SLOT              9 // update this value when reserving a slot
 
 #endif
 

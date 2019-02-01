@@ -38,6 +38,7 @@
 #define __hwasan_thread_exit()
 #endif
 
+#include "private/bionic_elf_tls.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_tls.h"
 
@@ -154,6 +155,7 @@ struct ThreadMapping {
 
 __LIBC_HIDDEN__ void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread);
 __LIBC_HIDDEN__ void __init_tcb_stack_guard(bionic_tcb* tcb);
+__LIBC_HIDDEN__ void __init_tcb_dtv(bionic_tcb* tcb);
 __LIBC_HIDDEN__ void __init_bionic_tls_ptrs(bionic_tcb* tcb, bionic_tls* tls);
 __LIBC_HIDDEN__ bionic_tls* __allocate_temp_bionic_tls();
 __LIBC_HIDDEN__ void __free_temp_bionic_tls(bionic_tls* tls);
@@ -177,6 +179,15 @@ static inline __always_inline pthread_internal_t* __get_thread() {
 
 static inline __always_inline bionic_tls& __get_bionic_tls() {
   return *static_cast<bionic_tls*>(__get_tls()[TLS_SLOT_BIONIC_TLS]);
+}
+
+static inline __always_inline TlsDtv* __get_tcb_dtv(bionic_tcb* tcb) {
+  uintptr_t dtv_slot = reinterpret_cast<uintptr_t>(tcb->tls_slot(TLS_SLOT_DTV));
+  return reinterpret_cast<TlsDtv*>(dtv_slot - offsetof(TlsDtv, generation));
+}
+
+static inline void __set_tcb_dtv(bionic_tcb* tcb, TlsDtv* val) {
+  tcb->tls_slot(TLS_SLOT_DTV) = &val->generation;
 }
 
 extern "C" __LIBC_HIDDEN__ int __set_tls(void* ptr);

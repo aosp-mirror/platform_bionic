@@ -33,6 +33,7 @@
 #include <link.h>
 #include <pthread.h>
 
+#include "private/bionic_allocator.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
@@ -69,6 +70,8 @@ struct libc_shared_globals {
   abort_msg_t* abort_msg = nullptr;
 
   StaticTlsLayout static_tls_layout;
+  TlsModules tls_modules;
+  BionicAllocator tls_allocator;
 
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;

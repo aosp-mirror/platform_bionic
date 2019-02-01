@@ -43,10 +43,8 @@ LOCAL_SRC_FILES := \
   linker_config_test.cpp \
   linker_globals.cpp \
   linked_list_test.cpp \
-  linker_memory_allocator_test.cpp \
   linker_sleb128_test.cpp \
   linker_utils_test.cpp \
-  ../linker_allocator.cpp \
   ../linker_block_allocator.cpp \
   ../linker_config.cpp \
   ../linker_utils.cpp \

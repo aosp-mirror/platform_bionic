@@ -47,6 +47,7 @@
 #include <private/bionic_defs.h>
 #include <private/bionic_config.h>
 #include <private/bionic_globals.h>
+#include <private/bionic_malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 
 #if __has_feature(hwaddress_sanitizer)
@@ -304,6 +305,13 @@ typedef ssize_t (*malloc_backtrace_func_t)(void*, uintptr_t*, size_t);
     async_safe_format_log(ANDROID_LOG_INFO, "libc", (format), ##__VA_ARGS__ )
 // =============================================================================
 
+// In a Zygote child process, this is set to true if profiling of this process
+// is allowed. Note that this set at a later time than the above
+// gMallocLeakZygoteChild. The latter is set during the fork (while still in
+// zygote's SELinux domain). While this bit is set after the child is
+// specialized (and has transferred SELinux domains if applicable).
+static _Atomic bool gMallocZygoteChildProfileable = false;
+
 // =============================================================================
 // Exported for use by ddms.
 // =============================================================================
@@ -554,13 +562,7 @@ static void ClearGlobalFunctions() {
   }
 }
 
-static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
-  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
-  if (impl_handle == nullptr) {
-    error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
-    return nullptr;
-  }
-
+static bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
   static constexpr const char* names[] = {
     "initialize",
     "finalize",
@@ -575,48 +577,65 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
     g_functions[i] = dlsym(impl_handle, symbol);
     if (g_functions[i] == nullptr) {
       error_log("%s: %s routine not found in %s", getprogname(), symbol, shared_lib);
-      dlclose(impl_handle);
       ClearGlobalFunctions();
-      return nullptr;
+      return false;
     }
   }
 
   if (!InitMallocFunctions(impl_handle, dispatch_table, prefix)) {
-    dlclose(impl_handle);
     ClearGlobalFunctions();
+    return false;
+  }
+  return true;
+}
+
+static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
+  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
+  if (impl_handle == nullptr) {
+    error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
     return nullptr;
+  }
+
+  if (!InitSharedLibrary(impl_handle, shared_lib, prefix, dispatch_table)) {
+    dlclose(impl_handle);
+    impl_handle = nullptr;
   }
 
   return impl_handle;
 }
 
-// A function pointer to heapprofds init function. Used to re-initialize
-// heapprofd. This will start a new profiling session and tear down the old
-// one in case it is still active.
-static _Atomic init_func_t g_heapprofd_init_func = nullptr;
+// The handle returned by dlopen when previously loading the heapprofd
+// hooks. nullptr if they had not been loaded before.
+static _Atomic (void*) g_heapprofd_handle = nullptr;
 
 static void install_hooks(libc_globals* globals, const char* options,
                           const char* prefix, const char* shared_lib) {
-  init_func_t init_func = atomic_load(&g_heapprofd_init_func);
-  if (init_func != nullptr) {
-    init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options);
-    info_log("%s: malloc %s re-enabled", getprogname(), prefix);
-    return;
-  }
-
   MallocDispatch dispatch_table;
-  void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
-  if (impl_handle == nullptr) {
-    return;
+
+  void* impl_handle = atomic_load(&g_heapprofd_handle);
+  bool reusing_handle = impl_handle != nullptr;
+  if (reusing_handle) {
+    if (!InitSharedLibrary(impl_handle, shared_lib, prefix, &dispatch_table)) {
+      return;
+    }
+  } else {
+    impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+    if (impl_handle == nullptr) {
+      return;
+    }
   }
-  init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
+  init_func_t init_func = reinterpret_cast<init_func_t>(g_functions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
-    dlclose(impl_handle);
+    error_log("%s: failed to enable malloc %s", getprogname(), prefix);
+    if (!reusing_handle) {
+      // We should not close if we are re-using an old handle, as we cannot be
+      // sure other threads are not currently in the hooks.
+      dlclose(impl_handle);
+    }
     ClearGlobalFunctions();
     return;
   }
 
-  atomic_store(&g_heapprofd_init_func, init_func);
   // We assign free  first explicitly to prevent the case where we observe a
   // alloc, but miss the corresponding free because of initialization order.
   //
@@ -628,6 +647,7 @@ static void install_hooks(libc_globals* globals, const char* options,
   // _Atomic. Assigning to an _Atomic is an atomic_store operation.
   // The assignment is done in declaration order.
   globals->malloc_dispatch = dispatch_table;
+  atomic_store(&g_heapprofd_handle, impl_handle);
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
 
@@ -641,12 +661,36 @@ static void install_hooks(libc_globals* globals, const char* options,
   }
 }
 
-extern "C" void InstallInitHeapprofdHook(int);
+// The logic for triggering heapprofd (at runtime) is as follows:
+// 1. HEAPPROFD_SIGNAL is received by the process, entering the
+//    MaybeInstallInitHeapprofdHook signal handler.
+// 2. If the initialization is not already in flight
+//    (g_heapprofd_init_in_progress is false), the malloc hook is set to
+//    point at InitHeapprofdHook, and g_heapprofd_init_in_progress is set to
+//    true.
+// 3. The next malloc call enters InitHeapprofdHook, which removes the malloc
+//    hook, and spawns a detached pthread to run the InitHeapprofd task.
+//    (g_heapprofd_init_hook_installed atomic is used to perform this once.)
+// 4. InitHeapprofd, on a dedicated pthread, loads the heapprofd client library,
+//    installs the full set of heapprofd hooks, and invokes the client's
+//    initializer. The dedicated pthread then terminates.
+// 5. g_heapprofd_init_in_progress and g_heapprofd_init_hook_installed are
+//    reset to false such that heapprofd can be reinitialized. Reinitialization
+//    means that a new profiling session is started, and any still active is
+//    torn down.
+//
+// The incremental hooking and a dedicated task thread are used since we cannot
+// do heavy work within a signal handler, or when blocking a malloc invocation.
+
+static _Atomic bool g_heapprofd_init_in_progress = false;
+static _Atomic bool g_heapprofd_init_hook_installed = false;
+
+extern "C" void MaybeInstallInitHeapprofdHook(int);
 
 // Initializes memory allocation framework once per process.
 static void malloc_init_impl(libc_globals* globals) {
   struct sigaction action = {};
-  action.sa_handler = InstallInitHeapprofdHook;
+  action.sa_handler = MaybeInstallInitHeapprofdHook;
   sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
 
   const char* prefix;
@@ -667,7 +711,10 @@ static void malloc_init_impl(libc_globals* globals) {
   } else {
     return;
   }
-  install_hooks(globals, options, prefix, shared_lib);
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    install_hooks(globals, options, prefix, shared_lib);
+    atomic_store(&g_heapprofd_init_in_progress, false);
+  }
 }
 
 // Initializes memory allocation framework.
@@ -676,33 +723,6 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
   malloc_init_impl(globals);
 }
-
-// The logic for triggering heapprofd below is as following.
-// 1. HEAPPROFD_SIGNAL is received by the process.
-// 2. If neither InitHeapprofd nor InitHeapprofdHook are currently installed
-//    (g_heapprofd_init_hook_installed is false), InitHeapprofdHook is
-//    installed and g_heapprofd_init_in_progress is set to true.
-//
-// On the next subsequent malloc, InitHeapprofdHook is called and
-// 3a. If the signal is currently being handled (g_heapprofd_init_in_progress
-//     is true), no action is taken.
-// 3b. Otherwise, The signal handler (InstallInitHeapprofdHook) installs a
-//     temporary malloc hook (InitHeapprofdHook).
-// 4. When this hook gets run the first time, it uninstalls itself and spawns
-//    a thread running InitHeapprofd that loads heapprofd.so and installs the
-//    hooks within.
-// 5. g_heapprofd_init_in_progress and g_heapprofd_init_hook_installed are
-//    reset to false so heapprofd can be reinitialized. Reinitialization
-//    means that a new profiling session is started and any still active is
-//    torn down.
-//
-// This roundabout way is needed because we are running non AS-safe code, so
-// we cannot run it directly in the signal handler. The other approach of
-// running a standby thread and signalling through write(2) and read(2) would
-// significantly increase the number of active threads in the system.
-
-static _Atomic bool g_heapprofd_init_in_progress = false;
-static _Atomic bool g_heapprofd_init_hook_installed = false;
 
 static void* InitHeapprofd(void*) {
   __libc_globals.mutate([](libc_globals* globals) {
@@ -732,7 +752,13 @@ static void* InitHeapprofdHook(size_t bytes) {
   return Malloc(malloc)(bytes);
 }
 
-extern "C" void InstallInitHeapprofdHook(int) {
+extern "C" void MaybeInstallInitHeapprofdHook(int) {
+  // Zygote child processes must be marked profileable.
+  if (gMallocLeakZygoteChild &&
+      !atomic_load_explicit_const(&gMallocZygoteChildProfileable, memory_order_acquire)) {
+    return;
+  }
+
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
       atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
@@ -741,6 +767,69 @@ extern "C" void InstallInitHeapprofdHook(int) {
 }
 
 #endif  // !LIBC_STATIC
+
+// =============================================================================
+// Platform-internal mallopt variant.
+// =============================================================================
+
+#if !defined(LIBC_STATIC)
+bool MallocDispatchReset() {
+  if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
+    __libc_globals.mutate([](libc_globals* globals) {
+      globals->malloc_dispatch = __libc_malloc_default_dispatch;
+    });
+    atomic_store(&g_heapprofd_init_in_progress, false);
+    return true;
+  }
+  errno = EAGAIN;
+  return false;
+}
+
+// Marks this process as a profileable zygote child.
+bool HandleInitZygoteChildProfiling() {
+  atomic_store_explicit(&gMallocZygoteChildProfileable, true,
+                        memory_order_release);
+
+  // Conditionally start "from startup" profiling.
+  if (CheckLoadHeapprofd()) {
+    // Directly call the signal handler (will correctly guard against
+    // concurrent signal delivery).
+    MaybeInstallInitHeapprofdHook(HEAPPROFD_SIGNAL);
+  }
+  return true;
+}
+
+#else
+
+bool MallocDispatchReset() {
+  return true;
+}
+
+bool HandleInitZygoteChildProfiling() {
+  return true;
+}
+
+#endif  // !defined(LIBC_STATIC)
+
+bool android_mallopt(int opcode, void* arg, size_t arg_size) {
+  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    return HandleInitZygoteChildProfiling();
+  }
+  if (opcode == M_RESET_HOOKS) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    return MallocDispatchReset();
+  }
+
+  errno = ENOTSUP;
+  return false;
+}
 
 // =============================================================================
 // Exported for use by libmemunreachable.
