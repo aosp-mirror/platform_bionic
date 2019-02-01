@@ -536,6 +536,10 @@ class SizeBasedAllocator {
     allocator_.free(ptr);
   }
 
+  static void purge() {
+    allocator_.purge();
+  }
+
  private:
   static LinkerBlockAllocator allocator_;
 };
@@ -552,6 +556,10 @@ class TypeBasedAllocator {
 
   static void free(T* ptr) {
     SizeBasedAllocator<sizeof(T)>::free(ptr);
+  }
+
+  static void purge() {
+    SizeBasedAllocator<sizeof(T)>::purge();
   }
 };
 
@@ -2073,6 +2081,8 @@ void* do_dlopen(const char* name, int flags,
          caller == nullptr ? "(null)" : caller->get_realpath(),
          ns == nullptr ? "(null)" : ns->get_name(),
          ns);
+
+  auto purge_guard = android::base::make_scope_guard([&]() { purge_unused_memory(); });
 
   auto failure_guard = android::base::make_scope_guard(
       [&]() { LD_LOG(kLogDlopen, "... dlopen failed: %s", linker_get_error_buffer()); });
@@ -4068,4 +4078,18 @@ android_namespace_t* get_exported_namespace(const char* name) {
     return nullptr;
   }
   return it->second;
+}
+
+void purge_unused_memory() {
+  // For now, we only purge the memory used by LoadTask because we know those
+  // are temporary objects.
+  //
+  // Purging other LinkerBlockAllocator hardly yields much because they hold
+  // information about namespaces and opened libraries, which are not freed
+  // when the control leaves the linker.
+  //
+  // Purging BionicAllocator may give us a few dirty pages back, but those pages
+  // would be already zeroed out, so they compress easily in ZRAM.  Therefore,
+  // it is not worth munmap()'ing those pages.
+  TypeBasedAllocator<LoadTask>::purge();
 }

@@ -50,6 +50,9 @@ class LinkerBlockAllocator {
   void free(void* block);
   void protect_all(int prot);
 
+  // Purge all pages if all previously allocated blocks have been freed.
+  void purge();
+
  private:
   void create_new_page();
   LinkerBlockAllocatorPage* find_page(void* block);
@@ -57,6 +60,7 @@ class LinkerBlockAllocator {
   size_t block_size_;
   LinkerBlockAllocatorPage* page_list_;
   void* free_block_list_;
+  size_t allocated_;
 
   DISALLOW_COPY_AND_ASSIGN(LinkerBlockAllocator);
 };
