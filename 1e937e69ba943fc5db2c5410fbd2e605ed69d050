@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9765b281_b85417f0",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-02T00:10:27Z",
+      "side": 1,
+      "message": "I think this is likely to cause extra memory usable by at least a page per process.\n\nAfter mulling this over, I think I have a better way to handle all of this that doesn\u0027t result in the extra page and might be a bit cleaner in all cases. I\u0027m not going to have the new method implemented just yet, probably on Monday.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 69
+      },
+      "revId": "1e937e69ba943fc5db2c5410fbd2e605ed69d050",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
