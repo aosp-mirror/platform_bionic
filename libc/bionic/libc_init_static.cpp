@@ -66,6 +66,30 @@ static void call_array(void(**list)()) {
   }
 }
 
+#if defined(__aarch64__) || defined(__x86_64__)
+extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+
+static void call_ifunc_resolvers() {
+  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
+  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
+    ElfW(Addr) resolver = r->r_addend;
+    *offset = reinterpret_cast<ifunc_resolver_t>(resolver)();
+  }
+}
+#else
+extern __LIBC_HIDDEN__ ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
+
+static void call_ifunc_resolvers() {
+  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
+  for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
+    ElfW(Addr) resolver = *offset;
+    *offset = reinterpret_cast<ifunc_resolver_t>(resolver)();
+  }
+}
+#endif
+
 static void apply_gnu_relro() {
   ElfW(Phdr)* phdr_start = reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR));
   unsigned long int phdr_ct = getauxval(AT_PHNUM);
@@ -137,6 +161,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_main_thread_final();
   __libc_init_common();
 
+  call_ifunc_resolvers();
   apply_gnu_relro();
 
   // Several Linux ABIs don't pass the onexit pointer, and the ones that

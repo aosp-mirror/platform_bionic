@@ -101,6 +101,7 @@ cc_test_library {
         "grp_pwd_file_test.cpp",
         "iconv_test.cpp",
         "ifaddrs_test.cpp",
+        "ifunc_test.cpp",
         "inttypes_test.cpp",
         "iso646_test.c",
         "langinfo_test.cpp",
