@@ -31,7 +31,7 @@
 #include "pthread_internal.h"
 
 int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
-  pid_t tid = pthread_gettid_np(t);
+  pid_t tid = __pthread_internal_gettid(t, "pthread_getcpuclockid");
   if (tid == -1) return ESRCH;
 
   // The tid is stored in the top bits, but negated.

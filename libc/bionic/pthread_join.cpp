@@ -40,7 +40,7 @@ int pthread_join(pthread_t t, void** return_value) {
     return EDEADLK;
   }
 
-  pthread_internal_t* thread = __pthread_internal_find(t);
+  pthread_internal_t* thread = __pthread_internal_find(t, "pthread_join");
   if (thread == nullptr) {
     return ESRCH;
   }

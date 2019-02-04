@@ -42,9 +42,10 @@
 // This value is not exported by kernel headers.
 #define MAX_TASK_COMM_LEN 16
 
-static int __open_task_comm_fd(pthread_t t, int flags) {
+static int __open_task_comm_fd(pthread_t t, int flags, const char* caller) {
   char comm_name[64];
-  snprintf(comm_name, sizeof(comm_name), "/proc/self/task/%d/comm", pthread_gettid_np(t));
+  snprintf(comm_name, sizeof(comm_name), "/proc/self/task/%d/comm",
+           __pthread_internal_gettid(t, caller));
   return open(comm_name, O_CLOEXEC | flags);
 }
 
@@ -59,7 +60,7 @@ int pthread_getname_np(pthread_t t, char* buf, size_t buf_size) {
   }
 
   // We have to get another thread's name.
-  int fd = __open_task_comm_fd(t, O_RDONLY);
+  int fd = __open_task_comm_fd(t, O_RDONLY, "pthread_getname_np");
   if (fd == -1) return errno;
 
   ssize_t n = TEMP_FAILURE_RETRY(read(fd, buf, buf_size));
@@ -91,7 +92,7 @@ int pthread_setname_np(pthread_t t, const char* thread_name) {
   }
 
   // We have to set another thread's name.
-  int fd = __open_task_comm_fd(t, O_WRONLY);
+  int fd = __open_task_comm_fd(t, O_WRONLY, "pthread_setname_np");
   if (fd == -1) return errno;
 
   ssize_t n = TEMP_FAILURE_RETRY(write(fd, thread_name, thread_name_len));
