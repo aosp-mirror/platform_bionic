@@ -38,7 +38,7 @@
 int pthread_sigqueue(pthread_t t, int sig, const union sigval value) {
   ErrnoRestorer errno_restorer;
 
-  pid_t tid = pthread_gettid_np(t);
+  pid_t tid = __pthread_internal_gettid(t, "pthread_sigqueue");
   if (tid == -1) return ESRCH;
 
   siginfo_t siginfo;

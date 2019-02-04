@@ -80,7 +80,12 @@ void __pthread_internal_remove_and_free(pthread_internal_t* thread) {
   __pthread_internal_free(thread);
 }
 
-pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
+pid_t __pthread_internal_gettid(pthread_t thread_id, const char* caller) {
+  pthread_internal_t* thread = __pthread_internal_find(thread_id, caller);
+  return thread ? thread->tid : -1;
+}
+
+pthread_internal_t* __pthread_internal_find(pthread_t thread_id, const char* caller) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(thread_id);
 
   // Check if we're looking for ourselves before acquiring the lock.
@@ -103,9 +108,9 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id) {
       // addresses might sometimes contain threads or things that look enough like
       // threads for us to do some real damage by continuing.
       // TODO: try getting rid of this when Treble lets us keep vendor blobs on an old API level.
-      async_safe_format_log(ANDROID_LOG_WARN, "libc", "invalid pthread_t (0) passed to libc");
+      async_safe_format_log(ANDROID_LOG_WARN, "libc", "invalid pthread_t (0) passed to %s", caller);
     } else {
-      async_safe_fatal("invalid pthread_t %p passed to libc", thread);
+      async_safe_fatal("invalid pthread_t %p passed to %s", thread, caller);
     }
   }
   return nullptr;
