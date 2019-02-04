@@ -34,7 +34,7 @@
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_detach(pthread_t t) {
-  pthread_internal_t* thread = __pthread_internal_find(t);
+  pthread_internal_t* thread = __pthread_internal_find(t, "pthread_detach");
   if (thread == nullptr) {
     return ESRCH;
   }
