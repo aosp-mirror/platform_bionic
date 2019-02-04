@@ -163,10 +163,11 @@ __LIBC_HIDDEN__ void __init_additional_stacks(pthread_internal_t*);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size);
 
-__LIBC_HIDDEN__ pthread_t           __pthread_internal_add(pthread_internal_t* thread);
-__LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id);
-__LIBC_HIDDEN__ void                __pthread_internal_remove(pthread_internal_t* thread);
-__LIBC_HIDDEN__ void                __pthread_internal_remove_and_free(pthread_internal_t* thread);
+__LIBC_HIDDEN__ pthread_t __pthread_internal_add(pthread_internal_t* thread);
+__LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id, const char* caller);
+__LIBC_HIDDEN__ pid_t __pthread_internal_gettid(pthread_t pthread_id, const char* caller);
+__LIBC_HIDDEN__ void __pthread_internal_remove(pthread_internal_t* thread);
+__LIBC_HIDDEN__ void __pthread_internal_remove_and_free(pthread_internal_t* thread);
 
 static inline __always_inline bionic_tcb* __get_bionic_tcb() {
   return reinterpret_cast<bionic_tcb*>(&__get_tls()[MIN_TLS_SLOT]);
