@@ -31,6 +31,5 @@
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 pid_t pthread_gettid_np(pthread_t t) {
-  pthread_internal_t* thread = __pthread_internal_find(t);
-  return thread ? thread->tid : -1;
+  return __pthread_internal_gettid(t, "pthread_gettid_np");
 }
