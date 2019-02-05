@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/s_expl.c 326219 2017-11-26 02:00:33Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/ld128/s_expl.c 336545 2018-07-20 12:42:24Z bde $");
 
 /*
  * ld128 version of s_expl.c.  See ../ld80/s_expl.c for most comments.
@@ -268,13 +268,8 @@ expm1l(long double x)
 	}
 
 	/* Reduce x to (k*ln2 + endpoint[n2] + r1 + r2). */
-	/* Use a specialized rint() to get fn.  Assume round-to-nearest. */
-	fn = (double)x * INV_L + 0x1.8p52 - 0x1.8p52;
-#if defined(HAVE_EFFICIENT_IRINT)
+	fn = rnint((double)x * INV_L);
 	n = irint(fn);
-#else
-	n = (int)fn;
-#endif
 	n2 = (unsigned)n % INTERVALS;
 	k = n >> LOG2_INTERVALS;
 	r1 = x - fn * L1;
