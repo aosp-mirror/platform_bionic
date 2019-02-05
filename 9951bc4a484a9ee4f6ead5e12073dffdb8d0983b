@@ -22,6 +22,30 @@
       "revId": "9951bc4a484a9ee4f6ead5e12073dffdb8d0983b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa4849a5_4fe77e8d",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1575,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-05T20:15:42Z",
+      "side": 1,
+      "message": "i was thinking of deliberately hard-coding the expectation that we use the identity transformation, but, yeah, may as well be vague...",
+      "parentUuid": "3a3e2c92_617ad1b4",
+      "range": {
+        "startLine": 1575,
+        "startChar": 15,
+        "endLine": 1575,
+        "endChar": 20
+      },
+      "revId": "9951bc4a484a9ee4f6ead5e12073dffdb8d0983b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
