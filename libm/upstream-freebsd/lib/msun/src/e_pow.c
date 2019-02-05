@@ -10,7 +10,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_pow.c 336362 2018-07-17 07:42:14Z bde $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_pow.c 342851 2019-01-07 17:35:09Z pfg $");
 
 /* __ieee754_pow(x,y) return x**y
  *
@@ -133,7 +133,7 @@ __ieee754_pow(double x, double y)
 		k = (iy>>20)-0x3ff;	   /* exponent */
 		if(k>20) {
 		    j = ly>>(52-k);
-		    if((j<<(52-k))==ly) yisint = 2-(j&1);
+		    if(((u_int32_t)j<<(52-k))==ly) yisint = 2-(j&1);
 		} else if(ly==0) {
 		    j = iy>>(20-k);
 		    if((j<<(20-k))==iy) yisint = 2-(j&1);
