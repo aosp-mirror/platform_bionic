@@ -1,8 +1,7 @@
-/*	$NetBSD: strxfrm.c,v 1.12 2012/06/25 22:32:46 abs Exp $	*/
-
+/*	$OpenBSD: strcoll.c,v 1.6 2015/08/31 02:53:57 guenther Exp $ */
 /*-
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 1990 The Regents of the University of California.
+ * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -32,39 +31,15 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)strxfrm.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: strxfrm.c,v 1.12 2012/06/25 22:32:46 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
-#include <assert.h>
 #include <string.h>
 
 /*
- * Transform src, storing the result in dst, such that
- * strcmp() on transformed strings returns what strcoll()
- * on the original untransformed strings would return.
+ * Compare strings according to LC_COLLATE category of current locale.
  */
-size_t
-strxfrm(char *dst, const char *src, size_t n)
+int
+strcoll(const char *s1, const char *s2)
 {
-	size_t srclen, copysize;
-
-	_DIAGASSERT(src != NULL);
-
-	/*
-	 * Since locales are unimplemented, this is just a copy.
-	 */
-	srclen = strlen(src);
-	if (n != 0) {
-		_DIAGASSERT(dst != NULL);
-		copysize = srclen < n ? srclen : n - 1;
-		(void)memcpy(dst, src, copysize);
-		dst[copysize] = 0;
-	}
-	return (srclen);
+	/* LC_COLLATE is unimplemented, hence always "C" */
+	return (strcmp(s1, s2));
 }
+DEF_STRONG(strcoll);
