@@ -104,6 +104,11 @@ class stack_protector_DeathTest : public BionicDeathTest {};
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
   // In another file to prevent inlining, which removes stack protection.
   extern void modify_stack_protector_test();
+#if __has_feature(hwaddress_sanitizer)
+  ASSERT_EXIT(modify_stack_protector_test(),
+              testing::KilledBySignal(SIGABRT), "tag-mismatch");
+#else
   ASSERT_EXIT(modify_stack_protector_test(),
               testing::KilledBySignal(SIGABRT), "stack corruption detected");
+#endif
 }
