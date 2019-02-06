@@ -337,11 +337,14 @@ struct TestBug37410 {
   static void* thread_fn(void* arg) {
     TestBug37410* data = reinterpret_cast<TestBug37410*>(arg);
 
+    // Unlocking data->mutex will cause the main thread to exit, invalidating *data. Save the handle.
+    pthread_t main_thread = data->main_thread;
+
     // Let the main thread know we're running.
     pthread_mutex_unlock(&data->mutex);
 
     // And wait for the main thread to exit.
-    pthread_join(data->main_thread, nullptr);
+    pthread_join(main_thread, nullptr);
 
     return nullptr;
   }
