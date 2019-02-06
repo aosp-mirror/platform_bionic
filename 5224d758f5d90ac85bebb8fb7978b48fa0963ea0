@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cead99aa_c88b4ec2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-06T17:16:06Z",
+      "side": 1,
+      "message": "is this inherent, our fault, your fault, or both?\n\n(not that we have many static binaries, but if there\u0027s something we can do...)",
+      "range": {
+        "startLine": 18,
+        "startChar": 49,
+        "endLine": 19,
+        "endChar": 8
+      },
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f719ba9_b9947b32",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-06T17:16:06Z",
+      "side": 1,
+      "message": "lose the comment?",
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ed91b4b_e247eeaa",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-06T17:16:06Z",
+      "side": 1,
+      "message": "fixable? (i.e. should there be a corresponding bug?)",
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
