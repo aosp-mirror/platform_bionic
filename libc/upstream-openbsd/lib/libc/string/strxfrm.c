@@ -1,8 +1,10 @@
-/*	$NetBSD: memccpy.c,v 1.13 2012/06/25 22:32:46 abs Exp $	*/
-
+/*	$OpenBSD: strxfrm.c,v 1.7 2015/08/31 02:53:57 guenther Exp $ */
 /*-
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 1990 The Regents of the University of California.
+ * All rights reserved.
+ *
+ * This code is derived from software contributed to Berkeley by
+ * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -29,33 +31,22 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)memccpy.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: memccpy.c,v 1.13 2012/06/25 22:32:46 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
-#include <assert.h>
 #include <string.h>
 
-void *
-memccpy(void *t, const void *f, int c, size_t n)
+/*
+ * Transform src, storing the result in dst, such that
+ * strcmp() on transformed strings returns what strcoll()
+ * on the original untransformed strings would return.
+ */
+size_t
+strxfrm(char *dst, const char *src, size_t n)
 {
 
-	_DIAGASSERT(t != 0);
-	_DIAGASSERT(f != 0);
-
-	if (n) {
-		unsigned char *tp = t;
-		const unsigned char *fp = f;
-		unsigned char uc = c;
-		do {
-			if ((*tp++ = *fp++) == uc)
-				return (tp);
-		} while (--n != 0);
-	}
-	return (0);
+	/*
+	 * Since locales are unimplemented, this is just a copy.
+	 */
+	if (n == 0)
+		return (strlen(src));
+	return (strlcpy(dst, src, n));
 }
+DEF_STRONG(strxfrm);
