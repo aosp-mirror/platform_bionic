@@ -1820,6 +1820,14 @@ TEST(STDIO_TEST, fmemopen_zero_length) {
   ASSERT_EQ(0, fclose(fp));
 }
 
+TEST(STDIO_TEST, fmemopen_zero_length_buffer_overrun) {
+  char buf[2] = "x";
+  ASSERT_EQ('x', buf[0]);
+  FILE* fp = fmemopen(buf, 0, "w");
+  ASSERT_EQ('x', buf[0]);
+  ASSERT_EQ(0, fclose(fp));
+}
+
 TEST(STDIO_TEST, fmemopen_write_only_allocated) {
   // POSIX says fmemopen "may fail if the mode argument does not include a '+'".
   // BSD fails, glibc doesn't. We side with the more lenient.

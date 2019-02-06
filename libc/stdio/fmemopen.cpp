@@ -149,7 +149,9 @@ FILE* fmemopen(void* buf, size_t capacity, const char* mode) {
   } else if (mode[0] == 'w') {
     ck->size = 0;
     ck->offset = 0;
-    ck->buf[0] = '\0';
+    if (capacity > 0) {
+      ck->buf[0] = '\0';
+    }
   }
 
   return fp;
