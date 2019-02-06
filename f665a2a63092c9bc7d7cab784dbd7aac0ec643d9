@@ -16,6 +16,24 @@
       "revId": "f665a2a63092c9bc7d7cab784dbd7aac0ec643d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfc3ce6c_f98f4c8c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-06T19:36:16Z",
+      "side": 1,
+      "message": "Um. I fail to spot something trivial today.\n\nDo you mean to return false when name !\u003d nullptr?",
+      "parentUuid": "8d94f83e_f96482f5",
+      "revId": "f665a2a63092c9bc7d7cab784dbd7aac0ec643d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
