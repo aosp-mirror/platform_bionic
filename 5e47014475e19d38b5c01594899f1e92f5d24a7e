@@ -16,6 +16,24 @@
       "revId": "5e47014475e19d38b5c01594899f1e92f5d24a7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af1814c5_56910091",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-06T18:36:14Z",
+      "side": 1,
+      "message": "Just want to write a regression for this P0 issue.\nLooks like it happens only when SDK \u003c Q. I will call android_set_application_target_sdk_version",
+      "parentUuid": "83cd1c86_f735b882",
+      "revId": "5e47014475e19d38b5c01594899f1e92f5d24a7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
