@@ -1,11 +1,8 @@
-/*	$NetBSD: strcoll.c,v 1.10 2012/06/25 22:32:46 abs Exp $	*/
+/*	$OpenBSD: memccpy.c,v 1.7 2015/08/31 02:53:57 guenther Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,28 +29,21 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)strcoll.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: strcoll.c,v 1.10 2012/06/25 22:32:46 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
-#include <assert.h>
 #include <string.h>
 
-/*
- * Compare strings according to LC_COLLATE category of current locale.
- */
-int
-strcoll(const char *s1, const char *s2)
+void *
+memccpy(void *t, const void *f, int c, size_t n)
 {
 
-	_DIAGASSERT(s1 != NULL);
-	_DIAGASSERT(s2 != NULL);
-
-	/* LC_COLLATE is unimplemented, hence always "C" */
-	return (strcmp(s1, s2));
+	if (n) {
+		unsigned char *tp = t;
+		const unsigned char *fp = f;
+		unsigned char uc = c;
+		do {
+			if ((*tp++ = *fp++) == uc)
+				return (tp);
+		} while (--n != 0);
+	}
+	return (0);
 }
+DEF_WEAK(memccpy);

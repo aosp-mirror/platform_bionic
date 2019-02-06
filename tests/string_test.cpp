@@ -1554,3 +1554,40 @@ TEST(STRING_TEST, strstr_smoke) {
   ASSERT_EQ(haystack + 1, strstr(haystack, "i"));
   ASSERT_EQ(haystack + 4, strstr(haystack, "da"));
 }
+
+TEST(STRING_TEST, strcasestr_smoke) {
+  const char* haystack = "bIg dAdDy/gIaNt hAyStAcKs";
+  ASSERT_EQ(haystack, strcasestr(haystack, ""));
+  ASSERT_EQ(haystack + 0, strcasestr(haystack, "B"));
+  ASSERT_EQ(haystack + 1, strcasestr(haystack, "i"));
+  ASSERT_EQ(haystack + 4, strcasestr(haystack, "Da"));
+}
+
+TEST(STRING_TEST, strcoll_smoke) {
+  ASSERT_TRUE(strcoll("aab", "aac") < 0);
+  ASSERT_TRUE(strcoll("aab", "aab") == 0);
+  ASSERT_TRUE(strcoll("aac", "aab") > 0);
+}
+
+TEST(STRING_TEST, strxfrm_smoke) {
+  const char* src1 = "aab";
+  char dst1[16] = {};
+  ASSERT_GT(strxfrm(dst1, src1, sizeof(dst1)), 0U);
+  const char* src2 = "aac";
+  char dst2[16] = {};
+  ASSERT_GT(strxfrm(dst2, src2, sizeof(dst2)), 0U);
+  ASSERT_TRUE(strcmp(dst1, dst2) < 0);
+}
+
+TEST(STRING_TEST, memccpy_smoke) {
+  char dst[32];
+
+  memset(dst, 0, sizeof(dst));
+  char* p = static_cast<char*>(memccpy(dst, "hello world", ' ', 32));
+  ASSERT_STREQ("hello ", dst);
+  ASSERT_EQ(ptrdiff_t(6), p - dst);
+
+  memset(dst, 0, sizeof(dst));
+  ASSERT_EQ(nullptr, memccpy(dst, "hello world", ' ', 4));
+  ASSERT_STREQ("hell", dst);
+}
