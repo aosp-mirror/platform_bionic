@@ -514,6 +514,7 @@ TEST(malloc, mallopt_smoke) {
 
 TEST(malloc, mallopt_decay) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
   errno = 0;
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
@@ -526,6 +527,7 @@ TEST(malloc, mallopt_decay) {
 
 TEST(malloc, mallopt_purge) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
 #else
@@ -563,6 +565,7 @@ TEST(malloc, reallocarray) {
 
 TEST(malloc, mallinfo) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallinfo
   static size_t sizes[] = {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
   };

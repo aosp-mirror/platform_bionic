@@ -35,6 +35,8 @@
 #include <android-base/macros.h>
 #include <android-base/unique_fd.h>
 
+#include "utils.h"
+
 using namespace std::chrono_literals;
 
 using android::base::unique_fd;
@@ -193,7 +195,7 @@ static void run_watchpoint_test(std::function<void(T&)> child_func, size_t offse
     return;
   }
 
-  set_watchpoint(child, uintptr_t(&data) + offset, size);
+  set_watchpoint(child, uintptr_t(untag_address(&data)) + offset, size);
 
   ASSERT_EQ(0, ptrace(PTRACE_CONT, child, nullptr, nullptr)) << strerror(errno);
   ASSERT_EQ(child, TEMP_FAILURE_RETRY(waitpid(child, &status, __WALL))) << strerror(errno);
