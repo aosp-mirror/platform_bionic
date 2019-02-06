@@ -1,8 +1,7 @@
-/*	$NetBSD: div.c,v 1.8 2012/06/25 22:32:45 abs Exp $	*/
-
+/*	$OpenBSD: div.c,v 1.6 2015/09/13 08:31:47 guenther Exp $ */
 /*
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 1990 Regents of the University of California.
+ * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -31,15 +30,6 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)div.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: div.c,v 1.8 2012/06/25 22:32:45 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
 
 #include <stdlib.h>		/* div_t */
 
@@ -79,3 +69,4 @@ div(int num, int denom)
 	}
 	return (r);
 }
+DEF_STRONG(div);
