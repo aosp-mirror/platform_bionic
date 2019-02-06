@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "78c6ff55_f6f56cba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-02-06T22:00:25Z",
+      "side": 1,
+      "message": "This is\nhttps://android-review.googlesource.com/c/platform/bionic/+/891628\nand it requires a toolchain update to fix.\nI think we broke it with the upstream change that put the shadow pointer into the tls slot, which required tls for the main thread to be allocated before any instrumented code could run. We never noticed it because by that time first stage init was turned into a dynamic executable.",
+      "parentUuid": "cead99aa_c88b4ec2",
+      "range": {
+        "startLine": 18,
+        "startChar": 49,
+        "endLine": 19,
+        "endChar": 8
+      },
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5f719ba9_b9947b32",
         "filename": "tests/buffer_tests.cpp",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "d2750a15_50fb80bd",
+        "filename": "tests/buffer_tests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-02-06T22:00:25Z",
+      "side": 1,
+      "message": "updated",
+      "parentUuid": "5f719ba9_b9947b32",
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7ed91b4b_e247eeaa",
         "filename": "tests/dl_test.cpp",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2019-02-06T17:16:06Z",
       "side": 1,
       "message": "fixable? (i.e. should there be a corresponding bug?)",
+      "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f45aa060_4465174e",
+        "filename": "tests/dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-02-06T22:00:25Z",
+      "side": 1,
+      "message": "filed a bug",
+      "parentUuid": "7ed91b4b_e247eeaa",
       "revId": "5224d758f5d90ac85bebb8fb7978b48fa0963ea0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
