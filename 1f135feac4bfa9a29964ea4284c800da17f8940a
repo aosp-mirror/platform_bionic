@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b645472_f85b0ffd",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-06T20:05:02Z",
+      "side": 1,
+      "message": "switch to strlen, since this confused everyone and is the less common idiom anyway?",
+      "range": {
+        "startLine": 56,
+        "startChar": 51,
+        "endLine": 56,
+        "endChar": 57
+      },
+      "revId": "1f135feac4bfa9a29964ea4284c800da17f8940a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
