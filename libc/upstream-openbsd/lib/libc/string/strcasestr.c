@@ -1,4 +1,5 @@
-/*	$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $	*/
+/*	$OpenBSD: strcasestr.c,v 1.4 2015/08/31 02:53:57 guenther Exp $	*/
+/*	$NetBSD: strcasestr.c,v 1.2 2005/02/09 21:35:47 kleink Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993
@@ -32,13 +33,6 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $");
-#endif /* LIBC_SCCS and not lint */
-
-#include "namespace.h"
-#include <assert.h>
 #include <ctype.h>
 #include <string.h>
 
@@ -51,11 +45,8 @@ strcasestr(const char *s, const char *find)
 	char c, sc;
 	size_t len;
 
-	_DIAGASSERT(s != NULL);
-	_DIAGASSERT(find != NULL);
-
 	if ((c = *find++) != 0) {
-		c = tolower((unsigned char)c);
+		c = (char)tolower((unsigned char)c);
 		len = strlen(find);
 		do {
 			do {
@@ -65,5 +56,6 @@ strcasestr(const char *s, const char *find)
 		} while (strncasecmp(s, find, len) != 0);
 		s--;
 	}
-	return __UNCONST(s);
+	return ((char *)s);
 }
+DEF_WEAK(strcasestr);
