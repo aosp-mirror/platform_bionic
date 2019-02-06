@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "17f6f1d2_4105bb20",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-02-06T17:55:53Z",
+      "side": 1,
+      "message": "Discussed offline, sounds like this is only for platform use. Outside the platform the versioned full (non-)API \"_63\" is still available.",
+      "parentUuid": "4bf07b0f_a50c13cb",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 15
+      },
+      "revId": "4e26fb9ed802a1444e4e156d862889bf6ec47c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2efbbdb_09a88e42",
         "filename": "libc/bionic/icu.cpp",
         "patchSetId": 2
