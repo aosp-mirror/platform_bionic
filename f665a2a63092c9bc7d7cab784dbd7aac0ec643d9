@@ -52,6 +52,24 @@
       "revId": "f665a2a63092c9bc7d7cab784dbd7aac0ec643d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1e1694e_037afcee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-06T23:17:34Z",
+      "side": 1,
+      "message": "Thanks for explaining the issue! Done now.\n\nDuring code review, some found !\u003d is confusing because dirname returns std::string, not const char* in the usual circumstance.\n\nI think dirname does not accept nullptr. I have simplified the code to \nname \u003d\u003d nullptr || dirname(name) !\u003d kSystemLibDir",
+      "parentUuid": "8854749a_2931b52b",
+      "revId": "f665a2a63092c9bc7d7cab784dbd7aac0ec643d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
