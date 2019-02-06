@@ -39,6 +39,24 @@
       "revId": "4e26fb9ed802a1444e4e156d862889bf6ec47c24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6303026_4f5309fa",
+        "filename": "libc/bionic/icu.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1373934
+      },
+      "writtenOn": "2019-02-06T17:38:45Z",
+      "side": 1,
+      "message": "My mistake, I missed the fact that sizeof() actually returns length of string plus one for zero byte. Fixed in patch set 3.",
+      "parentUuid": "c2efbbdb_09a88e42",
+      "revId": "4e26fb9ed802a1444e4e156d862889bf6ec47c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
