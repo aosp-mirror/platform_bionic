@@ -1,8 +1,7 @@
-/*	$NetBSD: lldiv.c,v 1.4 2012/06/25 22:32:45 abs Exp $	*/
-
+/*	$OpenBSD: lldiv.c,v 1.2 2016/08/14 23:18:03 guenther Exp $	*/
 /*
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * Copyright (c) 1990 Regents of the University of California.
+ * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -32,25 +31,10 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "from: @(#)ldiv.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: lldiv.c,v 1.4 2012/06/25 22:32:45 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
-
-#include "namespace.h"
 #include <stdlib.h>		/* lldiv_t */
 
-#ifdef __weak_alias
-__weak_alias(lldiv, _lldiv)
-#endif
-
-/* LONGLONG */
 lldiv_t
-lldiv(long long int num, long long int denom)
+lldiv(long long num, long long denom)
 {
 	lldiv_t r;
 
@@ -64,3 +48,5 @@ lldiv(long long int num, long long int denom)
 	}
 	return (r);
 }
+
+__weak_alias(qdiv, lldiv);
