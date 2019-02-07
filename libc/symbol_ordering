@@ -46,7 +46,6 @@ je_tsd_tsd
 optreset
 _rs_forked
 daylight
-_ZL17g_icudata_version
 gMallocLeakZygoteChild
 _ZL18netdClientInitOnce
 je_opt_narenas
