@@ -22,6 +22,30 @@
       "revId": "6cb719f0ed2d59ed88d79e8b36147c49975753c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f197aba4_b47c34a8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-07T15:55:06Z",
+      "side": 1,
+      "message": "(fwiw, i think this is the strongest argument for google3-style \"user-defined functions LookLikeThis\" --- it guarantees no confusion with C/C++/POSIX.)",
+      "parentUuid": "5f9bc4a8_3df9c03c",
+      "range": {
+        "startLine": 254,
+        "startChar": 25,
+        "endLine": 254,
+        "endChar": 55
+      },
+      "revId": "6cb719f0ed2d59ed88d79e8b36147c49975753c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
