@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ace0992_cc7a6339",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2163,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-07T00:08:06Z",
+      "side": 1,
+      "message": "newName doesn\u0027t match new_name.\n\nbut these messages are all a bit confusing. maybe better as:\n\n  \"dlopen considering translation from %s to APEX path %s\"\n  \"dlopen %s exists, not translating\"\n  \"dlopen %s does not exist, not translating\"\n  \"dlopen translation accepted: using %s\"\n\nthat ways folks debugging from logs don\u0027t have to have the source open to understand the logging...\n\n(apologies for not actually paying attention to this part before.)",
+      "revId": "080b0bd249b743270439f8e6807cc7567412f7d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
