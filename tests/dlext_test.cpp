@@ -232,6 +232,12 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
   dlclose(handle);
 }
 
+TEST(dlfcn, dlopen_from_nullptr_android_api_level) {
+  // Regression test for http://b/123972211. Testing dlopen(nullptr) when target sdk is P
+  android_set_application_target_sdk_version(__ANDROID_API_P__);
+  ASSERT_TRUE(dlopen(nullptr, RTLD_NOW) != nullptr);
+}
+
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
   const std::string lib_path = GetTestlibRoot() + lib_zip_path;
