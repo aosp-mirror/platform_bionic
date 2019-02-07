@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5f9bc4a8_3df9c03c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1071150
+      },
+      "writtenOn": "2019-02-07T10:14:55Z",
+      "side": 1,
+      "message": "In the original CL this was \"dirname(name).compare(kSystemLibDir) !\u003d 0\" which makes it super clear that the linker\u0027s dirname(C++) is not the same as the POSIX dirname(C).\n\nEither is fine as folks working on the linker are aware of this.",
+      "range": {
+        "startLine": 254,
+        "startChar": 25,
+        "endLine": 254,
+        "endChar": 55
+      },
+      "revId": "6cb719f0ed2d59ed88d79e8b36147c49975753c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
