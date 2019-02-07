@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "a031acc2_24793cbf",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-02-07T10:34:35Z",
+      "side": 1,
+      "message": "Good point, we should make this memory_order_acquire. This is accidentally left over. I uploaded a PS to fix this.",
+      "parentUuid": "ec5d71a7_8531664e",
+      "range": {
+        "startLine": 122,
+        "startChar": 36,
+        "endLine": 122,
+        "endChar": 61
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9cdb09b6_3b52345c",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -65,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "7c3092db_f25db706",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-02-07T10:34:35Z",
+      "side": 1,
+      "message": "Yes, this still looks good.\n\n(FYI, we uninstall the dispatch for heapprofd once we are done. This requires us to reinitialize heapprofd if we want to start profiling later, but we do not want to dlclose and dlopen again, as we do not know the state of other threads (i.e. if they are currently within one of the heapprofd functions). This is why we keep around the handle to re-use later.)",
+      "parentUuid": "9cdb09b6_3b52345c",
+      "range": {
+        "startLine": 596,
+        "startChar": 6,
+        "endLine": 596,
+        "endChar": 20
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d97261cb_eeaf06c7",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 2
@@ -82,6 +130,47 @@
         "endLine": 619,
         "endChar": 45
       },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44f195bc_35386abf",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-02-07T10:34:35Z",
+      "side": 1,
+      "message": "Yes, this looks good to me too. With the atomic swap we no longer have to make sure free is set before malloc.",
+      "parentUuid": "d97261cb_eeaf06c7",
+      "range": {
+        "startLine": 619,
+        "startChar": 2,
+        "endLine": 619,
+        "endChar": 45
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44a96201_27d38b0c",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2019-02-07T10:34:35Z",
+      "side": 1,
+      "message": "I would call this something like heapprofd_init_dispatch or similar, as otherwise it sounds like this dispatches to heapprofd.",
       "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
