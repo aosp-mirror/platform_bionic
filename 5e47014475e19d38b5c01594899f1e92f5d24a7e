@@ -70,6 +70,24 @@
       "revId": "5e47014475e19d38b5c01594899f1e92f5d24a7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0637b40_cdb32acf",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2019-02-07T12:27:17Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "632f6fee_c528079e",
+      "revId": "5e47014475e19d38b5c01594899f1e92f5d24a7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
