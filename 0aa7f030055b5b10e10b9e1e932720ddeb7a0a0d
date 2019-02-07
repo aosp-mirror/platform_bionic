@@ -16,6 +16,75 @@
       "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec5d71a7_8531664e",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-02-07T00:31:21Z",
+      "side": 1,
+      "message": "Why is it a good idea to give memory_order_acquire another name? I really need to understand that this is memory_order_acquire in order to read the code.\n\nIf this is really almost always null, it may be beneficial to do a relaxed load, return null if appropriate, and do an acquire load if it was non-null.",
+      "range": {
+        "startLine": 122,
+        "startChar": 36,
+        "endLine": 122,
+        "endChar": 61
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cdb09b6_3b52345c",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-02-07T00:31:21Z",
+      "side": 1,
+      "message": "I don\u0027t understand the logic here. But it seems largely unchanged.",
+      "range": {
+        "startLine": 596,
+        "startChar": 6,
+        "endLine": 596,
+        "endChar": 20
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d97261cb_eeaf06c7",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-02-07T00:31:21Z",
+      "side": 1,
+      "message": "IIUC, this seems fine. The malloc must happen before the corresponding free, so the dispatch table reads must also be ordered. I would probably use memory_order_release just so it matches the acquire above, but that\u0027s basically a taste thing.",
+      "range": {
+        "startLine": 619,
+        "startChar": 2,
+        "endLine": 619,
+        "endChar": 45
+      },
+      "revId": "0aa7f030055b5b10e10b9e1e932720ddeb7a0a0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
