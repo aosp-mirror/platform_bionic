@@ -80,8 +80,6 @@ static T* RemoveConst(const T* x) {
 // https://reviews.llvm.org/D47613
 #define atomic_load_explicit_const(obj, order) atomic_load_explicit(RemoveConst(obj), order)
 
-static constexpr memory_order default_read_memory_order = memory_order_acquire;
-
 static constexpr MallocDispatch __libc_malloc_default_dispatch
   __attribute__((unused)) = {
     Malloc(calloc),
@@ -117,103 +115,88 @@ int gMallocLeakZygoteChild = 0;
 // =============================================================================
 // Allocation functions
 // =============================================================================
+static inline const MallocDispatch* GetDispatchTable() {
+  return atomic_load_explicit_const(&__libc_globals->current_dispatch_table,
+                                    memory_order_acquire);
+}
+
 extern "C" void* calloc(size_t n_elements, size_t elem_size) {
-  auto _calloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.calloc,
-      default_read_memory_order);
-  if (__predict_false(_calloc != nullptr)) {
-    return _calloc(n_elements, elem_size);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->calloc(n_elements, elem_size);
   }
   return Malloc(calloc)(n_elements, elem_size);
 }
 
 extern "C" void free(void* mem) {
-  auto _free = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.free,
-      default_read_memory_order);
-  if (__predict_false(_free != nullptr)) {
-    _free(mem);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    dispatch_table->free(mem);
   } else {
     Malloc(free)(mem);
   }
 }
 
 extern "C" struct mallinfo mallinfo() {
-  auto _mallinfo = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.mallinfo,
-      default_read_memory_order);
-  if (__predict_false(_mallinfo != nullptr)) {
-    return _mallinfo();
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->mallinfo();
   }
   return Malloc(mallinfo)();
 }
 
 extern "C" int mallopt(int param, int value) {
-  auto _mallopt = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.mallopt,
-      default_read_memory_order);
-  if (__predict_false(_mallopt != nullptr)) {
-    return _mallopt(param, value);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->mallopt(param, value);
   }
   return Malloc(mallopt)(param, value);
 }
 
 extern "C" void* malloc(size_t bytes) {
-  auto _malloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.malloc,
-      default_read_memory_order);
-  if (__predict_false(_malloc != nullptr)) {
-    return _malloc(bytes);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->malloc(bytes);
   }
   return Malloc(malloc)(bytes);
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
-  auto _malloc_usable_size = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.malloc_usable_size,
-      default_read_memory_order);
-  if (__predict_false(_malloc_usable_size != nullptr)) {
-    return _malloc_usable_size(mem);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->malloc_usable_size(mem);
   }
   return Malloc(malloc_usable_size)(mem);
 }
 
 extern "C" void* memalign(size_t alignment, size_t bytes) {
-  auto _memalign = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.memalign,
-      default_read_memory_order);
-  if (__predict_false(_memalign != nullptr)) {
-    return _memalign(alignment, bytes);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->memalign(alignment, bytes);
   }
   return Malloc(memalign)(alignment, bytes);
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
-  auto _posix_memalign = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.posix_memalign,
-      default_read_memory_order);
-  if (__predict_false(_posix_memalign != nullptr)) {
-    return _posix_memalign(memptr, alignment, size);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->posix_memalign(memptr, alignment, size);
   }
   return Malloc(posix_memalign)(memptr, alignment, size);
 }
 
 extern "C" void* aligned_alloc(size_t alignment, size_t size) {
-  auto _aligned_alloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.aligned_alloc,
-      default_read_memory_order);
-  if (__predict_false(_aligned_alloc != nullptr)) {
-    return _aligned_alloc(alignment, size);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->aligned_alloc(alignment, size);
   }
   return Malloc(aligned_alloc)(alignment, size);
 }
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
-  auto _realloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.realloc,
-      default_read_memory_order);
-  if (__predict_false(_realloc != nullptr)) {
-    return _realloc(old_mem, bytes);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->realloc(old_mem, bytes);
   }
   return Malloc(realloc)(old_mem, bytes);
 }
@@ -229,21 +212,17 @@ extern "C" void* reallocarray(void* old_mem, size_t item_count, size_t item_size
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t bytes) {
-  auto _pvalloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.pvalloc,
-      default_read_memory_order);
-  if (__predict_false(_pvalloc != nullptr)) {
-    return _pvalloc(bytes);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->pvalloc(bytes);
   }
   return Malloc(pvalloc)(bytes);
 }
 
 extern "C" void* valloc(size_t bytes) {
-  auto _valloc = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.valloc,
-      default_read_memory_order);
-  if (__predict_false(_valloc != nullptr)) {
-    return _valloc(bytes);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->valloc(bytes);
   }
   return Malloc(valloc)(bytes);
 }
@@ -365,7 +344,7 @@ extern "C" void write_malloc_leak_info(FILE* fp) {
 // =============================================================================
 
 template<typename FunctionType>
-static bool InitMallocFunction(void* malloc_impl_handler, _Atomic(FunctionType)* func, const char* prefix, const char* suffix) {
+static bool InitMallocFunction(void* malloc_impl_handler, FunctionType* func, const char* prefix, const char* suffix) {
   char symbol[128];
   snprintf(symbol, sizeof(symbol), "%s_%s", prefix, suffix);
   *func = reinterpret_cast<FunctionType>(dlsym(malloc_impl_handler, symbol));
@@ -433,7 +412,7 @@ static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const
   return true;
 }
 
-static void malloc_fini_impl(void*) {
+static void MallocFiniImpl(void*) {
   // Our BSD stdio implementation doesn't close the standard streams,
   // it only flushes them. Other unclosed FILE*s will show up as
   // malloc leaks, but to avoid the standard streams showing up in
@@ -608,18 +587,16 @@ static void* LoadSharedLibrary(const char* shared_lib, const char* prefix, Mallo
 // hooks. nullptr if they had not been loaded before.
 static _Atomic (void*) g_heapprofd_handle = nullptr;
 
-static void install_hooks(libc_globals* globals, const char* options,
+static void InstallHooks(libc_globals* globals, const char* options,
                           const char* prefix, const char* shared_lib) {
-  MallocDispatch dispatch_table;
-
   void* impl_handle = atomic_load(&g_heapprofd_handle);
   bool reusing_handle = impl_handle != nullptr;
   if (reusing_handle) {
-    if (!InitSharedLibrary(impl_handle, shared_lib, prefix, &dispatch_table)) {
+    if (!InitSharedLibrary(impl_handle, shared_lib, prefix, &globals->malloc_dispatch_table)) {
       return;
     }
   } else {
-    impl_handle = LoadSharedLibrary(shared_lib, prefix, &dispatch_table);
+    impl_handle = LoadSharedLibrary(shared_lib, prefix, &globals->malloc_dispatch_table);
     if (impl_handle == nullptr) {
       return;
     }
@@ -636,17 +613,10 @@ static void install_hooks(libc_globals* globals, const char* options,
     return;
   }
 
-  // We assign free  first explicitly to prevent the case where we observe a
-  // alloc, but miss the corresponding free because of initialization order.
-  //
-  // This is safer than relying on the declaration order inside
-  // MallocDispatch at the cost of an extra atomic pointer write on
-  // initialization.
-  atomic_store(&globals->malloc_dispatch.free, dispatch_table.free);
-  // The struct gets assigned elementwise and each of the elements is an
-  // _Atomic. Assigning to an _Atomic is an atomic_store operation.
-  // The assignment is done in declaration order.
-  globals->malloc_dispatch = dispatch_table;
+  // Do a pointer swap so that all of the functions become valid at once to
+  // avoid any initialization order problems.
+  atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
+
   atomic_store(&g_heapprofd_handle, impl_handle);
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
@@ -655,7 +625,7 @@ static void install_hooks(libc_globals* globals, const char* options,
   // where another atexit function is used to cleanup allocated memory,
   // but the finalize function was already called. This particular error
   // seems to be triggered by a zygote spawned process calling exit.
-  int ret_value = __cxa_atexit(malloc_fini_impl, nullptr, nullptr);
+  int ret_value = __cxa_atexit(MallocFiniImpl, nullptr, nullptr);
   if (ret_value != 0) {
     error_log("failed to set atexit cleanup function: %d", ret_value);
   }
@@ -688,7 +658,7 @@ static _Atomic bool g_heapprofd_init_hook_installed = false;
 extern "C" void MaybeInstallInitHeapprofdHook(int);
 
 // Initializes memory allocation framework once per process.
-static void malloc_init_impl(libc_globals* globals) {
+static void MallocInitImpl(libc_globals* globals) {
   struct sigaction action = {};
   action.sa_handler = MaybeInstallInitHeapprofdHook;
   sigaction(HEAPPROFD_SIGNAL, &action, nullptr);
@@ -712,7 +682,7 @@ static void malloc_init_impl(libc_globals* globals) {
     return;
   }
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
-    install_hooks(globals, options, prefix, shared_lib);
+    InstallHooks(globals, options, prefix, shared_lib);
     atomic_store(&g_heapprofd_init_in_progress, false);
   }
 }
@@ -721,12 +691,12 @@ static void malloc_init_impl(libc_globals* globals) {
 // This routine is called from __libc_init routines in libc_init_dynamic.cpp.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
-  malloc_init_impl(globals);
+  MallocInitImpl(globals);
 }
 
 static void* InitHeapprofd(void*) {
   __libc_globals.mutate([](libc_globals* globals) {
-    install_hooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
+    InstallHooks(globals, nullptr, HEAPPROFD_PREFIX, HEAPPROFD_SHARED_LIB);
   });
   atomic_store(&g_heapprofd_init_in_progress, false);
   // Allow to install hook again to re-initialize heap profiling after the
@@ -738,7 +708,7 @@ static void* InitHeapprofd(void*) {
 static void* InitHeapprofdHook(size_t bytes) {
   if (!atomic_exchange(&g_heapprofd_init_hook_installed, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
-      atomic_store(&globals->malloc_dispatch.malloc, nullptr);
+      atomic_store(&globals->current_dispatch_table, nullptr);
     });
 
     pthread_t thread_id;
@@ -752,6 +722,29 @@ static void* InitHeapprofdHook(size_t bytes) {
   return Malloc(malloc)(bytes);
 }
 
+static constexpr MallocDispatch __heapprofd_dispatch
+  __attribute__((unused)) = {
+    Malloc(calloc),
+    Malloc(free),
+    Malloc(mallinfo),
+    InitHeapprofdHook,
+    Malloc(malloc_usable_size),
+    Malloc(memalign),
+    Malloc(posix_memalign),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+    Malloc(pvalloc),
+#endif
+    Malloc(realloc),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+    Malloc(valloc),
+#endif
+    Malloc(iterate),
+    Malloc(malloc_disable),
+    Malloc(malloc_enable),
+    Malloc(mallopt),
+    Malloc(aligned_alloc),
+  };
+
 extern "C" void MaybeInstallInitHeapprofdHook(int) {
   // Zygote child processes must be marked profileable.
   if (gMallocLeakZygoteChild &&
@@ -761,7 +754,7 @@ extern "C" void MaybeInstallInitHeapprofdHook(int) {
 
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
-      atomic_store(&globals->malloc_dispatch.malloc, InitHeapprofdHook);
+      atomic_store(&globals->current_dispatch_table, &__heapprofd_dispatch);
     });
   }
 }
@@ -776,7 +769,7 @@ extern "C" void MaybeInstallInitHeapprofdHook(int) {
 bool MallocDispatchReset() {
   if (!atomic_exchange(&g_heapprofd_init_in_progress, true)) {
     __libc_globals.mutate([](libc_globals* globals) {
-      globals->malloc_dispatch = __libc_malloc_default_dispatch;
+      atomic_store(&globals->current_dispatch_table, nullptr);
     });
     atomic_store(&g_heapprofd_init_in_progress, false);
     return true;
@@ -839,11 +832,9 @@ bool android_mallopt(int opcode, void* arg, size_t arg_size) {
 // [base, base+size).  Must be called between malloc_disable and malloc_enable.
 extern "C" int malloc_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
-  auto _iterate = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.iterate,
-      default_read_memory_order);
-  if (__predict_false(_iterate != nullptr)) {
-    return _iterate(base, size, callback, arg);
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->iterate(base, size, callback, arg);
   }
   return Malloc(iterate)(base, size, callback, arg);
 }
@@ -851,22 +842,18 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
 // Disable calls to malloc so malloc_iterate gets a consistent view of
 // allocated memory.
 extern "C" void malloc_disable() {
-  auto _malloc_disable = atomic_load_explicit_const(
-     & __libc_globals->malloc_dispatch.malloc_disable,
-      default_read_memory_order);
-  if (__predict_false(_malloc_disable != nullptr)) {
-    return _malloc_disable();
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->malloc_disable();
   }
   return Malloc(malloc_disable)();
 }
 
 // Re-enable calls to malloc after a previous call to malloc_disable.
 extern "C" void malloc_enable() {
-  auto _malloc_enable = atomic_load_explicit_const(
-      &__libc_globals->malloc_dispatch.malloc_enable,
-      default_read_memory_order);
-  if (__predict_false(_malloc_enable != nullptr)) {
-    return _malloc_enable();
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->malloc_enable();
   }
   return Malloc(malloc_enable)();
 }
