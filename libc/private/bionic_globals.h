@@ -29,6 +29,7 @@
 #ifndef _PRIVATE_BIONIC_GLOBALS_H
 #define _PRIVATE_BIONIC_GLOBALS_H
 
+#include <stdatomic.h>
 #include <sys/cdefs.h>
 #include <link.h>
 #include <pthread.h>
@@ -43,7 +44,18 @@
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
-  MallocDispatch malloc_dispatch;
+
+  // In order to allow a complete switch between dispatch tables without
+  // the need for copying each function by function in the structure,
+  // use a single atomic pointer to switch.
+  // The current_dispatch_table pointer can only ever be set to a complete
+  // table. Any dispatch table that is pointed to by current_dispatch_table
+  // cannot be modified after that. If the pointer changes in the future,
+  // the old pointer must always stay valid.
+  // The malloc_dispatch_table is modified by malloc debug, malloc hooks,
+  // and heaprofd. Only one of these modes can be active at any given time.
+  _Atomic(const MallocDispatch*) current_dispatch_table;
+  MallocDispatch malloc_dispatch_table;
 };
 
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
