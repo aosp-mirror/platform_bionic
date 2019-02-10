@@ -36,53 +36,12 @@
 
 #include <async_safe/log.h>
 
-// Allowed icu4c version numbers are in the range [44, 999].
-// Gingerbread's icu4c 4.4 is the minimum supported ICU version.
-static constexpr auto ICUDATA_VERSION_MIN_LENGTH = 2;
-static constexpr auto ICUDATA_VERSION_MAX_LENGTH = 3;
-static constexpr auto ICUDATA_VERSION_MIN = 44;
-
-static char g_icudata_version[ICUDATA_VERSION_MAX_LENGTH + 1];
-
 static void* g_libicuuc_handle = nullptr;
 
-static int __icu_dat_file_filter(const dirent* dirp) {
-  const char* name = dirp->d_name;
-
-  // Is the name the right length to match 'icudt(\d\d\d)l.dat'?
-  const size_t len = strlen(name);
-  if (len < 10 + ICUDATA_VERSION_MIN_LENGTH || len > 10 + ICUDATA_VERSION_MAX_LENGTH) return 0;
-
-  return !strncmp(name, "icudt", 5) && !strncmp(&name[len - 5], "l.dat", 5);
-}
-
 static bool __find_icu() {
-  dirent** namelist = nullptr;
-  int n = scandir("/apex/com.android.runtime/etc/icu", &namelist, &__icu_dat_file_filter,
-                  alphasort);
-  if (n < 0) {
-    async_safe_write_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find ICU folder");
-    return false;
-  }
-  int max_version = -1;
-  while (n--) {
-    // We prefer the latest version available.
-    int version = atoi(&namelist[n]->d_name[strlen("icudt")]);
-    if (version != 0 && version > max_version) max_version = version;
-    free(namelist[n]);
-  }
-  free(namelist);
-
-  if (max_version < ICUDATA_VERSION_MIN) {
-    async_safe_write_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find an ICU .dat file");
-    return false;
-  }
-
-  snprintf(g_icudata_version, sizeof(g_icudata_version), "_%d", max_version);
-
-  g_libicuuc_handle = dlopen("libicuuc.so", RTLD_LOCAL);
+  g_libicuuc_handle = dlopen("libandroidicu.so", RTLD_LOCAL);
   if (g_libicuuc_handle == nullptr) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libicuuc.so: %s",
+    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libandroidicu.so: %s",
                           dlerror());
     return false;
   }
@@ -94,9 +53,9 @@ void* __find_icu_symbol(const char* symbol_name) {
   static bool found_icu = __find_icu();
   if (!found_icu) return nullptr;
 
-  char versioned_symbol_name[strlen(symbol_name) + sizeof(g_icudata_version)];
-  snprintf(versioned_symbol_name, sizeof(versioned_symbol_name), "%s%s",
-           symbol_name, g_icudata_version);
+  char versioned_symbol_name[strlen(symbol_name) + strlen("_android") + 1];
+  snprintf(versioned_symbol_name, sizeof(versioned_symbol_name), "%s_android",
+           symbol_name);
 
   void* symbol = dlsym(g_libicuuc_handle, versioned_symbol_name);
   if (symbol == nullptr) {

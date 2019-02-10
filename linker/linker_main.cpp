@@ -553,6 +553,24 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
   async_safe_fatal("Could not find a PHDR: broken executable?");
 }
 
+// Detect an attempt to run the linker on itself. e.g.:
+//   /system/bin/linker64 /system/bin/linker64
+// Use priority-1 to run this constructor before other constructors.
+__attribute__((constructor(1))) static void detect_self_exec() {
+  // Normally, the linker initializes the auxv global before calling its
+  // constructors. If the linker loads itself, though, the first loader calls
+  // the second loader's constructors before calling __linker_init.
+  if (__libc_shared_globals()->auxv != nullptr) {
+    return;
+  }
+#if defined(__i386__)
+  // We don't have access to the auxv struct from here, so use the int 0x80
+  // fallback.
+  __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
+#endif
+  __linker_error("error: linker cannot load itself\n");
+}
+
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 
@@ -575,18 +593,8 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // another program), AT_BASE is 0.
   ElfW(Addr) linker_addr = getauxval(AT_BASE);
   if (linker_addr == 0) {
-    // Detect an attempt to run the linker on itself (e.g.
-    // `linker64 /system/bin/linker64`). If the kernel loaded this instance of
-    // the linker, then AT_ENTRY will refer to &_start. If it doesn't, then
-    // something else must have loaded this instance of the linker. It's
-    // simpler if we only allow one copy of the linker to be loaded at a time.
-    if (getauxval(AT_ENTRY) != reinterpret_cast<uintptr_t>(&_start)) {
-      // The first linker already relocated this one and set up TLS, so we don't
-      // need further libc initialization.
-      __linker_error("error: linker cannot load itself\n");
-    }
-    // Otherwise, the AT_PHDR and AT_PHNUM aux values describe this linker
-    // instance, so use the phdr to find the linker's base address.
+    // The AT_PHDR and AT_PHNUM aux values describe this linker instance, so use
+    // the phdr to find the linker's base address.
     ElfW(Addr) load_bias;
     get_elf_base_from_phdr(
       reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
