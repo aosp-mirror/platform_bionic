@@ -24,6 +24,7 @@ bootstrap_go_package {
         "blueprint-proptools",
         "soong",
         "soong-android",
+        "soong-cc",
     ],
     srcs: [
         "bionic.go",
