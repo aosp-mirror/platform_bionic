@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0568f99_77dfbe1a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-11T21:55:04Z",
+      "side": 1,
+      "message": "This doesn\u0027t help - libnativehelper.so isn\u0027t found in this call. From my limited tracing it appears that there are no linked namespaces.\n\nBtw, only marlin is affected in TH, but I have no problem reproducing this locally on taimen.",
+      "range": {
+        "startLine": 1548,
+        "startChar": 1,
+        "endLine": 1549,
+        "endChar": 49
+      },
+      "revId": "c596274fcf40f845bc1c0759b195c37e3392f943",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
