@@ -337,11 +337,14 @@ struct TestBug37410 {
   static void* thread_fn(void* arg) {
     TestBug37410* data = reinterpret_cast<TestBug37410*>(arg);
 
+    // Unlocking data->mutex will cause the main thread to exit, invalidating *data. Save the handle.
+    pthread_t main_thread = data->main_thread;
+
     // Let the main thread know we're running.
     pthread_mutex_unlock(&data->mutex);
 
     // And wait for the main thread to exit.
-    pthread_join(data->main_thread, nullptr);
+    pthread_join(main_thread, nullptr);
 
     return nullptr;
   }
@@ -1550,7 +1553,7 @@ TEST(pthread, pthread_attr_getstack__main_thread) {
   void* maps_stack_hi = nullptr;
   std::vector<map_record> maps;
   ASSERT_TRUE(Maps::parse_maps(&maps));
-  uintptr_t stack_address = reinterpret_cast<uintptr_t>(&maps_stack_hi);
+  uintptr_t stack_address = reinterpret_cast<uintptr_t>(untag_address(&maps_stack_hi));
   for (const auto& map : maps) {
     if (map.addr_start <= stack_address && map.addr_end > stack_address){
       maps_stack_hi = reinterpret_cast<void*>(map.addr_end);
@@ -1629,9 +1632,9 @@ static void getstack_signal_handler(int sig) {
 
   // Verify if the stack used by the signal handler is the alternate stack just registered.
   ASSERT_LE(getstack_signal_handler_arg.signal_stack_base, &attr);
-  ASSERT_LT(static_cast<void*>(&attr),
+  ASSERT_LT(static_cast<void*>(untag_address(&attr)),
             static_cast<char*>(getstack_signal_handler_arg.signal_stack_base) +
-            getstack_signal_handler_arg.signal_stack_size);
+                getstack_signal_handler_arg.signal_stack_size);
 
   // Verify if the main thread's stack got in the signal handler is correct.
   ASSERT_EQ(getstack_signal_handler_arg.main_stack_base, stack_base);
@@ -1690,7 +1693,7 @@ static void pthread_attr_getstack_18908062_helper(void*) {
 
   // Test whether &local_variable is in [stack_base, stack_base + stack_size).
   ASSERT_LE(reinterpret_cast<char*>(stack_base), &local_variable);
-  ASSERT_LT(&local_variable, reinterpret_cast<char*>(stack_base) + stack_size);
+  ASSERT_LT(untag_address(&local_variable), reinterpret_cast<char*>(stack_base) + stack_size);
 }
 
 // Check whether something on stack is in the range of

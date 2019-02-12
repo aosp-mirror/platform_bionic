@@ -66,9 +66,6 @@ extern "C" {
 // Use an initializer so __libc_sysinfo will have a fallback implementation
 // while .preinit_array constructors run.
 #if defined(__i386__)
-static __attribute__((__naked__)) void __libc_int0x80() {
-  __asm__ volatile("int $0x80; ret");
-}
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
 

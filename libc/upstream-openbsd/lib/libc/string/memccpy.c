@@ -1,11 +1,8 @@
-/*	$NetBSD: ldiv.c,v 1.8 2012/06/25 22:32:45 abs Exp $	*/
+/*	$OpenBSD: memccpy.c,v 1.7 2015/08/31 02:53:57 guenther Exp $	*/
 
-/*
+/*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Chris Torek.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -32,29 +29,21 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)ldiv.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: ldiv.c,v 1.8 2012/06/25 22:32:45 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
+#include <string.h>
 
-#include <stdlib.h>		/* ldiv_t */
-
-ldiv_t
-ldiv(long num, long denom)
+void *
+memccpy(void *t, const void *f, int c, size_t n)
 {
-	ldiv_t r;
 
-	/* see div.c for comments */
-
-	r.quot = num / denom;
-	r.rem = num % denom;
-	if (num >= 0 && r.rem < 0) {
-		r.quot++;
-		r.rem -= denom;
+	if (n) {
+		unsigned char *tp = t;
+		const unsigned char *fp = f;
+		unsigned char uc = c;
+		do {
+			if ((*tp++ = *fp++) == uc)
+				return (tp);
+		} while (--n != 0);
 	}
-	return (r);
+	return (0);
 }
+DEF_WEAK(memccpy);

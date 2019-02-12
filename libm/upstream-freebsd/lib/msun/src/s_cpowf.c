@@ -44,10 +44,11 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_cpowf.c 336299 2018-07-15 00:23:10Z mmacy $");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_cpowf.c 336563 2018-07-20 18:27:30Z dim $");
 
 #include <complex.h>
 #include <math.h>
+#include "math_private.h"
 
 float complex
 cpowf(float complex a, float complex z)
@@ -59,7 +60,7 @@ cpowf(float complex a, float complex z)
 	y = cimagf(z);
 	absa = cabsf (a);
 	if (absa == 0.0f) {
-		return (0.0f + 0.0f * I);
+		return (CMPLXF(0.0f, 0.0f));
 	}
 	arga = cargf (a);
 	r = powf (absa, x);
@@ -68,6 +69,6 @@ cpowf(float complex a, float complex z)
 		r = r * expf (-y * arga);
 		theta = theta + y * logf (absa);
 	}
-	w = r * cosf (theta) + (r * sinf (theta)) * I;
+	w = CMPLXF(r * cosf (theta), r * sinf (theta));
 	return (w);
 }

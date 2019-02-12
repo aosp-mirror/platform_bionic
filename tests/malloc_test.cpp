@@ -515,6 +515,7 @@ TEST(malloc, mallopt_smoke) {
 
 TEST(malloc, mallopt_decay) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
   errno = 0;
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
@@ -527,6 +528,7 @@ TEST(malloc, mallopt_decay) {
 
 TEST(malloc, mallopt_purge) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
 #else
@@ -564,6 +566,7 @@ TEST(malloc, reallocarray) {
 
 TEST(malloc, mallinfo) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan does not implement mallinfo
   static size_t sizes[] = {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
   };
@@ -585,10 +588,13 @@ TEST(malloc, mallinfo) {
       size_t new_allocated = mallinfo().uordblks;
       if (allocated != new_allocated) {
         size_t usable_size = malloc_usable_size(ptrs[i]);
-        ASSERT_GE(new_allocated, allocated + usable_size)
-            << "Failed at size " << size << " usable size " << usable_size;
-        pass = true;
-        break;
+        // Only check if the total got bigger by at least allocation size.
+        // Sometimes the mallinfo numbers can go backwards due to compaction
+        // and/or freeing of cached data.
+        if (new_allocated >= allocated + usable_size) {
+          pass = true;
+          break;
+        }
       }
     }
     for (void* ptr : ptrs) {

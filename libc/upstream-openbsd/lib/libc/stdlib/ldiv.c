@@ -1,8 +1,7 @@
-/*	$NetBSD: strcoll.c,v 1.10 2012/06/25 22:32:46 abs Exp $	*/
-
-/*-
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+/*	$OpenBSD: ldiv.c,v 1.5 2005/08/08 08:05:36 espie Exp $ */
+/*
+ * Copyright (c) 1990 Regents of the University of California.
+ * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -32,28 +31,20 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)strcoll.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: strcoll.c,v 1.10 2012/06/25 22:32:46 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
+#include <stdlib.h>		/* ldiv_t */
 
-#include <assert.h>
-#include <string.h>
-
-/*
- * Compare strings according to LC_COLLATE category of current locale.
- */
-int
-strcoll(const char *s1, const char *s2)
+ldiv_t
+ldiv(long num, long denom)
 {
+	ldiv_t r;
 
-	_DIAGASSERT(s1 != NULL);
-	_DIAGASSERT(s2 != NULL);
+	/* see div.c for comments */
 
-	/* LC_COLLATE is unimplemented, hence always "C" */
-	return (strcmp(s1, s2));
+	r.quot = num / denom;
+	r.rem = num % denom;
+	if (num >= 0 && r.rem < 0) {
+		r.quot++;
+		r.rem -= denom;
+	}
+	return (r);
 }
