@@ -1158,14 +1158,6 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (fd == -1 && ns->is_greylist_enabled() && is_greylisted(ns, name, needed_by)) {
-    // try searching for it on default_namespace default_library_path
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset,
-                               g_default_namespace.get_default_library_paths(), realpath);
-  }
-  // END OF WORKAROUND
-
   return fd;
 }
 
@@ -1543,6 +1535,20 @@ static bool find_library_internal(android_namespace_t* ns,
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
     return true;
   }
+
+  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
+  if (ns->is_greylist_enabled() && is_greylisted(ns, task->get_name(), task->get_needed_by())) {
+    // For the libs in the greylist, switch to the default namespace and then
+    // try the load again from there. The library could be loaded from the
+    // default namespace or from another namespace (e.g. runtime) that is linked
+    // from the default namespace.
+    ns = &g_default_namespace;
+    if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
+                     search_linked_namespaces)) {
+      return true;
+    }
+  }
+  // END OF WORKAROUND
 
   if (search_linked_namespaces) {
     // if a library was not found - look into linked namespaces
