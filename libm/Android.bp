@@ -509,6 +509,7 @@ cc_library {
     stl: "none",
 
     // TODO(ivanlozano): Remove after b/118321713
+    no_libcrt: true,
     xom: false,
 
     stubs: {
