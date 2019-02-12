@@ -1,8 +1,7 @@
-/*	$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $	*/
-
-/*-
- * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+/*	$OpenBSD: div.c,v 1.6 2015/09/13 08:31:47 guenther Exp $ */
+/*
+ * Copyright (c) 1990 Regents of the University of California.
+ * All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
  * Chris Torek.
@@ -32,38 +31,42 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-__RCSID("$NetBSD: strcasestr.c,v 1.3 2005/11/29 03:12:00 christos Exp $");
-#endif /* LIBC_SCCS and not lint */
+#include <stdlib.h>		/* div_t */
 
-#include "namespace.h"
-#include <assert.h>
-#include <ctype.h>
-#include <string.h>
-
-/*
- * Find the first occurrence of find in s, ignore case.
- */
-char *
-strcasestr(const char *s, const char *find)
+div_t
+div(int num, int denom)
 {
-	char c, sc;
-	size_t len;
+	div_t r;
 
-	_DIAGASSERT(s != NULL);
-	_DIAGASSERT(find != NULL);
-
-	if ((c = *find++) != 0) {
-		c = tolower((unsigned char)c);
-		len = strlen(find);
-		do {
-			do {
-				if ((sc = *s++) == 0)
-					return (NULL);
-			} while ((char)tolower((unsigned char)sc) != c);
-		} while (strncasecmp(s, find, len) != 0);
-		s--;
+	r.quot = num / denom;
+	r.rem = num % denom;
+	/*
+	 * The ANSI standard says that |r.quot| <= |n/d|, where
+	 * n/d is to be computed in infinite precision.  In other
+	 * words, we should always truncate the quotient towards
+	 * 0, never -infinity.
+	 *
+	 * Machine division and remainer may work either way when
+	 * one or both of n or d is negative.  If only one is
+	 * negative and r.quot has been truncated towards -inf,
+	 * r.rem will have the same sign as denom and the opposite
+	 * sign of num; if both are negative and r.quot has been
+	 * truncated towards -inf, r.rem will be positive (will
+	 * have the opposite sign of num).  These are considered
+	 * `wrong'.
+	 *
+	 * If both are num and denom are positive, r will always
+	 * be positive.
+	 *
+	 * This all boils down to:
+	 *	if num >= 0, but r.rem < 0, we got the wrong answer.
+	 * In that case, to get the right answer, add 1 to r.quot and
+	 * subtract denom from r.rem.
+	 */
+	if (num >= 0 && r.rem < 0) {
+		r.quot++;
+		r.rem -= denom;
 	}
-	return __UNCONST(s);
+	return (r);
 }
+DEF_STRONG(div);

@@ -40,7 +40,7 @@ cc_defaults {
     ],
     stl: "libc++",
     sanitize: {
-        never: true,
+        address: false,
     },
     bootstrap: true,
 }

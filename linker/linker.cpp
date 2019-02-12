@@ -91,19 +91,21 @@ static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 #if defined(__LP64__)
-static const char* const kSystemLibDir     = "/system/lib64";
-static const char* const kOdmLibDir        = "/odm/lib64";
-static const char* const kVendorLibDir     = "/vendor/lib64";
-static const char* const kAsanSystemLibDir = "/data/asan/system/lib64";
-static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib64";
-static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib64";
+static const char* const kSystemLibDir        = "/system/lib64";
+static const char* const kOdmLibDir           = "/odm/lib64";
+static const char* const kVendorLibDir        = "/vendor/lib64";
+static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
+static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
+static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
+static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib64";
 #else
-static const char* const kSystemLibDir     = "/system/lib";
-static const char* const kOdmLibDir        = "/odm/lib";
-static const char* const kVendorLibDir     = "/vendor/lib";
-static const char* const kAsanSystemLibDir = "/data/asan/system/lib";
-static const char* const kAsanOdmLibDir    = "/data/asan/odm/lib";
-static const char* const kAsanVendorLibDir = "/data/asan/vendor/lib";
+static const char* const kSystemLibDir        = "/system/lib";
+static const char* const kOdmLibDir           = "/odm/lib";
+static const char* const kVendorLibDir        = "/vendor/lib";
+static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
+static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
+static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
+static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -227,6 +229,44 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   return false;
 }
 // END OF WORKAROUND
+
+// Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
+/**
+ * Translate /system path to /apex path if needed
+ * The workaround should work only when targetSdkVersion < Q.
+ *
+ * param out_name_to_apex pointing to /apex path
+ * return true if translation is needed
+ */
+static bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
+  static const char* const kSystemToRuntimeApexLibs[] = {
+    "libicuuc.so",
+    "libicui18n.so",
+  };
+  // New mapping for new apex should be added below
+
+  // Nothing to do if target sdk version is Q or above
+  if (get_application_target_sdk_version() >= __ANDROID_API_Q__) {
+    return false;
+  }
+
+  // If the path isn't /system/lib, there's nothing to do.
+  if (name == nullptr || dirname(name) != kSystemLibDir) {
+    return false;
+  }
+
+  const char* base_name = basename(name);
+
+  for (const char* soname : kSystemToRuntimeApexLibs) {
+    if (strcmp(base_name, soname) == 0) {
+      *out_name_to_apex = std::string(kRuntimeApexLibDir) + "/" + base_name;
+      return true;
+    }
+  }
+
+  return false;
+}
+// End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
 
@@ -1118,14 +1158,6 @@ static int open_library(android_namespace_t* ns,
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (fd == -1 && ns->is_greylist_enabled() && is_greylisted(ns, name, needed_by)) {
-    // try searching for it on default_namespace default_library_path
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset,
-                               g_default_namespace.get_default_library_paths(), realpath);
-  }
-  // END OF WORKAROUND
-
   return fd;
 }
 
@@ -1503,6 +1535,20 @@ static bool find_library_internal(android_namespace_t* ns,
   if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
     return true;
   }
+
+  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
+  if (ns->is_greylist_enabled() && is_greylisted(ns, task->get_name(), task->get_needed_by())) {
+    // For the libs in the greylist, switch to the default namespace and then
+    // try the load again from there. The library could be loaded from the
+    // default namespace or from another namespace (e.g. runtime) that is linked
+    // from the default namespace.
+    ns = &g_default_namespace;
+    if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
+                     search_linked_namespaces)) {
+      return true;
+    }
+  }
+  // END OF WORKAROUND
 
   if (search_linked_namespaces) {
     // if a library was not found - look into linked namespaces
@@ -2074,13 +2120,14 @@ void* do_dlopen(const char* name, int flags,
   android_namespace_t* ns = get_caller_namespace(caller);
 
   LD_LOG(kLogDlopen,
-         "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p) ...",
+         "dlopen(name=\"%s\", flags=0x%x, extinfo=%s, caller=\"%s\", caller_ns=%s@%p, targetSdkVersion=%i) ...",
          name,
          flags,
          android_dlextinfo_to_string(extinfo).c_str(),
          caller == nullptr ? "(null)" : caller->get_realpath(),
          ns == nullptr ? "(null)" : ns->get_name(),
-         ns);
+         ns,
+         get_application_target_sdk_version());
 
   auto purge_guard = android::base::make_scope_guard([&]() { purge_unused_memory(); });
 
@@ -2113,6 +2160,28 @@ void* do_dlopen(const char* name, int flags,
       ns = extinfo->library_namespace;
     }
   }
+
+  // Workaround for dlopen(/system/lib/<soname>) when .so is in /apex. http://b/121248172
+  // The workaround works only when targetSdkVersion < Q.
+  std::string name_to_apex;
+  if (translateSystemPathToApexPath(name, &name_to_apex)) {
+    const char* new_name = name_to_apex.c_str();
+    LD_LOG(kLogDlopen, "dlopen considering translation from %s to APEX path %s",
+           name,
+           new_name);
+    // Some APEXs could be optionally disabled. Only translate the path
+    // when the old file is absent and the new file exists.
+    if (file_exists(name)) {
+      LD_LOG(kLogDlopen, "dlopen %s exists, not translating", name);
+    } else if (!file_exists(new_name)) {
+      LD_LOG(kLogDlopen, "dlopen %s does not exist, not translating",
+             new_name);
+    } else {
+      LD_LOG(kLogDlopen, "dlopen translation accepted: using %s", new_name);
+      name = new_name;
+    }
+  }
+  // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
   std::string asan_name_holder;
 

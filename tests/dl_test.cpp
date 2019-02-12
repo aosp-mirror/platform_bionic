@@ -138,7 +138,7 @@ TEST(dl, exec_linker_load_self) {
 
 TEST(dl, preinit_system_calls) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array
+  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array, b/124007027
   std::string helper = GetTestlibRoot() +
       "/preinit_syscall_test_helper/preinit_syscall_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
@@ -150,6 +150,7 @@ TEST(dl, preinit_system_calls) {
 
 TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
+  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array, b/124007027
   std::string helper = GetTestlibRoot() +
       "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607

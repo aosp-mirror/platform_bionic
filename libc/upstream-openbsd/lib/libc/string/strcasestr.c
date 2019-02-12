@@ -1,6 +1,7 @@
-/*	$NetBSD: div.c,v 1.8 2012/06/25 22:32:45 abs Exp $	*/
+/*	$OpenBSD: strcasestr.c,v 1.4 2015/08/31 02:53:57 guenther Exp $	*/
+/*	$NetBSD: strcasestr.c,v 1.2 2005/02/09 21:35:47 kleink Exp $	*/
 
-/*
+/*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
@@ -32,50 +33,29 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/cdefs.h>
-#if defined(LIBC_SCCS) && !defined(lint)
-#if 0
-static char sccsid[] = "@(#)div.c	8.1 (Berkeley) 6/4/93";
-#else
-__RCSID("$NetBSD: div.c,v 1.8 2012/06/25 22:32:45 abs Exp $");
-#endif
-#endif /* LIBC_SCCS and not lint */
+#include <ctype.h>
+#include <string.h>
 
-#include <stdlib.h>		/* div_t */
-
-div_t
-div(int num, int denom)
+/*
+ * Find the first occurrence of find in s, ignore case.
+ */
+char *
+strcasestr(const char *s, const char *find)
 {
-	div_t r;
+	char c, sc;
+	size_t len;
 
-	r.quot = num / denom;
-	r.rem = num % denom;
-	/*
-	 * The ANSI standard says that |r.quot| <= |n/d|, where
-	 * n/d is to be computed in infinite precision.  In other
-	 * words, we should always truncate the quotient towards
-	 * 0, never -infinity.
-	 *
-	 * Machine division and remainer may work either way when
-	 * one or both of n or d is negative.  If only one is
-	 * negative and r.quot has been truncated towards -inf,
-	 * r.rem will have the same sign as denom and the opposite
-	 * sign of num; if both are negative and r.quot has been
-	 * truncated towards -inf, r.rem will be positive (will
-	 * have the opposite sign of num).  These are considered
-	 * `wrong'.
-	 *
-	 * If both are num and denom are positive, r will always
-	 * be positive.
-	 *
-	 * This all boils down to:
-	 *	if num >= 0, but r.rem < 0, we got the wrong answer.
-	 * In that case, to get the right answer, add 1 to r.quot and
-	 * subtract denom from r.rem.
-	 */
-	if (num >= 0 && r.rem < 0) {
-		r.quot++;
-		r.rem -= denom;
+	if ((c = *find++) != 0) {
+		c = (char)tolower((unsigned char)c);
+		len = strlen(find);
+		do {
+			do {
+				if ((sc = *s++) == 0)
+					return (NULL);
+			} while ((char)tolower((unsigned char)sc) != c);
+		} while (strncasecmp(s, find, len) != 0);
+		s--;
 	}
-	return (r);
+	return ((char *)s);
 }
+DEF_WEAK(strcasestr);

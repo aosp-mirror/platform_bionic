@@ -20,6 +20,7 @@
 
 #include <gtest/gtest.h>
 #include "buffer_tests.h"
+#include "utils.h"
 
 // For the comparison buffer tests, the maximum length to test for the
 // miscompare checks.
@@ -227,16 +228,11 @@ static void VerifyFencepost(uint8_t *buffer) {
   }
 }
 
-// Malloc can return a tagged pointer, which is not accepted in mm system calls like mprotect.
-// Clear top 8 bits of the address on 64-bit platforms.
+// Malloc can return a tagged pointer, which is not accepted in mm system calls like mprotect
+// in the preliminary version of the syscall tagging support in the current Pixel 2 kernel.
+// Note: the final version of the kernel patchset may relax this requirement.
 static int MprotectHeap(void* addr, size_t len, int prot) {
-#if defined(__LP64__)
-  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
-  void* untagged_addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
-#else
-  void* untagged_addr = addr;
-#endif
-  return mprotect(untagged_addr, len, prot);
+  return mprotect(untag_address(addr), len, prot);
 }
 
 void RunSingleBufferAlignTest(
