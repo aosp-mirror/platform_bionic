@@ -46,6 +46,30 @@
       "revId": "c596274fcf40f845bc1c0759b195c37e3392f943",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b18b1e79_fb9d5dc4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-12T13:14:12Z",
+      "side": 1,
+      "message": "The switch to g_default_namespace below did all the difference. (I was looking for the namespace recursion through the load_library call above, but obviously I don\u0027t understand the flow here well enough.)",
+      "parentUuid": "ede4a5cf_c16f3658",
+      "range": {
+        "startLine": 1548,
+        "startChar": 1,
+        "endLine": 1549,
+        "endChar": 49
+      },
+      "revId": "c596274fcf40f845bc1c0759b195c37e3392f943",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

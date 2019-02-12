@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bf31ef2_d999f24f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1545,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-12T13:14:12Z",
+      "side": 1,
+      "message": "What are the implications of this switch to the default namespace? It\u0027s worth a comment.",
+      "revId": "228e3ea39849a242602691ad6baaa45bc8332527",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
