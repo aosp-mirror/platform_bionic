@@ -70,6 +70,30 @@
       "revId": "1e937e69ba943fc5db2c5410fbd2e605ed69d050",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b8f75fb_3f4b31c0",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-12T21:26:48Z",
+      "side": 1,
+      "message": "This is the refactoring I was talking about:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/902533\n\nI hope to submit by end of day or tomorrow.",
+      "parentUuid": "47b510bd_184701c8",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 86,
+        "endChar": 69
+      },
+      "revId": "1e937e69ba943fc5db2c5410fbd2e605ed69d050",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
