@@ -22,6 +22,30 @@
       "revId": "c596274fcf40f845bc1c0759b195c37e3392f943",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ede4a5cf_c16f3658",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1549,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-02-12T00:50:31Z",
+      "side": 1,
+      "message": "That\u0027s weird. We have following in ld.config.vndk_lite.txt\n\nnamespace.default.link.runtime.shared_libs +\u003d libnativehelper.so",
+      "parentUuid": "d0568f99_77dfbe1a",
+      "range": {
+        "startLine": 1548,
+        "startChar": 1,
+        "endLine": 1549,
+        "endChar": 49
+      },
+      "revId": "c596274fcf40f845bc1c0759b195c37e3392f943",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
