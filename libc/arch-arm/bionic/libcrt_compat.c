@@ -90,6 +90,8 @@ extern char __floatunsidf;
 extern char __floatunsisf;
 extern char __gedf2;
 extern char __gtdf2;
+extern char __gnu_ldivmod_helper;
+extern char __gnu_uldivmod_helper;
 extern char __ledf2;
 extern char __ltdf2;
 extern char __muldf3;
@@ -101,10 +103,11 @@ extern char __popcountsi2;
 extern char __subdf3;
 extern char __subsf3;
 extern char __truncdfsf2;
+extern char __udivdi3;
 extern char __unorddf2;
 extern char __unordsf2;
 
-void* __bionic_libgcc_compat_symbols[] = {
+void* __bionic_libcrt_compat_symbols[] = {
     &__adddf3,
     &__addsf3,
     &__aeabi_cdcmpeq,
@@ -169,6 +172,8 @@ void* __bionic_libgcc_compat_symbols[] = {
     &__floatunsisf,
     &__gedf2,
     &__gtdf2,
+    &__gnu_ldivmod_helper,
+    &__gnu_uldivmod_helper,
     &__ledf2,
     &__ltdf2,
     &__muldf3,
@@ -180,6 +185,7 @@ void* __bionic_libgcc_compat_symbols[] = {
     &__subdf3,
     &__subsf3,
     &__truncdfsf2,
+    &__udivdi3,
     &__unorddf2,
     &__unordsf2,
 };

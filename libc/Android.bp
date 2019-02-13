@@ -77,8 +77,15 @@ cc_defaults {
     native_coverage: false,
     recovery_available: true,
 
+    arch: {
+        x86: {
+            no_libcrt: true,
+        },
+        x86_64: {
+            no_libcrt: true,
+        },
+    },
     // TODO(ivanlozano): Remove after b/118321713
-    no_libcrt: true,
     xom: false,
 }
 
@@ -765,7 +772,7 @@ cc_library_static {
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
                 "arch-arm/bionic/_exit_with_stack_teardown.S",
-                "arch-arm/bionic/libgcc_compat.c",
+                "arch-arm/bionic/libcrt_compat.c",
                 "arch-arm/bionic/popcount_tab.c",
                 "arch-arm/bionic/__restore.S",
                 "arch-arm/bionic/setjmp.S",
@@ -849,7 +856,7 @@ cc_library_static {
                 "arch-mips/bionic/__bionic_clone.S",
                 "arch-mips/bionic/cacheflush.cpp",
                 "arch-mips/bionic/_exit_with_stack_teardown.S",
-                "arch-mips/bionic/libgcc_compat.c",
+                "arch-mips/bionic/libcrt_compat.c",
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
@@ -919,7 +926,7 @@ cc_library_static {
 
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
-                "arch-x86/bionic/libgcc_compat.c",
+                "arch-x86/bionic/libcrt_compat.c",
                 "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
