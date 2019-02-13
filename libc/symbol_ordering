@@ -6,8 +6,8 @@
 je_background_thread_enabled_state
 je_can_enable_background_thread
 _ZZ17__find_icu_symbolPKcE9found_icu
-_ZL28g_heapprofd_init_in_progress
-_ZL31g_heapprofd_init_hook_installed
+_ZL24gHeapprofdInitInProgress
+_ZL27gHeapprofdInitHookInstalled
 je_opt_abort
 je_opt_abort_conf
 je_opt_junk_alloc
@@ -174,7 +174,7 @@ random_mutex
 __res_randomid.__libc_mutex_random
 locallock
 g_atexit_lock
-_ZL11g_functions
+_ZL10gFunctions
 _ZL13vendor_passwd
 _ZL12vendor_group
 tm
