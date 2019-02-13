@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <elf.h>
 #include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -23,6 +24,8 @@
 #include <unistd.h>
 
 #include <tinyxml2.h>
+
+#include <android-base/file.h>
 
 #include "private/bionic_config.h"
 #include "private/bionic_malloc.h"
@@ -620,20 +623,48 @@ TEST(android_mallopt, error_on_unexpected_option) {
 #endif
 }
 
+bool IsDynamic() {
+#if defined(__LP64__)
+  Elf64_Ehdr ehdr;
+#else
+  Elf32_Ehdr ehdr;
+#endif
+  std::string path(android::base::GetExecutablePath());
+
+  int fd = open(path.c_str(), O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    // Assume dynamic on error.
+    return true;
+  }
+  bool read_completed = android::base::ReadFully(fd, &ehdr, sizeof(ehdr));
+  close(fd);
+  // Assume dynamic in error cases.
+  return !read_completed || ehdr.e_type == ET_DYN;
+}
+
 TEST(android_mallopt, init_zygote_child_profiling) {
 #if defined(__BIONIC__)
   // Successful call.
   errno = 0;
-  EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
-  EXPECT_EQ(0, errno);
+  if (IsDynamic()) {
+    EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+    EXPECT_EQ(0, errno);
+  } else {
+    // Not supported in static executables.
+    EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+    EXPECT_EQ(ENOTSUP, errno);
+  }
 
   // Unexpected arguments rejected.
   errno = 0;
   char unexpected = 0;
   EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, &unexpected, 1));
-  EXPECT_EQ(EINVAL, errno);
+  if (IsDynamic()) {
+    EXPECT_EQ(EINVAL, errno);
+  } else {
+    EXPECT_EQ(ENOTSUP, errno);
+  }
 #else
   GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
 #endif
 }
-
