@@ -1300,7 +1300,9 @@ cc_library_static {
 cc_library_static {
     name: "libc_ndk",
     defaults: ["libc_defaults"],
-    srcs: libc_common_src_files + ["bionic/malloc_common.cpp"],
+    srcs: libc_common_src_files + [
+        "bionic/malloc_common.cpp",
+    ],
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
@@ -1493,6 +1495,8 @@ filegroup {
         "arch-common/bionic/crtbrand.S",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
