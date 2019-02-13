@@ -32,6 +32,7 @@
 #include <thread>
 
 #include "gtest_globals.h"
+#include "private/__get_tls.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
@@ -114,11 +115,25 @@ TEST(elftls_dl, bump_local_vars) {
   }).join();
 }
 
+extern "C" int* missing_weak_tls_addr();
+
+// The Bionic linker resolves a TPREL relocation to an unresolved weak TLS
+// symbol to 0, which is added to the thread pointer. N.B.: A TPREL relocation
+// in a static executable is resolved by the static linker instead, and static
+// linker behavior varies (especially with bfd and gold). See
+// https://bugs.llvm.org/show_bug.cgi?id=40570.
+TEST(elftls_dl, tprel_missing_weak) {
+  ASSERT_EQ(static_cast<void*>(__get_tls()), missing_weak_tls_addr());
+  std::thread([] {
+    ASSERT_EQ(static_cast<void*>(__get_tls()), missing_weak_tls_addr());
+  }).join();
+}
+
 // The behavior of accessing an unresolved weak TLS symbol using a dynamic TLS
 // relocation depends on which kind of implementation the target uses. With
 // TLSDESC, the result is NULL. With __tls_get_addr, the result is the
 // generation count (or maybe undefined behavior)? This test only tests TLSDESC.
-TEST(elftls_dl, missing_weak) {
+TEST(elftls_dl, tlsdesc_missing_weak) {
 #if defined(__aarch64__)
   void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
   ASSERT_NE(nullptr, lib);
