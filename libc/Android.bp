@@ -78,6 +78,7 @@ cc_defaults {
     recovery_available: true,
 
     // TODO(ivanlozano): Remove after b/118321713
+    no_libcrt: true,
     xom: false,
 }
 
