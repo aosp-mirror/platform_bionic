@@ -20,6 +20,7 @@ bionic_mountpoint {
     src: "dummy_mountpoint",
     library: true,
     symlinks: ["libc.so"],
+    mountsource: "libc",
 }
 
 bionic_mountpoint {
@@ -28,6 +29,7 @@ bionic_mountpoint {
     src: "dummy_mountpoint",
     library: true,
     symlinks: ["libdl.so"],
+    mountsource: "libdl",
 }
 
 bionic_mountpoint {
@@ -36,6 +38,7 @@ bionic_mountpoint {
     src: "dummy_mountpoint",
     library: true,
     symlinks: ["libm.so"],
+    mountsource: "libm",
 }
 
 bionic_mountpoint {
@@ -49,4 +52,5 @@ bionic_mountpoint {
     src: "dummy_mountpoint",
     binary: true,
     symlinks: ["linker", "linker_asan"],
+    mountsource: "linker",
 }
