@@ -19,9 +19,11 @@ import (
 	"io"
 	"strings"
 
+	"github.com/google/blueprint"
 	"github.com/google/blueprint/proptools"
 
 	"android/soong/android"
+	"android/soong/cc"
 )
 
 // bionic_mountpoint is a module type that is specialized to create
@@ -60,16 +62,23 @@ type bionicMountpoint struct {
 	outputFile android.Path
 	pathInPartition string
 	stem string
+	unstrippedOutputFile android.Path
 }
 
 type bionicMountpointProperties struct {
 	// The file that is installed as the mount point
 	Src *string
 
+	// TODO(jiyong) remove these two properties (probably Stem and Suffix
+	// as well, as they can be inteffered from Mountsource
+
 	// True if the mount point is for a Bionic library such libc.so
 	Library *bool
 	// True if the mount point is for a Bionic binary such as linker
 	Binary *bool
+
+	// The module that this module is a mount point for
+	Mountsource *string
 
 	// Base name of the mount point
 	Stem *string `android:"arch_variant"`
@@ -81,6 +90,13 @@ type bionicMountpointProperties struct {
 	// Symlinks names will have the same suffix as the mount point
 	Symlinks []string
 }
+
+type dependencyTag struct {
+	blueprint.BaseDependencyTag
+	name string
+}
+
+var mountsourceTag = dependencyTag{name: "mountsource"}
 
 func (m *bionicMountpoint) DepsMutator(ctx android.BottomUpMutatorContext) {
 	if Bool(m.properties.Library) == Bool(m.properties.Binary) {
@@ -95,6 +111,17 @@ func (m *bionicMountpoint) DepsMutator(ctx android.BottomUpMutatorContext) {
 		ctx.PropertyErrorf("src", "src must be set")
 	}
 	android.ExtractSourceDeps(ctx, m.properties.Src)
+
+	if m.properties.Mountsource == nil {
+		ctx.PropertyErrorf("mountsource", "mountsource must be set")
+		return
+	}
+
+	ctx.AddFarVariationDependencies([]blueprint.Variation{
+		{Mutator: "arch", Variation: ctx.Target().String()},
+		{Mutator: "image", Variation: "core"},
+		{Mutator: "link", Variation: "shared"},
+	}, mountsourceTag, String(m.properties.Mountsource))
 }
 
 func (m *bionicMountpoint) GenerateAndroidBuildActions(ctx android.ModuleContext) {
@@ -110,6 +137,12 @@ func (m *bionicMountpoint) GenerateAndroidBuildActions(ctx android.ModuleContext
 	m.stem = String(m.properties.Stem) + String(m.properties.Suffix)
 
 	m.outputFile = ctx.ExpandSource(String(m.properties.Src), "src")
+
+	ctx.VisitDirectDepsWithTag(mountsourceTag, func(module android.Module) {
+		if cc, ok := module.(*cc.Module); ok {
+			m.unstrippedOutputFile = cc.UnstrippedOutputFile()
+		}
+	})
 }
 
 func (m *bionicMountpoint) AndroidMk() android.AndroidMkData {
@@ -148,7 +181,10 @@ func (m *bionicMountpoint) AndroidMk() android.AndroidMkData {
 				}
 				fmt.Fprintln(w, "LOCAL_POST_INSTALL_CMD := " + strings.Join(cmds, " && "))
 			}
-			fmt.Fprintln(w, "include $(BUILD_PREBUILT)")
+			if m.unstrippedOutputFile != nil {
+				fmt.Fprintln(w, "LOCAL_SOONG_UNSTRIPPED_BINARY :=", m.unstrippedOutputFile.String())
+			}
+			fmt.Fprintln(w, "include $(BUILD_SYSTEM)/soong_cc_prebuilt.mk")
 		},
 	}
 }
