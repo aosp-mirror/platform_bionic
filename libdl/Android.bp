@@ -92,6 +92,7 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
+    native_coverage: false,
 
     // This is placeholder library the actual implementation is (currently)
     // provided by the linker.
