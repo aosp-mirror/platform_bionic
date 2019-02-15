@@ -266,12 +266,12 @@ void PointerData::LogBacktrace(size_t hash_index) {
   error_log("  hash_index %zu does not have matching frame data.", hash_index);
 }
 
-void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_size) {
+void PointerData::LogFreeError(const FreePointerInfoType& info, size_t max_cmp_bytes) {
   error_log(LOG_DIVIDER);
   uint8_t* memory = reinterpret_cast<uint8_t*>(info.pointer);
   error_log("+++ ALLOCATION %p USED AFTER FREE", memory);
   uint8_t fill_free_value = g_debug->config().fill_free_value();
-  for (size_t i = 0; i < usable_size; i++) {
+  for (size_t i = 0; i < max_cmp_bytes; i++) {
     if (memory[i] != fill_free_value) {
       error_log("  allocation[%zu] = 0x%02x (expected 0x%02x)", i, memory[i], fill_free_value);
     }
@@ -314,11 +314,12 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
   size_t bytes = (usable_size < g_debug->config().fill_on_free_bytes())
                      ? usable_size
                      : g_debug->config().fill_on_free_bytes();
+  size_t max_cmp_bytes = bytes;
   const uint8_t* memory = reinterpret_cast<const uint8_t*>(info.pointer);
   while (bytes > 0) {
     size_t bytes_to_cmp = (bytes < g_cmp_mem.size()) ? bytes : g_cmp_mem.size();
     if (memcmp(memory, g_cmp_mem.data(), bytes_to_cmp) != 0) {
-      LogFreeError(info, usable_size);
+      LogFreeError(info, max_cmp_bytes);
     }
     bytes -= bytes_to_cmp;
     memory = &memory[bytes_to_cmp];
