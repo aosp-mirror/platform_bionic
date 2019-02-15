@@ -990,6 +990,35 @@ TEST_F(MallocDebugTest, free_track_multiple_thread) {
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, free_track_pointer_modified_after_free) {
+  Init("free_track=4 fill_on_free=2 free_track_backtrace_num_frames=0");
+
+  void* pointers[5];
+  for (size_t i = 0; i < sizeof(pointers) / sizeof(void*); i++) {
+    pointers[i] = debug_malloc(100);
+    ASSERT_TRUE(pointers[i] != nullptr);
+    memset(pointers[i], 0, 100);
+  }
+
+  debug_free(pointers[0]);
+
+  // overwrite the whole pointer, only expect errors on the fill bytes we check.
+  memset(pointers[0], 0x20, 100);
+
+  for (size_t i = 1; i < sizeof(pointers) / sizeof(void*); i++) {
+    debug_free(pointers[i]);
+  }
+
+  std::string expected_log(DIVIDER);
+  expected_log += android::base::StringPrintf("6 malloc_debug +++ ALLOCATION %p USED AFTER FREE\n",
+                                              pointers[0]);
+  expected_log += "6 malloc_debug   allocation[0] = 0x20 (expected 0xef)\n";
+  expected_log += "6 malloc_debug   allocation[1] = 0x20 (expected 0xef)\n";
+  expected_log += DIVIDER;
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, get_malloc_leak_info_invalid) {
   Init("fill");
 
