@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df562cff_4d4db792",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-02-15T06:37:24Z",
+      "side": 1,
+      "message": "I think this should be renamed to CtsBionicTestCases. See b/124437796",
+      "range": {
+        "startLine": 4,
+        "startChar": 15,
+        "endLine": 4,
+        "endChar": 32
+      },
+      "revId": "f305804b41cd6f5d3d347cf0bc1986a0675fd945",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
