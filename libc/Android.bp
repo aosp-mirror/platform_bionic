@@ -85,8 +85,6 @@ cc_defaults {
             no_libcrt: true,
         },
     },
-    // TODO(ivanlozano): Remove after b/118321713
-    xom: false,
 }
 
 // ========================================================
