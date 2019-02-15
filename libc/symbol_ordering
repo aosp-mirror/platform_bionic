@@ -3,8 +3,6 @@
 # symbols by size, we usually have less dirty pages at runtime, because small
 # symbols are grouped together.
 
-je_background_thread_enabled_state
-je_can_enable_background_thread
 _ZZ17__find_icu_symbolPKcE9found_icu
 _ZL24gHeapprofdInitInProgress
 _ZL27gHeapprofdInitHookInstalled
@@ -19,7 +17,6 @@ malloc_disabled_tcache
 had_conf_error
 malloc_slow_flags
 je_opt_background_thread
-background_thread_enabled_at_fork
 ctl_initialized
 je_log_init_done
 mmap_flags
@@ -70,8 +67,6 @@ __cxa_finalize.call_depth
 seed48.sseed
 ether_aton.addr
 je_background_thread_info
-je_max_background_threads
-je_n_background_threads
 je_malloc_message
 je_tcache_bin_info
 je_tcache_maxclass
@@ -92,7 +87,6 @@ je_opt_dirty_decay_ms
 je_opt_muzzy_decay_ms
 dirty_decay_ms_default.0
 muzzy_decay_ms_default.0
-pthread_create_fptr
 b0
 ctl_arenas
 ctl_stats
