@@ -211,6 +211,16 @@ void HeapprofdInstallSignalHandler() {
   sigaction(kHeapprofdSignal, &action, nullptr);
 }
 
+static void DisplayError(int) {
+  error_log("Cannot install heapprofd while malloc debug/malloc hooks are enabled.");
+}
+
+void HeapprofdInstallErrorSignalHandler() {
+  struct sigaction action = {};
+  action.sa_handler = DisplayError;
+  sigaction(kHeapprofdSignal, &action, nullptr);
+}
+
 static void CommonInstallHooks(libc_globals* globals) {
   void* impl_handle = atomic_load(&gHeapprofdHandle);
   bool reusing_handle = impl_handle != nullptr;
