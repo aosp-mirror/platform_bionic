@@ -303,23 +303,25 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
   return true;
 }
 
-static void InstallHooks(libc_globals* globals, const char* options, const char* prefix,
+static bool InstallHooks(libc_globals* globals, const char* options, const char* prefix,
                          const char* shared_lib) {
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &globals->malloc_dispatch_table);
   if (impl_handle == nullptr) {
-    return;
+    return false;
   }
 
   init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
   if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
     error_log("%s: failed to enable malloc %s", getprogname(), prefix);
     ClearGlobalFunctions();
-    return;
+    return false;
   }
 
   if (!FinishInstallHooks(globals, options, prefix)) {
     dlclose(impl_handle);
+    return false;
   }
+  return true;
 }
 
 // Initializes memory allocation framework once per process.
@@ -329,16 +331,25 @@ static void MallocInitImpl(libc_globals* globals) {
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
+  bool hook_installed = false;
   if (CheckLoadMallocDebug(&options)) {
-    InstallHooks(globals, options, kDebugPrefix, kDebugSharedLib);
+    hook_installed = InstallHooks(globals, options, kDebugPrefix, kDebugSharedLib);
   } else if (CheckLoadMallocHooks(&options)) {
-    InstallHooks(globals, options, kHooksPrefix, kHooksSharedLib);
-  } else if (HeapprofdShouldLoad()) {
-    HeapprofdInstallHooksAtInit(globals);
+    hook_installed = InstallHooks(globals, options, kHooksPrefix, kHooksSharedLib);
   }
 
-  // Install this last to avoid as many race conditions as possible.
-  HeapprofdInstallSignalHandler();
+  if (!hook_installed) {
+    if (HeapprofdShouldLoad()) {
+      HeapprofdInstallHooksAtInit(globals);
+    }
+
+    // Install this last to avoid as many race conditions as possible.
+    HeapprofdInstallSignalHandler();
+  } else {
+    // Install a signal handler that prints an error since we don't support
+    // heapprofd and any other hook to be installed at the same time.
+    HeapprofdInstallErrorSignalHandler();
+  }
 }
 
 // Initializes memory allocation framework.
