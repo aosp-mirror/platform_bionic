@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e9af3ac_3d9c099f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-02-15T16:22:50Z",
+      "side": 1,
+      "message": "Can you please also add a TODO pointing to the ticket to the entry in runtime_libart.mk that adds it into /system?",
+      "range": {
+        "startLine": 17,
+        "startChar": 7,
+        "endLine": 18,
+        "endChar": 41
+      },
+      "revId": "af12c94e79a724e8c9edb07963a97e9b078f3e79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
