@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f07055c_f182c2a9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-15T21:54:22Z",
+      "side": 1,
+      "message": "move this TODO up, since it applies to the `arch` block too, right?",
+      "revId": "165b1cf57bab5db9716ea79e546d329b46159a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
