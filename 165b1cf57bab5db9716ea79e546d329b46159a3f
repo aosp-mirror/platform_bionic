@@ -16,6 +16,24 @@
       "revId": "165b1cf57bab5db9716ea79e546d329b46159a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac79b774_fcf79042",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2019-02-15T21:59:56Z",
+      "side": 1,
+      "message": "XOM only applies to AArch64. Besides, this comment and the `XOM: false` line is removed in the patch set.",
+      "parentUuid": "3f07055c_f182c2a9",
+      "revId": "165b1cf57bab5db9716ea79e546d329b46159a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
