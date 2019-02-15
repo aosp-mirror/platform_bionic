@@ -92,6 +92,8 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
+
+    // Opt out of native_coverage when opting out of system_shared_libs
     native_coverage: false,
 
     // This is placeholder library the actual implementation is (currently)
