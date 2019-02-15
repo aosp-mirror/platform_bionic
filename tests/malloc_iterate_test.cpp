@@ -92,14 +92,15 @@ static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
   // Find all of the maps that are [anon:libc_malloc].
-  ASSERT_TRUE(android::procinfo::ReadMapFile("/proc/self/maps",
-    [&](uint64_t start, uint64_t end, uint16_t, uint64_t, const char* name) {
-    if (std::string(name) == "[anon:libc_malloc]") {
-      malloc_disable();
-      malloc_iterate(start, end - start, SavePointers, test_data);
-      malloc_enable();
-    }
-  }));
+  ASSERT_TRUE(android::procinfo::ReadMapFile(
+      "/proc/self/maps",
+      [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
+        if (std::string(name) == "[anon:libc_malloc]") {
+          malloc_disable();
+          malloc_iterate(start, end - start, SavePointers, test_data);
+          malloc_enable();
+        }
+      }));
 
   for (size_t i = 0; i < test_data->allocs.size(); i++) {
     EXPECT_EQ(1UL, test_data->allocs[i].count) << "Failed on size " << test_data->allocs[i].size;
@@ -180,14 +181,15 @@ TEST(malloc_iterate, invalid_pointers) {
   TestDataType test_data = {};
 
   // Find all of the maps that are not [anon:libc_malloc].
-  ASSERT_TRUE(android::procinfo::ReadMapFile("/proc/self/maps",
-    [&](uint64_t start, uint64_t end, uint16_t, uint64_t, const char* name) {
-    if (std::string(name) != "[anon:libc_malloc]") {
-      malloc_disable();
-      malloc_iterate(start, end - start, SavePointers, &test_data);
-      malloc_enable();
-    }
-  }));
+  ASSERT_TRUE(android::procinfo::ReadMapFile(
+      "/proc/self/maps",
+      [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
+        if (std::string(name) != "[anon:libc_malloc]") {
+          malloc_disable();
+          malloc_iterate(start, end - start, SavePointers, &test_data);
+          malloc_enable();
+        }
+      }));
 
   ASSERT_EQ(0UL, test_data.total_allocated_bytes);
 #else
