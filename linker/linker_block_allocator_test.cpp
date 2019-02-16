@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../linker_block_allocator.h"
+#include "linker_block_allocator.h"
 
 #include <unistd.h>
 
@@ -145,4 +145,3 @@ TEST(linker_allocator, test_protect) {
   testing::FLAGS_gtest_death_test_style = "threadsafe";
   ASSERT_EXIT(protect_all(), testing::KilledBySignal(SIGSEGV), "trying to access protected page");
 }
-

@@ -32,8 +32,8 @@
 
 #include <gtest/gtest.h>
 
-#include "../linker_config.h"
-#include "../linker_utils.h"
+#include "linker_config.h"
+#include "linker_utils.h"
 
 #include <unistd.h>
 
