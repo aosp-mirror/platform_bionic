@@ -1561,7 +1561,7 @@ LIBC_PRIVATE {
     __ashldi3; # arm
     __ashrdi3; # arm
     __bionic_brk; # arm x86 mips
-    __bionic_libgcc_compat_symbols; # arm x86
+    __bionic_libcrt_compat_symbols; # arm x86
     __cmpdf2; # arm
     __divdf3; # arm
     __divdi3; # arm x86 mips
