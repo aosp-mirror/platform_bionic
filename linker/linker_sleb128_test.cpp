@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../linker_sleb128.h"
+#include "linker_sleb128.h"
 
 TEST(linker_sleb128, smoke) {
   std::vector<uint8_t> encoding;
