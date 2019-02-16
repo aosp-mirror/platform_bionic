@@ -30,6 +30,7 @@
 
 #include <vector>
 
+#include "async_safe/CHECK.h"
 #include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
 #include "private/bionic_defs.h"
