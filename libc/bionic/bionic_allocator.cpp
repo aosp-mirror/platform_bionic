@@ -38,6 +38,7 @@
 #include <new>
 
 #include <async_safe/log.h>
+#include <async_safe/CHECK.h>
 
 #include "private/bionic_macros.h"
 #include "private/bionic_page.h"
