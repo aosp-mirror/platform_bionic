@@ -28,20 +28,7 @@
 
 #pragma once
 
-#include <pthread.h>
-#include <stdatomic.h>
-
-#include <private/bionic_globals.h>
-#include <private/bionic_malloc_dispatch.h>
+#include <stdint.h>
 
 // Function prototypes.
-bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* prefix,
-                       MallocDispatch* dispatch_table);
-
-void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table);
-
-bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix);
-
-// Lock for globals, to guarantee that only one thread is doing a mutate.
-extern pthread_mutex_t gGlobalsMutateLock;
-extern _Atomic bool gGlobalsMutating;
+bool LimitEnable(void* arg, size_t arg_size);

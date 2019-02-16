@@ -1481,7 +1481,7 @@ LIBC_Q { # introduced=Q
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
 
-    # Used by libandroid_runtime
+    # Used by libandroid_runtime and libmedia
     android_mallopt; # apex
     gMallocLeakZygoteChild; # apex
 } LIBC_P;

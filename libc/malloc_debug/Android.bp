@@ -145,6 +145,8 @@ cc_test {
 cc_test {
     name: "malloc_debug_system_tests",
 
+    include_dirs: ["bionic/libc"],
+
     srcs: [
         "tests/malloc_debug_system_tests.cpp",
     ],
