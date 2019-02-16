@@ -89,6 +89,9 @@ type bionicMountpointProperties struct {
 	// Symlinks to the mountpoints from the system and recovery partitions
 	// Symlinks names will have the same suffix as the mount point
 	Symlinks []string
+
+	// List of sanitizer names that this APEX is enabled for
+	SanitizerNames []string `blueprint:"mutated"`
 }
 
 type dependencyTag struct {
@@ -97,6 +100,31 @@ type dependencyTag struct {
 }
 
 var mountsourceTag = dependencyTag{name: "mountsource"}
+
+
+func (m *bionicMountpoint) EnableSanitizer(sanitizerName string) {
+	if !android.InList(sanitizerName, m.properties.SanitizerNames) {
+		m.properties.SanitizerNames = append(m.properties.SanitizerNames, sanitizerName)
+	}
+}
+
+func (m *bionicMountpoint) IsSanitizerEnabled(ctx android.BaseModuleContext, sanitizerName string) bool {
+	if android.InList(sanitizerName, m.properties.SanitizerNames) {
+		return true
+	}
+
+	// Then follow the global setting
+	globalSanitizerNames := []string{}
+	if m.Host() {
+		globalSanitizerNames = ctx.Config().SanitizeHost()
+	} else {
+		arches := ctx.Config().SanitizeDeviceArch()
+		if len(arches) == 0 || android.InList(m.Arch().ArchType.Name, arches) {
+			globalSanitizerNames = ctx.Config().SanitizeDevice()
+		}
+	}
+	return android.InList(sanitizerName, globalSanitizerNames)
+}
 
 func (m *bionicMountpoint) DepsMutator(ctx android.BottomUpMutatorContext) {
 	if Bool(m.properties.Library) == Bool(m.properties.Binary) {
