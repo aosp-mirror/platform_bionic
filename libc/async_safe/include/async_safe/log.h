@@ -34,35 +34,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+// This file is an alternative to <android/log.h>, but reuses
+// `android_LogPriority` and should not have conflicting identifiers.
+#include <android/log.h>
+
 // These functions do not allocate memory to send data to the log.
 
 __BEGIN_DECLS
-
-enum {
-  ANDROID_LOG_UNKNOWN = 0,
-  ANDROID_LOG_DEFAULT,    /* only for SetMinPriority() */
-
-  ANDROID_LOG_VERBOSE,
-  ANDROID_LOG_DEBUG,
-  ANDROID_LOG_INFO,
-  ANDROID_LOG_WARN,
-  ANDROID_LOG_ERROR,
-  ANDROID_LOG_FATAL,
-
-  ANDROID_LOG_SILENT,     /* only for SetMinPriority(); must be last */
-};
-
-enum {
-  LOG_ID_MIN = 0,
-
-  LOG_ID_MAIN = 0,
-  LOG_ID_RADIO = 1,
-  LOG_ID_EVENTS = 2,
-  LOG_ID_SYSTEM = 3,
-  LOG_ID_CRASH = 4,
-
-  LOG_ID_MAX
-};
 
 // Formats a message to the log (priority 'fatal'), then aborts.
 // Implemented as a macro so that async_safe_fatal isn't on the stack when we crash:
@@ -91,16 +69,8 @@ int async_safe_format_buffer_va_list(char* buffer, size_t buffer_size, const cha
 
 int async_safe_format_fd(int fd, const char* format , ...) __printflike(2, 3);
 int async_safe_format_fd_va_list(int fd, const char* format, va_list args);
-int async_safe_format_log(int pri, const char* tag, const char* fmt, ...) __printflike(3, 4);
-int async_safe_format_log_va_list(int pri, const char* tag, const char* fmt, va_list ap);
-int async_safe_write_log(int pri, const char* tag, const char* msg);
-
-#define CHECK(predicate) \
-  do { \
-    if (!(predicate)) { \
-      async_safe_fatal("%s:%d: %s CHECK '" #predicate "' failed", \
-          __FILE__, __LINE__, __FUNCTION__); \
-    } \
-  } while(0)
+int async_safe_format_log(int priority, const char* tag, const char* fmt, ...) __printflike(3, 4);
+int async_safe_format_log_va_list(int priority, const char* tag, const char* fmt, va_list ap);
+int async_safe_write_log(int priority, const char* tag, const char* msg);
 
 __END_DECLS
