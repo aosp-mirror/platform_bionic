@@ -32,7 +32,7 @@
 
 #include <gtest/gtest.h>
 
-#include "../linker_utils.h"
+#include "linker_utils.h"
 
 TEST(linker_utils, format_string) {
   std::vector<std::pair<std::string, std::string>> params = {{ "LIB", "lib32"}, { "SDKVER", "42"}};

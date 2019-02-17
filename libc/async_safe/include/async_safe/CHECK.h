@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,22 @@
  * SUCH DAMAGE.
  */
 
-extern char __divdi3;
-extern char __moddi3;
-extern char __popcountsi2;
-extern char __udivdi3;
-extern char __umoddi3;
+#pragma once
 
-void* __bionic_libgcc_compat_symbols[] = {
-    &__divdi3,
-    &__moddi3,
-    &__popcountsi2,
-    &__udivdi3,
-    &__umoddi3,
-};
+#include <sys/cdefs.h>
+
+#include <async_safe/log.h>
+
+__BEGIN_DECLS
+
+// TODO: replace this with something more like <android-base/logging.h>'s family of macros.
+
+#define CHECK(predicate) \
+  do { \
+    if (!(predicate)) { \
+      async_safe_fatal("%s:%d: %s CHECK '" #predicate "' failed", \
+          __FILE__, __LINE__, __FUNCTION__); \
+    } \
+  } while(0)
+
+__END_DECLS

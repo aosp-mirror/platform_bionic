@@ -32,7 +32,7 @@ extern char __popcountsi2;
 extern char __udivdi3;
 extern char __umoddi3;
 
-void* __bionic_libgcc_compat_symbols[] = {
+void* __bionic_libcrt_compat_symbols[] = {
     &__divdi3,
     &__moddi3,
     &__popcountsi2,

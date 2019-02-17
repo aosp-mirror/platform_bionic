@@ -37,6 +37,18 @@
 #if __has_feature(hwaddress_sanitizer)
 
 #include <sanitizer/hwasan_interface.h>
+
+__BEGIN_DECLS
+
+// FIXME: implement these in HWASan allocator.
+int __sanitizer_iterate(uintptr_t base, size_t size,
+                        void (*callback)(uintptr_t base, size_t size, void* arg),
+                        void* arg);
+void __sanitizer_malloc_disable();
+void __sanitizer_malloc_enable();
+
+__END_DECLS
+
 #define Malloc(function)  __sanitizer_ ## function
 
 #else // __has_feature(hwaddress_sanitizer)
