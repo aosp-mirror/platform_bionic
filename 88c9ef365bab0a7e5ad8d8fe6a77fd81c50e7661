@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2489148a_4678c623",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-02-18T03:02:32Z",
+      "side": 1,
+      "message": "why is is_oem_id() omitted here?",
+      "revId": "88c9ef365bab0a7e5ad8d8fe6a77fd81c50e7661",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
