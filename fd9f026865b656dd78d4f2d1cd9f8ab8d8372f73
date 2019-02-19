@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5f3887f_eb5dbfdb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-19T23:35:48Z",
+      "side": 1,
+      "message": "I think you don\u0027t need this part because both symbols will have the same value if the linker does not provide a definition (the value actually won\u0027t be null but rather the address of the start of the image), so the for loop will just end up doing nothing.",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dbce521b_9722daed",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-19T23:35:48Z",
+      "side": 1,
+      "message": "There certainly appears to be code handling them: https://android.googlesource.com/toolchain/binutils/+/refs/heads/master/binutils-2.27/gold/arm.cc#7779\n\nMy suspicion is that one of these are happening:\n1) we don\u0027t actually reach that code unless there are IRELATIVE relocs,\n2) that code doesn\u0027t have any effect unless there are IRELATIVE relocs, or\n3) parameters-\u003edoing_static_link() somehow ends up being false.",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
