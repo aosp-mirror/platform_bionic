@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d88bb368_149e5ff9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-20T06:45:13Z",
+      "side": 1,
+      "message": "\u003e Good point that this won\u0027t enter the loop anyway, but possibly more clear with the explicit check?\n\nI actually think it would be clearer here with a comment but without the check. With the check it raises the question of why the check exists when the comment implies that the check isn\u0027t actually necessary.\n\n\u003e It won\u0027t be null? I thought undefined weak symbols were initialized to null.\n\nSorry, you\u0027re right, it will be null. I was thinking of another case.",
+      "parentUuid": "f04801d9_aadd864f",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dbce521b_9722daed",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Yeah, I saw that too. I didn\u0027t dig too far in to why it wasn\u0027t being hit. We\u0027re unlikely to make changes to gold at this point, this is a new feature that we probably don\u0027t need in the NDK, and we need to get a functioning sysroot for Q ASAP.\n\nI\u0027d rather we put the effort into improving lld than fixing gold since that seems to be the direction things are going.",
       "parentUuid": "dbce521b_9722daed",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c05c8b27_21508c2a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-20T06:45:13Z",
+      "side": 1,
+      "message": "It\u0027s fine not to dig into why gold has this behaviour, but then I\u0027d adjust the comment to say something like the symbols are \"sometimes not defined\" with gold, rather than saying that they\u0027re not supported.",
+      "parentUuid": "7bc3c023_f5e0e99e",
       "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
