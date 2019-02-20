@@ -34,6 +34,7 @@
 #include <private/android_filesystem_config.h>
 
 #if defined(__BIONIC__)
+#include <android/api-level.h>
 #include <android-base/properties.h>
 #endif
 
@@ -247,11 +248,9 @@ static void expect_ids(const T& ids) {
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
-  // Upgrading devices launched before API level 28 may not comply with the below check.
-  // Due to the difficulty in changing uids after launch, it is waived for these devices.
-  // Also grant this check for device launched with 28(P) to give the vendor time to
-  // adopt the AID scheme.
-  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+  // TODO(73062966): We still don't have a good way to create vendor AIDs in the system or other
+  // non-vendor partitions, therefore we keep this check disabled.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= __ANDROID_API_Q__) {
     return;
   }
 
