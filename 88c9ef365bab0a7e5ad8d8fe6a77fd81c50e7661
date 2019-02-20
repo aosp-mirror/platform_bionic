@@ -52,6 +52,24 @@
       "revId": "88c9ef365bab0a7e5ad8d8fe6a77fd81c50e7661",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e018dd0e_88a6277d",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-02-20T18:31:40Z",
+      "side": 1,
+      "message": "It is mandatory.  Partitions must only provide AIDs for numbers within their reserved range.  That\u0027s already the case for vendor and the \u0027OEM\u0027 range currently.",
+      "parentUuid": "32e5915f_d6e7524d",
+      "revId": "88c9ef365bab0a7e5ad8d8fe6a77fd81c50e7661",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
