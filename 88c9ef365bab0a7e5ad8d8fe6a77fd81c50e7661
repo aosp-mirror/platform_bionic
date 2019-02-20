@@ -70,6 +70,24 @@
       "revId": "88c9ef365bab0a7e5ad8d8fe6a77fd81c50e7661",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f5d0797_7b26f210",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-02-20T18:37:03Z",
+      "side": 1,
+      "message": "Yes, I know. I asked that because I thought that should have been enforced when building the image.",
+      "parentUuid": "e018dd0e_88a6277d",
+      "revId": "88c9ef365bab0a7e5ad8d8fe6a77fd81c50e7661",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
