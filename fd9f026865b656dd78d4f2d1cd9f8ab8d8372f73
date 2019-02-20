@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f04801d9_aadd864f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-02-20T05:47:28Z",
+      "side": 1,
+      "message": "Good point that this won\u0027t enter the loop anyway, but possibly more clear with the explicit check?\n\nIt won\u0027t be null? I thought undefined weak symbols were initialized to null.",
+      "parentUuid": "c5f3887f_eb5dbfdb",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dbce521b_9722daed",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bc3c023_f5e0e99e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-02-20T05:47:28Z",
+      "side": 1,
+      "message": "Yeah, I saw that too. I didn\u0027t dig too far in to why it wasn\u0027t being hit. We\u0027re unlikely to make changes to gold at this point, this is a new feature that we probably don\u0027t need in the NDK, and we need to get a functioning sysroot for Q ASAP.\n\nI\u0027d rather we put the effort into improving lld than fixing gold since that seems to be the direction things are going.",
+      "parentUuid": "dbce521b_9722daed",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
