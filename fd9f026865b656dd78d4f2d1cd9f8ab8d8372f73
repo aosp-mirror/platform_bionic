@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0a6858a8_d351669c",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-02-20T20:45:02Z",
+      "side": 1,
+      "message": "I find it more obvious with the explicit (if unnecessary) check. The check protects us from someone altering the loop conditions anyway.",
+      "parentUuid": "d88bb368_149e5ff9",
+      "revId": "fd9f026865b656dd78d4f2d1cd9f8ab8d8372f73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dbce521b_9722daed",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 2
