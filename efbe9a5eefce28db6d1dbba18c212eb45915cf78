@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "610876c1_f707b08d",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-02-20T23:56:33Z",
+      "side": 1,
+      "message": "I wondered about 32-bit Android.\n - ReadMapFile uses strtoull to parse a uint64_t from /proc/self/maps. The addresses in maps are only 8 hex digits.\n - It looks like Clang zero-extends pointers to 64-bits, while GCC sign-extends them. We\u0027re only using Clang nowadays, so that\u0027s fine.",
+      "revId": "efbe9a5eefce28db6d1dbba18c212eb45915cf78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
