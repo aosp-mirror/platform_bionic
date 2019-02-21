@@ -16,6 +16,24 @@
       "revId": "efbe9a5eefce28db6d1dbba18c212eb45915cf78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2619906_e0d76282",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1021004
+      },
+      "writtenOn": "2019-02-21T16:02:50Z",
+      "side": 1,
+      "message": "Yeah it worked on 32-bit for me so I didn\u0027t worry about it, and uint64_t is what libprocinfo uses.",
+      "parentUuid": "610876c1_f707b08d",
+      "revId": "efbe9a5eefce28db6d1dbba18c212eb45915cf78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
