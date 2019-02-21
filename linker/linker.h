@@ -188,3 +188,9 @@ void increment_dso_handle_reference_counter(void* dso_handle);
 void decrement_dso_handle_reference_counter(void* dso_handle);
 
 void purge_unused_memory();
+
+struct address_space_params {
+  void* start_addr = nullptr;
+  size_t reserved_size = 0;
+  bool must_use_address = false;
+};
