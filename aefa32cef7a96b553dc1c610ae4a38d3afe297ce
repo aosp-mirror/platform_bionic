@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "410e9eaa_7beba409",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-22T18:48:25Z",
+      "side": 1,
+      "message": "do we know how lld resolves this? (and whether it\u0027s deterministic?)",
+      "revId": "aefa32cef7a96b553dc1c610ae4a38d3afe297ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
