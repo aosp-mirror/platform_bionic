@@ -69,7 +69,11 @@ extern "C" void* calloc(size_t n_elements, size_t elem_size) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->calloc(n_elements, elem_size);
   }
-  return Malloc(calloc)(n_elements, elem_size);
+  void* result = Malloc(calloc)(n_elements, elem_size);
+  if (__predict_false(result == nullptr)) {
+    warning_log("calloc(%zu, %zu) failed: returning null pointer", n_elements, elem_size);
+  }
+  return result;
 }
 
 extern "C" void free(void* mem) {
@@ -102,7 +106,11 @@ extern "C" void* malloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->malloc(bytes);
   }
-  return Malloc(malloc)(bytes);
+  void* result = Malloc(malloc)(bytes);
+  if (__predict_false(result == nullptr)) {
+    warning_log("malloc(%zu) failed: returning null pointer", bytes);
+  }
+  return result;
 }
 
 extern "C" size_t malloc_usable_size(const void* mem) {
@@ -118,7 +126,11 @@ extern "C" void* memalign(size_t alignment, size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->memalign(alignment, bytes);
   }
-  return Malloc(memalign)(alignment, bytes);
+  void* result = Malloc(memalign)(alignment, bytes);
+  if (__predict_false(result == nullptr)) {
+    warning_log("memalign(%zu, %zu) failed: returning null pointer", alignment, bytes);
+  }
+  return result;
 }
 
 extern "C" int posix_memalign(void** memptr, size_t alignment, size_t size) {
@@ -134,7 +146,11 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->aligned_alloc(alignment, size);
   }
-  return Malloc(aligned_alloc)(alignment, size);
+  void* result = Malloc(aligned_alloc)(alignment, size);
+  if (__predict_false(result == nullptr)) {
+    warning_log("aligned_alloc(%zu, %zu) failed: returning null pointer", alignment, size);
+  }
+  return result;
 }
 
 extern "C" void* realloc(void* old_mem, size_t bytes) {
@@ -142,12 +158,18 @@ extern "C" void* realloc(void* old_mem, size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->realloc(old_mem, bytes);
   }
-  return Malloc(realloc)(old_mem, bytes);
+  void* result = Malloc(realloc)(old_mem, bytes);
+  if (__predict_false(result == nullptr && bytes != 0)) {
+    warning_log("realloc(%p, %zu) failed: returning null pointer", old_mem, bytes);
+  }
+  return result;
 }
 
 extern "C" void* reallocarray(void* old_mem, size_t item_count, size_t item_size) {
   size_t new_size;
   if (__builtin_mul_overflow(item_count, item_size, &new_size)) {
+    warning_log("reallocaray(%p, %zu, %zu) failed: returning null pointer",
+                old_mem, item_count, item_size);
     errno = ENOMEM;
     return nullptr;
   }
@@ -160,7 +182,11 @@ extern "C" void* pvalloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->pvalloc(bytes);
   }
-  return Malloc(pvalloc)(bytes);
+  void* result = Malloc(pvalloc)(bytes);
+  if (__predict_false(result == nullptr)) {
+    warning_log("pvalloc(%zu) failed: returning null pointer", bytes);
+  }
+  return result;
 }
 
 extern "C" void* valloc(size_t bytes) {
@@ -168,7 +194,11 @@ extern "C" void* valloc(size_t bytes) {
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->valloc(bytes);
   }
-  return Malloc(valloc)(bytes);
+  void* result = Malloc(valloc)(bytes);
+  if (__predict_false(result == nullptr)) {
+    warning_log("valloc(%zu) failed: returning null pointer", bytes);
+  }
+  return result;
 }
 #endif
 // =============================================================================
