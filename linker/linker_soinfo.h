@@ -223,7 +223,7 @@ struct soinfo {
   void call_pre_init_constructors();
   bool prelink_image();
   bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
-                  const android_dlextinfo* extinfo);
+                  const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
   void add_child(soinfo* child);
