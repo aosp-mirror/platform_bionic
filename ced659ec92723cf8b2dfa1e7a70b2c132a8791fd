@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d7bf03b_543fd70e",
+        "filename": "libc/include/paths.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2019-02-25T17:12:24Z",
+      "side": 1,
+      "message": "we may want a /product/sbin later",
+      "range": {
+        "startLine": 50,
+        "startChar": 23,
+        "endLine": 50,
+        "endChar": 41
+      },
+      "revId": "ced659ec92723cf8b2dfa1e7a70b2c132a8791fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
