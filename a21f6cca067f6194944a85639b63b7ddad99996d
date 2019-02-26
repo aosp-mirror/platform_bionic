@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fff37895_d7575e30",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-26T20:27:57Z",
+      "side": 1,
+      "message": "this was really the only gotcha.\n\n(other than my first version didn\u0027t include the arguments, which -- even when looking at the bionic unit tests -- turns out to just leave the reader asking \"aye, but was it a reasonable request?\".)",
+      "range": {
+        "startLine": 162,
+        "startChar": 39,
+        "endLine": 162,
+        "endChar": 53
+      },
+      "revId": "a21f6cca067f6194944a85639b63b7ddad99996d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
