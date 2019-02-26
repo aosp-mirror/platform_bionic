@@ -202,7 +202,7 @@ bool HeapprofdShouldLoad() {
   if (__system_property_get(program_property, property_value) == 0) {
     return false;
   }
-  return program_property[0] != '\0';
+  return property_value[0] != '\0';
 }
 
 void HeapprofdInstallSignalHandler() {
