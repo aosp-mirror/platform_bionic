@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b46b70cf_438d9579",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-27T23:15:49Z",
+      "side": 1,
+      "message": "Sounds like a good idea. I went with malloc_limit: which isn\u0027t too large.",
+      "parentUuid": "c366e6ca_a3a6ff5d",
+      "range": {
+        "startLine": 93,
+        "startChar": 15,
+        "endLine": 93,
+        "endChar": 25
+      },
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f8665857_5911c3af",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2019-02-27T16:40:21Z",
       "side": 1,
       "message": "this is weird, but hboehm already looked at this heapprofd stuff?",
+      "range": {
+        "startLine": 247,
+        "startChar": 2,
+        "endLine": 256,
+        "endChar": 52
+      },
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76947128_6b380ade",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-27T23:15:49Z",
+      "side": 1,
+      "message": "I should probably ask hboehm since this is new. The tricky part here is that all of the other code can perform the lock, but there is one case where there is no lock occurring. If heapprofd is enabled by a signal, that code does a mutate with no lock (because it\u0027s occuring in a signal handler). I can\u0027t do the normal lock scheme, I have to use this weird locking scheme.\n\nI\u0027ll update the comment to better reflect what I\u0027m doing and why.",
+      "parentUuid": "f8665857_5911c3af",
       "range": {
         "startLine": 247,
         "startChar": 2,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "7f36ace7_19c451ec",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-27T23:15:49Z",
+      "side": 1,
+      "message": "Good point, done.",
+      "parentUuid": "b000083a_8c6854d7",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f2a6fa3b_704c51c7",
         "filename": "libc/private/bionic_malloc.h",
         "patchSetId": 9
@@ -76,6 +142,24 @@
       "writtenOn": "2019-02-27T16:40:21Z",
       "side": 1,
       "message": "units. (preferably in the constant name.)\n\nwe should document what the expected arg type for all of these is too.",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c285ef16_06b8c6fd",
+        "filename": "libc/private/bionic_malloc.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-27T23:15:49Z",
+      "side": 1,
+      "message": "Done, including changing the name to make it very clear what it is.\n\nI also added some info about the arguments, see if it makes sense.",
+      "parentUuid": "f2a6fa3b_704c51c7",
       "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -111,6 +195,24 @@
       "side": 1,
       "message": "(`isolated: true` in an Android.bp runs with our custom gtest runner that isolates each test. [and runs them in parallel by default.])",
       "parentUuid": "ed27a6e9_256206ab",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "635b4d39_6e91bfdf",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-02-27T23:15:49Z",
+      "side": 1,
+      "message": "As Elliott mentions, our test runner does isolation so no need to worry about this.",
+      "parentUuid": "4fae365e_35568883",
       "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
