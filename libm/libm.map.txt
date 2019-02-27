@@ -301,58 +301,19 @@ LIBC_DEPRECATED { # arm mips platform-only
     ___Unwind_RaiseException; # arm
     ___Unwind_Resume; # arm
     ___Unwind_Resume_or_Rethrow; # arm
-    __adddf3; # arm
-    __aeabi_cdcmpeq; # arm
-    __aeabi_cdcmple; # arm
-    __aeabi_cdrcmple; # arm
-    __aeabi_cfcmpeq; # arm
-    __aeabi_cfcmple; # arm
-    __aeabi_cfrcmple; # arm
     __aeabi_d2lz; # arm
-    __aeabi_d2uiz; # arm
     __aeabi_d2ulz; # arm
-    __aeabi_dadd; # arm
-    __aeabi_dcmpeq; # arm
-    __aeabi_dcmpge; # arm
-    __aeabi_dcmpgt; # arm
-    __aeabi_dcmple; # arm
-    __aeabi_dcmplt; # arm
-    __aeabi_ddiv; # arm
-    __aeabi_dmul; # arm
-    __aeabi_drsub; # arm
-    __aeabi_dsub; # arm
-    __aeabi_f2d; # arm
     __aeabi_f2lz; # arm
     __aeabi_f2ulz; # arm
-    __aeabi_fcmpeq; # arm
-    __aeabi_fcmpge; # arm
-    __aeabi_fcmpgt; # arm
-    __aeabi_fcmple; # arm
-    __aeabi_fcmplt; # arm
-    __aeabi_i2d; # arm
     __aeabi_l2d; # arm
-    __aeabi_ui2d; # arm
-    __aeabi_ul2d; # arm
     __aeabi_unwind_cpp_pr0; # arm
     __aeabi_unwind_cpp_pr1; # arm
     __aeabi_unwind_cpp_pr2; # arm
-    __cmpdf2; # arm
-    __cmpsf2; # arm
-    __divdf3; # arm
-    __eqdf2; # arm
-    __eqsf2; # arm
-    __extendsfdf2; # arm
     __fixdfdi; # arm mips
     __fixsfdi; # arm mips
     __fixunsdfdi; # arm mips
-    __fixunsdfsi; # arm
     __fixunssfdi; # arm mips
     __floatdidf; # arm
-    __floatsidf; # arm
-    __floatundidf; # arm
-    __floatunsidf; # arm
-    __gedf2; # arm
-    __gesf2; # arm
     __gnu_Unwind_Backtrace; # arm
     __gnu_unwind_execute; # arm
     __gnu_Unwind_ForcedUnwind; # arm
@@ -370,17 +331,7 @@ LIBC_DEPRECATED { # arm mips platform-only
     __gnu_Unwind_Save_VFP_D_16_to_31; # arm
     __gnu_Unwind_Save_WMMXC; # arm
     __gnu_Unwind_Save_WMMXD; # arm
-    __gtdf2; # arm
-    __gtsf2; # arm
-    __ledf2; # arm
-    __lesf2; # arm
-    __ltdf2; # arm
-    __ltsf2; # arm
-    __muldf3; # arm
-    __nedf2; # arm
-    __nesf2; # arm
     __restore_core_regs; # arm
-    __subdf3; # arm
     _Unwind_Backtrace; # arm
     _Unwind_Complete; # arm
     _Unwind_DeleteException; # arm

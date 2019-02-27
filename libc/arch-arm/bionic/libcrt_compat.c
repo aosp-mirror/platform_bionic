@@ -31,8 +31,12 @@ extern char __addsf3;
 extern char __aeabi_cdcmpeq;
 extern char __aeabi_cdcmple;
 extern char __aeabi_cdrcmple;
+extern char __aeabi_cfcmpeq;
+extern char __aeabi_cfcmple;
+extern char __aeabi_cfrcmple;
 extern char __aeabi_d2f;
 extern char __aeabi_d2iz;
+extern char __aeabi_d2uiz;
 extern char __aeabi_dadd;
 extern char __aeabi_dcmpeq;
 extern char __aeabi_dcmpge;
@@ -48,6 +52,11 @@ extern char __aeabi_f2d;
 extern char __aeabi_f2iz;
 extern char __aeabi_f2uiz;
 extern char __aeabi_fadd;
+extern char __aeabi_fcmpeq;
+extern char __aeabi_fcmpge;
+extern char __aeabi_fcmpgt;
+extern char __aeabi_fcmple;
+extern char __aeabi_fcmplt;
 extern char __aeabi_fcmpun;
 extern char __aeabi_fdiv;
 extern char __aeabi_fmul;
@@ -74,12 +83,15 @@ extern char __aeabi_uldivmod;
 extern char __aeabi_unwind_cpp_pr0;
 extern char __aeabi_unwind_cpp_pr1;
 extern char __cmpdf2;
+extern char __cmpsf2;
 extern char __divdf3;
 extern char __divsf3;
 extern char __eqdf2;
+extern char __eqsf2;
 extern char __extendsfdf2;
 extern char __fixdfsi;
 extern char __fixsfsi;
+extern char __fixunsdfsi;
 extern char __floatdidf;
 extern char __floatdisf;
 extern char __floatsidf;
@@ -89,15 +101,20 @@ extern char __floatundisf;
 extern char __floatunsidf;
 extern char __floatunsisf;
 extern char __gedf2;
+extern char __gesf2;
 extern char __gtdf2;
+extern char __gtsf2;
 extern char __gnu_ldivmod_helper;
 extern char __gnu_uldivmod_helper;
 extern char __ledf2;
+extern char __lesf2;
 extern char __ltdf2;
+extern char __ltsf2;
 extern char __muldf3;
 extern char __muldi3;
 extern char __mulsf3;
 extern char __nedf2;
+extern char __nesf2;
 extern char __popcount_tab;
 extern char __popcountsi2;
 extern char __subdf3;
@@ -113,8 +130,12 @@ void* __bionic_libcrt_compat_symbols[] = {
     &__aeabi_cdcmpeq,
     &__aeabi_cdcmple,
     &__aeabi_cdrcmple,
+    &__aeabi_cfcmpeq,
+    &__aeabi_cfcmple,
+    &__aeabi_cfrcmple,
     &__aeabi_d2f,
     &__aeabi_d2iz,
+    &__aeabi_d2uiz,
     &__aeabi_dadd,
     &__aeabi_dcmpeq,
     &__aeabi_dcmpge,
@@ -130,6 +151,11 @@ void* __bionic_libcrt_compat_symbols[] = {
     &__aeabi_f2iz,
     &__aeabi_f2uiz,
     &__aeabi_fadd,
+    &__aeabi_fcmpeq,
+    &__aeabi_fcmpge,
+    &__aeabi_fcmpgt,
+    &__aeabi_fcmple,
+    &__aeabi_fcmplt,
     &__aeabi_fcmpun,
     &__aeabi_fdiv,
     &__aeabi_fmul,
@@ -156,12 +182,15 @@ void* __bionic_libcrt_compat_symbols[] = {
     &__aeabi_unwind_cpp_pr0,
     &__aeabi_unwind_cpp_pr1,
     &__cmpdf2,
+    &__cmpsf2,
     &__divdf3,
     &__divsf3,
     &__eqdf2,
+    &__eqsf2,
     &__extendsfdf2,
     &__fixdfsi,
     &__fixsfsi,
+    &__fixunsdfsi,
     &__floatdidf,
     &__floatdisf,
     &__floatsidf,
@@ -171,15 +200,20 @@ void* __bionic_libcrt_compat_symbols[] = {
     &__floatunsidf,
     &__floatunsisf,
     &__gedf2,
+    &__gesf2,
     &__gtdf2,
+    &__gtsf2,
     &__gnu_ldivmod_helper,
     &__gnu_uldivmod_helper,
     &__ledf2,
+    &__lesf2,
     &__ltdf2,
+    &__ltsf2,
     &__muldf3,
     &__muldi3,
     &__mulsf3,
     &__nedf2,
+    &__nesf2,
     &__popcount_tab,
     &__popcountsi2,
     &__subdf3,
