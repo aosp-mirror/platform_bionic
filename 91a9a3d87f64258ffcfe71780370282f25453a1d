@@ -216,6 +216,24 @@
       "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f7aeb29_3af7209b",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-27T23:27:14Z",
+      "side": 1,
+      "message": "After reading through the libgtest_isolated code it looks like it\u0027s doing exactly what we need here. Thanks.",
+      "parentUuid": "635b4d39_6e91bfdf",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
