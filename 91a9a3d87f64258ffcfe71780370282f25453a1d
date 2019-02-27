@@ -79,6 +79,23 @@
       "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed27a6e9_256206ab",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-02-27T18:10:12Z",
+      "side": 1,
+      "message": "Does this really work outside of an EXPECT_EXIT without causing the other allocation limit tests to fail (due to setting limit multiple times)? Do we run these tests in different processes somehow?",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
