@@ -96,6 +96,24 @@
       "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fae365e_35568883",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-27T18:24:38Z",
+      "side": 1,
+      "message": "(`isolated: true` in an Android.bp runs with our custom gtest runner that isolates each test. [and runs them in parallel by default.])",
+      "parentUuid": "ed27a6e9_256206ab",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
