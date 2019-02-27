@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c366e6ca_a3a6ff5d",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-27T16:40:21Z",
+      "side": 1,
+      "message": "include the size of the allocation too, to help debug whether you\u0027re dealing with a reasonable allocation on an unreasonable heap, or an unreasonable allocation.\n\n(do we want to pass the function name in so we can add that?)\n\nalso include some fixed string like malloc_limit or M_SET_ALLOCATION_LIMIT so that we can grep for all logging related to this feature in one command?",
+      "range": {
+        "startLine": 93,
+        "startChar": 15,
+        "endLine": 93,
+        "endChar": 25
+      },
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8665857_5911c3af",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-27T16:40:21Z",
+      "side": 1,
+      "message": "this is weird, but hboehm already looked at this heapprofd stuff?",
+      "range": {
+        "startLine": 247,
+        "startChar": 2,
+        "endLine": 256,
+        "endChar": 52
+      },
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b000083a_8c6854d7",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-27T16:40:21Z",
+      "side": 1,
+      "message": "since using this functionality at all is presumably rare, do we want to info_log on success? (and include the limit.)",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2a6fa3b_704c51c7",
+        "filename": "libc/private/bionic_malloc.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-02-27T16:40:21Z",
+      "side": 1,
+      "message": "units. (preferably in the constant name.)\n\nwe should document what the expected arg type for all of these is too.",
+      "revId": "91a9a3d87f64258ffcfe71780370282f25453a1d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
