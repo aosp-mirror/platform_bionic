@@ -426,6 +426,11 @@ cc_test_library {
 cc_defaults {
     name: "bionic_unit_tests_defaults",
     host_supported: false,
+    gtest: false,
+
+    defaults: [
+        "bionic_tests_defaults",
+    ],
 
     whole_static_libs: [
         "libBionicTests",
@@ -437,12 +442,14 @@ cc_defaults {
         "libtinyxml2",
         "liblog",
         "libbase",
+        "libgtest_isolated",
     ],
 
     srcs: [
         // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
         "__cxa_thread_atexit_test.cpp",
         "gtest_globals.cpp",
+        "gtest_main.cpp",
         "thread_local_test.cpp",
     ],
 
@@ -461,6 +468,7 @@ cc_defaults {
         android: {
             shared_libs: [
                 "ld-android",
+                "libandroidicu",
                 "libdl",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
@@ -486,29 +494,6 @@ cc_defaults {
                 "-Wl,--rpath,${ORIGIN}/../bionic-loader-test-libs",
                 "-Wl,--enable-new-dtags",
             ],
-        },
-    },
-}
-
-cc_test {
-    name: "bionic-unit-tests",
-    gtest: false,
-    defaults: [
-        "bionic_unit_tests_defaults",
-        "bionic_tests_defaults",
-    ],
-
-    srcs: [
-        "gtest_main.cpp",
-    ],
-
-    static_libs: [
-        "libgtest_isolated",
-    ],
-
-    target: {
-        android: {
-            shared_libs: ["libandroidicu"],
         },
     },
 
@@ -652,6 +637,24 @@ cc_test {
         "ld_config_test_helper_lib1",
         "ld_config_test_helper_lib2",
         "ld_config_test_helper_lib3",
+    ],
+}
+
+cc_test {
+    name: "bionic-unit-tests",
+    defaults: [
+        "bionic_unit_tests_defaults",
+    ],
+}
+
+cc_test {
+    name: "bionic-unit-tests-scudo",
+    defaults: [
+        "bionic_unit_tests_defaults",
+    ],
+
+    shared_libs: [
+        "libc_scudo",
     ],
 }
 

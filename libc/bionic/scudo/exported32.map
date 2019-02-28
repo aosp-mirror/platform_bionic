@@ -1,0 +1,16 @@
+LIBC_SCUDO {
+  global:
+    scudo_aligned_alloc;
+    scudo_calloc;
+    scudo_free;
+    scudo_mallinfo;
+    scudo_malloc;
+    scudo_malloc_usable_size;
+    scudo_memalign;
+    scudo_posix_memalign;
+    scudo_pvalloc;
+    scudo_realloc;
+    scudo_valloc;
+  local:
+    *;
+};
