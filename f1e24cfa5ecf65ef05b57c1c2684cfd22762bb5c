@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54615c3d_e3a7f8c3",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-01T02:31:59Z",
+      "side": 1,
+      "message": "Won\u0027t this resend the signal before mainline code has made any progress? Thus if you interrupted a thread holding the gGlobalsMutating \"lock\", wouldn\u0027t you immediately hit that case again?",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96d0940f_28bf675c",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-01T02:31:59Z",
+      "side": 1,
+      "message": "I would consider memory_order_relaxed accesses to this. I think it\u0027s safe, and may get you some performance back. The added overhead here looks fairly substantial. If the limit is not exact, it may be possible to make this much cheaper by tracking at a much lower level, when regions are allocated.",
+      "range": {
+        "startLine": 86,
+        "startChar": 24,
+        "endLine": 86,
+        "endChar": 34
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "758cef25_1a606178",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-01T02:31:59Z",
+      "side": 1,
+      "message": "This can\u0027t happen concurrently with malloc calls?",
+      "range": {
+        "startLine": 307,
+        "startChar": 2,
+        "endLine": 307,
+        "endChar": 16
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
