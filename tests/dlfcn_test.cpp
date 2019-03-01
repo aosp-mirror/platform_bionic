@@ -49,6 +49,12 @@
 #pragma clang diagnostic pop
 #endif //  defined(__ANDROID__) && (defined(__arm__) || defined(__i386__))
 
+// Declared manually because the macro definitions in <elf.h> conflict with LLVM headers.
+#ifdef __arm__
+typedef uintptr_t _Unwind_Ptr;
+extern "C" _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int*);
+#endif
+
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
@@ -1730,6 +1736,30 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
 TEST(dlfcn, dlopen_df_1_global) {
   void* handle = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
+}
+
+TEST(dlfcn, segment_gap) {
+  void* handle = dlopen("libsegment_gap_outer.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  auto get_inner = reinterpret_cast<void* (*)()>(dlsym(handle, "get_inner"));
+  void* inner = get_inner();
+  (void)inner;
+
+#if __arm__
+  int count;
+  _Unwind_Ptr outer_exidx = dl_unwind_find_exidx(reinterpret_cast<_Unwind_Ptr>(get_inner), &count);
+  _Unwind_Ptr inner_exidx = dl_unwind_find_exidx(reinterpret_cast<_Unwind_Ptr>(inner), &count);
+  EXPECT_NE(0u, outer_exidx);
+  EXPECT_NE(0u, inner_exidx);
+  EXPECT_NE(inner_exidx, outer_exidx);
+#endif
+
+  Dl_info info;
+  int rc = dladdr(inner, &info);
+  ASSERT_NE(rc, 0);
+
+  EXPECT_NE(nullptr, strstr(info.dli_fname, "libsegment_gap_inner.so"));
 }
 
 #endif

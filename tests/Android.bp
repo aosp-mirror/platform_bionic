@@ -643,6 +643,8 @@ cc_test {
         "libnstest_ns_a_public1_internal",
         "libnstest_ns_b_public2",
         "libnstest_ns_b_public3",
+        "libsegment_gap_inner",
+        "libsegment_gap_outer",
         "ld_preload_test_helper",
         "ld_preload_test_helper_lib1",
         "ld_preload_test_helper_lib2",
