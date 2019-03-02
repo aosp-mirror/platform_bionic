@@ -48,8 +48,10 @@ New libc behavior in Q (API level 29):
   * Whole printf family now supports the GNU `%m` extension, rather than a special-case hack in `syslog`
   * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension
   * Bug fixes to handling of UTF-8 U+fffe/U+ffff and code points above U+10ffff
+  * `aligned_alloc` correctly verifies that `size` is a multiple of `alignment`
 
 New libc functions in P (API level 28):
+  * `aligned_alloc`
   * `__freading`/`__fwriting` (completing <stdio_ext.h>)
   * `endhostent`/`endnetent`/`endprotoent`/`getnetent`/`getprotoent`/`sethostent`/`setnetent`/`setprotoent` (completing <netdb.h>)
   * `fexecve`
