@@ -132,9 +132,6 @@ class PointerData : public OptionData {
   void PostForkParent();
   void PostForkChild();
 
-  static void GetList(std::vector<ListInfoType>* list, bool only_with_backtrace);
-  static void GetUniqueList(std::vector<ListInfoType>* list, bool only_with_backtrace);
-
   static size_t AddBacktrace(size_t num_frames);
   static void RemoveBacktrace(size_t hash_index);
 
@@ -151,6 +148,7 @@ class PointerData : public OptionData {
   static void VerifyFreedPointer(const FreePointerInfoType& info);
   static void VerifyAllFreed();
 
+  static void GetAllocList(std::vector<ListInfoType>* list);
   static void LogLeaks();
   static void DumpLiveToFile(FILE* fp);
 
@@ -164,6 +162,9 @@ class PointerData : public OptionData {
  private:
   static std::string GetHashString(uintptr_t* frames, size_t num_frames);
   static void LogBacktrace(size_t hash_index);
+
+  static void GetList(std::vector<ListInfoType>* list, bool only_with_backtrace);
+  static void GetUniqueList(std::vector<ListInfoType>* list, bool only_with_backtrace);
 
   size_t alloc_offset_ = 0;
   std::vector<uint8_t> cmp_mem_;
