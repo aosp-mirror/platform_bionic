@@ -318,7 +318,7 @@ TEST_F(MallocDebugTest, expand_alloc) {
   ASSERT_LE(1039U, debug_malloc_usable_size(pointer));
   debug_free(pointer);
 
-  pointer = debug_aligned_alloc(128, 15);
+  pointer = debug_aligned_alloc(16, 16);
   ASSERT_TRUE(pointer != nullptr);
   ASSERT_LE(1039U, debug_malloc_usable_size(pointer));
   debug_free(pointer);
@@ -2144,9 +2144,9 @@ void VerifyRecordAllocs() {
   debug_free(pointer);
   expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 
-  pointer = debug_aligned_alloc(32, 50);
+  pointer = debug_aligned_alloc(32, 64);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 32 50\n", getpid(), pointer);
+  expected += android::base::StringPrintf("%d: memalign %p 32 64\n", getpid(), pointer);
   debug_free(pointer);
   expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 

@@ -272,11 +272,11 @@ TEST(stdlib, aligned_alloc_sweep) {
   for (size_t align = 1; align <= 2048; align <<= 1) {
     // Try all of the non power of 2 values from the last until this value.
     for (size_t fail_align = last_align + 1; fail_align < align; fail_align++) {
-      ASSERT_TRUE(aligned_alloc(fail_align, 256) == nullptr)
+      ASSERT_TRUE(aligned_alloc(fail_align, fail_align) == nullptr)
           << "Unexpected success at align " << fail_align;
       ASSERT_EQ(EINVAL, errno) << "Unexpected errno at align " << fail_align;
     }
-    void* ptr = aligned_alloc(align, 256);
+    void* ptr = aligned_alloc(align, 2 * align);
     ASSERT_TRUE(ptr != nullptr) << "Unexpected failure at align " << align;
     ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr) & (align - 1))
         << "Did not return a valid aligned ptr " << ptr << " expected alignment " << align;
@@ -292,11 +292,11 @@ TEST(stdlib, aligned_alloc_overflow) {
 
 TEST(stdlib, aligned_alloc_size_not_multiple_of_alignment) {
   SKIP_WITH_HWASAN;
-  for (size_t size = 1; size <= 2048; size++) {
-    void* ptr = aligned_alloc(2048, size);
-    ASSERT_TRUE(ptr != nullptr) << "Failed at size " << std::to_string(size);
-    free(ptr);
-  }
+
+  ASSERT_TRUE(aligned_alloc(2048, 1) == nullptr);
+  ASSERT_TRUE(aligned_alloc(4, 3) == nullptr);
+  ASSERT_TRUE(aligned_alloc(4, 7) == nullptr);
+  ASSERT_TRUE(aligned_alloc(16, 8) == nullptr);
 }
 
 TEST(stdlib, realpath__NULL_filename) {

@@ -729,7 +729,7 @@ void* debug_aligned_alloc(size_t alignment, size_t size) {
   if (DebugCallsDisabled()) {
     return g_dispatch->aligned_alloc(alignment, size);
   }
-  if (!powerof2(alignment)) {
+  if (!powerof2(alignment) || (size % alignment) != 0) {
     errno = EINVAL;
     return nullptr;
   }
