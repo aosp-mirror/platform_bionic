@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <malloc.h>
 #include <sys/param.h>
 #include <unistd.h>
@@ -46,6 +47,20 @@ void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
     boundary = 1;
   }
   return je_memalign(boundary, size);
+}
+
+#ifdef je_aligned_alloc
+#undef je_aligned_alloc
+#endif
+
+// The aligned_alloc function requires that size is a multiple of alignment.
+// jemalloc doesn't enforce this, so add enforcement here.
+void* je_aligned_alloc_wrapper(size_t alignment, size_t size) {
+  if ((size % alignment) != 0) {
+    errno = EINVAL;
+    return nullptr;
+  }
+  return je_aligned_alloc(alignment, size);
 }
 
 int je_mallopt(int param, int value) {

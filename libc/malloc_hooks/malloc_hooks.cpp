@@ -176,7 +176,7 @@ int hooks_mallopt(int param, int value) {
 
 void* hooks_aligned_alloc(size_t alignment, size_t size) {
   if (__memalign_hook != nullptr && __memalign_hook != default_memalign_hook) {
-    if (!powerof2(alignment)) {
+    if (!powerof2(alignment) || (size % alignment) != 0) {
       errno = EINVAL;
       return nullptr;
     }
