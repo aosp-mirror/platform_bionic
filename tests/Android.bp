@@ -508,7 +508,7 @@ cc_test {
 
     target: {
         android: {
-            shared_libs: ["libicuuc"],
+            shared_libs: ["libandroidicu"],
         },
     },
 
