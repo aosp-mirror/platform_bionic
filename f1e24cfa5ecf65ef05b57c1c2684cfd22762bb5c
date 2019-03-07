@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a1bea25b_4fb96fbe",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-07T18:57:03Z",
+      "side": 1,
+      "message": "It should only ever resend the signal once. The code in the other thread blocks the signal, so the only way you can get to this point is if the signal is now blocked (and will resend when it\u0027s unblocked in the other thread).",
+      "parentUuid": "54615c3d_e3a7f8c3",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96d0940f_28bf675c",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "12be165d_781d2cb6",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-07T18:57:03Z",
+      "side": 1,
+      "message": "I changed all read access to memory_order_relaxed. I left the fetch_{add,sub} the same.",
+      "parentUuid": "96d0940f_28bf675c",
+      "range": {
+        "startLine": 86,
+        "startChar": 24,
+        "endLine": 86,
+        "endChar": 34
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "758cef25_1a606178",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12
@@ -59,6 +107,30 @@
       "writtenOn": "2019-03-01T02:31:59Z",
       "side": 1,
       "message": "This can\u0027t happen concurrently with malloc calls?",
+      "range": {
+        "startLine": 307,
+        "startChar": 2,
+        "endLine": 307,
+        "endChar": 16
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d4f3057_b6f275d0",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-07T18:57:03Z",
+      "side": 1,
+      "message": "Yes it can, but the malloc calls that make use of this variable only ever happen after the dispatch table below is changed in EnableLimitDispatchTable(). Since this variable is set once and always read-only, and the enabling only occurs after some locking and other atomic stores in the enable function.",
+      "parentUuid": "758cef25_1a606178",
       "range": {
         "startLine": 307,
         "startChar": 2,
