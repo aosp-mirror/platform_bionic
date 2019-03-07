@@ -34,6 +34,7 @@ int je_mallctl(const char *name, void *oldp, size_t *oldlenp, void *newp, size_t
 struct mallinfo je_mallinfo();
 void je_malloc_disable();
 void je_malloc_enable();
+int je_malloc_info(int options, FILE* fp);
 int je_mallopt(int, int);
 void* je_memalign_round_up_boundary(size_t, size_t);
 void* je_pvalloc(size_t);

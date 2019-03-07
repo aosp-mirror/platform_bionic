@@ -123,6 +123,7 @@ cc_test {
     static_libs: [
         "libc_malloc_debug",
         "libdemangle",
+        "libtinyxml2",
     ],
 
     shared_libs: [
