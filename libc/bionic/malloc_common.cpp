@@ -42,6 +42,7 @@
 //   write_malloc_leak_info: Writes the leak info data to a file.
 
 #include <stdint.h>
+#include <stdio.h>
 
 #include <private/bionic_config.h>
 
@@ -91,6 +92,14 @@ extern "C" struct mallinfo mallinfo() {
     return dispatch_table->mallinfo();
   }
   return Malloc(mallinfo)();
+}
+
+extern "C" int malloc_info(int options, FILE* fp) {
+  auto dispatch_table = GetDispatchTable();
+  if (__predict_false(dispatch_table != nullptr)) {
+    return dispatch_table->malloc_info(options, fp);
+  }
+  return Malloc(malloc_info)(options, fp);
 }
 
 extern "C" int mallopt(int param, int value) {

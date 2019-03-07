@@ -1089,7 +1089,6 @@ cc_library_static {
         "bionic/locale.cpp",
         "bionic/lockf.cpp",
         "bionic/lstat.cpp",
-        "bionic/malloc_info.cpp",
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",

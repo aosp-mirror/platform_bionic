@@ -13,6 +13,7 @@ LIBC_MALLOC_HOOKS {
     hooks_malloc_backtrace;
     hooks_malloc_disable;
     hooks_malloc_enable;
+    hooks_malloc_info;
     hooks_malloc_usable_size;
     hooks_mallopt;
     hooks_memalign;

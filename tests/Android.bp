@@ -194,7 +194,6 @@ cc_test_library {
 
     include_dirs: [
         "bionic/libc",
-        "external/tinyxml2",
     ],
 
     target: {
