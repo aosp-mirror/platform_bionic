@@ -56,6 +56,11 @@ struct ptp_sys_offset {
   unsigned int rsv[3];
   struct ptp_clock_time ts[2 * PTP_MAX_SAMPLES + 1];
 };
+struct ptp_sys_offset_extended {
+  unsigned int n_samples;
+  unsigned int rsv[3];
+  struct ptp_clock_time ts[PTP_MAX_SAMPLES][3];
+};
 struct ptp_sys_offset_precise {
   struct ptp_clock_time device;
   struct ptp_clock_time sys_realtime;
@@ -84,6 +89,7 @@ struct ptp_pin_desc {
 #define PTP_PIN_GETFUNC _IOWR(PTP_CLK_MAGIC, 6, struct ptp_pin_desc)
 #define PTP_PIN_SETFUNC _IOW(PTP_CLK_MAGIC, 7, struct ptp_pin_desc)
 #define PTP_SYS_OFFSET_PRECISE _IOWR(PTP_CLK_MAGIC, 8, struct ptp_sys_offset_precise)
+#define PTP_SYS_OFFSET_EXTENDED _IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
 struct ptp_extts_event {
   struct ptp_clock_time t;
   unsigned int index;

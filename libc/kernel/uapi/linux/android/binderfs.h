@@ -16,43 +16,16 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef HNS_ABI_USER_H
-#define HNS_ABI_USER_H
+#ifndef _UAPI_LINUX_BINDERFS_H
+#define _UAPI_LINUX_BINDERFS_H
+#include <linux/android/binder.h>
 #include <linux/types.h>
-struct hns_roce_ib_create_cq {
-  __aligned_u64 buf_addr;
-  __aligned_u64 db_addr;
+#include <linux/ioctl.h>
+#define BINDERFS_MAX_NAME 255
+struct binderfs_device {
+  char name[BINDERFS_MAX_NAME + 1];
+  __u32 major;
+  __u32 minor;
 };
-struct hns_roce_ib_create_cq_resp {
-  __aligned_u64 cqn;
-  __aligned_u64 cap_flags;
-};
-struct hns_roce_ib_create_srq {
-  __aligned_u64 buf_addr;
-  __aligned_u64 db_addr;
-  __aligned_u64 que_addr;
-};
-struct hns_roce_ib_create_srq_resp {
-  __u32 srqn;
-  __u32 reserved;
-};
-struct hns_roce_ib_create_qp {
-  __aligned_u64 buf_addr;
-  __aligned_u64 db_addr;
-  __u8 log_sq_bb_count;
-  __u8 log_sq_stride;
-  __u8 sq_no_prefetch;
-  __u8 reserved[5];
-  __aligned_u64 sdb_addr;
-};
-struct hns_roce_ib_create_qp_resp {
-  __aligned_u64 cap_flags;
-};
-struct hns_roce_ib_alloc_ucontext_resp {
-  __u32 qp_tab_size;
-  __u32 reserved;
-};
-struct hns_roce_ib_alloc_pd_resp {
-  __u32 pdn;
-};
+#define BINDER_CTL_ADD _IOWR('b', 1, struct binderfs_device)
 #endif

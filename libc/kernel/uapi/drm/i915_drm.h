@@ -281,6 +281,9 @@ typedef struct drm_i915_irq_emit {
 typedef struct drm_i915_irq_wait {
   int irq_seq;
 } drm_i915_irq_wait_t;
+#define I915_GEM_PPGTT_NONE 0
+#define I915_GEM_PPGTT_ALIASING 1
+#define I915_GEM_PPGTT_FULL 2
 #define I915_PARAM_IRQ_ACTIVE 1
 #define I915_PARAM_ALLOW_BATCHBUFFER 2
 #define I915_PARAM_LAST_DISPATCH 3

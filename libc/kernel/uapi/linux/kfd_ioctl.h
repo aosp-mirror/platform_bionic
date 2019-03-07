@@ -261,6 +261,20 @@ struct kfd_ioctl_unmap_memory_from_gpu_args {
   __u32 n_devices;
   __u32 n_success;
 };
+struct kfd_ioctl_get_dmabuf_info_args {
+  __u64 size;
+  __u64 metadata_ptr;
+  __u32 metadata_size;
+  __u32 gpu_id;
+  __u32 flags;
+  __u32 dmabuf_fd;
+};
+struct kfd_ioctl_import_dmabuf_args {
+  __u64 va_addr;
+  __u64 handle;
+  __u32 gpu_id;
+  __u32 dmabuf_fd;
+};
 #define AMDKFD_IOCTL_BASE 'K'
 #define AMDKFD_IO(nr) _IO(AMDKFD_IOCTL_BASE, nr)
 #define AMDKFD_IOR(nr,type) _IOR(AMDKFD_IOCTL_BASE, nr, type)
@@ -293,6 +307,8 @@ struct kfd_ioctl_unmap_memory_from_gpu_args {
 #define AMDKFD_IOC_UNMAP_MEMORY_FROM_GPU AMDKFD_IOWR(0x19, struct kfd_ioctl_unmap_memory_from_gpu_args)
 #define AMDKFD_IOC_SET_CU_MASK AMDKFD_IOW(0x1A, struct kfd_ioctl_set_cu_mask_args)
 #define AMDKFD_IOC_GET_QUEUE_WAVE_STATE AMDKFD_IOWR(0x1B, struct kfd_ioctl_get_queue_wave_state_args)
+#define AMDKFD_IOC_GET_DMABUF_INFO AMDKFD_IOWR(0x1C, struct kfd_ioctl_get_dmabuf_info_args)
+#define AMDKFD_IOC_IMPORT_DMABUF AMDKFD_IOWR(0x1D, struct kfd_ioctl_import_dmabuf_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x1C
+#define AMDKFD_COMMAND_END 0x1E
 #endif
