@@ -237,4 +237,12 @@ struct br_mcast_stats {
   __u64 mcast_bytes[BR_MCAST_DIR_SIZE];
   __u64 mcast_packets[BR_MCAST_DIR_SIZE];
 };
+enum br_boolopt_id {
+  BR_BOOLOPT_NO_LL_LEARN,
+  BR_BOOLOPT_MAX
+};
+struct br_boolopt_multi {
+  __u32 optval;
+  __u32 optmask;
+};
 #endif

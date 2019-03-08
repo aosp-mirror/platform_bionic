@@ -134,4 +134,5 @@
 #define PORT_PIC32 115
 #define PORT_MPS2UART 116
 #define PORT_MTK_BTIF 117
+#define PORT_RDA 118
 #endif
