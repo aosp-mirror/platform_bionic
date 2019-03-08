@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e34a50fa_dfdb5419",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-08T01:33:34Z",
+      "side": 1,
+      "message": "I think I\u0027m misunderstanding something here. I concluded last time that this is called from a signal handler, and you\u0027re going through the atomic_exchange locking to make that safe in the event you interrupted ?\n\nThus my conclusion was that raising the signal here would cause the signal handler to exit and reenable the signal, at which point, the signal handler would be immediately reinvoked. I don\u0027t think the interrupted thread will have had a chance to advance at that point.\n\nWhat did I miss?",
+      "parentUuid": "a1bea25b_4fb96fbe",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96d0940f_28bf675c",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12
@@ -140,6 +164,30 @@
       "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f507f5fa_8ddb187d",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-08T01:33:34Z",
+      "side": 1,
+      "message": "So this can\u0027t be unset? So this always happens-before any read accesses to gAllocLimit read accesses?\n\nSounds good.",
+      "parentUuid": "3d4f3057_b6f275d0",
+      "range": {
+        "startLine": 307,
+        "startChar": 2,
+        "endLine": 307,
+        "endChar": 16
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
