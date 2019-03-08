@@ -121,7 +121,7 @@ TEST(properties, __system_property_add) {
     ASSERT_EQ(5, system_properties.Get(name, propvalue));
     ASSERT_STREQ(propvalue, "value");
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -156,7 +156,7 @@ TEST(properties, __system_property_update) {
     ASSERT_EQ(6, system_properties.Get("property_other", propvalue));
     ASSERT_STREQ(propvalue, "value6");
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -202,7 +202,7 @@ TEST(properties, fill) {
         ASSERT_EQ(0, memcmp(prop_value, prop_value_ret, PROP_VALUE_MAX));
     }
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -219,7 +219,7 @@ TEST(properties, __system_property_foreach) {
     ASSERT_EQ(0, system_properties.Foreach(foreach_test_callback, &count));
     ASSERT_EQ(3U, count);
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -248,7 +248,7 @@ TEST(properties, __system_property_find_nth) {
       ASSERT_TRUE(system_properties.FindNth(i) == nullptr);
     }
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -307,7 +307,7 @@ TEST(properties, fill_hierarchical) {
         }
     }
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -328,7 +328,7 @@ TEST(properties, errors) {
     ASSERT_EQ(-1, system_properties.Add("name", 4, "value", PROP_VALUE_MAX));
     ASSERT_EQ(-1, system_properties.Update(NULL, "value", PROP_VALUE_MAX));
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -344,7 +344,7 @@ TEST(properties, __system_property_serial) {
     ASSERT_EQ(0, system_properties.Update(const_cast<prop_info*>(pi), "value2", 6));
     ASSERT_NE(serial, system_properties.Serial(pi));
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -375,7 +375,7 @@ TEST(properties, __system_property_wait_any) {
 
     thread.join();
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -408,7 +408,7 @@ TEST(properties, __system_property_wait) {
 
     thread.join();
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -436,7 +436,7 @@ TEST_F(properties_DeathTest, read_only) {
 
   ASSERT_EXIT(__system_property_add("property", 8, "value", 5), KilledByFault(), "");
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -508,7 +508,7 @@ TEST(properties, __system_property_extra_long_read_only) {
   }
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -523,6 +523,6 @@ TEST(properties, __system_property_extra_long_read_only_too_long) {
   ASSERT_NE(0, system_properties.Add(name.c_str(), name.size(), value.c_str(), value.size()));
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }

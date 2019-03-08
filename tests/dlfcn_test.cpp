@@ -254,8 +254,7 @@ TEST(dlfcn, dlopen_by_soname) {
 TEST(dlfcn, dlopen_vdso) {
 #if __has_include(<sys/auxv.h>)
   if (getauxval(AT_SYSINFO_EHDR) == 0) {
-    GTEST_LOG_(INFO) << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test.";
-    return;
+    GTEST_SKIP() << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test";
   }
 #endif
 
@@ -970,9 +969,9 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #if defined(__BIONIC__)
   ASSERT_EQ(handle1, handle2);
 #else
-  GTEST_LOG_(INFO) << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
-                      "it loads a separate copy of the main executable "
-                      "on dlopen by absolute path.";
+  GTEST_SKIP() << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
+                  "it loads a separate copy of the main executable "
+                  "on dlopen by absolute path";
 #endif
 }
 
@@ -997,7 +996,10 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc returns libc.so's ldconfig path, which is a symlink (not a realpath)";
+#endif
+
   Dl_info info;
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
   ASSERT_TRUE(dladdr(addr, &info) != 0);
@@ -1019,10 +1021,6 @@ TEST(dlfcn, dladdr_libc) {
   // TODO: add check for dfi_fbase
   ASSERT_STREQ("puts", info.dli_sname);
   ASSERT_EQ(addr, info.dli_saddr);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing for glibc. Glibc returns path from ldconfig "
-      "for libc.so, which is symlink itself (not a realpath).\n";
-#endif
 }
 
 TEST(dlfcn, dladdr_invalid) {
@@ -1060,7 +1058,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
   ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
+  GTEST_SKIP() << "mips toolchain does not support '--hash-style=gnu'";
 #endif
 }
 
@@ -1178,13 +1176,13 @@ TEST(dlfcn, dlopen_symlink) {
 // that calls dlopen(libc...). This is to test the situation
 // described in b/7941716.
 TEST(dlfcn, dlopen_dlopen_from_ctor) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc segfaults if you try to call dlopen from a constructor";
+#endif
+
   void* handle = dlopen("libtest_dlopen_from_ctor_main.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
-#else
-  GTEST_LOG_(INFO) << "This test is disabled for glibc (glibc segfaults if you try to call dlopen from a constructor).\n";
-#endif
 }
 
 static std::string g_fini_call_order_str;

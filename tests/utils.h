@@ -64,7 +64,7 @@ static inline bool running_with_hwasan() {
   return &__hwasan_init != 0;
 }
 
-#define SKIP_WITH_HWASAN if (running_with_hwasan()) { return; }
+#define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
 
 static inline void* untag_address(void* addr) {
 #if defined(__LP64__)

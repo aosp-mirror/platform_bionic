@@ -61,5 +61,5 @@ TEST(getauxval, arm_has_AT_HWCAP2) {
     return;
   }
 #endif
-  GTEST_LOG_(INFO) << "This test is only meaningful for 32-bit ARM code on 64-bit devices.\n";
+  GTEST_SKIP() << "This test is only meaningful for 32-bit ARM code on 64-bit devices";
 }

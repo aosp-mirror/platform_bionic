@@ -150,7 +150,7 @@ TEST(malloc_iterate, small_allocs) {
 
   FreePtrs(&test_data);
 #else
-  GTEST_LOG_(INFO) << "Skipping, this is a bionic only test.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -169,7 +169,7 @@ TEST(malloc_iterate, large_allocs) {
 
   FreePtrs(&test_data);
 #else
-  GTEST_LOG_(INFO) << "Skipping, this is a bionic only test.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -193,7 +193,7 @@ TEST(malloc_iterate, invalid_pointers) {
 
   ASSERT_EQ(0UL, test_data.total_allocated_bytes);
 #else
-  GTEST_LOG_(INFO) << "Skipping, this is a bionic only test.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -222,6 +222,6 @@ TEST(malloc_iterate, malloc_disable_prevents_allocs) {
   ASSERT_NE(-1, wait_pid) << "Unknown failure in waitpid.";
   ASSERT_EQ(0, wait_pid) << "malloc_disable did not prevent allocation calls.";
 #else
-  GTEST_LOG_(INFO) << "Skipping, this is a bionic only test.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }

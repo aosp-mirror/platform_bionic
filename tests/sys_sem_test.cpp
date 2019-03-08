@@ -35,8 +35,7 @@
 
 TEST(sys_sem, smoke) {
   if (semctl(-1, 0, IPC_RMID) == -1 && errno == ENOSYS) {
-    GTEST_LOG_(INFO) << "no <sys/sem.h> support in this kernel\n";
-    return;
+    GTEST_SKIP() << "no <sys/sem.h> support in this kernel";
   }
 
   // Create a semaphore.
