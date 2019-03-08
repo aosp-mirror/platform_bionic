@@ -65,8 +65,6 @@ bool __init_tls(pthread_internal_t* thread) {
     return false;
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, allocation, allocation_size, "bionic TLS guard");
-
   // Carve out the writable TLS section.
   thread->bionic_tls = reinterpret_cast<bionic_tls*>(static_cast<char*>(allocation) +
                                                      PTHREAD_GUARD_SIZE);
@@ -77,7 +75,6 @@ bool __init_tls(pthread_internal_t* thread) {
     return false;
   }
 
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->bionic_tls, BIONIC_TLS_SIZE, "bionic TLS");
   return true;
 }
 
@@ -105,7 +102,6 @@ void __init_alternate_signal_stack(pthread_internal_t* thread) {
     // We can only use const static allocated string for mapped region name, as Android kernel
     // uses the string pointer directly when dumping /proc/pid/maps.
     prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, ss.ss_sp, ss.ss_size, "thread signal stack");
-    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, stack_base, PTHREAD_GUARD_SIZE, "thread signal stack guard");
   }
 }
 
@@ -184,8 +180,6 @@ static void* __create_thread_mapped_space(size_t mmap_size, size_t stack_guard_s
     munmap(space, mmap_size);
     return NULL;
   }
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, space, stack_guard_size, "thread stack guard");
-
   return space;
 }
 
