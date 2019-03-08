@@ -601,9 +601,9 @@ void PointerData::DumpLiveToFile(FILE* fp) {
 }
 
 void PointerData::PrepareFork() NO_THREAD_SAFETY_ANALYSIS {
+  free_pointer_mutex_.lock();
   pointer_mutex_.lock();
   frame_mutex_.lock();
-  free_pointer_mutex_.lock();
 }
 
 void PointerData::PostForkParent() NO_THREAD_SAFETY_ANALYSIS {
