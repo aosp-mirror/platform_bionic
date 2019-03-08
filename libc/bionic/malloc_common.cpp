@@ -41,6 +41,7 @@
 //                          get_malloc_leak_info.
 //   write_malloc_leak_info: Writes the leak info data to a file.
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -264,6 +265,11 @@ extern "C" void __sanitizer_malloc_disable() {
 }
 
 extern "C" void __sanitizer_malloc_enable() {
+}
+
+extern "C" int __sanitizer_malloc_info(int, FILE*) {
+  errno = ENOTSUP;
+  return -1;
 }
 #endif
 // =============================================================================
