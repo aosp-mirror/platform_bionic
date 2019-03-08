@@ -584,8 +584,15 @@ class State:
                          "kernel/uapi/asm-arm/asm/unistd-eabi.h",
                          "kernel/uapi/asm-arm/asm/unistd-oabi.h",
                          "kernel/uapi/asm-mips/asm/unistd.h",
+                         "kernel/uapi/asm-mips/asm/unistd_n32.h",
+                         "kernel/uapi/asm-mips/asm/unistd_n64.h",
+                         "kernel/uapi/asm-mips/asm/unistd_nr_n32.h",
+                         "kernel/uapi/asm-mips/asm/unistd_nr_n64.h",
+                         "kernel/uapi/asm-mips/asm/unistd_nr_o32.h",
+                         "kernel/uapi/asm-mips/asm/unistd_o32.h",
                          "kernel/uapi/asm-x86/asm/unistd_32.h",
-                         "kernel/uapi/asm-x86/asm/unistd_64.h"]:
+                         "kernel/uapi/asm-x86/asm/unistd_64.h",
+                         "kernel/uapi/asm-x86/asm/unistd_x32.h"]:
           for line in open(os.path.join(bionic_libc_root, unistd_h)):
             m = re.search(pattern, line)
             if m:

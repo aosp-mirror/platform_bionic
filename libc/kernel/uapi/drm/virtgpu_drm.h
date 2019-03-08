@@ -31,6 +31,9 @@ extern "C" {
 #define DRM_VIRTGPU_TRANSFER_TO_HOST 0x07
 #define DRM_VIRTGPU_WAIT 0x08
 #define DRM_VIRTGPU_GET_CAPS 0x09
+#define VIRTGPU_EXECBUF_FENCE_FD_IN 0x01
+#define VIRTGPU_EXECBUF_FENCE_FD_OUT 0x02
+#define VIRTGPU_EXECBUF_FLAGS (VIRTGPU_EXECBUF_FENCE_FD_IN | VIRTGPU_EXECBUF_FENCE_FD_OUT | 0)
 struct drm_virtgpu_map {
   __u64 offset;
   __u32 handle;
@@ -42,7 +45,7 @@ struct drm_virtgpu_execbuffer {
   __u64 command;
   __u64 bo_handles;
   __u32 num_bo_handles;
-  __u32 pad;
+  __s32 fence_fd;
 };
 #define VIRTGPU_PARAM_3D_FEATURES 1
 #define VIRTGPU_PARAM_CAPSET_QUERY_FIX 2
@@ -105,7 +108,7 @@ struct drm_virtgpu_get_caps {
   __u32 pad;
 };
 #define DRM_IOCTL_VIRTGPU_MAP DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_MAP, struct drm_virtgpu_map)
-#define DRM_IOCTL_VIRTGPU_EXECBUFFER DRM_IOW(DRM_COMMAND_BASE + DRM_VIRTGPU_EXECBUFFER, struct drm_virtgpu_execbuffer)
+#define DRM_IOCTL_VIRTGPU_EXECBUFFER DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_EXECBUFFER, struct drm_virtgpu_execbuffer)
 #define DRM_IOCTL_VIRTGPU_GETPARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_GETPARAM, struct drm_virtgpu_getparam)
 #define DRM_IOCTL_VIRTGPU_RESOURCE_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_RESOURCE_CREATE, struct drm_virtgpu_resource_create)
 #define DRM_IOCTL_VIRTGPU_RESOURCE_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_VIRTGPU_RESOURCE_INFO, struct drm_virtgpu_resource_info)

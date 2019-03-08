@@ -20,6 +20,7 @@
 #define VIRTIO_GPU_HW_H
 #include <linux/types.h>
 #define VIRTIO_GPU_F_VIRGL 0
+#define VIRTIO_GPU_F_EDID 1
 enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_UNDEFINED = 0,
   VIRTIO_GPU_CMD_GET_DISPLAY_INFO = 0x0100,
@@ -32,6 +33,7 @@ enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_CMD_RESOURCE_DETACH_BACKING,
   VIRTIO_GPU_CMD_GET_CAPSET_INFO,
   VIRTIO_GPU_CMD_GET_CAPSET,
+  VIRTIO_GPU_CMD_GET_EDID,
   VIRTIO_GPU_CMD_CTX_CREATE = 0x0200,
   VIRTIO_GPU_CMD_CTX_DESTROY,
   VIRTIO_GPU_CMD_CTX_ATTACH_RESOURCE,
@@ -46,6 +48,7 @@ enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_RESP_OK_DISPLAY_INFO,
   VIRTIO_GPU_RESP_OK_CAPSET_INFO,
   VIRTIO_GPU_RESP_OK_CAPSET,
+  VIRTIO_GPU_RESP_OK_EDID,
   VIRTIO_GPU_RESP_ERR_UNSPEC = 0x1200,
   VIRTIO_GPU_RESP_ERR_OUT_OF_MEMORY,
   VIRTIO_GPU_RESP_ERR_INVALID_SCANOUT_ID,
@@ -206,6 +209,17 @@ struct virtio_gpu_get_capset {
 struct virtio_gpu_resp_capset {
   struct virtio_gpu_ctrl_hdr hdr;
   __u8 capset_data[];
+};
+struct virtio_gpu_cmd_get_edid {
+  struct virtio_gpu_ctrl_hdr hdr;
+  __le32 scanout;
+  __le32 padding;
+};
+struct virtio_gpu_resp_edid {
+  struct virtio_gpu_ctrl_hdr hdr;
+  __le32 size;
+  __le32 padding;
+  __u8 edid[1024];
 };
 #define VIRTIO_GPU_EVENT_DISPLAY (1 << 0)
 struct virtio_gpu_config {

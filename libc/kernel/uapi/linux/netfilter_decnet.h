@@ -20,10 +20,6 @@
 #define __LINUX_DECNET_NETFILTER_H
 #include <linux/netfilter.h>
 #include <limits.h>
-#define NFC_DN_SRC 0x0001
-#define NFC_DN_DST 0x0002
-#define NFC_DN_IF_IN 0x0004
-#define NFC_DN_IF_OUT 0x0008
 #define NF_DN_NUMHOOKS 7
 #define NF_DN_PRE_ROUTING 0
 #define NF_DN_LOCAL_IN 1
