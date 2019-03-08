@@ -367,6 +367,15 @@ struct kvm_dirty_log {
     __u64 padding2;
   };
 };
+struct kvm_clear_dirty_log {
+  __u32 slot;
+  __u32 num_pages;
+  __u64 first_page;
+  union {
+    void __user * dirty_bitmap;
+    __u64 padding2;
+  };
+};
 struct kvm_signal_mask {
   __u32 len;
   __u8 sigset[0];
@@ -759,6 +768,8 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_HYPERV_ENLIGHTENED_VMCS 163
 #define KVM_CAP_EXCEPTION_PAYLOAD 164
 #define KVM_CAP_ARM_VM_IPA_SIZE 165
+#define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
+#define KVM_CAP_HYPERV_CPUID 167
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1070,6 +1081,8 @@ struct kvm_enc_region {
 #define KVM_HYPERV_EVENTFD _IOW(KVMIO, 0xbd, struct kvm_hyperv_eventfd)
 #define KVM_GET_NESTED_STATE _IOWR(KVMIO, 0xbe, struct kvm_nested_state)
 #define KVM_SET_NESTED_STATE _IOW(KVMIO, 0xbf, struct kvm_nested_state)
+#define KVM_CLEAR_DIRTY_LOG _IOWR(KVMIO, 0xc0, struct kvm_clear_dirty_log)
+#define KVM_GET_SUPPORTED_HV_CPUID _IOWR(KVMIO, 0xc1, struct kvm_cpuid2)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,
