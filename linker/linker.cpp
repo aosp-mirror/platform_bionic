@@ -415,11 +415,9 @@ static bool realpath_fd(int fd, std::string* realpath) {
 //
 // Intended to be called by libc's __gnu_Unwind_Find_exidx().
 _Unwind_Ptr do_dl_unwind_find_exidx(_Unwind_Ptr pc, int* pcount) {
-  for (soinfo* si = solist_get_head(); si != 0; si = si->next) {
-    if ((pc >= si->base) && (pc < (si->base + si->size))) {
-        *pcount = si->ARM_exidx_count;
-        return reinterpret_cast<_Unwind_Ptr>(si->ARM_exidx);
-    }
+  if (soinfo* si = find_containing_library(reinterpret_cast<void*>(pc))) {
+    *pcount = si->ARM_exidx_count;
+    return reinterpret_cast<_Unwind_Ptr>(si->ARM_exidx);
   }
   *pcount = 0;
   return 0;
@@ -938,8 +936,18 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
 soinfo* find_containing_library(const void* p) {
   ElfW(Addr) address = reinterpret_cast<ElfW(Addr)>(p);
   for (soinfo* si = solist_get_head(); si != nullptr; si = si->next) {
-    if (address >= si->base && address - si->base < si->size) {
-      return si;
+    if (address < si->base || address - si->base >= si->size) {
+      continue;
+    }
+    ElfW(Addr) vaddr = address - si->load_bias;
+    for (size_t i = 0; i != si->phnum; ++i) {
+      const ElfW(Phdr)* phdr = &si->phdr[i];
+      if (phdr->p_type != PT_LOAD) {
+        continue;
+      }
+      if (vaddr >= phdr->p_vaddr && vaddr < phdr->p_vaddr + phdr->p_memsz) {
+        return si;
+      }
     }
   }
   return nullptr;

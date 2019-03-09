@@ -918,3 +918,18 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["exec_linker_helper_lib.cpp"],
 }
+
+cc_test_library {
+    name: "libsegment_gap_outer",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["segment_gap_outer.cpp"],
+    ldflags: ["-Wl,-T,bionic/tests/libs/segment_gap_outer.lds"],
+}
+
+cc_test_library {
+    name: "libsegment_gap_inner",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["segment_gap_inner.cpp"],
+}
