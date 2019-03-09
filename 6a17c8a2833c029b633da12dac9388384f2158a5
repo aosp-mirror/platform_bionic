@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b35975a1_ba498001",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-03-09T02:39:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f2a1296_93ce6362",
+      "range": {
+        "startLine": 942,
+        "startChar": 33,
+        "endLine": 942,
+        "endChar": 57
+      },
+      "revId": "6a17c8a2833c029b633da12dac9388384f2158a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7321865e_507d5ae2",
         "filename": "tests/libs/segment_gap_outer.cpp",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "6a17c8a2833c029b633da12dac9388384f2158a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49aa71e5_4fbbc8f4",
+        "filename": "tests/libs/segment_gap_outer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-03-09T02:39:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7321865e_507d5ae2",
+      "revId": "6a17c8a2833c029b633da12dac9388384f2158a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
