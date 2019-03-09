@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "066eae63_2d3784d9",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-03-09T01:09:01Z",
+      "side": 1,
+      "message": "Aside: there really should be an std::move() around whitelisted_libs in the rvalue-reference overload.\n\n    whitelisted_libs_ \u003d std::move(whitelisted_libs);\n\nWithout it, the assignment will make an unnecessary copy of the vector-of-string, which make set_whitespace_libs(vector\u003cstring\u003e\u0026\u0026) roughly equivalent to the const\u0026 version, but less applicable.\n\nThis CL is consistent with the rest of the linker config code, I suppose, so maybe it can be fixed independently/later.",
+      "revId": "255d1b4c11344cb8a3d03c34750dec6ff77ae4e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
