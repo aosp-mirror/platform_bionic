@@ -492,6 +492,17 @@ void PointerData::LogLeaks() {
   }
 }
 
+void PointerData::GetAllocList(std::vector<ListInfoType>* list) {
+  std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
+  std::lock_guard<std::mutex> frame_guard(frame_mutex_);
+
+  if (pointers_.empty()) {
+    return;
+  }
+
+  GetList(list, false);
+}
+
 void PointerData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
                           size_t* total_memory, size_t* backtrace_size) {
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
@@ -590,9 +601,9 @@ void PointerData::DumpLiveToFile(FILE* fp) {
 }
 
 void PointerData::PrepareFork() NO_THREAD_SAFETY_ANALYSIS {
+  free_pointer_mutex_.lock();
   pointer_mutex_.lock();
   frame_mutex_.lock();
-  free_pointer_mutex_.lock();
 }
 
 void PointerData::PostForkParent() NO_THREAD_SAFETY_ANALYSIS {

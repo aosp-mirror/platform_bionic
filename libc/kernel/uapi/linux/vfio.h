@@ -114,7 +114,20 @@ struct vfio_region_gfx_edid {
 #define VFIO_DEVICE_GFX_LINK_STATE_UP 1
 #define VFIO_DEVICE_GFX_LINK_STATE_DOWN 2
 };
+#define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM (1)
+#define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD (1)
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
+#define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
+struct vfio_region_info_cap_nvlink2_ssatgt {
+  struct vfio_info_cap_header header;
+  __u64 tgt;
+};
+#define VFIO_REGION_INFO_CAP_NVLINK2_LNKSPD 5
+struct vfio_region_info_cap_nvlink2_lnkspd {
+  struct vfio_info_cap_header header;
+  __u32 link_speed;
+  __u32 __pad;
+};
 struct vfio_irq_info {
   __u32 argsz;
   __u32 flags;

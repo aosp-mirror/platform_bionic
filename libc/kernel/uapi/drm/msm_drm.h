@@ -57,12 +57,16 @@ struct drm_msm_gem_new {
   __u32 flags;
   __u32 handle;
 };
-#define MSM_INFO_IOVA 0x01
-#define MSM_INFO_FLAGS (MSM_INFO_IOVA)
+#define MSM_INFO_GET_OFFSET 0x00
+#define MSM_INFO_GET_IOVA 0x01
+#define MSM_INFO_SET_NAME 0x02
+#define MSM_INFO_GET_NAME 0x03
 struct drm_msm_gem_info {
   __u32 handle;
-  __u32 flags;
-  __u64 offset;
+  __u32 info;
+  __u64 value;
+  __u32 len;
+  __u32 pad;
 };
 #define MSM_PREP_READ 0x01
 #define MSM_PREP_WRITE 0x02
@@ -97,7 +101,8 @@ struct drm_msm_gem_submit_cmd {
 };
 #define MSM_SUBMIT_BO_READ 0x0001
 #define MSM_SUBMIT_BO_WRITE 0x0002
-#define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE)
+#define MSM_SUBMIT_BO_DUMP 0x0004
+#define MSM_SUBMIT_BO_FLAGS (MSM_SUBMIT_BO_READ | MSM_SUBMIT_BO_WRITE | MSM_SUBMIT_BO_DUMP)
 struct drm_msm_gem_submit_bo {
   __u32 flags;
   __u32 handle;

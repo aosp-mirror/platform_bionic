@@ -85,6 +85,7 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
     Malloc(malloc_enable),
     Malloc(mallopt),
     Malloc(aligned_alloc),
+    Malloc(malloc_info),
   };
 
 static constexpr char kHooksSharedLib[] = "libc_malloc_hooks.so";
@@ -144,6 +145,10 @@ static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const
     return false;
   }
   if (!InitMallocFunction<MallocMalloc>(impl_handler, &table->malloc, prefix, "malloc")) {
+    return false;
+  }
+  if (!InitMallocFunction<MallocMallocInfo>(impl_handler, &table->malloc_info, prefix,
+                                                "malloc_info")) {
     return false;
   }
   if (!InitMallocFunction<MallocMallocUsableSize>(impl_handler, &table->malloc_usable_size, prefix,

@@ -108,6 +108,7 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
     Malloc(malloc_enable),
     Malloc(mallopt),
     Malloc(aligned_alloc),
+    Malloc(malloc_info),
   };
 
 static void MaybeInstallInitHeapprofdHook(int) {

@@ -19,6 +19,7 @@
 #include <elf.h>
 #include <limits.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <unistd.h>
@@ -348,35 +349,42 @@ TEST(malloc, malloc_info) {
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
+  if (std::string(root->Attribute("version")) == "jemalloc-1") {
+    // Verify jemalloc version of this data.
+    ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
-  auto arena = root->FirstChildElement();
-  for (; arena != nullptr; arena = arena->NextSiblingElement()) {
-    int val;
+    auto arena = root->FirstChildElement();
+    for (; arena != nullptr; arena = arena->NextSiblingElement()) {
+      int val;
 
-    ASSERT_STREQ("heap", arena->Name());
-    ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-large")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("bins-total")->QueryIntText(&val));
+      ASSERT_STREQ("heap", arena->Name());
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-large")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("bins-total")->QueryIntText(&val));
 
-    auto bin = arena->FirstChildElement("bin");
-    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
-      if (strcmp(bin->Name(), "bin") == 0) {
-        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("allocated")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("nmalloc")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+      auto bin = arena->FirstChildElement("bin");
+      for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+        if (strcmp(bin->Name(), "bin") == 0) {
+          ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("allocated")->QueryIntText(&val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("nmalloc")->QueryIntText(&val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+        }
       }
     }
+  } else {
+    // Only verify that this is debug-malloc-1, the malloc debug unit tests
+    // verify the output.
+    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
   }
 #endif
 }
