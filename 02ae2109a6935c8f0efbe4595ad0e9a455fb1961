@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d2ba9bd_e5189f21",
+        "filename": "tests/dlext_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-10T22:41:21Z",
+      "side": 1,
+      "message": "You don\u0027t need the return, doing a SKIP automatically returns.",
+      "range": {
+        "startLine": 545,
+        "startChar": 0,
+        "endLine": 545,
+        "endChar": 11
+      },
+      "revId": "02ae2109a6935c8f0efbe4595ad0e9a455fb1961",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aaa8701_9349715c",
+        "filename": "tests/dlfcn_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-10T22:41:21Z",
+      "side": 1,
+      "message": "For tests that compile when not using bionic but have different behavior, I think it would be better to move this to the top of the function and make it:\n\n#if !defined(__BIONIC__)\n  GTEST_SKIP() \u003c\u003c ...;\n#endif",
+      "range": {
+        "startLine": 1022,
+        "startChar": 0,
+        "endLine": 1024,
+        "endChar": 6
+      },
+      "revId": "02ae2109a6935c8f0efbe4595ad0e9a455fb1961",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
