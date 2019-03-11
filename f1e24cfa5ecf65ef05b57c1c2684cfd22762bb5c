@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "a6ccd096_94b4b8ac",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-11T22:58:21Z",
+      "side": 1,
+      "message": "Here\u0027s the only sequence that can involve causing a raise, or at least what\u0027s supposed to be happening:\n\nSignal is triggered, and this function is called.\n\nMeanwhile, in another thread, the EnableLimitDispatchTable is in the midst of being called. The first thing that happens in that function is a call to mask this signal, then a call to atomic_exchange the value of gGlobalsMutating.\n\nIf the EnableLimitDispatchTable call wins by setting gGlobalsMutating before the signal handler does, then the signal handler will call the raise, but the signal will be masked. There is no way for the gGlobalsMutating value to have been false and then set to true without the signal having already been masked.\n\nIf you see a way that the raise can happen without the masking, please let me know. This is kind of complex, so if I\u0027ve missed something please let me know.",
+      "parentUuid": "e34a50fa_dfdb5419",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96d0940f_28bf675c",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "So this can\u0027t be unset? So this always happens-before any read accesses to gAllocLimit read accesses?\n\nSounds good.",
       "parentUuid": "3d4f3057_b6f275d0",
+      "range": {
+        "startLine": 307,
+        "startChar": 2,
+        "endLine": 307,
+        "endChar": 16
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2819111c_563a54a2",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-11T22:58:21Z",
+      "side": 1,
+      "message": "Yes, it\u0027s only set once, it\u0027s only allowed to be set once to make this code simpler. Once a limit is enabled, that\u0027s it, you can\u0027t change it.",
+      "parentUuid": "f507f5fa_8ddb187d",
       "range": {
         "startLine": 307,
         "startChar": 2,
