@@ -3133,7 +3133,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           }
         }
         break;
-#endif  // defined(R_GENERIC_TLSDESC)
+#endif  // defined(__aarch64__)
 
 #if defined(__aarch64__)
       case R_AARCH64_ABS64:
@@ -3305,11 +3305,14 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     }
   }
 
+#if defined(__aarch64__)
+  // Bionic currently only implements TLSDESC for arm64.
   for (const std::pair<TlsDescriptor*, size_t>& pair : deferred_tlsdesc_relocs) {
     TlsDescriptor* desc = pair.first;
     desc->func = tlsdesc_resolver_dynamic;
     desc->arg = reinterpret_cast<size_t>(&tlsdesc_args_[pair.second]);
   }
+#endif
 
   return true;
 }
