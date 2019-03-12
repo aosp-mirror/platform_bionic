@@ -99,12 +99,8 @@ LIBC {
     __open_2; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
     __openat; # arm x86 mips
     __openat_2; # introduced-arm=17 introduced-arm64=21 introduced-mips=17 introduced-mips64=21 introduced-x86=17 introduced-x86_64=21
-    __p_cdname;
-    __p_cdnname;
     __p_class;
     __p_class_syms; # var
-    __p_fqname;
-    __p_fqnname;
     __p_option;
     __p_query;
     __p_rcode;

@@ -370,11 +370,7 @@ __LIBC_HIDDEN__ extern const struct res_sym __p_rcode_syms[];
 #define fp_resstat		__fp_resstat
 #define loc_aton		__loc_aton
 #define loc_ntoa		__loc_ntoa
-#define p_cdname		__p_cdname
-#define p_cdnname		__p_cdnname
 #define p_class			__p_class
-#define p_fqname		__p_fqname
-#define p_fqnname		__p_fqnname
 #define p_option		__p_option
 #define p_secstodate		__p_secstodate
 #define p_section		__p_section
@@ -450,11 +446,6 @@ const char *	p_time(uint32_t);
 const char *	p_type(int);
 const char *	p_rcode(int);
 __LIBC_HIDDEN__ const char *	p_sockun(union res_sockaddr_union, char *, size_t);
-const u_char *	p_cdnname(const u_char *, const u_char *, int, FILE *);
-const u_char *	p_cdname(const u_char *, const u_char *, FILE *);
-const u_char *	p_fqnname(const u_char *, const u_char *,
-			       int, char *, int);
-const u_char *	p_fqname(const u_char *, const u_char *, FILE *);
 const char *	p_option(u_long);
 char *		p_secstodate(u_long);
 int		dn_count_labels(const char *);

@@ -347,61 +347,6 @@ res_pquery(const res_state statp, const u_char *msg, int len, FILE *file) {
 		putc('\n', file);
 }
 
-const u_char *
-p_cdnname(const u_char *cp, const u_char *msg, int len, FILE *file) {
-	char name[MAXDNAME];
-	int n;
-
-	if ((n = dn_expand(msg, msg + len, cp, name, (int)sizeof name)) < 0)
-		return (NULL);
-	if (name[0] == '\0')
-		putc('.', file);
-	else
-		fputs(name, file);
-	return (cp + n);
-}
-
-const u_char *
-p_cdname(const u_char *cp, const u_char *msg, FILE *file) {
-	return (p_cdnname(cp, msg, PACKETSZ, file));
-}
-
-/* Return a fully-qualified domain name from a compressed name (with
-   length supplied).  */
-
-const u_char *
-p_fqnname(const u_char *cp, const u_char *msg, int msglen, char *name,
-    int namelen)
-{
-	int n;
-	size_t newlen;
-
-	if ((n = dn_expand(msg, cp + msglen, cp, name, namelen)) < 0)
-		return (NULL);
-	newlen = strlen(name);
-	if (newlen == 0 || name[newlen - 1] != '.') {
-		if ((int)newlen + 1 >= namelen)	/* Lack space for final dot */
-			return (NULL);
-		else
-			strcpy(name + newlen, ".");
-	}
-	return (cp + n);
-}
-
-/* XXX:	the rest of these functions need to become length-limited, too. */
-
-const u_char *
-p_fqname(const u_char *cp, const u_char *msg, FILE *file) {
-	char name[MAXDNAME];
-	const u_char *n;
-
-	n = p_fqnname(cp, msg, MAXCDNAME, name, (int)sizeof name);
-	if (n == NULL)
-		return (NULL);
-	fputs(name, file);
-	return (n);
-}
-
 /*
  * Names of RR classes and qclasses.  Classes and qclasses are the same, except
  * that C_ANY is a qclass but not a class.  (You can ask for records of class
