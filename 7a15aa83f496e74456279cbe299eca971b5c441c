@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64be99d2_c9c2d11e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-03-12T14:47:01Z",
+      "side": 0,
+      "message": "this means they\u0027ve been exported by libc since \"forever\", which means we can\u0027t easily remove them. how do you know no apps are using them?\n\ndefinitely too late to make this change in Q.\n\n(these are also exported by glibc.)",
+      "range": {
+        "startLine": 102,
+        "startChar": 3,
+        "endLine": 107,
+        "endChar": 16
+      },
+      "revId": "7a15aa83f496e74456279cbe299eca971b5c441c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
