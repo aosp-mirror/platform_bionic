@@ -16,6 +16,24 @@
       "revId": "255d1b4c11344cb8a3d03c34750dec6ff77ae4e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78b2142e_0a9ba9aa",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-03-12T17:43:44Z",
+      "side": 1,
+      "message": "I\u0027ll do this in a separate CL to keep review simple.",
+      "parentUuid": "066eae63_2d3784d9",
+      "revId": "255d1b4c11344cb8a3d03c34750dec6ff77ae4e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
