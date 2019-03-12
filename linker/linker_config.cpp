@@ -60,7 +60,7 @@ class ConfigParser {
   };
 
   explicit ConfigParser(std::string&& content)
-      : content_(content), p_(0), lineno_(0), was_end_of_file_(false) {}
+      : content_(std::move(content)), p_(0), lineno_(0), was_end_of_file_(false) {}
 
   /*
    * Possible return values
@@ -147,7 +147,7 @@ class PropertyValue {
   PropertyValue() = default;
 
   PropertyValue(std::string&& value, size_t lineno)
-    : value_(value), lineno_(lineno) {}
+    : value_(std::move(value)), lineno_(lineno) {}
 
   const std::string& value() const {
     return value_;
@@ -362,7 +362,7 @@ static constexpr const char* kLibParamValue = "lib";
 class Properties {
  public:
   explicit Properties(std::unordered_map<std::string, PropertyValue>&& properties)
-      : properties_(properties), target_sdk_version_(__ANDROID_API__) {}
+      : properties_(std::move(properties)), target_sdk_version_(__ANDROID_API__) {}
 
   std::vector<std::string> get_strings(const std::string& name, size_t* lineno = nullptr) const {
     auto it = find_property(name, lineno);
@@ -411,7 +411,7 @@ class Properties {
     static std::string vndk = Config::get_vndk_version_string('-');
     params.push_back({ "VNDK_VER", vndk });
 
-    for (auto&& path : paths) {
+    for (auto& path : paths) {
       format_string(&path, params);
     }
 
