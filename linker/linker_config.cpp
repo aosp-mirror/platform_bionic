@@ -80,7 +80,7 @@ class ConfigParser {
         continue;
       }
 
-      if (line[0] == '[' && line[line.size() - 1] == ']') {
+      if (line[0] == '[' && line.back() == ']') {
         *name = line.substr(1, line.size() - 2);
         return kSection;
       }
