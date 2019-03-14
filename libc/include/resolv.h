@@ -60,7 +60,7 @@ int res_query(const char* __name, int __class, int __type, u_char* __answer, int
 int res_search(const char* __name, int __class, int __type, u_char* __answer, int __answer_size);
 
 #define res_randomid __res_randomid
-u_int __res_randomid(void) __INTRODUCED_IN_FUTURE;
+u_int __res_randomid(void) __INTRODUCED_IN(29);
 
 __END_DECLS
 

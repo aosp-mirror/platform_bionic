@@ -109,7 +109,7 @@ time_t timelocal(struct tm* __tm) __INTRODUCED_IN(12);
 time_t timegm(struct tm* __tm) __INTRODUCED_IN(12);
 
 #define TIME_UTC 1
-int timespec_get(struct timespec* __ts, int __base) __INTRODUCED_IN_FUTURE;
+int timespec_get(struct timespec* __ts, int __base) __INTRODUCED_IN(29);
 
 __END_DECLS
 
