@@ -190,13 +190,6 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
 
     int version = avail.arch_availability[*it.second.begin()].introduced;
 
-    // Assume that the entire declaration is declared __INTRODUCED_IN_FUTURE if one arch is.
-    bool future = avail.arch_availability[*it.second.begin()].future;
-
-    if (future) {
-      return "__ANDROID_API__ >= __ANDROID_API_FUTURE__";
-    }
-
     // The maximum min_version of the set.
     int max_min_version = 0;
     for (Arch arch : archs) {
