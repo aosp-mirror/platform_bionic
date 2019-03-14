@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "c98c1ddb_482c8d23",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-14T21:26:38Z",
+      "side": 1,
+      "message": "So why can\u0027t you just loop and retry, rather than re-raising the signal?\n\nI now believe this works, but I think I\u0027m still missing something.\n\nIf I understand correctly, gGlobalsMutating is basically being used as a lock. It\u0027s safe to acquire in the signal handler, because you know it will never be held by the thread the handler interrupted, thus self-deadlocks cannot occur.\n\nBut you cannot use pthread_mutex_lock because that\u0027s not defined to be async-signal-safe. So you need something more primitive, based on atomics.\n\nWould it be clearer to just define a simple async-signal-safe spin-lock abstraction that assumes acquiring signal handlers are masked while the lock is held?",
+      "parentUuid": "a6ccd096_94b4b8ac",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96d0940f_28bf675c",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12

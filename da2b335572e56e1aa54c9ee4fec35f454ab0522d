@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e2df186_2a8983ae",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2019-03-14T21:26:38Z",
+      "side": 1,
+      "message": "This can just move to the end of the loop, so you don\u0027t need the test, right?",
+      "range": {
+        "startLine": 276,
+        "startChar": 6,
+        "endLine": 276,
+        "endChar": 19
+      },
+      "revId": "da2b335572e56e1aa54c9ee4fec35f454ab0522d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
