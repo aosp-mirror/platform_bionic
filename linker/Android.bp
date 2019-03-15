@@ -283,8 +283,6 @@ cc_binary {
 
     name: "linker",
     symlinks: ["linker_asan"],
-    // The linker in the system partition is now only for bootstrapping
-    relative_install_path: "bootstrap",
     recovery_available: true,
     multilib: {
         lib32: {
@@ -307,7 +305,6 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
-    required: ["linker.mountpoint"],
 }
 
 cc_library {
