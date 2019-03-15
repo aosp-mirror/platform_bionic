@@ -66,6 +66,10 @@ static inline const MallocDispatch* GetDispatchTable() {
   return atomic_load_explicit(&__libc_globals->current_dispatch_table, memory_order_acquire);
 }
 
+static inline const MallocDispatch* GetDefaultDispatchTable() {
+  return atomic_load_explicit(&__libc_globals->default_dispatch_table, memory_order_acquire);
+}
+
 // =============================================================================
 // Log functions
 // =============================================================================
