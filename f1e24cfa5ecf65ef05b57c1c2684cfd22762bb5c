@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "a39d40a9_58418b18",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-15T19:45:02Z",
+      "side": 1,
+      "message": "Yep, you are correct about everything here.\n\nThe reason I\u0027m not looping is that I\u0027m using the re-raising as a poor man\u0027s conditional and avoiding a busy loop. When re-raising the signal, it\u0027s not blocked, it\u0027s masked so the signal is still pending. As soon as the signal is no longer masked, it re-raises on its own.\n\nI didn\u0027t want to define an async-signal-safe spin lock because is the only place it\u0027s being used.\n\nI updated the comment around the raise so it\u0027s clear why I\u0027m doing what I\u0027m doing, let me know if that makes this more readable.",
+      "parentUuid": "c98c1ddb_482c8d23",
+      "range": {
+        "startLine": 136,
+        "startChar": 4,
+        "endLine": 137,
+        "endChar": 28
+      },
+      "revId": "f1e24cfa5ecf65ef05b57c1c2684cfd22762bb5c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "96d0940f_28bf675c",
         "filename": "libc/bionic/malloc_limit.cpp",
         "patchSetId": 12

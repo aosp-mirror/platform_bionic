@@ -22,6 +22,30 @@
       "revId": "da2b335572e56e1aa54c9ee4fec35f454ab0522d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecb36c2d_a85047fd",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-15T19:45:02Z",
+      "side": 1,
+      "message": "Technically, I would need the test at either the front or the back. At the end, it doesn\u0027t make sense to sleep one more time before exiting the loop.\n\nHowever, let me modify the loops slightly to make it clear what\u0027s going on.",
+      "parentUuid": "4e2df186_2a8983ae",
+      "range": {
+        "startLine": 276,
+        "startChar": 6,
+        "endLine": 276,
+        "endChar": 19
+      },
+      "revId": "da2b335572e56e1aa54c9ee4fec35f454ab0522d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
