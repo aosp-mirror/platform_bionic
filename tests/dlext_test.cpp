@@ -372,12 +372,12 @@ TEST_F(DlExtTest, ReservedRecursive) {
 }
 
 TEST_F(DlExtTest, ReservedRecursiveTooSmall) {
-  void* start = mmap(nullptr, kLibSize/2, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  void* start = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_TRUE(start != MAP_FAILED);
   android_dlextinfo extinfo;
   extinfo.flags = ANDROID_DLEXT_RESERVED_ADDRESS | ANDROID_DLEXT_RESERVED_ADDRESS_RECURSIVE;
   extinfo.reserved_addr = start;
-  extinfo.reserved_size = kLibSize/2;
+  extinfo.reserved_size = PAGE_SIZE;
   handle_ = android_dlopen_ext(kLibNameRecursive, RTLD_NOW, &extinfo);
   EXPECT_EQ(nullptr, handle_);
 }
