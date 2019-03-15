@@ -40,4 +40,8 @@ void HeapprofdInstallSignalHandler();
 
 void HeapprofdInstallErrorSignalHandler();
 
+void HeapprofdMaskSignal();
+
+void HeapprofdUnmaskSignal();
+
 bool HeapprofdMallopt(int optcode, void* arg, size_t arg_size);
