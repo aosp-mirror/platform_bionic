@@ -74,11 +74,6 @@ int group_lp32() __INTRODUCED_IN_ARM(12) __INTRODUCED_IN_X86(12) __INTRODUCED_IN
 
 
 
-#if __ANDROID_API__ >= __ANDROID_API_FUTURE__
-int future() __INTRODUCED_IN_FUTURE;
-#endif /* __ANDROID_API__ >= __ANDROID_API_FUTURE__ */
-
-
 #if defined(__cplusplus)
 }
 #endif
