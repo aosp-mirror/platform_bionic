@@ -53,6 +53,10 @@ $(call add-clean-step, rm -rf $(PRODUCT_OUT)/obj/SHARED_LIBRARIES/libc_*)
 $(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib/libGLES*)
 $(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib64/libGLES*)
 
+# /bionic is removed
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/root/bionic)
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/recovery/root/bionic)
+
 # ************************************************
 # NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
 # ************************************************
