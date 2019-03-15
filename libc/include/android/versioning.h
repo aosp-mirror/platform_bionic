@@ -17,7 +17,6 @@
 #pragma once
 
 #define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
-#define __INTRODUCED_IN_FUTURE __attribute__((annotate("introduced_in_future")))
 #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
 #define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
 #define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
