@@ -108,7 +108,6 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: ["10000"],
     },
-    required: ["libdl.mountpoint"],
 }
 
 ndk_library {
