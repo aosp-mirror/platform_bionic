@@ -34,6 +34,10 @@
 
 #include <private/bionic_malloc_dispatch.h>
 
+#if __has_feature(hwaddress_sanitizer)
+#include <sanitizer/allocator_interface.h>
+#endif
+
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
