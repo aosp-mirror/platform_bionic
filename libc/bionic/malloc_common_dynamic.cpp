@@ -57,12 +57,22 @@
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <private/bionic_malloc.h>
 
 #include <sys/system_properties.h>
 
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
+#include "malloc_limit.h"
+
+// =============================================================================
+// Global variables instantations.
+// =============================================================================
+pthread_mutex_t gGlobalsMutateLock = PTHREAD_MUTEX_INITIALIZER;
+
+_Atomic bool gGlobalsMutating = false;
+// =============================================================================
 
 static constexpr MallocDispatch __libc_malloc_default_dispatch
   __attribute__((unused)) = {
@@ -292,7 +302,10 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
 
   // Do a pointer swap so that all of the functions become valid at once to
   // avoid any initialization order problems.
-  atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
+  atomic_store(&globals->default_dispatch_table, &globals->malloc_dispatch_table);
+  if (GetDispatchTable() == nullptr) {
+    atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
+  }
 
   info_log("%s: malloc %s enabled", getprogname(), prefix);
 
@@ -431,6 +444,9 @@ extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t fra
 // Platform-internal mallopt variant.
 // =============================================================================
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
+  if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
+    return LimitEnable(arg, arg_size);
+  }
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
 // =============================================================================

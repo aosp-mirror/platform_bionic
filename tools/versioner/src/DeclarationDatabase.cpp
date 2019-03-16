@@ -147,9 +147,6 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       llvm::StringRef annotation = attr->getAnnotation();
       if (annotation == "versioner_no_guard") {
         no_guard = true;
-      } else if (annotation == "introduced_in_future") {
-        // Tag the compiled-for arch, since this can vary across archs.
-        availability.arch_availability[type.arch].future = true;
       } else {
         llvm::SmallVector<llvm::StringRef, 2> fragments;
         annotation.split(fragments, "=");
@@ -344,10 +341,6 @@ void HeaderDatabase::parseAST(CompilationType type, ASTContext& ctx) {
 
 std::string to_string(const AvailabilityValues& av) {
   std::stringstream ss;
-
-  if (av.future) {
-    ss << "future, ";
-  }
 
   if (av.introduced != 0) {
     ss << "introduced = " << av.introduced << ", ";

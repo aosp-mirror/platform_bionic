@@ -18,12 +18,17 @@
 
 #include <elf.h>
 #include <limits.h>
+#include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <malloc.h>
 #include <unistd.h>
 
+#include <atomic>
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
@@ -674,5 +679,241 @@ TEST(android_mallopt, init_zygote_child_profiling) {
   }
 #else
   GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+#endif
+}
+
+#if defined(__BIONIC__)
+template <typename FuncType>
+void CheckAllocationFunction(FuncType func) {
+  // Assumes that no more than 108MB of memory is allocated before this.
+  size_t limit = 128 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+  if (!func(20 * 1024 * 1024))
+    exit(1);
+  if (func(128 * 1024 * 1024))
+    exit(1);
+  exit(0);
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit) {
+#if defined(__BIONIC__)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(bytes, 1) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(1, bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return malloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return memalign(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* ptr;
+                return posix_memalign(&ptr, sizeof(void *), bytes) == 0;
+              }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return aligned_alloc(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p = malloc(1024 * 1024);
+                return realloc(p, bytes) != nullptr;
+              }),
+              testing::ExitedWithCode(0), "");
+#if !defined(__LP64__)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return pvalloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return valloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+#endif
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_multiple) {
+#if defined(__BIONIC__)
+  // Only the first set should work.
+  size_t limit = 256 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+  limit = 32 * 1024 * 1024;
+  ASSERT_FALSE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}
+
+#if defined(__BIONIC__)
+static constexpr size_t kAllocationSize = 8 * 1024 * 1024;
+
+static size_t GetMaxAllocations() {
+  size_t max_pointers = 0;
+  void* ptrs[20];
+  for (size_t i = 0; i < sizeof(ptrs) / sizeof(void*); i++) {
+    ptrs[i] = malloc(kAllocationSize);
+    if (ptrs[i] == nullptr) {
+      max_pointers = i;
+      break;
+    }
+  }
+  for (size_t i = 0; i < max_pointers; i++) {
+    free(ptrs[i]);
+  }
+  return max_pointers;
+}
+
+static void VerifyMaxPointers(size_t max_pointers) {
+  // Now verify that we can allocate the same number as before.
+  void* ptrs[20];
+  for (size_t i = 0; i < max_pointers; i++) {
+    ptrs[i] = malloc(kAllocationSize);
+    ASSERT_TRUE(ptrs[i] != nullptr) << "Failed to allocate on iteration " << i;
+  }
+
+  // Make sure the next allocation still fails.
+  ASSERT_TRUE(malloc(kAllocationSize) == nullptr);
+  for (size_t i = 0; i < max_pointers; i++) {
+    free(ptrs[i]);
+  }
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit_realloc_increase) {
+#if defined(__BIONIC__)
+  size_t limit = 128 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(10 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  // Increase size.
+  memory = realloc(memory, 20 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 40 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 80 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  // Now push past limit.
+  memory = realloc(memory, 130 * 1024 * 1024);
+  ASSERT_TRUE(memory == nullptr);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_realloc_decrease) {
+#if defined(__BIONIC__)
+  size_t limit = 100 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(80 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  // Decrease size.
+  memory = realloc(memory, 60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 40 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 20 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 10 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  free(memory);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_realloc_free) {
+#if defined(__BIONIC__)
+  size_t limit = 100 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  memory = realloc(memory, 0);
+  ASSERT_TRUE(memory == nullptr);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+#endif
+}
+
+#if defined(__BIONIC__)
+static void* SetAllocationLimit(void* data) {
+  std::atomic_bool* go = reinterpret_cast<std::atomic_bool*>(data);
+  while (!go->load()) {
+  }
+  size_t limit = 500 * 1024 * 1024;
+  if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
+    return reinterpret_cast<void*>(-1);
+  }
+  return nullptr;
+}
+
+static void SetAllocationLimitMultipleThreads() {
+  std::atomic_bool go;
+  go = false;
+
+  static constexpr size_t kNumThreads = 4;
+  pthread_t threads[kNumThreads];
+  for (size_t i = 0; i < kNumThreads; i++) {
+    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, SetAllocationLimit, &go));
+  }
+
+  // Let them go all at once.
+  go = true;
+  ASSERT_EQ(0, kill(getpid(), __SIGRTMIN + 4));
+
+  size_t num_successful = 0;
+  for (size_t i = 0; i < kNumThreads; i++) {
+    void* result;
+    ASSERT_EQ(0, pthread_join(threads[i], &result));
+    if (result != nullptr) {
+      num_successful++;
+    }
+  }
+  ASSERT_EQ(1U, num_successful);
+  exit(0);
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit_multiple_threads) {
+#if defined(__BIONIC__)
+  if (IsDynamic()) {
+    ASSERT_TRUE(android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+  }
+
+  // Run this a number of times as a stress test.
+  for (size_t i = 0; i < 100; i++) {
+    // Not using ASSERT_EXIT because errors messages are not displayed.
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+      ASSERT_NO_FATAL_FAILURE(SetAllocationLimitMultipleThreads());
+    }
+    ASSERT_NE(-1, pid);
+    int status;
+    ASSERT_EQ(pid, wait(&status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
+#else
+  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
 #endif
 }

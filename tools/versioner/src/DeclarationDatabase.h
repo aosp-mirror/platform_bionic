@@ -42,13 +42,12 @@ enum class DeclarationType {
 };
 
 struct AvailabilityValues {
-  bool future = false;
   int introduced = 0;
   int deprecated = 0;
   int obsoleted = 0;
 
   bool empty() const {
-    return !(future || introduced || deprecated || obsoleted);
+    return !(introduced || deprecated || obsoleted);
   }
 
   bool operator==(const AvailabilityValues& rhs) const {
