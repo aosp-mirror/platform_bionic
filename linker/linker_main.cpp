@@ -353,6 +353,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   // a C-style string to last until the program exits.
   static std::string exe_path = exe_info.path;
 
+  INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
+
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
                             exe_path.c_str(), &exe_info.file_stat,
