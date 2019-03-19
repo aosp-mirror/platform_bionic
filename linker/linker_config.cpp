@@ -269,6 +269,8 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
   }
 
+  INFO("[ Using config section \"%s\" ]", section_name.c_str());
+
   // skip everything until we meet a correct section
   while (true) {
     std::string name;
