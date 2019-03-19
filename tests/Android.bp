@@ -462,6 +462,7 @@ cc_defaults {
             shared_libs: [
                 "ld-android",
                 "libdl",
+                "libdl_android",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
                 "libdl_test_df_1_global",
