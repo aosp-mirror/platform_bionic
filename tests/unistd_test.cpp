@@ -628,6 +628,45 @@ TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
   ASSERT_NE(static_cast<uint64_t>(parent_tid), reinterpret_cast<uint64_t>(result));
 }
 
+static void optimization_barrier(void* arg) {
+  asm volatile("" : : "r"(arg) : "memory");
+}
+
+__attribute__((noinline)) static void HwasanVforkTestChild() {
+  // Allocate a tagged region on stack and leave it there.
+  char x[10000];
+  optimization_barrier(x);
+  _exit(0);
+}
+
+__attribute__((noinline)) static void HwasanReadMemory(const char* p, size_t size) {
+  // Read memory byte-by-byte. This will blow up if the pointer tag in p does not match any memory
+  // tag in [p, p+size).
+  volatile char z;
+  for (size_t i = 0; i < size; ++i) {
+    z = p[i];
+  }
+}
+
+__attribute__((noinline, no_sanitize("hwaddress"))) static void HwasanVforkTestParent() {
+  // Allocate a region on stack, but don't tag it (see the function attribute).
+  // This depends on unallocated stack space at current function entry being untagged.
+  char x[10000];
+  optimization_barrier(x);
+  // Verify that contents of x[] are untagged.
+  HwasanReadMemory(x, sizeof(x));
+}
+
+TEST(UNISTD_TEST, hwasan_vfork) {
+  // Test hwasan annotation in vfork. This test is only interesting when built with hwasan, but it
+  // is supposed to work correctly either way.
+  if (vfork()) {
+    HwasanVforkTestParent();
+  } else {
+    HwasanVforkTestChild();
+  }
+}
+
 class UNISTD_DEATHTEST : public BionicDeathTest {};
 
 TEST_F(UNISTD_DEATHTEST, abort) {
