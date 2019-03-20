@@ -26,7 +26,6 @@
 // guard region must be large enough that we can allocate an SCS_SIZE-aligned SCS while ensuring
 // that there is at least one guard page after the SCS so that a stack overflow results in a SIGSEGV
 // instead of corrupting the allocation that comes after it.
-// TODO(b/118642754): Use a larger guard region.
-#define SCS_GUARD_REGION_SIZE (SCS_SIZE * 2)
+#define SCS_GUARD_REGION_SIZE (16 * 1024 * 1024)
 
 #endif // _BIONIC_CONSTANTS_H_
