@@ -114,15 +114,15 @@ class NamespaceConfig {
   }
 
   void set_search_paths(std::vector<std::string>&& search_paths) {
-    search_paths_ = search_paths;
+    search_paths_ = std::move(search_paths);
   }
 
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
-    permitted_paths_ = permitted_paths;
+    permitted_paths_ = std::move(permitted_paths);
   }
 
   void set_whitelisted_libs(std::vector<std::string>&& whitelisted_libs) {
-    whitelisted_libs_ = whitelisted_libs;
+    whitelisted_libs_ = std::move(whitelisted_libs);
   }
  private:
   const std::string name_;
