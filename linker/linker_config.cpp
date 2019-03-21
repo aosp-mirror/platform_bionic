@@ -552,6 +552,12 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));
     ns_config->set_visible(properties.get_bool(property_name_prefix + ".visible"));
 
+    std::string whitelisted =
+        properties.get_string(property_name_prefix + ".whitelisted", &lineno);
+    if (!whitelisted.empty()) {
+      ns_config->set_whitelisted_libs(android::base::Split(whitelisted, ":"));
+    }
+
     // these are affected by is_asan flag
     if (is_asan) {
       property_name_prefix += ".asan";

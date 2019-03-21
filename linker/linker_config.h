@@ -92,6 +92,10 @@ class NamespaceConfig {
     return permitted_paths_;
   }
 
+  const std::vector<std::string>& whitelisted_libs() const {
+    return whitelisted_libs_;
+  }
+
   const std::vector<NamespaceLinkConfig>& links() const {
     return namespace_links_;
   }
@@ -116,12 +120,17 @@ class NamespaceConfig {
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
     permitted_paths_ = permitted_paths;
   }
+
+  void set_whitelisted_libs(std::vector<std::string>&& whitelisted_libs) {
+    whitelisted_libs_ = whitelisted_libs;
+  }
  private:
   const std::string name_;
   bool isolated_;
   bool visible_;
   std::vector<std::string> search_paths_;
   std::vector<std::string> permitted_paths_;
+  std::vector<std::string> whitelisted_libs_;
   std::vector<NamespaceLinkConfig> namespace_links_;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(NamespaceConfig);
