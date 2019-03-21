@@ -28,11 +28,9 @@
 
 #pragma once
 
-#include <sys/cdefs.h>
+#if defined(__BIONIC_GET_DEVICE_API_LEVEL_INLINE)
 
-#if !defined(__BIONIC_GET_DEVICE_API_LEVEL_INLINE)
-#define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static inline /* for versioner */
-#endif
+#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 
@@ -48,3 +46,5 @@ __BIONIC_GET_DEVICE_API_LEVEL_INLINE int android_get_device_api_level() {
 }
 
 __END_DECLS
+
+#endif  // __BIONIC_GET_DEVICE_API_LEVEL_INLINE
