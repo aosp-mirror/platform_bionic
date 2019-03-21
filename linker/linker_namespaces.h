@@ -110,6 +110,16 @@ struct android_namespace_t {
     permitted_paths_ = permitted_paths;
   }
 
+  const std::vector<std::string>& get_whitelisted_libs() const {
+    return whitelisted_libs_;
+  }
+  void set_whitelisted_libs(std::vector<std::string>&& whitelisted_libs) {
+    whitelisted_libs_ = whitelisted_libs;
+  }
+  void set_whitelisted_libs(const std::vector<std::string>& whitelisted_libs) {
+    whitelisted_libs_ = whitelisted_libs;
+  }
+
   const std::vector<android_namespace_link_t>& linked_namespaces() const {
     return linked_namespaces_;
   }
@@ -157,6 +167,7 @@ struct android_namespace_t {
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
   std::vector<std::string> permitted_paths_;
+  std::vector<std::string> whitelisted_libs_;
   // Loader looks into linked namespace if it was not able
   // to find a library in this namespace. Note that library
   // lookup in linked namespaces are limited by the list of
