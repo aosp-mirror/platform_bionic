@@ -202,7 +202,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   exit(slingshot(args.argc, args.argv, args.envp));
 }
 
-extern "C" void __hwasan_init();
+extern "C" void __hwasan_init_static();
 
 __attribute__((no_sanitize("hwaddress")))
 __noreturn void __libc_init(void* raw_args,
@@ -214,8 +214,9 @@ __noreturn void __libc_init(void* raw_args,
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
   // all we need is access to TLS_SLOT_SANITIZER.
   __set_tls(&temp_tcb.tls_slot(0));
-  // Initialize HWASan. This sets up TLS_SLOT_SANITIZER, among other things.
-  __hwasan_init();
+  // Initialize HWASan enough to run instrumented code. This sets up TLS_SLOT_SANITIZER, among other
+  // things.
+  __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
   __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);
