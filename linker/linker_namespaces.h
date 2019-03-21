@@ -87,14 +87,14 @@ struct android_namespace_t {
     return ld_library_paths_;
   }
   void set_ld_library_paths(std::vector<std::string>&& library_paths) {
-    ld_library_paths_ = library_paths;
+    ld_library_paths_ = std::move(library_paths);
   }
 
   const std::vector<std::string>& get_default_library_paths() const {
     return default_library_paths_;
   }
   void set_default_library_paths(std::vector<std::string>&& library_paths) {
-    default_library_paths_ = library_paths;
+    default_library_paths_ = std::move(library_paths);
   }
   void set_default_library_paths(const std::vector<std::string>& library_paths) {
     default_library_paths_ = library_paths;
@@ -104,7 +104,7 @@ struct android_namespace_t {
     return permitted_paths_;
   }
   void set_permitted_paths(std::vector<std::string>&& permitted_paths) {
-    permitted_paths_ = permitted_paths;
+    permitted_paths_ = std::move(permitted_paths);
   }
   void set_permitted_paths(const std::vector<std::string>& permitted_paths) {
     permitted_paths_ = permitted_paths;
@@ -114,7 +114,7 @@ struct android_namespace_t {
     return whitelisted_libs_;
   }
   void set_whitelisted_libs(std::vector<std::string>&& whitelisted_libs) {
-    whitelisted_libs_ = whitelisted_libs;
+    whitelisted_libs_ = std::move(whitelisted_libs);
   }
   void set_whitelisted_libs(const std::vector<std::string>& whitelisted_libs) {
     whitelisted_libs_ = whitelisted_libs;
