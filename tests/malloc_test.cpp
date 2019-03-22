@@ -341,6 +341,7 @@ TEST(malloc, valloc_overflow) {
 
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
+  SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
   char* buf;
   size_t bufsize;
   FILE* memstream = open_memstream(&buf, &bufsize);
