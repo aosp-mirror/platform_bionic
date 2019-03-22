@@ -52,6 +52,7 @@
 
 #include "local.h"
 #include "glue.h"
+#include "private/__bionic_get_shell_path.h"
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
@@ -1226,7 +1227,7 @@ FILE* popen(const char* cmd, const char* mode) {
     if (dup2(fds[child], desired_child_fd) == -1) _exit(127);
     close(fds[child]);
     if (bidirectional) dup2(STDOUT_FILENO, STDIN_FILENO);
-    execl(_PATH_BSHELL, "sh", "-c", cmd, nullptr);
+    execl(__bionic_get_shell_path(), "sh", "-c", cmd, nullptr);
     _exit(127);
   }
 
