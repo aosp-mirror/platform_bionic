@@ -38,6 +38,14 @@ bool android_namespace_t::is_accessible(const std::string& file) {
     return true;
   }
 
+  if (!whitelisted_libs_.empty()) {
+    const char *lib_name = basename(file.c_str());
+    if (std::find(whitelisted_libs_.begin(), whitelisted_libs_.end(),
+                  lib_name) == whitelisted_libs_.end()) {
+      return false;
+    }
+  }
+
   for (const auto& dir : ld_library_paths_) {
     if (file_is_in_dir(file, dir)) {
       return true;
