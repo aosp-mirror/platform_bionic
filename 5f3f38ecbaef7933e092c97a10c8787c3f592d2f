@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c23c270e_cfde22d8",
+        "filename": "tests/sys_param_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1014443
+      },
+      "writtenOn": "2019-03-25T17:57:14Z",
+      "side": 1,
+      "message": "is there really much value in iterating over all negative integers over a few exemplar cases ?",
+      "range": {
+        "startLine": 25,
+        "startChar": 2,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "5f3f38ecbaef7933e092c97a10c8787c3f592d2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
