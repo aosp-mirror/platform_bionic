@@ -153,6 +153,7 @@ cc_test_library {
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
+        "sys_param_test.cpp",
         "sys_personality_test.cpp",
         "sys_prctl_test.cpp",
         "sys_procfs_test.cpp",
