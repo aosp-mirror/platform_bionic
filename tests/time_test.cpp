@@ -309,12 +309,22 @@ TEST(time, strptime_F) {
 TEST(time, strptime_P_p) {
   setenv("TZ", "UTC", 1);
 
+  // For parsing, %P and %p are the same: case doesn't matter.
+
   struct tm tm = {.tm_hour = 12};
   ASSERT_EQ('\0', *strptime("AM", "%p", &tm));
   EXPECT_EQ(0, tm.tm_hour);
 
   tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("am", "%p", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+
+  tm = {.tm_hour = 12};
   ASSERT_EQ('\0', *strptime("AM", "%P", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+
+  tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("am", "%P", &tm));
   EXPECT_EQ(0, tm.tm_hour);
 }
 
