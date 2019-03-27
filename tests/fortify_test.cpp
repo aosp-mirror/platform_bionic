@@ -143,7 +143,7 @@ TEST_F(DEATHTEST, stpcpy_fortified2) {
   ASSERT_FORTIFY(stpcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "stpcpy not available";
 #endif // __BIONIC__
 }
 
@@ -155,7 +155,7 @@ TEST_F(DEATHTEST, strcpy_fortified2) {
   ASSERT_FORTIFY(strcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -167,7 +167,7 @@ TEST_F(DEATHTEST, strcpy2_fortified2) {
   ASSERT_FORTIFY(strcpy(myfoo.empty, src));
   free(src);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -179,7 +179,7 @@ TEST_F(DEATHTEST, strcpy3_fortified2) {
   ASSERT_FORTIFY(strcpy(myfoo.one, src));
   free(src);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -191,7 +191,7 @@ TEST_F(DEATHTEST, strchr_fortified2) {
   ASSERT_FORTIFY(printf("%s", strchr(myfoo.a, 'a')));
   ASSERT_FORTIFY(printf("%s", strchr(static_cast<const char*>(myfoo.a), 'a')));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -203,7 +203,7 @@ TEST_F(DEATHTEST, strrchr_fortified2) {
   ASSERT_FORTIFY(printf("%s", strrchr(myfoo.a, 'a')));
   ASSERT_FORTIFY(printf("%s", strrchr(static_cast<const char*>(myfoo.a), 'a')));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -215,7 +215,7 @@ TEST_F(DEATHTEST, memchr_fortified2) {
   ASSERT_FORTIFY(printf("%s", memchr(myfoo.a, 'a', asize)));
   ASSERT_FORTIFY(printf("%s", memchr(static_cast<const void*>(myfoo.a), 'a', asize)));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -227,7 +227,7 @@ TEST_F(DEATHTEST, memrchr_fortified2) {
   ASSERT_FORTIFY(printf("%s", memrchr(myfoo.a, 'a', asize)));
   ASSERT_FORTIFY(printf("%s", memrchr(static_cast<const void*>(myfoo.a), 'a', asize)));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -238,7 +238,7 @@ TEST_F(DEATHTEST, strlcpy_fortified2) {
   size_t n = strlen(myfoo.a);
   ASSERT_FORTIFY(strlcpy(myfoo.one, myfoo.a, n));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "strlcpy not available";
 #endif // __BIONIC__
 }
 
@@ -250,7 +250,7 @@ TEST_F(DEATHTEST, strlcat_fortified2) {
   size_t n = strlen(myfoo.a);
   ASSERT_FORTIFY(strlcat(myfoo.one, myfoo.a, n));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "strlcat not available";
 #endif // __BIONIC__
 }
 
@@ -315,7 +315,7 @@ TEST_F(DEATHTEST, strcpy_fortified) {
   ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -327,7 +327,7 @@ TEST_F(DEATHTEST, strcpy2_fortified) {
   ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -339,7 +339,7 @@ TEST_F(DEATHTEST, strcpy3_fortified) {
   ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -351,7 +351,7 @@ TEST_F(DEATHTEST, strcpy4_fortified) {
   ASSERT_FORTIFY(strcpy(buf, orig));
   free(orig);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -361,7 +361,7 @@ TEST_F(DEATHTEST, strlen_fortified) {
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_FORTIFY(printf("%zd", strlen(buf)));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -371,7 +371,7 @@ TEST_F(DEATHTEST, strchr_fortified) {
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_FORTIFY(printf("%s", strchr(buf, 'a')));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -381,7 +381,7 @@ TEST_F(DEATHTEST, strrchr_fortified) {
   memcpy(buf, "0123456789", sizeof(buf));
   ASSERT_FORTIFY(printf("%s", strrchr(buf, 'a')));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
 }
 
@@ -393,7 +393,7 @@ TEST_F(DEATHTEST, strlcpy_fortified) {
   size_t n = strlen(bufa);
   ASSERT_FORTIFY(strlcpy(bufb, bufa, n));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "strlcpy not available";
 #endif // __BIONIC__
 }
 
@@ -406,7 +406,7 @@ TEST_F(DEATHTEST, strlcat_fortified) {
   size_t n = strlen(bufa);
   ASSERT_FORTIFY(strlcat(bufb, bufa, n));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "strlcat not available";
 #endif // __BIONIC__
 }
 
