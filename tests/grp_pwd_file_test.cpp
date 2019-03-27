@@ -103,7 +103,7 @@ TEST(grp_pwd_file, passwd_file_one_entry) {
   EXPECT_FALSE(passwd_file.FindById(3, nullptr));
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -123,7 +123,7 @@ TEST(grp_pwd_file, group_file_one_entry) {
   EXPECT_FALSE(group_file.FindById(3, nullptr));
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -161,7 +161,7 @@ TEST(grp_pwd_file, passwd_file_many_entries) {
   EXPECT_FALSE(passwd_file.FindById(50, nullptr));
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -197,7 +197,7 @@ TEST(grp_pwd_file, group_file_many_entries) {
   EXPECT_FALSE(group_file.FindById(799, nullptr));
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -219,7 +219,7 @@ TEST(grp_pwd_file, passwd_file_required_prefix) {
   FindAndCheckPasswdEntry(&passwd_file, "vendor_name", 3, 4, "dir", "shell");
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }
 
@@ -241,6 +241,6 @@ TEST(grp_pwd_file, group_file_required_prefix) {
   FindAndCheckGroupEntry(&group_file, "vendor_name", 2);
 
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // __BIONIC__
 }

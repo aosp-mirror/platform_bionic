@@ -912,6 +912,6 @@ TEST(time, timespec_get) {
   ASSERT_EQ(0, timespec_get(&ts, 123));
   ASSERT_EQ(TIME_UTC, timespec_get(&ts, TIME_UTC));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have timespec_get until 2.21\n";
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
 }

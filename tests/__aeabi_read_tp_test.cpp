@@ -38,6 +38,6 @@ TEST(aeabi, read_tp) {
 #if defined(__arm__)
   ASSERT_EQ(__aeabi_read_tp(), static_cast<void*>(__get_tls()));
 #else
-  GTEST_LOG_(INFO) << "__aeabi_read_tp is only available on arm32.\n";
+  GTEST_SKIP() << "__aeabi_read_tp is only available on arm32";
 #endif
 }

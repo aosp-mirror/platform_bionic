@@ -582,7 +582,7 @@ TEST(signal, sys_signame) {
   ASSERT_TRUE(sys_signame[0] == nullptr);
   ASSERT_STREQ("HUP", sys_signame[SIGHUP]);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc doesn't have sys_signame";
 #endif
 }
 
