@@ -39,6 +39,7 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "private/__bionic_get_shell_path.h"
 #include "private/FdPath.h"
 
 extern "C" char** environ;
@@ -111,7 +112,7 @@ static int __exec_as_script(const char* buf, char* const* argv, char* const* env
   script_argv[0] = "sh";
   script_argv[1] = buf;
   memcpy(script_argv + 2, argv + 1, arg_count * sizeof(char*));
-  return execve(_PATH_BSHELL, const_cast<char**>(script_argv), envp);
+  return execve(__bionic_get_shell_path(), const_cast<char**>(script_argv), envp);
 }
 
 int execvpe(const char* name, char* const* argv, char* const* envp) {
