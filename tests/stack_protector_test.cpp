@@ -95,7 +95,7 @@ TEST(stack_protector, global_guard) {
   ASSERT_NE(0, gettid());
   ASSERT_NE(0U, __stack_chk_guard);
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have a global __stack_chk_guard.\n";
+  GTEST_SKIP() << "glibc doesn't have a global __stack_chk_guard";
 #endif
 }
 

@@ -109,8 +109,7 @@ TEST(pty, bug_28979140) {
   cpu_set_t cpus;
   ASSERT_EQ(0, sched_getaffinity(0, sizeof(cpu_set_t), &cpus));
   if (CPU_COUNT(&cpus) < 2) {
-    GTEST_LOG_(INFO) << "This test tests bug happens only on multiprocessors.";
-    return;
+    GTEST_SKIP() << "This bug only happens on multiprocessors";
   }
   constexpr uint32_t TEST_DATA_COUNT = 2000000;
 

@@ -111,7 +111,7 @@ TEST(wctype, towlower) {
     EXPECT_EQ(wint_t(L'δ'), towlower(L'δ'));
     EXPECT_EQ(wint_t(L'δ'), towlower(L'Δ'));
   } else {
-    GTEST_LOG_(INFO) << "skipping unicode towlower tests";
+    GTEST_SKIP() << "icu not available";
   }
 }
 
@@ -127,7 +127,7 @@ TEST(wctype, towlower_l) {
     EXPECT_EQ(wint_t(L'δ'), towlower_l(L'δ', l.l));
     EXPECT_EQ(wint_t(L'δ'), towlower_l(L'Δ', l.l));
   } else {
-    GTEST_LOG_(INFO) << "skipping unicode towlower_l tests";
+    GTEST_SKIP() << "icu not available";
   }
 }
 
@@ -142,7 +142,7 @@ TEST(wctype, towupper) {
     EXPECT_EQ(wint_t(L'Δ'), towupper(L'δ'));
     EXPECT_EQ(wint_t(L'Δ'), towupper(L'Δ'));
   } else {
-    GTEST_LOG_(INFO) << "skipping unicode towupper tests";
+    GTEST_SKIP() << "icu not available";
   }
 }
 
@@ -158,7 +158,7 @@ TEST(wctype, towupper_l) {
     EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'δ', l.l));
     EXPECT_EQ(wint_t(L'Δ'), towupper_l(L'Δ', l.l));
   } else {
-    GTEST_LOG_(INFO) << "skipping unicode towupper_l tests";
+    GTEST_SKIP() << "icu not available";
   }
 }
 

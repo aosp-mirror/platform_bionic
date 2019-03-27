@@ -540,10 +540,7 @@ TEST_F(DlExtRelroSharingTest, RelroFileEmpty) {
 }
 
 TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
-  if (geteuid() != 0) {
-    GTEST_LOG_(INFO) << "This test must be run as root.\n";
-    return;
-  }
+  if (geteuid() != 0) GTEST_SKIP() << "This test must be run as root";
 
   TemporaryFile tf; // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));

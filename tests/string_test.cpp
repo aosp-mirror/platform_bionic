@@ -85,7 +85,7 @@ TEST(STRING_TEST, strerror_concurrent) {
 
   ASSERT_STREQ("Unknown error 1001", strerror1001);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "Skipping test, requires a thread safe strerror.";
+  GTEST_SKIP() << "thread-safe strerror not available";
 #endif // __BIONIC__
 }
 
@@ -578,7 +578,7 @@ TEST(STRING_TEST, strlcat) {
     }
   }
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+  GTEST_SKIP() << "strlcat not available";
 #endif
 }
 
@@ -610,7 +610,7 @@ TEST(STRING_TEST, strlcpy) {
                  (memcmp(state.ptr2, state.ptr + state.MAX_LEN, state.MAX_LEN) != 0));
   }
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+  GTEST_SKIP() << "strlcpy not available";
 #endif
 }
 
@@ -1139,7 +1139,7 @@ TEST(STRING_TEST, strlcpy_align) {
 #if defined(STRLCPY_SUPPORTED)
   RunSrcDstBufferAlignTest(LARGE, DoStrlcpyTest);
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+  GTEST_SKIP() << "strlcpy not available";
 #endif
 }
 
@@ -1147,7 +1147,7 @@ TEST(STRING_TEST, strlcpy_overread) {
 #if defined(STRLCPY_SUPPORTED)
   RunSrcDstBufferOverreadTest(DoStrlcpyTest);
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcpy not supported on this platform.";
+  GTEST_SKIP() << "strlcpy not available";
 #endif
 }
 
@@ -1275,7 +1275,7 @@ TEST(STRING_TEST, strlcat_align) {
 #if defined(STRLCAT_SUPPORTED)
   RunSrcDstBufferAlignTest(MEDIUM, DoStrlcatTest, LargeSetIncrement);
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+  GTEST_SKIP() << "strlcat not available";
 #endif
 }
 
@@ -1283,7 +1283,7 @@ TEST(STRING_TEST, strlcat_overread) {
 #if defined(STRLCAT_SUPPORTED)
   RunSrcDstBufferOverreadTest(DoStrlcatTest);
 #else
-  GTEST_LOG_(INFO) << "Skipping test, strlcat not supported on this platform.";
+  GTEST_SKIP() << "strlcat not available";
 #endif
 }
 

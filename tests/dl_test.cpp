@@ -138,7 +138,7 @@ TEST(dl, exec_linker_load_self) {
 
 TEST(dl, preinit_system_calls) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array, b/124007027
+  SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
   std::string helper = GetTestlibRoot() +
       "/preinit_syscall_test_helper/preinit_syscall_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
@@ -150,7 +150,7 @@ TEST(dl, preinit_system_calls) {
 
 TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan not initialized in preinit_array, b/124007027
+  SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
   std::string helper = GetTestlibRoot() +
       "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
@@ -242,7 +242,7 @@ static bool is_debuggable_build() {
 // whose search paths include the 'ns2/' subdir.
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // libclang_rt.hwasan is not found with custom ld config
+  SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
     // LD_CONFIG_FILE is not supported on user build
     return;
@@ -265,7 +265,7 @@ TEST(dl, exec_with_ld_config_file) {
 // additional namespaces other than the default namespace.
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // libclang_rt.hwasan is not found with custom ld config
+  SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
     // LD_CONFIG_FILE is not supported on user build
     return;
