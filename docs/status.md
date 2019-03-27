@@ -45,14 +45,17 @@ New libc functions in Q (API level 29):
   * `getloadavg` (BSD/GNU extension in <stdlib.h>)
 
 New libc behavior in Q (API level 29):
-  * Whole printf family now supports the GNU `%m` extension, rather than a special-case hack in `syslog`
-  * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension
-  * Bug fixes to handling of UTF-8 U+fffe/U+ffff and code points above U+10ffff
-  * `aligned_alloc` correctly verifies that `size` is a multiple of `alignment`
+  * Whole printf family now supports the GNU `%m` extension, rather than a
+    special-case hack in `syslog`.
+  * `popen` now always uses `O_CLOEXEC`, not just with the `e` extension.
+  * Bug fixes to handling of UTF-8 U+fffe/U+ffff and code points above U+10ffff.
+  * `aligned_alloc` correctly verifies that `size` is a multiple of `alignment`.
   * Using `%n` with the printf family is now reported as a FORTIFY failure.
     Previous versions of Android would ignore the `%n` but not consume the
     corresponding pointer argument, leading to obscure errors. The scanf family
     is unchanged.
+  * Support in strptime for `%F`, `%G`, `%g`, `%P`, `%u`, `%V`, and `%v`.
+    (strftime already supported them all.)
   * [fdsan](fdsan.md) detects common file descriptor errors at runtime.
 
 New libc functions in P (API level 28):
@@ -74,9 +77,9 @@ New libc functions in P (API level 28):
   * `syncfs`
 
 New libc behavior in P (API level 28):
-  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these)
-  * `%mc`/`%ms`/`%m[` support in the scanf family
-  * `%s` support in strptime (strftime already supported it)
+  * `%C` and `%S` support in the printf family (previously only the wprintf family supported these).
+  * `%mc`/`%ms`/`%m[` support in the scanf family.
+  * `%s` support in strptime (strftime already supported it).
   * Using a `pthread_mutex_t` after it's been destroyed will be detected at
     runtime and reported as a FORTIFY failure.
   * Passing a null `FILE*` or `DIR*` to libc is now detected at runtime and
