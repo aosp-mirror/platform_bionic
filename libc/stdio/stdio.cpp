@@ -291,7 +291,7 @@ FILE* fdopen(int fd, const char* mode) {
     if (fcntl(fd, F_SETFL, fd_flags | O_APPEND) == -1) return nullptr;
   }
 
-  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'x'.
+  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'e'.
   if ((mode_flags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
