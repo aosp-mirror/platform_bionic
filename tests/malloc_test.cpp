@@ -728,7 +728,7 @@ TEST(android_mallopt, set_allocation_limit) {
               testing::ExitedWithCode(0), "");
 #endif
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
 
@@ -740,7 +740,7 @@ TEST(android_mallopt, set_allocation_limit_multiple) {
   limit = 32 * 1024 * 1024;
   ASSERT_FALSE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
 
@@ -805,7 +805,7 @@ TEST(android_mallopt, set_allocation_limit_realloc_increase) {
 
   VerifyMaxPointers(max_pointers);
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
 
@@ -833,7 +833,7 @@ TEST(android_mallopt, set_allocation_limit_realloc_decrease) {
 
   VerifyMaxPointers(max_pointers);
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
 
@@ -853,7 +853,7 @@ TEST(android_mallopt, set_allocation_limit_realloc_free) {
 
   VerifyMaxPointers(max_pointers);
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
 
@@ -915,6 +915,6 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
     ASSERT_EQ(0, WEXITSTATUS(status));
   }
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic extension.\n";
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
