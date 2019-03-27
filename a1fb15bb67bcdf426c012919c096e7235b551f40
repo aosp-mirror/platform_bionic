@@ -22,6 +22,30 @@
       "revId": "a1fb15bb67bcdf426c012919c096e7235b551f40",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7046df3b_9bb12c2a",
+        "filename": "tests/time_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-03-27T15:44:45Z",
+      "side": 1,
+      "message": "for parsing we accept both. %P or %p only differs for output.",
+      "parentUuid": "b81fa42b_11a05e63",
+      "range": {
+        "startLine": 317,
+        "startChar": 29,
+        "endLine": 317,
+        "endChar": 31
+      },
+      "revId": "a1fb15bb67bcdf426c012919c096e7235b551f40",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
