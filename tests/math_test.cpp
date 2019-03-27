@@ -388,7 +388,7 @@ TEST(MATH_TEST, __isnormal) {
   ASSERT_TRUE(__isnormal(123.0));
   ASSERT_FALSE(__isnormal(double_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have __isnormal.\n";
+  GTEST_SKIP() << "glibc doesn't have __isnormal";
 #endif // __BIONIC__
 }
 
@@ -397,7 +397,7 @@ TEST(MATH_TEST, __isnormalf) {
   ASSERT_TRUE(__isnormalf(123.0f));
   ASSERT_FALSE(__isnormalf(float_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have __isnormalf.\n";
+  GTEST_SKIP() << "glibc doesn't have __isnormalf";
 #endif // __BIONIC__
 }
 
@@ -406,7 +406,7 @@ TEST(MATH_TEST, isnormalf) {
   ASSERT_TRUE(isnormalf(123.0f));
   ASSERT_FALSE(isnormalf(float_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have isnormalf.\n";
+  GTEST_SKIP() << "glibc doesn't have isnormalf";
 #endif // __BIONIC__
 }
 
@@ -415,7 +415,7 @@ TEST(MATH_TEST, __isnormall) {
   ASSERT_TRUE(__isnormall(123.0L));
   ASSERT_FALSE(__isnormall(ldouble_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have __isnormall.\n";
+  GTEST_SKIP() << "glibc doesn't have __isnormall";
 #endif // __BIONIC__
 }
 
@@ -424,7 +424,7 @@ TEST(MATH_TEST, isnormall) {
   ASSERT_TRUE(isnormall(123.0L));
   ASSERT_FALSE(isnormall(ldouble_subnormal()));
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have isnormall.\n";
+  GTEST_SKIP() << "glibc doesn't have isnormall";
 #endif // __BIONIC__
 }
 
@@ -1396,7 +1396,7 @@ TEST(MATH_TEST, gamma_r) {
   ASSERT_DOUBLE_EQ(log(24.0), gamma_r(5.0, &sign));
   ASSERT_EQ(1, sign);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have gamma_r.\n";
+  GTEST_SKIP() << "glibc doesn't have gamma_r";
 #endif // __BIONIC__
 }
 
@@ -1406,7 +1406,7 @@ TEST(MATH_TEST, gammaf_r) {
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf_r(5.0f, &sign));
   ASSERT_EQ(1, sign);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "glibc doesn't have gammaf_r.\n";
+  GTEST_SKIP() << "glibc doesn't have gammaf_r";
 #endif // __BIONIC__
 }
 
