@@ -4156,6 +4156,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     ns->set_isolated(ns_config->isolated());
     ns->set_default_library_paths(ns_config->search_paths());
     ns->set_permitted_paths(ns_config->permitted_paths());
+    ns->set_whitelisted_libs(ns_config->whitelisted_libs());
 
     namespaces[ns_config->name()] = ns;
     if (ns_config->visible()) {

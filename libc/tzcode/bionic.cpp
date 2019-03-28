@@ -228,9 +228,14 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   if (fd >= 0) return fd;
 #else
   // On the host, we don't expect those locations to exist, and we're not
-  // worried about security so we trust $ANDROID_DATA, $ANDROID_RUNTIME_ROOT
-  // and $ANDROID_ROOT to point us in the right direction.
+  // worried about security so we trust $ANDROID_DATA, $ANDROID_RUNTIME_ROOT,
+  // $ANDROID_TZDATA_ROOT, and $ANDROID_ROOT to point us in the right direction.
   char* path = make_path("ANDROID_DATA", "/misc/zoneinfo/current/tzdata");
+  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  free(path);
+  if (fd >= 0) return fd;
+
+  path = make_path("ANDROID_TZDATA_ROOT", "/etc/tz/tzdata");
   fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
   free(path);
   if (fd >= 0) return fd;

@@ -149,19 +149,19 @@ int android_fdsan_close_with_tag(int fd, uint64_t tag) __INTRODUCED_IN(29) __att
  *
  * Returns 0 for untagged and invalid file descriptors.
  */
-uint64_t android_fdsan_get_owner_tag(int fd);
+uint64_t android_fdsan_get_owner_tag(int fd) __INTRODUCED_IN(29);
 
 /*
  * Get an owner tag's string representation.
  *
  * The return value points to memory with static lifetime, do not attempt to modify it.
  */
-const char* android_fdsan_get_tag_type(uint64_t tag);
+const char* android_fdsan_get_tag_type(uint64_t tag) __INTRODUCED_IN(29);
 
 /*
  * Get an owner tag's value, with the type masked off.
  */
-uint64_t android_fdsan_get_tag_value(uint64_t tag);
+uint64_t android_fdsan_get_tag_value(uint64_t tag) __INTRODUCED_IN(29);
 
 enum android_fdsan_error_level {
   // No errors.
