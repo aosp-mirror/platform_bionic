@@ -141,8 +141,7 @@ TEST(semaphore, sem_timedwait_monotonic_np) {
 #if defined(__BIONIC__)
   sem_timedwait_helper(CLOCK_MONOTONIC, sem_timedwait_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO)
-      << "This test does nothing since sem_timedwait_monotonic_np is only supported on bionic";
+  GTEST_SKIP() << "sem_timedwait_monotonic_np is only supported on bionic";
 #endif  // __BIONIC__
 }
 
@@ -218,7 +217,7 @@ TEST(semaphore, sem_wait_no_EINTR_in_sdk_less_equal_than_23) {
   ASSERT_EQ(0, pthread_join(thread, &result));
   ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(result));
 #else
-  GTEST_LOG_(INFO) << "This test tests sem_wait's compatibility for old sdk versions";
+  GTEST_SKIP() << "This test tests sem_wait's compatibility for old sdk versions";
 #endif
 }
 

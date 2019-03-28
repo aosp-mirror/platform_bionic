@@ -77,14 +77,6 @@ cc_defaults {
     native_coverage: false,
     recovery_available: true,
 
-    arch: {
-        x86: {
-            no_libcrt: true,
-        },
-        x86_64: {
-            no_libcrt: true,
-        },
-    },
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
     ldflags: ["-Wl,-z,muldefs"],

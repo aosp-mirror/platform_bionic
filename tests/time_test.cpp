@@ -296,6 +296,69 @@ TEST(time, strptime_l) {
   EXPECT_STREQ("09:41:53", buf);
 }
 
+TEST(time, strptime_F) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm tm = {};
+  ASSERT_EQ('\0', *strptime("2019-03-26", "%F", &tm));
+  EXPECT_EQ(119, tm.tm_year);
+  EXPECT_EQ(2, tm.tm_mon);
+  EXPECT_EQ(26, tm.tm_mday);
+}
+
+TEST(time, strptime_P_p) {
+  setenv("TZ", "UTC", 1);
+
+  // For parsing, %P and %p are the same: case doesn't matter.
+
+  struct tm tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("AM", "%p", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+
+  tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("am", "%p", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+
+  tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("AM", "%P", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+
+  tm = {.tm_hour = 12};
+  ASSERT_EQ('\0', *strptime("am", "%P", &tm));
+  EXPECT_EQ(0, tm.tm_hour);
+}
+
+TEST(time, strptime_u) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm tm = {};
+  ASSERT_EQ('\0', *strptime("2", "%u", &tm));
+  EXPECT_EQ(2, tm.tm_wday);
+}
+
+TEST(time, strptime_v) {
+  setenv("TZ", "UTC", 1);
+
+  struct tm tm = {};
+  ASSERT_EQ('\0', *strptime("26-Mar-1980", "%v", &tm));
+  EXPECT_EQ(80, tm.tm_year);
+  EXPECT_EQ(2, tm.tm_mon);
+  EXPECT_EQ(26, tm.tm_mday);
+}
+
+TEST(time, strptime_V_G_g) {
+  setenv("TZ", "UTC", 1);
+
+  // %V (ISO-8601 week number), %G (year of week number, without century), and
+  // %g (year of week number) have no effect when parsed, and are supported
+  // solely so that it's possible for strptime(3) to parse everything that
+  // strftime(3) can output.
+  struct tm tm = {};
+  ASSERT_EQ('\0', *strptime("1 2 3", "%V %G %g", &tm));
+  struct tm zero = {};
+  EXPECT_TRUE(memcmp(&tm, &zero, sizeof(tm)) == 0);
+}
+
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
   itimerspec ts;
   ts.it_value.tv_sec = value_s;
@@ -912,6 +975,6 @@ TEST(time, timespec_get) {
   ASSERT_EQ(0, timespec_get(&ts, 123));
   ASSERT_EQ(TIME_UTC, timespec_get(&ts, TIME_UTC));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have timespec_get until 2.21\n";
+  GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
 }
