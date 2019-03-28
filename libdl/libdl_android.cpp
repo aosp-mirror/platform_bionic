@@ -28,7 +28,7 @@ __attribute__((__weak__, visibility("default")))
 void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size);
 
 __attribute__((__weak__, visibility("default")))
-    void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
+void __loader_android_update_LD_LIBRARY_PATH(const char* ld_library_path);
 
 __attribute__((__weak__, visibility("default")))
 void __loader_android_set_application_target_sdk_version(int target);
