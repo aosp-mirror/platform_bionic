@@ -328,13 +328,6 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
     return false;
   }
 
-  init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
-    error_log("%s: failed to enable malloc %s", getprogname(), prefix);
-    ClearGlobalFunctions();
-    return false;
-  }
-
   if (!FinishInstallHooks(globals, options, prefix)) {
     dlclose(impl_handle);
     return false;
