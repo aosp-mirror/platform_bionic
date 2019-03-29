@@ -52,7 +52,7 @@ static __inline int __ndk_legacy___libc_current_sigrtmax() {
 
 static __inline int __ndk_legacy___libc_current_sigrtmin() {
   if (__libc_current_sigrtmin) return __libc_current_sigrtmin();
-  return __SIGRTMIN + 5; /* Should match __libc_current_sigrtmin. */
+  return __SIGRTMIN + 6; /* Should match __libc_current_sigrtmin. */
 }
 
 #undef SIGRTMAX
