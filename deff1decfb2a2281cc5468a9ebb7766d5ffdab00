@@ -22,6 +22,30 @@
       "revId": "deff1decfb2a2281cc5468a9ebb7766d5ffdab00",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "880a19f3_a0861d50",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1150933
+      },
+      "writtenOn": "2019-03-29T22:18:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "999e965f_0515845f",
+      "range": {
+        "startLine": 175,
+        "startChar": 14,
+        "endLine": 176,
+        "endChar": 64
+      },
+      "revId": "deff1decfb2a2281cc5468a9ebb7766d5ffdab00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
