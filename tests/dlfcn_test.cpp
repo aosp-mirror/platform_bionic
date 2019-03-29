@@ -982,16 +982,16 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 }
 
 #if defined (__aarch64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/arm64/"
 #elif defined (__arm__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
 #elif defined (__i386__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
 #elif defined (__x86_64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86_64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
 #elif defined (__mips__)
 #if defined(__LP64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/mips64/"
 #else
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
 #endif
