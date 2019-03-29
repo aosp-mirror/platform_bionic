@@ -187,8 +187,8 @@ if __name__ == "__main__":
         if not new_data:
             continue
 
-        b.readFile(path)
-        r = b.editFile(path, new_data)
+        b.readFile(dst_file)
+        r = b.editFile(dst_file, new_data)
         if r == 0:
             r = "unchanged"
         elif r == 1:
