@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "999e965f_0515845f",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-29T22:03:22Z",
+      "side": 1,
+      "message": "You should add the why from the comment description here too. It will avoid someone having to hunt through the log messages to figure out the why part of this reason.",
+      "range": {
+        "startLine": 175,
+        "startChar": 14,
+        "endLine": 176,
+        "endChar": 64
+      },
+      "revId": "deff1decfb2a2281cc5468a9ebb7766d5ffdab00",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
