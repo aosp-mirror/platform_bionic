@@ -43,5 +43,6 @@ LIBC_OMR1 { # introduced=27
 
 LIBC_PLATFORM {
   global:
+    android_get_LD_LIBRARY_PATH;
     __cfi_init;
 } LIBC_OMR1;
