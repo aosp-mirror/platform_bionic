@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74ebf295_c0c4608f",
+        "filename": "libc/kernel/tools/clean_header.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-03-29T21:39:56Z",
+      "side": 1,
+      "message": "You should add a comment about why you are doing this so the next person coming along doesn\u0027t change this thinking it was a mistake.",
+      "range": {
+        "startLine": 175,
+        "startChar": 12,
+        "endLine": 176,
+        "endChar": 0
+      },
+      "revId": "59aa7fd17900040b21df26f1e246d1c4d8d0dc4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
