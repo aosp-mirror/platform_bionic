@@ -30,7 +30,7 @@ TEST(sys_resource, rlimit_struct_size) {
 
 class SysResourceTest : public ::testing::Test {
  protected:
-  virtual void SetUp() {
+  void SetUp() override {
     ASSERT_EQ(0, getrlimit(RLIMIT_CORE, &l32_));
     ASSERT_EQ(0, getrlimit64(RLIMIT_CORE, &l64_));
     ASSERT_EQ(0, prlimit(0, RLIMIT_CORE, nullptr, &pr_l32_));
