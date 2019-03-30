@@ -402,7 +402,7 @@ class PtraceResumptionTest : public ::testing::Test {
     }
   }
 
-  ~PtraceResumptionTest() {
+  ~PtraceResumptionTest() override {
   }
 
   void AssertDeath(int signo);
