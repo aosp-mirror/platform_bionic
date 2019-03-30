@@ -67,7 +67,7 @@ constexpr auto kLibSize = 1024 * 1024; // how much address space to reserve for 
 
 class DlExtTest : public ::testing::Test {
 protected:
-  virtual void SetUp() {
+  void SetUp() override {
     handle_ = nullptr;
     // verify that we don't have the library loaded already
     void* h = dlopen(kLibName, RTLD_NOW | RTLD_NOLOAD);
@@ -78,7 +78,7 @@ protected:
     ASSERT_EQ(std::string("dlopen failed: library \"") + kLibNameNoRelro + "\" wasn't loaded and RTLD_NOLOAD prevented it", dlerror());
   }
 
-  virtual void TearDown() {
+  void TearDown() override {
     if (handle_ != nullptr) {
       ASSERT_DL_ZERO(dlclose(handle_));
     }
@@ -418,7 +418,7 @@ TEST_F(DlExtTest, ReservedHintTooSmall) {
 
 class DlExtRelroSharingTest : public DlExtTest {
 protected:
-  virtual void SetUp() {
+  void SetUp() override {
     DlExtTest::SetUp();
     void* start = mmap(nullptr, kLibSize, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     ASSERT_TRUE(start != MAP_FAILED);
@@ -428,7 +428,7 @@ protected:
     extinfo_.relro_fd = -1;
   }
 
-  virtual void TearDown() {
+  void TearDown() override {
     DlExtTest::TearDown();
   }
 
