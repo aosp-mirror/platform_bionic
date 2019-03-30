@@ -172,7 +172,12 @@ if __name__ == "__main__":
             dst_file = os.path.join(dst_dir, path)
             src_file = os.path.join(src_dir, path)
             new_data = cleanupFile(dst_file, src_file, path)
-            print new_data
+            # Use sys.stdout.write instead of a simple print statement to avoid
+            # sending an extra new line character to stdout.  Running this
+            # program in non-update mode and redirecting stdout to a file should
+            # yield the same result as using update mode, where new_data is
+            # written directly to a file.
+            sys.stdout.write(new_data)
 
         sys.exit(0)
 
