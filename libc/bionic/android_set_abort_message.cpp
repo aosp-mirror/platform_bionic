@@ -33,6 +33,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
@@ -81,6 +82,10 @@ void android_set_abort_message(const char* msg) {
   if (map == MAP_FAILED) {
     return;
   }
+
+  // Name the abort message mapping to make it easier for tools to find the
+  // mapping.
+  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, map, size, "abort message");
 
   magic_abort_msg_t* new_magic_abort_message = reinterpret_cast<magic_abort_msg_t*>(map);
   fill_abort_message_magic(new_magic_abort_message);
