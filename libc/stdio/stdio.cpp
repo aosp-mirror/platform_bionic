@@ -52,6 +52,7 @@
 
 #include "local.h"
 #include "glue.h"
+#include "private/__bionic_get_shell_path.h"
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
@@ -290,7 +291,7 @@ FILE* fdopen(int fd, const char* mode) {
     if (fcntl(fd, F_SETFL, fd_flags | O_APPEND) == -1) return nullptr;
   }
 
-  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'x'.
+  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'e'.
   if ((mode_flags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
@@ -1218,7 +1219,7 @@ FILE* popen(const char* cmd, const char* mode) {
     if (dup2(fds[child], desired_child_fd) == -1) _exit(127);
     close(fds[child]);
     if (bidirectional) dup2(STDOUT_FILENO, STDIN_FILENO);
-    execl(_PATH_BSHELL, "sh", "-c", cmd, nullptr);
+    execl(__bionic_get_shell_path(), "sh", "-c", cmd, nullptr);
     _exit(127);
   }
 

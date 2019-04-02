@@ -46,7 +46,7 @@ TEST(endian, htons_htonl_htonq_macros) {
   ASSERT_EQ(be32, htonl(le32));
   ASSERT_EQ(be64, htonq(le64));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have these macros";
+  GTEST_SKIP() << "glibc doesn't have htons/htonl/htonq in <endian.h>";
 #endif
 }
 
@@ -56,7 +56,7 @@ TEST(endian, ntohs_ntohl_ntohq_macros) {
   ASSERT_EQ(le32, ntohl(be32));
   ASSERT_EQ(le64, ntohq(be64));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have these macros";
+  GTEST_SKIP() << "glibc doesn't have ntohs/ntohl/ntohq in <endian.h>";
 #endif
 }
 
@@ -90,7 +90,7 @@ TEST(endian, betoh16_betoh32_betoh64) {
   ASSERT_EQ(le32, betoh32(be32));
   ASSERT_EQ(le64, betoh64(be64));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have these macros";
+  GTEST_SKIP() << "glibc doesn't have betoh16/betoh32/betoh64";
 #endif
 }
 
@@ -100,6 +100,6 @@ TEST(endian, letoh16_letoh32_letoh64) {
   ASSERT_EQ(le32, letoh32(le32));
   ASSERT_EQ(le64, letoh64(le64));
 #else
-  GTEST_LOG_(INFO) << "glibc doesn't have these macros";
+  GTEST_SKIP() << "glibc doesn't have letoh16/letoh32/letoh64";
 #endif
 }

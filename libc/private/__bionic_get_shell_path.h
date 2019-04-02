@@ -26,18 +26,6 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#pragma once
 
-#include "private/__get_tls.h"
-
-#if defined(__arm__)
-extern "C" void* __aeabi_read_tp();
-#endif
-
-TEST(aeabi, read_tp) {
-#if defined(__arm__)
-  ASSERT_EQ(__aeabi_read_tp(), static_cast<void*>(__get_tls()));
-#else
-  GTEST_SKIP() << "__aeabi_read_tp is only available on arm32";
-#endif
-}
+extern "C" const char* __bionic_get_shell_path();

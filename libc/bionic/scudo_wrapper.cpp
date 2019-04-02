@@ -26,18 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#include <gtest/gtest.h>
+#include <errno.h>
+#include <stdio.h>
 
-#include "private/__get_tls.h"
+#include "scudo.h"
+#include "private/bionic_globals.h"
+#include "private/WriteProtected.h"
 
-#if defined(__arm__)
-extern "C" void* __aeabi_read_tp();
+__LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
+
+#if defined(__i386__)
+__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
 
-TEST(aeabi, read_tp) {
-#if defined(__arm__)
-  ASSERT_EQ(__aeabi_read_tp(), static_cast<void*>(__get_tls()));
-#else
-  GTEST_SKIP() << "__aeabi_read_tp is only available on arm32";
-#endif
+int scudo_mallopt(int /*param*/, int /*value*/) {
+  return 0;
+}
+
+int scudo_malloc_info(int /*options*/, FILE* /*fp*/) {
+  errno = ENOTSUP;
+  return -1;
+}
+
+int scudo_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*) {
+  return 0;
+}
+
+void scudo_malloc_disable() {
+}
+
+void scudo_malloc_enable() {
 }

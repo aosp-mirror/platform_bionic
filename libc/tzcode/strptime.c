@@ -172,6 +172,12 @@ literal:
                 return (NULL);
             break;
 
+        case 'F':  /* The date as "%Y-%m-%d". */
+            _LEGAL_ALT(0);
+            if (!(bp = _strptime(bp, "%Y-%m-%d", tm, cr)))
+                return (NULL);
+            continue;
+
         case 'R':   /* The time as "%H:%M". */
             _LEGAL_ALT(0);
             if (!(bp = _strptime(bp, "%H:%M", tm, cr)))
@@ -187,6 +193,12 @@ literal:
         case 'T':   /* The time as "%H:%M:%S". */
             _LEGAL_ALT(0);
             if (!(bp = _strptime(bp, "%H:%M:%S", tm, cr)))
+                return (NULL);
+            break;
+
+        case 'v':  /* The date as "%e-%b-%Y". */
+            _LEGAL_ALT(0);
+            if (!(bp = _strptime(bp, "%e-%b-%Y", tm, cr)))
                 return (NULL);
             break;
 
@@ -305,6 +317,7 @@ literal:
             tm->tm_mon--;
             break;
 
+        case 'P':
         case 'p':   /* The locale's equivalent of AM/PM. */
             _LEGAL_ALT(0);
             /* AM? */
@@ -376,6 +389,33 @@ literal:
             if (!(_conv_num(&bp, &tm->tm_wday, 0, 6)))
                 return (NULL);
             break;
+
+        case 'u':  /* The day of week, monday = 1. */
+            _LEGAL_ALT(_ALT_O);
+            if (!(_conv_num(&bp, &i, 1, 7)))
+                return (NULL);
+            tm->tm_wday = i % 7;
+            continue;
+
+        case 'g':  /* The year corresponding to the ISO week
+                    * number but without the century.
+                    */
+            if (!(_conv_num(&bp, &i, 0, 99)))
+                return (NULL);
+            continue;
+
+        case 'G':  /* The year corresponding to the ISO week
+                    * number with century.
+                    */
+            do
+                bp++;
+            while (isdigit(*bp));
+            continue;
+
+        case 'V':  /* The ISO 8601:1988 week number as decimal */
+            if (!(_conv_num(&bp, &i, 0, 53)))
+                return (NULL);
+            continue;
 
         case 'Y':   /* The year. */
             _LEGAL_ALT(_ALT_E);

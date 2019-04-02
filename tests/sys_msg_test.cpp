@@ -35,8 +35,7 @@
 
 TEST(sys_msg, smoke) {
   if (msgctl(-1, IPC_STAT, nullptr) == -1 && errno == ENOSYS) {
-    GTEST_LOG_(INFO) << "no <sys/msg.h> support in this kernel\n";
-    return;
+    GTEST_SKIP() << "no <sys/msg.h> support in this kernel";
   }
 
   // Create a queue.
