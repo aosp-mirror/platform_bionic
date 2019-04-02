@@ -181,8 +181,10 @@ bool RecordData::Initialize(const Config& config) {
   }
   pthread_setspecific(key_, nullptr);
 
-  info_log("%s: Run: 'kill -%d %d' to dump the allocation records.", getprogname(),
-           config.record_allocs_signal(), getpid());
+  if (config.options() & VERBOSE) {
+    info_log("%s: Run: 'kill -%d %d' to dump the allocation records.", getprogname(),
+             config.record_allocs_signal(), getpid());
+  }
 
   num_entries_ = config.record_allocs_num_entries();
   entries_ = new const RecordEntry*[num_entries_];
