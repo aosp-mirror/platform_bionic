@@ -54,6 +54,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <android/dlext.h>
+
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -277,8 +279,33 @@ bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* pr
   return true;
 }
 
+extern "C" struct android_namespace_t* android_get_exported_namespace(const char* name);
+
 void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
-  void* impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
+  void* impl_handle = nullptr;
+  // Try to load the libc_malloc_* libs from the "runtime" namespace and then
+  // fall back to dlopen() to load them from the default namespace.
+  //
+  // The libraries are packaged in the runtime APEX together with libc.so.
+  // However, since the libc.so is searched via the symlink in the system
+  // partition (/system/lib/libc.so -> /apex/com.android.runtime/bionic.libc.so)
+  // libc.so is loaded into the default namespace. If we just dlopen() here, the
+  // linker will load the libs found in /system/lib which might be incompatible
+  // with libc.so in the runtime APEX. Use android_dlopen_ext to explicitly load
+  // the ones in the runtime APEX.
+  struct android_namespace_t* runtime_ns = android_get_exported_namespace("runtime");
+  if (runtime_ns != nullptr) {
+    const android_dlextinfo dlextinfo = {
+      .flags = ANDROID_DLEXT_USE_NAMESPACE,
+      .library_namespace = runtime_ns,
+    };
+    impl_handle = android_dlopen_ext(shared_lib, RTLD_NOW | RTLD_LOCAL, &dlextinfo);
+  }
+
+  if (impl_handle == nullptr) {
+    impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
+  }
+
   if (impl_handle == nullptr) {
     error_log("%s: Unable to open shared library %s: %s", getprogname(), shared_lib, dlerror());
     return nullptr;
