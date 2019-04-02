@@ -119,7 +119,7 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count
                                  ElfW(Addr) load_bias);
 
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                   ElfW(Addr) load_bias, int fd);
+                                   ElfW(Addr) load_bias, int fd, size_t* file_offset);
 
 int phdr_table_map_gnu_relro(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                              ElfW(Addr) load_bias, int fd, size_t* file_offset);
