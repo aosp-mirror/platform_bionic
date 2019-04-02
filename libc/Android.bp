@@ -2425,3 +2425,54 @@ cc_library {
         static_libs: ["libbase"],
     },
 }
+
+// This is a temporary library that will use scudo as the native memory
+// allocator. To use it, add it as the first shared library.
+cc_library_shared {
+    name: "libc_scudo",
+    vendor_available: true,
+    srcs: [
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
+        "bionic/malloc_limit.cpp",
+        "bionic/scudo_wrapper.cpp",
+        "bionic/__set_errno.cpp",
+    ],
+    cflags: ["-DUSE_SCUDO"],
+    stl: "none",
+    system_shared_libs: [],
+
+    header_libs: ["libc_headers"],
+
+    static_libs: ["libasync_safe"],
+
+    allow_undefined_symbols: true,
+    shared_libs: ["libscudo_wrapper"],
+
+    arch: {
+        arm: {
+            srcs: ["arch-arm/syscalls/__rt_sigprocmask.S"],
+        },
+        arm64: {
+            srcs: ["arch-arm64/syscalls/__rt_sigprocmask.S"],
+        },
+        x86: {
+            srcs: [
+                "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/syscalls/__rt_sigprocmask.S",
+            ],
+        },
+        x86_64: {
+            srcs: ["arch-x86_64/syscalls/__rt_sigprocmask.S"],
+        },
+    },
+
+    // Mark this library as global so it overrides all the allocation
+    // definitions properly.
+    ldflags: ["-Wl,-z,global"],
+}
+
+subdirs = [
+    "bionic/scudo",
+]
