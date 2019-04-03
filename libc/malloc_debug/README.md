@@ -401,6 +401,21 @@ log message.
 **NOTE**: If leak\_track is enabled, no abort occurs if leaks have been
 detected when the process is exiting.
 
+### verbose
+As of Android Q, all info messages will be turned off by default. For example,
+in Android P and older, enabling malloc debug would result in this message
+in the log:
+
+    08-16 15:54:16.060 26947 26947 I libc    : /system/bin/app_process64: malloc debug enabled
+
+In android Q, this message will not be displayed because these info messages
+slow down process start up. However, if you want to re-enable these messages,
+add the verbose option. All of the "Run XXX" messages are also silenced unless
+the verbose option is specified. This is an example of the type
+of messages that are no longer displayed:
+
+    09-10 01:03:50.070   557   557 I malloc_debug: /system/bin/audioserver: Run: 'kill -47 557' to dump the backtrace.
+
 Additional Errors
 -----------------
 There are a few other error messages that might appear in the log.
