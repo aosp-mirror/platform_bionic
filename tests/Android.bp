@@ -700,10 +700,6 @@ cc_test {
 
     static_executable: true,
     stl: "libc++_static",
-
-    // libclang_rt.builtins does not work with libm
-    // http://b/117167374
-    no_libcrt: true,
 }
 
 // -----------------------------------------------------------------------------
