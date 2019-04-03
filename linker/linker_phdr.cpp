@@ -831,16 +831,17 @@ int phdr_table_protect_gnu_relro(const ElfW(Phdr)* phdr_table,
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
  *   fd          -> writable file descriptor to use
+ *   file_offset -> pointer to offset into file descriptor to use/update
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
 int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
                                    size_t phdr_count,
                                    ElfW(Addr) load_bias,
-                                   int fd) {
+                                   int fd,
+                                   size_t* file_offset) {
   const ElfW(Phdr)* phdr = phdr_table;
   const ElfW(Phdr)* phdr_limit = phdr + phdr_count;
-  ssize_t file_offset = 0;
 
   for (phdr = phdr_table; phdr < phdr_limit; phdr++) {
     if (phdr->p_type != PT_GNU_RELRO) {
@@ -856,11 +857,11 @@ int phdr_table_serialize_gnu_relro(const ElfW(Phdr)* phdr_table,
       return -1;
     }
     void* map = mmap(reinterpret_cast<void*>(seg_page_start), size, PROT_READ,
-                     MAP_PRIVATE|MAP_FIXED, fd, file_offset);
+                     MAP_PRIVATE|MAP_FIXED, fd, *file_offset);
     if (map == MAP_FAILED) {
       return -1;
     }
-    file_offset += size;
+    *file_offset += size;
   }
   return 0;
 }

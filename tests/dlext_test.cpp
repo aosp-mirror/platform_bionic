@@ -450,7 +450,21 @@ protected:
         fprintf(stderr, "in child: %s\n", dlerror());
         exit(1);
       }
-      exit(0);
+      fn f = reinterpret_cast<fn>(dlsym(handle, "getRandomNumber"));
+      ASSERT_DL_NOTNULL(f);
+      EXPECT_EQ(4, f());
+
+      if (recursive) {
+        fn f = reinterpret_cast<fn>(dlsym(handle, "getBiggerRandomNumber"));
+        ASSERT_DL_NOTNULL(f);
+        EXPECT_EQ(8, f());
+      }
+
+      uint32_t* taxicab_number =
+              reinterpret_cast<uint32_t*>(dlsym(handle, "dlopen_testlib_taxicab_number"));
+      ASSERT_DL_NOTNULL(taxicab_number);
+      EXPECT_EQ(1729U, *taxicab_number);
+      exit(testing::Test::HasFailure());
     }
 
     // continuing in parent
