@@ -105,8 +105,10 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
       error_log("Unable to set up backtrace signal enable function: %s", strerror(errno));
       return false;
     }
-    info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
-             config.backtrace_signal(), getpid());
+    if (config.options() & VERBOSE) {
+      info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
+               config.backtrace_signal(), getpid());
+    }
   }
 
   if (config.options() & BACKTRACE) {
@@ -117,8 +119,10 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
       error_log("Unable to set up backtrace dump signal function: %s", strerror(errno));
       return false;
     }
-    info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
-             config.backtrace_dump_signal(), getpid());
+    if (config.options() & VERBOSE) {
+      info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
+               config.backtrace_dump_signal(), getpid());
+    }
   }
 
   backtrace_dump_ = false;

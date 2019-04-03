@@ -135,6 +135,9 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     {
         "abort_on_error", {ABORT_ON_ERROR, &Config::VerifyValueEmpty},
     },
+    {
+        "verbose", {VERBOSE, &Config::VerifyValueEmpty},
+    },
 };
 
 bool Config::ParseValue(const std::string& option, const std::string& value, size_t min_value,
