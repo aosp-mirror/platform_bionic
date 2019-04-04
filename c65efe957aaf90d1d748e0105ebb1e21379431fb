@@ -16,6 +16,24 @@
       "revId": "c65efe957aaf90d1d748e0105ebb1e21379431fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec8e1dae_e4f4074d",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-04-04T01:46:26Z",
+      "side": 1,
+      "message": "I could, but I don\u0027t think it\u0027s worth the extra complexity. The test is verifying that dladdr doesn\u0027t accidentally misinterpret a TLS symbol\u0027s value as an (unbiased) virtual address while dladdr is searching for something unrelated. Whether the solib is part of static TLS shouldn\u0027t affect anything.\n\nI\u0027ll add another test verifying that dladdr fails when it\u0027s called on the address of a thread\u0027s copy of a TLS variable.\n\ndlsym also doesn\u0027t discriminate between static and dynamic TLS, but it could optimize accesses to static TLS. (e.g. Instead of delegating those to __tls_get_addr, dlsym could look up the static TLS offset and add it to __get_tls(). Not sure that\u0027s worth doing.)",
+      "parentUuid": "3caa285b_0d9ba065",
+      "revId": "c65efe957aaf90d1d748e0105ebb1e21379431fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
