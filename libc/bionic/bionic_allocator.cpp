@@ -45,11 +45,11 @@
 
 //
 // BionicAllocator is a general purpose allocator designed to provide the same
-// functionality as the malloc/free/realloc libc functions.
+// functionality as the malloc/free/realloc/memalign libc functions.
 //
 // On alloc:
-// If size is >= 1k allocator proxies malloc call directly to mmap
-// If size < 1k allocator uses SmallObjectAllocator for the size
+// If size is > 1k allocator proxies malloc call directly to mmap.
+// If size <= 1k allocator uses BionicSmallObjectAllocator for the size
 // rounded up to the nearest power of two.
 //
 // On free:
@@ -57,10 +57,10 @@
 // For a pointer allocated using proxy-to-mmap allocator unmaps
 // the memory.
 //
-// For a pointer allocated using SmallObjectAllocator it adds
+// For a pointer allocated using BionicSmallObjectAllocator it adds
 // the block to free_blocks_list in the corresponding page. If the number of
-// free pages reaches 2, SmallObjectAllocator munmaps one of the pages keeping
-// the other one in reserve.
+// free pages reaches 2, BionicSmallObjectAllocator munmaps one of the pages
+// keeping the other one in reserve.
 
 // Memory management for large objects is fairly straightforward, but for small
 // objects it is more complicated.  If you are changing this code, one simple
