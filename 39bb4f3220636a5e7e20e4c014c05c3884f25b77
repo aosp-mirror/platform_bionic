@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2d9f35d_800a9a24",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-04-04T21:57:46Z",
+      "side": 1,
+      "message": "This description is not quite correct. This function should always returns a single value, it\u0027s not ever expected to return multiple values.\n\nThe bug is that two paths in the code return two values, presumably, because at some point in the past it did return two values. You can see that a bit further down a return None does occur for a different error condition.\n\nJust a nit, but this can be confusing if someone looks at this in the future.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 40
+      },
+      "revId": "39bb4f3220636a5e7e20e4c014c05c3884f25b77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
