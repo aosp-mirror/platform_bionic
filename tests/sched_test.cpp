@@ -47,7 +47,7 @@ TEST(sched, clone) {
 // See https://sourceware.org/bugzilla/show_bug.cgi?id=10311 for more details.
 TEST(sched, clone) {
   // In order to enumerate all possible tests for CTS, create an empty test.
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "glibc is broken";
 }
 #endif
 

@@ -82,7 +82,7 @@ TEST(sys_stat, mkfifo) {
     unlink(path.c_str());
   } else {
     // SELinux policy forbids us from creating FIFOs. http://b/17646702.
-    GTEST_LOG_(INFO) << "This test only performs a test when run as root.";
+    GTEST_SKIP() << "SELinux policy forbids non-root from creating FIFOs";
   }
 }
 

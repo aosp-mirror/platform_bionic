@@ -62,14 +62,13 @@ class ChildGuard {
 
 enum class HwFeature { Watchpoint, Breakpoint };
 
-static bool is_hw_feature_supported(pid_t child, HwFeature feature) {
+static void check_hw_feature_supported(pid_t child, HwFeature feature) {
 #if defined(__arm__)
   long capabilities;
   long result = ptrace(PTRACE_GETHBPREGS, child, 0, &capabilities);
   if (result == -1) {
     EXPECT_EQ(EIO, errno);
-    GTEST_LOG_(INFO) << "Hardware debug support disabled at kernel configuration time.";
-    return false;
+    GTEST_SKIP() << "Hardware debug support disabled at kernel configuration time";
   }
   uint8_t hb_count = capabilities & 0xff;
   capabilities >>= 8;
@@ -77,19 +76,12 @@ static bool is_hw_feature_supported(pid_t child, HwFeature feature) {
   capabilities >>= 8;
   uint8_t max_wp_size = capabilities & 0xff;
   if (max_wp_size == 0) {
-    GTEST_LOG_(INFO)
-        << "Kernel reports zero maximum watchpoint size. Hardware debug support missing.";
-    return false;
+    GTEST_SKIP() << "Kernel reports zero maximum watchpoint size";
+  } else if (feature == HwFeature::Watchpoint && wp_count == 0) {
+    GTEST_SKIP() << "Kernel reports zero hardware watchpoints";
+  } else if (feature == HwFeature::Breakpoint && hb_count == 0) {
+    GTEST_SKIP() << "Kernel reports zero hardware breakpoints";
   }
-  if (feature == HwFeature::Watchpoint && wp_count == 0) {
-    GTEST_LOG_(INFO) << "Kernel reports zero hardware watchpoints";
-    return false;
-  }
-  if (feature == HwFeature::Breakpoint && hb_count == 0) {
-    GTEST_LOG_(INFO) << "Kernel reports zero hardware breakpoints";
-    return false;
-  }
-  return true;
 #elif defined(__aarch64__)
   user_hwdebug_state dreg_state;
   iovec iov;
@@ -99,20 +91,13 @@ static bool is_hw_feature_supported(pid_t child, HwFeature feature) {
   long result = ptrace(PTRACE_GETREGSET, child,
                        feature == HwFeature::Watchpoint ? NT_ARM_HW_WATCH : NT_ARM_HW_BREAK, &iov);
   if (result == -1) {
-    EXPECT_EQ(EINVAL, errno);
-    return false;
+    ASSERT_EQ(EINVAL, errno);
   }
-  return (dreg_state.dbg_info & 0xff) > 0;
-#elif defined(__i386__) || defined(__x86_64__)
+  if ((dreg_state.dbg_info & 0xff) == 0) GTEST_SKIP() << "hardware support missing";
+#else
   // We assume watchpoints and breakpoints are always supported on x86.
   UNUSED(child);
   UNUSED(feature);
-  return true;
-#else
-  // TODO: mips support.
-  UNUSED(child);
-  UNUSED(feature);
-  return false;
 #endif
 }
 
@@ -190,10 +175,7 @@ static void run_watchpoint_test(std::function<void(T&)> child_func, size_t offse
   ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
-  if (!is_hw_feature_supported(child, HwFeature::Watchpoint)) {
-    GTEST_LOG_(INFO) << "Skipping test because hardware support is not available.\n";
-    return;
-  }
+  check_hw_feature_supported(child, HwFeature::Watchpoint);
 
   set_watchpoint(child, uintptr_t(untag_address(&data)) + offset, size);
 
@@ -360,10 +342,7 @@ TEST(sys_ptrace, hardware_breakpoint) {
   ASSERT_TRUE(WIFSTOPPED(status)) << "Status was: " << status;
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
-  if (!is_hw_feature_supported(child, HwFeature::Breakpoint)) {
-    GTEST_LOG_(INFO) << "Skipping test because hardware support is not available.\n";
-    return;
-  }
+  check_hw_feature_supported(child, HwFeature::Breakpoint);
 
   set_breakpoint(child);
 
@@ -423,7 +402,7 @@ class PtraceResumptionTest : public ::testing::Test {
     }
   }
 
-  ~PtraceResumptionTest() {
+  ~PtraceResumptionTest() override {
   }
 
   void AssertDeath(int signo);

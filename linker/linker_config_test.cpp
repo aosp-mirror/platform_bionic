@@ -56,6 +56,7 @@ static const char* config_str =
   "enable.target.sdk.version = true\n"
   "additional.namespaces=system\n"
   "additional.namespaces+=vndk\n"
+  "additional.namespaces+=vndk_in_system\n"
   "namespace.default.isolated = true\n"
   "namespace.default.search.paths = /vendor/${LIB}\n"
   "namespace.default.permitted.paths = /vendor/${LIB}\n"
@@ -82,6 +83,12 @@ static const char* config_str =
   "namespace.vndk.asan.search.paths += /system/${LIB}/vndk\n"
   "namespace.vndk.links = default\n"
   "namespace.vndk.link.default.allow_all_shared_libs = true\n"
+  "namespace.vndk.link.vndk_in_system.allow_all_shared_libs = true\n"
+  "namespace.vndk_in_system.isolated = true\n"
+  "namespace.vndk_in_system.visible = true\n"
+  "namespace.vndk_in_system.search.paths = /system/${LIB}\n"
+  "namespace.vndk_in_system.permitted.paths = /system/${LIB}\n"
+  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so:libtinyxml2.so\n"
   "\n";
 
 static bool write_version(const std::string& path, uint32_t version) {
@@ -165,20 +172,24 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_FALSE(default_ns_links[1].allow_all_shared_libs());
 
   auto& ns_configs = config->namespace_configs();
-  ASSERT_EQ(3U, ns_configs.size());
+  ASSERT_EQ(4U, ns_configs.size());
 
   // find second namespace
   const NamespaceConfig* ns_system = nullptr;
   const NamespaceConfig* ns_vndk = nullptr;
+  const NamespaceConfig* ns_vndk_in_system = nullptr;
   for (auto& ns : ns_configs) {
     std::string ns_name = ns->name();
-    ASSERT_TRUE(ns_name == "system" || ns_name == "default" || ns_name == "vndk")
+    ASSERT_TRUE(ns_name == "system" || ns_name == "default" ||
+                ns_name == "vndk" || ns_name == "vndk_in_system")
         << "unexpected ns name: " << ns->name();
 
     if (ns_name == "system") {
       ns_system = ns.get();
     } else if (ns_name == "vndk") {
       ns_vndk = ns.get();
+    } else if (ns_name == "vndk_in_system") {
+      ns_vndk_in_system = ns.get();
     }
   }
 
@@ -199,6 +210,11 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_EQ(1U, ns_vndk_links.size());
   ASSERT_EQ("default", ns_vndk_links[0].ns_name());
   ASSERT_TRUE(ns_vndk_links[0].allow_all_shared_libs());
+
+  ASSERT_TRUE(ns_vndk_in_system != nullptr) << "vndk_in_system namespace was not found";
+  ASSERT_EQ(
+      std::vector<std::string>({"libz.so", "libyuv.so", "libtinyxml2.so"}),
+      ns_vndk_in_system->whitelisted_libs());
 }
 
 TEST(linker_config, smoke) {

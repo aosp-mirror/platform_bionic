@@ -146,7 +146,7 @@ TEST(elftls_dl, tlsdesc_missing_weak) {
     ASSERT_EQ(nullptr, missing_weak_dyn_tls_addr());
   }).join();
 #else
-  GTEST_LOG_(INFO) << "This test is only run on TLSDESC-based targets.\n";
+  GTEST_SKIP() << "This test is only run on TLSDESC-based targets";
 #endif
 }
 
@@ -215,7 +215,7 @@ TEST(elftls_dl, dtv_resize) {
 
 #undef LOAD_LIB
 #else
-  GTEST_LOG_(INFO) << "This test is skipped for glibc because it tests Bionic internals.";
+  GTEST_SKIP() << "test doesn't apply to glibc";
 #endif
 }
 
@@ -266,6 +266,6 @@ TEST(elftls_dl, dlclose_removes_entry) {
     dlclose(lib);
   }
 #else
-  GTEST_LOG_(INFO) << "This test is skipped for glibc because it tests Bionic internals.";
+  GTEST_SKIP() << "test doesn't apply to glibc";
 #endif
 }

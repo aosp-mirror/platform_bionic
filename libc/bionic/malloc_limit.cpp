@@ -275,7 +275,7 @@ static bool EnableLimitDispatchTable() {
   // being called, allow up to five ms for the signal handler to complete
   // before failing.
   bool enabled = false;
-  size_t num_tries = 10;
+  size_t num_tries = 20;
   while (true) {
     if (!atomic_exchange(&gGlobalsMutating, true)) {
       __libc_globals.mutate([](libc_globals* globals) {

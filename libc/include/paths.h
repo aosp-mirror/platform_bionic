@@ -47,7 +47,7 @@
 #define _PATH_CONSOLE "/dev/console"
 
 /** Default shell search path. */
-#define _PATH_DEFPATH "/sbin:/system/sbin:/apex/com.android.runtime/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
+#define _PATH_DEFPATH "/sbin:/system/sbin:/product/bin:/apex/com.android.runtime/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin"
 
 /** Path to the directory containing device files. */
 #define _PATH_DEV "/dev/"

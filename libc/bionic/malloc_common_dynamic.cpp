@@ -307,8 +307,6 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
     atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
   }
 
-  info_log("%s: malloc %s enabled", getprogname(), prefix);
-
   // Use atexit to trigger the cleanup function. This avoids a problem
   // where another atexit function is used to cleanup allocated memory,
   // but the finalize function was already called. This particular error
@@ -316,7 +314,7 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
   int ret_value = __cxa_atexit(MallocFiniImpl, nullptr, nullptr);
   if (ret_value != 0) {
     // We don't consider this a fatal error.
-    info_log("failed to set atexit cleanup function: %d", ret_value);
+    warning_log("failed to set atexit cleanup function: %d", ret_value);
   }
   return true;
 }
@@ -325,13 +323,6 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
                          const char* shared_lib) {
   void* impl_handle = LoadSharedLibrary(shared_lib, prefix, &globals->malloc_dispatch_table);
   if (impl_handle == nullptr) {
-    return false;
-  }
-
-  init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
-    error_log("%s: failed to enable malloc %s", getprogname(), prefix);
-    ClearGlobalFunctions();
     return false;
   }
 

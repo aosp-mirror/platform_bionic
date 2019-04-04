@@ -137,7 +137,21 @@ int pthread_cond_timedwait_monotonic_np(pthread_cond_t* __cond, pthread_mutex_t*
                                         const struct timespec* __timeout) __INTRODUCED_IN_64(28);
 int pthread_cond_wait(pthread_cond_t* __cond, pthread_mutex_t* __mutex);
 
+#if defined(__clang__)
+/*
+ * Disable -Wbuiltin-requires-header because clang confuses this declaration with the one defined in
+ * "llvm/tools/clang/include/clang/Basic/Builtins.def", which did not define any formal arguments.
+ * It seems to be an upstream bug and the fix (https://reviews.llvm.org/D58531) is still under
+ * review. Thus, let's disable the warning for this function declaration.
+ */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wbuiltin-requires-header"
+#endif
 int pthread_create(pthread_t* __pthread_ptr, pthread_attr_t const* __attr, void* (*__start_routine)(void*), void*);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
 int pthread_detach(pthread_t __pthread);
 void pthread_exit(void* __return_value) __noreturn;
 

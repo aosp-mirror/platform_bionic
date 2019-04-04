@@ -78,7 +78,7 @@ TEST(libgen, basename_r) {
   TestBasename(".", ".", 1, buf, sizeof(buf), 0);
   TestBasename("..", "..", 2, buf, sizeof(buf), 0);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "basename_r is only available on 32-bit bionic";
 #endif // __BIONIC__
 }
 
@@ -95,6 +95,6 @@ TEST(libgen, dirname_r) {
   TestDirname(".", ".", 1, buf, sizeof(buf), 0);
   TestDirname("..", ".", 1, buf, sizeof(buf), 0);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "dirname_r is only available on 32-bit bionic";
 #endif // __BIONIC__
 }

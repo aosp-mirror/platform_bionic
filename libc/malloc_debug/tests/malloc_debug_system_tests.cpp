@@ -195,7 +195,7 @@ TEST(MallocTests, DISABLED_smoke) {}
 
 TEST(MallocDebugSystemTest, smoke) {
   pid_t pid;
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_smoke", "backtrace", &pid));
+  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_smoke", "verbose backtrace", &pid));
 
   ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"}));
 }
@@ -399,7 +399,7 @@ static void VerifyLeak(const char* test_prefix) {
     pid_t pid;
     SCOPED_TRACE(testing::Message() << functions[i].name << " expected size " << functions[i].size);
     std::string test = std::string("MallocTests.DISABLED_") + test_prefix + functions[i].name;
-    EXPECT_NO_FATAL_FAILURE(Exec(test.c_str(), "backtrace leak_track", &pid));
+    EXPECT_NO_FATAL_FAILURE(Exec(test.c_str(), "verbose backtrace leak_track", &pid));
 
     std::string expected_leak = android::base::StringPrintf("leaked block of size %zu at", functions[i].size);
     EXPECT_NO_FATAL_FAILURE(FindStrings(

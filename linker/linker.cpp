@@ -3987,7 +3987,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   /* Handle serializing/sharing the RELRO segment */
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
     if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
-                                       extinfo->relro_fd) < 0) {
+                                       extinfo->relro_fd, relro_fd_offset) < 0) {
       DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
@@ -4156,6 +4156,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     ns->set_isolated(ns_config->isolated());
     ns->set_default_library_paths(ns_config->search_paths());
     ns->set_permitted_paths(ns_config->permitted_paths());
+    ns->set_whitelisted_libs(ns_config->whitelisted_libs());
 
     namespaces[ns_config->name()] = ns;
     if (ns_config->visible()) {

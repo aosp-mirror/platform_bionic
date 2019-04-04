@@ -30,6 +30,7 @@
 #include <inttypes.h>
 #include <malloc.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
 #include <sys/param.h>
@@ -251,6 +252,10 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
   // Always enable the backtrace code since we will use it in a number
   // of different error cases.
   backtrace_startup();
+
+  if (g_debug->config().options() & VERBOSE) {
+    info_log("%s: malloc debug enabled", getprogname());
+  }
 
   return true;
 }

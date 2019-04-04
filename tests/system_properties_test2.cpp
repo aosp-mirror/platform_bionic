@@ -124,7 +124,7 @@ TEST(properties, smoke) {
     ASSERT_EQ(expected_name, legacy_name);
     ASSERT_STREQ("value2", propvalue);
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -143,6 +143,6 @@ TEST(properties, empty_value) {
     }
 
 #else // __BIONIC__
-    GTEST_LOG_(INFO) << "This test does nothing.\n";
+    GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
