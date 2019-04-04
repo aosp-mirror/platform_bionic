@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3caa285b_0d9ba065",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-04T00:26:35Z",
+      "side": 1,
+      "message": "test for static TLS too?",
+      "revId": "c65efe957aaf90d1d748e0105ebb1e21379431fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
