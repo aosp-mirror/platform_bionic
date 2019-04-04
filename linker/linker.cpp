@@ -3987,7 +3987,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   /* Handle serializing/sharing the RELRO segment */
   if (extinfo && (extinfo->flags & ANDROID_DLEXT_WRITE_RELRO)) {
     if (phdr_table_serialize_gnu_relro(phdr, phnum, load_bias,
-                                       extinfo->relro_fd) < 0) {
+                                       extinfo->relro_fd, relro_fd_offset) < 0) {
       DL_ERR("failed serializing GNU RELRO section for \"%s\": %s",
              get_realpath(), strerror(errno));
       return false;
