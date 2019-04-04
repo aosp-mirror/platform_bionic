@@ -86,11 +86,11 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     # Check the header path
     if not os.path.exists(src_file):
         print_error(no_update, "'%s' does not exist\n" % src_file)
-        return None, None
+        return None
 
     if not os.path.isfile(src_file):
         print_error(no_update, "'%s' is not a file\n" % src_file)
-        return None, None
+        return None
 
     # Extract the architecture if found.
     arch = None
