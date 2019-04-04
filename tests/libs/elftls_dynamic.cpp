@@ -27,6 +27,24 @@
  */
 
 // This shared object test library is dlopen'ed by the main test executable.
+
+// Export a large TLS variable from a solib for testing dladdr and dlsym. The
+// TLS symbol's value will appear to overlap almost everything else in the
+// shared object, but dladdr must not return it.
+__thread char large_tls_var[4 * 1024 * 1024];
+
+extern "C" char* get_large_tls_var_addr() {
+  return large_tls_var;
+}
+
+// For testing dladdr, return an address that's part of the solib's .bss
+// section, but does not have an entry in the dynsym table and whose
+// solib-relative address appears to overlap with the large TLS variable.
+extern "C" void* get_local_addr() {
+  static char dummy[1024];
+  return &dummy[512];
+}
+
 // This variable comes from libtest_elftls_shared_var.so, which is part of
 // static TLS. Verify that a GD-model access can access the variable.
 //
