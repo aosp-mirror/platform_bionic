@@ -2383,9 +2383,26 @@ bool do_dlsym(void* handle,
 
   if (sym != nullptr) {
     uint32_t bind = ELF_ST_BIND(sym->st_info);
+    uint32_t type = ELF_ST_TYPE(sym->st_info);
 
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
-      *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+      if (type == STT_TLS) {
+        // For a TLS symbol, dlsym returns the address of the current thread's
+        // copy of the symbol. This function may allocate a DTV and/or storage
+        // for the source TLS module. (Allocating a DTV isn't necessary if the
+        // symbol is part of static TLS, but it's simpler to reuse
+        // __tls_get_addr.)
+        soinfo_tls* tls_module = found->get_tls();
+        if (tls_module == nullptr) {
+          DL_ERR("TLS symbol \"%s\" in solib \"%s\" with no TLS segment",
+                 sym_name, found->get_realpath());
+          return false;
+        }
+        const TlsIndex ti { tls_module->module_id, sym->st_value };
+        *symbol = TLS_GET_ADDR(&ti);
+      } else {
+        *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
+      }
       failure_guard.Disable();
       LD_LOG(kLogDlsym,
              "... dlsym successful: sym_name=\"%s\", sym_ver=\"%s\", found in=\"%s\", address=%p",
