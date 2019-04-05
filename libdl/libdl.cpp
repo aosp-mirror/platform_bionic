@@ -25,6 +25,9 @@
 extern "C" {
 
 __attribute__((__weak__, visibility("default")))
+void __loader_android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size);
+
+__attribute__((__weak__, visibility("default")))
 void* __loader_dlopen(const char* filename, int flags, const void* caller_addr);
 
 __attribute__((__weak__, visibility("default")))
@@ -70,6 +73,11 @@ __attribute__((__weak__, visibility("default")))
 int __loader_android_get_application_target_sdk_version();
 
 // Proxy calls to bionic loader
+__attribute__((__weak__))
+void android_get_LD_LIBRARY_PATH(char* buffer, size_t buffer_size) {
+  __loader_android_get_LD_LIBRARY_PATH(buffer, buffer_size);
+}
+
 __attribute__((__weak__))
 void* dlopen(const char* filename, int flag) {
   const void* caller_addr = __builtin_return_address(0);
