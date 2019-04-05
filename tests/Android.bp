@@ -470,6 +470,7 @@ cc_defaults {
                 "ld-android",
                 "libandroidicu",
                 "libdl",
+                "libdl_android",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
                 "libdl_test_df_1_global",
