@@ -17,30 +17,120 @@
 #include <err.h>
 #include <langinfo.h>
 #include <locale.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-static void BM_stdlib_malloc_free(benchmark::State& state) {
+#if defined(__BIONIC__)
+
+#else
+#endif
+
+static __always_inline void MakeAllocationResident(void* ptr, size_t nbytes, int pagesize) {
+  uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
+  for (size_t i = 0; i < nbytes; i += pagesize) {
+    data[i] = 1;
+  }
+}
+
+static void MallocFree(benchmark::State& state) {
   const size_t nbytes = state.range(0);
   int pagesize = getpagesize();
 
-  void* ptr;
   for (auto _ : state) {
-    ptr = malloc(nbytes);
-    // Make the entire allocation resident.
-    uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
-    for (size_t i = 0; i < nbytes; i += pagesize) {
-      data[i] = 1;
-    }
+    void* ptr;
+    benchmark::DoNotOptimize(ptr = malloc(nbytes));
+    MakeAllocationResident(ptr, nbytes, pagesize);
     free(ptr);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
 }
-BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_free, "AT_COMMON_SIZES");
+
+static void BM_stdlib_malloc_free_default(benchmark::State& state) {
+#if defined(__BIONIC__)
+  // The default is expected to be a zero decay time.
+  mallopt(M_DECAY_TIME, 0);
+#endif
+
+  MallocFree(state);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_free_default, "AT_COMMON_SIZES");
+
+#if defined(__BIONIC__)
+static void BM_stdlib_malloc_free_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  MallocFree(state);
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_free_decay1, "AT_COMMON_SIZES");
+#endif
+
+static void MallocMultiple(benchmark::State& state, size_t nbytes, size_t numAllocs) {
+  int pagesize = getpagesize();
+  void* ptrs[numAllocs];
+  for (auto _ : state) {
+    for (size_t i = 0; i < numAllocs; i++) {
+      benchmark::DoNotOptimize(ptrs[i] = reinterpret_cast<uint8_t*>(malloc(nbytes)));
+      MakeAllocationResident(ptrs[i], nbytes, pagesize);
+    }
+    state.PauseTiming(); // Stop timers while freeing pointers.
+    for (size_t i = 0; i < numAllocs; i++) {
+      free(ptrs[i]);
+    }
+    state.ResumeTiming();
+  }
+
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes) * numAllocs);
+}
+
+void BM_stdlib_malloc_forty_default(benchmark::State& state) {
+
+#if defined(__BIONIC__)
+  // The default is expected to be a zero decay time.
+  mallopt(M_DECAY_TIME, 0);
+#endif
+
+  MallocMultiple(state, state.range(0), 40);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_forty_default, "AT_COMMON_SIZES");
+
+#if defined(__BIONIC__)
+void BM_stdlib_malloc_forty_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  MallocMultiple(state, state.range(0), 40);
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_forty_decay1, "AT_COMMON_SIZES");
+#endif
+
+void BM_stdlib_malloc_multiple_8192_allocs_default(benchmark::State& state) {
+#if defined(__BIONIC__)
+  // The default is expected to be a zero decay time.
+  mallopt(M_DECAY_TIME, 0);
+#endif
+
+  MallocMultiple(state, 8192, state.range(0));
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_multiple_8192_allocs_default, "AT_SMALL_SIZES");
+
+#if defined(__BIONIC__)
+void BM_stdlib_malloc_multiple_8192_allocs_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  MallocMultiple(state, 8192, state.range(0));
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_multiple_8192_allocs_decay1, "AT_SMALL_SIZES");
+#endif
 
 static void BM_stdlib_mbstowcs(benchmark::State& state) {
   const size_t buf_alignment = state.range(0);
@@ -167,3 +257,4 @@ void BM_stdlib_strtoull(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_stdlib_strtoull);
+
