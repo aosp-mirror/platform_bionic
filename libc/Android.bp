@@ -1578,9 +1578,6 @@ cc_library {
         "ld-android",
         "libdl",
     ],
-    static_libs: [
-        "libdl_android",
-    ],
     whole_static_libs: [
         "libjemalloc5",
     ],
