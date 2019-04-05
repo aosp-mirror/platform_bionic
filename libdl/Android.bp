@@ -114,6 +114,7 @@ cc_library {
     name: "libdl_android",
 
     defaults: ["linux_bionic_supported"],
+    recovery_available: true,
 
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
     // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
