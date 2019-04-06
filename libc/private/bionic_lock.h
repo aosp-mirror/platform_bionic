@@ -70,8 +70,9 @@ class Lock {
   }
 
   void unlock() {
+    bool shared = process_shared; /* cache to local variable */
     if (atomic_exchange_explicit(&state, Unlocked, memory_order_release) == LockedWithWaiter) {
-      __futex_wake_ex(&state, process_shared, 1);
+      __futex_wake_ex(&state, shared, 1);
     }
   }
 };

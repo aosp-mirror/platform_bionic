@@ -269,3 +269,69 @@ TEST(elftls_dl, dlclose_removes_entry) {
   GTEST_SKIP() << "test doesn't apply to glibc";
 #endif
 }
+
+// Use dlsym to get the address of a TLS variable in static TLS and compare it
+// against the ordinary address of the variable.
+TEST(elftls_dl, dlsym_static_tls) {
+  void* lib = dlopen("libtest_elftls_shared_var.so", RTLD_LOCAL | RTLD_NOW);
+  ASSERT_NE(nullptr, lib);
+
+  int* var_addr = static_cast<int*>(dlsym(lib, "elftls_shared_var"));
+  ASSERT_EQ(&elftls_shared_var, var_addr);
+
+  std::thread([lib] {
+    int* var_addr = static_cast<int*>(dlsym(lib, "elftls_shared_var"));
+    ASSERT_EQ(&elftls_shared_var, var_addr);
+  }).join();
+}
+
+// Use dlsym to get the address of a TLS variable in dynamic TLS and compare it
+// against the ordinary address of the variable.
+TEST(elftls_dl, dlsym_dynamic_tls) {
+  void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
+  ASSERT_NE(nullptr, lib);
+  auto get_var_addr = reinterpret_cast<int*(*)()>(dlsym(lib, "get_large_tls_var_addr"));
+  ASSERT_NE(nullptr, get_var_addr);
+
+  int* var_addr = static_cast<int*>(dlsym(lib, "large_tls_var"));
+  ASSERT_EQ(get_var_addr(), var_addr);
+
+  std::thread([lib, get_var_addr] {
+    int* var_addr = static_cast<int*>(dlsym(lib, "large_tls_var"));
+    ASSERT_EQ(get_var_addr(), var_addr);
+  }).join();
+}
+
+// Calling dladdr on a TLS variable's address doesn't find anything.
+TEST(elftls_dl, dladdr_on_tls_var) {
+  Dl_info info;
+
+  // Static TLS variable
+  ASSERT_EQ(0, dladdr(&elftls_shared_var, &info));
+
+  // Dynamic TLS variable
+  void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
+  ASSERT_NE(nullptr, lib);
+  int* var_addr = static_cast<int*>(dlsym(lib, "large_tls_var"));
+  ASSERT_EQ(0, dladdr(var_addr, &info));
+}
+
+// Verify that dladdr does not misinterpret a TLS symbol's value as a virtual
+// address.
+TEST(elftls_dl, dladdr_skip_tls_symbol) {
+  void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
+
+  auto get_local_addr = reinterpret_cast<void*(*)()>(dlsym(lib, "get_local_addr"));
+  ASSERT_NE(nullptr, get_local_addr);
+  void* local_addr = get_local_addr();
+
+  Dl_info info;
+  ASSERT_NE(0, dladdr(local_addr, &info));
+
+  std::string libpath = GetTestlibRoot() + "/libtest_elftls_dynamic.so";
+  char dli_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(info.dli_fname, dli_realpath));
+  ASSERT_STREQ(libpath.c_str(), dli_realpath);
+  ASSERT_STREQ(nullptr, info.dli_sname);
+  ASSERT_EQ(nullptr, info.dli_saddr);
+}
