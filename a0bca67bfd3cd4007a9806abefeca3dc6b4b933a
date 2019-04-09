@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "53692c5a_ba36d500",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-04-09T21:58:49Z",
+      "side": 1,
+      "message": "It look like fma is an extension of Neon:\n\nhttp://infocenter.arm.com/help/index.jsp?topic\u003d/com.arm.doc.dui0473m/dom1359731185741.html\n\nIIRC, the NDK still supports non-Neon armv7, but we\u0027re in the process of dropping that support (https://github.com/android-ndk/ndk/issues/859).\n\nI couldn\u0027t get Clang to use FPU instructions for fma/fmaf and armv7: https://godbolt.org/z/DpUM21.  I also tried building the NDK arm7 prebuilt libm.a with this CL, and its builtins.o was broken:\n\nDisassembly of section .text.fmaf:\n\n00000000 \u003cfmaf\u003e:\n   0:   eafffffe        b       0 \u003cfmaf\u003e\n\nDisassembly of section .text.fma:\n\n00000000 \u003cfma\u003e:\n   0:   eafffffe        b       0 \u003cfma\u003e\n\nI built the prebuilts by doing:\nrprichard@cashew:/x/aosp$ export OUT_DIR\u003d$PWD/out/ndk\nrprichard@cashew:/x/aosp$ build/soong/scripts/build-ndk-prebuilts.sh \n...\nrprichard@cashew:/x/aosp$ arm-linux-gnueabi-objdump -dr out/ndk/soong/.intermediates/bionic/libm/libm/android_arm_armv7-a_core_static/obj/bionic/libm/builtins.o | less",
+      "revId": "a0bca67bfd3cd4007a9806abefeca3dc6b4b933a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f600523e_06e5bc22",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-04-09T21:58:49Z",
+      "side": 1,
+      "message": "This is checking defined(__arm__) || (__aarch64__ !\u003d 0)\n\nI think Bionic\u0027s most-common #if convention would use something like: defined(__arm__) || defined(__aarch64__)",
+      "revId": "a0bca67bfd3cd4007a9806abefeca3dc6b4b933a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a390a4ae_a90c74fc",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-04-09T21:58:49Z",
+      "side": 1,
+      "message": "#if defined(__arm__)",
+      "revId": "a0bca67bfd3cd4007a9806abefeca3dc6b4b933a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
