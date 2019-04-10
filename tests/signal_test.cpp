@@ -388,6 +388,10 @@ static void TestSignalMaskFunction(std::function<void()> fn, SignalMaskFunctionT
   TestSignalMaskFiltered(GetSignalMask(), fn_type);
 }
 
+// Turn off these tests in pie, so that we don't break people that cherry-picked the following
+// patch which fixes some behavior while weakening the test:
+//   https://android-review.googlesource.com/c/platform/bionic/+/881574
+#if 0
 TEST(signal, sigaction_filter) {
   ClearSignalMask();
   static uint64_t sigset;
@@ -411,6 +415,7 @@ TEST(signal, sigaction64_filter) {
   ASSERT_NE(0ULL, sigset);
   TestSignalMaskFiltered(sigset, SignalMaskFunctionType::RtAware);
 }
+#endif
 
 TEST(signal, sigprocmask_setmask_filter) {
   TestSignalMaskFunction(
