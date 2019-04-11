@@ -1865,11 +1865,17 @@ bool find_libraries(android_namespace_t* ns,
 
     soinfo_list_t global_group = local_group_ns->get_global_group();
     bool linked = local_group.visit([&](soinfo* si) {
-      // Even though local group may contain accessible soinfos from other namesapces
+      // Even though local group may contain accessible soinfos from other namespaces
       // we should avoid linking them (because if they are not linked -> they
       // are in the local_group_roots and will be linked later).
       if (!si->is_linked() && si->get_primary_namespace() == local_group_ns) {
-        if (!si->link_image(global_group, local_group, extinfo, &relro_fd_offset) ||
+        const android_dlextinfo* link_extinfo = nullptr;
+        if (si == soinfos[0] || reserved_address_recursive) {
+          // Only forward extinfo for the first library unless the recursive
+          // flag is set.
+          link_extinfo = extinfo;
+        }
+        if (!si->link_image(global_group, local_group, link_extinfo, &relro_fd_offset) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
