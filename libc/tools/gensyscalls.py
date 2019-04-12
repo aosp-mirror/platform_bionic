@@ -527,7 +527,6 @@ class State:
     def __init__(self):
         self.old_stubs = []
         self.new_stubs = []
-        self.other_files = []
         self.syscalls = []
 
 
@@ -565,56 +564,6 @@ class State:
                 syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)
 
 
-    # Scan Linux kernel asm/unistd.h files containing __NR_* constants
-    # and write out equivalent SYS_* constants for glibc source compatibility.
-    def gen_glibc_syscalls_h(self):
-        glibc_syscalls_h_path = "include/bits/glibc-syscalls.h"
-        logging.info("generating " + glibc_syscalls_h_path)
-        glibc_fp = create_file(glibc_syscalls_h_path)
-        glibc_fp.write("/* %s */\n" % warning)
-        glibc_fp.write("#ifndef _BIONIC_BITS_GLIBC_SYSCALLS_H_\n")
-        glibc_fp.write("#define _BIONIC_BITS_GLIBC_SYSCALLS_H_\n")
-
-        # Collect the set of all syscalls for all architectures.
-        syscalls = set()
-        pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
-        for unistd_h in ["kernel/uapi/asm-generic/unistd.h",
-                         "kernel/uapi/asm-arm/asm/unistd.h",
-                         "kernel/uapi/asm-arm/asm/unistd-common.h",
-                         "kernel/uapi/asm-arm/asm/unistd-eabi.h",
-                         "kernel/uapi/asm-arm/asm/unistd-oabi.h",
-                         "kernel/uapi/asm-mips/asm/unistd.h",
-                         "kernel/uapi/asm-mips/asm/unistd_n32.h",
-                         "kernel/uapi/asm-mips/asm/unistd_n64.h",
-                         "kernel/uapi/asm-mips/asm/unistd_nr_n32.h",
-                         "kernel/uapi/asm-mips/asm/unistd_nr_n64.h",
-                         "kernel/uapi/asm-mips/asm/unistd_nr_o32.h",
-                         "kernel/uapi/asm-mips/asm/unistd_o32.h",
-                         "kernel/uapi/asm-x86/asm/unistd_32.h",
-                         "kernel/uapi/asm-x86/asm/unistd_64.h",
-                         "kernel/uapi/asm-x86/asm/unistd_x32.h"]:
-          for line in open(os.path.join(bionic_libc_root, unistd_h)):
-            m = re.search(pattern, line)
-            if m:
-              nr_name = m.group(1)
-              if 'reserved' not in nr_name and 'unused' not in nr_name:
-                syscalls.add(nr_name)
-
-        # Write out a single file listing them all. Note that the input
-        # files include #if trickery, so even for a single architecture
-        # we don't know exactly which ones are available.
-        # https://code.google.com/p/android/issues/detail?id=215853
-        for syscall in sorted(syscalls):
-          nr_name = make__NR_name(syscall)
-          glibc_fp.write("#if defined(%s)\n" % nr_name)
-          glibc_fp.write("  #define SYS_%s %s\n" % (syscall, nr_name))
-          glibc_fp.write("#endif\n")
-
-        glibc_fp.write("#endif /* _BIONIC_BITS_GLIBC_SYSCALLS_H_ */\n")
-        glibc_fp.close()
-        self.other_files.append(glibc_syscalls_h_path)
-
-
     # Write each syscall stub.
     def gen_syscall_stubs(self):
         for syscall in self.syscalls:
@@ -645,16 +594,15 @@ class State:
             logging.info("creating %s..." % bionic_temp)
             make_dir(bionic_temp)
 
-        logging.info("re-generating stubs and support files...")
+        logging.info("re-generating stubs...")
 
-        self.gen_glibc_syscalls_h()
         self.gen_syscall_stubs()
 
         logging.info("comparing files...")
         adds    = []
         edits   = []
 
-        for stub in self.new_stubs + self.other_files:
+        for stub in self.new_stubs:
             tmp_file = os.path.join(bionic_temp, stub)
             libc_file = os.path.join(bionic_libc_root, stub)
             if not os.path.exists(libc_file):
