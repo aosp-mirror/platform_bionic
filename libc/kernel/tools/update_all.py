@@ -4,7 +4,7 @@ import sys, cpp, kernel, glob, os, re, getopt, clean_header, subprocess, shutil
 from defaults import *
 from utils import *
 
-def usage():
+def Usage():
     print """\
   usage: %(progname)s [kernel-original-path] [kernel-modified-path]
 
@@ -24,7 +24,7 @@ def usage():
 """ % { "progname" : os.path.basename(sys.argv[0]) }
     sys.exit(0)
 
-def processFiles(updater, original_dir, modified_dir, src_rel_dir, update_rel_dir):
+def ProcessFiles(updater, original_dir, modified_dir, src_rel_dir, update_rel_dir):
     # Delete the old headers before updating to the new headers.
     update_dir = os.path.join(get_kernel_dir(), update_rel_dir)
     shutil.rmtree(update_dir)
@@ -64,15 +64,64 @@ def processFiles(updater, original_dir, modified_dir, src_rel_dir, update_rel_di
             update_path = os.path.join(update_rel_dir, rel_path)
             print "cleaning %s -> %s (%s)" % (src_str, update_path, state)
 
+
+# This lets us support regular system calls like __NR_write and also weird
+# ones like __ARM_NR_cacheflush, where the NR doesn't come at the start.
+def make__NR_name(name):
+    if name.startswith('__ARM_NR_'):
+        return name
+    else:
+        return '__NR_%s' % (name)
+
+
+# Scan Linux kernel asm/unistd.h files containing __NR_* constants
+# and write out equivalent SYS_* constants for glibc source compatibility.
+def GenerateGlibcSyscallsHeader(updater):
+    libc_root = '%s/bionic/libc/' % os.environ['ANDROID_BUILD_TOP']
+
+    # Collect the set of all syscalls for all architectures.
+    syscalls = set()
+    pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
+    for unistd_h in ['kernel/uapi/asm-generic/unistd.h',
+                     'kernel/uapi/asm-arm/asm/unistd.h',
+                     'kernel/uapi/asm-arm/asm/unistd-common.h',
+                     'kernel/uapi/asm-arm/asm/unistd-eabi.h',
+                     'kernel/uapi/asm-arm/asm/unistd-oabi.h',
+                     'kernel/uapi/asm-x86/asm/unistd_32.h',
+                     'kernel/uapi/asm-x86/asm/unistd_64.h',
+                     'kernel/uapi/asm-x86/asm/unistd_x32.h']:
+        for line in open(os.path.join(libc_root, unistd_h)):
+            m = re.search(pattern, line)
+            if m:
+                nr_name = m.group(1)
+                if 'reserved' not in nr_name and 'unused' not in nr_name:
+                    syscalls.add(nr_name)
+
+    # Create a single file listing them all.
+    # Note that the input files include #if trickery, so even for a single
+    # architecture we don't know exactly which ones are available.
+    # https://b.corp.google.com/issues/37110151
+    content = '/* Generated file. Do not edit. */\n'
+    content += '#pragma once\n'
+
+    for syscall in sorted(syscalls):
+        nr_name = make__NR_name(syscall)
+        content += '#if defined(%s)\n' % nr_name
+        content += '  #define SYS_%s %s\n' % (syscall, nr_name)
+        content += '#endif\n'
+
+    updater.editFile('%s/include/bits/glibc-syscalls.h' % libc_root, content)
+
+
 try:
     optlist, args = getopt.getopt(sys.argv[1:], '')
 except:
     # Unrecognized option
     sys.stderr.write("error: unrecognized option\n")
-    usage()
+    Usage()
 
 if len(optlist) > 0 or len(args) > 2:
-    usage()
+    Usage()
 
 if len(args) > 0:
     original_dir = args[0]
@@ -91,10 +140,16 @@ if not os.path.isdir(modified_dir):
     panic("The kernel modified directory %s is not a directory\n" % modified_dir)
 
 updater = BatchFileUpdater()
+
 # Process the original uapi headers first.
-processFiles(updater, original_dir, modified_dir, "uapi", "uapi"),
+ProcessFiles(updater, original_dir, modified_dir, "uapi", "uapi"),
 
 # Now process the special files.
-processFiles(updater, original_dir, modified_dir, "scsi", os.path.join("android", "scsi", "scsi"))
+ProcessFiles(updater, original_dir, modified_dir, "scsi", os.path.join("android", "scsi", "scsi"))
 
+updater.updateGitFiles()
+
+# Now re-generate the <bits/glibc-syscalls.h> from the new uapi headers.
+updater = BatchFileUpdater()
+GenerateGlibcSyscallsHeader(updater)
 updater.updateGitFiles()
