@@ -417,3 +417,17 @@ are possible workarounds.
 | No workaround     | Works for static STL       | Broken  | Works |
 | `-Wl,-z,nodelete` | Works for static STL       | Works   | Works |
 | No `dlclose`      | Works                      | Works   | Works |
+
+## Use of IFUNC in libc (True for all API levels on devices running Q)
+
+Starting with Android Q (API level 29), libc uses
+[IFUNC](https://sourceware.org/glibc/wiki/GNU_IFUNC) functionality in
+the dynamic linker to choose optimized assembler routines at run time
+rather than at build time. This lets us use the same `libc.so` on all
+devices, and is similar to what other OSes already did. Because the zygote
+uses the C library, this decision is made long before we know what API
+level an app targets, so all code sees the new IFUNC-using C library.
+Most apps should be unaffected by this change, but apps that hook or try to
+detect hooking of C library functions might need to fix their code to cope
+with IFUNC relocations. The affected functions are from `<string.h>`, but
+may expand to include more functions (and more libraries) in future.

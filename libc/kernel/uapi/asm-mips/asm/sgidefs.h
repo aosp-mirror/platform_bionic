@@ -18,9 +18,6 @@
  ****************************************************************************/
 #ifndef __ASM_SGIDEFS_H
 #define __ASM_SGIDEFS_H
-#ifndef __linux__
-#error Use a Linux compiler or give up .
-#endif
 #define _MIPS_ISA_MIPS1 1
 #define _MIPS_ISA_MIPS2 2
 #define _MIPS_ISA_MIPS3 3

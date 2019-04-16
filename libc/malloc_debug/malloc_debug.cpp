@@ -29,6 +29,8 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <malloc.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/cdefs.h>
 #include <sys/param.h>
@@ -41,6 +43,7 @@
 #include <android-base/properties.h>
 #include <android-base/stringprintf.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <private/MallocXmlElem.h>
 
 #include "Config.h"
 #include "DebugData.h"
@@ -85,6 +88,7 @@ void* debug_realloc(void* pointer, size_t bytes);
 void* debug_calloc(size_t nmemb, size_t bytes);
 struct mallinfo debug_mallinfo();
 int debug_mallopt(int param, int value);
+int debug_malloc_info(int options, FILE* fp);
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
 int debug_iterate(uintptr_t base, size_t size,
                   void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
@@ -248,6 +252,10 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
   // Always enable the backtrace code since we will use it in a number
   // of different error cases.
   backtrace_startup();
+
+  if (g_debug->config().options() & VERBOSE) {
+    info_log("%s: malloc debug enabled", getprogname());
+  }
 
   return true;
 }
@@ -725,11 +733,37 @@ int debug_mallopt(int param, int value) {
   return g_dispatch->mallopt(param, value);
 }
 
+int debug_malloc_info(int options, FILE* fp) {
+  if (DebugCallsDisabled() || !g_debug->TrackPointers()) {
+    return g_dispatch->malloc_info(options, fp);
+  }
+
+  MallocXmlElem root(fp, "malloc", "version=\"debug-malloc-1\"");
+  std::vector<ListInfoType> list;
+  PointerData::GetAllocList(&list);
+
+  size_t alloc_num = 0;
+  for (size_t i = 0; i < list.size(); i++) {
+    MallocXmlElem alloc(fp, "allocation", "nr=\"%zu\"", alloc_num);
+
+    size_t total = 1;
+    size_t size = list[i].size;
+    while (i < list.size() - 1 && list[i + 1].size == size) {
+      i++;
+      total++;
+    }
+    MallocXmlElem(fp, "size").Contents("%zu", list[i].size);
+    MallocXmlElem(fp, "total").Contents("%zu", total);
+    alloc_num++;
+  }
+  return 0;
+}
+
 void* debug_aligned_alloc(size_t alignment, size_t size) {
   if (DebugCallsDisabled()) {
     return g_dispatch->aligned_alloc(alignment, size);
   }
-  if (!powerof2(alignment)) {
+  if (!powerof2(alignment) || (size % alignment) != 0) {
     errno = EINVAL;
     return nullptr;
   }
@@ -741,7 +775,7 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
     return g_dispatch->posix_memalign(memptr, alignment, size);
   }
 
-  if (!powerof2(alignment)) {
+  if (alignment < sizeof(void*) || !powerof2(alignment)) {
     return EINVAL;
   }
   int saved_errno = errno;

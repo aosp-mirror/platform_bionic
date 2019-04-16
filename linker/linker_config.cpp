@@ -60,7 +60,7 @@ class ConfigParser {
   };
 
   explicit ConfigParser(std::string&& content)
-      : content_(content), p_(0), lineno_(0), was_end_of_file_(false) {}
+      : content_(std::move(content)), p_(0), lineno_(0), was_end_of_file_(false) {}
 
   /*
    * Possible return values
@@ -80,7 +80,7 @@ class ConfigParser {
         continue;
       }
 
-      if (line[0] == '[' && line[line.size() - 1] == ']') {
+      if (line[0] == '[' && line.back() == ']') {
         *name = line.substr(1, line.size() - 2);
         return kSection;
       }
@@ -147,7 +147,7 @@ class PropertyValue {
   PropertyValue() = default;
 
   PropertyValue(std::string&& value, size_t lineno)
-    : value_(value), lineno_(lineno) {}
+    : value_(std::move(value)), lineno_(lineno) {}
 
   const std::string& value() const {
     return value_;
@@ -269,6 +269,8 @@ static bool parse_config_file(const char* ld_config_file_path,
     }
   }
 
+  INFO("[ Using config section \"%s\" ]", section_name.c_str());
+
   // skip everything until we meet a correct section
   while (true) {
     std::string name;
@@ -360,7 +362,7 @@ static constexpr const char* kLibParamValue = "lib";
 class Properties {
  public:
   explicit Properties(std::unordered_map<std::string, PropertyValue>&& properties)
-      : properties_(properties), target_sdk_version_(__ANDROID_API__) {}
+      : properties_(std::move(properties)), target_sdk_version_(__ANDROID_API__) {}
 
   std::vector<std::string> get_strings(const std::string& name, size_t* lineno = nullptr) const {
     auto it = find_property(name, lineno);
@@ -409,7 +411,7 @@ class Properties {
     static std::string vndk = Config::get_vndk_version_string('-');
     params.push_back({ "VNDK_VER", vndk });
 
-    for (auto&& path : paths) {
+    for (auto& path : paths) {
       format_string(&path, params);
     }
 
@@ -549,6 +551,12 @@ bool Config::read_binary_config(const char* ld_config_file_path,
 
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));
     ns_config->set_visible(properties.get_bool(property_name_prefix + ".visible"));
+
+    std::string whitelisted =
+        properties.get_string(property_name_prefix + ".whitelisted", &lineno);
+    if (!whitelisted.empty()) {
+      ns_config->set_whitelisted_libs(android::base::Split(whitelisted, ":"));
+    }
 
     // these are affected by is_asan flag
     if (is_asan) {

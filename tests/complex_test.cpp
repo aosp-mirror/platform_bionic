@@ -27,7 +27,6 @@
 #define __INTRODUCED_IN(x)
 #define __INTRODUCED_IN_32(x)
 #define __INTRODUCED_IN_64(x)
-#define __INTRODUCED_IN_FUTURE
 #define __RENAME_LDBL(a,b,c)
 #endif
 

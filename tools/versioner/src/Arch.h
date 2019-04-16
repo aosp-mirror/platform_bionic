@@ -138,7 +138,7 @@ static ArchMap<std::string> arch_targets = {
   { Arch::x86_64, "x86_64-linux-android" },
 };
 
-static const std::set<int> default_levels = { 14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28 };
+static const std::set<int> default_levels = { 14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29 };
 
 static const ArchMap<int> arch_min_api = {
   { Arch::arm, 9 },
@@ -148,8 +148,6 @@ static const ArchMap<int> arch_min_api = {
   { Arch::x86, 9 },
   { Arch::x86_64, 21 },
 };
-
-static constexpr int future_api = 10000;
 
 static const std::unordered_map<std::string, int> api_codename_map{
   {"G", 9},
@@ -166,5 +164,5 @@ static const std::unordered_map<std::string, int> api_codename_map{
   {"O", 26},
   {"O-MR1", 27},
   {"P", 28},
-  {"Q", 9001},
+  {"Q", 29},
 };

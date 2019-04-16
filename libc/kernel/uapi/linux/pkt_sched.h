@@ -195,9 +195,33 @@ enum {
   TCA_GRED_DPS,
   TCA_GRED_MAX_P,
   TCA_GRED_LIMIT,
+  TCA_GRED_VQ_LIST,
   __TCA_GRED_MAX,
 };
 #define TCA_GRED_MAX (__TCA_GRED_MAX - 1)
+enum {
+  TCA_GRED_VQ_ENTRY_UNSPEC,
+  TCA_GRED_VQ_ENTRY,
+  __TCA_GRED_VQ_ENTRY_MAX,
+};
+#define TCA_GRED_VQ_ENTRY_MAX (__TCA_GRED_VQ_ENTRY_MAX - 1)
+enum {
+  TCA_GRED_VQ_UNSPEC,
+  TCA_GRED_VQ_PAD,
+  TCA_GRED_VQ_DP,
+  TCA_GRED_VQ_STAT_BYTES,
+  TCA_GRED_VQ_STAT_PACKETS,
+  TCA_GRED_VQ_STAT_BACKLOG,
+  TCA_GRED_VQ_STAT_PROB_DROP,
+  TCA_GRED_VQ_STAT_PROB_MARK,
+  TCA_GRED_VQ_STAT_FORCED_DROP,
+  TCA_GRED_VQ_STAT_FORCED_MARK,
+  TCA_GRED_VQ_STAT_PDROP,
+  TCA_GRED_VQ_STAT_OTHER,
+  TCA_GRED_VQ_FLAGS,
+  __TCA_GRED_VQ_MAX
+};
+#define TCA_GRED_VQ_MAX (__TCA_GRED_VQ_MAX - 1)
 struct tc_gred_qopt {
   __u32 limit;
   __u32 qth_min;
@@ -639,6 +663,7 @@ enum {
   TCA_FQ_FLOW_REFILL_DELAY,
   TCA_FQ_ORPHAN_MASK,
   TCA_FQ_LOW_RATE_THRESHOLD,
+  TCA_FQ_CE_THRESHOLD,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
@@ -655,6 +680,7 @@ struct tc_fq_qd_stats {
   __u32 inactive_flows;
   __u32 throttled_flows;
   __u32 unthrottle_latency_ns;
+  __u64 ce_mark;
 };
 enum {
   TCA_HHF_UNSPEC,

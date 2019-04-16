@@ -193,7 +193,7 @@ TEST(stdio_ext, __freading__fwriting) {
 
 TEST(stdio_ext, __fseterr) {
 #if defined(__GLIBC__)
-  GTEST_LOG_(INFO) << "glibc doesn't have __fseterr, but gnulib will use it";
+  GTEST_SKIP() << "glibc doesn't have __fseterr, but gnulib will use it";
 #else
   FILE* fp = fopen("/dev/null", "w");
 

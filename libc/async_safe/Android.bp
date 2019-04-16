@@ -12,7 +12,20 @@ cc_library_static {
     recovery_available: true,
 
     include_dirs: ["bionic/libc"],
-    header_libs: ["libc_headers"],
+    header_libs: ["libc_headers", "liblog_headers"],
 
     export_include_dirs: ["include"],
+    export_header_lib_headers: ["liblog_headers"],
+    stl: "none",
+}
+
+cc_library_headers {
+    name: "libasync_safe_headers",
+    recovery_available: true,
+    defaults: ["linux_bionic_supported"],
+
+    export_include_dirs: ["include"],
+
+    system_shared_libs: [],
+    stl: "none",
 }

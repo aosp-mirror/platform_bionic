@@ -330,7 +330,7 @@ TEST(STDIO_TEST, snprintf_n) {
   int i = 1234;
   EXPECT_DEATH(snprintf(buf, sizeof(buf), "a %n b", &i), "%n not allowed on Android");
 #else
-  GTEST_LOG_(INFO) << "This test does nothing on glibc.\n";
+  GTEST_SKIP() << "glibc does allow %n";
 #endif
 }
 
@@ -1897,7 +1897,7 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing on glibc.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif
 }
 
@@ -2157,7 +2157,7 @@ TEST(STDIO_TEST, fseek_ftell_unseekable) {
 
   fclose(fp);
 #else
-  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
+  GTEST_SKIP() << "glibc uses fopencookie instead";
 #endif
 }
 
@@ -2167,7 +2167,7 @@ TEST(STDIO_TEST, funopen_EINVAL) {
   ASSERT_EQ(nullptr, funopen(nullptr, nullptr, nullptr, nullptr, nullptr));
   ASSERT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
+  GTEST_SKIP() << "glibc uses fopencookie instead";
 #endif
 }
 
@@ -2195,7 +2195,7 @@ TEST(STDIO_TEST, funopen_seek) {
   EXPECT_EQ(0, fgetpos64(fp64, &pos64)) << strerror(errno);
   EXPECT_EQ(0xfedcba12345678, pos64);
 #else
-  GTEST_LOG_(INFO) << "glibc uses fopencookie instead.\n";
+  GTEST_SKIP() << "glibc uses fopencookie instead";
 #endif
 }
 
@@ -2234,7 +2234,7 @@ static void AssertFileOffsetAt(FILE* fp, off64_t offset) {
   EXPECT_EQ(offset, static_cast<off64_t>(pos));
   EXPECT_EQ(offset, static_cast<off64_t>(pos64));
 #else
-  GTEST_LOG_(INFO) << "glibc's fpos_t is opaque.\n";
+  GTEST_SKIP() << "glibc's fpos_t is opaque";
 #endif
 }
 

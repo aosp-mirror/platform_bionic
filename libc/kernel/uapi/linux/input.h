@@ -24,13 +24,17 @@
 #include <linux/types.h>
 #include "input-event-codes.h"
 struct input_event {
-#if (__BITS_PER_LONG != 32 || !defined(__USE_TIME_BITS64)) && !defined(__KERNEL)
+#if __BITS_PER_LONG != 32 || !defined(__USE_TIME_BITS64)
   struct timeval time;
 #define input_event_sec time.tv_sec
 #define input_event_usec time.tv_usec
 #else
   __kernel_ulong_t __sec;
+#if defined(__sparc__) && defined(__arch64__)
+  unsigned int __usec;
+#else
   __kernel_ulong_t __usec;
+#endif
 #define input_event_sec __sec
 #define input_event_usec __usec
 #endif

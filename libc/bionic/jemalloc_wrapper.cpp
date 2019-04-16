@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <malloc.h>
 #include <sys/param.h>
 #include <unistd.h>
 
+#include <private/MallocXmlElem.h>
+
 #include "jemalloc.h"
-#include "private/bionic_macros.h"
 
 void* je_pvalloc(size_t bytes) {
   size_t pagesize = getpagesize();
@@ -46,6 +48,20 @@ void* je_memalign_round_up_boundary(size_t boundary, size_t size) {
     boundary = 1;
   }
   return je_memalign(boundary, size);
+}
+
+#ifdef je_aligned_alloc
+#undef je_aligned_alloc
+#endif
+
+// The aligned_alloc function requires that size is a multiple of alignment.
+// jemalloc doesn't enforce this, so add enforcement here.
+void* je_aligned_alloc_wrapper(size_t alignment, size_t size) {
+  if ((size % alignment) != 0) {
+    errno = EINVAL;
+    return nullptr;
+  }
+  return je_aligned_alloc(alignment, size);
 }
 
 int je_mallopt(int param, int value) {
@@ -99,5 +115,51 @@ int je_mallopt(int param, int value) {
     }
     return 1;
   }
+  return 0;
+}
+
+__BEGIN_DECLS
+
+size_t __mallinfo_narenas();
+size_t __mallinfo_nbins();
+struct mallinfo __mallinfo_arena_info(size_t);
+struct mallinfo __mallinfo_bin_info(size_t, size_t);
+
+__END_DECLS
+
+int je_malloc_info(int options, FILE* fp) {
+  if (options != 0) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  MallocXmlElem root(fp, "malloc", "version=\"jemalloc-1\"");
+
+  // Dump all of the large allocations in the arenas.
+  for (size_t i = 0; i < __mallinfo_narenas(); i++) {
+    struct mallinfo mi = __mallinfo_arena_info(i);
+    if (mi.hblkhd != 0) {
+      MallocXmlElem arena_elem(fp, "heap", "nr=\"%d\"", i);
+      {
+        MallocXmlElem(fp, "allocated-large").Contents("%zu", mi.ordblks);
+        MallocXmlElem(fp, "allocated-huge").Contents("%zu", mi.uordblks);
+        MallocXmlElem(fp, "allocated-bins").Contents("%zu", mi.fsmblks);
+
+        size_t total = 0;
+        for (size_t j = 0; j < __mallinfo_nbins(); j++) {
+          struct mallinfo mi = __mallinfo_bin_info(i, j);
+          if (mi.ordblks != 0) {
+            MallocXmlElem bin_elem(fp, "bin", "nr=\"%d\"", j);
+            MallocXmlElem(fp, "allocated").Contents("%zu", mi.ordblks);
+            MallocXmlElem(fp, "nmalloc").Contents("%zu", mi.uordblks);
+            MallocXmlElem(fp, "ndalloc").Contents("%zu", mi.fordblks);
+            total += mi.ordblks;
+          }
+        }
+        MallocXmlElem(fp, "bins-total").Contents("%zu", total);
+      }
+    }
+  }
+
   return 0;
 }

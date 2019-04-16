@@ -52,6 +52,7 @@
 
 #include "local.h"
 #include "glue.h"
+#include "private/__bionic_get_shell_path.h"
 #include "private/bionic_fortify.h"
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
@@ -290,7 +291,7 @@ FILE* fdopen(int fd, const char* mode) {
     if (fcntl(fd, F_SETFL, fd_flags | O_APPEND) == -1) return nullptr;
   }
 
-  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'x'.
+  // Make sure O_CLOEXEC is set on the underlying fd if our mode has 'e'.
   if ((mode_flags & O_CLOEXEC) && !((tmp = fcntl(fd, F_GETFD)) & FD_CLOEXEC)) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
@@ -1169,11 +1170,6 @@ size_t fwrite_unlocked(const void* buf, size_t size, size_t count, FILE* fp) {
   return (__sfvwrite(fp, &uio) == 0) ? count : ((n - uio.uio_resid) / size);
 }
 
-static int __close_if_popened(FILE* fp) {
-  if (_EXT(fp)->_popen_pid > 0) close(fileno(fp));
-  return 0;
-}
-
 static FILE* __popen_fail(int fds[2]) {
   ErrnoRestorer errno_restorer;
   close(fds[0]);
@@ -1219,14 +1215,11 @@ FILE* popen(const char* cmd, const char* mode) {
 
   if (pid == 0) {
     close(fds[parent]);
-    // POSIX says "The popen() function shall ensure that any streams from previous popen() calls
-    // that remain open in the parent process are closed in the new child process."
-    _fwalk(__close_if_popened);
     // dup2 so that the child fd isn't closed on exec.
     if (dup2(fds[child], desired_child_fd) == -1) _exit(127);
     close(fds[child]);
     if (bidirectional) dup2(STDOUT_FILENO, STDIN_FILENO);
-    execl(_PATH_BSHELL, "sh", "-c", cmd, nullptr);
+    execl(__bionic_get_shell_path(), "sh", "-c", cmd, nullptr);
     _exit(127);
   }
 

@@ -61,7 +61,7 @@ TEST(sys_prctl, bug_20017123) {
 
   ASSERT_EQ(0, munmap(p, page_size * 3));
 #else
-  GTEST_LOG_(INFO) << "This test does nothing as it tests an Android specific kernel feature.";
+  GTEST_SKIP() << "PR_SET_VMA not available";
 #endif
 }
 
@@ -112,7 +112,6 @@ TEST(sys_prctl, pr_cap_ambient) {
   EXPECT_EQ(-1, err);
   EXPECT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO)
-      << "Skipping test that requires host support for PR_CAP_AMBIENT.";
+  GTEST_SKIP() << "PR_CAP_AMBIENT not available";
 #endif
 }

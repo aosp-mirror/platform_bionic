@@ -42,6 +42,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <async_safe/CHECK.h>
 
 #include "private/bionic_defs.h"
 #include "private/bionic_macros.h"

@@ -713,7 +713,7 @@ TEST(stdio, open_wmemstream_EINVAL) {
   ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "This test is bionic-specific";
 #endif
 }
 

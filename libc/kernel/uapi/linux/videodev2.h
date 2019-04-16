@@ -58,6 +58,7 @@ enum v4l2_buf_type {
   V4L2_BUF_TYPE_SDR_CAPTURE = 11,
   V4L2_BUF_TYPE_SDR_OUTPUT = 12,
   V4L2_BUF_TYPE_META_CAPTURE = 13,
+  V4L2_BUF_TYPE_META_OUTPUT = 14,
   V4L2_BUF_TYPE_PRIVATE = 0x80,
 };
 #define V4L2_TYPE_IS_MULTIPLANAR(type) ((type) == V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE || (type) == V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE)
@@ -179,6 +180,7 @@ struct v4l2_capability {
 #define V4L2_CAP_READWRITE 0x01000000
 #define V4L2_CAP_ASYNCIO 0x02000000
 #define V4L2_CAP_STREAMING 0x04000000
+#define V4L2_CAP_META_OUTPUT 0x08000000
 #define V4L2_CAP_TOUCH 0x10000000
 #define V4L2_CAP_DEVICE_CAPS 0x80000000
 struct v4l2_pix_format {
@@ -356,6 +358,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
 #define V4L2_PIX_FMT_SUNXI_TILED_NV12 v4l2_fourcc('S', 'T', '1', '2')
+#define V4L2_PIX_FMT_CNF4 v4l2_fourcc('C', 'N', 'F', '4')
 #define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
 #define V4L2_PIX_FMT_IPU3_SGBRG10 v4l2_fourcc('i', 'p', '3', 'g')
 #define V4L2_PIX_FMT_IPU3_SGRBG10 v4l2_fourcc('i', 'p', '3', 'G')
@@ -481,6 +484,7 @@ struct v4l2_requestbuffers {
 #define V4L2_BUF_CAP_SUPPORTS_USERPTR (1 << 1)
 #define V4L2_BUF_CAP_SUPPORTS_DMABUF (1 << 2)
 #define V4L2_BUF_CAP_SUPPORTS_REQUESTS (1 << 3)
+#define V4L2_BUF_CAP_SUPPORTS_ORPHANED_BUFS (1 << 4)
 struct v4l2_plane {
   __u32 bytesused;
   __u32 length;

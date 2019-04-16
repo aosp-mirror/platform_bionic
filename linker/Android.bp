@@ -283,8 +283,6 @@ cc_binary {
 
     name: "linker",
     symlinks: ["linker_asan"],
-    // The linker in the system partition is now only for bootstrapping
-    relative_install_path: "bootstrap",
     recovery_available: true,
     multilib: {
         lib32: {
@@ -296,6 +294,10 @@ cc_binary {
         },
     },
     system_shared_libs: [],
+
+    // Opt out of native_coverage when opting out of system_shared_libs
+    native_coverage: false,
+
     target: {
         android: {
             static_libs: ["libdebuggerd_handler_fallback"],
@@ -303,7 +305,6 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
-    required: ["linker.mountpoint"],
 }
 
 cc_library {
@@ -364,7 +365,46 @@ cc_library {
     nocrt: true,
     system_shared_libs: [],
 
+    // Opt out of native_coverage when opting out of system_shared_libs
+    native_coverage: false,
+
     sanitize: {
         never: true,
     },
+}
+
+cc_test {
+    name: "linker-unit-tests",
+
+    cflags: [
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "-Wunused",
+        "-Werror",
+    ],
+
+    // We need to access Bionic private headers in the linker.
+    include_dirs: ["bionic/libc"],
+
+    srcs: [
+        // Tests.
+        "linker_block_allocator_test.cpp",
+        "linker_config_test.cpp",
+        "linked_list_test.cpp",
+        "linker_sleb128_test.cpp",
+        "linker_utils_test.cpp",
+
+        // Parts of the linker that we're testing.
+        "linker_block_allocator.cpp",
+        "linker_config.cpp",
+        "linker_test_globals.cpp",
+        "linker_utils.cpp",
+    ],
+
+    static_libs: [
+        "libasync_safe",
+        "libbase",
+        "liblog",
+    ],
 }

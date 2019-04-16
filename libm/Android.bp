@@ -508,14 +508,10 @@ cc_library {
     },
     stl: "none",
 
-    // TODO(ivanlozano): Remove after b/118321713
-    xom: false,
-
     stubs: {
         symbol_file: "libm.map.txt",
         versions: ["10000"],
     },
-    required: ["libm.mountpoint"],
 }
 
 ndk_library {

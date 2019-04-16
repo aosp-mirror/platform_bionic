@@ -49,7 +49,7 @@ class LinkerLogger {
   LinkerLogger() : flags_(0) { }
 
   void ResetState();
-  void Log(const char* format, ...);
+  void Log(const char* format, ...) __printflike(2, 3);
 
   uint32_t IsEnabled(uint32_t type) {
     return flags_ & type;

@@ -105,8 +105,10 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
       error_log("Unable to set up backtrace signal enable function: %s", strerror(errno));
       return false;
     }
-    info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
-             config.backtrace_signal(), getpid());
+    if (config.options() & VERBOSE) {
+      info_log("%s: Run: 'kill -%d %d' to enable backtracing.", getprogname(),
+               config.backtrace_signal(), getpid());
+    }
   }
 
   if (config.options() & BACKTRACE) {
@@ -117,8 +119,10 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
       error_log("Unable to set up backtrace dump signal function: %s", strerror(errno));
       return false;
     }
-    info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
-             config.backtrace_dump_signal(), getpid());
+    if (config.options() & VERBOSE) {
+      info_log("%s: Run: 'kill -%d %d' to dump the backtrace.", getprogname(),
+               config.backtrace_dump_signal(), getpid());
+    }
   }
 
   backtrace_dump_ = false;
@@ -266,12 +270,12 @@ void PointerData::LogBacktrace(size_t hash_index) {
   error_log("  hash_index %zu does not have matching frame data.", hash_index);
 }
 
-void PointerData::LogFreeError(const FreePointerInfoType& info, size_t usable_size) {
+void PointerData::LogFreeError(const FreePointerInfoType& info, size_t max_cmp_bytes) {
   error_log(LOG_DIVIDER);
   uint8_t* memory = reinterpret_cast<uint8_t*>(info.pointer);
   error_log("+++ ALLOCATION %p USED AFTER FREE", memory);
   uint8_t fill_free_value = g_debug->config().fill_free_value();
-  for (size_t i = 0; i < usable_size; i++) {
+  for (size_t i = 0; i < max_cmp_bytes; i++) {
     if (memory[i] != fill_free_value) {
       error_log("  allocation[%zu] = 0x%02x (expected 0x%02x)", i, memory[i], fill_free_value);
     }
@@ -314,11 +318,12 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
   size_t bytes = (usable_size < g_debug->config().fill_on_free_bytes())
                      ? usable_size
                      : g_debug->config().fill_on_free_bytes();
+  size_t max_cmp_bytes = bytes;
   const uint8_t* memory = reinterpret_cast<const uint8_t*>(info.pointer);
   while (bytes > 0) {
     size_t bytes_to_cmp = (bytes < g_cmp_mem.size()) ? bytes : g_cmp_mem.size();
     if (memcmp(memory, g_cmp_mem.data(), bytes_to_cmp) != 0) {
-      LogFreeError(info, usable_size);
+      LogFreeError(info, max_cmp_bytes);
     }
     bytes -= bytes_to_cmp;
     memory = &memory[bytes_to_cmp];
@@ -491,6 +496,17 @@ void PointerData::LogLeaks() {
   }
 }
 
+void PointerData::GetAllocList(std::vector<ListInfoType>* list) {
+  std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
+  std::lock_guard<std::mutex> frame_guard(frame_mutex_);
+
+  if (pointers_.empty()) {
+    return;
+  }
+
+  GetList(list, false);
+}
+
 void PointerData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size,
                           size_t* total_memory, size_t* backtrace_size) {
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
@@ -589,9 +605,9 @@ void PointerData::DumpLiveToFile(FILE* fp) {
 }
 
 void PointerData::PrepareFork() NO_THREAD_SAFETY_ANALYSIS {
+  free_pointer_mutex_.lock();
   pointer_mutex_.lock();
   frame_mutex_.lock();
-  free_pointer_mutex_.lock();
 }
 
 void PointerData::PostForkParent() NO_THREAD_SAFETY_ANALYSIS {

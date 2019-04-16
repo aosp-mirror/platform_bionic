@@ -57,12 +57,10 @@
 #define MSDOS_SLOTS 21
 #define MSDOS_DOT ".          "
 #define MSDOS_DOTDOT "..         "
-#define FAT_FIRST_ENT(s,x) ((MSDOS_SB(s)->fat_bits == 32 ? 0x0FFFFF00 : MSDOS_SB(s)->fat_bits == 16 ? 0xFF00 : 0xF00) | (x))
 #define FAT_START_ENT 2
 #define MAX_FAT12 0xFF4
 #define MAX_FAT16 0xFFF4
 #define MAX_FAT32 0x0FFFFFF6
-#define MAX_FAT(s) (MSDOS_SB(s)->fat_bits == 32 ? MAX_FAT32 : MSDOS_SB(s)->fat_bits == 16 ? MAX_FAT16 : MAX_FAT12)
 #define BAD_FAT12 0xFF7
 #define BAD_FAT16 0xFFF7
 #define BAD_FAT32 0x0FFFFFF7
@@ -108,7 +106,7 @@ struct fat_boot_sector {
       __u8 state;
       __u8 signature;
       __u8 vol_id[4];
-      __u8 vol_label[11];
+      __u8 vol_label[MSDOS_NAME];
       __u8 fs_type[8];
     } fat16;
     struct {
@@ -123,7 +121,7 @@ struct fat_boot_sector {
       __u8 state;
       __u8 signature;
       __u8 vol_id[4];
-      __u8 vol_label[11];
+      __u8 vol_label[MSDOS_NAME];
       __u8 fs_type[8];
     } fat32;
   };

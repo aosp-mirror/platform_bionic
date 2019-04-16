@@ -67,9 +67,20 @@ static void call_array(void(**list)()) {
 }
 
 #if defined(__aarch64__) || defined(__x86_64__)
-extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
 
 static void call_ifunc_resolvers() {
+  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
+    // These symbols are not emitted by gold. Gold has code to do so, but for
+    // whatever reason it is not being run. In these cases ifuncs cannot be
+    // resolved, so we do not support using ifuncs in static executables linked
+    // with gold.
+    //
+    // Since they are weak, they will be non-null when linked with bfd/lld and
+    // null when linked with gold.
+    return;
+  }
+
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
@@ -78,9 +89,20 @@ static void call_ifunc_resolvers() {
   }
 }
 #else
-extern __LIBC_HIDDEN__ ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
+extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
 
 static void call_ifunc_resolvers() {
+  if (__rel_iplt_start == nullptr || __rel_iplt_end == nullptr) {
+    // These symbols are not emitted by gold. Gold has code to do so, but for
+    // whatever reason it is not being run. In these cases ifuncs cannot be
+    // resolved, so we do not support using ifuncs in static executables linked
+    // with gold.
+    //
+    // Since they are weak, they will be non-null when linked with bfd/lld and
+    // null when linked with gold.
+    return;
+  }
+
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
@@ -180,7 +202,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   exit(slingshot(args.argc, args.argv, args.envp));
 }
 
-extern "C" void __hwasan_init();
+extern "C" void __hwasan_init_static();
 
 __attribute__((no_sanitize("hwaddress")))
 __noreturn void __libc_init(void* raw_args,
@@ -192,8 +214,9 @@ __noreturn void __libc_init(void* raw_args,
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now
   // all we need is access to TLS_SLOT_SANITIZER.
   __set_tls(&temp_tcb.tls_slot(0));
-  // Initialize HWASan. This sets up TLS_SLOT_SANITIZER, among other things.
-  __hwasan_init();
+  // Initialize HWASan enough to run instrumented code. This sets up TLS_SLOT_SANITIZER, among other
+  // things.
+  __hwasan_init_static();
   // We are ready to run HWASan-instrumented code, proceed with libc initialization...
 #endif
   __real_libc_init(raw_args, onexit, slingshot, structors, &temp_tcb);

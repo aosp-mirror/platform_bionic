@@ -31,6 +31,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <private/bionic_config.h>
 
 // Entry in malloc dispatch table.
@@ -38,6 +39,7 @@ typedef void* (*MallocCalloc)(size_t, size_t);
 typedef void (*MallocFree)(void*);
 typedef struct mallinfo (*MallocMallinfo)();
 typedef void* (*MallocMalloc)(size_t);
+typedef int (*MallocMallocInfo)(int, FILE*);
 typedef size_t (*MallocMallocUsableSize)(const void*);
 typedef void* (*MallocMemalign)(size_t, size_t);
 typedef int (*MallocPosixMemalign)(void**, size_t, size_t);
@@ -73,6 +75,7 @@ struct MallocDispatch {
   MallocMallocEnable malloc_enable;
   MallocMallopt mallopt;
   MallocAlignedAlloc aligned_alloc;
+  MallocMallocInfo malloc_info;
 } __attribute__((aligned(32)));
 
 #endif

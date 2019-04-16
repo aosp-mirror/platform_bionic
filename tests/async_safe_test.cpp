@@ -104,7 +104,7 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%lld,%d,%d,%dz", 0x1000000000LL, 6, 7, 8);
   EXPECT_STREQ("a68719476736,6,7,8z", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -114,7 +114,7 @@ TEST(async_safe_log, d_INT_MAX) {
   async_safe_format_buffer(buf, sizeof(buf), "%d", INT_MAX);
   EXPECT_STREQ("2147483647", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -124,7 +124,7 @@ TEST(async_safe_log, d_INT_MIN) {
   async_safe_format_buffer(buf, sizeof(buf), "%d", INT_MIN);
   EXPECT_STREQ("-2147483648", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -138,7 +138,7 @@ TEST(async_safe_log, ld_LONG_MAX) {
   EXPECT_STREQ("2147483647", buf);
 #endif
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -152,7 +152,7 @@ TEST(async_safe_log, ld_LONG_MIN) {
   EXPECT_STREQ("-2147483648", buf);
 #endif
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -162,7 +162,7 @@ TEST(async_safe_log, lld_LLONG_MAX) {
   async_safe_format_buffer(buf, sizeof(buf), "%lld", LLONG_MAX);
   EXPECT_STREQ("9223372036854775807", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -172,7 +172,7 @@ TEST(async_safe_log, lld_LLONG_MIN) {
   async_safe_format_buffer(buf, sizeof(buf), "%lld", LLONG_MIN);
   EXPECT_STREQ("-9223372036854775808", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }
 
@@ -196,6 +196,6 @@ TEST(async_safe_log, buffer_overrun) {
   ASSERT_EQ(4, async_safe_format_buffer(buf, 2, "xxxx"));
   EXPECT_STREQ("x", buf);
 #else // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
 }

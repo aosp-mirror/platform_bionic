@@ -24,8 +24,14 @@
 #define VRING_DESC_F_NEXT 1
 #define VRING_DESC_F_WRITE 2
 #define VRING_DESC_F_INDIRECT 4
+#define VRING_PACKED_DESC_F_AVAIL 7
+#define VRING_PACKED_DESC_F_USED 15
 #define VRING_USED_F_NO_NOTIFY 1
 #define VRING_AVAIL_F_NO_INTERRUPT 1
+#define VRING_PACKED_EVENT_FLAG_ENABLE 0x0
+#define VRING_PACKED_EVENT_FLAG_DISABLE 0x1
+#define VRING_PACKED_EVENT_FLAG_DESC 0x2
+#define VRING_PACKED_EVENT_F_WRAP_CTR 15
 #define VIRTIO_RING_F_INDIRECT_DESC 28
 #define VIRTIO_RING_F_EVENT_IDX 29
 struct vring_desc {
@@ -59,4 +65,14 @@ struct vring {
 #define VRING_DESC_ALIGN_SIZE 16
 #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
 #define vring_avail_event(vr) (* (__virtio16 *) & (vr)->used->ring[(vr)->num])
+struct vring_packed_desc_event {
+  __le16 off_wrap;
+  __le16 flags;
+};
+struct vring_packed_desc {
+  __le64 addr;
+  __le32 len;
+  __le16 id;
+  __le16 flags;
+};
 #endif

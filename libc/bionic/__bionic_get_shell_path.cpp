@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#include "private/__bionic_get_shell_path.h"
+
 #include <errno.h>
 #include <string.h>
 #include <sys/cdefs.h>
@@ -51,7 +53,7 @@ static const char* init_sh_path() {
   return "/system/bin/sh";
 }
 
-__LIBC_HIDDEN__ extern "C" const char* __bionic_get_shell_path() {
+const char* __bionic_get_shell_path() {
   static const char* sh_path = init_sh_path();
   return sh_path;
 }

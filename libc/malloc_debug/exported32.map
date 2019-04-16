@@ -14,6 +14,7 @@ LIBC_MALLOC_DEBUG {
     debug_malloc_backtrace;
     debug_malloc_disable;
     debug_malloc_enable;
+    debug_malloc_info;
     debug_malloc_usable_size;
     debug_mallopt;
     debug_memalign;

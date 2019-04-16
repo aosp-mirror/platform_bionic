@@ -128,40 +128,40 @@ enum android_fdsan_owner_type {
 /*
  * Create an owner tag with the specified type and least significant 56 bits of tag.
  */
-uint64_t android_fdsan_create_owner_tag(enum android_fdsan_owner_type type, uint64_t tag) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+uint64_t android_fdsan_create_owner_tag(enum android_fdsan_owner_type type, uint64_t tag) __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
  * Exchange a file descriptor's tag.
  *
  * Logs and aborts if the fd's tag does not match expected_tag.
  */
-void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t new_tag) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+void android_fdsan_exchange_owner_tag(int fd, uint64_t expected_tag, uint64_t new_tag) __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
  * Close a file descriptor with a tag, and resets the tag to 0.
  *
  * Logs and aborts if the tag is incorrect.
  */
-int android_fdsan_close_with_tag(int fd, uint64_t tag) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+int android_fdsan_close_with_tag(int fd, uint64_t tag) __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
  * Get a file descriptor's current owner tag.
  *
  * Returns 0 for untagged and invalid file descriptors.
  */
-uint64_t android_fdsan_get_owner_tag(int fd);
+uint64_t android_fdsan_get_owner_tag(int fd) __INTRODUCED_IN(29);
 
 /*
  * Get an owner tag's string representation.
  *
  * The return value points to memory with static lifetime, do not attempt to modify it.
  */
-const char* android_fdsan_get_tag_type(uint64_t tag);
+const char* android_fdsan_get_tag_type(uint64_t tag) __INTRODUCED_IN(29);
 
 /*
  * Get an owner tag's value, with the type masked off.
  */
-uint64_t android_fdsan_get_tag_value(uint64_t tag);
+uint64_t android_fdsan_get_tag_value(uint64_t tag) __INTRODUCED_IN(29);
 
 enum android_fdsan_error_level {
   // No errors.
@@ -180,7 +180,7 @@ enum android_fdsan_error_level {
 /*
  * Get the error level.
  */
-enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN(29) __attribute__((__weak__));
 
 /*
  * Set the error level and return the previous state.
@@ -195,6 +195,6 @@ enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN_F
  * value, and so should probably only be called in single-threaded contexts
  * (e.g. postfork).
  */
-enum android_fdsan_error_level android_fdsan_set_error_level(enum android_fdsan_error_level new_level) __INTRODUCED_IN_FUTURE __attribute__((__weak__));
+enum android_fdsan_error_level android_fdsan_set_error_level(enum android_fdsan_error_level new_level) __INTRODUCED_IN(29) __attribute__((__weak__));
 
 __END_DECLS

@@ -165,7 +165,7 @@ static void add_vdso() {
   si->load_bias = get_elf_exec_load_bias(ehdr_vdso);
 
   si->prelink_image();
-  si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr);
+  si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr);
   // prevents accidental unloads...
   si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_NODELETE);
   si->set_linked();
@@ -281,7 +281,8 @@ static ExecutableInfo load_executable(const char* orig_path) {
   if (!elf_reader.Read(result.path.c_str(), fd.get(), file_offset, result.file_stat.st_size)) {
     __linker_error("error: %s\n", linker_get_error_buffer());
   }
-  if (!elf_reader.Load(nullptr)) {
+  address_space_params address_space;
+  if (!elf_reader.Load(&address_space)) {
     __linker_error("error: %s\n", linker_get_error_buffer());
   }
 
@@ -351,6 +352,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   // Assign to a static variable for the sake of the debug map, which needs
   // a C-style string to last until the program exits.
   static std::string exe_path = exe_info.path;
+
+  INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
 
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
@@ -448,7 +451,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                       &namespaces)) {
     __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
-    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr)) {
+    if (!si->link_image(g_empty_list, soinfo_list_t::make_list(si), nullptr, nullptr)) {
       __linker_cannot_link(g_argv[0]);
     }
     si->increment_ref_count();
@@ -623,7 +626,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // itself without having to look into local_group and (2) allocators
   // are not yet initialized, and therefore we cannot use linked_list.push_*
   // functions at this point.
-  if (!tmp_linker_so.link_image(g_empty_list, g_empty_list, nullptr)) __linker_cannot_link(args.argv[0]);
+  if (!tmp_linker_so.link_image(g_empty_list, g_empty_list, nullptr, nullptr)) __linker_cannot_link(args.argv[0]);
 
   return __linker_init_post_relocation(args, tmp_linker_so);
 }

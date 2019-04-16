@@ -30,8 +30,6 @@
 
 #include <thread>
 
-#include "private/__get_tls.h"
-
 // Specify the LE access model explicitly. This file is compiled into the
 // bionic-unit-tests executable, but the compiler sees an -fpic object file
 // output into a static library, so it defaults to dynamic TLS accesses.
@@ -64,16 +62,8 @@ TEST(elftls, shared_ie) {
   }).join();
 }
 
-extern "C" int* missing_weak_tls_addr();
 extern "C" int bump_static_tls_var_1();
 extern "C" int bump_static_tls_var_2();
-
-TEST(elftls, tprel_missing_weak) {
-  ASSERT_EQ(static_cast<void*>(__get_tls()), missing_weak_tls_addr());
-  std::thread([] {
-    ASSERT_EQ(static_cast<void*>(__get_tls()), missing_weak_tls_addr());
-  }).join();
-}
 
 TEST(elftls, tprel_addend) {
   ASSERT_EQ(4, bump_static_tls_var_1());

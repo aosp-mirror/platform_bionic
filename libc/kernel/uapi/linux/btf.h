@@ -44,6 +44,7 @@ struct btf_type {
 };
 #define BTF_INFO_KIND(info) (((info) >> 24) & 0x0f)
 #define BTF_INFO_VLEN(info) ((info) & 0xffff)
+#define BTF_INFO_KFLAG(info) ((info) >> 31)
 #define BTF_KIND_UNKN 0
 #define BTF_KIND_INT 1
 #define BTF_KIND_PTR 2
@@ -56,8 +57,10 @@ struct btf_type {
 #define BTF_KIND_VOLATILE 9
 #define BTF_KIND_CONST 10
 #define BTF_KIND_RESTRICT 11
-#define BTF_KIND_MAX 11
-#define NR_BTF_KINDS 12
+#define BTF_KIND_FUNC 12
+#define BTF_KIND_FUNC_PROTO 13
+#define BTF_KIND_MAX 13
+#define NR_BTF_KINDS 14
 #define BTF_INT_ENCODING(VAL) (((VAL) & 0x0f000000) >> 24)
 #define BTF_INT_OFFSET(VAL) (((VAL & 0x00ff0000)) >> 16)
 #define BTF_INT_BITS(VAL) ((VAL) & 0x000000ff)
@@ -77,5 +80,11 @@ struct btf_member {
   __u32 name_off;
   __u32 type;
   __u32 offset;
+};
+#define BTF_MEMBER_BITFIELD_SIZE(val) ((val) >> 24)
+#define BTF_MEMBER_BIT_OFFSET(val) ((val) & 0xffffff)
+struct btf_param {
+  __u32 name_off;
+  __u32 type;
 };
 #endif
