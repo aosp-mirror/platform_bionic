@@ -1246,22 +1246,22 @@ cc_library_static {
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls/**/*.S"],
+            srcs: ["arch-arm/syscalls.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls/**/*.S"],
+            srcs: ["arch-arm64/syscalls.S"],
         },
         mips: {
-            srcs: ["arch-mips/syscalls/**/*.S"],
+            srcs: ["arch-mips/syscalls.S"],
         },
         mips64: {
-            srcs: ["arch-mips64/syscalls/**/*.S"],
+            srcs: ["arch-mips64/syscalls.S"],
         },
         x86: {
-            srcs: ["arch-x86/syscalls/**/*.S"],
+            srcs: ["arch-x86/syscalls.S"],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls/**/*.S"],
+            srcs: ["arch-x86_64/syscalls.S"],
         },
     },
     name: "libc_syscalls",
@@ -2455,19 +2455,19 @@ cc_library_shared {
 
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls/__rt_sigprocmask.S"],
+            srcs: ["arch-arm/syscalls.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls/__rt_sigprocmask.S"],
+            srcs: ["arch-arm64/syscalls.S"],
         },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                "arch-x86/syscalls/__rt_sigprocmask.S",
+                "arch-x86/syscalls.S",
             ],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls/__rt_sigprocmask.S"],
+            srcs: ["arch-x86_64/syscalls.S"],
         },
     },
 
