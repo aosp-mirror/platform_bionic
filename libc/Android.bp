@@ -77,8 +77,9 @@ cc_defaults {
     native_coverage: false,
     recovery_available: true,
 
-    // TODO(ivanlozano): Remove after b/118321713
-    xom: false,
+    // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
+    // warning since this is intended right now.
+    ldflags: ["-Wl,-z,muldefs"],
 }
 
 // ========================================================
@@ -764,7 +765,7 @@ cc_library_static {
                 "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
                 "arch-arm/bionic/_exit_with_stack_teardown.S",
-                "arch-arm/bionic/libgcc_compat.c",
+                "arch-arm/bionic/libcrt_compat.c",
                 "arch-arm/bionic/popcount_tab.c",
                 "arch-arm/bionic/__restore.S",
                 "arch-arm/bionic/setjmp.S",
@@ -848,7 +849,7 @@ cc_library_static {
                 "arch-mips/bionic/__bionic_clone.S",
                 "arch-mips/bionic/cacheflush.cpp",
                 "arch-mips/bionic/_exit_with_stack_teardown.S",
-                "arch-mips/bionic/libgcc_compat.c",
+                "arch-mips/bionic/libcrt_compat.c",
                 "arch-mips/bionic/setjmp.S",
                 "arch-mips/bionic/syscall.S",
                 "arch-mips/bionic/vfork.S",
@@ -918,7 +919,7 @@ cc_library_static {
 
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
-                "arch-x86/bionic/libgcc_compat.c",
+                "arch-x86/bionic/libcrt_compat.c",
                 "arch-x86/bionic/__restore.S",
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
@@ -1080,7 +1081,6 @@ cc_library_static {
         "bionic/locale.cpp",
         "bionic/lockf.cpp",
         "bionic/lstat.cpp",
-        "bionic/malloc_info.cpp",
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
@@ -1246,22 +1246,22 @@ cc_library_static {
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls/**/*.S"],
+            srcs: ["arch-arm/syscalls.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls/**/*.S"],
+            srcs: ["arch-arm64/syscalls.S"],
         },
         mips: {
-            srcs: ["arch-mips/syscalls/**/*.S"],
+            srcs: ["arch-mips/syscalls.S"],
         },
         mips64: {
-            srcs: ["arch-mips64/syscalls/**/*.S"],
+            srcs: ["arch-mips64/syscalls.S"],
         },
         x86: {
-            srcs: ["arch-x86/syscalls/**/*.S"],
+            srcs: ["arch-x86/syscalls.S"],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls/**/*.S"],
+            srcs: ["arch-x86_64/syscalls.S"],
         },
     },
     name: "libc_syscalls",
@@ -1300,7 +1300,10 @@ cc_library_static {
 cc_library_static {
     name: "libc_ndk",
     defaults: ["libc_defaults"],
-    srcs: libc_common_src_files + ["bionic/malloc_common.cpp"],
+    srcs: libc_common_src_files + [
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_limit.cpp",
+    ],
     multilib: {
         lib32: {
             srcs: libc_common_src_files_32,
@@ -1493,6 +1496,9 @@ filegroup {
         "arch-common/bionic/crtbrand.S",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
+        "bionic/malloc_limit.cpp",
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
@@ -1503,6 +1509,7 @@ filegroup {
     srcs: [
         "bionic/dl_iterate_phdr_static.cpp",
         "bionic/malloc_common.cpp",
+        "bionic/malloc_limit.cpp",
     ],
 }
 
@@ -1548,7 +1555,7 @@ cc_library {
         ],
     },
 
-    required: ["tzdata", "libc.mountpoint"],
+    required: ["tzdata"],
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.
@@ -1570,6 +1577,9 @@ cc_library {
     shared_libs: [
         "ld-android",
         "libdl",
+    ],
+    static_libs: [
+        "libdl_android",
     ],
     whole_static_libs: [
         "libjemalloc5",
@@ -2418,3 +2428,54 @@ cc_library {
         static_libs: ["libbase"],
     },
 }
+
+// This is a temporary library that will use scudo as the native memory
+// allocator. To use it, add it as the first shared library.
+cc_library_shared {
+    name: "libc_scudo",
+    vendor_available: true,
+    srcs: [
+        "bionic/malloc_common.cpp",
+        "bionic/malloc_common_dynamic.cpp",
+        "bionic/malloc_heapprofd.cpp",
+        "bionic/malloc_limit.cpp",
+        "bionic/scudo_wrapper.cpp",
+        "bionic/__set_errno.cpp",
+    ],
+    cflags: ["-DUSE_SCUDO"],
+    stl: "none",
+    system_shared_libs: [],
+
+    header_libs: ["libc_headers"],
+
+    static_libs: ["libasync_safe"],
+
+    allow_undefined_symbols: true,
+    shared_libs: ["libscudo_wrapper"],
+
+    arch: {
+        arm: {
+            srcs: ["arch-arm/syscalls.S"],
+        },
+        arm64: {
+            srcs: ["arch-arm64/syscalls.S"],
+        },
+        x86: {
+            srcs: [
+                "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/syscalls.S",
+            ],
+        },
+        x86_64: {
+            srcs: ["arch-x86_64/syscalls.S"],
+        },
+    },
+
+    // Mark this library as global so it overrides all the allocation
+    // definitions properly.
+    ldflags: ["-Wl,-z,global"],
+}
+
+subdirs = [
+    "bionic/scudo",
+]

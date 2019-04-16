@@ -257,10 +257,6 @@ class SymbolFileParser {
         intro_arch = true;
         continue;
       }
-
-      if (tag == "future") {
-        return compilation_type.api_level == future_api;
-      }
     }
 
     if (intro.empty() && api_level.empty()) {

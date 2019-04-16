@@ -397,10 +397,6 @@ static bool checkVersions(const std::set<CompilationType>& types,
         should_be_available = false;
       }
 
-      if (arch_availability.future) {
-        continue;
-      }
-
       // The function declaration might be (validly) missing for the given CompilationType.
       if (!symbol_it.second.hasDeclaration(type)) {
         should_be_available = false;

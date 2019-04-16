@@ -463,6 +463,12 @@ struct drm_mode_get_lease {
 struct drm_mode_revoke_lease {
   __u32 lessee_id;
 };
+struct drm_mode_rect {
+  __s32 x1;
+  __s32 y1;
+  __s32 x2;
+  __s32 y2;
+};
 #ifdef __cplusplus
 }
 #endif

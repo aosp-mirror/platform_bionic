@@ -55,6 +55,9 @@ struct libc_globals {
   // The malloc_dispatch_table is modified by malloc debug, malloc hooks,
   // and heaprofd. Only one of these modes can be active at any given time.
   _Atomic(const MallocDispatch*) current_dispatch_table;
+  // This pointer is only used by the allocation limit code when both a
+  // limit is enabled and some other hook is enabled at the same time.
+  _Atomic(const MallocDispatch*) default_dispatch_table;
   MallocDispatch malloc_dispatch_table;
 };
 

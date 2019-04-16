@@ -231,6 +231,6 @@ TEST(link, dl_unwind_find_exidx) {
   }
   ASSERT_TRUE(found);
 #else
-  GTEST_LOG_(INFO) << "dl_unwind_find_exidx is an ARM-only API\n";
+  GTEST_SKIP() << "dl_unwind_find_exidx is an ARM-only API";
 #endif
 }

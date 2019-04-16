@@ -34,6 +34,7 @@
 #include <private/android_filesystem_config.h>
 
 #if defined(__BIONIC__)
+#include <android/api-level.h>
 #include <android-base/properties.h>
 #endif
 
@@ -137,17 +138,13 @@ static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_typ
 
 #else // !defined(__BIONIC__)
 
-static void print_no_getpwnam_test_info() {
-  GTEST_LOG_(INFO) << "This test is about uid/username translation for Android, which does nothing on libc other than bionic.\n";
-}
-
 static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */,
                              bool /* check_username */) {
-  print_no_getpwnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 }
 
 static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_type_t /* uid_type */) {
-  print_no_getpwnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 }
 
 #endif
@@ -247,11 +244,9 @@ static void expect_ids(const T& ids) {
   expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
-  // Upgrading devices launched before API level 28 may not comply with the below check.
-  // Due to the difficulty in changing uids after launch, it is waived for these devices.
-  // Also grant this check for device launched with 28(P) to give the vendor time to
-  // adopt the AID scheme.
-  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 28) {
+  // TODO(73062966): We still don't have a good way to create vendor AIDs in the system or other
+  // non-vendor partitions, therefore we keep this check disabled.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= __ANDROID_API_Q__) {
     return;
   }
 
@@ -312,7 +307,7 @@ TEST(pwd, getpwent_iterate) {
 
   expect_ids(uids);
 #else
-  print_no_getpwnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -383,16 +378,12 @@ static void check_get_group(const char* group_name, gid_t gid, bool check_groupn
 
 #else // !defined(__BIONIC__)
 
-static void print_no_getgrnam_test_info() {
-  GTEST_LOG_(INFO) << "This test is about gid/group_name translation for Android, which does nothing on libc other than bionic.\n";
-}
-
 static void check_get_group(const char*, gid_t, bool) {
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 }
 
 static void check_get_group(const char*, gid_t) {
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 }
 
 #endif
@@ -502,7 +493,7 @@ TEST(grp, getgrnam_r_reentrancy) {
   check_group(grp[0], "root", 0);
   check_group(grp[1], "system", 1000);
 #else
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -522,7 +513,7 @@ TEST(grp, getgrgid_r_reentrancy) {
   check_group(grp[0], "root", 0);
   check_group(grp[1], "system", 1000);
 #else
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -562,7 +553,7 @@ TEST(grp, getgrent_iterate) {
 
   expect_ids(gids);
 #else
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -591,7 +582,7 @@ TEST(pwd, vendor_prefix_users) {
 
   TestAidNamePrefix("/vendor/etc/passwd");
 #else
-  print_no_getpwnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -603,6 +594,6 @@ TEST(pwd, vendor_prefix_groups) {
 
   TestAidNamePrefix("/vendor/etc/group");
 #else
-  print_no_getgrnam_test_info();
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }

@@ -321,8 +321,9 @@
 #define __NR_statx 291
 #define __NR_io_pgetevents 292
 #define __NR_rseq 293
+#define __NR_kexec_file_load 294
 #undef __NR_syscalls
-#define __NR_syscalls 294
+#define __NR_syscalls 295
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs

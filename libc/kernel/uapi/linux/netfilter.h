@@ -35,8 +35,6 @@
 #define NF_VERDICT_QBITS 16
 #define NF_QUEUE_NR(x) ((((x) << 16) & NF_VERDICT_QMASK) | NF_QUEUE)
 #define NF_DROP_ERR(x) (((- x) << 16) | NF_DROP)
-#define NFC_UNKNOWN 0x4000
-#define NFC_ALTERED 0x8000
 #define NF_VERDICT_BITS 16
 enum nf_inet_hooks {
   NF_INET_PRE_ROUTING,

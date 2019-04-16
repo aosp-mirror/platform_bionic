@@ -62,7 +62,7 @@ class VersionerASTConsumer : public clang::ASTConsumer {
       : header_database(header_database), type(type) {
   }
 
-  virtual void HandleTranslationUnit(ASTContext& ctx) override {
+  void HandleTranslationUnit(ASTContext& ctx) override {
     header_database->parseAST(type, ctx);
   }
 };

@@ -37,7 +37,7 @@ const char* const sys_siglist[NSIG] = {
 };
 
 const char* const sys_signame[NSIG] = {
-#define __BIONIC_SIGDEF(signal_number, unused) [ signal_number ] = #signal_number + 3,
+#define __BIONIC_SIGDEF(signal_number, unused) [ signal_number ] = &(#signal_number)[3],
 #include "private/bionic_sigdefs.h"
 };
 

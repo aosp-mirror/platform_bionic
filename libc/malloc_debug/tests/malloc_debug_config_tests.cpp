@@ -743,3 +743,21 @@ TEST_F(MallocDebugConfigTest, trigger_abort_fail) {
       "which does not take a value\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugConfigTest, verbose) {
+  ASSERT_TRUE(InitConfig("verbose")) << getFakeLogPrint();
+  ASSERT_EQ(VERBOSE, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, trigger_verbose_fail) {
+  ASSERT_FALSE(InitConfig("verbose=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'verbose' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}

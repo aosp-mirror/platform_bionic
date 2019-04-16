@@ -1481,7 +1481,7 @@ LIBC_Q { # introduced=Q
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
 
-    # Used by libandroid_runtime
+    # Used by libandroid_runtime and libmedia
     android_mallopt; # apex
     gMallocLeakZygoteChild; # apex
 } LIBC_P;
@@ -1500,8 +1500,12 @@ LIBC_PRIVATE {
     __aeabi_cdcmpeq; # arm
     __aeabi_cdcmple; # arm
     __aeabi_cdrcmple; # arm
+    __aeabi_cfcmpeq; # arm
+    __aeabi_cfcmple; # arm
+    __aeabi_cfrcmple; # arm
     __aeabi_d2f; # arm
     __aeabi_d2iz; # arm
+    __aeabi_d2uiz; # arm
     __aeabi_dadd; # arm
     __aeabi_dcmpeq; # arm
     __aeabi_dcmpge; # arm
@@ -1517,6 +1521,11 @@ LIBC_PRIVATE {
     __aeabi_f2iz; # arm
     __aeabi_f2uiz; # arm
     __aeabi_fadd; # arm
+    __aeabi_fcmpeq; # arm
+    __aeabi_fcmpge; # arm
+    __aeabi_fcmpgt; # arm
+    __aeabi_fcmple; # arm
+    __aeabi_fcmplt; # arm
     __aeabi_fcmpun; # arm
     __aeabi_fdiv; # arm
     __aeabi_fmul; # arm
@@ -1561,17 +1570,20 @@ LIBC_PRIVATE {
     __ashldi3; # arm
     __ashrdi3; # arm
     __bionic_brk; # arm x86 mips
-    __bionic_libgcc_compat_symbols; # arm x86
+    __bionic_libcrt_compat_symbols; # arm x86
     __cmpdf2; # arm
+    __cmpsf2; # arm
     __divdf3; # arm
     __divdi3; # arm x86 mips
     __divsf3; # arm
     __divsi3; # arm
     __dso_handle; # arm
     __eqdf2; # arm
+    __eqsf2; # arm
     __extendsfdf2; # arm
     __fixdfsi; # arm
     __fixsfsi; # arm
+    __fixunsdfsi; # arm
     __fixunssfsi; # arm
     __floatdidf; # arm
     __floatdisf; # arm
@@ -1584,6 +1596,7 @@ LIBC_PRIVATE {
     __futex_wait; # arm x86 mips
     __futex_wake; # arm x86 mips
     __gedf2; # arm
+    __gesf2; # arm
     __get_thread; # arm x86 mips
     __get_tls; # arm x86 mips
     __getdents64; # arm x86 mips
@@ -1608,13 +1621,17 @@ LIBC_PRIVATE {
     __gnu_Unwind_Save_WMMXC; # arm
     __gnu_Unwind_Save_WMMXD; # arm
     __gtdf2; # arm
+    __gtsf2; # arm
     __ledf2; # arm
+    __lesf2; # arm
     __lshrdi3; # arm
     __ltdf2; # arm
+    __ltsf2; # arm
     __muldf3; # arm
     __muldi3; # arm
     __mulsf3; # arm
     __nedf2; # arm
+    __nesf2; # arm
     __open; # arm x86 mips
     __page_shift; # arm x86 mips
     __page_size; # arm x86 mips

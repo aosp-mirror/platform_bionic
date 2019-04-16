@@ -298,11 +298,26 @@ void __libc_init_AT_SECURE(char** env) {
   unsigned long is_AT_SECURE = getauxval(AT_SECURE);
   if (errno != 0) __early_abort(__LINE__);
 
-  if (is_AT_SECURE) {
-    // If this is a setuid/setgid program, close the security hole described in
-    // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
+  // Always ensure that STDIN/STDOUT/STDERR exist. This prevents file
+  // descriptor confusion bugs where a parent process closes
+  // STD*, the exec()d process calls open() for an unrelated reason,
+  // the newly created file descriptor is assigned
+  // 0<=FD<=2, and unrelated code attempts to read / write to the STD*
+  // FDs.
+  // In particular, this can be a security bug for setuid/setgid programs.
+  // For example:
+  // https://www.freebsd.org/security/advisories/FreeBSD-SA-02:23.stdio.asc
+  // However, for robustness reasons, we don't limit these protections to
+  // just security critical executables.
+  //
+  // Init is excluded from these protections unless AT_SECURE is set, as
+  // /dev/null and/or /sys/fs/selinux/null will not be available at
+  // early boot.
+  if ((getpid() != 1) || is_AT_SECURE) {
     __nullify_closed_stdio();
+  }
 
+  if (is_AT_SECURE) {
     __sanitize_environment_variables(env);
   }
 

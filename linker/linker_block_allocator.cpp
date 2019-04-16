@@ -134,7 +134,7 @@ void LinkerBlockAllocator::create_new_page() {
 
   FreeBlockInfo* first_block = reinterpret_cast<FreeBlockInfo*>(page->bytes);
   first_block->next_block = free_block_list_;
-  first_block->num_free_blocks = (kAllocateSize - sizeof(LinkerBlockAllocatorPage*))/block_size_;
+  first_block->num_free_blocks = sizeof(page->bytes) / block_size_;
 
   free_block_list_ = first_block;
 

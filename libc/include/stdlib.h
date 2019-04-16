@@ -154,7 +154,7 @@ lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const_
  *
  * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
  */
-int getloadavg(double __averages[], int __n) __INTRODUCED_IN_FUTURE;
+int getloadavg(double __averages[], int __n) __INTRODUCED_IN(29);
 
 /* BSD compatibility. */
 const char* getprogname(void) __INTRODUCED_IN(21);

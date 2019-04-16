@@ -27,12 +27,12 @@
  */
 
 #include <errno.h>
-#include <paths.h>
 #include <stdlib.h>
 #include <spawn.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "private/__bionic_get_shell_path.h"
 #include "private/ScopedSignalBlocker.h"
 #include "private/ScopedSignalHandler.h"
 
@@ -58,7 +58,7 @@ int system(const char* command) {
 
   const char* argv[] = { "sh", "-c", command, nullptr };
   pid_t child;
-  if ((errno = posix_spawn(&child, _PATH_BSHELL, nullptr, &attributes,
+  if ((errno = posix_spawn(&child, __bionic_get_shell_path(), nullptr, &attributes,
                            const_cast<char**>(argv), environ)) != 0) {
     return -1;
   }

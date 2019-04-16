@@ -16,13 +16,22 @@
 
 #include <gtest/gtest.h>
 
+#include <elf.h>
 #include <limits.h>
+#include <pthread.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <malloc.h>
 #include <unistd.h>
 
+#include <atomic>
 #include <tinyxml2.h>
+
+#include <android-base/file.h>
 
 #include "private/bionic_config.h"
 #include "private/bionic_malloc.h"
@@ -85,7 +94,7 @@ TEST(malloc, calloc_overflow) {
 }
 
 TEST(malloc, memalign_multiple) {
-  SKIP_WITH_HWASAN; // hwasan requires power of 2 alignment.
+  SKIP_WITH_HWASAN << "hwasan requires power of 2 alignment";
   // Memalign test where the alignment is any value.
   for (size_t i = 0; i <= 12; i++) {
     for (size_t alignment = 1 << i; alignment < (1U << (i+1)); alignment++) {
@@ -332,6 +341,7 @@ TEST(malloc, valloc_overflow) {
 
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
+  SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
   char* buf;
   size_t bufsize;
   FILE* memstream = open_memstream(&buf, &bufsize);
@@ -345,35 +355,42 @@ TEST(malloc, malloc_info) {
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
+  if (std::string(root->Attribute("version")) == "jemalloc-1") {
+    // Verify jemalloc version of this data.
+    ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
-  auto arena = root->FirstChildElement();
-  for (; arena != nullptr; arena = arena->NextSiblingElement()) {
-    int val;
+    auto arena = root->FirstChildElement();
+    for (; arena != nullptr; arena = arena->NextSiblingElement()) {
+      int val;
 
-    ASSERT_STREQ("heap", arena->Name());
-    ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-large")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
-    ASSERT_EQ(tinyxml2::XML_SUCCESS,
-              arena->FirstChildElement("bins-total")->QueryIntText(&val));
+      ASSERT_STREQ("heap", arena->Name());
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-large")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("bins-total")->QueryIntText(&val));
 
-    auto bin = arena->FirstChildElement("bin");
-    for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
-      if (strcmp(bin->Name(), "bin") == 0) {
-        ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("allocated")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("nmalloc")->QueryIntText(&val));
-        ASSERT_EQ(tinyxml2::XML_SUCCESS,
-                  bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+      auto bin = arena->FirstChildElement("bin");
+      for (; bin != nullptr; bin = bin ->NextSiblingElement()) {
+        if (strcmp(bin->Name(), "bin") == 0) {
+          ASSERT_EQ(tinyxml2::XML_SUCCESS, bin->QueryIntAttribute("nr", &val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("allocated")->QueryIntText(&val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("nmalloc")->QueryIntText(&val));
+          ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                    bin->FirstChildElement("ndalloc")->QueryIntText(&val));
+        }
       }
     }
+  } else {
+    // Only verify that this is debug-malloc-1, the malloc debug unit tests
+    // verify the output.
+    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
   }
 #endif
 }
@@ -515,24 +532,24 @@ TEST(malloc, mallopt_smoke) {
 
 TEST(malloc, mallopt_decay) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
   errno = 0;
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 1));
   ASSERT_EQ(1, mallopt(M_DECAY_TIME, 0));
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
 TEST(malloc, mallopt_purge) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan does not implement mallopt
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -550,7 +567,7 @@ TEST(malloc, reallocarray_overflow) {
   ASSERT_TRUE(reallocarray(nullptr, b, a) == nullptr);
   ASSERT_EQ(ENOMEM, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+  GTEST_SKIP() << "reallocarray not available";
 #endif
 }
 
@@ -560,13 +577,13 @@ TEST(malloc, reallocarray) {
   ASSERT_TRUE(p != nullptr);
   ASSERT_GE(malloc_usable_size(p), 64U);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with reallocarray.\n";
+  GTEST_SKIP() << "reallocarray not available";
 #endif
 }
 
 TEST(malloc, mallinfo) {
 #if defined(__BIONIC__)
-  SKIP_WITH_HWASAN; // hwasan does not implement mallinfo
+  SKIP_WITH_HWASAN << "hwasan does not implement mallinfo";
   static size_t sizes[] = {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
   };
@@ -605,7 +622,7 @@ TEST(malloc, mallinfo) {
         << kMaxAllocs << " allocations.";
   }
 #else
-  GTEST_LOG_(INFO) << "Host glibc does not pass this test, skipping.\n";
+  GTEST_SKIP() << "glibc is broken";
 #endif
 }
 
@@ -616,24 +633,288 @@ TEST(android_mallopt, error_on_unexpected_option) {
   EXPECT_EQ(false, android_mallopt(unrecognized_option, nullptr, 0));
   EXPECT_EQ(ENOTSUP, errno);
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
+}
+
+bool IsDynamic() {
+#if defined(__LP64__)
+  Elf64_Ehdr ehdr;
+#else
+  Elf32_Ehdr ehdr;
+#endif
+  std::string path(android::base::GetExecutablePath());
+
+  int fd = open(path.c_str(), O_RDONLY | O_CLOEXEC);
+  if (fd == -1) {
+    // Assume dynamic on error.
+    return true;
+  }
+  bool read_completed = android::base::ReadFully(fd, &ehdr, sizeof(ehdr));
+  close(fd);
+  // Assume dynamic in error cases.
+  return !read_completed || ehdr.e_type == ET_DYN;
 }
 
 TEST(android_mallopt, init_zygote_child_profiling) {
 #if defined(__BIONIC__)
   // Successful call.
   errno = 0;
-  EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
-  EXPECT_EQ(0, errno);
+  if (IsDynamic()) {
+    EXPECT_EQ(true, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+    EXPECT_EQ(0, errno);
+  } else {
+    // Not supported in static executables.
+    EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+    EXPECT_EQ(ENOTSUP, errno);
+  }
 
   // Unexpected arguments rejected.
   errno = 0;
   char unexpected = 0;
   EXPECT_EQ(false, android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, &unexpected, 1));
-  EXPECT_EQ(EINVAL, errno);
+  if (IsDynamic()) {
+    EXPECT_EQ(EINVAL, errno);
+  } else {
+    EXPECT_EQ(ENOTSUP, errno);
+  }
 #else
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
+#if defined(__BIONIC__)
+template <typename FuncType>
+void CheckAllocationFunction(FuncType func) {
+  // Assumes that no more than 108MB of memory is allocated before this.
+  size_t limit = 128 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+  if (!func(20 * 1024 * 1024))
+    exit(1);
+  if (func(128 * 1024 * 1024))
+    exit(1);
+  exit(0);
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit) {
+#if defined(__BIONIC__)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(bytes, 1) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return calloc(1, bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return malloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return memalign(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* ptr;
+                return posix_memalign(&ptr, sizeof(void *), bytes) == 0;
+              }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction(
+                  [](size_t bytes) { return aligned_alloc(sizeof(void*), bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) {
+                void* p = malloc(1024 * 1024);
+                return realloc(p, bytes) != nullptr;
+              }),
+              testing::ExitedWithCode(0), "");
+#if !defined(__LP64__)
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return pvalloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+  EXPECT_EXIT(CheckAllocationFunction([](size_t bytes) { return valloc(bytes) != nullptr; }),
+              testing::ExitedWithCode(0), "");
+#endif
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_multiple) {
+#if defined(__BIONIC__)
+  // Only the first set should work.
+  size_t limit = 256 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+  limit = 32 * 1024 * 1024;
+  ASSERT_FALSE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+#if defined(__BIONIC__)
+static constexpr size_t kAllocationSize = 8 * 1024 * 1024;
+
+static size_t GetMaxAllocations() {
+  size_t max_pointers = 0;
+  void* ptrs[20];
+  for (size_t i = 0; i < sizeof(ptrs) / sizeof(void*); i++) {
+    ptrs[i] = malloc(kAllocationSize);
+    if (ptrs[i] == nullptr) {
+      max_pointers = i;
+      break;
+    }
+  }
+  for (size_t i = 0; i < max_pointers; i++) {
+    free(ptrs[i]);
+  }
+  return max_pointers;
+}
+
+static void VerifyMaxPointers(size_t max_pointers) {
+  // Now verify that we can allocate the same number as before.
+  void* ptrs[20];
+  for (size_t i = 0; i < max_pointers; i++) {
+    ptrs[i] = malloc(kAllocationSize);
+    ASSERT_TRUE(ptrs[i] != nullptr) << "Failed to allocate on iteration " << i;
+  }
+
+  // Make sure the next allocation still fails.
+  ASSERT_TRUE(malloc(kAllocationSize) == nullptr);
+  for (size_t i = 0; i < max_pointers; i++) {
+    free(ptrs[i]);
+  }
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit_realloc_increase) {
+#if defined(__BIONIC__)
+  size_t limit = 128 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(10 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  // Increase size.
+  memory = realloc(memory, 20 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 40 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 80 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  // Now push past limit.
+  memory = realloc(memory, 130 * 1024 * 1024);
+  ASSERT_TRUE(memory == nullptr);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_realloc_decrease) {
+#if defined(__BIONIC__)
+  size_t limit = 100 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(80 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  // Decrease size.
+  memory = realloc(memory, 60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 40 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 20 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  memory = realloc(memory, 10 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+  free(memory);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(android_mallopt, set_allocation_limit_realloc_free) {
+#if defined(__BIONIC__)
+  size_t limit = 100 * 1024 * 1024;
+  ASSERT_TRUE(android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit)));
+
+  size_t max_pointers = GetMaxAllocations();
+  ASSERT_TRUE(max_pointers != 0) << "Limit never reached.";
+
+  void* memory = malloc(60 * 1024 * 1024);
+  ASSERT_TRUE(memory != nullptr);
+
+  memory = realloc(memory, 0);
+  ASSERT_TRUE(memory == nullptr);
+
+  VerifyMaxPointers(max_pointers);
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+#if defined(__BIONIC__)
+static void* SetAllocationLimit(void* data) {
+  std::atomic_bool* go = reinterpret_cast<std::atomic_bool*>(data);
+  while (!go->load()) {
+  }
+  size_t limit = 500 * 1024 * 1024;
+  if (android_mallopt(M_SET_ALLOCATION_LIMIT_BYTES, &limit, sizeof(limit))) {
+    return reinterpret_cast<void*>(-1);
+  }
+  return nullptr;
+}
+
+static void SetAllocationLimitMultipleThreads() {
+  std::atomic_bool go;
+  go = false;
+
+  static constexpr size_t kNumThreads = 4;
+  pthread_t threads[kNumThreads];
+  for (size_t i = 0; i < kNumThreads; i++) {
+    ASSERT_EQ(0, pthread_create(&threads[i], nullptr, SetAllocationLimit, &go));
+  }
+
+  // Let them go all at once.
+  go = true;
+  ASSERT_EQ(0, kill(getpid(), __SIGRTMIN + 4));
+
+  size_t num_successful = 0;
+  for (size_t i = 0; i < kNumThreads; i++) {
+    void* result;
+    ASSERT_EQ(0, pthread_join(threads[i], &result));
+    if (result != nullptr) {
+      num_successful++;
+    }
+  }
+  ASSERT_EQ(1U, num_successful);
+  exit(0);
+}
+#endif
+
+TEST(android_mallopt, set_allocation_limit_multiple_threads) {
+#if defined(__BIONIC__)
+  if (IsDynamic()) {
+    ASSERT_TRUE(android_mallopt(M_INIT_ZYGOTE_CHILD_PROFILING, nullptr, 0));
+  }
+
+  // Run this a number of times as a stress test.
+  for (size_t i = 0; i < 100; i++) {
+    // Not using ASSERT_EXIT because errors messages are not displayed.
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+      ASSERT_NO_FATAL_FAILURE(SetAllocationLimitMultipleThreads());
+    }
+    ASSERT_NE(-1, pid);
+    int status;
+    ASSERT_EQ(pid, wait(&status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}

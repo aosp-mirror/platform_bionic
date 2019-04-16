@@ -12,8 +12,8 @@ cc_library_static {
     whole_static_libs: [
         "libpropertyinfoparser",
     ],
-    static_libs: [
-        "libasync_safe",
+    header_libs: [
+        "libasync_safe_headers",
     ],
 
     include_dirs: [

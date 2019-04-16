@@ -18,71 +18,9 @@
  ****************************************************************************/
 #ifndef _LINUX_VHOST_H
 #define _LINUX_VHOST_H
+#include <linux/vhost_types.h>
 #include <linux/types.h>
-#include <linux/compiler.h>
 #include <linux/ioctl.h>
-#include <linux/virtio_config.h>
-#include <linux/virtio_ring.h>
-struct vhost_vring_state {
-  unsigned int index;
-  unsigned int num;
-};
-struct vhost_vring_file {
-  unsigned int index;
-  int fd;
-};
-struct vhost_vring_addr {
-  unsigned int index;
-  unsigned int flags;
-#define VHOST_VRING_F_LOG 0
-  __u64 desc_user_addr;
-  __u64 used_user_addr;
-  __u64 avail_user_addr;
-  __u64 log_guest_addr;
-};
-struct vhost_iotlb_msg {
-  __u64 iova;
-  __u64 size;
-  __u64 uaddr;
-#define VHOST_ACCESS_RO 0x1
-#define VHOST_ACCESS_WO 0x2
-#define VHOST_ACCESS_RW 0x3
-  __u8 perm;
-#define VHOST_IOTLB_MISS 1
-#define VHOST_IOTLB_UPDATE 2
-#define VHOST_IOTLB_INVALIDATE 3
-#define VHOST_IOTLB_ACCESS_FAIL 4
-  __u8 type;
-};
-#define VHOST_IOTLB_MSG 0x1
-#define VHOST_IOTLB_MSG_V2 0x2
-struct vhost_msg {
-  int type;
-  union {
-    struct vhost_iotlb_msg iotlb;
-    __u8 padding[64];
-  };
-};
-struct vhost_msg_v2 {
-  __u32 type;
-  __u32 reserved;
-  union {
-    struct vhost_iotlb_msg iotlb;
-    __u8 padding[64];
-  };
-};
-struct vhost_memory_region {
-  __u64 guest_phys_addr;
-  __u64 memory_size;
-  __u64 userspace_addr;
-  __u64 flags_padding;
-};
-#define VHOST_PAGE_SIZE 0x1000
-struct vhost_memory {
-  __u32 nregions;
-  __u32 padding;
-  struct vhost_memory_region regions[0];
-};
 #define VHOST_VIRTIO 0xAF
 #define VHOST_GET_FEATURES _IOR(VHOST_VIRTIO, 0x00, __u64)
 #define VHOST_SET_FEATURES _IOW(VHOST_VIRTIO, 0x00, __u64)
@@ -108,15 +46,6 @@ struct vhost_memory {
 #define VHOST_SET_BACKEND_FEATURES _IOW(VHOST_VIRTIO, 0x25, __u64)
 #define VHOST_GET_BACKEND_FEATURES _IOR(VHOST_VIRTIO, 0x26, __u64)
 #define VHOST_NET_SET_BACKEND _IOW(VHOST_VIRTIO, 0x30, struct vhost_vring_file)
-#define VHOST_F_LOG_ALL 26
-#define VHOST_NET_F_VIRTIO_NET_HDR 27
-#define VHOST_SCSI_ABI_VERSION 1
-struct vhost_scsi_target {
-  int abi_version;
-  char vhost_wwpn[224];
-  unsigned short vhost_tpgt;
-  unsigned short reserved;
-};
 #define VHOST_SCSI_SET_ENDPOINT _IOW(VHOST_VIRTIO, 0x40, struct vhost_scsi_target)
 #define VHOST_SCSI_CLEAR_ENDPOINT _IOW(VHOST_VIRTIO, 0x41, struct vhost_scsi_target)
 #define VHOST_SCSI_GET_ABI_VERSION _IOW(VHOST_VIRTIO, 0x42, int)

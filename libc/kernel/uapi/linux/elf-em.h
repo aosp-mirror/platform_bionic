@@ -45,6 +45,7 @@
 #define EM_M32R 88
 #define EM_MN10300 89
 #define EM_OPENRISC 92
+#define EM_XTENSA 94
 #define EM_BLACKFIN 106
 #define EM_ALTERA_NIOS2 113
 #define EM_TI_C6000 140
@@ -54,6 +55,7 @@
 #define EM_TILEGX 191
 #define EM_RISCV 243
 #define EM_BPF 247
+#define EM_CSKY 252
 #define EM_FRV 0x5441
 #define EM_ALPHA 0x9026
 #define EM_CYGNUS_M32R 0x9041

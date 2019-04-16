@@ -39,14 +39,6 @@ cc_library {
 // ==============================================================
 cc_test {
     name: "malloc_hooks_unit_tests",
-    multilib: {
-        lib32: {
-            suffix: "32",
-        },
-        lib64: {
-            suffix: "64",
-        },
-    },
 
     srcs: [
         "tests/malloc_hooks_tests.cpp",

@@ -49,6 +49,21 @@ module_tag := optional
 include $(LOCAL_PATH)/Android.build.testlib.mk
 
 # -----------------------------------------------------------------------------
+# Library used by dlext tests - recursive use of RELRO sharing
+# -----------------------------------------------------------------------------
+libdlext_test_recursive_src_files := \
+    dlext_test_recursive_library.cpp \
+
+libdlext_test_recursive_ldflags := \
+    -Wl,-z,relro \
+
+libdlext_test_recursive_shared_libraries := libdlext_test
+
+module := libdlext_test_recursive
+module_tag := optional
+include $(LOCAL_PATH)/Android.build.testlib.mk
+
+# -----------------------------------------------------------------------------
 # Library used by dlext tests - different name non-default location
 # -----------------------------------------------------------------------------
 module := libdlext_test_fd

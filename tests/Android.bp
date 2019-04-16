@@ -153,6 +153,7 @@ cc_test_library {
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
+        "sys_param_test.cpp",
         "sys_personality_test.cpp",
         "sys_prctl_test.cpp",
         "sys_procfs_test.cpp",
@@ -194,7 +195,6 @@ cc_test_library {
 
     include_dirs: [
         "bionic/libc",
-        "external/tinyxml2",
     ],
 
     target: {
@@ -386,6 +386,7 @@ cc_test_library {
             ],
             static_libs: [
                 "libmeminfo",
+                "libprocinfo",
                 "libziparchive",
                 "libLLVMObject",
                 "libLLVMBitReader",
@@ -425,6 +426,11 @@ cc_test_library {
 cc_defaults {
     name: "bionic_unit_tests_defaults",
     host_supported: false,
+    gtest: false,
+
+    defaults: [
+        "bionic_tests_defaults",
+    ],
 
     whole_static_libs: [
         "libBionicTests",
@@ -436,12 +442,14 @@ cc_defaults {
         "libtinyxml2",
         "liblog",
         "libbase",
+        "libgtest_isolated",
     ],
 
     srcs: [
         // TODO: Include __cxa_thread_atexit_test.cpp to glibc tests once it is upgraded (glibc 2.18+)
         "__cxa_thread_atexit_test.cpp",
         "gtest_globals.cpp",
+        "gtest_main.cpp",
         "thread_local_test.cpp",
     ],
 
@@ -460,7 +468,9 @@ cc_defaults {
         android: {
             shared_libs: [
                 "ld-android",
+                "libandroidicu",
                 "libdl",
+                "libdl_android",
                 "libdl_preempt_test_1",
                 "libdl_preempt_test_2",
                 "libdl_test_df_1_global",
@@ -487,29 +497,6 @@ cc_defaults {
             ],
         },
     },
-}
-
-cc_test {
-    name: "bionic-unit-tests",
-    gtest: false,
-    defaults: [
-        "bionic_unit_tests_defaults",
-        "bionic_tests_defaults",
-    ],
-
-    srcs: [
-        "gtest_main.cpp",
-    ],
-
-    static_libs: [
-        "libgtest_isolated",
-    ],
-
-    target: {
-        android: {
-            shared_libs: ["libicuuc"],
-        },
-    },
 
     required: [
         "cfi_test_helper",
@@ -528,6 +515,7 @@ cc_test {
         "libdlext_test_different_soname",
         "libdlext_test_fd",
         "libdlext_test_norelro",
+        "libdlext_test_recursive",
         "libdlext_test_runpath_zip_zipaligned",
         "libdlext_test",
         "libdlext_test_zip",
@@ -641,6 +629,8 @@ cc_test {
         "libnstest_ns_a_public1_internal",
         "libnstest_ns_b_public2",
         "libnstest_ns_b_public3",
+        "libsegment_gap_inner",
+        "libsegment_gap_outer",
         "ld_preload_test_helper",
         "ld_preload_test_helper_lib1",
         "ld_preload_test_helper_lib2",
@@ -648,6 +638,24 @@ cc_test {
         "ld_config_test_helper_lib1",
         "ld_config_test_helper_lib2",
         "ld_config_test_helper_lib3",
+    ],
+}
+
+cc_test {
+    name: "bionic-unit-tests",
+    defaults: [
+        "bionic_unit_tests_defaults",
+    ],
+}
+
+cc_test {
+    name: "bionic-unit-tests-scudo",
+    defaults: [
+        "bionic_unit_tests_defaults",
+    ],
+
+    shared_libs: [
+        "libc_scudo",
     ],
 }
 
@@ -693,10 +701,6 @@ cc_test {
 
     static_executable: true,
     stl: "libc++_static",
-
-    // libclang_rt.builtins does not work with libm
-    // http://b/117167374
-    no_libcrt: true,
 }
 
 // -----------------------------------------------------------------------------

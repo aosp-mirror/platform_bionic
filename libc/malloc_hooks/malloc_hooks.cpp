@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <malloc.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/param.h>
 #include <unistd.h>
@@ -57,6 +58,7 @@ ssize_t hooks_malloc_backtrace(void* pointer, uintptr_t* frames, size_t frame_co
 void hooks_free_malloc_leak_info(uint8_t* info);
 size_t hooks_malloc_usable_size(void* pointer);
 void* hooks_malloc(size_t size);
+int hooks_malloc_info(int options, FILE* fp);
 void hooks_free(void* pointer);
 void* hooks_memalign(size_t alignment, size_t bytes);
 void* hooks_aligned_alloc(size_t alignment, size_t bytes);
@@ -174,9 +176,13 @@ int hooks_mallopt(int param, int value) {
   return g_dispatch->mallopt(param, value);
 }
 
+int hooks_malloc_info(int options, FILE* fp) {
+  return g_dispatch->malloc_info(options, fp);
+}
+
 void* hooks_aligned_alloc(size_t alignment, size_t size) {
   if (__memalign_hook != nullptr && __memalign_hook != default_memalign_hook) {
-    if (!powerof2(alignment)) {
+    if (!powerof2(alignment) || (size % alignment) != 0) {
       errno = EINVAL;
       return nullptr;
     }
@@ -191,7 +197,7 @@ void* hooks_aligned_alloc(size_t alignment, size_t size) {
 
 int hooks_posix_memalign(void** memptr, size_t alignment, size_t size) {
   if (__memalign_hook != nullptr && __memalign_hook != default_memalign_hook) {
-    if (!powerof2(alignment)) {
+    if (alignment < sizeof(void*) || !powerof2(alignment)) {
       return EINVAL;
     }
     *memptr = __memalign_hook(alignment, size, __builtin_return_address(0));

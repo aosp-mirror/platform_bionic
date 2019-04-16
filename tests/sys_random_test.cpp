@@ -43,7 +43,7 @@ TEST(sys_random, getentropy) {
   ASSERT_EQ(0, getentropy(buf2, sizeof(buf2)));
   ASSERT_TRUE(memcmp(buf1, buf2, sizeof(buf1)) != 0);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }
 
@@ -53,7 +53,7 @@ TEST(sys_random, getentropy_EFAULT) {
   ASSERT_EQ(-1, getentropy(nullptr, 1));
   ASSERT_EQ(EFAULT, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }
 
@@ -66,7 +66,7 @@ TEST(sys_random, getentropy_EIO) {
   ASSERT_EQ(-1, getentropy(buf, sizeof(buf)));
   ASSERT_EQ(EIO, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }
 
@@ -79,7 +79,7 @@ TEST(sys_random, getrandom) {
   ASSERT_EQ(64, getrandom(buf2, sizeof(buf2), 0));
   ASSERT_TRUE(memcmp(buf1, buf2, sizeof(buf1)) != 0);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }
 
@@ -89,7 +89,7 @@ TEST(sys_random, getrandom_EFAULT) {
   ASSERT_EQ(-1, getrandom(nullptr, 256, 0));
   ASSERT_EQ(EFAULT, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }
 
@@ -100,6 +100,6 @@ TEST(sys_random, getrandom_EINVAL) {
   ASSERT_EQ(-1, getrandom(buf, sizeof(buf), ~0));
   ASSERT_EQ(EINVAL, errno);
 #else
-  GTEST_LOG_(INFO) << "This test requires a C library with <sys/random.h>.\n";
+  GTEST_SKIP() << "<sys/random.h> not available";
 #endif
 }

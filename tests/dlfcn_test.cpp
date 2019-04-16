@@ -49,6 +49,12 @@
 #pragma clang diagnostic pop
 #endif //  defined(__ANDROID__) && (defined(__arm__) || defined(__i386__))
 
+// Declared manually because the macro definitions in <elf.h> conflict with LLVM headers.
+#ifdef __arm__
+typedef uintptr_t _Unwind_Ptr;
+extern "C" _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int*);
+#endif
+
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
 
@@ -254,8 +260,7 @@ TEST(dlfcn, dlopen_by_soname) {
 TEST(dlfcn, dlopen_vdso) {
 #if __has_include(<sys/auxv.h>)
   if (getauxval(AT_SYSINFO_EHDR) == 0) {
-    GTEST_LOG_(INFO) << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test.";
-    return;
+    GTEST_SKIP() << "getauxval(AT_SYSINFO_EHDR) == 0, skipping this test";
   }
 #endif
 
@@ -970,23 +975,23 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #if defined(__BIONIC__)
   ASSERT_EQ(handle1, handle2);
 #else
-  GTEST_LOG_(INFO) << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
-                      "it loads a separate copy of the main executable "
-                      "on dlopen by absolute path.";
+  GTEST_SKIP() << "Skipping ASSERT_EQ(handle1, handle2) for glibc: "
+                  "it loads a separate copy of the main executable "
+                  "on dlopen by absolute path";
 #endif
 }
 
 #if defined (__aarch64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/arm64/"
 #elif defined (__arm__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
 #elif defined (__i386__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
 #elif defined (__x86_64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86_64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
 #elif defined (__mips__)
 #if defined(__LP64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips64/"
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/mips64/"
 #else
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
 #endif
@@ -997,7 +1002,10 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
 
 TEST(dlfcn, dladdr_libc) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc returns libc.so's ldconfig path, which is a symlink (not a realpath)";
+#endif
+
   Dl_info info;
   void* addr = reinterpret_cast<void*>(puts); // well-known libc function
   ASSERT_TRUE(dladdr(addr, &info) != 0);
@@ -1019,10 +1027,6 @@ TEST(dlfcn, dladdr_libc) {
   // TODO: add check for dfi_fbase
   ASSERT_STREQ("puts", info.dli_sname);
   ASSERT_EQ(addr, info.dli_saddr);
-#else
-  GTEST_LOG_(INFO) << "This test does nothing for glibc. Glibc returns path from ldconfig "
-      "for libc.so, which is symlink itself (not a realpath).\n";
-#endif
 }
 
 TEST(dlfcn, dladdr_invalid) {
@@ -1060,7 +1064,7 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
   ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing for mips/mips64; mips toolchain does not support '--hash-style=gnu'\n";
+  GTEST_SKIP() << "mips toolchain does not support '--hash-style=gnu'";
 #endif
 }
 
@@ -1178,13 +1182,13 @@ TEST(dlfcn, dlopen_symlink) {
 // that calls dlopen(libc...). This is to test the situation
 // described in b/7941716.
 TEST(dlfcn, dlopen_dlopen_from_ctor) {
-#if defined(__BIONIC__)
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc segfaults if you try to call dlopen from a constructor";
+#endif
+
   void* handle = dlopen("libtest_dlopen_from_ctor_main.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   dlclose(handle);
-#else
-  GTEST_LOG_(INFO) << "This test is disabled for glibc (glibc segfaults if you try to call dlopen from a constructor).\n";
-#endif
 }
 
 static std::string g_fini_call_order_str;
@@ -1730,6 +1734,30 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
 TEST(dlfcn, dlopen_df_1_global) {
   void* handle = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
+}
+
+TEST(dlfcn, segment_gap) {
+  void* handle = dlopen("libsegment_gap_outer.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+
+  auto get_inner = reinterpret_cast<void* (*)()>(dlsym(handle, "get_inner"));
+  void* inner = get_inner();
+  (void)inner;
+
+#if __arm__
+  int count;
+  _Unwind_Ptr outer_exidx = dl_unwind_find_exidx(reinterpret_cast<_Unwind_Ptr>(get_inner), &count);
+  _Unwind_Ptr inner_exidx = dl_unwind_find_exidx(reinterpret_cast<_Unwind_Ptr>(inner), &count);
+  EXPECT_NE(0u, outer_exidx);
+  EXPECT_NE(0u, inner_exidx);
+  EXPECT_NE(inner_exidx, outer_exidx);
+#endif
+
+  Dl_info info;
+  int rc = dladdr(inner, &info);
+  ASSERT_NE(rc, 0);
+
+  EXPECT_NE(nullptr, strstr(info.dli_fname, "libsegment_gap_inner.so"));
 }
 
 #endif

@@ -83,6 +83,7 @@ typedef __s32 sctp_assoc_t;
 #define SCTP_STREAM_SCHEDULER_VALUE 124
 #define SCTP_INTERLEAVING_SUPPORTED 125
 #define SCTP_SENDMSG_CONNECT 126
+#define SCTP_EVENT 127
 #define SCTP_PR_SCTP_NONE 0x0000
 #define SCTP_PR_SCTP_TTL 0x0010
 #define SCTP_PR_SCTP_RTX 0x0020
@@ -360,6 +361,8 @@ union sctp_notification {
 };
 enum sctp_sn_type {
   SCTP_SN_TYPE_BASE = (1 << 15),
+  SCTP_DATA_IO_EVENT = SCTP_SN_TYPE_BASE,
+#define SCTP_DATA_IO_EVENT SCTP_DATA_IO_EVENT
   SCTP_ASSOC_CHANGE,
 #define SCTP_ASSOC_CHANGE SCTP_ASSOC_CHANGE
   SCTP_PEER_ADDR_CHANGE,
@@ -384,6 +387,8 @@ enum sctp_sn_type {
 #define SCTP_ASSOC_RESET_EVENT SCTP_ASSOC_RESET_EVENT
   SCTP_STREAM_CHANGE_EVENT,
 #define SCTP_STREAM_CHANGE_EVENT SCTP_STREAM_CHANGE_EVENT
+  SCTP_SN_TYPE_MAX = SCTP_STREAM_CHANGE_EVENT,
+#define SCTP_SN_TYPE_MAX SCTP_SN_TYPE_MAX
 };
 typedef enum sctp_sn_error {
   SCTP_FAILED_THRESHOLD,
@@ -654,6 +659,11 @@ struct sctp_add_streams {
   sctp_assoc_t sas_assoc_id;
   uint16_t sas_instrms;
   uint16_t sas_outstrms;
+};
+struct sctp_event {
+  sctp_assoc_t se_assoc_id;
+  uint16_t se_type;
+  uint8_t se_on;
 };
 enum sctp_sched_type {
   SCTP_SS_FCFS,

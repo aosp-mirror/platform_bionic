@@ -190,7 +190,7 @@ TEST(pthread, static_pthread_key_used_before_creation) {
   ASSERT_EQ(EINVAL, pthread_setspecific(key, nullptr));
   ASSERT_EQ(EINVAL, pthread_key_delete(key));
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic pthread key implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -986,8 +986,7 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer_timedwait_monotonic_np) {
   test_pthread_rwlock_reader_wakeup_writer(
       [&](pthread_rwlock_t* lock) { return pthread_rwlock_timedwrlock_monotonic_np(lock, &ts); });
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedwrlock_monotonic_np is "
-                      "only supported on bionic";
+  GTEST_SKIP() << "pthread_rwlock_timedwrlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1035,8 +1034,7 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader_timedwait_monotonic_np) {
   test_pthread_rwlock_writer_wakeup_reader(
       [&](pthread_rwlock_t* lock) { return pthread_rwlock_timedrdlock_monotonic_np(lock, &ts); });
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedrdlock_monotonic_np is "
-                      "only supported on bionic";
+  GTEST_SKIP() << "pthread_rwlock_timedrdlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1096,8 +1094,7 @@ TEST(pthread, pthread_rwlock_timedrdlock_monotonic_np_timeout) {
   pthread_rwlock_timedrdlock_timeout_helper(CLOCK_MONOTONIC,
                                             pthread_rwlock_timedrdlock_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedrdlock_monotonic_np is "
-                      "only supported on bionic";
+  GTEST_SKIP() << "pthread_rwlock_timedrdlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1133,8 +1130,7 @@ TEST(pthread, pthread_rwlock_timedwrlock_monotonic_np_timeout) {
   pthread_rwlock_timedwrlock_timeout_helper(CLOCK_MONOTONIC,
                                             pthread_rwlock_timedwrlock_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_rwlock_timedwrlock_monotonic_np is "
-                      "only supported on bionic";
+  GTEST_SKIP() << "pthread_rwlock_timedwrlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1364,7 +1360,7 @@ TEST(pthread, pthread_cond_broadcast__preserves_condattr_flags) {
   ASSERT_EQ(0, pthread_condattr_getpshared(&attr, &pshared));
   ASSERT_EQ(PTHREAD_PROCESS_SHARED, pshared);
 #else  // !defined(__BIONIC__)
-  GTEST_LOG_(INFO) << "This tests a bionic implementation detail.\n";
+  GTEST_SKIP() << "bionic-only test";
 #endif  // !defined(__BIONIC__)
 }
 
@@ -1480,8 +1476,7 @@ TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC_np) {
   progress = SIGNALED;
   ASSERT_EQ(0, pthread_cond_signal(&cond));
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_cond_timedwait_monotonic_np is only "
-                      "supported on bionic";
+  GTEST_SKIP() << "pthread_cond_timedwait_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1516,8 +1511,7 @@ TEST(pthread, pthread_cond_timedwait_monotonic_np_timeout) {
 #if defined(__BIONIC__)
   pthread_cond_timedwait_timeout_helper(CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_cond_timedwait_monotonic_np is only "
-                      "supported on bionic";
+  GTEST_SKIP() << "pthread_cond_timedwait_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -1739,7 +1733,7 @@ TEST(pthread, pthread_gettid_np) {
 
   ASSERT_EQ(t_gettid_result, t_pthread_gettid_np_result);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing.\n";
+  GTEST_SKIP() << "pthread_gettid_np not available";
 #endif
 }
 
@@ -1934,7 +1928,7 @@ TEST(pthread, pthread_mutex_pi_count_limit) {
   }
   ASSERT_EQ(0, pthread_mutexattr_destroy(&attr));
 #else
-  GTEST_LOG_(INFO) << "This test does nothing as pi mutex count isn't limited.\n";
+  GTEST_SKIP() << "pi mutex count not limited to 64Ki";
 #endif
 }
 
@@ -2121,7 +2115,7 @@ TEST(pthread, pthread_mutex_owner_tid_limit) {
   // Bionic's pthread_mutex implementation on 32-bit devices uses 16 bits to represent owner tid.
   ASSERT_LE(pid_max, 65536);
 #else
-  GTEST_LOG_(INFO) << "This test does nothing as 32-bit tid is supported by pthread_mutex.\n";
+  GTEST_SKIP() << "pthread_mutex supports 32-bit tid";
 #endif
 }
 
@@ -2164,8 +2158,7 @@ TEST(pthread, pthread_mutex_timedlock_monotonic_np) {
 #if defined(__BIONIC__)
   pthread_mutex_timedlock_helper(CLOCK_MONOTONIC, pthread_mutex_timedlock_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_mutex_timedlock_monotonic_np is only "
-                      "supported on bionic";
+  GTEST_SKIP() << "pthread_mutex_timedlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -2216,8 +2209,7 @@ TEST(pthread, pthread_mutex_timedlock_monotonic_np_pi) {
 #if defined(__BIONIC__)
   pthread_mutex_timedlock_pi_helper(CLOCK_MONOTONIC, pthread_mutex_timedlock_monotonic_np);
 #else   // __BIONIC__
-  GTEST_LOG_(INFO) << "This test does nothing since pthread_mutex_timedlock_monotonic_np is only "
-                      "supported on bionic";
+  GTEST_SKIP() << "pthread_mutex_timedlock_monotonic_np not available";
 #endif  // __BIONIC__
 }
 
@@ -2240,7 +2232,7 @@ TEST(pthread, pthread_mutex_using_destroyed_mutex) {
   ASSERT_EXIT(pthread_mutex_destroy(&m), ::testing::KilledBySignal(SIGABRT),
               "pthread_mutex_destroy called on a destroyed mutex");
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic pthread mutex implementation details.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -2297,7 +2289,7 @@ TEST(pthread, pthread_types_allow_four_bytes_alignment) {
   ASSERT_EQ(0, pthread_rwlock_destroy(rwlock));
 
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic implementation details.";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -2312,7 +2304,7 @@ TEST(pthread, pthread_mutex_lock_null_32) {
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EQ(EINVAL, pthread_mutex_lock(null_value));
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+  GTEST_SKIP() << "32-bit bionic-only test";
 #endif
 }
 
@@ -2327,7 +2319,7 @@ TEST(pthread, pthread_mutex_unlock_null_32) {
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EQ(EINVAL, pthread_mutex_unlock(null_value));
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 32 bit devices.";
+  GTEST_SKIP() << "32-bit bionic-only test";
 #endif
 }
 
@@ -2336,7 +2328,7 @@ TEST_F(pthread_DeathTest, pthread_mutex_lock_null_64) {
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EXIT(pthread_mutex_lock(null_value), testing::KilledBySignal(SIGSEGV), "");
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+  GTEST_SKIP() << "64-bit bionic-only test";
 #endif
 }
 
@@ -2345,7 +2337,7 @@ TEST_F(pthread_DeathTest, pthread_mutex_unlock_null_64) {
   pthread_mutex_t* null_value = nullptr;
   ASSERT_EXIT(pthread_mutex_unlock(null_value), testing::KilledBySignal(SIGSEGV), "");
 #else
-  GTEST_LOG_(INFO) << "This test tests bionic implementation details on 64 bit devices.";
+  GTEST_SKIP() << "64-bit bionic-only test";
 #endif
 }
 
@@ -2658,10 +2650,7 @@ TEST(pthread, pthread_attr_setinheritsched__PTHREAD_INHERIT_SCHED__PTHREAD_EXPLI
 TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
   sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
   int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
-  if (rc == EPERM) {
-    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
-    return;
-  }
+  if (rc == EPERM) GTEST_SKIP() << "pthread_setschedparam failed with EPERM";
   ASSERT_EQ(0, rc);
 
   pthread_attr_t attr;
@@ -2682,10 +2671,7 @@ TEST(pthread, pthread_attr_setinheritsched_PTHREAD_INHERIT_SCHED_takes_effect) {
 TEST(pthread, pthread_attr_setinheritsched_PTHREAD_EXPLICIT_SCHED_takes_effect) {
   sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
   int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO, &param);
-  if (rc == EPERM) {
-    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
-    return;
-  }
+  if (rc == EPERM) GTEST_SKIP() << "pthread_setschedparam failed with EPERM";
   ASSERT_EQ(0, rc);
 
   pthread_attr_t attr;
@@ -2707,10 +2693,7 @@ TEST(pthread, pthread_attr_setinheritsched_PTHREAD_EXPLICIT_SCHED_takes_effect) 
 TEST(pthread, pthread_attr_setinheritsched__takes_effect_despite_SCHED_RESET_ON_FORK) {
   sched_param param = { .sched_priority = sched_get_priority_min(SCHED_FIFO) };
   int rc = pthread_setschedparam(pthread_self(), SCHED_FIFO | SCHED_RESET_ON_FORK, &param);
-  if (rc == EPERM) {
-    GTEST_LOG_(INFO) << "pthread_setschedparam failed with EPERM, skipping test\n";
-    return;
-  }
+  if (rc == EPERM) GTEST_SKIP() << "pthread_setschedparam failed with EPERM";
   ASSERT_EQ(0, rc);
 
   pthread_attr_t attr;
