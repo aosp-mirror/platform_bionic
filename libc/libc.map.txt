@@ -1483,7 +1483,6 @@ LIBC_Q { # introduced=Q
 
     # Used by libandroid_runtime and libmedia
     android_mallopt; # apex
-    gMallocLeakZygoteChild; # apex
 } LIBC_P;
 
 LIBC_PRIVATE {
