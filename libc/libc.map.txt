@@ -1473,15 +1473,10 @@ LIBC_Q { # introduced=Q
     malloc_enable; # apex
     malloc_iterate; # apex
 
-    # Used by libmediautils
-    write_malloc_leak_info; # apex
-    free_malloc_leak_info; # apex
-    get_malloc_leak_info; # apex
-
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
 
-    # Used by libandroid_runtime and libmedia
+    # Used by libandroid_runtime, libmedia and libmediautils
     android_mallopt; # apex
 } LIBC_P;
 
