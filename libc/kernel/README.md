@@ -81,10 +81,5 @@ Next, run this command to copy the parsed files to bionic/libc/kernel/uapi:
   bionic/libc/kernel/tools/update_all.py
 ```
 
-Finally, run this command to regenerate the syscalls list:
-```
-  bionic/libc/tools/gensyscalls.py
-```
-
 After this, you will need to build/test the tree to make sure that these
 changes do not introduce any errors.

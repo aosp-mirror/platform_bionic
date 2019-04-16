@@ -1241,27 +1241,53 @@ cc_library_static {
 // libc_syscalls.a
 // ========================================================
 
+genrule {
+    name: "syscalls-arm.S",
+    out: ["syscalls-arm.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-arm64.S",
+    out: ["syscalls-arm64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-x86.S",
+    out: ["syscalls-x86.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-x86_64.S",
+    out: ["syscalls-x86_64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls.S"],
+            srcs: [":syscalls-arm.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls.S"],
-        },
-        mips: {
-            srcs: ["arch-mips/syscalls.S"],
-        },
-        mips64: {
-            srcs: ["arch-mips64/syscalls.S"],
+            srcs: [":syscalls-arm64.S"],
         },
         x86: {
-            srcs: ["arch-x86/syscalls.S"],
+            srcs: [":syscalls-x86.S"],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls.S"],
+            srcs: [":syscalls-x86_64.S"],
         },
     },
     name: "libc_syscalls",
@@ -2455,19 +2481,19 @@ cc_library_shared {
 
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls.S"],
+            srcs: [":syscalls-arm.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls.S"],
+            srcs: [":syscalls-arm64.S"],
         },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                "arch-x86/syscalls.S",
+                ":syscalls-x86.S",
             ],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls.S"],
+            srcs: [":syscalls-x86_64.S"],
         },
     },
 
