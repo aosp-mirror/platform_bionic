@@ -86,11 +86,11 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     # Check the header path
     if not os.path.exists(src_file):
         print_error(no_update, "'%s' does not exist\n" % src_file)
-        return None, None
+        return None
 
     if not os.path.isfile(src_file):
         print_error(no_update, "'%s' is not a file\n" % src_file)
-        return None, None
+        return None
 
     # Extract the architecture if found.
     arch = None
@@ -152,8 +152,8 @@ if __name__ == "__main__":
         usage()
 
     no_update = True
-    dst_dir = get_kernel_dir()
-    src_dir = get_kernel_headers_original_dir()
+    dst_dir = None
+    src_dir = None
     for opt, arg in optlist:
         if opt == '-u':
             no_update = False
@@ -163,6 +163,15 @@ if __name__ == "__main__":
             src_dir = arg
         elif opt == '-d':
             dst_dir = arg
+    # get_kernel_dir() and get_kernel_headers_original_dir() require the current
+    # working directory to be a direct or indirect subdirectory of
+    # ANDROID_BUILD_TOP.  Otherwise, these functions print an error message and
+    # exit.  Let's allow the user to run this program from an unrelated
+    # directory, if they specify src_dir and dst_dir on the command line.
+    if dst_dir is None:
+      dst_dir = get_kernel_dir()
+    if src_dir is None:
+      src_dir = get_kernel_headers_original_dir()
 
     if len(args) == 0:
         usage()
