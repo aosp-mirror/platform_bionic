@@ -467,9 +467,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
 #if TIMING
   gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0], (int) (
-           (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
-           (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
+  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0],
+        static_cast<int>(((static_cast<long long>(t1.tv_sec) * 1000000LL) +
+                          static_cast<long long>(t1.tv_usec)) -
+                         ((static_cast<long long>(t0.tv_sec) * 1000000LL) +
+                          static_cast<long long>(t0.tv_usec))));
 #endif
 #if STATS
   PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
