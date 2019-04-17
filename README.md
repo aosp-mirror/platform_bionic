@@ -162,17 +162,16 @@ Adding a system call usually involves:
 
   1. Add entries to SYSCALLS.TXT.
      See SYSCALLS.TXT itself for documentation on the format.
-  2. Run the gensyscalls.py script.
-  3. Add constants (and perhaps types) to the appropriate header file.
+  2. Add constants (and perhaps types) to the appropriate header file.
      Note that you should check to see whether the constants are already in
      kernel uapi header files, in which case you just need to make sure that
      the appropriate POSIX header file in libc/include/ includes the
      relevant file or files.
-  4. Add function declarations to the appropriate header file. Don't forget
+  3. Add function declarations to the appropriate header file. Don't forget
      to include the appropriate `__INTRODUCED_IN()`.
-  5. Add the function name to the correct section in libc/libc.map.txt and
+  4. Add the function name to the correct section in libc/libc.map.txt and
      run `./libc/tools/genversion-scripts.py`.
-  6. Add at least basic tests. Even a test that deliberately supplies
+  5. Add at least basic tests. Even a test that deliberately supplies
      an invalid argument helps check that we're generating the right symbol
      and have the right declaration in the header file, and that you correctly
      updated the maps in step 5. (You can use strace(1) to confirm that the
