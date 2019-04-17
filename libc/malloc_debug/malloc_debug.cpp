@@ -58,7 +58,7 @@
 // ------------------------------------------------------------------------
 DebugData* g_debug;
 
-int* g_malloc_zygote_child;
+bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
 // ------------------------------------------------------------------------
@@ -70,7 +70,7 @@ const MallocDispatch* g_dispatch;
 // ------------------------------------------------------------------------
 __BEGIN_DECLS
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* malloc_zygote_child,
                       const char* options);
 void debug_finalize();
 void debug_dump_heap(const char* file_name);
@@ -225,15 +225,15 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   return g_debug->GetPointer(header);
 }
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* zygote_child,
                       const char* options) {
-  if (malloc_zygote_child == nullptr || options == nullptr) {
+  if (zygote_child == nullptr || options == nullptr) {
     return false;
   }
 
   InitAtfork();
 
-  g_malloc_zygote_child = malloc_zygote_child;
+  g_zygote_child = zygote_child;
 
   g_dispatch = malloc_dispatch;
 
