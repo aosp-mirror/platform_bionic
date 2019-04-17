@@ -50,7 +50,7 @@
 
 __BEGIN_DECLS
 
-bool debug_initialize(const MallocDispatch*, int*, const char*);
+bool debug_initialize(const MallocDispatch*, bool*, const char*);
 void debug_finalize();
 
 void* debug_malloc(size_t);
@@ -103,8 +103,8 @@ class MallocDebugTest : public ::testing::Test {
   }
 
   void Init(const char* options) {
-    zygote = 0;
-    ASSERT_TRUE(debug_initialize(&dispatch, &zygote, options));
+    zygote_child = false;
+    ASSERT_TRUE(debug_initialize(&dispatch, &zygote_child, options));
     initialized = true;
   }
 
@@ -116,7 +116,7 @@ class MallocDebugTest : public ::testing::Test {
 
   bool initialized;
 
-  int zygote;
+  bool zygote_child;
 
   static MallocDispatch dispatch;
 };
@@ -1344,7 +1344,7 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
   backtrace_fake_add(std::vector<uintptr_t> {0xa300, 0xb300});
 
   std::vector<void*> pointers;
-  zygote = 1;
+  zygote_child = true;
   pointers.push_back(debug_malloc(100));
   ASSERT_TRUE(pointers.back() != nullptr);
   pointers.push_back(debug_malloc(40));
@@ -1352,7 +1352,7 @@ void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
   pointers.push_back(debug_malloc(200));
   ASSERT_TRUE(pointers.back() != nullptr);
 
-  zygote = 0;
+  zygote_child = false;
   pointers.push_back(debug_malloc(10));
   ASSERT_TRUE(pointers.back() != nullptr);
   pointers.push_back(debug_malloc(50));
@@ -1750,7 +1750,7 @@ TEST_F(MallocDebugTest, backtrace_same_stack_zygote) {
   backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
   backtrace_fake_add(std::vector<uintptr_t> {0xbc000});
 
-  zygote = 1;
+  zygote_child = true;
 
   void* pointers[4];
   pointers[0] = debug_malloc(100);
@@ -1809,14 +1809,14 @@ TEST_F(MallocDebugTest, backtrace_same_stack_mix_zygote) {
   backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xecd00, 0x12000});
   backtrace_fake_add(std::vector<uintptr_t> {0xbc000});
 
-  zygote = 1;
+  zygote_child = true;
   void* pointers[4];
   pointers[0] = debug_malloc(40);
   ASSERT_TRUE(pointers[0] != nullptr);
   pointers[1] = debug_malloc(40);
   ASSERT_TRUE(pointers[1] != nullptr);
 
-  zygote = 0;
+  zygote_child = false;
   pointers[2] = debug_malloc(40);
   ASSERT_TRUE(pointers[2] != nullptr);
   pointers[3] = debug_malloc(100);
@@ -1989,7 +1989,7 @@ TEST_F(MallocDebugTest, zygote_set) {
   // Set all of the options.
   Init("guard fill backtrace leak_track free_track=2");
 
-  zygote = 1;
+  zygote_child = true;
 
   backtrace_fake_add(std::vector<uintptr_t> {0x1});
 
