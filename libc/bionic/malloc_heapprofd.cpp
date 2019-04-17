@@ -81,10 +81,10 @@ static _Atomic bool gHeapprofdInitHookInstalled = false;
 
 // In a Zygote child process, this is set to true if profiling of this process
 // is allowed. Note that this is set at a later time than the global
-// gMallocLeakZygoteChild. The latter is set during the fork (while still in
+// gZygoteChild. The latter is set during the fork (while still in
 // zygote's SELinux domain). While this bit is set after the child is
 // specialized (and has transferred SELinux domains if applicable).
-static _Atomic bool gMallocZygoteChildProfileable = false;
+static _Atomic bool gZygoteChildProfileable = false;
 
 extern "C" void* MallocInitHeapprofdHook(size_t);
 
@@ -114,8 +114,8 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
 
 static void MaybeInstallInitHeapprofdHook(int) {
   // Zygote child processes must be marked profileable.
-  if (gMallocLeakZygoteChild &&
-      !atomic_load_explicit(&gMallocZygoteChildProfileable, memory_order_acquire)) {
+  if (gZygoteChild &&
+      !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
     return;
   }
 
@@ -326,7 +326,7 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
 
 // Marks this process as a profileable zygote child.
 static bool HandleInitZygoteChildProfiling() {
-  atomic_store_explicit(&gMallocZygoteChildProfileable, true, memory_order_release);
+  atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
 
   // Conditionally start "from startup" profiling.
   if (HeapprofdShouldLoad()) {
