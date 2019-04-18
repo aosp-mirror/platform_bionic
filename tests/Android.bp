@@ -184,6 +184,7 @@ cc_test_library {
         "system_properties_test2.cpp",
         "termios_test.cpp",
         "tgmath_test.c",
+        "threads_test.cpp",
         "time_test.cpp",
         "uchar_test.cpp",
         "unistd_nofortify_test.cpp",
