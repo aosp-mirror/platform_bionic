@@ -45,6 +45,9 @@ enum {
   //   arg_size = sizeof(size_t)
   M_SET_ALLOCATION_LIMIT_BYTES = 3,
 #define M_SET_ALLOCATION_LIMIT_BYTES M_SET_ALLOCATION_LIMIT_BYTES
+  // Called after the zygote forks to indicate this is a child.
+  M_SET_ZYGOTE_CHILD = 4,
+#define M_SET_ZYGOTE_CHILD M_SET_ZYGOTE_CHILD
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
