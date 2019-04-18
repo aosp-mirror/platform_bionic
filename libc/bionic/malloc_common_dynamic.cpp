@@ -46,6 +46,7 @@
 //   write_malloc_leak_info: Writes the leak info data to a file.
 
 #include <dlfcn.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
 #include <stdatomic.h>
@@ -72,6 +73,8 @@
 // Global variables instantations.
 // =============================================================================
 pthread_mutex_t gGlobalsMutateLock = PTHREAD_MUTEX_INITIALIZER;
+
+bool gZygoteChild = false;
 
 _Atomic bool gGlobalsMutating = false;
 // =============================================================================
@@ -112,7 +115,7 @@ static constexpr char kDebugPropertyProgram[] = "libc.debug.malloc.program";
 static constexpr char kDebugEnvOptions[] = "LIBC_DEBUG_MALLOC_OPTIONS";
 
 typedef void (*finalize_func_t)();
-typedef bool (*init_func_t)(const MallocDispatch*, int*, const char*);
+typedef bool (*init_func_t)(const MallocDispatch*, bool*, const char*);
 typedef void (*get_malloc_leak_info_func_t)(uint8_t**, size_t*, size_t*, size_t*, size_t*);
 typedef void (*free_malloc_leak_info_func_t)(uint8_t*);
 typedef bool (*write_malloc_leak_info_func_t)(FILE*);
@@ -329,7 +332,7 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
 
 bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix) {
   init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gMallocLeakZygoteChild, options)) {
+  if (!init_func(&__libc_malloc_default_dispatch, &gZygoteChild, options)) {
     error_log("%s: failed to enable malloc %s", getprogname(), prefix);
     ClearGlobalFunctions();
     return false;
@@ -470,6 +473,14 @@ extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t fra
 // Platform-internal mallopt variant.
 // =============================================================================
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
+  if (opcode == M_SET_ZYGOTE_CHILD) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    gZygoteChild = true;
+    return true;
+  }
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
     return LimitEnable(arg, arg_size);
   }
