@@ -162,7 +162,7 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
   return result;
 }
 
-extern "C" void* realloc(void* old_mem, size_t bytes) {
+extern "C" __attribute__((__noinline__)) void* realloc(void* old_mem, size_t bytes) {
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->realloc(old_mem, bytes);
