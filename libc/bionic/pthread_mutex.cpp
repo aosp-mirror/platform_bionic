@@ -199,6 +199,8 @@ static int PIMutexUnlock(PIMutex& mutex) {
                                                                    memory_order_relaxed))) {
             return 0;
         }
+    } else {
+        old_owner = atomic_load_explicit(&mutex.owner_tid, memory_order_relaxed);
     }
 
     if (tid != (old_owner & FUTEX_TID_MASK)) {
