@@ -1843,10 +1843,25 @@ struct PthreadMutex {
   DISALLOW_COPY_AND_ASSIGN(PthreadMutex);
 };
 
+static int UnlockFromAnotherThread(pthread_mutex_t* mutex) {
+  pthread_t thread;
+  pthread_create(&thread, nullptr, [](void* mutex_voidp) -> void* {
+    pthread_mutex_t* mutex = static_cast<pthread_mutex_t*>(mutex_voidp);
+    intptr_t result = pthread_mutex_unlock(mutex);
+    return reinterpret_cast<void*>(result);
+  }, mutex);
+  void* result;
+  EXPECT_EQ(0, pthread_join(thread, &result));
+  return reinterpret_cast<intptr_t>(result);
+};
+
 static void TestPthreadMutexLockNormal(int protocol) {
   PthreadMutex m(PTHREAD_MUTEX_NORMAL, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  if (protocol == PTHREAD_PRIO_INHERIT) {
+    ASSERT_EQ(EPERM, UnlockFromAnotherThread(&m.lock));
+  }
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
   ASSERT_EQ(EBUSY, pthread_mutex_trylock(&m.lock));
@@ -1857,6 +1872,7 @@ static void TestPthreadMutexLockErrorCheck(int protocol) {
   PthreadMutex m(PTHREAD_MUTEX_ERRORCHECK, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(EPERM, UnlockFromAnotherThread(&m.lock));
   ASSERT_EQ(EDEADLK, pthread_mutex_lock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
@@ -1873,7 +1889,9 @@ static void TestPthreadMutexLockRecursive(int protocol) {
   PthreadMutex m(PTHREAD_MUTEX_RECURSIVE, protocol);
 
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(EPERM, UnlockFromAnotherThread(&m.lock));
   ASSERT_EQ(0, pthread_mutex_lock(&m.lock));
+  ASSERT_EQ(EPERM, UnlockFromAnotherThread(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_unlock(&m.lock));
   ASSERT_EQ(0, pthread_mutex_trylock(&m.lock));
