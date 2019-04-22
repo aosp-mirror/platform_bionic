@@ -89,14 +89,10 @@ static int ifunc_close(int fd) {
     return r0;
 }
 
-#define DEFINE_IFUNC_WITH_SUFFIX(name, suffix) \
-    name##_func name##suffix __attribute__((ifunc(#name "_resolver"))); \
+#define DEFINE_IFUNC(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
     __attribute__((visibility("hidden"))) \
     name##_func* name##_resolver()
-
-#define DEFINE_IFUNC(name) DEFINE_IFUNC_WITH_SUFFIX(name, )
-
-#define DEFINE_INTERNAL_IFUNC(name) DEFINE_IFUNC_WITH_SUFFIX(name, _internal)
 
 #define DECLARE_FUNC(type, name) \
     __attribute__((visibility("hidden"))) \
@@ -291,7 +287,7 @@ DEFINE_IFUNC(__strcat_chk) {
 }
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
-DEFINE_INTERNAL_IFUNC(strcmp) {
+DEFINE_IFUNC(strcmp) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcmp_func, strcmp_a9);
@@ -305,7 +301,7 @@ DEFINE_INTERNAL_IFUNC(strcmp) {
 }
 
 typedef size_t strlen_func(const char* __s);
-DEFINE_INTERNAL_IFUNC(strlen) {
+DEFINE_IFUNC(strlen) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strlen_func, strlen_a9);
