@@ -32,14 +32,7 @@
 // calls and add special debugging code to attempt to catch allocation
 // errors. All of the debugging code is implemented in a separate shared
 // library that is only loaded when the property "libc.debug.malloc.options"
-// is set to a non-zero value. There are two functions exported to
-// allow ddms, or other external users to get information from the debug
-// allocation.
-//   get_malloc_leak_info: Returns information about all of the known native
-//                         allocations that are currently in use.
-//   free_malloc_leak_info: Frees the data allocated by the call to
-//                          get_malloc_leak_info.
-//   write_malloc_leak_info: Writes the leak info data to a file.
+// is set to a non-zero value.
 
 #include <errno.h>
 #include <stdint.h>
