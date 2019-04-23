@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "bc263e94_7f70fe2e",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-23T22:50:05Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4e4880a7_60017dce",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a1493e7_cafff9c0",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -291,6 +309,24 @@
       "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "18ff314a_37558484",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-04-23T22:50:05Z",
+      "side": 1,
+      "message": "You want both though, right? Make sure that it doesn\u0027t unconditionally assign and crash on nullptr?",
+      "parentUuid": "87a8f41e_f47866fb",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     },
     {
       "key": {
