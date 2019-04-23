@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e270dc75_dad7cbcb",
+        "filename": "libc/include/threads.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7c69dd0_bf61feb4",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64264819_e76a5b27",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2019-04-22T20:55:57Z",
       "side": 1,
       "message": "Success is returned even if no thread was waiting on the condition variable. Assert that the count is the correct value after each wait? cnd_broadcast would also pass this test.",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e4880a7_60017dce",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "this one i\u0027m a bit worried about because it seems like our options involve increasing flake, but we can try it...",
+      "parentUuid": "64264819_e76a5b27",
       "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "acc53a11_dc2f7da4",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a1493e7_cafff9c0",
+      "range": {
+        "startLine": 207,
+        "startChar": 48,
+        "endLine": 207,
+        "endChar": 49
+      },
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad5896fe_e2756a36",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -73,6 +133,24 @@
       "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89e26b74_f8741b64",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad5896fe_e2756a36",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "57906e70_32bc593f",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4dfc7eb5_8058b47e",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "137b4ada_ef04c501",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -107,6 +203,24 @@
       "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b1d420f_e8d55bfa",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "137b4ada_ef04c501",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -127,6 +241,24 @@
     },
     {
       "key": {
+        "uuid": "d61a6025_0cbc1aa2",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "yeah, these are actual pointers, so very unsafe to use late.",
+      "parentUuid": "a9a7e76a_152b2ea9",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9e6061a_fefc0a0e",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -144,6 +276,24 @@
     },
     {
       "key": {
+        "uuid": "87a8f41e_f47866fb",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9e6061a_fefc0a0e",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "818296b3_4b9cb9ed",
         "filename": "tests/threads_test.cpp",
         "patchSetId": 2
@@ -158,6 +308,24 @@
       "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10759fb9_b9ee615a",
+        "filename": "tests/threads_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-04-23T16:46:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "818296b3_4b9cb9ed",
+      "revId": "c1c466584bfbfa660e35aa0107db79ccfddc938a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
