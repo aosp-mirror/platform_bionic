@@ -409,39 +409,29 @@ __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals) {
 // =============================================================================
 // Functions to support dumping of native heap allocations using malloc debug.
 // =============================================================================
-
-// Retrieve native heap information.
-//
-// "*info" is set to a buffer we allocate
-// "*overall_size" is set to the size of the "info" buffer
-// "*info_size" is set to the size of a single entry
-// "*total_memory" is set to the sum of all allocations we're tracking; does
-//   not include heap overhead
-// "*backtrace_size" is set to the maximum number of entries in the back trace
-extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overall_size,
-    size_t* info_size, size_t* total_memory, size_t* backtrace_size) {
+bool GetMallocLeakInfo(android_mallopt_leak_info_t* leak_info) {
   void* func = gFunctions[FUNC_GET_MALLOC_LEAK_INFO];
   if (func == nullptr) {
-    return;
+    errno = ENOTSUP;
+    return false;
   }
-  reinterpret_cast<get_malloc_leak_info_func_t>(func)(info, overall_size, info_size, total_memory,
-                                                      backtrace_size);
+  reinterpret_cast<get_malloc_leak_info_func_t>(func)(
+      &leak_info->buffer, &leak_info->overall_size, &leak_info->info_size,
+      &leak_info->total_memory, &leak_info->backtrace_size);
+  return true;
 }
 
-extern "C" void free_malloc_leak_info(uint8_t* info) {
+bool FreeMallocLeakInfo(android_mallopt_leak_info_t* leak_info) {
   void* func = gFunctions[FUNC_FREE_MALLOC_LEAK_INFO];
   if (func == nullptr) {
-    return;
+    errno = ENOTSUP;
+    return false;
   }
-  reinterpret_cast<free_malloc_leak_info_func_t>(func)(info);
+  reinterpret_cast<free_malloc_leak_info_func_t>(func)(leak_info->buffer);
+  return true;
 }
 
-extern "C" void write_malloc_leak_info(FILE* fp) {
-  if (fp == nullptr) {
-    error_log("write_malloc_leak_info called with a nullptr");
-    return;
-  }
-
+bool WriteMallocLeakInfo(FILE* fp) {
   void* func = gFunctions[FUNC_WRITE_LEAK_INFO];
   bool written = false;
   if (func != nullptr) {
@@ -453,7 +443,9 @@ extern "C" void write_malloc_leak_info(FILE* fp) {
     fprintf(fp, "# adb shell stop\n");
     fprintf(fp, "# adb shell setprop libc.debug.malloc.options backtrace\n");
     fprintf(fp, "# adb shell start\n");
+    errno = ENOTSUP;
   }
+  return written;
 }
 // =============================================================================
 
@@ -483,6 +475,27 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   }
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
     return LimitEnable(arg, arg_size);
+  }
+  if (opcode == M_WRITE_MALLOC_LEAK_INFO_TO_FILE) {
+    if (arg == nullptr || arg_size != sizeof(FILE*)) {
+      errno = EINVAL;
+      return false;
+    }
+    return WriteMallocLeakInfo(reinterpret_cast<FILE*>(arg));
+  }
+  if (opcode == M_GET_MALLOC_LEAK_INFO) {
+    if (arg == nullptr || arg_size != sizeof(android_mallopt_leak_info_t)) {
+      errno = EINVAL;
+      return false;
+    }
+    return GetMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
+  }
+  if (opcode == M_FREE_MALLOC_LEAK_INFO) {
+    if (arg == nullptr || arg_size != sizeof(android_mallopt_leak_info_t)) {
+      errno = EINVAL;
+      return false;
+    }
+    return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
   }
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
