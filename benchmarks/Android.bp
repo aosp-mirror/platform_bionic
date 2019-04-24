@@ -61,8 +61,8 @@ cc_defaults {
 }
 
 // Build benchmarks for the device (with bionic's .so). Run with:
-//   adb shell bionic-benchmarks32
-//   adb shell bionic-benchmarks64
+//   adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks
+//   adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks
 cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
