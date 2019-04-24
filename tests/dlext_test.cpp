@@ -538,6 +538,26 @@ TEST_F(DlExtRelroSharingTest, ChildWritesGoodDataRecursive) {
   tf.fd = extinfo_.relro_fd;
 }
 
+TEST_F(DlExtRelroSharingTest, CheckRelroSizes) {
+  TemporaryFile tf1, tf2;
+  ASSERT_NOERROR(close(tf1.fd));
+  ASSERT_NOERROR(close(tf2.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameRecursive, tf1.path, false));
+  struct stat no_recursive;
+  ASSERT_NOERROR(fstat(extinfo_.relro_fd, &no_recursive));
+  tf1.fd = extinfo_.relro_fd;
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameRecursive, tf2.path, true));
+  struct stat with_recursive;
+  ASSERT_NOERROR(fstat(extinfo_.relro_fd, &with_recursive));
+  tf2.fd = extinfo_.relro_fd;
+
+  // RELRO file should end up bigger when we use the recursive flag, since it
+  // includes data for more than one library.
+  ASSERT_GT(with_recursive.st_size, no_recursive.st_size);
+}
+
 TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
   TemporaryFile tf; // // Use tf to get an unique filename.
   ASSERT_NOERROR(close(tf.fd));
