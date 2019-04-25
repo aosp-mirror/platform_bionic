@@ -34,6 +34,24 @@
       "revId": "894cd1c005d272878716c8724c061147e498ac27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "174e1ede_fbf94d26",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-04-25T16:30:57Z",
+      "side": 1,
+      "message": "Done; my mistake.  I added a comment to be clearer too how the function interprets the property.",
+      "parentUuid": "d11629a4_1d314717",
+      "revId": "894cd1c005d272878716c8724c061147e498ac27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
