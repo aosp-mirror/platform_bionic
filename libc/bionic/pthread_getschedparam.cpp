@@ -28,9 +28,11 @@
 
 #include <errno.h>
 
+#include "private/bionic_defs.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_getschedparam(pthread_t t, int* policy, sched_param* param) {
   ErrnoRestorer errno_restorer;
 
