@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1515fab9_8b9e8f87",
+        "filename": "libc/bionic/grp_pwd.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1207838
+      },
+      "writtenOn": "2019-04-25T06:27:15Z",
+      "side": 1,
+      "message": "This __system_property_get is returning the length of read property value, suggest will be：\n\nif (__system_property_get(\"ro.product.first_api_level\", value) \u003d\u003d 0) {\n    // The api_level property is not set, might because the device is still under\n    // development, assume the device it is 29 or later?\n    return true;\n}",
+      "revId": "894cd1c005d272878716c8724c061147e498ac27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
