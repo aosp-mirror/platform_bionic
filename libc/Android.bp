@@ -1577,7 +1577,10 @@ cc_library {
         ],
     },
 
-    required: ["tzdata"],
+    required: [
+        "tzdata",
+        "tz_version", // Version metadata for tzdata to help debugging.
+    ],
 
     // Leave the symbols in the shared library so that stack unwinders can produce
     // meaningful name resolution.
