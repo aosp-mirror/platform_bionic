@@ -30,9 +30,11 @@
 #include <pthread.h>
 #include <sched.h>
 
+#include "private/bionic_defs.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
   ErrnoRestorer errno_restorer;
 
@@ -42,6 +44,7 @@ int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
   return (sched_setscheduler(tid, policy, param) == -1) ? errno : 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_setschedprio(pthread_t t, int priority) {
   ErrnoRestorer errno_restorer;
 
