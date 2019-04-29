@@ -193,10 +193,9 @@ build your device drivers, you shouldn't modify bionic. Instead use
 
 ## Updating tzdata
 
-This is fully automated (and these days handled by the libcore team, because
-they own icu, and that needs to be updated in sync with bionic):
-
-  1. Run update-tzdata.py in external/icu/tools/.
+This is handled by the libcore team, because they own icu, and that needs to be
+updated in sync with bionic). See
+[system/timezone/README.android](https://android.googlesource.com/platform/system/timezone/+/master/README.android).
 
 
 ## Verifying changes
