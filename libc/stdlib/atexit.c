@@ -188,7 +188,8 @@ restart:
 
 	/* If called via exit(), flush output of all open files. */
 	if (dso == NULL) {
-		fflush(NULL);
+		extern void __libc_stdio_cleanup(void);
+		__libc_stdio_cleanup();
 	}
 
   /* BEGIN android-changed: call __unregister_atfork if dso is not null */
