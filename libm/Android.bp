@@ -503,7 +503,7 @@ cc_library {
     native_coverage: bionic_coverage,
     sanitize: {
         address: false,
-        coverage: false,
+        fuzzer: false,
         integer_overflow: false,
     },
     stl: "none",
