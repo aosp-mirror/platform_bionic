@@ -125,7 +125,8 @@ struct mallinfo {
 
 /**
  * [mallinfo(3)](http://man7.org/linux/man-pages/man3/mallinfo.3.html) returns
- * information about the current state of the heap.
+ * information about the current state of the heap. Note that mallinfo() is
+ * inherently unreliable and consider using malloc_info() instead.
  */
 struct mallinfo mallinfo(void);
 
