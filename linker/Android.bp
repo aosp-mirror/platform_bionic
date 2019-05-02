@@ -267,7 +267,6 @@ cc_binary {
         "libc_nomalloc",
         "libm",
         "libziparchive",
-        "libutils",
         "libbase",
         "libz",
 
