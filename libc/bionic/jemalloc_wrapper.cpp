@@ -103,6 +103,14 @@ int je_mallopt(int param, int value) {
     }
     return 1;
   } else if (param == M_PURGE) {
+    // Only clear the current thread cache since there is no easy way to
+    // clear the caches of other threads.
+    // This must be done first so that cleared allocations get purged
+    // in the next calls.
+    if (je_mallctl("thread.tcache.flush", nullptr, nullptr, nullptr, 0) != 0) {
+      return 0;
+    }
+
     unsigned narenas;
     size_t sz = sizeof(unsigned);
     if (je_mallctl("arenas.narenas", &narenas, &sz, nullptr, 0) != 0) {
