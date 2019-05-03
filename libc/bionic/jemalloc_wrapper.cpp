@@ -128,10 +128,10 @@ int je_mallopt(int param, int value) {
 
 __BEGIN_DECLS
 
-size_t __mallinfo_narenas();
-size_t __mallinfo_nbins();
-struct mallinfo __mallinfo_arena_info(size_t);
-struct mallinfo __mallinfo_bin_info(size_t, size_t);
+size_t je_mallinfo_narenas();
+size_t je_mallinfo_nbins();
+struct mallinfo je_mallinfo_arena_info(size_t);
+struct mallinfo je_mallinfo_bin_info(size_t, size_t);
 
 __END_DECLS
 
@@ -144,8 +144,8 @@ int je_malloc_info(int options, FILE* fp) {
   MallocXmlElem root(fp, "malloc", "version=\"jemalloc-1\"");
 
   // Dump all of the large allocations in the arenas.
-  for (size_t i = 0; i < __mallinfo_narenas(); i++) {
-    struct mallinfo mi = __mallinfo_arena_info(i);
+  for (size_t i = 0; i < je_mallinfo_narenas(); i++) {
+    struct mallinfo mi = je_mallinfo_arena_info(i);
     if (mi.hblkhd != 0) {
       MallocXmlElem arena_elem(fp, "heap", "nr=\"%d\"", i);
       {
@@ -154,8 +154,8 @@ int je_malloc_info(int options, FILE* fp) {
         MallocXmlElem(fp, "allocated-bins").Contents("%zu", mi.fsmblks);
 
         size_t total = 0;
-        for (size_t j = 0; j < __mallinfo_nbins(); j++) {
-          struct mallinfo mi = __mallinfo_bin_info(i, j);
+        for (size_t j = 0; j < je_mallinfo_nbins(); j++) {
+          struct mallinfo mi = je_mallinfo_bin_info(i, j);
           if (mi.ordblks != 0) {
             MallocXmlElem bin_elem(fp, "bin", "nr=\"%d\"", j);
             MallocXmlElem(fp, "allocated").Contents("%zu", mi.ordblks);
