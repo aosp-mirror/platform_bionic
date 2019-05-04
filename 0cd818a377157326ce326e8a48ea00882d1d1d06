@@ -16,6 +16,24 @@
       "revId": "0cd818a377157326ce326e8a48ea00882d1d1d06",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba0e173c_8965ab0d",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-05-04T04:49:51Z",
+      "side": 0,
+      "message": "that\u0027s tempting, but that\u0027s another new alternative we haven\u0027t tested... unless you think otherwise, this full patch -- taking us back to P\u0027s behavior -- seems like the safest choice for Q (given that we won\u0027t have enough time for another round)?",
+      "parentUuid": "a41e7a37_c5efbbbc",
+      "revId": "0cd818a377157326ce326e8a48ea00882d1d1d06",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
