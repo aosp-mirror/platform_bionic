@@ -134,10 +134,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   ZipArchiveHandle handle;
   ASSERT_EQ(0, OpenArchive(lib_path.c_str(), &handle));
   ZipEntry zip_entry;
-  ZipString zip_name;
-  zip_name.name = reinterpret_cast<const uint8_t*>(kLibZipSimpleZip);
-  zip_name.name_length = strlen(kLibZipSimpleZip);
-  ASSERT_EQ(0, FindEntry(handle, zip_name, &zip_entry));
+  ASSERT_EQ(0, FindEntry(handle, kLibZipSimpleZip, &zip_entry));
   extinfo.library_fd_offset = zip_entry.offset;
   CloseArchive(handle);
 
