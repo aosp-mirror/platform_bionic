@@ -395,6 +395,60 @@ TEST(malloc, malloc_info) {
 #endif
 }
 
+TEST(malloc, malloc_info_matches_mallinfo) {
+#ifdef __BIONIC__
+  SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
+
+  char* buf;
+  size_t bufsize;
+  FILE* memstream = open_memstream(&buf, &bufsize);
+  ASSERT_NE(nullptr, memstream);
+  size_t mallinfo_before_allocated_bytes = mallinfo().uordblks;
+  ASSERT_EQ(0, malloc_info(0, memstream));
+  size_t mallinfo_after_allocated_bytes = mallinfo().uordblks;
+  ASSERT_EQ(0, fclose(memstream));
+
+  tinyxml2::XMLDocument doc;
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+
+  size_t total_allocated_bytes = 0;
+  auto root = doc.FirstChildElement();
+  ASSERT_NE(nullptr, root);
+  ASSERT_STREQ("malloc", root->Name());
+  if (std::string(root->Attribute("version")) == "jemalloc-1") {
+    // Verify jemalloc version of this data.
+    ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
+
+    auto arena = root->FirstChildElement();
+    for (; arena != nullptr; arena = arena->NextSiblingElement()) {
+      int val;
+
+      ASSERT_STREQ("heap", arena->Name());
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, arena->QueryIntAttribute("nr", &val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-large")->QueryIntText(&val));
+      total_allocated_bytes += val;
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-huge")->QueryIntText(&val));
+      total_allocated_bytes += val;
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("allocated-bins")->QueryIntText(&val));
+      total_allocated_bytes += val;
+      ASSERT_EQ(tinyxml2::XML_SUCCESS,
+                arena->FirstChildElement("bins-total")->QueryIntText(&val));
+    }
+    // The total needs to be between the mallinfo call before and after
+    // since malloc_info allocates some memory.
+    EXPECT_LE(mallinfo_before_allocated_bytes, total_allocated_bytes);
+    EXPECT_GE(mallinfo_after_allocated_bytes, total_allocated_bytes);
+  } else {
+    // Only verify that this is debug-malloc-1, the malloc debug unit tests
+    // verify the output.
+    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
+  }
+#endif
+}
+
 TEST(malloc, calloc_usable_size) {
   for (size_t size = 1; size <= 2048; size++) {
     void* pointer = malloc(size);
