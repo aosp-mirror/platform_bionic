@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "26ebd0e1_1c589789",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-06T20:14:27Z",
+      "side": 1,
+      "message": "Yeah, I felt mildly icky about relying on that. Good to know that it\u0027s a misfeature -- thanks!",
+      "parentUuid": "122fb96a_65a94e23",
+      "range": {
+        "startLine": 15,
+        "startChar": 23,
+        "endLine": 17,
+        "endChar": 50
+      },
+      "revId": "46130e24a86218d28ccfa36ddc26ea2bbbe03a4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d2d14e4_bd57cd03",
         "filename": "tests/Android.bp",
         "patchSetId": 2
