@@ -76,6 +76,7 @@ cc_defaults {
     },
     native_coverage: false,
     recovery_available: true,
+    native_bridge_supported: true,
 
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
@@ -1692,6 +1693,7 @@ cc_library_headers {
     host_supported: true,
     vendor_available: true,
     recovery_available: true,
+    native_bridge_supported: true,
 
     no_libcrt: true,
     no_libgcc: true,
@@ -1824,6 +1826,7 @@ cc_defaults {
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     recovery_available: true,
+    native_bridge_supported: true,
 
     cflags: [
         "-Wno-gcc-compat",
@@ -2082,6 +2085,7 @@ ndk_headers {
 
 ndk_library {
     name: "libc",
+    native_bridge_supported: true,
     symbol_file: "libc.map.txt",
     first_version: "9",
 }
@@ -2091,6 +2095,7 @@ llndk_library {
     symbol_file: "libc.map.txt",
     export_headers_as_system: true,
     export_preprocessed_headers: ["include"],
+    native_bridge_supported: true,
     export_include_dirs: [
         "kernel/android/uapi",
         "kernel/uapi",
