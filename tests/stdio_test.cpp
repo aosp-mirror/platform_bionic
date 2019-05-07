@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <linux/fs.h>
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -2598,4 +2599,14 @@ TEST(STDIO_TEST, fread_with_locked_file) {
 
   funlockfile(fp1);
   fclose(fp1);
+}
+
+TEST(STDIO_TEST, SEEK_macros) {
+  ASSERT_EQ(0, SEEK_SET);
+  ASSERT_EQ(1, SEEK_CUR);
+  ASSERT_EQ(2, SEEK_END);
+  ASSERT_EQ(3, SEEK_DATA);
+  ASSERT_EQ(4, SEEK_HOLE);
+  // So we'll notice if Linux grows another constant in <linux/fs.h>...
+  ASSERT_EQ(SEEK_MAX, SEEK_HOLE);
 }
