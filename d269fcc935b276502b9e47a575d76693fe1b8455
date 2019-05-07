@@ -46,6 +46,30 @@
       "revId": "d269fcc935b276502b9e47a575d76693fe1b8455",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a01735a4_f9855549",
+        "filename": "libc/malloc_debug/malloc_debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-05-07T21:31:32Z",
+      "side": 1,
+      "message": "Ah, I just assumed that it would be a simpler change under the assumption that this code is otherwise safe as-is.",
+      "parentUuid": "af82332e_8eb7d275",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 299,
+        "endChar": 45
+      },
+      "revId": "d269fcc935b276502b9e47a575d76693fe1b8455",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
