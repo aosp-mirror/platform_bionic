@@ -40,7 +40,7 @@ static int
 lflush(FILE *fp)
 {
 	if ((fp->_flags & (__SLBF|__SWR)) == (__SLBF|__SWR))
-		return (__sflush(fp));	/* ignored... */
+		return (__sflush_locked(fp));	/* ignored... */
 	return (0);
 }
 
