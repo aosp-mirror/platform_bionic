@@ -1742,6 +1742,8 @@ LIBC_PRIVATE {
 LIBC_DEPRECATED {
   global:
     __system_property_wait_any;
+    free_malloc_leak_info; # arm
+    get_malloc_leak_info; # arm
 };
 
 LIBC_PLATFORM {
