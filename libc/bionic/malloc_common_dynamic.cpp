@@ -500,3 +500,40 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
 // =============================================================================
+
+#if !defined(__LP64__) && defined(__arm__)
+// =============================================================================
+// Old platform only functions that some old 32 bit apps are still using.
+// See b/132175052.
+// Only compile the functions for 32 bit arm, so that new apps do not use
+// these functions.
+// =============================================================================
+extern "C" void get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* info_size,
+                                     size_t* total_memory, size_t* backtrace_size) {
+  if (info == nullptr || overall_size == nullptr || info_size == nullptr ||
+      total_memory == nullptr || backtrace_size == nullptr) {
+    return;
+  }
+
+  *info = nullptr;
+  *overall_size = 0;
+  *info_size = 0;
+  *total_memory = 0;
+  *backtrace_size = 0;
+
+  android_mallopt_leak_info_t leak_info = {};
+  if (android_mallopt(M_GET_MALLOC_LEAK_INFO, &leak_info, sizeof(leak_info))) {
+    *info = leak_info.buffer;
+    *overall_size = leak_info.overall_size;
+    *info_size = leak_info.info_size;
+    *total_memory = leak_info.total_memory;
+    *backtrace_size = leak_info.backtrace_size;
+  }
+}
+
+extern "C" void free_malloc_leak_info(uint8_t* info) {
+  android_mallopt_leak_info_t leak_info = { .buffer = info };
+  android_mallopt(M_FREE_MALLOC_LEAK_INFO, &leak_info, sizeof(leak_info));
+}
+// =============================================================================
+#endif
