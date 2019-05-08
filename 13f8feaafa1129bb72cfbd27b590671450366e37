@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6447960a_ed38fc6f",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-08T23:10:50Z",
+      "side": 1,
+      "message": "Non neon support is only for some rare cases. Here you can simply RETURN_FUNC(__memchr_func, __memchr_a15) for all variants.\n\n(But keep __memchr_generic in static_function_dispatch.S)",
+      "revId": "13f8feaafa1129bb72cfbd27b590671450366e37",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
