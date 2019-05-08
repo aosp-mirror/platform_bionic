@@ -2,6 +2,7 @@ cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     srcs: [
         "linker_memory.cpp",
@@ -318,6 +319,7 @@ cc_library {
 
     ldflags: [
         "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
@@ -360,6 +362,7 @@ cc_library {
     name: "ld-android",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     nocrt: true,
     system_shared_libs: [],
