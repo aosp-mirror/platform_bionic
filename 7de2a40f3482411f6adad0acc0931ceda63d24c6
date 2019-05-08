@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cbd287e_a8c814ad",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-08T22:05:04Z",
+      "side": 1,
+      "message": "__memchr_a15",
+      "range": {
+        "startLine": 170,
+        "startChar": 39,
+        "endLine": 170,
+        "endChar": 51
+      },
+      "revId": "7de2a40f3482411f6adad0acc0931ceda63d24c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2998a5b0_2008a0dc",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-08T22:05:04Z",
+      "side": 1,
+      "message": "__memchr_generic",
+      "range": {
+        "startLine": 173,
+        "startChar": 39,
+        "endLine": 173,
+        "endChar": 55
+      },
+      "revId": "7de2a40f3482411f6adad0acc0931ceda63d24c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
