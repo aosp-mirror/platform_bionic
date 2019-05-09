@@ -40,8 +40,7 @@ int __ppoll64_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset64
 __BIONIC_FORTIFY_INLINE
 int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, int timeout)
     __overloadable
-    __clang_error_if(__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                       __bos(fds) < sizeof(*fds) * fd_count,
+    __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'poll', fd_count is larger than the given buffer") {
   size_t bos_fds = __bos(fds);
 
@@ -54,8 +53,7 @@ int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, int timeo
 __BIONIC_FORTIFY_INLINE
 int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const struct timespec* timeout, const sigset_t* mask)
     __overloadable
-    __clang_error_if(__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                       __bos(fds) < sizeof(*fds) * fd_count,
+    __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'ppoll', fd_count is larger than the given buffer") {
   size_t bos_fds = __bos(fds);
 
@@ -69,8 +67,7 @@ int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const st
 __BIONIC_FORTIFY_INLINE
 int ppoll64(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const struct timespec* timeout, const sigset64_t* mask)
     __overloadable
-    __clang_error_if(__bos(fds) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                       __bos(fds) < sizeof(*fds) * fd_count,
+    __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'ppoll64', fd_count is larger than the given buffer") {
   size_t bos_fds = __bos(fds);
 

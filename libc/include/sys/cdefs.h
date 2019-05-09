@@ -289,6 +289,14 @@
 #define __pass_object_size __pass_object_size_n(__bos_level)
 #define __pass_object_size0 __pass_object_size_n(0)
 
+/* Intended for use in unevaluated contexts, e.g. diagnose_if conditions. */
+#define __bos_unevaluated_lt(bos_val, val) \
+  ((bos_val) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (bos_val) < (val))
+
+#define __bos_unevaluated_leq(bos_val, val) \
+  ((bos_val) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (bos_val) <= (val))
+
+
 #if defined(__BIONIC_FORTIFY) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif

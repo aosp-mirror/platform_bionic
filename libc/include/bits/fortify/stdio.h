@@ -57,8 +57,7 @@ int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int snprintf(char* dest, size_t size, const char* format)
     __overloadable
-    __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                    __bos(dest) < __builtin_strlen(format),
+    __enable_if(__bos_unevaluated_lt(__bos(dest), __builtin_strlen(format)),
                 "format string will always overflow destination buffer")
     __errorattr("format string will always overflow destination buffer");
 
@@ -75,8 +74,7 @@ int snprintf(char* const __pass_object_size dest, size_t size, const char* forma
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int sprintf(char* dest, const char* format)
     __overloadable
-    __enable_if(__bos(dest) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                __bos(dest) < __builtin_strlen(format),
+    __enable_if(__bos_unevaluated_lt(__bos(dest), __builtin_strlen(format)),
                 "format string will always overflow destination buffer")
     __errorattr("format string will always overflow destination buffer");
 
@@ -96,7 +94,7 @@ size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FIL
         __overloadable
         __clang_error_if(__unsafe_check_mul_overflow(size, count),
                          "in call to 'fread', size * count overflows")
-        __clang_error_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && size * count > __bos(buf),
+        __clang_error_if(__bos_unevaluated_lt(__bos0(buf), size * count),
                          "in call to 'fread', size * count is too large for the given buffer") {
     size_t bos = __bos0(buf);
 
@@ -111,7 +109,7 @@ size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t cou
         __overloadable
         __clang_error_if(__unsafe_check_mul_overflow(size, count),
                          "in call to 'fwrite', size * count overflows")
-        __clang_error_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && size * count > __bos(buf),
+        __clang_error_if(__bos_unevaluated_lt(__bos0(buf), size * count),
                          "in call to 'fwrite', size * count is too large for the given buffer") {
     size_t bos = __bos0(buf);
 
@@ -128,7 +126,7 @@ __BIONIC_FORTIFY_INLINE
 char* fgets(char* const __pass_object_size dest, int size, FILE* stream)
         __overloadable
         __clang_error_if(size < 0, "in call to 'fgets', size should not be negative")
-        __clang_error_if(size > __bos(dest),
+        __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
                          "in call to 'fgets', size is larger than the destination buffer") {
     size_t bos = __bos(dest);
 
