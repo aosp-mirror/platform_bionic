@@ -106,7 +106,7 @@ FILE* stdin = &__sF[0];
 FILE* stdout = &__sF[1];
 FILE* stderr = &__sF[2];
 
-static pthread_mutex_t __stdio_mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+static pthread_mutex_t __stdio_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static uint64_t __get_file_tag(FILE* fp) {
   // Don't use a tag for the standard streams.
@@ -211,19 +211,21 @@ found:
 }
 
 int _fwalk(int (*callback)(FILE*)) {
-  pthread_mutex_lock(&__stdio_mutex);
   int result = 0;
   for (glue* g = &__sglue; g != nullptr; g = g->next) {
     FILE* fp = g->iobs;
     for (int n = g->niobs; --n >= 0; ++fp) {
-      ScopedFileLock sfl(fp);
       if (fp->_flags != 0 && (fp->_flags & __SIGN) == 0) {
         result |= (*callback)(fp);
       }
     }
   }
-  pthread_mutex_unlock(&__stdio_mutex);
   return result;
+}
+
+extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
+  // Equivalent to fflush(nullptr), but without all the locking since we're shutting down anyway.
+  _fwalk(__sflush);
 }
 
 static FILE* __fopen(int fd, int flags) {
@@ -518,6 +520,11 @@ int __sflush(FILE* fp) {
     n -= written, p += written;
   }
   return 0;
+}
+
+int __sflush_locked(FILE* fp) {
+  ScopedFileLock sfl(fp);
+  return __sflush(fp);
 }
 
 int __sread(void* cookie, char* buf, int n) {
@@ -1061,7 +1068,7 @@ int wscanf(const wchar_t* fmt, ...) {
 }
 
 static int fflush_all() {
-  return _fwalk(__sflush);
+  return _fwalk(__sflush_locked);
 }
 
 int fflush(FILE* fp) {
