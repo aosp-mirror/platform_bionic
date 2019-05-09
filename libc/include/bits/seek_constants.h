@@ -39,3 +39,23 @@
 #define SEEK_CUR 1
 /** Seek relative to the end of the file. */
 #define SEEK_END 2
+
+#if defined(__USE_GNU)
+
+/**
+ * Seek to the first data (non-hole) location in the file
+ * greater than or equal to the given offset.
+ *
+ * See [lseek(2)](http://man7.org/linux/man-pages/man2/lseek.2.html).
+ */
+#define SEEK_DATA 3
+
+/**
+ * Seek to the first hole (non-data) location in the file
+ * greater than or equal to the given offset.
+ *
+ * See [lseek(2)](http://man7.org/linux/man-pages/man2/lseek.2.html).
+ */
+#define SEEK_HOLE 4
+
+#endif
