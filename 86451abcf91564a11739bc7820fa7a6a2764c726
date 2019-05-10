@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21a86492_8eb371d7",
+        "filename": "libc/arch-arm/cortex-a15/bionic/strcmp.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-10T01:12:54Z",
+      "side": 1,
+      "message": "Merge conflict???",
+      "range": {
+        "startLine": 429,
+        "startChar": 0,
+        "endLine": 429,
+        "endChar": 7
+      },
+      "revId": "86451abcf91564a11739bc7820fa7a6a2764c726",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9392985f_0f424a36",
+        "filename": "libc/arch-arm/cortex-a15/bionic/strcmp.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-10T01:12:54Z",
+      "side": 1,
+      "message": "Merge conflict???",
+      "range": {
+        "startLine": 737,
+        "startChar": 0,
+        "endLine": 737,
+        "endChar": 56
+      },
+      "revId": "86451abcf91564a11739bc7820fa7a6a2764c726",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
