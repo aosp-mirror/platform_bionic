@@ -16,6 +16,24 @@
       "revId": "f8e56e73c630400c7a72e4f25e56920bfe910b68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4c9a073_87b8ce4b",
+        "filename": "libc/arch-arm/generic/bionic/memchr.S",
+        "patchSetId": 15
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-05-10T04:52:57Z",
+      "side": 1,
+      "message": "Removed at https://android.googlesource.com/platform/bionic/+/b83d6747facc5d819a0df0bcb8762477eecfd962\n\nCopied the old generic version.  Fixing.",
+      "parentUuid": "f8c5083b_7a215d9b",
+      "revId": "f8e56e73c630400c7a72e4f25e56920bfe910b68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
