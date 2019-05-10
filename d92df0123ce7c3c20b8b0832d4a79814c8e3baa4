@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "08be25b0_5e594138",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1165,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-10T21:00:42Z",
+      "side": 1,
+      "message": "The Bionic convention is \"#if !defined(__ANDROID_APEX__)\"",
+      "revId": "d92df0123ce7c3c20b8b0832d4a79814c8e3baa4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
