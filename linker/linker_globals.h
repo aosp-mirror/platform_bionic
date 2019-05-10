@@ -87,3 +87,5 @@ class DlErrorRestorer {
  private:
   std::string saved_error_msg_;
 };
+
+__LIBC_HIDDEN__ extern bool g_is_ldd;

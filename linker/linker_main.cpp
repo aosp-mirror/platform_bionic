@@ -117,6 +117,7 @@ soinfo* solist_get_vdso() {
   return vdso;
 }
 
+bool g_is_ldd;
 int g_ld_debug_verbosity;
 
 static std::vector<std::string> g_ld_preload_names;
@@ -397,7 +398,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                          "\"%s\": error: Android 5.0 and later only support "
                          "position-independent executables (-fPIE).\n",
                          g_argv[0]);
-    exit(EXIT_FAILURE);
+    _exit(EXIT_FAILURE);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
@@ -660,22 +661,29 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // linker's _start.
   const char* exe_to_load = nullptr;
   if (getauxval(AT_ENTRY) == reinterpret_cast<uintptr_t>(&_start)) {
-    if (args.argc <= 1 || !strcmp(args.argv[1], "--help")) {
+    if (args.argc == 3 && !strcmp(args.argv[1], "--list")) {
+      // We're being asked to behave like ldd(1).
+      g_is_ldd = true;
+      exe_to_load = args.argv[2];
+    } else if (args.argc <= 1 || !strcmp(args.argv[1], "--help")) {
       async_safe_format_fd(STDOUT_FILENO,
-         "Usage: %s program [arguments...]\n"
-         "       %s path.zip!/program [arguments...]\n"
+         "Usage: %s [--list] PROGRAM [ARGS-FOR-PROGRAM...]\n"
+         "       %s [--list] path.zip!/PROGRAM [ARGS-FOR-PROGRAM...]\n"
          "\n"
          "A helper program for linking dynamic executables. Typically, the kernel loads\n"
          "this program because it's the PT_INTERP of a dynamic executable.\n"
          "\n"
          "This program can also be run directly to load and run a dynamic executable. The\n"
          "executable can be inside a zip file if it's stored uncompressed and at a\n"
-         "page-aligned offset.\n",
+         "page-aligned offset.\n"
+         "\n"
+         "The --list option gives behavior equivalent to ldd(1) on other systems.\n",
          args.argv[0], args.argv[0]);
-      exit(0);
+      _exit(EXIT_SUCCESS);
+    } else {
+      exe_to_load = args.argv[1];
+      __libc_shared_globals()->initial_linker_arg_count = 1;
     }
-    exe_to_load = args.argv[1];
-    __libc_shared_globals()->initial_linker_arg_count = 1;
   }
 
   // store argc/argv/envp to use them for calling constructors
@@ -692,6 +700,8 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   init_link_map_head(*solinker, kLinkerPath);
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
+
+  if (g_is_ldd) _exit(EXIT_SUCCESS);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 
