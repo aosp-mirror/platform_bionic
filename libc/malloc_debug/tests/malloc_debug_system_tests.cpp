@@ -42,13 +42,15 @@
 #include <log/log.h>
 
 #include <string>
+#include <thread>
 #include <vector>
 
 #include "private/bionic_malloc.h"
 
-static constexpr time_t kTimeoutSeconds = 5;
+static constexpr time_t kTimeoutSeconds = 10;
 
-static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
+static void Exec(const char* test_name, const char* debug_options, pid_t* pid, int exit_code = 0,
+                 time_t timeout_seconds = kTimeoutSeconds) {
   int fds[2];
   ASSERT_NE(-1, pipe(fds));
   ASSERT_NE(-1, fcntl(fds[0], F_SETFL, O_NONBLOCK));
@@ -94,7 +96,8 @@ static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
       output.append(buffer.data(), bytes);
     }
 
-    if ((time(nullptr) - start_time) > kTimeoutSeconds) {
+    if ((time(nullptr) - start_time) > timeout_seconds) {
+      kill(*pid, SIGINT);
       break;
     }
   }
@@ -109,7 +112,7 @@ static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
       done = true;
       break;
     }
-    if ((time(nullptr) - start_time) > kTimeoutSeconds) {
+    if ((time(nullptr) - start_time) > timeout_seconds) {
       break;
     }
   }
@@ -119,21 +122,23 @@ static void Exec(const char* test_name, const char* debug_options, pid_t* pid) {
     while (true) {
       int kill_status;
       int wait_pid = waitpid(*pid, &kill_status, WNOHANG);
-      if (wait_pid == *pid || (time(nullptr) - start_time) > kTimeoutSeconds) {
+      if (wait_pid == *pid || (time(nullptr) - start_time) > timeout_seconds) {
         break;
       }
     }
   }
 
   ASSERT_TRUE(done) << "Timed out waiting for waitpid, output:\n" << output;
-  ASSERT_EQ(0, WEXITSTATUS(status)) << "Output:\n" << output;
+  ASSERT_FALSE(WIFSIGNALED(status))
+      << "Failed with signal " << WTERMSIG(status) << "\nOutput:\n" << output;
+  ASSERT_EQ(exit_code, WEXITSTATUS(status)) << "Output:\n" << output;
 }
 
-static void GetLogStr(pid_t pid, std::string* log_str) {
+static void GetLogStr(pid_t pid, std::string* log_str, log_id log = LOG_ID_MAIN) {
   log_str->clear();
 
   logger_list* list;
-  list = android_logger_list_open(LOG_ID_MAIN, ANDROID_LOG_RDONLY | ANDROID_LOG_NONBLOCK, 1000, pid);
+  list = android_logger_list_open(log, ANDROID_LOG_RDONLY | ANDROID_LOG_NONBLOCK, 1000, pid);
   ASSERT_TRUE(list != nullptr);
 
   while (true) {
@@ -168,7 +173,8 @@ static void GetLogStr(pid_t pid, std::string* log_str) {
   android_logger_list_close(list);
 }
 
-static void FindStrings(pid_t pid, std::vector<const char*> match_strings) {
+static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
+                        time_t timeout_seconds = kTimeoutSeconds) {
   std::string log_str;
   time_t start = time(nullptr);
   bool found_all;
@@ -184,7 +190,7 @@ static void FindStrings(pid_t pid, std::vector<const char*> match_strings) {
     if (found_all) {
       return;
     }
-    if ((time(nullptr) - start) > kTimeoutSeconds) {
+    if ((time(nullptr) - start) > timeout_seconds) {
       break;
     }
   }
@@ -413,4 +419,48 @@ TEST(MallocDebugSystemTest, verify_leak) {
 
 TEST(MallocDebugSystemTest, verify_leak_allocation_limit) {
   VerifyLeak("leak_memory_limit_");
+}
+
+static constexpr int kExpectedExitCode = 30;
+
+TEST(MallocTests, DISABLED_exit_while_threads_allocating) {
+  std::atomic_uint32_t thread_mask;
+  thread_mask = 0;
+
+  for (size_t i = 0; i < 32; i++) {
+    std::thread malloc_thread([&thread_mask, i] {
+      while (true) {
+        void* ptr = malloc(100);
+        if (ptr == nullptr) {
+          exit(1000);
+        }
+        free(ptr);
+        thread_mask.fetch_or(1 << i);
+      }
+    });
+    malloc_thread.detach();
+  }
+
+  // Wait until each thread has done at least one allocation.
+  while (thread_mask.load() != 0xffffffff)
+    ;
+  exit(kExpectedExitCode);
+}
+
+// Verify that exiting while other threads are doing malloc operations,
+// that there are no crashes.
+TEST(MallocDebugSystemTest, exit_while_threads_allocating) {
+  for (size_t i = 0; i < 100; i++) {
+    SCOPED_TRACE(::testing::Message() << "Run " << i);
+    pid_t pid;
+    ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_exit_while_threads_allocating",
+                                 "verbose backtrace", &pid, kExpectedExitCode));
+
+    ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"}));
+
+    std::string log_str;
+    GetLogStr(pid, &log_str, LOG_ID_CRASH);
+    ASSERT_TRUE(log_str.find("Fatal signal") == std::string::npos)
+        << "Found crash in log.\nLog message: " << log_str;
+  }
 }
