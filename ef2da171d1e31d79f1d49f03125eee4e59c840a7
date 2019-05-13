@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c0622ef9_b905957d",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1207103
+      },
+      "writtenOn": "2019-05-13T16:05:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "511224ae_c544261b",
+      "range": {
+        "startLine": 130,
+        "startChar": 22,
+        "endLine": 130,
+        "endChar": 24
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eddf9360_bd106ff9",
         "filename": "tests/leak_test.cpp",
         "patchSetId": 3
@@ -165,6 +189,30 @@
       "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67cedc67_af8a5996",
+        "filename": "tests/leak_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1207103
+      },
+      "writtenOn": "2019-05-13T16:05:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa22a6fa_8f30b588",
+      "range": {
+        "startLine": 132,
+        "startChar": 6,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "ef2da171d1e31d79f1d49f03125eee4e59c840a7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
