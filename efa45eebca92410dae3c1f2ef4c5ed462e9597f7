@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "722afca4_90534c55",
+        "filename": "libc/Android.bp",
+        "patchSetId": 17
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-14T17:24:14Z",
+      "side": 1,
+      "message": "Add here:\n\n\"upstream-openbsd/lib/libc/string/memchr.c\",",
+      "range": {
+        "startLine": 554,
+        "startChar": 0,
+        "endLine": 554,
+        "endChar": 60
+      },
+      "revId": "efa45eebca92410dae3c1f2ef4c5ed462e9597f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
