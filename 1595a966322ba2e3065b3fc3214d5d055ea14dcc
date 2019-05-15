@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2224c447_69958571",
+        "filename": "libc/arch-arm/dynamic_function_dispatch.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-05-15T00:50:35Z",
+      "side": 1,
+      "message": "Remove the switch since we only have one case now.",
+      "range": {
+        "startLine": 297,
+        "startChar": 0,
+        "endLine": 297,
+        "endChar": 49
+      },
+      "revId": "1595a966322ba2e3065b3fc3214d5d055ea14dcc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
