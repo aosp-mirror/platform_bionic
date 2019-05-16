@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c36f7a5c_1671d051",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-05-16T19:11:54Z",
+      "side": 1,
+      "message": "That is a good point. I don\u0027t think it\u0027s easy to verify whether this is safe or not, so I moved this large one to the data segment.",
+      "parentUuid": "d5cbd7f7_69deb4e7",
+      "range": {
+        "startLine": 399,
+        "startChar": 2,
+        "endLine": 399,
+        "endChar": 21
+      },
+      "revId": "11952266e17f69e5b0716629c77c15cede684890",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed437799_7a151433",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "11952266e17f69e5b0716629c77c15cede684890",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3e51a2f_83f35881",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-05-16T19:11:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed437799_7a151433",
+      "range": {
+        "startLine": 405,
+        "startChar": 51,
+        "endLine": 405,
+        "endChar": 67
+      },
+      "revId": "11952266e17f69e5b0716629c77c15cede684890",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
