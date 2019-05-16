@@ -86,6 +86,7 @@
 #define __noreturn __attribute__((__noreturn__))
 #define __mallocfunc  __attribute__((__malloc__))
 #define __packed __attribute__((__packed__))
+#define __returns_twice __attribute__((__returns_twice__))
 #define __unused __attribute__((__unused__))
 #define __used __attribute__((__used__))
 
