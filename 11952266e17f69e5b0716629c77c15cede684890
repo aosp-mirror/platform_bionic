@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d5cbd7f7_69deb4e7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-16T16:30:25Z",
+      "side": 1,
+      "message": "Is there any worry that this will expand the stack too far? This adds a lot of data to the stack, and if this code is on any paths where that matters, we are going to see weird crashes.\n\nFor example, is this on any of the dlopen paths? Could games start breaking because a dlopen that used to be fine now is taking a lot more stack?",
+      "range": {
+        "startLine": 399,
+        "startChar": 2,
+        "endLine": 399,
+        "endChar": 21
+      },
+      "revId": "11952266e17f69e5b0716629c77c15cede684890",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed437799_7a151433",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
