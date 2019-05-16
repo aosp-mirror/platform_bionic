@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cef6bf7e_bf792825",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-16T20:25:51Z",
+      "side": 1,
+      "message": "Maybe combine these two statements to avoid a string copy?\n\n          resolved_paths_[path] \u003d resolve_path(path);",
+      "range": {
+        "startLine": 427,
+        "startChar": 0,
+        "endLine": 428,
+        "endChar": 43
+      },
+      "revId": "5eba5d9e502ff4513c6010a57cb780ea773b91c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcc8ba2a_e41b15f8",
+        "filename": "linker/linker_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-16T20:25:51Z",
+      "side": 1,
+      "message": "std::move(resolved) ?",
+      "range": {
+        "startLine": 209,
+        "startChar": 32,
+        "endLine": 209,
+        "endChar": 40
+      },
+      "revId": "5eba5d9e502ff4513c6010a57cb780ea773b91c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
