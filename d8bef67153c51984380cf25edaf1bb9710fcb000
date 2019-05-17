@@ -22,6 +22,30 @@
       "revId": "d8bef67153c51984380cf25edaf1bb9710fcb000",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "417da27b_9e7474e9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-05-17T03:39:37Z",
+      "side": 1,
+      "message": "As I understand it, everything in the linker is single-threaded. The initial link is definitely single-threaded. Subsequent calls to dlopen and other dl functions are guarded by a global lock g_dl_mutex.",
+      "parentUuid": "c980967c_8e734d7b",
+      "range": {
+        "startLine": 401,
+        "startChar": 2,
+        "endLine": 401,
+        "endChar": 28
+      },
+      "revId": "d8bef67153c51984380cf25edaf1bb9710fcb000",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
