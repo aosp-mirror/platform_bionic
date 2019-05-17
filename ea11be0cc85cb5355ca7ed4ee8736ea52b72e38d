@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "774ea9fb_8dca80b1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-17T01:12:41Z",
+      "side": 1,
+      "message": "oh this is unfortunate. I am not sure whether that behavior is intended or not.",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "ea11be0cc85cb5355ca7ed4ee8736ea52b72e38d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
