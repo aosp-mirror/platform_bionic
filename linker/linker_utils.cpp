@@ -204,47 +204,54 @@ void resolve_paths(std::vector<std::string>& paths,
     if (path.empty()) {
       continue;
     }
+    std::string resolved = resolve_path(path);
+    if (!resolved.empty()) {
+      resolved_paths->push_back(std::move(resolved));
+    }
+  }
+}
 
-    char resolved_path[PATH_MAX];
-    const char* original_path = path.c_str();
-    if (realpath(original_path, resolved_path) != nullptr) {
-      struct stat s;
-      if (stat(resolved_path, &s) == -1) {
-        DL_WARN("Warning: cannot stat file \"%s\": %s (ignoring)", resolved_path, strerror(errno));
-        continue;
+std::string resolve_path(const std::string& path) {
+  char resolved_path[PATH_MAX];
+  const char* original_path = path.c_str();
+  if (realpath(original_path, resolved_path) != nullptr) {
+    struct stat s;
+    if (stat(resolved_path, &s) == -1) {
+      DL_WARN("Warning: cannot stat file \"%s\": %s (ignoring)", resolved_path, strerror(errno));
+      return "";
+    }
+    if (!S_ISDIR(s.st_mode)) {
+      DL_WARN("Warning: \"%s\" is not a directory (ignoring)", resolved_path);
+      return "";
+    }
+    return resolved_path;
+  } else {
+    std::string normalized_path;
+    if (!normalize_path(original_path, &normalized_path)) {
+      DL_WARN("Warning: unable to normalize \"%s\" (ignoring)", original_path);
+      return "";
+    }
+
+    std::string zip_path;
+    std::string entry_path;
+    if (parse_zip_path(normalized_path.c_str(), &zip_path, &entry_path)) {
+      if (realpath(zip_path.c_str(), resolved_path) == nullptr) {
+        DL_WARN("Warning: unable to resolve \"%s\": %s (ignoring)",
+                zip_path.c_str(), strerror(errno));
+        return "";
       }
-      if (!S_ISDIR(s.st_mode)) {
-        DL_WARN("Warning: \"%s\" is not a directory (ignoring)", resolved_path);
-        continue;
-      }
-      resolved_paths->push_back(resolved_path);
+
+      return std::string(resolved_path) + kZipFileSeparator + entry_path;
     } else {
-      std::string normalized_path;
-      if (!normalize_path(original_path, &normalized_path)) {
-        DL_WARN("Warning: unable to normalize \"%s\" (ignoring)", original_path);
-        continue;
-      }
-
-      std::string zip_path;
-      std::string entry_path;
-      if (parse_zip_path(normalized_path.c_str(), &zip_path, &entry_path)) {
-        if (realpath(zip_path.c_str(), resolved_path) == nullptr) {
-          DL_WARN("Warning: unable to resolve \"%s\": %s (ignoring)",
-                  zip_path.c_str(), strerror(errno));
-          continue;
-        }
-
-        resolved_paths->push_back(std::string(resolved_path) + kZipFileSeparator + entry_path);
-      } else {
-        struct stat s;
-        if (stat(normalized_path.c_str(), &s) == 0 && S_ISDIR(s.st_mode)) {
-          // Path is not a zip path, but an existing directory. Then add it
-          // although we failed to resolve it. b/119656753
-          resolved_paths->push_back(normalized_path);
-        }
+      struct stat s;
+      if (stat(normalized_path.c_str(), &s) == 0 && S_ISDIR(s.st_mode)) {
+        // Path is not a zip path, but an existing directory. Then add it
+        // although we failed to resolve it. b/119656753
+        return normalized_path;
       }
     }
   }
+  return "";
 }
 
 bool is_first_stage_init() {

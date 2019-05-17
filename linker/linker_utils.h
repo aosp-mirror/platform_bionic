@@ -47,6 +47,9 @@ bool parse_zip_path(const char* input_path, std::string* zip_path, std::string* 
 //    normalizes entry name by calling normalize_path function.
 void resolve_paths(std::vector<std::string>& paths,
                    std::vector<std::string>* resolved_paths);
+// Resolve a single path. Return empty string when the path is invalid or can't
+// be resolved.
+std::string resolve_path(const std::string& path);
 
 void split_path(const char* path, const char* delimiters, std::vector<std::string>* paths);
 
