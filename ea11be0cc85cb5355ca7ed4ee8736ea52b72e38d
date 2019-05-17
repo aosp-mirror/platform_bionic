@@ -22,6 +22,30 @@
       "revId": "ea11be0cc85cb5355ca7ed4ee8736ea52b72e38d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b294657f_86600db8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-05-17T01:17:47Z",
+      "side": 1,
+      "message": "Yes, it is. See: http://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html#shobj_dependencies\n\"The set of directories specified by a given DT_RUNPATH entry is used to find only the immediate dependencies of the executable or shared object containing the DT_RUNPATH entry.\"",
+      "parentUuid": "774ea9fb_8dca80b1",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 18,
+        "endChar": 25
+      },
+      "revId": "ea11be0cc85cb5355ca7ed4ee8736ea52b72e38d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
