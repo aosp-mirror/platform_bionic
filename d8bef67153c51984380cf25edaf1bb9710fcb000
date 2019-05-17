@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c980967c_8e734d7b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-05-17T01:17:21Z",
+      "side": 1,
+      "message": "This isn\u0027t thread safe now, is this function guaranteed not to be called from multiple threads?",
+      "range": {
+        "startLine": 401,
+        "startChar": 2,
+        "endLine": 401,
+        "endChar": 28
+      },
+      "revId": "d8bef67153c51984380cf25edaf1bb9710fcb000",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
