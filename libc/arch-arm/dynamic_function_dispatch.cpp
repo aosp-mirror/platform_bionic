@@ -288,16 +288,7 @@ DEFINE_IFUNC(__strcat_chk) {
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
 DEFINE_IFUNC(strcmp) {
-    switch(get_cpu_variant()) {
-        case kCortexA9:
-            RETURN_FUNC(strcmp_func, strcmp_a9);
-        case kCortexA55:
-        case kKrait:
-        case kKryo:
-            RETURN_FUNC(strcmp_func, strcmp_krait);
-        default:
-            RETURN_FUNC(strcmp_func, strcmp_a15);
-    }
+    RETURN_FUNC(strcmp_func, strcmp_a15);
 }
 
 typedef size_t strlen_func(const char* __s);
