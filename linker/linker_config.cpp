@@ -417,9 +417,22 @@ class Properties {
 
     if (resolve) {
       std::vector<std::string> resolved_paths;
-
-      // do not remove paths that do not exist
-      resolve_paths(paths, &resolved_paths);
+      for (const auto& path : paths) {
+        if (path.empty()) {
+          continue;
+        }
+        // this is single threaded. no need to lock
+        auto cached = resolved_paths_.find(path);
+        if (cached == resolved_paths_.end()) {
+          resolved_paths_[path] = resolve_path(path);
+          cached = resolved_paths_.find(path);
+        }
+        CHECK(cached != resolved_paths_.end());
+        if (cached->second.empty()) {
+          continue;
+        }
+        resolved_paths.push_back(cached->second);
+      }
 
       return resolved_paths;
     } else {
@@ -442,6 +455,7 @@ class Properties {
     return it;
   }
   std::unordered_map<std::string, PropertyValue> properties_;
+  std::unordered_map<std::string, std::string> resolved_paths_;
   int target_sdk_version_;
 
   DISALLOW_IMPLICIT_CONSTRUCTORS(Properties);
