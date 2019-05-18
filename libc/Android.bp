@@ -790,13 +790,11 @@ cc_library_static {
                 "arch-arm/cortex-a9/bionic/memset.S",
                 "arch-arm/cortex-a9/bionic/stpcpy.S",
                 "arch-arm/cortex-a9/bionic/strcat.S",
-                "arch-arm/cortex-a9/bionic/strcmp.S",
                 "arch-arm/cortex-a9/bionic/strcpy.S",
                 "arch-arm/cortex-a9/bionic/strlen.S",
 
                 "arch-arm/krait/bionic/memcpy.S",
                 "arch-arm/krait/bionic/memset.S",
-                "arch-arm/krait/bionic/strcmp.S",
 
                 "arch-arm/cortex-a53/bionic/memcpy.S",
 
