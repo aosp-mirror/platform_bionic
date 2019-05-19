@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "650781ac_e86e1124",
+        "filename": "libm/builtins.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-05-19T02:43:40Z",
+      "side": 1,
+      "message": "Should we use this for ARMv8 as well?  The CTS Bionic Tests pass when just returning nearbyint (in fake_long_double.c).",
+      "revId": "594a39527607b5dc88a3192fc2293a639538a207",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
