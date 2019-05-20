@@ -19,7 +19,6 @@
 #ifndef __LINUX_TC_VLAN_H
 #define __LINUX_TC_VLAN_H
 #include <linux/pkt_cls.h>
-#define TCA_ACT_VLAN 12
 #define TCA_VLAN_ACT_POP 1
 #define TCA_VLAN_ACT_PUSH 2
 #define TCA_VLAN_ACT_MODIFY 3
