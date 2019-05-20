@@ -22,6 +22,30 @@
       "revId": "4c4fda2d219a544d63f90c16cce7e0e41a43ce83",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed10b6ba_7809729b",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2019-05-20T23:52:03Z",
+      "side": 1,
+      "message": "That\u0027s exactly it :) Is there a rewording here that might make this more clear?",
+      "parentUuid": "78f7e4c0_08a913e6",
+      "range": {
+        "startLine": 241,
+        "startChar": 67,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "4c4fda2d219a544d63f90c16cce7e0e41a43ce83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
