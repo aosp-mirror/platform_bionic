@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "baae230c_9e3b0c42",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-20T14:21:14Z",
+      "side": 1,
+      "message": "This change ought to be accompanied by unit and/or CTS test changes.",
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "581ea67a_9b2f42e5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2566,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-20T14:21:14Z",
+      "side": 1,
+      "message": "This looks like it breaks isolation and we might get different behaviour based on changes in global ordering, which makes me a bit wary.\n\nBut first I need to check my understanding of the scenario: The anonymous namespace is used when we cannot determine the caller, hence we only have the process global state to go on, and also a library path judging from the call site [1]. That\u0027s apparently not enough - the loaded code assumes some libraries are available that we try to get through the first classloader-namespace(?) being created here. Is that about right?\n\nIf so, do we know more specifically what the loaded code needs? In http://b/130623656#comment11 it wants to load an .so from the app\u0027s own directory - can\u0027t we determine that at app startup?\n\n[1] http://cs/aosp-master/system/core/libnativeloader/library_namespaces.cpp?l\u003d160-161\u0026rcl\u003dde725e6e757ec780861be4d5b85d653211be9fa2",
+      "range": {
+        "startLine": 2565,
+        "startChar": 5,
+        "endLine": 2566,
+        "endChar": 24
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed1b2ad5_954ef8bc",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-20T14:21:14Z",
+      "side": 1,
+      "message": "This is subordinate to my general comment below about this approach, but this should also explain what the flag actually entails.",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 65
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
