@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "78f7e4c0_08a913e6",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-20T23:39:29Z",
+      "side": 1,
+      "message": "Is \"non-TLS variant\" a reference to ELF TLS?\n\ni.e. If I understand correctly, a fuzzer runtime DSO exports the __sancov_lowest_stack variable as the emutls symbol, \"__emutls_v.__sancov_lowest_stack\", but when fuzzer-instrumented code is compiled with -fno-emulated-tls, the compiler instrumentation refers to an ordinary ELF TLS symbol, \"__sancov_lowest_stack\", which isn\u0027t defined anywhere.",
+      "range": {
+        "startLine": 241,
+        "startChar": 67,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "4c4fda2d219a544d63f90c16cce7e0e41a43ce83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
