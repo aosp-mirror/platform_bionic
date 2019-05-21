@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "28edcf11_723ac5c4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-21T12:02:03Z",
+      "side": 1,
+      "message": "I\u0027ve replied in the other CL.",
+      "parentUuid": "baae230c_9e3b0c42",
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "581ea67a_9b2f42e5",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "26f6bdd8_be9e303b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2566,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-21T12:02:03Z",
+      "side": 1,
+      "message": "Your understanding is correct. So, IMO, there has to be some heuristic on anonymous namespace cause there is not much hint (the caller). And the heuristic is that \"if we don\u0027t know the caller, assume that it is from the first app classloader\".\n\nSo, I think we actually don\u0027t need to isolate anonymous namespace from other classloader-namespace namespaces. If the caller was available, the lib should have been loaded into one of the named namespaces (which probably would be the first one).",
+      "parentUuid": "581ea67a_9b2f42e5",
+      "range": {
+        "startLine": 2565,
+        "startChar": 5,
+        "endLine": 2566,
+        "endChar": 24
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed1b2ad5_954ef8bc",
         "filename": "linker/linker.h",
         "patchSetId": 3
@@ -62,6 +104,30 @@
       "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56a33dfd_6fd893fe",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-21T12:02:03Z",
+      "side": 1,
+      "message": "I am confused. The description explains what the flag is for: shared libs from apps and libs for unknown caller of dlopen().",
+      "parentUuid": "ed1b2ad5_954ef8bc",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 65
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
