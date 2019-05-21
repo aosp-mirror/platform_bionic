@@ -78,7 +78,7 @@ extern char** environ;
 __noreturn void _exit(int __status);
 
 pid_t  fork(void);
-pid_t  vfork(void);
+pid_t  vfork(void) __returns_twice;
 pid_t  getpid(void);
 pid_t  gettid(void) __attribute_const__;
 pid_t  getpgid(pid_t __pid);

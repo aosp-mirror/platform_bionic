@@ -81,10 +81,10 @@ static _Atomic bool gHeapprofdInitHookInstalled = false;
 
 // In a Zygote child process, this is set to true if profiling of this process
 // is allowed. Note that this is set at a later time than the global
-// gMallocLeakZygoteChild. The latter is set during the fork (while still in
+// gZygoteChild. The latter is set during the fork (while still in
 // zygote's SELinux domain). While this bit is set after the child is
 // specialized (and has transferred SELinux domains if applicable).
-static _Atomic bool gMallocZygoteChildProfileable = false;
+static _Atomic bool gZygoteChildProfileable = false;
 
 extern "C" void* MallocInitHeapprofdHook(size_t);
 
@@ -114,8 +114,8 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
 
 static void MaybeInstallInitHeapprofdHook(int) {
   // Zygote child processes must be marked profileable.
-  if (gMallocLeakZygoteChild &&
-      !atomic_load_explicit(&gMallocZygoteChildProfileable, memory_order_acquire)) {
+  if (gZygoteChild &&
+      !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
     return;
   }
 
@@ -143,22 +143,23 @@ static void MaybeInstallInitHeapprofdHook(int) {
   }
 }
 
+constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
+constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
+constexpr size_t kMaxCmdlineSize = 512;
+
 static bool GetHeapprofdProgramProperty(char* data, size_t size) {
-  constexpr char prefix[] = "heapprofd.enable.";
-  // - 1 to skip nullbyte, which we will write later.
-  constexpr size_t prefix_size = sizeof(prefix) - 1;
-  if (size < prefix_size) {
+  if (size < kHeapprofdProgramPropertyPrefixSize) {
     error_log("%s: Overflow constructing heapprofd property", getprogname());
     return false;
   }
-  memcpy(data, prefix, prefix_size);
+  memcpy(data, kHeapprofdProgramPropertyPrefix, kHeapprofdProgramPropertyPrefixSize);
 
   int fd = open("/proc/self/cmdline", O_RDONLY | O_CLOEXEC);
   if (fd == -1) {
     error_log("%s: Failed to open /proc/self/cmdline", getprogname());
     return false;
   }
-  char cmdline[128];
+  char cmdline[kMaxCmdlineSize];
   ssize_t rd = read(fd, cmdline, sizeof(cmdline) - 1);
   close(fd);
   if (rd == -1) {
@@ -167,7 +168,7 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
   }
   cmdline[rd] = '\0';
   char* first_arg = static_cast<char*>(memchr(cmdline, '\0', rd));
-  if (first_arg == nullptr || first_arg == cmdline + size - 1) {
+  if (first_arg == nullptr) {
     error_log("%s: Overflow reading cmdline", getprogname());
     return false;
   }
@@ -192,12 +193,12 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
   }
 
   size_t name_size = static_cast<size_t>(first_arg - start);
-  if (name_size >= size - prefix_size) {
+  if (name_size >= size - kHeapprofdProgramPropertyPrefixSize) {
     error_log("%s: overflow constructing heapprofd property.", getprogname());
     return false;
   }
   // + 1 to also copy the trailing null byte.
-  memcpy(data + prefix_size, start, name_size + 1);
+  memcpy(data + kHeapprofdProgramPropertyPrefixSize, start, name_size + 1);
   return true;
 }
 
@@ -213,7 +214,7 @@ bool HeapprofdShouldLoad() {
     return true;
   }
 
-  char program_property[128];
+  char program_property[kHeapprofdProgramPropertyPrefixSize + kMaxCmdlineSize];
   if (!GetHeapprofdProgramProperty(program_property,
                                    sizeof(program_property))) {
     return false;
@@ -326,7 +327,7 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
 
 // Marks this process as a profileable zygote child.
 static bool HandleInitZygoteChildProfiling() {
-  atomic_store_explicit(&gMallocZygoteChildProfileable, true, memory_order_release);
+  atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
 
   // Conditionally start "from startup" profiling.
   if (HeapprofdShouldLoad()) {

@@ -102,22 +102,27 @@ void BenchmarkMalloc(MallocEntry entries[], size_t total_entries, size_t max_all
 //       bionic/libc/malloc_debug/tools/gen_malloc.pl -i <THREAD_ID> g_sql_entries kMaxSqlAllocSlots < <ALLOC_FILE> > malloc_sql.h
 #include "malloc_sql.h"
 
-static void BM_malloc_sql_trace_decay_time_0(benchmark::State& state) {
+static void BM_malloc_sql_trace_default(benchmark::State& state) {
+  // The default is expected to be a zero decay time.
   mallopt(M_DECAY_TIME, 0);
-  for (auto _ : state) {
-    BenchmarkMalloc(g_sql_entries, sizeof(g_sql_entries) / sizeof(MallocEntry),
-                    kMaxSqlAllocSlots);
-  }
-}
-BIONIC_BENCHMARK(BM_malloc_sql_trace_decay_time_0);
 
-static void BM_malloc_sql_trace_decay_time_1(benchmark::State& state) {
-  mallopt(M_DECAY_TIME, 1);
   for (auto _ : state) {
     BenchmarkMalloc(g_sql_entries, sizeof(g_sql_entries) / sizeof(MallocEntry),
                     kMaxSqlAllocSlots);
   }
 }
-BIONIC_BENCHMARK(BM_malloc_sql_trace_decay_time_1);
+BIONIC_BENCHMARK(BM_malloc_sql_trace_default);
+
+static void BM_malloc_sql_trace_decay1(benchmark::State& state) {
+  mallopt(M_DECAY_TIME, 1);
+
+  for (auto _ : state) {
+    BenchmarkMalloc(g_sql_entries, sizeof(g_sql_entries) / sizeof(MallocEntry),
+                    kMaxSqlAllocSlots);
+  }
+
+  mallopt(M_DECAY_TIME, 0);
+}
+BIONIC_BENCHMARK(BM_malloc_sql_trace_decay1);
 
 #endif
