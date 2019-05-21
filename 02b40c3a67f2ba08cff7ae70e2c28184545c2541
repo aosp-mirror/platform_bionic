@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "47196e7e_7038338a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2566,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-21T14:19:40Z",
+      "side": 1,
+      "message": "\u003e \"if we don\u0027t know the caller, use a namespace with well known parameters x, y, z - no more and no less\n\nThis is done inside the linker. And it shouldn\u0027t (and can\u0027t) know anything about the characteristics of the linker, because the namespaces are all created outside of the linker. It doesn\u0027t know whether or not a search path is for an app. To the linker, the namespaces are the same (perhaps except for the default ns). So,there must be a hint from \"the outside\", and ANDROID_NAMESPACE_TYPE_UNTRUSTED is it. Previously, without giving a hint, we explicitly created a new namespace just for that case, but fundamentally that is the same; linker anyway rely on libnativeloader to teach it the namespace that it should use when caller isn\u0027t identifiable.\n\nWhether the hinted namespace is correctly configured or not, and whether the hint is correctly given or not are all the responsibilities of libnativeloader, not the linker.",
+      "parentUuid": "a2248887_531d707e",
+      "range": {
+        "startLine": 2565,
+        "startChar": 5,
+        "endLine": 2566,
+        "endChar": 24
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed1b2ad5_954ef8bc",
         "filename": "linker/linker.h",
         "patchSetId": 3
@@ -176,6 +200,30 @@
       "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e3e7f7c_47d90c89",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-05-21T14:19:40Z",
+      "side": 1,
+      "message": "anonymous namespace is a concept private to the linker. (we ideally need to remove APIs like android_init_anonymous_namespace. I left that just because there are some existing test code using it). The description already explains that a namespace flagged with this is used to load libraries when the caller cannot be determined.",
+      "parentUuid": "a7d26553_8c1555c0",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 65
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
