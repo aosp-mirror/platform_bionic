@@ -46,6 +46,30 @@
       "revId": "d8bef67153c51984380cf25edaf1bb9710fcb000",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "640e74a4_8f3b3fa2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-21T00:12:28Z",
+      "side": 1,
+      "message": "readlpath_fd is only called when loading a library, which only happens when the g_dl_mutex mutex is held.",
+      "parentUuid": "417da27b_9e7474e9",
+      "range": {
+        "startLine": 401,
+        "startChar": 2,
+        "endLine": 401,
+        "endChar": 28
+      },
+      "revId": "d8bef67153c51984380cf25edaf1bb9710fcb000",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
