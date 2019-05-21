@@ -217,6 +217,89 @@ TEST(pwd, getpwnam_app_id_u1_a40000) {
 TEST(pwd, getpwnam_app_id_u1_i0) {
   check_get_passwd("u1_i0", 190000, TYPE_APP);
 }
+
+TEST(pwd, getpwnam_r_alignment) {
+#if defined(__BIONIC__)
+  passwd pwd_storage;
+  alignas(16) char buf[512];
+  passwd* pwd;
+  int result = getpwnam_r("root", &pwd_storage, buf + 1, sizeof(buf) - 1, &pwd);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd, "root", 0, TYPE_SYSTEM, true);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(pwd, getpwuid_r_alignment) {
+#if defined(__BIONIC__)
+  passwd pwd_storage;
+  alignas(16) char buf[512];
+  passwd* pwd;
+  int result = getpwuid_r(0, &pwd_storage, buf + 1, sizeof(buf) - 1, &pwd);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd, "root", 0, TYPE_SYSTEM, true);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(pwd, getpwnam_r_reentrancy) {
+#if defined(__BIONIC__)
+  passwd pwd_storage[2];
+  char buf[2][512];
+  passwd* pwd[3];
+  int result = getpwnam_r("root", &pwd_storage[0], buf[0], sizeof(buf[0]), &pwd[0]);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd[0], "root", 0, TYPE_SYSTEM, true);
+  pwd[1] = getpwnam("system");
+  ASSERT_NE(nullptr, pwd[1]);
+  check_passwd(pwd[1], "system", 1000, TYPE_SYSTEM, true);
+  result = getpwnam_r("radio", &pwd_storage[1], buf[1], sizeof(buf[1]), &pwd[2]);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd[2], "radio", 1001, TYPE_SYSTEM, true);
+  check_passwd(pwd[0], "root", 0, TYPE_SYSTEM, true);
+  check_passwd(pwd[1], "system", 1000, TYPE_SYSTEM, true);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(pwd, getpwuid_r_reentrancy) {
+#if defined(__BIONIC__)
+  passwd pwd_storage[2];
+  char buf[2][512];
+  passwd* pwd[3];
+  int result = getpwuid_r(0, &pwd_storage[0], buf[0], sizeof(buf[0]), &pwd[0]);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd[0], "root", 0, TYPE_SYSTEM, true);
+  pwd[1] = getpwuid(1000);
+  ASSERT_NE(nullptr, pwd[1]);
+  check_passwd(pwd[1], "system", 1000, TYPE_SYSTEM, true);
+  result = getpwuid_r(1001, &pwd_storage[1], buf[1], sizeof(buf[1]), &pwd[2]);
+  ASSERT_EQ(0, result);
+  check_passwd(pwd[2], "radio", 1001, TYPE_SYSTEM, true);
+  check_passwd(pwd[0], "root", 0, TYPE_SYSTEM, true);
+  check_passwd(pwd[1], "system", 1000, TYPE_SYSTEM, true);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(pwd, getpwnam_r_large_enough_suggested_buffer_size) {
+#if defined(__BIONIC__)
+  long size = sysconf(_SC_GETPW_R_SIZE_MAX);
+  ASSERT_GT(size, 0);
+  char buf[size];
+  passwd pwd_storage;
+  passwd* pwd;
+  ASSERT_EQ(0, getpwnam_r("root", &pwd_storage, buf, size, &pwd));
+  check_passwd(pwd, "root", 0, TYPE_SYSTEM, true);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 #if defined(__BIONIC__)
 template <typename T>
 static void expect_ids(const T& ids) {
@@ -475,6 +558,32 @@ TEST(grp, getgrnam_app_id_u1_a40000) {
 
 TEST(grp, getgrnam_app_id_u1_i0) {
   check_get_group("u1_i0", 190000);
+}
+
+TEST(grp, getgrnam_r_alignment) {
+#if defined(__BIONIC__)
+  group grp_storage;
+  alignas(16) char buf[512];
+  group* grp;
+  int result = getgrnam_r("root", &grp_storage, buf + 1, sizeof(buf) - 1, &grp);
+  ASSERT_EQ(0, result);
+  check_group(grp, "root", 0);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(grp, getgrgid_r_alignment) {
+#if defined(__BIONIC__)
+  group grp_storage;
+  alignas(16) char buf[512];
+  group* grp;
+  int result = getgrgid_r(0, &grp_storage, buf + 1, sizeof(buf) - 1, &grp);
+  ASSERT_EQ(0, result);
+  check_group(grp, "root", 0);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
 }
 
 TEST(grp, getgrnam_r_reentrancy) {
