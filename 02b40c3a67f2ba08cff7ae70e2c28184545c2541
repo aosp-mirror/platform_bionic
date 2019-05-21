@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "a2248887_531d707e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2566,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-21T13:47:18Z",
+      "side": 1,
+      "message": "The significant difference between knowing the caller and doing this is in the word \"first\". Maybe it\u0027s just me not understanding app native loading well enough, but how do ascertain that the first namespace loaded with these criteria (through ANDROID_NAMESPACE_TYPE_UNTRUSTED - you\u0027re also dropping the condition that the library path should be nonempty in the other CL) is a good one to use for this? It seems coincidental to me. Brittle too - even if we can argue it does the right thing now, it means relying on a global characteristic of the whole loader setup, which is hard to ensure (which also means tests become all the more important).\n\nI was rather hoping for something along the lines of: \"if we don\u0027t know the caller, use a namespace with well known parameters x, y, z - no more and no less\". That\u0027s why I wondered what we know about what x, y and z should be. Getting the app .so lib directory into the search path is one of them, setting up all the usual library links is of course another. Are there more? Is it only in the \"first\" app classloader namespace that we can find them?\n\nTaking the approach further, that namespace with x, y and z would be the most suitable for the \"main\" app namespace, and it ought to be the parent for even the first classloader namespace. It would also help address the issue of the namespace to use for app binaries (cf http://b/130788466#comment18), because there we don\u0027t have any classloader namespace to start from.",
+      "parentUuid": "26f6bdd8_be9e303b",
+      "range": {
+        "startLine": 2565,
+        "startChar": 5,
+        "endLine": 2566,
+        "endChar": 24
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed1b2ad5_954ef8bc",
         "filename": "linker/linker.h",
         "patchSetId": 3
@@ -128,6 +152,30 @@
       "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7d26553_8c1555c0",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-21T13:47:18Z",
+      "side": 1,
+      "message": "What I meant is that it would also be helpful to know what the flag makes the linker do, i.e. effectively making the namespace a candidate for becoming the anonymous namespace.",
+      "parentUuid": "56a33dfd_6fd893fe",
+      "range": {
+        "startLine": 160,
+        "startChar": 2,
+        "endLine": 162,
+        "endChar": 65
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
