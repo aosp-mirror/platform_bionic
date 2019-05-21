@@ -46,6 +46,30 @@
       "revId": "4c4fda2d219a544d63f90c16cce7e0e41a43ce83",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22339dbc_62b21517",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-21T01:04:33Z",
+      "side": 1,
+      "message": "I think \"non-TLS variant\" could just be switched to \"ELF TLS variant\"\n\nMaybe this rewrite is better, though?\n\n    // With fuzzer builds, compiler instrumentation generates a reference to the\n    // __sancov_lowest_stack variable, which (for now) is defined by the fuzzer\n    // library as an emutls symbol. The -fno-emulated-tls flag above configures\n    // the compiler to reference an ordinary ELF TLS __sancov_lowest_stack\n    // symbol instead, which isn\u0027t defined. Disable the fuzzer for this test\n    // until the platform is switched to ELF TLS.",
+      "parentUuid": "ed10b6ba_7809729b",
+      "range": {
+        "startLine": 241,
+        "startChar": 67,
+        "endLine": 242,
+        "endChar": 22
+      },
+      "revId": "4c4fda2d219a544d63f90c16cce7e0e41a43ce83",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
