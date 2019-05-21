@@ -22,7 +22,8 @@
 #
 #      - Each parameter type is assumed to be stored in 32 bits.
 #
-# This file is processed by a python script named gensyscalls.py.
+# This file is processed by a python script named gensyscalls.py, run via
+# genrules in Android.bp.
 
 int     execve(const char*, char* const*, char* const*)  all
 

@@ -330,6 +330,16 @@ default. Ensure you're using the current NDK and that you haven't
 configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
 
+## `__register_atfork` (Available in API level >= 23)
+
+To allow `atfork` and `pthread_atfork` handlers to be unregistered on
+`dlclose`, the implementation changed in API level 23. Unfortunately this
+requires a new libc function `__register_atfork`. Code using these functions
+that is built with a target API level >= 23 therefore will not load on earlier
+versions of Android, with an error referencing `__register_atfork`.
+
+*Resolution*: build your code with an NDK target API level that matches your
+app's minimum API level, or avoid using `atfork`/`pthread_atfork`.
 
 ## DT_RUNPATH support (Available in API level >= 24)
 

@@ -134,10 +134,7 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   ZipArchiveHandle handle;
   ASSERT_EQ(0, OpenArchive(lib_path.c_str(), &handle));
   ZipEntry zip_entry;
-  ZipString zip_name;
-  zip_name.name = reinterpret_cast<const uint8_t*>(kLibZipSimpleZip);
-  zip_name.name_length = strlen(kLibZipSimpleZip);
-  ASSERT_EQ(0, FindEntry(handle, zip_name, &zip_entry));
+  ASSERT_EQ(0, FindEntry(handle, kLibZipSimpleZip, &zip_entry));
   extinfo.library_fd_offset = zip_entry.offset;
   CloseArchive(handle);
 
@@ -536,6 +533,26 @@ TEST_F(DlExtRelroSharingTest, ChildWritesGoodDataRecursive) {
 
   // Use destructor of tf to close and unlink the file.
   tf.fd = extinfo_.relro_fd;
+}
+
+TEST_F(DlExtRelroSharingTest, CheckRelroSizes) {
+  TemporaryFile tf1, tf2;
+  ASSERT_NOERROR(close(tf1.fd));
+  ASSERT_NOERROR(close(tf2.fd));
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameRecursive, tf1.path, false));
+  struct stat no_recursive;
+  ASSERT_NOERROR(fstat(extinfo_.relro_fd, &no_recursive));
+  tf1.fd = extinfo_.relro_fd;
+
+  ASSERT_NO_FATAL_FAILURE(CreateRelroFile(kLibNameRecursive, tf2.path, true));
+  struct stat with_recursive;
+  ASSERT_NOERROR(fstat(extinfo_.relro_fd, &with_recursive));
+  tf2.fd = extinfo_.relro_fd;
+
+  // RELRO file should end up bigger when we use the recursive flag, since it
+  // includes data for more than one library.
+  ASSERT_GT(with_recursive.st_size, no_recursive.st_size);
 }
 
 TEST_F(DlExtRelroSharingTest, ChildWritesNoRelro) {
