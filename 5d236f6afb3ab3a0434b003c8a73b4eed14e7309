@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "681555b0_25008380",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-21T20:29:33Z",
+      "side": 1,
+      "message": "I think this could just be \"return name_.c_str();\"\n\nPreviously:\n - If android_create_namespace\u0027s name argument is nullptr, I think the linker tolerates that and sets android_namespace_t::name_ to nullptr. It looks like get_name() is only used for trace/error strings, and our printf code turns nullptr into \"(null)\".\n - If the argument is \"\", then android_namespace_t::name_ becomes \"\".\n\nWith this CL:\n - nullptr causes a segfault in android_namespace_t::set_name().\n - \"\" becomes nullptr, so log strings have \"(null)\".\n\nI think the API\u0027s only callers are internal to the platform, so it should be OK to treat nullptr as an invalid argument, but then there\u0027s no reason to turn \"\" into \"(null)\".",
+      "range": {
+        "startLine": 77,
+        "startChar": 33,
+        "endLine": 77,
+        "endChar": 80
+      },
+      "revId": "5d236f6afb3ab3a0434b003c8a73b4eed14e7309",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
