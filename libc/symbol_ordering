@@ -27,7 +27,7 @@ os_overcommits
 restartloop
 _ZL24gHeapprofdInitInProgress
 _ZL27gHeapprofdInitHookInstalled
-_ZL29gMallocZygoteChildProfileable
+_ZL23gZygoteChildProfileable
 _ZZ17__find_icu_symbolPKcE9found_icu
 ru_a
 ru_b
@@ -55,7 +55,6 @@ __free_hook
 g_atexit_lock
 gGlobalsMutateLock
 global_hashtable
-gMallocLeakZygoteChild
 gmtptr
 handlers
 je_background_thread_info

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,31 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <pthread.h>
-#include <sched.h>
+#include <threads.h>
 
-#include "private/bionic_defs.h"
-#include "private/ErrnoRestorer.h"
-#include "pthread_internal.h"
-
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE
-int pthread_setschedparam(pthread_t t, int policy, const sched_param* param) {
-  ErrnoRestorer errno_restorer;
-
-  pid_t tid = __pthread_internal_gettid(t, "pthread_setschedparam");
-  if (tid == -1) return ESRCH;
-
-  return (sched_setscheduler(tid, policy, param) == -1) ? errno : 0;
-}
-
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE
-int pthread_setschedprio(pthread_t t, int priority) {
-  ErrnoRestorer errno_restorer;
-
-  pid_t tid = __pthread_internal_gettid(t, "pthread_setschedprio");
-  if (tid == -1) return ESRCH;
-
-  sched_param param = { .sched_priority = priority };
-  return (sched_setparam(tid, &param) == -1) ? errno : 0;
-}
+#define __BIONIC_THREADS_INLINE /* Out of line. */
+#include <bits/threads_inlines.h>

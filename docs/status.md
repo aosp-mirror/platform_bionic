@@ -37,6 +37,9 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
+New libc functions in R (API level 30):
+  * Full C11 `<threads.h>` (available as inlines for older API levels).
+
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
   * `reallocarray` (BSD/GNU extension in `<malloc.h>` and `<stdlib.h>`)

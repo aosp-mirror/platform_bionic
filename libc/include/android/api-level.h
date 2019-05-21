@@ -100,6 +100,9 @@ __BEGIN_DECLS
 /** Names the "Q" API level (29), for comparisons against __ANDROID_API__. */
 #define __ANDROID_API_Q__ 29
 
+/** Names the "R" API level (30), for comparisons against __ANDROID_API__. */
+#define __ANDROID_API_R__ 30
+
 /**
  * Returns the `targetSdkVersion` of the caller, or `__ANDROID_API_FUTURE__`
  * if there is no known target SDK version (for code not running in the

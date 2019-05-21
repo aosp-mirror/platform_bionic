@@ -25,7 +25,7 @@ if [ ${HOST_OS}-${HOST_ARCH} = linux-x86 -o ${HOST_OS}-${HOST_ARCH} = linux-x86_
             cd ${ANDROID_BUILD_TOP}
             export ANDROID_DATA=${TARGET_OUT_DATA}
             export ANDROID_ROOT=${TARGET_OUT}
-            ${NATIVETEST}/bionic-benchmarks/bionic-benchmarks $@
+            ${BENCHMARKS}/bionic-benchmarks/bionic-benchmarks $@
         )
     else
         echo "$0 not supported on TARGET_ARCH=$TARGET_ARCH"

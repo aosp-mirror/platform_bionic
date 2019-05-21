@@ -1039,7 +1039,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
 
   ZipEntry entry;
 
-  if (FindEntry(handle, ZipString(file_path), &entry) != 0) {
+  if (FindEntry(handle, file_path, &entry) != 0) {
     // Entry was not found.
     close(fd);
     return -1;
@@ -1161,6 +1161,13 @@ static int open_library(android_namespace_t* ns,
       fd = -1;
     }
   }
+
+#if !defined(__ANDROID_APEX__)
+  if (fd == -1) {
+    std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
+    fd = open_library_on_paths(zip_archive_cache, name, file_offset, bootstrap_paths, realpath);
+  }
+#endif
 
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
@@ -1865,11 +1872,17 @@ bool find_libraries(android_namespace_t* ns,
 
     soinfo_list_t global_group = local_group_ns->get_global_group();
     bool linked = local_group.visit([&](soinfo* si) {
-      // Even though local group may contain accessible soinfos from other namesapces
+      // Even though local group may contain accessible soinfos from other namespaces
       // we should avoid linking them (because if they are not linked -> they
       // are in the local_group_roots and will be linked later).
       if (!si->is_linked() && si->get_primary_namespace() == local_group_ns) {
-        if (!si->link_image(global_group, local_group, extinfo, &relro_fd_offset) ||
+        const android_dlextinfo* link_extinfo = nullptr;
+        if (si == soinfos[0] || reserved_address_recursive) {
+          // Only forward extinfo for the first library unless the recursive
+          // flag is set.
+          link_extinfo = extinfo;
+        }
+        if (!si->link_image(global_group, local_group, link_extinfo, &relro_fd_offset) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
@@ -2590,6 +2603,8 @@ bool link_namespaces_all_libs(android_namespace_t* namespace_from,
 }
 
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
+  if (g_is_ldd) return 0;
+
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
   ElfW(Addr) ifunc_addr = ifunc_resolver();
@@ -3868,6 +3883,11 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (is_image_linked()) {
     // already linked.
     return true;
+  }
+
+  if (g_is_ldd && !is_main_executable()) {
+    async_safe_format_fd(STDOUT_FILENO, "\t%s => %s (%p)\n", get_soname(),
+                         get_realpath(), reinterpret_cast<void*>(base));
   }
 
   local_group_root_ = local_group.front();

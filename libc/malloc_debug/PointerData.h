@@ -44,7 +44,7 @@
 #include "OptionData.h"
 #include "UnwindBacktrace.h"
 
-extern int* g_malloc_zygote_child;
+extern bool* g_zygote_child;
 
 // Forward declarations.
 class Config;
@@ -89,7 +89,9 @@ struct PointerInfoType {
   size_t hash_index;
   size_t RealSize() const { return size & ~(1U << 31); }
   bool ZygoteChildAlloc() const { return size & (1U << 31); }
-  static size_t GetEncodedSize(size_t size) { return GetEncodedSize(*g_malloc_zygote_child, size); }
+  static size_t GetEncodedSize(size_t size) {
+    return GetEncodedSize(*g_zygote_child, size);
+  }
   static size_t GetEncodedSize(bool child_alloc, size_t size) {
     return size | ((child_alloc) ? (1U << 31) : 0);
   }

@@ -76,6 +76,7 @@ cc_defaults {
     },
     native_coverage: false,
     recovery_available: true,
+    native_bridge_supported: true,
 
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
@@ -762,12 +763,13 @@ cc_library_static {
                 "arch-arm/generic/bionic/strlen.c",
 
                 "arch-arm/bionic/__aeabi_read_tp.S",
-                "arch-arm/bionic/atomics_arm.c",
                 "arch-arm/bionic/__bionic_clone.S",
+                "arch-arm/bionic/__restore.S",
                 "arch-arm/bionic/_exit_with_stack_teardown.S",
+                "arch-arm/bionic/atomics_arm.c",
+                "arch-arm/bionic/bpabi.c",
                 "arch-arm/bionic/libcrt_compat.c",
                 "arch-arm/bionic/popcount_tab.c",
-                "arch-arm/bionic/__restore.S",
                 "arch-arm/bionic/setjmp.S",
                 "arch-arm/bionic/syscall.S",
                 "arch-arm/bionic/vfork.S",
@@ -788,13 +790,11 @@ cc_library_static {
                 "arch-arm/cortex-a9/bionic/memset.S",
                 "arch-arm/cortex-a9/bionic/stpcpy.S",
                 "arch-arm/cortex-a9/bionic/strcat.S",
-                "arch-arm/cortex-a9/bionic/strcmp.S",
                 "arch-arm/cortex-a9/bionic/strcpy.S",
                 "arch-arm/cortex-a9/bionic/strlen.S",
 
                 "arch-arm/krait/bionic/memcpy.S",
                 "arch-arm/krait/bionic/memset.S",
-                "arch-arm/krait/bionic/strcmp.S",
 
                 "arch-arm/cortex-a53/bionic/memcpy.S",
 
@@ -1153,6 +1153,7 @@ cc_library_static {
         "bionic/tdestroy.cpp",
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
+        "bionic/threads.cpp",
         "bionic/timespec_get.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
@@ -1241,27 +1242,53 @@ cc_library_static {
 // libc_syscalls.a
 // ========================================================
 
+genrule {
+    name: "syscalls-arm.S",
+    out: ["syscalls-arm.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-arm64.S",
+    out: ["syscalls-arm64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-x86.S",
+    out: ["syscalls-x86.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
+}
+
+genrule {
+    name: "syscalls-x86_64.S",
+    out: ["syscalls-x86_64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tool_files: [":bionic-gensyscalls"],
+    cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls.S"],
+            srcs: [":syscalls-arm.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls.S"],
-        },
-        mips: {
-            srcs: ["arch-mips/syscalls.S"],
-        },
-        mips64: {
-            srcs: ["arch-mips64/syscalls.S"],
+            srcs: [":syscalls-arm64.S"],
         },
         x86: {
-            srcs: ["arch-x86/syscalls.S"],
+            srcs: [":syscalls-x86.S"],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls.S"],
+            srcs: [":syscalls-x86_64.S"],
         },
     },
     name: "libc_syscalls",
@@ -1435,12 +1462,7 @@ cc_library_static {
             srcs: ["arch-x86/dynamic_function_dispatch.cpp"],
         },
         arm: {
-            srcs: [
-                "arch-arm/dynamic_function_dispatch.cpp",
-
-                // Workaround for b/120254692.
-                "arch-arm/dynamic_function_wrapper.S",
-            ],
+            srcs: ["arch-arm/dynamic_function_dispatch.cpp"],
         },
     },
 
@@ -1555,13 +1577,10 @@ cc_library {
         ],
     },
 
-    required: ["tzdata"],
-
-    // Leave the symbols in the shared library so that stack unwinders can produce
-    // meaningful name resolution.
-    strip: {
-        keep_symbols: true,
-    },
+    required: [
+        "tzdata",
+        "tz_version", // Version metadata for tzdata to help debugging.
+    ],
 
     // Do not pack libc.so relocations; see http://b/20645321 for details.
     pack_relocations: false,
@@ -1603,9 +1622,23 @@ cc_library {
             static: {
                 srcs: [":libc_sources_static_arm"],
             },
+
+            // Arm 32 bit does not produce complete exidx unwind information
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/132992102 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
         },
         arm64: {
             version_script: ":libc.arm64.map",
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1613,9 +1646,21 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             version_script: ":libc.x86.map",
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
     },
 
@@ -1666,6 +1711,7 @@ cc_library_headers {
     host_supported: true,
     vendor_available: true,
     recovery_available: true,
+    native_bridge_supported: true,
 
     no_libcrt: true,
     no_libgcc: true,
@@ -1798,6 +1844,7 @@ cc_defaults {
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     recovery_available: true,
+    native_bridge_supported: true,
 
     cflags: [
         "-Wno-gcc-compat",
@@ -2056,6 +2103,7 @@ ndk_headers {
 
 ndk_library {
     name: "libc",
+    native_bridge_supported: true,
     symbol_file: "libc.map.txt",
     first_version: "9",
 }
@@ -2065,6 +2113,7 @@ llndk_library {
     symbol_file: "libc.map.txt",
     export_headers_as_system: true,
     export_preprocessed_headers: ["include"],
+    native_bridge_supported: true,
     export_include_dirs: [
         "kernel/android/uapi",
         "kernel/uapi",
@@ -2455,19 +2504,19 @@ cc_library_shared {
 
     arch: {
         arm: {
-            srcs: ["arch-arm/syscalls.S"],
+            srcs: [":syscalls-arm.S"],
         },
         arm64: {
-            srcs: ["arch-arm64/syscalls.S"],
+            srcs: [":syscalls-arm64.S"],
         },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                "arch-x86/syscalls.S",
+                ":syscalls-x86.S",
             ],
         },
         x86_64: {
-            srcs: ["arch-x86_64/syscalls.S"],
+            srcs: [":syscalls-x86_64.S"],
         },
     },
 

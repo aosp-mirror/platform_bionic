@@ -1,0 +1,8 @@
+#!/bin/bash -eu
+#
+# Runs the given C/C++ compile-ish command. On success, scrapes an object file
+# from that command line and touches it.
+
+"$@"
+obj="$(echo "$@" | grep -oP '\S+\.o\b')"
+touch "${obj}"

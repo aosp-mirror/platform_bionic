@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <linux/fs.h>
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -29,6 +30,7 @@
 #include <locale.h>
 
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <android-base/file.h>
@@ -2576,4 +2578,35 @@ TEST(STDIO_TEST, dev_std_files) {
   length = readlink("/dev/stderr", path, sizeof(path));
   ASSERT_LT(0, length);
   ASSERT_EQ("/proc/self/fd/2", std::string(path, length));
+}
+
+TEST(STDIO_TEST, fread_with_locked_file) {
+  // Reading an unbuffered/line-buffered file from one thread shouldn't block on
+  // files locked on other threads, even if it flushes some line-buffered files.
+  FILE* fp1 = fopen("/dev/zero", "r");
+  ASSERT_TRUE(fp1 != nullptr);
+  flockfile(fp1);
+
+  std::thread([] {
+    for (int mode : { _IONBF, _IOLBF }) {
+      FILE* fp2 = fopen("/dev/zero", "r");
+      ASSERT_TRUE(fp2 != nullptr);
+      setvbuf(fp2, nullptr, mode, 0);
+      ASSERT_EQ('\0', fgetc(fp2));
+      fclose(fp2);
+    }
+  }).join();
+
+  funlockfile(fp1);
+  fclose(fp1);
+}
+
+TEST(STDIO_TEST, SEEK_macros) {
+  ASSERT_EQ(0, SEEK_SET);
+  ASSERT_EQ(1, SEEK_CUR);
+  ASSERT_EQ(2, SEEK_END);
+  ASSERT_EQ(3, SEEK_DATA);
+  ASSERT_EQ(4, SEEK_HOLE);
+  // So we'll notice if Linux grows another constant in <linux/fs.h>...
+  ASSERT_EQ(SEEK_MAX, SEEK_HOLE);
 }

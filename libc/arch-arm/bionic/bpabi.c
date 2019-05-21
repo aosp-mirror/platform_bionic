@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+extern long long __divdi3(long long, long long);
+extern unsigned long long __udivdi3(unsigned long long, unsigned long long);
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
+long long __gnu_ldivmod_helper(long long a, long long b, long long* remainder) {
+  long long quotient = __divdi3(a, b);
+  *remainder = a - b * quotient;
+  return quotient;
+}
 
-FUNCTION_DELEGATE(strcmp, strcmp_internal)
-FUNCTION_DELEGATE(strlen, strlen_internal)
+unsigned long long __gnu_uldivmod_helper(unsigned long long a, unsigned long long b,
+                                         unsigned long long* remainder) {
+  unsigned long long quotient = __udivdi3(a, b);
+  *remainder = a - b * quotient;
+  return quotient;
+}
