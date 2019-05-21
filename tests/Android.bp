@@ -184,6 +184,7 @@ cc_test_library {
         "system_properties_test2.cpp",
         "termios_test.cpp",
         "tgmath_test.c",
+        "threads_test.cpp",
         "time_test.cpp",
         "uchar_test.cpp",
         "unistd_nofortify_test.cpp",
@@ -287,6 +288,7 @@ cc_test_library {
         // enabled. Since the intent is just to build this, we can get away with
         // passing this flag on its own.
         "-fsanitize=address",
+        "-Wno-memset-transposed-args",
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
@@ -303,6 +305,7 @@ cc_test_library {
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
         "-D__clang_analyzer__",
+        "-Wno-memset-transposed-args",
     ],
     srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }

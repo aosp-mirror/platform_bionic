@@ -32,14 +32,7 @@
 // calls and add special debugging code to attempt to catch allocation
 // errors. All of the debugging code is implemented in a separate shared
 // library that is only loaded when the property "libc.debug.malloc.options"
-// is set to a non-zero value. There are two functions exported to
-// allow ddms, or other external users to get information from the debug
-// allocation.
-//   get_malloc_leak_info: Returns information about all of the known native
-//                         allocations that are currently in use.
-//   free_malloc_leak_info: Frees the data allocated by the call to
-//                          get_malloc_leak_info.
-//   write_malloc_leak_info: Writes the leak info data to a file.
+// is set to a non-zero value.
 
 #include <errno.h>
 #include <stdint.h>
@@ -60,9 +53,6 @@ void* (*volatile __malloc_hook)(size_t, const void*);
 void* (*volatile __realloc_hook)(void*, size_t, const void*);
 void (*volatile __free_hook)(void*, const void*);
 void* (*volatile __memalign_hook)(size_t, size_t, const void*);
-
-// In a VM process, this is set to 1 after fork()ing out of zygote.
-int gMallocLeakZygoteChild = 0;
 // =============================================================================
 
 // =============================================================================
@@ -165,7 +155,7 @@ extern "C" void* aligned_alloc(size_t alignment, size_t size) {
   return result;
 }
 
-extern "C" void* realloc(void* old_mem, size_t bytes) {
+extern "C" __attribute__((__noinline__)) void* realloc(void* old_mem, size_t bytes) {
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->realloc(old_mem, bytes);

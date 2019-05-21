@@ -199,6 +199,8 @@ static int PIMutexUnlock(PIMutex& mutex) {
                                                                    memory_order_relaxed))) {
             return 0;
         }
+    } else {
+        old_owner = atomic_load_explicit(&mutex.owner_tid, memory_order_relaxed);
     }
 
     if (tid != (old_owner & FUTEX_TID_MASK)) {
@@ -644,6 +646,15 @@ static inline __always_inline void NormalMutexUnlock(pthread_mutex_internal_t* m
         // we call wake, the thread we eventually wake will find an unlocked mutex
         // and will execute. Either way we have correct behavior and nobody is
         // orphaned on the wait queue.
+        //
+        // The pthread_mutex_internal_t object may have been deallocated between the
+        // atomic exchange and the wake call. In that case, this wake call could
+        // target unmapped memory or memory used by an otherwise unrelated futex
+        // operation. Even if the kernel avoids spurious futex wakeups from its
+        // point of view, this wake call could trigger a spurious wakeup in any
+        // futex accessible from this process. References:
+        //  - https://lkml.org/lkml/2014/11/27/472
+        //  - http://austingroupbugs.net/view.php?id=811#c2267
         __futex_wake_ex(&mutex->state, shared, 1);
     }
 }

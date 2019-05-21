@@ -41,7 +41,7 @@ using ZipData = std::pair<std::unique_ptr<ZipEntry>, std::unique_ptr<ZipString>>
 
 static bool GetEntries(ZipArchiveHandle handle, std::vector<ZipData>* entries) {
   void* cookie;
-  int32_t return_value = StartIteration(handle, &cookie, nullptr, nullptr);
+  int32_t return_value = StartIteration(handle, &cookie);
   if (return_value != 0) {
     fprintf(stderr, "Unable to iterate over entries: %s\n", ErrorCodeString(return_value));
     return false;

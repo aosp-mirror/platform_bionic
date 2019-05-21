@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <android/api-level.h>
 #include <ctype.h>
 #include <errno.h>
 #include <grp.h>
@@ -35,6 +36,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/system_properties.h>
 #include <unistd.h>
 
 #include "private/android_filesystem_config.h"
@@ -56,85 +58,31 @@ static GroupFile vendor_group("/vendor/etc/group", "vendor_");
 // functions to share state, but <grp.h> functions can't clobber <passwd.h>
 // functions' state and vice versa.
 #include "bionic/pthread_internal.h"
-static group_state_t* get_group_tls_buffer() {
-  return &__get_bionic_tls().group;
-}
-
-static passwd_state_t* get_passwd_tls_buffer() {
-  return &__get_bionic_tls().passwd;
-}
 
 static void init_group_state(group_state_t* state) {
   memset(state, 0, sizeof(group_state_t) - sizeof(state->getgrent_idx));
+  state->group_.gr_name = state->group_name_buffer_;
   state->group_.gr_mem = state->group_members_;
+  state->group_.gr_mem[0] = state->group_.gr_name;
 }
 
-static group_state_t* __group_state() {
-  group_state_t* result = get_group_tls_buffer();
-  if (result != nullptr) {
-    init_group_state(result);
-  }
+static group_state_t* get_group_tls_buffer() {
+  auto result = &__get_bionic_tls().group;
+  init_group_state(result);
   return result;
 }
 
-static int do_getpw_r(int by_name, const char* name, uid_t uid,
-                      passwd* dst, char* buf, size_t byte_count,
-                      passwd** result) {
-  // getpwnam_r and getpwuid_r don't modify errno, but library calls we
-  // make might.
-  ErrnoRestorer errno_restorer;
-  *result = nullptr;
-
-  // Our implementation of getpwnam(3) and getpwuid(3) use thread-local
-  // storage, so we can call them as long as we copy everything out
-  // before returning.
-  const passwd* src = by_name ? getpwnam(name) : getpwuid(uid); // NOLINT: see above.
-
-  // POSIX allows failure to find a match to be considered a non-error.
-  // Reporting success (0) but with *result NULL is glibc's behavior.
-  if (src == nullptr) {
-    return (errno == ENOENT) ? 0 : errno;
-  }
-
-  // Work out where our strings will go in 'buf', and whether we've got
-  // enough space.
-  size_t required_byte_count = 0;
-  dst->pw_name = buf;
-  required_byte_count += strlen(src->pw_name) + 1;
-  dst->pw_dir = buf + required_byte_count;
-  required_byte_count += strlen(src->pw_dir) + 1;
-  dst->pw_shell = buf + required_byte_count;
-  required_byte_count += strlen(src->pw_shell) + 1;
-  if (byte_count < required_byte_count) {
-    return ERANGE;
-  }
-
-  // Copy the strings.
-  snprintf(buf, byte_count, "%s%c%s%c%s", src->pw_name, 0, src->pw_dir, 0, src->pw_shell);
-
-  // pw_passwd and pw_gecos are non-POSIX and unused (always NULL) in bionic.
-  // Note: On LP32, we define pw_gecos to pw_passwd since they're both NULL.
-  dst->pw_passwd = nullptr;
-#if defined(__LP64__)
-  dst->pw_gecos = nullptr;
-#endif
-
-  // Copy the integral fields.
-  dst->pw_gid = src->pw_gid;
-  dst->pw_uid = src->pw_uid;
-
-  *result = dst;
-  return 0;
+static void init_passwd_state(passwd_state_t* state) {
+  memset(state, 0, sizeof(passwd_state_t) - sizeof(state->getpwent_idx));
+  state->passwd_.pw_name = state->name_buffer_;
+  state->passwd_.pw_dir = state->dir_buffer_;
+  state->passwd_.pw_shell = state->sh_buffer_;
 }
 
-int getpwnam_r(const char* name, passwd* pwd,
-               char* buf, size_t byte_count, passwd** result) {
-  return do_getpw_r(1, name, -1, pwd, buf, byte_count, result);
-}
-
-int getpwuid_r(uid_t uid, passwd* pwd,
-               char* buf, size_t byte_count, passwd** result) {
-  return do_getpw_r(0, nullptr, uid, pwd, buf, byte_count, result);
+static passwd_state_t* get_passwd_tls_buffer() {
+  auto result = &__get_bionic_tls().passwd;
+  init_passwd_state(result);
+  return result;
 }
 
 static passwd* android_iinfo_to_passwd(passwd_state_t* state,
@@ -144,11 +92,8 @@ static passwd* android_iinfo_to_passwd(passwd_state_t* state,
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
   passwd* pw = &state->passwd_;
-  pw->pw_name  = state->name_buffer_;
   pw->pw_uid   = iinfo->aid;
   pw->pw_gid   = iinfo->aid;
-  pw->pw_dir   = state->dir_buffer_;
-  pw->pw_shell = state->sh_buffer_;
   return pw;
 }
 
@@ -157,43 +102,23 @@ static group* android_iinfo_to_group(group_state_t* state,
   snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_), "%s", iinfo->name);
 
   group* gr = &state->group_;
-  gr->gr_name   = state->group_name_buffer_;
-  gr->gr_gid    = iinfo->aid;
-  gr->gr_mem[0] = gr->gr_name;
+  gr->gr_gid = iinfo->aid;
   return gr;
 }
 
-static passwd* android_id_to_passwd(passwd_state_t* state, unsigned id) {
+static const android_id_info* find_android_id_info(unsigned id) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (android_ids[n].aid == id) {
-      return android_iinfo_to_passwd(state, android_ids + n);
+      return &android_ids[n];
     }
   }
   return nullptr;
 }
 
-static passwd* android_name_to_passwd(passwd_state_t* state, const char* name) {
+static const android_id_info* find_android_id_info(const char* name) {
   for (size_t n = 0; n < android_id_count; ++n) {
     if (!strcmp(android_ids[n].name, name)) {
-      return android_iinfo_to_passwd(state, android_ids + n);
-    }
-  }
-  return nullptr;
-}
-
-static group* android_id_to_group(group_state_t* state, unsigned id) {
-  for (size_t n = 0; n < android_id_count; ++n) {
-    if (android_ids[n].aid == id) {
-      return android_iinfo_to_group(state, android_ids + n);
-    }
-  }
-  return nullptr;
-}
-
-static group* android_name_to_group(group_state_t* state, const char* name) {
-  for (size_t n = 0; n < android_id_count; ++n) {
-    if (!strcmp(android_ids[n].name, name)) {
-      return android_iinfo_to_group(state, android_ids + n);
+      return &android_ids[n];
     }
   }
   return nullptr;
@@ -332,15 +257,9 @@ static id_t app_id_from_name(const char* name, bool is_group) {
   } else if (end[1] == 'i' && isdigit(end[2])) {
     // end will point to \0 if the strtoul below succeeds.
     appid = strtoul(end+2, &end, 10) + AID_ISOLATED_START;
-  } else {
-    for (size_t n = 0; n < android_id_count; n++) {
-      if (!strcmp(android_ids[n].name, end + 1)) {
-        appid = android_ids[n].aid;
-        // Move the end pointer to the null terminator.
-        end += strlen(android_ids[n].name) + 1;
-        break;
-      }
-    }
+  } else if (auto* android_id_info = find_android_id_info(end + 1); android_id_info != nullptr) {
+    appid = android_id_info->aid;
+    end += strlen(android_id_info->name) + 1;
   }
 
   // Check that the entire string was consumed by one of the 3 cases above.
@@ -370,11 +289,8 @@ static void print_app_name_from_uid(const uid_t uid, char* buffer, const int buf
   if (appid >= AID_ISOLATED_START) {
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
   } else if (appid < AID_APP_START) {
-    for (size_t n = 0; n < android_id_count; n++) {
-      if (android_ids[n].aid == appid) {
-        snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
-        return;
-      }
+    if (auto* android_id_info = find_android_id_info(appid); android_id_info != nullptr) {
+      snprintf(buffer, bufferlen, "u%u_%s", userid, android_id_info->name);
     }
   } else {
     snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP_START);
@@ -391,15 +307,28 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   } else if (appid >= AID_CACHE_GID_START && appid <= AID_CACHE_GID_END) {
     snprintf(buffer, bufferlen, "u%u_a%u_cache", userid, appid - AID_CACHE_GID_START);
   } else if (appid < AID_APP_START) {
-    for (size_t n = 0; n < android_id_count; n++) {
-      if (android_ids[n].aid == appid) {
-        snprintf(buffer, bufferlen, "u%u_%s", userid, android_ids[n].name);
-        return;
-      }
+    if (auto* android_id_info = find_android_id_info(appid); android_id_info != nullptr) {
+      snprintf(buffer, bufferlen, "u%u_%s", userid, android_id_info->name);
     }
   } else {
     snprintf(buffer, bufferlen, "u%u_a%u", userid, appid - AID_APP_START);
   }
+}
+
+static bool device_launched_before_api_29() {
+  // Check if ro.product.first_api_level is set to a value > 0 and < 29, if so, this device was
+  // launched before API 29 (Q). Any other value is considered to be either in development or
+  // launched after.
+  // Cache the value as __system_property_get() is expensive and this may be called often.
+  static bool result = [] {
+    char value[PROP_VALUE_MAX] = { 0 };
+    if (__system_property_get("ro.product.first_api_level", value) == 0) {
+      return false;
+    }
+    int value_int = atoi(value);
+    return value_int != 0 && value_int < 29;
+  }();
+  return result;
 }
 
 // oem_XXXX -> uid
@@ -408,8 +337,17 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
 //   AID_OEM_RESERVED_2_START to AID_OEM_RESERVED_2_END (5000-5999)
 // Check OEM id is within range.
 static bool is_oem_id(id_t id) {
-  return (((id >= AID_OEM_RESERVED_START) && (id <= AID_OEM_RESERVED_END)) ||
-      ((id >= AID_OEM_RESERVED_2_START) && (id <= AID_OEM_RESERVED_2_END)));
+  // Upgrading devices launched before API level 29 may not comply with the below check.
+  // Due to the difficulty in changing uids after launch, it is waived for these devices.
+  // The legacy range:
+  // AID_OEM_RESERVED_START to AID_EVERYBODY (2900-9996), excluding builtin AIDs.
+  if (device_launched_before_api_29() && id >= AID_OEM_RESERVED_START && id < AID_EVERYBODY &&
+      find_android_id_info(id) == nullptr) {
+    return true;
+  }
+
+  return (id >= AID_OEM_RESERVED_START && id <= AID_OEM_RESERVED_END) ||
+         (id >= AID_OEM_RESERVED_2_START && id <= AID_OEM_RESERVED_2_END);
 }
 
 // Translate an OEM name to the corresponding user/group id.
@@ -438,9 +376,6 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/vendor/bin/sh");
 
   passwd* pw = &state->passwd_;
-  pw->pw_name  = state->name_buffer_;
-  pw->pw_dir   = state->dir_buffer_;
-  pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
   return pw;
@@ -459,9 +394,7 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
            "oem_%u", gid);
 
   group* gr = &state->group_;
-  gr->gr_name   = state->group_name_buffer_;
-  gr->gr_gid    = gid;
-  gr->gr_mem[0] = gr->gr_name;
+  gr->gr_gid = gid;
   return gr;
 }
 
@@ -489,9 +422,6 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
   snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
 
   passwd* pw = &state->passwd_;
-  pw->pw_name  = state->name_buffer_;
-  pw->pw_dir   = state->dir_buffer_;
-  pw->pw_shell = state->sh_buffer_;
   pw->pw_uid   = uid;
   pw->pw_gid   = uid;
   return pw;
@@ -508,39 +438,31 @@ static group* app_id_to_group(gid_t gid, group_state_t* state) {
   print_app_name_from_gid(gid, state->group_name_buffer_, sizeof(state->group_name_buffer_));
 
   group* gr = &state->group_;
-  gr->gr_name   = state->group_name_buffer_;
-  gr->gr_gid    = gid;
-  gr->gr_mem[0] = gr->gr_name;
+  gr->gr_gid = gid;
   return gr;
 }
 
-passwd* getpwuid(uid_t uid) { // NOLINT: implementing bad function.
-  passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == nullptr) {
-    return nullptr;
+passwd* getpwuid_internal(uid_t uid, passwd_state_t* state) {
+  if (auto* android_id_info = find_android_id_info(uid); android_id_info != nullptr) {
+    return android_iinfo_to_passwd(state, android_id_info);
   }
 
-  passwd* pw = android_id_to_passwd(state, uid);
-  if (pw != nullptr) {
-    return pw;
-  }
   // Handle OEM range.
-  pw = oem_id_to_passwd(uid, state);
+  passwd* pw = oem_id_to_passwd(uid, state);
   if (pw != nullptr) {
     return pw;
   }
   return app_id_to_passwd(uid, state);
 }
 
-passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
+passwd* getpwuid(uid_t uid) {  // NOLINT: implementing bad function.
   passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == nullptr) {
-    return nullptr;
-  }
+  return getpwuid_internal(uid, state);
+}
 
-  passwd* pw = android_name_to_passwd(state, login);
-  if (pw != nullptr) {
-    return pw;
+passwd* getpwnam_internal(const char* login, passwd_state_t* state) {
+  if (auto* android_id_info = find_android_id_info(login); android_id_info != nullptr) {
+    return android_iinfo_to_passwd(state, android_id_info);
   }
 
   if (vendor_passwd.FindByName(login, state)) {
@@ -550,11 +472,44 @@ passwd* getpwnam(const char* login) { // NOLINT: implementing bad function.
   }
 
   // Handle OEM range.
-  pw = oem_id_to_passwd(oem_id_from_name(login), state);
+  passwd* pw = oem_id_to_passwd(oem_id_from_name(login), state);
   if (pw != nullptr) {
     return pw;
   }
   return app_id_to_passwd(app_id_from_name(login, false), state);
+}
+
+passwd* getpwnam(const char* login) {  // NOLINT: implementing bad function.
+  passwd_state_t* state = get_passwd_tls_buffer();
+  return getpwnam_internal(login, state);
+}
+
+static int getpasswd_r(bool by_name, const char* name, uid_t uid, struct passwd* pwd, char* buf,
+                       size_t buflen, struct passwd** result) {
+  ErrnoRestorer errno_restorer;
+  *result = nullptr;
+  char* p =
+      reinterpret_cast<char*>(__BIONIC_ALIGN(reinterpret_cast<uintptr_t>(buf), sizeof(uintptr_t)));
+  if (p + sizeof(passwd_state_t) > buf + buflen) {
+    return ERANGE;
+  }
+  passwd_state_t* state = reinterpret_cast<passwd_state_t*>(p);
+  init_passwd_state(state);
+  passwd* retval = (by_name ? getpwnam_internal(name, state) : getpwuid_internal(uid, state));
+  if (retval != nullptr) {
+    *pwd = *retval;
+    *result = pwd;
+    return 0;
+  }
+  return errno;
+}
+
+int getpwnam_r(const char* name, passwd* pwd, char* buf, size_t byte_count, passwd** result) {
+  return getpasswd_r(true, name, -1, pwd, buf, byte_count, result);
+}
+
+int getpwuid_r(uid_t uid, passwd* pwd, char* buf, size_t byte_count, passwd** result) {
+  return getpasswd_r(false, nullptr, uid, pwd, buf, byte_count, result);
 }
 
 // All users are in just one group, the one passed in.
@@ -594,9 +549,6 @@ void endpwent() {
 
 passwd* getpwent() {
   passwd_state_t* state = get_passwd_tls_buffer();
-  if (state == nullptr) {
-    return nullptr;
-  }
   if (state->getpwent_idx < 0) {
     return nullptr;
   }
@@ -634,12 +586,12 @@ passwd* getpwent() {
 }
 
 static group* getgrgid_internal(gid_t gid, group_state_t* state) {
-  group* grp = android_id_to_group(state, gid);
-  if (grp != nullptr) {
-    return grp;
+  if (auto* android_id_info = find_android_id_info(gid); android_id_info != nullptr) {
+    return android_iinfo_to_group(state, android_id_info);
   }
+
   // Handle OEM range.
-  grp = oem_id_to_group(gid, state);
+  group* grp = oem_id_to_group(gid, state);
   if (grp != nullptr) {
     return grp;
   }
@@ -647,17 +599,13 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
 }
 
 group* getgrgid(gid_t gid) { // NOLINT: implementing bad function.
-  group_state_t* state = __group_state();
-  if (state == nullptr) {
-    return nullptr;
-  }
+  group_state_t* state = get_group_tls_buffer();
   return getgrgid_internal(gid, state);
 }
 
 static group* getgrnam_internal(const char* name, group_state_t* state) {
-  group* grp = android_name_to_group(state, name);
-  if (grp != nullptr) {
-    return grp;
+  if (auto* android_id_info = find_android_id_info(name); android_id_info != nullptr) {
+    return android_iinfo_to_group(state, android_id_info);
   }
 
   if (vendor_group.FindByName(name, state)) {
@@ -667,7 +615,7 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
   }
 
   // Handle OEM range.
-  grp = oem_id_to_group(oem_id_from_name(name), state);
+  group* grp = oem_id_to_group(oem_id_from_name(name), state);
   if (grp != nullptr) {
     return grp;
   }
@@ -675,10 +623,7 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
 }
 
 group* getgrnam(const char* name) { // NOLINT: implementing bad function.
-  group_state_t* state = __group_state();
-  if (state == nullptr) {
-    return nullptr;
-  }
+  group_state_t* state = get_group_tls_buffer();
   return getgrnam_internal(name, state);
 }
 
@@ -724,9 +669,6 @@ void endgrent() {
 
 group* getgrent() {
   group_state_t* state = get_group_tls_buffer();
-  if (state == nullptr) {
-    return nullptr;
-  }
   if (state->getgrent_idx < 0) {
     return nullptr;
   }
@@ -734,7 +676,6 @@ group* getgrent() {
   size_t start = 0;
   ssize_t end = android_id_count;
   if (state->getgrent_idx < end) {
-    init_group_state(state);
     return android_iinfo_to_group(state, android_ids + state->getgrent_idx++);
   }
 
@@ -742,7 +683,6 @@ group* getgrent() {
   end += AID_OEM_RESERVED_END - AID_OEM_RESERVED_START + 1;
 
   if (state->getgrent_idx < end) {
-    init_group_state(state);
     return oem_id_to_group(
         state->getgrent_idx++ - start + AID_OEM_RESERVED_START, state);
   }
@@ -751,7 +691,6 @@ group* getgrent() {
   end += AID_OEM_RESERVED_2_END - AID_OEM_RESERVED_2_START + 1;
 
   if (state->getgrent_idx < end) {
-    init_group_state(state);
     return oem_id_to_group(
         state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, state);
   }

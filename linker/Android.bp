@@ -2,6 +2,7 @@ cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     srcs: [
         "linker_memory.cpp",
@@ -267,7 +268,6 @@ cc_binary {
         "libc_nomalloc",
         "libm",
         "libziparchive",
-        "libutils",
         "libbase",
         "libz",
 
@@ -307,6 +307,11 @@ cc_binary {
     xom: false,
 }
 
+sh_binary {
+    name: "ldd",
+    src: "ldd",
+}
+
 cc_library {
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols ld-android.so pulls from
     // libgcc.a are made static to ld-android.so.  This in turn ensures that libraries that
@@ -319,6 +324,7 @@ cc_library {
 
     ldflags: [
         "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
@@ -361,6 +367,7 @@ cc_library {
     name: "ld-android",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     nocrt: true,
     system_shared_libs: [],

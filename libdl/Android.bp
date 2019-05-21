@@ -5,6 +5,7 @@ cc_library_static {
     name: "libdl_static",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     srcs: [
         "libdl.cpp",
@@ -32,6 +33,7 @@ cc_library_static {
 cc_library {
     name: "libdl",
     recovery_available: true,
+    native_bridge_supported: true,
     static_ndk_lib: true,
 
     defaults: ["linux_bionic_supported"],
@@ -47,6 +49,7 @@ cc_library {
 
     ldflags: [
         "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
@@ -115,6 +118,7 @@ cc_library {
 
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    native_bridge_supported: true,
 
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols libdl.so pulls from
     // libgcc.a are made static to libdl.so.  This in turn ensures that libraries that
@@ -127,6 +131,7 @@ cc_library {
 
     ldflags: [
         "-Wl,--exclude-libs=libgcc.a",
+        "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
@@ -179,12 +184,14 @@ cc_library {
 
 ndk_library {
     name: "libdl",
+    native_bridge_supported: true,
     symbol_file: "libdl.map.txt",
     first_version: "9",
 }
 
 llndk_library {
     name: "libdl",
+    native_bridge_supported: true,
     symbol_file: "libdl.map.txt",
 }
 

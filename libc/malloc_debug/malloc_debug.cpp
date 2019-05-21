@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <inttypes.h>
 #include <malloc.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -58,7 +59,7 @@
 // ------------------------------------------------------------------------
 DebugData* g_debug;
 
-int* g_malloc_zygote_child;
+bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
 // ------------------------------------------------------------------------
@@ -70,7 +71,7 @@ const MallocDispatch* g_dispatch;
 // ------------------------------------------------------------------------
 __BEGIN_DECLS
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* malloc_zygote_child,
                       const char* options);
 void debug_finalize();
 void debug_dump_heap(const char* file_name);
@@ -102,6 +103,32 @@ void* debug_valloc(size_t size);
 
 __END_DECLS
 // ------------------------------------------------------------------------
+
+class ScopedConcurrentLock {
+ public:
+  ScopedConcurrentLock() {
+    pthread_rwlock_rdlock(&lock_);
+  }
+  ~ScopedConcurrentLock() {
+    pthread_rwlock_unlock(&lock_);
+  }
+
+  static void Init() {
+    pthread_rwlockattr_t attr;
+    // Set the attribute so that when a write lock is pending, read locks are no
+    // longer granted.
+    pthread_rwlockattr_setkind_np(&attr, PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
+    pthread_rwlock_init(&lock_, &attr);
+  }
+
+  static void BlockAllOperations() {
+    pthread_rwlock_wrlock(&lock_);
+  }
+
+ private:
+  static pthread_rwlock_t lock_;
+};
+pthread_rwlock_t ScopedConcurrentLock::lock_;
 
 static void InitAtfork() {
   static pthread_once_t atfork_init = PTHREAD_ONCE_INIT;
@@ -225,15 +252,15 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   return g_debug->GetPointer(header);
 }
 
-bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_child,
+bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* zygote_child,
                       const char* options) {
-  if (malloc_zygote_child == nullptr || options == nullptr) {
+  if (zygote_child == nullptr || options == nullptr) {
     return false;
   }
 
   InitAtfork();
 
-  g_malloc_zygote_child = malloc_zygote_child;
+  g_zygote_child = zygote_child;
 
   g_dispatch = malloc_dispatch;
 
@@ -257,6 +284,8 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, int* malloc_zygote_
     info_log("%s: malloc debug enabled", getprogname());
   }
 
+  ScopedConcurrentLock::Init();
+
   return true;
 }
 
@@ -264,6 +293,10 @@ void debug_finalize() {
   if (g_debug == nullptr) {
     return;
   }
+
+  // Make sure that there are no other threads doing debug allocations
+  // before we kill everything.
+  ScopedConcurrentLock::BlockAllOperations();
 
   // Turn off capturing allocations calls.
   DebugDisableSet(true);
@@ -292,6 +325,8 @@ void debug_finalize() {
 
 void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* info_size,
                                 size_t* total_memory, size_t* backtrace_size) {
+  ScopedConcurrentLock lock;
+
   ScopedDisableDebugCalls disable;
 
   // Verify the arguments.
@@ -325,6 +360,7 @@ size_t debug_malloc_usable_size(void* pointer) {
   if (DebugCallsDisabled() || pointer == nullptr) {
     return g_dispatch->malloc_usable_size(pointer);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   if (!VerifyPointer(pointer, "malloc_usable_size")) {
@@ -388,6 +424,7 @@ void* debug_malloc(size_t size) {
   if (DebugCallsDisabled()) {
     return g_dispatch->malloc(size);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   void* pointer = InternalMalloc(size);
@@ -463,6 +500,7 @@ void debug_free(void* pointer) {
   if (DebugCallsDisabled() || pointer == nullptr) {
     return g_dispatch->free(pointer);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
@@ -480,6 +518,7 @@ void* debug_memalign(size_t alignment, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->memalign(alignment, bytes);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   if (bytes == 0) {
@@ -558,6 +597,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->realloc(pointer, bytes);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   if (pointer == nullptr) {
@@ -676,6 +716,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
   if (DebugCallsDisabled()) {
     return g_dispatch->calloc(nmemb, bytes);
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   size_t size;
@@ -737,6 +778,8 @@ int debug_malloc_info(int options, FILE* fp) {
   if (DebugCallsDisabled() || !g_debug->TrackPointers()) {
     return g_dispatch->malloc_info(options, fp);
   }
+  ScopedConcurrentLock lock;
+  ScopedDisableDebugCalls disable;
 
   MallocXmlElem root(fp, "malloc", "version=\"debug-malloc-1\"");
   std::vector<ListInfoType> list;
@@ -786,6 +829,7 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
 
 int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
                   void* arg) {
+  ScopedConcurrentLock lock;
   if (g_debug->TrackPointers()) {
     // Since malloc is disabled, don't bother acquiring any locks.
     for (auto it = PointerData::begin(); it != PointerData::end(); ++it) {
@@ -800,6 +844,7 @@ int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_
 }
 
 void debug_malloc_disable() {
+  ScopedConcurrentLock lock;
   g_dispatch->malloc_disable();
   if (g_debug->pointer) {
     g_debug->pointer->PrepareFork();
@@ -807,6 +852,7 @@ void debug_malloc_disable() {
 }
 
 void debug_malloc_enable() {
+  ScopedConcurrentLock lock;
   if (g_debug->pointer) {
     g_debug->pointer->PostForkParent();
   }
@@ -817,6 +863,7 @@ ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t max_fram
   if (DebugCallsDisabled() || pointer == nullptr) {
     return 0;
   }
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   if (!(g_debug->config().options() & BACKTRACE)) {
@@ -870,6 +917,7 @@ static void write_dump(FILE* fp) {
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   std::lock_guard<std::mutex> guard(g_dump_lock);
@@ -883,6 +931,7 @@ bool debug_write_malloc_leak_info(FILE* fp) {
 }
 
 void debug_dump_heap(const char* file_name) {
+  ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
   std::lock_guard<std::mutex> guard(g_dump_lock);

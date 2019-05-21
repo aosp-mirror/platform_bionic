@@ -38,6 +38,7 @@
 
 #include <gtest/gtest.h>
 
+#include <private/bionic_malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <tests/utils.h>
 
@@ -197,19 +198,15 @@ TEST_F(MallocHooksTest, extended_functions) {
 }
 
 TEST_F(MallocHooksTest, DISABLED_extended_functions) {
-  uint8_t* info = nullptr;
-  size_t overall_size = 100;
-  size_t info_size = 200;
-  size_t total_memory = 300;
-  size_t backtrace_size = 400;
-  get_malloc_leak_info(&info, &overall_size, &info_size, &total_memory, &backtrace_size);
-  EXPECT_EQ(nullptr, info);
-  EXPECT_EQ(0U, overall_size);
-  EXPECT_EQ(0U, info_size);
-  EXPECT_EQ(0U, total_memory);
-  EXPECT_EQ(0U, backtrace_size);
+  android_mallopt_leak_info_t leak_info;
+  ASSERT_TRUE(android_mallopt(M_GET_MALLOC_LEAK_INFO, &leak_info, sizeof(leak_info)));
+  EXPECT_EQ(nullptr, leak_info.buffer);
+  EXPECT_EQ(0U, leak_info.overall_size);
+  EXPECT_EQ(0U, leak_info.info_size);
+  EXPECT_EQ(0U, leak_info.total_memory);
+  EXPECT_EQ(0U, leak_info.backtrace_size);
 
-  free_malloc_leak_info(info);
+  ASSERT_TRUE(android_mallopt(M_FREE_MALLOC_LEAK_INFO, &leak_info, sizeof(leak_info)));
 
   malloc_enable();
   malloc_disable();
