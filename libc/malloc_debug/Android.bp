@@ -3,8 +3,8 @@
 // ==============================================================
 // Used by libmemunreachable
 cc_library_static {
-
     name: "libc_malloc_debug_backtrace",
+    vendor_available: true,
 
     srcs: [
         "backtrace.cpp",
