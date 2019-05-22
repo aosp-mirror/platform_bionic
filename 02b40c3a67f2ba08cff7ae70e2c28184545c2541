@@ -132,6 +132,30 @@
     },
     {
       "key": {
+        "uuid": "4dcde391_ddb9d289",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2566,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-05-22T13:07:49Z",
+      "side": 1,
+      "message": "Sure, but I\u0027m discussing the larger problem encompassing both CLs in this topic. What parts of it goes into the linker is more of an implementation detail. Sorry for the confusion of opening the topic on the wrong CL.\n\nI think my question about those x, y and z still is very relevant to figure out the right way forward for the anonymous namespace issue.\n\nAs for the linker interface, I prefer the old one, i.e. telling the linker to specifically use a certain namespace for this. It\u0027s more explicit and doesn\u0027t encode the notion of using the first namespace in the linker. It might even be reasonable to drop the g_anonymous_namespace_initialized check in the old code and leave that too to libnativeloader.",
+      "parentUuid": "47196e7e_7038338a",
+      "range": {
+        "startLine": 2565,
+        "startChar": 5,
+        "endLine": 2566,
+        "endChar": 24
+      },
+      "revId": "02b40c3a67f2ba08cff7ae70e2c28184545c2541",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ed1b2ad5_954ef8bc",
         "filename": "linker/linker.h",
         "patchSetId": 3
