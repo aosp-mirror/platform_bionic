@@ -94,6 +94,9 @@ extern "C" {
 #define DRM_FORMAT_NV61 fourcc_code('N', 'V', '6', '1')
 #define DRM_FORMAT_NV24 fourcc_code('N', 'V', '2', '4')
 #define DRM_FORMAT_NV42 fourcc_code('N', 'V', '4', '2')
+#define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
+#define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')
+#define DRM_FORMAT_P016 fourcc_code('P', '0', '1', '6')
 #define DRM_FORMAT_YUV410 fourcc_code('Y', 'U', 'V', '9')
 #define DRM_FORMAT_YVU410 fourcc_code('Y', 'V', 'U', '9')
 #define DRM_FORMAT_YUV411 fourcc_code('Y', 'U', '1', '1')
@@ -114,6 +117,7 @@ extern "C" {
 #define DRM_FORMAT_MOD_VENDOR_VIVANTE 0x06
 #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
 #define DRM_FORMAT_MOD_VENDOR_ARM 0x08
+#define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
 #define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | ((val) & 0x00ffffffffffffffULL))
 #define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
@@ -157,12 +161,17 @@ extern "C" {
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_MASK 0xf
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 (1ULL)
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 (2ULL)
+#define AFBC_FORMAT_MOD_BLOCK_SIZE_64x4 (3ULL)
+#define AFBC_FORMAT_MOD_BLOCK_SIZE_32x8_64x4 (4ULL)
 #define AFBC_FORMAT_MOD_YTR (1ULL << 4)
 #define AFBC_FORMAT_MOD_SPLIT (1ULL << 5)
 #define AFBC_FORMAT_MOD_SPARSE (1ULL << 6)
 #define AFBC_FORMAT_MOD_CBR (1ULL << 7)
 #define AFBC_FORMAT_MOD_TILED (1ULL << 8)
 #define AFBC_FORMAT_MOD_SC (1ULL << 9)
+#define AFBC_FORMAT_MOD_DB (1ULL << 10)
+#define AFBC_FORMAT_MOD_BCH (1ULL << 11)
+#define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
 #ifdef __cplusplus
 }
 #endif

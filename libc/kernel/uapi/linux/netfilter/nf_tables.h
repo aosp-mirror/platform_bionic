@@ -139,6 +139,7 @@ enum nft_rule_attributes {
   NFTA_RULE_USERDATA,
   NFTA_RULE_PAD,
   NFTA_RULE_ID,
+  NFTA_RULE_POSITION_ID,
   __NFTA_RULE_MAX
 };
 #define NFTA_RULE_MAX (__NFTA_RULE_MAX - 1)
@@ -413,6 +414,8 @@ enum nft_meta_keys {
   NFT_META_CGROUP,
   NFT_META_PRANDOM,
   NFT_META_SECPATH,
+  NFT_META_IIFKIND,
+  NFT_META_OIFKIND,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,
@@ -922,10 +925,18 @@ enum nft_tunnel_keys {
   __NFT_TUNNEL_MAX
 };
 #define NFT_TUNNEL_MAX (__NFT_TUNNEL_MAX - 1)
+enum nft_tunnel_mode {
+  NFT_TUNNEL_MODE_NONE,
+  NFT_TUNNEL_MODE_RX,
+  NFT_TUNNEL_MODE_TX,
+  __NFT_TUNNEL_MODE_MAX
+};
+#define NFT_TUNNEL_MODE_MAX (__NFT_TUNNEL_MODE_MAX - 1)
 enum nft_tunnel_attributes {
   NFTA_TUNNEL_UNSPEC,
   NFTA_TUNNEL_KEY,
   NFTA_TUNNEL_DREG,
+  NFTA_TUNNEL_MODE,
   __NFTA_TUNNEL_MAX
 };
 #define NFTA_TUNNEL_MAX (__NFTA_TUNNEL_MAX - 1)

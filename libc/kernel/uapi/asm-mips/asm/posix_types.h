@@ -21,11 +21,5 @@
 #include <asm/sgidefs.h>
 typedef long __kernel_daddr_t;
 #define __kernel_daddr_t __kernel_daddr_t
-#if _MIPS_SZLONG == 32
-typedef struct {
-  long val[2];
-} __kernel_fsid_t;
-#define __kernel_fsid_t __kernel_fsid_t
-#endif
 #include <asm-generic/posix_types.h>
 #endif

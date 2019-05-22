@@ -84,17 +84,32 @@
 #if defined(__NR_clock_adjtime)
   #define SYS_clock_adjtime __NR_clock_adjtime
 #endif
+#if defined(__NR_clock_adjtime64)
+  #define SYS_clock_adjtime64 __NR_clock_adjtime64
+#endif
 #if defined(__NR_clock_getres)
   #define SYS_clock_getres __NR_clock_getres
+#endif
+#if defined(__NR_clock_getres_time64)
+  #define SYS_clock_getres_time64 __NR_clock_getres_time64
 #endif
 #if defined(__NR_clock_gettime)
   #define SYS_clock_gettime __NR_clock_gettime
 #endif
+#if defined(__NR_clock_gettime64)
+  #define SYS_clock_gettime64 __NR_clock_gettime64
+#endif
 #if defined(__NR_clock_nanosleep)
   #define SYS_clock_nanosleep __NR_clock_nanosleep
 #endif
+#if defined(__NR_clock_nanosleep_time64)
+  #define SYS_clock_nanosleep_time64 __NR_clock_nanosleep_time64
+#endif
 #if defined(__NR_clock_settime)
   #define SYS_clock_settime __NR_clock_settime
+#endif
+#if defined(__NR_clock_settime64)
+  #define SYS_clock_settime64 __NR_clock_settime64
 #endif
 #if defined(__NR_clone)
   #define SYS_clone __NR_clone
@@ -261,6 +276,9 @@
 #if defined(__NR_futex)
   #define SYS_futex __NR_futex
 #endif
+#if defined(__NR_futex_time64)
+  #define SYS_futex_time64 __NR_futex_time64
+#endif
 #if defined(__NR_futimesat)
   #define SYS_futimesat __NR_futimesat
 #endif
@@ -414,11 +432,23 @@
 #if defined(__NR_io_pgetevents)
   #define SYS_io_pgetevents __NR_io_pgetevents
 #endif
+#if defined(__NR_io_pgetevents_time64)
+  #define SYS_io_pgetevents_time64 __NR_io_pgetevents_time64
+#endif
 #if defined(__NR_io_setup)
   #define SYS_io_setup __NR_io_setup
 #endif
 #if defined(__NR_io_submit)
   #define SYS_io_submit __NR_io_submit
+#endif
+#if defined(__NR_io_uring_enter)
+  #define SYS_io_uring_enter __NR_io_uring_enter
+#endif
+#if defined(__NR_io_uring_register)
+  #define SYS_io_uring_register __NR_io_uring_register
+#endif
+#if defined(__NR_io_uring_setup)
+  #define SYS_io_uring_setup __NR_io_uring_setup
 #endif
 #if defined(__NR_ioctl)
   #define SYS_ioctl __NR_ioctl
@@ -573,8 +603,14 @@
 #if defined(__NR_mq_timedreceive)
   #define SYS_mq_timedreceive __NR_mq_timedreceive
 #endif
+#if defined(__NR_mq_timedreceive_time64)
+  #define SYS_mq_timedreceive_time64 __NR_mq_timedreceive_time64
+#endif
 #if defined(__NR_mq_timedsend)
   #define SYS_mq_timedsend __NR_mq_timedsend
+#endif
+#if defined(__NR_mq_timedsend_time64)
+  #define SYS_mq_timedsend_time64 __NR_mq_timedsend_time64
 #endif
 #if defined(__NR_mq_unlink)
   #define SYS_mq_unlink __NR_mq_unlink
@@ -663,6 +699,9 @@
 #if defined(__NR_personality)
   #define SYS_personality __NR_personality
 #endif
+#if defined(__NR_pidfd_send_signal)
+  #define SYS_pidfd_send_signal __NR_pidfd_send_signal
+#endif
 #if defined(__NR_pipe)
   #define SYS_pipe __NR_pipe
 #endif
@@ -686,6 +725,9 @@
 #endif
 #if defined(__NR_ppoll)
   #define SYS_ppoll __NR_ppoll
+#endif
+#if defined(__NR_ppoll_time64)
+  #define SYS_ppoll_time64 __NR_ppoll_time64
 #endif
 #if defined(__NR_prctl)
   #define SYS_prctl __NR_prctl
@@ -716,6 +758,9 @@
 #endif
 #if defined(__NR_pselect6)
   #define SYS_pselect6 __NR_pselect6
+#endif
+#if defined(__NR_pselect6_time64)
+  #define SYS_pselect6_time64 __NR_pselect6_time64
 #endif
 #if defined(__NR_ptrace)
   #define SYS_ptrace __NR_ptrace
@@ -768,6 +813,9 @@
 #if defined(__NR_recvmmsg)
   #define SYS_recvmmsg __NR_recvmmsg
 #endif
+#if defined(__NR_recvmmsg_time64)
+  #define SYS_recvmmsg_time64 __NR_recvmmsg_time64
+#endif
 #if defined(__NR_recvmsg)
   #define SYS_recvmsg __NR_recvmsg
 #endif
@@ -819,6 +867,9 @@
 #if defined(__NR_rt_sigtimedwait)
   #define SYS_rt_sigtimedwait __NR_rt_sigtimedwait
 #endif
+#if defined(__NR_rt_sigtimedwait_time64)
+  #define SYS_rt_sigtimedwait_time64 __NR_rt_sigtimedwait_time64
+#endif
 #if defined(__NR_rt_tgsigqueueinfo)
   #define SYS_rt_tgsigqueueinfo __NR_rt_tgsigqueueinfo
 #endif
@@ -842,6 +893,9 @@
 #endif
 #if defined(__NR_sched_rr_get_interval)
   #define SYS_sched_rr_get_interval __NR_sched_rr_get_interval
+#endif
+#if defined(__NR_sched_rr_get_interval_time64)
+  #define SYS_sched_rr_get_interval_time64 __NR_sched_rr_get_interval_time64
 #endif
 #if defined(__NR_sched_setaffinity)
   #define SYS_sched_setaffinity __NR_sched_setaffinity
@@ -878,6 +932,9 @@
 #endif
 #if defined(__NR_semtimedop)
   #define SYS_semtimedop __NR_semtimedop
+#endif
+#if defined(__NR_semtimedop_time64)
+  #define SYS_semtimedop_time64 __NR_semtimedop_time64
 #endif
 #if defined(__NR_send)
   #define SYS_send __NR_send
@@ -1137,8 +1194,14 @@
 #if defined(__NR_timer_gettime)
   #define SYS_timer_gettime __NR_timer_gettime
 #endif
+#if defined(__NR_timer_gettime64)
+  #define SYS_timer_gettime64 __NR_timer_gettime64
+#endif
 #if defined(__NR_timer_settime)
   #define SYS_timer_settime __NR_timer_settime
+#endif
+#if defined(__NR_timer_settime64)
+  #define SYS_timer_settime64 __NR_timer_settime64
 #endif
 #if defined(__NR_timerfd_create)
   #define SYS_timerfd_create __NR_timerfd_create
@@ -1146,8 +1209,14 @@
 #if defined(__NR_timerfd_gettime)
   #define SYS_timerfd_gettime __NR_timerfd_gettime
 #endif
+#if defined(__NR_timerfd_gettime64)
+  #define SYS_timerfd_gettime64 __NR_timerfd_gettime64
+#endif
 #if defined(__NR_timerfd_settime)
   #define SYS_timerfd_settime __NR_timerfd_settime
+#endif
+#if defined(__NR_timerfd_settime64)
+  #define SYS_timerfd_settime64 __NR_timerfd_settime64
 #endif
 #if defined(__NR_times)
   #define SYS_times __NR_times
@@ -1205,6 +1274,9 @@
 #endif
 #if defined(__NR_utimensat)
   #define SYS_utimensat __NR_utimensat
+#endif
+#if defined(__NR_utimensat_time64)
+  #define SYS_utimensat_time64 __NR_utimensat_time64
 #endif
 #if defined(__NR_utimes)
   #define SYS_utimes __NR_utimes

@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_LIMITS_H
-#define _LINUX_LIMITS_H
+#ifndef _UAPI_LINUX_LIMITS_H
+#define _UAPI_LINUX_LIMITS_H
 #define NR_OPEN 1024
 #define NGROUPS_MAX 65536
 #define ARG_MAX 131072

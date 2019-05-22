@@ -36,7 +36,9 @@
 #define __NR_io_destroy 1
 #define __NR_io_submit 2
 #define __NR_io_cancel 3
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_io_getevents 4
+#endif
 #define __NR_setxattr 5
 #define __NR_lsetxattr 6
 #define __NR_fsetxattr 7
@@ -106,8 +108,10 @@
 #define __NR_preadv 69
 #define __NR_pwritev 70
 #define __NR3264_sendfile 71
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_pselect6 72
 #define __NR_ppoll 73
+#endif
 #define __NR_signalfd4 74
 #define __NR_vmsplice 75
 #define __NR_splice 76
@@ -126,9 +130,13 @@
 #define __NR_sync_file_range 84
 #endif
 #define __NR_timerfd_create 85
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_timerfd_settime 86
 #define __NR_timerfd_gettime 87
+#endif
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_utimensat 88
+#endif
 #define __NR_acct 89
 #define __NR_capget 90
 #define __NR_capset 91
@@ -138,24 +146,34 @@
 #define __NR_waitid 95
 #define __NR_set_tid_address 96
 #define __NR_unshare 97
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_futex 98
+#endif
 #define __NR_set_robust_list 99
 #define __NR_get_robust_list 100
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_nanosleep 101
+#endif
 #define __NR_getitimer 102
 #define __NR_setitimer 103
 #define __NR_kexec_load 104
 #define __NR_init_module 105
 #define __NR_delete_module 106
 #define __NR_timer_create 107
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_timer_gettime 108
+#endif
 #define __NR_timer_getoverrun 109
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_timer_settime 110
+#endif
 #define __NR_timer_delete 111
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_clock_settime 112
 #define __NR_clock_gettime 113
 #define __NR_clock_getres 114
 #define __NR_clock_nanosleep 115
+#endif
 #define __NR_syslog 116
 #define __NR_ptrace 117
 #define __NR_sched_setparam 118
@@ -167,7 +185,9 @@
 #define __NR_sched_yield 124
 #define __NR_sched_get_priority_max 125
 #define __NR_sched_get_priority_min 126
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_sched_rr_get_interval 127
+#endif
 #define __NR_restart_syscall 128
 #define __NR_kill 129
 #define __NR_tkill 130
@@ -177,7 +197,9 @@
 #define __NR_rt_sigaction 134
 #define __NR_rt_sigprocmask 135
 #define __NR_rt_sigpending 136
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_rt_sigtimedwait 137
+#endif
 #define __NR_rt_sigqueueinfo 138
 #define __NR_rt_sigreturn 139
 #define __NR_setpriority 140
@@ -203,15 +225,19 @@
 #define __NR_uname 160
 #define __NR_sethostname 161
 #define __NR_setdomainname 162
+#ifdef __ARCH_WANT_SET_GET_RLIMIT
 #define __NR_getrlimit 163
 #define __NR_setrlimit 164
+#endif
 #define __NR_getrusage 165
 #define __NR_umask 166
 #define __NR_prctl 167
 #define __NR_getcpu 168
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_gettimeofday 169
 #define __NR_settimeofday 170
 #define __NR_adjtimex 171
+#endif
 #define __NR_getpid 172
 #define __NR_getppid 173
 #define __NR_getuid 174
@@ -222,8 +248,10 @@
 #define __NR_sysinfo 179
 #define __NR_mq_open 180
 #define __NR_mq_unlink 181
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_mq_timedsend 182
 #define __NR_mq_timedreceive 183
+#endif
 #define __NR_mq_notify 184
 #define __NR_mq_getsetattr 185
 #define __NR_msgget 186
@@ -232,7 +260,9 @@
 #define __NR_msgsnd 189
 #define __NR_semget 190
 #define __NR_semctl 191
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_semtimedop 192
+#endif
 #define __NR_semop 193
 #define __NR_shmget 194
 #define __NR_shmctl 195
@@ -285,15 +315,21 @@
 #define __NR_rt_tgsigqueueinfo 240
 #define __NR_perf_event_open 241
 #define __NR_accept4 242
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_recvmmsg 243
+#endif
 #define __NR_arch_specific_syscall 244
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_wait4 260
+#endif
 #define __NR_prlimit64 261
 #define __NR_fanotify_init 262
 #define __NR_fanotify_mark 263
 #define __NR_name_to_handle_at 264
 #define __NR_open_by_handle_at 265
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_clock_adjtime 266
+#endif
 #define __NR_syncfs 267
 #define __NR_setns 268
 #define __NR_sendmmsg 269
@@ -319,11 +355,39 @@
 #define __NR_pkey_alloc 289
 #define __NR_pkey_free 290
 #define __NR_statx 291
+#if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
 #define __NR_io_pgetevents 292
+#endif
 #define __NR_rseq 293
 #define __NR_kexec_file_load 294
+#if __BITS_PER_LONG == 32
+#define __NR_clock_gettime64 403
+#define __NR_clock_settime64 404
+#define __NR_clock_adjtime64 405
+#define __NR_clock_getres_time64 406
+#define __NR_clock_nanosleep_time64 407
+#define __NR_timer_gettime64 408
+#define __NR_timer_settime64 409
+#define __NR_timerfd_gettime64 410
+#define __NR_timerfd_settime64 411
+#define __NR_utimensat_time64 412
+#define __NR_pselect6_time64 413
+#define __NR_ppoll_time64 414
+#define __NR_io_pgetevents_time64 416
+#define __NR_recvmmsg_time64 417
+#define __NR_mq_timedsend_time64 418
+#define __NR_mq_timedreceive_time64 419
+#define __NR_semtimedop_time64 420
+#define __NR_rt_sigtimedwait_time64 421
+#define __NR_futex_time64 422
+#define __NR_sched_rr_get_interval_time64 423
+#endif
+#define __NR_pidfd_send_signal 424
+#define __NR_io_uring_setup 425
+#define __NR_io_uring_enter 426
+#define __NR_io_uring_register 427
 #undef __NR_syscalls
-#define __NR_syscalls 295
+#define __NR_syscalls 428
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs
