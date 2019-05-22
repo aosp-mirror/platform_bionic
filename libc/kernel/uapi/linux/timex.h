@@ -53,6 +53,46 @@ struct timex {
   int : 32;
   int : 32;
 };
+struct __kernel_timex_timeval {
+  __kernel_time64_t tv_sec;
+  long long tv_usec;
+};
+struct __kernel_timex {
+  unsigned int modes;
+  int : 32;
+  long long offset;
+  long long freq;
+  long long maxerror;
+  long long esterror;
+  int status;
+  int : 32;
+  long long constant;
+  long long precision;
+  long long tolerance;
+  struct __kernel_timex_timeval time;
+  long long tick;
+  long long ppsfreq;
+  long long jitter;
+  int shift;
+  int : 32;
+  long long stabil;
+  long long jitcnt;
+  long long calcnt;
+  long long errcnt;
+  long long stbcnt;
+  int tai;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+  int : 32;
+};
 #define ADJ_OFFSET 0x0001
 #define ADJ_FREQUENCY 0x0002
 #define ADJ_MAXERROR 0x0004
