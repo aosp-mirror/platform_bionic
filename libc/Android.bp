@@ -2523,6 +2523,9 @@ cc_library_shared {
     // Mark this library as global so it overrides all the allocation
     // definitions properly.
     ldflags: ["-Wl,-z,global"],
+
+    // Like libc, disable native coverage for libc_scudo.
+    native_coverage: false,
 }
 
 subdirs = [
