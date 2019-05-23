@@ -238,6 +238,9 @@ enum {
   RDMA_OPTION_ID_TOS = 0,
   RDMA_OPTION_ID_REUSEADDR = 1,
   RDMA_OPTION_ID_AFONLY = 2,
+  RDMA_OPTION_ID_ACK_TIMEOUT = 3
+};
+enum {
   RDMA_OPTION_IB_PATH = 1
 };
 struct rdma_ucm_set_option {

@@ -16,26 +16,25 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __LINUX_TC_SKBMOD_H
-#define __LINUX_TC_SKBMOD_H
-#include <linux/pkt_cls.h>
-#define SKBMOD_F_DMAC 0x1
-#define SKBMOD_F_SMAC 0x2
-#define SKBMOD_F_ETYPE 0x4
-#define SKBMOD_F_SWAPMAC 0x8
-struct tc_skbmod {
-  tc_gen;
-  __u64 flags;
+#ifndef _UAPI_LINUX_TIME_TYPES_H
+#define _UAPI_LINUX_TIME_TYPES_H
+#include <linux/types.h>
+struct __kernel_timespec {
+  __kernel_time64_t tv_sec;
+  long long tv_nsec;
 };
-enum {
-  TCA_SKBMOD_UNSPEC,
-  TCA_SKBMOD_TM,
-  TCA_SKBMOD_PARMS,
-  TCA_SKBMOD_DMAC,
-  TCA_SKBMOD_SMAC,
-  TCA_SKBMOD_ETYPE,
-  TCA_SKBMOD_PAD,
-  __TCA_SKBMOD_MAX
+struct __kernel_itimerspec {
+  struct __kernel_timespec it_interval;
+  struct __kernel_timespec it_value;
 };
-#define TCA_SKBMOD_MAX (__TCA_SKBMOD_MAX - 1)
+#ifndef __kernel_old_timeval
+struct __kernel_old_timeval {
+  __kernel_long_t tv_sec;
+  __kernel_long_t tv_usec;
+};
+#endif
+struct __kernel_sock_timeval {
+  __s64 tv_sec;
+  __s64 tv_usec;
+};
 #endif

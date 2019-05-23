@@ -21,9 +21,16 @@
 #include <linux/types.h>
 #define FAN_ACCESS 0x00000001
 #define FAN_MODIFY 0x00000002
+#define FAN_ATTRIB 0x00000004
 #define FAN_CLOSE_WRITE 0x00000008
 #define FAN_CLOSE_NOWRITE 0x00000010
 #define FAN_OPEN 0x00000020
+#define FAN_MOVED_FROM 0x00000040
+#define FAN_MOVED_TO 0x00000080
+#define FAN_CREATE 0x00000100
+#define FAN_DELETE 0x00000200
+#define FAN_DELETE_SELF 0x00000400
+#define FAN_MOVE_SELF 0x00000800
 #define FAN_OPEN_EXEC 0x00001000
 #define FAN_Q_OVERFLOW 0x00004000
 #define FAN_OPEN_PERM 0x00010000
@@ -32,6 +39,7 @@
 #define FAN_ONDIR 0x40000000
 #define FAN_EVENT_ON_CHILD 0x08000000
 #define FAN_CLOSE (FAN_CLOSE_WRITE | FAN_CLOSE_NOWRITE)
+#define FAN_MOVE (FAN_MOVED_FROM | FAN_MOVED_TO)
 #define FAN_CLOEXEC 0x00000001
 #define FAN_NONBLOCK 0x00000002
 #define FAN_CLASS_NOTIF 0x00000000
@@ -42,6 +50,7 @@
 #define FAN_UNLIMITED_MARKS 0x00000020
 #define FAN_ENABLE_AUDIT 0x00000040
 #define FAN_REPORT_TID 0x00000100
+#define FAN_REPORT_FID 0x00000200
 #define FAN_ALL_INIT_FLAGS (FAN_CLOEXEC | FAN_NONBLOCK | FAN_ALL_CLASS_BITS | FAN_UNLIMITED_QUEUE | FAN_UNLIMITED_MARKS)
 #define FAN_MARK_ADD 0x00000001
 #define FAN_MARK_REMOVE 0x00000002
@@ -66,6 +75,17 @@ struct fanotify_event_metadata {
   __aligned_u64 mask;
   __s32 fd;
   __s32 pid;
+};
+#define FAN_EVENT_INFO_TYPE_FID 1
+struct fanotify_event_info_header {
+  __u8 info_type;
+  __u8 pad;
+  __u16 len;
+};
+struct fanotify_event_info_fid {
+  struct fanotify_event_info_header hdr;
+  __kernel_fsid_t fsid;
+  unsigned char handle[0];
 };
 struct fanotify_response {
   __s32 fd;

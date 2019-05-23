@@ -27,6 +27,8 @@
 #define UBI_IOCRMVOL _IOW(UBI_IOC_MAGIC, 1, __s32)
 #define UBI_IOCRSVOL _IOW(UBI_IOC_MAGIC, 2, struct ubi_rsvol_req)
 #define UBI_IOCRNVOL _IOW(UBI_IOC_MAGIC, 3, struct ubi_rnvol_req)
+#define UBI_IOCRPEB _IOW(UBI_IOC_MAGIC, 4, __s32)
+#define UBI_IOCSPEB _IOW(UBI_IOC_MAGIC, 5, __s32)
 #define UBI_CTRL_IOC_MAGIC 'o'
 #define UBI_IOCATT _IOW(UBI_CTRL_IOC_MAGIC, 64, struct ubi_attach_req)
 #define UBI_IOCDET _IOW(UBI_CTRL_IOC_MAGIC, 65, __s32)
