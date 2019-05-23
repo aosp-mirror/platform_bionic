@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f7eeafa6_52e0bec2",
+        "filename": "libc/include/bits/fortify/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-23T22:19:53Z",
+      "side": 1,
+      "message": "Good catch -- done",
+      "parentUuid": "e2ca3764_12aedcb3",
+      "range": {
+        "startLine": 42,
+        "startChar": 45,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "b394d7e03a3668aa110befb1b6221a20134ae8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef688ab0_506afabf",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "b394d7e03a3668aa110befb1b6221a20134ae8cc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39f095c2_29cfb046",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-23T22:19:53Z",
+      "side": 1,
+      "message": "Good point; will add a rename patch on top of the stack.",
+      "parentUuid": "ef688ab0_506afabf",
+      "range": {
+        "startLine": 307,
+        "startChar": 24,
+        "endLine": 307,
+        "endChar": 27
+      },
+      "revId": "b394d7e03a3668aa110befb1b6221a20134ae8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
