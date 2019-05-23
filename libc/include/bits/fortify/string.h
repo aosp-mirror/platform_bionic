@@ -70,10 +70,10 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
-        __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
+        __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'stpcpy' called with string bigger than buffer") {
     size_t bos_dst = __bos(dst);
-    if (__bos_trivially_not_leq(bos_dst, __builtin_strlen(src))) {
+    if (__bos_trivially_not_le(bos_dst, __builtin_strlen(src))) {
         return __builtin_stpcpy(dst, src);
     }
     return __builtin___stpcpy_chk(dst, src, bos_dst);
@@ -84,10 +84,10 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
 __BIONIC_FORTIFY_INLINE
 char* strcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
-        __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
+        __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
     size_t bos_dst = __bos(dst);
-    if (__bos_trivially_not_leq(bos_dst, __builtin_strlen(src))) {
+    if (__bos_trivially_not_le(bos_dst, __builtin_strlen(src))) {
         return __builtin_strcpy(dst, src);
     }
     return __builtin___strcpy_chk(dst, src, bos_dst);
@@ -123,7 +123,7 @@ __BIONIC_FORTIFY_INLINE
 void* memchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
-    if (__bos_trivially_geq(bos, n)) {
+    if (__bos_trivially_ge(bos, n)) {
         return __builtin_memchr(s, c, n);
     }
 
@@ -134,7 +134,7 @@ __BIONIC_FORTIFY_INLINE
 void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
-    if (__bos_trivially_geq(bos, n)) {
+    if (__bos_trivially_ge(bos, n)) {
         return __memrchr_real(s, c, n);
     }
 
