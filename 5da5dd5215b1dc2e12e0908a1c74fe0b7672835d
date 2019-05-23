@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7336b883_4300f80f",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-05-23T20:47:54Z",
+      "side": 1,
+      "message": "(restating a comment that was apparently lost: the tricky bit here is that __builtin_strlen(src) gets guarded by __builtin_constant_p(__builtin_strlen(src)). So if the length doesn\u0027t fold to a constant at compile-time, the __builtin_strlen you see here will be folded into nothing)",
+      "revId": "5da5dd5215b1dc2e12e0908a1c74fe0b7672835d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
