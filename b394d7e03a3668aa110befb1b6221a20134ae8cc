@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2ca3764_12aedcb3",
+        "filename": "libc/include/bits/fortify/poll.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-05-23T21:17:44Z",
+      "side": 1,
+      "message": "are you going to need __BIONIC_CAST here to avoid potential warnings?",
+      "range": {
+        "startLine": 42,
+        "startChar": 45,
+        "endLine": 42,
+        "endChar": 53
+      },
+      "revId": "b394d7e03a3668aa110befb1b6221a20134ae8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef688ab0_506afabf",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-05-23T21:17:44Z",
+      "side": 1,
+      "message": "(can we come back at the end and use the usual ARM two-letter le/lt/ge/ge instead of the mix of two- and three-letter names?)",
+      "range": {
+        "startLine": 307,
+        "startChar": 24,
+        "endLine": 307,
+        "endChar": 27
+      },
+      "revId": "b394d7e03a3668aa110befb1b6221a20134ae8cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
