@@ -60,6 +60,7 @@
 #define PORT_SUNZILOG 38
 #define PORT_SUNSAB 39
 #define PORT_NPCM 40
+#define PORT_TEGRA_TCU 41
 #define PORT_PCH_8LINE 44
 #define PORT_PCH_2LINE 45
 #define PORT_DZ 46

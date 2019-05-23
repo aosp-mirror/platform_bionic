@@ -23,7 +23,9 @@
 #define PMU_POWER_CTRL 0x11
 #define PMU_ADB_CMD 0x20
 #define PMU_ADB_POLL_OFF 0x21
+#define PMU_WRITE_XPRAM 0x32
 #define PMU_WRITE_NVRAM 0x33
+#define PMU_READ_XPRAM 0x3a
 #define PMU_READ_NVRAM 0x3b
 #define PMU_SET_RTC 0x30
 #define PMU_READ_RTC 0x38

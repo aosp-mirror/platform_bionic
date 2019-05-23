@@ -20,7 +20,6 @@
 #define __LINUX_TC_MIR_H
 #include <linux/types.h>
 #include <linux/pkt_cls.h>
-#define TCA_ACT_MIRRED 8
 #define TCA_EGRESS_REDIR 1
 #define TCA_EGRESS_MIRROR 2
 #define TCA_INGRESS_REDIR 3

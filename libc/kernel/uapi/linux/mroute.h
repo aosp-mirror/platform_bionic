@@ -34,10 +34,15 @@
 #define MRT_TABLE (MRT_BASE + 9)
 #define MRT_ADD_MFC_PROXY (MRT_BASE + 10)
 #define MRT_DEL_MFC_PROXY (MRT_BASE + 11)
-#define MRT_MAX (MRT_BASE + 11)
+#define MRT_FLUSH (MRT_BASE + 12)
+#define MRT_MAX (MRT_BASE + 12)
 #define SIOCGETVIFCNT SIOCPROTOPRIVATE
 #define SIOCGETSGCNT (SIOCPROTOPRIVATE + 1)
 #define SIOCGETRPF (SIOCPROTOPRIVATE + 2)
+#define MRT_FLUSH_MFC 1
+#define MRT_FLUSH_MFC_STATIC 2
+#define MRT_FLUSH_VIFS 4
+#define MRT_FLUSH_VIFS_STATIC 8
 #define MAXVIFS 32
 typedef unsigned long vifbitmap_t;
 typedef unsigned short vifi_t;
