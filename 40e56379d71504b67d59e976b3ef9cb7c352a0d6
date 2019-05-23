@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3fd888d5_8b3f53b7",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2019-05-23T07:13:31Z",
+      "side": 1,
+      "message": "Looks good to me.\n\nI think one relocation is sufficient. They don\u0027t have to appear as a pair.\n\nAfter the support for .reloc lands in the toolchain, all the local symbols __tls_align and __tls_align_reference can be deleted.",
+      "revId": "40e56379d71504b67d59e976b3ef9cb7c352a0d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
