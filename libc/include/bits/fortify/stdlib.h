@@ -38,8 +38,8 @@
 #define __PATH_MAX 4096
 
 char* realpath(const char* path, char* resolved)
-        __clang_error_if(__bos(resolved) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                         __bos(resolved) < __PATH_MAX, __realpath_buf_too_small_str)
+        __clang_error_if(__bos_unevaluated_lt(__bos(resolved), __PATH_MAX),
+                         __realpath_buf_too_small_str)
         __clang_error_if(!path, "'realpath': NULL path is never correct; flipped arguments?");
 /* No need for a definition; the only issues we can catch are at compile-time. */
 

@@ -44,7 +44,7 @@ extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
         __overloadable
-        __clang_error_if(__bos0(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(dst) < copy_amount,
+        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
                          "'memcpy' called with size bigger than buffer") {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
@@ -52,7 +52,7 @@ void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_a
 __BIONIC_FORTIFY_INLINE
 void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
         __overloadable
-        __clang_error_if(__bos0(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(dst) < len,
+        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
                          "'memmove' called with size bigger than buffer") {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
@@ -62,8 +62,7 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
-        __clang_error_if(__bos(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                             __bos(dst) <= __builtin_strlen(src),
+        __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
                          "'stpcpy' called with string bigger than buffer") {
     return __builtin___stpcpy_chk(dst, src, __bos(dst));
 }
@@ -73,8 +72,7 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
 __BIONIC_FORTIFY_INLINE
 char* strcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
-        __clang_error_if(__bos(dst) != __BIONIC_FORTIFY_UNKNOWN_SIZE &&
-                             __bos(dst) <= __builtin_strlen(src),
+        __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
     return __builtin___strcpy_chk(dst, src, __bos(dst));
 }
@@ -92,7 +90,7 @@ char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __o
 __BIONIC_FORTIFY_INLINE
 void* memset(void* const s __pass_object_size0, int c, size_t n)
         __overloadable
-        __clang_error_if(__bos0(s) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(s) < n,
+        __clang_error_if(__bos_unevaluated_lt(__bos0(s), n),
                          "'memset' called with size bigger than buffer")
         /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
         __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
