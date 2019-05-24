@@ -45,7 +45,7 @@ ssize_t recvfrom(int fd, void* const buf __pass_object_size0, size_t len, int fl
                      "'recvfrom' called with size bigger than buffer") {
   size_t bos = __bos0(buf);
 
-  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+  if (__bos_trivially_not_lt(bos, len)) {
     return __call_bypassing_fortify(recvfrom)(fd, buf, len, flags, src_addr, addr_len);
   }
   return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
@@ -60,7 +60,7 @@ ssize_t sendto(int fd, const void* const buf __pass_object_size0, size_t len, in
                      "'sendto' called with size bigger than buffer") {
   size_t bos = __bos0(buf);
 
-  if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+  if (__bos_trivially_not_lt(bos, len)) {
     return __call_bypassing_fortify(sendto)(fd, buf, len, flags, dest_addr, addr_len);
   }
   return __sendto_chk(fd, buf, len, bos, flags, dest_addr, addr_len);
