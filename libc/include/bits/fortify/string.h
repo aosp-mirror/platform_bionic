@@ -123,7 +123,7 @@ __BIONIC_FORTIFY_INLINE
 void* memchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_trivially_geq(bos, n)) {
         return __builtin_memchr(s, c, n);
     }
 
@@ -134,7 +134,7 @@ __BIONIC_FORTIFY_INLINE
 void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_trivially_geq(bos, n)) {
         return __memrchr_real(s, c, n);
     }
 
@@ -195,24 +195,11 @@ size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
     return __strlcat_chk(dst, src, size, bos);
 }
 
-/*
- * If we can evaluate the size of s at compile-time, just call __builtin_strlen
- * on it directly. This makes it way easier for compilers to fold things like
- * strlen("Foo") into a constant, as users would expect. -1ULL is chosen simply
- * because it's large.
- */
-__BIONIC_FORTIFY_INLINE
-size_t strlen(const char* const s __pass_object_size)
-        __overloadable __enable_if(__builtin_strlen(s) != -1ULL,
-                                   "enabled if s is a known good string.") {
-    return __builtin_strlen(s);
-}
-
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char* const s __pass_object_size0) __overloadable {
     size_t bos = __bos0(s);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_trivially_gt(bos, __builtin_strlen(s))) {
         return __builtin_strlen(s);
     }
 
