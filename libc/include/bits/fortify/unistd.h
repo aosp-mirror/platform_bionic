@@ -63,7 +63,7 @@ ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTROD
     __clang_error_if((what) > SSIZE_MAX, "in call to '" #fn "', '" #what "' must be <= SSIZE_MAX")
 
 #define __error_if_overflows_objectsize(what, objsize, fn) \
-    __clang_error_if((objsize) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (what) > (objsize), \
+    __clang_error_if(__bos_unevaluated_lt((objsize), (what)), \
                      "in call to '" #fn "', '" #what "' bytes overflows the given object")
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
