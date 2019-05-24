@@ -46,7 +46,11 @@ void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_a
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
                          "'memcpy' called with size bigger than buffer") {
-    return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
+    size_t bos_dst = __bos0(dst);
+    if (__bos_trivially_not_lt(bos_dst, copy_amount)) {
+        return __builtin_memcpy(dst, src, copy_amount);
+    }
+    return __builtin___memcpy_chk(dst, src, copy_amount, bos_dst);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -54,7 +58,11 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
                          "'memmove' called with size bigger than buffer") {
-    return __builtin___memmove_chk(dst, src, len, __bos0(dst));
+    size_t bos_dst = __bos0(dst);
+    if (__bos_trivially_not_lt(bos_dst, len)) {
+        return __builtin_memmove(dst, src, len);
+    }
+    return __builtin___memmove_chk(dst, src, len, bos_dst);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
@@ -64,7 +72,11 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
         __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
                          "'stpcpy' called with string bigger than buffer") {
-    return __builtin___stpcpy_chk(dst, src, __bos(dst));
+    size_t bos_dst = __bos(dst);
+    if (__bos_trivially_not_leq(bos_dst, __builtin_strlen(src))) {
+        return __builtin_stpcpy(dst, src);
+    }
+    return __builtin___stpcpy_chk(dst, src, bos_dst);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
@@ -74,7 +86,11 @@ char* strcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
         __clang_error_if(__bos_unevaluated_leq(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
-    return __builtin___strcpy_chk(dst, src, __bos(dst));
+    size_t bos_dst = __bos(dst);
+    if (__bos_trivially_not_leq(bos_dst, __builtin_strlen(src))) {
+        return __builtin_strcpy(dst, src);
+    }
+    return __builtin___strcpy_chk(dst, src, bos_dst);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -94,7 +110,11 @@ void* memset(void* const s __pass_object_size0, int c, size_t n)
                          "'memset' called with size bigger than buffer")
         /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
         __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
-    return __builtin___memset_chk(s, c, n, __bos0(s));
+    size_t bos = __bos0(s);
+    if (__bos_trivially_not_lt(bos, n)) {
+        return __builtin_memset(s, c, n);
+    }
+    return __builtin___memset_chk(s, c, n, bos);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
