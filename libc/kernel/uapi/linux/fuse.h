@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 28
+#define FUSE_KERNEL_MINOR_VERSION 29
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -97,6 +97,7 @@ struct fuse_file_lock {
 #define FUSE_ABORT_ERROR (1 << 21)
 #define FUSE_MAX_PAGES (1 << 22)
 #define FUSE_CACHE_SYMLINKS (1 << 23)
+#define FUSE_NO_OPENDIR_SUPPORT (1 << 24)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)

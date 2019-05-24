@@ -35,10 +35,15 @@
 #define MRT6_TABLE (MRT6_BASE + 9)
 #define MRT6_ADD_MFC_PROXY (MRT6_BASE + 10)
 #define MRT6_DEL_MFC_PROXY (MRT6_BASE + 11)
-#define MRT6_MAX (MRT6_BASE + 11)
+#define MRT6_FLUSH (MRT6_BASE + 12)
+#define MRT6_MAX (MRT6_BASE + 12)
 #define SIOCGETMIFCNT_IN6 SIOCPROTOPRIVATE
 #define SIOCGETSGCNT_IN6 (SIOCPROTOPRIVATE + 1)
 #define SIOCGETRPF (SIOCPROTOPRIVATE + 2)
+#define MRT6_FLUSH_MFC 1
+#define MRT6_FLUSH_MFC_STATIC 2
+#define MRT6_FLUSH_MIFS 4
+#define MRT6_FLUSH_MIFS_STATIC 8
 #define MAXMIFS 32
 typedef unsigned long mifbitmap_t;
 typedef unsigned short mifi_t;

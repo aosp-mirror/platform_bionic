@@ -346,4 +346,8 @@
 #define __NR_statx (__NR_Linux + 326)
 #define __NR_rseq (__NR_Linux + 327)
 #define __NR_io_pgetevents (__NR_Linux + 328)
+#define __NR_pidfd_send_signal (__NR_Linux + 424)
+#define __NR_io_uring_setup (__NR_Linux + 425)
+#define __NR_io_uring_enter (__NR_Linux + 426)
+#define __NR_io_uring_register (__NR_Linux + 427)
 #endif

@@ -16,24 +16,58 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __LINUX_TC_NAT_H
-#define __LINUX_TC_NAT_H
-#include <linux/pkt_cls.h>
+#ifndef _LINUX_XDP_DIAG_H
+#define _LINUX_XDP_DIAG_H
 #include <linux/types.h>
-enum {
-  TCA_NAT_UNSPEC,
-  TCA_NAT_PARMS,
-  TCA_NAT_TM,
-  TCA_NAT_PAD,
-  __TCA_NAT_MAX
+struct xdp_diag_req {
+  __u8 sdiag_family;
+  __u8 sdiag_protocol;
+  __u16 pad;
+  __u32 xdiag_ino;
+  __u32 xdiag_show;
+  __u32 xdiag_cookie[2];
 };
-#define TCA_NAT_MAX (__TCA_NAT_MAX - 1)
-#define TCA_NAT_FLAG_EGRESS 1
-struct tc_nat {
-  tc_gen;
-  __be32 old_addr;
-  __be32 new_addr;
-  __be32 mask;
+struct xdp_diag_msg {
+  __u8 xdiag_family;
+  __u8 xdiag_type;
+  __u16 pad;
+  __u32 xdiag_ino;
+  __u32 xdiag_cookie[2];
+};
+#define XDP_SHOW_INFO (1 << 0)
+#define XDP_SHOW_RING_CFG (1 << 1)
+#define XDP_SHOW_UMEM (1 << 2)
+#define XDP_SHOW_MEMINFO (1 << 3)
+enum {
+  XDP_DIAG_NONE,
+  XDP_DIAG_INFO,
+  XDP_DIAG_UID,
+  XDP_DIAG_RX_RING,
+  XDP_DIAG_TX_RING,
+  XDP_DIAG_UMEM,
+  XDP_DIAG_UMEM_FILL_RING,
+  XDP_DIAG_UMEM_COMPLETION_RING,
+  XDP_DIAG_MEMINFO,
+  __XDP_DIAG_MAX,
+};
+#define XDP_DIAG_MAX (__XDP_DIAG_MAX - 1)
+struct xdp_diag_info {
+  __u32 ifindex;
+  __u32 queue_id;
+};
+struct xdp_diag_ring {
+  __u32 entries;
+};
+#define XDP_DU_F_ZEROCOPY (1 << 0)
+struct xdp_diag_umem {
+  __u64 size;
+  __u32 id;
+  __u32 num_pages;
+  __u32 chunk_size;
+  __u32 headroom;
+  __u32 ifindex;
+  __u32 queue_id;
   __u32 flags;
+  __u32 refs;
 };
 #endif

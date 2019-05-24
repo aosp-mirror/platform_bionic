@@ -19,7 +19,6 @@
 #ifndef __LINUX_TC_SKBEDIT_H
 #define __LINUX_TC_SKBEDIT_H
 #include <linux/pkt_cls.h>
-#define TCA_ACT_SKBEDIT 11
 #define SKBEDIT_F_PRIORITY 0x1
 #define SKBEDIT_F_QUEUE_MAPPING 0x2
 #define SKBEDIT_F_MARK 0x4
