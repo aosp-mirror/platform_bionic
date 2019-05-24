@@ -44,8 +44,7 @@ ssize_t __recvfrom_chk(int, void*, size_t, size_t, int, struct sockaddr*,
 __BIONIC_FORTIFY_INLINE
 ssize_t recvfrom(int fd, void* const buf __pass_object_size0, size_t len, int flags, struct sockaddr* src_addr, socklen_t* addr_len)
     __overloadable
-    __clang_error_if(__bos(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos(buf) < len,
-                     __recvfrom_bad_size) {
+    __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len), __recvfrom_bad_size) {
   size_t bos = __bos0(buf);
 
   if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -59,8 +58,7 @@ ssize_t recvfrom(int fd, void* const buf __pass_object_size0, size_t len, int fl
 __BIONIC_FORTIFY_INLINE
 ssize_t sendto(int fd, const void* const buf __pass_object_size0, size_t len, int flags, const struct sockaddr* dest_addr, socklen_t addr_len)
     __overloadable
-    __clang_error_if(__bos0(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(buf) < len,
-                     __sendto_bad_size) {
+    __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len), __sendto_bad_size) {
   size_t bos = __bos0(buf);
 
   if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -73,7 +71,7 @@ ssize_t sendto(int fd, const void* const buf __pass_object_size0, size_t len, in
 __BIONIC_FORTIFY_INLINE
 ssize_t recv(int socket, void* const buf __pass_object_size0, size_t len, int flags)
     __overloadable
-    __clang_error_if(__bos0(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(buf) < len,
+    __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len),
                      "'recv' called with size bigger than buffer") {
   return recvfrom(socket, buf, len, flags, NULL, 0);
 }
@@ -81,7 +79,7 @@ ssize_t recv(int socket, void* const buf __pass_object_size0, size_t len, int fl
 __BIONIC_FORTIFY_INLINE
 ssize_t send(int socket, const void* const buf __pass_object_size0, size_t len, int flags)
     __overloadable
-    __clang_error_if(__bos0(buf) != __BIONIC_FORTIFY_UNKNOWN_SIZE && __bos0(buf) < len,
+    __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len),
                      "'send' called with size bigger than buffer") {
   return sendto(socket, buf, len, flags, NULL, 0);
 }
