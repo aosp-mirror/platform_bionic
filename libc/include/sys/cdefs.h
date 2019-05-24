@@ -296,6 +296,13 @@
 #define __bos_unevaluated_leq(bos_val, val) \
   ((bos_val) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (bos_val) <= (val))
 
+/* Intended for use in evaluated contexts. */
+#define __bos_dynamic_check_impl(bos_val, op, index) \
+  (bos_val == __BIONIC_FORTIFY_UNKNOWN_SIZE || (__builtin_constant_p(index) && bos_val op index))
+
+/* The names here are meant to match nicely with the __bos_unevaluated macros above. */
+#define __bos_trivially_not_lt(bos_val, index) __bos_dynamic_check_impl((bos_val), >=, (index))
+#define __bos_trivially_not_leq(bos_val, index) __bos_dynamic_check_impl((bos_val), >, (index))
 
 #if defined(__BIONIC_FORTIFY) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
