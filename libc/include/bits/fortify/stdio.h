@@ -89,6 +89,10 @@ int sprintf(char* const __pass_object_size dest, const char* format, ...) __over
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
+#define __bos_trivially_not_lt_mul(bos_val, size, count) \
+  __bos_dynamic_check_impl_and(bos_val, >=, (size) * (count), \
+                               !__unsafe_check_mul_overflow(size, count))
+
 __BIONIC_FORTIFY_INLINE
 size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FILE* stream)
         __overloadable
@@ -98,7 +102,7 @@ size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FIL
                          "in call to 'fread', size * count is too large for the given buffer") {
     size_t bos = __bos0(buf);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_trivially_not_lt_mul(bos, size, count)) {
         return __call_bypassing_fortify(fread)(buf, size, count, stream);
     }
     return __fread_chk(buf, size, count, stream, bos);
@@ -113,12 +117,13 @@ size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t cou
                          "in call to 'fwrite', size * count is too large for the given buffer") {
     size_t bos = __bos0(buf);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_trivially_not_lt_mul(bos, size, count)) {
         return __call_bypassing_fortify(fwrite)(buf, size, count, stream);
     }
 
     return __fwrite_chk(buf, size, count, stream, bos);
 }
+#undef __bos_trivially_not_lt_mul
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
@@ -130,7 +135,7 @@ char* fgets(char* const __pass_object_size dest, int size, FILE* stream)
                          "in call to 'fgets', size is larger than the destination buffer") {
     size_t bos = __bos(dest);
 
-    if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
+    if (__bos_dynamic_check_impl_and(bos, >=, (size_t)size, size >= 0)) {
         return __call_bypassing_fortify(fgets)(dest, size, stream);
     }
 
