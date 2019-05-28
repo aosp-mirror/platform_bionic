@@ -51,6 +51,23 @@
       "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe948041_ff0d78e5",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-28T23:33:35Z",
+      "side": 1,
+      "message": "I think this CL is treating the second executable like a dlopen\u0027ed DSO, so it\u0027s configured to use dynamic TLS rather than static TLS? I don\u0027t think that\u0027s currently going to work -- the static linker can generate executables that access TLS variables without using a relocation or a function call, e.g.:\n\nhttps://android.googlesource.com/platform/bionic/+/master/docs/elf-tls.md#Local-Exec-LE\n\nI think it\u0027d require toolchain support (and build system changes) to produce executables whose TLS segment is assumed to be allocated dynamically.\n\nELF TLS isn\u0027t enabled in the platform yet, so this issue won\u0027t come up for now.",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
