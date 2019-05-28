@@ -46,6 +46,30 @@
       "revId": "cba94fb201aa9db8926731310dbadc613a07bc2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da762b2c_6441ac0d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-05-28T19:39:55Z",
+      "side": 1,
+      "message": "execve does impose arbitrary limits, though (_SC_ARG_MAX, RLIMIT_STACK, or MAX_ARG_STRLEN).\n\n(They\u0027re much much bigger than 128 arguments, though.)",
+      "parentUuid": "a31637d0_0cfdb608",
+      "range": {
+        "startLine": 430,
+        "startChar": 19,
+        "endLine": 430,
+        "endChar": 27
+      },
+      "revId": "cba94fb201aa9db8926731310dbadc613a07bc2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
