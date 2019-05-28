@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba63aebe_b105734d",
+        "filename": "libc/include/android/dlext.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-05-28T19:30:21Z",
+      "side": 1,
+      "message": "Do you expect anyone else to use this call other than native zygote?  Assuming not, might as well be explicit that it shouldn\u0027t be used besides that use case.",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06dc6a72_1fd9ab63",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-05-28T19:30:21Z",
+      "side": 1,
+      "message": "Similarly, this exposes this symbol widely, right?  Can this be LIBC_PRIVATE or LIBC_PLATFORM, aka whichever would allow native zygote to use this symbol without exposing it to apps and putting it into the NDK?",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
