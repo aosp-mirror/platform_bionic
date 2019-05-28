@@ -105,5 +105,14 @@ struct user_pac_mask {
   __u64 data_mask;
   __u64 insn_mask;
 };
+struct user_pac_address_keys {
+  __uint128_t apiakey;
+  __uint128_t apibkey;
+  __uint128_t apdakey;
+  __uint128_t apdbkey;
+};
+struct user_pac_generic_keys {
+  __uint128_t apgakey;
+};
 #endif
 #endif
