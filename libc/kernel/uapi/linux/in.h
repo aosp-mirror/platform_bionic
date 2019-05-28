@@ -215,6 +215,7 @@ struct sockaddr_in {
 #define INADDR_UNSPEC_GROUP 0xe0000000U
 #define INADDR_ALLHOSTS_GROUP 0xe0000001U
 #define INADDR_ALLRTRS_GROUP 0xe0000002U
+#define INADDR_ALLSNOOPERS_GROUP 0xe000006aU
 #define INADDR_MAX_LOCAL_GROUP 0xe00000ffU
 #endif
 #include <asm/byteorder.h>
