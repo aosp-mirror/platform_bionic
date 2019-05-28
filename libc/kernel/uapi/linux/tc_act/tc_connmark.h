@@ -20,7 +20,6 @@
 #define __UAPI_TC_CONNMARK_H
 #include <linux/types.h>
 #include <linux/pkt_cls.h>
-#define TCA_ACT_CONNMARK 14
 struct tc_connmark {
   tc_gen;
   __u16 zone;

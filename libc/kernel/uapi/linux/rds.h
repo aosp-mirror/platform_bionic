@@ -36,6 +36,9 @@
 #define RDS_TRANS_TCP 2
 #define RDS_TRANS_COUNT 3
 #define RDS_TRANS_NONE (~0)
+#define SIOCRDSSETTOS (SIOCPROTOPRIVATE)
+#define SIOCRDSGETTOS (SIOCPROTOPRIVATE + 1)
+typedef __u8 rds_tos_t;
 #define RDS_CMSG_RDMA_ARGS 1
 #define RDS_CMSG_RDMA_DEST 2
 #define RDS_CMSG_RDMA_MAP 3
@@ -82,6 +85,7 @@ struct rds_info_connection {
   __be32 faddr;
   __u8 transport[TRANSNAMSIZ];
   __u8 flags;
+  __u8 tos;
 } __attribute__((packed));
 struct rds6_info_connection {
   __u64 next_tx_seq;
@@ -101,6 +105,7 @@ struct rds_info_message {
   __be16 lport;
   __be16 fport;
   __u8 flags;
+  __u8 tos;
 } __attribute__((packed));
 struct rds6_info_message {
   __u64 seq;
@@ -140,6 +145,7 @@ struct rds_info_tcp_socket {
   __u32 last_sent_nxt;
   __u32 last_expected_una;
   __u32 last_seen_una;
+  __u8 tos;
 } __attribute__((packed));
 struct rds6_info_tcp_socket {
   struct in6_addr local_addr;
@@ -163,6 +169,7 @@ struct rds_info_rdma_connection {
   __u32 max_send_sge;
   __u32 rdma_mr_max;
   __u32 rdma_mr_size;
+  __u8 tos;
 };
 struct rds6_info_rdma_connection {
   struct in6_addr src_addr;
@@ -174,6 +181,7 @@ struct rds6_info_rdma_connection {
   __u32 max_send_sge;
   __u32 rdma_mr_max;
   __u32 rdma_mr_size;
+  __u8 tos;
 };
 enum rds_message_rxpath_latency {
   RDS_MSG_RX_HDR_TO_DGRAM_START = 0,

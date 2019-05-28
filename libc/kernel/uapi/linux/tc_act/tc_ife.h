@@ -21,7 +21,6 @@
 #include <linux/types.h>
 #include <linux/pkt_cls.h>
 #include <linux/ife.h>
-#define TCA_ACT_IFE 25
 #define IFE_ENCODE 1
 #define IFE_DECODE 0
 struct tc_ife {

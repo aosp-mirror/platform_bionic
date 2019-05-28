@@ -24,7 +24,7 @@
 #define AUTOFS_PROTO_VERSION 5
 #define AUTOFS_MIN_PROTO_VERSION 3
 #define AUTOFS_MAX_PROTO_VERSION 5
-#define AUTOFS_PROTO_SUBVERSION 4
+#define AUTOFS_PROTO_SUBVERSION 5
 #if defined(__ia64__) || defined(__alpha__)
 typedef unsigned long autofs_wqt_t;
 #else

@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_GENERIC_SOCKET_H
 #define __ASM_GENERIC_SOCKET_H
+#include <linux/posix_types.h>
 #include <asm/sockios.h>
 #define SOL_SOCKET 1
 #define SO_DEBUG 1
@@ -42,8 +43,8 @@
 #define SO_PEERCRED 17
 #define SO_RCVLOWAT 18
 #define SO_SNDLOWAT 19
-#define SO_RCVTIMEO 20
-#define SO_SNDTIMEO 21
+#define SO_RCVTIMEO_OLD 20
+#define SO_SNDTIMEO_OLD 21
 #endif
 #define SO_SECURITY_AUTHENTICATION 22
 #define SO_SECURITY_ENCRYPTION_TRANSPORT 23
@@ -53,16 +54,10 @@
 #define SO_DETACH_FILTER 27
 #define SO_GET_FILTER SO_ATTACH_FILTER
 #define SO_PEERNAME 28
-#define SO_TIMESTAMP 29
-#define SCM_TIMESTAMP SO_TIMESTAMP
 #define SO_ACCEPTCONN 30
 #define SO_PEERSEC 31
 #define SO_PASSSEC 34
-#define SO_TIMESTAMPNS 35
-#define SCM_TIMESTAMPNS SO_TIMESTAMPNS
 #define SO_MARK 36
-#define SO_TIMESTAMPING 37
-#define SCM_TIMESTAMPING SO_TIMESTAMPING
 #define SO_PROTOCOL 38
 #define SO_DOMAIN 39
 #define SO_RXQ_OVFL 40
@@ -90,4 +85,29 @@
 #define SO_ZEROCOPY 60
 #define SO_TXTIME 61
 #define SCM_TXTIME SO_TXTIME
+#define SO_BINDTOIFINDEX 62
+#define SO_TIMESTAMP_OLD 29
+#define SO_TIMESTAMPNS_OLD 35
+#define SO_TIMESTAMPING_OLD 37
+#define SO_TIMESTAMP_NEW 63
+#define SO_TIMESTAMPNS_NEW 64
+#define SO_TIMESTAMPING_NEW 65
+#define SO_RCVTIMEO_NEW 66
+#define SO_SNDTIMEO_NEW 67
+#if __BITS_PER_LONG == 64 || defined(__x86_64__) && defined(__ILP32__)
+#define SO_TIMESTAMP SO_TIMESTAMP_OLD
+#define SO_TIMESTAMPNS SO_TIMESTAMPNS_OLD
+#define SO_TIMESTAMPING SO_TIMESTAMPING_OLD
+#define SO_RCVTIMEO SO_RCVTIMEO_OLD
+#define SO_SNDTIMEO SO_SNDTIMEO_OLD
+#else
+#define SO_TIMESTAMP (sizeof(time_t) == sizeof(__kernel_long_t) ? SO_TIMESTAMP_OLD : SO_TIMESTAMP_NEW)
+#define SO_TIMESTAMPNS (sizeof(time_t) == sizeof(__kernel_long_t) ? SO_TIMESTAMPNS_OLD : SO_TIMESTAMPNS_NEW)
+#define SO_TIMESTAMPING (sizeof(time_t) == sizeof(__kernel_long_t) ? SO_TIMESTAMPING_OLD : SO_TIMESTAMPING_NEW)
+#define SO_RCVTIMEO (sizeof(time_t) == sizeof(__kernel_long_t) ? SO_RCVTIMEO_OLD : SO_RCVTIMEO_NEW)
+#define SO_SNDTIMEO (sizeof(time_t) == sizeof(__kernel_long_t) ? SO_SNDTIMEO_OLD : SO_SNDTIMEO_NEW)
+#endif
+#define SCM_TIMESTAMP SO_TIMESTAMP
+#define SCM_TIMESTAMPNS SO_TIMESTAMPNS
+#define SCM_TIMESTAMPING SO_TIMESTAMPING
 #endif

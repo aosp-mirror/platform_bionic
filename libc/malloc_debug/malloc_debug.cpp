@@ -252,9 +252,16 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   return g_debug->GetPointer(header);
 }
 
+extern "C" void __asan_init() __attribute__((weak));
+
 bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* zygote_child,
                       const char* options) {
   if (zygote_child == nullptr || options == nullptr) {
+    return false;
+  }
+
+  if (__asan_init != 0) {
+    error_log("malloc debug cannot be enabled alongside ASAN");
     return false;
   }
 

@@ -31,7 +31,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <asm/mman.h>
+#include <linux/mman.h>
 
 __BEGIN_DECLS
 

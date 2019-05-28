@@ -1468,10 +1468,10 @@ LIBC_Q { # introduced=Q
     __system_properties_init; # apex
 
     # Used by libmemunreachable
-    malloc_backtrace; # apex
-    malloc_disable; # apex
-    malloc_enable; # apex
-    malloc_iterate; # apex
+    malloc_backtrace; # apex vndk
+    malloc_disable; # apex vndk
+    malloc_enable; # apex vndk
+    malloc_iterate; # apex vndk
 
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
