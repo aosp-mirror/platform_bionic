@@ -33,6 +33,24 @@
       "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f6e6d89_c330f4c4",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-05-28T20:47:08Z",
+      "side": 1,
+      "message": "That\u0027s a good point. If I make this LIBC_PLATFORM, how can I tell the build system to *not* link against the stub library, which doesn\u0027t contain LIBC_PLATFORM symbols?",
+      "parentUuid": "06dc6a72_1fd9ab63",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
