@@ -458,6 +458,7 @@ enum btrfs_err_code {
 #define BTRFS_IOC_DEFRAG _IOW(BTRFS_IOCTL_MAGIC, 2, struct btrfs_ioctl_vol_args)
 #define BTRFS_IOC_RESIZE _IOW(BTRFS_IOCTL_MAGIC, 3, struct btrfs_ioctl_vol_args)
 #define BTRFS_IOC_SCAN_DEV _IOW(BTRFS_IOCTL_MAGIC, 4, struct btrfs_ioctl_vol_args)
+#define BTRFS_IOC_FORGET_DEV _IOW(BTRFS_IOCTL_MAGIC, 5, struct btrfs_ioctl_vol_args)
 #define BTRFS_IOC_TRANS_START _IO(BTRFS_IOCTL_MAGIC, 6)
 #define BTRFS_IOC_TRANS_END _IO(BTRFS_IOCTL_MAGIC, 7)
 #define BTRFS_IOC_SYNC _IO(BTRFS_IOCTL_MAGIC, 8)

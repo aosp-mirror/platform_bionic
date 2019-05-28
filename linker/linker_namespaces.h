@@ -72,9 +72,9 @@ struct android_namespace_link_t {
 
 struct android_namespace_t {
  public:
-  android_namespace_t() : name_(nullptr), is_isolated_(false), is_greylist_enabled_(false) {}
+  android_namespace_t() : is_isolated_(false), is_greylist_enabled_(false) {}
 
-  const char* get_name() const { return name_; }
+  const char* get_name() const { return name_.c_str(); }
   void set_name(const char* name) { name_ = name; }
 
   bool is_isolated() const { return is_isolated_; }
@@ -161,7 +161,7 @@ struct android_namespace_t {
   soinfo_list_t get_shared_group();
 
  private:
-  const char* name_;
+  std::string name_;
   bool is_isolated_;
   bool is_greylist_enabled_;
   std::vector<std::string> ld_library_paths_;

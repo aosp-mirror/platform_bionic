@@ -21,6 +21,9 @@
 #include <linux/types.h>
 #include <linux/socket.h>
 typedef __s32 sctp_assoc_t;
+#define SCTP_FUTURE_ASSOC 0
+#define SCTP_CURRENT_ASSOC 1
+#define SCTP_ALL_ASSOC 2
 #define SCTP_RTOINFO 0
 #define SCTP_ASSOCINFO 1
 #define SCTP_INITMSG 2

@@ -198,7 +198,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, __reserved_1 : 35;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, __reserved_1 : 33;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -230,7 +230,6 @@ struct perf_event_query_bpf {
   __u32 prog_cnt;
   __u32 ids[0];
 };
-#define perf_flags(attr) (* (& (attr)->read_format + 1))
 #define PERF_EVENT_IOC_ENABLE _IO('$', 0)
 #define PERF_EVENT_IOC_DISABLE _IO('$', 1)
 #define PERF_EVENT_IOC_REFRESH _IO('$', 2)
@@ -327,7 +326,21 @@ enum perf_event_type {
   PERF_RECORD_SWITCH = 14,
   PERF_RECORD_SWITCH_CPU_WIDE = 15,
   PERF_RECORD_NAMESPACES = 16,
+  PERF_RECORD_KSYMBOL = 17,
+  PERF_RECORD_BPF_EVENT = 18,
   PERF_RECORD_MAX,
+};
+enum perf_record_ksymbol_type {
+  PERF_RECORD_KSYMBOL_TYPE_UNKNOWN = 0,
+  PERF_RECORD_KSYMBOL_TYPE_BPF = 1,
+  PERF_RECORD_KSYMBOL_TYPE_MAX
+};
+#define PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER (1 << 0)
+enum perf_bpf_event_type {
+  PERF_BPF_EVENT_UNKNOWN = 0,
+  PERF_BPF_EVENT_PROG_LOAD = 1,
+  PERF_BPF_EVENT_PROG_UNLOAD = 2,
+  PERF_BPF_EVENT_MAX,
 };
 #define PERF_MAX_STACK_DEPTH 127
 #define PERF_MAX_CONTEXTS_PER_STACK 8
