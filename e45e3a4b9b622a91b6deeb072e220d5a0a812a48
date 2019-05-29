@@ -68,6 +68,24 @@
       "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0b0365a_d95ae52d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-05-29T03:58:32Z",
+      "side": 1,
+      "message": "Thanks for the info! Reading the doc, I\u0027m a bit confused about how the compiler decides whether to use IE/LE vs GD/LD for DSOs. How does the compiler know whether a DSO is ever dlopen()\u0027ed at runtime? Asking because if DSOs on Android are all using GD/LD, we can have a special mode that tells the dynamic linker to only allocate the main executable in the static TLS block, and thus we can just replace the static TLS block when we load the second executable. Is that a feasible approach?",
+      "parentUuid": "fe948041_ff0d78e5",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
