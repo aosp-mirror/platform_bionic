@@ -116,6 +116,7 @@ static void MaybeInstallInitHeapprofdHook(int) {
   // Zygote child processes must be marked profileable.
   if (gZygoteChild &&
       !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
+    error_log("%s: not enabling heapprofd, not marked profileable.", getprogname());
     return;
   }
 
