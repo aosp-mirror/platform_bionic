@@ -86,6 +86,24 @@
       "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8e083c3_7a9eaba7",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-29T23:28:37Z",
+      "side": 1,
+      "message": "If code is compiled with -fpic, then the compiler assumes its output is going into a DSO, and it uses LD/GD. (The programmer can specify a more efficient model using the `tls_model` attribute or the `-ftls-model` command-line argument, but then they\u0027re responsible for ensuring that the DSO is loaded at startup. dlopen fails with an error code if it tries to load a DSO using static TLS.)\n\n\u003e ... Is that a feasible approach?\n\nI think that approach works as long as the first executable doesn\u0027t use TLS. We would need to do something about the bionic_tls structure, which is currently allocated as part of static TLS. Bionic\u0027s pthread keys (bionic_tls::key_data) are currently allocated just after the executable\u0027s TLS for compatibility with the Golang runtime (https://github.com/golang/go/issues/29674).",
+      "parentUuid": "d0b0365a_d95ae52d",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
