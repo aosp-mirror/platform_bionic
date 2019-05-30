@@ -46,6 +46,8 @@ using android::base::ReadFileToString;
 using android::base::Split;
 using android::base::StartsWith;
 
+using namespace std::literals;
+
 enum uid_type_t {
   TYPE_APP,
   TYPE_SYSTEM,
@@ -130,10 +132,39 @@ static void check_getpwnam_r(const char* username, uid_t uid, uid_type_t uid_typ
 
 static void check_get_passwd(const char* username, uid_t uid, uid_type_t uid_type,
                              bool check_username = true) {
+  SCOPED_TRACE("username '"s + username + "'");
   check_getpwuid(username, uid, uid_type, check_username);
   check_getpwnam(username, uid, uid_type, check_username);
   check_getpwuid_r(username, uid, uid_type, check_username);
   check_getpwnam_r(username, uid, uid_type, check_username);
+}
+
+static void expect_no_passwd_id(uid_t uid) {
+  SCOPED_TRACE("uid '" + std::to_string(uid) + "'");
+  errno = 0;
+  passwd* passwd = nullptr;
+  passwd = getpwuid(uid);
+  EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
+  EXPECT_EQ(ENOENT, errno);
+
+  struct passwd passwd_storage;
+  char buf[512];
+  EXPECT_EQ(ENOENT, getpwuid_r(uid, &passwd_storage, buf, sizeof(buf), &passwd));
+  EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
+}
+
+static void expect_no_passwd_name(const char* username) {
+  SCOPED_TRACE("username '"s + username + "'");
+  errno = 0;
+  passwd* passwd = nullptr;
+  passwd = getpwnam(username);
+  EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
+  EXPECT_EQ(ENOENT, errno);
+
+  struct passwd passwd_storage;
+  char buf[512];
+  EXPECT_EQ(ENOENT, getpwnam_r(username, &passwd_storage, buf, sizeof(buf), &passwd));
+  EXPECT_EQ(nullptr, passwd) << "name = '" << passwd->pw_name << "'";
 }
 
 #else // !defined(__BIONIC__)
@@ -147,75 +178,124 @@ static void check_get_passwd(const char* /* username */, uid_t /* uid */, uid_ty
   GTEST_SKIP() << "bionic-only test";
 }
 
+static void expect_no_passwd_id(uid_t /* uid */) {
+  GTEST_SKIP() << "bionic-only test";
+}
+
+static void expect_no_passwd_name(const char* /* username */) {
+  GTEST_SKIP() << "bionic-only test";
+}
+
 #endif
 
-TEST(pwd, getpwnam_system_id_root) {
+TEST(pwd, getpwnam_platform_ids) {
   check_get_passwd("root", 0, TYPE_SYSTEM);
-}
+  check_get_passwd("daemon", 1, TYPE_SYSTEM);
+  check_get_passwd("bin", 2, TYPE_SYSTEM);
 
-TEST(pwd, getpwnam_system_id_system) {
   check_get_passwd("system", 1000, TYPE_SYSTEM);
-}
-
-TEST(pwd, getpwnam_app_id_radio) {
   check_get_passwd("radio", 1001, TYPE_SYSTEM);
-}
 
-TEST(pwd, getpwnam_oem_id_5000) {
-  check_get_passwd("oem_5000", 5000, TYPE_VENDOR, false);
-}
+  check_get_passwd("shell", 2000, TYPE_SYSTEM);
 
-TEST(pwd, getpwnam_oem_id_5999) {
-  check_get_passwd("oem_5999", 5999, TYPE_VENDOR, false);
-}
-
-TEST(pwd, getpwnam_oem_id_2900) {
-  check_get_passwd("oem_2900", 2900, TYPE_VENDOR, false);
-}
-
-TEST(pwd, getpwnam_oem_id_2999) {
-  check_get_passwd("oem_2999", 2999, TYPE_VENDOR, false);
-}
-
-TEST(pwd, getpwnam_app_id_nobody) {
   check_get_passwd("nobody", 9999, TYPE_SYSTEM);
 }
 
-TEST(pwd, getpwnam_app_id_u0_a0) {
+TEST(pwd, getpwnam_oem_ids) {
+  check_get_passwd("oem_2900", 2900, TYPE_VENDOR, false);
+  check_get_passwd("oem_2945", 2945, TYPE_VENDOR, false);
+  check_get_passwd("oem_2999", 2999, TYPE_VENDOR, false);
+  check_get_passwd("oem_5000", 5000, TYPE_VENDOR, false);
+  check_get_passwd("oem_5454", 5454, TYPE_VENDOR, false);
+  check_get_passwd("oem_5999", 5999, TYPE_VENDOR, false);
+}
+
+TEST(pwd, getpwnam_non_exist) {
+  expect_no_passwd_id(999);   // End of the system reserved range, unallocated.
+  expect_no_passwd_id(1999);  // End of the system reserved range, unallocated.
+  expect_no_passwd_id(2899);  // End of the system reserved range, unallocated.
+
+  // These ranges are for GIDs only.
+  expect_no_passwd_id(20000);
+  expect_no_passwd_id(30000);
+  expect_no_passwd_id(40000);
+  expect_no_passwd_id(50000);
+
+  // These should not be parsed as users, only as groups.
+  expect_no_passwd_name("u0_a9999_cache");
+  expect_no_passwd_name("u0_a9999_ext");
+  expect_no_passwd_name("u0_a9999_ext_cache");
+  expect_no_passwd_name("all_a9999");
+}
+
+TEST(pwd, getpwnam_u0_app_ids) {
   check_get_passwd("u0_a0", 10000, TYPE_APP);
-}
-
-TEST(pwd, getpwnam_app_id_u0_a1234) {
   check_get_passwd("u0_a1234", 11234, TYPE_APP);
-}
+  check_get_passwd("u0_a9999", 19999, TYPE_APP);
 
-// Test the difference between uid and shared gid.
-TEST(pwd, getpwnam_app_id_u0_a49999) {
-  check_get_passwd("u0_a49999", 59999, TYPE_APP);
-}
-
-TEST(pwd, getpwnam_app_id_u0_i1) {
   check_get_passwd("u0_i1", 90001, TYPE_APP);
+  check_get_passwd("u0_i4545", 94545, TYPE_APP);
+  check_get_passwd("u0_i9999", 99999, TYPE_APP);
 }
 
-TEST(pwd, getpwnam_app_id_u1_root) {
-  check_get_passwd("u1_root", 100000, TYPE_SYSTEM);
-}
-
-TEST(pwd, getpwnam_app_id_u1_radio) {
+TEST(pwd, getpwnam_app_id_u1_ids) {
+  check_get_passwd("u1_system", 101000, TYPE_SYSTEM);
   check_get_passwd("u1_radio", 101001, TYPE_SYSTEM);
-}
 
-TEST(pwd, getpwnam_app_id_u1_a0) {
   check_get_passwd("u1_a0", 110000, TYPE_APP);
+  check_get_passwd("u1_a1234", 111234, TYPE_APP);
+  check_get_passwd("u1_a9999", 119999, TYPE_APP);
+
+  check_get_passwd("u1_i1", 190001, TYPE_APP);
+  check_get_passwd("u1_i4545", 194545, TYPE_APP);
+  check_get_passwd("u1_i9999", 199999, TYPE_APP);
 }
 
-TEST(pwd, getpwnam_app_id_u1_a40000) {
-  check_get_passwd("u1_a40000", 150000, TYPE_APP);
+TEST(pwd, getpwnam_app_id_u31_ids) {
+  check_get_passwd("u31_system", 3101000, TYPE_SYSTEM);
+  check_get_passwd("u31_radio", 3101001, TYPE_SYSTEM);
+
+  check_get_passwd("u31_a0", 3110000, TYPE_APP);
+  check_get_passwd("u31_a1234", 3111234, TYPE_APP);
+  check_get_passwd("u31_a9999", 3119999, TYPE_APP);
+
+  check_get_passwd("u31_i1", 3190001, TYPE_APP);
+  check_get_passwd("u31_i4545", 3194545, TYPE_APP);
+  check_get_passwd("u31_i9999", 3199999, TYPE_APP);
 }
 
-TEST(pwd, getpwnam_app_id_u1_i0) {
-  check_get_passwd("u1_i0", 190000, TYPE_APP);
+TEST(pwd, getpwnam_app_id_not_allowed_platform) {
+  expect_no_passwd_name("u1_root");
+  expect_no_passwd_name("u1_debuggerd");
+
+  expect_no_passwd_name("u31_root");
+  expect_no_passwd_name("u31_debuggerd");
+}
+
+TEST(pwd, getpwuid_app_id_u1_non_exist) {
+  expect_no_passwd_id(100000);  // There is no 'root' for secondary users.
+  expect_no_passwd_id(101999);  // End of the system reserved range, unallocated.
+  expect_no_passwd_id(102900);  // The OEM ranges were never allocated to secondary users.
+  expect_no_passwd_id(105000);  // The OEM ranges were never allocated to secondary users.
+
+  // These ranges are for GIDs only.
+  expect_no_passwd_id(120000);
+  expect_no_passwd_id(130000);
+  expect_no_passwd_id(140000);
+  expect_no_passwd_id(150000);
+}
+
+TEST(pwd, getpwuid_app_id_u31_non_exist) {
+  expect_no_passwd_id(3100000);  // There is no 'root' for secondary users.
+  expect_no_passwd_id(3101999);  // End of the system reserved range, unallocated.
+  expect_no_passwd_id(3102900);  // The OEM ranges were never allocated to secondary users.
+  expect_no_passwd_id(3105000);  // The OEM ranges were never allocated to secondary users.
+
+  // These ranges are for GIDs only.
+  expect_no_passwd_id(3120000);
+  expect_no_passwd_id(3130000);
+  expect_no_passwd_id(3140000);
+  expect_no_passwd_id(3150000);
 }
 
 TEST(pwd, getpwnam_r_alignment) {
@@ -302,7 +382,7 @@ TEST(pwd, getpwnam_r_large_enough_suggested_buffer_size) {
 
 #if defined(__BIONIC__)
 template <typename T>
-static void expect_ids(const T& ids) {
+static void expect_ids(const T& ids, bool is_group) {
   std::set<typename T::key_type> expected_ids;
   // Ensure that all android_ids are iterated through.
   for (size_t n = 0; n < android_id_count; ++n) {
@@ -321,10 +401,12 @@ static void expect_ids(const T& ids) {
   expect_range(AID_OEM_RESERVED_START, AID_OEM_RESERVED_END);
   expect_range(AID_OEM_RESERVED_2_START, AID_OEM_RESERVED_2_END);
   expect_range(AID_APP_START, AID_APP_END);
-  expect_range(AID_CACHE_GID_START, AID_CACHE_GID_END);
-  expect_range(AID_EXT_GID_START, AID_EXT_GID_END);
-  expect_range(AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END);
-  expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
+  if (is_group) {
+    expect_range(AID_CACHE_GID_START, AID_CACHE_GID_END);
+    expect_range(AID_EXT_GID_START, AID_EXT_GID_END);
+    expect_range(AID_EXT_CACHE_GID_START, AID_EXT_CACHE_GID_END);
+    expect_range(AID_SHARED_GID_START, AID_SHARED_GID_END);
+  }
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
   // TODO(73062966): We still don't have a good way to create vendor AIDs in the system or other
@@ -388,7 +470,7 @@ TEST(pwd, getpwent_iterate) {
   }
   endpwent();
 
-  expect_ids(uids);
+  expect_ids(uids, false);
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
@@ -453,10 +535,39 @@ static void check_getgrnam_r(const char* group_name, gid_t gid, bool check_group
 }
 
 static void check_get_group(const char* group_name, gid_t gid, bool check_groupname = true) {
+  SCOPED_TRACE("groupname '"s + group_name + "'");
   check_getgrgid(group_name, gid, check_groupname);
   check_getgrnam(group_name, gid, check_groupname);
   check_getgrgid_r(group_name, gid, check_groupname);
   check_getgrnam_r(group_name, gid, check_groupname);
+}
+
+static void expect_no_group_id(gid_t gid) {
+  SCOPED_TRACE("gid '" + std::to_string(gid) + "'");
+  errno = 0;
+  group* group = nullptr;
+  group = getgrgid(gid);
+  EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
+  EXPECT_EQ(ENOENT, errno);
+
+  struct group group_storage;
+  char buf[512];
+  EXPECT_EQ(ENOENT, getgrgid_r(gid, &group_storage, buf, sizeof(buf), &group));
+  EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
+}
+
+static void expect_no_group_name(const char* groupname) {
+  SCOPED_TRACE("groupname '"s + groupname + "'");
+  errno = 0;
+  group* group = nullptr;
+  group = getgrnam(groupname);
+  EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
+  EXPECT_EQ(ENOENT, errno);
+
+  struct group group_storage;
+  char buf[512];
+  EXPECT_EQ(ENOENT, getgrnam_r(groupname, &group_storage, buf, sizeof(buf), &group));
+  EXPECT_EQ(nullptr, group) << "name = '" << group->gr_name << "'";
 }
 
 #else // !defined(__BIONIC__)
@@ -469,95 +580,144 @@ static void check_get_group(const char*, gid_t) {
   GTEST_SKIP() << "bionic-only test";
 }
 
+static void expect_no_group_id(gid_t /* gid */) {
+  GTEST_SKIP() << "bionic-only test";
+}
+
+static void expect_no_group_name(const char* /* groupname */) {
+  GTEST_SKIP() << "bionic-only test";
+}
+
 #endif
 
-TEST(grp, getgrnam_system_id_root) {
+TEST(grp, getgrnam_platform_ids) {
   check_get_group("root", 0);
-}
+  check_get_group("daemon", 1);
+  check_get_group("bin", 2);
 
-TEST(grp, getgrnam_system_id_system) {
   check_get_group("system", 1000);
-}
-
-TEST(grp, getgrnam_app_id_radio) {
   check_get_group("radio", 1001);
-}
 
-TEST(grp, getgrnam_oem_id_5000) {
-  check_get_group("oem_5000", 5000, false);
-}
+  check_get_group("shell", 2000);
 
-TEST(grp, getgrnam_oem_id_5999) {
-  check_get_group("oem_5999", 5999, false);
-}
-
-TEST(grp, getgrnam_oem_id_2900) {
-  check_get_group("oem_2900", 2900, false);
-}
-
-TEST(grp, getgrnam_oem_id_2999) {
-  check_get_group("oem_2999", 2999, false);
-}
-
-TEST(grp, getgrnam_app_id_nobody) {
   check_get_group("nobody", 9999);
 }
 
-TEST(grp, getgrnam_app_id_u0_a0) {
+TEST(grp, getgrnam_oem_ids) {
+  check_get_group("oem_2900", 2900, false);
+  check_get_group("oem_2945", 2945, false);
+  check_get_group("oem_2999", 2999, false);
+  check_get_group("oem_5000", 5000, false);
+  check_get_group("oem_5454", 5454, false);
+  check_get_group("oem_5999", 5999, false);
+}
+
+TEST(grp, getgrnam_non_exist) {
+  expect_no_passwd_id(999);   // End of the system reserved range, unallocated.
+  expect_no_passwd_id(1999);  // End of the system reserved range, unallocated.
+  expect_no_passwd_id(2899);  // End of the system reserved range, unallocated.
+}
+
+TEST(grp, getgrnam_u0_app_ids) {
   check_get_group("u0_a0", 10000);
-}
-
-TEST(grp, getgrnam_app_id_u0_a1234) {
   check_get_group("u0_a1234", 11234);
-}
-
-TEST(grp, getgrnam_app_id_u0_a9999) {
   check_get_group("u0_a9999", 19999);
-}
 
-TEST(getgrnam, app_id_u0_a0_cache) {
   check_get_group("u0_a0_cache", 20000);
-}
-
-TEST(getgrnam, app_id_u0_a1234_cache) {
   check_get_group("u0_a1234_cache", 21234);
-}
-
-TEST(getgrnam, app_id_u0_a9999_cache) {
   check_get_group("u0_a9999_cache", 29999);
-}
 
-TEST(getgrnam, app_id_u10_a1234_cache) {
-  check_get_group("u10_a1234_cache", 1021234);
-}
+  check_get_group("u0_a0_ext", 30000);
+  check_get_group("u0_a4545_ext", 34545);
+  check_get_group("u0_a9999_ext", 39999);
 
-// Test the difference between uid and shared gid.
-TEST(grp, getgrnam_app_id_all_a9999) {
+  check_get_group("u0_a0_ext_cache", 40000);
+  check_get_group("u0_a4545_ext_cache", 44545);
+  check_get_group("u0_a9999_ext_cache", 49999);
+
+  check_get_group("all_a0", 50000);
+  check_get_group("all_a4545", 54545);
   check_get_group("all_a9999", 59999);
-}
 
-TEST(grp, getgrnam_app_id_u0_i1) {
   check_get_group("u0_i1", 90001);
 }
 
-TEST(grp, getgrnam_app_id_u1_root) {
-  check_get_group("u1_root", 100000);
-}
-
-TEST(grp, getgrnam_app_id_u1_radio) {
+TEST(grp, getgrnam_u1_app_ids) {
+  check_get_group("u1_system", 101000);
   check_get_group("u1_radio", 101001);
-}
 
-TEST(grp, getgrnam_app_id_u1_a0) {
   check_get_group("u1_a0", 110000);
+  check_get_group("u1_a1234", 111234);
+  check_get_group("u1_a9999", 119999);
+
+  check_get_group("u1_a0_cache", 120000);
+  check_get_group("u1_a1234_cache", 121234);
+  check_get_group("u1_a9999_cache", 129999);
+
+  check_get_group("u1_a0_ext", 130000);
+  check_get_group("u1_a4545_ext", 134545);
+  check_get_group("u1_a9999_ext", 139999);
+
+  check_get_group("u1_a0_ext_cache", 140000);
+  check_get_group("u1_a4545_ext_cache", 144545);
+  check_get_group("u1_a9999_ext_cache", 149999);
+
+  check_get_group("u1_i1", 190001);
 }
 
-TEST(grp, getgrnam_app_id_u1_a40000) {
-  check_get_group("u1_a40000", 150000);
+TEST(grp, getgrnam_u31_app_ids) {
+  check_get_group("u31_system", 3101000);
+  check_get_group("u31_radio", 3101001);
+
+  check_get_group("u31_a0", 3110000);
+  check_get_group("u31_a1234", 3111234);
+  check_get_group("u31_a9999", 3119999);
+
+  check_get_group("u31_a0_cache", 3120000);
+  check_get_group("u31_a1234_cache", 3121234);
+  check_get_group("u31_a9999_cache", 3129999);
+
+  check_get_group("u31_a0_cache", 3120000);
+  check_get_group("u31_a1234_cache", 3121234);
+  check_get_group("u31_a9999_cache", 3129999);
+
+  check_get_group("u31_a0_ext", 3130000);
+  check_get_group("u31_a4545_ext", 3134545);
+  check_get_group("u31_a9999_ext", 3139999);
+
+  check_get_group("u31_a0_ext_cache", 3140000);
+  check_get_group("u31_a4545_ext_cache", 3144545);
+  check_get_group("u31_a9999_ext_cache", 3149999);
+
+  check_get_group("u31_i1", 3190001);
 }
 
-TEST(grp, getgrnam_app_id_u1_i0) {
-  check_get_group("u1_i0", 190000);
+TEST(grp, getpgram_app_id_not_allowed_platform) {
+  expect_no_group_name("u1_root");
+  expect_no_group_name("u1_debuggerd");
+
+  expect_no_group_name("u31_root");
+  expect_no_group_name("u31_debuggerd");
+}
+
+TEST(grp, getgrgid_app_id_u1_non_exist) {
+  expect_no_group_id(100000);  // There is no 'root' for secondary users.
+  expect_no_group_id(101999);  // End of the system reserved range, unallocated.
+  expect_no_group_id(102900);  // The OEM ranges were never allocated to secondary users.
+  expect_no_group_id(105000);  // The OEM ranges were never allocated to secondary users.
+
+  // The shared range is shared among users, and therefore doesn't exist for secondary users.
+  expect_no_group_id(150000);
+}
+
+TEST(grp, getgrgid_app_id_u31_non_exist) {
+  expect_no_group_id(3100000);  // There is no 'root' for secondary users.
+  expect_no_group_id(3101999);  // End of the system reserved range, unallocated.
+  expect_no_group_id(3102900);  // The OEM ranges were never allocated to secondary users.
+  expect_no_group_id(3105000);  // The OEM ranges were never allocated to secondary users.
+
+  // The shared range is shared among users, and therefore doesn't exist for secondary users.
+  expect_no_group_id(3150000);
 }
 
 TEST(grp, getgrnam_r_alignment) {
@@ -660,7 +820,7 @@ TEST(grp, getgrent_iterate) {
   }
   endgrent();
 
-  expect_ids(gids);
+  expect_ids(gids, true);
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif

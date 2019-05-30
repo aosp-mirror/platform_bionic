@@ -26,6 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#include "private/grp_pwd.h"
+
 #include <android/api-level.h>
 #include <ctype.h>
 #include <errno.h>
@@ -37,12 +39,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/system_properties.h>
+#include <sys/types.h>
 #include <unistd.h>
 
+#include "private/ErrnoRestorer.h"
 #include "private/android_filesystem_config.h"
 #include "private/bionic_macros.h"
-#include "private/grp_pwd.h"
-#include "private/ErrnoRestorer.h"
 
 // Generated android_ids array
 #include "generated_android_ids.h"
@@ -127,10 +129,17 @@ static const android_id_info* find_android_id_info(const char* name) {
 // These are a list of the reserved app ranges, and should never contain anything below
 // AID_APP_START.  They exist per user, so a given uid/gid modulo AID_USER_OFFSET will map
 // to these ranges.
-static constexpr struct {
-  uid_t start;
-  uid_t end;
-} user_ranges[] = {
+struct IdRange {
+  id_t start;
+  id_t end;
+};
+
+static constexpr IdRange user_ranges[] = {
+  { AID_APP_START, AID_APP_END },
+  { AID_ISOLATED_START, AID_ISOLATED_END },
+};
+
+static constexpr IdRange group_ranges[] = {
   { AID_APP_START, AID_APP_END },
   { AID_CACHE_GID_START, AID_CACHE_GID_END },
   { AID_EXT_GID_START, AID_EXT_GID_END },
@@ -139,22 +148,40 @@ static constexpr struct {
   { AID_ISOLATED_START, AID_ISOLATED_END },
 };
 
-static constexpr bool verify_user_ranges_ascending() {
-  auto array_size = arraysize(user_ranges);
+template <class T, size_t N>
+static constexpr bool verify_user_ranges_ascending(T (&ranges)[N]) {
+  auto array_size = N;
   if (array_size < 2) return false;
 
-  if (user_ranges[0].start > user_ranges[0].end) return false;
+  if (ranges[0].start > ranges[0].end) return false;
 
   for (size_t i = 1; i < array_size; ++i) {
-    if (user_ranges[i].start > user_ranges[i].end) return false;
-    if (user_ranges[i - 1].end > user_ranges[i].start) return false;
+    if (ranges[i].start > ranges[i].end) return false;
+    if (ranges[i - 1].end > ranges[i].start) return false;
   }
   return true;
 }
 
-static_assert(verify_user_ranges_ascending(), "user_ranges must have ascending ranges");
+static_assert(verify_user_ranges_ascending(user_ranges), "user_ranges must have ascending ranges");
+static_assert(verify_user_ranges_ascending(group_ranges), "user_ranges must have ascending ranges");
 
-static bool is_valid_app_id(id_t id) {
+// This list comes from PackageManagerService.java, where platform AIDs are added to list of valid
+// AIDs for packages via addSharedUserLPw().
+static constexpr const id_t secondary_user_platform_ids[] = {
+  AID_SYSTEM, AID_RADIO,          AID_LOG,           AID_NFC, AID_BLUETOOTH,
+  AID_SHELL,  AID_SECURE_ELEMENT, AID_NETWORK_STACK,
+};
+
+static bool platform_id_secondary_user_allowed(id_t id) {
+  for (const auto& allowed_id : secondary_user_platform_ids) {
+    if (allowed_id == id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static bool is_valid_app_id(id_t id, bool is_group) {
   id_t appid = id % AID_USER_OFFSET;
 
   // AID_OVERFLOWUID is never a valid app id, so we explicitly return false to ensure this.
@@ -163,15 +190,23 @@ static bool is_valid_app_id(id_t id) {
     return false;
   }
 
-  // If we've resolved to something before app_start, we have already checked against
-  // android_ids, so no need to check again.
-  if (appid < user_ranges[0].start) {
+  auto ranges_size = is_group ? arraysize(group_ranges) : arraysize(user_ranges);
+  auto ranges = is_group ? group_ranges : user_ranges;
+
+  // If we're checking an appid that resolves below the user range, then it's a platform AID for a
+  // seconary user. We only allow a reduced set of these, so we must check that it is allowed.
+  if (appid < ranges[0].start && platform_id_secondary_user_allowed(appid)) {
     return true;
   }
 
+  // The shared GID range is only valid for the first user.
+  if (appid >= AID_SHARED_GID_START && appid <= AID_SHARED_GID_END && appid != id) {
+    return false;
+  }
+
   // Otherwise check that the appid is in one of the reserved ranges.
-  for (size_t i = 0; i < arraysize(user_ranges); ++i) {
-    if (appid >= user_ranges[i].start && appid <= user_ranges[i].end) {
+  for (size_t i = 0; i < ranges_size; ++i) {
+    if (appid >= ranges[i].start && appid <= ranges[i].end) {
       return true;
     }
   }
@@ -180,26 +215,29 @@ static bool is_valid_app_id(id_t id) {
 }
 
 // This provides an iterater for app_ids within the first user's app id's.
-static uid_t get_next_app_id(uid_t current_id) {
-  // If current_id is below the first of the user_ranges, then we're uninitialized, and return the
-  // first valid id.
-  if (current_id < user_ranges[0].start) {
-    return user_ranges[0].start;
+static id_t get_next_app_id(id_t current_id, bool is_group) {
+  auto ranges_size = is_group ? arraysize(group_ranges) : arraysize(user_ranges);
+  auto ranges = is_group ? group_ranges : user_ranges;
+
+  // If current_id is below the first of the ranges, then we're uninitialized, and return the first
+  // valid id.
+  if (current_id < ranges[0].start) {
+    return ranges[0].start;
   }
 
-  uid_t incremented_id = current_id + 1;
+  id_t incremented_id = current_id + 1;
 
   // Check to see if our incremented_id is between two ranges, and if so, return the beginning of
   // the next valid range.
-  for (size_t i = 1; i < arraysize(user_ranges); ++i) {
-    if (incremented_id > user_ranges[i - 1].end && incremented_id < user_ranges[i].start) {
-      return user_ranges[i].start;
+  for (size_t i = 1; i < ranges_size; ++i) {
+    if (incremented_id > ranges[i - 1].end && incremented_id < ranges[i].start) {
+      return ranges[i].start;
     }
   }
 
   // Check to see if our incremented_id is above final range, and return -1 to indicate that we've
   // completed if so.
-  if (incremented_id > user_ranges[arraysize(user_ranges) - 1].end) {
+  if (incremented_id > ranges[ranges_size - 1].end) {
     return -1;
   }
 
@@ -209,6 +247,8 @@ static uid_t get_next_app_id(uid_t current_id) {
 
 // Translate a user/group name to the corresponding user/group id.
 // all_a1234 -> 0 * AID_USER_OFFSET + AID_SHARED_GID_START + 1234 (group name only)
+// u0_a1234_ext_cache -> 0 * AID_USER_OFFSET + AID_EXT_CACHE_GID_START + 1234 (group name only)
+// u0_a1234_ext -> 0 * AID_USER_OFFSET + AID_EXT_GID_START + 1234 (group name only)
 // u0_a1234_cache -> 0 * AID_USER_OFFSET + AID_CACHE_GID_START + 1234 (group name only)
 // u0_a1234 -> 0 * AID_USER_OFFSET + AID_APP_START + 1234
 // u2_i1000 -> 2 * AID_USER_OFFSET + AID_ISOLATED_START + 1000
@@ -247,9 +287,19 @@ static id_t app_id_from_name(const char* name, bool is_group) {
     } else {
       // end will point to \0 if the strtoul below succeeds.
       appid = strtoul(end+2, &end, 10);
-      if (is_group && !strcmp(end, "_cache")) {
-        end += 6;
-        appid += AID_CACHE_GID_START;
+      if (is_group) {
+        if (!strcmp(end, "_ext_cache")) {
+          end += 10;
+          appid += AID_EXT_CACHE_GID_START;
+        } else if (!strcmp(end, "_ext")) {
+          end += 4;
+          appid += AID_EXT_GID_START;
+        } else if (!strcmp(end, "_cache")) {
+          end += 6;
+          appid += AID_CACHE_GID_START;
+        } else {
+          appid += AID_APP_START;
+        }
       } else {
         appid += AID_APP_START;
       }
@@ -260,6 +310,10 @@ static id_t app_id_from_name(const char* name, bool is_group) {
   } else if (auto* android_id_info = find_android_id_info(end + 1); android_id_info != nullptr) {
     appid = android_id_info->aid;
     end += strlen(android_id_info->name) + 1;
+    if (!platform_id_secondary_user_allowed(appid)) {
+      errno = ENOENT;
+      return 0;
+    }
   }
 
   // Check that the entire string was consumed by one of the 3 cases above.
@@ -304,6 +358,10 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
     snprintf(buffer, bufferlen, "u%u_i%u", userid, appid - AID_ISOLATED_START);
   } else if (userid == 0 && appid >= AID_SHARED_GID_START && appid <= AID_SHARED_GID_END) {
     snprintf(buffer, bufferlen, "all_a%u", appid - AID_SHARED_GID_START);
+  } else if (appid >= AID_EXT_CACHE_GID_START && appid <= AID_EXT_CACHE_GID_END) {
+    snprintf(buffer, bufferlen, "u%u_a%u_ext_cache", userid, appid - AID_EXT_CACHE_GID_START);
+  } else if (appid >= AID_EXT_GID_START && appid <= AID_EXT_GID_END) {
+    snprintf(buffer, bufferlen, "u%u_a%u_ext", userid, appid - AID_EXT_GID_START);
   } else if (appid >= AID_CACHE_GID_START && appid <= AID_CACHE_GID_END) {
     snprintf(buffer, bufferlen, "u%u_a%u_cache", userid, appid - AID_CACHE_GID_START);
   } else if (appid < AID_APP_START) {
@@ -405,7 +463,7 @@ static group* oem_id_to_group(gid_t gid, group_state_t* state) {
 // AID_USER_OFFSET+                        -> u1_radio, u1_a1234, u2_i1234, etc.
 // returns a passwd structure (sets errno to ENOENT on failure).
 static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
-  if (uid < AID_APP_START || !is_valid_app_id(uid)) {
+  if (uid < AID_APP_START || !is_valid_app_id(uid, false)) {
     errno = ENOENT;
     return nullptr;
   }
@@ -430,7 +488,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
 // Translate a gid into the corresponding app_<gid>
 // group structure (sets errno to ENOENT on failure).
 static group* app_id_to_group(gid_t gid, group_state_t* state) {
-  if (gid < AID_APP_START || !is_valid_app_id(gid)) {
+  if (gid < AID_APP_START || !is_valid_app_id(gid, true)) {
     errno = ENOENT;
     return nullptr;
   }
@@ -575,7 +633,7 @@ passwd* getpwent() {
         state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
   }
 
-  state->getpwent_idx = get_next_app_id(state->getpwent_idx);
+  state->getpwent_idx = get_next_app_id(state->getpwent_idx, false);
 
   if (state->getpwent_idx != -1) {
     return app_id_to_passwd(state->getpwent_idx, state);
@@ -698,7 +756,7 @@ group* getgrent() {
   start = end;
   end += AID_USER_OFFSET - AID_APP_START; // Do not expose higher groups
 
-  state->getgrent_idx = get_next_app_id(state->getgrent_idx);
+  state->getgrent_idx = get_next_app_id(state->getgrent_idx, true);
 
   if (state->getgrent_idx != -1) {
     return app_id_to_group(state->getgrent_idx, state);
