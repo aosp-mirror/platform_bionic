@@ -73,6 +73,8 @@ cc_defaults {
     sanitize: {
         address: false,
         integer_overflow: false,
+        // TODO(b/132640749): Fix broken fuzzer support.
+        fuzzer: false,
     },
     native_coverage: false,
     recovery_available: true,
