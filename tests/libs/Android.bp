@@ -29,7 +29,7 @@ cc_defaults {
     gtest: false,
     sanitize: {
         address: false,
-        coverage: false,
+        fuzzer: false,
     },
     stl: "libc++_static",
     target: {
