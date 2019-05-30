@@ -122,6 +122,24 @@
       "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2943b027_4b24d0be",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-05-30T22:47:48Z",
+      "side": 1,
+      "message": "This needs to allow a 0-sized TLS segment because all Android executables have a TLS segment -- https://android-review.googlesource.com/c/platform/bionic/+/967181.",
+      "parentUuid": "2b7fb034_4b6bfdd2",
+      "revId": "e45e3a4b9b622a91b6deeb072e220d5a0a812a48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
