@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "63ba378c_a8562e85",
+        "filename": "libm/Android.bp",
+        "patchSetId": 11
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1021512
+      },
+      "writtenOn": "2019-05-30T19:52:17Z",
+      "side": 1,
+      "message": "is there a condition that will work on ARMv8.2 also?  I would prefer not to duplicate the full list if possible.  Perhaps something like https://android.googlesource.com/platform/build/soong/+/refs/heads/master/android/arch.go#228",
+      "revId": "594a39527607b5dc88a3192fc2293a639538a207",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "650781ac_e86e1124",
         "filename": "libm/builtins.cpp",
         "patchSetId": 11
