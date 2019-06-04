@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b181c766_536a9192",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1225,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-04T20:21:45Z",
+      "side": 1,
+      "message": "I suspect zero is reserved for the device and inode numbers:\n\n - (maj\u003d0,min\u003d0) is reserved as the null device number. https://www.kernel.org/doc/Documentation/admin-guide/devices.txt\n\n - https://stackoverflow.com/questions/2099121/why-do-inode-numbers-start-from-1-and-not-0\n\nAssuming a successful fstat never produces a 0 device or inode number, then maybe this error path never runs.",
+      "parentUuid": "ea980341_15db9a86",
+      "range": {
+        "startLine": 1225,
+        "startChar": 6,
+        "endLine": 1225,
+        "endChar": 52
+      },
+      "revId": "52995ad2c339a0ba1eb803fb24c789a0993e58d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "210bb91c_3067ec1b",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-04T17:41:21Z",
       "side": 1,
       "message": "I\u0027d suggest checking the inode first. Pick any two files on the system: their inode numbers will usually differ even if they\u0027re on different devices, so in most cases, we can bail out before even getting to the device number check.",
+      "range": {
+        "startLine": 1231,
+        "startChar": 15,
+        "endLine": 1231,
+        "endChar": 25
+      },
+      "revId": "52995ad2c339a0ba1eb803fb24c789a0993e58d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa732e8a_5213383d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-04T20:21:45Z",
+      "side": 1,
+      "message": "Yeah that seems fine to me.",
+      "parentUuid": "210bb91c_3067ec1b",
       "range": {
         "startLine": 1231,
         "startChar": 15,
