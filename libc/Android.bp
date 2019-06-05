@@ -754,6 +754,7 @@ cc_library_static {
 
     arch: {
         arm: {
+            asflags: libc_common_flags + ["-mno-restrict-it"],
             srcs: [
                 "arch-arm/generic/bionic/memcmp.S",
                 "arch-arm/generic/bionic/memmove.S",
