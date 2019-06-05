@@ -93,6 +93,30 @@
       "revId": "52995ad2c339a0ba1eb803fb24c789a0993e58d9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92b27801_214b57a5",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-06-05T04:02:16Z",
+      "side": 1,
+      "message": "Good point. Swapped the two lines.",
+      "parentUuid": "aa732e8a_5213383d",
+      "range": {
+        "startLine": 1231,
+        "startChar": 15,
+        "endLine": 1231,
+        "endChar": 25
+      },
+      "revId": "52995ad2c339a0ba1eb803fb24c789a0993e58d9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
