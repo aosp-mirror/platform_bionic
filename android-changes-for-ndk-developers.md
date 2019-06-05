@@ -66,6 +66,14 @@ the local group. This allows ASAN, for example, to ensure that it can
 intercept any symbol.
 
 
+## LD_PRELOAD and 32/64 bit
+
+LD_PRELOAD applies to both 32- and 64-bit processes. This means that you
+should avoid saying something like `/system/lib/libfoo.so` and just say
+`libfoo.so` instead, letting the dynamic linker find the correct library
+on its search path.
+
+
 ## RTLD_LOCAL (Available in API level >= 23)
 
 The dlopen(3) RTLD_LOCAL flag used to be ignored but is implemented
