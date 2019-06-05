@@ -1717,7 +1717,6 @@ cc_library_headers {
     native_bridge_supported: true,
 
     no_libcrt: true,
-    no_libgcc: true,
     stl: "none",
     system_shared_libs: [],
 
