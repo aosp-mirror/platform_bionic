@@ -690,7 +690,7 @@ LIBC {
     ns_name_ntol; # arm64 x86_64 mips64 introduced=22
     ns_name_ntop; # arm64 x86_64 mips64 introduced=22
     ns_name_pack; # arm64 x86_64 mips64 introduced=22
-    ns_name_pton; # arm64 x86_64 mips64 introduced=23
+    ns_name_pton; # arm64 x86_64 mips64 introduced=22
     ns_name_rollback; # arm64 x86_64 mips64 introduced=22
     ns_name_skip; # arm64 x86_64 mips64 introduced=22
     ns_name_uncompress; # arm64 x86_64 mips64 introduced=22
