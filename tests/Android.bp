@@ -286,6 +286,7 @@ cc_defaults {
         "-Wno-builtin-memcpy-chk-size",
         "-Wno-format-zero-length",
         "-Wno-memset-transposed-args",
+        "-Wno-strlcpy-strlcat-size",
         "-Wno-strncat-size",
     ],
 }

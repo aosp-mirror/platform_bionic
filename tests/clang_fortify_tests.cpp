@@ -177,22 +177,18 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(strcpy(small_buffer, large_string));
     // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(stpcpy(small_buffer, large_string));
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strncpy(small_buffer, large_string, sizeof(large_string)));
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(stpncpy(small_buffer, large_string, sizeof(large_string)));
-#if 0
-    // expected-error@+1{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strcat(small_buffer, large_string));
-#if 0
-    // expected-error@+1{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strncat(small_buffer, large_string, sizeof(large_string)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(strlcpy(small_buffer, large_string, sizeof(large_string)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(strlcat(small_buffer, large_string, sizeof(large_string)));
   }
 
   {
@@ -224,32 +220,34 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH_STRUCT(stpcpy(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{called with bigger length than the destination}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{called with bigger length than the destination}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(stpncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+2{{string bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strcat(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncat(split.tiny_buffer, small_string, sizeof(small_string)));
+
+#if _FORTIFY_SOURCE > 1
+    // expected-error@+2{{size bigger than buffer}}
+#endif
+    EXPECT_FORTIFY_DEATH_STRUCT(strlcat(split.tiny_buffer, small_string, sizeof(small_string)));
+
+#if _FORTIFY_SOURCE > 1
+    // expected-error@+2{{size bigger than buffer}}
+#endif
+    EXPECT_FORTIFY_DEATH_STRUCT(strlcpy(split.tiny_buffer, small_string, sizeof(small_string)));
   }
 }
 
