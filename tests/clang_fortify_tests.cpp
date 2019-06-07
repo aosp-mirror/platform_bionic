@@ -251,55 +251,56 @@ FORTIFY_TEST(string) {
   }
 }
 
+FORTIFY_TEST(fcntl) {
+  const char target[] = "/dev/null";
+  int dirfd = 0;
+
+  // These all emit hard errors without diagnose_if, so running them is a bit
+  // more involved.
+#ifdef COMPILATION_TESTS
+  // expected-error@+1{{too many arguments}}
+  open("/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  open64("/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  openat(0, "/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  openat64(0, "/", 0, 0, 0);
+#endif
+
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open(target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open(target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open64(target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open64(target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat(dirfd, target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat(dirfd, target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat64(dirfd, target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat64(dirfd, target, O_TMPFILE));
+
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(open(target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(open64(target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(openat(dirfd, target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(openat64(dirfd, target, O_RDONLY, 0777));
+}
+
 // Since these emit hard errors, it's sort of hard to run them...
 #ifdef COMPILATION_TESTS
 namespace compilation_tests {
 template <typename T>
 static T declval() {
   __builtin_unreachable();
-}
-
-static void testFcntl() {
-  // expected-error@+1{{too many arguments}}
-  open("/", 0, 0, 0);
-#if 0
-  // expected-error@+1{{either with 2 or 3 arguments, not more}}
-#endif
-  open64("/", 0, 0, 0);
-  // expected-error@+1{{too many arguments}}
-  openat(0, "/", 0, 0, 0);
-#if 0
-  // expected-error@+1{{either with 3 or 4 arguments, not more}}
-#endif
-  openat64(0, "/", 0, 0, 0);
-
-  // expected-error@+1{{missing mode}}
-  open("/", O_CREAT);
-  // expected-error@+1{{missing mode}}
-  open("/", O_TMPFILE);
-#if 0
-  // expected-error@+1{{needs 3 arguments}}
-#endif
-  open64("/", O_CREAT);
-#if 0
-  // expected-error@+1{{needs 3 arguments}}
-#endif
-  open64("/", O_TMPFILE);
-  // expected-error@+1{{missing mode}}
-  openat(0, "/", O_CREAT);
-  // expected-error@+1{{missing mode}}
-  openat(0, "/", O_TMPFILE);
-#if 0
-  // expected-error@+1{{needs 4 arguments}}
-#endif
-  openat64(0, "/", O_CREAT);
-#if 0
-  // expected-error@+1{{needs 4 arguments}}
-#endif
-  openat64(0, "/", O_TMPFILE);
-
-  // Superfluous modes are sometimes bugs, but not often enough to complain
-  // about, apparently.
 }
 
 static void testFormatStrings() {
