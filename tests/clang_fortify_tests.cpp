@@ -591,8 +591,6 @@ FORTIFY_TEST(unistd) {
   EXPECT_FORTIFY_DEATH_STRUCT(getcwd(split.tiny_buffer, sizeof(split)));
 
   {
-    // FIXME: These should all die in FORTIFY. Headers are bugged.
-#ifdef COMPILATION_TESTS
     char* volatile unknown = small_buffer;
     const size_t count = static_cast<size_t>(SSIZE_MAX) + 1;
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
@@ -607,7 +605,6 @@ FORTIFY_TEST(unistd) {
     EXPECT_FORTIFY_DEATH(pwrite(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
     EXPECT_FORTIFY_DEATH(pwrite64(kBogusFD, unknown, count, 0));
-#endif
   }
 }
 
