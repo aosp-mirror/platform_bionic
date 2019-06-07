@@ -391,20 +391,17 @@ static void testFormatStrings() {
 
 static void testStdlib() {
   char path_buffer[PATH_MAX - 1];
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
   realpath("/", path_buffer);
-#if 0
-    // expected-error@+1{{ignoring return value of function}}
-#endif
+  // expected-warning@+1{{ignoring return value of function}}
   realpath("/", nullptr);
 
-  // FIXME: This should complain about flipped arguments, instead of objectsize.
-  // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
+  // expected-warning@+2{{ignoring return value of function}}
+  // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, path_buffer);
 
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, nullptr);
 }
