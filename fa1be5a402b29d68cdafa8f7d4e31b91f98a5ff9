@@ -46,6 +46,47 @@
       "revId": "fa1be5a402b29d68cdafa8f7d4e31b91f98a5ff9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4c533bf_ee846401",
+        "filename": "libdl/libdl_android.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-07T06:12:06Z",
+      "side": 1,
+      "message": "Does \"# apex\" have any effect in this file?\n\nAFAICT, in gen_stub_libs.py, the apex version tag means, \"only output this symbol in an APEX stub solib, not in other kinds of stub solibs\". The only libdl_android stub solib I see is the APEX stub solib.\n\nI noticed that all the symbols have the version tag, except for android_update_LD_LIBRARY_PATH. This matches the tagging the symbols had before they were moved from libdl. The version tag matters for libdl, because libdl has NDK stub libs.\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/930906/",
+      "parentUuid": "311f3ce9_6a9939e4",
+      "range": {
+        "startLine": 27,
+        "startChar": 28,
+        "endLine": 27,
+        "endChar": 34
+      },
+      "revId": "fa1be5a402b29d68cdafa8f7d4e31b91f98a5ff9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f0249f4_cc49062d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-07T06:12:06Z",
+      "side": 1,
+      "message": "I think we want to insert the second executable into the gdb module list? (i.e. Move this one call out of the !g_first_exe_linked block.)\n\nI\u0027d expect gdb to still see the nativezygote binary as the process\u0027 executable, and then the second executable would look like another DSO.\n\nfind_libraries/link_image would add the solib to the module list, but it skips an soinfo when soinfo::is_main_executable() returns true. We could disable the si-\u003eset_main_executable() above, but that would break handling of DT_PREINIT_ARRAY/call_pre_init_constructors.",
+      "revId": "fa1be5a402b29d68cdafa8f7d4e31b91f98a5ff9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

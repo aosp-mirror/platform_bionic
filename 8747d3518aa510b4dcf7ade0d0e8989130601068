@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "33435f57_16a06384",
+        "filename": "linker/arch/x86/exec.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-07T06:12:06Z",
+      "side": 1,
+      "message": "nit: Can we remove these semicolons?",
+      "range": {
+        "startLine": 44,
+        "startChar": 10,
+        "endLine": 44,
+        "endChar": 11
+      },
+      "revId": "8747d3518aa510b4dcf7ade0d0e8989130601068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40185f55_36161a50",
+        "filename": "linker/arch/x86/exec.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-07T06:12:06Z",
+      "side": 1,
+      "message": "The stack pointer needs to be aligned to 16-bytes before the entry point is called. I don\u0027t think this code is doing that?\n\nOn arm32, the stack pointer should be 16-byte aligned.\n\nOn x86-32, I think the stack pointer is 16-byte aligned prior to the call instruction that calls the entry point. If we use a jump, then it would be 12-mod-16 aligned instead.\n\nAlso, I think we want CFI annotations indicating what\u0027s going on with the stack? Maybe something like BIONIC_STOP_UNWIND if we don\u0027t care about unwinding beyond this point. (We probably could unwind if we wanted to, though. Maybe that would be useful?)",
+      "revId": "8747d3518aa510b4dcf7ade0d0e8989130601068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
