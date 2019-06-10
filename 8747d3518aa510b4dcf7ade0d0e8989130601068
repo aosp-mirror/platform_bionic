@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "146c7cb3_aceb0360",
+        "filename": "linker/arch/x86/exec.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-06-10T20:24:19Z",
+      "side": 1,
+      "message": "Done. Also changed all comments to use // instead of #.",
+      "parentUuid": "33435f57_16a06384",
+      "range": {
+        "startLine": 44,
+        "startChar": 10,
+        "endLine": 44,
+        "endChar": 11
+      },
+      "revId": "8747d3518aa510b4dcf7ade0d0e8989130601068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "40185f55_36161a50",
         "filename": "linker/arch/x86/exec.S",
         "patchSetId": 8
@@ -39,6 +63,24 @@
       "revId": "8747d3518aa510b4dcf7ade0d0e8989130601068",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8ea1ca1_e28cfc41",
+        "filename": "linker/arch/x86/exec.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1349653
+      },
+      "writtenOn": "2019-06-10T20:24:19Z",
+      "side": 1,
+      "message": "Done. Thanks for catching this! Also added CFI annotations to stop unwind. Given that there\u0027s only one intended code path leading to this point, unwinding beyond this function is probably not that useful. (Also we kinda destroyed part of the stack above.)",
+      "parentUuid": "40185f55_36161a50",
+      "revId": "8747d3518aa510b4dcf7ade0d0e8989130601068",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
