@@ -165,10 +165,9 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
     EXPECT_NO_DEATH(memset(small_buffer, sizeof(small_buffer), 0));
-    // FIXME: Should these be warnings?
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bcopy(large_buffer, small_buffer, sizeof(large_buffer)));
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bzero(small_buffer, sizeof(large_buffer)));
   }
 
