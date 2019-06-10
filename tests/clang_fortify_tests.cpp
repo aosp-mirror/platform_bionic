@@ -159,11 +159,8 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
-    // FIXME: this should be EXPECT_FORTIFY_DEATH
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
-    EXPECT_NO_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
