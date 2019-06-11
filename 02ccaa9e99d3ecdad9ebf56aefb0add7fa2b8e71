@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2b8eeb9_8afc6dd2",
+        "filename": "linker/arch/arm/exec.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-11T02:52:42Z",
+      "side": 1,
+      "message": "I think this can be a simpler if we align the stack pointer first then copy the words:\n\nENTRY_PRIVATE(push_to_stack_and_jump)\n  // r0 \u003d data, r1 \u003d count, r2 \u003d entry\n\n  // Force unwinds to end in this function.\n  .cfi_undefined r14\n\n  // Reserve space and align the stack pointer to 16.\n  sub sp, sp, r1, lsl #2\n  bic sp, sp, #15\n\n  // Copy the words.\n  b .loop_test\n.loop:\n  sub r1, r1, #1\n  ldr r4, [r0, r1, lsl #2]\n  str r4, [sp, r1, lsl #2]\n.loop_test:\n  cmp r1, #0\n  bne .loop\n\n  bx r2\nEND(push_to_stack_and_jump)",
+      "revId": "02ccaa9e99d3ecdad9ebf56aefb0add7fa2b8e71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4671d4ef_9eaf21a0",
+        "filename": "linker/arch/x86/exec.S",
+        "patchSetId": 9
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-11T02:52:42Z",
+      "side": 1,
+      "message": "Sorry, I was wrong about the 12-mod-16 alignment. ESP at the entry point is always 16-byte aligned:\n\nhttps://github.com/torvalds/linux/blob/9c7db5004280767566e91a33445bf93aa479ef02/fs/binfmt_elf.c#L149\n\nI think this could be simpler. Maybe:\n\nENTRY_PRIVATE(push_to_stack_and_jump)\n  // Force unwinds to end in this function.\n  .cfi_undefined %eip\n\n  pop %eax  // Throw away the return address.\n  pop %esi  // Pointer to data.\n  pop %ecx  // Number of words to push.\n  pop %eax  // Address to jump to.\n\n  shll $2, %ecx   // Number of bytes to push.\n\n  // Reserve space for the entry arguments, then align the stack to 16.\n  subl %ecx, %esp\n  andl $~0xf, %esp\n\n  movl %esp, %edi\n  cld\n  rep movsb\n\n  jmp *%eax\nEND(push_to_stack_and_jump)\n\nIt\u0027s more apparent that the resulting ESP will be 16-byte aligned, because there\u0027s just one instruction responsible for alignment.",
+      "revId": "02ccaa9e99d3ecdad9ebf56aefb0add7fa2b8e71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
