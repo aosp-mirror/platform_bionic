@@ -1222,12 +1222,14 @@ static bool find_loaded_library_by_inode(android_namespace_t* ns,
                                          off64_t file_offset,
                                          bool search_linked_namespaces,
                                          soinfo** candidate) {
+  if (file_stat.st_dev == 0 || file_stat.st_ino == 0) {
+    *candidate = nullptr;
+    return false;
+  }
 
   auto predicate = [&](soinfo* si) {
-    return si->get_st_dev() != 0 &&
-           si->get_st_ino() != 0 &&
+    return si->get_st_ino() == file_stat.st_ino &&
            si->get_st_dev() == file_stat.st_dev &&
-           si->get_st_ino() == file_stat.st_ino &&
            si->get_file_offset() == file_offset;
   };
 
