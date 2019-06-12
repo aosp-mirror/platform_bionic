@@ -550,6 +550,16 @@ void soinfo::set_nodelete() {
   rtld_flags_ |= RTLD_NODELETE;
 }
 
+void soinfo::set_realpath(const char* path) {
+#if defined(__work_around_b_24465209__)
+  if (has_min_version(2)) {
+    realpath_ = path;
+  }
+#else
+  realpath_ = path;
+#endif
+}
+
 const char* soinfo::get_realpath() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
