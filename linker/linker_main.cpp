@@ -176,11 +176,12 @@ static void add_vdso() {
 }
 
 // Initializes an soinfo's link_map_head field using other fields from the
-// soinfo (phdr, phnum, load_bias).
-static void init_link_map_head(soinfo& info, const char* linker_path) {
+// soinfo (phdr, phnum, load_bias). The soinfo's realpath must not change after
+// this function is called.
+static void init_link_map_head(soinfo& info) {
   auto& map = info.link_map_head;
   map.l_addr = info.load_bias;
-  map.l_name = const_cast<char*>(linker_path);
+  map.l_name = const_cast<char*>(info.get_realpath());
   phdr_table_get_dynamic_section(info.phdr, info.phnum, info.load_bias, &map.l_ld, nullptr);
 }
 
@@ -232,9 +233,9 @@ static ExecutableInfo get_executable_info() {
 }
 
 #if defined(__LP64__)
-static char kLinkerPath[] = "/system/bin/linker64";
+static char kFallbackLinkerPath[] = "/system/bin/linker64";
 #else
-static char kLinkerPath[] = "/system/bin/linker";
+static char kFallbackLinkerPath[] = "/system/bin/linker";
 #endif
 
 __printflike(1, 2)
@@ -350,15 +351,11 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
                                                 get_executable_info();
 
-  // Assign to a static variable for the sake of the debug map, which needs
-  // a C-style string to last until the program exits.
-  static std::string exe_path = exe_info.path;
-
-  INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
+  INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
 
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
-                            exe_path.c_str(), &exe_info.file_stat,
+                            exe_info.path.c_str(), &exe_info.file_stat,
                             0, RTLD_GLOBAL);
   somain = si;
   si->phdr = exe_info.phdr;
@@ -367,7 +364,25 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->dynamic = nullptr;
   si->set_main_executable();
-  init_link_map_head(*si, exe_path.c_str());
+  init_link_map_head(*si);
+
+  // Use the executable's PT_INTERP string as the solinker filename in the
+  // dynamic linker's module list. gdb reads both PT_INTERP and the module list,
+  // and if the paths for the linker are different, gdb will report that the
+  // PT_INTERP linker path was unloaded once the module list is initialized.
+  // There are three situations to handle:
+  //  - the APEX linker (/system/bin/linker[64] -> /apex/.../linker[64])
+  //  - the ASAN linker (/system/bin/linker_asan[64] -> /apex/.../linker[64])
+  //  - the bootstrap linker (/system/bin/bootstrap/linker[64])
+  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
+                                                       somain->load_bias);
+  if (interp == nullptr) {
+    // This case can happen if the linker attempts to execute itself
+    // (e.g. "linker64 /system/bin/linker64").
+    interp = kFallbackLinkerPath;
+  }
+  solinker->set_realpath(interp);
+  init_link_map_head(*solinker);
 
   // Register the main executable and the linker upfront to have
   // gdb aware of them before loading the rest of the dependency
@@ -405,7 +420,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
 
-  std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_path.c_str());
+  std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_info.path.c_str());
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
@@ -695,9 +710,8 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = solinker = get_libdl_info(kLinkerPath, tmp_linker_so);
+  sonext = solist = solinker = get_libdl_info(tmp_linker_so);
   g_default_namespace.add_soinfo(solinker);
-  init_link_map_head(*solinker, kLinkerPath);
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
 
