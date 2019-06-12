@@ -308,11 +308,11 @@ static uint8_t __libdl_info_buf[sizeof(soinfo)] __attribute__((aligned(8)));
 static soinfo* __libdl_info = nullptr;
 
 // This is used by the dynamic linker. Every process gets these symbols for free.
-soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si) {
+soinfo* get_libdl_info(const soinfo& linker_si) {
   CHECK((linker_si.flags_ & FLAG_GNU_HASH) != 0);
 
   if (__libdl_info == nullptr) {
-    __libdl_info = new (__libdl_info_buf) soinfo(&g_default_namespace, linker_path, nullptr, 0, 0);
+    __libdl_info = new (__libdl_info_buf) soinfo(&g_default_namespace, nullptr, nullptr, 0, 0);
     __libdl_info->flags_ |= (FLAG_LINKED | FLAG_GNU_HASH);
     __libdl_info->strtab_ = linker_si.strtab_;
     __libdl_info->symtab_ = linker_si.symtab_;
