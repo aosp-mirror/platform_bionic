@@ -278,6 +278,7 @@ struct soinfo {
 
   void set_soname(const char* soname);
   const char* get_soname() const;
+  void set_realpath(const char* path);
   const char* get_realpath() const;
   const ElfW(Versym)* get_versym(size_t n) const;
   ElfW(Addr) get_verneed_ptr() const;
@@ -372,7 +373,7 @@ struct soinfo {
   android_namespace_list_t secondary_namespaces_;
   uintptr_t handle_;
 
-  friend soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si);
+  friend soinfo* get_libdl_info(const soinfo& linker_si);
 
   // version >= 4
   ElfW(Relr)* relr_;
