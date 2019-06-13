@@ -307,7 +307,7 @@ static void testFcntl() {
 static void testFormatStrings() {
   const auto unsigned_value = declval<unsigned long long>();
   const auto* unknown_string = declval<const char*>();
-  const auto va = declval<va_list>();
+  const auto va = *declval<va_list*>();
 
   {
     auto some_fd = declval<int>();
