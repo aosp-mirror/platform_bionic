@@ -271,6 +271,7 @@ cc_library_static {
                 "upstream-freebsd/lib/libc/string/wcscat.c",
                 "upstream-freebsd/lib/libc/string/wcscpy.c",
                 "upstream-freebsd/lib/libc/string/wmemcmp.c",
+                "upstream-freebsd/lib/libc/string/wmemset.c",
             ],
         },
     },
@@ -899,6 +900,7 @@ cc_library_static {
                 "arch-x86/generic/string/wcscat.c",
                 "arch-x86/generic/string/wcscpy.c",
                 "arch-x86/generic/string/wmemcmp.c",
+                "arch-x86/generic/string/wmemset.c",
 
                 "arch-x86/atom/string/sse2-memchr-atom.S",
                 "arch-x86/atom/string/sse2-memrchr-atom.S",
@@ -947,6 +949,9 @@ cc_library_static {
                 "arch-x86/atom/string/ssse3-strcpy-atom.S",
                 "arch-x86/atom/string/ssse3-strncpy-atom.S",
                 "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
+
+                // avx2 functions
+                "arch-x86/kabylake/string/avx2-wmemset-kbl.S",
             ],
 
             exclude_srcs: [
@@ -969,6 +974,7 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
+                "arch-x86_64/string/avx2-wmemset-kbl.S",
 
                 "arch-x86_64/bionic/__bionic_clone.S",
                 "arch-x86_64/bionic/_exit_with_stack_teardown.S",
