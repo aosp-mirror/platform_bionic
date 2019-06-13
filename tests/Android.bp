@@ -281,6 +281,16 @@ cc_test_library {
 // -----------------------------------------------------------------------------
 
 cc_defaults {
+    name: "bionic_clang_fortify_tests_w_flags",
+    cflags: [
+        "-Wno-builtin-memcpy-chk-size",
+        "-Wno-format-zero-length",
+        "-Wno-memset-transposed-args",
+        "-Wno-strncat-size",
+    ],
+}
+
+cc_defaults {
     name: "bionic_fortify_tests_defaults",
     cflags: [
         "-U_FORTIFY_SOURCE",
@@ -299,6 +309,9 @@ cc_defaults {
 // unused.
 cc_test_library {
     name: "fortify_disabled_for_asan",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+    ],
     cflags: [
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
@@ -306,11 +319,10 @@ cc_test_library {
         // enabled. Since the intent is just to build this, we can get away with
         // passing this flag on its own.
         "-fsanitize=address",
-        "-Wno-memset-transposed-args",
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
-    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
+    srcs: ["clang_fortify_tests.cpp"],
 }
 
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
@@ -319,13 +331,15 @@ cc_test_library {
 // enabled. The library that results from building this is meant to be unused.
 cc_test_library {
     name: "fortify_disabled_for_tidy",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+    ],
     cflags: [
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
         "-D__clang_analyzer__",
-        "-Wno-memset-transposed-args",
     ],
-    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
+    srcs: ["clang_fortify_tests.cpp"],
 }
 
 cc_test_library {
@@ -358,6 +372,53 @@ cc_test_library {
     },
 }
 
+cc_defaults {
+    name: "bionic_new_fortify_tests_defaults",
+    defaults: [
+        "bionic_clang_fortify_tests_w_flags",
+    ],
+    cflags: [
+        "-U_FORTIFY_SOURCE",
+    ],
+    srcs: ["clang_fortify_tests.cpp"],
+    target: {
+        host: {
+            clang_cflags: ["-D__clang__"],
+        },
+    },
+}
+
+cc_test_library {
+    name: "libfortify1-new-tests-clang",
+    defaults: [
+        "bionic_new_fortify_tests_defaults",
+        "bionic_tests_defaults",
+    ],
+    cflags: [
+        "-D_FORTIFY_SOURCE=1",
+        "-DTEST_NAME=Fortify1_clang_new",
+    ],
+    shared: {
+        enabled: false,
+    },
+}
+
+cc_test_library {
+    name: "libfortify2-new-tests-clang",
+    defaults: [
+        "bionic_new_fortify_tests_defaults",
+        "bionic_tests_defaults",
+    ],
+    cflags: [
+        "-D_FORTIFY_SOURCE=2",
+        "-DTEST_NAME=Fortify2_clang_new",
+    ],
+    shared: {
+        enabled: false,
+    },
+}
+
+
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -368,7 +429,9 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libfortify1-tests-clang",
+        "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
+        "libfortify2-new-tests-clang",
     ],
     shared: {
         enabled: false,
