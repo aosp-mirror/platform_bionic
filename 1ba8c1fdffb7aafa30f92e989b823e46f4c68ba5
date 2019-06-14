@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26352bfd_845f8575",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-14T04:12:04Z",
+      "side": 1,
+      "message": "yeah, we try to avoid unnecessary transitive includes. it\u0027s traditional. if/when we get modules i assume we\u0027ll stop caring. i will admit to being somewhat tempted to stop caring, but i worry about folks complaining about the namespace pollution until then.\n\ni wonder what danalbert thinks? he\u0027s the most likely person to hear complaints...",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "1ba8c1fdffb7aafa30f92e989b823e46f4c68ba5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
