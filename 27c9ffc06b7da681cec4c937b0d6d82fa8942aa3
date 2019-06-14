@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "797cf1d0_feb81a84",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-14T22:43:31Z",
+      "side": 1,
+      "message": "I feel like giving it a reasonable default on error wouldn\u0027t be too bad: we could just make it \"CHECK FOR ERRORS CHECK FOR ERRORS CHECK FOR ERRORS [...]\" and call it \u0027unspecified contents\u0027 :)\n\n+1 to forcing people regardless of whether the default is well-defined though.",
+      "parentUuid": "1fa54d7a_36202161",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 59
+      },
+      "revId": "27c9ffc06b7da681cec4c937b0d6d82fa8942aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "900b45bf_777f7d26",
         "filename": "libc/include/stdlib.h",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-14T03:27:46Z",
       "side": 1,
       "message": "(does this attribute have to go at the start, or can we put it at the end with the others?)",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "27c9ffc06b7da681cec4c937b0d6d82fa8942aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bfdd238_d42b2e21",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-14T22:43:31Z",
+      "side": 1,
+      "message": "we get gcc-compat warnings if we put it at the end IIRC",
+      "parentUuid": "900b45bf_777f7d26",
       "range": {
         "startLine": 93,
         "startChar": 0,
