@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1fa54d7a_36202161",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-14T03:27:46Z",
+      "side": 1,
+      "message": "/me wonders if we should fix that too... though is making it the empty string on failure actually an improvement? perhaps not. forcing folks to check for errors probably is the best.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 59
+      },
+      "revId": "27c9ffc06b7da681cec4c937b0d6d82fa8942aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "900b45bf_777f7d26",
+        "filename": "libc/include/stdlib.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-14T03:27:46Z",
+      "side": 1,
+      "message": "(does this attribute have to go at the start, or can we put it at the end with the others?)",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "27c9ffc06b7da681cec4c937b0d6d82fa8942aa3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
