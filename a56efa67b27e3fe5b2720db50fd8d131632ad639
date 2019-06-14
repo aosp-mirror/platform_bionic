@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dd1b04ec_f6ca391b",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-14T22:45:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dafcf01_6a0eec47",
+      "revId": "a56efa67b27e3fe5b2720db50fd8d131632ad639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "843d1c77_0f49b32a",
         "filename": "libc/libc.map.txt",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "a56efa67b27e3fe5b2720db50fd8d131632ad639",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d17fe33_10d48ca7",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-14T22:45:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "843d1c77_0f49b32a",
+      "revId": "a56efa67b27e3fe5b2720db50fd8d131632ad639",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
