@@ -22,6 +22,30 @@
       "revId": "1ba8c1fdffb7aafa30f92e989b823e46f4c68ba5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "046022cc_f38185b9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-06-14T06:37:37Z",
+      "side": 1,
+      "message": "if it\u0027s an issue at all, i\u0027m happy to turn these into `static inline` wrappers around __builtin_{memcpy,memmove}, which would let us establish an actual FORTIFY\u0027ed strings.h header. the FORTIFY\u0027ed header is going to be like 20LOC of copy-paste with tiny tweaks, so it\u0027s really no trouble if there\u0027s a material downside.\n\nwill wait to hear danalbert\u0027s thoughts",
+      "parentUuid": "26352bfd_845f8575",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "1ba8c1fdffb7aafa30f92e989b823e46f4c68ba5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
