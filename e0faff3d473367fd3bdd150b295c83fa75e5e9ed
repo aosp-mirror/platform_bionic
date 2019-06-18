@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8b32404_d564afb7",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2019-06-18T09:55:47Z",
+      "side": 1,
+      "message": "Alphabetical order?",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 91
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "268ca218_78b12e31",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2019-06-18T09:55:47Z",
+      "side": 1,
+      "message": "Should these all be __socketcall? Should none of them be? If none, then should we delete the __socketcall define above?",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98683dc6_0d85b2cc",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1000835
+      },
+      "writtenOn": "2019-06-18T09:55:47Z",
+      "side": 1,
+      "message": "Why the triple underscore? Is this something that already exists in bionic?",
+      "range": {
+        "startLine": 29,
+        "startChar": 15,
+        "endLine": 29,
+        "endChar": 24
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
