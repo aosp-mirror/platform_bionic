@@ -70,6 +70,7 @@ int __open_2(const char* pathname, int flags) {
   if (needs_mode(flags)) __fortify_fatal("open: called with O_CREAT/O_TMPFILE but no mode");
   return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0);
 }
+__strong_alias(__open64_2, __open_2);
 
 int openat(int fd, const char *pathname, int flags, ...) {
   mode_t mode = 0;
@@ -89,3 +90,4 @@ int __openat_2(int fd, const char* pathname, int flags) {
   if (needs_mode(flags)) __fortify_fatal("open: called with O_CREAT/O_TMPFILE but no mode");
   return __openat(fd, pathname, force_O_LARGEFILE(flags), 0);
 }
+__strong_alias(__openat64_2, __openat_2);
