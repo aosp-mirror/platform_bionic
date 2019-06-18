@@ -55,6 +55,10 @@ int fork() {
     // fork, close all of their fds blindly, and then exec.
     android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
 
+    // Reset the stack_and_tls VMA name so it doesn't end with a tid from the
+    // parent process.
+    __set_stack_and_tls_vma_name(true);
+
     __bionic_atfork_run_child();
   } else {
     __bionic_atfork_run_parent();
