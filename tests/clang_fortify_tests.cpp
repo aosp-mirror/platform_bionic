@@ -177,22 +177,18 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(strcpy(small_buffer, large_string));
     // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(stpcpy(small_buffer, large_string));
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strncpy(small_buffer, large_string, sizeof(large_string)));
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(stpncpy(small_buffer, large_string, sizeof(large_string)));
-#if 0
-    // expected-error@+1{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strcat(small_buffer, large_string));
-#if 0
-    // expected-error@+1{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strncat(small_buffer, large_string, sizeof(large_string)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(strlcpy(small_buffer, large_string, sizeof(large_string)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(strlcat(small_buffer, large_string, sizeof(large_string)));
   }
 
   {
@@ -224,33 +220,79 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH_STRUCT(stpcpy(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{called with bigger length than the destination}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{called with bigger length than the destination}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(stpncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+2{{string bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strcat(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-#if 0
-    // expected-error@+2{{destination buffer will always be overflown}}
-#endif
+    // expected-error@+2{{size bigger than buffer}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncat(split.tiny_buffer, small_string, sizeof(small_string)));
+
+#if _FORTIFY_SOURCE > 1
+    // expected-error@+2{{size bigger than buffer}}
+#endif
+    EXPECT_FORTIFY_DEATH_STRUCT(strlcat(split.tiny_buffer, small_string, sizeof(small_string)));
+
+#if _FORTIFY_SOURCE > 1
+    // expected-error@+2{{size bigger than buffer}}
+#endif
+    EXPECT_FORTIFY_DEATH_STRUCT(strlcpy(split.tiny_buffer, small_string, sizeof(small_string)));
   }
+}
+
+FORTIFY_TEST(fcntl) {
+  const char target[] = "/dev/null";
+  int dirfd = 0;
+
+  // These all emit hard errors without diagnose_if, so running them is a bit
+  // more involved.
+#ifdef COMPILATION_TESTS
+  // expected-error@+1{{too many arguments}}
+  open("/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  open64("/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  openat(0, "/", 0, 0, 0);
+  // expected-error@+1{{too many arguments}}
+  openat64(0, "/", 0, 0, 0);
+#endif
+
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open(target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open(target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open64(target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(open64(target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat(dirfd, target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat(dirfd, target, O_TMPFILE));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat64(dirfd, target, O_CREAT));
+  // expected-error@+1{{missing mode}}
+  EXPECT_FORTIFY_DEATH(openat64(dirfd, target, O_TMPFILE));
+
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(open(target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(open64(target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(openat(dirfd, target, O_RDONLY, 0777));
+  // expected-warning@+1{{superfluous mode bits}}
+  EXPECT_NO_DEATH(openat64(dirfd, target, O_RDONLY, 0777));
 }
 
 // Since these emit hard errors, it's sort of hard to run them...
@@ -259,49 +301,6 @@ namespace compilation_tests {
 template <typename T>
 static T declval() {
   __builtin_unreachable();
-}
-
-static void testFcntl() {
-  // expected-error@+1{{too many arguments}}
-  open("/", 0, 0, 0);
-#if 0
-  // expected-error@+1{{either with 2 or 3 arguments, not more}}
-#endif
-  open64("/", 0, 0, 0);
-  // expected-error@+1{{too many arguments}}
-  openat(0, "/", 0, 0, 0);
-#if 0
-  // expected-error@+1{{either with 3 or 4 arguments, not more}}
-#endif
-  openat64(0, "/", 0, 0, 0);
-
-  // expected-error@+1{{missing mode}}
-  open("/", O_CREAT);
-  // expected-error@+1{{missing mode}}
-  open("/", O_TMPFILE);
-#if 0
-  // expected-error@+1{{needs 3 arguments}}
-#endif
-  open64("/", O_CREAT);
-#if 0
-  // expected-error@+1{{needs 3 arguments}}
-#endif
-  open64("/", O_TMPFILE);
-  // expected-error@+1{{missing mode}}
-  openat(0, "/", O_CREAT);
-  // expected-error@+1{{missing mode}}
-  openat(0, "/", O_TMPFILE);
-#if 0
-  // expected-error@+1{{needs 4 arguments}}
-#endif
-  openat64(0, "/", O_CREAT);
-#if 0
-  // expected-error@+1{{needs 4 arguments}}
-#endif
-  openat64(0, "/", O_TMPFILE);
-
-  // Superfluous modes are sometimes bugs, but not often enough to complain
-  // about, apparently.
 }
 
 static void testFormatStrings() {
