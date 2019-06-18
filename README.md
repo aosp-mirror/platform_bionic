@@ -169,8 +169,7 @@ Adding a system call usually involves:
      relevant file or files.
   3. Add function declarations to the appropriate header file. Don't forget
      to include the appropriate `__INTRODUCED_IN()`.
-  4. Add the function name to the correct section in libc/libc.map.txt and
-     run `./libc/tools/genversion-scripts.py`.
+  4. Add the function name to the correct section in libc/libc.map.txt.
   5. Add at least basic tests. Even a test that deliberately supplies
      an invalid argument helps check that we're generating the right symbol
      and have the right declaration in the header file, and that you correctly
