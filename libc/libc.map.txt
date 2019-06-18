@@ -1482,6 +1482,8 @@ LIBC_Q { # introduced=Q
 
 LIBC_R { # introduced=R
   global:
+    __open64_2;
+    __openat64_2;
     call_once;
     cnd_broadcast;
     cnd_destroy;
