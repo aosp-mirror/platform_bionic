@@ -30,7 +30,7 @@
 #include <unistd.h>
 #include <errno.h>
 
-extern "C" int ___faccessat(int, const char*, int);
+extern "C" int __faccessat(int, const char*, int);
 
 int faccessat(int dirfd, const char* pathname, int mode, int flags) {
   // "The mode specifies the accessibility check(s) to be performed,
@@ -56,5 +56,5 @@ int faccessat(int dirfd, const char* pathname, int mode, int flags) {
     return -1;
   }
 
-  return ___faccessat(dirfd, pathname, mode);
+  return __faccessat(dirfd, pathname, mode);
 }
