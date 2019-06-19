@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cbb580e6_389f0203",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-19T19:37:38Z",
+      "side": 1,
+      "message": "out-analed on my own CL! i\u0027d been so careful everywhere else :-)\n\ndone.",
+      "parentUuid": "d8b32404_d564afb7",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 91
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "268ca218_78b12e31",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9daa3ad4_0a3fcb99",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-19T19:37:38Z",
+      "side": 1,
+      "message": "i think they should all be. good catch. fixed.",
+      "parentUuid": "268ca218_78b12e31",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 23
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98683dc6_0d85b2cc",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2019-06-18T09:55:47Z",
       "side": 1,
       "message": "Why the triple underscore? Is this something that already exists in bionic?",
+      "range": {
+        "startLine": 29,
+        "startChar": 15,
+        "endLine": 29,
+        "endChar": 24
+      },
+      "revId": "e0faff3d473367fd3bdd150b295c83fa75e5e9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48c4e2e6_7e5d0d34",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-19T19:37:38Z",
+      "side": 1,
+      "message": "yeah, it was a response to the fact that __ symbols weren\u0027t actually private, they were more of a \"polite notice\". we added ___ to be \"this is actually private, so you can\u0027t touch it even if you want to\".\n\nbut then we added the map, so this is obsolete now. i\u0027ll swap this change to __ since it\u0027s going to need another round of treehugging anyway, and i\u0027ll follow up with a patch to remove all the ___ stuff.",
+      "parentUuid": "98683dc6_0d85b2cc",
       "range": {
         "startLine": 29,
         "startChar": 15,
