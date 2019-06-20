@@ -57,8 +57,6 @@
 #include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
 
-extern "C" int ___close(int fd);
-
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 

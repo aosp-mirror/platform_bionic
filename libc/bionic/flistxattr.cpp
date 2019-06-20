@@ -35,11 +35,11 @@
 
 #include "private/FdPath.h"
 
-extern "C" ssize_t ___flistxattr(int, char*, size_t);
+extern "C" ssize_t __flistxattr(int, char*, size_t);
 
 ssize_t flistxattr(int fd, char *list, size_t size) {
   int saved_errno = errno;
-  ssize_t result = ___flistxattr(fd, list, size);
+  ssize_t result = __flistxattr(fd, list, size);
   if (result != -1 || errno != EBADF) {
     return result;
   }
