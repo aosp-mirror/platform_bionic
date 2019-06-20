@@ -30,11 +30,11 @@
 
 #include "private/ErrnoRestorer.h"
 
-extern "C" int ___clock_nanosleep(clockid_t, int, const timespec*, timespec*);
+extern "C" int __clock_nanosleep(clockid_t, int, const timespec*, timespec*);
 
 int clock_nanosleep(clockid_t clock_id, int flags, const timespec* in, timespec* out) {
   if (clock_id == CLOCK_THREAD_CPUTIME_ID) return EINVAL;
 
   ErrnoRestorer errno_restorer;
-  return (___clock_nanosleep(clock_id, flags, in, out) == 0) ? 0 : errno;
+  return (__clock_nanosleep(clock_id, flags, in, out) == 0) ? 0 : errno;
 }

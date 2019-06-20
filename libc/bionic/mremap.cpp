@@ -34,7 +34,7 @@
 
 #include "private/bionic_macros.h"
 
-extern "C" void* ___mremap(void*, size_t, size_t, int, void*);
+extern "C" void* __mremap(void*, size_t, size_t, int, void*);
 
 void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...) {
   // prevent allocations large enough for `end - start` to overflow
@@ -53,5 +53,5 @@ void* mremap(void* old_address, size_t old_size, size_t new_size, int flags, ...
     new_address = va_arg(ap, void*);
     va_end(ap);
   }
-  return ___mremap(old_address, old_size, new_size, flags, new_address);
+  return __mremap(old_address, old_size, new_size, flags, new_address);
 }
