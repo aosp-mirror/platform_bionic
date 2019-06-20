@@ -284,6 +284,7 @@ cc_defaults {
     name: "bionic_clang_fortify_tests_w_flags",
     cflags: [
         "-Wno-builtin-memcpy-chk-size",
+        "-Wno-format-security",
         "-Wno-format-zero-length",
         "-Wno-memset-transposed-args",
         "-Wno-strlcpy-strlcat-size",
