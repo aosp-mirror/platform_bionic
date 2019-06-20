@@ -312,32 +312,48 @@ TEST(malloc, realloc_overflow) {
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t);
 extern "C" void* valloc(size_t);
+#endif
 
 TEST(malloc, pvalloc_std) {
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   ASSERT_LE(pagesize, malloc_usable_size(ptr));
   free(ptr);
+#else
+  GTEST_SKIP() << "pvalloc not supported.";
+#endif
 }
 
 TEST(malloc, pvalloc_overflow) {
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   ASSERT_EQ(nullptr, pvalloc(SIZE_MAX));
+#else
+  GTEST_SKIP() << "pvalloc not supported.";
+#endif
 }
 
 TEST(malloc, valloc_std) {
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = valloc(100);
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   free(ptr);
+#else
+  GTEST_SKIP() << "valloc not supported.";
+#endif
 }
 
 TEST(malloc, valloc_overflow) {
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   ASSERT_EQ(nullptr, valloc(SIZE_MAX));
-}
+#else
+  GTEST_SKIP() << "valloc not supported.";
 #endif
+}
 
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
