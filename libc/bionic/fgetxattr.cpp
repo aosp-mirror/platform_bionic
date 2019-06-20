@@ -35,11 +35,11 @@
 
 #include "private/FdPath.h"
 
-extern "C" ssize_t ___fgetxattr(int, const char*, void*, size_t);
+extern "C" ssize_t __fgetxattr(int, const char*, void*, size_t);
 
 ssize_t fgetxattr(int fd, const char *name, void *value, size_t size) {
   int saved_errno = errno;
-  ssize_t result = ___fgetxattr(fd, name, value, size);
+  ssize_t result = __fgetxattr(fd, name, value, size);
 
   if (result != -1 || errno != EBADF) {
     return result;
