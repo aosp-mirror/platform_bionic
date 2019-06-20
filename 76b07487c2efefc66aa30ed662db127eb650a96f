@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "474951d9_193d8896",
+        "filename": "libc/bionic/ndk_cruft.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T19:10:07Z",
+      "side": 1,
+      "message": "this is already in \u003csys/cdefs.h\u003e, no?",
+      "revId": "76b07487c2efefc66aa30ed662db127eb650a96f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
