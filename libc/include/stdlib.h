@@ -90,7 +90,7 @@ int atoi(const char* __s) __attribute_pure__;
 long atol(const char* __s) __attribute_pure__;
 long long atoll(const char* __s) __attribute_pure__;
 
-char* realpath(const char* __path, char* __resolved);
+__wur char* realpath(const char* __path, char* __resolved);
 int system(const char* __command);
 
 void* bsearch(const void* __key, const void* __base, size_t __nmemb, size_t __size, int (*__comparator)(const void* __lhs, const void* __rhs));
