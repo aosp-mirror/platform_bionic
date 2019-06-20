@@ -55,6 +55,12 @@
 #define __clang_error_if(...)
 #undef __clang_warning_if
 #define __clang_warning_if(...)
+
+// SOMETIMES_CONST allows clang to emit eager diagnostics when we're doing compilation tests, but
+// blocks them otherwise. This is needed for diagnostics emitted with __enable_if.
+#define SOMETIMES_CONST volatile
+#else
+#define SOMETIMES_CONST const
 #endif
 
 #include <err.h>
@@ -391,20 +397,17 @@ static void testFormatStrings() {
 
 static void testStdlib() {
   char path_buffer[PATH_MAX - 1];
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
   realpath("/", path_buffer);
-#if 0
-    // expected-error@+1{{ignoring return value of function}}
-#endif
+  // expected-warning@+1{{ignoring return value of function}}
   realpath("/", nullptr);
 
-  // FIXME: This should complain about flipped arguments, instead of objectsize.
-  // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
+  // expected-warning@+2{{ignoring return value of function}}
+  // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, path_buffer);
 
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, nullptr);
 }
@@ -487,17 +490,18 @@ FORTIFY_TEST(sys_stat) {
 FORTIFY_TEST(stdio) {
   char small_buffer[8] = {};
   {
-#if 0
-    // expected-error@+1{{may overflow the destination buffer}}
-#endif
+    // expected-error@+1{{size is larger than the destination buffer}}
     EXPECT_FORTIFY_DEATH(snprintf(small_buffer, sizeof(small_buffer) + 1, ""));
 
     va_list va;
-#if 0
-    // expected-error@+1{{may overflow the destination buffer}}
-#endif
+    // expected-error@+2{{size is larger than the destination buffer}}
     // expected-warning@+1{{format string is empty}}
     EXPECT_FORTIFY_DEATH(vsnprintf(small_buffer, sizeof(small_buffer) + 1, "", va));
+
+    const char *SOMETIMES_CONST format_string = "aaaaaaaaa";
+
+    // expected-error@+1{{format string will always overflow}}
+    EXPECT_FORTIFY_DEATH(sprintf(small_buffer, format_string));
   }
 
   // expected-error@+1{{size should not be negative}}
