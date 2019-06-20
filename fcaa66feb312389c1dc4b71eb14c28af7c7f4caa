@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ff5c1513_7e546355",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2019-06-20T06:01:34Z",
+      "side": 1,
+      "message": "nit:should it be nullptr?",
+      "range": {
+        "startLine": 49,
+        "startChar": 18,
+        "endLine": 49,
+        "endChar": 22
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "569ae53f_fc157621",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 3
