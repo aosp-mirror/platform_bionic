@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "054fefbe_d3ac5685",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T15:28:49Z",
+      "side": 1,
+      "message": "done, and L34, since i need to treehugger again anyway...",
+      "parentUuid": "ff5c1513_7e546355",
+      "range": {
+        "startLine": 49,
+        "startChar": 18,
+        "endLine": 49,
+        "endChar": 22
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "569ae53f_fc157621",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2019-06-20T03:49:30Z",
       "side": 1,
       "message": "Nit: alphabetical order here, in the order of the functions below, and in the cpp file? :-P",
+      "range": {
+        "startLine": 29,
+        "startChar": 28,
+        "endLine": 29,
+        "endChar": 36
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25879e65_0d66a8cb",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T15:28:49Z",
+      "side": 1,
+      "message": "wait, i got them _all_ wrong? someone should have taken my keyboard away from me that day.\n\ndone.",
+      "parentUuid": "569ae53f_fc157621",
       "range": {
         "startLine": 29,
         "startChar": 28,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "30915923_e4027ef8",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T15:28:49Z",
+      "side": 1,
+      "message": "me neither. it seems to have been like that since the beginning, with no obvious explanation.\n\ni\u0027ll remove it in a separate CL and see what breaks...\n\n(there\u0027s a lot i don\u0027t like about this stuff.)",
+      "parentUuid": "4e1a9fa4_3c2317b5",
+      "range": {
+        "startLine": 44,
+        "startChar": 56,
+        "endLine": 44,
+        "endChar": 84
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0538359_d6fd333c",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 3
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "d1ecce51_00ff2b25",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T15:28:49Z",
+      "side": 1,
+      "message": "no. that\u0027s why there\u0027s the weirdness where we dlsym the functions to initialize these function pointers. it future-proofs us for this.\n\n(though i wish the assignments were _here_. it\u0027s bizarre that we hand the addresses of these function pointers to libnetd_client, but probably too late to change that now if Samsung are already using it.)",
+      "parentUuid": "b0538359_d6fd333c",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 14
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb6cf0e5_aab94629",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 3
@@ -105,6 +201,30 @@
       "writtenOn": "2019-06-20T03:49:30Z",
       "side": 1,
       "message": "Nit: is there a line length limit in this file?",
+      "range": {
+        "startLine": 63,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 122
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c76b764f_166d73be",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-06-20T15:28:49Z",
+      "side": 1,
+      "message": "\"not really\", but since there\u0027s a meaningful place to add the break anyway (and this isn\u0027t the header file, so here\u0027s no benefit to grep returning you the complete signature)... done.",
+      "parentUuid": "eb6cf0e5_aab94629",
       "range": {
         "startLine": 63,
         "startChar": 0,
