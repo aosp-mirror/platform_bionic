@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "4e1a9fa4_3c2317b5",
+        "filename": "libc/bionic/NetdClientDispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2019-06-20T15:15:03Z",
+      "side": 1,
+      "message": "Not sure why this alignment is necessary...",
+      "range": {
+        "startLine": 44,
+        "startChar": 56,
+        "endLine": 44,
+        "endChar": 84
+      },
+      "revId": "fcaa66feb312389c1dc4b71eb14c28af7c7f4caa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0538359_d6fd333c",
         "filename": "libc/bionic/NetdClientDispatch.cpp",
         "patchSetId": 3
