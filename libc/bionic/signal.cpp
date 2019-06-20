@@ -41,7 +41,7 @@
 #include "private/sigrtmin.h"
 
 extern "C" int __rt_sigpending(const sigset64_t*, size_t);
-extern "C" int ___rt_sigqueueinfo(pid_t, int, siginfo_t*);
+extern "C" int __rt_sigqueueinfo(pid_t, int, siginfo_t*);
 extern "C" int __rt_sigsuspend(const sigset64_t*, size_t);
 extern "C" int __rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t);
 
@@ -216,7 +216,7 @@ int sigqueue(pid_t pid, int sig, const sigval value) {
   info.si_pid = getpid();
   info.si_uid = getuid();
   info.si_value = value;
-  return ___rt_sigqueueinfo(pid, sig, &info);
+  return __rt_sigqueueinfo(pid, sig, &info);
 }
 
 int sigrelse(int sig) {

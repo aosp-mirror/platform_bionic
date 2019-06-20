@@ -105,10 +105,10 @@ ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) lp64
 ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) lp32
 ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) lp64
 
-int         ___close:close(int)  all
+int         __close:close(int)  all
 pid_t       __getpid:getpid()  all
 int         munmap(void*, size_t)  all
-void*       ___mremap:mremap(void*, size_t, size_t, int, void*)  all
+void*       __mremap:mremap(void*, size_t, size_t, int, void*)  all
 int         msync(const void*, size_t, int)    all
 int         mprotect(const void*, size_t, int)  all
 int         madvise(void*, size_t, int)  all
@@ -123,7 +123,7 @@ ssize_t     writev(int, const struct iovec*, int)  all
 int         __fcntl64:fcntl64(int, int, void*)  lp32
 int         fcntl(int, int, void*)  lp64
 int         flock(int, int)   all
-int         ___fchmod:fchmod(int, mode_t)  all
+int         __fchmod:fchmod(int, mode_t)  all
 int         dup(int)  all
 int         pipe2(int*, int) all
 int         dup3(int, int, int)   all
@@ -133,16 +133,16 @@ int         fchown:fchown32(int, uid_t, gid_t)  arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,mips,mips64,x86_64
 void        sync(void)  all
 int         syncfs(int)  all
-int         ___fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
-ssize_t     ___fgetxattr:fgetxattr(int, const char*, void*, size_t) all
-ssize_t     ___flistxattr:flistxattr(int, char*, size_t) all
+int         __fsetxattr:fsetxattr(int, const char*, const void*, size_t, int) all
+ssize_t     __fgetxattr:fgetxattr(int, const char*, void*, size_t) all
+ssize_t     __flistxattr:flistxattr(int, char*, size_t) all
 int         fremovexattr(int, const char*) all
 
 int __getdents64:getdents64(unsigned int, struct dirent*, unsigned int)   arm,arm64,mips,mips64,x86,x86_64
 
 int __openat:openat(int, const char*, int, mode_t) all
-int ___faccessat:faccessat(int, const char*, int)  all
-int ___fchmodat:fchmodat(int, const char*, mode_t)  all
+int __faccessat:faccessat(int, const char*, int)  all
+int __fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
 int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64
@@ -213,7 +213,7 @@ int           settimeofday(const struct timeval*, const struct timezone*)   all
 clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
 int           clock_settime(clockid_t, const struct timespec*)  all
-int           ___clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
+int           __clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
 int           getitimer(int, const struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
 int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
@@ -234,7 +234,7 @@ int     __rt_sigpending:rt_sigpending(sigset64_t*, size_t)  all
 int     __rt_sigprocmask:rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t)  all
 int     __rt_sigsuspend:rt_sigsuspend(const sigset64_t*, size_t)  all
 int     __rt_sigtimedwait:rt_sigtimedwait(const sigset64_t*, siginfo_t*, const timespec*, size_t)  all
-int     ___rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
+int     __rt_sigqueueinfo:rt_sigqueueinfo(pid_t, int, siginfo_t*)  all
 int     __signalfd4:signalfd4(int, const sigset64_t*, size_t, int)  all
 
 # sockets

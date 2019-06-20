@@ -35,11 +35,11 @@
 
 #include "private/FdPath.h"
 
-extern "C" int ___fsetxattr(int, const char*, const void*, size_t, int);
+extern "C" int __fsetxattr(int, const char*, const void*, size_t, int);
 
 int fsetxattr(int fd, const char* name, const void* value, size_t size, int flags) {
   int saved_errno = errno;
-  int result = ___fsetxattr(fd, name, value, size, flags);
+  int result = __fsetxattr(fd, name, value, size, flags);
   if (result == 0 || errno != EBADF) {
     return result;
   }
