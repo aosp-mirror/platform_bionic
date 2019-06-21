@@ -328,7 +328,7 @@ TEST(malloc, pvalloc_overflow) {
 
 TEST(malloc, valloc_std) {
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  void* ptr = pvalloc(100);
+  void* ptr = valloc(100);
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   free(ptr);
