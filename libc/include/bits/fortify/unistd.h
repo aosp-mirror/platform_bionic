@@ -67,7 +67,8 @@ ssize_t __readlinkat_chk(int dirfd, const char*, char*, size_t, size_t) __INTROD
                      "in call to '" #fn "', '" #what "' bytes overflows the given object")
 
 #define __bos_trivially_not_lt_no_overflow(bos_val, index)  \
-      __bos_dynamic_check_impl_and((bos_val), >=, (index), (bos_val) <= SSIZE_MAX)
+      ((__bos_dynamic_check_impl_and((bos_val), >=, (index), (bos_val) <= SSIZE_MAX) && \
+        __builtin_constant_p(index) && (index) <= SSIZE_MAX))
 
 #if __ANDROID_API__ >= __ANDROID_API_N__
 __BIONIC_FORTIFY_INLINE

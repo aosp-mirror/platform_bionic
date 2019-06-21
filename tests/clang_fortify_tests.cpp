@@ -159,19 +159,15 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
-    // FIXME: this should be EXPECT_FORTIFY_DEATH
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
-    EXPECT_NO_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
     EXPECT_NO_DEATH(memset(small_buffer, sizeof(small_buffer), 0));
-    // FIXME: Should these be warnings?
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bcopy(large_buffer, small_buffer, sizeof(large_buffer)));
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bzero(small_buffer, sizeof(large_buffer)));
   }
 
@@ -591,8 +587,6 @@ FORTIFY_TEST(unistd) {
   EXPECT_FORTIFY_DEATH_STRUCT(getcwd(split.tiny_buffer, sizeof(split)));
 
   {
-    // FIXME: These should all die in FORTIFY. Headers are bugged.
-#ifdef COMPILATION_TESTS
     char* volatile unknown = small_buffer;
     const size_t count = static_cast<size_t>(SSIZE_MAX) + 1;
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
@@ -607,7 +601,6 @@ FORTIFY_TEST(unistd) {
     EXPECT_FORTIFY_DEATH(pwrite(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
     EXPECT_FORTIFY_DEATH(pwrite64(kBogusFD, unknown, count, 0));
-#endif
   }
 }
 
