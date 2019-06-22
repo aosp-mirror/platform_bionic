@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,33 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/xattr.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <stdio.h>
+#if defined(__BIONIC_FORTIFY)
 
-#include "private/FdPath.h"
-
-extern "C" int __fsetxattr(int, const char*, const void*, size_t, int);
-
-int fsetxattr(int fd, const char* name, const void* value, size_t size, int flags) {
-  int saved_errno = errno;
-  int result = __fsetxattr(fd, name, value, size, flags);
-  if (result == 0 || errno != EBADF) {
-    return result;
-  }
-
-  // fd could be an O_PATH file descriptor, and the kernel
-  // may not directly support fsetxattr() on such a file descriptor.
-  // Use /proc/self/fd instead to emulate this support.
-  int fd_flag = fcntl(fd, F_GETFL);
-  if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {
-    errno = EBADF;
-    return -1;
-  }
-
-  errno = saved_errno;
-  return setxattr(FdPath(fd).c_str(), name, value, size, flags);
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+__BIONIC_FORTIFY_INLINE
+void bcopy(const void *src, void* const dst __pass_object_size0, size_t len)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
+                         "'bcopy' called with size bigger than buffer") {
+    size_t bos = __bos0(dst);
+    if (__bos_trivially_not_lt(bos, len)) {
+        __builtin_memmove(dst, src, len);
+    } else {
+        __builtin___memmove_chk(dst, src, len, bos);
+    }
 }
+
+__BIONIC_FORTIFY_INLINE
+void bzero(void* const b __pass_object_size0, size_t len)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos0(b), len),
+                         "'bzero' called with size bigger than buffer") {
+    size_t bos = __bos0(b);
+    if (__bos_trivially_not_lt(bos, len)) {
+        __builtin_memset(b, 0, len);
+    } else {
+        __builtin___memset_chk(b, 0, len, bos);
+    }
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+
+#endif /* defined(__BIONIC_FORTIFY) */

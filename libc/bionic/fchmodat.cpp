@@ -34,7 +34,7 @@
 
 #include "private/ErrnoRestorer.h"
 
-extern "C" int ___fchmodat(int, const char*, mode_t);
+extern "C" int __fchmodat(int, const char*, mode_t);
 
 int fchmodat(int dirfd, const char* pathname, mode_t mode, int flags) {
   if ((flags & ~AT_SYMLINK_NOFOLLOW) != 0) {
@@ -63,5 +63,5 @@ int fchmodat(int dirfd, const char* pathname, mode_t mode, int flags) {
     return result;
   }
 
-  return ___fchmodat(dirfd, pathname, mode);
+  return __fchmodat(dirfd, pathname, mode);
 }

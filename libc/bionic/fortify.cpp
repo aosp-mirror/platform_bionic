@@ -500,3 +500,10 @@ extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t d
   return memcpy(dst, src, count);
 }
 #endif // NO___MEMCPY_CHK
+
+// Runtime implementation of __mempcpy_chk (used directly by compiler, not in headers).
+extern "C" void* __mempcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
+  __check_count("mempcpy", "count", count);
+  __check_buffer_access("mempcpy", "write into", count, dst_len);
+  return mempcpy(dst, src, count);
+}

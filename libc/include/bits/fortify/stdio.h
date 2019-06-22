@@ -39,6 +39,8 @@ size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
 int vsnprintf(char* const __pass_object_size dest, size_t size, const char* format, va_list ap)
+        __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
+                         "in call to 'vsnprintf', size is larger than the destination buffer")
         __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
@@ -50,19 +52,10 @@ int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
-/*
- * Simple case: `format` can't have format specifiers, so we can just compare
- * its length to the length of `dest`
- */
-__BIONIC_ERROR_FUNCTION_VISIBILITY
-int snprintf(char* dest, size_t size, const char* format)
-    __overloadable
-    __enable_if(__bos_unevaluated_lt(__bos(dest), __builtin_strlen(format)),
-                "format string will always overflow destination buffer")
-    __errorattr("format string will always overflow destination buffer");
-
 __BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
 int snprintf(char* const __pass_object_size dest, size_t size, const char* format, ...)
+        __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
+                         "in call to 'snprintf', size is larger than the destination buffer")
         __overloadable {
     va_list va;
     va_start(va, format);

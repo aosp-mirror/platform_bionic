@@ -66,6 +66,22 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
+#if defined(__USE_GNU)
+#if __ANDROID_API__ >= __ANDROID_API_R__
+__BIONIC_FORTIFY_INLINE
+void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
+                         "'mempcpy' called with size bigger than buffer") {
+    size_t bos_dst = __bos0(dst);
+    if (__bos_trivially_not_lt(bos_dst, copy_amount)) {
+        return __builtin_mempcpy(dst, src, copy_amount);
+    }
+    return __builtin___mempcpy_chk(dst, src, copy_amount, bos_dst);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
+#endif
+
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* const dst __pass_object_size, const char* src)

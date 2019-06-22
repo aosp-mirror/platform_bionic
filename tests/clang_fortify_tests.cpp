@@ -55,6 +55,12 @@
 #define __clang_error_if(...)
 #undef __clang_warning_if
 #define __clang_warning_if(...)
+
+// SOMETIMES_CONST allows clang to emit eager diagnostics when we're doing compilation tests, but
+// blocks them otherwise. This is needed for diagnostics emitted with __enable_if.
+#define SOMETIMES_CONST volatile
+#else
+#define SOMETIMES_CONST const
 #endif
 
 #include <err.h>
@@ -153,19 +159,15 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
-    // FIXME: this should be EXPECT_FORTIFY_DEATH
-#if 0
-    // expected-error@+1{{called with bigger length than the destination}}
-#endif
-    EXPECT_NO_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
+    // expected-error@+1{{size bigger than buffer}}
+    EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
     EXPECT_NO_DEATH(memset(small_buffer, sizeof(small_buffer), 0));
-    // FIXME: Should these be warnings?
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bcopy(large_buffer, small_buffer, sizeof(large_buffer)));
-    // expected-warning@+1{{will always overflow}}
+    // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(bzero(small_buffer, sizeof(large_buffer)));
   }
 
@@ -391,20 +393,17 @@ static void testFormatStrings() {
 
 static void testStdlib() {
   char path_buffer[PATH_MAX - 1];
-#if 0
-  // expected-error@+2{{ignoring return value of function}}
-#endif
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
   realpath("/", path_buffer);
-#if 0
-    // expected-error@+1{{ignoring return value of function}}
-#endif
+  // expected-warning@+1{{ignoring return value of function}}
   realpath("/", nullptr);
 
-  // FIXME: This should complain about flipped arguments, instead of objectsize.
-  // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
+  // expected-warning@+2{{ignoring return value of function}}
+  // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, path_buffer);
 
+  // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, nullptr);
 }
@@ -487,17 +486,18 @@ FORTIFY_TEST(sys_stat) {
 FORTIFY_TEST(stdio) {
   char small_buffer[8] = {};
   {
-#if 0
-    // expected-error@+1{{may overflow the destination buffer}}
-#endif
+    // expected-error@+1{{size is larger than the destination buffer}}
     EXPECT_FORTIFY_DEATH(snprintf(small_buffer, sizeof(small_buffer) + 1, ""));
 
     va_list va;
-#if 0
-    // expected-error@+1{{may overflow the destination buffer}}
-#endif
+    // expected-error@+2{{size is larger than the destination buffer}}
     // expected-warning@+1{{format string is empty}}
     EXPECT_FORTIFY_DEATH(vsnprintf(small_buffer, sizeof(small_buffer) + 1, "", va));
+
+    const char *SOMETIMES_CONST format_string = "aaaaaaaaa";
+
+    // expected-error@+1{{format string will always overflow}}
+    EXPECT_FORTIFY_DEATH(sprintf(small_buffer, format_string));
   }
 
   // expected-error@+1{{size should not be negative}}
@@ -587,8 +587,6 @@ FORTIFY_TEST(unistd) {
   EXPECT_FORTIFY_DEATH_STRUCT(getcwd(split.tiny_buffer, sizeof(split)));
 
   {
-    // FIXME: These should all die in FORTIFY. Headers are bugged.
-#ifdef COMPILATION_TESTS
     char* volatile unknown = small_buffer;
     const size_t count = static_cast<size_t>(SSIZE_MAX) + 1;
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
@@ -603,7 +601,6 @@ FORTIFY_TEST(unistd) {
     EXPECT_FORTIFY_DEATH(pwrite(kBogusFD, unknown, count, 0));
     // expected-error@+1{{'count' must be <= SSIZE_MAX}}
     EXPECT_FORTIFY_DEATH(pwrite64(kBogusFD, unknown, count, 0));
-#endif
   }
 }
 
