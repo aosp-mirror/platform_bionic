@@ -246,15 +246,15 @@ int           listen(int, int)                   arm,arm64,mips,mips64,x86_64
 int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
 int           getsockname(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           getpeername(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
-int           sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
+int           __sendto:sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
 int           recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           shutdown(int, int)  arm,arm64,mips,mips64,x86_64
 int           setsockopt(int, int, int, const void*, socklen_t)  arm,arm64,mips,mips64,x86_64
 int           getsockopt(int, int, int, void*, socklen_t*)    arm,arm64,mips,mips64,x86_64
 ssize_t       recvmsg(int, struct msghdr*, unsigned int)   arm,arm64,mips,mips64,x86_64
-ssize_t       sendmsg(int, const struct msghdr*, unsigned int)  arm,arm64,mips,mips64,x86_64
+ssize_t       __sendmsg:sendmsg(int, const struct msghdr*, unsigned int)  arm,arm64,mips,mips64,x86_64
 int           recvmmsg(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   arm,arm64,mips,mips64,x86_64
-int           sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,arm64,mips,mips64,x86_64
+int           __sendmmsg:sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm,arm64,mips,mips64,x86_64
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
 int           __socket:socketcall:1(int, int, int) x86
@@ -264,16 +264,16 @@ int           listen:socketcall:4(int, int)                   x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
 int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
 int           socketpair:socketcall:8(int, int, int, int*)    x86
-int           sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
+int           __sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
 int           recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
 int           shutdown:socketcall:13(int, int)  x86
 int           setsockopt:socketcall:14(int, int, int, const void*, socklen_t)  x86
 int           getsockopt:socketcall:15(int, int, int, void*, socklen_t*)    x86
-int           sendmsg:socketcall:16(int, const struct msghdr*, unsigned int)  x86
+int           __sendmsg:socketcall:16(int, const struct msghdr*, unsigned int)  x86
 int           recvmsg:socketcall:17(int, struct msghdr*, unsigned int)   x86
 int           __accept4:socketcall:18(int, struct sockaddr*, socklen_t*, int)  x86
 int           recvmmsg:socketcall:19(int, struct mmsghdr*, unsigned int, int, const struct timespec*)   x86
-int           sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
+int           __sendmmsg:socketcall:20(int, struct mmsghdr*, unsigned int, int)   x86
 
 # scheduler & real-time
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param* param)  all
