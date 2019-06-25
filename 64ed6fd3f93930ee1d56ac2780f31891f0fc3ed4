@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73e44a59_db41d299",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1672,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-06-25T21:40:06Z",
+      "side": 1,
+      "message": "ru -\u003e run",
+      "range": {
+        "startLine": 1672,
+        "startChar": 74,
+        "endLine": 1672,
+        "endChar": 76
+      },
+      "revId": "64ed6fd3f93930ee1d56ac2780f31891f0fc3ed4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
