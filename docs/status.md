@@ -301,7 +301,7 @@ targets N or later.
 The `_FORTIFY_SOURCE` macro can be used to enable extra
 automatic bounds checking for common libc functions. If a buffer
 overrun is detected, the program is safely aborted as in this
-(example)[https://source.android.com/devices/tech/debug/native-crash#fortify].
+[example](https://source.android.com/devices/tech/debug/native-crash#fortify).
 
 Note that in recent releases Android's FORTIFY has been extended to
 cover other issues. It can now detect, for example, passing `O_CREAT`
@@ -313,7 +313,7 @@ printf(3) family, or using the scanf(3) `m` modifier incorrectly will
 all result in FORTIFY failures even for code not built with FORTIFY.
 
 More background information is available in our
-(FORTIFY in Android)[https://android-developers.googleblog.com/2017/04/fortify-in-android.html]
+[FORTIFY in Android](https://android-developers.googleblog.com/2017/04/fortify-in-android.html)
 blog post.
 
 The Android platform is built with `-D_FORTIFY_SOURCE=2`, but NDK users
