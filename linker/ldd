@@ -10,7 +10,8 @@ function error() {
 
 [ $# -eq 1 ] || error "usage: ldd FILE"
 
-case `file -L "$1"` in
+what=$(file -L "$1")
+case "$what" in
   *32-bit*)
     linker --list "$1"
     ;;
@@ -18,6 +19,6 @@ case `file -L "$1"` in
     linker64 --list "$1"
     ;;
   *)
-    error "$1: not an ELF file"
+    error "$what"
     ;;
 esac
