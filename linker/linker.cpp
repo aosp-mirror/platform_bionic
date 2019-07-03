@@ -4082,10 +4082,10 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
-// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/<exec>
+// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/*
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
-  if (paths.size() == 5 && paths[1] == "apex" && paths[3] == "bin") {
+  if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
     return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
   }
   return "";
