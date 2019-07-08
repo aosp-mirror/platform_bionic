@@ -770,6 +770,11 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_ARM_VM_IPA_SIZE 165
 #define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT 166
 #define KVM_CAP_HYPERV_CPUID 167
+#define KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 168
+#define KVM_CAP_PPC_IRQ_XIVE 169
+#define KVM_CAP_ARM_SVE 170
+#define KVM_CAP_ARM_PTRAUTH_ADDRESS 171
+#define KVM_CAP_ARM_PTRAUTH_GENERIC 172
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -886,6 +891,7 @@ struct kvm_dirty_tlb {
 #define KVM_REG_SIZE_U256 0x0050000000000000ULL
 #define KVM_REG_SIZE_U512 0x0060000000000000ULL
 #define KVM_REG_SIZE_U1024 0x0070000000000000ULL
+#define KVM_REG_SIZE_U2048 0x0080000000000000ULL
 struct kvm_reg_list {
   __u64 n;
   __u64 reg[0];
@@ -940,6 +946,8 @@ enum kvm_device_type {
 #define KVM_DEV_TYPE_ARM_VGIC_V3 KVM_DEV_TYPE_ARM_VGIC_V3
   KVM_DEV_TYPE_ARM_VGIC_ITS,
 #define KVM_DEV_TYPE_ARM_VGIC_ITS KVM_DEV_TYPE_ARM_VGIC_ITS
+  KVM_DEV_TYPE_XIVE,
+#define KVM_DEV_TYPE_XIVE KVM_DEV_TYPE_XIVE
   KVM_DEV_TYPE_MAX,
 };
 struct kvm_vfio_spapr_tce {
@@ -1083,6 +1091,7 @@ struct kvm_enc_region {
 #define KVM_SET_NESTED_STATE _IOW(KVMIO, 0xbf, struct kvm_nested_state)
 #define KVM_CLEAR_DIRTY_LOG _IOWR(KVMIO, 0xc0, struct kvm_clear_dirty_log)
 #define KVM_GET_SUPPORTED_HV_CPUID _IOWR(KVMIO, 0xc1, struct kvm_cpuid2)
+#define KVM_ARM_VCPU_FINALIZE _IOW(KVMIO, 0xc2, int)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,

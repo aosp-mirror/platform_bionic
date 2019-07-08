@@ -26,6 +26,7 @@ enum mlx5_ib_create_flow_action_attrs {
 enum mlx5_ib_alloc_dm_attrs {
   MLX5_IB_ATTR_ALLOC_DM_RESP_START_OFFSET = (1U << UVERBS_ID_NS_SHIFT),
   MLX5_IB_ATTR_ALLOC_DM_RESP_PAGE_INDEX,
+  MLX5_IB_ATTR_ALLOC_DM_REQ_TYPE,
 };
 enum mlx5_ib_devx_methods {
   MLX5_IB_METHOD_DEVX_OTHER = (1U << UVERBS_ID_NS_SHIFT),
@@ -109,6 +110,7 @@ enum mlx5_ib_flow_matcher_create_attrs {
   MLX5_IB_ATTR_FLOW_MATCHER_FLOW_TYPE,
   MLX5_IB_ATTR_FLOW_MATCHER_MATCH_CRITERIA,
   MLX5_IB_ATTR_FLOW_MATCHER_FLOW_FLAGS,
+  MLX5_IB_ATTR_FLOW_MATCHER_FT_TYPE,
 };
 enum mlx5_ib_flow_matcher_destroy_attrs {
   MLX5_IB_ATTR_FLOW_MATCHER_DESTROY_HANDLE = (1U << UVERBS_ID_NS_SHIFT),
