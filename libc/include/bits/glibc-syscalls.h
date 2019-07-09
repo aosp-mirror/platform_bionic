@@ -243,8 +243,20 @@
 #if defined(__NR_fremovexattr)
   #define SYS_fremovexattr __NR_fremovexattr
 #endif
+#if defined(__NR_fsconfig)
+  #define SYS_fsconfig __NR_fsconfig
+#endif
 #if defined(__NR_fsetxattr)
   #define SYS_fsetxattr __NR_fsetxattr
+#endif
+#if defined(__NR_fsmount)
+  #define SYS_fsmount __NR_fsmount
+#endif
+#if defined(__NR_fsopen)
+  #define SYS_fsopen __NR_fsopen
+#endif
+#if defined(__NR_fspick)
+  #define SYS_fspick __NR_fspick
 #endif
 #if defined(__NR_fstat)
   #define SYS_fstat __NR_fstat
@@ -582,6 +594,9 @@
 #if defined(__NR_mount)
   #define SYS_mount __NR_mount
 #endif
+#if defined(__NR_move_mount)
+  #define SYS_move_mount __NR_move_mount
+#endif
 #if defined(__NR_move_pages)
   #define SYS_move_pages __NR_move_pages
 #endif
@@ -677,6 +692,9 @@
 #endif
 #if defined(__NR_open_by_handle_at)
   #define SYS_open_by_handle_at __NR_open_by_handle_at
+#endif
+#if defined(__NR_open_tree)
+  #define SYS_open_tree __NR_open_tree
 #endif
 #if defined(__NR_openat)
   #define SYS_openat __NR_openat

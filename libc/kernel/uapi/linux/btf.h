@@ -59,10 +59,12 @@ struct btf_type {
 #define BTF_KIND_RESTRICT 11
 #define BTF_KIND_FUNC 12
 #define BTF_KIND_FUNC_PROTO 13
-#define BTF_KIND_MAX 13
-#define NR_BTF_KINDS 14
+#define BTF_KIND_VAR 14
+#define BTF_KIND_DATASEC 15
+#define BTF_KIND_MAX BTF_KIND_DATASEC
+#define NR_BTF_KINDS (BTF_KIND_MAX + 1)
 #define BTF_INT_ENCODING(VAL) (((VAL) & 0x0f000000) >> 24)
-#define BTF_INT_OFFSET(VAL) (((VAL & 0x00ff0000)) >> 16)
+#define BTF_INT_OFFSET(VAL) (((VAL) & 0x00ff0000) >> 16)
 #define BTF_INT_BITS(VAL) ((VAL) & 0x000000ff)
 #define BTF_INT_SIGNED (1 << 0)
 #define BTF_INT_CHAR (1 << 1)
@@ -86,5 +88,17 @@ struct btf_member {
 struct btf_param {
   __u32 name_off;
   __u32 type;
+};
+enum {
+  BTF_VAR_STATIC = 0,
+  BTF_VAR_GLOBAL_ALLOCATED,
+};
+struct btf_var {
+  __u32 linkage;
+};
+struct btf_var_secinfo {
+  __u32 type;
+  __u32 offset;
+  __u32 size;
 };
 #endif
