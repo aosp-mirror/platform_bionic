@@ -130,5 +130,6 @@ enum rc_proto {
   RC_PROTO_RCMM12 = 24,
   RC_PROTO_RCMM24 = 25,
   RC_PROTO_RCMM32 = 26,
+  RC_PROTO_XBOX_DVD = 27,
 };
 #endif
