@@ -111,6 +111,7 @@ struct sockaddr_tipc {
 #define TIPC_MCAST_REPLICAST 134
 #define TIPC_GROUP_JOIN 135
 #define TIPC_GROUP_LEAVE 136
+#define TIPC_SOCK_RECVQ_USED 137
 #define TIPC_GROUP_LOOPBACK 0x1
 #define TIPC_GROUP_MEMBER_EVTS 0x2
 struct tipc_group_req {

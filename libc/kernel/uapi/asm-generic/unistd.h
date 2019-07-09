@@ -386,8 +386,14 @@
 #define __NR_io_uring_setup 425
 #define __NR_io_uring_enter 426
 #define __NR_io_uring_register 427
+#define __NR_open_tree 428
+#define __NR_move_mount 429
+#define __NR_fsopen 430
+#define __NR_fsconfig 431
+#define __NR_fsmount 432
+#define __NR_fspick 433
 #undef __NR_syscalls
-#define __NR_syscalls 428
+#define __NR_syscalls 434
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs

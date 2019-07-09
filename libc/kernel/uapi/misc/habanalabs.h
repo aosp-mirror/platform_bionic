@@ -39,10 +39,16 @@ enum goya_queue_id {
   GOYA_QUEUE_ID_TPC7,
   GOYA_QUEUE_ID_SIZE
 };
+enum hl_device_status {
+  HL_DEVICE_STATUS_OPERATIONAL,
+  HL_DEVICE_STATUS_IN_RESET,
+  HL_DEVICE_STATUS_MALFUNCTION
+};
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
 #define HL_INFO_DRAM_USAGE 2
 #define HL_INFO_HW_IDLE 3
+#define HL_INFO_DEVICE_STATUS 4
 #define HL_INFO_VERSION_MAX_LEN 128
 struct hl_info_hw_ip_info {
   __u64 sram_base_address;
@@ -68,6 +74,10 @@ struct hl_info_dram_usage {
 };
 struct hl_info_hw_idle {
   __u32 is_idle;
+  __u32 pad;
+};
+struct hl_info_device_status {
+  __u32 status;
   __u32 pad;
 };
 struct hl_info_args {
@@ -183,11 +193,64 @@ union hl_mem_args {
   struct hl_mem_in in;
   struct hl_mem_out out;
 };
+#define HL_DEBUG_MAX_AUX_VALUES 10
+struct hl_debug_params_etr {
+  __u64 buffer_address;
+  __u64 buffer_size;
+  __u32 sink_mode;
+  __u32 pad;
+};
+struct hl_debug_params_etf {
+  __u64 buffer_address;
+  __u64 buffer_size;
+  __u32 sink_mode;
+  __u32 pad;
+};
+struct hl_debug_params_stm {
+  __u64 he_mask;
+  __u64 sp_mask;
+  __u32 id;
+  __u32 frequency;
+};
+struct hl_debug_params_bmon {
+  __u64 start_addr0;
+  __u64 addr_mask0;
+  __u64 start_addr1;
+  __u64 addr_mask1;
+  __u32 bw_win;
+  __u32 win_capture;
+  __u32 id;
+  __u32 pad;
+};
+struct hl_debug_params_spmu {
+  __u64 event_types[HL_DEBUG_MAX_AUX_VALUES];
+  __u32 event_types_num;
+  __u32 pad;
+};
+#define HL_DEBUG_OP_ETR 0
+#define HL_DEBUG_OP_ETF 1
+#define HL_DEBUG_OP_STM 2
+#define HL_DEBUG_OP_FUNNEL 3
+#define HL_DEBUG_OP_BMON 4
+#define HL_DEBUG_OP_SPMU 5
+#define HL_DEBUG_OP_TIMESTAMP 6
+#define HL_DEBUG_OP_SET_MODE 7
+struct hl_debug_args {
+  __u64 input_ptr;
+  __u64 output_ptr;
+  __u32 input_size;
+  __u32 output_size;
+  __u32 op;
+  __u32 reg_idx;
+  __u32 enable;
+  __u32 ctx_id;
+};
 #define HL_IOCTL_INFO _IOWR('H', 0x01, struct hl_info_args)
 #define HL_IOCTL_CB _IOWR('H', 0x02, union hl_cb_args)
 #define HL_IOCTL_CS _IOWR('H', 0x03, union hl_cs_args)
 #define HL_IOCTL_WAIT_CS _IOWR('H', 0x04, union hl_wait_cs_args)
 #define HL_IOCTL_MEMORY _IOWR('H', 0x05, union hl_mem_args)
+#define HL_IOCTL_DEBUG _IOWR('H', 0x06, struct hl_debug_args)
 #define HL_COMMAND_START 0x01
-#define HL_COMMAND_END 0x06
+#define HL_COMMAND_END 0x07
 #endif

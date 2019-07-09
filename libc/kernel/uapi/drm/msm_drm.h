@@ -40,6 +40,8 @@ struct drm_msm_timespec {
 #define MSM_PARAM_TIMESTAMP 0x05
 #define MSM_PARAM_GMEM_BASE 0x06
 #define MSM_PARAM_NR_RINGS 0x07
+#define MSM_PARAM_PP_PGTABLE 0x08
+#define MSM_PARAM_FAULTS 0x09
 struct drm_msm_param {
   __u32 pipe;
   __u32 param;
@@ -143,6 +145,14 @@ struct drm_msm_submitqueue {
   __u32 prio;
   __u32 id;
 };
+#define MSM_SUBMITQUEUE_PARAM_FAULTS 0
+struct drm_msm_submitqueue_query {
+  __u64 data;
+  __u32 id;
+  __u32 param;
+  __u32 len;
+  __u32 pad;
+};
 #define DRM_MSM_GET_PARAM 0x00
 #define DRM_MSM_GEM_NEW 0x02
 #define DRM_MSM_GEM_INFO 0x03
@@ -153,6 +163,7 @@ struct drm_msm_submitqueue {
 #define DRM_MSM_GEM_MADVISE 0x08
 #define DRM_MSM_SUBMITQUEUE_NEW 0x0A
 #define DRM_MSM_SUBMITQUEUE_CLOSE 0x0B
+#define DRM_MSM_SUBMITQUEUE_QUERY 0x0C
 #define DRM_IOCTL_MSM_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GET_PARAM, struct drm_msm_param)
 #define DRM_IOCTL_MSM_GEM_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
 #define DRM_IOCTL_MSM_GEM_INFO DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_INFO, struct drm_msm_gem_info)
@@ -163,6 +174,7 @@ struct drm_msm_submitqueue {
 #define DRM_IOCTL_MSM_GEM_MADVISE DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_MADVISE, struct drm_msm_gem_madvise)
 #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
 #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE DRM_IOW(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
+#define DRM_IOCTL_MSM_SUBMITQUEUE_QUERY DRM_IOW(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_QUERY, struct drm_msm_submitqueue_query)
 #ifdef __cplusplus
 }
 #endif

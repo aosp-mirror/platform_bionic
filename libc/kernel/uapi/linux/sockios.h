@@ -18,10 +18,20 @@
  ****************************************************************************/
 #ifndef _LINUX_SOCKIOS_H
 #define _LINUX_SOCKIOS_H
+#include <asm/bitsperlong.h>
 #include <asm/sockios.h>
 #define SIOCINQ FIONREAD
 #define SIOCOUTQ TIOCOUTQ
 #define SOCK_IOC_TYPE 0x89
+#define SIOCGSTAMP_NEW _IOR(SOCK_IOC_TYPE, 0x06, long long[2])
+#define SIOCGSTAMPNS_NEW _IOR(SOCK_IOC_TYPE, 0x07, long long[2])
+#if __BITS_PER_LONG == 64 || defined(__x86_64__) && defined(__ILP32__)
+#define SIOCGSTAMP SIOCGSTAMP_OLD
+#define SIOCGSTAMPNS SIOCGSTAMPNS_OLD
+#else
+#define SIOCGSTAMP ((sizeof(struct timeval)) == 8 ? SIOCGSTAMP_OLD : SIOCGSTAMP_NEW)
+#define SIOCGSTAMPNS ((sizeof(struct timespec)) == 8 ? SIOCGSTAMPNS_OLD : SIOCGSTAMPNS_NEW)
+#endif
 #define SIOCADDRT 0x890B
 #define SIOCDELRT 0x890C
 #define SIOCRTMSG 0x890D
