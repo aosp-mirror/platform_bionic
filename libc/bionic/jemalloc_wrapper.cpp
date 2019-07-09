@@ -107,9 +107,8 @@ int je_mallopt(int param, int value) {
     // clear the caches of other threads.
     // This must be done first so that cleared allocations get purged
     // in the next calls.
-    if (je_mallctl("thread.tcache.flush", nullptr, nullptr, nullptr, 0) != 0) {
-      return 0;
-    }
+    // Ignore the return call since this will fail if the tcache is disabled.
+    je_mallctl("thread.tcache.flush", nullptr, nullptr, nullptr, 0);
 
     unsigned narenas;
     size_t sz = sizeof(unsigned);
