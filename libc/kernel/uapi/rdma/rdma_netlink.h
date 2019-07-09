@@ -51,16 +51,6 @@ enum {
   RDMA_NL_IWPM_HELLO,
   RDMA_NL_IWPM_NUM_OPS
 };
-struct rdma_cm_id_stats {
-  __u32 qp_num;
-  __u32 bound_dev_if;
-  __u32 port_space;
-  __s32 pid;
-  __u8 cm_state;
-  __u8 node_type;
-  __u8 port_num;
-  __u8 qp_type;
-};
 enum {
   IWPM_NLA_REG_PID_UNSPEC = 0,
   IWPM_NLA_REG_PID_SEQ,
@@ -193,6 +183,8 @@ enum rdma_nldev_command {
   RDMA_NLDEV_CMD_NEWLINK,
   RDMA_NLDEV_CMD_DELLINK,
   RDMA_NLDEV_CMD_PORT_GET,
+  RDMA_NLDEV_CMD_SYS_GET,
+  RDMA_NLDEV_CMD_SYS_SET,
   RDMA_NLDEV_CMD_RES_GET = 9,
   RDMA_NLDEV_CMD_RES_QP_GET,
   RDMA_NLDEV_CMD_RES_CM_ID_GET,
@@ -276,6 +268,9 @@ enum rdma_nldev_attr {
   RDMA_NLDEV_ATTR_RES_CM_IDN,
   RDMA_NLDEV_ATTR_RES_CTXN,
   RDMA_NLDEV_ATTR_LINK_TYPE,
+  RDMA_NLDEV_SYS_ATTR_NETNS_MODE,
+  RDMA_NLDEV_ATTR_DEV_PROTOCOL,
+  RDMA_NLDEV_NET_NS_FD,
   RDMA_NLDEV_ATTR_MAX
 };
 #endif
