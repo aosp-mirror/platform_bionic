@@ -46,7 +46,6 @@
 #define PSR_x 0x0000ff00
 #define PSR_c 0x000000ff
 #ifndef __ASSEMBLY__
-#include <linux/prctl.h>
 struct user_pt_regs {
   __u64 regs[31];
   __u64 sp;
@@ -79,8 +78,8 @@ struct user_sve_header {
 #define SVE_PT_REGS_MASK (1 << 0)
 #define SVE_PT_REGS_FPSIMD 0
 #define SVE_PT_REGS_SVE SVE_PT_REGS_MASK
-#define SVE_PT_VL_INHERIT (PR_SVE_VL_INHERIT >> 16)
-#define SVE_PT_VL_ONEXEC (PR_SVE_SET_VL_ONEXEC >> 16)
+#define SVE_PT_VL_INHERIT ((1 << 17) >> 16)
+#define SVE_PT_VL_ONEXEC ((1 << 18) >> 16)
 #define SVE_PT_REGS_OFFSET ((sizeof(struct user_sve_header) + (__SVE_VQ_BYTES - 1)) / __SVE_VQ_BYTES * __SVE_VQ_BYTES)
 #define SVE_PT_FPSIMD_OFFSET SVE_PT_REGS_OFFSET
 #define SVE_PT_FPSIMD_SIZE(vq,flags) (sizeof(struct user_fpsimd_state))
