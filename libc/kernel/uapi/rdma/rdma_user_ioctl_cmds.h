@@ -70,5 +70,6 @@ enum rdma_driver_id {
   RDMA_DRIVER_RXE,
   RDMA_DRIVER_HFI1,
   RDMA_DRIVER_QIB,
+  RDMA_DRIVER_EFA,
 };
 #endif
