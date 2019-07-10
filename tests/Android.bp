@@ -560,7 +560,6 @@ cc_defaults {
         android: {
             shared_libs: [
                 "ld-android",
-                "libandroidicu",
                 "libdl",
                 "libdl_android",
                 "libdl_preempt_test_1",
