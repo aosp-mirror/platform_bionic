@@ -32,6 +32,7 @@ int	ioprio_set:ioprio_set(int which, int who, int ioprio)	arm64,x86_64,mips64
 pid_t	gettid:gettid()	all
 int	futex:futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3)	all
 int	clone:clone(int (*fn)(void *), void *child_stack, int flags, void *arg, ..) all
+int	sigreturn:sigreturn(unsigned long __unused)	arm,x86,mips
 int	rt_sigreturn:rt_sigreturn(unsigned long __unused)	all
 int	rt_tgsigqueueinfo:int rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *uinfo)	all
 int	restart_syscall:int restart_syscall()	all
@@ -54,17 +55,14 @@ int	seccomp:seccomp(unsigned int operation, unsigned int flags, void *args)	all
 # Needed for debugging 32-bit Chrome
 int	pipe:pipe(int pipefd[2])	arm,x86,mips
 
-# b/34813887
+# Needed by breakpad (b/34813887).
 int	open:open(const char *path, int oflag, ... ) arm,x86,x86_64,mips
 int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) arm,x86,x86_64,mips
 
-# syscalls needed to boot android
-int	sigreturn:sigreturn(unsigned long __unused)	arm,x86,mips
-
-# Needed by sanitizers (b/34606909)
-# 5 (__NR_open) and 195 (__NR_stat64) are also required, but they are
-# already allowed.
-ssize_t	readlink:readlink(const char *path, char *buf, size_t bufsiz)	arm,x86,x86_64,mips
+# Needed by sanitizers (b/34606909, b/136777266).
+int open:open(const char*, int, ...)  arm,x86,x86_64
+int stat64:stat64(const char*, struct stat64*)  arm,x86
+ssize_t readlink:readlink(const char*, char*, size_t)  arm,x86,x86_64
 
 # Probed for and conditionally used by ART.
 int membarrier(int cmd, int flags) all
