@@ -24,6 +24,7 @@
 #include "private/bionic_systrace.h"
 #include "private/CachedProperty.h"
 
+#include <async_safe/log.h>
 #include <cutils/trace.h> // For ATRACE_TAG_BIONIC.
 
 #define WRITE_OFFSET   32
@@ -65,7 +66,7 @@ void bionic_trace_begin(const char* message) {
   // kernel trace_marker.
   int length = strlen(message);
   char buf[length + WRITE_OFFSET];
-  size_t len = snprintf(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
+  size_t len = async_safe_format_buffer(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
 
   // Tracing may stop just after checking property and before writing the message.
   // So the write is acceptable to fail. See b/20666100.
