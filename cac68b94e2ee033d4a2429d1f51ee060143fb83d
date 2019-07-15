@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac9b6983_5c2c8b0c",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-15T15:40:43Z",
+      "side": 1,
+      "message": "if you\u0027re only going to name one here, name clocklock instead, since that\u0027s what you\u0027d replace pthread_mutex_timedlock_monotonic_np with?",
+      "range": {
+        "startLine": 200,
+        "startChar": 33,
+        "endLine": 200,
+        "endChar": 56
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c243e68_35ca999d",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-15T15:40:43Z",
+      "side": 1,
+      "message": "(this doesn\u0027t make much sense in any of the places you\u0027ve used it, since in each place you\u0027re only mentioning one function. likewise the \"These\" later.)",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 32
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9b61528_24193858",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-15T15:40:43Z",
+      "side": 1,
+      "message": "(i always try to get the full name of the function into the test.)",
+      "range": {
+        "startLine": 993,
+        "startChar": 14,
+        "endLine": 993,
+        "endChar": 59
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94b454a7_19e90e04",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-15T15:40:43Z",
+      "side": 1,
+      "message": "oops",
+      "range": {
+        "startLine": 1008,
+        "startChar": 19,
+        "endLine": 1008,
+        "endChar": 58
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
