@@ -990,6 +990,25 @@ TEST(pthread, pthread_rwlock_reader_wakeup_writer_timedwait_monotonic_np) {
 #endif  // __BIONIC__
 }
 
+TEST(pthread, pthread_rwlock_reader_wakeup_writer_clockwait) {
+#if defined(__BIONIC__)
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_reader_wakeup_writer([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_clockwrlock(lock, CLOCK_MONOTONIC, &ts);
+  });
+
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_reader_wakeup_writer([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_clockwrlock(lock, CLOCK_REALTIME, &ts);
+  });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockwrlock not available";
+#endif  // __BIONIC__
+}
+
 static void test_pthread_rwlock_writer_wakeup_reader(std::function<int (pthread_rwlock_t*)> lock_function) {
   RwlockWakeupHelperArg wakeup_arg;
   ASSERT_EQ(0, pthread_rwlock_init(&wakeup_arg.lock, nullptr));
@@ -1035,6 +1054,25 @@ TEST(pthread, pthread_rwlock_writer_wakeup_reader_timedwait_monotonic_np) {
       [&](pthread_rwlock_t* lock) { return pthread_rwlock_timedrdlock_monotonic_np(lock, &ts); });
 #else   // __BIONIC__
   GTEST_SKIP() << "pthread_rwlock_timedrdlock_monotonic_np not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_writer_wakeup_reader_clockwait) {
+#if defined(__BIONIC__)
+  timespec ts;
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_writer_wakeup_reader([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_clockrdlock(lock, CLOCK_MONOTONIC, &ts);
+  });
+
+  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
+  ts.tv_sec += 1;
+  test_pthread_rwlock_writer_wakeup_reader([&](pthread_rwlock_t* lock) {
+    return pthread_rwlock_clockrdlock(lock, CLOCK_REALTIME, &ts);
+  });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockrdlock not available";
 #endif  // __BIONIC__
 }
 
@@ -1098,6 +1136,38 @@ TEST(pthread, pthread_rwlock_timedrdlock_monotonic_np_timeout) {
 #endif  // __BIONIC__
 }
 
+TEST(pthread, pthread_rwlock_clockrdlock_monotonic_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedrdlock_timeout_helper(
+      CLOCK_MONOTONIC, [](pthread_rwlock_t* __rwlock, const timespec* __timeout) {
+        return pthread_rwlock_clockrdlock(__rwlock, CLOCK_MONOTONIC, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockrdlock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_clockrdlock_realtime_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedrdlock_timeout_helper(
+      CLOCK_REALTIME, [](pthread_rwlock_t* __rwlock, const timespec* __timeout) {
+        return pthread_rwlock_clockrdlock(__rwlock, CLOCK_REALTIME, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockrdlock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_clockrdlock_invalid) {
+#if defined(__BIONIC__)
+  pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
+  timespec ts;
+  EXPECT_EQ(EINVAL, pthread_rwlock_clockrdlock(&lock, CLOCK_PROCESS_CPUTIME_ID, &ts));
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockrdlock not available";
+#endif  // __BIONIC__
+}
+
 static void pthread_rwlock_timedwrlock_timeout_helper(
     clockid_t clock, int (*lock_function)(pthread_rwlock_t* __rwlock, const timespec* __timeout)) {
   RwlockWakeupHelperArg wakeup_arg;
@@ -1131,6 +1201,38 @@ TEST(pthread, pthread_rwlock_timedwrlock_monotonic_np_timeout) {
                                             pthread_rwlock_timedwrlock_monotonic_np);
 #else   // __BIONIC__
   GTEST_SKIP() << "pthread_rwlock_timedwrlock_monotonic_np not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_clockwrlock_monotonic_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedwrlock_timeout_helper(
+      CLOCK_MONOTONIC, [](pthread_rwlock_t* __rwlock, const timespec* __timeout) {
+        return pthread_rwlock_clockwrlock(__rwlock, CLOCK_MONOTONIC, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockwrlock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_clockwrlock_realtime_timeout) {
+#if defined(__BIONIC__)
+  pthread_rwlock_timedwrlock_timeout_helper(
+      CLOCK_REALTIME, [](pthread_rwlock_t* __rwlock, const timespec* __timeout) {
+        return pthread_rwlock_clockwrlock(__rwlock, CLOCK_REALTIME, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockwrlock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_rwlock_clockwrlock_invalid) {
+#if defined(__BIONIC__)
+  pthread_rwlock_t lock = PTHREAD_RWLOCK_INITIALIZER;
+  timespec ts;
+  EXPECT_EQ(EINVAL, pthread_rwlock_clockwrlock(&lock, CLOCK_PROCESS_CPUTIME_ID, &ts));
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_rwlock_clockrwlock not available";
 #endif  // __BIONIC__
 }
 
@@ -1392,14 +1494,41 @@ class pthread_CondWakeupTest : public ::testing::Test {
     ASSERT_EQ(0, pthread_condattr_destroy(&attr));
   }
 
-  void StartWaitingThread(std::function<int (pthread_cond_t* cond, pthread_mutex_t* mutex)> wait_function) {
+  void StartWaitingThread(
+      std::function<int(pthread_cond_t* cond, pthread_mutex_t* mutex)> wait_function) {
     progress = INITIALIZED;
     this->wait_function = wait_function;
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, reinterpret_cast<void* (*)(void*)>(WaitThreadFn), this));
+    ASSERT_EQ(0, pthread_create(&thread, nullptr, reinterpret_cast<void* (*)(void*)>(WaitThreadFn),
+                                this));
     while (progress != WAITING) {
       usleep(5000);
     }
     usleep(5000);
+  }
+
+  void RunTimedTest(
+      clockid_t clock,
+      std::function<int(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* timeout)>
+          wait_function) {
+    timespec ts;
+    ASSERT_EQ(0, clock_gettime(clock, &ts));
+    ts.tv_sec += 1;
+
+    StartWaitingThread([&wait_function, &ts](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+      return wait_function(cond, mutex, &ts);
+    });
+
+    progress = SIGNALED;
+    ASSERT_EQ(0, pthread_cond_signal(&cond));
+  }
+
+  void RunTimedTest(clockid_t clock, std::function<int(pthread_cond_t* cond, pthread_mutex_t* mutex,
+                                                       clockid_t clock, const timespec* timeout)>
+                                         wait_function) {
+    RunTimedTest(clock, [clock, &wait_function](pthread_cond_t* cond, pthread_mutex_t* mutex,
+                                                const timespec* timeout) {
+      return wait_function(cond, mutex, clock, timeout);
+    });
   }
 
   void TearDown() override {
@@ -1442,41 +1571,56 @@ TEST_F(pthread_CondWakeupTest, broadcast_wait) {
 
 TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_REALTIME) {
   InitCond(CLOCK_REALTIME);
-  timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_REALTIME, &ts));
-  ts.tv_sec += 1;
-  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
-    return pthread_cond_timedwait(cond, mutex, &ts);
-  });
-  progress = SIGNALED;
-  ASSERT_EQ(0, pthread_cond_signal(&cond));
+  RunTimedTest(CLOCK_REALTIME, pthread_cond_timedwait);
 }
 
 TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC) {
   InitCond(CLOCK_MONOTONIC);
-  timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
-  ts.tv_sec += 1;
-  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
-    return pthread_cond_timedwait(cond, mutex, &ts);
-  });
-  progress = SIGNALED;
-  ASSERT_EQ(0, pthread_cond_signal(&cond));
+  RunTimedTest(CLOCK_MONOTONIC, pthread_cond_timedwait);
 }
 
 TEST_F(pthread_CondWakeupTest, signal_timedwait_CLOCK_MONOTONIC_np) {
 #if defined(__BIONIC__)
   InitCond(CLOCK_REALTIME);
-  timespec ts;
-  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts));
-  ts.tv_sec += 1;
-  StartWaitingThread([&](pthread_cond_t* cond, pthread_mutex_t* mutex) {
-    return pthread_cond_timedwait_monotonic_np(cond, mutex, &ts);
-  });
-  progress = SIGNALED;
-  ASSERT_EQ(0, pthread_cond_signal(&cond));
+  RunTimedTest(CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
 #else   // __BIONIC__
   GTEST_SKIP() << "pthread_cond_timedwait_monotonic_np not available";
+#endif  // __BIONIC__
+}
+
+TEST_F(pthread_CondWakeupTest, signal_clockwait_monotonic_monotonic) {
+#if defined(__BIONIC__)
+  InitCond(CLOCK_MONOTONIC);
+  RunTimedTest(CLOCK_MONOTONIC, pthread_cond_clockwait);
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
+#endif  // __BIONIC__
+}
+
+TEST_F(pthread_CondWakeupTest, signal_clockwait_monotonic_realtime) {
+#if defined(__BIONIC__)
+  InitCond(CLOCK_MONOTONIC);
+  RunTimedTest(CLOCK_REALTIME, pthread_cond_clockwait);
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
+#endif  // __BIONIC__
+}
+
+TEST_F(pthread_CondWakeupTest, signal_clockwait_realtime_monotonic) {
+#if defined(__BIONIC__)
+  InitCond(CLOCK_REALTIME);
+  RunTimedTest(CLOCK_MONOTONIC, pthread_cond_clockwait);
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
+#endif  // __BIONIC__
+}
+
+TEST_F(pthread_CondWakeupTest, signal_clockwait_realtime_realtime) {
+#if defined(__BIONIC__)
+  InitCond(CLOCK_REALTIME);
+  RunTimedTest(CLOCK_REALTIME, pthread_cond_clockwait);
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
 #endif  // __BIONIC__
 }
 
@@ -1512,6 +1656,35 @@ TEST(pthread, pthread_cond_timedwait_monotonic_np_timeout) {
   pthread_cond_timedwait_timeout_helper(CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
 #else   // __BIONIC__
   GTEST_SKIP() << "pthread_cond_timedwait_monotonic_np not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_cond_clockwait_timeout) {
+#if defined(__BIONIC__)
+  pthread_cond_timedwait_timeout_helper(
+      CLOCK_MONOTONIC,
+      [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_cond_clockwait(__cond, __mutex, CLOCK_MONOTONIC, __timeout);
+      });
+  pthread_cond_timedwait_timeout_helper(
+      CLOCK_REALTIME,
+      [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_cond_clockwait(__cond, __mutex, CLOCK_REALTIME, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_cond_clockwait_invalid) {
+#if defined(__BIONIC__)
+  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+  pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  timespec ts;
+  EXPECT_EQ(EINVAL, pthread_cond_clockwait(&cond, &mutex, CLOCK_PROCESS_CPUTIME_ID, &ts));
+
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_cond_clockwait not available";
 #endif  // __BIONIC__
 }
 
@@ -2180,6 +2353,21 @@ TEST(pthread, pthread_mutex_timedlock_monotonic_np) {
 #endif  // __BIONIC__
 }
 
+TEST(pthread, pthread_mutex_clocklock) {
+#if defined(__BIONIC__)
+  pthread_mutex_timedlock_helper(
+      CLOCK_MONOTONIC, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_mutex_clocklock(__mutex, CLOCK_MONOTONIC, __timeout);
+      });
+  pthread_mutex_timedlock_helper(
+      CLOCK_REALTIME, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_mutex_clocklock(__mutex, CLOCK_REALTIME, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_mutex_clocklock not available";
+#endif  // __BIONIC__
+}
+
 static void pthread_mutex_timedlock_pi_helper(clockid_t clock,
                                               int (*lock_function)(pthread_mutex_t* __mutex,
                                                                    const timespec* __timeout)) {
@@ -2231,6 +2419,31 @@ TEST(pthread, pthread_mutex_timedlock_monotonic_np_pi) {
 #endif  // __BIONIC__
 }
 
+TEST(pthread, pthread_mutex_clocklock_pi) {
+#if defined(__BIONIC__)
+  pthread_mutex_timedlock_pi_helper(
+      CLOCK_MONOTONIC, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_mutex_clocklock(__mutex, CLOCK_MONOTONIC, __timeout);
+      });
+  pthread_mutex_timedlock_pi_helper(
+      CLOCK_REALTIME, [](pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_mutex_clocklock(__mutex, CLOCK_REALTIME, __timeout);
+      });
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_mutex_clocklock not available";
+#endif  // __BIONIC__
+}
+
+TEST(pthread, pthread_mutex_clocklock_invalid) {
+#if defined(__BIONIC__)
+  pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  timespec ts;
+  EXPECT_EQ(EINVAL, pthread_mutex_clocklock(&mutex, CLOCK_PROCESS_CPUTIME_ID, &ts));
+#else   // __BIONIC__
+  GTEST_SKIP() << "pthread_mutex_clocklock not available";
+#endif  // __BIONIC__
+}
+
 TEST(pthread, pthread_mutex_using_destroyed_mutex) {
 #if defined(__BIONIC__)
   pthread_mutex_t m;
@@ -2247,6 +2460,13 @@ TEST(pthread, pthread_mutex_using_destroyed_mutex) {
               "pthread_mutex_timedlock called on a destroyed mutex");
   ASSERT_EXIT(pthread_mutex_timedlock_monotonic_np(&m, &ts), ::testing::KilledBySignal(SIGABRT),
               "pthread_mutex_timedlock_monotonic_np called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_clocklock(&m, CLOCK_MONOTONIC, &ts), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_clocklock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_clocklock(&m, CLOCK_REALTIME, &ts), ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_clocklock called on a destroyed mutex");
+  ASSERT_EXIT(pthread_mutex_clocklock(&m, CLOCK_PROCESS_CPUTIME_ID, &ts),
+              ::testing::KilledBySignal(SIGABRT),
+              "pthread_mutex_clocklock called on a destroyed mutex");
   ASSERT_EXIT(pthread_mutex_destroy(&m), ::testing::KilledBySignal(SIGABRT),
               "pthread_mutex_destroy called on a destroyed mutex");
 #else
