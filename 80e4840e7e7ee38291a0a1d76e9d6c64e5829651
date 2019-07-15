@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d14ac7c3_5bec2990",
+        "filename": "libc/arch-x86/kabylake/string/avx2-wmemset-kbl.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-15T18:46:48Z",
+      "side": 1,
+      "message": "missing #include...\n\nbionic/libc/arch-x86/kabylake/string/avx2-wmemset-kbl.S:29:1: error: invalid instruction mnemonic \u0027entry\u0027\nENTRY(WMEMSET)\n^~~~~\nbionic/libc/arch-x86/kabylake/string/avx2-wmemset-kbl.S:142:1: error: invalid instruction mnemonic \u0027end\u0027\nEND(WMEMSET)\n^~~",
+      "revId": "80e4840e7e7ee38291a0a1d76e9d6c64e5829651",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
