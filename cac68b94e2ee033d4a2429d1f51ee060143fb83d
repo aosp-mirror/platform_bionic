@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f245cae_0ebb7803",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-15T16:07:10Z",
+      "side": 1,
+      "message": "Done; that was a pure typo.",
+      "parentUuid": "ac9b6983_5c2c8b0c",
+      "range": {
+        "startLine": 200,
+        "startChar": 33,
+        "endLine": 200,
+        "endChar": 56
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c243e68_35ca999d",
         "filename": "libc/include/semaphore.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "892e2a90_c467e7da",
+        "filename": "libc/include/semaphore.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-15T16:07:10Z",
+      "side": 1,
+      "message": "Done; I was assuming that the reader would see these as a set of functions, but that\u0027s probably a bad assumption anyway.",
+      "parentUuid": "0c243e68_35ca999d",
+      "range": {
+        "startLine": 59,
+        "startChar": 7,
+        "endLine": 59,
+        "endChar": 32
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9b61528_24193858",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2019-07-15T15:40:43Z",
       "side": 1,
       "message": "(i always try to get the full name of the function into the test.)",
+      "range": {
+        "startLine": 993,
+        "startChar": 14,
+        "endLine": 993,
+        "endChar": 59
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c7fff1f_dbeaa6fb",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-15T16:07:10Z",
+      "side": 1,
+      "message": "I copied this directly from the above test names:\n\npthread_rwlock_reader_wakeup_writer\npthread_rwlock_reader_wakeup_writer_timedwait\npthread_rwlock_reader_wakeup_writer_timedwait_monotonic_np\n\nShould I rename them all then?  Probably doesn\u0027t make sense to only have this one named differently.",
+      "parentUuid": "a9b61528_24193858",
       "range": {
         "startLine": 993,
         "startChar": 14,
@@ -91,6 +163,30 @@
       "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d6f6ea7_a08a13f1",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1008,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-15T16:07:10Z",
+      "side": 1,
+      "message": "Done; indeed a typo.",
+      "parentUuid": "94b454a7_19e90e04",
+      "range": {
+        "startLine": 1008,
+        "startChar": 19,
+        "endLine": 1008,
+        "endChar": 58
+      },
+      "revId": "cac68b94e2ee033d4a2429d1f51ee060143fb83d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
