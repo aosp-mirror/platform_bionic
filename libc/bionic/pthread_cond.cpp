@@ -215,6 +215,18 @@ extern "C" int pthread_cond_timedwait_monotonic_np(pthread_cond_t* cond_interfac
   return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, false, abs_timeout);
 }
 
+int pthread_cond_clockwait(pthread_cond_t* cond_interface, pthread_mutex_t* mutex, clockid_t clock,
+                           const struct timespec* abs_timeout) {
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      return pthread_cond_timedwait_monotonic_np(cond_interface, mutex, abs_timeout);
+    case CLOCK_REALTIME:
+      return pthread_cond_timedwait(cond_interface, mutex, abs_timeout);
+    default:
+      return EINVAL;
+  }
+}
+
 #if !defined(__LP64__)
 // TODO: this exists only for backward binary compatibility on 32 bit platforms.
 extern "C" int pthread_cond_timedwait_monotonic(pthread_cond_t* cond_interface,
