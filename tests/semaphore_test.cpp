@@ -145,6 +145,19 @@ TEST(semaphore, sem_timedwait_monotonic_np) {
 #endif  // __BIONIC__
 }
 
+TEST(semaphore, sem_clockwait) {
+#if defined(__BIONIC__)
+  sem_timedwait_helper(CLOCK_MONOTONIC, [](sem_t* __sem, const timespec* __ts) {
+    return sem_clockwait(__sem, CLOCK_MONOTONIC, __ts);
+  });
+  sem_timedwait_helper(CLOCK_REALTIME, [](sem_t* __sem, const timespec* __ts) {
+    return sem_clockwait(__sem, CLOCK_REALTIME, __ts);
+  });
+#else   // __BIONIC__
+  GTEST_SKIP() << "sem_clockwait is only supported on bionic";
+#endif  // __BIONIC__
+}
+
 TEST(semaphore_DeathTest, sem_timedwait_null_timeout) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));

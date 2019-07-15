@@ -275,6 +275,17 @@ int sem_timedwait_monotonic_np(sem_t* sem, const timespec* abs_timeout) {
   return __sem_timedwait(sem, abs_timeout, false);
 }
 
+int sem_clockwait(sem_t* sem, clockid_t clock, const timespec* abs_timeout) {
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      return sem_timedwait_monotonic_np(sem, abs_timeout);
+    case CLOCK_REALTIME:
+      return sem_timedwait(sem, abs_timeout);
+    default:
+      return EINVAL;
+  }
+}
+
 int sem_post(sem_t* sem) {
   atomic_uint* sem_count_ptr = SEM_TO_ATOMIC_POINTER(sem);
   unsigned int shared = SEM_GET_SHARED(sem_count_ptr);
