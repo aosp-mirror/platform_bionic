@@ -16,6 +16,24 @@
       "revId": "80e4840e7e7ee38291a0a1d76e9d6c64e5829651",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8018c9b8_59ecd342",
+        "filename": "libc/arch-x86/kabylake/string/avx2-wmemset-kbl.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1371444
+      },
+      "writtenOn": "2019-07-16T12:39:53Z",
+      "side": 1,
+      "message": "Sorry. Missed it. Done",
+      "parentUuid": "d14ac7c3_5bec2990",
+      "revId": "80e4840e7e7ee38291a0a1d76e9d6c64e5829651",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
