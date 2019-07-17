@@ -46,7 +46,7 @@
 #include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
 
-extern "C" int ___close(int fd);
+extern "C" int __close(int fd);
 pid_t __get_cached_pid();
 
 static constexpr const char* kFdsanPropertyName = "debug.fdsan";
@@ -269,7 +269,7 @@ uint64_t android_fdsan_get_tag_value(uint64_t tag) {
 int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
-    return ___close(fd);
+    return __close(fd);
   }
 
   uint64_t tag = expected_tag;
@@ -299,7 +299,7 @@ int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
     }
   }
 
-  int rc = ___close(fd);
+  int rc = __close(fd);
   // If we were expecting to close with a tag, abort on EBADF.
   if (expected_tag && rc == -1 && errno == EBADF) {
     fdsan_error("double-close of file descriptor %d detected", fd);

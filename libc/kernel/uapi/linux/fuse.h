@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 29
+#define FUSE_KERNEL_MINOR_VERSION 31
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -73,6 +73,7 @@ struct fuse_file_lock {
 #define FOPEN_KEEP_CACHE (1 << 1)
 #define FOPEN_NONSEEKABLE (1 << 2)
 #define FOPEN_CACHE_DIR (1 << 3)
+#define FOPEN_STREAM (1 << 4)
 #define FUSE_ASYNC_READ (1 << 0)
 #define FUSE_POSIX_LOCKS (1 << 1)
 #define FUSE_FILE_OPS (1 << 2)
@@ -98,6 +99,7 @@ struct fuse_file_lock {
 #define FUSE_MAX_PAGES (1 << 22)
 #define FUSE_CACHE_SYMLINKS (1 << 23)
 #define FUSE_NO_OPENDIR_SUPPORT (1 << 24)
+#define FUSE_EXPLICIT_INVAL_DATA (1 << 25)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -105,14 +107,17 @@ struct fuse_file_lock {
 #define FUSE_LK_FLOCK (1 << 0)
 #define FUSE_WRITE_CACHE (1 << 0)
 #define FUSE_WRITE_LOCKOWNER (1 << 1)
+#define FUSE_WRITE_KILL_PRIV (1 << 2)
 #define FUSE_READ_LOCKOWNER (1 << 1)
 #define FUSE_IOCTL_COMPAT (1 << 0)
 #define FUSE_IOCTL_UNRESTRICTED (1 << 1)
 #define FUSE_IOCTL_RETRY (1 << 2)
 #define FUSE_IOCTL_32BIT (1 << 3)
 #define FUSE_IOCTL_DIR (1 << 4)
+#define FUSE_IOCTL_COMPAT_X32 (1 << 5)
 #define FUSE_IOCTL_MAX_IOV 256
 #define FUSE_POLL_SCHEDULE_NOTIFY (1 << 0)
+#define FUSE_FSYNC_FDATASYNC (1 << 0)
 enum fuse_opcode {
   FUSE_LOOKUP = 1,
   FUSE_FORGET = 2,

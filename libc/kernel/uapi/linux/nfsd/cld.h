@@ -26,6 +26,7 @@ enum cld_command {
   Cld_Remove,
   Cld_Check,
   Cld_GraceDone,
+  Cld_GraceStart,
 };
 struct cld_name {
   __u16 cn_len;
