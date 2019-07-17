@@ -113,7 +113,7 @@ static inline void* IncrementLimit(void* mem) {
 
 void* LimitCalloc(size_t n_elements, size_t elem_size) {
   size_t total;
-  if (__builtin_add_overflow(n_elements, elem_size, &total) || !CheckLimit(total)) {
+  if (__builtin_mul_overflow(n_elements, elem_size, &total) || !CheckLimit(total)) {
     warning_log("malloc_limit: calloc(%zu, %zu) exceeds limit %" PRId64, n_elements, elem_size,
                 gAllocLimit);
     return nullptr;

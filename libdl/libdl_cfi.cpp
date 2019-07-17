@@ -45,6 +45,10 @@ extern "C" size_t __cfi_shadow_size() {
 
 static uint16_t shadow_load(void* p) {
   uintptr_t addr = reinterpret_cast<uintptr_t>(p);
+#ifdef __aarch64__
+  // Untag the pointer to move it into the address space covered by the shadow.
+  addr &= (1ULL << 56) - 1;
+#endif
   uintptr_t ofs = CFIShadow::MemToShadowOffset(addr);
   if (ofs > CFIShadow::kShadowSize) return CFIShadow::kInvalidShadow;
   return *reinterpret_cast<uint16_t*>(shadow_base_storage.v + ofs);

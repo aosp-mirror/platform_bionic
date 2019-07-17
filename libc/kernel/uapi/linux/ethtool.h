@@ -101,9 +101,12 @@ struct ethtool_tunable {
 };
 #define DOWNSHIFT_DEV_DEFAULT_COUNT 0xff
 #define DOWNSHIFT_DEV_DISABLE 0
+#define ETHTOOL_PHY_FAST_LINK_DOWN_ON 0
+#define ETHTOOL_PHY_FAST_LINK_DOWN_OFF 0xff
 enum phy_tunable_id {
   ETHTOOL_PHY_ID_UNSPEC,
   ETHTOOL_PHY_DOWNSHIFT,
+  ETHTOOL_PHY_FAST_LINK_DOWN,
   __ETHTOOL_PHY_TUNABLE_COUNT,
 };
 struct ethtool_regs {
@@ -754,6 +757,8 @@ enum ethtool_link_mode_bit_indices {
 #define ETH_MODULE_SFF_8636_LEN 256
 #define ETH_MODULE_SFF_8436 0x4
 #define ETH_MODULE_SFF_8436_LEN 256
+#define ETH_MODULE_SFF_8636_MAX_LEN 640
+#define ETH_MODULE_SFF_8436_MAX_LEN 640
 enum ethtool_reset_flags {
   ETH_RESET_MGMT = 1 << 0,
   ETH_RESET_IRQ = 1 << 1,

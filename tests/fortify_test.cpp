@@ -926,6 +926,24 @@ TEST(TEST_NAME, strcat_chk_max_int_size) {
   ASSERT_EQ('\0', buf[9]);
 }
 
+TEST(TEST_NAME, mempcpy_chk) {
+  const char input_str[] = "abcdefg";
+  size_t input_str_size = strlen(input_str) + 1;
+
+  char buf1[10] = {};
+  char buf2[10] = {};
+
+  __builtin_mempcpy(buf1, input_str, input_str_size);
+  __builtin___mempcpy_chk(buf2, input_str, input_str_size, __bos0(buf2));
+
+  ASSERT_EQ(memcmp(buf1, buf2, sizeof(buf2)), 0);
+
+  void *builtin_ptr = __builtin_mempcpy(buf1, input_str, input_str_size);
+  void *fortify_ptr = __builtin___mempcpy_chk(buf1, input_str, input_str_size, __bos0(buf2));
+
+  ASSERT_EQ(builtin_ptr, fortify_ptr);
+}
+
 extern "C" char* __stpcpy_chk(char*, const char*, size_t);
 
 TEST(TEST_NAME, stpcpy_chk_max_int_size) {
