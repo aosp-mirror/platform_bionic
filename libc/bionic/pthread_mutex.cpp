@@ -989,6 +989,24 @@ int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* mutex_interface,
     return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
 }
 
+int pthread_mutex_clocklock(pthread_mutex_t* mutex_interface, clockid_t clock,
+                            const struct timespec* abs_timeout) {
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
+    case CLOCK_REALTIME:
+      return __pthread_mutex_timedlock(mutex_interface, true, abs_timeout, __FUNCTION__);
+    default: {
+      pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
+      uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
+      if (IsMutexDestroyed(old_state)) {
+        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
+      }
+      return EINVAL;
+    }
+  }
+}
+
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {
     pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
     uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
