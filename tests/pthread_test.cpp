@@ -1624,14 +1624,27 @@ TEST_F(pthread_CondWakeupTest, signal_clockwait_realtime_realtime) {
 #endif  // __BIONIC__
 }
 
-static void pthread_cond_timedwait_timeout_helper(clockid_t clock,
+static void pthread_cond_timedwait_timeout_helper(bool init_monotonic, clockid_t clock,
                                                   int (*wait_function)(pthread_cond_t* __cond,
                                                                        pthread_mutex_t* __mutex,
                                                                        const timespec* __timeout)) {
   pthread_mutex_t mutex;
   ASSERT_EQ(0, pthread_mutex_init(&mutex, nullptr));
   pthread_cond_t cond;
-  ASSERT_EQ(0, pthread_cond_init(&cond, nullptr));
+
+  if (init_monotonic) {
+    pthread_condattr_t attr;
+    pthread_condattr_init(&attr);
+
+    ASSERT_EQ(0, pthread_condattr_setclock(&attr, CLOCK_MONOTONIC));
+    clockid_t clock;
+    ASSERT_EQ(0, pthread_condattr_getclock(&attr, &clock));
+    ASSERT_EQ(CLOCK_MONOTONIC, clock);
+
+    ASSERT_EQ(0, pthread_cond_init(&cond, &attr));
+  } else {
+    ASSERT_EQ(0, pthread_cond_init(&cond, nullptr));
+  }
   ASSERT_EQ(0, pthread_mutex_lock(&mutex));
 
   timespec ts;
@@ -1648,12 +1661,13 @@ static void pthread_cond_timedwait_timeout_helper(clockid_t clock,
 }
 
 TEST(pthread, pthread_cond_timedwait_timeout) {
-  pthread_cond_timedwait_timeout_helper(CLOCK_REALTIME, pthread_cond_timedwait);
+  pthread_cond_timedwait_timeout_helper(false, CLOCK_REALTIME, pthread_cond_timedwait);
 }
 
 TEST(pthread, pthread_cond_timedwait_monotonic_np_timeout) {
 #if defined(__BIONIC__)
-  pthread_cond_timedwait_timeout_helper(CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
+  pthread_cond_timedwait_timeout_helper(false, CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
+  pthread_cond_timedwait_timeout_helper(true, CLOCK_MONOTONIC, pthread_cond_timedwait_monotonic_np);
 #else   // __BIONIC__
   GTEST_SKIP() << "pthread_cond_timedwait_monotonic_np not available";
 #endif  // __BIONIC__
@@ -1662,12 +1676,22 @@ TEST(pthread, pthread_cond_timedwait_monotonic_np_timeout) {
 TEST(pthread, pthread_cond_clockwait_timeout) {
 #if defined(__BIONIC__)
   pthread_cond_timedwait_timeout_helper(
-      CLOCK_MONOTONIC,
+      false, CLOCK_MONOTONIC,
       [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
         return pthread_cond_clockwait(__cond, __mutex, CLOCK_MONOTONIC, __timeout);
       });
   pthread_cond_timedwait_timeout_helper(
-      CLOCK_REALTIME,
+      true, CLOCK_MONOTONIC,
+      [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_cond_clockwait(__cond, __mutex, CLOCK_MONOTONIC, __timeout);
+      });
+  pthread_cond_timedwait_timeout_helper(
+      false, CLOCK_REALTIME,
+      [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
+        return pthread_cond_clockwait(__cond, __mutex, CLOCK_REALTIME, __timeout);
+      });
+  pthread_cond_timedwait_timeout_helper(
+      true, CLOCK_REALTIME,
       [](pthread_cond_t* __cond, pthread_mutex_t* __mutex, const timespec* __timeout) {
         return pthread_cond_clockwait(__cond, __mutex, CLOCK_REALTIME, __timeout);
       });
