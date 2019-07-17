@@ -221,7 +221,7 @@ int pthread_cond_clockwait(pthread_cond_t* cond_interface, pthread_mutex_t* mute
     case CLOCK_MONOTONIC:
       return pthread_cond_timedwait_monotonic_np(cond_interface, mutex, abs_timeout);
     case CLOCK_REALTIME:
-      return pthread_cond_timedwait(cond_interface, mutex, abs_timeout);
+      return __pthread_cond_timedwait(__get_internal_cond(cond_interface), mutex, true, abs_timeout);
     default:
       return EINVAL;
   }
