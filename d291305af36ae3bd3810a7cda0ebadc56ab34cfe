@@ -16,6 +16,24 @@
       "revId": "d291305af36ae3bd3810a7cda0ebadc56ab34cfe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8a72661_02d1dfbc",
+        "filename": "libc/include/bits/pthread_cond_clockwait_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-18T01:10:19Z",
+      "side": 1,
+      "message": "yeah, i\u0027m torn too, but i think i agree with what you chose. hopefully keeping the names of the functions here should mean that anyone doing a large-scale change will catch it at least.",
+      "parentUuid": "9beec85a_9a84a8d7",
+      "revId": "d291305af36ae3bd3810a7cda0ebadc56ab34cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

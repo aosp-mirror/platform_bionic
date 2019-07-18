@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e58776c4_f6c7394a",
+        "filename": "tests/pthread_cond_test.inc",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-18T01:10:19Z",
+      "side": 0,
+      "message": "keep the .h so things (like gerrit) know how to color this?\n\n(the stdio stuff just uses .cpp.)",
+      "revId": "9cf76012aa5edc11050920ab1b65817c1be1a112",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
