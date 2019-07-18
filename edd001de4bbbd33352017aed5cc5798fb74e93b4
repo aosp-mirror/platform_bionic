@@ -22,6 +22,30 @@
       "revId": "edd001de4bbbd33352017aed5cc5798fb74e93b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa607dfc_502965b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-18T20:02:58Z",
+      "side": 1,
+      "message": "i was assuming they\u0027d be calling exec soon enough so it didn\u0027t matter, but jmgao points out that the zygote probably looks silly. (he also suggests that maybe we should special case the main thread and not include the tid in its name?)",
+      "parentUuid": "933b93b3_ca2febd2",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 17
+      },
+      "revId": "edd001de4bbbd33352017aed5cc5798fb74e93b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
