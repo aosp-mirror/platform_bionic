@@ -46,6 +46,30 @@
       "revId": "edd001de4bbbd33352017aed5cc5798fb74e93b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "501b7c57_42d170b3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-18T21:57:09Z",
+      "side": 1,
+      "message": "I changed it to use stack_and_tls:main for the main thread, and now fork resets the VMA name. Previously, for a child of the zygote, there had been a stack_and_tls:\u003ctid\u003e VMA where tid came from the parent.",
+      "parentUuid": "aa607dfc_502965b6",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 17
+      },
+      "revId": "edd001de4bbbd33352017aed5cc5798fb74e93b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
