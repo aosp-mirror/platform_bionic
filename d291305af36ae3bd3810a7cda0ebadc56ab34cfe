@@ -34,6 +34,24 @@
       "revId": "d291305af36ae3bd3810a7cda0ebadc56ab34cfe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "514d14e6_7d1d1fed",
+        "filename": "libc/include/bits/pthread_cond_clockwait_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-07-18T21:06:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b8a72661_02d1dfbc",
+      "revId": "d291305af36ae3bd3810a7cda0ebadc56ab34cfe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
