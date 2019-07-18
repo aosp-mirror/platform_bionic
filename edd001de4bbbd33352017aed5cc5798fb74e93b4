@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "933b93b3_ca2febd2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-18T19:51:38Z",
+      "side": 1,
+      "message": "I\u0027m wondering if Bionic should update the surviving thread\u0027s VMA name after forking, and if it did, would we need to worry about racing some other thread trying to read the VMA name buffer. (That\u0027s easy to avoid using an extra PR_SET_VMA_ANON_NAME call.)",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 17
+      },
+      "revId": "edd001de4bbbd33352017aed5cc5798fb74e93b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
