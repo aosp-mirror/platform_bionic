@@ -50,8 +50,21 @@
 #include "generated_android_ids.h"
 #include "grp_pwd_file.h"
 
-static PasswdFile vendor_passwd("/vendor/etc/passwd", "vendor_");
-static GroupFile vendor_group("/vendor/etc/group", "vendor_");
+static PasswdFile passwd_files[] = {
+  { "/system/etc/passwd", "system_" },
+  { "/vendor/etc/passwd", "vendor_" },
+  { "/odm/etc/passwd", "odm_" },
+  { "/product/etc/passwd", "product_" },
+  { "/system_ext/etc/passwd", "system_ext_" },
+};
+
+static GroupFile group_files[] = {
+  { "/system/etc/group", "system_" },
+  { "/vendor/etc/group", "vendor_" },
+  { "/odm/etc/group", "odm_" },
+  { "/product/etc/group", "product_" },
+  { "/system_ext/etc/group", "system_ext_" },
+};
 
 // POSIX seems to envisage an implementation where the <pwd.h> functions are
 // implemented by brute-force searching with getpwent(3), and the <grp.h>
@@ -91,7 +104,7 @@ static passwd* android_iinfo_to_passwd(passwd_state_t* state,
                                        const android_id_info* iinfo) {
   snprintf(state->name_buffer_, sizeof(state->name_buffer_), "%s", iinfo->name);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
-  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/bin/sh");
 
   passwd* pw = &state->passwd_;
   pw->pw_uid   = iinfo->aid;
@@ -421,17 +434,19 @@ static id_t oem_id_from_name(const char* name) {
 }
 
 static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
+  for (auto& passwd_file : passwd_files) {
+    if (passwd_file.FindById(uid, state)) {
+      return &state->passwd_;
+    }
+  }
+
   if (!is_oem_id(uid)) {
     return nullptr;
   }
 
-  if (vendor_passwd.FindById(uid, state)) {
-    return &state->passwd_;
-  }
-
   snprintf(state->name_buffer_, sizeof(state->name_buffer_), "oem_%u", uid);
   snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/");
-  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/vendor/bin/sh");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/bin/sh");
 
   passwd* pw = &state->passwd_;
   pw->pw_uid   = uid;
@@ -440,12 +455,14 @@ static passwd* oem_id_to_passwd(uid_t uid, passwd_state_t* state) {
 }
 
 static group* oem_id_to_group(gid_t gid, group_state_t* state) {
-  if (!is_oem_id(gid)) {
-    return nullptr;
+  for (auto& group_file : group_files) {
+    if (group_file.FindById(gid, state)) {
+      return &state->group_;
+    }
   }
 
-  if (vendor_group.FindById(gid, state)) {
-    return &state->group_;
+  if (!is_oem_id(gid)) {
+    return nullptr;
   }
 
   snprintf(state->group_name_buffer_, sizeof(state->group_name_buffer_),
@@ -477,7 +494,7 @@ static passwd* app_id_to_passwd(uid_t uid, passwd_state_t* state) {
       snprintf(state->dir_buffer_, sizeof(state->dir_buffer_), "/data");
   }
 
-  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/system/bin/sh");
+  snprintf(state->sh_buffer_, sizeof(state->sh_buffer_), "/bin/sh");
 
   passwd* pw = &state->passwd_;
   pw->pw_uid   = uid;
@@ -523,8 +540,8 @@ passwd* getpwnam_internal(const char* login, passwd_state_t* state) {
     return android_iinfo_to_passwd(state, android_id_info);
   }
 
-  if (vendor_passwd.FindByName(login, state)) {
-    if (is_oem_id(state->passwd_.pw_uid)) {
+  for (auto& passwd_file : passwd_files) {
+    if (passwd_file.FindByName(login, state)) {
       return &state->passwd_;
     }
   }
@@ -633,6 +650,22 @@ passwd* getpwent() {
         state->getpwent_idx++ - start + AID_OEM_RESERVED_2_START, state);
   }
 
+  start = end;
+  end += AID_SYSTEM_EXT_RESERVED_END - AID_SYSTEM_RESERVED_START + 1;
+
+  if (state->getpwent_idx < end) {
+    // No one calls this enough to worry about how inefficient the below is.
+    auto* oem_passwd =
+        oem_id_to_passwd(state->getpwent_idx++ - start + AID_SYSTEM_RESERVED_START, state);
+    while (oem_passwd == nullptr && state->getpwent_idx < end) {
+      oem_passwd =
+          oem_id_to_passwd(state->getpwent_idx++ - start + AID_SYSTEM_RESERVED_START, state);
+    }
+    if (oem_passwd != nullptr) {
+      return oem_passwd;
+    }
+  }
+
   state->getpwent_idx = get_next_app_id(state->getpwent_idx, false);
 
   if (state->getpwent_idx != -1) {
@@ -666,8 +699,8 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
     return android_iinfo_to_group(state, android_id_info);
   }
 
-  if (vendor_group.FindByName(name, state)) {
-    if (is_oem_id(state->group_.gr_gid)) {
+  for (auto& group_file : group_files) {
+    if (group_file.FindByName(name, state)) {
       return &state->group_;
     }
   }
@@ -751,6 +784,22 @@ group* getgrent() {
   if (state->getgrent_idx < end) {
     return oem_id_to_group(
         state->getgrent_idx++ - start + AID_OEM_RESERVED_2_START, state);
+  }
+
+  start = end;
+  end += AID_SYSTEM_EXT_RESERVED_END - AID_SYSTEM_RESERVED_START + 1;
+
+  if (state->getgrent_idx < end) {
+    // No one calls this enough to worry about how inefficient the below is.
+    init_group_state(state);
+    auto* oem_group =
+        oem_id_to_group(state->getgrent_idx++ - start + AID_SYSTEM_RESERVED_START, state);
+    while (oem_group == nullptr && state->getgrent_idx < end) {
+      oem_group = oem_id_to_group(state->getgrent_idx++ - start + AID_SYSTEM_RESERVED_START, state);
+    }
+    if (oem_group != nullptr) {
+      return oem_group;
+    }
   }
 
   start = end;
