@@ -36,7 +36,6 @@
 #include <vector>
 
 #include <android-base/stringprintf.h>
-#include <demangle.h>
 #include <unwindstack/LocalUnwinder.h>
 #include <unwindstack/MapInfo.h>
 
@@ -48,6 +47,8 @@
 #else
 #define PAD_PTR "08" PRIx64
 #endif
+
+extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 static pthread_once_t g_setup_once = PTHREAD_ONCE_INIT;
 
@@ -100,7 +101,14 @@ void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info) {
     }
 
     if (!info->function_name.empty()) {
-      line += " (" + demangle(info->function_name.c_str());
+      line += " (";
+      char* demangled_name = __cxa_demangle(info->function_name.c_str(), nullptr, nullptr, nullptr);
+      if (demangled_name != nullptr) {
+        line += demangled_name;
+        free(demangled_name);
+      } else {
+        line += info->function_name;
+      }
       if (info->function_offset != 0) {
         line += "+" + std::to_string(info->function_offset);
       }
