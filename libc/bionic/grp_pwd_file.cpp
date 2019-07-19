@@ -270,8 +270,8 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
 
   while (line_beginning < end) {
     line_beginning = ParseLine(line_beginning, end, line->fields, line->kNumFields);
-    // To comply with Treble, users/groups from the vendor partition need to be prefixed with
-    // vendor_.
+    // To comply with Treble, users/groups from each partition need to be prefixed with
+    // the partition name.
     if (required_prefix_ != nullptr) {
       if (strncmp(line->fields[0], required_prefix_, strlen(required_prefix_)) != 0) {
         char name[kGrpPwdBufferSize];
