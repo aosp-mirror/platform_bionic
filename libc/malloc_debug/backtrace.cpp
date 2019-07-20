@@ -36,8 +36,6 @@
 #include <unistd.h>
 #include <unwind.h>
 
-#include <demangle.h>
-
 #include "MapData.h"
 #include "backtrace.h"
 #include "debug_log.h"
@@ -164,10 +162,18 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
 
     char buf[1024];
     if (symbol != nullptr) {
+      char* demangled_name = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
+      const char* name;
+      if (demangled_name != nullptr) {
+        name = demangled_name;
+      } else {
+        name = symbol;
+      }
       async_safe_format_buffer(buf, sizeof(buf),
                                "          #%02zd  pc %" PAD_PTR "  %s%s (%s+%" PRIuPTR ")\n",
-                               frame_num, rel_pc, soname, offset_buf, demangle(symbol).c_str(),
+                               frame_num, rel_pc, soname, offset_buf, name,
                                frames[frame_num] - offset);
+      free(demangled_name);
     } else {
       async_safe_format_buffer(buf, sizeof(buf), "          #%02zd  pc %" PAD_PTR "  %s%s\n",
                                frame_num, rel_pc, soname, offset_buf);
