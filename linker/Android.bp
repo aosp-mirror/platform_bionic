@@ -300,7 +300,10 @@ cc_binary {
 
     target: {
         android: {
-            static_libs: ["libdebuggerd_handler_fallback"],
+            static_libs: [
+                "libc++demangle",
+                "libdebuggerd_handler_fallback",
+            ],
         },
     },
     compile_multilib: "both",
