@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1231f32a_90ade138",
+        "filename": "libc/private/sigrtmin.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-23T15:27:24Z",
+      "side": 1,
+      "message": "clarify the difference between this and 38?",
+      "revId": "a6d5d783bf6cd04256046fc8ef34aef46c9c534e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ba60513_df6fae8b",
+        "filename": "libc/private/sigrtmin.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-07-23T15:27:24Z",
+      "side": 1,
+      "message": "Java\n\n(or \"ART managed\")",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 36
+      },
+      "revId": "a6d5d783bf6cd04256046fc8ef34aef46c9c534e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
