@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "bca5c26d_60b07b2c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1041833
+      },
+      "writtenOn": "2019-07-23T15:28:45Z",
+      "side": 1,
+      "message": "Repo should have rejected this change for missing a Test stanza.",
+      "revId": "a6d5d783bf6cd04256046fc8ef34aef46c9c534e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1231f32a_90ade138",
         "filename": "libc/private/sigrtmin.h",
         "patchSetId": 4
