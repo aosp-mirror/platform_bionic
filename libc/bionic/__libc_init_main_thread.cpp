@@ -135,8 +135,11 @@ extern "C" void __libc_init_main_thread_final() {
 
   main_thread.mmap_base = mapping.mmap_base;
   main_thread.mmap_size = mapping.mmap_size;
+  main_thread.mmap_base_unguarded = mapping.mmap_base_unguarded;
+  main_thread.mmap_size_unguarded = mapping.mmap_size_unguarded;
 
   __set_tls(&new_tcb->tls_slot(0));
 
+  __set_stack_and_tls_vma_name(true);
   __free_temp_bionic_tls(temp_tls);
 }
