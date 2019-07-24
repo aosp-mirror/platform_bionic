@@ -30,7 +30,7 @@ __BEGIN_DECLS
 
 void* je_aligned_alloc_wrapper(size_t, size_t);
 int je_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
-int je_mallctl(const char *name, void *oldp, size_t *oldlenp, void *newp, size_t newlen);
+int je_mallctl(const char *name, void *oldp, size_t *oldlenp, void *newp, size_t newlen) __attribute__((nothrow));
 struct mallinfo je_mallinfo();
 void je_malloc_disable();
 void je_malloc_enable();
