@@ -282,6 +282,14 @@ static linker_stats_t linker_stats;
 void count_relocation(RelocationKind kind) {
   ++linker_stats.count[kind];
 }
+
+void print_linker_stats() {
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
+         linker_stats.count[kRelocAbsolute],
+         linker_stats.count[kRelocRelative],
+         linker_stats.count[kRelocCopy],
+         linker_stats.count[kRelocSymbol]);
+}
 #else
 void count_relocation(RelocationKind) {
 }
