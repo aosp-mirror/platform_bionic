@@ -284,11 +284,13 @@ void count_relocation(RelocationKind kind) {
 }
 
 void print_linker_stats() {
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol (%d cached)",
+         g_argv[0],
          linker_stats.count[kRelocAbsolute],
          linker_stats.count[kRelocRelative],
          linker_stats.count[kRelocCopy],
-         linker_stats.count[kRelocSymbol]);
+         linker_stats.count[kRelocSymbol],
+         linker_stats.count[kRelocSymbolCached]);
 }
 #else
 void count_relocation(RelocationKind) {
@@ -2891,6 +2893,17 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
   const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
   std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
 
+  struct {
+    // Cache key
+    ElfW(Word) sym;
+
+    // Cache value
+    const ElfW(Sym)* s;
+    soinfo* lsi;
+  } symbol_lookup_cache;
+
+  symbol_lookup_cache.sym = 0;
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2934,14 +2947,25 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       return false;
     } else {
       sym_name = get_string(symtab_[sym].st_name);
-      const version_info* vi = nullptr;
 
-      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
-        return false;
-      }
+      if (sym == symbol_lookup_cache.sym) {
+        s = symbol_lookup_cache.s;
+        lsi = symbol_lookup_cache.lsi;
+        count_relocation(kRelocSymbolCached);
+      } else {
+        const version_info* vi = nullptr;
 
-      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-        return false;
+        if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+          return false;
+        }
+
+        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+          return false;
+        }
+
+        symbol_lookup_cache.sym = sym;
+        symbol_lookup_cache.s = s;
+        symbol_lookup_cache.lsi = lsi;
       }
 
       if (s == nullptr) {
