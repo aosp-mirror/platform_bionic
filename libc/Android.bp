@@ -1675,7 +1675,9 @@ cc_library {
         versions: ["10000"],
     },
 
-    symbol_ordering_file: "symbol_ordering",
+    // Sorting bss symbols by size usually results in less dirty pages at run
+    // time, because small symbols are grouped together.
+    sort_bss_symbols_by_size: true,
 }
 
 genrule {
