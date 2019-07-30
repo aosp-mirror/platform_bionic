@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39befc63_2d299a7e",
+        "filename": "libc/dns/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2019-07-30T19:00:25Z",
+      "side": 1,
+      "message": "What should we do if cp \u003e\u003d eom?\n\nCould you add a real testcase for ns_initparse() and ns_parserr() showing that we handle this corner case correctly? The fuzzer test can only detect some forms of undefined behavior, but tells us nothing about correctness.",
+      "range": {
+        "startLine": 705,
+        "startChar": 7,
+        "endLine": 705,
+        "endChar": 15
+      },
+      "revId": "b279d98b9f35024efeef5cb85fa9c892d491ea31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
