@@ -3162,10 +3162,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
-
-#if !defined(__aarch64__)
-      // Omit support for DTPMOD/DTPREL on arm64, at least until
-      // http://b/123385182 is fixed. arm64 uses TLSDESC instead.
       case R_GENERIC_TLS_DTPMOD:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
@@ -3190,7 +3186,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
-#endif  // !defined(__aarch64__)
 
 #if defined(__aarch64__)
       // Bionic currently only implements TLSDESC for arm64. This implementation should work with
