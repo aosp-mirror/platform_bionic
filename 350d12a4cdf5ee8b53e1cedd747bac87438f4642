@@ -69,6 +69,24 @@
       "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5eb79093_72a0a237",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-07-31T17:22:07Z",
+      "side": 1,
+      "message": "This function clears g_anonymous_namespace_set at the beginning, though, so I think set_anonymous_namespace will always succeed.",
+      "parentUuid": "88e20b37_d9e7ed2b",
+      "revId": "350d12a4cdf5ee8b53e1cedd747bac87438f4642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
