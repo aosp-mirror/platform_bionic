@@ -1485,6 +1485,7 @@ LIBC_R { # introduced=R
     __mempcpy_chk;
     __open64_2;
     __openat64_2;
+    __tls_get_addr; # arm64
     call_once;
     cnd_broadcast;
     cnd_destroy;
