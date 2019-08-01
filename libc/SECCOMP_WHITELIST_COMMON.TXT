@@ -82,3 +82,22 @@ int io_destroy(aio_context_t ctx) all
 int io_submit(aio_context_t ctx, long nr,  struct iocb **iocbpp) all
 int io_getevents(aio_context_t ctx, long min_nr, long max_nr, struct io_event *events, struct timespec *timeout) all
 int io_cancel(aio_context_t ctx, struct iocb *, struct io_event *result) all
+int statx(int, const char*, int, unsigned int, statx*) all
+int clock_gettime64(clockid_t, timespec64*) lp32
+int clock_settime64(clockid_t, const timespec64*) lp32
+int clock_adjtime64(clockid_t, timex64*) lp32
+int clock_getres_time64(clockid_t, timespec64*) lp32
+int clock_nanosleep_time64(clockid_t, int, const timespec64*, timespec*) lp32
+# TODO: afaict, __kernel_timer_t and itimerspec are both already fine?
+int timer_gettime64(__kernel_timer_t, itimerspec64*) lp32
+int timer_settime64(__kernel_timer_t, int, const itimerspec64*, itimerspec64*) lp32
+int timerfd_gettime64(int, itimerspec64*) lp32
+int timerfd_settime64(int, int, const itimerspec64*, itimerspec64*) lp32
+int utimensat_time64(int, const char*, const timespec64[2], int) lp32
+int pselect6_time64(int, fd_set*, fd_set*, timespec64*, void*) lp32
+int ppoll_time64(pollfd*, unsigned int, timespec64*, const sigset64_t*, size_t) lp32
+int recvmmsg_time64(int, mmsghdr*, unsigned int, int, const timespec64*) lp32
+int semtimedop_time64(int, sembuf*, size_t, const timespec64*) lp32
+int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
+int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
+int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
