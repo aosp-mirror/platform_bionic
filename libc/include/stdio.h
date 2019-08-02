@@ -165,8 +165,52 @@ char* tmpnam(char* __s)
 char* tempnam(const char* __dir, const char* __prefix)
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
 
+/**
+ * [rename(2)](http://man7.org/linux/man-pages/man2/rename.2.html) changes
+ * the name or location of a file.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int rename(const char* __old_path, const char* __new_path);
+
+/**
+ * [renameat(2)](http://man7.org/linux/man-pages/man2/renameat.2.html) changes
+ * the name or location of a file, interpreting relative paths using an fd.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int renameat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path);
+
+#if defined(__USE_GNU)
+
+/**
+ * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * to fail if the new path already exists.
+ */
+#define RENAME_NOREPLACE (1<<0)
+
+/**
+ * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * to atomically exchange the two paths.
+ */
+#define RENAME_EXCHANGE (1<<1)
+
+/**
+ * Flag for [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html)
+ * to create a union/overlay filesystem object.
+ */
+#define RENAME_WHITEOUT (1<<2)
+
+/**
+ * [renameat2(2)](http://man7.org/linux/man-pages/man2/renameat2.2.html) changes
+ * the name or location of a file, interpreting relative paths using an fd,
+ * with optional `RENAME_` flags.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int renameat2(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, unsigned __flags) __INTRODUCED_IN(30);
+
+#endif
 
 int fseek(FILE* __fp, long __offset, int __whence);
 long ftell(FILE* __fp);
