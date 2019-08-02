@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34af0472_04d1326f",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-02T21:27:43Z",
+      "side": 1,
+      "message": "This can be deleted now.",
+      "revId": "2ce0116fd14343d62404c298ada1f61791f4bce9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
