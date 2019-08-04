@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "1b3ca9b1_ef8097d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2019-08-04T18:17:51Z",
+      "side": 1,
+      "message": "Remove this prefix: it has no meaning from the point of view of someone reading the git history of bionic.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 10
+      },
+      "revId": "b279d98b9f35024efeef5cb85fa9c892d491ea31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1b1bfe5_682b73ed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2019-08-04T18:17:51Z",
+      "side": 1,
+      "message": "No \".\" at the end of the subject line of commit messages.\n\nSee: https://chris.beams.io/posts/git-commit/",
+      "range": {
+        "startLine": 7,
+        "startChar": 62,
+        "endLine": 7,
+        "endChar": 63
+      },
+      "revId": "b279d98b9f35024efeef5cb85fa9c892d491ea31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "39befc63_2d299a7e",
         "filename": "libc/dns/nameser/ns_name.c",
         "patchSetId": 1
@@ -37,6 +83,30 @@
       "side": 1,
       "message": "For cp \u003e\u003d eom :\nwhen cp \u003d\u003d eom, go to line 709 and then line 720.\nWhen cp \u003e eom, go to line 720\n\nWill also add one more resolv_integration_test for this case.",
       "parentUuid": "39befc63_2d299a7e",
+      "range": {
+        "startLine": 705,
+        "startChar": 7,
+        "endLine": 705,
+        "endChar": 15
+      },
+      "revId": "b279d98b9f35024efeef5cb85fa9c892d491ea31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f0272d9_3d0a2d39",
+        "filename": "libc/dns/nameser/ns_name.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2019-08-04T18:17:51Z",
+      "side": 1,
+      "message": "Right. The way it works out seems a bit too subtle to me, but this code is written like that (a while loop with a break at the end and a continue in the middle of a switch?!?).\n\nFor the sake of keeping the fix easy to merge, let\u0027s go with the minimal change that plugs the bug. Long term, I think we should just move away from this code and write a modern parser based on safer C++ primitives.",
+      "parentUuid": "d48bcbcc_103964ff",
       "range": {
         "startLine": 705,
         "startChar": 7,
