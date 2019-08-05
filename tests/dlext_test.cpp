@@ -29,9 +29,7 @@
 #include <android-base/file.h>
 #include <android-base/strings.h>
 
-#include <linux/memfd.h>
 #include <sys/mman.h>
-#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <sys/wait.h>
@@ -942,7 +940,7 @@ TEST(dlext, dlopen_ext_use_memfd) {
   const std::string lib_path = GetTestlibRoot() + "/libtest_simple.so";
 
   // create memfd
-  int memfd = syscall(__NR_memfd_create, "foobar", MFD_CLOEXEC);
+  int memfd = memfd_create("foobar", MFD_CLOEXEC);
   if (memfd == -1 && errno == ENOSYS) {
     return;
   }
