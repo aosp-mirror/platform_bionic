@@ -16,6 +16,24 @@
       "revId": "3b7ebd90543dd998a3cc607ac2f22bd58edeb8fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "816c2138_78437075",
+        "filename": "tests/stdatomic_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-08-05T20:56:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bddbc4d_46467e95",
+      "revId": "3b7ebd90543dd998a3cc607ac2f22bd58edeb8fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
