@@ -64,31 +64,40 @@ int open:open(const char*, int, ...)  arm,x86,x86_64
 int stat64:stat64(const char*, struct stat64*)  arm,x86
 ssize_t readlink:readlink(const char*, char*, size_t)  arm,x86,x86_64
 
-# Probed for and conditionally used by ART.
-int membarrier(int cmd, int flags) all
-
+#
 # Useful new syscalls which we don't yet use in bionic.
+#
+
+# Since Linux 3.14, not in glibc.
 int sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int flags) all
 int sched_setattr(pid_t pid, struct sched_attr* attr, unsigned int size, unsigned int flags) all
+# Since Linux 3.15, glibc 2.27.
 int memfd_create(const char* name, unsigned int flags) all
-int renameat2(int olddirfd, const char* oldpath, int newdirfd, const char* newpath, unsigned int flags)  all
+# Since Linux 3.19, not in glibc.
 int execveat(int dirfd, const char* pathname, char* const* argv, char* const* envp, int flags)  all
+# Since Linux 4.3, not in glibc. Probed for and conditionally used by ART.
+int membarrier(int cmd, int flags) all
+# Since Linux 4.5, glibc 2.27.
 ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, size_t len, unsigned int flags) all
+# Since Linux 4.4, glibc 2.27.
 int mlock2(const void* addr, size_t len, int flags) all
+# Since Linux 4.6, glibc 2.26.
 ssize_t preadv2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
 ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
+# Since Linux 2.5, not in glibc.
 int io_setup(unsigned nr, aio_context_t *ctxp) all
 int io_destroy(aio_context_t ctx) all
 int io_submit(aio_context_t ctx, long nr,  struct iocb **iocbpp) all
 int io_getevents(aio_context_t ctx, long min_nr, long max_nr, struct io_event *events, struct timespec *timeout) all
 int io_cancel(aio_context_t ctx, struct iocb *, struct io_event *result) all
+# Since Linux 4.11, glibc 2.30.
 int statx(int, const char*, int, unsigned int, statx*) all
+# Since Linux 5.1, not in glibc.
 int clock_gettime64(clockid_t, timespec64*) lp32
 int clock_settime64(clockid_t, const timespec64*) lp32
 int clock_adjtime64(clockid_t, timex64*) lp32
 int clock_getres_time64(clockid_t, timespec64*) lp32
 int clock_nanosleep_time64(clockid_t, int, const timespec64*, timespec*) lp32
-# TODO: afaict, __kernel_timer_t and itimerspec are both already fine?
 int timer_gettime64(__kernel_timer_t, itimerspec64*) lp32
 int timer_settime64(__kernel_timer_t, int, const itimerspec64*, itimerspec64*) lp32
 int timerfd_gettime64(int, itimerspec64*) lp32
