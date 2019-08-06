@@ -26,34 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_MMAN_H_
-#define _SYS_MMAN_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <linux/memfd.h>
 #include <linux/mman.h>
 
 __BEGIN_DECLS
 
-#ifndef MAP_ANON
-#define MAP_ANON  MAP_ANONYMOUS
-#endif
+/** Alternative spelling of the `MAP_ANONYMOUS` flag for mmap(). */
+#define MAP_ANON MAP_ANONYMOUS
 
+/** Return value for mmap(). */
 #define MAP_FAILED __BIONIC_CAST(reinterpret_cast, void*, -1)
 
-#define MREMAP_MAYMOVE  1
-#define MREMAP_FIXED    2
-
-/*
- * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+/**
+ * [mmap(2)](http://man7.org/linux/man-pages/man2/mmap.2.html)
+ * creates a memory mapping for the given range.
  *
- * mmap64 wasn't really around until L, but we added an inline for it since it
- * allows a lot more code to compile with _FILE_OFFSET_BITS=64.
- *
- * GCC removes the static inline unless it is explicitly used. We can get around
- * this with __attribute__((used)), but that needlessly adds a definition of
- * mmap64 to every translation unit that includes this header. Instead, just
- * preserve the old behavior for GCC and emit a useful diagnostic.
+ * Returns the address of the mapping on success,
+ * and returns `MAP_FAILED` and sets `errno` on failure.
  */
 #if defined(__USE_FILE_OFFSET64)
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset) __RENAME(mmap64);
@@ -62,25 +55,126 @@ void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t
 #endif
 
 #if __ANDROID_API__ >= __ANDROID_API_L__
+/**
+ * mmap64() is a variant of mmap() that takes a 64-bit offset even on LP32.
+ *
+ * See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md
+ *
+ * mmap64 wasn't really around until L, but we added an inline for it since it
+ * allows a lot more code to compile with _FILE_OFFSET_BITS=64.
+ */
 void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd, off64_t __offset) __INTRODUCED_IN(21);
 #endif
 
+/**
+ * [munmap(2)](http://man7.org/linux/man-pages/man2/munmap.2.html)
+ * deletes a memory mapping for the given range.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int munmap(void* __addr, size_t __size);
+
+/**
+ * [msync(2)](http://man7.org/linux/man-pages/man2/msync.2.html)
+ * flushes changes to a memory-mapped file to disk.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int msync(void* __addr, size_t __size, int __flags);
+
+/**
+ * [mprotect(2)](http://man7.org/linux/man-pages/man2/mprotect.2.html)
+ * sets the protection on a memory region.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int mprotect(void* __addr, size_t __size, int __prot);
+
+/** Flag for mremap(). */
+#define MREMAP_MAYMOVE  1
+
+/** Flag for mremap(). */
+#define MREMAP_FIXED    2
+
+/**
+ * [mremap(2)](http://man7.org/linux/man-pages/man2/mremap.2.html)
+ * expands or shrinks an existing memory mapping.
+ *
+ * Returns the address of the mapping on success,
+ * and returns `MAP_FAILED` and sets `errno` on failure.
+ */
 void* mremap(void* __old_addr, size_t __old_size, size_t __new_size, int __flags, ...);
 
+/**
+ * [mlockall(2)](http://man7.org/linux/man-pages/man2/mlockall.2.html)
+ * locks pages (preventing swapping).
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int mlockall(int __flags) __INTRODUCED_IN(17);
+
+/**
+ * [munlockall(2)](http://man7.org/linux/man-pages/man2/munlockall.2.html)
+ * unlocks pages (allowing swapping).
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int munlockall(void) __INTRODUCED_IN(17);
 
+/**
+ * [mlock(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
+ * locks pages (preventing swapping).
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int mlock(const void* __addr, size_t __size);
+
+/**
+ * [mlock2(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
+ * locks pages (preventing swapping), with optional flags.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int mlock2(const void* __addr, size_t __size, int __flags) __INTRODUCED_IN(30);
+
+/**
+ * [munlock(2)](http://man7.org/linux/man-pages/man2/munlock.2.html)
+ * unlocks pages (allowing swapping).
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int munlock(const void* __addr, size_t __size);
 
+/**
+ * [mincore(2)](http://man7.org/linux/man-pages/man2/mincore.2.html)
+ * tests whether pages are resident in memory.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int mincore(void* __addr, size_t __size, unsigned char* __vector);
 
+/**
+ * [madvise(2)](http://man7.org/linux/man-pages/man2/madvise.2.html)
+ * gives the kernel advice about future usage patterns.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
 int madvise(void* __addr, size_t __size, int __advice);
 
+#if defined(__USE_GNU)
+
+/**
+ * [memfd_create(2)](http://man7.org/linux/man-pages/man2/memfd_create.2.html)
+ * creates an anonymous file.
+ *
+ * Returns an fd on success, and returns -1 and sets `errno` on failure.
+ */
+int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
+
+#endif
+
 #if __ANDROID_API__ >= __ANDROID_API_M__
+
 /*
  * Some third-party code uses the existence of POSIX_MADV_NORMAL to detect the
  * availability of posix_madvise. This is not correct, since having up-to-date
@@ -89,16 +183,30 @@ int madvise(void* __addr, size_t __size, int __advice);
  *
  * https://github.com/android-ndk/ndk/issues/395
  */
+
+/** Flag for posix_madvise(). */
 #define POSIX_MADV_NORMAL     MADV_NORMAL
+/** Flag for posix_madvise(). */
 #define POSIX_MADV_RANDOM     MADV_RANDOM
+/** Flag for posix_madvise(). */
 #define POSIX_MADV_SEQUENTIAL MADV_SEQUENTIAL
+/** Flag for posix_madvise(). */
 #define POSIX_MADV_WILLNEED   MADV_WILLNEED
+/** Flag for posix_madvise(). */
 #define POSIX_MADV_DONTNEED   MADV_DONTNEED
+
 #endif
+
+/**
+ * [posix_madvise(3)](http://man7.org/linux/man-pages/man3/posix_madvise.3.html)
+ * gives the kernel advice about future usage patterns.
+ *
+ * Returns 0 on success, and returns a positive error number on failure.
+ *
+ * See also madvise() which has been available much longer.
+ */
 int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 
 __END_DECLS
 
 #include <android/legacy_sys_mman_inlines.h>
-
-#endif
