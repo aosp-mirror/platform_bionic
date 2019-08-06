@@ -39,6 +39,7 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 
 New libc functions in R (API level 30):
   * Full C11 `<threads.h>` (available as inlines for older API levels).
+  * `memfd_create` and `mlock2` (GNU extensions).
   * `renameat2` (GNU extension).
   * `pthread_cond_clockwait`/`pthread_mutex_clocklock`/`pthread_rwlock_clockrdlock`/`pthread_rwlock_clockwrlock`/`sem_clockwait`
 
