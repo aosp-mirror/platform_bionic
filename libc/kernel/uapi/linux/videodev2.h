@@ -210,7 +210,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_RGBX444 v4l2_fourcc('R', 'X', '1', '2')
 #define V4L2_PIX_FMT_ABGR444 v4l2_fourcc('A', 'B', '1', '2')
 #define V4L2_PIX_FMT_XBGR444 v4l2_fourcc('X', 'B', '1', '2')
-#define V4L2_PIX_FMT_BGRA444 v4l2_fourcc('B', 'A', '1', '2')
+#define V4L2_PIX_FMT_BGRA444 v4l2_fourcc('G', 'A', '1', '2')
 #define V4L2_PIX_FMT_BGRX444 v4l2_fourcc('B', 'X', '1', '2')
 #define V4L2_PIX_FMT_RGB555 v4l2_fourcc('R', 'G', 'B', 'O')
 #define V4L2_PIX_FMT_ARGB555 v4l2_fourcc('A', 'R', '1', '5')
