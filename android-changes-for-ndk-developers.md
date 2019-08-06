@@ -46,6 +46,10 @@ versions older than JB-MR2, you might want to consider
 [ReLinker](https://github.com/KeepSafe/ReLinker) which claims to solve
 these problems automatically.
 
+Alternatively, if you don't have too many dependencies, it can be easiest to
+simply link all of your code into one big library and sidestep the details of
+library and symbol lookup changes on all past (and future) Android versions.
+
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
