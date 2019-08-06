@@ -88,6 +88,10 @@ struct libc_shared_globals {
   TlsModules tls_modules;
   BionicAllocator tls_allocator;
 
+  // Values passed from the HWASan runtime (via libc.so) to the loader.
+  void (*load_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
+  void (*unload_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
+
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
