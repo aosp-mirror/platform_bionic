@@ -1905,6 +1905,9 @@ bool find_libraries(android_namespace_t* ns,
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
+        if (__libc_shared_globals()->load_hook) {
+          __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
+        }
       }
 
       return true;
@@ -2039,6 +2042,9 @@ static void soinfo_unload_impl(soinfo* root) {
            si);
     notify_gdb_of_unload(si);
     unregister_soinfo_tls(si);
+    if (__libc_shared_globals()->unload_hook) {
+      __libc_shared_globals()->unload_hook(si->load_bias, si->phdr, si->phnum);
+    }
     get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }

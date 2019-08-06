@@ -69,6 +69,13 @@ extern "C" {
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
 
+extern "C" __attribute__((weak)) void __hwasan_library_loaded(ElfW(Addr) base,
+                                                              const ElfW(Phdr)* phdr,
+                                                              ElfW(Half) phnum);
+extern "C" __attribute__((weak)) void __hwasan_library_unloaded(ElfW(Addr) base,
+                                                                const ElfW(Phdr)* phdr,
+                                                                ElfW(Half) phnum);
+
 // We need a helper function for __libc_preinit because compiling with LTO may
 // inline functions requiring a stack protector check, but __stack_chk_guard is
 // not initialized at the start of __libc_preinit. __libc_preinit_impl will run
@@ -91,6 +98,14 @@ static void __libc_preinit_impl() {
 
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);
+
+#if __has_feature(hwaddress_sanitizer)
+  // Notify the HWASan runtime library whenever a library is loaded or unloaded
+  // so that it can update its shadow memory.
+  __libc_shared_globals()->load_hook = __hwasan_library_loaded;
+  __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
+#endif
+
   netdClientInit();
 }
 
