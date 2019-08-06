@@ -1493,6 +1493,8 @@ LIBC_R { # introduced=R
     cnd_signal;
     cnd_timedwait;
     cnd_wait;
+    memfd_create;
+    mlock2;
     mtx_destroy;
     mtx_init;
     mtx_lock;
