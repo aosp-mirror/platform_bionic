@@ -46,6 +46,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77b4c777_31c8b2b7",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-07T15:10:58Z",
+      "side": 1,
+      "message": "neither that doc, nor the bug, nor the other doc linked from the bug mention @TargetSdkVersion. where are the docs for this? (i\u0027m struggling to think what it could mean.)\n\ni also don\u0027t see the relevance to this CL, but maybe that will be clearer when we\u0027ve seen the documentation for @TargetSdkVersion...",
+      "parentUuid": "8c0fe1f0_6dba8af5",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
