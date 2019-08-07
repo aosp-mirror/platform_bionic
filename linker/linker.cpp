@@ -90,6 +90,8 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
+static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
+
 #if defined(__LP64__)
 static const char* const kSystemLibDir        = "/system/lib64";
 static const char* const kOdmLibDir           = "/odm/lib64";
@@ -4141,6 +4143,13 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return ld_config_file_env;
   }
 #endif
+
+  // Use generated linker config if flag is set
+  // TODO(b/138920271) Do not check property once it is confirmed as stable
+  if (android::base::GetBoolProperty("sys.linker.use_generated_config", false) &&
+      file_exists(kLdGeneratedConfigFilePath)) {
+    return kLdGeneratedConfigFilePath;
+  }
 
   std::string path = get_ld_config_file_apex_path(executable_path);
   if (!path.empty()) {
