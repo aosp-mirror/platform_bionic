@@ -142,6 +142,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "444896d0_58fbd3ca",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-08-07T22:14:27Z",
+      "side": 1,
+      "message": "\"behavior change\" means that there is a new behavior (crash early), and a compat behavior (let apps do the dangerous thing even though that will lead to some undefined / bad state down the track). In this particular case, because the behavior change crashes apps, while apps will want to find out that they\u0027re doing the wrong thing, reproducibly crashing for end users is not necessarily desirable; so there should be a way to turn this off.\n\nIn other ways: What I\u0027m saying is that we should not hard code that the behavior change is tied to a targetSdkVersion. It can be based on targetSdkVersion in most cases, but we should have the option to override this based on other factors (e.g. per-app), without having to recompile the system. This is what the \"logging and gating\" design has the potential to allow configuring at runtime.",
+      "parentUuid": "8e29720e_f1cfad31",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
