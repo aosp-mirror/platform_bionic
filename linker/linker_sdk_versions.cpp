@@ -26,9 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include "linker.h"
-#include <android/api-level.h>
 #include <atomic>
+
+#include <android/api-level.h>
+#include <android/fdsan.h>
+
+#include "linker.h"
 
 static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
 
@@ -38,6 +41,10 @@ void set_application_target_sdk_version(int target) {
     target = __ANDROID_API__;
   }
   g_target_sdk_version = target;
+
+  if (target < 30) {
+    android_fdsan_set_error_level_from_property(ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE);
+  }
 }
 
 int get_application_target_sdk_version() {
