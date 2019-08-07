@@ -22,6 +22,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c0fe1f0_6dba8af5",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1463094
+      },
+      "writtenOn": "2019-08-07T12:52:44Z",
+      "side": 1,
+      "message": "Thanks Tobias!\n\nJosh: see go/nonsdk/dev/compat-framework\nI\u0027ll try to move this to using our framework once we have native support if you don\u0027t mind.",
+      "parentUuid": "2925efdd_52fdddbe",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
