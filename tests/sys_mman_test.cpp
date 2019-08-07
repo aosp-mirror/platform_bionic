@@ -230,7 +230,10 @@ TEST(sys_mman, mmap_PTRDIFF_MAX) {
 TEST(sys_mman, mremap_PTRDIFF_MAX) {
   void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   ASSERT_NE(MAP_FAILED, map);
+
   ASSERT_EQ(MAP_FAILED, mremap(map, PAGE_SIZE, kHuge, MREMAP_MAYMOVE));
+
+  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
 }
 
 TEST(sys_mman, mmap_bug_27265969) {
@@ -238,4 +241,62 @@ TEST(sys_mman, mmap_bug_27265969) {
                                             MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
   // Some kernels had bugs that would cause segfaults here...
   __builtin___clear_cache(base, base + (PAGE_SIZE * 2));
+}
+
+TEST(sys_mman, mlock) {
+  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Not really anything we can assert about this.
+  mlock(map, PAGE_SIZE);
+
+  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
+}
+
+TEST(sys_mman, mlock2) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "needs glibc 2.27";
+#else
+  void* map = mmap(nullptr, PAGE_SIZE, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+  ASSERT_NE(MAP_FAILED, map);
+
+  // Not really anything we can assert about this.
+  mlock2(map, PAGE_SIZE, MLOCK_ONFAULT);
+
+  ASSERT_EQ(0, munmap(map, PAGE_SIZE));
+#endif
+}
+
+TEST(sys_mman, memfd_create) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "needs glibc 2.27";
+#else
+  // Is the MFD_CLOEXEC flag obeyed?
+  errno = 0;
+  int fd = memfd_create("doesn't matter", 0);
+  if (fd == -1) {
+    ASSERT_EQ(ENOSYS, errno);
+    GTEST_SKIP() << "no memfd_create available";
+  }
+  int f = fcntl(fd, F_GETFD);
+  ASSERT_NE(-1, f);
+  ASSERT_FALSE(f & FD_CLOEXEC);
+  close(fd);
+
+  errno = 0;
+  fd = memfd_create("doesn't matter", MFD_CLOEXEC);
+  f = fcntl(fd, F_GETFD);
+  ASSERT_NE(-1, f);
+  ASSERT_TRUE(f & FD_CLOEXEC);
+
+  // Can we read and write?
+  std::string expected("hello, world!");
+  ASSERT_TRUE(android::base::WriteStringToFd(expected, fd));
+  ASSERT_EQ(0, lseek(fd, 0, SEEK_SET));
+  std::string actual;
+  ASSERT_TRUE(android::base::ReadFdToString(fd, &actual));
+  ASSERT_EQ(expected, actual);
+
+  close(fd);
+#endif
 }

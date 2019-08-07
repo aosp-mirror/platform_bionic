@@ -20,6 +20,7 @@
 #define _LINUX_NILFS2_ONDISK_H
 #include <linux/types.h>
 #include <linux/magic.h>
+#include <asm/byteorder.h>
 #define NILFS_INODE_BMAP_SIZE 7
 struct nilfs_inode {
   __le64 i_blocks;
@@ -248,11 +249,11 @@ enum {
   NILFS_CHECKPOINT_MINOR,
 };
 #define NILFS_CHECKPOINT_FNS(flag,name) static inline void nilfs_checkpoint_set_ ##name(struct nilfs_checkpoint * cp) \
-{ cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) | (1UL << NILFS_CHECKPOINT_ ##flag)); \
+{ cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) | (1UL << NILFS_CHECKPOINT_ ##flag)); \
 } static inline void nilfs_checkpoint_clear_ ##name(struct nilfs_checkpoint * cp) \
-{ cp->cp_flags = cpu_to_le32(le32_to_cpu(cp->cp_flags) & ~(1UL << NILFS_CHECKPOINT_ ##flag)); \
+{ cp->cp_flags = __cpu_to_le32(__le32_to_cpu(cp->cp_flags) & ~(1UL << NILFS_CHECKPOINT_ ##flag)); \
 } static inline int nilfs_checkpoint_ ##name(const struct nilfs_checkpoint * cp) \
-{ return ! ! (le32_to_cpu(cp->cp_flags) & (1UL << NILFS_CHECKPOINT_ ##flag)); \
+{ return ! ! (__le32_to_cpu(cp->cp_flags) & (1UL << NILFS_CHECKPOINT_ ##flag)); \
 }
 struct nilfs_cpfile_header {
   __le64 ch_ncheckpoints;
@@ -272,11 +273,11 @@ enum {
   NILFS_SEGMENT_USAGE_ERROR,
 };
 #define NILFS_SEGMENT_USAGE_FNS(flag,name) static inline void nilfs_segment_usage_set_ ##name(struct nilfs_segment_usage * su) \
-{ su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) | (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
+{ su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) | (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
 } static inline void nilfs_segment_usage_clear_ ##name(struct nilfs_segment_usage * su) \
-{ su->su_flags = cpu_to_le32(le32_to_cpu(su->su_flags) & ~(1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
+{ su->su_flags = __cpu_to_le32(__le32_to_cpu(su->su_flags) & ~(1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
 } static inline int nilfs_segment_usage_ ##name(const struct nilfs_segment_usage * su) \
-{ return ! ! (le32_to_cpu(su->su_flags) & (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
+{ return ! ! (__le32_to_cpu(su->su_flags) & (1UL << NILFS_SEGMENT_USAGE_ ##flag)); \
 }
 struct nilfs_sufile_header {
   __le64 sh_ncleansegs;

@@ -107,12 +107,14 @@ ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) lp64
 
 int         __close:close(int)  all
 pid_t       __getpid:getpid()  all
+int memfd_create(const char*, unsigned) all
 int         munmap(void*, size_t)  all
 void*       __mremap:mremap(void*, size_t, size_t, int, void*)  all
 int         msync(const void*, size_t, int)    all
 int         mprotect(const void*, size_t, int)  all
 int         madvise(void*, size_t, int)  all
-int         mlock(const void* addr, size_t len)    all
+int mlock(const void* addr, size_t len)    all
+int mlock2(const void* addr, size_t len, int flags)    all
 int         munlock(const void* addr, size_t len)   all
 int         mlockall(int flags)   all
 int         munlockall()   all
