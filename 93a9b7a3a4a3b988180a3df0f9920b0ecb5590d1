@@ -118,6 +118,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e29720e_f1cfad31",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-07T21:33:33Z",
+      "side": 1,
+      "message": "i\u0027m not sure i\u0027ve understood the TL;DR of \"logging and gating\", but i don\u0027t think it\u0027s relevant for fdsan. fdsan isn\u0027t an API, it\u0027s a behavioral change to all of the fd creating/destroying APIs.",
+      "parentUuid": "8f839eaf_26b61dc7",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
