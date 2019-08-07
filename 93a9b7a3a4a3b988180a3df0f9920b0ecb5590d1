@@ -70,6 +70,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84ea072a_930961f8",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-08-07T19:53:34Z",
+      "side": 1,
+      "message": "\u003e Ah you already have a method to set the targetSdkVersion. Will this be called only once, or updated when @TargetSdkVersion() temporarily changes libcore\u0027s concept of targetSdkVersion?\n\nIt should get called by @TargetSdkVersion: https://android.googlesource.com/platform/art/+/master/runtime/native/dalvik_system_VMRuntime.cc#260\n\n\u003e Either way, as mentioned in my previous comment, configuring this behavior via the new API from http://b/135010838 seems like it\u0027ll be much more maintainable than via targetSdk and system properties. The only problem is that the API is not yet accessible to native code and that its _implementation_ for .java code is incomplete; so I guess doing something like you\u0027re doing here might be okay for now, but we should probably change it to the new API before the end of the year. WDYT?\n\nI\u0027m not sure what a native API would look like: we don\u0027t have a concept of target sdk level for purely native code, right? If you just mean that we should use this in zygote-derived processes, I think calling down to a one line JNI function that does this call should be good enough?",
+      "parentUuid": "77b4c777_31c8b2b7",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
