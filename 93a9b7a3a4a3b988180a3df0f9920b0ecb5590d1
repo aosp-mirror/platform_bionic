@@ -94,6 +94,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8f839eaf_26b61dc7",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-08-07T20:18:06Z",
+      "side": 1,
+      "message": "There are two aspects here: the right approach (a) right now, (b) in the longer term.\n\nFor (a), my mention of @TargetSdkVersion was referring the JUnit rule from the [1]; the only documentation that I\u0027m aware of is the one in that file. Under the hood, it calls VMRuntime.setTargetSdkVersion() (see line 142 of [1]). So my question was whether that was hooked up with this method here. Looks like it is (as Josh also worked out).\n\nFor reference, an example use of @TargetSdkVersion in a *Test.java file is [2].\n\nFor (b), when the corresponding infrastructure is ready, hopefully this year, my feeling is that targetSdkVersion is not the right abstraction level to use here. The code shouldn\u0027t hard-code that the compat behavior should happen if and only if targetSdkVersion \u003c\u003d X. Instead (once the API is ready), it should be asking that API whether this particular behavior change should exhibit the new old the compat behavior; whether that is based on targetSdkVersion or something else is an implementation detail that this code here need not concern itself with.\n\nSee the design linked from http://b/135010838.\n\n[1] https://android.googlesource.com/platform/libcore/+/master/test-rules/src/main/java/libcore/junit/util/SwitchTargetSdkVersionRule.java\n\n[2] https://android.googlesource.com/platform/libcore/+/master/luni/src/test/java/org/apache/harmony/regex/tests/java/util/regex/PatternTest.java#210",
+      "parentUuid": "84ea072a_930961f8",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
