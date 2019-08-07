@@ -16,6 +16,24 @@
       "revId": "66c9a786ec85c1130d3e56b5bdc0dd4a7165f8de",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0619b1e4_b61b8856",
+        "filename": "libc/bionic/__cxa_guard.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1056364
+      },
+      "writtenOn": "2019-08-07T18:09:11Z",
+      "side": 1,
+      "message": "The stdatomic.h has changed from using _USING_LIBCXX to using __has_include(\u003catomic\u003e). So at least we should remove _USING_LIBCXX.",
+      "parentUuid": "6b536756_a2c80a69",
+      "revId": "66c9a786ec85c1130d3e56b5bdc0dd4a7165f8de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
