@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2925efdd_52fdddbe",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-08-07T12:24:01Z",
+      "side": 1,
+      "message": "Ah you already have a method to set the targetSdkVersion. Will this be called only once, or updated when @TargetSdkVersion() temporarily changes libcore\u0027s concept of targetSdkVersion?\n\nEither way, as mentioned in my previous comment, configuring this behavior via the new API from http://b/135010838 seems like it\u0027ll be much more maintainable than via targetSdk and system properties. The only problem is that the API is not yet accessible to native code and that its _implementation_ for .java code is incomplete; so I guess doing something like you\u0027re doing here might be okay for now, but we should probably change it to the new API before the end of the year. WDYT?",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
