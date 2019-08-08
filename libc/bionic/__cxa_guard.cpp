@@ -16,9 +16,7 @@
 
 #include <endian.h>
 #include <limits.h>
-#undef _USING_LIBCXX  // Prevent using of <atomic>.
 #include <stdatomic.h>
-
 #include <stddef.h>
 
 #include "private/bionic_futex.h"
