@@ -10,7 +10,7 @@ at least the
 It is important to note that there are two modes for a native allocator
 to run in on Android. The first is the normal allocator, the second is
 called the svelte config, which is designed to run on memory constrained
-systems and be a bit slower, but take less PSS. To enable the svelte config,
+systems and be a bit slower, but take less RSS. To enable the svelte config,
 add this line to the `BoardConfig.mk` for the given target:
 
     MALLOC_SVELTE := true
@@ -55,7 +55,7 @@ to work efficiently.
 When set to zero, `mallopt(M_DECAY_TIME, 0)`, it is expected that an
 allocator will attempt to purge and release any unused memory back to the
 kernel on free calls. This is important in Android to avoid consuming extra
-PSS.
+RSS.
 
 When set to non-zero, `mallopt(M_DECAY_TIME, 1)`, an allocator can delay the
 purge and release action. The amount of delay is up to the allocator
@@ -65,13 +65,13 @@ allocator was implemented to have a one second delay.
 The drawback to this option is that most allocators do not have a separate
 thread to handle the purge, so the decay is only handled when an
 allocation operation occurs. For server processes, this can mean that
-PSS is slightly higher when the server is waiting for the next connection
+RSS is slightly higher when the server is waiting for the next connection
 and no other allocation calls are made. The `M_PURGE` option is used to
 force a purge in this case.
 
 For all applications on Android, the call `mallopt(M_DECAY_TIME, 1)` is
 made by default. The idea is that it allows application frees to run a
-bit faster, while only increasing PSS a bit.
+bit faster, while only increasing RSS a bit.
 
 #### M\_PURGE
 When called, `mallopt(M_PURGE, 0)`, an allocator should purge and release
@@ -115,7 +115,7 @@ to specify a device.
 ## Performance
 There are multiple different ways to evaluate the performance of a native
 allocator on Android. One is allocation speed in various different scenarios,
-anoher is total PSS taken by the allocator.
+another is total RSS taken by the allocator.
 
 The last is virtual address space consumed in 32 bit applications. There is
 a limited amount of address space available in 32 bit apps, and there have
@@ -129,7 +129,7 @@ benchmarks. These benchmarks can be built using this command:
     mmma -j bionic/benchmarks
 
 These benchmarks are only used to verify the speed of the allocator and
-ignore anything related to PSS and virtual address space consumed.
+ignore anything related to RSS and virtual address space consumed.
 
 #### Allocate/Free Benchmarks
 These are the benchmarks to verify the allocation speed of a loop doing a
@@ -228,7 +228,7 @@ To run the benchmarks with `mallopt(M_DECAY_TIME, 1)`, use these commands:
 These numbers should be as performant as the current allocator.
 
 ### Memory Trace Benchmarks
-These benchmarks measure all three axes of a native allocator, PSS, virtual
+These benchmarks measure all three axes of a native allocator, RSS, virtual
 address space consumed, speed of allocation. They are designed to
 run on a trace of the allocations from a real world application or system
 process.
@@ -248,7 +248,7 @@ And these two benchmark executables:
     /data/benchmarktest/trace_benchmark/trace_benchmark
 
 #### Memory Replay Benchmarks
-These benchmarks display PSS, virtual memory consumed (VA space), and do a
+These benchmarks display RSS, virtual memory consumed (VA space), and do a
 bit of performance testing on actual traces taken from running applications.
 
 The trace data includes what thread does each operation, so the replay
@@ -279,8 +279,8 @@ Run the benchmark thusly:
 
 Where XXX.txt is the name of a trace file.
 
-Every 100000 allocation operations, a dump of the PSS and VA space will be
-performed. At the end, a final PSS and VA space number will be printed.
+Every 100000 allocation operations, a dump of the RSS and VA space will be
+performed. At the end, a final RSS and VA space number will be printed.
 For the most part, the intermediate data can be ignored, but it is always
 a good idea to look over the data to verify that no strange spikes are
 occurring.
@@ -303,6 +303,14 @@ failures and would cause the camera app to abort/crash. It is
 important to verify that when running this trace using the 32 bit replay
 executable, the virtual address space consumed is not much larger than the
 current allocator. A small increase (on the order of a few MBs) would be okay.
+
+There is no specific benchmark for memory fragmentation, instead, the RSS
+when running the memory traces acts as a proxy for this. An allocator that
+is fragmenting badly will show an increase in RSS. The best trace for
+tracking fragmentation is system\_server.txt which is an extremely long
+trace (~13 million operations). The total number of live allocations goes
+up and down a bit, but stays mostly the same so an allocator that fragments
+badly would likely show an abnormal increase in RSS on this trace.
 
 NOTE: When a native allocator calls mmap, it is expected that the allocator
 will name the map using the call:
