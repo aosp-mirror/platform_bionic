@@ -22,6 +22,6 @@ SECTIONS {
   # Place end_of_gap at the end of the gap.
   . = 0x1000000;
   .bss.end_of_gap : {
-    *(.bss.end_of_gap);
+    *(.bss.*end_of_gap*);
   }
 }

@@ -951,7 +951,9 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
 }
 
 soinfo* find_containing_library(const void* p) {
-  ElfW(Addr) address = reinterpret_cast<ElfW(Addr)>(p);
+  // Addresses within a library may be tagged if they point to globals. Untag
+  // them so that the bounds check succeeds.
+  ElfW(Addr) address = reinterpret_cast<ElfW(Addr)>(untag_address(p));
   for (soinfo* si = solist_get_head(); si != nullptr; si = si->next) {
     if (address < si->base || address - si->base >= si->size) {
       continue;
@@ -1901,12 +1903,12 @@ bool find_libraries(android_namespace_t* ns,
           // flag is set.
           link_extinfo = extinfo;
         }
+        if (__libc_shared_globals()->load_hook) {
+          __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
+        }
         if (!si->link_image(global_group, local_group, link_extinfo, &relro_fd_offset) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
-        }
-        if (__libc_shared_globals()->load_hook) {
-          __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
         }
       }
 

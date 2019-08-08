@@ -361,8 +361,10 @@ TEST_F(DlExtTest, ReservedRecursive) {
 
   uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
   ASSERT_DL_NOTNULL(taxicab_number);
-  EXPECT_GE(reinterpret_cast<void*>(taxicab_number), start);
-  EXPECT_LT(reinterpret_cast<void*>(taxicab_number), reinterpret_cast<char*>(start) + kLibSize);
+  // Untag the pointer so that it can be compared with start, which will be untagged.
+  void* addr = reinterpret_cast<void*>(untag_address(taxicab_number));
+  EXPECT_GE(addr, start);
+  EXPECT_LT(addr, reinterpret_cast<char*>(start) + kLibSize);
   EXPECT_EQ(1729U, *taxicab_number);
 }
 
