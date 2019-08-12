@@ -46,7 +46,7 @@
 struct timespec {
   /** Number of seconds. */
   time_t tv_sec;
-  /** Number of nanoseconds. Must be less than 1,000,000. */
+  /** Number of nanoseconds. Must be less than 1,000,000,000. */
   long tv_nsec;
 };
 #endif
