@@ -166,6 +166,30 @@
       "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "65535a90_111dc015",
+        "filename": "linker/linker_sdk_versions.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1103203
+      },
+      "writtenOn": "2019-08-12T11:12:43Z",
+      "side": 1,
+      "message": "PS. The fact that this CL had to be rolled back is an example for why this behavior change would be good to gate based on an API such as the one I mentioned, because that kind of API has the potential (not implemented yet) to allow us to roll back the behavior specifically for some apps / processes, without having to roll back the code change.",
+      "parentUuid": "444896d0_58fbd3ca",
+      "range": {
+        "startLine": 38,
+        "startChar": 5,
+        "endLine": 38,
+        "endChar": 39
+      },
+      "revId": "93a9b7a3a4a3b988180a3df0f9920b0ecb5590d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
