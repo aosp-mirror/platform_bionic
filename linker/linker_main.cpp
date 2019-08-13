@@ -490,11 +490,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                           static_cast<long long>(t0.tv_usec))));
 #endif
 #if STATS
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
-         linker_stats.count[kRelocAbsolute],
-         linker_stats.count[kRelocRelative],
-         linker_stats.count[kRelocCopy],
-         linker_stats.count[kRelocSymbol]);
+  print_linker_stats();
 #endif
 #if COUNT_PAGES
   {

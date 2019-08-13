@@ -1675,7 +1675,9 @@ cc_library {
         versions: ["10000"],
     },
 
-    symbol_ordering_file: "symbol_ordering",
+    // Sorting bss symbols by size usually results in less dirty pages at run
+    // time, because small symbols are grouped together.
+    sort_bss_symbols_by_size: true,
 }
 
 genrule {
@@ -1708,6 +1710,19 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+}
+
+// Makes bionic_tls.h available for art to use in its implementation of Thread::Current().
+cc_library_headers {
+    name: "bionic_libc_private_headers",
+    visibility: [
+        "//art:__subpackages__",
+    ],
+    host_supported: true,
+    export_include_dirs: [
+        "private",
+    ],
+    sdk_version: "current",
 }
 
 // libc_headers for libasync_safe and libpropertyinfoparser

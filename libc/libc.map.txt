@@ -1485,6 +1485,7 @@ LIBC_R { # introduced=R
     __mempcpy_chk;
     __open64_2;
     __openat64_2;
+    __tls_get_addr; # arm64
     call_once;
     cnd_broadcast;
     cnd_destroy;
@@ -1492,6 +1493,8 @@ LIBC_R { # introduced=R
     cnd_signal;
     cnd_timedwait;
     cnd_wait;
+    memfd_create;
+    mlock2;
     mtx_destroy;
     mtx_init;
     mtx_lock;
@@ -1502,6 +1505,7 @@ LIBC_R { # introduced=R
     pthread_mutex_clocklock;
     pthread_rwlock_clockrdlock;
     pthread_rwlock_clockwrlock;
+    renameat2;
     sem_clockwait;
     thrd_create;
     thrd_current;
