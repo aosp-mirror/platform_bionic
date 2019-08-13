@@ -282,6 +282,16 @@ static linker_stats_t linker_stats;
 void count_relocation(RelocationKind kind) {
   ++linker_stats.count[kind];
 }
+
+void print_linker_stats() {
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol (%d cached)",
+         g_argv[0],
+         linker_stats.count[kRelocAbsolute],
+         linker_stats.count[kRelocRelative],
+         linker_stats.count[kRelocCopy],
+         linker_stats.count[kRelocSymbol],
+         linker_stats.count[kRelocSymbolCached]);
+}
 #else
 void count_relocation(RelocationKind) {
 }
@@ -1895,6 +1905,9 @@ bool find_libraries(android_namespace_t* ns,
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
+        if (__libc_shared_globals()->load_hook) {
+          __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
+        }
       }
 
       return true;
@@ -2029,6 +2042,9 @@ static void soinfo_unload_impl(soinfo* root) {
            si);
     notify_gdb_of_unload(si);
     unregister_soinfo_tls(si);
+    if (__libc_shared_globals()->unload_hook) {
+      __libc_shared_globals()->unload_hook(si->load_bias, si->phdr, si->phnum);
+    }
     get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
@@ -2883,6 +2899,17 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
   const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
   std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
 
+  struct {
+    // Cache key
+    ElfW(Word) sym;
+
+    // Cache value
+    const ElfW(Sym)* s;
+    soinfo* lsi;
+  } symbol_lookup_cache;
+
+  symbol_lookup_cache.sym = 0;
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2926,14 +2953,25 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       return false;
     } else {
       sym_name = get_string(symtab_[sym].st_name);
-      const version_info* vi = nullptr;
 
-      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
-        return false;
-      }
+      if (sym == symbol_lookup_cache.sym) {
+        s = symbol_lookup_cache.s;
+        lsi = symbol_lookup_cache.lsi;
+        count_relocation(kRelocSymbolCached);
+      } else {
+        const version_info* vi = nullptr;
 
-      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-        return false;
+        if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+          return false;
+        }
+
+        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+          return false;
+        }
+
+        symbol_lookup_cache.sym = sym;
+        symbol_lookup_cache.s = s;
+        symbol_lookup_cache.lsi = lsi;
       }
 
       if (s == nullptr) {
@@ -3130,10 +3168,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
-
-#if !defined(__aarch64__)
-      // Omit support for DTPMOD/DTPREL on arm64, at least until
-      // http://b/123385182 is fixed. arm64 uses TLSDESC instead.
       case R_GENERIC_TLS_DTPMOD:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
@@ -3158,7 +3192,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
-#endif  // !defined(__aarch64__)
 
 #if defined(__aarch64__)
       // Bionic currently only implements TLSDESC for arm64. This implementation should work with

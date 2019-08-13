@@ -25,7 +25,7 @@ configuration using set of properties described in example below.
 ## Example
 
 ```
-# The following line maps section to a dir. Binraies ran from this location will use namespaces
+# The following line maps section to a dir. Binaries ran from this location will use namespaces
 # configuration specified in [example_section] below
 dir.example_section=/system/bin/example
 
@@ -38,7 +38,7 @@ dir.example_section=/system/bin/example
 # default value is false
 enable.target.sdk.version = true
 
-# This property can be used to declare additional namespaces.Note that there is always the default
+# This property can be used to declare additional namespaces. Note that there is always the default
 # namespace. The default namespace is the namespace for the main executable. This list is
 # comma-separated.
 additional.namespaces = ns1
@@ -65,7 +65,7 @@ namespace.default.asan.permitted.paths = /data/${LIB}
 # This declares linked namespaces - comma separated list.
 namespace.default.links = ns1
 
-# For every link define list of shared libraries. This is list of the libraries accessilbe from
+# For every link define list of shared libraries. This is list of the libraries accessible from
 # default namespace but loaded in the linked namespace.
 namespace.default.link.ns1.shared_libs = libexternal.so:libother.so
 

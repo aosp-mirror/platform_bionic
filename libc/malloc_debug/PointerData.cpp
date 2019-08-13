@@ -43,7 +43,6 @@
 
 #include <android-base/stringprintf.h>
 #include <android-base/thread_annotations.h>
-#include <demangle.h>
 #include <private/bionic_macros.h>
 
 #include "Config.h"
@@ -53,6 +52,8 @@
 #include "debug_log.h"
 #include "malloc_debug.h"
 #include "UnwindBacktrace.h"
+
+extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 std::atomic_uint8_t PointerData::backtrace_enabled_;
 std::atomic_bool PointerData::backtrace_dump_;
@@ -596,7 +597,16 @@ void PointerData::DumpLiveToFile(FILE* fp) {
         if (frame.function_name.empty()) {
           fprintf(fp, " \"\" 0}");
         } else {
-          fprintf(fp, " \"%s\" %" PRIx64 "}", demangle(frame.function_name.c_str()).c_str(), frame.function_offset);
+          char* demangled_name = __cxa_demangle(frame.function_name.c_str(), nullptr, nullptr,
+                                                nullptr);
+          const char* name;
+          if (demangled_name != nullptr) {
+            name = demangled_name;
+          } else {
+            name = frame.function_name.c_str();
+          }
+          fprintf(fp, " \"%s\" %" PRIx64 "}", name, frame.function_offset);
+          free(demangled_name);
         }
       }
       fprintf(fp, "\n");

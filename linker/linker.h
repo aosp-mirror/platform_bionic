@@ -94,10 +94,13 @@ enum RelocationKind {
   kRelocRelative,
   kRelocCopy,
   kRelocSymbol,
+  kRelocSymbolCached,
   kRelocMax
 };
 
 void count_relocation(RelocationKind kind);
+
+void print_linker_stats();
 
 soinfo* get_libdl_info(const soinfo& linker_si);
 
