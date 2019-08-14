@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48715053_3b74e302",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-14T19:44:01Z",
+      "side": 1,
+      "message": "I think I\u0027d move the `set_bss_vma_name(\u0026tmp_linker_so);` call to immediately after the tmp_linker_so.protect_relro() call (or immediately before it). Both calls are setting up the virtual page attributes for the linker.\n\nI\u0027d also like to keep the amount of code running prior to __libc_init_main_thread_late to a minimum, because various things depend on the stuff that function initializes (e.g. __bionic_tls -\u003e dirname/basename/strerror, gettid, arc4random).",
+      "revId": "64f46f7010f9b858a9acb1115132511696ebc68f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
