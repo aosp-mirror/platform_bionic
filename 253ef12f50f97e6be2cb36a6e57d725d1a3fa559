@@ -16,6 +16,24 @@
       "revId": "253ef12f50f97e6be2cb36a6e57d725d1a3fa559",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "291d72aa_b88e3a7d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-08-14T19:59:48Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure we have to wrap? That makes this seem unlikely to cause the reported bug (which was failing basically 100% of the time on test infrastructure?)",
+      "parentUuid": "7333a945_9734e3b2",
+      "revId": "253ef12f50f97e6be2cb36a6e57d725d1a3fa559",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
