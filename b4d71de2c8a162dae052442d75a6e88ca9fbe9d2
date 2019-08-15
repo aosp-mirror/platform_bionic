@@ -52,6 +52,24 @@
       "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fa99def_0877bc93",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2019-08-15T21:00:51Z",
+      "side": 1,
+      "message": "Hmm, kUncheckedShadow thing looks like a bug indeed.\nIt is probably easiest to copy the entire memory range in ShadowWrite constructor to avoid this problem.",
+      "parentUuid": "e7f59441_786826fd",
+      "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
