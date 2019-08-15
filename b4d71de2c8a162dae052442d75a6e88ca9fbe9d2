@@ -16,6 +16,24 @@
       "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ae56a76_ebddb1a3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-08-15T16:18:20Z",
+      "side": 1,
+      "message": "It happens that calling the hooks multiple times, or calling the unload hook without calling the load hook first, is harmless (it will just end up setting the shadow to the value that it already has). I think the same is also true for CFI shadow. In any event, I think you\u0027re right and we can remove the additional call here.",
+      "parentUuid": "8255be3b_6223240b",
+      "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
