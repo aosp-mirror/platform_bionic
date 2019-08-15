@@ -148,6 +148,10 @@ struct kfd_ioctl_dbg_wave_control_args {
 #define KFD_HW_EXCEPTION_PER_ENGINE_RESET 1
 #define KFD_HW_EXCEPTION_GPU_HANG 0
 #define KFD_HW_EXCEPTION_ECC 1
+#define KFD_MEM_ERR_NO_RAS 0
+#define KFD_MEM_ERR_SRAM_ECC 1
+#define KFD_MEM_ERR_POISON_CONSUMED 2
+#define KFD_MEM_ERR_GPU_HANG 3
 struct kfd_ioctl_create_event_args {
   __u64 event_page_offset;
   __u32 event_trigger_data;
@@ -179,7 +183,7 @@ struct kfd_hsa_memory_exception_data {
   struct kfd_memory_exception_failure failure;
   __u64 va;
   __u32 gpu_id;
-  __u32 pad;
+  __u32 ErrorType;
 };
 struct kfd_hsa_hw_exception_data {
   __u32 reset_type;

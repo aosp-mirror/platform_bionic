@@ -110,7 +110,9 @@ def GenerateGlibcSyscallsHeader(updater):
         content += '  #define SYS_%s %s\n' % (syscall, nr_name)
         content += '#endif\n'
 
-    updater.editFile('%s/include/bits/glibc-syscalls.h' % libc_root, content)
+    syscall_file = os.path.join(libc_root, 'include/bits/glibc-syscalls.h')
+    updater.readFile(syscall_file)
+    updater.editFile(syscall_file, content)
 
 
 try:

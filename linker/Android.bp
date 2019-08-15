@@ -177,11 +177,6 @@ cc_defaults {
         "-Wextra",
         "-Wunused",
         "-Werror",
-
-        // Define _USING_LIBCXX so <stdatomic.h> defers to the <atomic> header. When a Soong module
-        // uses the platform libc++, Soong automatically passes this macro, but the dynamic linker
-        // links against libc++ manually.
-        "-D_USING_LIBCXX",
     ],
 
     // TODO: split out the asflags.

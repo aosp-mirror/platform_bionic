@@ -496,7 +496,7 @@ enum nft_ct_keys {
   NFT_CT_DST_IP,
   NFT_CT_SRC_IP6,
   NFT_CT_DST_IP6,
-  NFT_CT_TIMEOUT,
+  NFT_CT_ID,
   __NFT_CT_MAX
 };
 #define NFT_CT_MAX (__NFT_CT_MAX - 1)
@@ -574,7 +574,7 @@ enum nft_log_level {
   NFT_LOGLEVEL_AUDIT,
   __NFT_LOGLEVEL_MAX
 };
-#define NFT_LOGLEVEL_MAX (__NFT_LOGLEVEL_MAX + 1)
+#define NFT_LOGLEVEL_MAX (__NFT_LOGLEVEL_MAX - 1)
 enum nft_queue_attributes {
   NFTA_QUEUE_UNSPEC,
   NFTA_QUEUE_NUM,
@@ -786,9 +786,13 @@ enum nft_osf_attributes {
   NFTA_OSF_UNSPEC,
   NFTA_OSF_DREG,
   NFTA_OSF_TTL,
+  NFTA_OSF_FLAGS,
   __NFTA_OSF_MAX,
 };
 #define NFTA_OSF_MAX (__NFTA_OSF_MAX - 1)
+enum nft_osf_flags {
+  NFT_OSF_F_VERSION = (1 << 0),
+};
 enum nft_devices_attributes {
   NFTA_DEVICE_UNSPEC,
   NFTA_DEVICE_NAME,

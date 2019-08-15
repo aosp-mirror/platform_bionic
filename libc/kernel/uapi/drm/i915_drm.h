@@ -25,6 +25,12 @@ extern "C" {
 #define I915_L3_PARITY_UEVENT "L3_PARITY_ERROR"
 #define I915_ERROR_UEVENT "ERROR"
 #define I915_RESET_UEVENT "RESET"
+struct i915_user_extension {
+  __u64 next_extension;
+  __u32 name;
+  __u32 flags;
+  __u32 rsvd[4];
+};
 enum i915_mocs_table_index {
   I915_MOCS_UNCACHED,
   I915_MOCS_PTE,
@@ -36,6 +42,10 @@ enum drm_i915_gem_engine_class {
   I915_ENGINE_CLASS_VIDEO = 2,
   I915_ENGINE_CLASS_VIDEO_ENHANCE = 3,
   I915_ENGINE_CLASS_INVALID = - 1
+};
+struct i915_engine_class_instance {
+  __u16 engine_class;
+  __u16 engine_instance;
 };
 enum drm_i915_pmu_engine_sample {
   I915_SAMPLE_BUSY = 0,
@@ -249,6 +259,7 @@ typedef struct _drm_i915_sarea {
 #define DRM_IOCTL_I915_GET_SPRITE_COLORKEY DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GET_SPRITE_COLORKEY, struct drm_intel_sprite_colorkey)
 #define DRM_IOCTL_I915_GEM_WAIT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_WAIT, struct drm_i915_gem_wait)
 #define DRM_IOCTL_I915_GEM_CONTEXT_CREATE DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create)
+#define DRM_IOCTL_I915_GEM_CONTEXT_CREATE_EXT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_CREATE, struct drm_i915_gem_context_create_ext)
 #define DRM_IOCTL_I915_GEM_CONTEXT_DESTROY DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_CONTEXT_DESTROY, struct drm_i915_gem_context_destroy)
 #define DRM_IOCTL_I915_REG_READ DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_REG_READ, struct drm_i915_reg_read)
 #define DRM_IOCTL_I915_GET_RESET_STATS DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GET_RESET_STATS, struct drm_i915_reset_stats)
@@ -328,6 +339,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_SCHEDULER_CAP_ENABLED (1ul << 0)
 #define I915_SCHEDULER_CAP_PRIORITY (1ul << 1)
 #define I915_SCHEDULER_CAP_PREEMPTION (1ul << 2)
+#define I915_SCHEDULER_CAP_SEMAPHORES (1ul << 3)
 #define I915_PARAM_HUC_STATUS 42
 #define I915_PARAM_HAS_EXEC_ASYNC 43
 #define I915_PARAM_HAS_EXEC_FENCE 44
@@ -499,7 +511,7 @@ struct drm_i915_gem_execbuffer2 {
   __u32 DR4;
   __u32 num_cliprects;
   __u64 cliprects_ptr;
-#define I915_EXEC_RING_MASK (7 << 0)
+#define I915_EXEC_RING_MASK (0x3f)
 #define I915_EXEC_DEFAULT (0 << 0)
 #define I915_EXEC_RENDER (1 << 0)
 #define I915_EXEC_BSD (2 << 0)
@@ -665,9 +677,52 @@ struct drm_i915_gem_context_create {
   __u32 ctx_id;
   __u32 pad;
 };
+struct drm_i915_gem_context_create_ext {
+  __u32 ctx_id;
+  __u32 flags;
+#define I915_CONTEXT_CREATE_FLAGS_USE_EXTENSIONS (1u << 0)
+#define I915_CONTEXT_CREATE_FLAGS_UNKNOWN (- (I915_CONTEXT_CREATE_FLAGS_USE_EXTENSIONS << 1))
+  __u64 extensions;
+};
+struct drm_i915_gem_context_param {
+  __u32 ctx_id;
+  __u32 size;
+  __u64 param;
+#define I915_CONTEXT_PARAM_BAN_PERIOD 0x1
+#define I915_CONTEXT_PARAM_NO_ZEROMAP 0x2
+#define I915_CONTEXT_PARAM_GTT_SIZE 0x3
+#define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE 0x4
+#define I915_CONTEXT_PARAM_BANNABLE 0x5
+#define I915_CONTEXT_PARAM_PRIORITY 0x6
+#define I915_CONTEXT_MAX_USER_PRIORITY 1023
+#define I915_CONTEXT_DEFAULT_PRIORITY 0
+#define I915_CONTEXT_MIN_USER_PRIORITY - 1023
+#define I915_CONTEXT_PARAM_SSEU 0x7
+#define I915_CONTEXT_PARAM_RECOVERABLE 0x8
+  __u64 value;
+};
+struct drm_i915_gem_context_param_sseu {
+  struct i915_engine_class_instance engine;
+  __u32 flags;
+  __u64 slice_mask;
+  __u64 subslice_mask;
+  __u16 min_eus_per_subslice;
+  __u16 max_eus_per_subslice;
+  __u32 rsvd;
+};
+struct drm_i915_gem_context_create_ext_setparam {
+#define I915_CONTEXT_CREATE_EXT_SETPARAM 0
+  struct i915_user_extension base;
+  struct drm_i915_gem_context_param param;
+};
 struct drm_i915_gem_context_destroy {
   __u32 ctx_id;
   __u32 pad;
+};
+struct drm_i915_gem_vm_control {
+  __u64 extensions;
+  __u32 flags;
+  __u32 vm_id;
 };
 struct drm_i915_reg_read {
   __u64 offset;
@@ -689,32 +744,6 @@ struct drm_i915_gem_userptr {
 #define I915_USERPTR_READ_ONLY 0x1
 #define I915_USERPTR_UNSYNCHRONIZED 0x80000000
   __u32 handle;
-};
-struct drm_i915_gem_context_param {
-  __u32 ctx_id;
-  __u32 size;
-  __u64 param;
-#define I915_CONTEXT_PARAM_BAN_PERIOD 0x1
-#define I915_CONTEXT_PARAM_NO_ZEROMAP 0x2
-#define I915_CONTEXT_PARAM_GTT_SIZE 0x3
-#define I915_CONTEXT_PARAM_NO_ERROR_CAPTURE 0x4
-#define I915_CONTEXT_PARAM_BANNABLE 0x5
-#define I915_CONTEXT_PARAM_PRIORITY 0x6
-#define I915_CONTEXT_MAX_USER_PRIORITY 1023
-#define I915_CONTEXT_DEFAULT_PRIORITY 0
-#define I915_CONTEXT_MIN_USER_PRIORITY - 1023
-#define I915_CONTEXT_PARAM_SSEU 0x7
-  __u64 value;
-};
-struct drm_i915_gem_context_param_sseu {
-  __u16 engine_class;
-  __u16 engine_instance;
-  __u32 flags;
-  __u64 slice_mask;
-  __u64 subslice_mask;
-  __u16 min_eus_per_subslice;
-  __u16 max_eus_per_subslice;
-  __u32 rsvd;
 };
 enum drm_i915_oa_format {
   I915_OA_FORMAT_A13 = 1,

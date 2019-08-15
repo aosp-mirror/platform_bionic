@@ -76,6 +76,7 @@
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
 
+static bool g_anonymous_namespace_set = false;
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 static std::unordered_map<std::string, android_namespace_t*> g_exported_namespaces;
 
@@ -89,6 +90,8 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
+
+static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir        = "/system/lib64";
@@ -270,8 +273,6 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 
 static std::vector<std::string> g_ld_preload_names;
 
-static bool g_anonymous_namespace_initialized;
-
 #if STATS
 struct linker_stats_t {
   int count[kRelocMax];
@@ -281,6 +282,16 @@ static linker_stats_t linker_stats;
 
 void count_relocation(RelocationKind kind) {
   ++linker_stats.count[kind];
+}
+
+void print_linker_stats() {
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol (%d cached)",
+         g_argv[0],
+         linker_stats.count[kRelocAbsolute],
+         linker_stats.count[kRelocRelative],
+         linker_stats.count[kRelocCopy],
+         linker_stats.count[kRelocSymbol],
+         linker_stats.count[kRelocSymbolCached]);
 }
 #else
 void count_relocation(RelocationKind) {
@@ -393,16 +404,23 @@ static void parse_LD_LIBRARY_PATH(const char* path) {
 }
 
 static bool realpath_fd(int fd, std::string* realpath) {
-  std::vector<char> buf(PATH_MAX), proc_self_fd(PATH_MAX);
-  async_safe_format_buffer(&proc_self_fd[0], proc_self_fd.size(), "/proc/self/fd/%d", fd);
-  if (readlink(&proc_self_fd[0], &buf[0], buf.size()) == -1) {
+  // proc_self_fd needs to be large enough to hold "/proc/self/fd/" plus an
+  // integer, plus the NULL terminator.
+  char proc_self_fd[32];
+  // We want to statically allocate this large buffer so that we don't grow
+  // the stack by too much.
+  static char buf[PATH_MAX];
+
+  async_safe_format_buffer(proc_self_fd, sizeof(proc_self_fd), "/proc/self/fd/%d", fd);
+  auto length = readlink(proc_self_fd, buf, sizeof(buf));
+  if (length == -1) {
     if (!is_first_stage_init()) {
-      PRINT("readlink(\"%s\") failed: %s [fd=%d]", &proc_self_fd[0], strerror(errno), fd);
+      PRINT("readlink(\"%s\") failed: %s [fd=%d]", proc_self_fd, strerror(errno), fd);
     }
     return false;
   }
 
-  *realpath = &buf[0];
+  realpath->assign(buf, length);
   return true;
 }
 
@@ -1215,12 +1233,14 @@ static bool find_loaded_library_by_inode(android_namespace_t* ns,
                                          off64_t file_offset,
                                          bool search_linked_namespaces,
                                          soinfo** candidate) {
+  if (file_stat.st_dev == 0 || file_stat.st_ino == 0) {
+    *candidate = nullptr;
+    return false;
+  }
 
   auto predicate = [&](soinfo* si) {
-    return si->get_st_dev() != 0 &&
-           si->get_st_ino() != 0 &&
+    return si->get_st_ino() == file_stat.st_ino &&
            si->get_st_dev() == file_stat.st_dev &&
-           si->get_st_ino() == file_stat.st_ino &&
            si->get_file_offset() == file_offset;
   };
 
@@ -1886,6 +1906,9 @@ bool find_libraries(android_namespace_t* ns,
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
+        if (__libc_shared_globals()->load_hook) {
+          __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
+        }
       }
 
       return true;
@@ -2020,6 +2043,9 @@ static void soinfo_unload_impl(soinfo* root) {
            si);
     notify_gdb_of_unload(si);
     unregister_soinfo_tls(si);
+    if (__libc_shared_globals()->unload_hook) {
+      __libc_shared_globals()->unload_hook(si->load_bias, si->phdr, si->phnum);
+    }
     get_cfi_shadow()->BeforeUnload(si);
     soinfo_free(si);
   }
@@ -2452,13 +2478,28 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
-bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
-  if (g_anonymous_namespace_initialized) {
-    DL_ERR("anonymous namespace has already been initialized.");
-    return false;
+// Make ns as the anonymous namespace that is a namespace used when
+// we fail to determine the caller address (e.g., call from mono-jited code)
+// Since there can be multiple anonymous namespace in a process, subsequent
+// call to this function causes an error.
+static bool set_anonymous_namespace(android_namespace_t* ns) {
+  if (!g_anonymous_namespace_set && ns != nullptr) {
+    CHECK(ns->is_also_used_as_anonymous());
+    g_anonymous_namespace = ns;
+    g_anonymous_namespace_set = true;
+    return true;
   }
+  return false;
+}
 
+// TODO(b/130388701) remove this. Currently, this is used only for testing
+// where we don't have classloader namespace.
+bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
   ProtectedDataGuard guard;
+
+  // Test-only feature: we need to change the anonymous namespace multiple times
+  // while the test is running.
+  g_anonymous_namespace_set = false;
 
   // create anonymous namespace
   // When the caller is nullptr - create_namespace will take global group
@@ -2469,20 +2510,17 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
                        "(anonymous)",
                        nullptr,
                        library_search_path,
-                       ANDROID_NAMESPACE_TYPE_ISOLATED,
+                       ANDROID_NAMESPACE_TYPE_ISOLATED |
+                       ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS,
                        nullptr,
                        &g_default_namespace);
 
-  if (anon_ns == nullptr) {
-    return false;
-  }
+  CHECK(anon_ns != nullptr);
 
   if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames)) {
+    // TODO: delete anon_ns
     return false;
   }
-
-  g_anonymous_namespace = anon_ns;
-  g_anonymous_namespace_initialized = true;
 
   return true;
 }
@@ -2523,6 +2561,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
   ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
+  ns->set_also_used_as_anonymous((type & ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
     // append parent namespace paths.
@@ -2553,6 +2592,16 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_ld_library_paths(std::move(ld_library_paths));
   ns->set_default_library_paths(std::move(default_library_paths));
   ns->set_permitted_paths(std::move(permitted_paths));
+
+  if (ns->is_also_used_as_anonymous() && !set_anonymous_namespace(ns)) {
+    DL_ERR("failed to set namespace: [name=\"%s\", ld_library_path=\"%s\", default_library_paths=\"%s\""
+           " permitted_paths=\"%s\"] as the anonymous namespace",
+           ns->get_name(),
+           android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+           android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+           android::base::Join(ns->get_permitted_paths(), ':').c_str());
+    return nullptr;
+  }
 
   return ns;
 }
@@ -2874,6 +2923,17 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
   const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
   std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
 
+  struct {
+    // Cache key
+    ElfW(Word) sym;
+
+    // Cache value
+    const ElfW(Sym)* s;
+    soinfo* lsi;
+  } symbol_lookup_cache;
+
+  symbol_lookup_cache.sym = 0;
+
   for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
     const auto rel = rel_iterator.next();
     if (rel == nullptr) {
@@ -2917,14 +2977,25 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       return false;
     } else {
       sym_name = get_string(symtab_[sym].st_name);
-      const version_info* vi = nullptr;
 
-      if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
-        return false;
-      }
+      if (sym == symbol_lookup_cache.sym) {
+        s = symbol_lookup_cache.s;
+        lsi = symbol_lookup_cache.lsi;
+        count_relocation(kRelocSymbolCached);
+      } else {
+        const version_info* vi = nullptr;
 
-      if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-        return false;
+        if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
+          return false;
+        }
+
+        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
+          return false;
+        }
+
+        symbol_lookup_cache.sym = sym;
+        symbol_lookup_cache.s = s;
+        symbol_lookup_cache.lsi = lsi;
       }
 
       if (s == nullptr) {
@@ -3121,10 +3192,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
         }
         break;
-
-#if !defined(__aarch64__)
-      // Omit support for DTPMOD/DTPREL on arm64, at least until
-      // http://b/123385182 is fixed. arm64 uses TLSDESC instead.
       case R_GENERIC_TLS_DTPMOD:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
@@ -3149,7 +3216,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
         break;
-#endif  // !defined(__aarch64__)
 
 #if defined(__aarch64__)
       // Bionic currently only implements TLSDESC for arm64. This implementation should work with
@@ -4073,10 +4139,10 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
-// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/<exec>
+// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/*
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
-  if (paths.size() == 5 && paths[1] == "apex" && paths[3] == "bin") {
+  if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
     return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
   }
   return "";
@@ -4105,6 +4171,13 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return ld_config_file_env;
   }
 #endif
+
+  // Use generated linker config if flag is set
+  // TODO(b/138920271) Do not check property once it is confirmed as stable
+  if (android::base::GetBoolProperty("sys.linker.use_generated_config", false) &&
+      file_exists(kLdGeneratedConfigFilePath)) {
+    return kLdGeneratedConfigFilePath;
+  }
 
   std::string path = get_ld_config_file_apex_path(executable_path);
   if (!path.empty()) {

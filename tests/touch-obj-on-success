@@ -4,5 +4,8 @@
 # from that command line and touches it.
 
 "$@"
-obj="$(echo "$@" | grep -oP '\S+\.o\b')"
-touch "${obj}"
+for arg in "$@"; do
+  if [[ "$arg" == *.o ]]; then
+    touch "$arg"
+  fi
+done

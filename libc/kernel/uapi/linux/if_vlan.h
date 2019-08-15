@@ -35,6 +35,7 @@ enum vlan_flags {
   VLAN_FLAG_GVRP = 0x2,
   VLAN_FLAG_LOOSE_BINDING = 0x4,
   VLAN_FLAG_MVRP = 0x8,
+  VLAN_FLAG_BRIDGE_BINDING = 0x10,
 };
 enum vlan_name_types {
   VLAN_NAME_TYPE_PLUS_VID,

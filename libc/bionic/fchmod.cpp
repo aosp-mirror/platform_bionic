@@ -35,11 +35,11 @@
 
 #include "private/FdPath.h"
 
-extern "C" int ___fchmod(int, mode_t);
+extern "C" int __fchmod(int, mode_t);
 
 int fchmod(int fd, mode_t mode) {
   int saved_errno = errno;
-  int result = ___fchmod(fd, mode);
+  int result = __fchmod(fd, mode);
   if (result == 0 || errno != EBADF) {
     return result;
   }

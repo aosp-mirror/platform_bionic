@@ -94,12 +94,15 @@ enum RelocationKind {
   kRelocRelative,
   kRelocCopy,
   kRelocSymbol,
+  kRelocSymbolCached,
   kRelocMax
 };
 
 void count_relocation(RelocationKind kind);
 
-soinfo* get_libdl_info(const char* linker_path, const soinfo& linker_si);
+void print_linker_stats();
+
+soinfo* get_libdl_info(const soinfo& linker_si);
 
 soinfo* find_containing_library(const void* p);
 
@@ -161,6 +164,13 @@ enum {
    * See http://b/26394120 for details.
    */
   ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED = 0x08000000,
+
+  /* This flag instructs linker to use this namespace as the anonymous
+   * namespace. There can be only one anonymous namespace in a process. If there
+   * already an anonymous namespace in the process, using this flag when
+   * creating a new namespace causes an error
+   */
+  ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS = 0x10000000,
 
   ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,

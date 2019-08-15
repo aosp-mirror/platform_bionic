@@ -136,4 +136,6 @@
 #define PORT_MPS2UART 116
 #define PORT_MTK_BTIF 117
 #define PORT_RDA 118
+#define PORT_MLB_USIO 119
+#define PORT_SIFIVE_V0 120
 #endif
