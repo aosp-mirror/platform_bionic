@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8255be3b_6223240b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-15T04:56:08Z",
+      "side": 1,
+      "message": "Actually, on second thought, I think this call to unload_hook should be unnecessary, because once find_libraries returns false, soinfo_unload_impl will call the unload_hook on every soinfo reachable from the root soinfo, which isn\u0027t already is_linked().\n\nI think the linker will call unload_hook even on DSOs that it didn\u0027t call load_hook for. (e.g. If find_libraries aborts midway through calling link_image on DSOs.) The same issue applies to cfi BeforeUnload/AfterLoad.\n\nThe \"local_group_roots\" list may include DSOs that aren\u0027t actually local group roots. (That behavior seems suspicious to me, I think?), and the effect is that the linker can call load_hook and get_cfi_shadow()-\u003eAfterLoad multiple times for a DSO, for a single dlopen call.\n\nExample:\n\n    namespace ns1: libroot.so, libchild.so\n    namespace ns2: libalien.so\n\n    libroot.so needs libchild.so and libalien.so\n    libalien.so needs libchild.so\n\nThere are two (actual) load groups:\n - libroot.so\u0027s group, which also has libchild.so\n - libalien.so\u0027s group\n\nThe linker will see that the libalien.so -\u003e libchild.so LoadTask crosses a namespace boundary and add libchild.so to local_group_roots, but that\u0027s not right.",
+      "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
