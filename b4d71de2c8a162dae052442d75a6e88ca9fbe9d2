@@ -34,6 +34,24 @@
       "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7f59441_786826fd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-15T20:48:01Z",
+      "side": 1,
+      "message": "Yes, that appears to be the case for the CFI shadow, but it\u0027s complicated. This code in linker_cfi.cpp was intended to reset the shadow to kUncheckedShadow when two libraries are mapped to the same place, which does happen in the situation I\u0027ve described:\n\n    // If there is something there already, fall back to unchecked. This may happen in rare cases\n    // with MAP_FIXED libraries. FIXME: consider using a (slow) resolution function instead.\n    s \u003d (s \u003d\u003d kInvalidShadow) ? sv : kUncheckedShadow;\n\nIt doesn\u0027t actually reset the shadow, though, because we\u0027re writing into temporary pages allocated by ShadowWrite, which left the target area as zeroed memory (kInvalidShadow is 0). I think the line above is equivalent to \"s \u003d sv;\".\n\nThe code was added after ShadowWrite already existed:\nhttps://android-review.googlesource.com/c/platform/bionic/+/246837/20..21\n\nI wonder if the AfterLoad/load_hook calls could be moved into link_image to avoid duplicate calls. It can be done in a later CL if we want to do that.\n\nFWIW, I realized that even if local_group_roots excluded non-root DSOs, we\u0027d still have duplicate AfterLoad/load_hook behavior, because a DSO can be shared between multiple local groups, e.g.:\n\n - libparent.so[ns1] -\u003e libgrandchild.so[ns2], libchild.so[ns2]\n - libchild.so[ns2] -\u003e libgrandchild.so[ns2]\n\nlibgrandchild.so is its own local group root, but it\u0027s also part of libchild.so\u0027s local group.",
+      "parentUuid": "0ae56a76_ebddb1a3",
+      "revId": "b4d71de2c8a162dae052442d75a6e88ca9fbe9d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
