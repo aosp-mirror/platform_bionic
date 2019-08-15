@@ -76,6 +76,7 @@
 
 static std::unordered_map<void*, size_t> g_dso_handle_counters;
 
+static bool g_anonymous_namespace_set = false;
 static android_namespace_t* g_anonymous_namespace = &g_default_namespace;
 static std::unordered_map<std::string, android_namespace_t*> g_exported_namespaces;
 
@@ -89,6 +90,8 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
+
+static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir        = "/system/lib64";
@@ -269,8 +272,6 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
-
-static bool g_anonymous_namespace_initialized;
 
 #if STATS
 struct linker_stats_t {
@@ -2477,13 +2478,28 @@ int do_dlclose(void* handle) {
   return 0;
 }
 
-bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
-  if (g_anonymous_namespace_initialized) {
-    DL_ERR("anonymous namespace has already been initialized.");
-    return false;
+// Make ns as the anonymous namespace that is a namespace used when
+// we fail to determine the caller address (e.g., call from mono-jited code)
+// Since there can be multiple anonymous namespace in a process, subsequent
+// call to this function causes an error.
+static bool set_anonymous_namespace(android_namespace_t* ns) {
+  if (!g_anonymous_namespace_set && ns != nullptr) {
+    CHECK(ns->is_also_used_as_anonymous());
+    g_anonymous_namespace = ns;
+    g_anonymous_namespace_set = true;
+    return true;
   }
+  return false;
+}
 
+// TODO(b/130388701) remove this. Currently, this is used only for testing
+// where we don't have classloader namespace.
+bool init_anonymous_namespace(const char* shared_lib_sonames, const char* library_search_path) {
   ProtectedDataGuard guard;
+
+  // Test-only feature: we need to change the anonymous namespace multiple times
+  // while the test is running.
+  g_anonymous_namespace_set = false;
 
   // create anonymous namespace
   // When the caller is nullptr - create_namespace will take global group
@@ -2494,20 +2510,17 @@ bool init_anonymous_namespace(const char* shared_lib_sonames, const char* librar
                        "(anonymous)",
                        nullptr,
                        library_search_path,
-                       ANDROID_NAMESPACE_TYPE_ISOLATED,
+                       ANDROID_NAMESPACE_TYPE_ISOLATED |
+                       ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS,
                        nullptr,
                        &g_default_namespace);
 
-  if (anon_ns == nullptr) {
-    return false;
-  }
+  CHECK(anon_ns != nullptr);
 
   if (!link_namespaces(anon_ns, &g_default_namespace, shared_lib_sonames)) {
+    // TODO: delete anon_ns
     return false;
   }
-
-  g_anonymous_namespace = anon_ns;
-  g_anonymous_namespace_initialized = true;
 
   return true;
 }
@@ -2548,6 +2561,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
   ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
+  ns->set_also_used_as_anonymous((type & ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
     // append parent namespace paths.
@@ -2578,6 +2592,16 @@ android_namespace_t* create_namespace(const void* caller_addr,
   ns->set_ld_library_paths(std::move(ld_library_paths));
   ns->set_default_library_paths(std::move(default_library_paths));
   ns->set_permitted_paths(std::move(permitted_paths));
+
+  if (ns->is_also_used_as_anonymous() && !set_anonymous_namespace(ns)) {
+    DL_ERR("failed to set namespace: [name=\"%s\", ld_library_path=\"%s\", default_library_paths=\"%s\""
+           " permitted_paths=\"%s\"] as the anonymous namespace",
+           ns->get_name(),
+           android::base::Join(ns->get_ld_library_paths(), ':').c_str(),
+           android::base::Join(ns->get_default_library_paths(), ':').c_str(),
+           android::base::Join(ns->get_permitted_paths(), ':').c_str());
+    return nullptr;
+  }
 
   return ns;
 }
@@ -4147,6 +4171,13 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return ld_config_file_env;
   }
 #endif
+
+  // Use generated linker config if flag is set
+  // TODO(b/138920271) Do not check property once it is confirmed as stable
+  if (android::base::GetBoolProperty("sys.linker.use_generated_config", false) &&
+      file_exists(kLdGeneratedConfigFilePath)) {
+    return kLdGeneratedConfigFilePath;
+  }
 
   std::string path = get_ld_config_file_apex_path(executable_path);
   if (!path.empty()) {
