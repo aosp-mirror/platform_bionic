@@ -266,16 +266,16 @@ the option [record\_allocs](https://android.googlesource.com/platform/bionic/+/m
 To run these benchmarks, first copy the trace files to the target and
 unzip them using these commands:
 
-    adb shell push system/extras/dumps /data/local/tmp
-    adb shell 'cd /data/local/tmp/dumps && for name in *.zip; do unzip $name; done'
+    adb shell push system/extras/traces /data/local/tmp
+    adb shell 'cd /data/local/tmp/traces && for name in *.zip; do unzip $name; done'
 
 Since all of the traces come from applications, the `memory_replay` program
 will always call `mallopt(M_DECAY_TIME, 1)' before running the trace.
 
 Run the benchmark thusly:
 
-    adb shell memory_replay64 /data/local/tmp/dumps/XXX.txt
-    adb shell memory_replay32 /data/local/tmp/dumps/XXX.txt
+    adb shell memory_replay64 /data/local/tmp/traces/XXX.txt
+    adb shell memory_replay32 /data/local/tmp/traces/XXX.txt
 
 Where XXX.txt is the name of a trace file.
 
