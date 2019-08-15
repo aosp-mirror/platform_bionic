@@ -66,6 +66,22 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
+#if defined(__USE_GNU)
+#if __ANDROID_API__ >= __ANDROID_API_R__
+__BIONIC_FORTIFY_INLINE
+void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
+                         "'mempcpy' called with size bigger than buffer") {
+    size_t bos_dst = __bos0(dst);
+    if (__bos_trivially_not_lt(bos_dst, copy_amount)) {
+        return __builtin_mempcpy(dst, src, copy_amount);
+    }
+    return __builtin___mempcpy_chk(dst, src, copy_amount, bos_dst);
+}
+#endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
+#endif
+
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
 char* stpcpy(char* const dst __pass_object_size, const char* src)
@@ -94,12 +110,18 @@ char* strcpy(char* const dst __pass_object_size, const char* src)
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strcat(char* const dst __pass_object_size, const char* src) __overloadable {
+char* strcat(char* const dst __pass_object_size, const char* src)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
+                         "'strcat' called with string bigger than buffer") {
     return __builtin___strcat_chk(dst, src, __bos(dst));
 }
 
 __BIONIC_FORTIFY_INLINE
-char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __overloadable {
+char* strncat(char* const dst __pass_object_size, const char* src, size_t n)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos(dst), n),
+                         "'strncat' called with size bigger than buffer") {
     return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
 
@@ -145,7 +167,9 @@ void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n)
 #if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
-        __overloadable {
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos(dst), n),
+                         "'stpncpy' called with size bigger than buffer") {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
@@ -159,7 +183,9 @@ char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_o
 
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
-        __overloadable {
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos(dst), n),
+                         "'strncpy' called with size bigger than buffer") {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
 
@@ -174,7 +200,10 @@ char* strncpy(char* const dst __pass_object_size, const char* const src __pass_o
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
-size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size) __overloadable {
+size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
+                         "'strlcpy' called with size bigger than buffer") {
     size_t bos = __bos(dst);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {
@@ -185,7 +214,10 @@ size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
 }
 
 __BIONIC_FORTIFY_INLINE
-size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size) __overloadable {
+size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
+        __overloadable
+        __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
+                         "'strlcat' called with size bigger than buffer") {
     size_t bos = __bos(dst);
 
     if (bos == __BIONIC_FORTIFY_UNKNOWN_SIZE) {

@@ -46,6 +46,10 @@ versions older than JB-MR2, you might want to consider
 [ReLinker](https://github.com/KeepSafe/ReLinker) which claims to solve
 these problems automatically.
 
+Alternatively, if you don't have too many dependencies, it can be easiest to
+simply link all of your code into one big library and sidestep the details of
+library and symbol lookup changes on all past (and future) Android versions.
+
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
@@ -64,6 +68,14 @@ the breadth-first transitive closure of the library and its DT_NEEDED
 libraries. The M dynamic linker searches the global group followed by
 the local group. This allows ASAN, for example, to ensure that it can
 intercept any symbol.
+
+
+## LD_PRELOAD and 32/64 bit
+
+LD_PRELOAD applies to both 32- and 64-bit processes. This means that you
+should avoid saying something like `/system/lib/libfoo.so` and just say
+`libfoo.so` instead, letting the dynamic linker find the correct library
+on its search path.
 
 
 ## RTLD_LOCAL (Available in API level >= 23)

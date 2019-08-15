@@ -429,6 +429,18 @@ int pthread_rwlock_timedrdlock_monotonic_np(pthread_rwlock_t* rwlock_interface,
   return __pthread_rwlock_timedrdlock(rwlock, false, abs_timeout);
 }
 
+int pthread_rwlock_clockrdlock(pthread_rwlock_t* rwlock_interface, clockid_t clock,
+                               const struct timespec* abs_timeout) {
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      return pthread_rwlock_timedrdlock_monotonic_np(rwlock_interface, abs_timeout);
+    case CLOCK_REALTIME:
+      return pthread_rwlock_timedrdlock(rwlock_interface, abs_timeout);
+    default:
+      return EINVAL;
+  }
+}
+
 int pthread_rwlock_tryrdlock(pthread_rwlock_t* rwlock_interface) {
   return __pthread_rwlock_tryrdlock(__get_internal_rwlock(rwlock_interface));
 }
@@ -453,6 +465,18 @@ int pthread_rwlock_timedwrlock_monotonic_np(pthread_rwlock_t* rwlock_interface,
   pthread_rwlock_internal_t* rwlock = __get_internal_rwlock(rwlock_interface);
 
   return __pthread_rwlock_timedwrlock(rwlock, false, abs_timeout);
+}
+
+int pthread_rwlock_clockwrlock(pthread_rwlock_t* rwlock_interface, clockid_t clock,
+                               const struct timespec* abs_timeout) {
+  switch (clock) {
+    case CLOCK_MONOTONIC:
+      return pthread_rwlock_timedwrlock_monotonic_np(rwlock_interface, abs_timeout);
+    case CLOCK_REALTIME:
+      return pthread_rwlock_timedwrlock(rwlock_interface, abs_timeout);
+    default:
+      return EINVAL;
+  }
 }
 
 int pthread_rwlock_trywrlock(pthread_rwlock_t* rwlock_interface) {

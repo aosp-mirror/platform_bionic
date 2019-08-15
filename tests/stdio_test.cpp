@@ -19,7 +19,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
-#include <linux/fs.h>
 #include <math.h>
 #include <stdio.h>
 #include <sys/types.h>
@@ -34,9 +33,17 @@
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/unique_fd.h>
 
 #include "BionicDeathTest.h"
 #include "utils.h"
+
+// This #include is actually a test too. We have to duplicate the
+// definitions of the RENAME_ constants because <linux/fs.h> also contains
+// pollution such as BLOCK_SIZE which conflicts with lots of user code.
+// Important to check that we have matching definitions.
+// There's no _MAX to test that we have all the constants, sadly.
+#include <linux/fs.h>
 
 #if defined(NOFORTIFY)
 #define STDIO_TEST stdio_nofortify
@@ -2609,4 +2616,78 @@ TEST(STDIO_TEST, SEEK_macros) {
   ASSERT_EQ(4, SEEK_HOLE);
   // So we'll notice if Linux grows another constant in <linux/fs.h>...
   ASSERT_EQ(SEEK_MAX, SEEK_HOLE);
+}
+
+TEST(STDIO_TEST, rename) {
+  TemporaryDir td;
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, rename(old_path.c_str(), new_path.c_str()));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+}
+
+TEST(STDIO_TEST, renameat) {
+  TemporaryDir td;
+  android::base::unique_fd dirfd{open(td.path, O_PATH)};
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, renameat(dirfd, "old", dirfd, "new"));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+}
+
+TEST(STDIO_TEST, renameat2) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28";
+#else
+  TemporaryDir td;
+  android::base::unique_fd dirfd{open(td.path, O_PATH)};
+  std::string old_path = td.path + "/old"s;
+  std::string new_path = td.path + "/new"s;
+
+  // Create the file, check it exists.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+  struct stat sb;
+  ASSERT_EQ(0, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(-1, stat(new_path.c_str(), &sb));
+
+  // Rename and check it moved.
+  ASSERT_EQ(0, renameat2(dirfd, "old", dirfd, "new", 0));
+  ASSERT_EQ(-1, stat(old_path.c_str(), &sb));
+  ASSERT_EQ(0, stat(new_path.c_str(), &sb));
+
+  // After this, both "old" and "new" exist.
+  ASSERT_EQ(0, close(creat(old_path.c_str(), 0666)));
+
+  // Rename and check it moved.
+  ASSERT_EQ(-1, renameat2(dirfd, "old", dirfd, "new", RENAME_NOREPLACE));
+  ASSERT_EQ(EEXIST, errno);
+#endif
+}
+
+TEST(STDIO_TEST, renameat2_flags) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28";
+#else
+ ASSERT_NE(0, RENAME_EXCHANGE);
+ ASSERT_NE(0, RENAME_NOREPLACE);
+ ASSERT_NE(0, RENAME_WHITEOUT);
+#endif
 }
