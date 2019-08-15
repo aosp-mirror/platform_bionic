@@ -249,7 +249,7 @@ extern "C" char* __stpncpy_chk(char* dst, const char* src, size_t len, size_t ds
 // This is a variant of __stpncpy_chk, but it also checks to make
 // sure we don't read beyond the end of "src". The code for this is
 // based on the original version of stpncpy, but modified to check
-// how much we read from "src" at the end of the copy operation.
+// how much we read from "src" during the copy operation.
 char* __stpncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_t src_len) {
   __check_buffer_access("stpncpy", "write into", n, dst_len);
   if (n != 0) {
@@ -257,6 +257,11 @@ char* __stpncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_
     const char* s = src;
 
     do {
+      size_t s_copy_len = static_cast<size_t>(s - src);
+      if (__predict_false(s_copy_len >= src_len)) {
+        __fortify_fatal("stpncpy: detected read past end of %zu-byte buffer", src_len);
+      }
+
       if ((*d++ = *s++) == 0) {
         // NUL pad the remaining n-1 bytes.
         while (--n != 0) {
@@ -265,11 +270,6 @@ char* __stpncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_
         break;
       }
     } while (--n != 0);
-
-    size_t s_copy_len = static_cast<size_t>(s - src);
-    if (__predict_false(s_copy_len > src_len)) {
-      __fortify_fatal("stpncpy: detected read past end of %zu-byte buffer", src_len);
-    }
   }
 
   return dst;
@@ -360,7 +360,7 @@ extern "C" char* __strncpy_chk(char* dst, const char* src, size_t len, size_t ds
 // This is a variant of __strncpy_chk, but it also checks to make
 // sure we don't read beyond the end of "src". The code for this is
 // based on the original version of strncpy, but modified to check
-// how much we read from "src" at the end of the copy operation.
+// how much we read from "src" during the copy operation.
 char* __strncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_t src_len) {
   __check_buffer_access("strncpy", "write into", n, dst_len);
   if (n != 0) {
@@ -368,6 +368,11 @@ char* __strncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_
     const char* s = src;
 
     do {
+      size_t s_copy_len = static_cast<size_t>(s - src);
+      if (__predict_false(s_copy_len >= src_len)) {
+        __fortify_fatal("strncpy: detected read past end of %zu-byte buffer", src_len);
+      }
+
       if ((*d++ = *s++) == 0) {
         // NUL pad the remaining n-1 bytes.
         while (--n != 0) {
@@ -376,11 +381,6 @@ char* __strncpy_chk2(char* dst, const char* src, size_t n, size_t dst_len, size_
         break;
       }
     } while (--n != 0);
-
-    size_t s_copy_len = static_cast<size_t>(s - src);
-    if (__predict_false(s_copy_len > src_len)) {
-      __fortify_fatal("strncpy: detected read past end of %zu-byte buffer", src_len);
-    }
   }
 
   return dst;
