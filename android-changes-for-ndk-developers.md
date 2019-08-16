@@ -1,7 +1,10 @@
-# Android changes for NDK developers
+# Android linker changes for NDK developers
 
 This document details important changes related to native code
 loading in various Android releases.
+
+See also [bionic status](docs/status.md) for general libc/libm/libdl
+behavior changes.
 
 Required tools: the NDK has an _arch_-linux-android-readelf binary
 (e.g. arm-linux-androideabi-readelf or i686-linux-android-readelf)
