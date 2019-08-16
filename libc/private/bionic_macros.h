@@ -87,3 +87,12 @@ char (&ArraySizeHelper(T (&array)[N]))[N];  // NOLINT(readability/casting)
 #else
 #define __BIONIC_FALLTHROUGH
 #endif
+
+template <typename T>
+static inline T* untag_address(T* p) {
+#if defined(__aarch64__)
+  return reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(p) & ((1ULL << 56) - 1));
+#else
+  return p;
+#endif
+}
