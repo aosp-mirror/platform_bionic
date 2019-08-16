@@ -47,11 +47,11 @@ class WriteProtected {
   WriteProtectedContents<T> contents;
 
   int set_protection(int prot) {
-    auto addr = reinterpret_cast<uintptr_t>(&contents);
+    auto addr = &contents;
 #if __has_feature(hwaddress_sanitizer)
     // The mprotect system call does not currently untag pointers, so do it
     // ourselves.
-    addr &= (1ULL << 56) - 1;
+    addr = untag_address(addr);
 #endif
     return mprotect(reinterpret_cast<void*>(addr), PAGE_SIZE, prot);
   }
