@@ -16,6 +16,24 @@
       "revId": "ed6f6a9210eba3b38832be2fe7465e8b4e9d016d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6ca4384_0c849df5",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1087625
+      },
+      "writtenOn": "2019-08-17T22:41:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee9c0f72_1ec15b25",
+      "revId": "ed6f6a9210eba3b38832be2fe7465e8b4e9d016d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
