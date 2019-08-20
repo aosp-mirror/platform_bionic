@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "8fa14ee1_712bc25d",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-20T22:52:48Z",
+      "side": 1,
+      "message": "i feel like the more useful compat helper would be something to compare `size` against in the callback --- to check at runtime whether i have the fields or not.",
+      "parentUuid": "cdab8f0c_8d0546bc",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d42af45f_2e5d4d56",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
