@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "cdab8f0c_8d0546bc",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-20T22:50:55Z",
+      "side": 1,
+      "message": "Yeah, it seems OK to me, too.\n\nMaybe the new fields should only be declared when __ANDROID_API__ \u003e\u003d __ANDROID_API_R__ ?",
+      "parentUuid": "fe8ea665_54d281ef",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d42af45f_2e5d4d56",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
