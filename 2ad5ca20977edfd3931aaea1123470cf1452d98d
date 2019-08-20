@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fe8ea665_54d281ef",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-20T20:49:32Z",
+      "side": 1,
+      "message": "dl_iterate_phdr hands you the pointer *and* a size_t, so although the answer is of course \"strictly, yes\", i think it\u0027s fine anyway.",
+      "parentUuid": "663f2ceb_89a40879",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d42af45f_2e5d4d56",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
