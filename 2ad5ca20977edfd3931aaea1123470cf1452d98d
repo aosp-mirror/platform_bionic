@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "c30be05c_08bbd532",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-22T19:01:11Z",
+      "side": 1,
+      "message": "On arm32, the dl_phdr_info type\u0027s alignment increases to 8 bytes, but the object\u0027s address at run-time might only be 4-byte aligned, on old platforms. Maybe the compiler could do something that requires 8-byte alignment?\n\nIt doesn\u0027t seem like something that would happen in practice, though, and defining all the fields makes checking `size` easier. If it did come up, we could pack the struct type to 4-bytes, only for NDK users.\n\nI see this in the LSB documentation:\n\n\"Some implementations may not provide all fields in dl_phdr_info, although the first four are always mandatory. Applications are advised to have the callback function check the size parameter before examining the later members.\"\n\nI think I\u0027ll remove the __ANDROID_API__ check.",
+      "parentUuid": "d74709f2_45566d8a",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d42af45f_2e5d4d56",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
