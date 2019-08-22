@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0fd6e4f_4d773dab",
+        "filename": "libc/include/link.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-08-22T16:45:32Z",
+      "side": 1,
+      "message": "i\u0027d rather not do this unless proven necessary.\n\ndanalbert?",
+      "revId": "40e44cdc7509ae461b21b3305f2d7343d86b78f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
