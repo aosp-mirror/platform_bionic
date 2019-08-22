@@ -22,6 +22,30 @@
       "revId": "a2e83ab34845759f0999d0ec88f4cdf558c0a9f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39feea90_e25e312e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-22T20:17:39Z",
+      "side": 1,
+      "message": "Yes, the linker\u0027s state is protected by g_dl_mutex.\n\nI\u0027m not sure where to add a comment. It applies to most of the variables here, and to most memory that\u0027s allocated dynamically.",
+      "parentUuid": "44a8e1e2_e62854cd",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 44
+      },
+      "revId": "a2e83ab34845759f0999d0ec88f4cdf558c0a9f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
