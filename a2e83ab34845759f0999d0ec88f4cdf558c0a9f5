@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "44a8e1e2_e62854cd",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-08-22T20:07:08Z",
+      "side": 1,
+      "message": "Are these variables always protected by a mutex to avoid reading/writing them in multiple threads? I think they are, but is it worth saying this explicitly?",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 44
+      },
+      "revId": "a2e83ab34845759f0999d0ec88f4cdf558c0a9f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
