@@ -100,7 +100,7 @@ static const char* const kVendorLibDir        = "/vendor/lib64";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
-static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib64";
+static const char* const kArtApexLibDir       = "/apex/com.android.art/lib64";
 #else
 static const char* const kSystemLibDir        = "/system/lib";
 static const char* const kOdmLibDir           = "/odm/lib";
@@ -108,7 +108,7 @@ static const char* const kVendorLibDir        = "/vendor/lib";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
-static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib";
+static const char* const kArtApexLibDir       = "/apex/com.android.art/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -242,7 +242,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
  * return true if translation is needed
  */
 static bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static const char* const kSystemToRuntimeApexLibs[] = {
+  static const char* const kSystemToArtApexLibs[] = {
     "libicuuc.so",
     "libicui18n.so",
   };
@@ -260,9 +260,9 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 
   const char* base_name = basename(name);
 
-  for (const char* soname : kSystemToRuntimeApexLibs) {
+  for (const char* soname : kSystemToArtApexLibs) {
     if (strcmp(base_name, soname) == 0) {
-      *out_name_to_apex = std::string(kRuntimeApexLibDir) + "/" + base_name;
+      *out_name_to_apex = std::string(kArtApexLibDir) + "/" + base_name;
       return true;
     }
   }
