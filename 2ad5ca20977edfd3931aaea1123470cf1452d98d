@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "d6cd8546_93aa154d",
+        "filename": "libc/include/link.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-22T06:42:31Z",
+      "side": 1,
+      "message": "I\u0027m not quite sure what to do here.\n\nFWIW, I noticed that adding the 4 new fields changes the struct\u0027s alignment on arm32 from 4 to 8 bytes. I think that could affect how the compiler accesses the first 4 fields, in principle. Not sure if it matters in practice?\n\nWhen libgcc accesses the extra fields, it declares its own extended-phdr-info struct and casts the dl_phdr_info* to its struct type if the size is large enough.\n\nThe non-LLVM libunwind also uses dlpi_subs to invalidate a cache, but it detects dlpi_subs at configure-time, then verifies that the field exists at run-time using offsetof.\n\nI\u0027m not aware of many uses of these fields. compiler-rt also has a NetBSD code path that uses dlpi_tls_modid, but that\u0027s all I know of so far.",
+      "parentUuid": "8fa14ee1_712bc25d",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d42af45f_2e5d4d56",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -90,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "68983312_25367155",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-22T06:42:31Z",
+      "side": 1,
+      "message": "0 is documented as the value to use when there is no TLS module.",
+      "parentUuid": "d42af45f_2e5d4d56",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8efee56f_a44d92da",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -104,6 +140,24 @@
       "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1efc4a57_11d543d4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2074,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-22T06:42:31Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8efee56f_a44d92da",
+      "revId": "2ad5ca20977edfd3931aaea1123470cf1452d98d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
