@@ -46,6 +46,30 @@
       "revId": "a2e83ab34845759f0999d0ec88f4cdf558c0a9f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48bfb810_fa616339",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-08-22T20:39:37Z",
+      "side": 1,
+      "message": "That\u0027s fine. I was worried that someone would come after this and try and make the mutex finer grained and not realize what variables require the lock, but it looks like all of the variables accesses would have to be modified. The comment doesn\u0027t really belong on any one variable, so I agree there really isn\u0027t a place for it.\n\nI don\u0027t know if there are any docs for the linker internals indicating that it is a single lock for most operations. I know I\u0027ve run into this before because I\u0027m never sure what\u0027s being done in a lock and what\u0027s not.",
+      "parentUuid": "39feea90_e25e312e",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 44
+      },
+      "revId": "a2e83ab34845759f0999d0ec88f4cdf558c0a9f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
