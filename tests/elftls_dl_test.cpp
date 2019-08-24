@@ -28,6 +28,7 @@
 
 #include <dlfcn.h>
 #include <gtest/gtest.h>
+#include <link.h>
 
 #include <thread>
 
@@ -334,4 +335,59 @@ TEST(elftls_dl, dladdr_skip_tls_symbol) {
   ASSERT_STREQ(libpath.c_str(), dli_realpath);
   ASSERT_STREQ(nullptr, info.dli_sname);
   ASSERT_EQ(nullptr, info.dli_saddr);
+}
+
+TEST(elftls_dl, dl_iterate_phdr) {
+  void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
+
+  auto get_var_addr = reinterpret_cast<void*(*)()>(dlsym(lib, "get_large_tls_var_addr"));
+  ASSERT_NE(nullptr, get_var_addr);
+
+  struct TlsInfo {
+    bool found;
+    size_t modid;
+    void* data;
+    size_t memsz;
+  };
+
+  auto get_tls_info = []() {
+    auto callback = [](dl_phdr_info* info, size_t, void* data) {
+      TlsInfo& tls_info = *static_cast<TlsInfo*>(data);
+
+      // This test is also run with glibc, where dlpi_name may have relative path components, so
+      // examine just the basename when searching for the library.
+      if (strcmp(basename(info->dlpi_name), "libtest_elftls_dynamic.so") != 0) return 0;
+
+      tls_info.found = true;
+      tls_info.modid = info->dlpi_tls_modid;
+      tls_info.data = info->dlpi_tls_data;
+      for (ElfW(Half) i = 0; i < info->dlpi_phnum; ++i) {
+        if (info->dlpi_phdr[i].p_type == PT_TLS) {
+          tls_info.memsz = info->dlpi_phdr[i].p_memsz;
+        }
+      }
+      EXPECT_NE(static_cast<size_t>(0), tls_info.memsz);
+      return 1;
+    };
+
+    TlsInfo result {};
+    dl_iterate_phdr(callback, &result);
+    return result;
+  };
+
+  // The executable has a TLS segment, so it will use module ID #1, and the DSO's ID will be larger
+  // than 1. Initially, the data field is nullptr, because this thread's instance hasn't been
+  // allocated yet.
+  TlsInfo tls_info = get_tls_info();
+  ASSERT_TRUE(tls_info.found);
+  ASSERT_GT(tls_info.modid, static_cast<size_t>(1));
+  ASSERT_EQ(nullptr, tls_info.data);
+
+  void* var_addr = get_var_addr();
+
+  // Verify that dl_iterate_phdr returns a range of memory covering the allocated TLS variable.
+  tls_info = get_tls_info();
+  ASSERT_TRUE(tls_info.found);
+  ASSERT_GE(var_addr, tls_info.data);
+  ASSERT_LT(var_addr, static_cast<char*>(tls_info.data) + tls_info.memsz);
 }
