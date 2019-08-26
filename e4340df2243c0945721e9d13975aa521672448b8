@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f1276c8_9bedaa59",
+        "filename": "libc/arch-common/bionic/__dso_handle_so.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-08-26T23:28:28Z",
+      "side": 1,
+      "message": "Can __dso_handle_const be a static variable instead of hidden? The header is only included into crtbegin_so.c.",
+      "revId": "e4340df2243c0945721e9d13975aa521672448b8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
