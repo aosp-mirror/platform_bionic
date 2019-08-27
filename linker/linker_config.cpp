@@ -408,6 +408,9 @@ class Properties {
       params.push_back({ "SDK_VER", buf });
     }
 
+    static std::string vndk = Config::get_vndk_version_string('-');
+    params.push_back({ "VNDK_VER", vndk });
+
     for (auto& path : paths) {
       format_string(&path, params);
     }
