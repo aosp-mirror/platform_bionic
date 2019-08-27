@@ -46,8 +46,8 @@
 
 #include <android-base/properties.h>
 #include <android-base/scopeguard.h>
-
 #include <async_safe/log.h>
+#include <bionic/pthread_internal.h>
 
 // Private C library headers.
 
@@ -86,6 +86,9 @@ static LinkerTypeAllocator<LinkedListEntry<soinfo>> g_soinfo_links_allocator;
 static LinkerTypeAllocator<android_namespace_t> g_namespace_allocator;
 static LinkerTypeAllocator<LinkedListEntry<android_namespace_t>> g_namespace_list_allocator;
 
+static uint64_t g_module_load_counter = 0;
+static uint64_t g_module_unload_counter = 0;
+
 static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_STRING ".txt";
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
@@ -100,7 +103,7 @@ static const char* const kVendorLibDir        = "/vendor/lib64";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
-static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib64";
+static const char* const kArtApexLibDir       = "/apex/com.android.art/lib64";
 #else
 static const char* const kSystemLibDir        = "/system/lib";
 static const char* const kOdmLibDir           = "/odm/lib";
@@ -108,7 +111,7 @@ static const char* const kVendorLibDir        = "/vendor/lib";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
-static const char* const kRuntimeApexLibDir   = "/apex/com.android.runtime/lib";
+static const char* const kArtApexLibDir       = "/apex/com.android.art/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -242,7 +245,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
  * return true if translation is needed
  */
 static bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static const char* const kSystemToRuntimeApexLibs[] = {
+  static const char* const kSystemToArtApexLibs[] = {
     "libicuuc.so",
     "libicui18n.so",
   };
@@ -260,9 +263,9 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 
   const char* base_name = basename(name);
 
-  for (const char* soname : kSystemToRuntimeApexLibs) {
+  for (const char* soname : kSystemToArtApexLibs) {
     if (strcmp(base_name, soname) == 0) {
-      *out_name_to_apex = std::string(kRuntimeApexLibDir) + "/" + base_name;
+      *out_name_to_apex = std::string(kArtApexLibDir) + "/" + base_name;
       return true;
     }
   }
@@ -424,6 +427,24 @@ static bool realpath_fd(int fd, std::string* realpath) {
   return true;
 }
 
+// Returns the address of the current thread's copy of a TLS module. If the current thread doesn't
+// have a copy yet, allocate one on-demand if should_alloc is true, and return nullptr otherwise.
+static inline void* get_tls_block_for_this_thread(const soinfo_tls* si_tls, bool should_alloc) {
+  const TlsModule& tls_mod = get_tls_module(si_tls->module_id);
+  if (tls_mod.static_offset != SIZE_MAX) {
+    const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+    char* static_tls = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
+    return static_tls + tls_mod.static_offset;
+  } else if (should_alloc) {
+    const TlsIndex ti { si_tls->module_id, 0 };
+    return TLS_GET_ADDR(&ti);
+  } else {
+    TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
+    if (dtv->generation < tls_mod.first_generation) return nullptr;
+    return dtv->modules[__tls_module_id_to_idx(si_tls->module_id)];
+  }
+}
+
 #if defined(__arm__)
 
 // For a given PC, find the .so that it belongs to.
@@ -453,6 +474,16 @@ int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), v
     dl_info.dlpi_name = si->link_map_head.l_name;
     dl_info.dlpi_phdr = si->phdr;
     dl_info.dlpi_phnum = si->phnum;
+    dl_info.dlpi_adds = g_module_load_counter;
+    dl_info.dlpi_subs = g_module_unload_counter;
+    if (soinfo_tls* tls_module = si->get_tls()) {
+      dl_info.dlpi_tls_modid = tls_module->module_id;
+      dl_info.dlpi_tls_data = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/false);
+    } else {
+      dl_info.dlpi_tls_modid = 0;
+      dl_info.dlpi_tls_data = nullptr;
+    }
+
     rv = cb(&dl_info, sizeof(dl_phdr_info), data);
     if (rv != 0) {
       break;
@@ -2043,6 +2074,7 @@ static void soinfo_unload_impl(soinfo* root) {
            "... dlclose: unloading \"%s\"@%p ...",
            si->get_realpath(),
            si);
+    ++g_module_unload_counter;
     notify_gdb_of_unload(si);
     unregister_soinfo_tls(si);
     if (__libc_shared_globals()->unload_hook) {
@@ -2429,18 +2461,15 @@ bool do_dlsym(void* handle,
     if ((bind == STB_GLOBAL || bind == STB_WEAK) && sym->st_shndx != 0) {
       if (type == STT_TLS) {
         // For a TLS symbol, dlsym returns the address of the current thread's
-        // copy of the symbol. This function may allocate a DTV and/or storage
-        // for the source TLS module. (Allocating a DTV isn't necessary if the
-        // symbol is part of static TLS, but it's simpler to reuse
-        // __tls_get_addr.)
-        soinfo_tls* tls_module = found->get_tls();
+        // copy of the symbol.
+        const soinfo_tls* tls_module = found->get_tls();
         if (tls_module == nullptr) {
           DL_ERR("TLS symbol \"%s\" in solib \"%s\" with no TLS segment",
                  sym_name, found->get_realpath());
           return false;
         }
-        const TlsIndex ti { tls_module->module_id, sym->st_value };
-        *symbol = TLS_GET_ADDR(&ti);
+        void* tls_block = get_tls_block_for_this_thread(tls_module, /*should_alloc=*/true);
+        *symbol = static_cast<char*>(tls_block) + sym->st_value;
       } else {
         *symbol = reinterpret_cast<void*>(found->resolve_symbol_address(sym));
       }
@@ -4106,6 +4135,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
   }
 
+  ++g_module_load_counter;
   notify_gdb_of_load(this);
   set_image_linked();
   return true;

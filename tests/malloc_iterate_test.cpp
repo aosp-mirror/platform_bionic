@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-#include <stdint.h>
-#include <stdlib.h>
-#include <time.h>
-
 #include <gtest/gtest.h>
 
 #if defined(__BIONIC__)
 
+#include <inttypes.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
+
 #include <vector>
 
+#include <async_safe/log.h>
 #include <procinfo/process_map.h>
 
 #include "utils.h"
@@ -92,15 +95,22 @@ static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
   // Find all of the maps that are [anon:libc_malloc].
-  ASSERT_TRUE(android::procinfo::ReadMapFile(
-      "/proc/self/maps",
-      [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-        if (std::string(name) == "[anon:libc_malloc]") {
-          malloc_disable();
-          malloc_iterate(start, end - start, SavePointers, test_data);
-          malloc_enable();
-        }
-      }));
+  auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
+    if (strcmp(name, "[anon:libc_malloc]") == 0) {
+      malloc_iterate(start, end - start, SavePointers, test_data);
+    }
+  };
+
+  std::vector<char> buffer(64 * 1024);
+
+  // Avoid doing allocations so that the maps don't change while looking
+  // for the pointers.
+  malloc_disable();
+  bool parsed = android::procinfo::ReadMapFileAsyncSafe("/proc/self/maps", buffer.data(),
+                                                        buffer.size(), callback);
+  malloc_enable();
+
+  ASSERT_TRUE(parsed) << "Failed to parse /proc/self/maps";
 
   for (size_t i = 0; i < test_data->allocs.size(); i++) {
     EXPECT_EQ(1UL, test_data->allocs[i].count) << "Failed on size " << test_data->allocs[i].size;
@@ -180,16 +190,42 @@ TEST(malloc_iterate, invalid_pointers) {
   SKIP_WITH_HWASAN;
   TestDataType test_data = {};
 
-  // Find all of the maps that are not [anon:libc_malloc].
-  ASSERT_TRUE(android::procinfo::ReadMapFile(
-      "/proc/self/maps",
-      [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-        if (std::string(name) != "[anon:libc_malloc]") {
-          malloc_disable();
-          malloc_iterate(start, end - start, SavePointers, &test_data);
-          malloc_enable();
+  // Only attempt to get memory data for maps that are not from the native allocator.
+  auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
+    if (strcmp(name, "[anon:libc_malloc]") != 0) {
+      size_t total = test_data.total_allocated_bytes;
+      malloc_iterate(start, end - start, SavePointers, &test_data);
+      total = test_data.total_allocated_bytes - total;
+      if (total > 0) {
+        char buffer[256];
+        int len = 0;
+        if (name[0] != '\0') {
+          len = async_safe_format_buffer(buffer, sizeof(buffer), "Failed on map %s: %zu\n", name,
+                                         total);
+        } else {
+          len = async_safe_format_buffer(buffer, sizeof(buffer),
+                                         "Failed on map anon:<%" PRIx64 "-%" PRIx64 ">: %zu\n",
+                                         start, end, total);
         }
-      }));
+        if (len > 0) {
+          write(STDOUT_FILENO, buffer, len);
+        }
+      }
+    }
+  };
+
+  std::vector<char> buffer(64 * 1024);
+
+  // Need to make sure that there are no allocations while reading the
+  // maps. Otherwise, it might create a new map during this check and
+  // incorrectly think a map is empty while it actually includes real
+  // allocations.
+  malloc_disable();
+  bool parsed = android::procinfo::ReadMapFileAsyncSafe("/proc/self/maps", buffer.data(),
+                                                        buffer.size(), callback);
+  malloc_enable();
+
+  ASSERT_TRUE(parsed) << "Failed to parse /proc/self/maps";
 
   ASSERT_EQ(0UL, test_data.total_allocated_bytes);
 #else
