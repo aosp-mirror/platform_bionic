@@ -266,18 +266,22 @@ class SymbolFileParser {
     if (!api_level.empty()) {
       // If an api-level tag is specified, it must be an exact match (mainly
       // for versioner unit tests).
-      return compilation_type.api_level == decodeApiLevelValue(api_level);
+      return compilation_type.api_level == parseApiLevelValue(api_level);
     }
 
-    return compilation_type.api_level >= decodeApiLevelValue(intro);
+    return compilation_type.api_level >= parseApiLevelValue(intro);
   }
 
-  // Extract and decode the integer API level from api-level or introduced tags.
-  static int decodeApiLevelValue(const std::string& tag) {
+  // Parse the integer API level from api-level or introduced tags.
+  int parseApiLevelValue(const std::string& tag) const {
     std::string api_level = tag.substr(tag.find('=') + 1);
     auto it = api_codename_map.find(api_level);
     if (it != api_codename_map.end()) {
       return it->second;
+    }
+    if (api_level.find_first_not_of("0123456789") != std::string::npos) {
+      errx(1, "%s:%zu: error: unknown API level codename specified: \"%s\"",
+           file_path.c_str(), curr_line_num, tag.c_str());
     }
     return std::stoi(api_level);
   }
