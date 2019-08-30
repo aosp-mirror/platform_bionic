@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a945ad24_062343a8",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-08-30T17:25:36Z",
+      "side": 1,
+      "message": "Life is tough.  :-(\n\n    #define bcopy __bionic_bcopy\n    #define bcopy(b1, b2, len) __bionic_bcopy((b1), (b2), (len))\n\nThese are slightly different in the following case:\n\n    #define LIBBUILTIN(NAME)\n    #define BUILTIN(NAME) LIBBUILTIN(NAME)\n    LIBBUILTIN(NAME) BI##NAME,\n\nThe former expands into `BI__bionic_bcopy` and the later expands into `BIbcopy`.  For best compatibility, we would like to have the later one.\n\nThis nuance is caused by the macro expansion rule.  When `BUILTIN(bcopy)` is expanded, it will be expanded into `LIBBUILTIN(__bionic_bcopy)` for the first case.  However, in the second case, `bcopy` by itself does not trigger the macro expansion, thus `BUILTIN(bcopy)` is only expanded into `LIBBUILTIN(bcopy)`.\n\nAnd thanks for TreeHugger.",
+      "revId": "b33952c777dc3068dbcdafcc14a58ed91064bd2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
