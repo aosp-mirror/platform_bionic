@@ -16,6 +16,24 @@
       "revId": "b33952c777dc3068dbcdafcc14a58ed91064bd2d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f09996da_55c1d46c",
+        "filename": "libc/include/strings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-08-30T17:27:40Z",
+      "side": 1,
+      "message": "*typo, code snippet should be:\n\n    #define LIBBUILTIN(NAME) BI##NAME\n    #define BUILTIN(NAME) LIBBUILTIN(NAME)\n    BUILTIN(bcopy)",
+      "parentUuid": "a945ad24_062343a8",
+      "revId": "b33952c777dc3068dbcdafcc14a58ed91064bd2d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
