@@ -34,9 +34,7 @@
 #include <sched.h>
 #include <stdlib.h>
 
-#if !defined(__BIONIC_THREADS_INLINE)
-#define __BIONIC_THREADS_INLINE static __inline
-#endif
+#if defined(__BIONIC_THREADS_INLINE)
 
 __BEGIN_DECLS
 
@@ -105,10 +103,12 @@ __BIONIC_THREADS_INLINE int mtx_lock(mtx_t* __mtx) {
   return __bionic_thrd_error(pthread_mutex_lock(__mtx));
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_THREADS_INLINE int mtx_timedlock(mtx_t* __mtx,
                                           const struct timespec* __timeout) {
   return __bionic_thrd_error(pthread_mutex_timedlock(__mtx, __timeout));
 }
+#endif
 
 __BIONIC_THREADS_INLINE int mtx_trylock(mtx_t* __mtx) {
   return __bionic_thrd_error(pthread_mutex_trylock(__mtx));
@@ -205,3 +205,5 @@ __BIONIC_THREADS_INLINE int tss_set(tss_t __key, void* __value) {
 }
 
 __END_DECLS
+
+#endif  // __BIONIC_THREADS_INLINE
