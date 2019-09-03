@@ -21,14 +21,16 @@
 
 #include <sys/eventfd.h>
 
+#include "utils.h"
+
 TEST(eventfd, smoke) {
-  unsigned int initial_value = 2;
-  int fd = eventfd(initial_value, O_NONBLOCK);
-  ASSERT_NE(fd, -1);
+  constexpr unsigned int kInitialValue = 2;
+  int fd = eventfd(kInitialValue, EFD_NONBLOCK);
+  ASSERT_NE(-1, fd);
 
   eventfd_t value = 123;
   ASSERT_EQ(0, eventfd_read(fd, &value));
-  ASSERT_EQ(initial_value, value);
+  ASSERT_EQ(kInitialValue, value);
 
   // Reading clears the counter.
   ASSERT_EQ(-1, eventfd_read(fd, &value));
@@ -41,6 +43,52 @@ TEST(eventfd, smoke) {
 
   ASSERT_EQ(0, eventfd_read(fd, &value));
   ASSERT_EQ(3U, value);
+
+  close(fd);
+}
+
+TEST(eventfd, cloexec) {
+  constexpr unsigned int kInitialValue = 2;
+  int fd = eventfd(kInitialValue, EFD_CLOEXEC);
+  ASSERT_NE(-1, fd);
+  AssertCloseOnExec(fd, true);
+
+  eventfd_t value = 123;
+  ASSERT_EQ(0, eventfd_read(fd, &value));
+  ASSERT_EQ(kInitialValue, value);
+
+  close(fd);
+
+  fd = eventfd(kInitialValue, EFD_NONBLOCK | EFD_CLOEXEC);
+  ASSERT_NE(-1, fd);
+  AssertCloseOnExec(fd, true);
+
+  value = 123;
+  ASSERT_EQ(0, eventfd_read(fd, &value));
+  ASSERT_EQ(kInitialValue, value);
+
+  close(fd);
+}
+
+TEST(eventfd, semaphore) {
+  int fd = eventfd(3, EFD_NONBLOCK | EFD_SEMAPHORE);
+  ASSERT_NE(-1, fd);
+
+  eventfd_t value = 123;
+  ASSERT_EQ(0, eventfd_read(fd, &value));
+  ASSERT_EQ(1U, value);
+
+  value = 123;
+  ASSERT_EQ(0, eventfd_read(fd, &value));
+  ASSERT_EQ(1U, value);
+
+  value = 123;
+  ASSERT_EQ(0, eventfd_read(fd, &value));
+  ASSERT_EQ(1U, value);
+
+  // The counter is cleared after the initial value decrements to 0.
+  ASSERT_EQ(-1, eventfd_read(fd, &value));
+  ASSERT_EQ(EAGAIN, errno);
 
   close(fd);
 }
