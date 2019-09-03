@@ -243,23 +243,15 @@ sighandler_t bsd_signal(int signum, sighandler_t handler) {
   return signal(signum, handler);
 }
 
-// bcopy/bzero were previously `#define`d, so we only have `static` wrappers in
-// Bionic headers. Since we have header definitions, we need some way to
-// overload these implementations; __never_call will ensure that any calls to
-// bcopy/bzero call the in-header implementation. Since the implementations
-// should end up functionally identical, it doesn't matter which we actually
-// call.
-#define __never_call __attribute__((enable_if(false, "never selected")))
-
 // This was removed from POSIX 2008.
-void bcopy(const void* src, void* dst, size_t n) __never_call __RENAME(bcopy);
-void bcopy(const void* src, void* dst, size_t n) __never_call {
+#undef bcopy
+void bcopy(const void* src, void* dst, size_t n) {
   memmove(dst, src, n);
 }
 
 // This was removed from POSIX 2008.
-void bzero(void* dst, size_t n) __never_call __RENAME(bzero);
-void bzero(void* dst, size_t n) __never_call {
+#undef bzero
+void bzero(void* dst, size_t n) {
   memset(dst, 0, n);
 }
 
