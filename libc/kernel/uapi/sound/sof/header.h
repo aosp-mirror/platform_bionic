@@ -18,12 +18,13 @@
  ****************************************************************************/
 #ifndef __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
 #define __INCLUDE_UAPI_SOUND_SOF_USER_HEADER_H__
+#include <linux/types.h>
 struct sof_abi_hdr {
-  uint32_t magic;
-  uint32_t type;
-  uint32_t size;
-  uint32_t abi;
-  uint32_t reserved[4];
-  uint32_t data[0];
+  __u32 magic;
+  __u32 type;
+  __u32 size;
+  __u32 abi;
+  __u32 reserved[4];
+  __u32 data[0];
 } __packed;
 #endif
