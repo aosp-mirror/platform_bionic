@@ -38,6 +38,12 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    // Make the bionic tests implicitly test bionic's shadow call stack support.
+    arch: {
+        arm64: {
+           cflags: ["-fsanitize=shadow-call-stack"],
+        },
+    },
     stl: "libc++",
     sanitize: {
         address: false,
