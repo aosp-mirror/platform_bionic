@@ -124,6 +124,10 @@ cc_test {
         "bionic/libc/async_safe/include",
     ],
 
+    header_libs: [
+        "bionic_libc_platform_headers",
+    ],
+
     static_libs: [
         "libc_malloc_debug",
         "libtinyxml2",
@@ -148,7 +152,13 @@ cc_test {
 cc_test {
     name: "malloc_debug_system_tests",
 
-    include_dirs: ["bionic/libc"],
+    include_dirs: [
+        "bionic/libc",
+    ],
+
+    header_libs: [
+        "bionic_libc_platform_headers",
+    ],
 
     srcs: [
         "tests/malloc_debug_system_tests.cpp",
