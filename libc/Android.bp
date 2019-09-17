@@ -1726,6 +1726,25 @@ cc_library_headers {
     sdk_version: "current",
 }
 
+// Headers that only other parts of the platform can include.
+cc_library_headers {
+    name: "bionic_libc_platform_headers",
+    visibility: [
+        "//bionic/libc/malloc_debug:__subpackages__",
+        "//bionic/libc/malloc_hooks:__subpackages__",
+        "//frameworks/av/media/libmedia:__subpackages__",
+        "//frameworks/av/media/utils:__subpackages__",
+        "//frameworks/base/core/jni:__subpackages__",
+        "//frameworks/base/services/core/jni:__subpackages__",
+        "//external/perfetto:__subpackages__",
+    ],
+    host_supported: true,
+    export_include_dirs: [
+        "platform",
+    ],
+    sdk_version: "current",
+}
+
 // libc_headers for libasync_safe and libpropertyinfoparser
 cc_library_headers {
     name: "libc_headers",
