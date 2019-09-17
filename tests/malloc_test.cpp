@@ -33,8 +33,8 @@
 
 #include <android-base/file.h>
 
+#include "platform/bionic/malloc.h"
 #include "private/bionic_config.h"
-#include "private/bionic_malloc.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)

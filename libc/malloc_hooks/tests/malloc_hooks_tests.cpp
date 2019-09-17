@@ -38,7 +38,7 @@
 
 #include <gtest/gtest.h>
 
-#include <private/bionic_malloc.h>
+#include <bionic/malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <tests/utils.h>
 
