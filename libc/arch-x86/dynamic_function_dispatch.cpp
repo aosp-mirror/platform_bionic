@@ -28,21 +28,9 @@
 
 #include <stddef.h>
 
+#include <private/bionic_ifuncs.h>
+
 extern "C" {
-
-#define DEFINE_IFUNC_FOR(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
-    __attribute__((visibility("hidden"))) \
-    name##_func* name##_resolver()
-
-#define DECLARE_FUNC(type, name) \
-    __attribute__((visibility("hidden"))) \
-    type name
-
-#define RETURN_FUNC(type, name) { \
-        DECLARE_FUNC(type, name); \
-        return name; \
-    }
 
 typedef int memcmp_func(const void* __lhs, const void* __rhs, size_t __n);
 DEFINE_IFUNC_FOR(memcmp) {
