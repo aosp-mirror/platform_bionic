@@ -49,7 +49,13 @@ cc_test {
     shared_libs: ["libbase"],
 
     local_include_dirs: ["tests"],
-    include_dirs: ["bionic/libc", "bionic"],
+    include_dirs: [
+        "bionic/libc",
+        "bionic"
+    ],
+    header_libs: [
+        "bionic_libc_platform_headers",
+    ],
 
     cflags: [
         "-Wall",
