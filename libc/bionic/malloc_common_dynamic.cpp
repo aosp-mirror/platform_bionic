@@ -57,10 +57,10 @@
 
 #include <android/dlext.h>
 
+#include <platform/bionic/malloc.h>
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
-#include <private/bionic_malloc.h>
 
 #include <sys/system_properties.h>
 

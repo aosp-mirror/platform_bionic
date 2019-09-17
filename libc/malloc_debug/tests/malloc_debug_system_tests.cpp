@@ -45,7 +45,7 @@
 #include <thread>
 #include <vector>
 
-#include "private/bionic_malloc.h"
+#include <bionic/malloc.h>
 
 static constexpr time_t kTimeoutSeconds = 10;
 
