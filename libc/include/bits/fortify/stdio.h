@@ -37,10 +37,9 @@ size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+/* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
 int vsnprintf(char* const __pass_object_size dest, size_t size, const char* format, va_list ap)
-        __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
-                         "in call to 'vsnprintf', size is larger than the destination buffer")
         __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
@@ -52,10 +51,9 @@ int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+/* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
 int snprintf(char* const __pass_object_size dest, size_t size, const char* format, ...)
-        __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
-                         "in call to 'snprintf', size is larger than the destination buffer")
         __overloadable {
     va_list va;
     va_start(va, format);
