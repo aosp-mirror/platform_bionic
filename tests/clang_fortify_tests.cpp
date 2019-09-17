@@ -35,11 +35,13 @@
 //
 // Similarly, there are a few overload tricks we have to emit errors. Ignore any notes from those.
 // expected-note@* 0+{{candidate function}}
-
-// FIXME(b/138701943): Silence warnings produced by -Wfortify-source since they're expected.
-// expected-warning@* 0+{{will always overflow}}
-// expected-warning@* 0+{{size argument is too large}}
+//
+// And finally, all explicitly-unavailable-here complaints from headers are
+// uninteresting
 // expected-note@* 0+{{has been explicitly marked unavailable here}}
+
+// Note that some of these diags come from clang itself, while others come from
+// `diagnose_if`s sprinkled throughout Bionic.
 
 #ifndef _FORTIFY_SOURCE
 #error "_FORTIFY_SOURCE must be defined"
@@ -60,12 +62,14 @@
 #define __clang_error_if(...)
 #undef __clang_warning_if
 #define __clang_warning_if(...)
+#pragma clang diagnostic ignored "-Wfortify-source"
 
 // SOMETIMES_CONST allows clang to emit eager diagnostics when we're doing compilation tests, but
 // blocks them otherwise. This is needed for diagnostics emitted with __enable_if.
 #define SOMETIMES_CONST volatile
 #else
 #define SOMETIMES_CONST const
+#pragma clang diagnostic error "-Wfortify-source"
 #endif
 
 #include <err.h>
@@ -160,13 +164,13 @@ FORTIFY_TEST(string) {
 
   {
     char large_buffer[sizeof(small_buffer) + 1] = {};
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{will always overflow}}
     EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{will always overflow}}
     EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{will always overflow}}
     EXPECT_FORTIFY_DEATH(memset(small_buffer, 0, sizeof(large_buffer)));
     // expected-warning@+1{{arguments got flipped?}}
     EXPECT_NO_DEATH(memset(small_buffer, sizeof(small_buffer), 0));
@@ -184,13 +188,13 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(strcpy(small_buffer, large_string));
     // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(stpcpy(small_buffer, large_string));
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{size argument is too large}}
     EXPECT_FORTIFY_DEATH(strncpy(small_buffer, large_string, sizeof(large_string)));
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{size argument is too large}}
     EXPECT_FORTIFY_DEATH(stpncpy(small_buffer, large_string, sizeof(large_string)));
     // expected-error@+1{{string bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strcat(small_buffer, large_string));
-    // expected-error@+1{{size bigger than buffer}}
+    // expected-error@+1{{size argument is too large}}
     EXPECT_FORTIFY_DEATH(strncat(small_buffer, large_string, sizeof(large_string)));
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(strlcpy(small_buffer, large_string, sizeof(large_string)));
@@ -227,12 +231,12 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH_STRUCT(stpcpy(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-    // expected-error@+2{{size bigger than buffer}}
+    // expected-error@+2{{size argument is too large}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
 #if _FORTIFY_SOURCE > 1
-    // expected-error@+2{{size bigger than buffer}}
+    // expected-error@+2{{size argument is too large}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(stpncpy(split.tiny_buffer, small_string, sizeof(small_string)));
 
@@ -242,7 +246,7 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH_STRUCT(strcat(split.tiny_buffer, small_string));
 
 #if _FORTIFY_SOURCE > 1
-    // expected-error@+2{{size bigger than buffer}}
+    // expected-error@+2{{size argument is too large}}
 #endif
     EXPECT_FORTIFY_DEATH_STRUCT(strncat(split.tiny_buffer, small_string, sizeof(small_string)));
 
@@ -491,11 +495,11 @@ FORTIFY_TEST(sys_stat) {
 FORTIFY_TEST(stdio) {
   char small_buffer[8] = {};
   {
-    // expected-error@+1{{size is larger than the destination buffer}}
+    // expected-error@+1{{size argument is too large}}
     EXPECT_FORTIFY_DEATH(snprintf(small_buffer, sizeof(small_buffer) + 1, ""));
 
     va_list va;
-    // expected-error@+2{{size is larger than the destination buffer}}
+    // expected-error@+2{{size argument is too large}}
     // expected-warning@+1{{format string is empty}}
     EXPECT_FORTIFY_DEATH(vsnprintf(small_buffer, sizeof(small_buffer) + 1, "", va));
 
