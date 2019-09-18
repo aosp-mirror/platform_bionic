@@ -37,20 +37,10 @@ long long llroundl(long double a1) { return llround(a1); }
 long lroundl(long double a1) { return lround(a1); }
 long double modfl(long double a1, long double* a2) { double i; double f = modf(a1, &i); *a2 = i; return f; }
 float nexttowardf(float a1, long double a2) { return nextafterf(a1, (float) a2); }
-long double powl(long double x, long double y) { return pow(x, y); }
 long double roundl(long double a1) { return round(a1); }
 void sincosl(long double x, long double* s, long double* c) { sincos(x, (double*) s, (double*) c); }
 
 #endif // __LP64__
 
-// FreeBSD doesn't have an ld128 implementations of tgammal, so both LP32 and LP64 need this.
+// FreeBSD doesn't have an ld128 implementation of tgammal, so both LP32 and LP64 need this.
 long double tgammal(long double x) { return tgamma(x); }
-
-// external/arm-optimized-routines does not provide the long double
-// wrappers for the routines it implements.
-#if (LDBL_MANT_DIG == 53)
-long double expl(long double x) { return exp(x); }
-long double exp2l(long double x) { return exp2(x); }
-long double logl(long double x) { return log(x); }
-long double log2l(long double x) { return log2(x); }
-#endif
