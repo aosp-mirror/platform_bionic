@@ -8,7 +8,7 @@ import re
 import subprocess
 import textwrap
 
-from gensyscalls import SysCallsTxtParser
+from gensyscalls import SupportedArchitectures, SysCallsTxtParser
 
 
 BPF_JGE = "BPF_JUMP(BPF_JMP|BPF_JGE|BPF_K, {0}, {1}, {2})"
@@ -181,7 +181,7 @@ def construct_bpf(syscalls, architecture, name_modifier):
 
 
 def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files, syscall_NRs):
-  for arch in ('arm', 'arm64', 'mips', 'mips64', 'x86', 'x86_64'):
+  for arch in SupportedArchitectures:
     base_names = load_syscall_names_from_file(base_syscall_file, arch)
     whitelist_names = set()
     blacklist_names = set()
@@ -215,7 +215,7 @@ def main():
   parser.add_argument("--verbose", "-v", help="Enables verbose logging.")
   parser.add_argument("--name-modifier",
                       help=("Specifies the name modifier for the policy. "
-                            "One of {app,global,system}."))
+                            "One of {app,system}."))
   parser.add_argument("--out-dir",
                       help="The output directory for the policy files")
   parser.add_argument("base_file", metavar="base-file", type=str,

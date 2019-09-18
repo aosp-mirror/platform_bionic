@@ -17,7 +17,7 @@ import sys
 import tempfile
 
 
-all_arches = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
+SupportedArchitectures = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
 
 bionic_libc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
@@ -456,19 +456,19 @@ class SysCallsTxtParser:
         # Parse the architecture list.
         arch_list = line[pos_rparen+1:].strip()
         if arch_list == "all":
-            for arch in all_arches:
+            for arch in SupportedArchitectures:
                 t[arch] = True
         elif arch_list == "lp32":
-            for arch in all_arches:
+            for arch in SupportedArchitectures:
                 if "64" not in arch:
                     t[arch] = True
         elif arch_list == "lp64":
-            for arch in all_arches:
+            for arch in SupportedArchitectures:
                 if "64" in arch:
                     t[arch] = True
         else:
             for arch in string.split(arch_list, ','):
-                if arch in all_arches:
+                if arch in SupportedArchitectures:
                     t[arch] = True
                 else:
                     E("invalid syscall architecture '%s' in '%s'" % (arch, line))
