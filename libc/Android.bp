@@ -2287,8 +2287,7 @@ cc_object {
     ],
 }
 
-// Generate the C++ policy sources for app, system, and global seccomp-bpf
-// filters.
+// Generate the C++ policy sources for app and system seccomp-bpf filters.
 python_binary_host {
     name: "genseccomp",
     main: "tools/genseccomp.py",
@@ -2458,38 +2457,6 @@ cc_genrule {
     ],
 }
 
-cc_genrule {
-    name: "libseccomp_policy_global_sources",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=global $(in)",
-
-    tools: [ "genseccomp" ],
-
-    srcs: [
-        "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_WHITELIST_GLOBAL.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
-    ],
-
-    out: [
-        "arm64_global_policy.cpp",
-        "arm_global_policy.cpp",
-        "mips64_global_policy.cpp",
-        "mips_global_policy.cpp",
-        "x86_64_global_policy.cpp",
-        "x86_global_policy.cpp",
-    ],
-}
-
 cc_library {
     name: "libseccomp_policy",
     recovery_available: true,
@@ -2497,7 +2464,6 @@ cc_library {
     generated_sources: [
         "libseccomp_policy_app_sources",
         "libseccomp_policy_app_zygote_sources",
-        "libseccomp_policy_global_sources",
         "libseccomp_policy_system_sources",
     ],
 
