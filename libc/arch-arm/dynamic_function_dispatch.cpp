@@ -29,6 +29,8 @@
 #include <fcntl.h>
 #include <sys/syscall.h>
 
+#include <private/bionic_ifuncs.h>
+
 extern "C" {
 
 enum CpuVariant {
@@ -89,20 +91,6 @@ static int ifunc_close(int fd) {
     return r0;
 }
 
-#define DEFINE_IFUNC(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
-    __attribute__((visibility("hidden"))) \
-    name##_func* name##_resolver()
-
-#define DECLARE_FUNC(type, name) \
-    __attribute__((visibility("hidden"))) \
-    type name
-
-#define RETURN_FUNC(type, name) { \
-        DECLARE_FUNC(type, name); \
-        return name; \
-    }
-
 static bool is_same_name(const char* a, const char* b) {
     static_assert(MAX_CPU_NAME_LEN % sizeof(int) == 0, "");
     const int* ia = reinterpret_cast<const int*>(a);
@@ -155,17 +143,17 @@ static CpuVariant get_cpu_variant() {
 }
 
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
-DEFINE_IFUNC(memmove) {
+DEFINE_IFUNC_FOR(memmove) {
     RETURN_FUNC(memmove_func, memmove_a15);
 }
 
 typedef void* memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC(memcpy) {
+DEFINE_IFUNC_FOR(memcpy) {
     return memmove_resolver();
 }
 
 typedef void* __memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC(__memcpy) {
+DEFINE_IFUNC_FOR(__memcpy) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__memcpy_func, __memcpy_a7);
@@ -185,7 +173,7 @@ DEFINE_IFUNC(__memcpy) {
 }
 
 typedef void* __memset_chk_func(void* s, int c, size_t n, size_t n2);
-DEFINE_IFUNC(__memset_chk) {
+DEFINE_IFUNC_FOR(__memset_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -202,7 +190,7 @@ DEFINE_IFUNC(__memset_chk) {
 }
 
 typedef void* memset_func(void* __dst, int __ch, size_t __n);
-DEFINE_IFUNC(memset) {
+DEFINE_IFUNC_FOR(memset) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -219,7 +207,7 @@ DEFINE_IFUNC(memset) {
 }
 
 typedef char* strcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC(strcpy) {
+DEFINE_IFUNC_FOR(strcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcpy_func, strcpy_a9);
@@ -229,7 +217,7 @@ DEFINE_IFUNC(strcpy) {
 }
 
 typedef char* __strcpy_chk_func(char* dst, const char* src, size_t dst_len);
-DEFINE_IFUNC(__strcpy_chk) {
+DEFINE_IFUNC_FOR(__strcpy_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a7);
@@ -248,7 +236,7 @@ DEFINE_IFUNC(__strcpy_chk) {
 }
 
 typedef char* stpcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC(stpcpy) {
+DEFINE_IFUNC_FOR(stpcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(stpcpy_func, stpcpy_a9);
@@ -258,7 +246,7 @@ DEFINE_IFUNC(stpcpy) {
 }
 
 typedef char* strcat_func(char* __dst, const char* __src);
-DEFINE_IFUNC(strcat) {
+DEFINE_IFUNC_FOR(strcat) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcat_func, strcat_a9);
@@ -268,7 +256,7 @@ DEFINE_IFUNC(strcat) {
 }
 
 typedef char* __strcat_chk_func(char* dst, const char* src, size_t dst_buf_size);
-DEFINE_IFUNC(__strcat_chk) {
+DEFINE_IFUNC_FOR(__strcat_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcat_chk_func, __strcat_chk_a7);
@@ -287,12 +275,12 @@ DEFINE_IFUNC(__strcat_chk) {
 }
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
-DEFINE_IFUNC(strcmp) {
+DEFINE_IFUNC_FOR(strcmp) {
     RETURN_FUNC(strcmp_func, strcmp_a15);
 }
 
 typedef size_t strlen_func(const char* __s);
-DEFINE_IFUNC(strlen) {
+DEFINE_IFUNC_FOR(strlen) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strlen_func, strlen_a9);
