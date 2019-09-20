@@ -69,7 +69,6 @@
 #define SOMETIMES_CONST volatile
 #else
 #define SOMETIMES_CONST const
-#pragma clang diagnostic error "-Wfortify-source"
 #endif
 
 #include <err.h>
