@@ -46,7 +46,7 @@ __BIONIC_FORTIFY_INLINE
 void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
         __overloadable {
     size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_not_lt(bos_dst, copy_amount)) {
+    if (__bos_trivially_ge(bos_dst, copy_amount)) {
         return __builtin_memcpy(dst, src, copy_amount);
     }
     return __builtin___memcpy_chk(dst, src, copy_amount, bos_dst);
@@ -56,7 +56,7 @@ void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_a
 __BIONIC_FORTIFY_INLINE
 void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) __overloadable {
     size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_not_lt(bos_dst, len)) {
+    if (__bos_trivially_ge(bos_dst, len)) {
         return __builtin_memmove(dst, src, len);
     }
     return __builtin___memmove_chk(dst, src, len, bos_dst);
@@ -71,7 +71,7 @@ void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
                          "'mempcpy' called with size bigger than buffer") {
     size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_not_lt(bos_dst, copy_amount)) {
+    if (__bos_trivially_ge(bos_dst, copy_amount)) {
         return __builtin_mempcpy(dst, src, copy_amount);
     }
     return __builtin___mempcpy_chk(dst, src, copy_amount, bos_dst);
