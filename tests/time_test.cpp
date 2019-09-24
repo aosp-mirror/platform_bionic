@@ -708,10 +708,6 @@ TEST(time, clock_gettime_unknown) {
 }
 
 TEST(time, clock_getres_CLOCK_REALTIME) {
-#if defined(__i386__)
-  // See b/141515847
-  GTEST_SKIP() << "Temporary disable until cuttlefish kernel is fixed.";
-#endif
   timespec ts;
   ASSERT_EQ(0, clock_getres(CLOCK_REALTIME, &ts));
   ASSERT_EQ(1, ts.tv_nsec);
@@ -719,10 +715,6 @@ TEST(time, clock_getres_CLOCK_REALTIME) {
 }
 
 TEST(time, clock_getres_CLOCK_MONOTONIC) {
-#if defined(__i386__)
-  // See b/141515847
-  GTEST_SKIP() << "Temporary disable until cuttlefish kernel is fixed.";
-#endif
   timespec ts;
   ASSERT_EQ(0, clock_getres(CLOCK_MONOTONIC, &ts));
   ASSERT_EQ(1, ts.tv_nsec);
@@ -740,10 +732,6 @@ TEST(time, clock_getres_CLOCK_THREAD_CPUTIME_ID) {
 }
 
 TEST(time, clock_getres_CLOCK_BOOTTIME) {
-#if defined(__i386__)
-  // See b/141515847
-  GTEST_SKIP() << "Temporary disable until cuttlefish kernel is fixed.";
-#endif
   timespec ts;
   ASSERT_EQ(0, clock_getres(CLOCK_BOOTTIME, &ts));
   ASSERT_EQ(1, ts.tv_nsec);
