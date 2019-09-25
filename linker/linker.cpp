@@ -204,7 +204,6 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     "libsqlite.so",
     "libui.so",
     "libutils.so",
-    "libvorbisidec.so",
     nullptr
   };
 
