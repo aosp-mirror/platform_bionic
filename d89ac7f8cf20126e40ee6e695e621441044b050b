@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d3140d1_813c3c4e",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-09-25T21:27:55Z",
+      "side": 1,
+      "message": "It seems weird that these functions don\u0027t call __get_netd_client and instead seem to rely on __get_netd_client mutating the struct.\n\nIt looks like this makes so that if you connect to a socket with an address that you\u0027re constructing yourself (e.g. if it\u0027s an IP address and you parse it out yourself) and you never call gethostbyname/getaddrinfo, you get different behavior?",
+      "range": {
+        "startLine": 61,
+        "startChar": 72,
+        "endLine": 62,
+        "endChar": 61
+      },
+      "revId": "d89ac7f8cf20126e40ee6e695e621441044b050b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
