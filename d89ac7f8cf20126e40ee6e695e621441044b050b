@@ -22,6 +22,30 @@
       "revId": "d89ac7f8cf20126e40ee6e695e621441044b050b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4c730b9_8c19d850",
+        "filename": "libc/bionic/NetdClient.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-25T22:35:13Z",
+      "side": 1,
+      "message": "yeah, still some work to do here. the version that does these too doesn\u0027t boot yet :-(",
+      "parentUuid": "8d3140d1_813c3c4e",
+      "range": {
+        "startLine": 61,
+        "startChar": 72,
+        "endLine": 62,
+        "endChar": 61
+      },
+      "revId": "d89ac7f8cf20126e40ee6e695e621441044b050b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
