@@ -29,9 +29,11 @@
 #include <errno.h>
 #include <unistd.h>
 
+#include "private/bionic_defs.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_kill(pthread_t t, int sig) {
   ErrnoRestorer errno_restorer;
 
