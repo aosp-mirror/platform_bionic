@@ -19,16 +19,5 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-void BM_inttypes_strtoimax(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    strtoimax(" -123", nullptr, 0);
-  }
-}
-BIONIC_BENCHMARK(BM_inttypes_strtoimax);
-
-void BM_inttypes_strtoumax(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    strtoumax(" -123", nullptr, 0);
-  }
-}
-BIONIC_BENCHMARK(BM_inttypes_strtoumax);
+BIONIC_TRIVIAL_BENCHMARK(BM_inttypes_strtoimax, strtoimax(" -123", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_inttypes_strtoumax, strtoumax(" -123", nullptr, 0));
