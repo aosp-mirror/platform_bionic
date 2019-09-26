@@ -1,18 +1,21 @@
-#!/bin/bash -e
+# source this script in bash
 
 source ${ANDROID_BUILD_TOP}/build/envsetup.sh
 
-TARGET_ARCH=$(get_build_var TARGET_ARCH)
-TARGET_OUT=$(get_build_var TARGET_OUT)
-TARGET_OUT_EXECUTABLES=$(get_build_var TARGET_OUT_EXECUTABLES)
-TARGET_OUT_DATA=$(get_build_var TARGET_OUT_DATA)
-HOST_OS=$(get_build_var HOST_OS)
-HOST_ARCH=$(get_build_var HOST_ARCH)
-HOST_OUT=$(get_build_var HOST_OUT)
+# See envsetup.sh for an example of using --dumpvars-mode to set shell variables.
+eval "$(cd ${ANDROID_BUILD_TOP}; build/soong/soong_ui.bash --dumpvars-mode --vars="\
+    TARGET_ARCH \
+    TARGET_OUT \
+    TARGET_OUT_EXECUTABLES \
+    TARGET_OUT_DATA \
+    HOST_OS \
+    HOST_ARCH \
+    HOST_OUT \
+    ")"
 
 function prepare()
 {
-    BITS=$1
+    local BITS=$1
     shift
 
     BENCHMARKS=${TARGET_OUT_DATA}/benchmarktest
@@ -23,27 +26,36 @@ function prepare()
     fi
 
     if [ ${TARGET_ARCH} = x86 -o ${TARGET_ARCH} = x86_64 ]; then
-        m -j MODULES-IN-bionic MODULES-IN-external-icu MODULES-IN-external-mksh ${TARGET_OUT}/etc/hosts $@
+        m -j MODULES-IN-bionic MODULES-IN-external-icu MODULES-IN-external-mksh ${TARGET_OUT}/etc/hosts "$@"
 
         if [ ! -d /system ]; then
-            echo "Attempting to create /system";
-            sudo mkdir -p -m 0777 /system;
-            mkdir -p -m 0777 /system/bin;
-            mkdir -p -m 0777 /system/lib;
-            mkdir -p -m 0777 /system/lib64;
+            echo "Attempting to create /system"
+            sudo mkdir -p -m 0777 /system
+            mkdir -p -m 0777 /system/bin
+            mkdir -p -m 0777 /system/lib
+            mkdir -p -m 0777 /system/lib64
         fi
         (
+            function make_link() {
+                dir=$1
+                tgt=$2
+                name=`basename ${tgt}`
+                src=$dir/$name
+                if [ -e $tgt ]; then
+                    ln -sfT `realpath ${tgt}` $src
+                fi
+            }
             cd ${ANDROID_BUILD_TOP}
             mkdir -p ${TARGET_OUT_DATA}/local/tmp
             for i in ${TARGET_OUT}/bin/bootstrap/* ${TARGET_OUT}/bin/*; do
-              ln -fs `realpath ${i}` /system/bin/
+                make_link /system/bin ${i}
             done
             ln -fs `realpath ${TARGET_OUT}/etc` /system/
             for i in ${TARGET_OUT}/lib/bootstrap/* ${TARGET_OUT}/lib/*; do
-              ln -fs `realpath ${i}` /system/lib/
+                make_link /system/lib ${i}
             done
             for i in ${TARGET_OUT}/lib64/bootstrap/* ${TARGET_OUT}/lib64/*; do
-              ln -fs `realpath ${i}` /system/lib64/
+                make_link /system/lib64 ${i}
             done
         )
     fi
