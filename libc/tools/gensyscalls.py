@@ -8,7 +8,6 @@ import atexit
 import commands
 import filecmp
 import glob
-import os.path
 import re
 import shutil
 import stat
@@ -18,8 +17,6 @@ import tempfile
 
 
 SupportedArchitectures = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
-
-bionic_libc = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 
 syscall_stub_header = \
 """
@@ -489,9 +486,9 @@ class SysCallsTxtParser:
             self.parse_open_file(fp)
 
 
-def main(arch):
+def main(arch, syscall_file):
     parser = SysCallsTxtParser()
-    parser.parse_file(os.path.join(bionic_libc, "SYSCALLS.TXT"))
+    parser.parse_file(syscall_file)
 
     for syscall in parser.syscalls:
         syscall["__NR_name"] = make__NR_name(syscall["name"])
@@ -528,4 +525,10 @@ def main(arch):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if len(sys.argv) < 2:
+      print "Usage: gensyscalls.py ARCH SOURCE_FILE"
+      sys.exit(1)
+
+    arch = sys.argv[1]
+    syscall_file = sys.argv[2]
+    main(arch, syscall_file)
