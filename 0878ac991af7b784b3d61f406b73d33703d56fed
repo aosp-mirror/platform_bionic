@@ -16,6 +16,24 @@
       "revId": "0878ac991af7b784b3d61f406b73d33703d56fed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1504605f_a706665c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3307,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-27T23:24:55Z",
+      "side": 0,
+      "message": "Yeah, these should be in a separate CL if we remove them.\n\nI think these relocations are static-only, and if a dynamic linker *did* support them, the calculation here would be wrong. The situation is similar to that of b/19197129 for R_ARM_REL32, but R_ARM_REL32 has actually shown up before.",
+      "parentUuid": "6fb644ad_48c383f7",
+      "revId": "0878ac991af7b784b3d61f406b73d33703d56fed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

@@ -99,6 +99,24 @@
     },
     {
       "key": {
+        "uuid": "df040fe3_62285962",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-27T23:24:55Z",
+      "side": 1,
+      "message": "IIRC find_verdef_version_index only returns false if something is malformed in the ELF file. I was wondering if we could move the check earlier. e.g. We would validate each DSO\u0027s verdef once, rather than each time we search for a symbol in the DSO.\n\nWith that change, this find_verdef_version_index failure code path would disappear.",
+      "parentUuid": "781e4d6b_1bc6e7fb",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "18f75b1b_f4692702",
         "filename": "linker/linker_soinfo.cpp",
         "patchSetId": 1
@@ -110,6 +128,30 @@
       "writtenOn": "2019-09-27T22:36:47Z",
       "side": 1,
       "message": "worth having a struct so we can just give these names directly rather than have L219-220?",
+      "range": {
+        "startLine": 218,
+        "startChar": 2,
+        "endLine": 218,
+        "endChar": 36
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "042c2586_98ddd771",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-27T23:24:55Z",
+      "side": 1,
+      "message": "Yeah, that make sense",
+      "parentUuid": "18f75b1b_f4692702",
       "range": {
         "startLine": 218,
         "startChar": 2,
@@ -150,6 +192,30 @@
       "writtenOn": "2019-09-27T22:36:47Z",
       "side": 1,
       "message": "hash_and_len?",
+      "range": {
+        "startLine": 1021,
+        "startChar": 11,
+        "endLine": 1021,
+        "endChar": 19
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18b40fcd_e54b0b30",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-09-27T23:24:55Z",
+      "side": 1,
+      "message": "Yeah, that\u0027s a better name.",
+      "parentUuid": "177c8947_a64038db",
       "range": {
         "startLine": 1021,
         "startChar": 11,
