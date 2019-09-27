@@ -1878,6 +1878,9 @@ cc_defaults {
         "-Wall",
         "-Werror",
     ],
+    sanitize: {
+        never: true,
+    },
 }
 
 cc_defaults {
