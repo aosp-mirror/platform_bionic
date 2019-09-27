@@ -1,0 +1,181 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eea00559_97c219a9",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "is this unused now?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7366f7d9_1ac93ab6",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "include the units in the name. i assumed this was ns until i read the code...\n\n(fwiw, to look at the constructor costs i\u0027m using local changes that use clock_gettime here right now :-) )\n\n(you might want to stick this in utils.h --- i ended up doing that so i could time more stuff, which i think we\u0027ll want to be able to do.)",
+      "range": {
+        "startLine": 300,
+        "startChar": 16,
+        "endLine": 300,
+        "endChar": 24
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60d2ea24_ff5f2cc8",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "explain why this clock? i\u0027d have expected CLOCK_MONOTONIC.",
+      "range": {
+        "startLine": 305,
+        "startChar": 18,
+        "endLine": 305,
+        "endChar": 41
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "775b03d3_47037ef8",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "(in my local changes i actually moved these to INFO and used the usual \"[ blah ]\" format.)",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "781e4d6b_1bc6e7fb",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "does anything trigger this? include the details anyway, to help debugging if we hit this?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18f75b1b_f4692702",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "worth having a struct so we can just give these names directly rather than have L219-220?",
+      "range": {
+        "startLine": 218,
+        "startChar": 2,
+        "endLine": 218,
+        "endChar": 36
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdf96f23_bb145fe8",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "does anything trigger this? include the details anyway, to help debugging if we hit this?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "177c8947_a64038db",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1021,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "hash_and_len?",
+      "range": {
+        "startLine": 1021,
+        "startChar": 11,
+        "endLine": 1021,
+        "endChar": 19
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02eea014_c2fc4925",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 1,
+      "message": "comment why?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

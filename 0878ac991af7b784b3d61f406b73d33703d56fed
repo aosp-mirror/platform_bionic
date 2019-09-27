@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6fb644ad_48c383f7",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3307,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-09-27T22:36:47Z",
+      "side": 0,
+      "message": "remove these in a separate CL? (with an explanation of why they\u0027re dead.)",
+      "revId": "0878ac991af7b784b3d61f406b73d33703d56fed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
