@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "7e4f63d4_dd27de29",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1841,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "If you plan on keeping the debugging code, I think you should at least switch to a local static constant so that the code gets parsed (but then dead code eliminated - DCE\u0027d).",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54c4707c_ca33a4b3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1865,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Same request for constant check",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eea00559_97c219a9",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -13,6 +47,23 @@
       "writtenOn": "2019-09-27T22:36:47Z",
       "side": 1,
       "message": "is this unused now?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aa09473_5c1d5e72",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Remove the ifdef, and this can also be DCE\u0027d as necessary.",
       "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -65,6 +116,74 @@
     },
     {
       "key": {
+        "uuid": "bd4d2eda_f91319e7",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Initialize to 0 instead, and put the get_time() call behind a constant flag check. This again lets it continue to get checked at compile-time while costing nothing.",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f035e5a6_793d421c",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Constant check.",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "003bd69f_17493ada",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Constant check.",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2d7e2ee_4682b37c",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "I now see that TIMING already existed for these components. Is it part of the Android.bp? If not, perhaps migrating to the static constant for TIMING is better as a separate change.",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "775b03d3_47037ef8",
         "filename": "linker/linker_main.cpp",
         "patchSetId": 1
@@ -76,6 +195,40 @@
       "writtenOn": "2019-09-27T22:36:47Z",
       "side": 1,
       "message": "(in my local changes i actually moved these to INFO and used the usual \"[ blah ]\" format.)",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b4f6a99_fa829070",
+        "filename": "linker/linker_reloc_iterators.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Is this define still needed? bionic/linker/linker_common_types.h only defines it for aarch64 and x86_64 with a comment about mips64 only having REL, but we have since removed support for that. It\u0027s probably not necessary to fix it in this CL, but is something to consider cleaning up.",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cdd77e3_681ea2bb",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Prefer TODO to XXX even for WIP just in case it gets checked in. It\u0027s easier to search for all the TODO in a project to clean up (or even lint check).",
       "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -164,6 +317,30 @@
     },
     {
       "key": {
+        "uuid": "3c741ef0_8c193dcf",
+        "filename": "linker/linker_soinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "You could also use a structured binding, but it looks like this other function is new, so a regular struct is probably still the preferred choice.",
+      "parentUuid": "042c2586_98ddd771",
+      "range": {
+        "startLine": 218,
+        "startChar": 2,
+        "endLine": 218,
+        "endChar": 36
+      },
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bdf96f23_bb145fe8",
         "filename": "linker/linker_soinfo.cpp",
         "patchSetId": 1
@@ -239,6 +416,23 @@
       "writtenOn": "2019-09-27T22:36:47Z",
       "side": 1,
       "message": "comment why?",
+      "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d960419f_f07cb874",
+        "filename": "linker/linker_soinfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2019-09-28T07:28:37Z",
+      "side": 1,
+      "message": "Redundant",
       "revId": "90aac467fcdad2b87820fb1e8315514dfec64104",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
