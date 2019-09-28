@@ -1713,32 +1713,19 @@ genrule {
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
 }
 
-// Makes bionic_tls.h available for art to use in its implementation of Thread::Current().
-cc_library_headers {
-    name: "bionic_libc_private_headers",
-    visibility: [
-        "//art:__subpackages__",
-    ],
-    host_supported: true,
-    export_include_dirs: [
-        "private",
-    ],
-    sdk_version: "current",
-}
-
 // Headers that only other parts of the platform can include.
 cc_library_headers {
     name: "bionic_libc_platform_headers",
     visibility: [
-        "//bionic/libc/malloc_debug:__subpackages__",
-        "//bionic/libc/malloc_hooks:__subpackages__",
-        "//frameworks/av/media/libmedia:__subpackages__",
-        "//frameworks/av/media/utils:__subpackages__",
-        "//frameworks/base/core/jni:__subpackages__",
-        "//frameworks/base/services/core/jni:__subpackages__",
+        "//art:__subpackages__",
+        "//bionic/libc:__subpackages__",
+        "//frameworks:__subpackages__",
         "//external/perfetto:__subpackages__",
+        "//external/scudo:__subpackages__",
     ],
     host_supported: true,
+    recovery_available: true,
+    native_bridge_supported: true,
     export_include_dirs: [
         "platform",
     ],
@@ -1891,6 +1878,9 @@ cc_defaults {
         "-Wall",
         "-Werror",
     ],
+    sanitize: {
+        never: true,
+    },
 }
 
 cc_defaults {

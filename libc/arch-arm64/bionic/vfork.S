@@ -26,8 +26,8 @@
  * SUCH DAMAGE.
  */
 
+#include <platform/bionic/tls_defines.h>
 #include <private/bionic_asm.h>
-#include <private/bionic_asm_tls.h>
 #include <asm/signal.h>
 #include <linux/sched.h>
 

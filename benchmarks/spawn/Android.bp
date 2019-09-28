@@ -42,6 +42,7 @@ cc_benchmark {
     target: {
         darwin: { enabled: false },
         windows: { enabled: false },
+        linux_glibc_x86: { enabled: false },
     },
 }
 
@@ -58,6 +59,7 @@ cc_defaults {
     target: {
         darwin: { enabled: false },
         windows: { enabled: false },
+        linux_glibc_x86: { enabled: false },
     },
 }
 
@@ -66,15 +68,10 @@ cc_binary {
     name: "bench_noop",
     srcs: ["noop.cpp"],
 
-    // When this binary is installed to host/linux-x86/bin, its runpath is ${ORIGIN}/../lib[64],
-    // which is fine for finding host/linux-x86/lib[64]/libc++.so. When it's installed to
-    // host/linux-x86/benchmarktest[64]/bionic-spawn-benchmarks, the runpath needs an extra "..".
+    // When this binary is installed to host/linux-x86/bin, its runpath is ${ORIGIN}/../lib64, which
+    // is fine for finding host/linux-x86/lib64/libc++.so. When it's installed to
+    // host/linux-x86/benchmarktest64/bionic-spawn-benchmarks, the runpath needs an extra "..".
     target: {
-        linux_glibc_x86: {
-            ldflags: [
-                "-Wl,--rpath,${ORIGIN}/../../lib",
-            ],
-        },
         linux_glibc_x86_64: {
             ldflags: [
                 "-Wl,--rpath,${ORIGIN}/../../lib64",

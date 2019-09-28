@@ -33,7 +33,7 @@
 #include <thread>
 
 #include "gtest_globals.h"
-#include "private/__get_tls.h"
+#include "platform/bionic/tls.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)

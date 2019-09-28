@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-#include <inttypes.h>
+#include <ctype.h>
 
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-BIONIC_TRIVIAL_BENCHMARK(BM_inttypes_strtoimax, strtoimax(" -123", nullptr, 0));
-BIONIC_TRIVIAL_BENCHMARK(BM_inttypes_strtoumax, strtoumax(" -123", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_ctype_tolower_y, tolower('X'));
+BIONIC_TRIVIAL_BENCHMARK(BM_ctype_tolower_n, tolower('x'));
+
+BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toupper_y, toupper('x'));
+BIONIC_TRIVIAL_BENCHMARK(BM_ctype_toupper_n, toupper('X'));
