@@ -72,7 +72,7 @@ int __open() {
 
 // TODO: does anything still need this?
 void** __get_tls() {
-#include "private/__get_tls.h"
+#include "platform/bionic/tls.h"
   return __get_tls();
 }
 
