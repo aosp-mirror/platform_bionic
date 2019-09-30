@@ -24,6 +24,7 @@ libc_common_src_files = [
 // ========================================================
 libc_common_src_files += [
     "bionic/ndk_cruft.cpp",
+    "bionic/ndk_cruft_data.cpp",
 ]
 
 libc_common_src_files_32 = [
@@ -390,8 +391,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/getprogname.c",
         "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
-        "upstream-openbsd/lib/libc/gen/tolower_.c",
-        "upstream-openbsd/lib/libc/gen/toupper_.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
         "upstream-openbsd/lib/libc/gen/verrx.c",
         "upstream-openbsd/lib/libc/gen/vwarn.c",
