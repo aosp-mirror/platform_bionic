@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef __BIONIC_PRIVATE_GET_TLS_H_
-#define __BIONIC_PRIVATE_GET_TLS_H_
+#pragma once
 
 #if defined(__aarch64__)
 # define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
@@ -50,4 +49,4 @@
 #error unsupported architecture
 #endif
 
-#endif /* __BIONIC_PRIVATE_GET_TLS_H_ */
+#include "tls_defines.h"
