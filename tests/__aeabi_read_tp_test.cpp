@@ -28,7 +28,7 @@
 
 #include <gtest/gtest.h>
 
-#include "private/__get_tls.h"
+#include "platform/bionic/tls.h"
 
 #if defined(__arm__)
 extern "C" void* __aeabi_read_tp();
