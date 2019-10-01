@@ -83,3 +83,15 @@ int toupper_l(int c, locale_t) {
 int tolower_l(int c, locale_t) {
   return tolower(c);
 }
+
+int tolower(int c) {
+  if (c >= 'A' && c <= 'Z') return c | 0x20;
+  return c;
+}
+
+int toupper(int c) {
+  // Using EOR rather than AND makes no difference on arm, but saves an
+  // instruction on arm64.
+  if (c >= 'a' && c <= 'z') return c ^ 0x20;
+  return c;
+}
