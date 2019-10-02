@@ -35,8 +35,6 @@ int __ppoll_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset_t*,
 int __ppoll64_chk(struct pollfd*, nfds_t, const struct timespec*, const sigset64_t*, size_t) __INTRODUCED_IN(28);
 
 #if defined(__BIONIC_FORTIFY)
-#if __ANDROID_API__ >= __ANDROID_API_M__
-
 #define __bos_fd_count_trivially_safe(bos_val, fds, fd_count)              \
   __bos_dynamic_check_impl_and((bos_val), >=, (sizeof(*fds) * (fd_count)), \
                                (fd_count) <= __BIONIC_CAST(static_cast, nfds_t, -1) / sizeof(*fds))
@@ -46,26 +44,32 @@ int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, int timeo
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'poll', fd_count is larger than the given buffer") {
+#if __ANDROID_API__ >= __ANDROID_API_M__
   size_t bos_fds = __bos(fds);
 
-  if (__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
-    return __call_bypassing_fortify(poll)(fds, fd_count, timeout);
+  if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
+    return __poll_chk(fds, fd_count, timeout, bos_fds);
   }
-  return __poll_chk(fds, fd_count, timeout, bos_fds);
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+  return __call_bypassing_fortify(poll)(fds, fd_count, timeout);
 }
 
+#if __ANDROID_API__ >= __ANDROID_API_L__
 __BIONIC_FORTIFY_INLINE
 int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const struct timespec* timeout, const sigset_t* mask)
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'ppoll', fd_count is larger than the given buffer") {
+#if __ANDROID_API__ >= __ANDROID_API_M__
   size_t bos_fds = __bos(fds);
 
-  if (__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
-    return __call_bypassing_fortify(ppoll)(fds, fd_count, timeout, mask);
+  if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
+    return __ppoll_chk(fds, fd_count, timeout, mask, bos_fds);
   }
-  return __ppoll_chk(fds, fd_count, timeout, mask, bos_fds);
+#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+  return __call_bypassing_fortify(ppoll)(fds, fd_count, timeout, mask);
 }
+#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
 
 #if __ANDROID_API__ >= __ANDROID_API_P__
 __BIONIC_FORTIFY_INLINE
@@ -75,14 +79,13 @@ int ppoll64(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const 
                      "in call to 'ppoll64', fd_count is larger than the given buffer") {
   size_t bos_fds = __bos(fds);
 
-  if (__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
-    return __call_bypassing_fortify(ppoll64)(fds, fd_count, timeout, mask);
+  if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
+    return __ppoll64_chk(fds, fd_count, timeout, mask, bos_fds);
   }
-  return __ppoll64_chk(fds, fd_count, timeout, mask, bos_fds);
+  return __call_bypassing_fortify(ppoll64)(fds, fd_count, timeout, mask);
 }
-#endif
+#endif /* __ANDROID_API__ >= __ANDROID_API_P__ */
 
 #undef __bos_fd_count_trivially_safe
 
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
 #endif /* defined(__BIONIC_FORTIFY) */
