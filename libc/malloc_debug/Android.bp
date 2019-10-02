@@ -39,6 +39,11 @@ cc_library_static {
         "-Werror",
         "-Wno-error=format-zero-length",
     ],
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 // ==============================================================
@@ -101,6 +106,11 @@ cc_library {
         "-fno-stack-protector",
         "-Wno-error=format-zero-length",
         "-Wthread-safety",
+    ],
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
     ],
 }
 
