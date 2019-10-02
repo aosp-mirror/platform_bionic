@@ -66,7 +66,6 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
-        "external/jemalloc_new/include",
     ],
 
     stl: "none",
@@ -84,6 +83,56 @@ cc_defaults {
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
     ldflags: ["-Wl,-z,muldefs"],
+}
+
+// Defaults for native allocator libs/includes to make it
+// easier to change.
+// To enable scudo, change the below to libc_scudo_defaults
+// and comment out the defaults line in libc_scudo shared
+// library.
+// ========================================================
+cc_defaults {
+    name: "libc_native_allocator_defaults",
+
+    defaults: ["libc_jemalloc5_defaults"],
+}
+
+cc_defaults {
+    name: "libc_jemalloc5_defaults",
+
+    include_dirs: [
+        "external/jemalloc_new/include",
+    ],
+
+    whole_static_libs: [
+        "libjemalloc5",
+        "libc_jemalloc_wrapper",
+    ],
+}
+
+// Functions not implemented by jemalloc directly, or that need to
+// be modified for Android.
+cc_library_static {
+    name: "libc_jemalloc_wrapper",
+    defaults: ["libc_defaults"],
+    srcs: ["bionic/jemalloc_wrapper.cpp"],
+    cflags: ["-fvisibility=hidden"],
+
+    include_dirs: [
+        "external/jemalloc_new/include",
+    ],
+}
+
+cc_defaults {
+    name: "libc_scudo_defaults",
+
+    cflags: [
+        "-DUSE_SCUDO",
+    ],
+
+    whole_static_libs: [
+        "libscudo",
+    ],
 }
 
 // ========================================================
@@ -1199,7 +1248,7 @@ cc_library_static {
 // ========================================================
 // libc_pthread.a - pthreads parts that previously lived in
 // libc_bionic.a. Relocated to their own library because
-// they can't be included in libc_ndk.a (as they layout of
+// they can't be included in libc_ndk.a (as the layout of
 // pthread_t has changed over the years and has ABI
 // compatibility issues).
 // ========================================================
@@ -1332,7 +1381,10 @@ cc_library_static {
 
 cc_library_static {
     name: "libc_ndk",
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_defaults",
+    ],
     srcs: libc_common_src_files + [
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1365,7 +1417,6 @@ cc_library_static {
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
-        "libc_malloc",
         "libc_netbsd",
         "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
@@ -1373,7 +1424,6 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
-        "libjemalloc5",
         "libstdc++",
     ],
 }
@@ -1399,7 +1449,6 @@ cc_library_static {
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
-        "libc_malloc",
         "libc_netbsd",
         "libc_openbsd",
         "libc_openbsd_large_stack",
@@ -1506,17 +1555,6 @@ cc_library_static {
     ],
 }
 
-// ========================================================
-// libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: ["bionic/jemalloc_wrapper.cpp"],
-    cflags: ["-fvisibility=hidden"],
-
-    name: "libc_malloc",
-}
-
 filegroup {
     name: "libc_sources_shared",
     srcs: [
@@ -1558,7 +1596,10 @@ filegroup {
 // libc.a + libc.so
 // ========================================================
 cc_library {
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_defaults",
+    ],
     name: "libc",
     static_ndk_lib: true,
     export_include_dirs: ["include"],
@@ -1605,9 +1646,6 @@ cc_library {
     ],
     static_libs: [
         "libdl_android",
-    ],
-    whole_static_libs: [
-        "libjemalloc5",
     ],
 
     nocrt: true,
@@ -1728,6 +1766,8 @@ cc_library_headers {
     export_include_dirs: [
         "platform",
     ],
+    system_shared_libs: [],
+    stl: "none",
     sdk_version: "current",
 }
 
@@ -2475,9 +2515,8 @@ cc_library {
 
 // This is a temporary library that will use scudo as the native memory
 // allocator. To use it, add it as the first shared library.
-cc_library_shared {
-    name: "libc_scudo",
-    vendor_available: true,
+cc_defaults {
+    name: "libc_scudo_wrapper_defaults",
     srcs: [
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
@@ -2487,15 +2526,11 @@ cc_library_shared {
         "bionic/__set_errno.cpp",
     ],
     cflags: ["-DUSE_SCUDO"],
-    stl: "none",
-    system_shared_libs: [],
+    shared_libs: ["libscudo_wrapper"],
 
     header_libs: ["libc_headers"],
 
     static_libs: ["libasync_safe"],
-
-    allow_undefined_symbols: true,
-    shared_libs: ["libscudo_wrapper"],
 
     arch: {
         arm: {
@@ -2518,7 +2553,16 @@ cc_library_shared {
     // Mark this library as global so it overrides all the allocation
     // definitions properly.
     ldflags: ["-Wl,-z,global"],
+}
 
+cc_library_shared {
+    name: "libc_scudo",
+    defaults: ["libc_scudo_wrapper_defaults"],
+    vendor_available: true,
+    stl: "none",
+    system_shared_libs: [],
+
+    allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
 }
