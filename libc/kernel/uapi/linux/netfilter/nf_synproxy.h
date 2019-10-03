@@ -16,14 +16,18 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __INCLUDE_UAPI_SOUND_SOF_USER_TONE_H__
-#define __INCLUDE_UAPI_SOUND_SOF_USER_TONE_H__
-#define SOF_TONE_IDX_FREQUENCY 0
-#define SOF_TONE_IDX_AMPLITUDE 1
-#define SOF_TONE_IDX_FREQ_MULT 2
-#define SOF_TONE_IDX_AMPL_MULT 3
-#define SOF_TONE_IDX_LENGTH 4
-#define SOF_TONE_IDX_PERIOD 5
-#define SOF_TONE_IDX_REPEATS 6
-#define SOF_TONE_IDX_LIN_RAMP_STEP 7
+#ifndef _NF_SYNPROXY_H
+#define _NF_SYNPROXY_H
+#include <linux/types.h>
+#define NF_SYNPROXY_OPT_MSS 0x01
+#define NF_SYNPROXY_OPT_WSCALE 0x02
+#define NF_SYNPROXY_OPT_SACK_PERM 0x04
+#define NF_SYNPROXY_OPT_TIMESTAMP 0x08
+#define NF_SYNPROXY_OPT_ECN 0x10
+#define NF_SYNPROXY_OPT_MASK (NF_SYNPROXY_OPT_MSS | NF_SYNPROXY_OPT_WSCALE | NF_SYNPROXY_OPT_SACK_PERM | NF_SYNPROXY_OPT_TIMESTAMP)
+struct nf_synproxy_info {
+  __u8 options;
+  __u8 wscale;
+  __u16 mss;
+};
 #endif

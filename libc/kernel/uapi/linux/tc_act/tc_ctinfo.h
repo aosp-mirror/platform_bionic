@@ -16,31 +16,26 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI__ISDNIF_H__
-#define _UAPI__ISDNIF_H__
-#define ISDN_PTYPE_UNKNOWN 0
-#define ISDN_PTYPE_1TR6 1
-#define ISDN_PTYPE_EURO 2
-#define ISDN_PTYPE_LEASED 3
-#define ISDN_PTYPE_NI1 4
-#define ISDN_PTYPE_MAX 7
-#define ISDN_PROTO_L2_X75I 0
-#define ISDN_PROTO_L2_X75UI 1
-#define ISDN_PROTO_L2_X75BUI 2
-#define ISDN_PROTO_L2_HDLC 3
-#define ISDN_PROTO_L2_TRANS 4
-#define ISDN_PROTO_L2_X25DTE 5
-#define ISDN_PROTO_L2_X25DCE 6
-#define ISDN_PROTO_L2_V11096 7
-#define ISDN_PROTO_L2_V11019 8
-#define ISDN_PROTO_L2_V11038 9
-#define ISDN_PROTO_L2_MODEM 10
-#define ISDN_PROTO_L2_FAX 11
-#define ISDN_PROTO_L2_HDLC_56K 12
-#define ISDN_PROTO_L2_MAX 15
-#define ISDN_PROTO_L3_TRANS 0
-#define ISDN_PROTO_L3_TRANSDSP 1
-#define ISDN_PROTO_L3_FCLASS2 2
-#define ISDN_PROTO_L3_FCLASS1 3
-#define ISDN_PROTO_L3_MAX 7
+#ifndef __UAPI_TC_CTINFO_H
+#define __UAPI_TC_CTINFO_H
+#include <linux/types.h>
+#include <linux/pkt_cls.h>
+struct tc_ctinfo {
+  tc_gen;
+};
+enum {
+  TCA_CTINFO_UNSPEC,
+  TCA_CTINFO_PAD,
+  TCA_CTINFO_TM,
+  TCA_CTINFO_ACT,
+  TCA_CTINFO_ZONE,
+  TCA_CTINFO_PARMS_DSCP_MASK,
+  TCA_CTINFO_PARMS_DSCP_STATEMASK,
+  TCA_CTINFO_PARMS_CPMARK_MASK,
+  TCA_CTINFO_STATS_DSCP_SET,
+  TCA_CTINFO_STATS_DSCP_ERROR,
+  TCA_CTINFO_STATS_CPMARK_SET,
+  __TCA_CTINFO_MAX
+};
+#define TCA_CTINFO_MAX (__TCA_CTINFO_MAX - 1)
 #endif

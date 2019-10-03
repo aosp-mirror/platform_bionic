@@ -170,6 +170,8 @@ struct rds_info_rdma_connection {
   __u32 rdma_mr_max;
   __u32 rdma_mr_size;
   __u8 tos;
+  __u8 sl;
+  __u32 cache_allocs;
 };
 struct rds6_info_rdma_connection {
   struct in6_addr src_addr;
@@ -182,6 +184,8 @@ struct rds6_info_rdma_connection {
   __u32 rdma_mr_max;
   __u32 rdma_mr_size;
   __u8 tos;
+  __u8 sl;
+  __u32 cache_allocs;
 };
 enum rds_message_rxpath_latency {
   RDS_MSG_RX_HDR_TO_DGRAM_START = 0,

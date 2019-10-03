@@ -16,27 +16,40 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_FLAT_H
-#define _UAPI_LINUX_FLAT_H
-#define FLAT_VERSION 0x00000004L
-#define MAX_SHARED_LIBS (1)
-struct flat_hdr {
-  char magic[4];
-  unsigned long rev;
-  unsigned long entry;
-  unsigned long data_start;
-  unsigned long data_end;
-  unsigned long bss_end;
-  unsigned long stack_size;
-  unsigned long reloc_start;
-  unsigned long reloc_count;
-  unsigned long flags;
-  unsigned long build_date;
-  unsigned long filler[5];
+#ifndef _UAPI_LINUX_NEXTHOP_H
+#define _UAPI_LINUX_NEXTHOP_H
+#include <linux/types.h>
+struct nhmsg {
+  unsigned char nh_family;
+  unsigned char nh_scope;
+  unsigned char nh_protocol;
+  unsigned char resvd;
+  unsigned int nh_flags;
 };
-#define FLAT_FLAG_RAM 0x0001
-#define FLAT_FLAG_GOTPIC 0x0002
-#define FLAT_FLAG_GZIP 0x0004
-#define FLAT_FLAG_GZDATA 0x0008
-#define FLAT_FLAG_KTRACE 0x0010
+struct nexthop_grp {
+  __u32 id;
+  __u8 weight;
+  __u8 resvd1;
+  __u16 resvd2;
+};
+enum {
+  NEXTHOP_GRP_TYPE_MPATH,
+  __NEXTHOP_GRP_TYPE_MAX,
+};
+#define NEXTHOP_GRP_TYPE_MAX (__NEXTHOP_GRP_TYPE_MAX - 1)
+enum {
+  NHA_UNSPEC,
+  NHA_ID,
+  NHA_GROUP,
+  NHA_GROUP_TYPE,
+  NHA_BLACKHOLE,
+  NHA_OIF,
+  NHA_GATEWAY,
+  NHA_ENCAP_TYPE,
+  NHA_ENCAP,
+  NHA_GROUPS,
+  NHA_MASTER,
+  __NHA_MAX,
+};
+#define NHA_MAX (__NHA_MAX - 1)
 #endif
