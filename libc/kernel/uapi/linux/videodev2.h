@@ -27,7 +27,7 @@
 #define VIDEO_MAX_FRAME 32
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
-#define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1 << 31))
+#define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
 enum v4l2_field {
   V4L2_FIELD_ANY = 0,
   V4L2_FIELD_NONE = 1,

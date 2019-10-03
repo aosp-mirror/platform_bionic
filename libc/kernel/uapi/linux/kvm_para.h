@@ -34,5 +34,6 @@
 #define KVM_HC_MIPS_CONSOLE_OUTPUT 8
 #define KVM_HC_CLOCK_PAIRING 9
 #define KVM_HC_SEND_IPI 10
+#define KVM_HC_SCHED_YIELD 11
 #include <asm/kvm_para.h>
 #endif

@@ -34,6 +34,7 @@ struct unix_diag_req {
 #define UDIAG_SHOW_ICONS 0x00000008
 #define UDIAG_SHOW_RQLEN 0x00000010
 #define UDIAG_SHOW_MEMINFO 0x00000020
+#define UDIAG_SHOW_UID 0x00000040
 struct unix_diag_msg {
   __u8 udiag_family;
   __u8 udiag_type;
@@ -50,6 +51,7 @@ enum {
   UNIX_DIAG_RQLEN,
   UNIX_DIAG_MEMINFO,
   UNIX_DIAG_SHUTDOWN,
+  UNIX_DIAG_UID,
   __UNIX_DIAG_MAX,
 };
 #define UNIX_DIAG_MAX (__UNIX_DIAG_MAX - 1)

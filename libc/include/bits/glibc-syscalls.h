@@ -114,6 +114,9 @@
 #if defined(__NR_clone)
   #define SYS_clone __NR_clone
 #endif
+#if defined(__NR_clone3)
+  #define SYS_clone3 __NR_clone3
+#endif
 #if defined(__NR_close)
   #define SYS_close __NR_close
 #endif
@@ -716,6 +719,9 @@
 #endif
 #if defined(__NR_personality)
   #define SYS_personality __NR_personality
+#endif
+#if defined(__NR_pidfd_open)
+  #define SYS_pidfd_open __NR_pidfd_open
 #endif
 #if defined(__NR_pidfd_send_signal)
   #define SYS_pidfd_send_signal __NR_pidfd_send_signal
