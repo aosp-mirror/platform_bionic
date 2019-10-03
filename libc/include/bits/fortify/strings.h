@@ -28,18 +28,19 @@
 
 #if defined(__BIONIC_FORTIFY)
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
 __BIONIC_FORTIFY_INLINE
 void __bionic_bcopy(const void *src, void* const dst __pass_object_size0, size_t len)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), len),
                          "'bcopy' called with size bigger than buffer") {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     size_t bos = __bos0(dst);
-    if (__bos_trivially_not_lt(bos, len)) {
-        __builtin_memmove(dst, src, len);
-    } else {
+    if (!__bos_trivially_ge(bos, len)) {
         __builtin___memmove_chk(dst, src, len, bos);
+        return;
     }
+#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+    __builtin_memmove(dst, src, len);
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -47,13 +48,14 @@ void __bionic_bzero(void* const b __pass_object_size0, size_t len)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(b), len),
                          "'bzero' called with size bigger than buffer") {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     size_t bos = __bos0(b);
-    if (__bos_trivially_not_lt(bos, len)) {
-        __builtin_memset(b, 0, len);
-    } else {
+    if (!__bos_trivially_ge(bos, len)) {
         __builtin___memset_chk(b, 0, len, bos);
+        return;
     }
-}
 #endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+    __builtin_memset(b, 0, len);
+}
 
 #endif /* defined(__BIONIC_FORTIFY) */
