@@ -16,30 +16,32 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef __INCLUDE_UAPI_SOUND_SOF_USER_TRACE_H__
-#define __INCLUDE_UAPI_SOUND_SOF_USER_TRACE_H__
-struct system_time {
-  uint32_t val_l;
-  uint32_t val_u;
-} __packed;
-#define LOG_ENABLE 1
-#define LOG_DISABLE 0
-#define LOG_LEVEL_CRITICAL 1
-#define LOG_LEVEL_VERBOSE 2
-struct log_buffer_layout {
-  uint32_t read_ptr;
-  uint32_t write_ptr;
-  uint32_t buffer[0];
-} __packed;
-struct log_buffer_status {
-  uint32_t core_id;
-} __packed;
-#define TRACE_ID_LENGTH 12
-struct log_entry_header {
-  uint32_t id_0 : TRACE_ID_LENGTH;
-  uint32_t id_1 : TRACE_ID_LENGTH;
-  uint32_t core_id : 8;
-  uint64_t timestamp;
-  uint32_t log_entry_address;
-} __packed;
+#ifndef RVT_ABI_USER_H
+#define RVT_ABI_USER_H
+#include <linux/types.h>
+#include <rdma/ib_user_verbs.h>
+#ifndef RDMA_ATOMIC_UAPI
+#define RDMA_ATOMIC_UAPI(_type,_name) struct { _type val; } _name
+#endif
+struct rvt_wqe_sge {
+  __aligned_u64 addr;
+  __u32 length;
+  __u32 lkey;
+};
+struct rvt_cq_wc {
+  RDMA_ATOMIC_UAPI(__u32, head);
+  RDMA_ATOMIC_UAPI(__u32, tail);
+  struct ib_uverbs_wc uqueue[];
+};
+struct rvt_rwqe {
+  __u64 wr_id;
+  __u8 num_sge;
+  __u8 padding[7];
+  struct rvt_wqe_sge sg_list[];
+};
+struct rvt_rwq {
+  RDMA_ATOMIC_UAPI(__u32, head);
+  RDMA_ATOMIC_UAPI(__u32, tail);
+  struct rvt_rwqe wq[];
+};
 #endif

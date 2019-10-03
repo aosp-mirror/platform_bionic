@@ -392,8 +392,12 @@
 #define __NR_fsconfig 431
 #define __NR_fsmount 432
 #define __NR_fspick 433
+#define __NR_pidfd_open 434
+#ifdef __ARCH_WANT_SYS_CLONE3
+#define __NR_clone3 435
+#endif
 #undef __NR_syscalls
-#define __NR_syscalls 434
+#define __NR_syscalls 436
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs
