@@ -47,6 +47,7 @@ struct xdp_mmap_offsets {
 #define XDP_UMEM_FILL_RING 5
 #define XDP_UMEM_COMPLETION_RING 6
 #define XDP_STATISTICS 7
+#define XDP_OPTIONS 8
 struct xdp_umem_reg {
   __u64 addr;
   __u64 len;
@@ -58,6 +59,10 @@ struct xdp_statistics {
   __u64 rx_invalid_descs;
   __u64 tx_invalid_descs;
 };
+struct xdp_options {
+  __u32 flags;
+};
+#define XDP_OPTIONS_ZEROCOPY (1 << 0)
 #define XDP_PGOFF_RX_RING 0
 #define XDP_PGOFF_TX_RING 0x80000000
 #define XDP_UMEM_PGOFF_FILL_RING 0x100000000ULL

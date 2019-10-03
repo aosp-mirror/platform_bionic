@@ -16,15 +16,28 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_ISDN_DIVERTIF_H
-#define _UAPI_LINUX_ISDN_DIVERTIF_H
-#define DIVERT_IF_MAGIC 0x25873401
-#define DIVERT_CMD_REG 0x00
-#define DIVERT_CMD_REL 0x01
-#define DIVERT_NO_ERR 0x00
-#define DIVERT_CMD_ERR 0x01
-#define DIVERT_VER_ERR 0x02
-#define DIVERT_REG_ERR 0x03
-#define DIVERT_REL_ERR 0x04
-#define DIVERT_REG_NAME isdn_register_divert
+#ifndef __LINUX_TC_MPLS_H
+#define __LINUX_TC_MPLS_H
+#include <linux/pkt_cls.h>
+#define TCA_MPLS_ACT_POP 1
+#define TCA_MPLS_ACT_PUSH 2
+#define TCA_MPLS_ACT_MODIFY 3
+#define TCA_MPLS_ACT_DEC_TTL 4
+struct tc_mpls {
+  tc_gen;
+  int m_action;
+};
+enum {
+  TCA_MPLS_UNSPEC,
+  TCA_MPLS_TM,
+  TCA_MPLS_PARMS,
+  TCA_MPLS_PAD,
+  TCA_MPLS_PROTO,
+  TCA_MPLS_LABEL,
+  TCA_MPLS_TC,
+  TCA_MPLS_TTL,
+  TCA_MPLS_BOS,
+  __TCA_MPLS_MAX,
+};
+#define TCA_MPLS_MAX (__TCA_MPLS_MAX - 1)
 #endif
