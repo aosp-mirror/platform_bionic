@@ -94,9 +94,9 @@ static void SavePointers(uintptr_t base, size_t size, void* data) {
 static void VerifyPtrs(TestDataType* test_data) {
   test_data->total_allocated_bytes = 0;
 
-  // Find all of the maps that are [anon:libc_malloc].
+  // Find all of the maps that are from the native allocator.
   auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-    if (strcmp(name, "[anon:libc_malloc]") == 0) {
+    if (strcmp(name, "[anon:libc_malloc]") == 0 || strncmp(name, "[anon:scudo:", 12) == 0) {
       malloc_iterate(start, end - start, SavePointers, test_data);
     }
   };
@@ -192,7 +192,7 @@ TEST(malloc_iterate, invalid_pointers) {
 
   // Only attempt to get memory data for maps that are not from the native allocator.
   auto callback = [&](uint64_t start, uint64_t end, uint16_t, uint64_t, ino_t, const char* name) {
-    if (strcmp(name, "[anon:libc_malloc]") != 0) {
+    if (strcmp(name, "[anon:libc_malloc]") != 0 && strncmp(name, "[anon:scudo:", 12) != 0) {
       size_t total = test_data.total_allocated_bytes;
       malloc_iterate(start, end - start, SavePointers, &test_data);
       total = test_data.total_allocated_bytes - total;
