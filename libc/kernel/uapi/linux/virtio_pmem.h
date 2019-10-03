@@ -16,12 +16,20 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_ROUTER_H
-#define _UAPI_ROUTER_H
-enum wan_states {
-  WAN_UNCONFIGURED,
-  WAN_DISCONNECTED,
-  WAN_CONNECTING,
-  WAN_CONNECTED
+#ifndef _UAPI_LINUX_VIRTIO_PMEM_H
+#define _UAPI_LINUX_VIRTIO_PMEM_H
+#include <linux/types.h>
+#include <linux/virtio_ids.h>
+#include <linux/virtio_config.h>
+struct virtio_pmem_config {
+  __u64 start;
+  __u64 size;
+};
+#define VIRTIO_PMEM_REQ_TYPE_FLUSH 0
+struct virtio_pmem_resp {
+  __le32 ret;
+};
+struct virtio_pmem_req {
+  __le32 type;
 };
 #endif

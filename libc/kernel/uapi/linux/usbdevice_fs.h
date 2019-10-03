@@ -52,6 +52,14 @@ struct usbdevfs_connectinfo {
   unsigned int devnum;
   unsigned char slow;
 };
+struct usbdevfs_conninfo_ex {
+  __u32 size;
+  __u32 busnum;
+  __u32 devnum;
+  __u32 speed;
+  __u8 num_ports;
+  __u8 ports[7];
+};
 #define USBDEVFS_URB_SHORT_NOT_OK 0x01
 #define USBDEVFS_URB_ISO_ASAP 0x02
 #define USBDEVFS_URB_BULK_CONTINUATION 0x04
@@ -101,6 +109,7 @@ struct usbdevfs_hub_portinfo {
 #define USBDEVFS_CAP_REAP_AFTER_DISCONNECT 0x10
 #define USBDEVFS_CAP_MMAP 0x20
 #define USBDEVFS_CAP_DROP_PRIVILEGES 0x40
+#define USBDEVFS_CAP_CONNINFO_EX 0x80
 #define USBDEVFS_DISCONNECT_CLAIM_IF_DRIVER 0x01
 #define USBDEVFS_DISCONNECT_CLAIM_EXCEPT_DRIVER 0x02
 struct usbdevfs_disconnect_claim {
@@ -148,4 +157,5 @@ struct usbdevfs_streams {
 #define USBDEVFS_FREE_STREAMS _IOR('U', 29, struct usbdevfs_streams)
 #define USBDEVFS_DROP_PRIVILEGES _IOW('U', 30, __u32)
 #define USBDEVFS_GET_SPEED _IO('U', 31)
+#define USBDEVFS_CONNINFO_EX(len) _IOC(_IOC_READ, 'U', 32, len)
 #endif

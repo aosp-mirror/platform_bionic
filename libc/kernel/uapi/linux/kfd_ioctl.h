@@ -26,9 +26,10 @@ struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
 };
-#define KFD_IOC_QUEUE_TYPE_COMPUTE 0
-#define KFD_IOC_QUEUE_TYPE_SDMA 1
-#define KFD_IOC_QUEUE_TYPE_COMPUTE_AQL 2
+#define KFD_IOC_QUEUE_TYPE_COMPUTE 0x0
+#define KFD_IOC_QUEUE_TYPE_SDMA 0x1
+#define KFD_IOC_QUEUE_TYPE_COMPUTE_AQL 0x2
+#define KFD_IOC_QUEUE_TYPE_SDMA_XGMI 0x3
 #define KFD_MAX_QUEUE_PERCENTAGE 100
 #define KFD_MAX_QUEUE_PRIORITY 15
 struct kfd_ioctl_create_queue_args {
@@ -236,6 +237,7 @@ struct kfd_ioctl_acquire_vm_args {
 #define KFD_IOC_ALLOC_MEM_FLAGS_GTT (1 << 1)
 #define KFD_IOC_ALLOC_MEM_FLAGS_USERPTR (1 << 2)
 #define KFD_IOC_ALLOC_MEM_FLAGS_DOORBELL (1 << 3)
+#define KFD_IOC_ALLOC_MEM_FLAGS_MMIO_REMAP (1 << 4)
 #define KFD_IOC_ALLOC_MEM_FLAGS_WRITABLE (1 << 31)
 #define KFD_IOC_ALLOC_MEM_FLAGS_EXECUTABLE (1 << 30)
 #define KFD_IOC_ALLOC_MEM_FLAGS_PUBLIC (1 << 29)
@@ -278,6 +280,10 @@ struct kfd_ioctl_import_dmabuf_args {
   __u64 handle;
   __u32 gpu_id;
   __u32 dmabuf_fd;
+};
+enum kfd_mmio_remap {
+  KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL = 0,
+  KFD_MMIO_REMAP_HDP_REG_FLUSH_CNTL = 4,
 };
 #define AMDKFD_IOCTL_BASE 'K'
 #define AMDKFD_IO(nr) _IO(AMDKFD_IOCTL_BASE, nr)
