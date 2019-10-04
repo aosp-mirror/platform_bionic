@@ -214,7 +214,7 @@ int fchdir(int __fd);
 int rmdir(const char* __path);
 int pipe(int __fds[2]);
 #if defined(__USE_GNU)
-int pipe2(int __fds[2], int __flags) __INTRODUCED_IN(9);
+int pipe2(int __fds[2], int __flags);
 #endif
 int chroot(const char* __path);
 int symlink(const char* __old_path, const char* __new_path);
@@ -242,7 +242,7 @@ int dup(int __old_fd);
 int dup2(int __old_fd, int __new_fd);
 int dup3(int __old_fd, int __new_fd, int __flags) __INTRODUCED_IN(21);
 int fsync(int __fd);
-int fdatasync(int __fd) __INTRODUCED_IN(9);
+int fdatasync(int __fd);
 
 /* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
@@ -280,7 +280,7 @@ void* sbrk(ptrdiff_t __increment);
 
 int isatty(int __fd);
 char* ttyname(int __fd);
-int ttyname_r(int __fd, char* __buf, size_t __buf_size) __INTRODUCED_IN(8);
+int ttyname_r(int __fd, char* __buf, size_t __buf_size);
 
 int acct(const char* __path);
 
