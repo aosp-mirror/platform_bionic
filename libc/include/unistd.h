@@ -204,7 +204,7 @@ long fpathconf(int __fd, int __name);
 long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
-int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
+int faccessat(int __dirfd, const char* __path, int __mode, int __flags);
 int link(const char* __old_path, const char* __new_path);
 int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
 int unlink(const char* __path);
@@ -248,11 +248,9 @@ int fdatasync(int __fd);
 #if defined(__USE_FILE_OFFSET64)
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
 off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
-  __RENAME(pread64) __INTRODUCED_IN(12);
-ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
-  __RENAME(pwrite64) __INTRODUCED_IN(12);
-int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64) __INTRODUCED_IN(12);
+ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset) __RENAME(pread64);
+ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset) __RENAME(pwrite64);
+int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64);
 #else
 int truncate(const char* __path, off_t __length);
 off_t lseek(int __fd, off_t __offset, int __whence);
@@ -263,9 +261,9 @@ int ftruncate(int __fd, off_t __length);
 
 int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
-ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
-ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
-int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(12);
+ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset);
+ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset);
+int ftruncate64(int __fd, off64_t __length);
 
 int pause(void);
 unsigned int alarm(unsigned int __seconds);
