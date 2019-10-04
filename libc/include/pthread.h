@@ -92,7 +92,7 @@ enum {
 #define PTHREAD_SCOPE_SYSTEM 0
 #define PTHREAD_SCOPE_PROCESS 1
 
-int pthread_atfork(void (*__prepare)(void), void (*__parent)(void), void (*__child)(void)) __INTRODUCED_IN(12);
+int pthread_atfork(void (*__prepare)(void), void (*__parent)(void), void (*__child)(void));
 
 int pthread_attr_destroy(pthread_attr_t* __attr);
 int pthread_attr_getdetachstate(const pthread_attr_t* __attr, int* __state);

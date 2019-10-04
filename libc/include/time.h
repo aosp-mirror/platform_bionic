@@ -105,8 +105,8 @@ int timer_gettime(timer_t __timer, struct itimerspec* __ts);
 int timer_getoverrun(timer_t __timer);
 
 /* Non-standard extensions that are in the BSDs and glibc. */
-time_t timelocal(struct tm* __tm) __INTRODUCED_IN(12);
-time_t timegm(struct tm* __tm) __INTRODUCED_IN(12);
+time_t timelocal(struct tm* __tm);
+time_t timegm(struct tm* __tm);
 
 #define TIME_UTC 1
 int timespec_get(struct timespec* __ts, int __base) __INTRODUCED_IN(29);
