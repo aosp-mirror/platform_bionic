@@ -43,39 +43,31 @@ __BEGIN_DECLS
  * representation of the given Ethernet address.
  *
  * Returns a pointer to a static buffer.
- *
- * Available since API level 11.
  */
-char* ether_ntoa(const struct ether_addr* __addr) __INTRODUCED_IN(11);
+char* ether_ntoa(const struct ether_addr* __addr);
 
 /**
  * [ether_ntoa_r(3)](http://man7.org/linux/man-pages/man3/ether_ntoa_r.3.html) returns a string
  * representation of the given Ethernet address.
  *
  * Returns a pointer to the given buffer.
- *
- * Available since API level 11.
  */
-char* ether_ntoa_r(const struct ether_addr* __addr, char* __buf) __INTRODUCED_IN(11);
+char* ether_ntoa_r(const struct ether_addr* __addr, char* __buf);
 
 /**
  * [ether_aton(3)](http://man7.org/linux/man-pages/man3/ether_aton.3.html) returns an `ether_addr`
  * corresponding to the given Ethernet address string.
  *
  * Returns a pointer to a static buffer, or NULL if the given string isn't a valid MAC address.
- *
- * Available since API level 11.
  */
-struct ether_addr* ether_aton(const char* __ascii) __INTRODUCED_IN(11);
+struct ether_addr* ether_aton(const char* __ascii);
 
 /**
  * [ether_aton_r(3)](http://man7.org/linux/man-pages/man3/ether_aton_r.3.html) returns an
  * `ether_addr` corresponding to the given Ethernet address string.
  *
  * Returns a pointer to the given buffer, or NULL if the given string isn't a valid MAC address.
- *
- * Available since API level 11.
  */
-struct ether_addr* ether_aton_r(const char* __ascii, struct ether_addr* __addr) __INTRODUCED_IN(11);
+struct ether_addr* ether_aton_r(const char* __ascii, struct ether_addr* __addr);
 
 __END_DECLS
