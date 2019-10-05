@@ -33,6 +33,7 @@ struct io_uring_sqe {
     __u32 fsync_flags;
     __u16 poll_events;
     __u32 sync_range_flags;
+    __u32 msg_flags;
   };
   __u64 user_data;
   union {
@@ -42,6 +43,7 @@ struct io_uring_sqe {
 };
 #define IOSQE_FIXED_FILE (1U << 0)
 #define IOSQE_IO_DRAIN (1U << 1)
+#define IOSQE_IO_LINK (1U << 2)
 #define IORING_SETUP_IOPOLL (1U << 0)
 #define IORING_SETUP_SQPOLL (1U << 1)
 #define IORING_SETUP_SQ_AFF (1U << 2)
@@ -54,6 +56,8 @@ struct io_uring_sqe {
 #define IORING_OP_POLL_ADD 6
 #define IORING_OP_POLL_REMOVE 7
 #define IORING_OP_SYNC_FILE_RANGE 8
+#define IORING_OP_SENDMSG 9
+#define IORING_OP_RECVMSG 10
 #define IORING_FSYNC_DATASYNC (1U << 0)
 struct io_uring_cqe {
   __u64 user_data;
