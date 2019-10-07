@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b3cb6e74_5ba6bacd",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-07T15:34:26Z",
+      "side": 1,
+      "message": "these ones are a bit silly, because open() has always been open64() on Android. we could just redirect everything to open/openat, always?",
+      "revId": "d37124048da6fa8ad2ee54d8d64adad8d6bbc460",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
