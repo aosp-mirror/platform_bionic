@@ -16,6 +16,24 @@
       "revId": "d37124048da6fa8ad2ee54d8d64adad8d6bbc460",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0897ca9b_e7a0080e",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-10-07T23:22:12Z",
+      "side": 1,
+      "message": "Huh, neat. Done",
+      "parentUuid": "b3cb6e74_5ba6bacd",
+      "revId": "d37124048da6fa8ad2ee54d8d64adad8d6bbc460",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

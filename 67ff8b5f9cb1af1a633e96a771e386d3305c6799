@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02a82562_6953f704",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-10-07T23:22:12Z",
+      "side": 0,
+      "message": "(these are in a bit of an awkward place now, since they\u0027re part of libc, but aren\u0027t actually declared anymore. i assume they\u0027ll just silently sit there ~forever until we no longer support Android 11? should i add a comment about that, leave them in, ...?)",
+      "revId": "67ff8b5f9cb1af1a633e96a771e386d3305c6799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
