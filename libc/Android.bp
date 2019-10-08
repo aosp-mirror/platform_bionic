@@ -438,7 +438,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/fnmatch.c",
         "upstream-openbsd/lib/libc/gen/ftok.c",
         "upstream-openbsd/lib/libc/gen/getprogname.c",
-        "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
         "upstream-openbsd/lib/libc/gen/verrx.c",
