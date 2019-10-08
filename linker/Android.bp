@@ -303,6 +303,11 @@ cc_binary {
     },
     compile_multilib: "both",
     xom: false,
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 sh_binary {
@@ -376,6 +381,11 @@ cc_library {
     sanitize: {
         never: true,
     },
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 cc_test {
