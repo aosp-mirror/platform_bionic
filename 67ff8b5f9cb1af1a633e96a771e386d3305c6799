@@ -16,6 +16,24 @@
       "revId": "67ff8b5f9cb1af1a633e96a771e386d3305c6799",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65cc9aac_7f3170a9",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-08T00:57:10Z",
+      "side": 0,
+      "message": "oh, i didn\u0027t realize they hadn\u0027t even shipped yet. yeah, we may as well remove them --- it\u0027s not like open64/fopen64 or whatever where some misguided code might legitimately try to refer to them.",
+      "parentUuid": "02a82562_6953f704",
+      "revId": "67ff8b5f9cb1af1a633e96a771e386d3305c6799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
