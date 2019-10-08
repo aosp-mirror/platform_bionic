@@ -651,10 +651,6 @@ android_namespace_list_t& soinfo::get_secondary_namespaces() {
   return secondary_namespaces_;
 }
 
-soinfo_tls* soinfo::get_tls() const {
-  return has_min_version(5) ? tls_.get() : nullptr;
-}
-
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {
   if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
     return call_ifunc_resolver(s->st_value + load_bias);

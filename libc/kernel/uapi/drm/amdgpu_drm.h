@@ -546,6 +546,7 @@ struct drm_amdgpu_info_firmware {
 #define AMDGPU_VRAM_TYPE_HBM 6
 #define AMDGPU_VRAM_TYPE_DDR3 7
 #define AMDGPU_VRAM_TYPE_DDR4 8
+#define AMDGPU_VRAM_TYPE_GDDR6 9
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -594,6 +595,7 @@ struct drm_amdgpu_info_device {
   __u32 cu_ao_bitmap[4][4];
   __u64 high_va_offset;
   __u64 high_va_max;
+  __u32 pa_sc_tile_steering_override;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
@@ -628,6 +630,7 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_CZ 135
 #define AMDGPU_FAMILY_AI 141
 #define AMDGPU_FAMILY_RV 142
+#define AMDGPU_FAMILY_NV 143
 #ifdef __cplusplus
 }
 #endif

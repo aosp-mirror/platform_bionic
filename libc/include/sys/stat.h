@@ -185,8 +185,7 @@ int mknodat(int __dir_fd, const char* __path, mode_t __mode, dev_t __dev) __INTR
 
 #define UTIME_NOW  ((1L << 30) - 1L)
 #define UTIME_OMIT ((1L << 30) - 2L)
-int utimensat(int __dir_fd, const char* __path, const struct timespec __times[2], int __flags)
-  __INTRODUCED_IN(12);
+int utimensat(int __dir_fd, const char* __path, const struct timespec __times[2], int __flags);
 int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19);
 
 __END_DECLS

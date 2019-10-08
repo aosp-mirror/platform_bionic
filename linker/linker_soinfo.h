@@ -294,7 +294,9 @@ struct soinfo {
   void add_secondary_namespace(android_namespace_t* secondary_ns);
   android_namespace_list_t& get_secondary_namespaces();
 
-  soinfo_tls* get_tls() const;
+  soinfo_tls* get_tls() const {
+    return has_min_version(5) ? tls_.get() : nullptr;
+  }
 
   void set_mapped_by_caller(bool reserved_map);
   bool is_mapped_by_caller() const;

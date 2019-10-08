@@ -204,7 +204,7 @@ long fpathconf(int __fd, int __name);
 long pathconf(const char* __path, int __name);
 
 int access(const char* __path, int __mode);
-int faccessat(int __dirfd, const char* __path, int __mode, int __flags) __INTRODUCED_IN(16);
+int faccessat(int __dirfd, const char* __path, int __mode, int __flags);
 int link(const char* __old_path, const char* __new_path);
 int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
 int unlink(const char* __path);
@@ -214,7 +214,7 @@ int fchdir(int __fd);
 int rmdir(const char* __path);
 int pipe(int __fds[2]);
 #if defined(__USE_GNU)
-int pipe2(int __fds[2], int __flags) __INTRODUCED_IN(9);
+int pipe2(int __fds[2], int __flags);
 #endif
 int chroot(const char* __path);
 int symlink(const char* __old_path, const char* __new_path);
@@ -242,17 +242,15 @@ int dup(int __old_fd);
 int dup2(int __old_fd, int __new_fd);
 int dup3(int __old_fd, int __new_fd, int __flags) __INTRODUCED_IN(21);
 int fsync(int __fd);
-int fdatasync(int __fd) __INTRODUCED_IN(9);
+int fdatasync(int __fd);
 
 /* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
 int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
 off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset)
-  __RENAME(pread64) __INTRODUCED_IN(12);
-ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset)
-  __RENAME(pwrite64) __INTRODUCED_IN(12);
-int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64) __INTRODUCED_IN(12);
+ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset) __RENAME(pread64);
+ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset) __RENAME(pwrite64);
+int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64);
 #else
 int truncate(const char* __path, off_t __length);
 off_t lseek(int __fd, off_t __offset, int __whence);
@@ -263,9 +261,9 @@ int ftruncate(int __fd, off_t __length);
 
 int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
-ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
-ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset) __INTRODUCED_IN(12);
-int ftruncate64(int __fd, off64_t __length) __INTRODUCED_IN(12);
+ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset);
+ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset);
+int ftruncate64(int __fd, off64_t __length);
 
 int pause(void);
 unsigned int alarm(unsigned int __seconds);
@@ -280,7 +278,7 @@ void* sbrk(ptrdiff_t __increment);
 
 int isatty(int __fd);
 char* ttyname(int __fd);
-int ttyname_r(int __fd, char* __buf, size_t __buf_size) __INTRODUCED_IN(8);
+int ttyname_r(int __fd, char* __buf, size_t __buf_size);
 
 int acct(const char* __path);
 

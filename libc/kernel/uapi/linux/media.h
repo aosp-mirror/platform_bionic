@@ -68,7 +68,7 @@ struct media_device_info {
 #define MEDIA_ENT_F_DV_ENCODER (MEDIA_ENT_F_BASE + 0x6002)
 #define MEDIA_ENT_FL_DEFAULT (1 << 0)
 #define MEDIA_ENT_FL_CONNECTOR (1 << 1)
-#define MEDIA_ENT_ID_FLAG_NEXT (1 << 31)
+#define MEDIA_ENT_ID_FLAG_NEXT (1U << 31)
 struct media_entity_desc {
   __u32 id;
   char name[32];

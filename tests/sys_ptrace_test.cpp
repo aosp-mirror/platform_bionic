@@ -176,6 +176,9 @@ static void run_watchpoint_test(std::function<void(T&)> child_func, size_t offse
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
   check_hw_feature_supported(child, HwFeature::Watchpoint);
+  if (::testing::Test::IsSkipped()) {
+    return;
+  }
 
   set_watchpoint(child, uintptr_t(untag_address(&data)) + offset, size);
 
@@ -224,6 +227,10 @@ TEST(sys_ptrace, watchpoint_stress) {
     if (!CPU_ISSET(cpu, &available_cpus)) continue;
 
     run_watchpoint_stress<uint8_t>(cpu);
+    if (::testing::Test::IsSkipped()) {
+      // Only check first case, since all others would skip for same reason.
+      return;
+    }
     run_watchpoint_stress<uint16_t>(cpu);
     run_watchpoint_stress<uint32_t>(cpu);
 #if defined(__LP64__)
@@ -343,6 +350,9 @@ TEST(sys_ptrace, hardware_breakpoint) {
   ASSERT_EQ(SIGSTOP, WSTOPSIG(status)) << "Status was: " << status;
 
   check_hw_feature_supported(child, HwFeature::Breakpoint);
+  if (::testing::Test::IsSkipped()) {
+    return;
+  }
 
   set_breakpoint(child);
 

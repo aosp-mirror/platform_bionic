@@ -8,7 +8,7 @@ import re
 import subprocess
 import textwrap
 
-from gensyscalls import SysCallsTxtParser
+from gensyscalls import SupportedArchitectures, SysCallsTxtParser
 from genseccomp import parse_syscall_NRs
 
 def load_syscall_names_from_file(file_path, architecture):
@@ -22,7 +22,7 @@ def load_syscall_names_from_file(file_path, architecture):
   return arch_map
 
 def gen_syscall_nrs(out_file, base_syscall_file, syscall_NRs):
-  for arch in ('arm', 'arm64', 'mips', 'mips64', 'x86', 'x86_64'):
+  for arch in SupportedArchitectures:
     base_names = load_syscall_names_from_file(base_syscall_file, arch)
 
     for func,syscall in base_names.iteritems():

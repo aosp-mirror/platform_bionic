@@ -32,6 +32,10 @@
 #include <sys/types.h>
 #include <link.h>
 
+#include "private/bionic_elf_tls.h"
+#include "private/bionic_globals.h"
+#include "pthread_internal.h"
+
 /* ld provides this to us in the default link script */
 extern "C" void* __executable_start;
 
@@ -52,6 +56,21 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   exe_info.dlpi_name = NULL;
   exe_info.dlpi_phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<uintptr_t>(ehdr) + ehdr->e_phoff);
   exe_info.dlpi_phnum = ehdr->e_phnum;
+  exe_info.dlpi_adds = 0;
+  exe_info.dlpi_subs = 0;
+
+  const TlsModules& tls_modules = __libc_shared_globals()->tls_modules;
+  if (tls_modules.module_count == 0) {
+    exe_info.dlpi_tls_modid = 0;
+    exe_info.dlpi_tls_data = nullptr;
+  } else {
+    const size_t kExeModuleId = 1;
+    const StaticTlsLayout& layout = __libc_shared_globals()->static_tls_layout;
+    const TlsModule& tls_module = tls_modules.module_table[__tls_module_id_to_idx(kExeModuleId)];
+    char* static_tls = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
+    exe_info.dlpi_tls_modid = kExeModuleId;
+    exe_info.dlpi_tls_data = static_tls + tls_module.static_offset;
+  }
 
   // Try the executable first.
   int rc = cb(&exe_info, sizeof(exe_info), data);
@@ -71,6 +90,10 @@ int dl_iterate_phdr(int (*cb)(struct dl_phdr_info* info, size_t size, void* data
   vdso_info.dlpi_name = NULL;
   vdso_info.dlpi_phdr = reinterpret_cast<ElfW(Phdr)*>(reinterpret_cast<char*>(ehdr_vdso) + ehdr_vdso->e_phoff);
   vdso_info.dlpi_phnum = ehdr_vdso->e_phnum;
+  vdso_info.dlpi_adds = 0;
+  vdso_info.dlpi_subs = 0;
+  vdso_info.dlpi_tls_modid = 0;
+  vdso_info.dlpi_tls_data = nullptr;
   for (size_t i = 0; i < vdso_info.dlpi_phnum; ++i) {
     if (vdso_info.dlpi_phdr[i].p_type == PT_LOAD) {
       vdso_info.dlpi_addr = (ElfW(Addr)) ehdr_vdso - vdso_info.dlpi_phdr[i].p_vaddr;
