@@ -34,6 +34,24 @@
       "revId": "67ff8b5f9cb1af1a633e96a771e386d3305c6799",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b96404d6_c4723f89",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-10-08T02:11:30Z",
+      "side": 0,
+      "message": "Ack -- will do in a follow-up CL",
+      "parentUuid": "65cc9aac_7f3170a9",
+      "revId": "67ff8b5f9cb1af1a633e96a771e386d3305c6799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
