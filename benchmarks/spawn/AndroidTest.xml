@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2019 The Android Open Source Project
+     All rights reserved.
+
+     Redistribution and use in source and binary forms, with or without
+     modification, are permitted provided that the following conditions
+     are met:
+      * Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+      * Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in
+        the documentation and/or other materials provided with the
+        distribution.
+
+     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+     FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+     COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+     INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+     BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+     OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+     AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+     OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+     OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+     SUCH DAMAGE.
+-->
+<configuration description="Runs bionic-spawn-benchmarks.">
+    <option name="test-suite-tag" value="apct" />
+
+    <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
+        <option name="cleanup" value="true" />
+        <option name="push" value="bionic-spawn-benchmarks->/data/local/tmp/bionic-spawn-benchmarks" />
+    </target_preparer>
+
+    <!-- TODO(b/120549168): This seems necessary for consistent results on a walleye, but it's not working with atest
+    <target_preparer class="com.android.tradefed.targetprep.PushFilePreparer">
+        <option name="push" value="perf-setup.sh->/data/local/tmp/perf-setup.sh" />
+        <option name="post-push" value="chmod 755 /data/local/tmp/perf-setup.sh;/data/local/tmp/perf-setup.sh" />
+    </target_preparer>
+    -->
+
+    <test class="com.android.tradefed.testtype.GoogleBenchmarkTest" >
+        <option name="native-benchmark-device-path" value="/data/local/tmp" />
+        <option name="benchmark-module-name" value="bionic-spawn-benchmarks" />
+
+        <!-- The GoogleBenchmarkTest class ordinarily expects every file in the benchmark's
+             directory (recursively) to be a google-benchmark binary, so we need this setting to
+             avoid failing on the bench_* noop programs, which don't output benchmark results. -->
+        <option name="file-exclusion-filter-regex" value=".*/bench_[^/]*$"  />
+    </test>
+
+</configuration>

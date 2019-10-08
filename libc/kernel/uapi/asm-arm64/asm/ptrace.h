@@ -45,6 +45,8 @@
 #define PSR_s 0x00ff0000
 #define PSR_x 0x0000ff00
 #define PSR_c 0x000000ff
+#define PTRACE_SYSEMU 31
+#define PTRACE_SYSEMU_SINGLESTEP 32
 #ifndef __ASSEMBLY__
 struct user_pt_regs {
   __u64 regs[31];

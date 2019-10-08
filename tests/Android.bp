@@ -38,6 +38,12 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    // Make the bionic tests implicitly test bionic's shadow call stack support.
+    arch: {
+        arm64: {
+           cflags: ["-fsanitize=shadow-call-stack"],
+        },
+    },
     stl: "libc++",
     sanitize: {
         address: false,
@@ -286,6 +292,7 @@ cc_defaults {
         "-Wno-builtin-memcpy-chk-size",
         "-Wno-format-security",
         "-Wno-format-zero-length",
+        "-Wno-fortify-source",
         "-Wno-memset-transposed-args",
         "-Wno-strlcpy-strlcat-size",
         "-Wno-strncat-size",

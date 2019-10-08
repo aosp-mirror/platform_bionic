@@ -56,7 +56,7 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
 int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...)
     __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
 int unshare(int __flags) __INTRODUCED_IN(17);
-int sched_getcpu(void) __INTRODUCED_IN(12);
+int sched_getcpu(void);
 int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);
 
 #ifdef __LP64__
@@ -74,8 +74,8 @@ typedef struct {
   __CPU_BITTYPE  __bits[ CPU_SETSIZE / __CPU_BITS ];
 } cpu_set_t;
 
-int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* __set) __INTRODUCED_IN(12);
-int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set) __INTRODUCED_IN(12);
+int sched_setaffinity(pid_t __pid, size_t __set_size, const cpu_set_t* __set);
+int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set);
 
 #define CPU_ZERO(set)          CPU_ZERO_S(sizeof(cpu_set_t), set)
 #define CPU_SET(cpu, set)      CPU_SET_S(cpu, sizeof(cpu_set_t), set)
@@ -98,8 +98,8 @@ int sched_getaffinity(pid_t __pid, size_t __set_size, cpu_set_t* __set) __INTROD
 #define CPU_ALLOC(count)  __sched_cpualloc((count))
 #define CPU_FREE(set)     __sched_cpufree((set))
 
-cpu_set_t* __sched_cpualloc(size_t __count) __INTRODUCED_IN(12);
-void __sched_cpufree(cpu_set_t* __set) __INTRODUCED_IN(12);
+cpu_set_t* __sched_cpualloc(size_t __count);
+void __sched_cpufree(cpu_set_t* __set);
 
 #define CPU_ZERO_S(setsize, set)  __builtin_memset(set, 0, setsize)
 
@@ -143,7 +143,7 @@ void __sched_cpufree(cpu_set_t* __set) __INTRODUCED_IN(12);
 
 #define CPU_COUNT_S(setsize, set)  __sched_cpucount((setsize), (set))
 
-int __sched_cpucount(size_t __set_size, const cpu_set_t* __set) __INTRODUCED_IN(12);
+int __sched_cpucount(size_t __set_size, const cpu_set_t* __set);
 
 #endif /* __USE_GNU */
 

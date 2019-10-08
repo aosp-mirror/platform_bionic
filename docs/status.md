@@ -1,5 +1,11 @@
 # Android bionic status
 
+This document details libc/libm/libdl additions and behavior changes.
+
+See also
+[Android linker changes for NDK developers](../android-changes-for-ndk-developers.md)
+for changes related to native code loading in various Android releases.
+
 ## Bionic function availability
 
 ### POSIX

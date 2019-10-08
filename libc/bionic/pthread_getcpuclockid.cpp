@@ -28,8 +28,10 @@
 
 #include <errno.h>
 
+#include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_getcpuclockid(pthread_t t, clockid_t* clockid) {
   pid_t tid = __pthread_internal_gettid(t, "pthread_getcpuclockid");
   if (tid == -1) return ESRCH;

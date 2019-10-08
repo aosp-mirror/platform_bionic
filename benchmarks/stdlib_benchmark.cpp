@@ -216,45 +216,9 @@ static void BM_stdlib_mbrtowc(benchmark::State& state) {
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc, "0");
 
-void BM_stdlib_atoi(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(atoi(" -123"));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_atoi);
-
-void BM_stdlib_atol(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(atol(" -123"));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_atol);
-
-void BM_stdlib_strtol(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(strtol(" -123", nullptr, 0));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_strtol);
-
-void BM_stdlib_strtoll(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(strtoll(" -123", nullptr, 0));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_strtoll);
-
-void BM_stdlib_strtoul(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(strtoul(" -123", nullptr, 0));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_strtoul);
-
-void BM_stdlib_strtoull(benchmark::State& state) {
-  for (auto _ : state) {
-    benchmark::DoNotOptimize(strtoull(" -123", nullptr, 0));
-  }
-}
-BIONIC_BENCHMARK(BM_stdlib_strtoull);
-
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_atoi, atoi(" -123"));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_atol, atol(" -123"));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtol, strtol(" -123", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoll, strtoll(" -123", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoul, strtoul(" -123", nullptr, 0));
+BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_strtoull, strtoull(" -123", nullptr, 0));
