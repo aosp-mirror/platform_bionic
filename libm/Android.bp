@@ -463,7 +463,6 @@ cc_library {
 
     cflags: [
         "-D__BIONIC_LP32_USE_LONG_DOUBLE",
-        "-D__BIONIC_NO_MATH_INLINES",
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
