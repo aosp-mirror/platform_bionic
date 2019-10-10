@@ -371,7 +371,8 @@ TEST(malloc, malloc_info) {
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  if (std::string(root->Attribute("version")) == "jemalloc-1") {
+  std::string version(root->Attribute("version"));
+  if (version == "jemalloc-1") {
     // Verify jemalloc version of this data.
     ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
@@ -404,9 +405,9 @@ TEST(malloc, malloc_info) {
       }
     }
   } else {
-    // Only verify that this is debug-malloc-1, the malloc debug unit tests
-    // verify the output.
-    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
+    // Do not verify output for scudo or debug malloc.
+    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
+        << "Unknown version: " << version;
   }
 #endif
 }
@@ -431,7 +432,8 @@ TEST(malloc, malloc_info_matches_mallinfo) {
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  if (std::string(root->Attribute("version")) == "jemalloc-1") {
+  std::string version(root->Attribute("version"));
+  if (version == "jemalloc-1") {
     // Verify jemalloc version of this data.
     ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
@@ -458,9 +460,9 @@ TEST(malloc, malloc_info_matches_mallinfo) {
     EXPECT_LE(mallinfo_before_allocated_bytes, total_allocated_bytes);
     EXPECT_GE(mallinfo_after_allocated_bytes, total_allocated_bytes);
   } else {
-    // Only verify that this is debug-malloc-1, the malloc debug unit tests
-    // verify the output.
-    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
+    // Do not verify output for scudo or debug malloc.
+    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
+        << "Unknown version: " << version;
   }
 #endif
 }
