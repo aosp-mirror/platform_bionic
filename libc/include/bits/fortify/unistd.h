@@ -76,7 +76,7 @@ char* getcwd(char* const __pass_object_size buf, size_t size)
 #if __ANDROID_API__ >= __ANDROID_API_N__
     size_t bos = __bos(buf);
 
-    if (!__bos_trivially_not_lt(bos, size)) {
+    if (!__bos_trivially_ge(bos, size)) {
         return __getcwd_chk(buf, size, bos);
     }
 #endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
