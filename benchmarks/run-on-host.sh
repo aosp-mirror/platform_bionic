@@ -8,7 +8,7 @@ if [ "$1" = glibc ]; then
         cd ${ANDROID_BUILD_TOP}
         export ANDROID_DATA=${TARGET_OUT_DATA}
         export ANDROID_ROOT=${TARGET_OUT}
-        ${HOST_OUT}/nativetest64/bionic-benchmarks-glibc/bionic-benchmarks-glibc $@
+        ${HOST_OUT}/benchmarktest64/bionic-benchmarks-glibc/bionic-benchmarks-glibc "$@"
     )
     exit 0
 elif [ "$1" != 32 -a "$1" != 64 ]; then
@@ -25,7 +25,7 @@ if [ ${HOST_OS}-${HOST_ARCH} = linux-x86 -o ${HOST_OS}-${HOST_ARCH} = linux-x86_
             cd ${ANDROID_BUILD_TOP}
             export ANDROID_DATA=${TARGET_OUT_DATA}
             export ANDROID_ROOT=${TARGET_OUT}
-            ${BENCHMARKS}/bionic-benchmarks/bionic-benchmarks $@
+            ${BENCHMARKS}/bionic-benchmarks/bionic-benchmarks "$@"
         )
     else
         echo "$0 not supported on TARGET_ARCH=$TARGET_ARCH"

@@ -60,6 +60,8 @@ enum batadv_mcast_flags {
   BATADV_MCAST_WANT_ALL_UNSNOOPABLES = 1UL << 0,
   BATADV_MCAST_WANT_ALL_IPV4 = 1UL << 1,
   BATADV_MCAST_WANT_ALL_IPV6 = 1UL << 2,
+  BATADV_MCAST_WANT_NO_RTR4 = 1UL << 3,
+  BATADV_MCAST_WANT_NO_RTR6 = 1UL << 4,
 };
 #define BATADV_TT_DATA_TYPE_MASK 0x0F
 enum batadv_tt_data_flags {

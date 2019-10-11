@@ -69,36 +69,20 @@ __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 // effect of placing a 0-sized TLS segment into Android executables that don't
 // use TLS, but this should be harmless.
 //
-// To ensure that the .tdata input section isn't deleted, the .text input
-// section (which contains _start) has a relocation to the .tdata input section.
-//
-// TODO: This file currently uses TPREL relocations from .text to ensure that
-// --gc-sections doesn't remove the .tdata input section. The relocations are
-// resolved by the static linker. (They don't appear in the executable.) Replace
-// the TPREL relocations with R_{ARM,AARCH64}_NONE once the toolchain has been
-// updated to support them:
-//  - https://reviews.llvm.org/D61992 (Support .reloc *, R_ARM_NONE, *)
-//  - https://reviews.llvm.org/D61973 (Support .reloc *, R_AARCH64_NONE, *)
-//  - https://reviews.llvm.org/D62052 (lld -r: fix R_*_NONE to section symbols on Elf*_Rel targets)
+// To ensure that the .tdata input section isn't deleted (e.g. by
+// --gc-sections), the .text input section (which contains _start) has a
+// relocation to the .tdata input section.
 #if __ANDROID_API__ >= __ANDROID_API_Q__
 #if defined(__arm__)
 asm("  .section .tdata,\"awT\",%progbits\n"
     "  .p2align 5\n"
-    "__tls_align:\n"
     "  .text\n"
-    "  .type __tls_align_reference,%function\n"
-    "__tls_align_reference:\n"
-    "  .long __tls_align(TPOFF)\n"
-    "  .size __tls_align_reference, .-__tls_align_reference\n");
+    "  .reloc 0, R_ARM_NONE, .tdata\n");
 #elif defined(__aarch64__)
 asm("  .section .tdata,\"awT\",@progbits\n"
     "  .p2align 6\n"
-    "__tls_align:\n"
     "  .text\n"
-    "  .type __tls_align_reference,%function\n"
-    "__tls_align_reference:\n"
-    "  add x0, x0, :tprel_lo12_nc:__tls_align\n"
-    "  .size __tls_align_reference, .-__tls_align_reference\n");
+    "  .reloc 0, R_AARCH64_NONE, .tdata\n");
 #endif
 #endif
 

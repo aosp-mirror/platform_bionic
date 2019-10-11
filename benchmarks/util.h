@@ -41,6 +41,13 @@ static int  __attribute__((unused)) EmplaceBenchmark(const std::string& fn_name,
 #define BIONIC_BENCHMARK_WITH_ARG(n, arg) \
   int _bionic_benchmark_##n __attribute__((unused)) = EmplaceBenchmark(std::string(#n), reinterpret_cast<benchmark_func_t>(n), arg)
 
+#define BIONIC_TRIVIAL_BENCHMARK(__name, __expression) \
+  static void __name(benchmark::State& state) { \
+    for (auto _ : state) { \
+      benchmark::DoNotOptimize(__expression); \
+    } \
+  } \
+  BIONIC_BENCHMARK(__name)
 
 constexpr auto KB = 1024;
 

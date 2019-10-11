@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include "private/bionic_defs.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
@@ -49,6 +50,7 @@ static int __open_task_comm_fd(pthread_t t, int flags, const char* caller) {
   return open(comm_name, O_CLOEXEC | flags);
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_getname_np(pthread_t t, char* buf, size_t buf_size) {
   ErrnoRestorer errno_restorer;
 
@@ -80,6 +82,7 @@ int pthread_getname_np(pthread_t t, char* buf, size_t buf_size) {
   return 0;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int pthread_setname_np(pthread_t t, const char* thread_name) {
   ErrnoRestorer errno_restorer;
 

@@ -43,9 +43,7 @@ __BEGIN_DECLS
  * process' personality.
  *
  * Returns the previous persona on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 15.
  */
-int personality(unsigned int __persona) __INTRODUCED_IN(15);
+int personality(unsigned int __persona);
 
 __END_DECLS

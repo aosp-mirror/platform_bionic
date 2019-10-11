@@ -39,6 +39,11 @@ cc_library_static {
         "-Werror",
         "-Wno-error=format-zero-length",
     ],
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 // ==============================================================
@@ -102,6 +107,11 @@ cc_library {
         "-Wno-error=format-zero-length",
         "-Wthread-safety",
     ],
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 // ==============================================================
@@ -122,6 +132,10 @@ cc_test {
     include_dirs: [
         "bionic/libc",
         "bionic/libc/async_safe/include",
+    ],
+
+    header_libs: [
+        "bionic_libc_platform_headers",
     ],
 
     static_libs: [
@@ -148,7 +162,13 @@ cc_test {
 cc_test {
     name: "malloc_debug_system_tests",
 
-    include_dirs: ["bionic/libc"],
+    include_dirs: [
+        "bionic/libc",
+    ],
+
+    header_libs: [
+        "bionic_libc_platform_headers",
+    ],
 
     srcs: [
         "tests/malloc_debug_system_tests.cpp",

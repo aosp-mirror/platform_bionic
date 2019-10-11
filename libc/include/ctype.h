@@ -97,7 +97,7 @@ int ispunct(int __ch);
 int isspace(int __ch);
 /** Returns true if `ch` is in `[A-Z]`. */
 int isupper(int __ch);
-/** Returns true if `ch` is in `[0-9a-f]`. */
+/** Returns true if `ch` is in `[0-9A-Fa-f]`. */
 int isxdigit(int __ch);
 
 /** Returns the corresponding lower-case character if `ch` is upper-case, or `ch` otherwise. */

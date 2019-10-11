@@ -39,7 +39,7 @@
 #include <stdio.h>
 
 #include <private/bionic_config.h>
-#include <private/bionic_malloc.h>
+#include <platform/bionic/malloc.h>
 
 #include "malloc_common.h"
 #include "malloc_limit.h"

@@ -28,6 +28,7 @@
 
 #include <gtest/gtest.h>
 
+#include <dlfcn.h>
 #include <link.h>
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>
@@ -78,6 +79,52 @@ TEST(link, dl_iterate_phdr) {
     size_t count;
   } f = {};
   ASSERT_EQ(0, dl_iterate_phdr(Functor::Callback, &f));
+}
+
+// Verify that the module load/unload counters from dl_iterate_phdr are incremented.
+TEST(link, dl_iterate_phdr_counters) {
+  struct Counters {
+    bool inited = false;
+    uint64_t adds = 0;
+    uint64_t subs = 0;
+  };
+
+  auto get_adds_subs = []() {
+    auto callback = [](dl_phdr_info* info, size_t size, void* data) {
+      Counters& counters = *static_cast<Counters*>(data);
+      EXPECT_GE(size, sizeof(dl_phdr_info));
+      if (!counters.inited) {
+        counters.inited = true;
+        counters.adds = info->dlpi_adds;
+        counters.subs = info->dlpi_subs;
+      } else {
+        // The counters have the same value for each module.
+        EXPECT_EQ(counters.adds, info->dlpi_adds);
+        EXPECT_EQ(counters.subs, info->dlpi_subs);
+      }
+      return 0;
+    };
+
+    Counters counters {};
+    EXPECT_EQ(0, dl_iterate_phdr(callback, &counters));
+    EXPECT_TRUE(counters.inited);
+    return counters;
+  };
+
+  // dlopen increments the 'adds' counter.
+  const auto before_dlopen = get_adds_subs();
+  void* const handle = dlopen("libtest_empty.so", RTLD_NOW);
+  ASSERT_NE(nullptr, handle);
+  const auto after_dlopen = get_adds_subs();
+  ASSERT_LT(before_dlopen.adds, after_dlopen.adds);
+  ASSERT_EQ(before_dlopen.subs, after_dlopen.subs);
+
+  // dlclose increments the 'subs' counter.
+  const auto before_dlclose = after_dlopen;
+  dlclose(handle);
+  const auto after_dlclose = get_adds_subs();
+  ASSERT_EQ(before_dlclose.adds, after_dlclose.adds);
+  ASSERT_LT(before_dlclose.subs, after_dlclose.subs);
 }
 
 struct ProgHdr {
