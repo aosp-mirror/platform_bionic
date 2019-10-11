@@ -438,7 +438,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/fnmatch.c",
         "upstream-openbsd/lib/libc/gen/ftok.c",
         "upstream-openbsd/lib/libc/gen/getprogname.c",
-        "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
         "upstream-openbsd/lib/libc/gen/verrx.c",
@@ -1712,6 +1711,11 @@ cc_library {
         symbol_file: "libc.map.txt",
         versions: ["10000"],
     },
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 
     // Sorting bss symbols by size usually results in less dirty pages at run
     // time, because small symbols are grouped together.
