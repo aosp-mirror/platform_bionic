@@ -29,6 +29,7 @@ extern "C" {
 #define DRM_V3D_GET_PARAM 0x04
 #define DRM_V3D_GET_BO_OFFSET 0x05
 #define DRM_V3D_SUBMIT_TFU 0x06
+#define DRM_V3D_SUBMIT_CSD 0x07
 #define DRM_IOCTL_V3D_SUBMIT_CL DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CL, struct drm_v3d_submit_cl)
 #define DRM_IOCTL_V3D_WAIT_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_WAIT_BO, struct drm_v3d_wait_bo)
 #define DRM_IOCTL_V3D_CREATE_BO DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_CREATE_BO, struct drm_v3d_create_bo)
@@ -36,6 +37,7 @@ extern "C" {
 #define DRM_IOCTL_V3D_GET_PARAM DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_GET_PARAM, struct drm_v3d_get_param)
 #define DRM_IOCTL_V3D_GET_BO_OFFSET DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_GET_BO_OFFSET, struct drm_v3d_get_bo_offset)
 #define DRM_IOCTL_V3D_SUBMIT_TFU DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_TFU, struct drm_v3d_submit_tfu)
+#define DRM_IOCTL_V3D_SUBMIT_CSD DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CSD, struct drm_v3d_submit_csd)
 struct drm_v3d_submit_cl {
   __u32 bcl_start;
   __u32 bcl_end;
@@ -76,6 +78,7 @@ enum drm_v3d_param {
   DRM_V3D_PARAM_V3D_CORE0_IDENT1,
   DRM_V3D_PARAM_V3D_CORE0_IDENT2,
   DRM_V3D_PARAM_SUPPORTS_TFU,
+  DRM_V3D_PARAM_SUPPORTS_CSD,
 };
 struct drm_v3d_get_param {
   __u32 param;
@@ -96,6 +99,14 @@ struct drm_v3d_submit_tfu {
   __u32 ios;
   __u32 coef[4];
   __u32 bo_handles[4];
+  __u32 in_sync;
+  __u32 out_sync;
+};
+struct drm_v3d_submit_csd {
+  __u32 cfg[7];
+  __u32 coef[4];
+  __u64 bo_handles;
+  __u32 bo_handle_count;
   __u32 in_sync;
   __u32 out_sync;
 };

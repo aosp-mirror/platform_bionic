@@ -24,4 +24,8 @@ struct xt_nfacct_match_info {
   char name[NFACCT_NAME_MAX];
   struct nf_acct * nfacct;
 };
+struct xt_nfacct_match_info_v1 {
+  char name[NFACCT_NAME_MAX];
+  struct nf_acct * nfacct __attribute__((aligned(8)));
+};
 #endif

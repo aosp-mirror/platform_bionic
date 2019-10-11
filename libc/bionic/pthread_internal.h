@@ -98,6 +98,7 @@ class pthread_internal_t {
   void* (*start_routine)(void*);
   void* start_routine_arg;
   void* return_value;
+  sigset64_t start_mask;
 
   void* alternate_signal_stack;
 

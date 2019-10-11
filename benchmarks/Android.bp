@@ -28,6 +28,7 @@ cc_defaults {
     srcs: [
         "bionic_benchmarks.cpp",
         "atomic_benchmark.cpp",
+        "ctype_benchmark.cpp",
         "get_heap_size_benchmark.cpp",
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
@@ -40,6 +41,7 @@ cc_defaults {
         "string_benchmark.cpp",
         "time_benchmark.cpp",
         "unistd_benchmark.cpp",
+        "wctype_benchmark.cpp",
     ],
     shared_libs: ["liblog"],
     static_libs: [

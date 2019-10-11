@@ -37,8 +37,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include <platform/bionic/malloc.h>
 #include <private/bionic_config.h>
-#include <private/bionic_malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <sys/system_properties.h>
 

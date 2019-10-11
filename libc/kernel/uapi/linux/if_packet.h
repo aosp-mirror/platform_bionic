@@ -117,7 +117,7 @@ struct tpacket_auxdata {
 #define TP_STATUS_WRONG_FORMAT (1 << 2)
 #define TP_STATUS_TS_SOFTWARE (1 << 29)
 #define TP_STATUS_TS_SYS_HARDWARE (1 << 30)
-#define TP_STATUS_TS_RAW_HARDWARE (1 << 31)
+#define TP_STATUS_TS_RAW_HARDWARE (1U << 31)
 #define TP_FT_REQ_FILL_RXHASH 0x1
 struct tpacket_hdr {
   unsigned long tp_status;

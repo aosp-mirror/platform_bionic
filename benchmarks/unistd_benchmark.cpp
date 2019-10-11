@@ -20,37 +20,11 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-static void BM_unistd_getpid(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    getpid();
-  }
-}
-BIONIC_BENCHMARK(BM_unistd_getpid);
+BIONIC_TRIVIAL_BENCHMARK(BM_unistd_getpid, getpid());
+BIONIC_TRIVIAL_BENCHMARK(BM_unistd_getpid_syscall, syscall(__NR_getpid));
 
-static void BM_unistd_getpid_syscall(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    syscall(__NR_getpid);
-  }
-}
-BIONIC_BENCHMARK(BM_unistd_getpid_syscall);
-
+// TODO: glibc 2.30 added gettid() too.
 #if defined(__BIONIC__)
-
-// Stop GCC optimizing out our pure function.
-/* Must not be static! */ pid_t (*gettid_fp)() = gettid;
-
-static void BM_unistd_gettid(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    gettid_fp();
-  }
-}
-BIONIC_BENCHMARK(BM_unistd_gettid);
-
+BIONIC_TRIVIAL_BENCHMARK(BM_unistd_gettid, gettid());
 #endif
-
-void BM_unistd_gettid_syscall(benchmark::State& state) {
-  while (state.KeepRunning()) {
-    syscall(__NR_gettid);
-  }
-}
-BIONIC_BENCHMARK(BM_unistd_gettid_syscall);
+BIONIC_TRIVIAL_BENCHMARK(BM_unistd_gettid_syscall, syscall(__NR_gettid));

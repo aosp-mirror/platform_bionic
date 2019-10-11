@@ -39,8 +39,6 @@ static const struct sock_filter* primary_app_zygote_filter = arm64_app_zygote_fi
 static const size_t primary_app_zygote_filter_size = arm64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = arm64_system_filter;
 static const size_t primary_system_filter_size = arm64_system_filter_size;
-static const struct sock_filter* primary_global_filter = arm64_global_filter;
-static const size_t primary_global_filter_size = arm64_global_filter_size;
 
 static const long primary_setresgid = __arm64_setresgid;
 static const long primary_setresuid = __arm64_setresuid;
@@ -51,8 +49,6 @@ static const struct sock_filter* secondary_app_zygote_filter = arm_app_zygote_fi
 static const size_t secondary_app_zygote_filter_size = arm_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = arm_system_filter;
 static const size_t secondary_system_filter_size = arm_system_filter_size;
-static const struct sock_filter* secondary_global_filter = arm_global_filter;
-static const size_t secondary_global_filter_size = arm_global_filter_size;
 
 static const long secondary_setresgid = __arm_setresgid;
 static const long secondary_setresuid = __arm_setresuid;
@@ -66,8 +62,6 @@ static const struct sock_filter* primary_app_zygote_filter = x86_64_app_zygote_f
 static const size_t primary_app_zygote_filter_size = x86_64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = x86_64_system_filter;
 static const size_t primary_system_filter_size = x86_64_system_filter_size;
-static const struct sock_filter* primary_global_filter = x86_64_global_filter;
-static const size_t primary_global_filter_size = x86_64_global_filter_size;
 
 static const long primary_setresgid = __x86_64_setresgid;
 static const long primary_setresuid = __x86_64_setresuid;
@@ -78,8 +72,6 @@ static const struct sock_filter* secondary_app_zygote_filter = x86_app_zygote_fi
 static const size_t secondary_app_zygote_filter_size = x86_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = x86_system_filter;
 static const size_t secondary_system_filter_size = x86_system_filter_size;
-static const struct sock_filter* secondary_global_filter = x86_global_filter;
-static const size_t secondary_global_filter_size = x86_global_filter_size;
 
 static const long secondary_setresgid = __x86_setresgid;
 static const long secondary_setresuid = __x86_setresuid;
@@ -93,8 +85,6 @@ static const struct sock_filter* primary_app_zygote_filter = mips64_app_zygote_f
 static const size_t primary_app_zygote_filter_size = mips64_app_zygote_filter_size;
 static const struct sock_filter* primary_system_filter = mips64_system_filter;
 static const size_t primary_system_filter_size = mips64_system_filter_size;
-static const struct sock_filter* primary_global_filter = mips64_global_filter;
-static const size_t primary_global_filter_size = mips64_global_filter_size;
 
 static const long primary_setresgid = __mips64_setresgid;
 static const long primary_setresuid = __mips64_setresuid;
@@ -105,8 +95,6 @@ static const struct sock_filter* secondary_app_zygote_filter = mips_app_zygote_f
 static const size_t secondary_app_zygote_filter_size = mips_app_zygote_filter_size;
 static const struct sock_filter* secondary_system_filter = mips_system_filter;
 static const size_t secondary_system_filter_size = mips_system_filter_size;
-static const struct sock_filter* secondary_global_filter = mips_global_filter;
-static const size_t secondary_global_filter_size = mips_global_filter_size;
 
 static const long secondary_setresgid = __mips_setresgid;
 static const long secondary_setresuid = __mips_setresuid;
@@ -245,7 +233,6 @@ enum FilterType {
   APP,
   APP_ZYGOTE,
   SYSTEM,
-  GLOBAL
 };
 
 bool _set_seccomp_filter(FilterType type) {
@@ -272,13 +259,6 @@ bool _set_seccomp_filter(FilterType type) {
         s = secondary_system_filter;
         s_size = secondary_system_filter_size;
         break;
-      case GLOBAL:
-        p = primary_global_filter;
-        p_size = primary_global_filter_size;
-        s = secondary_global_filter;
-        s_size = secondary_global_filter_size;
-        break;
-
     }
 
 #ifdef DUAL_ARCH
@@ -323,10 +303,6 @@ bool set_app_zygote_seccomp_filter() {
 
 bool set_system_seccomp_filter() {
     return _set_seccomp_filter(FilterType::SYSTEM);
-}
-
-bool set_global_seccomp_filter() {
-    return _set_seccomp_filter(FilterType::GLOBAL);
 }
 
 bool install_setuidgid_seccomp_filter(uint32_t uid_gid_min, uint32_t uid_gid_max) {

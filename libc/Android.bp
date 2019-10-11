@@ -24,6 +24,7 @@ libc_common_src_files = [
 // ========================================================
 libc_common_src_files += [
     "bionic/ndk_cruft.cpp",
+    "bionic/ndk_cruft_data.cpp",
 ]
 
 libc_common_src_files_32 = [
@@ -65,7 +66,6 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
-        "external/jemalloc_new/include",
     ],
 
     stl: "none",
@@ -83,6 +83,56 @@ cc_defaults {
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
     ldflags: ["-Wl,-z,muldefs"],
+}
+
+// Defaults for native allocator libs/includes to make it
+// easier to change.
+// To enable scudo, change the below to libc_scudo_defaults
+// and comment out the defaults line in libc_scudo shared
+// library.
+// ========================================================
+cc_defaults {
+    name: "libc_native_allocator_defaults",
+
+    defaults: ["libc_jemalloc5_defaults"],
+}
+
+cc_defaults {
+    name: "libc_jemalloc5_defaults",
+
+    include_dirs: [
+        "external/jemalloc_new/include",
+    ],
+
+    whole_static_libs: [
+        "libjemalloc5",
+        "libc_jemalloc_wrapper",
+    ],
+}
+
+// Functions not implemented by jemalloc directly, or that need to
+// be modified for Android.
+cc_library_static {
+    name: "libc_jemalloc_wrapper",
+    defaults: ["libc_defaults"],
+    srcs: ["bionic/jemalloc_wrapper.cpp"],
+    cflags: ["-fvisibility=hidden"],
+
+    include_dirs: [
+        "external/jemalloc_new/include",
+    ],
+}
+
+cc_defaults {
+    name: "libc_scudo_defaults",
+
+    cflags: [
+        "-DUSE_SCUDO",
+    ],
+
+    whole_static_libs: [
+        "libscudo",
+    ],
 }
 
 // ========================================================
@@ -388,10 +438,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/gen/fnmatch.c",
         "upstream-openbsd/lib/libc/gen/ftok.c",
         "upstream-openbsd/lib/libc/gen/getprogname.c",
-        "upstream-openbsd/lib/libc/gen/isctype.c",
         "upstream-openbsd/lib/libc/gen/setprogname.c",
-        "upstream-openbsd/lib/libc/gen/tolower_.c",
-        "upstream-openbsd/lib/libc/gen/toupper_.c",
         "upstream-openbsd/lib/libc/gen/verr.c",
         "upstream-openbsd/lib/libc/gen/verrx.c",
         "upstream-openbsd/lib/libc/gen/vwarn.c",
@@ -1133,7 +1180,6 @@ cc_library_static {
         "bionic/sigprocmask.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
-        "bionic/statvfs.cpp",
         "bionic/stdlib_l.cpp",
         "bionic/strchrnul.cpp",
         "bionic/strerror.cpp",
@@ -1150,6 +1196,8 @@ cc_library_static {
         "bionic/sys_sem.cpp",
         "bionic/sys_shm.cpp",
         "bionic/sys_signalfd.cpp",
+        "bionic/sys_statfs.cpp",
+        "bionic/sys_statvfs.cpp",
         "bionic/sys_time.cpp",
         "bionic/sysinfo.cpp",
         "bionic/syslog.cpp",
@@ -1199,7 +1247,7 @@ cc_library_static {
 // ========================================================
 // libc_pthread.a - pthreads parts that previously lived in
 // libc_bionic.a. Relocated to their own library because
-// they can't be included in libc_ndk.a (as they layout of
+// they can't be included in libc_ndk.a (as the layout of
 // pthread_t has changed over the years and has ABI
 // compatibility issues).
 // ========================================================
@@ -1332,7 +1380,10 @@ cc_library_static {
 
 cc_library_static {
     name: "libc_ndk",
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_defaults",
+    ],
     srcs: libc_common_src_files + [
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1365,7 +1416,6 @@ cc_library_static {
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
-        "libc_malloc",
         "libc_netbsd",
         "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
@@ -1373,7 +1423,6 @@ cc_library_static {
         "libc_syscalls",
         "libc_tzcode",
         "libm",
-        "libjemalloc5",
         "libstdc++",
     ],
 }
@@ -1399,7 +1448,6 @@ cc_library_static {
         "libc_freebsd",
         "libc_freebsd_large_stack",
         "libc_gdtoa",
-        "libc_malloc",
         "libc_netbsd",
         "libc_openbsd",
         "libc_openbsd_large_stack",
@@ -1506,17 +1554,6 @@ cc_library_static {
     ],
 }
 
-// ========================================================
-// libc_malloc.a: the _prefixed_ malloc functions (like dlcalloc).
-// ========================================================
-cc_library_static {
-    defaults: ["libc_defaults"],
-    srcs: ["bionic/jemalloc_wrapper.cpp"],
-    cflags: ["-fvisibility=hidden"],
-
-    name: "libc_malloc",
-}
-
 filegroup {
     name: "libc_sources_shared",
     srcs: [
@@ -1558,7 +1595,10 @@ filegroup {
 // libc.a + libc.so
 // ========================================================
 cc_library {
-    defaults: ["libc_defaults"],
+    defaults: [
+        "libc_defaults",
+        "libc_native_allocator_defaults",
+    ],
     name: "libc",
     static_ndk_lib: true,
     export_include_dirs: ["include"],
@@ -1605,9 +1645,6 @@ cc_library {
     ],
     static_libs: [
         "libdl_android",
-    ],
-    whole_static_libs: [
-        "libjemalloc5",
     ],
 
     nocrt: true,
@@ -1675,6 +1712,11 @@ cc_library {
         versions: ["10000"],
     },
 
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
+
     // Sorting bss symbols by size usually results in less dirty pages at run
     // time, because small symbols are grouped together.
     sort_bss_symbols_by_size: true,
@@ -1712,16 +1754,24 @@ genrule {
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
 }
 
-// Makes bionic_tls.h available for art to use in its implementation of Thread::Current().
+// Headers that only other parts of the platform can include.
 cc_library_headers {
-    name: "bionic_libc_private_headers",
+    name: "bionic_libc_platform_headers",
     visibility: [
         "//art:__subpackages__",
+        "//bionic/libc:__subpackages__",
+        "//frameworks:__subpackages__",
+        "//external/perfetto:__subpackages__",
+        "//external/scudo:__subpackages__",
     ],
     host_supported: true,
+    recovery_available: true,
+    native_bridge_supported: true,
     export_include_dirs: [
-        "private",
+        "platform",
     ],
+    system_shared_libs: [],
+    stl: "none",
     sdk_version: "current",
 }
 
@@ -1871,6 +1921,9 @@ cc_defaults {
         "-Wall",
         "-Werror",
     ],
+    sanitize: {
+        never: true,
+    },
 }
 
 cc_defaults {
@@ -2267,8 +2320,7 @@ cc_object {
     ],
 }
 
-// Generate the C++ policy sources for app, system, and global seccomp-bpf
-// filters.
+// Generate the C++ policy sources for app and system seccomp-bpf filters.
 python_binary_host {
     name: "genseccomp",
     main: "tools/genseccomp.py",
@@ -2438,38 +2490,6 @@ cc_genrule {
     ],
 }
 
-cc_genrule {
-    name: "libseccomp_policy_global_sources",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=global $(in)",
-
-    tools: [ "genseccomp" ],
-
-    srcs: [
-        "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_WHITELIST_GLOBAL.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
-    ],
-
-    out: [
-        "arm64_global_policy.cpp",
-        "arm_global_policy.cpp",
-        "mips64_global_policy.cpp",
-        "mips_global_policy.cpp",
-        "x86_64_global_policy.cpp",
-        "x86_global_policy.cpp",
-    ],
-}
-
 cc_library {
     name: "libseccomp_policy",
     recovery_available: true,
@@ -2477,7 +2497,6 @@ cc_library {
     generated_sources: [
         "libseccomp_policy_app_sources",
         "libseccomp_policy_app_zygote_sources",
-        "libseccomp_policy_global_sources",
         "libseccomp_policy_system_sources",
     ],
 
@@ -2500,9 +2519,8 @@ cc_library {
 
 // This is a temporary library that will use scudo as the native memory
 // allocator. To use it, add it as the first shared library.
-cc_library_shared {
-    name: "libc_scudo",
-    vendor_available: true,
+cc_defaults {
+    name: "libc_scudo_wrapper_defaults",
     srcs: [
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
@@ -2512,15 +2530,11 @@ cc_library_shared {
         "bionic/__set_errno.cpp",
     ],
     cflags: ["-DUSE_SCUDO"],
-    stl: "none",
-    system_shared_libs: [],
+    shared_libs: ["libscudo_wrapper"],
 
     header_libs: ["libc_headers"],
 
     static_libs: ["libasync_safe"],
-
-    allow_undefined_symbols: true,
-    shared_libs: ["libscudo_wrapper"],
 
     arch: {
         arm: {
@@ -2543,7 +2557,16 @@ cc_library_shared {
     // Mark this library as global so it overrides all the allocation
     // definitions properly.
     ldflags: ["-Wl,-z,global"],
+}
 
+cc_library_shared {
+    name: "libc_scudo",
+    defaults: ["libc_scudo_wrapper_defaults"],
+    vendor_available: true,
+    stl: "none",
+    system_shared_libs: [],
+
+    allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
 }

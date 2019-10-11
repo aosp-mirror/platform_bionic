@@ -34,9 +34,9 @@
 #include <sys/cdefs.h>
 #include <sys/param.h>
 
-#include "bionic_asm_tls.h"
+#include <platform/bionic/tls.h>
+
 #include "bionic_macros.h"
-#include "__get_tls.h"
 #include "grp_pwd.h"
 
 /** WARNING WARNING WARNING

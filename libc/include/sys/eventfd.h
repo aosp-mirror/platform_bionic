@@ -38,6 +38,8 @@
 
 __BEGIN_DECLS
 
+/** The eventfd() flag to provide semaphore-like semantics for reads. */
+#define EFD_SEMAPHORE (1 << 0)
 /** The eventfd() flag for a close-on-exec file descriptor. */
 #define EFD_CLOEXEC O_CLOEXEC
 /** The eventfd() flag for a non-blocking file descriptor. */

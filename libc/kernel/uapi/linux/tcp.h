@@ -92,6 +92,7 @@ enum {
 #define TCP_ZEROCOPY_RECEIVE 35
 #define TCP_INQ 36
 #define TCP_CM_INQ TCP_INQ
+#define TCP_TX_DELAY 37
 #define TCP_REPAIR_ON 1
 #define TCP_REPAIR_OFF 0
 #define TCP_REPAIR_OFF_NO_WP - 1
