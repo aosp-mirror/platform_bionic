@@ -31,6 +31,7 @@
 #include "linker_globals.h"
 #include "linker_dlwarning.h"
 
+#include <link.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -191,11 +192,6 @@ int __loader_dlclose(void* handle) {
 int __loader_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
   ScopedPthreadMutexLocker locker(&g_dl_mutex);
   return do_dl_iterate_phdr(cb, data);
-}
-
-// This function is needed by libgcc.a
-int dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), void* data) {
-  return __loader_dl_iterate_phdr(cb, data);
 }
 
 #if defined(__arm__)
