@@ -4208,7 +4208,7 @@ static std::string get_ld_config_file_vndk_path() {
   if (insert_pos == std::string::npos) {
     insert_pos = ld_config_file_vndk.length();
   }
-  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
+  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string("."));
   return ld_config_file_vndk;
 }
 
