@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1b43889_9542c28f",
+        "filename": "docs/defines.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-10-15T20:23:54Z",
+      "side": 1,
+      "message": "Do you want a note about host bionic here?",
+      "range": {
+        "startLine": 10,
+        "startChar": 40,
+        "endLine": 10,
+        "endChar": 56
+      },
+      "revId": "c5deea64069946720e4b50ba05d3fbaa5057b5ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52d18047_8d5add1b",
+        "filename": "docs/defines.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-10-15T20:23:54Z",
+      "side": 1,
+      "message": "Probably worth another host bionic note",
+      "range": {
+        "startLine": 20,
+        "startChar": 30,
+        "endLine": 20,
+        "endChar": 69
+      },
+      "revId": "c5deea64069946720e4b50ba05d3fbaa5057b5ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc1e4dbe_e27f31c5",
+        "filename": "docs/defines.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2019-10-15T20:23:54Z",
+      "side": 1,
+      "message": "Also worth mentioning `__LP32__` and `__LP64__`?",
+      "revId": "c5deea64069946720e4b50ba05d3fbaa5057b5ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
