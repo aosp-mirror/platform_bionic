@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7aa2e38f_488f3722",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-16T01:05:18Z",
+      "side": 1,
+      "message": "I was thinking of https://github.com/android/ndk/issues/593 -- is there an older version of the bug?",
+      "parentUuid": "3f3f40e7_7c578773",
+      "range": {
+        "startLine": 20,
+        "startChar": 3,
+        "endLine": 20,
+        "endChar": 54
+      },
+      "revId": "c3529cc5f42399d27b45f7c6105c1767764e31e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "848fa26b_b82f2649",
         "filename": "linker/Android.bp",
         "patchSetId": 2
