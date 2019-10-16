@@ -57,6 +57,24 @@
       "revId": "c3529cc5f42399d27b45f7c6105c1767764e31e2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a74558f_8bc2e2db",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-16T00:57:52Z",
+      "side": 1,
+      "message": "I\u0027ll see if I can improve the comment.\n\nIt\u0027d be nice if I could add a Bionic linker test verifying that the linker binaries only have relative relocations. dlfcn_test.cpp uses LLVM to inspect binary files, but IIRC, it\u0027s using the obsolete platform/external/llvm (so it can\u0027t read Android packed relocations). Upstream LLVM has llvm::object::ELFFile::android_relas (in include/llvm/Object/ELF.h). Bionic doesn\u0027t use packed/relr relocs now, but maybe it would someday.",
+      "parentUuid": "19e3080c_b7650514",
+      "revId": "c3529cc5f42399d27b45f7c6105c1767764e31e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
