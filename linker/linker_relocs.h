@@ -35,6 +35,8 @@
 #if defined (__aarch64__)
 
 #define R_GENERIC_JUMP_SLOT     R_AARCH64_JUMP_SLOT
+// R_AARCH64_ABS64 is classified as a static relocation but it is common in DSOs.
+#define R_GENERIC_ABSOLUTE      R_AARCH64_ABS64
 #define R_GENERIC_GLOB_DAT      R_AARCH64_GLOB_DAT
 #define R_GENERIC_RELATIVE      R_AARCH64_RELATIVE
 #define R_GENERIC_IRELATIVE     R_AARCH64_IRELATIVE
@@ -46,6 +48,8 @@
 #elif defined (__arm__)
 
 #define R_GENERIC_JUMP_SLOT     R_ARM_JUMP_SLOT
+// R_ARM_ABS32 is classified as a static relocation but it is common in DSOs.
+#define R_GENERIC_ABSOLUTE      R_ARM_ABS32
 #define R_GENERIC_GLOB_DAT      R_ARM_GLOB_DAT
 #define R_GENERIC_RELATIVE      R_ARM_RELATIVE
 #define R_GENERIC_IRELATIVE     R_ARM_IRELATIVE
@@ -57,6 +61,7 @@
 #elif defined (__i386__)
 
 #define R_GENERIC_JUMP_SLOT     R_386_JMP_SLOT
+#define R_GENERIC_ABSOLUTE      R_386_32
 #define R_GENERIC_GLOB_DAT      R_386_GLOB_DAT
 #define R_GENERIC_RELATIVE      R_386_RELATIVE
 #define R_GENERIC_IRELATIVE     R_386_IRELATIVE
@@ -68,6 +73,7 @@
 #elif defined (__x86_64__)
 
 #define R_GENERIC_JUMP_SLOT     R_X86_64_JUMP_SLOT
+#define R_GENERIC_ABSOLUTE      R_X86_64_64
 #define R_GENERIC_GLOB_DAT      R_X86_64_GLOB_DAT
 #define R_GENERIC_RELATIVE      R_X86_64_RELATIVE
 #define R_GENERIC_IRELATIVE     R_X86_64_IRELATIVE
