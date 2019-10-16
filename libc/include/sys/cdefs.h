@@ -36,6 +36,10 @@
 
 #pragma once
 
+/**
+ * `__BIONIC__` is always defined if you're building with bionic. See
+ * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
+ */
 #define __BIONIC__ 1
 
 #if defined(__cplusplus)

@@ -31,6 +31,9 @@
 /**
  * @file android/api-level.h
  * @brief Functions and constants for dealing with multiple API levels.
+ *
+ * See
+ * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
  */
 
 #include <sys/cdefs.h>
@@ -38,9 +41,9 @@
 __BEGIN_DECLS
 
 /**
- * Magic version number for an Android OS build which has
- * not yet turned into an official release,
- * for comparison against `__ANDROID_API__`.
+ * Magic version number for an Android OS build which has not yet turned
+ * into an official release, for comparison against `__ANDROID_API__`. See
+ * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
  */
 #define __ANDROID_API_FUTURE__ 10000
 
@@ -49,25 +52,10 @@ __BEGIN_DECLS
 /**
  * `__ANDROID_API__` is the API level being targeted. For the OS,
  * this is `__ANDROID_API_FUTURE__`. For the NDK, this is set by the
- * compiler system based on the API level you claimed to target.
+ * compiler system based on the API level you claimed to target. See
+ * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
  */
 #define __ANDROID_API__ __ANDROID_API_FUTURE__
-#endif
-
-#if __ANDROID_API__ != __ANDROID_API_FUTURE__
-/**
- * `__ANDROID_NDK__` is defined for code that's built by the NDK
- * rather than as part of the OS. "Built by the NDK" is an ambiguous idea,
- * so you might prefer to check `__ANDROID__`, `__BIONIC__`, `__linux__`,
- * or `__NDK_MAJOR__` instead, depending on exactly what you're trying to say.
- *
- * `__ANDROID_NDK__` is intended to capture "this code is being built for
- * Android, but targeting a specific API level". This is true for all code built
- * by the NDK proper, but also for OS code that sets `sdk_version` in its build
- * file. This distinction might matter to you if, for example, your code could
- * be built as part of an app *or* as part of the OS.
- */
-#define __ANDROID_NDK__ 1
 #endif
 
 /** Names the Gingerbread API level (9), for comparison against `__ANDROID_API__`. */
