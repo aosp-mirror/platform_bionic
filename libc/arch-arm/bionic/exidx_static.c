@@ -43,7 +43,11 @@ struct exidx_entry {
 extern struct exidx_entry __exidx_end;
 extern struct exidx_entry __exidx_start;
 
-_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __attribute__((unused)), int* pcount) {
+_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr pc __attribute__((unused)), int* pcount) {
   *pcount = (&__exidx_end - &__exidx_start);
   return (_Unwind_Ptr)&__exidx_start;
+}
+
+_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc, int *pcount) {
+  return dl_unwind_find_exidx(pc, pcount);
 }
