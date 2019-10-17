@@ -3319,14 +3319,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
         *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend - reloc;
         break;
-#elif defined(__arm__)
-      case R_ARM_REL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x - %08x %s",
-                   reloc, sym_addr, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
-        break;
 #elif defined(__i386__)
       case R_386_PC32:
         count_relocation(kRelocRelative);
