@@ -3198,6 +3198,17 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_addr;
         }
         break;
+      case R_GENERIC_COPY:
+        // Copy relocations allow read-only data or code in a non-PIE executable to access a
+        // variable from a DSO. The executable reserves extra space in its .bss section, and the
+        // linker copies the variable into the extra space. The executable then exports its copy
+        // to interpose the copy in the DSO.
+        //
+        // Bionic only supports PIE executables, so copy relocations aren't supported. The ARM and
+        // AArch64 ABI documents only allow them for ET_EXEC (non-PIE) objects. See IHI0056B and
+        // IHI0044F.
+        DL_ERR("%s COPY relocations are not supported", get_realpath());
+        return false;
       case R_GENERIC_TLS_TPREL:
         count_relocation(kRelocRelative);
         MARK(rel->r_offset);
@@ -3292,20 +3303,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
 #endif  // defined(__aarch64__)
 
-#if defined(__aarch64__)
-      case R_AARCH64_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0056b/IHI0056B_aaelf64.pdf
-         *
-         * Section 4.6.11 "Dynamic relocations"
-         * R_AARCH64_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_AARCH64_COPY relocations are not supported", get_realpath());
-        return false;
-#elif defined(__x86_64__)
+#if defined(__x86_64__)
       case R_X86_64_32:
         count_relocation(kRelocAbsolute);
         MARK(rel->r_offset);
@@ -3329,18 +3327,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
                    reloc, sym_addr, rel->r_offset, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
         break;
-      case R_ARM_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
-         *
-         * Section 4.6.1.10 "Dynamic relocations"
-         * R_ARM_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_ARM_COPY relocations are not supported", get_realpath());
-        return false;
 #elif defined(__i386__)
       case R_386_PC32:
         count_relocation(kRelocRelative);
