@@ -32,6 +32,15 @@ cc_library {
         "-Werror",
         "-fno-stack-protector",
     ],
+
+    apex_available: [
+        "com.android.runtime",
+    ],
+    static: {
+        apex_available: [
+            "//apex_available:platform",
+        ],
+    },
 }
 
 // ==============================================================
