@@ -751,6 +751,33 @@ cc_test {
     ],
 }
 
+cc_test {
+    name: "bionic-stress-tests",
+    defaults: [
+        "bionic_tests_defaults",
+    ],
+
+    // For now, these tests run forever, so do not use the isolation framework.
+    isolated: false,
+
+    srcs: [
+        "malloc_stress_test.cpp",
+    ],
+
+    shared_libs: [
+        "libbase",
+    ],
+
+    target: {
+        android: {
+            static_libs: [
+                "libmeminfo",
+                "libprocinfo",
+            ],
+        },
+    },
+}
+
 // -----------------------------------------------------------------------------
 // Tests for the device linked against bionic's static library. Run with:
 //   adb shell /data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static
