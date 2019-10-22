@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd791380_5e93f32b",
+        "filename": "tests/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T23:25:47Z",
+      "side": 1,
+      "message": "does it make sense to have multiple stress tests in the same binary, since you can only run one?",
+      "range": {
+        "startLine": 755,
+        "startChar": 11,
+        "endLine": 755,
+        "endChar": 30
+      },
+      "revId": "ee0ce440fd7571923b2d2446b9bde9f3328ba14b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
