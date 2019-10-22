@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b111242c_7c897c94",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T04:56:05Z",
+      "side": 1,
+      "message": "you\u0027ve updated these in this file, but not in the next ... since they\u0027re all nice short blocks now, just lose the #endif comments? i don\u0027t think they\u0027re reducing confusion any more.",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 96
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "542667af_f995233c",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T04:56:05Z",
+      "side": 1,
+      "message": "(this one and the L148 are more convincing!)",
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0b47e33_688c3028",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T04:56:05Z",
+      "side": 1,
+      "message": "this is an interesting trade-off with hwasan, though, no? because fortify can catch off-by-ones whereas hwasan works on unfortified functions too, but needs a bigger overwrite?",
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7f81807_7e989156",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T04:56:05Z",
+      "side": 1,
+      "message": "any reason why you wrote this backwards? (did you intend to put a comment inside the #if?)",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 0
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77e2bee0_83790509",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-22T04:56:05Z",
+      "side": 1,
+      "message": "not quite true again :-)",
+      "range": {
+        "startLine": 49,
+        "startChar": 7,
+        "endLine": 49,
+        "endChar": 23
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
