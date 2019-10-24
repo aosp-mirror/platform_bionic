@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c66e8027_5a429dfb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4188,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-10-24T02:25:16Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer that we only do the file-existence check once. Maybe this function can return \"\" and the caller can check path.empty()?",
+      "revId": "b054ae45dba7e3375366a7c7a6844522fe9a1e4d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
