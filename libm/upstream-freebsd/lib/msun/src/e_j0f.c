@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_j0f.c 343023 2019-01-14 15:48:35Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_j0f.c 343953 2019-02-10 08:46:07Z peterj $");
 
 /*
  * See e_j0.c for complete comments.
@@ -55,8 +55,7 @@ __ieee754_j0f(float x)
 	if(ix>=0x7f800000) return one/(x*x);
 	x = fabsf(x);
 	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		s = sinf(x);
-		c = cosf(x);
+		sincosf(x, &s, &c);
 		ss = s-c;
 		cc = s+c;
 		if(ix<0x7f000000) {  /* Make sure x+x does not overflow. */
@@ -128,8 +127,7 @@ __ieee754_y0f(float x)
          *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
          * to compute the worse one.
          */
-                s = sinf(x);
-                c = cosf(x);
+                sincosf(x, &s, &c);
                 ss = s-c;
                 cc = s+c;
 	/*
