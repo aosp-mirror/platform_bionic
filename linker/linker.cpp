@@ -92,7 +92,6 @@ static uint64_t g_module_unload_counter = 0;
 static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_STRING ".txt";
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
-static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
 
@@ -4054,30 +4053,13 @@ static std::string get_ld_config_file_apex_path(const char* executable_path) {
 }
 
 static std::string get_ld_config_file_vndk_path() {
-  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
-    return kLdConfigVndkLiteFilePath;
+  if (!file_exists(kLdGeneratedConfigFilePath)) {
+    DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
+            kLdGeneratedConfigFilePath);
+    return "";
   }
 
-  // Use generated linker config if flag is set
-  // TODO(b/138920271) Do not check property once it is confirmed as stable
-  // TODO(b/139638519) This file should also cover legacy or vndk-lite config
-  if (android::base::GetProperty("ro.vndk.version", "") != "" &&
-      android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
-    if (file_exists(kLdGeneratedConfigFilePath)) {
-      return kLdGeneratedConfigFilePath;
-    } else {
-      DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
-              kLdGeneratedConfigFilePath);
-    }
-  }
-
-  std::string ld_config_file_vndk = kLdConfigFilePath;
-  size_t insert_pos = ld_config_file_vndk.find_last_of('.');
-  if (insert_pos == std::string::npos) {
-    insert_pos = ld_config_file_vndk.length();
-  }
-  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
-  return ld_config_file_vndk;
+  return kLdGeneratedConfigFilePath;
 }
 
 static std::string get_ld_config_file_path(const char* executable_path) {
@@ -4105,7 +4087,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   }
 
   path = get_ld_config_file_vndk_path();
-  if (file_exists(path.c_str())) {
+  if (!path.empty()) {
     return path;
   }
 
