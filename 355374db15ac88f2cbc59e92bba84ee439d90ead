@@ -49,6 +49,29 @@
     },
     {
       "key": {
+        "uuid": "8930f1db_bf29a808",
+        "filename": "libc/arch-arm64/static_function_dispatch.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1307957
+      },
+      "writtenOn": "2019-10-29T23:04:17Z",
+      "side": 1,
+      "message": "I think we have ifunc support for static binary now. Do we still need this?\n\n(Anyway this is out of the scope of this change.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 43
+      },
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "644b79c7_a332de3c",
         "filename": "libc/platform/bionic/mte_kernel.h",
         "patchSetId": 3
