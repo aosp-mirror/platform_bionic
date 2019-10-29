@@ -81,6 +81,24 @@
       "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ee5967_aeeb7b7d",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-29T20:39:00Z",
+      "side": 1,
+      "message": "no, that\u0027s fine (and exactly the point of this directory) --- just checking this was intentional because it\u0027s the less common case :-)",
+      "parentUuid": "2c062cb2_c7186d94",
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
