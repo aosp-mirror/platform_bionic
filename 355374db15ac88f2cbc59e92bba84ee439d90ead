@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "314059db_58fb0656",
+        "filename": "libc/arch-arm64/generic/bionic/memchr.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-10-29T20:00:07Z",
+      "side": 1,
+      "message": "\u003e s/generic/default/g and then call the mte ones mte?\n\nI like that suggestion, as you point out it avoids the ambiguity of the word \"generic\" here. I\u0027ll make that change.",
+      "parentUuid": "73cc9b2c_8b9fa9e6",
+      "range": {
+        "startLine": 31,
+        "startChar": 15,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "644b79c7_a332de3c",
         "filename": "libc/platform/bionic/mte_kernel.h",
         "patchSetId": 3
@@ -36,6 +60,24 @@
       "writtenOn": "2019-10-29T19:42:28Z",
       "side": 1,
       "message": "is this intended to be exported outside of bionic itself? (i.e. should this be in the private/ directory rather than the platform/ directory?)",
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c062cb2_c7186d94",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-10-29T20:00:07Z",
+      "side": 1,
+      "message": "Scudo is going to need to refer to these constants, so I wanted to put them in a place where scudo could access them. That said, scudo could always just have its own copy of the header. Either way is fine with me.",
+      "parentUuid": "644b79c7_a332de3c",
       "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
