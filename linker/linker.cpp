@@ -1503,7 +1503,16 @@ static bool load_library(android_namespace_t* ns,
   // Open the file.
   int fd = open_library(ns, zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
-    DL_OPEN_ERR("library \"%s\" not found", name);
+    if (task->is_dt_needed()) {
+      if (needed_by->is_main_executable()) {
+        DL_OPEN_ERR("library \"%s\" not found: needed by main executable", name);
+      } else {
+        DL_OPEN_ERR("library \"%s\" not found: needed by %s in namespace %s", name,
+                    needed_by->get_realpath(), task->get_start_from()->get_name());
+      }
+    } else {
+      DL_OPEN_ERR("library \"%s\" not found", name);
+    }
     return false;
   }
 

@@ -28,6 +28,7 @@
 #include <android/dlext.h>
 #include <android-base/file.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -1374,7 +1375,10 @@ TEST(dlext, ns_isolated) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  const char* error = dlerror();
+  ASSERT_MATCH(error,
+               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
+               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated1)");
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1502,7 +1506,9 @@ TEST(dlext, ns_shared) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_MATCH(dlerror(),
+               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
+               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated_shared)");
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1762,7 +1768,10 @@ TEST(dlext, ns_isolated_rtld_global) {
 
   handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle1 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
+  ASSERT_MATCH(
+      dlerror(),
+      R"(dlopen failed: library "libnstest_public.so" not found: needed by \S+libnstest_root.so)"
+      R"( in namespace isolated2)");
 }
 
 TEST(dlext, ns_inaccessible_error_message) {
