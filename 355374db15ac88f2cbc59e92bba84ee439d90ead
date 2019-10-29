@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73cc9b2c_8b9fa9e6",
+        "filename": "libc/arch-arm64/generic/bionic/memchr.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-29T19:42:28Z",
+      "side": 1,
+      "message": "should these be `_mte` and the the ones you\u0027ve called `_nomte` be `_generic`?\n\ni saw what you said in the commit message, but \"generic\" seems like the wrong word given the context. the word \"generic\" doesn\u0027t clearly say \"must be mte safe\". i think when people hear \"generic\" they think \"default\", so maybe that\u0027s the clearest option? s/generic/default/g and then call the mte ones mte?",
+      "range": {
+        "startLine": 31,
+        "startChar": 15,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "644b79c7_a332de3c",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-29T19:42:28Z",
+      "side": 1,
+      "message": "is this intended to be exported outside of bionic itself? (i.e. should this be in the private/ directory rather than the platform/ directory?)",
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
