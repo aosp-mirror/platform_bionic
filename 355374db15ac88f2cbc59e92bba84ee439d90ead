@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b8e54a87_a61076ca",
+        "filename": "libc/arch-arm64/generic/bionic/memchr.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-10-29T23:19:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "314059db_58fb0656",
+      "range": {
+        "startLine": 31,
+        "startChar": 15,
+        "endLine": 31,
+        "endChar": 29
+      },
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8930f1db_bf29a808",
         "filename": "libc/arch-arm64/static_function_dispatch.S",
         "patchSetId": 3
@@ -60,6 +84,30 @@
       "writtenOn": "2019-10-29T23:04:17Z",
       "side": 1,
       "message": "I think we have ifunc support for static binary now. Do we still need this?\n\n(Anyway this is out of the scope of this change.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 43
+      },
+      "revId": "355374db15ac88f2cbc59e92bba84ee439d90ead",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78b717bb_0612abbc",
+        "filename": "libc/arch-arm64/static_function_dispatch.S",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-10-29T23:19:50Z",
+      "side": 1,
+      "message": "We might still need it if we\u0027re still using gold in the NDK on arm64 (see https://android-review.googlesource.com/c/platform/bionic/+/906496 )\n\nBesides that, we will need to make sure that none of the libc initialization code calls any of these functions before ifunc resolvers are called.",
+      "parentUuid": "8930f1db_bf29a808",
       "range": {
         "startLine": 36,
         "startChar": 0,
