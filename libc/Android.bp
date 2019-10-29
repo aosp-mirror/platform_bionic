@@ -1070,6 +1070,7 @@ cc_library_static {
         "bionic/atof.cpp",
         "bionic/bionic_allocator.cpp",
         "bionic/bionic_arc4random.cpp",
+        "bionic/bionic_call_ifunc_resolver.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
         "bionic/bionic_systrace.cpp",
