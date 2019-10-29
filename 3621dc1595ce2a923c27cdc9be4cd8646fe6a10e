@@ -16,6 +16,24 @@
       "revId": "3621dc1595ce2a923c27cdc9be4cd8646fe6a10e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08015b26_aa4a4ac5",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-10-29T05:23:32Z",
+      "side": 1,
+      "message": "good idea. done.",
+      "parentUuid": "09faa812_b4490c3d",
+      "revId": "3621dc1595ce2a923c27cdc9be4cd8646fe6a10e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
