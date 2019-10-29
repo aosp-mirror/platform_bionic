@@ -24,12 +24,16 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
 #include <atomic>
+#include <chrono>
 
 #include "SignalUtils.h"
 #include "utils.h"
 
 #include "private/bionic_constants.h"
+
+using namespace std::chrono_literals;
 
 TEST(time, time) {
   // Acquire time
@@ -797,7 +801,7 @@ TEST(time, clock_settime) {
   ASSERT_EQ(EINVAL, errno);
 }
 
-TEST(time, clock_nanosleep) {
+TEST(time, clock_nanosleep_EINVAL) {
   timespec in;
   timespec out;
   ASSERT_EQ(EINVAL, clock_nanosleep(-1, 0, &in, &out));
@@ -808,6 +812,29 @@ TEST(time, clock_nanosleep_thread_cputime_id) {
   in.tv_sec = 1;
   in.tv_nsec = 0;
   ASSERT_EQ(EINVAL, clock_nanosleep(CLOCK_THREAD_CPUTIME_ID, 0, &in, nullptr));
+}
+
+TEST(time, clock_nanosleep) {
+  auto t0 = std::chrono::steady_clock::now();
+  const timespec ts = {.tv_nsec = 5000000};
+  ASSERT_EQ(0, clock_nanosleep(CLOCK_MONOTONIC, 0, &ts, nullptr));
+  auto t1 = std::chrono::steady_clock::now();
+  ASSERT_GE(t1-t0, 5000000ns);
+}
+
+TEST(time, nanosleep) {
+  auto t0 = std::chrono::steady_clock::now();
+  const timespec ts = {.tv_nsec = 5000000};
+  ASSERT_EQ(0, nanosleep(&ts, nullptr));
+  auto t1 = std::chrono::steady_clock::now();
+  ASSERT_GE(t1-t0, 5000000ns);
+}
+
+TEST(time, nanosleep_EINVAL) {
+  timespec ts = {.tv_sec = -1};
+  errno = 0;
+  ASSERT_EQ(-1, nanosleep(&ts, nullptr));
+  ASSERT_EQ(EINVAL, errno);
 }
 
 TEST(time, bug_31938693) {
