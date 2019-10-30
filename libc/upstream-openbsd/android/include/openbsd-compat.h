@@ -14,33 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_OPENBSD_COMPAT_H_included
-#define _BIONIC_OPENBSD_COMPAT_H_included
+#pragma once
 
 #define _BSD_SOURCE
 #include <sys/cdefs.h>
 
 #include <stddef.h> // For size_t.
 
-// TODO: libandroid_support uses this file, so we need to wait for
-// <sys/random.h> to be in the NDK headers before we can lose this declaration.
-//#include <sys/random.h> // For getentropy.
-int getentropy(void*, size_t);
+#include <sys/random.h> // For getentropy.
 
 #define __BEGIN_HIDDEN_DECLS _Pragma("GCC visibility push(hidden)")
 #define __END_HIDDEN_DECLS _Pragma("GCC visibility pop")
 
 extern const char* __progname;
-
-/* Redirect internal C library calls to the public function. */
-#define _err err
-#define _errx errx
-#define _verr verr
-#define _verrx verrx
-#define _vwarn vwarn
-#define _vwarnx vwarnx
-#define _warn warn
-#define _warnx warnx
 
 /* Ignore all DEF_STRONG/DEF_WEAK in OpenBSD. */
 #define DEF_STRONG(sym)
@@ -82,5 +68,3 @@ __LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
 
 __LIBC_HIDDEN__ extern char* __findenv(const char*, int, int*);
 __LIBC_HIDDEN__ extern char* _mktemp(char*);
-
-#endif
