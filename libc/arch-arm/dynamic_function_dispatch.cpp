@@ -149,7 +149,7 @@ DEFINE_IFUNC_FOR(memmove) {
 
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
-    return memmove_resolver();
+    return memmove_resolver(hwcap);
 }
 
 typedef void* __memcpy_func(void*, const void*, size_t);
