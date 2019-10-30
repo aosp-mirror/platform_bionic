@@ -26,30 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm.h>
 
-#include <stdint.h>
-#include <sys/ifunc.h>
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    b impl; \
+END(name)
 
-#if defined(__aarch64__)
-#define IFUNC_ARGS (uint64_t hwcap __attribute__((unused)), \
-                    __ifunc_arg_t* arg __attribute__((unused)))
-#elif defined(__arm__)
-#define IFUNC_ARGS (unsigned long hwcap __attribute__((unused)))
-#else
-#define IFUNC_ARGS ()
-#endif
-
-#define DEFINE_IFUNC_FOR(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
-    __attribute__((visibility("hidden"))) \
-    name##_func* name##_resolver IFUNC_ARGS
-
-#define DECLARE_FUNC(type, name) \
-    __attribute__((visibility("hidden"))) \
-    type name
-
-#define RETURN_FUNC(type, name) { \
-        DECLARE_FUNC(type, name); \
-        return name; \
-    }
+FUNCTION_DELEGATE(memchr, memchr_mte)
+FUNCTION_DELEGATE(strchr, strchr_mte)
+FUNCTION_DELEGATE(strcmp, strcmp_mte)
+FUNCTION_DELEGATE(strlen, strlen_mte)
+FUNCTION_DELEGATE(strncmp, strncmp_mte)
+FUNCTION_DELEGATE(strnlen, strnlen_mte)

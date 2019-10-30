@@ -28,28 +28,14 @@
 
 #pragma once
 
-#include <stdint.h>
-#include <sys/ifunc.h>
+// Defines constants used as part of the interface in an experimental MTE branch
+// of the Linux kernel, which may be found at:
+//
+// https://github.com/pcc/linux/tree/android-experimental-mte
+//
+// This interface should not be considered to be stable.
 
-#if defined(__aarch64__)
-#define IFUNC_ARGS (uint64_t hwcap __attribute__((unused)), \
-                    __ifunc_arg_t* arg __attribute__((unused)))
-#elif defined(__arm__)
-#define IFUNC_ARGS (unsigned long hwcap __attribute__((unused)))
-#else
-#define IFUNC_ARGS ()
+#ifdef ANDROID_EXPERIMENTAL_MTE
+#define HWCAP2_MTE (1UL << 31)
+#define PROT_MTE 0x10
 #endif
-
-#define DEFINE_IFUNC_FOR(name) \
-    name##_func name __attribute__((ifunc(#name "_resolver"))); \
-    __attribute__((visibility("hidden"))) \
-    name##_func* name##_resolver IFUNC_ARGS
-
-#define DECLARE_FUNC(type, name) \
-    __attribute__((visibility("hidden"))) \
-    type name
-
-#define RETURN_FUNC(type, name) { \
-        DECLARE_FUNC(type, name); \
-        return name; \
-    }
