@@ -33,6 +33,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <chrono>
+
 #include <android-base/file.h>
 #include <android-base/strings.h>
 
@@ -45,6 +47,8 @@
 #define UNISTD_TEST unistd
 #define UNISTD_DEATHTEST unistd_DeathTest
 #endif
+
+using namespace std::chrono_literals;
 
 static void* get_brk() {
   return sbrk(0);
@@ -1515,4 +1519,18 @@ TEST(UNISTD_TEST, swab_negative_byte_count) {
   memset(buf, 'x', sizeof(buf));
   swab("hello", buf, -1);
   ASSERT_EQ('x', buf[0]);
+}
+
+TEST(UNISTD_TEST, usleep) {
+  auto t0 = std::chrono::steady_clock::now();
+  ASSERT_EQ(0, usleep(5000));
+  auto t1 = std::chrono::steady_clock::now();
+  ASSERT_GE(t1-t0, 5000us);
+}
+
+TEST(UNISTD_TEST, sleep) {
+  auto t0 = std::chrono::steady_clock::now();
+  ASSERT_EQ(0U, sleep(1));
+  auto t1 = std::chrono::steady_clock::now();
+  ASSERT_GE(t1-t0, 1s);
 }

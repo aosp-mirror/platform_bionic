@@ -68,6 +68,7 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
@@ -92,6 +93,7 @@ static uint64_t g_module_unload_counter = 0;
 static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_STRING ".txt";
 
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
+static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
 static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
 
@@ -2689,11 +2691,9 @@ bool link_namespaces_all_libs(android_namespace_t* namespace_from,
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   if (g_is_ldd) return 0;
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
-  ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
-  ElfW(Addr) ifunc_addr = ifunc_resolver();
+  ElfW(Addr) ifunc_addr = __bionic_call_ifunc_resolver(resolver_addr);
   TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p",
-      ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
+      reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
@@ -4053,13 +4053,30 @@ static std::string get_ld_config_file_apex_path(const char* executable_path) {
 }
 
 static std::string get_ld_config_file_vndk_path() {
-  if (!file_exists(kLdGeneratedConfigFilePath)) {
-    DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
-            kLdGeneratedConfigFilePath);
-    return "";
+  if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
+    return kLdConfigVndkLiteFilePath;
   }
 
-  return kLdGeneratedConfigFilePath;
+  // Use generated linker config if flag is set
+  // TODO(b/138920271) Do not check property once it is confirmed as stable
+  // TODO(b/139638519) This file should also cover legacy or vndk-lite config
+  if (android::base::GetProperty("ro.vndk.version", "") != "" &&
+      android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
+    if (file_exists(kLdGeneratedConfigFilePath)) {
+      return kLdGeneratedConfigFilePath;
+    } else {
+      DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
+              kLdGeneratedConfigFilePath);
+    }
+  }
+
+  std::string ld_config_file_vndk = kLdConfigFilePath;
+  size_t insert_pos = ld_config_file_vndk.find_last_of('.');
+  if (insert_pos == std::string::npos) {
+    insert_pos = ld_config_file_vndk.length();
+  }
+  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
+  return ld_config_file_vndk;
 }
 
 static std::string get_ld_config_file_path(const char* executable_path) {
@@ -4087,7 +4104,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   }
 
   path = get_ld_config_file_vndk_path();
-  if (!path.empty()) {
+  if (file_exists(path.c_str())) {
     return path;
   }
 

@@ -1,4 +1,6 @@
-/*
+/*-
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
  * Copyright (c) 1999
  *	David E. O'Brien
  * Copyright (c) 1988, 1993
@@ -33,7 +35,7 @@
 static char sccsid[] = "@(#)strcpy.c	8.1 (Berkeley) 6/4/93";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/libc/string/wcpcpy.c 326025 2017-11-20 19:49:47Z pfg $");
 
 #include <wchar.h>
 
