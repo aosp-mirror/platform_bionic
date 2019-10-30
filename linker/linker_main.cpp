@@ -496,31 +496,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 #if STATS
   print_linker_stats();
 #endif
-#if COUNT_PAGES
-  {
-    unsigned n;
-    unsigned i;
-    unsigned count = 0;
-    for (n = 0; n < 4096; n++) {
-      if (bitmask[n]) {
-        unsigned x = bitmask[n];
-#if defined(__LP64__)
-        for (i = 0; i < 32; i++) {
-#else
-        for (i = 0; i < 8; i++) {
-#endif
-          if (x & 1) {
-            count++;
-          }
-          x >>= 1;
-        }
-      }
-    }
-    PRINT("PAGES MODIFIED: %s: %d (%dKB)", g_argv[0], count, count * 4);
-  }
-#endif
-
-#if TIMING || STATS || COUNT_PAGES
+#if TIMING || STATS
   fflush(stdout);
 #endif
 
