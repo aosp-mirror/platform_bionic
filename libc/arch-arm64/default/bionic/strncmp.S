@@ -65,7 +65,7 @@
 	.rep 7
 	nop	/* Pad so that the loop below fits a cache line.  */
 	.endr
-ENTRY(strncmp)
+ENTRY(strncmp_default)
 	cbz	limit, .Lret0
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
@@ -277,4 +277,4 @@ ENTRY(strncmp)
 .Lret0:
 	mov	result, #0
 	ret
-END(strncmp)
+END(strncmp_default)
