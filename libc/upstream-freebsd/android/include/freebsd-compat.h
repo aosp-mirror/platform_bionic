@@ -47,4 +47,6 @@
 /* FreeBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
 
+#define __compiler_membar() __asm __volatile(" " : : : "memory")
+
 #endif
