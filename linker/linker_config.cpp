@@ -408,8 +408,10 @@ class Properties {
       params.push_back({ "SDK_VER", buf });
     }
 
-    static std::string vndk = Config::get_vndk_version_string('-');
-    params.push_back({ "VNDK_VER", vndk });
+    static std::string vndk_ver = Config::get_vndk_version_string('-');
+    params.push_back({ "VNDK_VER", vndk_ver });
+    static std::string vndk_apex_ver = Config::get_vndk_version_string('v');
+    params.push_back({ "VNDK_APEX_VER", vndk_apex_ver });
 
     for (auto& path : paths) {
       format_string(&path, params);
