@@ -31,22 +31,20 @@
 #include <sys/random.h>
 #include <unistd.h>
 
+#include "private/ScopedFd.h"
+
 static int getentropy_urandom(void* buffer, size_t buffer_size, int saved_errno) {
-  int fd = TEMP_FAILURE_RETRY(open("/dev/urandom", O_RDONLY | O_NOFOLLOW | O_CLOEXEC, 0));
-  if (fd == -1) return -1;
+  ScopedFd fd(TEMP_FAILURE_RETRY(open("/dev/urandom", O_RDONLY | O_NOFOLLOW | O_CLOEXEC, 0)));
+  if (fd.get() == -1) return -1;
 
   size_t collected = 0;
   while (collected < buffer_size) {
-    ssize_t count = TEMP_FAILURE_RETRY(read(fd, static_cast<char*>(buffer) + collected,
+    ssize_t count = TEMP_FAILURE_RETRY(read(fd.get(), static_cast<char*>(buffer) + collected,
                                             buffer_size - collected));
-    if (count == -1) {
-      close(fd);
-      return -1;
-    }
+    if (count == -1) return -1;
     collected += count;
   }
 
-  close(fd);
   errno = saved_errno;
   return 0;
 }
