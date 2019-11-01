@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "658fdc8a_1ef4081b",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-01T23:01:18Z",
+      "side": 1,
+      "message": "still not true :-)",
+      "revId": "f835ac8efc180593d4de0950f225cdb4962be402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
