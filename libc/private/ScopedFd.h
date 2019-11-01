@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,37 +26,39 @@
  * SUCH DAMAGE.
  */
 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <errno.h>
+#pragma once
+
 #include <unistd.h>
 
-#include "private/ScopedFd.h"
+#include "private/bionic_macros.h"
+#include "private/ErrnoRestorer.h"
 
-extern "C" int __fchmodat(int, const char*, mode_t);
-
-int fchmodat(int dirfd, const char* pathname, mode_t mode, int flags) {
-  if ((flags & ~AT_SYMLINK_NOFOLLOW) != 0) {
-    errno = EINVAL;
-    return -1;
+class ScopedFd final {
+ public:
+  explicit ScopedFd(int fd) : fd_(fd) {
   }
 
-  if (flags & AT_SYMLINK_NOFOLLOW) {
-    // Emulate AT_SYMLINK_NOFOLLOW using the mechanism described
-    // at https://sourceware.org/bugzilla/show_bug.cgi?id=14578
-    // comment #10
-
-    ScopedFd fd(openat(dirfd, pathname, O_PATH | O_NOFOLLOW | O_CLOEXEC));
-    if (fd.get() == -1) return -1;
-
-    // POSIX requires that ENOTSUP be returned when the system
-    // doesn't support setting the mode of a symbolic link.
-    // This is true for all Linux kernels.
-    // We rely on the O_PATH compatibility layer added in the
-    // fchmod() function to get errno correct.
-    return fchmod(fd.get(), mode);
+  ScopedFd() : fd_(-1) {
   }
 
-  return __fchmodat(dirfd, pathname, mode);
-}
+  ~ScopedFd() {
+    reset(-1);
+  }
+
+  void reset(int fd = -1) {
+    if (fd != -1) {
+      ErrnoRestorer e;
+      close(fd_);
+    }
+    fd_ = fd;
+  }
+
+  int get() const {
+    return fd_;
+  }
+
+ private:
+  int fd_;
+
+  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedFd);
+};
