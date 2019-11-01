@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "721f0453_57660e53",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T21:55:47Z",
+      "side": 1,
+      "message": "Ick, yeah, you\u0027re right.\n\nI left ones for nested blocks; please lemme know if you\u0027d prefer that those disappear, too.",
+      "parentUuid": "b111242c_7c897c94",
+      "range": {
+        "startLine": 66,
+        "startChar": 7,
+        "endLine": 66,
+        "endChar": 96
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "542667af_f995233c",
         "filename": "libc/include/bits/fortify/fcntl.h",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "d42717ec_8fbfeada",
+        "filename": "libc/include/bits/fortify/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T21:55:47Z",
+      "side": 1,
+      "message": ";)",
+      "parentUuid": "542667af_f995233c",
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0b47e33_688c3028",
         "filename": "libc/include/sys/cdefs.h",
         "patchSetId": 1
@@ -56,6 +98,24 @@
       "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4df2e814_d1130cdd",
+        "filename": "libc/include/sys/cdefs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 243,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T21:55:47Z",
+      "side": 1,
+      "message": "correct. AIUI, if you\u0027re using _FORTIFY_SOURCE\u003d1, \"a bigger overwrite\" for `malloc`ated memory is 15B for a guaranteed(*) trap, and anything lower depends on the size of your original allocation.\n\n_FORTIFY_SOURCE\u003d2 complicates this, since hwasan can\u0027t operate at field granularity for structs, or treat each element as a box for arrays AFAIK.\n\ni also don\u0027t know if hwasan is planned to be enabled for stack objects?\n\n(*) -- assuming two adjacent allocations aren\u0027t allowed to have matching tag bits",
+      "parentUuid": "b0b47e33_688c3028",
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "b23eec05_443c3a8c",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T21:55:47Z",
+      "side": 1,
+      "message": "It was copy-pasted from tests/clang_fortify_tests.cpp, which has a clang-parsed comment in the `#if`. You\u0027re right that it\u0027s better to flip this.",
+      "parentUuid": "e7f81807_7e989156",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 0
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77e2bee0_83790509",
         "filename": "tests/clang_fortify_asan.cpp",
         "patchSetId": 1
@@ -102,6 +186,30 @@
       "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d818198_66f77efc",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T21:55:47Z",
+      "side": 1,
+      "message": "shhhhhhhh",
+      "parentUuid": "77e2bee0_83790509",
+      "range": {
+        "startLine": 49,
+        "startChar": 7,
+        "endLine": 49,
+        "endChar": 23
+      },
+      "revId": "3bf413d7365ca151f6f8ea599d8a530f15d787bb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
