@@ -16,6 +16,24 @@
       "revId": "f835ac8efc180593d4de0950f225cdb4962be402",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "910e7f01_e5b14b7e",
+        "filename": "tests/clang_fortify_asan.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2019-11-01T23:28:43Z",
+      "side": 1,
+      "message": "Yeeted.",
+      "parentUuid": "658fdc8a_1ef4081b",
+      "revId": "f835ac8efc180593d4de0950f225cdb4962be402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
