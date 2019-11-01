@@ -1520,6 +1520,7 @@ cc_library_static {
     name: "libc_common_shared",
 
     cflags: [
+        "-ffreestanding",
         "-fno-stack-protector",
         "-fno-jump-tables",
     ],
