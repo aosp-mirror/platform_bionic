@@ -32,6 +32,7 @@
 #include <sys/auxv.h>
 
 #include "linker_debug.h"
+#include "linker_debuggerd.h"
 #include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
@@ -46,9 +47,6 @@
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
-#ifdef __ANDROID__
-#include "debuggerd/handler.h"
-#endif
 
 #include <async_safe/log.h>
 #include <bionic/libc_init_common.h>
@@ -311,15 +309,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __system_properties_init(); // may use 'environ'
 
   // Register the debuggerd signal handler.
-#ifdef __ANDROID__
-  debuggerd_callbacks_t callbacks = {
-    .get_abort_message = []() {
-      return __libc_shared_globals()->abort_msg;
-    },
-    .post_dump = &notify_gdb_of_libraries,
-  };
-  debuggerd_init(&callbacks);
-#endif
+  linker_debuggerd_init();
 
   g_linker_logger.ResetState();
 
