@@ -57,7 +57,9 @@ static pthread_internal_t main_thread;
 //
 // This is in a file by itself because it needs to be built with
 // -fno-stack-protector because it's responsible for setting up the main
-// thread's TLS (which stack protector relies on).
+// thread's TLS (which stack protector relies on). It's also built with
+// -ffreestanding because the early init function runs in the linker before
+// ifunc resolvers have run.
 
 // Do enough setup to:
 //  - Let the dynamic linker invoke system calls (and access errno)
@@ -65,7 +67,8 @@ static pthread_internal_t main_thread;
 //  - Allow the stack protector to work (with a zero cookie)
 // Avoid doing much more because, when this code is called within the dynamic
 // linker, the linker binary hasn't been relocated yet, so certain kinds of code
-// are hazardous, such as accessing non-hidden global variables.
+// are hazardous, such as accessing non-hidden global variables or calling
+// string.h functions.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
                                               bionic_tcb* temp_tcb) {
@@ -78,6 +81,23 @@ extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
   __set_tls(&temp_tcb->tls_slot(0));
   main_thread.tid = __getpid();
   main_thread.set_cached_pid(main_thread.tid);
+}
+
+// This code is used both by each new pthread and the code that initializes the main thread.
+void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread) {
+#ifdef TLS_SLOT_SELF
+  // On x86, slot 0 must point to itself so code can read the thread pointer by
+  // loading %fs:0 or %gs:0.
+  tcb->tls_slot(TLS_SLOT_SELF) = &tcb->tls_slot(TLS_SLOT_SELF);
+#endif
+  tcb->tls_slot(TLS_SLOT_THREAD_ID) = thread;
+}
+
+void __init_tcb_dtv(bionic_tcb* tcb) {
+  // Initialize the DTV slot to a statically-allocated empty DTV. The first
+  // access to a dynamic TLS variable allocates a new DTV.
+  static const TlsDtv zero_dtv = {};
+  __set_tcb_dtv(tcb, const_cast<TlsDtv*>(&zero_dtv));
 }
 
 // Finish initializing the main thread.

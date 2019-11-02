@@ -123,6 +123,15 @@ cc_defaults {
 }
 
 cc_library_static {
+    name: "liblinker_main",
+    defaults: ["linker_defaults", "linker_all_targets"],
+    srcs: ["linker_main.cpp"],
+
+    // Ensure that the compiler won't insert string function calls before ifuncs are resolved.
+    cflags: ["-ffreestanding"],
+}
+
+cc_library_static {
     name: "liblinker_malloc",
     defaults: ["linker_defaults", "linker_all_targets"],
     srcs: ["linker_memory.cpp"],
@@ -151,7 +160,6 @@ filegroup {
         "linker_globals.cpp",
         "linker_libc_support.c",
         "linker_libcxx_support.cpp",
-        "linker_main.cpp",
         "linker_namespaces.cpp",
         "linker_logger.cpp",
         "linker_mapped_file_fragment.cpp",
@@ -287,10 +295,12 @@ cc_defaults {
     },
 
     static_libs: [
+        "liblinker_main",
         "liblinker_malloc",
 
         "libc++_static",
         "libc_nomalloc",
+        "libc_dynamic_dispatch",
         "libm",
     ],
 
