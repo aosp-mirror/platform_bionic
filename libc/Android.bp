@@ -136,19 +136,21 @@ cc_defaults {
 }
 
 // ========================================================
-// libc_stack_protector.a - stack protector code
+// libc_bootstrap.a - -fno-stack-protector and -ffreestanding
 // ========================================================
 //
-// Code that implements the stack protector (or that runs
-// before TLS has been set up) needs to be compiled with
-// -fno-stack-protector, since it accesses the stack canary
-// TLS slot.
+// Code that implements the stack protector (or that runs before TLS has been set up) needs to be
+// compiled with -fno-stack-protector, since it accesses the stack canary TLS slot. In the linker,
+// some of this code runs before ifunc resolvers have made string.h functions work, so compile with
+// -ffreestanding.
 
 cc_library_static {
 
     srcs: [
         "bionic/__libc_init_main_thread.cpp",
         "bionic/__stack_chk_fail.cpp",
+        "bionic/bionic_call_ifunc_resolver.cpp",
+        "bionic/getauxval.cpp",
     ],
     arch: {
         arm64: {
@@ -166,20 +168,25 @@ cc_library_static {
     },
 
     defaults: ["libc_defaults"],
-    cflags: ["-fno-stack-protector"],
-    name: "libc_stack_protector",
+    cflags: ["-fno-stack-protector", "-ffreestanding"],
+    name: "libc_bootstrap",
 }
 
-// libc_init_static.cpp also needs to be built without stack protector,
-// because it's responsible for setting up TLS for static executables.
-// This isn't the case for dynamic executables because the dynamic linker
-// has already set up the main thread's TLS.
+// libc_init_static.cpp and libc_init_dynamic.cpp need to be built without stack protector.
+// libc_init_static.cpp sets up TLS for static executables, and libc_init_dynamic.cpp initializes
+// the stack protector global variable.
 
 cc_library_static {
     name: "libc_init_static",
     defaults: ["libc_defaults"],
     srcs: ["bionic/libc_init_static.cpp"],
-    cflags: ["-fno-stack-protector"],
+    cflags: [
+        "-fno-stack-protector",
+
+        // Compile libc_init_static.cpp with -ffreestanding, because some of its code is called
+        // from the linker before ifunc resolvers have made string.h functions available.
+        "-ffreestanding",
+    ],
 }
 
 cc_library_static {
@@ -778,12 +785,6 @@ cc_library_static {
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
-        // The data that backs getauxval is initialized in the libc init
-        // functions which are invoked by the linker. If this file is included
-        // in libc_ndk.a, only one of the copies of the global data will be
-        // initialized, resulting in nullptr dereferences.
-        "bionic/getauxval.cpp",
-
         // These require getauxval, which isn't available on older platforms.
         "bionic/sysconf.cpp",
         "bionic/vdso.cpp",
@@ -1078,7 +1079,6 @@ cc_library_static {
         "bionic/atof.cpp",
         "bionic/bionic_allocator.cpp",
         "bionic/bionic_arc4random.cpp",
-        "bionic/bionic_call_ifunc_resolver.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
         "bionic/bionic_systrace.cpp",
@@ -1421,6 +1421,7 @@ cc_library_static {
 
     whole_static_libs: [
         "libc_bionic_ndk",
+        "libc_bootstrap",
         "libc_fortify",
         "libc_freebsd",
         "libc_freebsd_large_stack",
@@ -1428,7 +1429,6 @@ cc_library_static {
         "libc_netbsd",
         "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
-        "libc_stack_protector",
         "libc_syscalls",
         "libc_tzcode",
         "libm",
@@ -1452,6 +1452,7 @@ cc_library_static {
     whole_static_libs: [
         "libc_bionic",
         "libc_bionic_ndk",
+        "libc_bootstrap",
         "libc_dns",
         "libc_fortify",
         "libc_freebsd",
@@ -1461,7 +1462,6 @@ cc_library_static {
         "libc_openbsd",
         "libc_openbsd_large_stack",
         "libc_openbsd_ndk",
-        "libc_stack_protector",
         "libc_syscalls",
         "libc_tzcode",
         "libstdc++",
@@ -1489,11 +1489,11 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_common_static.a For static binaries.
+// libc_static_dispatch.a
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
-    name: "libc_common_static",
+    name: "libc_static_dispatch",
 
     arch: {
         x86: {
@@ -1506,18 +1506,14 @@ cc_library_static {
             srcs: ["arch-arm64/static_function_dispatch.S"],
         },
     },
-
-    whole_static_libs: [
-        "libc_common",
-    ],
 }
 
 // ========================================================
-// libc_common_shared.a For shared libraries.
+// libc_dynamic_dispatch.a
 // ========================================================
 cc_library_static {
     defaults: ["libc_defaults"],
-    name: "libc_common_shared",
+    name: "libc_dynamic_dispatch",
 
     cflags: [
         "-fno-stack-protector",
@@ -1534,9 +1530,31 @@ cc_library_static {
             srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
+}
+
+// ========================================================
+// libc_common_static.a For static binaries.
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    name: "libc_common_static",
 
     whole_static_libs: [
         "libc_common",
+        "libc_static_dispatch",
+    ],
+}
+
+// ========================================================
+// libc_common_shared.a For shared libraries.
+// ========================================================
+cc_library_static {
+    defaults: ["libc_defaults"],
+    name: "libc_common_shared",
+
+    whole_static_libs: [
+        "libc_common",
+        "libc_dynamic_dispatch",
     ],
 }
 
@@ -1560,19 +1578,16 @@ cc_library_static {
 // libc_nomalloc.a
 // ========================================================
 //
-// This is a version of the static C library that does not
-// include malloc. It's useful in situations when the user wants
-// to provide their own malloc implementation, or wants to
-// explicitly disallow the use of malloc, such as in the
-// dynamic linker.
+// This is a version of the static C library used by the dynamic linker that exclude malloc. It also
+// excludes functions selected using ifunc's (e.g. for string.h). Link in either
+// libc_static_dispatch or libc_dynamic_dispatch to provide those functions.
 
 cc_library_static {
     name: "libc_nomalloc",
     defaults: ["libc_defaults"],
-    cflags: ["-DLIBC_STATIC"],
 
     whole_static_libs: [
-        "libc_common_static",
+        "libc_common",
         "libc_init_static",
         "libc_unwind_static",
     ],
