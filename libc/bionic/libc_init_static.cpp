@@ -39,6 +39,7 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
@@ -81,11 +82,10 @@ static void call_ifunc_resolvers() {
     return;
   }
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = r->r_addend;
-    *offset = reinterpret_cast<ifunc_resolver_t>(resolver)();
+    *offset = __bionic_call_ifunc_resolver(resolver);
   }
 }
 #else
@@ -103,11 +103,10 @@ static void call_ifunc_resolvers() {
     return;
   }
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
   for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = *offset;
-    *offset = reinterpret_cast<ifunc_resolver_t>(resolver)();
+    *offset = __bionic_call_ifunc_resolver(resolver);
   }
 }
 #endif

@@ -58,7 +58,7 @@
 #define pos		x11
 
 	/* Start of performance-critical section  -- one 64B cache line.  */
-ENTRY(strcmp)
+ENTRY(strcmp_default)
 .p2align  6
 	eor	tmp1, src1, src2
 	mov	zeroones, #REP8_01
@@ -189,4 +189,4 @@ L(loop_misaligned):
 L(done):
 	sub	result, data1, data2
 	ret
-END(strcmp)
+END(strcmp_default)

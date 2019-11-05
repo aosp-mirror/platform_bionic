@@ -69,7 +69,7 @@
  * identify exactly which byte has matched.
  */
 
-ENTRY(memchr)
+ENTRY(memchr_default)
 	/*
 	 * Magic constant 0x40100401 allows us to identify which lane matches
 	 * the requested byte.
@@ -161,4 +161,4 @@ ENTRY(memchr)
 .Lzero_length:
 	mov	result, xzr
 	ret
-END(memchr)
+END(memchr_default)

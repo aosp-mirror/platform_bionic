@@ -83,6 +83,12 @@ cc_defaults {
     // lld complains about duplicate symbols in libcrt and libgcc. Suppress the
     // warning since this is intended right now.
     ldflags: ["-Wl,-z,muldefs"],
+
+    product_variables: {
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+    },
 }
 
 // Defaults for native allocator libs/includes to make it
@@ -271,8 +277,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/ldexp.c",
-        "upstream-freebsd/lib/libc/gen/sleep.c",
-        "upstream-freebsd/lib/libc/gen/usleep.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate.c",
         "upstream-freebsd/lib/libc/stdlib/hcreate_r.c",
@@ -856,19 +860,27 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memchr.S",
                 "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
                 "arch-arm64/generic/bionic/stpcpy.S",
-                "arch-arm64/generic/bionic/strchr.S",
-                "arch-arm64/generic/bionic/strcmp.S",
                 "arch-arm64/generic/bionic/strcpy.S",
-                "arch-arm64/generic/bionic/strlen.S",
-                "arch-arm64/generic/bionic/strncmp.S",
-                "arch-arm64/generic/bionic/strnlen.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
+
+                "arch-arm64/default/bionic/memchr.S",
+                "arch-arm64/default/bionic/strchr.S",
+                "arch-arm64/default/bionic/strcmp.S",
+                "arch-arm64/default/bionic/strlen.S",
+                "arch-arm64/default/bionic/strncmp.S",
+                "arch-arm64/default/bionic/strnlen.S",
+
+                "arch-arm64/mte/bionic/memchr.c",
+                "arch-arm64/mte/bionic/strchr.cpp",
+                "arch-arm64/mte/bionic/strcmp.c",
+                "arch-arm64/mte/bionic/strlen.c",
+                "arch-arm64/mte/bionic/strncmp.c",
+                "arch-arm64/mte/bionic/strnlen.c",
 
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -1072,6 +1084,7 @@ cc_library_static {
         "bionic/atof.cpp",
         "bionic/bionic_allocator.cpp",
         "bionic/bionic_arc4random.cpp",
+        "bionic/bionic_call_ifunc_resolver.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
         "bionic/bionic_systrace.cpp",
@@ -1178,6 +1191,7 @@ cc_library_static {
         "bionic/sigaction.cpp",
         "bionic/signal.cpp",
         "bionic/sigprocmask.cpp",
+        "bionic/sleep.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
@@ -1212,6 +1226,7 @@ cc_library_static {
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
+        "bionic/usleep.cpp",
         "bionic/wait.cpp",
         "bionic/wchar.cpp",
         "bionic/wchar_l.cpp",
@@ -1493,6 +1508,9 @@ cc_library_static {
         arm: {
             srcs: ["arch-arm/static_function_dispatch.S"],
         },
+        arm64: {
+            srcs: ["arch-arm64/static_function_dispatch.S"],
+        },
     },
 
     whole_static_libs: [
@@ -1508,6 +1526,7 @@ cc_library_static {
     name: "libc_common_shared",
 
     cflags: [
+        "-ffreestanding",
         "-fno-stack-protector",
         "-fno-jump-tables",
     ],
@@ -1517,6 +1536,9 @@ cc_library_static {
         },
         arm: {
             srcs: ["arch-arm/dynamic_function_dispatch.cpp"],
+        },
+        arm64: {
+            srcs: ["arch-arm64/dynamic_function_dispatch.cpp"],
         },
     },
 

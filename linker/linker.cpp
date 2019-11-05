@@ -68,6 +68,7 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
@@ -298,10 +299,6 @@ void print_linker_stats() {
 #else
 void count_relocation(RelocationKind) {
 }
-#endif
-
-#if COUNT_PAGES
-uint32_t bitmask[4096];
 #endif
 
 static void notify_gdb_of_load(soinfo* info) {
@@ -2690,11 +2687,9 @@ bool link_namespaces_all_libs(android_namespace_t* namespace_from,
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   if (g_is_ldd) return 0;
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
-  ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
-  ElfW(Addr) ifunc_addr = ifunc_resolver();
+  ElfW(Addr) ifunc_addr = __bionic_call_ifunc_resolver(resolver_addr);
   TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p",
-      ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
+      reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
@@ -3141,7 +3136,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     switch (type) {
       case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO JMP_SLOT %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
@@ -3151,7 +3145,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       case R_GENERIC_ABSOLUTE:
       case R_GENERIC_GLOB_DAT:
         count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO ABSOLUTE/GLOB_DAT %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
@@ -3159,7 +3152,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_RELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(load_bias + addend));
@@ -3167,7 +3159,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_IRELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
                     reinterpret_cast<void*>(reloc),
                     reinterpret_cast<void*>(load_bias + addend));
@@ -3211,7 +3202,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         return false;
       case R_GENERIC_TLS_TPREL:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           ElfW(Addr) tpoff = 0;
           if (lsi == nullptr) {
@@ -3237,7 +3227,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_TLS_DTPMOD:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           size_t module_id = 0;
           if (lsi == nullptr) {
@@ -3253,7 +3242,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_TLS_DTPREL:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
@@ -3265,7 +3253,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       // other architectures, as long as the resolver functions are implemented.
       case R_GENERIC_TLSDESC:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           TlsDescriptor* desc = reinterpret_cast<TlsDescriptor*>(reloc);
           if (lsi == nullptr) {
@@ -3306,14 +3293,12 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 #if defined(__x86_64__)
       case R_X86_64_32:
         count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_32 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
                    static_cast<size_t>(sym_addr), sym_name);
         *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend;
         break;
       case R_X86_64_PC32:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_PC32 %08zx <- +%08zx (%08zx - %08zx) %s",
                    static_cast<size_t>(reloc), static_cast<size_t>(sym_addr - reloc),
                    static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
@@ -3322,7 +3307,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 #elif defined(__i386__)
       case R_386_PC32:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s",
                    reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);

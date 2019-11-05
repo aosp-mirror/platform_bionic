@@ -100,6 +100,19 @@ To run all of the compliance tests:
 The allocation tests are not meant to be complete, so it is expected
 that a native allocator will have its own set of tests that can be run.
 
+### Libmemunreachable Tests
+The libmemunreachable tests verify that the iterator functions are working
+properly.
+
+To run all of the tests:
+
+    adb shell /data/nativetest64/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest64/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest64/memunreachable_unit_test/memunreachable_unit_test
+    adb shell /data/nativetest/memunreachable_unit_test/memunreachable_unit_test
+
 ### CTS Entropy Test
 In addition to the bionic tests, there is also a CTS test that is designed
 to verify that the addresses returned by malloc are sufficiently randomized
