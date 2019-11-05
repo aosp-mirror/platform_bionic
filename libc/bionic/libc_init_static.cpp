@@ -231,6 +231,9 @@ extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
 }
 
+// This function is called in the dynamic linker before ifunc resolvers have run, so this file is
+// compiled with -ffreestanding to avoid implicit string.h function calls. (It shouldn't strictly
+// be necessary, though.)
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
   static libc_shared_globals globals;
   return &globals;
