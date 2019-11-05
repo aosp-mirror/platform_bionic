@@ -32,6 +32,7 @@
 #include <sys/auxv.h>
 
 #include "linker_debug.h"
+#include "linker_debuggerd.h"
 #include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
@@ -39,6 +40,8 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_auxv.h"
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -46,9 +49,6 @@
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
-#ifdef __ANDROID__
-#include "debuggerd/handler.h"
-#endif
 
 #include <async_safe/log.h>
 #include <bionic/libc_init_common.h>
@@ -311,15 +311,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __system_properties_init(); // may use 'environ'
 
   // Register the debuggerd signal handler.
-#ifdef __ANDROID__
-  debuggerd_callbacks_t callbacks = {
-    .get_abort_message = []() {
-      return __libc_shared_globals()->abort_msg;
-    },
-    .post_dump = &notify_gdb_of_libraries,
-  };
-  debuggerd_init(&callbacks);
-#endif
+  linker_debuggerd_init();
 
   g_linker_logger.ResetState();
 
@@ -575,6 +567,32 @@ static void set_bss_vma_name(soinfo* si) {
   }
 }
 
+// TODO: There is a similar ifunc resolver calling loop in libc_init_static.cpp, but that version
+// uses weak symbols, which don't work in the linker prior to its relocation. This version also
+// supports a load bias. When we stop supporting the gold linker in the NDK, then maybe we can use
+// non-weak definitions and merge the two loops.
+#if defined(USE_RELA)
+extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+
+static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
+  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
+    ElfW(Addr) resolver = r->r_addend + load_bias;
+    *offset = __bionic_call_ifunc_resolver(resolver);
+  }
+}
+#else
+extern __LIBC_HIDDEN__ ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
+
+static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
+  for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
+    ElfW(Addr) resolver = *offset + load_bias;
+    *offset = __bionic_call_ifunc_resolver(resolver);
+  }
+}
+#endif
+
 // Detect an attempt to run the linker on itself. e.g.:
 //   /system/bin/linker64 /system/bin/linker64
 // Use priority-1 to run this constructor before other constructors.
@@ -626,11 +644,15 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
+  // string.h functions must not be used prior to calling the linker's ifunc resolvers.
+  const ElfW(Addr) load_bias = get_elf_exec_load_bias(elf_hdr);
+  call_ifunc_resolvers(load_bias);
+
   soinfo tmp_linker_so(nullptr, nullptr, nullptr, 0, 0);
 
   tmp_linker_so.base = linker_addr;
   tmp_linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
-  tmp_linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
+  tmp_linker_so.load_bias = load_bias;
   tmp_linker_so.dynamic = nullptr;
   tmp_linker_so.phdr = phdr;
   tmp_linker_so.phnum = elf_hdr->e_phnum;
