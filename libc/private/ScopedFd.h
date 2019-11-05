@@ -46,7 +46,7 @@ class ScopedFd final {
   }
 
   void reset(int fd = -1) {
-    if (fd != -1) {
+    if (fd_ != -1) {
       ErrnoRestorer e;
       close(fd_);
     }
