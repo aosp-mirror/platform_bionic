@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-2-Clause
+ *
  * Copyright (c)1999 Citrus Project,
  * All rights reserved.
  *
@@ -32,7 +34,7 @@
 __RCSID("$NetBSD: wmemset.c,v 1.1 2000/12/23 23:14:37 itojun Exp $");
 #endif /* LIBC_SCCS and not lint */
 #endif
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/libc/string/wmemset.c 326193 2017-11-25 17:12:48Z pfg $");
 
 #include <wchar.h>
 

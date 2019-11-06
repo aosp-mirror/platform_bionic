@@ -19,16 +19,16 @@
 #include <errno.h>
 #include <sys/wait.h>
 #include <unistd.h>
+
+#include <chrono>
 #include <sstream>
 #include <string>
 
 #if defined(__BIONIC__)
 #include <sys/system_properties.h>
-
-static uint64_t NanoTime() {
-  timespec now;
-  clock_gettime(CLOCK_MONOTONIC, &now);
-  return static_cast<uint64_t>(now.tv_sec) * UINT64_C(1000000000) + now.tv_nsec;
+int64_t NanoTime() {
+  auto t = std::chrono::time_point_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now());
+  return t.time_since_epoch().count();
 }
 #endif
 

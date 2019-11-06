@@ -68,7 +68,7 @@
 	mov	len, limit
 	ret
 
-ENTRY(strnlen)
+ENTRY(strnlen_default)
 	cbz	limit, .Lhit_limit
 	mov	zeroones, #REP8_01
 	bic	src, srcin, #15
@@ -171,4 +171,4 @@ ENTRY(strnlen)
 	csinv	data1, data1, xzr, le
 	csel	data2, data2, data2a, le
 	b	.Lrealigned
-END(strnlen)
+END(strnlen_default)

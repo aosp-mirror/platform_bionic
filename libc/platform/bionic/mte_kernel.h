@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#include <link.h>
+#pragma once
 
-/* Find the .ARM.exidx section (which in the case of a static executable
- * can be identified through its start and end symbols), and return its
- * beginning and numbe of entries to the caller.  Note that for static
- * executables we do not need to use the value of the PC to find the
- * EXIDX section.
- */
+// Defines constants used as part of the interface in an experimental MTE branch
+// of the Linux kernel, which may be found at:
+//
+// https://github.com/pcc/linux/tree/android-experimental-mte
+//
+// This interface should not be considered to be stable.
 
-extern unsigned __exidx_end;
-extern unsigned __exidx_start;
-
-_Unwind_Ptr __gnu_Unwind_Find_exidx(_Unwind_Ptr pc __unused,
-                                    int* pcount)
-{
-  *pcount = (__exidx_end-__exidx_start)/8;
-  return __exidx_start;
-}
+#ifdef ANDROID_EXPERIMENTAL_MTE
+#define HWCAP2_MTE (1UL << 31)
+#define PROT_MTE 0x10
+#endif

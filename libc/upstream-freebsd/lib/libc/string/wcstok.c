@@ -1,4 +1,6 @@
 /*-
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
  * Copyright (c) 1998 Softweyr LLC.  All rights reserved.
  *
  * strtok_r, from Berkeley strtok
@@ -33,7 +35,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/libc/string/wcstok.c 326025 2017-11-20 19:49:47Z pfg $");
 
 #include <wchar.h>
 
