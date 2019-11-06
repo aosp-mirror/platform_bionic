@@ -3162,7 +3162,10 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
                     reinterpret_cast<void*>(reloc),
                     reinterpret_cast<void*>(load_bias + addend));
-        {
+        // In the linker, ifuncs are called as soon as possible so that string functions work.
+        // We must not call them again. (e.g. On arm32, resolving an ifunc changes the meaning of
+        // the addend from a resolver function to the implementation.)
+        if (!is_linker()) {
 #if !defined(__LP64__)
           // When relocating dso with text_relocation .text segment is
           // not executable. We need to restore elf flags for this
