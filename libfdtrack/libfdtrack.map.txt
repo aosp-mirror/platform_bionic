@@ -1,0 +1,6 @@
+LIBFDTRACK {
+  global:
+    fdtrack_dump;
+  local:
+    *;
+};

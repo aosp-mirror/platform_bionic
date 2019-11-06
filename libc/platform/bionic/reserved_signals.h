@@ -42,14 +42,16 @@
 //   36 (__SIGRTMIN + 4)        platform profilers (heapprofd, traced_perf)
 //   37 (__SIGRTMIN + 5)        coverage (libprofile-extras)
 //   38 (__SIGRTMIN + 6)        heapprofd ART managed heap dumps
+//   39 (__SIGRTMIN + 7)        fdtrack
 //
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
 
 #define BIONIC_SIGNAL_DEBUGGER __SIGRTMIN + 3
 #define BIONIC_SIGNAL_PROFILER __SIGRTMIN + 4
+#define BIONIC_SIGNAL_FDTRACK __SIGRTMIN + 7
 
-#define __SIGRT_RESERVED 7
+#define __SIGRT_RESERVED 8
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
   int (*block)(sigset64_t*, int);
   int (*unblock)(sigset64_t*, int);
@@ -77,5 +79,6 @@ static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigs
   unblock(&sigset, __SIGRTMIN + 4);
   unblock(&sigset, __SIGRTMIN + 5);
   unblock(&sigset, __SIGRTMIN + 6);
+  unblock(&sigset, __SIGRTMIN + 7);
   return sigset;
 }
