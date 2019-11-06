@@ -593,6 +593,13 @@ static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
 }
 #endif
 
+// Usable before ifunc resolvers have been called. This function is compiled with -ffreestanding.
+static void linker_memclr(void* dst, size_t cnt) {
+  for (size_t i = 0; i < cnt; ++i) {
+    reinterpret_cast<char*>(dst)[i] = '\0';
+  }
+}
+
 // Detect an attempt to run the linker on itself. e.g.:
 //   /system/bin/linker64 /system/bin/linker64
 // Use priority-1 to run this constructor before other constructors.
@@ -626,7 +633,8 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
-  bionic_tcb temp_tcb = {};
+  bionic_tcb temp_tcb __attribute__((uninitialized));
+  linker_memclr(&temp_tcb, sizeof(temp_tcb));
   __libc_init_main_thread_early(args, &temp_tcb);
 
   // When the linker is run by itself (rather than as an interpreter for
