@@ -36,7 +36,6 @@
 
 // This function needs to be safe to call before TLS is set up, so it can't
 // access errno or the stack protector.
-__attribute__((no_stack_protector))
 __LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
   for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
     if (v->a_type == type) {
