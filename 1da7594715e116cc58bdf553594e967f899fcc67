@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6582e126_8c34326b",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1350,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-06T18:09:58Z",
+      "side": 1,
+      "message": "or just `return android::base::Trim(sanitized);`? it does more than you strictly need, but it minimizes your code.",
+      "revId": "1da7594715e116cc58bdf553594e967f899fcc67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
