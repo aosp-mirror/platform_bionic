@@ -16,6 +16,24 @@
       "revId": "1a65fab6b8c86446c5440b438e236a66611e337e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6c26245_9aa4b32a",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2623,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-11-06T17:43:18Z",
+      "side": 1,
+      "message": "It comes from the sanitize function. I modified it so that the extra \\n doesn\u0027t happen now.",
+      "parentUuid": "7a8c614c_c184d229",
+      "revId": "1a65fab6b8c86446c5440b438e236a66611e337e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
