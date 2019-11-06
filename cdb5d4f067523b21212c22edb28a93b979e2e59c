@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48ff10e5_58f9d976",
+        "filename": "libc/malloc_debug/tests/malloc_debug_unit_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-06T01:36:20Z",
+      "side": 1,
+      "message": "(i think the cool kids are using `static constexpr std::string_view` and `\"\"sv` these days.)",
+      "range": {
+        "startLine": 2583,
+        "startChar": 0,
+        "endLine": 2583,
+        "endChar": 17
+      },
+      "revId": "cdb5d4f067523b21212c22edb28a93b979e2e59c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
