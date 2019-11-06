@@ -358,15 +358,20 @@ TEST(malloc, valloc_overflow) {
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
-  char* buf;
-  size_t bufsize;
-  FILE* memstream = open_memstream(&buf, &bufsize);
-  ASSERT_NE(nullptr, memstream);
-  ASSERT_EQ(0, malloc_info(0, memstream));
-  ASSERT_EQ(0, fclose(memstream));
+
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
 
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
@@ -416,17 +421,21 @@ TEST(malloc, malloc_info_matches_mallinfo) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
 
-  char* buf;
-  size_t bufsize;
-  FILE* memstream = open_memstream(&buf, &bufsize);
-  ASSERT_NE(nullptr, memstream);
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
   size_t mallinfo_before_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, malloc_info(0, memstream));
+  ASSERT_EQ(0, malloc_info(0, fp));
   size_t mallinfo_after_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, fclose(memstream));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
 
   size_t total_allocated_bytes = 0;
   auto root = doc.FirstChildElement();

@@ -785,16 +785,23 @@ int debug_malloc_info(int options, FILE* fp) {
   if (DebugCallsDisabled() || !g_debug->TrackPointers()) {
     return g_dispatch->malloc_info(options, fp);
   }
+
+  // Make sure any pending output is written to the file.
+  fflush(fp);
+
   ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
-  MallocXmlElem root(fp, "malloc", "version=\"debug-malloc-1\"");
+  // Avoid any issues where allocations are made that will be freed
+  // in the fclose.
+  int fd = fileno(fp);
+  MallocXmlElem root(fd, "malloc", "version=\"debug-malloc-1\"");
   std::vector<ListInfoType> list;
   PointerData::GetAllocList(&list);
 
   size_t alloc_num = 0;
   for (size_t i = 0; i < list.size(); i++) {
-    MallocXmlElem alloc(fp, "allocation", "nr=\"%zu\"", alloc_num);
+    MallocXmlElem alloc(fd, "allocation", "nr=\"%zu\"", alloc_num);
 
     size_t total = 1;
     size_t size = list[i].size;
@@ -802,8 +809,8 @@ int debug_malloc_info(int options, FILE* fp) {
       i++;
       total++;
     }
-    MallocXmlElem(fp, "size").Contents("%zu", list[i].size);
-    MallocXmlElem(fp, "total").Contents("%zu", total);
+    MallocXmlElem(fd, "size").Contents("%zu", list[i].size);
+    MallocXmlElem(fd, "total").Contents("%zu", total);
     alloc_num++;
   }
   return 0;
@@ -905,25 +912,28 @@ void* debug_valloc(size_t size) {
 
 static std::mutex g_dump_lock;
 
-static void write_dump(FILE* fp) {
-  fprintf(fp, "Android Native Heap Dump v1.2\n\n");
+static void write_dump(int fd) {
+  dprintf(fd, "Android Native Heap Dump v1.2\n\n");
 
   std::string fingerprint = android::base::GetProperty("ro.build.fingerprint", "unknown");
-  fprintf(fp, "Build fingerprint: '%s'\n\n", fingerprint.c_str());
+  dprintf(fd, "Build fingerprint: '%s'\n\n", fingerprint.c_str());
 
-  PointerData::DumpLiveToFile(fp);
+  PointerData::DumpLiveToFile(fd);
 
-  fprintf(fp, "MAPS\n");
+  dprintf(fd, "MAPS\n");
   std::string content;
   if (!android::base::ReadFileToString("/proc/self/maps", &content)) {
-    fprintf(fp, "Could not open /proc/self/maps\n");
+    dprintf(fd, "Could not open /proc/self/maps\n");
   } else {
-    fprintf(fp, "%s", content.c_str());
+    dprintf(fd, "%s", content.c_str());
   }
-  fprintf(fp, "END\n");
+  dprintf(fd, "END\n");
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {
+  // Make sure any pending output is written to the file.
+  fflush(fp);
+
   ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
@@ -933,7 +943,8 @@ bool debug_write_malloc_leak_info(FILE* fp) {
     return false;
   }
 
-  write_dump(fp);
+  write_dump(fileno(fp));
+
   return true;
 }
 
@@ -943,13 +954,13 @@ void debug_dump_heap(const char* file_name) {
 
   std::lock_guard<std::mutex> guard(g_dump_lock);
 
-  FILE* fp = fopen(file_name, "w+e");
-  if (fp == nullptr) {
+  int fd = open(file_name, O_RDWR | O_CREAT | O_NOFOLLOW | O_TRUNC | O_CLOEXEC, 0644);
+  if (fd == -1) {
     error_log("Unable to create file: %s", file_name);
     return;
   }
 
   error_log("Dumping to file: %s\n", file_name);
-  write_dump(fp);
-  fclose(fp);
+  write_dump(fd);
+  close(fd);
 }

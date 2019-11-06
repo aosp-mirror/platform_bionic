@@ -27,6 +27,8 @@
 
 #include <algorithm>
 #include <memory>
+#include <string>
+#include <string_view>
 #include <thread>
 #include <vector>
 #include <utility>
@@ -72,6 +74,9 @@ int debug_malloc_info(int, FILE*);
 void* debug_pvalloc(size_t);
 void* debug_valloc(size_t);
 #endif
+
+bool debug_write_malloc_leak_info(FILE*);
+void debug_dump_heap(const char*);
 
 __END_DECLS
 
@@ -1302,6 +1307,10 @@ TEST_F(MallocDebugTest, get_malloc_backtrace_with_header) {
 }
 
 static std::string SanitizeHeapData(const std::string& data) {
+  if (data.empty()) {
+    return data;
+  }
+
   // Remove the map data since it's not consistent.
   std::string sanitized;
   bool skip_map_data = false;
@@ -1329,7 +1338,7 @@ static std::string SanitizeHeapData(const std::string& data) {
       sanitized += line + '\n';
     }
   }
-  return sanitized;
+  return android::base::Trim(sanitized);
 }
 
 void MallocDebugTest::BacktraceDumpOnSignal(bool trigger_with_alloc) {
@@ -1402,9 +1411,7 @@ z 1  sz      100  num    1  bt 100 200
 z 1  sz       40  num    1  bt 300 400
 MAPS
 MAP_DATA
-END
-
-)";
+END)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1463,9 +1470,7 @@ z 0  sz      400  num    1  bt a000 b000
 z 0  sz      300  num    1  bt 100 200
 MAPS
 MAP_DATA
-END
-
-)";
+END)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1513,9 +1518,7 @@ z 0  sz      400  num    1  bt a000 b000 c000
 z 0  sz      300  num    2  bt 100 200
 MAPS
 MAP_DATA
-END
-
-)";
+END)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -1575,9 +1578,7 @@ z 0  sz      300  num    1  bt 1100 1200
   bt_info {"" 100 "fake1" a} {"" 200 "fake2" 14}
 MAPS
 MAP_DATA
-END
-
-)";
+END)";
   ASSERT_STREQ(expected.c_str(), sanitized.c_str()) << "Actual data: \n" << actual;
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -2472,15 +2473,19 @@ TEST_F(MallocDebugTest, abort_on_error_header_tag_corrupted) {
 TEST_F(MallocDebugTest, malloc_info_no_pointer_tracking) {
   Init("fill");
 
-  char* buffer;
-  size_t size;
-  FILE* memstream = open_memstream(&buffer, &size);
-  ASSERT_TRUE(memstream != nullptr);
-  ASSERT_EQ(0, debug_malloc_info(0, memstream));
-  ASSERT_EQ(0, fclose(memstream));
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, debug_malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buffer));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
   auto root = doc.FirstChildElement();
   ASSERT_TRUE(root != nullptr);
   ASSERT_STREQ("malloc", root->Name());
@@ -2501,17 +2506,21 @@ TEST_F(MallocDebugTest, malloc_info_with_pointer_tracking) {
   std::unique_ptr<void, decltype(debug_free)*> ptr4(debug_malloc(1200), debug_free);
   ASSERT_TRUE(ptr4.get() != nullptr);
 
-  char* buffer;
-  size_t size;
-  FILE* memstream = open_memstream(&buffer, &size);
-  ASSERT_TRUE(memstream != nullptr);
-  ASSERT_EQ(0, debug_malloc_info(0, memstream));
-  ASSERT_EQ(0, fclose(memstream));
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, debug_malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
 
-  SCOPED_TRACE(testing::Message() << "Output:\n" << buffer);
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+
+  SCOPED_TRACE(testing::Message() << "Output:\n" << contents);
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buffer));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
   auto root = doc.FirstChildElement();
   ASSERT_TRUE(root != nullptr);
   ASSERT_STREQ("malloc", root->Name());
@@ -2547,4 +2556,135 @@ TEST_F(MallocDebugTest, malloc_info_with_pointer_tracking) {
   ASSERT_EQ(500, val);
   ASSERT_EQ(tinyxml2::XML_SUCCESS, alloc->FirstChildElement("total")->QueryIntText(&val));
   ASSERT_EQ(1, val);
+}
+
+static void AllocPtrsWithBacktrace(std::vector<void*>* ptrs) {
+  backtrace_fake_add(std::vector<uintptr_t> {0xf, 0xe, 0xd, 0xc});
+  void* ptr = debug_malloc(1024);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 1024);
+  ptrs->push_back(ptr);
+
+  backtrace_fake_add(std::vector<uintptr_t> {0xbc000, 0xbc001, 0xbc002});
+  ptr = debug_malloc(500);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 500);
+  ptrs->push_back(ptr);
+
+  backtrace_fake_add(std::vector<uintptr_t> {0x104});
+  ptr = debug_malloc(100);
+  ASSERT_TRUE(ptr != nullptr);
+  memset(ptr, 0, 100);
+  ptrs->push_back(ptr);
+}
+
+static constexpr std::string_view kDumpInfo = R"(Android Native Heap Dump v1.2
+
+Build fingerprint: ''
+
+Total memory: 1624
+Allocation records: 3
+Backtrace size: 16
+
+z 0  sz     1024  num    1  bt f e d c
+z 0  sz      500  num    1  bt bc000 bc001 bc002
+z 0  sz      100  num    1  bt 104
+MAPS
+MAP_DATA
+END)";
+
+TEST_F(MallocDebugTest, debug_write_malloc_leak_info) {
+  Init("backtrace=16");
+
+  std::vector<void*> ptrs;
+  AllocPtrsWithBacktrace(&ptrs);
+
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  close(tf.fd);
+  tf.release();
+  FILE* fp = fopen(tf.path, "w+");
+  ASSERT_TRUE(fp != nullptr);
+
+  ASSERT_TRUE(debug_write_malloc_leak_info(fp));
+
+  fclose(fp);
+
+  for (auto ptr : ptrs) {
+    debug_free(ptr);
+  }
+  ptrs.clear();
+
+  std::string expected(kDumpInfo);
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+  contents = SanitizeHeapData(contents);
+  ASSERT_EQ(expected, contents);
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, debug_write_malloc_leak_info_extra_data) {
+  Init("backtrace=16");
+
+  std::vector<void*> ptrs;
+  AllocPtrsWithBacktrace(&ptrs);
+
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  close(tf.fd);
+  tf.release();
+  FILE* fp = fopen(tf.path, "w+");
+  ASSERT_TRUE(fp != nullptr);
+
+  fprintf(fp, "This message should appear before the output.\n");
+  ASSERT_TRUE(debug_write_malloc_leak_info(fp));
+  fprintf(fp, "This message should appear after the output.\n");
+
+  fclose(fp);
+
+  for (auto ptr : ptrs) {
+    debug_free(ptr);
+  }
+  ptrs.clear();
+
+  std::string expected = "This message should appear before the output.\n"
+                         + std::string(kDumpInfo)
+                         + "\nThis message should appear after the output.";
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+  contents = SanitizeHeapData(contents);
+  ASSERT_EQ(expected, contents);
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, dump_heap) {
+  Init("backtrace=16");
+
+  std::vector<void*> ptrs;
+  AllocPtrsWithBacktrace(&ptrs);
+
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  close(tf.fd);
+  tf.release();
+  debug_dump_heap(tf.path);
+
+  for (auto ptr : ptrs) {
+    debug_free(ptr);
+  }
+  ptrs.clear();
+
+  std::string expected(kDumpInfo);
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+  contents = SanitizeHeapData(contents);
+  ASSERT_EQ(expected, contents);
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = std::string("6 malloc_debug Dumping to file: ") + tf.path + "\n\n";
+  ASSERT_EQ(expected_log, getFakeLogPrint());
 }

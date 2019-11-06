@@ -140,30 +140,32 @@ int je_malloc_info(int options, FILE* fp) {
     return -1;
   }
 
-  MallocXmlElem root(fp, "malloc", "version=\"jemalloc-1\"");
+  fflush(fp);
+  int fd = fileno(fp);
+  MallocXmlElem root(fd, "malloc", "version=\"jemalloc-1\"");
 
   // Dump all of the large allocations in the arenas.
   for (size_t i = 0; i < je_mallinfo_narenas(); i++) {
     struct mallinfo mi = je_mallinfo_arena_info(i);
     if (mi.hblkhd != 0) {
-      MallocXmlElem arena_elem(fp, "heap", "nr=\"%d\"", i);
+      MallocXmlElem arena_elem(fd, "heap", "nr=\"%d\"", i);
       {
-        MallocXmlElem(fp, "allocated-large").Contents("%zu", mi.ordblks);
-        MallocXmlElem(fp, "allocated-huge").Contents("%zu", mi.uordblks);
-        MallocXmlElem(fp, "allocated-bins").Contents("%zu", mi.fsmblks);
+        MallocXmlElem(fd, "allocated-large").Contents("%zu", mi.ordblks);
+        MallocXmlElem(fd, "allocated-huge").Contents("%zu", mi.uordblks);
+        MallocXmlElem(fd, "allocated-bins").Contents("%zu", mi.fsmblks);
 
         size_t total = 0;
         for (size_t j = 0; j < je_mallinfo_nbins(); j++) {
           struct mallinfo mi = je_mallinfo_bin_info(i, j);
           if (mi.ordblks != 0) {
-            MallocXmlElem bin_elem(fp, "bin", "nr=\"%d\"", j);
-            MallocXmlElem(fp, "allocated").Contents("%zu", mi.ordblks);
-            MallocXmlElem(fp, "nmalloc").Contents("%zu", mi.uordblks);
-            MallocXmlElem(fp, "ndalloc").Contents("%zu", mi.fordblks);
+            MallocXmlElem bin_elem(fd, "bin", "nr=\"%d\"", j);
+            MallocXmlElem(fd, "allocated").Contents("%zu", mi.ordblks);
+            MallocXmlElem(fd, "nmalloc").Contents("%zu", mi.uordblks);
+            MallocXmlElem(fd, "ndalloc").Contents("%zu", mi.fordblks);
             total += mi.ordblks;
           }
         }
-        MallocXmlElem(fp, "bins-total").Contents("%zu", total);
+        MallocXmlElem(fd, "bins-total").Contents("%zu", total);
       }
     }
   }

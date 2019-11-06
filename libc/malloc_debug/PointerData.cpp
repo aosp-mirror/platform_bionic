@@ -554,7 +554,7 @@ bool PointerData::Exists(const void* ptr) {
   return pointers_.count(pointer) != 0;
 }
 
-void PointerData::DumpLiveToFile(FILE* fp) {
+void PointerData::DumpLiveToFile(int fd) {
   std::vector<ListInfoType> list;
 
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
@@ -566,13 +566,13 @@ void PointerData::DumpLiveToFile(FILE* fp) {
     total_memory += info.size * info.num_allocations;
   }
 
-  fprintf(fp, "Total memory: %zu\n", total_memory);
-  fprintf(fp, "Allocation records: %zd\n", list.size());
-  fprintf(fp, "Backtrace size: %zu\n", g_debug->config().backtrace_frames());
-  fprintf(fp, "\n");
+  dprintf(fd, "Total memory: %zu\n", total_memory);
+  dprintf(fd, "Allocation records: %zd\n", list.size());
+  dprintf(fd, "Backtrace size: %zu\n", g_debug->config().backtrace_frames());
+  dprintf(fd, "\n");
 
   for (const auto& info : list) {
-    fprintf(fp, "z %d  sz %8zu  num    %zu  bt", (info.zygote_child_alloc) ? 1 : 0, info.size,
+    dprintf(fd, "z %d  sz %8zu  num    %zu  bt", (info.zygote_child_alloc) ? 1 : 0, info.size,
             info.num_allocations);
     FrameInfoType* frame_info = info.frame_info;
     if (frame_info != nullptr) {
@@ -580,22 +580,22 @@ void PointerData::DumpLiveToFile(FILE* fp) {
         if (frame_info->frames[i] == 0) {
           break;
         }
-        fprintf(fp, " %" PRIxPTR, frame_info->frames[i]);
+        dprintf(fd, " %" PRIxPTR, frame_info->frames[i]);
       }
     }
-    fprintf(fp, "\n");
+    dprintf(fd, "\n");
     if (info.backtrace_info != nullptr) {
-      fprintf(fp, "  bt_info");
+      dprintf(fd, "  bt_info");
       for (const auto& frame : *info.backtrace_info) {
-        fprintf(fp, " {");
+        dprintf(fd, " {");
         if (frame.map_info != nullptr && !frame.map_info->name.empty()) {
-          fprintf(fp, "\"%s\"", frame.map_info->name.c_str());
+          dprintf(fd, "\"%s\"", frame.map_info->name.c_str());
         } else {
-          fprintf(fp, "\"\"");
+          dprintf(fd, "\"\"");
         }
-        fprintf(fp, " %" PRIx64, frame.rel_pc);
+        dprintf(fd, " %" PRIx64, frame.rel_pc);
         if (frame.function_name.empty()) {
-          fprintf(fp, " \"\" 0}");
+          dprintf(fd, " \"\" 0}");
         } else {
           char* demangled_name = __cxa_demangle(frame.function_name.c_str(), nullptr, nullptr,
                                                 nullptr);
@@ -605,11 +605,11 @@ void PointerData::DumpLiveToFile(FILE* fp) {
           } else {
             name = frame.function_name.c_str();
           }
-          fprintf(fp, " \"%s\" %" PRIx64 "}", name, frame.function_offset);
+          dprintf(fd, " \"%s\" %" PRIx64 "}", name, frame.function_offset);
           free(demangled_name);
         }
       }
-      fprintf(fp, "\n");
+      dprintf(fd, "\n");
     }
   }
 }
