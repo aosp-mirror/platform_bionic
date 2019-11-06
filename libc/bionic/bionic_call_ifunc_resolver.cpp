@@ -30,14 +30,32 @@
 #include <sys/auxv.h>
 #include <sys/ifunc.h>
 
+#include "private/bionic_auxv.h"
+
+// This code is called in the linker before it has been relocated, so minimize calls into other
+// parts of Bionic. In particular, we won't ever have two ifunc resolvers called concurrently, so
+// initializing the ifunc resolver argument doesn't need to be thread-safe.
+
 ElfW(Addr) __bionic_call_ifunc_resolver(ElfW(Addr) resolver_addr) {
 #if defined(__aarch64__)
   typedef ElfW(Addr) (*ifunc_resolver_t)(uint64_t, __ifunc_arg_t*);
-  static __ifunc_arg_t arg = { sizeof(__ifunc_arg_t), getauxval(AT_HWCAP), getauxval(AT_HWCAP2) };
+  static __ifunc_arg_t arg;
+  static bool initialized = false;
+  if (!initialized) {
+    initialized = true;
+    arg._size = sizeof(__ifunc_arg_t);
+    arg._hwcap = getauxval(AT_HWCAP);
+    arg._hwcap2 = getauxval(AT_HWCAP2);
+  }
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(arg._hwcap | _IFUNC_ARG_HWCAP, &arg);
 #elif defined(__arm__)
   typedef ElfW(Addr) (*ifunc_resolver_t)(unsigned long);
-  static unsigned long hwcap = getauxval(AT_HWCAP);
+  static unsigned long hwcap;
+  static bool initialized = false;
+  if (!initialized) {
+    initialized = true;
+    hwcap = getauxval(AT_HWCAP);
+  }
   return reinterpret_cast<ifunc_resolver_t>(resolver_addr)(hwcap);
 #else
   typedef ElfW(Addr) (*ifunc_resolver_t)(void);

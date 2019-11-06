@@ -26,39 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include "linker_debuggerd.h"
 
-#include <unistd.h>
+#include "debuggerd/handler.h"
+#include "private/bionic_globals.h"
 
-#include "private/bionic_macros.h"
-#include "private/ErrnoRestorer.h"
+#include "linker_gdb_support.h"
 
-class ScopedFd final {
- public:
-  explicit ScopedFd(int fd) : fd_(fd) {
-  }
-
-  ScopedFd() : fd_(-1) {
-  }
-
-  ~ScopedFd() {
-    reset(-1);
-  }
-
-  void reset(int fd = -1) {
-    if (fd_ != -1) {
-      ErrnoRestorer e;
-      close(fd_);
-    }
-    fd_ = fd;
-  }
-
-  int get() const {
-    return fd_;
-  }
-
- private:
-  int fd_;
-
-  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedFd);
-};
+void linker_debuggerd_init() {
+  debuggerd_callbacks_t callbacks = {
+    .get_abort_message = []() {
+      return __libc_shared_globals()->abort_msg;
+    },
+    .post_dump = &notify_gdb_of_libraries,
+  };
+  debuggerd_init(&callbacks);
+}

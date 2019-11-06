@@ -28,37 +28,4 @@
 
 #pragma once
 
-#include <unistd.h>
-
-#include "private/bionic_macros.h"
-#include "private/ErrnoRestorer.h"
-
-class ScopedFd final {
- public:
-  explicit ScopedFd(int fd) : fd_(fd) {
-  }
-
-  ScopedFd() : fd_(-1) {
-  }
-
-  ~ScopedFd() {
-    reset(-1);
-  }
-
-  void reset(int fd = -1) {
-    if (fd_ != -1) {
-      ErrnoRestorer e;
-      close(fd_);
-    }
-    fd_ = fd;
-  }
-
-  int get() const {
-    return fd_;
-  }
-
- private:
-  int fd_;
-
-  BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedFd);
-};
+void linker_debuggerd_init();
