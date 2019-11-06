@@ -14,37 +14,13 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_FREEBSD_COMPAT_H_included
-#define _BIONIC_FREEBSD_COMPAT_H_included
+#pragma once
 
 #define _BSD_SOURCE
 
-#include <sys/cdefs.h>
-#include <stddef.h> // For size_t.
-
 #define REPLACE_GETOPT
-
-/*
- * FreeBSD's libc has three symbols for every symbol:
- *
- *     __f will be the actual implementation.
- *     _f will be a weak reference to __f (used for calls to f from within the library).
- *     f will be a weak reference to __f (used for calls to f from outside the library).
- *
- * We collapse this into just the one symbol, f.
- */
-
-/* Prevent weak reference generation. */
-#define __weak_reference(sym,alias)
-
-/* Ensure that the implementation itself gets the underscore-free name. */
-#define __sleep sleep
-#define __usleep usleep
-
-/* Redirect internal C library calls to the public function. */
-#define _nanosleep nanosleep
 
 /* FreeBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
 
-#endif
+#define __compiler_membar() __asm __volatile(" " : : : "memory")

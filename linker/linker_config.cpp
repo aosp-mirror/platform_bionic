@@ -408,8 +408,10 @@ class Properties {
       params.push_back({ "SDK_VER", buf });
     }
 
-    static std::string vndk = Config::get_vndk_version_string("");
-    params.push_back({ "VNDK_VER", vndk });
+    static std::string vndk_ver = Config::get_vndk_version_string('-');
+    params.push_back({ "VNDK_VER", vndk_ver });
+    static std::string vndk_apex_ver = Config::get_vndk_version_string('v');
+    params.push_back({ "VNDK_APEX_VER", vndk_apex_ver });
 
     for (auto& path : paths) {
       format_string(&path, params);
@@ -596,11 +598,11 @@ bool Config::read_binary_config(const char* ld_config_file_path,
   return true;
 }
 
-std::string Config::get_vndk_version_string(const std::string& prefix) {
+std::string Config::get_vndk_version_string(const char delimiter) {
   std::string version = android::base::GetProperty("ro.vndk.version", "");
   if (version != "" && version != "current") {
-    //add the prefix in front of the string and return it.
-    return version.insert(0, prefix);
+    //add the delimiter char in front of the string and return it.
+    return version.insert(0, 1, delimiter);
   }
   return "";
 }

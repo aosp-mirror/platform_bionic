@@ -68,6 +68,7 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
@@ -298,10 +299,6 @@ void print_linker_stats() {
 #else
 void count_relocation(RelocationKind) {
 }
-#endif
-
-#if COUNT_PAGES
-uint32_t bitmask[4096];
 #endif
 
 static void notify_gdb_of_load(soinfo* info) {
@@ -2690,11 +2687,9 @@ bool link_namespaces_all_libs(android_namespace_t* namespace_from,
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   if (g_is_ldd) return 0;
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
-  ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
-  ElfW(Addr) ifunc_addr = ifunc_resolver();
+  ElfW(Addr) ifunc_addr = __bionic_call_ifunc_resolver(resolver_addr);
   TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p",
-      ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
+      reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
@@ -2931,8 +2926,11 @@ static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
 }
 #else
 static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
+  // The i386 psABI specifies that R_386_GLOB_DAT doesn't have an addend. The ARM ELF ABI document
+  // (IHI0044F) specifies that R_ARM_GLOB_DAT has an addend, but Bionic isn't adding it.
   if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
       ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE ||
+      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_ABSOLUTE ||
       ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_DTPREL ||
       ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_TPREL) {
     return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
@@ -3056,6 +3054,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 
         switch (type) {
           case R_GENERIC_JUMP_SLOT:
+          case R_GENERIC_ABSOLUTE:
           case R_GENERIC_GLOB_DAT:
           case R_GENERIC_RELATIVE:
           case R_GENERIC_IRELATIVE:
@@ -3063,17 +3062,8 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           case R_GENERIC_TLS_DTPREL:
           case R_GENERIC_TLS_TPREL:
           case R_GENERIC_TLSDESC:
-#if defined(__aarch64__)
-          case R_AARCH64_ABS64:
-          case R_AARCH64_ABS32:
-          case R_AARCH64_ABS16:
-#elif defined(__x86_64__)
+#if defined(__x86_64__)
           case R_X86_64_32:
-          case R_X86_64_64:
-#elif defined(__arm__)
-          case R_ARM_ABS32:
-#elif defined(__i386__)
-          case R_386_32:
 #endif
             /*
              * The sym_addr was initialized to be zero above, or the relocation
@@ -3146,24 +3136,22 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
     switch (type) {
       case R_GENERIC_JUMP_SLOT:
         count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO JMP_SLOT %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
 
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
         break;
+      case R_GENERIC_ABSOLUTE:
       case R_GENERIC_GLOB_DAT:
         count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %16p <- %16p %s\n",
+        TRACE_TYPE(RELO, "RELO ABSOLUTE/GLOB_DAT %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
         break;
       case R_GENERIC_RELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(load_bias + addend));
@@ -3171,11 +3159,13 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_IRELATIVE:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
                     reinterpret_cast<void*>(reloc),
                     reinterpret_cast<void*>(load_bias + addend));
-        {
+        // In the linker, ifuncs are called as soon as possible so that string functions work.
+        // We must not call them again. (e.g. On arm32, resolving an ifunc changes the meaning of
+        // the addend from a resolver function to the implementation.)
+        if (!is_linker()) {
 #if !defined(__LP64__)
           // When relocating dso with text_relocation .text segment is
           // not executable. We need to restore elf flags for this
@@ -3202,9 +3192,19 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
           *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_addr;
         }
         break;
+      case R_GENERIC_COPY:
+        // Copy relocations allow read-only data or code in a non-PIE executable to access a
+        // variable from a DSO. The executable reserves extra space in its .bss section, and the
+        // linker copies the variable into the extra space. The executable then exports its copy
+        // to interpose the copy in the DSO.
+        //
+        // Bionic only supports PIE executables, so copy relocations aren't supported. The ARM and
+        // AArch64 ABI documents only allow them for ET_EXEC (non-PIE) objects. See IHI0056B and
+        // IHI0044F.
+        DL_ERR("%s COPY relocations are not supported", get_realpath());
+        return false;
       case R_GENERIC_TLS_TPREL:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           ElfW(Addr) tpoff = 0;
           if (lsi == nullptr) {
@@ -3230,7 +3230,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_TLS_DTPMOD:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           size_t module_id = 0;
           if (lsi == nullptr) {
@@ -3246,7 +3245,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
       case R_GENERIC_TLS_DTPREL:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
                    reinterpret_cast<void*>(reloc),
                    reinterpret_cast<void*>(sym_addr + addend), sym_name);
@@ -3258,7 +3256,6 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
       // other architectures, as long as the resolver functions are implemented.
       case R_GENERIC_TLSDESC:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         {
           TlsDescriptor* desc = reinterpret_cast<TlsDescriptor*>(reloc);
           if (lsi == nullptr) {
@@ -3296,165 +3293,23 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
         break;
 #endif  // defined(__aarch64__)
 
-#if defined(__aarch64__)
-      case R_AARCH64_ABS64:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-        break;
-      case R_AARCH64_ABS32:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_ABS16:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL64:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-        break;
-      case R_AARCH64_PREL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL16:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-
-      case R_AARCH64_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0056b/IHI0056B_aaelf64.pdf
-         *
-         * Section 4.6.11 "Dynamic relocations"
-         * R_AARCH64_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_AARCH64_COPY relocations are not supported", get_realpath());
-        return false;
-#elif defined(__x86_64__)
+#if defined(__x86_64__)
       case R_X86_64_32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
+        count_relocation(kRelocAbsolute);
         TRACE_TYPE(RELO, "RELO R_X86_64_32 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
                    static_cast<size_t>(sym_addr), sym_name);
         *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend;
         break;
-      case R_X86_64_64:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_X86_64_64 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
-                   static_cast<size_t>(sym_addr), sym_name);
-        *reinterpret_cast<Elf64_Addr*>(reloc) = sym_addr + addend;
-        break;
       case R_X86_64_PC32:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_X86_64_PC32 %08zx <- +%08zx (%08zx - %08zx) %s",
                    static_cast<size_t>(reloc), static_cast<size_t>(sym_addr - reloc),
                    static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
         *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend - reloc;
         break;
-#elif defined(__arm__)
-      case R_ARM_ABS32:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
-        break;
-      case R_ARM_REL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x - %08x %s",
-                   reloc, sym_addr, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
-        break;
-      case R_ARM_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
-         *
-         * Section 4.6.1.10 "Dynamic relocations"
-         * R_ARM_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_ARM_COPY relocations are not supported", get_realpath());
-        return false;
 #elif defined(__i386__)
-      case R_386_32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_386_32 %08x <- +%08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
-        break;
       case R_386_PC32:
         count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
         TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s",
                    reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
         *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
@@ -4208,7 +4063,7 @@ static std::string get_ld_config_file_vndk_path() {
   if (insert_pos == std::string::npos) {
     insert_pos = ld_config_file_vndk.length();
   }
-  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string("."));
+  ld_config_file_vndk.insert(insert_pos, Config::get_vndk_version_string('.'));
   return ld_config_file_vndk;
 }
 

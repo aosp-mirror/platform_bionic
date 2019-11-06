@@ -37,6 +37,7 @@
 #include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
+#include "private/ScopedFd.h"
 
 // This file mmap's /*/etc/passwd and /*/etc/group in order to return their contents without any
 // allocations.  Note that these files and the strings contained within them are explicitly not
@@ -230,19 +231,16 @@ bool MmapFile::GetFile(const char** start, const char** end) {
 }
 
 bool MmapFile::DoMmap() {
-  int fd = open(filename_, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
+  ScopedFd fd(open(filename_, O_CLOEXEC | O_NOFOLLOW | O_RDONLY));
 
   struct stat fd_stat;
-  if (fstat(fd, &fd_stat) == -1) {
-    close(fd);
+  if (fstat(fd.get(), &fd_stat) == -1) {
     return false;
   }
 
   auto mmap_size = fd_stat.st_size;
 
-  void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd, 0);
-  close(fd);
-
+  void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd.get(), 0);
   if (map_result == MAP_FAILED) {
     return false;
   }

@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_j0.c 343023 2019-01-14 15:48:35Z pfg $");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_j0.c 343953 2019-02-10 08:46:07Z peterj $");
 
 /* __ieee754_j0(x), __ieee754_y0(x)
  * Bessel function of the first and second kinds of order zero.
@@ -93,8 +93,7 @@ __ieee754_j0(double x)
 	if(ix>=0x7ff00000) return one/(x*x);
 	x = fabs(x);
 	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		s = sin(x);
-		c = cos(x);
+		sincos(x, &s, &c);
 		ss = s-c;
 		cc = s+c;
 		if(ix<0x7fe00000) {  /* Make sure x+x does not overflow. */
@@ -173,8 +172,7 @@ __ieee754_y0(double x)
          *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
          * to compute the worse one.
          */
-                s = sin(x);
-                c = cos(x);
+                sincos(x, &s, &c);
                 ss = s-c;
                 cc = s+c;
 	/*

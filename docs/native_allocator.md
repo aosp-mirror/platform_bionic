@@ -100,6 +100,19 @@ To run all of the compliance tests:
 The allocation tests are not meant to be complete, so it is expected
 that a native allocator will have its own set of tests that can be run.
 
+### Libmemunreachable Tests
+The libmemunreachable tests verify that the iterator functions are working
+properly.
+
+To run all of the tests:
+
+    adb shell /data/nativetest64/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest64/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest64/memunreachable_unit_test/memunreachable_unit_test
+    adb shell /data/nativetest/memunreachable_unit_test/memunreachable_unit_test
+
 ### CTS Entropy Test
 In addition to the bionic tests, there is also a CTS test that is designed
 to verify that the addresses returned by malloc are sufficiently randomized
@@ -263,21 +276,22 @@ so it is not possible to create a completely accurate replay.
 To generate these traces, see the [Malloc Debug documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md),
 the option [record\_allocs](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md#record_allocs_total_entries).
 
-To run these benchmarks, first copy the trace files to the target and
-unzip them using these commands:
+To run these benchmarks, first copy the trace files to the target using
+these commands:
 
     adb shell push system/extras/traces /data/local/tmp
-    adb shell 'cd /data/local/tmp/traces && for name in *.zip; do unzip $name; done'
 
 Since all of the traces come from applications, the `memory_replay` program
 will always call `mallopt(M_DECAY_TIME, 1)' before running the trace.
 
 Run the benchmark thusly:
 
-    adb shell memory_replay64 /data/local/tmp/traces/XXX.txt
-    adb shell memory_replay32 /data/local/tmp/traces/XXX.txt
+    adb shell memory_replay64 /data/local/tmp/traces/XXX.zip
+    adb shell memory_replay32 /data/local/tmp/traces/XXX.zip
 
-Where XXX.txt is the name of a trace file.
+Where XXX.zip is the name of a zipped trace file. The `memory_replay`
+program also can process text files, but all trace files are currently
+checked in as zip files.
 
 Every 100000 allocation operations, a dump of the RSS and VA space will be
 performed. At the end, a final RSS and VA space number will be printed.

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_UTILS_H
-#define __TEST_UTILS_H
+#pragma once
 
 #include <dlfcn.h>
 #include <fcntl.h>
@@ -253,6 +252,4 @@ class ExecTestHelper {
   std::vector<const char*> env_;
   std::string output_;
 };
-#endif
-
 #endif

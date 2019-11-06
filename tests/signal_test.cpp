@@ -20,12 +20,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <chrono>
 #include <thread>
 
 #include <android-base/macros.h>
 #include <gtest/gtest.h>
 
 #include "SignalUtils.h"
+
+using namespace std::chrono_literals;
 
 static int SIGNAL_MIN() {
   return 1; // Signals start at 1 (SIGHUP), not 0.
@@ -753,12 +756,6 @@ TEST(signal, sigtimedwait64_SIGRTMIN) {
   ASSERT_EQ(0, errno);
 }
 
-static int64_t NanoTime() {
-  timespec t;
-  clock_gettime(CLOCK_MONOTONIC, &t);
-  return static_cast<int64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
-}
-
 TEST(signal, sigtimedwait_timeout) {
   // Block SIGALRM.
   sigset_t just_SIGALRM;
@@ -768,13 +765,14 @@ TEST(signal, sigtimedwait_timeout) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, &original_set));
 
   // Wait timeout.
-  int64_t start_time = NanoTime();
+  auto t0 = std::chrono::steady_clock::now();
   siginfo_t info;
   timespec timeout = { .tv_sec = 0, .tv_nsec = 1000000 };
   errno = 0;
   ASSERT_EQ(-1, sigtimedwait(&just_SIGALRM, &info, &timeout));
   ASSERT_EQ(EAGAIN, errno);
-  ASSERT_GE(NanoTime() - start_time, 1000000);
+  auto t1 = std::chrono::steady_clock::now();
+  ASSERT_GE(t1-t0, 1000000ns);
 
   ASSERT_EQ(0, sigprocmask(SIG_SETMASK, &original_set, nullptr));
 }

@@ -40,37 +40,27 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "private/ErrnoRestorer.h"
+#include "private/ScopedFd.h"
 
 #include "bionic_netlink.h"
 
 char* if_indextoname(unsigned ifindex, char* ifname) {
-  int s = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
-  if (s == -1) return nullptr;
+  ScopedFd s(socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0));
+  if (s.get() == -1) return nullptr;
 
-  struct ifreq ifr;
-  memset(&ifr, 0, sizeof(ifr));
-  ifr.ifr_ifindex = ifindex;
-
-  int rc = ioctl(s, SIOCGIFNAME, &ifr);
-  ErrnoRestorer errno_restorer;
-  close(s);
-  return (rc == -1) ? nullptr : strncpy(ifname, ifr.ifr_name, IFNAMSIZ);
+  ifreq ifr = {.ifr_ifindex = static_cast<int>(ifindex)};
+  return (ioctl(s.get(), SIOCGIFNAME, &ifr) == -1) ? nullptr
+                                                   : strncpy(ifname, ifr.ifr_name, IFNAMSIZ);
 }
 
 unsigned if_nametoindex(const char* ifname) {
-  int s = socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0);
-  if (s == -1) return 0;
+  ScopedFd s(socket(AF_INET, SOCK_DGRAM|SOCK_CLOEXEC, 0));
+  if (s.get() == -1) return 0;
 
-  struct ifreq ifr;
-  memset(&ifr, 0, sizeof(ifr));
+  ifreq ifr = {};
   strncpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name));
   ifr.ifr_name[IFNAMSIZ - 1] = 0;
-
-  int rc = ioctl(s, SIOCGIFINDEX, &ifr);
-  ErrnoRestorer errno_restorer;
-  close(s);
-  return (rc == -1) ? 0 : ifr.ifr_ifindex;
+  return (ioctl(s.get(), SIOCGIFINDEX, &ifr) == -1) ? 0 : ifr.ifr_ifindex;
 }
 
 struct if_list {
