@@ -185,6 +185,11 @@ cc_library {
         symbol_file: "libdl_android.map.txt",
         versions: ["10000"],
     },
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+    ],
 }
 
 ndk_library {
