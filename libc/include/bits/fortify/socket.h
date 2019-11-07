@@ -42,13 +42,13 @@ ssize_t recvfrom(int fd, void* const buf __pass_object_size0, size_t len, int fl
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len),
                      "'recvfrom' called with size bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= __ANDROID_API_N__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos = __bos0(buf);
 
   if (!__bos_trivially_ge(bos, len)) {
     return __recvfrom_chk(fd, buf, len, bos, flags, src_addr, addr_len);
   }
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+#endif
   return __call_bypassing_fortify(recvfrom)(fd, buf, len, flags, src_addr, addr_len);
 }
 
@@ -57,13 +57,13 @@ ssize_t sendto(int fd, const void* const buf __pass_object_size0, size_t len, in
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len),
                      "'sendto' called with size bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_N_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_N_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos = __bos0(buf);
 
   if (!__bos_trivially_ge(bos, len)) {
     return __sendto_chk(fd, buf, len, bos, flags, dest_addr, addr_len);
   }
-#endif /* __ANDROID_API__ >= __ANDROID_API_N_MR1__ */
+#endif
   return __call_bypassing_fortify(sendto)(fd, buf, len, flags, dest_addr, addr_len);
 }
 
