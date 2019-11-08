@@ -350,9 +350,9 @@ static struct mallinfo LimitMallinfo() {
 static int LimitIterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*), void* arg) {
   auto dispatch_table = GetDefaultDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
-    return dispatch_table->iterate(base, size, callback, arg);
+    return dispatch_table->malloc_iterate(base, size, callback, arg);
   }
-  return Malloc(iterate)(base, size, callback, arg);
+  return Malloc(malloc_iterate)(base, size, callback, arg);
 }
 
 static void LimitMallocDisable() {
