@@ -91,8 +91,8 @@ struct mallinfo debug_mallinfo();
 int debug_mallopt(int param, int value);
 int debug_malloc_info(int options, FILE* fp);
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
-int debug_iterate(uintptr_t base, size_t size,
-                  void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
+int debug_malloc_iterate(uintptr_t base, size_t size,
+                         void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void debug_malloc_disable();
 void debug_malloc_enable();
 
@@ -841,7 +841,7 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
   return (*memptr != nullptr) ? 0 : ENOMEM;
 }
 
-int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
+int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
                   void* arg) {
   ScopedConcurrentLock lock;
   if (g_debug->TrackPointers()) {
@@ -854,7 +854,7 @@ int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_
 
   // An option that adds a header will add pointer tracking, so no need to
   // check if headers are enabled.
-  return g_dispatch->iterate(base, size, callback, arg);
+  return g_dispatch->malloc_iterate(base, size, callback, arg);
 }
 
 void debug_malloc_disable() {
