@@ -67,7 +67,7 @@ void* hooks_calloc(size_t nmemb, size_t bytes);
 struct mallinfo hooks_mallinfo();
 int hooks_mallopt(int param, int value);
 int hooks_posix_memalign(void** memptr, size_t alignment, size_t size);
-int hooks_iterate(uintptr_t base, size_t size,
+int hooks_malloc_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void hooks_malloc_disable();
 void hooks_malloc_enable();
@@ -209,7 +209,7 @@ int hooks_posix_memalign(void** memptr, size_t alignment, size_t size) {
   return g_dispatch->posix_memalign(memptr, alignment, size);
 }
 
-int hooks_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*) {
+int hooks_malloc_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*) {
   return 0;
 }
 
