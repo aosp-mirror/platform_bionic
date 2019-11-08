@@ -52,7 +52,7 @@ void* scudo_pvalloc(size_t);
 void* scudo_valloc(size_t);
 #endif
 
-int scudo_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
+int scudo_malloc_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*);
 void scudo_malloc_disable();
 void scudo_malloc_enable();
 
