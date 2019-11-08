@@ -8,13 +8,13 @@ LIBC_MALLOC_DEBUG {
     debug_free_malloc_leak_info;
     debug_get_malloc_leak_info;
     debug_initialize;
-    debug_iterate;
     debug_mallinfo;
     debug_malloc;
     debug_malloc_backtrace;
     debug_malloc_disable;
     debug_malloc_enable;
     debug_malloc_info;
+    debug_malloc_iterate;
     debug_malloc_usable_size;
     debug_mallopt;
     debug_memalign;
