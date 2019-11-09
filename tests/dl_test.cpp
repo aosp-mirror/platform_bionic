@@ -204,7 +204,10 @@ TEST(dl, exec_with_ld_preload) {
 // The two libs are in ns2/ subdir.
 TEST(dl, exec_without_ld_config_file) {
 #if defined(__BIONIC__)
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string error_message =
+      "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() +
+      "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" "
+      "not found: needed by main executable\n";
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   chmod(helper.c_str(), 0755);
