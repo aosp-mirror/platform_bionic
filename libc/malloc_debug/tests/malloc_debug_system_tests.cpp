@@ -50,6 +50,14 @@
 
 static constexpr time_t kTimeoutSeconds = 10;
 
+extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
+  static const char* initial_args[] = {"--slow_threshold_ms=30000",
+                                       "--deadline_threshold_ms=1200000"};
+  *args = initial_args;
+  *num_args = 2;
+  return true;
+}
+
 static void Exec(const char* test_name, const char* debug_options, pid_t* pid, int exit_code = 0,
                  time_t timeout_seconds = kTimeoutSeconds) {
   int fds[2];
@@ -71,6 +79,9 @@ static void Exec(const char* test_name, const char* debug_options, pid_t* pid, i
     args.push_back("--gtest_also_run_disabled_tests");
     std::string filter_arg = std::string("--gtest_filter=") + test_name;
     args.push_back(filter_arg.c_str());
+    // Need this because some code depends on exit codes from the test run
+    // but the isolation runner does not support that.
+    args.push_back("--no_isolate");
     args.push_back(nullptr);
     execv(args[0], reinterpret_cast<char* const*>(const_cast<char**>(args.data())));
     exit(20);
@@ -179,14 +190,14 @@ static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
                         time_t timeout_seconds = kTimeoutSeconds) {
   std::string log_str;
   time_t start = time(nullptr);
-  bool found_all;
+  std::string missing_match;
   while (true) {
     GetLogStr(pid, &log_str);
-    found_all = true;
+    missing_match.clear();
     // Look for the expected strings.
     for (auto str : match_strings) {
       if (log_str.find(str) == std::string::npos) {
-        found_all = false;
+        missing_match = str;
         break;
       }
     }
@@ -195,14 +206,14 @@ static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
     for (auto str : no_match_strings) {
       ASSERT_TRUE(log_str.find(str) == std::string::npos) << "Unexpectedly found '" << str << "' in log output:\n" << log_str;
     }
-    if (found_all) {
+    if (missing_match.empty()) {
       return;
     }
     if ((time(nullptr) - start) > timeout_seconds) {
       break;
     }
   }
-  ASSERT_TRUE(found_all) << "Didn't find expected log output:\n" << log_str;
+  ASSERT_EQ("", missing_match) << "Didn't find expected log output:\n" << log_str;
 }
 
 TEST(MallocTests, DISABLED_smoke) {}
@@ -413,7 +424,7 @@ static void VerifyLeak(const char* test_prefix) {
     pid_t pid;
     SCOPED_TRACE(testing::Message() << functions[i].name << " expected size " << functions[i].size);
     std::string test = std::string("MallocTests.DISABLED_") + test_prefix + functions[i].name;
-    EXPECT_NO_FATAL_FAILURE(Exec(test.c_str(), "verbose backtrace leak_track", &pid));
+    ASSERT_NO_FATAL_FAILURE(Exec(test.c_str(), "verbose backtrace leak_track", &pid));
 
     std::string expected_leak = android::base::StringPrintf("leaked block of size %zu at", functions[i].size);
     EXPECT_NO_FATAL_FAILURE(FindStrings(
