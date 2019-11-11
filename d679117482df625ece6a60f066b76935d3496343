@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "41355166_9e105459",
+        "filename": "tests/system_properties_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2019-11-11T17:02:35Z",
+      "side": 1,
+      "message": "Maybe call __system_property_serial() directly instead?  The reason that we go through the class is so that we can test a different backing __properties__ directory, but since __system_property_serial() doesn\u0027t depend on anything, might as well use it directly here.\n\nOtherwise clang-format this?  The pointer should be on the left.",
+      "revId": "d679117482df625ece6a60f066b76935d3496343",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
