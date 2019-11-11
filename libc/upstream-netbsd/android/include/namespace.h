@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef _BIONIC_NETBSD_NAMESPACE_H_included
-#define _BIONIC_NETBSD_NAMESPACE_H_included
+#pragma once
 
 __LIBC_HIDDEN__ int __res_enable_mt(void);
 __LIBC_HIDDEN__ int __res_disable_mt(void);
-
-#endif

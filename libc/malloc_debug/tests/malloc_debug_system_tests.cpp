@@ -37,6 +37,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <android-base/file.h>
 #include <android-base/stringprintf.h>
 #include <gtest/gtest.h>
 #include <log/log.h>
@@ -174,6 +175,7 @@ static void GetLogStr(pid_t pid, std::string* log_str, log_id log = LOG_ID_MAIN)
 }
 
 static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
+                        std::vector<const char*> no_match_strings = std::vector<const char*>{},
                         time_t timeout_seconds = kTimeoutSeconds) {
   std::string log_str;
   time_t start = time(nullptr);
@@ -181,11 +183,17 @@ static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
   while (true) {
     GetLogStr(pid, &log_str);
     found_all = true;
+    // Look for the expected strings.
     for (auto str : match_strings) {
       if (log_str.find(str) == std::string::npos) {
         found_all = false;
         break;
       }
+    }
+
+    // Verify the unexpected strings are not present.
+    for (auto str : no_match_strings) {
+      ASSERT_TRUE(log_str.find(str) == std::string::npos) << "Unexpectedly found '" << str << "' in log output:\n" << log_str;
     }
     if (found_all) {
       return;
@@ -194,7 +202,7 @@ static void FindStrings(pid_t pid, std::vector<const char*> match_strings,
       break;
     }
   }
-  ASSERT_TRUE(found_all) << "Didn't find expected log output:\n" + log_str;
+  ASSERT_TRUE(found_all) << "Didn't find expected log output:\n" << log_str;
 }
 
 TEST(MallocTests, DISABLED_smoke) {}
@@ -463,4 +471,46 @@ TEST(MallocDebugSystemTest, exit_while_threads_allocating) {
     ASSERT_TRUE(log_str.find("Fatal signal") == std::string::npos)
         << "Found crash in log.\nLog message: " << log_str;
   }
+}
+
+TEST(MallocTests, DISABLED_write_leak_info) {
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+
+  FILE* fp = fdopen(tf.fd, "w+");
+  if (fp == nullptr) {
+    printf("Unable to create %s\n", tf.path);
+    _exit(1);
+  }
+  tf.release();
+
+  void* ptr = malloc(1000);
+  if (ptr == nullptr) {
+    printf("malloc failed\n");
+    _exit(1);
+  }
+  memset(ptr, 0, 1000);
+
+  android_mallopt(M_WRITE_MALLOC_LEAK_INFO_TO_FILE, fp, sizeof(fp));
+
+  fclose(fp);
+
+  free(ptr);
+}
+
+TEST(MallocDebugSystemTest, write_leak_info_no_header) {
+  pid_t pid;
+  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace", &pid, 0));
+
+  ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"},
+
+                          std::vector<const char*>{" HAS INVALID TAG ", "USED AFTER FREE ", "UNKNOWN POINTER "}));
+}
+
+TEST(MallocDebugSystemTest, write_leak_info_header) {
+  pid_t pid;
+  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace guard", &pid, 0));
+
+  ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"},
+                          std::vector<const char*>{" HAS INVALID TAG ", "USED AFTER FREE ", "UNKNOWN POINTER "}));
 }

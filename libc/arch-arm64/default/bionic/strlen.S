@@ -94,7 +94,7 @@
 	   whether the first fetch, which may be misaligned, crosses a page
 	   boundary.  */
 
-ENTRY(strlen)
+ENTRY(strlen_default)
 	and	tmp1, srcin, MIN_PAGE_SIZE - 1
 	mov	zeroones, REP8_01
 	cmp	tmp1, MIN_PAGE_SIZE - 16
@@ -224,4 +224,4 @@ L(page_cross):
 	csel	data2, data2, tmp2, eq
 	b	L(page_cross_entry)
 
-END(strlen)
+END(strlen_default)
