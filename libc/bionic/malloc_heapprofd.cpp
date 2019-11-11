@@ -104,7 +104,7 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
     Malloc(valloc),
 #endif
-    Malloc(iterate),
+    Malloc(malloc_iterate),
     Malloc(malloc_disable),
     Malloc(malloc_enable),
     Malloc(mallopt),
