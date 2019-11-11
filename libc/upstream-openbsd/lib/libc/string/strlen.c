@@ -1,5 +1,7 @@
-/*
- * Copyright (c) 1989, 1993
+/*	$OpenBSD: strlen.c,v 1.9 2015/08/31 02:53:57 guenther Exp $	*/
+
+/*-
+ * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -10,7 +12,7 @@
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in the
  *    documentation and/or other materials provided with the distribution.
- * 4. Neither the name of the University nor the names of its contributors
+ * 3. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
@@ -27,26 +29,16 @@
  * SUCH DAMAGE.
  */
 
-#if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)usleep.c	8.1 (Berkeley) 6/4/93";
-#endif /* LIBC_SCCS and not lint */
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+#include <string.h>
 
-#include "namespace.h"
-#include <time.h>
-#include <unistd.h>
-#include "un-namespace.h"
-
-int
-__usleep(useconds_t useconds)
+size_t
+strlen(const char *str)
 {
-	struct timespec time_to_sleep;
+	const char *s;
 
-	time_to_sleep.tv_nsec = (useconds % 1000000) * 1000;
-	time_to_sleep.tv_sec = useconds / 1000000;
-	return (_nanosleep(&time_to_sleep, NULL));
+	for (s = str; *s; ++s)
+		;
+	return (s - str);
 }
 
-__weak_reference(__usleep, usleep);
-__weak_reference(__usleep, _usleep);
+DEF_STRONG(strlen);

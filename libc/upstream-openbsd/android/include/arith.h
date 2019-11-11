@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#pragma once
+
 #define IEEE_8087
 
 #if defined(__LP64__)

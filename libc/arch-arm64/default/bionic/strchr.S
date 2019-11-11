@@ -73,7 +73,7 @@
 
 /* Locals and temporaries.  */
 
-ENTRY(strchr)
+ENTRY(strchr_default)
 	/* Magic constant 0x40100401 to allow us to identify which lane
 	   matches the requested byte.  Magic constant 0x80200802 used
 	   similarly for NUL termination.  */
@@ -150,4 +150,4 @@ ENTRY(strchr)
 	add	result, src, tmp1, lsr #1
 	csel	result, result, xzr, eq
 	ret
-END(strchr)
+END(strchr_default)
