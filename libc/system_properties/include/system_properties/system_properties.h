@@ -66,6 +66,7 @@ class SystemProperties {
   int Get(const char* name, char* value);
   int Update(prop_info* pi, const char* value, unsigned int len);
   int Add(const char* name, unsigned int namelen, const char* value, unsigned int valuelen);
+  uint32_t Serial(const prop_info* pi);
   uint32_t WaitAny(uint32_t old_serial);
   bool Wait(const prop_info* pi, uint32_t old_serial, uint32_t* new_serial_ptr,
             const timespec* relative_timeout);
@@ -73,8 +74,6 @@ class SystemProperties {
   int Foreach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie);
 
  private:
-  uint32_t ReadMutablePropertyValue(const prop_info* pi, char* value);
-
   // We don't want to use new or malloc in properties (b/31659220), and we don't want to waste a
   // full page by using mmap(), so we set aside enough space to create any context of the three
   // contexts.

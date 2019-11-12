@@ -184,7 +184,7 @@ static void BM_property_serial(benchmark::State& state) {
 
   size_t i = 0;
   while (state.KeepRunning()) {
-    __system_property_serial(pinfo[i]);
+    pa.system_properties().Serial(pinfo[i]);
     i = (i + 1) % nprops;
   }
 
