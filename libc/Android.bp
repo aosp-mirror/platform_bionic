@@ -1710,6 +1710,8 @@ cc_library {
             strip: {
                 keep_symbols_and_debug_frame: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
