@@ -213,18 +213,31 @@ New libc functions in J (API level 16):
   * all of <sys/xattr.h>.
 
 libc function count over time:
-  G 803, H 825, I 826, J 846, J-MR1 873, J-MR2 881, K 896, L 1116, M 1181, N 1226, O 1278
 
+| OS    | API level | Function count |
+|-------|-----------|----------------|
+| J     | 16        | 842            |
+| J MR1 | 17        | 870            |
+| J MR2 | 18        | 878            |
+| K     | 19        | 893            |
+| L     | 21        | 1118           |
+| M     | 23        | 1183           |
+| N     | 24        | 1228           |
+| O     | 26        | 1280           |
+| P     | 28        | 1378           |
+| Q     | 29        | 1394           |
+
+Data collected by:
 ```
-ndk-r17$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
-  echo $i; nm $i | grep -vw [AbdNnt] | grep -vw B | wc -l ; done
+ndk-r21$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
+  echo $i; nm $i | grep -w T | wc -l ; done
 ```
 
 ### libm
 
 Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
 
-0 remaining missing POSIX libm functions.
+0 remaining missing C11/POSIX libm functions.
 
 New libm functions in O (API level 26):
   * <complex.h> `clog`/`clogf`, `cpow`/`cpowf` functions.
@@ -239,10 +252,6 @@ New libm functions in L (API level 21):
 
 New libm functions in J-MR2 (API level 18):
   * <math.h> `log2`, `log2f`.
-
-libm function count over time:
-  G 158, J-MR2 164, L 220, M 265, O 284
-
 
 
 ## Target API level behavioral differences
