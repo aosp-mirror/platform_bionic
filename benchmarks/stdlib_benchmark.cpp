@@ -24,11 +24,6 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-#if defined(__BIONIC__)
-
-#else
-#endif
-
 static __always_inline void MakeAllocationResident(void* ptr, size_t nbytes, int pagesize) {
   uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
   for (size_t i = 0; i < nbytes; i += pagesize) {

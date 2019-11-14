@@ -144,6 +144,32 @@ benchmarks. These benchmarks can be built using this command:
 These benchmarks are only used to verify the speed of the allocator and
 ignore anything related to RSS and virtual address space consumed.
 
+For all of these benchmark runs, it can be useful to add these two options:
+
+    --benchmark_repetitions=XX
+    --benchmark_report_aggregates_only=true
+
+This will run the benchmark XX times and then give a mean, median, and stddev
+and helps to get a number that can be compared to the new allocator.
+
+In addition, there is another option:
+
+    --bionic_cpu=XX
+
+Which will lock the benchmark to only run on core XX. This also avoids
+any issue related to the code migrating from one core to another
+with different characteristics. For example, on a big-little cpu, if the
+benchmark moves from big to little or vice-versa, this can cause scores
+to fluctuate in indeterminte ways.
+
+For most runs, the best set of options to add is:
+
+    --benchmark_repetitions=10 --benchmark_report_aggregates_only=true --bionic_cpu=3
+
+On most phones with a big-little cpu, the third core is the little core.
+Choosing to run on the little core can tend to highlight any performance
+differences.
+
 #### Allocate/Free Benchmarks
 These are the benchmarks to verify the allocation speed of a loop doing a
 single allocation, touching every page in the allocation to make it resident
@@ -239,6 +265,18 @@ To run the benchmarks with `mallopt(M_DECAY_TIME, 1)`, use these commands:
     adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --benchmark_filter=malloc_sql_trace_decay1
 
 These numbers should be as performant as the current allocator.
+
+#### mallinfo Benchmark
+This benchmark only verifies that mallinfo is still close to the performance
+of the current allocator.
+
+To run the benchmark, use these commands:
+
+    adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallinfo
+    adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallinfo
+
+Calls to mallinfo are used in ART so a new allocator is required to be
+nearly as performant as the current allocator.
 
 ### Memory Trace Benchmarks
 These benchmarks measure all three axes of a native allocator, RSS, virtual
