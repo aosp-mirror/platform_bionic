@@ -181,6 +181,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
+  __libc_init_fork_handler();
 
   call_ifunc_resolvers();
   apply_gnu_relro();
