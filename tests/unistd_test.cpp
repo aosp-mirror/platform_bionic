@@ -27,6 +27,7 @@
 #include <stdint.h>
 #include <sys/capability.h>
 #include <sys/param.h>
+#include <sys/resource.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -1065,11 +1066,38 @@ TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_ONLN) {
 }
 
 TEST(UNISTD_TEST, sysconf_SC_ARG_MAX) {
-  // https://lkml.org/lkml/2017/11/15/813.
-#if !defined(ARG_MAX)
-#define ARG_MAX 131072
-#endif
-  ASSERT_EQ(ARG_MAX, sysconf(_SC_ARG_MAX));
+  // Since Linux 2.6.23, ARG_MAX isn't a constant and depends on RLIMIT_STACK.
+  // See prepare_arg_pages() in the kernel for the gory details:
+  // https://elixir.bootlin.com/linux/v5.3.11/source/fs/exec.c#L451
+
+  // Get our current limit, and set things up so we restore the limit.
+  rlimit rl;
+  ASSERT_EQ(0, getrlimit(RLIMIT_STACK, &rl));
+  uint64_t original_rlim_cur = rl.rlim_cur;
+  if (rl.rlim_cur == RLIM_INFINITY) {
+    rl.rlim_cur = 8 * 1024 * 1024; // Bionic reports unlimited stacks as 8MiB.
+  }
+  auto guard = android::base::make_scope_guard([&rl, original_rlim_cur]() {
+    rl.rlim_cur = original_rlim_cur;
+    ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+  });
+
+  // _SC_ARG_MAX should be 1/4 the stack size.
+  EXPECT_EQ(static_cast<long>(rl.rlim_cur / 4), sysconf(_SC_ARG_MAX));
+
+  // If you have a really small stack, the kernel still guarantees "32 pages" (see fs/exec.c).
+  rl.rlim_cur = 1024;
+  rl.rlim_max = RLIM_INFINITY;
+  ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+
+  EXPECT_EQ(static_cast<long>(32 * sysconf(_SC_PAGE_SIZE)), sysconf(_SC_ARG_MAX));
+
+  // With a 128-page stack limit, we know exactly what _SC_ARG_MAX should be...
+  rl.rlim_cur = 128 * sysconf(_SC_PAGE_SIZE);
+  rl.rlim_max = RLIM_INFINITY;
+  ASSERT_EQ(0, setrlimit(RLIMIT_STACK, &rl));
+
+  EXPECT_EQ(static_cast<long>((128 * sysconf(_SC_PAGE_SIZE)) / 4), sysconf(_SC_ARG_MAX));
 }
 
 TEST(UNISTD_TEST, sysconf_unknown) {
