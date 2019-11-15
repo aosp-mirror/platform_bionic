@@ -1521,11 +1521,6 @@ LIBC_R { # introduced=R
 
 LIBC_PRIVATE {
   global:
-    ___Unwind_Backtrace; # arm
-    ___Unwind_ForcedUnwind; # arm
-    ___Unwind_RaiseException; # arm
-    ___Unwind_Resume; # arm
-    ___Unwind_Resume_or_Rethrow; # arm
     __accept4; # arm x86 mips
     __adddf3; # arm
     __addsf3; # arm
@@ -1635,24 +1630,8 @@ LIBC_PRIVATE {
     __getdents64; # arm x86 mips
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
-    __gnu_Unwind_Backtrace; # arm
-    __gnu_unwind_execute; # arm
     __gnu_Unwind_Find_exidx; # arm
-    __gnu_Unwind_ForcedUnwind; # arm
     __gnu_unwind_frame; # arm
-    __gnu_Unwind_RaiseException; # arm
-    __gnu_Unwind_Restore_VFP; # arm
-    __gnu_Unwind_Restore_VFP_D; # arm
-    __gnu_Unwind_Restore_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Restore_WMMXC; # arm
-    __gnu_Unwind_Restore_WMMXD; # arm
-    __gnu_Unwind_Resume; # arm
-    __gnu_Unwind_Resume_or_Rethrow; # arm
-    __gnu_Unwind_Save_VFP; # arm
-    __gnu_Unwind_Save_VFP_D; # arm
-    __gnu_Unwind_Save_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Save_WMMXC; # arm
-    __gnu_Unwind_Save_WMMXD; # arm
     __gtdf2; # arm
     __gtsf2; # arm
     __ledf2; # arm
@@ -1671,7 +1650,6 @@ LIBC_PRIVATE {
     __popcount_tab; # arm
     __popcountsi2; # arm x86 mips
     __pthread_gettid; # arm x86 mips
-    __restore_core_regs; # arm
     __sclose; # arm x86 mips
     __sdidinit; # arm x86 mips
     __set_errno; # arm x86 mips
@@ -1701,8 +1679,6 @@ LIBC_PRIVATE {
     _Unwind_Backtrace; # arm
     _Unwind_Complete; # arm
     _Unwind_DeleteException; # arm
-    _Unwind_ForcedUnwind; # arm
-    _Unwind_GetCFA; # arm
     _Unwind_GetDataRelBase; # arm
     _Unwind_GetLanguageSpecificData; # arm
     _Unwind_GetRegionStart; # arm
@@ -1711,7 +1687,6 @@ LIBC_PRIVATE {
     _Unwind_Resume; # arm
     _Unwind_Resume_or_Rethrow; # arm
     _Unwind_VRS_Get; # arm
-    _Unwind_VRS_Pop; # arm
     _Unwind_VRS_Set; # arm
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
@@ -1735,7 +1710,6 @@ LIBC_PRIVATE {
     memswap; # arm x86 mips
     pthread_attr_getstackaddr; # arm x86 mips
     pthread_attr_setstackaddr; # arm x86 mips
-    restore_core_regs; # arm
     SHA1Final; # arm x86 mips
     SHA1Init; # arm x86 mips
     SHA1Transform; # arm x86 mips
