@@ -2,6 +2,12 @@
   "presubmit": [
     {
       "name": "CtsBionicTestCases"
+    },
+    {
+      "name": "malloc_debug_system_tests"
+    },
+    {
+      "name": "malloc_hooks_system_tests"
     }
   ]
 }
