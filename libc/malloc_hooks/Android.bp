@@ -47,7 +47,8 @@ cc_library {
 // Unit Tests
 // ==============================================================
 cc_test {
-    name: "malloc_hooks_unit_tests",
+    name: "malloc_hooks_system_tests",
+    isolated: true,
 
     srcs: [
         "tests/malloc_hooks_tests.cpp",
@@ -70,4 +71,5 @@ cc_test {
         "-Wall",
         "-Werror",
     ],
+    test_suites: ["general-tests"],
 }
