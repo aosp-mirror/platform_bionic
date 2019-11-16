@@ -35,6 +35,11 @@
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
+// Call the libc malloc initialisers.
+__attribute__((constructor(1))) static void __scudo_preinit() {
+  __libc_globals.mutate(__libc_init_malloc);
+}
+
 #if defined(__i386__)
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
