@@ -101,11 +101,13 @@ void __libc_init_common() {
 
   __libc_add_main_thread();
 
-  // Register atfork handlers to take and release the arc4random lock.
-  pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
-
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
+}
+
+void __libc_init_fork_handler() {
+  // Register atfork handlers to take and release the arc4random lock.
+  pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
 }
 
 __noreturn static void __early_abort(int line) {
