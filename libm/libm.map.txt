@@ -296,56 +296,14 @@ LIBC_O { # introduced=O
 
 LIBC_DEPRECATED { # arm mips platform-only
   global: # arm mips
-    ___Unwind_Backtrace; # arm
-    ___Unwind_ForcedUnwind; # arm
-    ___Unwind_RaiseException; # arm
-    ___Unwind_Resume; # arm
-    ___Unwind_Resume_or_Rethrow; # arm
     __aeabi_d2lz; # arm
     __aeabi_d2ulz; # arm
     __aeabi_f2lz; # arm
     __aeabi_f2ulz; # arm
     __aeabi_l2d; # arm
-    __aeabi_unwind_cpp_pr0; # arm
-    __aeabi_unwind_cpp_pr1; # arm
-    __aeabi_unwind_cpp_pr2; # arm
     __fixdfdi; # arm mips
     __fixsfdi; # arm mips
     __fixunsdfdi; # arm mips
     __fixunssfdi; # arm mips
     __floatdidf; # arm
-    __gnu_Unwind_Backtrace; # arm
-    __gnu_unwind_execute; # arm
-    __gnu_Unwind_ForcedUnwind; # arm
-    __gnu_unwind_frame; # arm
-    __gnu_Unwind_RaiseException; # arm
-    __gnu_Unwind_Restore_VFP; # arm
-    __gnu_Unwind_Restore_VFP_D; # arm
-    __gnu_Unwind_Restore_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Restore_WMMXC; # arm
-    __gnu_Unwind_Restore_WMMXD; # arm
-    __gnu_Unwind_Resume; # arm
-    __gnu_Unwind_Resume_or_Rethrow; # arm
-    __gnu_Unwind_Save_VFP; # arm
-    __gnu_Unwind_Save_VFP_D; # arm
-    __gnu_Unwind_Save_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Save_WMMXC; # arm
-    __gnu_Unwind_Save_WMMXD; # arm
-    __restore_core_regs; # arm
-    _Unwind_Backtrace; # arm
-    _Unwind_Complete; # arm
-    _Unwind_DeleteException; # arm
-    _Unwind_ForcedUnwind; # arm
-    _Unwind_GetCFA; # arm
-    _Unwind_GetDataRelBase; # arm
-    _Unwind_GetLanguageSpecificData; # arm
-    _Unwind_GetRegionStart; # arm
-    _Unwind_GetTextRelBase; # arm
-    _Unwind_RaiseException; # arm
-    _Unwind_Resume; # arm
-    _Unwind_Resume_or_Rethrow; # arm
-    _Unwind_VRS_Get; # arm
-    _Unwind_VRS_Pop; # arm
-    _Unwind_VRS_Set; # arm
-    restore_core_regs; # arm
 } LIBC_O; # arm mips
