@@ -286,7 +286,6 @@ cc_library {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
-            whole_static_libs: [ "libgcc_stripped" ],
         },
 
         arm64: {
