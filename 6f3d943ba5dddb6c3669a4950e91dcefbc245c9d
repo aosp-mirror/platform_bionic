@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "737afc68_ad281547",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-11-19T17:33:44Z",
+      "side": 1,
+      "message": "This should avoid the cause of the previous revert in b/144100240. I plan to submit ag/9754153 as soon as this topic is merged into internal.",
+      "revId": "6f3d943ba5dddb6c3669a4950e91dcefbc245c9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
