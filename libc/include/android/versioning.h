@@ -30,6 +30,7 @@
 #define __INTRODUCED_IN_MIPS(api_level) __attribute__((annotate("introduced_in_mips=" #api_level)))
 
 #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
+#define __VERSIONER_FORTIFY_INLINE __attribute__((annotate("versioner_fortify_inline")))
 
 #else
 
@@ -43,5 +44,6 @@
 #define __INTRODUCED_IN_MIPS(api_level)
 
 #define __VERSIONER_NO_GUARD
+#define __VERSIONER_FORTIFY_INLINE
 
 #endif  // defined(__BIONIC_VERSIONER)
