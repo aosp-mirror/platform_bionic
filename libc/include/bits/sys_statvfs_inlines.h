@@ -38,20 +38,20 @@ __BEGIN_DECLS
 
 #if defined(__BIONIC_NEED_STATVFS_INLINES)
 
-static __inline void __bionic_statfs_to_statvfs(const struct statfs* __in,
-                                                struct statvfs* __out) {
-  __out->f_bsize = __in->f_bsize;
-  __out->f_frsize = __in->f_frsize;
-  __out->f_blocks = __in->f_blocks;
-  __out->f_bfree = __in->f_bfree;
-  __out->f_bavail = __in->f_bavail;
-  __out->f_files = __in->f_files;
-  __out->f_ffree = __in->f_ffree;
-  __out->f_favail = __in->f_ffree;
-  __out->f_fsid = __in->f_fsid.__val[0] |
-      __BIONIC_CAST(static_cast, uint64_t, __in->f_fsid.__val[1]) << 32;
-  __out->f_flag = __in->f_flags;
-  __out->f_namemax = __in->f_namelen;
+static __inline void __bionic_statfs_to_statvfs(const struct statfs* __src,
+                                                struct statvfs* __dst) {
+  __dst->f_bsize = __src->f_bsize;
+  __dst->f_frsize = __src->f_frsize;
+  __dst->f_blocks = __src->f_blocks;
+  __dst->f_bfree = __src->f_bfree;
+  __dst->f_bavail = __src->f_bavail;
+  __dst->f_files = __src->f_files;
+  __dst->f_ffree = __src->f_ffree;
+  __dst->f_favail = __src->f_ffree;
+  __dst->f_fsid = __src->f_fsid.__val[0] |
+      __BIONIC_CAST(static_cast, uint64_t, __src->f_fsid.__val[1]) << 32;
+  __dst->f_flag = __src->f_flags;
+  __dst->f_namemax = __src->f_namelen;
 }
 
 __BIONIC_SYS_STATVFS_INLINE int statvfs(const char* __path,
