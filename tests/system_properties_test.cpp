@@ -340,9 +340,9 @@ TEST(properties, __system_property_serial) {
     ASSERT_EQ(0, system_properties.Add("property", 8, "value1", 6));
     const prop_info* pi = system_properties.Find("property");
     ASSERT_TRUE(pi != nullptr);
-    unsigned serial = system_properties.Serial(pi);
+    unsigned serial = __system_property_serial(pi);
     ASSERT_EQ(0, system_properties.Update(const_cast<prop_info*>(pi), "value2", 6));
-    ASSERT_NE(serial, system_properties.Serial(pi));
+    ASSERT_NE(serial, __system_property_serial(pi));
 #else // __BIONIC__
     GTEST_SKIP() << "bionic-only test";
 #endif // __BIONIC__
@@ -389,7 +389,7 @@ TEST(properties, __system_property_wait) {
     prop_info* pi = const_cast<prop_info*>(system_properties.Find("property"));
     ASSERT_TRUE(pi != nullptr);
 
-    unsigned serial = system_properties.Serial(pi);
+    unsigned serial = __system_property_serial(pi);
 
     std::thread thread([&system_properties]() {
         prop_info* pi = const_cast<prop_info*>(system_properties.Find("property"));

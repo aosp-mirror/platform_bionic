@@ -42,9 +42,9 @@
 __BEGIN_DECLS
 
 // FIXME: implement these in HWASan allocator.
-int __sanitizer_iterate(uintptr_t base, size_t size,
-                        void (*callback)(uintptr_t base, size_t size, void* arg),
-                        void* arg);
+int __sanitizer_malloc_iterate(uintptr_t base, size_t size,
+                               void (*callback)(uintptr_t base, size_t size, void* arg),
+                               void* arg);
 void __sanitizer_malloc_disable();
 void __sanitizer_malloc_enable();
 int __sanitizer_malloc_info(int options, FILE* fp);

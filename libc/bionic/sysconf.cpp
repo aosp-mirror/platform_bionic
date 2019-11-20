@@ -52,16 +52,31 @@ long sysconf(int name) {
     // Things we actually have to calculate...
     //
     case _SC_ARG_MAX:
-      // https://lkml.org/lkml/2017/11/15/813...
+      // You might think that just returning a constant 128KiB (ARG_MAX) would
+      // make sense, as this guy did:
       //
-      // I suspect a 128kB sysconf(_SC_ARG_MAX) is the sanest bet, simply
-      // because of that "conservative is better than aggressive".
+      //   https://lkml.org/lkml/2017/11/15/813...
       //
-      // Especially since _technically_ we're still limiting things to that
-      // 128kB due to the single-string limit.
+      //   I suspect a 128kB sysconf(_SC_ARG_MAX) is the sanest bet, simply
+      //   because of that "conservative is better than aggressive".
       //
-      //               Linus
-      return ARG_MAX;
+      //   Especially since _technically_ we're still limiting things to that
+      //   128kB due to the single-string limit.
+      //
+      //                 Linus
+      //
+      // In practice that caused us trouble with toybox tests for xargs edge
+      // cases. The tests assume that they can at least reach the kernel's
+      // "minimum maximum" of 128KiB, but if we report 128KiB for _SC_ARG_MAX
+      // and xargs starts subtracting the environment space and so on from that,
+      // then xargs will think it's run out of space when given 128KiB of data,
+      // which should always work. See this thread for more:
+      //
+      // http://lists.landley.net/pipermail/toybox-landley.net/2019-November/011229.html
+      //
+      // So let's resign ourselves to tracking what the kernel actually does.
+      // Right now (2019, Linux 5.3) that amounts to:
+      return MAX(MIN(__sysconf_rlimit(RLIMIT_STACK) / 4, 3 * _STK_LIM / 4), ARG_MAX);
 
     case _SC_AVPHYS_PAGES:      return get_avphys_pages();
     case _SC_CHILD_MAX:         return __sysconf_rlimit(RLIMIT_NPROC);

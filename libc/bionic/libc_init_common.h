@@ -56,4 +56,8 @@ __LIBC_HIDDEN__ void __libc_init_common();
 
 __LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
 
+// The fork handler must be initialised after __libc_init_malloc, as
+// pthread_atfork may call malloc() during its once-init.
+__LIBC_HIDDEN__ void __libc_init_fork_handler();
+
 #endif

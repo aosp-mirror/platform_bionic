@@ -42,7 +42,6 @@ libc_common_flags = [
     "-Wno-deprecated-declarations",
     "-Wno-gcc-compat",
     "-Wframe-larger-than=2048",
-    "-Wimplicit-fallthrough",
 
     // Try to catch typical 32-bit assumptions that break with 64-bit pointers.
     "-Werror=pointer-to-int-cast",
@@ -1711,6 +1710,8 @@ cc_library {
             strip: {
                 keep_symbols_and_debug_frame: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
