@@ -103,6 +103,14 @@ void __libc_init_common() {
 
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
+
+  // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
+  // returns -EINVAL) if the kernel doesn't understand the prctl.
+#if defined(__aarch64__)
+#define PR_SET_TAGGED_ADDR_CTRL 55
+#define PR_TAGGED_ADDR_ENABLE   (1UL << 0)
+  prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+#endif
 }
 
 void __libc_init_fork_handler() {
