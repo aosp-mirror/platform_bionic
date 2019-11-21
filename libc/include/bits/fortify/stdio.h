@@ -36,7 +36,7 @@ size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(
 
 #if defined(__BIONIC_FORTIFY) && !defined(__BIONIC_NO_STDIO_FORTIFY)
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
 int vsnprintf(char* const __pass_object_size dest, size_t size, const char* format, va_list ap)
@@ -48,7 +48,7 @@ __BIONIC_FORTIFY_INLINE __printflike(2, 0)
 int vsprintf(char* const __pass_object_size dest, const char* format, va_list ap) __overloadable {
     return __builtin___vsprintf_chk(dest, 0, __bos(dest), format, ap);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
 
 __BIONIC_ERROR_FUNCTION_VISIBILITY
 int sprintf(char* dest, const char* format)
@@ -57,7 +57,7 @@ int sprintf(char* dest, const char* format)
                 "format string will always overflow destination buffer")
     __errorattr("format string will always overflow destination buffer");
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_VARIADIC __printflike(2, 3)
 int sprintf(char* const __pass_object_size dest, const char* format, ...) __overloadable {
     va_list va;
@@ -77,7 +77,7 @@ int snprintf(char* const __pass_object_size dest, size_t size, const char* forma
     va_end(va);
     return result;
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
 
 #define __bos_trivially_ge_mul(bos_val, size, count) \
   __bos_dynamic_check_impl_and(bos_val, >=, (size) * (count), \
@@ -90,13 +90,13 @@ size_t fread(void* const __pass_object_size0 buf, size_t size, size_t count, FIL
                          "in call to 'fread', size * count overflows")
         __clang_error_if(__bos_unevaluated_lt(__bos0(buf), size * count),
                          "in call to 'fread', size * count is too large for the given buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= __ANDROID_API_N__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos0(buf);
 
     if (!__bos_trivially_ge_mul(bos, size, count)) {
         return __fread_chk(buf, size, count, stream, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+#endif
     return __call_bypassing_fortify(fread)(buf, size, count, stream);
 }
 
@@ -107,13 +107,13 @@ size_t fwrite(const void* const __pass_object_size0 buf, size_t size, size_t cou
                          "in call to 'fwrite', size * count overflows")
         __clang_error_if(__bos_unevaluated_lt(__bos0(buf), size * count),
                          "in call to 'fwrite', size * count is too large for the given buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= __ANDROID_API_N__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos0(buf);
 
     if (!__bos_trivially_ge_mul(bos, size, count)) {
         return __fwrite_chk(buf, size, count, stream, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_N__ */
+#endif
     return __call_bypassing_fortify(fwrite)(buf, size, count, stream);
 }
 #undef __bos_trivially_ge_mul
@@ -124,13 +124,13 @@ char* fgets(char* const __pass_object_size dest, int size, FILE* stream)
         __clang_error_if(size < 0, "in call to 'fgets', size should not be negative")
         __clang_error_if(__bos_unevaluated_lt(__bos(dest), size),
                          "in call to 'fgets', size is larger than the destination buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos(dest);
 
     if (!__bos_dynamic_check_impl_and(bos, >=, (size_t)size, size >= 0)) {
         return __fgets_chk(dest, size, stream, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __call_bypassing_fortify(fgets)(dest, size, stream);
 }
 
