@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "082c32bd_d6d88271",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-11-21T16:16:51Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s a pain. I suspect we need to get used to it. :\\ Anyway, clarified here.",
+      "parentUuid": "d12d5de2_1d05d9bd",
+      "range": {
+        "startLine": 7,
+        "startChar": 33,
+        "endLine": 7,
+        "endChar": 40
+      },
+      "revId": "6f3d943ba5dddb6c3669a4950e91dcefbc245c9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "737afc68_ad281547",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
