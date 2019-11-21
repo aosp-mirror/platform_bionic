@@ -41,11 +41,11 @@ mode_t umask(mode_t mode)
     __overloadable
     __enable_if(1, "")
     __clang_error_if(mode & ~0777, "'umask' called with invalid mode") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR2__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   return __umask_chk(mode);
 #else
   return __umask_real(mode);
-#endif  /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+#endif
 }
 
 #endif /* defined(__BIONIC_FORTIFY) */
