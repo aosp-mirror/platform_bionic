@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d12d5de2_1d05d9bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-11-21T16:11:35Z",
+      "side": 1,
+      "message": "(this name still confuses me! my immediate reaction was \"shouldn\u0027t it be in the bionic apex?\"...)",
+      "range": {
+        "startLine": 7,
+        "startChar": 33,
+        "endLine": 7,
+        "endChar": 40
+      },
+      "revId": "6f3d943ba5dddb6c3669a4950e91dcefbc245c9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "737afc68_ad281547",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
