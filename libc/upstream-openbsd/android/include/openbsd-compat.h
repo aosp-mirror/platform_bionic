@@ -19,6 +19,8 @@
 #define _BSD_SOURCE
 #include <sys/cdefs.h>
 
+#include <unistd.h> // For environ.
+
 #include <stddef.h> // For size_t.
 
 #include <sys/random.h> // For getentropy.
