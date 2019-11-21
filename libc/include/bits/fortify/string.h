@@ -40,7 +40,7 @@ size_t __strlcat_chk(char*, const char*, size_t, size_t) __INTRODUCED_IN(17);
 #if defined(__BIONIC_FORTIFY)
 extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
@@ -61,7 +61,7 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) 
     }
     return __builtin___memmove_chk(dst, src, len, bos_dst);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
 
 #if defined(__USE_GNU)
 #if __ANDROID_API__ >= __ANDROID_API_R__
@@ -70,11 +70,13 @@ void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
                          "'mempcpy' called with size bigger than buffer") {
+#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_ge(bos_dst, copy_amount)) {
-        return __builtin_mempcpy(dst, src, copy_amount);
+    if (!__bos_trivially_ge(bos_dst, copy_amount)) {
+        return __builtin___mempcpy_chk(dst, src, copy_amount, bos_dst);
     }
-    return __builtin___mempcpy_chk(dst, src, copy_amount, bos_dst);
+#endif
+    return __builtin_mempcpy(dst, src, copy_amount);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_R__ */
 #endif /* __USE_GNU */
@@ -84,12 +86,12 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'stpcpy' called with string bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= __ANDROID_API_L__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos_dst = __bos(dst);
     if (!__bos_trivially_gt(bos_dst, __builtin_strlen(src))) {
         return __builtin___stpcpy_chk(dst, src, bos_dst);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
+#endif
     return __builtin_stpcpy(dst, src);
 }
 
@@ -98,12 +100,12 @@ char* strcpy(char* const dst __pass_object_size, const char* src)
         __overloadable
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos_dst = __bos(dst);
     if (!__bos_trivially_gt(bos_dst, __builtin_strlen(src))) {
         return __builtin___strcpy_chk(dst, src, bos_dst);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __builtin_strcpy(dst, src);
 }
 
@@ -112,36 +114,36 @@ char* strcat(char* const dst __pass_object_size, const char* src)
         __overloadable
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'strcat' called with string bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     return __builtin___strcat_chk(dst, src, __bos(dst));
 #else
     return __builtin_strcat(dst, src);
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
 }
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __overloadable {
     return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
 
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable
         /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
         __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos0(s);
     if (!__bos_trivially_ge(bos, n)) {
         return __builtin___memset_chk(s, c, n, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __builtin_memset(s, c, n);
 }
 
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= __ANDROID_API_M__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_INLINE
 void* memchr(const void* const s __pass_object_size, int c, size_t n) __overloadable {
     size_t bos = __bos(s);
@@ -163,9 +165,9 @@ void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n)
 
     return __memrchr_chk(s, c, n, bos);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+#endif
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= __ANDROID_API_L__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
@@ -195,20 +197,20 @@ char* strncpy(char* const dst __pass_object_size, const char* const src __pass_o
 
     return __strncpy_chk2(dst, src, n, bos_dst, bos_src);
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
+#endif
 
 __BIONIC_FORTIFY_INLINE
 size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
                          "'strlcpy' called with size bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos(dst);
 
     if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcpy_chk(dst, src, size, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __call_bypassing_fortify(strlcpy)(dst, src, size);
 }
 
@@ -217,53 +219,53 @@ size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
                          "'strlcat' called with size bigger than buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos(dst);
 
     if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strlcat_chk(dst, src, size, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __call_bypassing_fortify(strlcat)(dst, src, size);
 }
 
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char* const s __pass_object_size0) __overloadable {
+#if __ANDROID_API__ >= __ANDROID_API_J_MR1__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos0(s);
 
-#if __ANDROID_API__ >= __ANDROID_API_J_MR1__
     if (!__bos_trivially_gt(bos, __builtin_strlen(s))) {
         return __strlen_chk(s, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR1__ */
+#endif
     return __builtin_strlen(s);
 }
 
 __BIONIC_FORTIFY_INLINE
 char* strchr(const char* const s __pass_object_size, int c) __overloadable {
-#if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
+#if  __ANDROID_API__ >= __ANDROID_API_J_MR2__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos(s);
 
     if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strchr_chk(s, c, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+#endif
     return __builtin_strchr(s, c);
 }
 
 __BIONIC_FORTIFY_INLINE
 char* strrchr(const char* const s __pass_object_size, int c) __overloadable {
-#if  __ANDROID_API__ >= __ANDROID_API_J_MR2__
+#if  __ANDROID_API__ >= __ANDROID_API_J_MR2__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     size_t bos = __bos(s);
 
     if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
         return __strrchr_chk(s, c, bos);
     }
-#endif /* __ANDROID_API__ >= __ANDROID_API_J_MR2__ */
+#endif
     return __builtin_strrchr(s, c);
 }
 
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= __ANDROID_API_M__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 #if defined(__cplusplus)
 extern "C++" {
 __BIONIC_FORTIFY_INLINE
