@@ -237,14 +237,15 @@
 #define __BIONIC_FORTIFY_UNKNOWN_SIZE ((size_t) -1)
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE > 0
-/*
- * FORTIFY's _chk functions effectively disable ASAN's stdlib interceptors.
- * Additionally, the static analyzer/clang-tidy try to pattern match some
- * standard library functions, and FORTIFY sometimes interferes with this. So,
- * we turn FORTIFY off in both cases.
- */
-#  if !__has_feature(address_sanitizer) && !defined(__clang_analyzer__)
+/* FORTIFY can interfere with pattern-matching of clang-tidy/the static analyzer.  */
+#  if !defined(__clang_analyzer__)
 #    define __BIONIC_FORTIFY 1
+/* ASAN has interceptors that FORTIFY's _chk functions can break.  */
+#    if __has_feature(address_sanitizer)
+#      define __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED 0
+#    else
+#      define __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED 1
+#    endif
 #  endif
 #endif
 
