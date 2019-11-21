@@ -3113,7 +3113,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -------------------------------------------------------------------
 
-Copyright (c) 1997 Todd C. Miller <Todd.Miller@courtesan.com>
+Copyright (c) 1997 Todd C. Miller <millert@openbsd.org>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -3353,7 +3353,7 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -------------------------------------------------------------------
 
-Copyright (c) 1998, 2015 Todd C. Miller <Todd.Miller@courtesan.com>
+Copyright (c) 1998, 2015 Todd C. Miller <millert@openbsd.org>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -4560,7 +4560,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 -------------------------------------------------------------------
 
-Copyright (c) 2007 Todd C. Miller <Todd.Miller@courtesan.com>
+Copyright (c) 2007 Todd C. Miller <millert@openbsd.org>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -4923,7 +4923,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 -------------------------------------------------------------------
 
-Copyright (c) 2010 Todd C. Miller <Todd.Miller@courtesan.com>
+Copyright (c) 2010 Todd C. Miller <millert@openbsd.org>
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
