@@ -94,6 +94,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8ad566d_c5a1b05b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-11-25T07:55:06Z",
+      "side": 1,
+      "message": "bind mounts works on files as well. so I suggest\n\na) /system/etc/linkerconfig/ld.config.txt \u003c-- the path that linker uses\nb) /system/etc/linkerconfig/bootstrap.ld.config.txt \u003c-- the file that was created for the boostrap ns\nc) /system/etc/linkerconfig/default.ld.config.txt \u003c- the file that was created for the default ns\n\nb) is bind mounted to a) in the bootstrap ns, while c) is bind mounted to a) in the default ns",
+      "parentUuid": "b82d23fc_9dffecb8",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
