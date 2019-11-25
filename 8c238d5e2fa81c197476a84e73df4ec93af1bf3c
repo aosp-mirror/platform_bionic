@@ -166,6 +166,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ef1a537_7d4b26bc",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-11-25T10:18:19Z",
+      "side": 1,
+      "message": "I thought \u0027current\u0027 idea to 1) flexible from any additional scenarios - we can have more versions of linker configuration and 2) easy to debug ld.config.txt content from any namespaces. By bind-mounting child dir to parent dir we would lose access to any other ld.config.txt, because as soon as we unmount bind-mounted child dir most of process would not work before we bind-mount one of the child dir with linker configuration. I agree that if we hide subdirs by bind mount it would look more clear, but just worried if there would be any corner cases.",
+      "parentUuid": "c82725c7_3d33f5e9",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
