@@ -46,6 +46,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5d5c1b4_1f512336",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-11-25T07:34:14Z",
+      "side": 1,
+      "message": "I don\u0027t get it. We will have different mounts at /system/etc/linkerconfig. I don\u0027t understand the reason to have additional sub directories to distinguish  something.",
+      "parentUuid": "2f78f46c_e0f5ca79",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
