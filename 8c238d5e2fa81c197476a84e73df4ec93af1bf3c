@@ -142,6 +142,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c82725c7_3d33f5e9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-11-25T08:58:04Z",
+      "side": 1,
+      "message": "ok, but even in that case, we don\u0027t need the \"current\" subdir. We could bind-mount /system/etc/linkerconfig/{boostrap|default}/ to /system/etc/linkerconfig.",
+      "parentUuid": "a0765786_a463c70e",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
