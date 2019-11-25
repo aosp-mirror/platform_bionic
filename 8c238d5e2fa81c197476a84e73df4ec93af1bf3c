@@ -70,6 +70,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b82d23fc_9dffecb8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-11-25T07:43:35Z",
+      "side": 1,
+      "message": "We should keep multiple linker configurations at some location. I thought to keep them in the /system/etc/linkerconfig, with different subdirectories, and keep point which one is current by bind-mount it to current subdirectory.",
+      "parentUuid": "c5d5c1b4_1f512336",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
