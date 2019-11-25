@@ -118,6 +118,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0765786_a463c70e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-11-25T08:13:08Z",
+      "side": 1,
+      "message": "I didn\u0027t know that bind mount works with file! Anyway, there will be more linker configurations from APEX module with binary, so I thought managing with directory would make more sense. WDYT about this?",
+      "parentUuid": "c8ad566d_c5a1b05b",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
