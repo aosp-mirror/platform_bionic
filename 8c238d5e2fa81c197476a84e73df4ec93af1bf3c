@@ -214,6 +214,30 @@
       "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0802ac1c_f1c7b51d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-11-26T01:22:20Z",
+      "side": 1,
+      "message": "Just worried if debugging linker configuration would be so difficult (enough to require extra manual for that). Anyway I like the idea that in normal case we just need to check /system/etc/linkerconfig so I will update this source code and design doc also soon. Thanks for your suggestion.",
+      "parentUuid": "485d7efe_0f1f65fa",
+      "range": {
+        "startLine": 98,
+        "startChar": 80,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "8c238d5e2fa81c197476a84e73df4ec93af1bf3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
