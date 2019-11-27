@@ -16,6 +16,10 @@
 
 #pragma once
 
+// The `annotate` attribute always pulls the annotated (inline) function into the object files, thus
+// we should only annotate headers when we are running versioner.
+#if defined(__BIONIC_VERSIONER)
+
 #define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
 #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
 #define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
@@ -26,3 +30,18 @@
 #define __INTRODUCED_IN_MIPS(api_level) __attribute__((annotate("introduced_in_mips=" #api_level)))
 
 #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
+
+#else
+
+#define __INTRODUCED_IN(api_level)
+#define __DEPRECATED_IN(api_level)
+#define __REMOVED_IN(api_level)
+#define __INTRODUCED_IN_32(api_level)
+#define __INTRODUCED_IN_64(api_level)
+#define __INTRODUCED_IN_ARM(api_level)
+#define __INTRODUCED_IN_X86(api_level)
+#define __INTRODUCED_IN_MIPS(api_level)
+
+#define __VERSIONER_NO_GUARD
+
+#endif  // defined(__BIONIC_VERSIONER)
