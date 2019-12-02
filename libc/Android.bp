@@ -536,7 +536,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strpbrk.c",
         "upstream-openbsd/lib/libc/string/strsep.c",
         "upstream-openbsd/lib/libc/string/strspn.c",
-        "upstream-openbsd/lib/libc/string/strstr.c",
         "upstream-openbsd/lib/libc/string/strtok.c",
         "upstream-openbsd/lib/libc/string/strxfrm.c",
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
@@ -564,6 +563,7 @@ cc_library_static {
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/strstr.c",
     ],
     cflags: [
         "-include openbsd-compat.h",
