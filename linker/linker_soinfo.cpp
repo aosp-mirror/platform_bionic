@@ -36,6 +36,7 @@
 
 #include <async_safe/log.h>
 
+#include "linker_config.h"
 #include "linker_debug.h"
 #include "linker_globals.h"
 #include "linker_logger.h"
@@ -85,11 +86,7 @@ void soinfo::set_dt_runpath(const char* path) {
   // FIXME: add $PLATFORM.
   std::vector<std::pair<std::string, std::string>> params = {
     {"ORIGIN", origin},
-#if defined(LIB_PATH)
-    {"LIB", LIB_PATH},
-#else
-#error "LIB_PATH not defined"
-#endif
+    {"LIB", kLibPath},
   };
   for (auto&& s : runpaths) {
     format_string(&s, params);
