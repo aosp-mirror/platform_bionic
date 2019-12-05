@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "239ab7b3_e12aa59d",
+        "filename": "linker/arch/arm_neon/linker_gnu_hash.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-05T05:11:24Z",
+      "side": 1,
+      "message": "or generate it with a genrule and #include it here?",
+      "revId": "33154e2e0e0aabd002ec930cfdf64a7e69b7c636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79130403_bfd1a0f2",
+        "filename": "linker/linker.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-05T05:11:24Z",
+      "side": 1,
+      "message": "if there\u0027s no concrete plan, may as well remove this comment.",
+      "revId": "33154e2e0e0aabd002ec930cfdf64a7e69b7c636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35aec9dd_52a8d74b",
+        "filename": "linker/linker_relocate.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-05T05:11:24Z",
+      "side": 1,
+      "message": "(else after a return always makes me think i\u0027ve misunderstood something.)",
+      "range": {
+        "startLine": 130,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 8
+      },
+      "revId": "33154e2e0e0aabd002ec930cfdf64a7e69b7c636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02be7fd4_351cde53",
+        "filename": "linker/linker_relocate.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-05T05:11:24Z",
+      "side": 1,
+      "message": "as opposed to the `public:` above? :-)\n\nmay as well just call this a struct?",
+      "revId": "33154e2e0e0aabd002ec930cfdf64a7e69b7c636",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
