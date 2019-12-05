@@ -335,11 +335,7 @@ cc_binary {
 
     symlinks: ["linker_asan"],
     multilib: {
-        lib32: {
-            cflags: ["-DLIB_PATH=\"lib\""],
-        },
         lib64: {
-            cflags: ["-DLIB_PATH=\"lib64\""],
             suffix: "64",
         },
     },
