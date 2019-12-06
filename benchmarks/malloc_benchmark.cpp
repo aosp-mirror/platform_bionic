@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,102 +27,46 @@
  */
 
 #include <malloc.h>
-#include <stdlib.h>
+#include <unistd.h>
+
+#include <vector>
 
 #include <benchmark/benchmark.h>
 #include "util.h"
 
 #if defined(__BIONIC__)
 
-enum AllocEnum : uint8_t {
-  MALLOC = 0,
-  CALLOC,
-  MEMALIGN,
-  REALLOC,
-  FREE,
-};
-
-struct MallocEntry {
-  AllocEnum type;
-  size_t idx;
-  size_t size;
-  size_t arg2;
-};
-
-void BenchmarkMalloc(MallocEntry entries[], size_t total_entries, size_t max_allocs) {
-  void* ptrs[max_allocs];
-
-  for (size_t i = 0; i < total_entries; i++) {
-    switch (entries[i].type) {
-    case MALLOC:
-      ptrs[entries[i].idx] = malloc(entries[i].size);
-      // Touch at least one byte of the allocation to make sure that
-      // PSS for this allocation is counted.
-      reinterpret_cast<uint8_t*>(ptrs[entries[i].idx])[0] = 10;
-      break;
-    case CALLOC:
-      ptrs[entries[i].idx] = calloc(entries[i].arg2, entries[i].size);
-      // Touch at least one byte of the allocation to make sure that
-      // PSS for this allocation is counted.
-      reinterpret_cast<uint8_t*>(ptrs[entries[i].idx])[0] = 20;
-      break;
-    case MEMALIGN:
-      ptrs[entries[i].idx] = memalign(entries[i].arg2, entries[i].size);
-      // Touch at least one byte of the allocation to make sure that
-      // PSS for this allocation is counted.
-      reinterpret_cast<uint8_t*>(ptrs[entries[i].idx])[0] = 30;
-      break;
-    case REALLOC:
-      if (entries[i].arg2 == 0) {
-        ptrs[entries[i].idx] = realloc(nullptr, entries[i].size);
-      } else {
-        ptrs[entries[i].idx] = realloc(ptrs[entries[i].arg2 - 1], entries[i].size);
-      }
-      // Touch at least one byte of the allocation to make sure that
-      // PSS for this allocation is counted.
-      reinterpret_cast<uint8_t*>(ptrs[entries[i].idx])[0] = 40;
-      break;
-    case FREE:
-      free(ptrs[entries[i].idx]);
-      break;
-    }
-  }
-}
-
-// This codifies playing back a single threaded trace of the allocations
-// when running the SQLite BenchMark app.
-// Instructions for recreating:
-//   - Enable malloc debug
-//       setprop wrap.com.wtsang02.sqliteutil "LIBC_DEBUG_MALLOC_OPTIONS=record_allocs logwrapper"
-//   - Start the SQLite BenchMark app
-//   - Dump allocs using the signal to get rid of non sql allocs(kill -47 <SQLITE_PID>)
-//   - Run the benchmark.
-//   - Dump allocs using the signal again.
-//   - Find the thread that has the most allocs and run the helper script
-//       bionic/libc/malloc_debug/tools/gen_malloc.pl -i <THREAD_ID> g_sql_entries kMaxSqlAllocSlots < <ALLOC_FILE> > malloc_sql.h
-#include "malloc_sql.h"
-
-static void BM_malloc_sql_trace_default(benchmark::State& state) {
-  // The default is expected to be a zero decay time.
-  mallopt(M_DECAY_TIME, 0);
-
-  for (auto _ : state) {
-    BenchmarkMalloc(g_sql_entries, sizeof(g_sql_entries) / sizeof(MallocEntry),
-                    kMaxSqlAllocSlots);
-  }
-}
-BIONIC_BENCHMARK(BM_malloc_sql_trace_default);
-
-static void BM_malloc_sql_trace_decay1(benchmark::State& state) {
+static void BM_mallopt_purge(benchmark::State& state) {
+  static size_t sizes[] = {8, 16, 32, 64, 128, 1024, 4096, 16384, 65536, 131072, 1048576};
+  static int pagesize = getpagesize();
   mallopt(M_DECAY_TIME, 1);
-
+  mallopt(M_PURGE, 0);
   for (auto _ : state) {
-    BenchmarkMalloc(g_sql_entries, sizeof(g_sql_entries) / sizeof(MallocEntry),
-                    kMaxSqlAllocSlots);
-  }
+    state.PauseTiming();
+    std::vector<void*> ptrs;
+    for (auto size : sizes) {
+      // Allocate at least two pages worth of the allocations.
+      for (size_t allocated = 0; allocated < 2 * static_cast<size_t>(pagesize); allocated += size) {
+        void* ptr = malloc(size);
+        if (ptr == nullptr) {
+          state.SkipWithError("Failed to allocate memory");
+        }
+        MakeAllocationResident(ptr, size, pagesize);
+        ptrs.push_back(ptr);
+      }
+    }
+    // Free the memory, which should leave many of the pages resident until
+    // the purge call.
+    for (auto ptr : ptrs) {
+      free(ptr);
+    }
+    ptrs.clear();
+    state.ResumeTiming();
 
+    mallopt(M_PURGE, 0);
+  }
   mallopt(M_DECAY_TIME, 0);
 }
-BIONIC_BENCHMARK(BM_malloc_sql_trace_decay1);
+BIONIC_BENCHMARK(BM_mallopt_purge);
 
 #endif

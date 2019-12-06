@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 #include <map>
 #include <mutex>
 #include <string>
@@ -68,3 +70,11 @@ wchar_t* GetAlignedPtr(std::vector<wchar_t>* buf, size_t alignment, size_t nbyte
 char* GetAlignedPtrFilled(std::vector<char>* buf, size_t alignment, size_t nbytes, char fill_byte);
 
 bool LockToCPU(int cpu_to_lock);
+
+static __inline __attribute__ ((__always_inline__)) void MakeAllocationResident(
+    void* ptr, size_t nbytes, int pagesize) {
+  uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
+  for (size_t i = 0; i < nbytes; i += pagesize) {
+    data[i] = 1;
+  }
+}

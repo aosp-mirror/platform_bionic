@@ -160,7 +160,7 @@ Which will lock the benchmark to only run on core XX. This also avoids
 any issue related to the code migrating from one core to another
 with different characteristics. For example, on a big-little cpu, if the
 benchmark moves from big to little or vice-versa, this can cause scores
-to fluctuate in indeterminte ways.
+to fluctuate in indeterminate ways.
 
 For most runs, the best set of options to add is:
 
@@ -277,6 +277,18 @@ To run the benchmark, use these commands:
 
 Calls to mallinfo are used in ART so a new allocator is required to be
 nearly as performant as the current allocator.
+
+#### mallopt M\_PURGE Benchmark
+This benchmark tracks the cost of calling `mallopt(M_PURGE, 0)`. As with the
+mallinfo benchmark, it's not necessary for this to be better than the previous
+allocator, only that the performance be in the same order of magnitude.
+
+To run the benchmark, use these commands:
+
+    adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallopt_purge
+    adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallopt_purge
+
+These calls are used to free unused memory pages back to the kernel.
 
 ### Memory Trace Benchmarks
 These benchmarks measure all three axes of a native allocator, RSS, virtual
