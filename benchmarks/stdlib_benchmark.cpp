@@ -24,13 +24,6 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
-static __always_inline void MakeAllocationResident(void* ptr, size_t nbytes, int pagesize) {
-  uint8_t* data = reinterpret_cast<uint8_t*>(ptr);
-  for (size_t i = 0; i < nbytes; i += pagesize) {
-    data[i] = 1;
-  }
-}
-
 static void MallocFree(benchmark::State& state) {
   const size_t nbytes = state.range(0);
   int pagesize = getpagesize();
