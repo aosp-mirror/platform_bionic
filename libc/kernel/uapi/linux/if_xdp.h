@@ -22,6 +22,8 @@
 #define XDP_SHARED_UMEM (1 << 0)
 #define XDP_COPY (1 << 1)
 #define XDP_ZEROCOPY (1 << 2)
+#define XDP_USE_NEED_WAKEUP (1 << 3)
+#define XDP_UMEM_UNALIGNED_CHUNK_FLAG (1 << 0)
 struct sockaddr_xdp {
   __u16 sxdp_family;
   __u16 sxdp_flags;
@@ -29,10 +31,12 @@ struct sockaddr_xdp {
   __u32 sxdp_queue_id;
   __u32 sxdp_shared_umem_fd;
 };
+#define XDP_RING_NEED_WAKEUP (1 << 0)
 struct xdp_ring_offset {
   __u64 producer;
   __u64 consumer;
   __u64 desc;
+  __u64 flags;
 };
 struct xdp_mmap_offsets {
   struct xdp_ring_offset rx;
@@ -53,6 +57,7 @@ struct xdp_umem_reg {
   __u64 len;
   __u32 chunk_size;
   __u32 headroom;
+  __u32 flags;
 };
 struct xdp_statistics {
   __u64 rx_dropped;
@@ -67,6 +72,8 @@ struct xdp_options {
 #define XDP_PGOFF_TX_RING 0x80000000
 #define XDP_UMEM_PGOFF_FILL_RING 0x100000000ULL
 #define XDP_UMEM_PGOFF_COMPLETION_RING 0x180000000ULL
+#define XSK_UNALIGNED_BUF_OFFSET_SHIFT 48
+#define XSK_UNALIGNED_BUF_ADDR_MASK ((1ULL << XSK_UNALIGNED_BUF_OFFSET_SHIFT) - 1)
 struct xdp_desc {
   __u64 addr;
   __u32 len;

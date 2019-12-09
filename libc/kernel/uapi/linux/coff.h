@@ -16,6 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifndef _UAPI_LINUX_COFF_H
+#define _UAPI_LINUX_COFF_H
 #define E_SYMNMLEN 8
 #define E_FILNMLEN 14
 #define E_DIMNUM 4
@@ -193,3 +195,4 @@ struct COFF_reloc {
 #define COFF_DEF_BSS_SECTION_ALIGNMENT 4
 #define COFF_DEF_TEXT_SECTION_ALIGNMENT 4
 #define COFF_DEF_SECTION_ALIGNMENT 4
+#endif

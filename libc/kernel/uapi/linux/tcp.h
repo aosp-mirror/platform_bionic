@@ -184,6 +184,8 @@ struct tcp_info {
   __u64 tcpi_bytes_retrans;
   __u32 tcpi_dsack_dups;
   __u32 tcpi_reord_seen;
+  __u32 tcpi_rcv_ooopack;
+  __u32 tcpi_snd_wnd;
 };
 enum {
   TCP_NLA_PAD,

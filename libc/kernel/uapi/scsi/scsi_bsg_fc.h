@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef SCSI_BSG_FC_H
 #define SCSI_BSG_FC_H
+#include <linux/types.h>
 #define FC_DEFAULT_BSG_TIMEOUT (10 * HZ)
 #define FC_BSG_CLS_MASK 0xF0000000
 #define FC_BSG_HST_MASK 0x80000000
@@ -30,16 +31,16 @@
 #define FC_BSG_RPT_ELS (FC_BSG_RPT_MASK | 0x00000001)
 #define FC_BSG_RPT_CT (FC_BSG_RPT_MASK | 0x00000002)
 struct fc_bsg_host_add_rport {
-  uint8_t reserved;
-  uint8_t port_id[3];
+  __u8 reserved;
+  __u8 port_id[3];
 };
 struct fc_bsg_host_del_rport {
-  uint8_t reserved;
-  uint8_t port_id[3];
+  __u8 reserved;
+  __u8 port_id[3];
 };
 struct fc_bsg_host_els {
-  uint8_t command_code;
-  uint8_t port_id[3];
+  __u8 command_code;
+  __u8 port_id[3];
 };
 #define FC_CTELS_STATUS_OK 0x00000000
 #define FC_CTELS_STATUS_REJECT 0x00000001
@@ -48,38 +49,38 @@ struct fc_bsg_host_els {
 #define FC_CTELS_STATUS_P_BSY 0x00000004
 #define FC_CTELS_STATUS_F_BSY 0x00000006
 struct fc_bsg_ctels_reply {
-  uint32_t status;
+  __u32 status;
   struct {
-    uint8_t action;
-    uint8_t reason_code;
-    uint8_t reason_explanation;
-    uint8_t vendor_unique;
+    __u8 action;
+    __u8 reason_code;
+    __u8 reason_explanation;
+    __u8 vendor_unique;
   } rjt_data;
 };
 struct fc_bsg_host_ct {
-  uint8_t reserved;
-  uint8_t port_id[3];
-  uint32_t preamble_word0;
-  uint32_t preamble_word1;
-  uint32_t preamble_word2;
+  __u8 reserved;
+  __u8 port_id[3];
+  __u32 preamble_word0;
+  __u32 preamble_word1;
+  __u32 preamble_word2;
 };
 struct fc_bsg_host_vendor {
-  uint64_t vendor_id;
-  uint32_t vendor_cmd[0];
+  __u64 vendor_id;
+  __u32 vendor_cmd[0];
 };
 struct fc_bsg_host_vendor_reply {
-  uint32_t vendor_rsp[0];
+  __u32 vendor_rsp[0];
 };
 struct fc_bsg_rport_els {
-  uint8_t els_code;
+  __u8 els_code;
 };
 struct fc_bsg_rport_ct {
-  uint32_t preamble_word0;
-  uint32_t preamble_word1;
-  uint32_t preamble_word2;
+  __u32 preamble_word0;
+  __u32 preamble_word1;
+  __u32 preamble_word2;
 };
 struct fc_bsg_request {
-  uint32_t msgcode;
+  __u32 msgcode;
   union {
     struct fc_bsg_host_add_rport h_addrport;
     struct fc_bsg_host_del_rport h_delrport;
@@ -91,8 +92,8 @@ struct fc_bsg_request {
   } rqst_data;
 } __attribute__((packed));
 struct fc_bsg_reply {
-  uint32_t result;
-  uint32_t reply_payload_rcv_len;
+  __u32 result;
+  __u32 reply_payload_rcv_len;
   union {
     struct fc_bsg_host_vendor_reply vendor_reply;
     struct fc_bsg_ctels_reply ctels_reply;

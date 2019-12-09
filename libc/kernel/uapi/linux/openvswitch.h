@@ -70,6 +70,7 @@ struct ovs_vport_stats {
 };
 #define OVS_DP_F_UNALIGNED (1 << 0)
 #define OVS_DP_F_VPORT_PIDS (1 << 1)
+#define OVS_DP_F_TC_RECIRC_SHARING (1 << 2)
 #define OVSP_LOCAL ((__u32) 0)
 #define OVS_PACKET_FAMILY "ovs_packet"
 #define OVS_PACKET_VERSION 0x1

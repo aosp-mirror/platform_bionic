@@ -24,7 +24,7 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-#define VIDEO_MAX_FRAME 32
+#define VIDEO_MAX_FRAME 64
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
@@ -414,6 +414,8 @@ struct v4l2_fmtdesc {
 };
 #define V4L2_FMT_FLAG_COMPRESSED 0x0001
 #define V4L2_FMT_FLAG_EMULATED 0x0002
+#define V4L2_FMT_FLAG_CONTINUOUS_BYTESTREAM 0x0004
+#define V4L2_FMT_FLAG_DYN_RESOLUTION 0x0008
 enum v4l2_frmsizetypes {
   V4L2_FRMSIZE_TYPE_DISCRETE = 1,
   V4L2_FRMSIZE_TYPE_CONTINUOUS = 2,

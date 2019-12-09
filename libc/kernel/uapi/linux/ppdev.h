@@ -16,6 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifndef _UAPI_LINUX_PPDEV_H
+#define _UAPI_LINUX_PPDEV_H
 #define PP_IOCTL 'p'
 #define PPSETMODE _IOW(PP_IOCTL, 0x80, int)
 #define PPRSTATUS _IOR(PP_IOCTL, 0x81, unsigned char)
@@ -53,3 +55,4 @@ struct ppdev_frob_struct {
 #define PP_FASTREAD (1 << 3)
 #define PP_W91284PIC (1 << 4)
 #define PP_FLAGMASK (PP_FASTWRITE | PP_FASTREAD | PP_W91284PIC)
+#endif
