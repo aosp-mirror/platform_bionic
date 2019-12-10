@@ -332,7 +332,9 @@ TEST(dl, disable_ld_config_file) {
     GTEST_SKIP() << "test is not supported on debuggable build";
   }
 
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
+      "\"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": " +
+      "library \"ld_config_test_helper_lib1.so\" not found: needed by main executable\n";
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
