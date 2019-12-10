@@ -63,6 +63,7 @@
                                          // destructor associated with this
                                          // soinfo is executed and this flag is
                                          // unset.
+#define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
 #define SOINFO_VERSION 5

@@ -3346,6 +3346,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 static soinfo_list_t g_empty_list;
 
 bool soinfo::prelink_image() {
+  if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
   phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
@@ -3840,6 +3841,8 @@ bool soinfo::prelink_image() {
 
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
+
+  flags_ |= FLAG_PRELINKED;
   return true;
 }
 
