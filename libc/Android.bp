@@ -20,13 +20,8 @@ libc_common_src_files = [
     "stdlib/exit.c",
 ]
 
-// Various kinds of cruft.
+// off64_t/time64_t support on LP32.
 // ========================================================
-libc_common_src_files += [
-    "bionic/ndk_cruft.cpp",
-    "bionic/ndk_cruft_data.cpp",
-]
-
 libc_common_src_files_32 = [
     "bionic/legacy_32_bit_support.cpp",
     "bionic/time64.c",
@@ -1609,6 +1604,8 @@ filegroup {
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/ndk_cruft.cpp",
+        "bionic/ndk_cruft_data.cpp",
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
