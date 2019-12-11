@@ -280,8 +280,7 @@ TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
-    // LD_CONFIG_FILE is not supported on user build
-    return;
+    GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
@@ -303,8 +302,7 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
-    // LD_CONFIG_FILE is not supported on user build
-    return;
+    GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
@@ -328,14 +326,15 @@ TEST(dl, disable_ld_config_file) {
   if (getuid() == 0) {
     // when executed from the shell (e.g. not as part of CTS), skip the test.
     // This test is only for CTS.
-    return;
+    GTEST_SKIP() << "test is not supported with root uid";
   }
   if (is_debuggable_build()) {
-    // Skip the test for non production devices
-    return;
+    GTEST_SKIP() << "test is not supported on debuggable build";
   }
 
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
+      "\"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": " +
+      "library \"ld_config_test_helper_lib1.so\" not found: needed by main executable\n";
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
