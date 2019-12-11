@@ -1517,6 +1517,36 @@ LIBC_R { # introduced=R
     tss_delete;
     tss_get;
     tss_set;
+
+    # Unwinder implementation
+    __aeabi_unwind_cpp_pr0; # apex llndk arm
+    __aeabi_unwind_cpp_pr1; # apex llndk arm
+    __aeabi_unwind_cpp_pr2; # apex llndk arm
+    __deregister_frame; # apex llndk arm64 x86 x86_64
+    __gnu_unwind_frame; # apex llndk arm
+    __register_frame; # apex llndk arm64 x86 x86_64
+    _Unwind_Backtrace; # apex llndk
+    _Unwind_Complete; # apex llndk arm
+    _Unwind_DeleteException; # apex llndk
+    _Unwind_Find_FDE; # apex llndk
+    _Unwind_FindEnclosingFunction; # apex llndk
+    _Unwind_ForcedUnwind; # apex llndk arm64 x86 x86_64
+    _Unwind_GetCFA; # apex llndk
+    _Unwind_GetDataRelBase; # apex llndk
+    _Unwind_GetGR; # apex llndk
+    _Unwind_GetIP; # apex llndk
+    _Unwind_GetIPInfo; # apex llndk
+    _Unwind_GetLanguageSpecificData; # apex llndk
+    _Unwind_GetRegionStart; # apex llndk
+    _Unwind_GetTextRelBase; # apex llndk
+    _Unwind_RaiseException; # apex llndk
+    _Unwind_Resume; # apex llndk
+    _Unwind_Resume_or_Rethrow; # apex llndk
+    _Unwind_SetGR; # apex llndk
+    _Unwind_SetIP; # apex llndk
+    _Unwind_VRS_Get; # apex llndk arm
+    _Unwind_VRS_Pop; # apex llndk arm
+    _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
 
 LIBC_PRIVATE {
@@ -1591,9 +1621,6 @@ LIBC_PRIVATE {
     __aeabi_ul2d; # arm
     __aeabi_ul2f; # arm
     __aeabi_uldivmod; # arm
-    __aeabi_unwind_cpp_pr0; # arm
-    __aeabi_unwind_cpp_pr1; # arm
-    __aeabi_unwind_cpp_pr2; # arm
     __arm_fadvise64_64; # arm
     __ashldi3; # arm
     __ashrdi3; # arm
@@ -1631,7 +1658,6 @@ LIBC_PRIVATE {
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
     __gnu_Unwind_Find_exidx; # arm
-    __gnu_unwind_frame; # arm
     __gtdf2; # arm
     __gtsf2; # arm
     __ledf2; # arm
@@ -1676,18 +1702,6 @@ LIBC_PRIVATE {
     __unordsf2; # arm
     __wait4; # arm x86 mips
     _fwalk; # arm x86 mips
-    _Unwind_Backtrace; # arm
-    _Unwind_Complete; # arm
-    _Unwind_DeleteException; # arm
-    _Unwind_GetDataRelBase; # arm
-    _Unwind_GetLanguageSpecificData; # arm
-    _Unwind_GetRegionStart; # arm
-    _Unwind_GetTextRelBase; # arm
-    _Unwind_RaiseException; # arm
-    _Unwind_Resume; # arm
-    _Unwind_Resume_or_Rethrow; # arm
-    _Unwind_VRS_Get; # arm
-    _Unwind_VRS_Set; # arm
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
     android_gethostbyaddrfornetcontext;

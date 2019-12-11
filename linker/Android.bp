@@ -243,18 +243,23 @@ cc_defaults {
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
+            static_libs: ["libgcc_stripped"],
         },
         x86: {
             srcs: [":linker_sources_x86"],
+            static_libs: ["libgcc_stripped"],
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
+            static_libs: ["libgcc_stripped"],
         },
         mips: {
             srcs: [":linker_sources_mips"],
+            static_libs: ["libgcc_stripped"],
         },
         mips64: {
             srcs: [":linker_sources_mips64"],
+            static_libs: ["libgcc_stripped"],
         },
     },
 

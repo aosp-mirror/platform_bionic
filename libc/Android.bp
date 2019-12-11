@@ -1711,7 +1711,7 @@ cc_library {
                 keep_symbols_and_debug_frame: true,
             },
 
-            whole_static_libs: [ "libgcc_stripped" ],
+            whole_static_libs: [ "libunwind_llvm" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
@@ -1721,6 +1721,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1734,6 +1736,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
@@ -1743,6 +1747,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
     },
 
@@ -1826,6 +1832,14 @@ cc_library_headers {
     no_libcrt: true,
     stl: "none",
     system_shared_libs: [],
+
+    // The build system generally requires that any dependencies of a target
+    // with an sdk_version must have a lower sdk_version. By setting sdk_version
+    // to 1 we let targets with an sdk_version that need to depend on the libc
+    // headers but cannot depend on libc itself due to circular dependencies
+    // (such as libunwind_llvm) depend on the headers. Setting sdk_version to 1
+    // is correct because the headers can support any sdk_version.
+    sdk_version: "1",
 
     export_include_dirs: [
         "include",
