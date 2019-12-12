@@ -30,7 +30,7 @@
 
 #include "linker_debug.h"
 #include "linker_globals.h"
-#include "private/bionic_page.h"
+#include "platform/bionic/page.h"
 
 #include <sys/mman.h>
 #include <sys/prctl.h>
