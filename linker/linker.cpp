@@ -95,7 +95,7 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
-static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
+static const char* const kLdGeneratedConfigFilePath = "/linkerconfig/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir        = "/system/lib64";
