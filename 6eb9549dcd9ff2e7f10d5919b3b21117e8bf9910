@@ -46,6 +46,30 @@
       "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a60c16d7_3d1aa817",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-13T18:40:25Z",
+      "side": 1,
+      "message": "\u003e We deliberately don\u0027t define the constants if MTE is disabled, to avoid accidental use of them in non-experimental builds.\n\nthat doesn\u0027t provide any actual protection, though, and if you added a check, that check could just as easily use 0/1 instead of undefined/defined.\n\na dangling if at the end of a #if seems like a clear style violation, and setting #defines to 0 or 1 so you can use them in if rather than #if is what we usually try to do (if only to avoid bitrot potential). #if should just be stuff that absolutely won\u0027t compile.",
+      "parentUuid": "76e83ef7_7c15a470",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
