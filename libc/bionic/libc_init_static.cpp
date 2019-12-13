@@ -39,11 +39,11 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "platform/bionic/page.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_macros.h"
-#include "private/bionic_page.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
