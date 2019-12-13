@@ -92,7 +92,6 @@
 #define PORT_S3C2412 73
 #define PORT_UARTLITE 74
 #define PORT_BFIN 75
-#define PORT_KS8695 76
 #define PORT_SB1250_DUART 77
 #define PORT_MCF 78
 #define PORT_BFIN_SPORT 79
@@ -137,4 +136,6 @@
 #define PORT_RDA 118
 #define PORT_MLB_USIO 119
 #define PORT_SIFIVE_V0 120
+#define PORT_SUNIX 121
+#define PORT_LINFLEXUART 122
 #endif

@@ -70,6 +70,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_VM_ALWAYS_VALID (1 << 6)
 #define AMDGPU_GEM_CREATE_EXPLICIT_SYNC (1 << 7)
 #define AMDGPU_GEM_CREATE_MQD_GFX9 (1 << 8)
+#define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -596,6 +597,7 @@ struct drm_amdgpu_info_device {
   __u64 high_va_offset;
   __u64 high_va_max;
   __u32 pa_sc_tile_steering_override;
+  __u64 tcc_disabled_mask;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;

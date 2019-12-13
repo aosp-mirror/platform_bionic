@@ -16,6 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifndef _UAPI_LINUX_CRYPTOUSER_H
+#define _UAPI_LINUX_CRYPTOUSER_H
 #include <linux/types.h>
 enum {
   CRYPTO_MSG_BASE = 0x10,
@@ -168,3 +170,4 @@ struct crypto_report_acomp {
   char type[CRYPTO_MAX_NAME];
 };
 #define CRYPTO_REPORT_MAXSIZE (sizeof(struct crypto_user_alg) + sizeof(struct crypto_report_blkcipher))
+#endif
