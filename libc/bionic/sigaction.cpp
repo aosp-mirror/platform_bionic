@@ -29,7 +29,7 @@
 #include <signal.h>
 #include <string.h>
 
-#include "private/sigrtmin.h"
+#include <platform/bionic/reserved_signals.h>
 
 extern "C" void __restore_rt(void);
 extern "C" void __restore(void);

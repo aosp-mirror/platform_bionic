@@ -32,19 +32,21 @@
 
 #include <signal.h>
 
-#include "platform/bionic/macros.h"
+#include "macros.h"
 
 // Realtime signals reserved for internal use:
 //   32 (__SIGRTMIN + 0)        POSIX timers
 //   33 (__SIGRTMIN + 1)        libbacktrace
 //   34 (__SIGRTMIN + 2)        libcore
-//   35 (__SIGRTMIN + 3)        debuggerd -b
+//   35 (__SIGRTMIN + 3)        debuggerd
 //   36 (__SIGRTMIN + 4)        heapprofd native dumps
 //   37 (__SIGRTMIN + 5)        coverage (libprofile-extras)
 //   38 (__SIGRTMIN + 6)        heapprofd ART managed heap dumps
 //
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
+
+#define BIONIC_SIGNAL_DEBUGGER __SIGRTMIN + 3
 
 #define __SIGRT_RESERVED 7
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
