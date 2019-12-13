@@ -22,6 +22,30 @@
       "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76e83ef7_7c15a470",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-13T17:52:25Z",
+      "side": 1,
+      "message": "I don\u0027t think that will work. We deliberately don\u0027t define the constants if MTE is disabled, to avoid accidental use of them in non-experimental builds.",
+      "parentUuid": "898c8ea7_cd124322",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
