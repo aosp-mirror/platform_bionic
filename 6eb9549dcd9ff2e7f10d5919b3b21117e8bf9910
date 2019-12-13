@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "898c8ea7_cd124322",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-13T16:35:11Z",
+      "side": 1,
+      "message": "lose the #ifdef and have `if (ANDROID_EXPERIMENTAL_MTE \u0026\u0026 prctl(...` instead for clarity?",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
