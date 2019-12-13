@@ -94,6 +94,30 @@
       "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57cc85a7_6266c67a",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-13T19:42:08Z",
+      "side": 1,
+      "message": "yeah, i\u0027m not sure how to say \"not experimental_mte\" in the Android.bp. (though i assume that `[\"-UDANDROID_EXPERIMENTAL_MTE\", \"-DANDROID_EXPERIMENTAL_MTE\u003d1\"]` works?) +dwillemsen in case there\u0027s a better way.\n\n(but, yeah, just avoiding the dangling if, even by having two copies of the second prctl(), seems fine too.)",
+      "parentUuid": "d2a25528_9d6d7af9",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
