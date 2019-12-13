@@ -33,5 +33,6 @@
 #define VIRTIO_ID_VSOCK 19
 #define VIRTIO_ID_CRYPTO 20
 #define VIRTIO_ID_IOMMU 23
+#define VIRTIO_ID_FS 26
 #define VIRTIO_ID_PMEM 27
 #endif

@@ -99,10 +99,13 @@ struct vfio_region_info_cap_type {
 };
 #define VFIO_REGION_TYPE_PCI_VENDOR_TYPE (1 << 31)
 #define VFIO_REGION_TYPE_PCI_VENDOR_MASK (0xffff)
+#define VFIO_REGION_TYPE_GFX (1)
+#define VFIO_REGION_TYPE_CCW (2)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION (1)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG (2)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG (3)
-#define VFIO_REGION_TYPE_GFX (1)
+#define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM (1)
+#define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD (1)
 #define VFIO_REGION_SUBTYPE_GFX_EDID (1)
 struct vfio_region_gfx_edid {
   __u32 edid_offset;
@@ -114,10 +117,7 @@ struct vfio_region_gfx_edid {
 #define VFIO_DEVICE_GFX_LINK_STATE_UP 1
 #define VFIO_DEVICE_GFX_LINK_STATE_DOWN 2
 };
-#define VFIO_REGION_TYPE_CCW (2)
 #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD (1)
-#define VFIO_REGION_SUBTYPE_NVIDIA_NVLINK2_RAM (1)
-#define VFIO_REGION_SUBTYPE_IBM_NVLINK2_ATSD (1)
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
 #define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
 struct vfio_region_info_cap_nvlink2_ssatgt {
@@ -248,7 +248,20 @@ struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
 #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)
+#define VFIO_IOMMU_INFO_CAPS (1 << 1)
   __u64 iova_pgsizes;
+  __u32 cap_offset;
+};
+#define VFIO_IOMMU_TYPE1_INFO_CAP_IOVA_RANGE 1
+struct vfio_iova_range {
+  __u64 start;
+  __u64 end;
+};
+struct vfio_iommu_type1_info_cap_iova_range {
+  struct vfio_info_cap_header header;
+  __u32 nr_iovas;
+  __u32 reserved;
+  struct vfio_iova_range iova_ranges[];
 };
 #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
 struct vfio_iommu_type1_dma_map {

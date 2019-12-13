@@ -110,6 +110,7 @@ struct usbdevfs_hub_portinfo {
 #define USBDEVFS_CAP_MMAP 0x20
 #define USBDEVFS_CAP_DROP_PRIVILEGES 0x40
 #define USBDEVFS_CAP_CONNINFO_EX 0x80
+#define USBDEVFS_CAP_SUSPEND 0x100
 #define USBDEVFS_DISCONNECT_CLAIM_IF_DRIVER 0x01
 #define USBDEVFS_DISCONNECT_CLAIM_EXCEPT_DRIVER 0x02
 struct usbdevfs_disconnect_claim {
@@ -158,4 +159,7 @@ struct usbdevfs_streams {
 #define USBDEVFS_DROP_PRIVILEGES _IOW('U', 30, __u32)
 #define USBDEVFS_GET_SPEED _IO('U', 31)
 #define USBDEVFS_CONNINFO_EX(len) _IOC(_IOC_READ, 'U', 32, len)
+#define USBDEVFS_FORBID_SUSPEND _IO('U', 33)
+#define USBDEVFS_ALLOW_SUSPEND _IO('U', 34)
+#define USBDEVFS_WAIT_FOR_RESUME _IO('U', 35)
 #endif
