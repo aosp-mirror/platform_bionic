@@ -42,6 +42,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <platform/bionic/mte_kernel.h>
 
 #include "private/WriteProtected.h"
 #include "private/bionic_defs.h"
@@ -109,7 +110,17 @@ void __libc_init_common() {
 #if defined(__aarch64__)
 #define PR_SET_TAGGED_ADDR_CTRL 55
 #define PR_TAGGED_ADDR_ENABLE   (1UL << 0)
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  // First, try enabling MTE in asynchronous mode, with tag 0 excluded. This will fail if the kernel
+  // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in
+  // syscall arguments.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL,
+            PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (1 << PR_MTE_EXCL_SHIFT), 0, 0, 0)) {
+    prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+  }
+#else
   prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0);
+#endif
 #endif
 }
 
