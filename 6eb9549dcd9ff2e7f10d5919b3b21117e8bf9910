@@ -118,6 +118,30 @@
       "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eaa782a4_ff9ad5ac",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-13T20:15:11Z",
+      "side": 1,
+      "message": "Okay, let\u0027s go with just avoiding the dangling if for now.",
+      "parentUuid": "57cc85a7_6266c67a",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
