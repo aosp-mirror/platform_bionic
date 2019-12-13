@@ -70,6 +70,30 @@
       "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2a25528_9d6d7af9",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-13T19:35:15Z",
+      "side": 1,
+      "message": "If we want to make ANDROID_EXPERIMENTAL_MTE 0/1 we would need to make this change to mte_kernel.h:\n\ndiff --git a/libc/platform/bionic/mte_kernel.h b/libc/platform/bionic/mte_kernel.h\nindex 804311cc5..69e06976c 100644\n--- a/libc/platform/bionic/mte_kernel.h\n+++ b/libc/platform/bionic/mte_kernel.h\n@@ -35,7 +35,9 @@\n //\n // This interface should not be considered to be stable.\n \n-#ifdef ANDROID_EXPERIMENTAL_MTE\n+#ifndef ANDROID_EXPERIMENTAL_MTE\n+#define ANDROID_EXPERIMENTAL_MTE 0\n+#endif\n \n #define HWCAP2_MTE (1 \u003c\u003c 10)\n #define PROT_MTE 0x20\n@@ -47,5 +49,3 @@\n #define PR_MTE_TCF_MASK (3UL \u003c\u003c PR_MTE_TCF_SHIFT)\n #define PR_MTE_EXCL_SHIFT 3\n #define PR_MTE_EXCL_MASK (0xffffUL \u003c\u003c PR_MTE_EXCL_SHIFT)\n-\n-#endif\n\n(I also tried:\n\ndiff --git a/libc/Android.bp b/libc/Android.bp\nindex edcb5b391..62fe5e3bd 100644\n--- a/libc/Android.bp\n+++ b/libc/Android.bp\n@@ -30,6 +30,7 @@ libc_common_src_files_32 \u003d [\n libc_common_flags \u003d [\n     \"-D_LIBC\u003d1\",\n     \"-D__BIONIC_LP32_USE_STAT64\",\n+    \"-DANDROID_EXPERIMENTAL_MTE\u003d0\",\n     \"-Wall\",\n     \"-Wextra\",\n     \"-Wunused\",\n@@ -80,7 +81,7 @@ cc_defaults {\n \n     product_variables: {\n         experimental_mte: {\n-            cflags: [\"-DANDROID_EXPERIMENTAL_MTE\"],\n+            cflags: [\"-DANDROID_EXPERIMENTAL_MTE\u003d1\"],\n         },\n     },\n }\n\nbut this caused build errors such as:\n\nIn file included from \u003cbuilt-in\u003e:364:\n\u003ccommand line\u003e:10:9: error: \u0027ANDROID_EXPERIMENTAL_MTE\u0027 macro redefined [-Werror,-Wmacro-redefined]\n#define ANDROID_EXPERIMENTAL_MTE 1\n        ^\n\u003ccommand line\u003e:9:9: note: previous definition is here\n#define ANDROID_EXPERIMENTAL_MTE 0\n        ^\n1 error generated.\n\n). This means that the meaning of ANDROID_EXPERIMENTAL_MTE is ambiguous depending on whether mte_kernel.h has been included yet. We also can\u0027t rely on ANDROID_EXPERIMENTAL_MTE being 0/1 in external projects such as scudo, since they may be compiled on non-Android platforms which might not have mte_kernel.h (and therefore we have code such as:\n\n #ifdef ANDROID_EXPERIMENTAL_MTE\n #include \u003cbionic/mte_kernel.h\u003e\n #endif\n\n). Which means that ANDROID_EXPERIMENTAL_MTE is still undefined/defined after potentially including mte_kernel.h and we still need to use #if in those projects.\n\nIn my opinion it seems more straightforward to let it be undefined/defined everywhere, but let me know what you think or if you have another suggestion.\n\nI should be able to restructure this to avoid the dangling if, if that would make things better.",
+      "parentUuid": "a60c16d7_3d1aa817",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 4
+      },
+      "revId": "6eb9549dcd9ff2e7f10d5919b3b21117e8bf9910",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
