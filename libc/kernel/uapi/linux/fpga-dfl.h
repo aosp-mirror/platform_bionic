@@ -71,4 +71,6 @@ struct dfl_fpga_fme_port_pr {
   __u64 buffer_address;
 };
 #define DFL_FPGA_FME_PORT_PR _IO(DFL_FPGA_MAGIC, DFL_FME_BASE + 0)
+#define DFL_FPGA_FME_PORT_RELEASE _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 1, int)
+#define DFL_FPGA_FME_PORT_ASSIGN _IOW(DFL_FPGA_MAGIC, DFL_FME_BASE + 2, int)
 #endif

@@ -31,8 +31,8 @@ struct btf_header {
   __u32 str_off;
   __u32 str_len;
 };
-#define BTF_MAX_TYPE 0x0000ffff
-#define BTF_MAX_NAME_OFFSET 0x0000ffff
+#define BTF_MAX_TYPE 0x000fffff
+#define BTF_MAX_NAME_OFFSET 0x00ffffff
 #define BTF_MAX_VLEN 0xffff
 struct btf_type {
   __u32 name_off;

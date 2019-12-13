@@ -16,16 +16,28 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_KEYCHORD_H_
-#define _UAPI_LINUX_KEYCHORD_H_
-#include <linux/input.h>
-#define KEYCHORD_VERSION 1
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct input_keychord {
-  __u16 version;
-  __u16 id;
-  __u16 count;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  __u16 keycodes[];
+#ifndef _UAPI_LINUX_FSVERITY_H
+#define _UAPI_LINUX_FSVERITY_H
+#include <linux/ioctl.h>
+#include <linux/types.h>
+#define FS_VERITY_HASH_ALG_SHA256 1
+#define FS_VERITY_HASH_ALG_SHA512 2
+struct fsverity_enable_arg {
+  __u32 version;
+  __u32 hash_algorithm;
+  __u32 block_size;
+  __u32 salt_size;
+  __u64 salt_ptr;
+  __u32 sig_size;
+  __u32 __reserved1;
+  __u64 sig_ptr;
+  __u64 __reserved2[11];
 };
+struct fsverity_digest {
+  __u16 digest_algorithm;
+  __u16 digest_size;
+  __u8 digest[];
+};
+#define FS_IOC_ENABLE_VERITY _IOW('f', 133, struct fsverity_enable_arg)
+#define FS_IOC_MEASURE_VERITY _IOWR('f', 134, struct fsverity_digest)
 #endif
