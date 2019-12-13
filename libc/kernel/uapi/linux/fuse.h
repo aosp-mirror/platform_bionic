@@ -100,6 +100,7 @@ struct fuse_file_lock {
 #define FUSE_CACHE_SYMLINKS (1 << 23)
 #define FUSE_NO_OPENDIR_SUPPORT (1 << 24)
 #define FUSE_EXPLICIT_INVAL_DATA (1 << 25)
+#define FUSE_MAP_ALIGNMENT (1 << 26)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -164,7 +165,11 @@ enum fuse_opcode {
   FUSE_RENAME2 = 45,
   FUSE_LSEEK = 46,
   FUSE_COPY_FILE_RANGE = 47,
+  FUSE_SETUPMAPPING = 48,
+  FUSE_REMOVEMAPPING = 49,
   CUSE_INIT = 4096,
+  CUSE_INIT_BSWAP_RESERVED = 1048576,
+  FUSE_INIT_BSWAP_RESERVED = 436207616,
 };
 enum fuse_notify_code {
   FUSE_NOTIFY_POLL = 1,
@@ -352,7 +357,7 @@ struct fuse_init_out {
   uint32_t max_write;
   uint32_t time_gran;
   uint16_t max_pages;
-  uint16_t padding;
+  uint16_t map_alignment;
   uint32_t unused[8];
 };
 #define CUSE_INIT_INFO_MAX 4096

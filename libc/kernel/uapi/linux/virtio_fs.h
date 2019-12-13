@@ -16,28 +16,14 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_USB_F_MTP_H
-#define _UAPI_LINUX_USB_F_MTP_H
-#include <linux/ioctl.h>
+#ifndef _UAPI_LINUX_VIRTIO_FS_H
+#define _UAPI_LINUX_VIRTIO_FS_H
 #include <linux/types.h>
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-struct mtp_file_range {
-  int fd;
-  loff_t offset;
-  int64_t length;
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  uint16_t command;
-  uint32_t transaction_id;
-};
-struct mtp_event {
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-  size_t length;
-  void * data;
-};
-#define MTP_SEND_FILE _IOW('M', 0, struct mtp_file_range)
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */
-#define MTP_RECEIVE_FILE _IOW('M', 1, struct mtp_file_range)
-#define MTP_SEND_EVENT _IOW('M', 3, struct mtp_event)
-#define MTP_SEND_FILE_WITH_HEADER _IOW('M', 4, struct mtp_file_range)
+#include <linux/virtio_ids.h>
+#include <linux/virtio_config.h>
+#include <linux/virtio_types.h>
+struct virtio_fs_config {
+  __u8 tag[36];
+  __u32 num_request_queues;
+} __attribute__((packed));
 #endif
-/* WARNING: DO NOT EDIT, AUTO-GENERATED CODE - SEE TOP FOR INSTRUCTIONS */

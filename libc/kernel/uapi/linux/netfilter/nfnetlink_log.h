@@ -39,6 +39,13 @@ struct nfulnl_msg_packet_timestamp {
   __aligned_be64 sec;
   __aligned_be64 usec;
 };
+enum nfulnl_vlan_attr {
+  NFULA_VLAN_UNSPEC,
+  NFULA_VLAN_PROTO,
+  NFULA_VLAN_TCI,
+  __NFULA_VLAN_MAX,
+};
+#define NFULA_VLAN_MAX (__NFULA_VLAN_MAX + 1)
 enum nfulnl_attr_type {
   NFULA_UNSPEC,
   NFULA_PACKET_HDR,
@@ -60,6 +67,8 @@ enum nfulnl_attr_type {
   NFULA_HWLEN,
   NFULA_CT,
   NFULA_CT_INFO,
+  NFULA_VLAN,
+  NFULA_L2HDR,
   __NFULA_MAX
 };
 #define NFULA_MAX (__NFULA_MAX - 1)

@@ -23,6 +23,13 @@
 #define PTP_ENABLE_FEATURE (1 << 0)
 #define PTP_RISING_EDGE (1 << 1)
 #define PTP_FALLING_EDGE (1 << 2)
+#define PTP_STRICT_FLAGS (1 << 3)
+#define PTP_EXTTS_EDGES (PTP_RISING_EDGE | PTP_FALLING_EDGE)
+#define PTP_EXTTS_VALID_FLAGS (PTP_ENABLE_FEATURE | PTP_RISING_EDGE | PTP_FALLING_EDGE | PTP_STRICT_FLAGS)
+#define PTP_EXTTS_V1_VALID_FLAGS (PTP_ENABLE_FEATURE | PTP_RISING_EDGE | PTP_FALLING_EDGE)
+#define PTP_PEROUT_ONE_SHOT (1 << 0)
+#define PTP_PEROUT_VALID_FLAGS (PTP_PEROUT_ONE_SHOT)
+#define PTP_PEROUT_V1_VALID_FLAGS (0)
 struct ptp_clock_time {
   __s64 sec;
   __u32 nsec;
@@ -90,6 +97,15 @@ struct ptp_pin_desc {
 #define PTP_PIN_SETFUNC _IOW(PTP_CLK_MAGIC, 7, struct ptp_pin_desc)
 #define PTP_SYS_OFFSET_PRECISE _IOWR(PTP_CLK_MAGIC, 8, struct ptp_sys_offset_precise)
 #define PTP_SYS_OFFSET_EXTENDED _IOWR(PTP_CLK_MAGIC, 9, struct ptp_sys_offset_extended)
+#define PTP_CLOCK_GETCAPS2 _IOR(PTP_CLK_MAGIC, 10, struct ptp_clock_caps)
+#define PTP_EXTTS_REQUEST2 _IOW(PTP_CLK_MAGIC, 11, struct ptp_extts_request)
+#define PTP_PEROUT_REQUEST2 _IOW(PTP_CLK_MAGIC, 12, struct ptp_perout_request)
+#define PTP_ENABLE_PPS2 _IOW(PTP_CLK_MAGIC, 13, int)
+#define PTP_SYS_OFFSET2 _IOW(PTP_CLK_MAGIC, 14, struct ptp_sys_offset)
+#define PTP_PIN_GETFUNC2 _IOWR(PTP_CLK_MAGIC, 15, struct ptp_pin_desc)
+#define PTP_PIN_SETFUNC2 _IOW(PTP_CLK_MAGIC, 16, struct ptp_pin_desc)
+#define PTP_SYS_OFFSET_PRECISE2 _IOWR(PTP_CLK_MAGIC, 17, struct ptp_sys_offset_precise)
+#define PTP_SYS_OFFSET_EXTENDED2 _IOWR(PTP_CLK_MAGIC, 18, struct ptp_sys_offset_extended)
 struct ptp_extts_event {
   struct ptp_clock_time t;
   unsigned int index;
