@@ -24,9 +24,9 @@
 ###  Options:
 ###   --skip-generation
 ###     Skip the step that generates all of the include files.
-###   --download-kernel <VERSION>
+###   --download-kernel
 ###     Automatically create a temporary git repository and check out the
-###     linux kernel source code for the given version.
+###     linux kernel source code at TOT.
 ###   --use-kernel-dir <DIR>
 ###     Do not check out the kernel source, use the kernel directory
 ###     pointed to by <DIR>.
@@ -39,8 +39,8 @@ set -eE
 
 TMPDIR=""
 ANDROID_DIR=""
-KERNEL_VERSION=""
-KERNEL_REPO="git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git"
+ANDROID_KERNEL_REPO="https://android.googlesource.com/kernel/common/"
+ANDROID_KERNEL_BRANCH="android-mainline"
 KERNEL_DIR=""
 KERNEL_DOWNLOAD=0
 ARCH_LIST=("arm" "arm64" "mips" "x86")
@@ -143,12 +143,6 @@ while [ $# -gt 0 ]; do
       SKIP_GENERATION=1
       ;;
     "--download-kernel")
-      if [[ $# -lt 2 ]]; then
-        echo "--download-kernel requires an argument."
-        exit 1
-      fi
-      shift
-      KERNEL_VERSION="$1"
       KERNEL_DOWNLOAD=1
       ;;
     "--use-kernel-dir")
@@ -198,31 +192,28 @@ elif [[ ! -d "${ANDROID_KERNEL_DIR}" ]]; then
   exit 1
 fi
 
-src_dir="linux-stable"
-
 if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
   cd "${TMPDIR}"
-  echo "Fetching linux kernel source ${KERNEL_VERSION}"
-  git clone ${KERNEL_REPO}
-  cd ${src_dir}
-  git checkout tags/"${KERNEL_VERSION}"
-  KERNEL_DIR="${TMPDIR}"
+  echo "Fetching android linux kernel source..."
+  git clone ${ANDROID_KERNEL_REPO} -b ${ANDROID_KERNEL_BRANCH}
+  cd common
+  KERNEL_DIR="${TMPDIR}/common"
 elif [[ "${KERNEL_DIR}" == "" ]]; then
   echo "Must specify one of --use-kernel-dir or --download-kernel."
   exit 1
-elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/${src_dir}" ]]; then
-  echo "The kernel directory $KERNEL_DIR or $KERNEL_DIR/${src_dir} does not exist."
+elif [[ ! -d "${KERNEL_DIR}" ]] || [[ ! -d "${KERNEL_DIR}/kernel" ]]; then
+  echo "The kernel directory $KERNEL_DIR or $KERNEL_DIR/kernel does not exist."
   exit 1
 else
-  cd "${KERNEL_DIR}/${src_dir}"
+  cd "${KERNEL_DIR}"
 fi
 
 if [[ ${VERIFY_HEADERS_ONLY} -eq 1 ]]; then
   # Verify if modified headers have changed.
-  verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+  verify_modified_hdrs "${KERNEL_DIR}/include/scsi" \
                        "${ANDROID_KERNEL_DIR}/scsi" \
-                       "${KERNEL_DIR}/${src_dir}"
+                       "${KERNEL_DIR}"
   exit 0
 fi
 
@@ -245,41 +236,41 @@ mkdir -p "${ANDROID_KERNEL_DIR}/uapi"
 cd ${ANDROID_BUILD_TOP}
 
 # Copy all of the include/uapi files to the kernel headers uapi directory.
-copy_hdrs "${KERNEL_DIR}/${src_dir}/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
+copy_hdrs "${KERNEL_DIR}/include/uapi" "${ANDROID_KERNEL_DIR}/uapi"
 
 # Copy the staging files to uapi/linux.
-copy_hdrs "${KERNEL_DIR}/${src_dir}/drivers/staging/android/uapi" \
+copy_hdrs "${KERNEL_DIR}/drivers/staging/android/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi/linux" "no-copy-dirs"
 
 # Remove ion.h, it's not fully supported by the upstream kernel (see b/77976082).
 rm -f "${ANDROID_KERNEL_DIR}/uapi/linux/ion.h"
 
 # Copy the generated headers.
-copy_hdrs "${KERNEL_DIR}/${src_dir}/include/generated/uapi" \
+copy_hdrs "${KERNEL_DIR}/include/generated/uapi" \
           "${ANDROID_KERNEL_DIR}/uapi"
 
 for arch in "${ARCH_LIST[@]}"; do
   # Copy arch headers.
-  copy_hdrs "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/uapi" \
+  copy_hdrs "${KERNEL_DIR}/arch/${arch}/include/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
   # Copy the generated arch headers.
-  copy_hdrs "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/generated/uapi" \
+  copy_hdrs "${KERNEL_DIR}/arch/${arch}/include/generated/uapi" \
             "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}"
 
   # Special copy of generated header files from arch/<ARCH>/generated/asm that
   # also exist in uapi/asm-generic.
-  copy_if_exists "${KERNEL_DIR}/${src_dir}/include/uapi/asm-generic" \
-                 "${KERNEL_DIR}/${src_dir}/arch/${arch}/include/generated/asm" \
+  copy_if_exists "${KERNEL_DIR}/include/uapi/asm-generic" \
+                 "${KERNEL_DIR}/arch/${arch}/include/generated/asm" \
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
 
 # The arm types.h uapi header is not properly being generated, so copy it
 # directly.
-cp "${KERNEL_DIR}/${src_dir}/include/uapi/asm-generic/types.h" \
+cp "${KERNEL_DIR}/include/uapi/asm-generic/types.h" \
    "${ANDROID_KERNEL_DIR}/uapi/asm-arm/asm"
 
 # Verify if modified headers have changed.
-verify_modified_hdrs "${KERNEL_DIR}/${src_dir}/include/scsi" \
+verify_modified_hdrs "${KERNEL_DIR}/include/scsi" \
                      "${ANDROID_KERNEL_DIR}/scsi" \
-                     "${KERNEL_DIR}/${src_dir}"
+                     "${KERNEL_DIR}"
 echo "Headers updated."
