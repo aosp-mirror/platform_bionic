@@ -196,7 +196,7 @@ if [[ ${KERNEL_DOWNLOAD} -eq 1 ]]; then
   TMPDIR=$(mktemp -d /tmp/android_kernelXXXXXXXX)
   cd "${TMPDIR}"
   echo "Fetching android linux kernel source..."
-  git clone ${ANDROID_KERNEL_REPO} -b ${ANDROID_KERNEL_BRANCH}
+  git clone ${ANDROID_KERNEL_REPO} -b ${ANDROID_KERNEL_BRANCH} --depth=1
   cd common
   KERNEL_DIR="${TMPDIR}/common"
 elif [[ "${KERNEL_DIR}" == "" ]]; then
