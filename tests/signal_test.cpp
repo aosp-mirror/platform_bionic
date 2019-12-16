@@ -176,7 +176,7 @@ TEST(signal, sigwait64_SIGRTMIN) {
 
   pid_t pid = getpid();
   std::thread thread([&pid]() {
-    usleep(5000);
+    sleep(1);
     kill(pid, SIGRTMIN);
   });
 
