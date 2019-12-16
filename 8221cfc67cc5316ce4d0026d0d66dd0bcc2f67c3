@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55f3e696_41247a1d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-12-16T14:48:14Z",
+      "side": 1,
+      "message": "Could be useful to know more specifically which tests need this.",
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68d7a7c0_5139d15b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-12-16T14:48:14Z",
+      "side": 1,
+      "message": "Isn\u0027t this just a temporary kludge until b/144966380 is addressed? If so, please add a TODO pointing to that bug so that we have some tracking to restore the DL_WARN after that.",
+      "range": {
+        "startLine": 4091,
+        "startChar": 6,
+        "endLine": 4091,
+        "endChar": 10
+      },
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
