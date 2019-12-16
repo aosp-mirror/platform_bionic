@@ -39,6 +39,30 @@
       "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e057452e_81d1bc36",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-12-16T22:00:58Z",
+      "side": 1,
+      "message": "I believe this CL is responding to a breakage resulting from r.android.com/1188822.\n\nI don\u0027t know how linker configuration worked for linux_bionic prior to this change. e.g. what did get_ld_config_file_path() return, and did that file exist?",
+      "parentUuid": "68d7a7c0_5139d15b",
+      "range": {
+        "startLine": 4091,
+        "startChar": 6,
+        "endLine": 4091,
+        "endChar": 10
+      },
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
