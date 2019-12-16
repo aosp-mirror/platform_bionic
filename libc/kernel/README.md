@@ -53,14 +53,16 @@ WHEN UPDATING THE HEADERS, ALWAYS CHECK THAT THE NEW CLEAN HEADERS DO
 NOT BREAK THE KERNEL <-> USER ABI, FOR EXAMPLE BY CHANGING THE SIZE
 OF A GIVEN TYPE. THIS TASK CANNOT BE EASILY AUTOMATED AT THE MOMENT.
 
-Download the Linux kernel source code:
+Download the Android mainline kernel source code:
 ```
   > mkdir kernel_src
   > cd kernel_src
-  kernel_src> git clone git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+  kernel_src> git clone https://android.googlesource.com/kernel/common/ -b android-mainline
 ```
 
-Then checkout the stable tag for the new kernel headers to import:
+For now, there are no tags, take the top of tree version. To find the
+version of the linux stable kernel headers the mainline source code is
+tracking, read the uapi/linux/version.h that is generated.
 ```
   kernel_src> cd linux-stable
   kernel_src/linux-stable> git checkout tags/vXXX
@@ -71,9 +73,15 @@ done a lunch TARGET. The script uses a variable set by the lunch command
 to determine which directory to use as the destination directory.
 
 After running lunch, run this command to import the headers into the android
-source tree:
+source tree if there is a kernel source tree already checked out:
 ```
   bionic/libc/kernel/tools/generate_uapi_headers.sh --use-kernel-dir kernel_src
+```
+
+Run this command to automatically download the latest version of the headers
+and import them if there is no checked out kernel source tree:
+```
+  bionic/libc/kernel/tools/generate_uapi_headers.sh --download-kernel
 ```
 
 Next, run this command to copy the parsed files to bionic/libc/kernel/uapi:
