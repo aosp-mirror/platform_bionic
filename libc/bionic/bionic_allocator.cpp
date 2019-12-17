@@ -40,8 +40,8 @@
 #include <async_safe/log.h>
 #include <async_safe/CHECK.h>
 
+#include "platform/bionic/page.h"
 #include "private/bionic_macros.h"
-#include "private/bionic_page.h"
 
 //
 // BionicAllocator is a general purpose allocator designed to provide the same

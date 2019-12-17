@@ -16,49 +16,52 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _XT_POLICY_H
-#define _XT_POLICY_H
-#include <linux/netfilter.h>
+#ifndef _UAPI_CAN_J1939_H_
+#define _UAPI_CAN_J1939_H_
 #include <linux/types.h>
-#include <linux/in.h>
-#include <linux/in6.h>
-#define XT_POLICY_MAX_ELEM 4
-enum xt_policy_flags {
-  XT_POLICY_MATCH_IN = 0x1,
-  XT_POLICY_MATCH_OUT = 0x2,
-  XT_POLICY_MATCH_NONE = 0x4,
-  XT_POLICY_MATCH_STRICT = 0x8,
+#include <linux/socket.h>
+#include <linux/can.h>
+#define J1939_MAX_UNICAST_ADDR 0xfd
+#define J1939_IDLE_ADDR 0xfe
+#define J1939_NO_ADDR 0xff
+#define J1939_NO_NAME 0
+#define J1939_PGN_REQUEST 0x0ea00
+#define J1939_PGN_ADDRESS_CLAIMED 0x0ee00
+#define J1939_PGN_ADDRESS_COMMANDED 0x0fed8
+#define J1939_PGN_PDU1_MAX 0x3ff00
+#define J1939_PGN_MAX 0x3ffff
+#define J1939_NO_PGN 0x40000
+typedef __u32 pgn_t;
+typedef __u8 priority_t;
+typedef __u64 name_t;
+#define SOL_CAN_J1939 (SOL_CAN_BASE + CAN_J1939)
+enum {
+  SO_J1939_FILTER = 1,
+  SO_J1939_PROMISC = 2,
+  SO_J1939_SEND_PRIO = 3,
+  SO_J1939_ERRQUEUE = 4,
 };
-enum xt_policy_modes {
-  XT_POLICY_MODE_TRANSPORT,
-  XT_POLICY_MODE_TUNNEL
+enum {
+  SCM_J1939_DEST_ADDR = 1,
+  SCM_J1939_DEST_NAME = 2,
+  SCM_J1939_PRIO = 3,
+  SCM_J1939_ERRQUEUE = 4,
 };
-struct xt_policy_spec {
-  __u8 saddr : 1, daddr : 1, proto : 1, mode : 1, spi : 1, reqid : 1;
+enum {
+  J1939_NLA_PAD,
+  J1939_NLA_BYTES_ACKED,
 };
-union xt_policy_addr {
-  struct in_addr a4;
-  struct in6_addr a6;
+enum {
+  J1939_EE_INFO_NONE,
+  J1939_EE_INFO_TX_ABORT,
 };
-struct xt_policy_elem {
-  union {
-    struct {
-      union xt_policy_addr saddr;
-      union xt_policy_addr smask;
-      union xt_policy_addr daddr;
-      union xt_policy_addr dmask;
-    };
-  };
-  __be32 spi;
-  __u32 reqid;
-  __u8 proto;
-  __u8 mode;
-  struct xt_policy_spec match;
-  struct xt_policy_spec invert;
+struct j1939_filter {
+  name_t name;
+  name_t name_mask;
+  pgn_t pgn;
+  pgn_t pgn_mask;
+  __u8 addr;
+  __u8 addr_mask;
 };
-struct xt_policy_info {
-  struct xt_policy_elem pol[XT_POLICY_MAX_ELEM];
-  __u16 flags;
-  __u16 len;
-};
+#define J1939_FILTER_MAX 512
 #endif

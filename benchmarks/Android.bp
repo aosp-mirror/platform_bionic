@@ -33,6 +33,7 @@ cc_defaults {
         "get_heap_size_benchmark.cpp",
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
+        "malloc_sql_benchmark.cpp",
         "math_benchmark.cpp",
         "property_benchmark.cpp",
         "pthread_benchmark.cpp",

@@ -57,6 +57,11 @@ $(call add-clean-step, rm -f $(PRODUCT_OUT)/system/lib64/libGLES*)
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/root/bionic)
 $(call add-clean-step, rm -rf $(PRODUCT_OUT)/recovery/root/bionic)
 
+# Ensure libdl_android.so is (only) in the correct locations after the move into
+# the Runtime APEX.
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/apex/com.android.runtime/lib{,64})
+$(call add-clean-step, rm -rf $(PRODUCT_OUT)/system/lib{,64})
+
 # ************************************************
 # NEWER CLEAN STEPS MUST BE AT THE END OF THE LIST
 # ************************************************

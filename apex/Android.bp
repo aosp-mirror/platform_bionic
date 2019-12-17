@@ -29,6 +29,7 @@ apex {
         "libc",
         "libm",
         "libdl",
+        "libdl_android",
         "libc_malloc_debug",
         "libc_malloc_hooks",
     ],

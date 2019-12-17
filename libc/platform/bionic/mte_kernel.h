@@ -36,6 +36,16 @@
 // This interface should not be considered to be stable.
 
 #ifdef ANDROID_EXPERIMENTAL_MTE
-#define HWCAP2_MTE (1UL << 31)
-#define PROT_MTE 0x10
+
+#define HWCAP2_MTE (1 << 10)
+#define PROT_MTE 0x20
+
+#define PR_MTE_TCF_SHIFT 1
+#define PR_MTE_TCF_NONE (0UL << PR_MTE_TCF_SHIFT)
+#define PR_MTE_TCF_SYNC (1UL << PR_MTE_TCF_SHIFT)
+#define PR_MTE_TCF_ASYNC (2UL << PR_MTE_TCF_SHIFT)
+#define PR_MTE_TCF_MASK (3UL << PR_MTE_TCF_SHIFT)
+#define PR_MTE_EXCL_SHIFT 3
+#define PR_MTE_EXCL_MASK (0xffffUL << PR_MTE_EXCL_SHIFT)
+
 #endif
