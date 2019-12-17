@@ -127,8 +127,17 @@ cc_defaults {
     name: "libc_scudo_defaults",
 
     cflags: [
-        "-DUSE_SCUDO",
+        "-DUSE_SCUDO_SVELTE",
     ],
+
+    product_variables: {
+        malloc_not_svelte: {
+            cflags: [
+                "-UUSE_SCUDO_SVELTE",
+                "-DUSE_SCUDO",
+            ],
+        },
+    },
 
     whole_static_libs: [
         "libscudo",
