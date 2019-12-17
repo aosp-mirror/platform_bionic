@@ -52,6 +52,24 @@
       "revId": "0684cc95aa6ec2d373e7a80091c9d68ba40641fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca42679a_be04408a",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2019-12-17T12:01:54Z",
+      "side": 1,
+      "message": "I figured it should be changed back to DL_WARN once we really should expect the file to exist when the property is true. But maybe I don\u0027t fully understand when this happens - is there another condition that needs to be added to avoid false alarms?",
+      "parentUuid": "66a0e382_ed54a28e",
+      "revId": "0684cc95aa6ec2d373e7a80091c9d68ba40641fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
