@@ -283,17 +283,10 @@ bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* pr
   return true;
 }
 
-// Note about USE_SCUDO. This file is compiled into libc.so and libc_scudo.so.
-// When compiled into libc_scudo.so, the libc_malloc_* libraries don't need
-// to be loaded from the runtime namespace since libc_scudo.so is not from
-// the runtime APEX, but is copied to any APEX that needs it.
-#ifndef USE_SCUDO
 extern "C" struct android_namespace_t* android_get_exported_namespace(const char* name);
-#endif
 
 void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
   void* impl_handle = nullptr;
-#ifndef USE_SCUDO
   // Try to load the libc_malloc_* libs from the "runtime" namespace and then
   // fall back to dlopen() to load them from the default namespace.
   //
@@ -312,7 +305,6 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
     };
     impl_handle = android_dlopen_ext(shared_lib, RTLD_NOW | RTLD_LOCAL, &dlextinfo);
   }
-#endif
 
   if (impl_handle == nullptr) {
     impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
