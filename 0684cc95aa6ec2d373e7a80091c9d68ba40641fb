@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d16e533_e89b9dd1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-12-17T02:03:10Z",
+      "side": 1,
+      "message": "What is left to do here after changing DL_WARN to INFO?",
+      "revId": "0684cc95aa6ec2d373e7a80091c9d68ba40641fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e1c787d9_48bc6616",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-12-17T02:03:10Z",
+      "side": 1,
+      "message": "I think this change is needed for the linux_bionic-based ART tests, but I thought those were run on Linux servers, not on Android?",
+      "parentUuid": "55f3e696_41247a1d",
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68d7a7c0_5139d15b",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -54,6 +72,30 @@
       "side": 1,
       "message": "I believe this CL is responding to a breakage resulting from r.android.com/1188822.\n\nI don\u0027t know how linker configuration worked for linux_bionic prior to this change. e.g. what did get_ld_config_file_path() return, and did that file exist?",
       "parentUuid": "68d7a7c0_5139d15b",
+      "range": {
+        "startLine": 4091,
+        "startChar": 6,
+        "endLine": 4091,
+        "endChar": 10
+      },
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebf38f09_bef8b10b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2019-12-17T02:03:10Z",
+      "side": 1,
+      "message": "I think I\u0027m OK with this change now.\n\nPreviously, get_ld_config_file_path returned kLdConfigFilePath, \"/system/etc/ld.config.txt\". init_default_namespaces called Config::read_binary_config, which failed, but it printed no error message because the config file was missing. (Specifically, parse_config_file called ReadFileToString, which returned ENOENT.)",
+      "parentUuid": "e057452e_81d1bc36",
       "range": {
         "startLine": 4091,
         "startChar": 6,
