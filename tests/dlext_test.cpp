@@ -2014,10 +2014,15 @@ TEST(dlext, ns_anonymous) {
     // For some natively bridged environments this code might be missing
     // the executable flag. This is because the guest code is not supposed
     // to be executed directly and making it non-executable is more secure.
-    // If this is the case we assume that the first segment is the one that
-    // has this flag.
-    ASSERT_TRUE((maps_to_copy[0].perms & PROT_WRITE) == 0);
-    maps_to_copy[0].perms |= PROT_EXEC;
+    // In this case we assume the segment with the function is executable.
+    for (auto& rec : maps_to_copy) {
+      if (ns_get_dlopened_string_addr >= rec.addr_start &&
+          ns_get_dlopened_string_addr < rec.addr_end) {
+        ASSERT_TRUE((rec.perms & PROT_WRITE) == 0);
+        rec.perms |= PROT_EXEC;
+        break;
+      }
+    }
   }
 
   // copy
