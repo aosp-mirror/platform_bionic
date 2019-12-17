@@ -60,6 +60,11 @@ __END_DECLS
 #include "scudo.h"
 #define Malloc(function)  scudo_ ## function
 
+#elif defined(USE_SCUDO_SVELTE)
+
+#include "scudo.h"
+#define Malloc(function)  scudo_svelte_ ## function
+
 #else
 
 #include "jemalloc.h"

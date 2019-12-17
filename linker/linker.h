@@ -36,7 +36,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "private/bionic_page.h"
+#include "platform/bionic/page.h"
 #include "linked_list.h"
 #include "linker_common_types.h"
 #include "linker_logger.h"

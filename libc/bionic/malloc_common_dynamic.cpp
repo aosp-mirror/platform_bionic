@@ -465,6 +465,7 @@ extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t fra
 // =============================================================================
 // Platform-internal mallopt variant.
 // =============================================================================
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_ZYGOTE_CHILD) {
     if (arg != nullptr || arg_size != 0) {

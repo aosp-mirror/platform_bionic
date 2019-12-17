@@ -21,6 +21,7 @@
 #include <linux/limits.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
+#include <linux/fscrypt.h>
 #include <linux/mount.h>
 #undef NR_OPEN
 #define INR_OPEN_CUR 1024
@@ -151,42 +152,6 @@ struct fsxattr {
 #define FS_IOC_FSSETXATTR _IOW('X', 32, struct fsxattr)
 #define FS_IOC_GETFSLABEL _IOR(0x94, 49, char[FSLABEL_MAX])
 #define FS_IOC_SETFSLABEL _IOW(0x94, 50, char[FSLABEL_MAX])
-#define FS_KEY_DESCRIPTOR_SIZE 8
-#define FS_POLICY_FLAGS_PAD_4 0x00
-#define FS_POLICY_FLAGS_PAD_8 0x01
-#define FS_POLICY_FLAGS_PAD_16 0x02
-#define FS_POLICY_FLAGS_PAD_32 0x03
-#define FS_POLICY_FLAGS_PAD_MASK 0x03
-#define FS_POLICY_FLAG_DIRECT_KEY 0x04
-#define FS_POLICY_FLAGS_VALID 0x07
-#define FS_ENCRYPTION_MODE_INVALID 0
-#define FS_ENCRYPTION_MODE_AES_256_XTS 1
-#define FS_ENCRYPTION_MODE_AES_256_GCM 2
-#define FS_ENCRYPTION_MODE_AES_256_CBC 3
-#define FS_ENCRYPTION_MODE_AES_256_CTS 4
-#define FS_ENCRYPTION_MODE_AES_128_CBC 5
-#define FS_ENCRYPTION_MODE_AES_128_CTS 6
-#define FS_ENCRYPTION_MODE_SPECK128_256_XTS 7
-#define FS_ENCRYPTION_MODE_SPECK128_256_CTS 8
-#define FS_ENCRYPTION_MODE_ADIANTUM 9
-struct fscrypt_policy {
-  __u8 version;
-  __u8 contents_encryption_mode;
-  __u8 filenames_encryption_mode;
-  __u8 flags;
-  __u8 master_key_descriptor[FS_KEY_DESCRIPTOR_SIZE];
-};
-#define FS_IOC_SET_ENCRYPTION_POLICY _IOR('f', 19, struct fscrypt_policy)
-#define FS_IOC_GET_ENCRYPTION_PWSALT _IOW('f', 20, __u8[16])
-#define FS_IOC_GET_ENCRYPTION_POLICY _IOW('f', 21, struct fscrypt_policy)
-#define FS_KEY_DESC_PREFIX "fscrypt:"
-#define FS_KEY_DESC_PREFIX_SIZE 8
-#define FS_MAX_KEY_SIZE 64
-struct fscrypt_key {
-  __u32 mode;
-  __u8 raw[FS_MAX_KEY_SIZE];
-  __u32 size;
-};
 #define FS_SECRM_FL 0x00000001
 #define FS_UNRM_FL 0x00000002
 #define FS_COMPR_FL 0x00000004
@@ -208,11 +173,13 @@ struct fscrypt_key {
 #define FS_TOPDIR_FL 0x00020000
 #define FS_HUGE_FILE_FL 0x00040000
 #define FS_EXTENT_FL 0x00080000
+#define FS_VERITY_FL 0x00100000
 #define FS_EA_INODE_FL 0x00200000
 #define FS_EOFBLOCKS_FL 0x00400000
 #define FS_NOCOW_FL 0x00800000
 #define FS_INLINE_DATA_FL 0x10000000
 #define FS_PROJINHERIT_FL 0x20000000
+#define FS_CASEFOLD_FL 0x40000000
 #define FS_RESERVED_FL 0x80000000
 #define FS_FL_USER_VISIBLE 0x0003DFFF
 #define FS_FL_USER_MODIFIABLE 0x000380FF

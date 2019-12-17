@@ -1548,11 +1548,31 @@ TEST(STRING_TEST, memmem_smoke) {
 }
 
 TEST(STRING_TEST, strstr_smoke) {
-  const char* haystack = "big daddy/giant haystacks";
-  ASSERT_EQ(haystack, strstr(haystack, ""));
+  const char* haystack = "big daddy/giant haystacks!";
+
+  // The current strstr() implementation has special cases for needles of
+  // lengths 0, 1, 2, 3, and 4, plus a long needle case. We test matches at the
+  // beginning, middle, and end of the haystack.
+
+  ASSERT_EQ(haystack + 0, strstr(haystack, ""));
+
   ASSERT_EQ(haystack + 0, strstr(haystack, "b"));
-  ASSERT_EQ(haystack + 1, strstr(haystack, "i"));
-  ASSERT_EQ(haystack + 4, strstr(haystack, "da"));
+  ASSERT_EQ(haystack + 0, strstr(haystack, "bi"));
+  ASSERT_EQ(haystack + 0, strstr(haystack, "big"));
+  ASSERT_EQ(haystack + 0, strstr(haystack, "big "));
+  ASSERT_EQ(haystack + 0, strstr(haystack, "big d"));
+
+  ASSERT_EQ(haystack + 2, strstr(haystack, "g"));
+  ASSERT_EQ(haystack + 10, strstr(haystack, "gi"));
+  ASSERT_EQ(haystack + 10, strstr(haystack, "gia"));
+  ASSERT_EQ(haystack + 10, strstr(haystack, "gian"));
+  ASSERT_EQ(haystack + 10, strstr(haystack, "giant"));
+
+  ASSERT_EQ(haystack + 25, strstr(haystack, "!"));
+  ASSERT_EQ(haystack + 24, strstr(haystack, "s!"));
+  ASSERT_EQ(haystack + 23, strstr(haystack, "ks!"));
+  ASSERT_EQ(haystack + 22, strstr(haystack, "cks!"));
+  ASSERT_EQ(haystack + 21, strstr(haystack, "acks!"));
 }
 
 TEST(STRING_TEST, strcasestr_smoke) {

@@ -60,7 +60,8 @@ struct canfd_frame {
 #define CAN_TP20 4
 #define CAN_MCNET 5
 #define CAN_ISOTP 6
-#define CAN_NPROTO 7
+#define CAN_J1939 7
+#define CAN_NPROTO 8
 #define SOL_CAN_BASE 100
 struct sockaddr_can {
   __kernel_sa_family_t can_family;
@@ -69,6 +70,11 @@ struct sockaddr_can {
     struct {
       canid_t rx_id, tx_id;
     } tp;
+    struct {
+      __u64 name;
+      __u32 pgn;
+      __u8 addr;
+    } j1939;
   } can_addr;
 };
 struct can_filter {

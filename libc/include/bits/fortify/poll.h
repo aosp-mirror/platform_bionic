@@ -44,13 +44,13 @@ int poll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, int timeo
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'poll', fd_count is larger than the given buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= __ANDROID_API_M__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos_fds = __bos(fds);
 
   if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
     return __poll_chk(fds, fd_count, timeout, bos_fds);
   }
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+#endif
   return __call_bypassing_fortify(poll)(fds, fd_count, timeout);
 }
 
@@ -60,13 +60,13 @@ int ppoll(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const st
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'ppoll', fd_count is larger than the given buffer") {
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= __ANDROID_API_M__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos_fds = __bos(fds);
 
   if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
     return __ppoll_chk(fds, fd_count, timeout, mask, bos_fds);
   }
-#endif /* __ANDROID_API__ >= __ANDROID_API_M__ */
+#endif
   return __call_bypassing_fortify(ppoll)(fds, fd_count, timeout, mask);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
@@ -77,11 +77,13 @@ int ppoll64(struct pollfd* const fds __pass_object_size, nfds_t fd_count, const 
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos(fds), sizeof(*fds) * fd_count),
                      "in call to 'ppoll64', fd_count is larger than the given buffer") {
+#if __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos_fds = __bos(fds);
 
   if (!__bos_fd_count_trivially_safe(bos_fds, fds, fd_count)) {
     return __ppoll64_chk(fds, fd_count, timeout, mask, bos_fds);
   }
+#endif
   return __call_bypassing_fortify(ppoll64)(fds, fd_count, timeout, mask);
 }
 #endif /* __ANDROID_API__ >= __ANDROID_API_P__ */

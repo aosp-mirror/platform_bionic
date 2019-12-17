@@ -20,13 +20,8 @@ libc_common_src_files = [
     "stdlib/exit.c",
 ]
 
-// Various kinds of cruft.
+// off64_t/time64_t support on LP32.
 // ========================================================
-libc_common_src_files += [
-    "bionic/ndk_cruft.cpp",
-    "bionic/ndk_cruft_data.cpp",
-]
-
 libc_common_src_files_32 = [
     "bionic/legacy_32_bit_support.cpp",
     "bionic/time64.c",
@@ -132,8 +127,17 @@ cc_defaults {
     name: "libc_scudo_defaults",
 
     cflags: [
-        "-DUSE_SCUDO",
+        "-DUSE_SCUDO_SVELTE",
     ],
+
+    product_variables: {
+        malloc_not_svelte: {
+            cflags: [
+                "-UUSE_SCUDO_SVELTE",
+                "-DUSE_SCUDO",
+            ],
+        },
+    },
 
     whole_static_libs: [
         "libscudo",
@@ -536,7 +540,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strpbrk.c",
         "upstream-openbsd/lib/libc/string/strsep.c",
         "upstream-openbsd/lib/libc/string/strspn.c",
-        "upstream-openbsd/lib/libc/string/strstr.c",
         "upstream-openbsd/lib/libc/string/strtok.c",
         "upstream-openbsd/lib/libc/string/strxfrm.c",
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
@@ -564,6 +567,7 @@ cc_library_static {
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/strstr.c",
     ],
     cflags: [
         "-include openbsd-compat.h",
@@ -1609,6 +1613,8 @@ filegroup {
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
+        "bionic/ndk_cruft.cpp",
+        "bionic/ndk_cruft_data.cpp",
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
