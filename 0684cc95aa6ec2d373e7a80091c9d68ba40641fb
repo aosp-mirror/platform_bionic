@@ -16,6 +16,24 @@
       "revId": "0684cc95aa6ec2d373e7a80091c9d68ba40641fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "231b82e6_88e39dee",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-12-17T02:11:18Z",
+      "side": 1,
+      "message": "INFO does not produce any logs to adb logcat, so I would use other log function to check logs from logcat if required (but probably not warning level). Also I will try to check if there are any way to filter out some cases where it is expected to get logs.",
+      "parentUuid": "3d16e533_e89b9dd1",
+      "revId": "0684cc95aa6ec2d373e7a80091c9d68ba40641fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

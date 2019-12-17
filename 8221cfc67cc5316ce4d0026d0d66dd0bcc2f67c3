@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "6a966ed3_0ac22c2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-12-17T02:11:18Z",
+      "side": 1,
+      "message": "Yes, I didn\u0027t have enough time to run ART tests yet, but I will try to execute it before I merge this if possible (and update commit message if I succeed to run the test).",
+      "parentUuid": "e1c787d9_48bc6616",
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68d7a7c0_5139d15b",
         "filename": "linker/linker.cpp",
         "patchSetId": 3
@@ -96,6 +114,30 @@
       "side": 1,
       "message": "I think I\u0027m OK with this change now.\n\nPreviously, get_ld_config_file_path returned kLdConfigFilePath, \"/system/etc/ld.config.txt\". init_default_namespaces called Config::read_binary_config, which failed, but it printed no error message because the config file was missing. (Specifically, parse_config_file called ReadFileToString, which returned ENOENT.)",
       "parentUuid": "e057452e_81d1bc36",
+      "range": {
+        "startLine": 4091,
+        "startChar": 6,
+        "endLine": 4091,
+        "endChar": 10
+      },
+      "revId": "8221cfc67cc5316ce4d0026d0d66dd0bcc2f67c3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1083dc7_45715266",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4091,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2019-12-17T02:11:18Z",
+      "side": 1,
+      "message": "I added TODO as a comment. Thanks.",
+      "parentUuid": "ebf38f09_bef8b10b",
       "range": {
         "startLine": 4091,
         "startChar": 6,
