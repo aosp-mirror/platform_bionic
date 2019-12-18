@@ -2233,6 +2233,7 @@ llndk_library {
     export_preprocessed_headers: ["include"],
     native_bridge_supported: true,
     export_include_dirs: [
+        "kernel/android/scsi",
         "kernel/android/uapi",
         "kernel/uapi",
     ],
