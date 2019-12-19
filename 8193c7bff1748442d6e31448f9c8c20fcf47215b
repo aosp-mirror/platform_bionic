@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cd0cb3f_d52a7735",
+        "filename": "libunwind/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2019-12-19T18:00:14Z",
+      "side": 1,
+      "message": "Does this library need to be in the same APEX (com.android.runtime) as other Bionic libs?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 22
+      },
+      "revId": "8193c7bff1748442d6e31448f9c8c20fcf47215b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
