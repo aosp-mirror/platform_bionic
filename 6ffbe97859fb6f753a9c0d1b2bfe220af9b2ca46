@@ -70,6 +70,30 @@
       "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8f4cd7a_bf8133f8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-12-19T17:18:09Z",
+      "side": 1,
+      "message": "I just submitted an aosp manifest change to add scudo, so if you re-run repo sync, I think it should build now.",
+      "parentUuid": "e6ffcebc_e8965a66",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
