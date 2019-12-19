@@ -22,6 +22,30 @@
       "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55ab0141_998ea990",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2019-12-19T15:27:56Z",
+      "side": 1,
+      "message": "Does that manifest include external/scudo? If not you need to add it.",
+      "parentUuid": "55b24b5e_d5f354df",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
