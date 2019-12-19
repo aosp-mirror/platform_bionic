@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55b24b5e_d5f354df",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1096678
+      },
+      "writtenOn": "2019-12-19T15:26:04Z",
+      "side": 1,
+      "message": "Hi Christopher,\nWe found your change here has broken the \u0027aosp/master-art\u0027 tree build. When building\nthe latest master-art with \u0027art/tools/buildbot-build.sh --target\u0027, we get\nfollowing error:\n\n  [  5% 1065/18225] //bionic/libc:libc generate toc libc.so\n  FAILED: out/soong/.intermediates/bionic/libc/libc/android_arm64_armv8-a_shared/libc.so.toc\n  echo \"module libc missing dependencies: libscudo\" \u0026\u0026 false\n  module libc missing dependencies: libscudo\n\nThe reproduce steps can be found in art/test/README.chroot.md.",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
