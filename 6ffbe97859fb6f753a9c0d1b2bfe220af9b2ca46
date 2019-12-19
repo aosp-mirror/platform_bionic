@@ -46,6 +46,30 @@
       "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6ffcebc_e8965a66",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2019-12-19T16:50:02Z",
+      "side": 1,
+      "message": "Xueliang, we are indeed seing this build failure, but on one of our internal branch (not AOSP master-art). What was the build command that produced this build error?",
+      "parentUuid": "55ab0141_998ea990",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
