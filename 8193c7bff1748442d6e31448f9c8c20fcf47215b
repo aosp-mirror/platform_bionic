@@ -22,6 +22,30 @@
       "revId": "8193c7bff1748442d6e31448f9c8c20fcf47215b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b7a6d25_0bf5d26c",
+        "filename": "libunwind/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2019-12-19T18:05:09Z",
+      "side": 1,
+      "message": "I think we\u0027ll eventually want it to live in an APEX (so that we can update it to fix unwinder bugs). It\u0027s not clear to me whether we\u0027ll want it to be in the Bionic APEX or a separate one, so for now I left it outside of an APEX.",
+      "parentUuid": "7cd0cb3f_d52a7735",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 22
+      },
+      "revId": "8193c7bff1748442d6e31448f9c8c20fcf47215b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
