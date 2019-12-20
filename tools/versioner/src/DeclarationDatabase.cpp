@@ -106,6 +106,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     bool is_extern = named_decl->getFormalLinkage() == ExternalLinkage;
     bool is_definition = false;
     bool no_guard = false;
+    bool fortify_inline = false;
 
     if (auto function_decl = dyn_cast<FunctionDecl>(decl)) {
       is_definition = function_decl->isThisDeclarationADefinition();
@@ -147,6 +148,8 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       llvm::StringRef annotation = attr->getAnnotation();
       if (annotation == "versioner_no_guard") {
         no_guard = true;
+      } else if (annotation == "versioner_fortify_inline") {
+        fortify_inline = true;
       } else {
         llvm::SmallVector<llvm::StringRef, 2> fragments;
         annotation.split(fragments, "=");
@@ -217,7 +220,8 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
         declaration_it != symbol_it->second.declarations.end()) {
       if (declaration_it->second.is_extern != is_extern ||
           declaration_it->second.is_definition != is_definition ||
-          declaration_it->second.no_guard != no_guard) {
+          declaration_it->second.no_guard != no_guard ||
+          declaration_it->second.fortify_inline != fortify_inline) {
         errx(1, "varying declaration of '%s' at %s:%u:%u", declaration_name.c_str(),
              location.filename.c_str(), location.start.line, location.start.column);
       }
@@ -229,6 +233,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
       declaration.is_extern = is_extern;
       declaration.is_definition = is_definition;
       declaration.no_guard = no_guard;
+      declaration.fortify_inline = fortify_inline;
       declaration.availability.insert(std::make_pair(type, availability));
       symbol_it->second.declarations.insert(std::make_pair(location, declaration));
     }
