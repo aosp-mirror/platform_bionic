@@ -118,6 +118,30 @@
       "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb8dc167_8cbecafc",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2019-12-20T10:39:32Z",
+      "side": 1,
+      "message": "Thanks for the information Xueliang; the manifest change adding Scudo has been submitted both in AOSP (https://android-review.googlesource.com/c/platform/manifest/+/1195494) and internally now.",
+      "parentUuid": "5423f8b0_41c0869b",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
