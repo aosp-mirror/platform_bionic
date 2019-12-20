@@ -16,6 +16,24 @@
       "revId": "5761dd85b6efbc72449e2fe578486d189ccc9dec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6370027f_28c58f87",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2019-12-20T00:17:43Z",
+      "side": 0,
+      "message": "bionic_macros.h is in private: do we want to move it to platform headers?",
+      "parentUuid": "fe6d3bfd_5b2244e4",
+      "revId": "5761dd85b6efbc72449e2fe578486d189ccc9dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
