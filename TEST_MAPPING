@@ -8,6 +8,9 @@
     },
     {
       "name": "malloc_hooks_system_tests"
+    },
+    {
+      "name": "memunreachable_unit_test"
     }
   ]
 }
