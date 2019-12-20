@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "916be46a_e5ae748f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-20T21:32:42Z",
+      "side": 1,
+      "message": "checkin comment doesn\u0027t match code. (feel free to switch the code to just use the number instead. the older i get, the more i think that having the names is more trouble than it\u0027s worth...)\n\ni\u0027ve uploaded https://android-review.googlesource.com/c/platform/bionic/+/1196476 to get rid of these.",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 58
+      },
+      "revId": "bf299b38e1e8f1ff118651cfd007e0b18fdf4f56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
