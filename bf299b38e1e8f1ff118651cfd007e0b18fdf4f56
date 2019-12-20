@@ -22,6 +22,30 @@
       "revId": "bf299b38e1e8f1ff118651cfd007e0b18fdf4f56",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e51b58a_25720b2d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1014807
+      },
+      "writtenOn": "2019-12-20T22:08:45Z",
+      "side": 1,
+      "message": "Done (was a type and shall be __ANDROID_API_O__).  Used numeric API level instead.",
+      "parentUuid": "916be46a_e5ae748f",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 58
+      },
+      "revId": "bf299b38e1e8f1ff118651cfd007e0b18fdf4f56",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
