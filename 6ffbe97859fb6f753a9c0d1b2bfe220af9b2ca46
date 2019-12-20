@@ -94,6 +94,30 @@
       "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5423f8b0_41c0869b",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1096678
+      },
+      "writtenOn": "2019-12-20T10:33:01Z",
+      "side": 1,
+      "message": "Hi, Christopher thank you for the fix.\n\nRoland, on master-art tree, by following step 0 to step 3 in art/test/README.chroot.md Quick User Guide, I was able to reproduce this error.",
+      "parentUuid": "a8f4cd7a_bf8133f8",
+      "range": {
+        "startLine": 97,
+        "startChar": 16,
+        "endLine": 97,
+        "endChar": 35
+      },
+      "revId": "6ffbe97859fb6f753a9c0d1b2bfe220af9b2ca46",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
