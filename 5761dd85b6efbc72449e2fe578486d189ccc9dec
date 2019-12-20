@@ -34,6 +34,24 @@
       "revId": "5761dd85b6efbc72449e2fe578486d189ccc9dec",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "948744e4_f480a4a8",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-20T00:23:18Z",
+      "side": 0,
+      "message": "yeah, seems like a bug that we didn\u0027t already?\n\n(i still wonder whether we should have added this to \u003csys/cdefs.h\u003e as the least unreasonable way to mark fallthrough.)",
+      "parentUuid": "6370027f_28c58f87",
+      "revId": "5761dd85b6efbc72449e2fe578486d189ccc9dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
