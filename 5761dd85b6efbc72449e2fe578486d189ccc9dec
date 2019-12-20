@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe6d3bfd_5b2244e4",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-12-20T00:16:45Z",
+      "side": 0,
+      "message": "why this change? the point of __BIONIC_FALLTHROUGH was to avoid the need for this kind of thing...",
+      "revId": "5761dd85b6efbc72449e2fe578486d189ccc9dec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
