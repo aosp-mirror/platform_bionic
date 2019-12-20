@@ -30,7 +30,7 @@
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_R__
+#if __ANDROID_API__ < 30
 
 #define __BIONIC_THREADS_INLINE static __inline
 #include <bits/threads_inlines.h>

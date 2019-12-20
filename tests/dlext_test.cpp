@@ -230,9 +230,9 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
   dlclose(handle);
 }
 
-TEST(dlfcn, dlopen_from_nullptr_android_api_level) {
+TEST(dlfcn, dlopen_from_nullptr_android_api_level_28) {
   // Regression test for http://b/123972211. Testing dlopen(nullptr) when target sdk is P
-  android_set_application_target_sdk_version(__ANDROID_API_P__);
+  android_set_application_target_sdk_version(28);
   ASSERT_TRUE(dlopen(nullptr, RTLD_NOW) != nullptr);
 }
 
@@ -1229,7 +1229,7 @@ TEST(dlext, ns_greylist_enabled) {
   extinfo.library_namespace = ns;
 
   // An app targeting M can open libnativehelper.so because it's on the greylist.
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
@@ -1241,7 +1241,7 @@ TEST(dlext, ns_greylist_enabled) {
   dlclose(handle);
 
   // An app targeting N no longer has the greylist.
-  android_set_application_target_sdk_version(__ANDROID_API_N__);
+  android_set_application_target_sdk_version(24);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
@@ -1266,7 +1266,7 @@ TEST(dlext, ns_greylist_disabled_by_default) {
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns;
 
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
@@ -2063,7 +2063,7 @@ TEST(dlext, dlopen_handle_value_platform) {
 }
 
 TEST(dlext, dlopen_handle_value_app_compat) {
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(reinterpret_cast<uintptr_t>(handle) % sizeof(uintptr_t) == 0)
           << "dlopen should return valid pointer";

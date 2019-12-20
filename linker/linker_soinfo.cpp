@@ -754,7 +754,7 @@ uintptr_t soinfo::get_handle() const {
 }
 
 void* soinfo::to_handle() {
-  if (get_application_target_sdk_version() < __ANDROID_API_N__ || !has_min_version(3)) {
+  if (get_application_target_sdk_version() < 24 || !has_min_version(3)) {
     return this;
   }
 
