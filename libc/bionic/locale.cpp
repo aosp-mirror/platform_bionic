@@ -35,7 +35,7 @@
 #include <time.h>
 #include <wchar.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 #if defined(__BIONIC_BUILD_FOR_ANDROID_SUPPORT)
 #define USE_TLS_SLOT 0

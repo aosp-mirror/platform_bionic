@@ -48,7 +48,7 @@
 #include <unistd.h>
 #include <wchar.h>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 #include "fvwrite.h"
 #include "gdtoa.h"

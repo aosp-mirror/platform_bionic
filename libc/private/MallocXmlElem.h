@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 class MallocXmlElem {
  public:

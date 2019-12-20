@@ -30,7 +30,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 struct atfork_t {
   atfork_t* next;

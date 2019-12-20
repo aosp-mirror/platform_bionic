@@ -32,7 +32,7 @@
 
 #include <signal.h>
 
-#include "bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 // Realtime signals reserved for internal use:
 //   32 (__SIGRTMIN + 0)        POSIX timers

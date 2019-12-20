@@ -41,7 +41,7 @@
 #include <android-base/stringprintf.h>
 #include <android-base/strings.h>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 #include <private/bionic_malloc_dispatch.h>
 
 #include "Config.h"

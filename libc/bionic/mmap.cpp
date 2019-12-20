@@ -31,7 +31,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/ErrnoRestorer.h"
 
 // mmap2(2) is like mmap(2), but the offset is in 4096-byte blocks, not bytes.

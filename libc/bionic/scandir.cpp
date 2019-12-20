@@ -22,7 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/ScopedReaddir.h"
 
 // A smart pointer to the scandir dirent**.
