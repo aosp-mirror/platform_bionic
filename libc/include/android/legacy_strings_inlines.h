@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_STRINGS_INLINES_H_
-#define _ANDROID_LEGACY_STRINGS_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if defined(__i386__) && __ANDROID_API__ < __ANDROID_API_J_MR2__
+#if defined(__i386__) && __ANDROID_API__ < 18
 
 #include <strings.h>
 
@@ -41,7 +40,5 @@ __BEGIN_DECLS
 static __inline int ffs(int __n) { return __builtin_ffs(__n); }
 
 __END_DECLS
-
-#endif
 
 #endif

@@ -40,7 +40,7 @@
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 // This file is implemented as static inlines before API level 21.
 
 /**
