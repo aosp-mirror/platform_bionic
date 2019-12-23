@@ -332,7 +332,7 @@ LIBC {
     execvp;
     execvpe; # introduced=21
     exit;
-    faccessat; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    faccessat;
     fallocate; # introduced=21
     fallocate64; # introduced=21
     fchdir;
@@ -358,9 +358,9 @@ LIBC {
     fgets;
     fgetwc;
     fgetws;
-    fgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fgetxattr;
     fileno;
-    flistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    flistxattr;
     flock;
     flockfile;
     fmemopen; # introduced=23
@@ -379,13 +379,13 @@ LIBC {
     free;
     freeaddrinfo;
     freelocale; # introduced=21
-    fremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fremovexattr;
     freopen;
     fscanf;
     fseek;
     fseeko;
     fsetpos;
-    fsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fsetxattr;
     fstat;
     fstat64; # introduced=21
     fstatat;
@@ -488,7 +488,7 @@ LIBC {
     getutent;
     getwc;
     getwchar;
-    getxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    getxattr;
     gmtime;
     gmtime64; # arm x86 mips
     gmtime64_r; # arm x86 mips
@@ -596,14 +596,14 @@ LIBC {
     ldexp;
     ldiv;
     lfind; # introduced=21
-    lgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lgetxattr;
     link;
     linkat; # introduced=21
     listen;
-    listxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    listxattr;
     llabs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     lldiv;
-    llistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    llistxattr;
     localeconv; # introduced=21
     localtime;
     localtime64; # arm x86 mips
@@ -612,11 +612,11 @@ LIBC {
     login_tty; # introduced=23
     longjmp;
     lrand48;
-    lremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lremovexattr;
     lsearch; # introduced=21
     lseek;
     lseek64;
-    lsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lsetxattr;
     lstat;
     lstat64; # introduced=21
     madvise;
@@ -723,7 +723,7 @@ LIBC {
     pause;
     pclose;
     perror;
-    personality; # introduced-arm=15 introduced-arm64=21 introduced-mips=15 introduced-mips64=21 introduced-x86=15 introduced-x86_64=21
+    personality;
     pipe;
     pipe2;
     poll;
@@ -850,7 +850,7 @@ LIBC {
     rand_r; # introduced=21
     random; # introduced=21
     read;
-    readahead; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    readahead;
     readdir;
     readdir64; # introduced=21
     readdir64_r; # introduced=21
@@ -870,7 +870,7 @@ LIBC {
     regexec;
     regfree;
     remove;
-    removexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    removexattr;
     remque; # introduced=21
     rename;
     renameat;
@@ -950,7 +950,7 @@ LIBC {
     setuid;
     setutent;
     setvbuf;
-    setxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    setxattr;
     shutdown;
     sigaction;
     sigaddset; # introduced=21
@@ -1068,13 +1068,13 @@ LIBC {
     tcsendbreak; # introduced=21
     tcsetattr; # introduced=21
     tcsetpgrp;
-    tdelete; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
-    tdestroy; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tdelete;
+    tdestroy;
     tee; # introduced=21
     telldir; # introduced=23
     tempnam;
-    tfind; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
-    tgkill; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tfind;
+    tgkill;
     time;
     timegm; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     timegm64; # arm x86 mips
@@ -1103,7 +1103,7 @@ LIBC {
     towupper_l; # introduced=21
     truncate;
     truncate64; # introduced=21
-    tsearch; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tsearch;
     ttyname;
     ttyname_r;
     twalk; # introduced=21

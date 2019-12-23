@@ -214,6 +214,6 @@ void* tsearch(const void* __key, void** __root_ptr, int (*__comparator)(const vo
  * [twalk(3)](http://man7.org/linux/man-pages/man3/twalk.3.html) calls
  * `__visitor` on every node in the tree.
  */
-void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int));
+void twalk(const void* __root, void (*__visitor)(const void*, VISIT, int)) __INTRODUCED_IN(21);
 
 __END_DECLS
