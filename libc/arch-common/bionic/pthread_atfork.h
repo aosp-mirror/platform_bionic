@@ -18,7 +18,7 @@
 
 // __register_atfork wasn't available until android-23. When using libc.a, we're
 // using the latest library regardless of target API level.
-#if defined(_FORCE_CRT_ATFORK) || __ANDROID_API__ >= __ANDROID_API_M__
+#if defined(_FORCE_CRT_ATFORK) || __ANDROID_API__ >= 23
 
 extern void* __dso_handle;
 
@@ -33,4 +33,4 @@ int pthread_atfork(void (*prepare)(void), void (*parent)(void), void (*child)(vo
   return __register_atfork(prepare, parent, child, &__dso_handle);
 }
 
-#endif  /* __ANDROID_API__ >= __ANDROID_API_M__ */
+#endif
