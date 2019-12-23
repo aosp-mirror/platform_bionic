@@ -1162,6 +1162,13 @@ static int open_library(android_namespace_t* ns,
     }
   }
 
+#if !defined(__ANDROID_APEX__)
+  if (fd == -1) {
+    std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
+    fd = open_library_on_paths(zip_archive_cache, name, file_offset, bootstrap_paths, realpath);
+  }
+#endif
+
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
