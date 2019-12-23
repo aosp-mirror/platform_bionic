@@ -124,7 +124,7 @@ int toupper(int __ch);
  */
 int _toupper(int __ch) __INTRODUCED_IN(21);
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 /** Like isalnum but with an ignored `locale_t`. */
 int isalnum_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
 /** Like isalpha but with an ignored `locale_t`. */

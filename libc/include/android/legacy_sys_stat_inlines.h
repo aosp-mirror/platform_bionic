@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_SYS_STAT_INLINES_H_
-#define _ANDROID_LEGACY_SYS_STAT_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+#if __ANDROID_API__ < 21
 
 #include <sys/stat.h>
 
@@ -44,4 +43,3 @@ static __inline int mkfifo(const char* __path, mode_t __mode) {
 __END_DECLS
 
 #endif
-#endif /* _ANDROID_LEGACY_SYS_STAT_INLINES_H_ */

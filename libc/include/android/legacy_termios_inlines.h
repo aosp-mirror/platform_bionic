@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_TERMIOS_INLINES_H_
-#define _ANDROID_LEGACY_TERMIOS_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+#if __ANDROID_API__ < 21
 
 #include <linux/termios.h>
 #include <sys/ioctl.h>
@@ -41,5 +40,3 @@
 #include <bits/termios_inlines.h>
 
 #endif
-
-#endif /* _ANDROID_LEGACY_TERMIOS_INLINES_H_ */
