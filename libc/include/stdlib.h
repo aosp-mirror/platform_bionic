@@ -43,7 +43,7 @@ __BEGIN_DECLS
 
 __noreturn void abort(void);
 __noreturn void exit(int __status);
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
 #else
 __noreturn void _Exit(int) __RENAME(_exit);
@@ -167,7 +167,7 @@ int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
 
 size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n);
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
 #else
@@ -183,7 +183,7 @@ size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #include <bits/fortify/stdlib.h>
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_K__
+#if __ANDROID_API__ >= 19
 int abs(int __x) __attribute_const__ __INTRODUCED_IN(19);
 long labs(long __x) __attribute_const__ __INTRODUCED_IN(19);
 long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
@@ -191,7 +191,7 @@ long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
 // Implemented as static inlines before 19.
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 float strtof(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
 double atof(const char* __s) __attribute_pure__ __INTRODUCED_IN(21);
 int rand(void) __INTRODUCED_IN(21);
@@ -207,7 +207,7 @@ long double strtold_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODU
 // Implemented as static inlines before 21.
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_O__
+#if __ANDROID_API__ >= 26
 double strtod_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
 float strtof_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
 long strtol_l(const char* __s, char** __end_ptr, int, locale_t __l) __INTRODUCED_IN(26);

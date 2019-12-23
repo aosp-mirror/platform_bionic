@@ -124,7 +124,7 @@ __BEGIN_DECLS
  */
 int android_get_application_target_sdk_version() __INTRODUCED_IN(24);
 
-#if __ANDROID_API__ < __ANDROID_API_Q__
+#if __ANDROID_API__ < 29
 
 // android_get_device_api_level is a static inline before API level 29.
 #define __BIONIC_GET_DEVICE_API_LEVEL_INLINE static __inline

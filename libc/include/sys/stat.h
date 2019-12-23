@@ -171,7 +171,7 @@ mode_t umask(mode_t __mask);
 #include <bits/fortify/stat.h>
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 int mkfifo(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
 #else
 // Implemented as a static inline before 21.

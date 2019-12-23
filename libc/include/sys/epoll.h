@@ -51,7 +51,7 @@ int epoll_create1(int __flags) __INTRODUCED_IN(21);
  * https://github.com/android-ndk/ndk/issues/302
  * https://github.com/android-ndk/ndk/issues/394
  */
-#if __ANDROID_API__ < __ANDROID_API_L__ && defined(EPOLL_CLOEXEC)
+#if __ANDROID_API__ < 21 && defined(EPOLL_CLOEXEC)
 #undef EPOLL_CLOEXEC
 #endif
 

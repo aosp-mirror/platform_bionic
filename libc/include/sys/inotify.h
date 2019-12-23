@@ -48,7 +48,7 @@ __BEGIN_DECLS
  *
  * https://github.com/android-ndk/ndk/issues/394
  */
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 #define IN_CLOEXEC O_CLOEXEC
 #define IN_NONBLOCK O_NONBLOCK
 #endif

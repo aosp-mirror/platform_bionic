@@ -35,7 +35,7 @@
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__ && defined(__arm__)
+#if __ANDROID_API__ < 21 && defined(__arm__)
 
 #define __BIONIC_FENV_INLINE static __inline
 #include <bits/fenv_inlines_arm.h>

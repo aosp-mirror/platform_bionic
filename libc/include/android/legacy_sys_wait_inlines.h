@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_SYS_WAIT_INLINES_H_
-#define _ANDROID_LEGACY_SYS_WAIT_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_J_MR2__
+#if __ANDROID_API__ < 18
 
 #include <sys/syscall.h>
 #include <sys/wait.h>
@@ -45,6 +44,4 @@ static __inline pid_t wait4(pid_t pid, int* status, int options, struct rusage* 
 
 __END_DECLS
 
-#endif /* __ANDROID_API__ < __ANDROID_API_J_MR2__ */
-
-#endif /* _ANDROID_LEGACY_SYS_WAIT_INLINES_H_ */
+#endif
