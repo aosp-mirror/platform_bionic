@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_STDLIB_INLINES_H_
-#define _ANDROID_LEGACY_STDLIB_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_K__
+#if __ANDROID_API__ < 19
 
 __BEGIN_DECLS
 
@@ -45,9 +44,11 @@ static __inline long long llabs(long long __n) {
 
 __END_DECLS
 
-#endif  /* __ANDROID_API__ < __ANDROID_API_K__ */
+#endif
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+
+
+#if __ANDROID_API__ < 21
 
 #include <errno.h>
 #include <float.h>
@@ -83,9 +84,11 @@ static __inline int grantpt(int __fd __attribute((unused))) {
 
 __END_DECLS
 
-#endif  /* __ANDROID_API__ < __ANDROID_API_L__ */
+#endif
 
-#if __ANDROID_API__ < __ANDROID_API_O__
+
+
+#if __ANDROID_API__ < 26
 
 #include <stdlib.h>
 #include <xlocale.h>
@@ -106,6 +109,4 @@ static __inline long strtol_l(const char* __s, char** __end_ptr, int __base, loc
 
 __END_DECLS
 
-#endif  /* __ANDROID_API__ < __ANDROID_API_O__ */
-
-#endif /* _ANDROID_LEGACY_STDLIB_INLINES_H_ */
+#endif

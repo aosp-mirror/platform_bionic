@@ -209,7 +209,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   };
 
   // If you're targeting N, you don't get the greylist.
-  if (g_greylist_disabled || get_application_target_sdk_version() >= __ANDROID_API_N__) {
+  if (g_greylist_disabled || get_application_target_sdk_version() >= 24) {
     return false;
   }
 
@@ -252,7 +252,7 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
   // New mapping for new apex should be added below
 
   // Nothing to do if target sdk version is Q or above
-  if (get_application_target_sdk_version() >= __ANDROID_API_Q__) {
+  if (get_application_target_sdk_version() >= 29) {
     return false;
   }
 
@@ -943,8 +943,7 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
     // if the library is opened by application with target api level < M.
     // See http://b/21565766
-    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 &&
-        si->get_target_sdk_version() >= __ANDROID_API_M__) {
+    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() >= 23) {
       continue;
     }
 
@@ -1232,10 +1231,10 @@ const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
   int app_target_api_level = get_application_target_sdk_version();
-  if (app_target_api_level < __ANDROID_API_M__) {
+  if (app_target_api_level < 23) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN_documented_change(__ANDROID_API_M__,
+      DL_WARN_documented_change(23,
                                 "invalid-dt_needed-entries-enforced-for-api-level-23",
                                 "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
                                 sopath, dt_needed, app_target_api_level);
@@ -1384,7 +1383,7 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        DL_WARN_documented_change(__ANDROID_API_N__,
+        DL_WARN_documented_change(24,
                                   "private-api-enforced-for-api-level-24",
                                   "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
                                   "is not accessible by namespace \"%s\"",
@@ -3832,9 +3831,9 @@ bool soinfo::prelink_image() {
   if (soname_ == nullptr &&
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
-      get_application_target_sdk_version() < __ANDROID_API_M__) {
+      get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN_documented_change(__ANDROID_API_M__,
+    DL_WARN_documented_change(23,
                               "missing-soname-enforced-for-api-level-23",
                               "\"%s\" has no DT_SONAME (will use %s instead)",
                               get_realpath(), soname_);
@@ -3875,7 +3874,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   if (has_text_relocations) {
     // Fail if app is targeting M or above.
     int app_target_api_level = get_application_target_sdk_version();
-    if (app_target_api_level >= __ANDROID_API_M__) {
+    if (app_target_api_level >= 23) {
       DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
                      "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
                      "Enforced-for-API-level-23)", get_realpath());
@@ -3883,7 +3882,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN_documented_change(__ANDROID_API_M__,
+    DL_WARN_documented_change(23,
                               "Text-Relocations-Enforced-for-API-level-23",
                               "\"%s\" has text relocations",
                               get_realpath());

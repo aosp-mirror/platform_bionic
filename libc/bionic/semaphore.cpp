@@ -221,7 +221,7 @@ int sem_wait(sem_t* sem) {
     }
 
     int result = __futex_wait_ex(sem_count_ptr, shared, shared | SEMCOUNT_MINUS_ONE, false, nullptr);
-    if (android_get_application_target_sdk_version() >= __ANDROID_API_N__) {
+    if (android_get_application_target_sdk_version() >= 24) {
       if (result ==-EINTR) {
         errno = EINTR;
         return -1;
