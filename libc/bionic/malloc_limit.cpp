@@ -264,7 +264,6 @@ static bool EnableLimitDispatchTable() {
 }
 #else
 static bool EnableLimitDispatchTable() {
-  HeapprofdMaskSignal();
   pthread_mutex_lock(&gGlobalsMutateLock);
   // All other code that calls mutate will grab the gGlobalsMutateLock.
   // However, there is one case where the lock cannot be acquired, in the
@@ -272,7 +271,7 @@ static bool EnableLimitDispatchTable() {
   // threads calling mutate at the same time, use an atomic variable to
   // verify that only this function or the signal handler are calling mutate.
   // If this function is called at the same time as the signal handler is
-  // being called, allow up to five ms for the signal handler to complete
+  // being called, allow a short period for the signal handler to complete
   // before failing.
   bool enabled = false;
   size_t num_tries = 20;
@@ -291,7 +290,6 @@ static bool EnableLimitDispatchTable() {
     usleep(1000);
   }
   pthread_mutex_unlock(&gGlobalsMutateLock);
-  HeapprofdUnmaskSignal();
   if (enabled) {
     info_log("malloc_limit: Allocation limit enabled, max size %" PRId64 " bytes\n", gAllocLimit);
   } else {
