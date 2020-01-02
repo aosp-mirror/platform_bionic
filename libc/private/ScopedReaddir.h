@@ -18,7 +18,7 @@
 
 #include <dirent.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 class ScopedReaddir {
  public:

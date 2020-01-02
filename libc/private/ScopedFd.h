@@ -30,7 +30,7 @@
 
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/ErrnoRestorer.h"
 
 class ScopedFd final {

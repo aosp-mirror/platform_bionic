@@ -34,7 +34,7 @@
 #include <set>
 #include <string>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 struct MapEntry {
   MapEntry(uintptr_t start, uintptr_t end, uintptr_t offset, const char* name, size_t name_len, int flags)

@@ -24,7 +24,7 @@
 
 #include <async_safe/log.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 template <typename T>
 union WriteProtectedContents {
