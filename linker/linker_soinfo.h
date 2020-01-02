@@ -243,9 +243,7 @@ struct soinfo {
 
   soinfo_list_t& get_parents();
 
-  bool find_symbol_by_name(SymbolName& symbol_name,
-                           const version_info* vi,
-                           const ElfW(Sym)** symbol) const;
+  const ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name, const version_info* vi) const;
 
   ElfW(Sym)* find_symbol_by_address(const void* addr);
   ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const;
@@ -310,10 +308,10 @@ struct soinfo {
   bool is_image_linked() const;
   void set_image_linked();
 
-  bool elf_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
-  ElfW(Sym)* elf_addr_lookup(const void* addr);
-  bool gnu_lookup(SymbolName& symbol_name, const version_info* vi, uint32_t* symbol_index) const;
+  const ElfW(Sym)* gnu_lookup(SymbolName& symbol_name, const version_info* vi) const;
+  const ElfW(Sym)* elf_lookup(SymbolName& symbol_name, const version_info* vi) const;
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
+  ElfW(Sym)* elf_addr_lookup(const void* addr);
 
   bool lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
                            const char* sym_name, const version_info** vi);
