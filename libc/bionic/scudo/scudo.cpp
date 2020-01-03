@@ -33,7 +33,7 @@
 #include <sys/param.h>
 #include <sys/prctl.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 #include "scudo.h"
 

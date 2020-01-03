@@ -32,7 +32,7 @@
 #include <stdint.h>
 #include <sys/system_properties.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 // The C11 standard doesn't allow atomic loads from const fields,
 // though C++11 does.  Fudge it until standards get straightened out.

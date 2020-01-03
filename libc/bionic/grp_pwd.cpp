@@ -44,7 +44,7 @@
 
 #include "private/ErrnoRestorer.h"
 #include "private/android_filesystem_config.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 // Generated android_ids array
 #include "generated_android_ids.h"

@@ -40,6 +40,7 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <platform/bionic/reserved_signals.h>
 #include <sys/system_properties.h>
 
 #include "private/bionic_globals.h"
@@ -168,8 +169,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
-      // DEBUGGER_SIGNAL
-      inline_raise(__SIGRTMIN + 3, &abort_message);
+      inline_raise(BIONIC_SIGNAL_DEBUGGER, &abort_message);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
