@@ -21,7 +21,7 @@
 #include <stdint.h>
 #include <sys/auxv.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 // When the kernel starts the dynamic linker, it passes a pointer to a block
 // of memory containing argc, the argv array, the environment variable array,

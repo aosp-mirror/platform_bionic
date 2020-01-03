@@ -32,7 +32,7 @@
 #include <pwd.h>
 
 #include "private/bionic_lock.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/grp_pwd.h"
 
 class MmapFile {

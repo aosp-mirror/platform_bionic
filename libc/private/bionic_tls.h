@@ -36,7 +36,7 @@
 
 #include <platform/bionic/tls.h>
 
-#include "bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "grp_pwd.h"
 
 /** WARNING WARNING WARNING

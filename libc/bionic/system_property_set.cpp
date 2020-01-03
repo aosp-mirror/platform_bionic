@@ -45,7 +45,7 @@
 #include <async_safe/CHECK.h>
 
 #include "private/bionic_defs.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/ScopedFd.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;

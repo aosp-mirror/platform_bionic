@@ -30,7 +30,7 @@
 
 #include <stdatomic.h>
 #include "private/bionic_futex.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 // Lock is used in places like pthread_rwlock_t, which can be initialized without calling
 // an initialization function. So make sure Lock can be initialized by setting its memory to 0.

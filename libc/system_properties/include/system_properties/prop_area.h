@@ -33,7 +33,7 @@
 #include <string.h>
 #include <sys/mman.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 #include "prop_info.h"
 
