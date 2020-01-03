@@ -36,9 +36,10 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <platform/bionic/reserved_signals.h>
+
 #include "private/ErrnoRestorer.h"
 #include "private/SigSetConverter.h"
-#include "private/sigrtmin.h"
 
 extern "C" int __rt_sigpending(const sigset64_t*, size_t);
 extern "C" int __rt_sigqueueinfo(pid_t, int, siginfo_t*);

@@ -32,7 +32,7 @@
 #include <stdint.h>
 #include <unistd.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 extern "C" void* __mremap(void*, size_t, size_t, int, void*);
 

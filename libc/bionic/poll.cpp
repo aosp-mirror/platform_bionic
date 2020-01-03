@@ -30,8 +30,9 @@
 #include <sys/poll.h>
 #include <sys/select.h>
 
+#include <platform/bionic/reserved_signals.h>
+
 #include "private/bionic_time_conversions.h"
-#include "private/sigrtmin.h"
 #include "private/SigSetConverter.h"
 
 extern "C" int __ppoll(pollfd*, unsigned int, timespec*, const sigset64_t*, size_t);
