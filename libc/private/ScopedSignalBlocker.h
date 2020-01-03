@@ -18,7 +18,7 @@
 
 #include <signal.h>
 
-#include "bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 class ScopedSignalBlocker {
  public:

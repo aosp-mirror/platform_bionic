@@ -1808,6 +1808,7 @@ cc_library_headers {
         "//frameworks:__subpackages__",
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
+        "//system/core/debuggerd:__subpackages__",
     ],
     host_supported: true,
     recovery_available: true,

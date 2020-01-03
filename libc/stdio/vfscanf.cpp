@@ -43,7 +43,7 @@
 
 #include <private/bionic_ctype.h>
 #include <private/bionic_fortify.h>
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 #include <private/bionic_mbstate.h>
 
 #define BUF 513 /* Maximum length of numeric string. */

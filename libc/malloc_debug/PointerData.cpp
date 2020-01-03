@@ -43,7 +43,7 @@
 
 #include <android-base/stringprintf.h>
 #include <android-base/thread_annotations.h>
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 #include "Config.h"
 #include "DebugData.h"
