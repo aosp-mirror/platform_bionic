@@ -22,6 +22,29 @@
       "revId": "d55502d9ea81815a900f47540a52ff46bca1238d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf0d58e6_844f9d78",
+        "filename": "linker/linker_cfi.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-06T21:08:58Z",
+      "side": 1,
+      "message": "nit: )* (only bother if you\u0027re going to redo this patch anyway for the commit message typo)",
+      "range": {
+        "startLine": 145,
+        "startChar": 20,
+        "endLine": 145,
+        "endChar": 23
+      },
+      "revId": "d55502d9ea81815a900f47540a52ff46bca1238d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
