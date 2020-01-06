@@ -22,6 +22,30 @@
       "revId": "31a3b35c9a61cbec741b427157d63d8f7cbbaa31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e37c36ea_66b69b7c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-06T17:32:33Z",
+      "side": 1,
+      "message": "I think that dropping the DT_NEEDED if all symbols are weak undefined is actually an intentional behaviour of the linker. The behaviour could in principle be changed, but this could have its own unintended consequences.\n\nI\u0027ve only seen this causing a problem in a handful of places on Android and in all of them it turned out to be a misuse of weak undef (optional symbol was in fact required). So I\u0027m not sure that we should change the linker at this point.",
+      "parentUuid": "f61572e5_335fd959",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 11
+      },
+      "revId": "31a3b35c9a61cbec741b427157d63d8f7cbbaa31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
