@@ -57,7 +57,7 @@ ssize_t sendto(int fd, const void* const buf __pass_object_size0, size_t len, in
     __overloadable
     __clang_error_if(__bos_unevaluated_lt(__bos0(buf), len),
                      "'sendto' called with size bigger than buffer") {
-#if __ANDROID_API__ >= 25 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
+#if __ANDROID_API__ >= 26 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   size_t bos = __bos0(buf);
 
   if (!__bos_trivially_ge(bos, len)) {
