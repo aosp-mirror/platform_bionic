@@ -217,7 +217,7 @@ clock_t       times(struct tms*)       all
 int           nanosleep(const struct timespec*, struct timespec*)   all
 int           clock_settime(clockid_t, const struct timespec*)  all
 int           __clock_nanosleep:clock_nanosleep(clockid_t, int, const struct timespec*, struct timespec*)  all
-int           getitimer(int, const struct itimerval*)   all
+int           getitimer(int, struct itimerval*)   all
 int           setitimer(int, const struct itimerval*, struct itimerval*)  all
 int           __timer_create:timer_create(clockid_t clockid, struct sigevent* evp, __kernel_timer_t* timerid)    all
 int           __timer_settime:timer_settime(__kernel_timer_t, int, const struct itimerspec*, struct itimerspec*) all
@@ -249,8 +249,8 @@ int           listen(int, int)                   arm,arm64,mips,mips64,x86_64
 int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,arm64,mips,mips64,x86_64
 int           getsockname(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           getpeername(int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
-int           __sendto:sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
-int           recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
+ssize_t       __sendto:sendto(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  arm,arm64,mips,mips64,x86_64
+ssize_t       recvfrom(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  arm,arm64,mips,mips64,x86_64
 int           shutdown(int, int)  arm,arm64,mips,mips64,x86_64
 int           setsockopt(int, int, int, const void*, socklen_t)  arm,arm64,mips,mips64,x86_64
 int           getsockopt(int, int, int, void*, socklen_t*)    arm,arm64,mips,mips64,x86_64
@@ -267,8 +267,8 @@ int           listen:socketcall:4(int, int)                   x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
 int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
 int           socketpair:socketcall:8(int, int, int, int*)    x86
-int           __sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
-int           recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
+ssize_t       __sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
+ssize_t       recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
 int           shutdown:socketcall:13(int, int)  x86
 int           setsockopt:socketcall:14(int, int, int, const void*, socklen_t)  x86
 int           getsockopt:socketcall:15(int, int, int, void*, socklen_t*)    x86
@@ -340,7 +340,7 @@ int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) arm64
 int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 
 pid_t wait4(pid_t, int*, int, struct rusage*)  all
-int __waitid:waitid(int, pid_t, struct siginfo_t*, int, void*)  all
+int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
@@ -355,8 +355,8 @@ int     __set_thread_area:set_thread_area(void*) x86
 
 # vdso stuff.
 int __clock_getres:clock_getres(clockid_t, struct timespec*) all
-int __clock_gettime:clock_gettime(clockid_t, timespec*) all
-int __gettimeofday:gettimeofday(timeval*, timezone*) all
+int __clock_gettime:clock_gettime(clockid_t, struct timespec*) all
+int __gettimeofday:gettimeofday(struct timeval*, struct timezone*) all
 
 # <sys/random.h>
 ssize_t getrandom(void*, size_t, unsigned) all
