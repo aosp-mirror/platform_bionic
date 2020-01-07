@@ -4202,11 +4202,13 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   // we also need vdso to be available for all namespaces (if present)
   soinfo* vdso = solist_get_vdso();
   for (auto it : namespaces) {
-    it.second->add_soinfo(ld_android_so);
-    if (vdso != nullptr) {
-      it.second->add_soinfo(vdso);
+    if (it.second != &g_default_namespace) {
+      it.second->add_soinfo(ld_android_so);
+      if (vdso != nullptr) {
+        it.second->add_soinfo(vdso);
+      }
+      // somain and ld_preloads are added to these namespaces after LD_PRELOAD libs are linked
     }
-    // somain and ld_preloads are added to these namespaces after LD_PRELOAD libs are linked
   }
 
   set_application_target_sdk_version(config->target_sdk_version());
