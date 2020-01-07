@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a08189c9_23e6b89c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-07T14:29:07Z",
+      "side": 1,
+      "message": "Checking for SI_QUEUE is indeed appropriate here, thanks.\n\nAs for the si_value - from my manual experiments on a crosshatch - maybe the first handler invocation from \"kill -36\" is with si_value of 0. But if the process is actively running, it seemed to behave more like an uninitialized struct, e.g.:\n\n01-06 16:35:01.620 31473 31473 E libc    : received profiling signal with si_value: -1543898096\n01-06 16:35:02.777 31473 31473 E libc    : received profiling signal with si_value: 1902268800\n01-06 16:35:03.777 31473 31473 E libc    : received profiling signal with si_value: 1902268800\n01-06 16:35:04.510 31473 31473 E libc    : received profiling signal with si_value: 1902268800\n01-06 16:35:05.113 31473 31473 E libc    : received profiling signal with si_value: 1902268800\n01-06 16:35:06.061 31473 31473 E libc    : received profiling signal with si_value: 1902268800\n01-06 16:35:06.964 31473 31473 E libc    : received profiling signal with si_value: 0\n\nI didn\u0027t look deeper than that.",
+      "parentUuid": "e06a822d_b569a7d6",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2ac9fa25_aa6efe2f",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "767b3729_1fdcf942",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-07T14:29:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ac9fa25_aa6efe2f",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 43,
+        "endChar": 55
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b922a75f_73d3d851",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2020-01-07T00:48:53Z",
       "side": 1,
       "message": "Should this take gGlobalsMutateLock as in DispatchReset below?\n\n(It seems weird that we have a mutex there and an atomic exchange on gGlobalsMutating here, and they\u0027re taken in different orders relative to gHeapprofdInitInProgress...)",
+      "range": {
+        "startLine": 188,
+        "startChar": 60,
+        "endLine": 189,
+        "endChar": 55
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1457e29_c2e2e8a2",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-07T14:29:07Z",
+      "side": 1,
+      "message": "Both the atomic and the mutex were added as part of malloc_limit (aosp/818973). This specific code fragmetn running in a signal handler context, so it cannot use the pthread mutex (gGlobalsMutateLock), so intead an atomic flag was tacked on to guard against one specific race on the \u0026globals-\u003ecurrent_dispatch_table. The review does mention that an async-safe spinlock would be appropriate, but wasn\u0027t implemented as there are no other current use-cases for it.\n\nI agree that it\u0027d be nice to simplify it, but it\u0027s intentionally out of scope of this refactoring. (I was looking at reusing gHeapprofdInitInProgress as that\u0027s already used to guard against concurrent signal init, but it doesn\u0027t quite work out).",
+      "parentUuid": "b922a75f_73d3d851",
       "range": {
         "startLine": 188,
         "startChar": 60,
