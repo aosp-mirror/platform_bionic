@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa875c40_43bd1ca2",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:36:21Z",
+      "side": 1,
+      "message": "driveby: not error\n\nmore driveby: include getprogname?",
+      "range": {
+        "startLine": 58,
+        "startChar": 24,
+        "endLine": 58,
+        "endChar": 41
+      },
+      "revId": "bbdf43cedae6aecde5412bee8972ed3b7626e670",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
