@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e06a822d_b569a7d6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-01-07T00:48:53Z",
+      "side": 1,
+      "message": "It\u0027ll be set to zero. That being said, you should probably be checking siginfo::si_code for SI_QUEUE before accessing si_value.",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ac9fa25_aa6efe2f",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-01-07T00:48:53Z",
+      "side": 1,
+      "message": "nit: put this in platform/bionic/reserved_signals.h?",
+      "range": {
+        "startLine": 42,
+        "startChar": 31,
+        "endLine": 43,
+        "endChar": 55
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b922a75f_73d3d851",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-01-07T00:48:53Z",
+      "side": 1,
+      "message": "Should this take gGlobalsMutateLock as in DispatchReset below?\n\n(It seems weird that we have a mutex there and an atomic exchange on gGlobalsMutating here, and they\u0027re taken in different orders relative to gHeapprofdInitInProgress...)",
+      "range": {
+        "startLine": 188,
+        "startChar": 60,
+        "endLine": 189,
+        "endChar": 55
+      },
+      "revId": "52c0ce375345f02afa6a24306fe8bbbe148bd200",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
