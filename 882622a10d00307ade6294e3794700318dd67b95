@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4db44792_2bfbc0f0",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "else {\n   async_safe_format_log(ANDROID_LOG_ERROR, \"libc\", \"received profiling signal with invalid si_value: %d\",\n                        signal_value);\n}",
+      "range": {
+        "startLine": 91,
+        "startChar": 2,
+        "endLine": 91,
+        "endChar": 3
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0904c74f_64841183",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "nit: logging?",
+      "range": {
+        "startLine": 100,
+        "startChar": 4,
+        "endLine": 100,
+        "endChar": 11
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d21f5d2_c38eabcb",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 106,
+        "endChar": 11
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3ae2b51_95819b2c",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 11
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69fbd9a7_eb7bfff2",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 11
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9daf9852_24795ddd",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "nit: think could do `alignas(cmsghdr) char control_buf[256] \u003d {};` instead above",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 46
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98dda2b8_7b31e1f3",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-07T17:57:24Z",
+      "side": 1,
+      "message": "error handling (logging)?",
+      "range": {
+        "startLine": 138,
+        "startChar": 2,
+        "endLine": 138,
+        "endChar": 9
+      },
+      "revId": "882622a10d00307ade6294e3794700318dd67b95",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
