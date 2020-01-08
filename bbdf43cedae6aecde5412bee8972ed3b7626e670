@@ -22,6 +22,30 @@
       "revId": "bbdf43cedae6aecde5412bee8972ed3b7626e670",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c72f4c6b_278aa129",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-08T20:31:16Z",
+      "side": 1,
+      "message": "Now a warning, as it\u0027s a notable event to log. I could also see it being an \"info\", since nothing directly unexpected is happening, though.\n\nprogname(): added to the entry log, but left the rest of the logging (including follow-up patch) without it (as you can just cluster by TID at that point).",
+      "parentUuid": "fa875c40_43bd1ca2",
+      "range": {
+        "startLine": 58,
+        "startChar": 24,
+        "endLine": 58,
+        "endChar": 41
+      },
+      "revId": "bbdf43cedae6aecde5412bee8972ed3b7626e670",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
