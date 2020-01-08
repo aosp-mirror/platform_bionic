@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a6efbccf_1564cf3c",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-08T23:24:48Z",
+      "side": 0,
+      "message": "How are you preventing signals from being stacked upon each other?\n\nThe mask and unmask mean that if a signal is sent while this is going on, it will be ignored and rethrown when the unmask comes off.",
+      "range": {
+        "startLine": 267,
+        "startChar": 2,
+        "endLine": 267,
+        "endChar": 21
+      },
+      "revId": "3779d6da40fc90b989b343c1b0d5b22611226b43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

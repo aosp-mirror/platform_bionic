@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7550fa3_1a9d803f",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-08T23:24:48Z",
+      "side": 1,
+      "message": "Is there a reason to do this here and not in the malloc init routines? If so, the comment should include why.",
+      "range": {
+        "startLine": 103,
+        "startChar": 2,
+        "endLine": 103,
+        "endChar": 35
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19297af7_297c54a2",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-08T23:24:48Z",
+      "side": 1,
+      "message": "It would be good to describe how this variable is used. I believe it\u0027s set by an android_mallopt, but where do you expect it to be set?",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e014c7d8_e7ac14f0",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-08T23:24:48Z",
+      "side": 1,
+      "message": "Why create a function for this? You only call it once.\n\nSame for the next two functions. While the name IsProcessProfileable is descriptive, you could move that comment down and achieve the same.",
+      "range": {
+        "startLine": 474,
+        "startChar": 12,
+        "endLine": 474,
+        "endChar": 26
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c37fba31_822c57c0",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-08T23:24:48Z",
+      "side": 1,
+      "message": "Would it be better to move all of this to malloc_common_heapprofd.cpp (including the gZygoteXX variables)?\n\nSince all of this is really only used by the profiling code, that is.",
+      "range": {
+        "startLine": 495,
+        "startChar": 0,
+        "endLine": 520,
+        "endChar": 3
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
