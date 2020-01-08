@@ -9,7 +9,7 @@ cc_library {
     recovery_available: true,
     static_ndk_lib: true,
 
-    whole_static_libs: ["libarm-optimized-routines"],
+    whole_static_libs: ["libarm-optimized-routines-math"],
 
     srcs: [
         "upstream-freebsd/lib/msun/bsdsrc/b_exp.c",
