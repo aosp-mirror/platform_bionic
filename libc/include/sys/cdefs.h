@@ -277,7 +277,7 @@
  * Because clang-FORTIFY uses overloads, we can't mark functions as `extern
  * inline` without making them available externally.
  */
-#  define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline
+#  define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
  * for variadic functions because compilers cannot inline them.
