@@ -178,6 +178,24 @@
       "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4823098_d6ea7fb4",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T19:20:37Z",
+      "side": 1,
+      "message": "Okay, I\u0027ve split my mallopt change into one change that just adds the mallopt and another that adds the scudo/MTE bits.",
+      "parentUuid": "ee1965ca_43d3783e",
+      "revId": "b08c4bf03433921b240cafd77f8b3c5f5514d425",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

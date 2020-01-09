@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de50f51e_f99387d2",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-09T19:20:37Z",
+      "side": 1,
+      "message": "As far as I know, TBI has always been enabled on Linux, so this comment isn\u0027t quite accurate. I\u0027d just say \"If the kernel supports tagged pointers, ...\"",
+      "revId": "84ac168a1d93e3c725ccb430360329b66f4acf90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
