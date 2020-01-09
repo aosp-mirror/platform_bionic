@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "21592f9a_8994b5cf",
+        "filename": "libc/bionic/libc_init_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-09T22:58:05Z",
+      "side": 1,
+      "message": "See the follow-up patch (aosp/1201058), which will be adding a perf-profiler codepath to this signal handler. It seemed appropriate to lift this outside of malloc-preinit as at least the new profiler isn\u0027t related to malloc. \n\nI think the comment is still appropriate if we assume that this isn\u0027t purely heapprofd-specific? WDYT?",
+      "parentUuid": "d7550fa3_1a9d803f",
+      "range": {
+        "startLine": 103,
+        "startChar": 2,
+        "endLine": 103,
+        "endChar": 35
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19297af7_297c54a2",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2020-01-08T23:24:48Z",
       "side": 1,
       "message": "It would be good to describe how this variable is used. I believe it\u0027s set by an android_mallopt, but where do you expect it to be set?",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 26
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f31899d_0c95916e",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-09T22:58:05Z",
+      "side": 1,
+      "message": "Added a sentence on its usage, does the addendum look useful?",
+      "parentUuid": "19297af7_297c54a2",
       "range": {
         "startLine": 81,
         "startChar": 3,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f68ea398_f6737671",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-09T22:58:05Z",
+      "side": 1,
+      "message": "My reasoning was to separate the option \"switch\" in the mallopt function that does argument checking, from the actual logic of each option. It seemed like that\u0027s what was being done for the malloc leak functions above as well.\n\nInlined now.",
+      "parentUuid": "e014c7d8_e7ac14f0",
+      "range": {
+        "startLine": 474,
+        "startChar": 12,
+        "endLine": 474,
+        "endChar": 26
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c37fba31_822c57c0",
         "filename": "libc/bionic/malloc_common_dynamic.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2020-01-08T23:24:48Z",
       "side": 1,
       "message": "Would it be better to move all of this to malloc_common_heapprofd.cpp (including the gZygoteXX variables)?\n\nSince all of this is really only used by the profiling code, that is.",
+      "range": {
+        "startLine": 495,
+        "startChar": 0,
+        "endLine": 520,
+        "endChar": 3
+      },
+      "revId": "ea374c9eadb938f0415968a34f7eea0ae20a9317",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aae7b526_7c5fb535",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-09T22:58:05Z",
+      "side": 1,
+      "message": "gZygoteChild\u0027s address is exposed to all malloc hooking libraries as part of the \"init\" function [1]. So without changing that, it seemed appropriate to keep it in the malloc_common_dynamic. At the same time, it also made sense to put the two bits in one source file, so I moved the gZygoteChildProfileable to here.\n\nIt\u0027ll also have to be read by the signal handling for the \"perf profiler\" that\u0027s being added in the follow-up aosp/1201058, so it\u0027ll be no longer heapprofd-specific.\n\nAs per the cl\u0027s description, it\u0027s a bit odd that we\u0027ll have the \"generic\" profiling signal handler interacting with android_mallopt, but extracting the profileability setting/getting into their own place seems not worth it at this point.\n\n[1] https://cs.android.com/android/_/android/platform/bionic/+/3779d6da40fc90b989b343c1b0d5b22611226b43:libc/bionic/malloc_common_dynamic.cpp;l\u003d336;drc\u003d5105ece8160b2e2ebf4a663ce6b4d3aa689067cb",
+      "parentUuid": "c37fba31_822c57c0",
       "range": {
         "startLine": 495,
         "startChar": 0,

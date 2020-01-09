@@ -22,6 +22,30 @@
       "revId": "3779d6da40fc90b989b343c1b0d5b22611226b43",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61963d60_50627057",
+        "filename": "libc/bionic/malloc_limit.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-09T22:58:05Z",
+      "side": 0,
+      "message": "As per the description and the comment in the heapprofd signal handling, I think it\u0027s ok to swallow the signal in the highly unlikely case of it arriving during this malloc_limit\u0027s initialization (which is once per process).\n\nAfaiu, this runs in a normal context as part of an android_mallopt code (so I\u0027m not sure which plural of signals you\u0027re referring to). I believe that leaving the signal unmasked is safe, even if it preempts this thread, since it respects the gGlobalsMutating atomic flag, and does nothing (without waiting) if that\u0027s already true.\n\nIs there a separate issue that I\u0027m overlooking?",
+      "parentUuid": "a6efbccf_1564cf3c",
+      "range": {
+        "startLine": 267,
+        "startChar": 2,
+        "endLine": 267,
+        "endChar": 21
+      },
+      "revId": "3779d6da40fc90b989b343c1b0d5b22611226b43",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
