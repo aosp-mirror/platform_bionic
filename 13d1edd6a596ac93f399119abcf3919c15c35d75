@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95c8085d_0559f1b2",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-01-10T20:52:44Z",
+      "side": 1,
+      "message": "Can zero be a reserved and invalid value so that callers _have_ to use sigqueue?",
+      "range": {
+        "startLine": 45,
+        "startChar": 21,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "13d1edd6a596ac93f399119abcf3919c15c35d75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88c211fe_a0b24db7",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-01-10T20:52:44Z",
+      "side": 1,
+      "message": "Suggestion: list supported signal commands?",
+      "range": {
+        "startLine": 76,
+        "startChar": 54,
+        "endLine": 76,
+        "endChar": 66
+      },
+      "revId": "13d1edd6a596ac93f399119abcf3919c15c35d75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
