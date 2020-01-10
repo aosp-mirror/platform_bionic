@@ -154,7 +154,7 @@ TEST(pthread_leak, detach) {
     pthread_barrier_wait(&barrier);
     ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-    WaitUntilAllExited(tids, arraysize(tids));
+    WaitUntilAllExited(tids, threads_count);
 
     // A native bridge implementation might need a warm up pass to reach a steady state.
     // http://b/37920774.
