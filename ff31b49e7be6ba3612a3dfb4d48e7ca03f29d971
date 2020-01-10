@@ -34,6 +34,24 @@
       "revId": "ff31b49e7be6ba3612a3dfb4d48e7ca03f29d971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "126ed675_df2d9939",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-01-10T23:55:37Z",
+      "side": 1,
+      "message": "I don\u0027t understand why this is here even with your comment, so I\u0027m going with yes, there should be a comment.",
+      "parentUuid": "22e06d3d_4199dd3e",
+      "revId": "ff31b49e7be6ba3612a3dfb4d48e7ca03f29d971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
