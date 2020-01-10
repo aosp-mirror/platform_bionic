@@ -64,6 +64,7 @@
 
 #include <sys/system_properties.h>
 
+#include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
@@ -498,6 +499,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
+  }
+  if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
+    return SetHeapTaggingLevel(arg, arg_size);
   }
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
