@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "948f25f6_b1cc20bf",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-10T00:48:08Z",
+      "side": 1,
+      "message": "If this is not guarded against hwaddress_sanitizer, it will change hwasan behavior. I\u0027m not sure if anything will break, but maybe add the ifdef just in case?",
+      "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efcc6c0d_084b64b5",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-10T00:48:08Z",
+      "side": 1,
+      "message": "This could be easier to read if all 3 (or 4) functions were in a single #ifdef block, with dummy implementations under #else.",
+      "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
