@@ -29,7 +29,10 @@
 cc_benchmark {
     name: "bionic-spawn-benchmarks",
     srcs: ["spawn_benchmarks.cpp"],
-    static_libs: ["libbase"],
+    static_libs: [
+        "libbase",
+        "liblog",
+    ],
 
     // Install these binaries in the same directory as the main benchmark binary.
     data: [
@@ -40,9 +43,15 @@ cc_benchmark {
 
     host_supported: true,
     target: {
-        darwin: { enabled: false },
-        windows: { enabled: false },
-        linux_glibc_x86: { enabled: false },
+        darwin: {
+            enabled: false,
+        },
+        windows: {
+            enabled: false,
+        },
+        linux_glibc_x86: {
+            enabled: false,
+        },
     },
 }
 
@@ -51,15 +60,25 @@ cc_defaults {
 
     compile_multilib: "both",
     multilib: {
-        lib32: { suffix: "32" },
-        lib64: { suffix: "64" },
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
     },
 
     host_supported: true,
     target: {
-        darwin: { enabled: false },
-        windows: { enabled: false },
-        linux_glibc_x86: { enabled: false },
+        darwin: {
+            enabled: false,
+        },
+        windows: {
+            enabled: false,
+        },
+        linux_glibc_x86: {
+            enabled: false,
+        },
     },
 }
 
@@ -77,7 +96,7 @@ cc_binary {
                 "-Wl,--rpath,${ORIGIN}/../../lib64",
             ],
         },
-    }
+    },
 }
 
 cc_binary {
