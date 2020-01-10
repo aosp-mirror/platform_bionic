@@ -29,6 +29,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 // Structures for android_mallopt.
 
@@ -84,6 +85,18 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
+  // Change the heap tagging state. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  //   arg = HeapTaggingLevel*
+  //   arg_size = sizeof(HeapTaggingLevel)
+  M_SET_HEAP_TAGGING_LEVEL = 8,
+#define M_SET_HEAP_TAGGING_LEVEL M_SET_HEAP_TAGGING_LEVEL
+};
+
+enum HeapTaggingLevel {
+  // Disable heap tagging. The program must use prctl(PR_SET_TAGGED_ADDR_CTRL) to disable memory tag
+  // checks before disabling heap tagging. Heap tagging may not be re-enabled after being disabled.
+  M_HEAP_TAGGING_LEVEL_NONE = 0,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
