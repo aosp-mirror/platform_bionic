@@ -16,6 +16,24 @@
       "revId": "ff31b49e7be6ba3612a3dfb4d48e7ca03f29d971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22e06d3d_4199dd3e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1835,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-10T22:35:10Z",
+      "side": 1,
+      "message": "(\"should we add a code comment here explaining this is for the circular dependency?\" but maybe not, because it\u0027s not unreasonable to export this with sdk_version 1. dunno. danalbert?)",
+      "parentUuid": "55fdf662_ae52ad2f",
+      "revId": "ff31b49e7be6ba3612a3dfb4d48e7ca03f29d971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
