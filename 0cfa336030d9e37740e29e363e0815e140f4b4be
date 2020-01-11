@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bbc306e3_95b91527",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1546,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-01-11T00:59:40Z",
+      "side": 1,
+      "message": "A few comments about the _Unwind_* symbols:\n\n_Unwind_VRS_Pop: This arm32 API is implemented in both libgcc and libunwind_llvm. It\u0027s documented as part of the ARM EHABI (ihi0038) and was previously exposed in Q Bionic libc.so. I think we can keep exposing it?\n\n_Unwind_FindEnclosingFunction and _Unwind_Find_FDE. These APIs appear to be gcc extensions. They appear absent from arm32 libgcc.a but present in every other {arm32,arm64,x86,x86_64}{libgcc,libunwind_llvm} configuration. It appears easy to implement _Unwind_FindEnclosingFunction as a wrapper around _Unwind_Find_FDE. Neither symbol was exported from Q Bionic libc.so. There are comments in libunwind_llvm that make me wonder how well these APIs work on OS X.[1]\n\n_Unwind_GetIPInfo: I think we could export this API. It\u0027s another gcc extension. It\u0027s like _Unwind_GetIP but returns an extra flag. It looks like it was added to fix a problem with unwinding from a signal handler (not for exception handling, I\u0027m guessing?).[2][3][4]. The _Unwind_GetIP/SetIP/GetIPInfo functions are missing from the Android arm32 libgcc.a prebuilt, but that\u0027s because they\u0027re C macros instead. libgcc, libunwind_llvm, and the Savannah libunwind all provide this API.\n\n[1] https://github.com/llvm/llvm-project/blob/44e0daf16e6985eb44ea9a629402852dbff9cb0b/libunwind/include/unwind.h#L334-L352\n\n[2] https://gcc.gnu.org/bugzilla/show_bug.cgi?id\u003d26208\n\n[3] https://github.com/gcc-mirror/gcc/blob/41d6b10e96a1de98e90a7c0378437c3255814b16/libgcc/unwind-c.c#L162\n\n[4] https://github.com/gcc-mirror/gcc/blob/f46ec74e121deb42e2f8ff2d63a25f65b1884b31/gcc/ada/init.c#L2805-L2810",
+      "revId": "0cfa336030d9e37740e29e363e0815e140f4b4be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
