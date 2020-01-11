@@ -36,6 +36,7 @@
 
 #include <async_safe/log.h>
 
+#include "linker.h"
 #include "linker_config.h"
 #include "linker_debug.h"
 #include "linker_globals.h"
@@ -43,7 +44,6 @@
 #include "linker_utils.h"
 
 // TODO(dimitry): These functions are currently located in linker.cpp - find a better place for it
-bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym);
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
 int get_application_target_sdk_version();
 
@@ -135,22 +135,6 @@ size_t soinfo::get_verdef_cnt() const {
   return 0;
 }
 
-bool soinfo::find_symbol_by_name(SymbolName& symbol_name,
-                                 const version_info* vi,
-                                 const ElfW(Sym)** symbol) const {
-  uint32_t symbol_index;
-  bool success =
-      is_gnu_hash() ?
-      gnu_lookup(symbol_name, vi, &symbol_index) :
-      elf_lookup(symbol_name, vi, &symbol_index);
-
-  if (success) {
-    *symbol = symbol_index == 0 ? nullptr : symtab_ + symbol_index;
-  }
-
-  return success;
-}
-
 static bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
   if (ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
       ELF_ST_BIND(s->st_info) == STB_WEAK) {
@@ -177,17 +161,18 @@ static inline bool check_symbol_version(const ElfW(Versym) verneed,
       verneed == (*verdef & ~kVersymHiddenBit);
 }
 
-bool soinfo::gnu_lookup(SymbolName& symbol_name,
-                        const version_info* vi,
-                        uint32_t* symbol_index) const {
+const ElfW(Sym)* soinfo::find_symbol_by_name(SymbolName& symbol_name,
+                                             const version_info* vi) const {
+  return is_gnu_hash() ? gnu_lookup(symbol_name, vi) : elf_lookup(symbol_name, vi);
+}
+
+const ElfW(Sym)* soinfo::gnu_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.gnu_hash();
   uint32_t h2 = hash >> gnu_shift2_;
 
   uint32_t bloom_mask_bits = sizeof(ElfW(Addr))*8;
   uint32_t word_num = (hash / bloom_mask_bits) & gnu_maskwords_;
   ElfW(Addr) bloom_word = gnu_bloom_filter_[word_num];
-
-  *symbol_index = 0;
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p (gnu)",
       symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
@@ -197,7 +182,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-    return true;
+    return nullptr;
   }
 
   // bloom test says "probably yes"...
@@ -207,7 +192,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
     TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
         symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-    return true;
+    return nullptr;
   }
 
   // lookup versym for the version definition in this library
@@ -216,10 +201,7 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
   // which implies that the default version can be accepted; the second case results in
   // verneed = 1 (kVersymGlobal) and implies that we should ignore versioned symbols
   // for this library and consider only *global* ones.
-  ElfW(Versym) verneed = 0;
-  if (!find_verdef_version_index(this, vi, &verneed)) {
-    return false;
-  }
+  const ElfW(Versym) verneed = find_verdef_version_index(this, vi);
 
   do {
     ElfW(Sym)* s = symtab_ + n;
@@ -235,30 +217,24 @@ bool soinfo::gnu_lookup(SymbolName& symbol_name,
       TRACE_TYPE(LOOKUP, "FOUND %s in %s (%p) %zd",
           symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(s->st_value),
           static_cast<size_t>(s->st_size));
-      *symbol_index = n;
-      return true;
+      return symtab_ + n;
     }
   } while ((gnu_chain_[n++] & 1) == 0);
 
   TRACE_TYPE(LOOKUP, "NOT FOUND %s in %s@%p",
              symbol_name.get_name(), get_realpath(), reinterpret_cast<void*>(base));
 
-  return true;
+  return nullptr;
 }
 
-bool soinfo::elf_lookup(SymbolName& symbol_name,
-                        const version_info* vi,
-                        uint32_t* symbol_index) const {
+const ElfW(Sym)* soinfo::elf_lookup(SymbolName& symbol_name, const version_info* vi) const {
   uint32_t hash = symbol_name.elf_hash();
 
   TRACE_TYPE(LOOKUP, "SEARCH %s in %s@%p h=%x(elf) %zd",
              symbol_name.get_name(), get_realpath(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  ElfW(Versym) verneed = 0;
-  if (!find_verdef_version_index(this, vi, &verneed)) {
-    return false;
-  }
+  const ElfW(Versym) verneed = find_verdef_version_index(this, vi);
 
   for (uint32_t n = bucket_[hash % nbucket_]; n != 0; n = chain_[n]) {
     ElfW(Sym)* s = symtab_ + n;
@@ -276,8 +252,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
                  symbol_name.get_name(), get_realpath(),
                  reinterpret_cast<void*>(s->st_value),
                  static_cast<size_t>(s->st_size));
-      *symbol_index = n;
-      return true;
+      return symtab_ + n;
     }
   }
 
@@ -285,8 +260,7 @@ bool soinfo::elf_lookup(SymbolName& symbol_name,
              symbol_name.get_name(), get_realpath(),
              reinterpret_cast<void*>(base), hash, hash % nbucket_);
 
-  *symbol_index = 0;
-  return true;
+  return nullptr;
 }
 
 ElfW(Sym)* soinfo::find_symbol_by_address(const void* addr) {

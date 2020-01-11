@@ -508,10 +508,7 @@ bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
    */
   if (si_from->has_DT_SYMBOLIC) {
     DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->get_realpath(), name);
-    if (!si_from->find_symbol_by_name(symbol_name, vi, &s)) {
-      return false;
-    }
-
+    s = si_from->find_symbol_by_name(symbol_name, vi);
     if (s != nullptr) {
       *si_found_in = si_from;
     }
@@ -519,15 +516,10 @@ bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
 
   // 1. Look for it in global_group
   if (s == nullptr) {
-    bool error = false;
     global_group.visit([&](soinfo* global_si) {
       DEBUG("%s: looking up %s in %s (from global group)",
           si_from->get_realpath(), name, global_si->get_realpath());
-      if (!global_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
+      s = global_si->find_symbol_by_name(symbol_name, vi);
       if (s != nullptr) {
         *si_found_in = global_si;
         return false;
@@ -535,15 +527,10 @@ bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
 
       return true;
     });
-
-    if (error) {
-      return false;
-    }
   }
 
   // 2. Look for it in the local group
   if (s == nullptr) {
-    bool error = false;
     local_group.visit([&](soinfo* local_si) {
       if (local_si == si_from && si_from->has_DT_SYMBOLIC) {
         // we already did this - skip
@@ -552,11 +539,7 @@ bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
 
       DEBUG("%s: looking up %s in %s (from local group)",
           si_from->get_realpath(), name, local_si->get_realpath());
-      if (!local_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
+      s = local_si->find_symbol_by_name(symbol_name, vi);
       if (s != nullptr) {
         *si_found_in = local_si;
         return false;
@@ -564,10 +547,6 @@ bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
 
       return true;
     });
-
-    if (error) {
-      return false;
-    }
   }
 
   if (s != nullptr) {
@@ -863,11 +842,7 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
       return kWalkSkip;
     }
 
-    if (!current_soinfo->find_symbol_by_name(symbol_name, vi, &result)) {
-      result = nullptr;
-      return kWalkStop;
-    }
-
+    result = current_soinfo->find_symbol_by_name(symbol_name, vi);
     if (result != nullptr) {
       *found = current_soinfo;
       return kWalkStop;
@@ -947,10 +922,7 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
       continue;
     }
 
-    if (!si->find_symbol_by_name(symbol_name, vi, &s)) {
-      return nullptr;
-    }
-
+    s = si->find_symbol_by_name(symbol_name, vi);
     if (s != nullptr) {
       *found = si;
       break;
@@ -2819,25 +2791,38 @@ static bool for_each_verdef(const soinfo* si, F functor) {
   return true;
 }
 
-bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym) {
+ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi) {
   if (vi == nullptr) {
-    *versym = kVersymNotNeeded;
-    return true;
+    return kVersymNotNeeded;
   }
 
-  *versym = kVersymGlobal;
+  ElfW(Versym) result = kVersymGlobal;
 
-  return for_each_verdef(si,
+  if (!for_each_verdef(si,
     [&](size_t, const ElfW(Verdef)* verdef, const ElfW(Verdaux)* verdaux) {
       if (verdef->vd_hash == vi->elf_hash &&
           strcmp(vi->name, si->get_string(verdaux->vda_name)) == 0) {
-        *versym = verdef->vd_ndx;
+        result = verdef->vd_ndx;
         return true;
       }
 
       return false;
     }
-  );
+  )) {
+    // verdef should have already been validated in prelink_image.
+    async_safe_fatal("invalid verdef after prelinking: %s, %s",
+                     si->get_realpath(), linker_get_error_buffer());
+  }
+
+  return result;
+}
+
+// Validate the library's verdef section. On error, returns false and invokes DL_ERR.
+bool validate_verdef_section(const soinfo* si) {
+  return for_each_verdef(si,
+    [&](size_t, const ElfW(Verdef)*, const ElfW(Verdaux)*) {
+      return false;
+    });
 }
 
 bool VersionTracker::init_verdef(const soinfo* si_from) {
@@ -3346,6 +3331,7 @@ bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& r
 static soinfo_list_t g_empty_list;
 
 bool soinfo::prelink_image() {
+  if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
   phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
@@ -3840,6 +3826,12 @@ bool soinfo::prelink_image() {
 
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
+
+  // Validate each library's verdef section once, so we don't have to validate
+  // it each time we look up a symbol with a version.
+  if (!validate_verdef_section(this)) return false;
+
+  flags_ |= FLAG_PRELINKED;
   return true;
 }
 

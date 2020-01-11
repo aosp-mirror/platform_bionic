@@ -52,31 +52,33 @@
  * To enable/disable specific debug options, change the defines above
  *********************************************************************/
 
+#include <stdarg.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
 #include <async_safe/CHECK.h>
 
+#define LINKER_VERBOSITY_PRINT  -1
+#define LINKER_VERBOSITY_INFO   0
+#define LINKER_VERBOSITY_TRACE  1
+#define LINKER_VERBOSITY_DEBUG  2
+
 __LIBC_HIDDEN__ extern int g_ld_debug_verbosity;
 
-#if LINKER_DEBUG_TO_LOG
-#define _PRINTVF(v, x...) \
-    do { \
-      if (g_ld_debug_verbosity > (v)) async_safe_format_log(5-(v), "linker", x); \
-    } while (0)
-#else /* !LINKER_DEBUG_TO_LOG */
-#define _PRINTVF(v, x...) \
-    do { \
-      if (g_ld_debug_verbosity > (v)) { async_safe_format_fd(1, x); write(1, "\n", 1); } \
-    } while (0)
-#endif /* !LINKER_DEBUG_TO_LOG */
+__LIBC_HIDDEN__ void linker_log_va_list(int prio, const char* fmt, va_list ap);
+__LIBC_HIDDEN__ void linker_log(int prio, const char* fmt, ...) __printflike(2, 3);
 
-#define PRINT(x...)          _PRINTVF(-1, x)
-#define INFO(x...)           _PRINTVF(0, x)
-#define TRACE(x...)          _PRINTVF(1, x)
+#define _PRINTVF(v, x...) \
+    do { \
+      if (g_ld_debug_verbosity > (v)) linker_log((v), x); \
+    } while (0)
+
+#define PRINT(x...)          _PRINTVF(LINKER_VERBOSITY_PRINT, x)
+#define INFO(x...)           _PRINTVF(LINKER_VERBOSITY_INFO, x)
+#define TRACE(x...)          _PRINTVF(LINKER_VERBOSITY_TRACE, x)
 
 #if TRACE_DEBUG
-#define DEBUG(x...)          _PRINTVF(2, "DEBUG: " x)
+#define DEBUG(x...)          _PRINTVF(LINKER_VERBOSITY_DEBUG, "DEBUG: " x)
 #else /* !TRACE_DEBUG */
 #define DEBUG(x...)          do {} while (0)
 #endif /* TRACE_DEBUG */
