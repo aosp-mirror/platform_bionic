@@ -16,6 +16,24 @@
       "revId": "0cfa336030d9e37740e29e363e0815e140f4b4be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1230bb3c_321a2b13",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1546,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-11T02:09:14Z",
+      "side": 1,
+      "message": "When I was putting together this list I basically went for the union of \"does it appear in clang\u0027s unwind.h (which is different from libunwind\u0027s unwind.h)\", \"does something in the platform need it\" and \"are apps using it\". It seems reasonable to add \"does the EHABI define it\" which would bring in _Unwind_VRS_Pop, and it looks like I missed _Unwind_GetIPInfo from unwind.h.\n\nI don\u0027t see harm in exporting _Unwind_Find_FDE either, given that we\u0027re already exporting _Unwind_FindEnclosingFunction. The EHABI doesn\u0027t use the same concept of FDEs as other platforms, which probably explains why libgcc doesn\u0027t implement it on arm32. I looked at the libunwind implementation and it looks like it\u0027s returning a pointer to the exidx (if compact) or the extab.",
+      "parentUuid": "bbc306e3_95b91527",
+      "revId": "0cfa336030d9e37740e29e363e0815e140f4b4be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
