@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "1b8e68d1_827a4f5f",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-13T17:54:01Z",
+      "side": 1,
+      "message": "Sorry, warnings from gtest itself on every call of AssertChildExited. I believe that the test infrastructure thinks that if there are any threads, then a fork could deadlock. I\u0027m not sure if this is because of something they are doing, or for some other reason, but I don\u0027t want a hundred warning messages to happen during the test.",
+      "parentUuid": "87819194_6070ae4b",
+      "range": {
+        "startLine": 757,
+        "startChar": 4,
+        "endLine": 761,
+        "endChar": 39
+      },
+      "revId": "d4bc4d3004d11797e88650e39ffae2869e1b10db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43d381a3_108180bb",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
