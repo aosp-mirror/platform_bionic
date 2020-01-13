@@ -156,6 +156,30 @@
     },
     {
       "key": {
+        "uuid": "2a7062f9_b741ad23",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-13T20:47:49Z",
+      "side": 1,
+      "message": "Oops, I wasn\u0027t looking closely at what you were commenting. For some reason, I thought you were asking about using ASSERT_EXIT, the gtest macro. Not using AssertChildExited, which is useful to use.\n\nUsing that function does not cause a problem.",
+      "parentUuid": "b1cfceb0_648f3539",
+      "range": {
+        "startLine": 757,
+        "startChar": 4,
+        "endLine": 761,
+        "endChar": 39
+      },
+      "revId": "d4bc4d3004d11797e88650e39ffae2869e1b10db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43d381a3_108180bb",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
