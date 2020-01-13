@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b782b248_a042862a",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-13T04:04:18Z",
+      "side": 1,
+      "message": "So something I noticed is that malloc_debug tests are actually failing under HWASan right now. I was under the impression that they\u0027d be run - but I guess not. Any thoughts?\n\nDone as part of below.",
+      "parentUuid": "948f25f6_b1cc20bf",
+      "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efcc6c0d_084b64b5",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 12
@@ -33,6 +51,24 @@
       "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fca205a2_a284e6ab",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-13T04:04:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "efcc6c0d_084b64b5",
+      "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
