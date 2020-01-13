@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d1be80e5_7e86285c",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:30:08Z",
+      "side": 1,
+      "message": "As mentioned on the preceding patch, I don\u0027t believe the cmdline adds much to these statements (but it is logged by the first logging statement). I\u0027m erring on the side of simpler logging until proven necessary.",
+      "parentUuid": "cb4d2460_722b0754",
+      "range": {
+        "startLine": 94,
+        "startChar": 54,
+        "endLine": 94,
+        "endChar": 66
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e7bade6_53fe6068",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccf78aa6_246420d3",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:30:08Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "7e7bade6_53fe6068",
+      "range": {
+        "startLine": 105,
+        "startChar": 54,
+        "endLine": 105,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2ce5cf7d_93632304",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:30:08Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "453a8ba5_765741e0",
+      "range": {
+        "startLine": 112,
+        "startChar": 54,
+        "endLine": 112,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5046fdf3_f20e9119",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 7
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "eb3428a1_fe6c3ff7",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:30:08Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "5046fdf3_f20e9119",
+      "range": {
+        "startLine": 119,
+        "startChar": 54,
+        "endLine": 119,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3a24e93_1f717d59",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 7
@@ -114,6 +210,30 @@
       "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0ba1692_597089d7",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:30:08Z",
+      "side": 1,
+      "message": "see above",
+      "parentUuid": "e3a24e93_1f717d59",
+      "range": {
+        "startLine": 125,
+        "startChar": 54,
+        "endLine": 125,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
