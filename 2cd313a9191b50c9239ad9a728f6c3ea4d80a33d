@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8fbdca47_96ca25dd",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-13T18:42:58Z",
+      "side": 1,
+      "message": "i think that the malloc_debug tests were only recently added to presubmit by cferris, but they should be there now.",
+      "parentUuid": "b782b248_a042862a",
+      "revId": "2cd313a9191b50c9239ad9a728f6c3ea4d80a33d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efcc6c0d_084b64b5",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 12
