@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "131db7fa_df82e12a",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 733,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-13T17:30:48Z",
+      "side": 1,
+      "message": "Probably a good idea to add this to base test_utils.h. I\u0027ll do that in a follow-on CL.",
+      "parentUuid": "6e424f6c_4de2bc0d",
+      "revId": "d4bc4d3004d11797e88650e39ffae2869e1b10db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb3fc69f_33b542b0",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "68aaa1b6_2ecec321",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-13T17:30:48Z",
+      "side": 1,
+      "message": "Using that macro I get a bunch of warnings about this possibly hanging. I think the way it\u0027s implemented isn\u0027t quite as straight forward, so might have a problem.",
+      "parentUuid": "eb3fc69f_33b542b0",
+      "range": {
+        "startLine": 757,
+        "startChar": 4,
+        "endLine": 761,
+        "endChar": 39
+      },
+      "revId": "d4bc4d3004d11797e88650e39ffae2869e1b10db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43d381a3_108180bb",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 2
@@ -53,6 +95,30 @@
       "writtenOn": "2020-01-11T05:54:06Z",
       "side": 1,
       "message": "(we have enough copies of this that we should factor it out at some point.)",
+      "range": {
+        "startLine": 765,
+        "startChar": 2,
+        "endLine": 768,
+        "endChar": 3
+      },
+      "revId": "d4bc4d3004d11797e88650e39ffae2869e1b10db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c48e285e_a68d0ae2",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-13T17:30:48Z",
+      "side": 1,
+      "message": "Another candidate for test_utils maybe.",
+      "parentUuid": "43d381a3_108180bb",
       "range": {
         "startLine": 765,
         "startChar": 2,
