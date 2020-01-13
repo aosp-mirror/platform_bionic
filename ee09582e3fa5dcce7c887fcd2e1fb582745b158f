@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb4d2460_722b0754",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-13T16:57:52Z",
+      "side": 1,
+      "message": "getprogname for consistency.",
+      "range": {
+        "startLine": 94,
+        "startChar": 54,
+        "endLine": 94,
+        "endChar": 66
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e7bade6_53fe6068",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-13T16:57:52Z",
+      "side": 1,
+      "message": "getprogname for consistency.",
+      "range": {
+        "startLine": 105,
+        "startChar": 54,
+        "endLine": 105,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "453a8ba5_765741e0",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-13T16:57:52Z",
+      "side": 1,
+      "message": "getprogname for consistency.",
+      "range": {
+        "startLine": 112,
+        "startChar": 54,
+        "endLine": 112,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5046fdf3_f20e9119",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-13T16:57:52Z",
+      "side": 1,
+      "message": "getprogname for consistency.",
+      "range": {
+        "startLine": 119,
+        "startChar": 54,
+        "endLine": 119,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a24e93_1f717d59",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-01-13T16:57:52Z",
+      "side": 1,
+      "message": "getprogname for consistency.",
+      "range": {
+        "startLine": 125,
+        "startChar": 54,
+        "endLine": 125,
+        "endChar": 60
+      },
+      "revId": "ee09582e3fa5dcce7c887fcd2e1fb582745b158f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
