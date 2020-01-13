@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3c0f6c52_7de07433",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:26:37Z",
+      "side": 1,
+      "message": "The handler is now looking at si_code, and only acting if the sender used sigqueue (corresponding heapprofd change is in the same topic). Heapprofd is part of the system image, so we don\u0027t have a strong incentive to preserve backwards compatibility with its older builds. So kill-sent signals are silently ignored.\n\nAside: as mentioned in the other comment thread, my experiments showed that \"0\" is not guaranteed when reading a signal sent via kill().",
+      "parentUuid": "95c8085d_0559f1b2",
+      "range": {
+        "startLine": 45,
+        "startChar": 21,
+        "endLine": 45,
+        "endChar": 42
+      },
+      "revId": "13d1edd6a596ac93f399119abcf3919c15c35d75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "88c211fe_a0b24db7",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 6
@@ -45,6 +69,30 @@
       "revId": "13d1edd6a596ac93f399119abcf3919c15c35d75",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28816b83_740c5d41",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-13T17:26:37Z",
+      "side": 1,
+      "message": "These signals should only be sent by the platform daemons, so I expect these logs to only be useful to bionic/perfetto teams. In this case, logging the rejection cause alone should be sufficient (note that the si_value itself is logged above).",
+      "parentUuid": "88c211fe_a0b24db7",
+      "range": {
+        "startLine": 76,
+        "startChar": 54,
+        "endLine": 76,
+        "endChar": 66
+      },
+      "revId": "13d1edd6a596ac93f399119abcf3919c15c35d75",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
