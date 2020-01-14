@@ -28,147 +28,82 @@
 
 #pragma once
 
-#include "linker.h"
-
 #include <string.h>
+
+#include "linker.h"
+#include "linker_sleb128.h"
 
 const size_t RELOCATION_GROUPED_BY_INFO_FLAG = 1;
 const size_t RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG = 2;
 const size_t RELOCATION_GROUPED_BY_ADDEND_FLAG = 4;
 const size_t RELOCATION_GROUP_HAS_ADDEND_FLAG = 8;
 
-class plain_reloc_iterator {
 #if defined(USE_RELA)
-  typedef ElfW(Rela) rel_t;
+typedef ElfW(Rela) rel_t;
 #else
-  typedef ElfW(Rel) rel_t;
+typedef ElfW(Rel) rel_t;
 #endif
- public:
-  plain_reloc_iterator(rel_t* rel_array, size_t count)
-      : begin_(rel_array), end_(begin_ + count), current_(begin_) {}
 
-  bool has_next() {
-    return current_ < end_;
-  }
+template <typename F>
+inline bool for_all_packed_relocs(sleb128_decoder decoder, F&& callback) {
+  const size_t num_relocs = decoder.pop_front();
 
-  rel_t* next() {
-    return current_++;
-  }
- private:
-  rel_t* const begin_;
-  rel_t* const end_;
-  rel_t* current_;
+  rel_t reloc = {
+    .r_offset = decoder.pop_front(),
+  };
 
-  DISALLOW_COPY_AND_ASSIGN(plain_reloc_iterator);
-};
+  for (size_t idx = 0; idx < num_relocs; ) {
+    const size_t group_size = decoder.pop_front();
+    const size_t group_flags = decoder.pop_front();
 
-template <typename decoder_t>
-class packed_reloc_iterator {
+    size_t group_r_offset_delta = 0;
+
+    if (group_flags & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) {
+      group_r_offset_delta = decoder.pop_front();
+    }
+    if (group_flags & RELOCATION_GROUPED_BY_INFO_FLAG) {
+      reloc.r_info = decoder.pop_front();
+    }
+
 #if defined(USE_RELA)
-  typedef ElfW(Rela) rel_t;
+    const size_t group_flags_reloc = group_flags & (RELOCATION_GROUP_HAS_ADDEND_FLAG |
+                                                    RELOCATION_GROUPED_BY_ADDEND_FLAG);
+    if (group_flags_reloc == RELOCATION_GROUP_HAS_ADDEND_FLAG) {
+      // Each relocation has an addend. This is the default situation with lld's current encoder.
+    } else if (group_flags_reloc == (RELOCATION_GROUP_HAS_ADDEND_FLAG |
+                                     RELOCATION_GROUPED_BY_ADDEND_FLAG)) {
+      reloc.r_addend += decoder.pop_front();
+    } else {
+      reloc.r_addend = 0;
+    }
 #else
-  typedef ElfW(Rel) rel_t;
+    if (__predict_false(group_flags & RELOCATION_GROUP_HAS_ADDEND_FLAG)) {
+      // This platform does not support rela, and yet we have it encoded in android_rel section.
+      async_safe_fatal("unexpected r_addend in android.rel section");
+    }
 #endif
- public:
-  explicit packed_reloc_iterator(decoder_t&& decoder)
-      : decoder_(decoder) {
-    // initialize fields
-    memset(&reloc_, 0, sizeof(reloc_));
-    relocation_count_ = decoder_.pop_front();
-    reloc_.r_offset = decoder_.pop_front();
-    relocation_index_ = 0;
-    relocation_group_index_ = 0;
-    group_size_ = 0;
-  }
 
-  bool has_next() const {
-    return relocation_index_ < relocation_count_;
-  }
-
-  rel_t* next() {
-    if (relocation_group_index_ == group_size_) {
-      if (!read_group_fields()) {
-        // Iterator is inconsistent state; it should not be called again
-        // but in case it is let's make sure has_next() returns false.
-        relocation_index_ = relocation_count_ = 0;
-        return nullptr;
+    for (size_t i = 0; i < group_size; ++i) {
+      if (group_flags & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) {
+        reloc.r_offset += group_r_offset_delta;
+      } else {
+        reloc.r_offset += decoder.pop_front();
+      }
+      if ((group_flags & RELOCATION_GROUPED_BY_INFO_FLAG) == 0) {
+        reloc.r_info = decoder.pop_front();
+      }
+#if defined(USE_RELA)
+      if (group_flags_reloc == RELOCATION_GROUP_HAS_ADDEND_FLAG) {
+        reloc.r_addend += decoder.pop_front();
+      }
+#endif
+      if (!callback(reloc)) {
+        return false;
       }
     }
 
-    if (is_relocation_grouped_by_offset_delta()) {
-      reloc_.r_offset += group_r_offset_delta_;
-    } else {
-      reloc_.r_offset += decoder_.pop_front();
-    }
-
-    if (!is_relocation_grouped_by_info()) {
-      reloc_.r_info = decoder_.pop_front();
-    }
-
-#if defined(USE_RELA)
-    if (is_relocation_group_has_addend() &&
-        !is_relocation_grouped_by_addend()) {
-      reloc_.r_addend += decoder_.pop_front();
-    }
-#endif
-
-    relocation_index_++;
-    relocation_group_index_++;
-
-    return &reloc_;
-  }
- private:
-  bool read_group_fields() {
-    group_size_ = decoder_.pop_front();
-    group_flags_ = decoder_.pop_front();
-
-    if (is_relocation_grouped_by_offset_delta()) {
-      group_r_offset_delta_ = decoder_.pop_front();
-    }
-
-    if (is_relocation_grouped_by_info()) {
-      reloc_.r_info = decoder_.pop_front();
-    }
-
-    if (is_relocation_group_has_addend() &&
-        is_relocation_grouped_by_addend()) {
-#if !defined(USE_RELA)
-      // This platform does not support rela, and yet we have it encoded in android_rel section.
-      DL_ERR("unexpected r_addend in android.rel section");
-      return false;
-#else
-      reloc_.r_addend += decoder_.pop_front();
-    } else if (!is_relocation_group_has_addend()) {
-      reloc_.r_addend = 0;
-#endif
-    }
-
-    relocation_group_index_ = 0;
-    return true;
+    idx += group_size;
   }
 
-  bool is_relocation_grouped_by_info() {
-    return (group_flags_ & RELOCATION_GROUPED_BY_INFO_FLAG) != 0;
-  }
-
-  bool is_relocation_grouped_by_offset_delta() {
-    return (group_flags_ & RELOCATION_GROUPED_BY_OFFSET_DELTA_FLAG) != 0;
-  }
-
-  bool is_relocation_grouped_by_addend() {
-    return (group_flags_ & RELOCATION_GROUPED_BY_ADDEND_FLAG) != 0;
-  }
-
-  bool is_relocation_group_has_addend() {
-    return (group_flags_ & RELOCATION_GROUP_HAS_ADDEND_FLAG) != 0;
-  }
-
-  decoder_t decoder_;
-  size_t relocation_count_;
-  size_t group_size_;
-  size_t group_flags_;
-  size_t group_r_offset_delta_;
-  size_t relocation_index_;
-  size_t relocation_group_index_;
-  rel_t reloc_;
-};
+  return true;
+}

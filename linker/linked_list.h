@@ -253,6 +253,12 @@ class LinkedList {
     return one_element_list;
   }
 
+  size_t size() const {
+    size_t result = 0;
+    for_each([&](T*) { ++result; });
+    return result;
+  }
+
  private:
   LinkedListEntry<T>* head_;
   LinkedListEntry<T>* tail_;

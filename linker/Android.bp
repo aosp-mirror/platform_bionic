@@ -165,6 +165,7 @@ filegroup {
         "linker_logger.cpp",
         "linker_mapped_file_fragment.cpp",
         "linker_phdr.cpp",
+        "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
         "linker_tls.cpp",
