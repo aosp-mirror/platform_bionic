@@ -1812,8 +1812,10 @@ cc_library_headers {
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
+        "//system/memory/libmemunreachable:__subpackages__",
     ],
     host_supported: true,
+    vendor_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
