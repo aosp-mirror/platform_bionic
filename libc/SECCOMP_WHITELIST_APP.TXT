@@ -25,9 +25,16 @@
 #
 # This file is processed by a python script named genseccomp.py.
 
+# Needed for debugging 32-bit Chrome
+int	pipe:pipe(int pipefd[2])	arm,x86,mips
+
 # b/34651972
 int	access:access(const char *pathname, int mode)	arm,x86,mips
 int	stat64:stat64(const char*, struct stat64*)	arm,x86,mips
+
+# b/34813887
+int	open:open(const char *path, int oflag, ... ) arm,x86,x86_64,mips
+int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) arm,x86,x86_64,mips
 
 # b/34719286
 int	eventfd:eventfd(unsigned int initval, int flags)	arm,x86,mips
