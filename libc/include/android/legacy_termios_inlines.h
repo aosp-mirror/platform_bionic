@@ -30,7 +30,10 @@
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < 21
+// The last bugfixes to <bits/termios_inlines.h> were
+// 5da96467a99254c963aef44e75167661d3e02278, so even those these functions were
+// in API level 21, ensure that everyone's using the latest versions.
+#if __ANDROID_API__ < 28
 
 #include <linux/termios.h>
 #include <sys/ioctl.h>
