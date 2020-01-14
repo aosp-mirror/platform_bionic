@@ -40,8 +40,10 @@
 
 __BEGIN_DECLS
 
-#if __ANDROID_API__ >= 21
-// This file is implemented as static inlines before API level 21.
+#if __ANDROID_API__ >= 28
+// This file is implemented as static inlines before API level 28.
+// Strictly these functions were introduced in API level 21, but there were bugs
+// in cfmakeraw() and cfsetspeed() until 28.
 
 /**
  * [cfgetispeed(3)](http://man7.org/linux/man-pages/man3/cfgetispeed.3.html)
