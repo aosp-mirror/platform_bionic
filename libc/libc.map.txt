@@ -1707,6 +1707,7 @@ LIBC_PRIVATE {
     android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
     android_gethostbynamefornetcontext;
+    android_unsafe_frame_pointer_chase;
     arc4random_addrandom; # arm x86 mips
     arc4random_stir; # arm x86 mips
     atexit; # arm
