@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d86531f_f53a4e94",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 970,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-15T22:58:30Z",
+      "side": 1,
+      "message": "(Trying to use \"platform/bionic/reserved_signals.h\" here wouldn\u0027t compile, didn\u0027t look much further than that)",
+      "range": {
+        "startLine": 970,
+        "startChar": 34,
+        "endLine": 970,
+        "endChar": 48
+      },
+      "revId": "175c8867b05ec14a8da1fd528c2bf17c4e67c280",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
