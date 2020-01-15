@@ -68,8 +68,48 @@
 
 #define SOINFO_VERSION 5
 
+ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
+
 typedef void (*linker_dtor_function_t)();
 typedef void (*linker_ctor_function_t)(int, char**, char**);
+
+// An entry within a SymbolLookupList.
+struct SymbolLookupLib {
+  uint32_t gnu_maskwords_ = 0;
+  uint32_t gnu_shift2_ = 0;
+  ElfW(Addr)* gnu_bloom_filter_ = nullptr;
+
+  const char* strtab_;
+  size_t strtab_size_;
+  const ElfW(Sym)* symtab_;
+  const ElfW(Versym)* versym_;
+
+  const uint32_t* gnu_chain_;
+  size_t gnu_nbucket_;
+  uint32_t* gnu_bucket_;
+
+  soinfo* si_ = nullptr;
+
+  bool needs_sysv_lookup() const { return si_ != nullptr && gnu_bloom_filter_ == nullptr; }
+};
+
+// A list of libraries to search for a symbol.
+class SymbolLookupList {
+  std::vector<SymbolLookupLib> libs_;
+  SymbolLookupLib sole_lib_;
+  const SymbolLookupLib* begin_;
+  const SymbolLookupLib* end_;
+  size_t slow_path_count_ = 0;
+
+ public:
+  explicit SymbolLookupList(soinfo* si);
+  SymbolLookupList(const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+  void set_dt_symbolic_lib(soinfo* symbolic_lib);
+
+  const SymbolLookupLib* begin() const { return begin_; }
+  const SymbolLookupLib* end() const { return end_; }
+  bool needs_slow_path() const { return slow_path_count_ > 0; }
+};
 
 class SymbolName {
  public:
@@ -223,7 +263,7 @@ struct soinfo {
   void call_destructors();
   void call_pre_init_constructors();
   bool prelink_image();
-  bool link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+  bool link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                   const android_dlextinfo* extinfo, size_t* relro_fd_offset);
   bool protect_relro();
 
@@ -246,7 +286,14 @@ struct soinfo {
   const ElfW(Sym)* find_symbol_by_name(SymbolName& symbol_name, const version_info* vi) const;
 
   ElfW(Sym)* find_symbol_by_address(const void* addr);
-  ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const;
+
+  ElfW(Addr) resolve_symbol_address(const ElfW(Sym)* s) const {
+    if (ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC) {
+      return call_ifunc_resolver(s->st_value + load_bias);
+    }
+
+    return static_cast<ElfW(Addr)>(s->st_value + load_bias);
+  }
 
   const char* get_string(ElfW(Word) index) const;
   bool can_unload() const;
@@ -258,6 +305,10 @@ struct soinfo {
 #else
     return true;
 #endif
+  }
+
+  const ElfW(Versym)* get_versym_table() const {
+    return has_min_version(2) ? versym_ : nullptr;
   }
 
   bool is_linked() const;
@@ -304,6 +355,8 @@ struct soinfo {
   void generate_handle();
   void* to_handle();
 
+  SymbolLookupLib get_lookup_lib();
+
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -313,16 +366,15 @@ struct soinfo {
   ElfW(Sym)* gnu_addr_lookup(const void* addr);
   ElfW(Sym)* elf_addr_lookup(const void* addr);
 
+ public:
   bool lookup_version_info(const VersionTracker& version_tracker, ElfW(Word) sym,
                            const char* sym_name, const version_info** vi);
 
-  template<typename ElfRelIteratorT>
-  bool relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                const soinfo_list_t& global_group, const soinfo_list_t& local_group);
+ private:
+  bool relocate(const SymbolLookupList& lookup_list);
   bool relocate_relr();
   void apply_relr_reloc(ElfW(Addr) offset);
 
- private:
   // This part of the structure is only available
   // when FLAG_NEW_SOINFO is set in this->flags.
   uint32_t version_;
@@ -398,3 +450,6 @@ void for_each_dt_needed(const soinfo* si, F action) {
     }
   }
 }
+
+const ElfW(Sym)* soinfo_do_lookup(const char* name, const version_info* vi,
+                                  soinfo** si_found_in, const SymbolLookupList& lookup_list);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,16 @@
 
 #pragma once
 
-#include <sys/cdefs.h>
+#include <stdint.h>
 
-// The last bugfixes to <bits/termios_inlines.h> were
-// 5da96467a99254c963aef44e75167661d3e02278, so even those these functions were
-// in API level 21, ensure that everyone's using the latest versions.
-#if __ANDROID_API__ < 28
+#include <utility>
 
-#include <linux/termios.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
-
-#define __BIONIC_TERMIOS_INLINE static __inline
-#include <bits/termios_inlines.h>
-
-#endif
+static inline std::pair<uint32_t, uint32_t> calculate_gnu_hash(const char* name) {
+  uint32_t h = 5381;
+  const uint8_t* name_bytes = reinterpret_cast<const uint8_t*>(name);
+  #pragma unroll 8
+  while (*name_bytes != 0) {
+    h += (h << 5) + *name_bytes++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
+  }
+  return { h, reinterpret_cast<const char*>(name_bytes) - name };
+}

@@ -85,23 +85,6 @@ class VersionTracker {
   DISALLOW_COPY_AND_ASSIGN(VersionTracker);
 };
 
-bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo_list_t& global_group,
-                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol);
-
-enum RelocationKind {
-  kRelocAbsolute = 0,
-  kRelocRelative,
-  kRelocCopy,
-  kRelocSymbol,
-  kRelocSymbolCached,
-  kRelocMax
-};
-
-void count_relocation(RelocationKind kind);
-
-void print_linker_stats();
-
 soinfo* get_libdl_info(const soinfo& linker_si);
 
 soinfo* find_containing_library(const void* p);
@@ -205,4 +188,6 @@ struct address_space_params {
   bool must_use_address = false;
 };
 
+int get_application_target_sdk_version();
 ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi);
+bool validate_verdef_section(const soinfo* si);

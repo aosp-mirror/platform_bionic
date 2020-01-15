@@ -52,13 +52,6 @@ int	tkill:tkill(int tid, int sig)	all
 # b/34763393
 int	seccomp:seccomp(unsigned int operation, unsigned int flags, void *args)	all
 
-# Needed for debugging 32-bit Chrome
-int	pipe:pipe(int pipefd[2])	arm,x86,mips
-
-# Needed by breakpad (b/34813887).
-int	open:open(const char *path, int oflag, ... ) arm,x86,x86_64,mips
-int	getdents:getdents(unsigned int fd, struct linux_dirent *dirp, unsigned int count) arm,x86,x86_64,mips
-
 # Needed by sanitizers (b/34606909, b/136777266).
 int open:open(const char*, int, ...)  arm,x86,x86_64
 int stat64:stat64(const char*, struct stat64*)  arm,x86

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,42 @@
 
 #pragma once
 
-#include <sys/cdefs.h>
+#include <link.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-// The last bugfixes to <bits/termios_inlines.h> were
-// 5da96467a99254c963aef44e75167661d3e02278, so even those these functions were
-// in API level 21, ensure that everyone's using the latest versions.
-#if __ANDROID_API__ < 28
+#include <utility>
+#include <vector>
 
-#include <linux/termios.h>
-#include <sys/ioctl.h>
-#include <sys/types.h>
+#include "linker_common_types.h"
+#include "linker_globals.h"
+#include "linker_soinfo.h"
 
-#define __BIONIC_TERMIOS_INLINE static __inline
-#include <bits/termios_inlines.h>
+static constexpr ElfW(Versym) kVersymHiddenBit = 0x8000;
 
-#endif
+enum RelocationKind {
+  kRelocAbsolute = 0,
+  kRelocRelative,
+  kRelocSymbol,
+  kRelocSymbolCached,
+  kRelocMax
+};
+
+void count_relocation(RelocationKind kind);
+
+template <bool Enabled> void count_relocation_if(RelocationKind kind) {
+  if (Enabled) count_relocation(kind);
+}
+
+void print_linker_stats();
+
+inline bool is_symbol_global_and_defined(const soinfo* si, const ElfW(Sym)* s) {
+  if (__predict_true(ELF_ST_BIND(s->st_info) == STB_GLOBAL ||
+                     ELF_ST_BIND(s->st_info) == STB_WEAK)) {
+    return s->st_shndx != SHN_UNDEF;
+  } else if (__predict_false(ELF_ST_BIND(s->st_info) != STB_LOCAL)) {
+    DL_WARN("Warning: unexpected ST_BIND value: %d for \"%s\" in \"%s\" (ignoring)",
+            ELF_ST_BIND(s->st_info), si->get_string(s->st_name), si->get_realpath());
+  }
+  return false;
+}
