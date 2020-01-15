@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54ce6f3d_aae3cd41",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-15T23:40:37Z",
+      "side": 1,
+      "message": "Small nit, but remove the space here and at the end near the braces. Same for all the brace initialization you are doing below.",
+      "range": {
+        "startLine": 103,
+        "startChar": 19,
+        "endLine": 103,
+        "endChar": 20
+      },
+      "revId": "e95316330bbbad46ef1cb3e0fa612639698b55cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2aaf912_78ba8fff",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-15T23:40:37Z",
+      "side": 1,
+      "message": "Just barely crosses over the 100 columns rule.",
+      "range": {
+        "startLine": 105,
+        "startChar": 84,
+        "endLine": 105,
+        "endChar": 100
+      },
+      "revId": "e95316330bbbad46ef1cb3e0fa612639698b55cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
