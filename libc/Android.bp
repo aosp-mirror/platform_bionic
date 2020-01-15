@@ -94,7 +94,7 @@ cc_defaults {
 cc_defaults {
     name: "libc_native_allocator_defaults",
 
-    defaults: ["libc_jemalloc5_defaults"],
+    defaults: ["libc_scudo_defaults"],
 }
 
 cc_defaults {
@@ -2614,7 +2614,6 @@ cc_defaults {
 
 cc_library_shared {
     name: "libc_scudo",
-    defaults: ["libc_scudo_wrapper_defaults"],
     vendor_available: true,
     stl: "none",
     system_shared_libs: [],
