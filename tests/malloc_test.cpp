@@ -30,6 +30,8 @@
 #include <unistd.h>
 
 #include <atomic>
+#include <thread>
+
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
@@ -705,6 +707,119 @@ TEST(malloc, mallinfo) {
   }
 #else
   GTEST_SKIP() << "glibc is broken";
+#endif
+}
+
+template <typename Type>
+void __attribute__((optnone)) VerifyAlignment(Type* floating) {
+  size_t expected_alignment = alignof(Type);
+  if (expected_alignment != 0) {
+    ASSERT_EQ(0U, (expected_alignment - 1) & reinterpret_cast<uintptr_t>(floating))
+        << "Expected alignment " << expected_alignment << " ptr value " << floating;
+  }
+}
+
+template <typename Type>
+void __attribute__((optnone)) TestAllocateType() {
+  // The number of allocations to do in a row. This is to attempt to
+  // expose the worst case alignment for native allocators that use
+  // bins.
+  static constexpr size_t kMaxConsecutiveAllocs = 100;
+
+  // Verify using new directly.
+  Type* types[kMaxConsecutiveAllocs];
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    types[i] = new Type;
+    VerifyAlignment(types[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    delete types[i];
+  }
+
+  // Verify using malloc.
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    types[i] = reinterpret_cast<Type*>(malloc(sizeof(Type)));
+    ASSERT_TRUE(types[i] != nullptr);
+    VerifyAlignment(types[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    free(types[i]);
+  }
+
+  // Verify using a vector.
+  std::vector<Type> type_vector(kMaxConsecutiveAllocs);
+  for (size_t i = 0; i < type_vector.size(); i++) {
+    VerifyAlignment(&type_vector[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+}
+
+#if defined(__ANDROID__)
+static void __attribute__((optnone)) AndroidVerifyAlignment(size_t alloc_size, size_t aligned_bytes) {
+  void* ptrs[100];
+  uintptr_t mask = aligned_bytes - 1;
+  for (size_t i = 0; i < sizeof(ptrs) / sizeof(void*); i++) {
+    ptrs[i] = malloc(alloc_size);
+    ASSERT_TRUE(ptrs[i] != nullptr);
+    ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptrs[i]) & mask)
+        << "Expected at least " << aligned_bytes << " byte alignment: size "
+        << alloc_size << " actual ptr " << ptrs[i];
+  }
+}
+#endif
+
+TEST(malloc, align_check) {
+  // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_445
+  // for a discussion of type alignment.
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<float>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<double>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long double>());
+
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char16_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char32_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<wchar_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<signed char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<short int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned short int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned long long int>());
+
+#if defined(__ANDROID__)
+  // On Android, there is a lot of code that expects certain alignments:
+  // - Allocations of a size that rounds up to a multiple of 16 bytes
+  //   must have at least 16 byte alignment.
+  // - Allocations of a size that rounds up to a multiple of 8 bytes and
+  //   not 16 bytes, are only required to have at least 8 byte alignment.
+  // This is regardless of whether it is in a 32 bit or 64 bit environment.
+
+  // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2293.htm for
+  // a discussion of this alignment mess. The code below is enforcing
+  // strong-alignment, since who knows what code depends on this behavior now.
+  for (size_t i = 1; i <= 128; i++) {
+    size_t rounded = (i + 7) & ~7;
+    if ((rounded % 16) == 0) {
+      AndroidVerifyAlignment(i, 16);
+    } else {
+      AndroidVerifyAlignment(i, 8);
+    }
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
 #endif
 }
 
