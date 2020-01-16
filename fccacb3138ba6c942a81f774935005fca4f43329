@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c98d2f24_249ee158",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-01-16T17:41:16Z",
+      "side": 1,
+      "message": "These two parent libs are missing the child lib in shared_libs, which is causing the treehugger failure. It\u0027ll be fixed in the next patch, along with more local testing to ensure that the DT_NEEDED and DT_RUNPATH are the same before/after this change",
+      "revId": "fccacb3138ba6c942a81f774935005fca4f43329",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
