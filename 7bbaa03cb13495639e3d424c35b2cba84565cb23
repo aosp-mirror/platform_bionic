@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8be322a0_8333ae92",
+        "filename": "libc/bionic/android_fast_backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1626440
+      },
+      "writtenOn": "2020-01-16T15:49:42Z",
+      "side": 1,
+      "message": "You should call __builtin_extract_return_addr here to post-process the return address. Otherwise it might contain a bogus value. For example, with Armv8.3-A Pointer Authentication it will have the pointer authentication code.",
+      "range": {
+        "startLine": 42,
+        "startChar": 24,
+        "endLine": 42,
+        "endChar": 43
+      },
+      "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
