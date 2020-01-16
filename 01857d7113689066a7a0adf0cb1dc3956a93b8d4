@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b7e3524_9510cc22",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-16T22:34:27Z",
+      "side": 1,
+      "message": "I don\u0027t like this code duplication. Is it possible to move the code to a common file and invoke it from both places?",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47e5d086_21620dcd",
+        "filename": "libdl/libdl.map.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-16T22:34:27Z",
+      "side": 1,
+      "message": "This should probably go under LIBC_R.\nDo we even want this to be a public interface?",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5499b3fd_98c5700b",
+        "filename": "linker/linker_disabled_changes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-16T22:34:27Z",
+      "side": 1,
+      "message": "please use \"unsigned long\" instead of \"unsigned long int\" everywhere",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1df26136_252750fe",
+        "filename": "linker/linker_disabled_changes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-16T22:34:27Z",
+      "side": 1,
+      "message": "Deallocate the previous contents of g_disabled_compat_changes to prevent leaked memory.",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5324976d_1228a98f",
+        "filename": "tests/libdl_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-16T22:34:27Z",
+      "side": 1,
+      "message": "Add a test with a static binary.",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
