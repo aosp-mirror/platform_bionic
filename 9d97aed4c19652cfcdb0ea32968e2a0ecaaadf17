@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bc0de1d3_91057f3a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1463094
+      },
+      "writtenOn": "2020-01-16T14:43:53Z",
+      "side": 1,
+      "message": "because the API needs to be strictly c, not c++.\nI couldn\u0027t get the linkage working with bool.",
+      "parentUuid": "0257e68c_f70ed2d1",
+      "range": {
+        "startLine": 248,
+        "startChar": 11,
+        "endLine": 248,
+        "endChar": 14
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c1af1e2_ed84ea9b",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14cd9f17_8edb760b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1463094
+      },
+      "writtenOn": "2020-01-16T14:43:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c1af1e2_ed84ea9b",
+      "range": {
+        "startLine": 252,
+        "startChar": 6,
+        "endLine": 252,
+        "endChar": 14
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "4725c015_8dd57d48",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1463094
+      },
+      "writtenOn": "2020-01-16T14:43:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e454b3c_7dfe8a07",
+      "range": {
+        "startLine": 259,
+        "startChar": 2,
+        "endLine": 259,
+        "endChar": 48
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "896cb51e_2612f750",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2020-01-15T23:58:06Z",
       "side": 1,
       "message": "How many disabled compat changes do we see on average? Is it worth implementing this as a sorted list to bsearch over?",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 29
+      },
+      "revId": "9d97aed4c19652cfcdb0ea32968e2a0ecaaadf17",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cafd1f4a_5a44d034",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1463094
+      },
+      "writtenOn": "2020-01-16T14:43:53Z",
+      "side": 1,
+      "message": "We currently have ~20 so that would be the maximal number.\nMost of them are target SDK gated so on apps that didn\u0027t update to R we would see a similar number on disabled changes.\nI\u0027m not sure if that would be better to sort and bsearch, depends on usage. WDYT?",
+      "parentUuid": "896cb51e_2612f750",
       "range": {
         "startLine": 267,
         "startChar": 4,
