@@ -22,6 +22,30 @@
       "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8640d90f_2566e056",
+        "filename": "libc/bionic/android_fast_backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-16T17:55:25Z",
+      "side": 1,
+      "message": "Hmm, I\u0027m not sure that __builtin_extract_return_addr can do this, at least in functions compiled with -msign-return-address\u003dall, because these functions use paciasp/autiasp, so the value of sp at exit would need to be an additional input to the builtin. We will probably need to do this ourselves when PAC support is implemented.",
+      "parentUuid": "8be322a0_8333ae92",
+      "range": {
+        "startLine": 42,
+        "startChar": 24,
+        "endLine": 42,
+        "endChar": 43
+      },
+      "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
