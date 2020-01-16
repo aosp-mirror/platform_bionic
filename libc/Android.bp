@@ -1613,6 +1613,7 @@ filegroup {
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
+        "bionic/android_profiling_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
         "bionic/ndk_cruft.cpp",

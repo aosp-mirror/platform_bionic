@@ -39,7 +39,7 @@
 //   33 (__SIGRTMIN + 1)        libbacktrace
 //   34 (__SIGRTMIN + 2)        libcore
 //   35 (__SIGRTMIN + 3)        debuggerd
-//   36 (__SIGRTMIN + 4)        heapprofd native dumps
+//   36 (__SIGRTMIN + 4)        platform profiling (heapprofd)
 //   37 (__SIGRTMIN + 5)        coverage (libprofile-extras)
 //   38 (__SIGRTMIN + 6)        heapprofd ART managed heap dumps
 //
@@ -47,6 +47,7 @@
 // in <android/legacy_signal_inlines.h> to match.
 
 #define BIONIC_SIGNAL_DEBUGGER __SIGRTMIN + 3
+#define BIONIC_SIGNAL_PROFILER __SIGRTMIN + 4
 
 #define __SIGRT_RESERVED 7
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
