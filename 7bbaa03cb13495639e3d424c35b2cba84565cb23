@@ -46,6 +46,30 @@
       "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92f5a408_2f1587ab",
+        "filename": "libc/bionic/android_fast_backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-16T18:32:00Z",
+      "side": 1,
+      "message": "If we did want to decrypt return addresses here, I\u0027ve noticed a potential problem with the compiler\u0027s frame layout that I\u0027ve noted in https://reviews.llvm.org/D65653 .",
+      "parentUuid": "8640d90f_2566e056",
+      "range": {
+        "startLine": 42,
+        "startChar": 24,
+        "endLine": 42,
+        "endChar": 43
+      },
+      "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
