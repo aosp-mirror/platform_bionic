@@ -18,14 +18,15 @@
 
 #include <elf.h>
 #include <limits.h>
+#include <malloc.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <malloc.h>
 #include <unistd.h>
 
 #include <atomic>
@@ -962,7 +963,11 @@ static void SetAllocationLimitMultipleThreads() {
 
   // Let them go all at once.
   go = true;
-  ASSERT_EQ(0, kill(getpid(), __SIGRTMIN + 4));
+  // Send hardcoded signal (BIONIC_SIGNAL_PROFILER with value 0) to trigger
+  // heapprofd handler.
+  union sigval signal_value;
+  signal_value.sival_int = 0;
+  ASSERT_EQ(0, sigqueue(getpid(), __SIGRTMIN + 4, signal_value));
 
   size_t num_successful = 0;
   for (size_t i = 0; i < kNumThreads; i++) {

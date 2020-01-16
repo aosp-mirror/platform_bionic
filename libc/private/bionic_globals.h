@@ -99,6 +99,7 @@ struct libc_shared_globals {
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
 __LIBC_HIDDEN__ void __libc_init_fdsan();
+__LIBC_HIDDEN__ void __libc_init_profiling_handlers();
 
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals);

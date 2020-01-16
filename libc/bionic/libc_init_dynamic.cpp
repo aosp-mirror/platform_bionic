@@ -99,6 +99,9 @@ static void __libc_preinit_impl() {
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);
 
+  // Install reserved signal handlers for assisting the platform's profilers.
+  __libc_init_profiling_handlers();
+
   __libc_init_fork_handler();
 
 #if __has_feature(hwaddress_sanitizer)
