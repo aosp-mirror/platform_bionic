@@ -26,26 +26,32 @@
  * SUCH DAMAGE.
  */
 
+#include <stdlib.h>
+
 #include "spawn_benchmark.h"
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
-
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
-
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
-
-#elif defined(__ANDROID__)
-
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
-
+#if defined(__LP64__)
+static constexpr const char* kNativeTestDir = "nativetest64";
+#else
+static constexpr const char* kNativeTestDir = "nativetest";
 #endif
+
+static void BM_linker_relocation(benchmark::State& state) {
+  std::string main = test_program("linker_reloc_bench_main");
+
+  // Translate from:
+  //    /data/benchmarktest[64]/linker-reloc-bench    [exe dir]
+  // to:
+  //    /data/nativetest[64]/linker-reloc-bench       [dir with test libs]
+  std::string test_lib_dir = 
+      android::base::Dirname(android::base::Dirname(android::base::GetExecutableDirectory())) +
+      "/" + kNativeTestDir + "/linker-reloc-bench";
+
+  setenv("LD_LIBRARY_PATH", test_lib_dir.c_str(), 1);
+
+  BM_spawn_test(state, (const char*[]) { main.c_str(), nullptr });
+}
+
+BENCHMARK(BM_linker_relocation)->UseRealTime()->Unit(benchmark::kMicrosecond);
 
 BENCHMARK_MAIN();
