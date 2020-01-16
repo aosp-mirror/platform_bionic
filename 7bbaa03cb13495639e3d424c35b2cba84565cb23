@@ -70,6 +70,30 @@
       "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21787832_bceb9d86",
+        "filename": "libc/bionic/android_fast_backtrace.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-16T22:34:18Z",
+      "side": 1,
+      "message": "Eli pointed out that we would just need to mask out the high bits of the pointer, which could conceivably be done in __builtin_extract_return_addr, but that isn\u0027t implemented. I think I\u0027d prefer to wait for that to be implemented before changing the code here.",
+      "parentUuid": "92f5a408_2f1587ab",
+      "range": {
+        "startLine": 42,
+        "startChar": 24,
+        "endLine": 42,
+        "endChar": 43
+      },
+      "revId": "7bbaa03cb13495639e3d424c35b2cba84565cb23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
