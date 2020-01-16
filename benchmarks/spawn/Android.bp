@@ -26,21 +26,8 @@
 // SUCH DAMAGE.
 //
 
-cc_benchmark {
-    name: "bionic-spawn-benchmarks",
-    srcs: ["spawn_benchmarks.cpp"],
-    static_libs: [
-        "libbase",
-        "liblog",
-    ],
-
-    // Install these binaries in the same directory as the main benchmark binary.
-    data: [
-        ":bench_noop",
-        ":bench_noop_nostl",
-        ":bench_noop_static",
-    ],
-
+cc_defaults {
+    name: "bionic_spawn_benchmark_targets",
     host_supported: true,
     target: {
         darwin: {
@@ -55,8 +42,41 @@ cc_benchmark {
     },
 }
 
+cc_library_static {
+    name: "libbionic_spawn_benchmark",
+    defaults: ["bionic_spawn_benchmark_targets"],
+
+    srcs: ["spawn_benchmark.cpp"],
+    export_include_dirs: ["include"],
+    static_libs: [
+        "libbase",
+        "libgoogle-benchmark",
+        "liblog",
+    ],
+}
+
+cc_benchmark {
+    name: "bionic-spawn-benchmarks",
+    defaults: ["bionic_spawn_benchmark_targets"],
+
+    srcs: ["spawn_benchmarks.cpp"],
+    static_libs: [
+        "libbase",
+        "libbionic_spawn_benchmark",
+        "liblog",
+    ],
+
+    // Install these binaries in the same directory as the main benchmark binary.
+    data: [
+        ":bench_noop",
+        ":bench_noop_nostl",
+        ":bench_noop_static",
+    ],
+}
+
 cc_defaults {
     name: "noop_binary_defaults",
+    defaults: ["bionic_spawn_benchmark_targets"],
 
     compile_multilib: "both",
     multilib: {
@@ -65,19 +85,6 @@ cc_defaults {
         },
         lib64: {
             suffix: "64",
-        },
-    },
-
-    host_supported: true,
-    target: {
-        darwin: {
-            enabled: false,
-        },
-        windows: {
-            enabled: false,
-        },
-        linux_glibc_x86: {
-            enabled: false,
         },
     },
 }

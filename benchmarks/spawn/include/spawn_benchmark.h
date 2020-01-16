@@ -26,26 +26,22 @@
  * SUCH DAMAGE.
  */
 
-#include "spawn_benchmark.h"
+#pragma once
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
+#include <android-base/file.h>
+#include <benchmark/benchmark.h>
 
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
+void BM_spawn_test(benchmark::State& state, const char* const* argv);
 
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
-
-#elif defined(__ANDROID__)
-
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
-
+static inline std::string test_program(const char* name) {
+#if defined(__LP64__)
+  return android::base::GetExecutableDirectory() + "/" + name + "64";
+#else
+  return android::base::GetExecutableDirectory() + "/" + name + "32";
 #endif
+}
 
-BENCHMARK_MAIN();
+#define SPAWN_BENCHMARK(name, ...)                                                    \
+    BENCHMARK_CAPTURE(BM_spawn_test, name, (const char*[]) { __VA_ARGS__, nullptr })  \
+        ->UseRealTime()                                                               \
+        ->Unit(benchmark::kMicrosecond)                                               \

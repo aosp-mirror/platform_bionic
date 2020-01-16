@@ -26,26 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#include "spawn_benchmark.h"
+#pragma once
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
+#if defined(__arm__)
 
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
+#define GOT_RELOC(sym) .long sym(GOT_PREL)
+#define CALL(sym) bl sym
+#define DATA_WORD(val) .long val
+#define MAIN .globl main; main: mov r0, #0; bx lr
 
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
+#elif defined(__aarch64__)
 
-#elif defined(__ANDROID__)
+#define GOT_RELOC(sym) adrp x1, :got:sym
+#define CALL(sym) bl sym
+#define DATA_WORD(val) .quad val
+#define MAIN .globl main; main: mov w0, wzr; ret
 
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
+#elif defined(__i386__)
 
+#define GOT_RELOC(sym) .long sym@got
+#define CALL(sym) call sym@PLT
+#define DATA_WORD(val) .long val
+#define MAIN .globl main; main: xorl %eax, %eax; retl
+
+#elif defined(__x86_64__)
+
+#define GOT_RELOC(sym) .quad sym@got
+#define CALL(sym) call sym@PLT
+#define DATA_WORD(val) .quad val
+#define MAIN .globl main; main: xorl %eax, %eax; retq
+
+#else
+#error "Unrecognized architecture"
 #endif
-
-BENCHMARK_MAIN();
