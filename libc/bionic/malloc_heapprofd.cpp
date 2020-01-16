@@ -49,18 +49,18 @@
 static constexpr char kHeapprofdSharedLib[] = "heapprofd_client.so";
 static constexpr char kHeapprofdPrefix[] = "heapprofd";
 static constexpr char kHeapprofdPropertyEnable[] = "heapprofd.enable";
-static constexpr int kHeapprofdSignal = __SIGRTMIN + 4;
 
 // The logic for triggering heapprofd (at runtime) is as follows:
-// 1. HEAPPROFD_SIGNAL is received by the process, entering the
-//    MaybeInstallInitHeapprofdHook signal handler.
+// 1. A reserved profiling signal is received by the process, its si_value
+//    discriminating between different handlers. For the case of heapprofd,
+//    HandleHeapprofdSignal is called.
 // 2. If the initialization is not already in flight
 //    (gHeapprofdInitInProgress is false), the malloc hook is set to
 //    point at InitHeapprofdHook, and gHeapprofdInitInProgress is set to
 //    true.
 // 3. The next malloc call enters InitHeapprofdHook, which removes the malloc
 //    hook, and spawns a detached pthread to run the InitHeapprofd task.
-//    (gHeapprofdInitHook_installed atomic is used to perform this once.)
+//    (gHeapprofdInitHookInstalled atomic is used to perform this once.)
 // 4. InitHeapprofd, on a dedicated pthread, loads the heapprofd client library,
 //    installs the full set of heapprofd hooks, and invokes the client's
 //    initializer. The dedicated pthread then terminates.
@@ -79,12 +79,9 @@ static _Atomic (void*) gHeapprofdHandle = nullptr;
 static _Atomic bool gHeapprofdInitInProgress = false;
 static _Atomic bool gHeapprofdInitHookInstalled = false;
 
-// In a Zygote child process, this is set to true if profiling of this process
-// is allowed. Note that this is set at a later time than the global
-// gZygoteChild. The latter is set during the fork (while still in
-// zygote's SELinux domain). While this bit is set after the child is
-// specialized (and has transferred SELinux domains if applicable).
-static _Atomic bool gZygoteChildProfileable = false;
+// Set to true if the process has enabled malloc_debug or malloc_hooks, which
+// are incompatible (and take precedence over) heapprofd.
+static _Atomic bool gHeapprofdIncompatibleHooks = false;
 
 extern "C" void* MallocInitHeapprofdHook(size_t);
 
@@ -93,7 +90,7 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
     Malloc(calloc),
     Malloc(free),
     Malloc(mallinfo),
-    MallocInitHeapprofdHook,
+    MallocInitHeapprofdHook, // malloc replacement
     Malloc(malloc_usable_size),
     Malloc(memalign),
     Malloc(posix_memalign),
@@ -111,38 +108,6 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
     Malloc(aligned_alloc),
     Malloc(malloc_info),
   };
-
-static void MaybeInstallInitHeapprofdHook(int) {
-  // Zygote child processes must be marked profileable.
-  if (gZygoteChild &&
-      !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
-    error_log("%s: not enabling heapprofd, not marked profileable.", getprogname());
-    return;
-  }
-
-  // Checking this variable is only necessary when this could conflict with
-  // the change to enable the allocation limit. All other places will
-  // not ever have a conflict modifying the globals.
-  if (!atomic_exchange(&gGlobalsMutating, true)) {
-    if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
-      __libc_globals.mutate([](libc_globals* globals) {
-        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
-        auto dispatch_table = GetDispatchTable();
-        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
-          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
-        }
-      });
-    }
-    atomic_store(&gGlobalsMutating, false);
-  } else {
-    // The only way you can get to this point is if the signal has been
-    // blocked by a call to HeapprofdMaskSignal. The raise below will
-    // do nothing until a call to HeapprofdUnmaskSignal, which will cause
-    // the signal to be resent. Using this avoids the need for a busy loop
-    // waiting for gGlobalsMutating to change back to false.
-    raise(kHeapprofdSignal);
-  }
-}
 
 constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
 constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
@@ -203,6 +168,39 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
   return true;
 }
 
+// Runtime triggering entry-point. Two possible call sites:
+// * when receiving a profiling signal with a si_value indicating heapprofd.
+// * when a Zygote child is marking itself as profileable, and there's a
+//   matching profiling request for this process (in which case heapprofd client
+//   is loaded synchronously).
+// In both cases, the caller is responsible for verifying that the process is
+// considered profileable.
+void HandleHeapprofdSignal() {
+  if (atomic_load_explicit(&gHeapprofdIncompatibleHooks, memory_order_acquire)) {
+    error_log("%s: not enabling heapprofd, malloc_debug/malloc_hooks are enabled.", getprogname());
+    return;
+  }
+
+  // Checking this variable is only necessary when this could conflict with
+  // the change to enable the allocation limit. All other places will
+  // not ever have a conflict modifying the globals.
+  if (!atomic_exchange(&gGlobalsMutating, true)) {
+    if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
+      __libc_globals.mutate([](libc_globals* globals) {
+        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
+        auto dispatch_table = GetDispatchTable();
+        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
+          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
+        }
+      });
+    }
+    atomic_store(&gGlobalsMutating, false);
+  }
+  // Otherwise, we're racing against malloc_limit's enable logic (at most once
+  // per process, and a niche feature). This is highly unlikely, so simply give
+  // up if it does happen.
+}
+
 bool HeapprofdShouldLoad() {
   // First check for heapprofd.enable. If it is set to "all", enable
   // heapprofd for all processes. Otherwise, check heapprofd.enable.${prog},
@@ -226,38 +224,8 @@ bool HeapprofdShouldLoad() {
   return property_value[0] != '\0';
 }
 
-void HeapprofdInstallSignalHandler() {
-  struct sigaction action = {};
-  action.sa_handler = MaybeInstallInitHeapprofdHook;
-  sigaction(kHeapprofdSignal, &action, nullptr);
-}
-
-extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
-
-void HeapprofdMaskSignal() {
-  sigset64_t mask_set;
-  // Need to use this function instead because sigprocmask64 filters
-  // out this signal.
-  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
-  sigaddset64(&mask_set, kHeapprofdSignal);
-  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
-}
-
-void HeapprofdUnmaskSignal() {
-  sigset64_t mask_set;
-  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
-  sigdelset64(&mask_set, kHeapprofdSignal);
-  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
-}
-
-static void DisplayError(int) {
-  error_log("Cannot install heapprofd while malloc debug/malloc hooks are enabled.");
-}
-
-void HeapprofdInstallErrorSignalHandler() {
-  struct sigaction action = {};
-  action.sa_handler = DisplayError;
-  sigaction(kHeapprofdSignal, &action, nullptr);
+void HeapprofdRememberHookConflict() {
+  atomic_store_explicit(&gHeapprofdIncompatibleHooks, true, memory_order_release);
 }
 
 static void CommonInstallHooks(libc_globals* globals) {
@@ -326,15 +294,12 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
   return Malloc(malloc)(bytes);
 }
 
-// Marks this process as a profileable zygote child.
-static bool HandleInitZygoteChildProfiling() {
-  atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
-
+bool HeapprofdInitZygoteChildProfiling() {
   // Conditionally start "from startup" profiling.
   if (HeapprofdShouldLoad()) {
-    // Directly call the signal handler (will correctly guard against
-    // concurrent signal delivery).
-    MaybeInstallInitHeapprofdHook(kHeapprofdSignal);
+    // Directly call the signal handler codepath (properly protects against
+    // concurrent invocations).
+    HandleHeapprofdSignal();
   }
   return true;
 }
@@ -358,13 +323,6 @@ static bool DispatchReset() {
 }
 
 bool HeapprofdMallopt(int opcode, void* arg, size_t arg_size) {
-  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
-    if (arg != nullptr || arg_size != 0) {
-      errno = EINVAL;
-      return false;
-    }
-    return HandleInitZygoteChildProfiling();
-  }
   if (opcode == M_RESET_HOOKS) {
     if (arg != nullptr || arg_size != 0) {
       errno = EINVAL;
