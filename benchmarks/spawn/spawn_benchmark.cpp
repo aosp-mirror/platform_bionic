@@ -28,24 +28,37 @@
 
 #include "spawn_benchmark.h"
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
+#include <errno.h>
+#include <spawn.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
+#include <android-base/stringprintf.h>
 
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
+extern char** environ;
 
-#elif defined(__ANDROID__)
+void BM_spawn_test(benchmark::State& state, const char* const* argv) {
+  for (auto _ : state) {
+    pid_t child = 0;
+    if (int spawn_err = posix_spawn(&child, argv[0], nullptr, nullptr, const_cast<char**>(argv),
+                                    environ)) {
+      state.SkipWithError(android::base::StringPrintf(
+          "posix_spawn of %s failed: %s", argv[0], strerror(spawn_err)).c_str());
+      break;
+    }
 
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
-
-#endif
-
-BENCHMARK_MAIN();
+    int wstatus = 0;
+    const pid_t wait_result = TEMP_FAILURE_RETRY(waitpid(child, &wstatus, 0));
+    if (wait_result != child) {
+      state.SkipWithError(android::base::StringPrintf(
+          "waitpid on pid %d for %s failed: %s",
+          static_cast<int>(child), argv[0], strerror(errno)).c_str());
+      break;
+    }
+    if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) == 127) {
+      state.SkipWithError(android::base::StringPrintf("could not exec %s", argv[0]).c_str());
+      break;
+    }
+  }
+}
