@@ -51,6 +51,7 @@ cc_benchmark {
     static_libs: [
         "libbase",
         "libbionic_spawn_benchmark",
+        "liblog",
     ],
 }
 
