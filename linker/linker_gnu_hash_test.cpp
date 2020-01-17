@@ -26,37 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-#include <stdint.h>
+#include "linker_gnu_hash.h"
 
-#include <utility>
-
-#if defined(__arm__) || defined(__aarch64__)
-#define USE_GNU_HASH_NEON 1
-#else
-#define USE_GNU_HASH_NEON 0
-#endif
-
+TEST(linker_gnu_hash, compare_neon_to_simple) {
 #if USE_GNU_HASH_NEON
-#include "arch/arm_neon/linker_gnu_hash_neon.h"
-#endif
+  auto check_input = [&](const char* name) {
+    auto expected = calculate_gnu_hash_simple(name);
+    auto actual = calculate_gnu_hash_neon(name);
+    EXPECT_EQ(expected.first, actual.first) << name;
+    EXPECT_EQ(expected.second, actual.second) << name;
+  };
 
-__attribute__((unused))
-static std::pair<uint32_t, uint32_t> calculate_gnu_hash_simple(const char* name) {
-  uint32_t h = 5381;
-  const uint8_t* name_bytes = reinterpret_cast<const uint8_t*>(name);
-  #pragma unroll 8
-  while (*name_bytes != 0) {
-    h += (h << 5) + *name_bytes++; // h*33 + c = h + h * 32 + c = h + h << 5 + c
+  __attribute__((aligned(8))) const char test1[] = "abcdefghijklmnop\0qrstuvwxyz";
+  for (size_t i = 0; i < sizeof(test1) - 1; ++i) {
+    check_input(&test1[i]);
   }
-  return { h, reinterpret_cast<const char*>(name_bytes) - name };
-}
 
-static inline std::pair<uint32_t, uint32_t> calculate_gnu_hash(const char* name) {
-#if USE_GNU_HASH_NEON
-  return calculate_gnu_hash_neon(name);
+  __attribute__((aligned(8))) const char test2[] = "abcdefghijklmnopqrs\0tuvwxyz";
+  for (size_t i = 0; i < sizeof(test2) - 1; ++i) {
+    check_input(&test2[i]);
+  }
+
+  __attribute__((aligned(8))) const char test3[] = "abcdefghijklmnopqrstuv\0wxyz";
+  for (size_t i = 0; i < sizeof(test3) - 1; ++i) {
+    check_input(&test3[i]);
+  }
 #else
-  return calculate_gnu_hash_simple(name);
+  GTEST_SKIP() << "This test is only implemented on arm/arm64";
 #endif
 }
