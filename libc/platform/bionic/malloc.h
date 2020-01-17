@@ -91,6 +91,12 @@ enum {
   //   arg_size = sizeof(HeapTaggingLevel)
   M_SET_HEAP_TAGGING_LEVEL = 8,
 #define M_SET_HEAP_TAGGING_LEVEL M_SET_HEAP_TAGGING_LEVEL
+  // Query whether the current process is considered to be profileable by the
+  // Android platform. Result is assigned to the arg pointer's destination.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_GET_PROCESS_PROFILEABLE = 9,
+#define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
 };
 
 enum HeapTaggingLevel {

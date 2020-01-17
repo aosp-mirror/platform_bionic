@@ -75,9 +75,19 @@
 // =============================================================================
 pthread_mutex_t gGlobalsMutateLock = PTHREAD_MUTEX_INITIALIZER;
 
-bool gZygoteChild = false;
-
 _Atomic bool gGlobalsMutating = false;
+
+static bool gZygoteChild = false;
+
+// In a Zygote child process, this is set to true if profiling of this process
+// is allowed. Note that this is set at a later time than gZygoteChild. The
+// latter is set during the fork (while still in zygote's SELinux domain). While
+// this bit is set after the child is specialized (and has transferred SELinux
+// domains if applicable). These two flags are read by the
+// BIONIC_SIGNAL_PROFILER handler, which does nothing if the process is not
+// profileable.
+static _Atomic bool gZygoteChildProfileable = false;
+
 // =============================================================================
 
 static constexpr MallocDispatch __libc_malloc_default_dispatch
@@ -383,13 +393,10 @@ static void MallocInitImpl(libc_globals* globals) {
     if (HeapprofdShouldLoad()) {
       HeapprofdInstallHooksAtInit(globals);
     }
-
-    // Install this last to avoid as many race conditions as possible.
-    HeapprofdInstallSignalHandler();
   } else {
-    // Install a signal handler that prints an error since we don't support
-    // heapprofd and any other hook to be installed at the same time.
-    HeapprofdInstallErrorSignalHandler();
+    // Record the fact that incompatible hooks are active, to skip any later
+    // heapprofd signal handler invocations.
+    HeapprofdRememberHookConflict();
   }
 }
 
@@ -468,6 +475,27 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     gZygoteChild = true;
     return true;
   }
+  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
+    // Also check if heapprofd should start profiling from app startup.
+    HeapprofdInitZygoteChildProfiling();
+    return true;
+  }
+  if (opcode == M_GET_PROCESS_PROFILEABLE) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    // Native processes are considered profileable. Zygote children are considered
+    // profileable only when appropriately tagged.
+    *reinterpret_cast<bool*>(arg) =
+        !gZygoteChild || atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire);
+    return true;
+  }
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
     return LimitEnable(arg, arg_size);
   }
@@ -495,6 +523,7 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
     return SetHeapTaggingLevel(arg, arg_size);
   }
+  // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
 // =============================================================================

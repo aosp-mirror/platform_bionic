@@ -215,6 +215,12 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     }
   };
 
+  // Skip symbol lookup for R_GENERIC_NONE relocations.
+  if (__predict_false(r_type == R_GENERIC_NONE)) {
+    trace_reloc("RELO NONE");
+    return true;
+  }
+
 #if defined(USE_RELA)
   auto get_addend_rel   = [&]() -> ElfW(Addr) { return reloc.r_addend; };
   auto get_addend_norel = [&]() -> ElfW(Addr) { return reloc.r_addend; };
