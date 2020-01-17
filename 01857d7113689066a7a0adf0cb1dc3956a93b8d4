@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "462619f8_6ed84350",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1010681
+      },
+      "writtenOn": "2020-01-17T08:37:14Z",
+      "side": 1,
+      "message": "is it possible to get the westworld logging hooked in here too?",
+      "range": {
+        "startLine": 265,
+        "startChar": 6,
+        "endLine": 265,
+        "endChar": 27
+      },
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47e5d086_21620dcd",
         "filename": "libdl/libdl.map.txt",
         "patchSetId": 6
@@ -64,6 +87,29 @@
       "writtenOn": "2020-01-16T22:34:27Z",
       "side": 1,
       "message": "Deallocate the previous contents of g_disabled_compat_changes to prevent leaked memory.",
+      "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e543c888_124d8abf",
+        "filename": "linker/linker_disabled_changes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1010681
+      },
+      "writtenOn": "2020-01-17T08:37:14Z",
+      "side": 1,
+      "message": "do we know the UID here? We should try and keep this log line identical to that in ChangeReporter.debugLog.",
+      "range": {
+        "startLine": 80,
+        "startChar": 33,
+        "endLine": 80,
+        "endChar": 95
+      },
       "revId": "01857d7113689066a7a0adf0cb1dc3956a93b8d4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
