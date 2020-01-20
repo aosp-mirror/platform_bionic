@@ -211,6 +211,9 @@ cc_test_library {
                 "libprocinfo",
                 "libsystemproperties",
             ],
+            srcs: [
+                "tagged_pointers_test.cpp",
+            ],
         },
     },
 
