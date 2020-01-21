@@ -16,6 +16,24 @@
       "revId": "43d5f9d4dd83d15a859d9be1359c4a4a47381fea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "348f3e58_78f3efe1",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-21T23:51:22Z",
+      "side": 1,
+      "message": "Right, so bionic tests run in presubmit _only_ on crosshatch_hwasan.\nWe kind of shot ourselves in the foot here.",
+      "parentUuid": "3bf0f293_1bfbecd3",
+      "revId": "43d5f9d4dd83d15a859d9be1359c4a4a47381fea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
