@@ -30,11 +30,19 @@
 #error This file should not be compiled for static targets.
 #endif
 
+#include <fcntl.h>
 #include <signal.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/un.h>
 
 #include <async_safe/log.h>
 #include <platform/bionic/malloc.h>
 #include <platform/bionic/reserved_signals.h>
+#include <private/ErrnoRestorer.h>
+#include <private/ScopedFd.h>
 
 #include "malloc_heapprofd.h"
 
@@ -42,7 +50,9 @@
 // platform's profilers. The accompanying signal value discriminates between
 // specific requestors:
 //  0: heapprofd heap profiler.
+//  1: traced_perf perf profiler.
 static constexpr int kHeapprofdSignalValue = 0;
+static constexpr int kTracedPerfSignalValue = 1;
 
 static void HandleProfilingSignal(int, siginfo_t*, void*);
 
@@ -54,12 +64,18 @@ __LIBC_HIDDEN__ void __libc_init_profiling_handlers() {
   sigaction(BIONIC_SIGNAL_PROFILER, &action, nullptr);
 }
 
+static void HandleTracedPerfSignal();
+
 static void HandleProfilingSignal(int /*signal_number*/, siginfo_t* info, void* /*ucontext*/) {
-  if (info->si_code != SI_QUEUE)
+  // Avoid clobbering errno.
+  ErrnoRestorer errno_restorer;
+
+  if (info->si_code != SI_QUEUE) {
     return;
+  }
 
   int signal_value = info->si_value.sival_int;
-  async_safe_format_log(ANDROID_LOG_WARN, "libc", "%s: received profiling signal with si_value: %d",
+  async_safe_format_log(ANDROID_LOG_INFO, "libc", "%s: received profiling signal with si_value: %d",
                         getprogname(), signal_value);
 
   // Proceed only if the process is considered profileable.
@@ -72,8 +88,65 @@ static void HandleProfilingSignal(int /*signal_number*/, siginfo_t* info, void* 
 
   if (signal_value == kHeapprofdSignalValue) {
     HandleHeapprofdSignal();
+  } else if (signal_value == kTracedPerfSignalValue) {
+    HandleTracedPerfSignal();
   } else {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "unrecognized profiling signal si_value: %d",
                           signal_value);
+  }
+}
+
+// Open /proc/self/{maps,mem}, connect to traced_perf, send the fds over the
+// socket. Everything happens synchronously within the signal handler. Socket
+// is made non-blocking, and we do not retry.
+static void HandleTracedPerfSignal() {
+  ScopedFd sock_fd{ socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0 /*protocol*/) };
+  if (sock_fd.get() == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to create socket: %s", strerror(errno));
+    return;
+  }
+
+  sockaddr_un saddr{ AF_UNIX, "/dev/socket/traced_perf" };
+  size_t addrlen = sizeof(sockaddr_un);
+  if (connect(sock_fd.get(), reinterpret_cast<const struct sockaddr*>(&saddr), addrlen) == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to connect to traced_perf socket: %s",
+                          strerror(errno));
+    return;
+  }
+
+  ScopedFd maps_fd{ open("/proc/self/maps", O_RDONLY | O_CLOEXEC) };
+  if (maps_fd.get() == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/maps: %s",
+                          strerror(errno));
+    return;
+  }
+  ScopedFd mem_fd{ open("/proc/self/mem", O_RDONLY | O_CLOEXEC) };
+  if (mem_fd.get() == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/mem: %s",
+                          strerror(errno));
+    return;
+  }
+
+  // Send 1 byte with auxiliary data carrying two fds.
+  int send_fds[2] = { maps_fd.get(), mem_fd.get() };
+  int num_fds = 2;
+  char iobuf[1] = {};
+  msghdr msg_hdr = {};
+  iovec iov = { reinterpret_cast<void*>(iobuf), sizeof(iobuf) };
+  msg_hdr.msg_iov = &iov;
+  msg_hdr.msg_iovlen = 1;
+  alignas(cmsghdr) char control_buf[256] = {};
+  const auto raw_ctl_data_sz = num_fds * sizeof(int);
+  const size_t control_buf_len = static_cast<size_t>(CMSG_SPACE(raw_ctl_data_sz));
+  msg_hdr.msg_control = control_buf;
+  msg_hdr.msg_controllen = control_buf_len;  // used by CMSG_FIRSTHDR
+  struct cmsghdr* cmsg = CMSG_FIRSTHDR(&msg_hdr);
+  cmsg->cmsg_level = SOL_SOCKET;
+  cmsg->cmsg_type = SCM_RIGHTS;
+  cmsg->cmsg_len = static_cast<size_t>(CMSG_LEN(raw_ctl_data_sz));
+  memcpy(CMSG_DATA(cmsg), send_fds, num_fds * sizeof(int));
+
+  if (sendmsg(sock_fd.get(), &msg_hdr, 0) == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to sendmsg: %s", strerror(errno));
   }
 }
