@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bf0f293_1bfbecd3",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-21T23:48:00Z",
+      "side": 1,
+      "message": "This is called from __libc_init_globals, which is called from __real_libc_init **before** __libc_init_common. Tagged pointer support in the kernel is initialized with a prctl that is called from __libc_init_common.\n\nAs a result, this must always fail on a new kernel. Also, the tests must fail (because the tests detect kernel support much later and would get the correct result). How did this even pass presubmits? Is the old kernel not that old after all?",
+      "revId": "43d5f9d4dd83d15a859d9be1359c4a4a47381fea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
