@@ -49,6 +49,10 @@ New libc functions in R (API level 30):
   * `renameat2` (GNU extension).
   * `pthread_cond_clockwait`/`pthread_mutex_clocklock`/`pthread_rwlock_clockrdlock`/`pthread_rwlock_clockwrlock`/`sem_clockwait`
 
+New libc behavior in R (API level 30):
+  * [fdsan](fdsan.md) now aborts when it detects common file descriptor errors,
+    rather than just logging.
+
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
   * `reallocarray` (BSD/GNU extension in `<malloc.h>` and `<stdlib.h>`)
@@ -68,7 +72,7 @@ New libc behavior in Q (API level 29):
     is unchanged.
   * Support in strptime for `%F`, `%G`, `%g`, `%P`, `%u`, `%V`, and `%v`.
     (strftime already supported them all.)
-  * [fdsan](fdsan.md) detects common file descriptor errors at runtime.
+  * [fdsan](fdsan.md) detects and logs common file descriptor errors at runtime.
 
 New libc functions in P (API level 28):
   * `aligned_alloc`
