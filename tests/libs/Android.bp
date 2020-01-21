@@ -83,21 +83,30 @@ cc_test_library {
     name: "libtest_elftls_dynamic_filler_1",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
-    cflags: ["-fno-emulated-tls", "-DTLS_FILLER=100"],
+    cflags: [
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=100",
+    ],
 }
 
 cc_test_library {
     name: "libtest_elftls_dynamic_filler_2",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
-    cflags: ["-fno-emulated-tls", "-DTLS_FILLER=200"],
+    cflags: [
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=200",
+    ],
 }
 
 cc_test_library {
     name: "libtest_elftls_dynamic_filler_3",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["elftls_dynamic_filler.cpp"],
-    cflags: ["-fno-emulated-tls", "-DTLS_FILLER=300"],
+    cflags: [
+        "-fno-emulated-tls",
+        "-DTLS_FILLER=300",
+    ],
 }
 
 // -----------------------------------------------------------------------------
@@ -131,7 +140,13 @@ cc_test_library {
 // -----------------------------------------------------------------------------
 // Library used by dlext tests - with GNU RELRO program header
 // -----------------------------------------------------------------------------
-// In Android.mk to support creating symlinks
+cc_test_library {
+    name: "libdlext_test",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,-z,relro"],
+    shared_libs: ["libtest_simple"],
+}
 
 // -----------------------------------------------------------------------------
 // Library used by dlext tests - without GNU RELRO program header
@@ -145,19 +160,58 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// Library used by dlext tests - recursive use of RELRO sharing
+// -----------------------------------------------------------------------------
+cc_test_library {
+    name: "libdlext_test_recursive",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlext_test_recursive_library.cpp"],
+    ldflags: ["-Wl,-z,relro"],
+    shared_libs: ["libdlext_test"],
+}
+
+// -----------------------------------------------------------------------------
 // Library used by dlext tests - different name non-default location
 // -----------------------------------------------------------------------------
-// In Android.mk to support installing to /data
+cc_test_library {
+    name: "libdlext_test_fd",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+    relative_install_path: "bionic-loader-test-libs/libdlext_test_fd",
+    shared_libs: ["libtest_simple"],
+}
 
 // -----------------------------------------------------------------------------
 // Libraries used by dlext tests for open from a zip-file
 // -----------------------------------------------------------------------------
-// In Android.mk to support installing to /data
+cc_test_library {
+    name: "libdlext_test_zip",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["dlext_test_library.cpp"],
+    shared_libs: ["libatest_simple_zip"],
+    relative_install_path: "bionic-loader-test-libs/libdlext_test_zip",
+}
+
+cc_test_library {
+    name: "libatest_simple_zip",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["dlopen_testlib_simple.cpp"],
+    relative_install_path: "bionic-loader-test-libs/libatest_simple_zip",
+}
 
 // ----------------------------------------------------------------------------
 // Library with soname which does not match filename
 // ----------------------------------------------------------------------------
-// In Android.mk to support zipped and aligned tests
+cc_test_library {
+    name: "libdlext_test_different_soname",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlext_test_library.cpp"],
+    ldflags: ["-Wl,-soname=libdlext_test_soname.so"],
+}
 
 // -----------------------------------------------------------------------------
 // Library used by dlext tests - zipped and aligned
@@ -375,39 +429,545 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
-// Build DT_RUNPATH test helper libraries
+// Build test helper libraries for linker namespaces
+//
+// This set of libraries is to test isolated namespaces
+//
+// Isolated namespaces do not allow loading of the library outside of
+// the search paths.
+//
+// This library cannot be loaded in isolated namespace because one of DT_NEEDED
+// libraries is outside of the search paths.
+//
+// libnstest_root_not_isolated.so (DT_RUNPATH = $ORIGIN/../private_namespace_libs_external/)
+// +-> libnstest_public.so
+// +-> libnstest_private_external.so (located in $ORIGIN/../private_namespace_libs_external/)
+//
+// Search path: $NATIVE_TESTS/private_namespace_libs/
+//
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.dt_runpath.mk
+
+cc_test_library {
+    name: "libnstest_root_not_isolated",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["namespaces_root.cpp"],
+    shared_libs: [
+        "libnstest_public",
+        "libnstest_private_external",
+    ],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs",
+    ldflags: ["-Wl,--rpath,$ORIGIN/../private_namespace_libs_external"],
+}
+
+cc_test_library {
+    name: "libnstest_private_external",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["namespaces_private.cpp"],
+    relative_install_path: "bionic-loader-test-libs/private_namespace_libs_external",
+}
+
+// -----------------------------------------------------------------------------
+// Build DT_RUNPATH test helper libraries
+//
+// Dependencies
+//
+// libtest_dt_runpath_d.so                       runpath: ${ORIGIN}/dt_runpath_b_c_x, ${ORIGIN}/dt_runpath_y/${LIB}
+// |-> dt_runpath_b_c_x/libtest_dt_runpath_b.so  runpath: ${ORIGIN}/../dt_runpath_a
+// |   |-> dt_runpath_a/libtest_dt_runpath_a.so
+// |-> dt_runpath_b_c_x/libtest_dt_runpath_c.so  runpath: ${ORIGIN}/invalid_dt_runpath
+// |   |-> libtest_dt_runpath_a.so (soname)
+// |-> dt_runpath_y/lib[64]/libtest_dt_runpath_y.so
+//
+// This one is used to test dlopen
+// dt_runpath_b_c_x/libtest_dt_runpath_x.so
+//
+// -----------------------------------------------------------------------------
+
+// A leaf library in a non-standard directory.
+cc_test_library {
+    name: "libtest_dt_runpath_a",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "bionic-loader-test-libs/dt_runpath_a",
+}
+
+// Depends on library A with a DT_RUNPATH
+cc_test_library {
+    name: "libtest_dt_runpath_b",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    shared_libs: ["libtest_dt_runpath_a"],
+    relative_install_path: "bionic-loader-test-libs/dt_runpath_b_c_x",
+    ldflags: ["-Wl,--rpath,${ORIGIN}/../dt_runpath_a"],
+}
+
+// Depends on library A with an incorrect DT_RUNPATH. This does not matter
+// because B is the first in the D (below) dependency order, and library A
+// is already loaded using the correct DT_RUNPATH from library B.
+cc_test_library {
+    name: "libtest_dt_runpath_c",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    shared_libs: ["libtest_dt_runpath_a"],
+    relative_install_path: "bionic-loader-test-libs/dt_runpath_b_c_x",
+    ldflags: ["-Wl,--rpath,${ORIGIN}/invalid_dt_runpath"],
+}
+
+// D depends on B, C, and Y with DT_RUNPATH.
+cc_test_library {
+    name: "libtest_dt_runpath_d",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_b.cpp"],
+    shared_libs: [
+        "libtest_dt_runpath_b",
+        "libtest_dt_runpath_c",
+        "libtest_dt_runpath_y",
+    ],
+    ldflags: [
+        "-Wl,--rpath,${ORIGIN}/dt_runpath_b_c_x",
+        "-Wl,--rpath,${ORIGIN}/dt_runpath_y/${LIB}",
+    ],
+}
+
+// D version for open-from-zip test with runpath
+cc_test_library {
+    name: "libtest_dt_runpath_d_zip",
+    srcs: ["dlopen_b.cpp"],
+    shared_libs: [
+        "libtest_dt_runpath_b",
+        "libtest_dt_runpath_c",
+        "libtest_dt_runpath_y",
+    ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    gtest: false,
+    relative_install_path: "libtest_dt_runpath_d_zip",
+    ldflags: [
+        "-Wl,--rpath,${ORIGIN}/dt_runpath_b_c_x",
+        "-Wl,--rpath,${ORIGIN}/dt_runpath_y/${LIB}",
+    ],
+    sanitize: {
+        address: false,
+        fuzzer: false,
+    },
+    stl: "libc++_static",
+    target: {
+        darwin: {
+            enabled: false,
+        },
+    },
+}
+
+// A leaf library in a directory library D has DT_RUNPATH for.
+cc_test_library {
+    name: "libtest_dt_runpath_x",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    relative_install_path: "bionic-loader-test-libs/dt_runpath_b_c_x",
+}
+
+// A leaf library in lib or lib64 directory
+cc_test_library {
+    name: "libtest_dt_runpath_y",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+
+    multilib: {
+        lib32: {
+            relative_install_path: "bionic-loader-test-libs/dt_runpath_y/lib",
+        },
+        lib64: {
+            relative_install_path: "bionic-loader-test-libs/dt_runpath_y/lib64",
+        },
+    },
+}
 
 // -----------------------------------------------------------------------------
 // Build library with two parents
+//
+// Libraries used by dlfcn tests to verify local group ref_counting
+// libtest_two_parents*.so
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.dlopen_2_parents_reloc.mk
+
+// ..._child.so - correct answer
+cc_test_library {
+    name: "libtest_two_parents_child",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_2_parents_reloc_answer.cpp"],
+}
+
+// ..._parent1.so - correct answer
+cc_test_library {
+    name: "libtest_two_parents_parent1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_reloc_answer_impl.cpp"],
+    shared_libs: ["libtest_two_parents_child"],
+    cflags: ["-D__ANSWER=42"],
+}
+
+// ..._parent2.so - incorrect answer
+cc_test_library {
+    name: "libtest_two_parents_parent2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_reloc_answer_impl.cpp"],
+    shared_libs: ["libtest_two_parents_child"],
+    cflags: ["-D__ANSWER=1"],
+}
 
 // -----------------------------------------------------------------------------
 // Build libtest_check_order_dlsym.so with its dependencies.
+//
+// Libraries used by dlfcn tests to verify correct load order:
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.dlopen_check_order_dlsym.mk
+
+// libtest_check_order_2_right.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_2_right",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_dlsym_answer.cpp"],
+    cflags: ["-D__ANSWER=42"],
+}
+
+// libtest_check_order_a.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_a",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_dlsym_answer.cpp"],
+    cflags: ["-D__ANSWER=1"],
+}
+
+// libtest_check_order_b.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_b",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_dlsym_answer.cpp"],
+    cflags: [
+        "-D__ANSWER=2",
+        "-D__ANSWER2=43",
+    ],
+}
+
+// libtest_check_order_c.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_3_c",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_dlsym_answer.cpp"],
+    cflags: ["-D__ANSWER=3"],
+}
+
+// libtest_check_order_d.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_d",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: ["libtest_check_order_dlsym_b"],
+    srcs: ["dlopen_check_order_dlsym_answer.cpp"],
+    cflags: [
+        "-D__ANSWER=4",
+        "-D__ANSWER2=4",
+    ],
+}
+
+// libtest_check_order_left.so
+cc_test_library {
+    name: "libtest_check_order_dlsym_1_left",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_dlsym_a",
+        "libtest_check_order_dlsym_b",
+    ],
+    srcs: ["empty.cpp"],
+}
+
+// libtest_check_order.so
+cc_test_library {
+    name: "libtest_check_order_dlsym",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_dlsym_1_left",
+        "libtest_check_order_dlsym_2_right",
+        "libtest_check_order_dlsym_3_c",
+    ],
+    srcs: ["empty.cpp"],
+}
 
 // -----------------------------------------------------------------------------
 // Build libtest_check_order_siblings.so with its dependencies.
+//
+// Libraries used by dlfcn tests to verify correct relocation order:
+// libtest_check_order_reloc_siblings*.so
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_siblings.mk
+
+// ..._1.so - empty
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_1",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_reloc_siblings_a",
+        "libtest_check_order_reloc_siblings_b",
+    ],
+    srcs: ["empty.cpp"],
+}
+
+// ..._2.so - empty
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_2",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_reloc_siblings_c",
+        "libtest_check_order_reloc_siblings_d",
+    ],
+    srcs: [
+        "dlopen_check_order_reloc_grandchild_answer.cpp",
+    ],
+    allow_undefined_symbols: true,
+}
+
+// ..._3.so - get_answer2();
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_3",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_reloc_siblings_e",
+        "libtest_check_order_reloc_siblings_f",
+    ],
+    srcs: [
+        "dlopen_check_order_reloc_nephew_answer.cpp",
+    ],
+}
+
+// ..._a.so <- correct impl
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_a",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=42"],
+}
+
+// ..._b.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_b",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=1"],
+}
+
+// ..._c.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_c",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_reloc_siblings_c_1",
+        "libtest_check_order_reloc_siblings_c_2",
+    ],
+    srcs: [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=2"],
+}
+
+// ..._d.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_d",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=3"],
+}
+
+// ..._e.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_e",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_answer_impl.cpp",
+    ],
+    cflags: [
+        "-D__ANSWER=4",
+    ],
+}
+
+// ..._f.so <- get_answer()
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_f",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_answer.cpp",
+    ],
+}
+
+// ..._c_1.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_c_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_grandchild_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=42"],
+}
+
+// ..._c_2.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings_c_2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: [
+        "dlopen_check_order_reloc_grandchild_answer_impl.cpp",
+    ],
+    cflags: ["-D__ANSWER=0"],
+}
+
+// libtest_check_order_reloc_siblings.so
+cc_test_library {
+    name: "libtest_check_order_reloc_siblings",
+    defaults: ["bionic_testlib_defaults"],
+    shared_libs: [
+        "libtest_check_order_reloc_siblings_1",
+        "libtest_check_order_reloc_siblings_2",
+        "libtest_check_order_reloc_siblings_3",
+    ],
+    srcs: [
+        "empty.cpp",
+    ],
+}
 
 // -----------------------------------------------------------------------------
 // Build libtest_check_order_root.so with its dependencies.
+//
+// Libraries used by dlfcn tests to verify correct relocation order:
+// libtest_check_order_reloc_root*.so
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.dlopen_check_order_reloc_main_executable.mk
+
+// ..._1.so - empty
+cc_test_library {
+    name: "libtest_check_order_reloc_root_1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+}
+
+// ..._2.so - this one has the incorrect answer
+cc_test_library {
+    name: "libtest_check_order_reloc_root_2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_reloc_root_answer_impl.cpp"],
+    cflags: ["-D__ANSWER=2"],
+}
+
+// libtest_check_order_reloc_root.so <- implements get_answer3()
+cc_test_library {
+    name: "libtest_check_order_reloc_root",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_check_order_reloc_root_answer.cpp"],
+    shared_libs: [
+        "libtest_check_order_reloc_root_1",
+        "libtest_check_order_reloc_root_2",
+    ],
+}
 
 // -----------------------------------------------------------------------------
 // Build libtest_versioned_lib.so with its dependencies.
+//
+// Libraries used to test versioned symbols
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.versioned_lib.mk
+
+cc_test_library {
+    name: "libtest_versioned_uselibv1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_uselib.cpp"],
+    shared_libs: ["libtest_versioned_libv1"],
+}
+
+cc_test_library {
+    name: "libtest_versioned_uselibv2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_uselib.cpp"],
+    shared_libs: ["libtest_versioned_libv2"],
+    version_script: "versioned_uselib.map",
+}
+
+cc_test_library {
+    name: "libtest_versioned_uselibv2_other",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_uselib.cpp"],
+    shared_libs: [
+        "libtest_versioned_otherlib_empty",
+        "libtest_versioned_libv2",
+    ],
+}
+
+cc_test_library {
+    name: "libtest_versioned_uselibv3_other",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_uselib.cpp"],
+    shared_libs: [
+        "libtest_versioned_otherlib_empty",
+        "libtest_versioned_lib",
+    ],
+}
+
+// lib v1 - this one used during static linking but never used at runtime
+// which forces libtest_versioned_uselibv1 to use function v1 from
+// libtest_versioned_lib.so
+cc_test_library {
+    name: "libtest_versioned_libv1",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_lib_v1.cpp"],
+    version_script: "versioned_lib_v1.map",
+    ldflags: ["-Wl,-soname,libtest_versioned_lib.so"],
+}
+
+// lib v2 - to make libtest_versioned_uselibv2.so use version 2 of versioned_function()
+cc_test_library {
+    name: "libtest_versioned_libv2",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_lib_v2.cpp"],
+    version_script: "versioned_lib_v2.map",
+    ldflags: ["-Wl,-soname,libtest_versioned_lib.so"],
+}
+
+// last version - this one is used at the runtime and exports 3 versions
+// of versioned_symbol().
+cc_test_library {
+    name: "libtest_versioned_lib",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_lib_v3.cpp"],
+    version_script: "versioned_lib_v3.map",
+}
+
+// This library is empty, the actual implementation will provide an unversioned
+// symbol for versioned_function().
+cc_test_library {
+    name: "libtest_versioned_otherlib_empty",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["empty.cpp"],
+    ldflags: ["-Wl,-soname,libtest_versioned_otherlib.so"],
+}
+
+cc_test_library {
+    name: "libtest_versioned_otherlib",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["versioned_lib_other.cpp"],
+    version_script: "versioned_lib_other.map",
+}
 
 // -----------------------------------------------------------------------------
 // Build libraries needed by pthread_atfork tests
+
+// This library used to test phtread_atfork handler behaviour
+// during/after dlclose.
 // -----------------------------------------------------------------------------
-// include $(LOCAL_PATH)/Android.build.pthread_atfork.mk
+cc_test_library {
+    name: "libtest_pthread_atfork",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["pthread_atfork.cpp"],
+}
 
 // -----------------------------------------------------------------------------
 // Library with dependency loop used by dlfcn tests
@@ -496,7 +1056,12 @@ cc_test_library {
 // -----------------------------------------------------------------------------
 // Library with dependency used by dlfcn tests
 // -----------------------------------------------------------------------------
-// In Android.mk to support dependency on libdlext_test
+cc_test_library {
+    name: "libtest_with_dependency",
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["dlopen_testlib_simple.cpp"],
+    shared_libs: ["libdlext_test"],
+}
 
 // -----------------------------------------------------------------------------
 // Library used by ifunc tests
@@ -776,7 +1341,6 @@ cc_test_library {
         "libtest_thread_local_dtor2",
     ],
 }
-
 
 // -----------------------------------------------------------------------------
 // Tool to use to align the shared libraries in a zip file.
