@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "02291518_100384f0",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-21T16:51:34Z",
+      "side": 1,
+      "message": "I (auto-)formatted this according to bionic/.clang_format options, which explicitly has:\nCpp11BracedListStyle: false\n\nThat actively adds the spaces (see https://clang.llvm.org/docs/ClangFormatStyleOptions.html).\n\nI\u0027ll proceed as is (matching the .clang_format) to avoid having gerrit unflip approvals. Will follow up on the formatting over chat/email to clarify whether manual edits are still preferred.",
+      "parentUuid": "54ce6f3d_aae3cd41",
+      "range": {
+        "startLine": 103,
+        "startChar": 19,
+        "endLine": 103,
+        "endChar": 20
+      },
+      "revId": "e95316330bbbad46ef1cb3e0fa612639698b55cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2aaf912_78ba8fff",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 9
@@ -45,6 +69,30 @@
       "revId": "e95316330bbbad46ef1cb3e0fa612639698b55cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "123ed03d_5bf06c3d",
+        "filename": "libc/bionic/android_profiling_dynamic.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-01-21T16:51:34Z",
+      "side": 1,
+      "message": "As above, the .clang_format options undo the line break. Following up separately.",
+      "parentUuid": "d2aaf912_78ba8fff",
+      "range": {
+        "startLine": 105,
+        "startChar": 84,
+        "endLine": 105,
+        "endChar": 100
+      },
+      "revId": "e95316330bbbad46ef1cb3e0fa612639698b55cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
