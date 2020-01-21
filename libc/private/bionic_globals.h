@@ -44,6 +44,7 @@
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
+  uintptr_t heap_pointer_tag;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
