@@ -68,8 +68,10 @@ static inline bool running_with_hwasan() {
 
 static inline void* untag_address(void* addr) {
 #if defined(__LP64__)
-  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
-  addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
+  if (running_with_hwasan()) {
+    constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
+    addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
+  }
 #endif
   return addr;
 }
