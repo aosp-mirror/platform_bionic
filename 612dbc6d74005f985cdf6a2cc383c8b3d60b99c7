@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ffc3f11_3f5a5a56",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-21T22:19:44Z",
+      "side": 1,
+      "message": "separate this into two CLs then, to make it easier to revert this part?",
+      "revId": "612dbc6d74005f985cdf6a2cc383c8b3d60b99c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
