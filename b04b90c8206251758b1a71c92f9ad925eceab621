@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f10ee6c_c4fe7436",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-22T21:51:13Z",
+      "side": 1,
+      "message": "why is this right?",
+      "range": {
+        "startLine": 202,
+        "startChar": 63,
+        "endLine": 202,
+        "endChar": 96
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e4ba9e9_ddd1d236",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-22T21:51:13Z",
+      "side": 1,
+      "message": "|\u003d\n\nwhen/why does this happen?",
+      "range": {
+        "startLine": 230,
+        "startChar": 36,
+        "endLine": 230,
+        "endChar": 37
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ef4057b_51b89f63",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-22T21:51:13Z",
+      "side": 1,
+      "message": "\"Copy the name if it is not already known\"?\n\n(should we take this new name regardless of whether we already have a name?)",
+      "range": {
+        "startLine": 238,
+        "startChar": 11,
+        "endLine": 238,
+        "endChar": 15
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adc63d52_4986c93d",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-22T21:51:13Z",
+      "side": 1,
+      "message": "this gets logged implicitly, so no need to duplicate it.",
+      "range": {
+        "startLine": 288,
+        "startChar": 36,
+        "endLine": 288,
+        "endChar": 42
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
