@@ -71,6 +71,7 @@ cc_defaults {
         fuzzer: false,
     },
     native_coverage: false,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -1402,6 +1403,7 @@ cc_library_static {
         "libc_defaults",
         "libc_native_allocator_defaults",
     ],
+    ramdisk_available: false,
     srcs: libc_common_src_files + [
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
@@ -1823,6 +1825,7 @@ cc_library_headers {
     ],
     host_supported: true,
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
@@ -1839,6 +1842,7 @@ cc_library_headers {
 
     host_supported: true,
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -1979,6 +1983,7 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
