@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eeb3bcd8_8f128352",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-22T23:18:49Z",
+      "side": 1,
+      "message": "Needs a comment.",
+      "revId": "2462dfe2321b8164eb6f04752811375f24494fef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83d5a191_ce69d40c",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-22T23:18:49Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this also check for \u003e\u003d 0? Otherwise we will return true on error I believe.",
+      "revId": "2462dfe2321b8164eb6f04752811375f24494fef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
