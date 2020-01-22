@@ -34,6 +34,24 @@
       "revId": "9d9c3a0811ef0955269bef600c918905b67b879e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad2721dd_a0bf79b9",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1056,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-22T20:22:34Z",
+      "side": 1,
+      "message": "(yeah, libc has so much hidden state that we basically threw in the towel and made that the default. a ton of our tests don\u0027t work if you turn isolation off, and we never do [except when running just a single test under strace/gdb/whatever, which is also fine].)",
+      "parentUuid": "2501efbd_2b62cf8b",
+      "revId": "9d9c3a0811ef0955269bef600c918905b67b879e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
