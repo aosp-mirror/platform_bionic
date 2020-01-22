@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a0bf574_5afd5ed4",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1056,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-22T19:51:23Z",
+      "side": 1,
+      "message": "This line \"poisons\" the current process, making it impossible to change the heap tagging level in the future and affecting other heap tagging test cases.",
+      "revId": "9d9c3a0811ef0955269bef600c918905b67b879e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
