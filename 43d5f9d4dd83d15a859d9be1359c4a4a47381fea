@@ -52,6 +52,24 @@
       "revId": "43d5f9d4dd83d15a859d9be1359c4a4a47381fea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f78eb5b4_c588c303",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-22T02:35:24Z",
+      "side": 1,
+      "message": "\u003e Even better, the \"new\" kernel is 4.14+, and crosshatch is on 4.9. We do not plan to backport below 4.14, so crosshatch will never get the \"real\" tagged pointer support.\n\nThis also explains why the tests passed locally as well (on taimen).\n\n\u003e I think it is fine and we should require the \"real\" tagged pointer support for this feature.\n\nSounds like the only reasonable option to me.",
+      "parentUuid": "0f95afd4_fb0a64bf",
+      "revId": "43d5f9d4dd83d15a859d9be1359c4a4a47381fea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
