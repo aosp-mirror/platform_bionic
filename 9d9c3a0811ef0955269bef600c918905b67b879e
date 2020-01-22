@@ -16,6 +16,24 @@
       "revId": "9d9c3a0811ef0955269bef600c918905b67b879e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2501efbd_2b62cf8b",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1056,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-22T19:53:19Z",
+      "side": 1,
+      "message": "I believe that each of these test cases is supposed to run in an isolated process to prevent these sorts of issues, is that not what you\u0027re seeing?",
+      "parentUuid": "1a0bf574_5afd5ed4",
+      "revId": "9d9c3a0811ef0955269bef600c918905b67b879e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
