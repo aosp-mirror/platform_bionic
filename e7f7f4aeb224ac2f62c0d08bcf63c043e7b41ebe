@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0607bac5_5998dac7",
+        "filename": "tests/stdlib_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-01-23T00:05:31Z",
+      "side": 1,
+      "message": "I\u0027m wondering why the new realpath__deleted test is passing. musl is verifying that the dev/ino values match between two stat calls, but the current realpath in this CL doesn\u0027t do that.\n\nI see that A_path includes an extra \"/\" after td.path, but the fd2 \"A (deleted)\" path here doesn\u0027t. I assume td.path doesn\u0027t have a trailing slash, and maybe adding one here will make the test fail?",
+      "range": {
+        "startLine": 391,
+        "startChar": 37,
+        "endLine": 391,
+        "endChar": 60
+      },
+      "revId": "e7f7f4aeb224ac2f62c0d08bcf63c043e7b41ebe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
