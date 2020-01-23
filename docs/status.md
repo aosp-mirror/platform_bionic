@@ -33,7 +33,11 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
 Missing functionality:
   * `<aio.h>`
   * `<wordexp.h>`
-  * Thread cancellation (`pthread_cancel`).
+  * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
+    because of the difficulty and cost of implementing it, and the difficulty
+    of using it correctly. See
+    [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
+    for more about thread cancellation.
   * Robust mutexes
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
