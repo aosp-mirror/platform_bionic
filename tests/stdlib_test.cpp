@@ -871,3 +871,24 @@ TEST(stdlib, getloadavg) {
   ASSERT_TRUE(fabs(expected[1] - load[1]) < 0.5) << expected[1] << ' ' << load[1];
   ASSERT_TRUE(fabs(expected[2] - load[2]) < 0.5) << expected[2] << ' ' << load[2];
 }
+
+TEST(stdlib, getprogname) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have getprogname()";
+#else
+  // You should always have a name.
+  ASSERT_TRUE(getprogname() != nullptr);
+  // The name should never have a slash in it.
+  ASSERT_TRUE(strchr(getprogname(), '/') == nullptr);
+#endif
+}
+
+TEST(stdlib, setprogname) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have setprogname()";
+#else
+  // setprogname() only takes the basename of what you give it.
+  setprogname("/usr/bin/muppet");
+  ASSERT_STREQ("muppet", getprogname());
+#endif
+}
