@@ -359,7 +359,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/glob.c",
-        "upstream-freebsd/lib/libc/stdlib/realpath.c",
     ],
 
     cflags: [
@@ -1179,6 +1178,7 @@ cc_library_static {
         "bionic/raise.cpp",
         "bionic/rand.cpp",
         "bionic/readlink.cpp",
+        "bionic/realpath.cpp",
         "bionic/reboot.cpp",
         "bionic/recv.cpp",
         "bionic/rename.cpp",
