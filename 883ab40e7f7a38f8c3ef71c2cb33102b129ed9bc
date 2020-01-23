@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d3f91925_6f78d6e0",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-23T18:38:02Z",
+      "side": 1,
+      "message": "It makes sense to me to validate the requested operation first, and then to apply the effects of current heap_tagging_level, but I don\u0027t feel strongly either way.",
+      "parentUuid": "7112641b_190c8072",
+      "revId": "883ab40e7f7a38f8c3ef71c2cb33102b129ed9bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1bf5aa83_ed51d94d",
         "filename": "tests/tagged_pointers_test.cpp",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "d6a03678_c4b095a8",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-23T18:38:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bf5aa83_ed51d94d",
+      "range": {
+        "startLine": 59,
+        "startChar": 5,
+        "endLine": 59,
+        "endChar": 25
+      },
+      "revId": "883ab40e7f7a38f8c3ef71c2cb33102b129ed9bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8efba1e8_d42b72ee",
         "filename": "tests/tagged_pointers_test.cpp",
         "patchSetId": 4
@@ -53,6 +95,24 @@
       "writtenOn": "2020-01-23T18:24:06Z",
       "side": 1,
       "message": "Shouldn\u0027t this condition be checked by:\n\n  EXPECT_EQ(reinterpret_cast\u003cuintptr_t\u003e(x) \u003e\u003e 56, 0u);",
+      "revId": "883ab40e7f7a38f8c3ef71c2cb33102b129ed9bc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9bb3c70_78479f4f",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-23T18:38:02Z",
+      "side": 1,
+      "message": "even better,\nEXPECT_EQ(untag_address(x), x)",
+      "parentUuid": "8efba1e8_d42b72ee",
       "revId": "883ab40e7f7a38f8c3ef71c2cb33102b129ed9bc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
