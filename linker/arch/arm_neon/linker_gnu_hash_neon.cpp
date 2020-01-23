@@ -156,7 +156,7 @@ std::pair<uint32_t, uint32_t> calculate_gnu_hash_neon(const char* name) {
   // Reverse the is-NUL vector so we can use clz to count the number of remaining bytes.
   is_nul = vrev64_u8(is_nul);
   const uint64_t is_nul_u64 = vget_lane_u64(vreinterpret_u64_u8(is_nul), 0);
-  const uint32_t num_valid_bits = is_nul_u64 == 0 ? 64 : __builtin_clzll(is_nul_u64);
+  const uint32_t num_valid_bits = __builtin_clzll(is_nul_u64);
 
   const uint32_t name_len = reinterpret_cast<const char*>(chunk_ptr) - name + (num_valid_bits >> 3);
 
