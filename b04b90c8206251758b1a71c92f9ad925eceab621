@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1562007f_e4589b78",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-01-23T15:47:19Z",
+      "side": 1,
+      "message": "It wasn\u0027t; thanks a bunch for calling this out.\n\nI assumed ifaddrs_storage objects without a name set existed because of names no longer being available through RTM_GETLINK messages, and RTM_NEWADDR messages not being guaranteed to include an IFA_LABEL. Upon closer inspection they were coming from the new ifaddrs_storage object being pushed on top of the list right before traversing it, which meant that the first \u0027match\u0027 would be new_addr itself (which didn\u0027t have its name set yet).\n\ntl;dr: I did a dumb. Thanks for catching.",
+      "parentUuid": "3f10ee6c_c4fe7436",
+      "range": {
+        "startLine": 202,
+        "startChar": 63,
+        "endLine": 202,
+        "endChar": 96
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e4ba9e9_ddd1d236",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c97fe08_736b354f",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-01-23T15:47:19Z",
+      "side": 1,
+      "message": "This happens only when the ifa_flags are not copied over from an existing RTM_NEWLINK message (so in the case where RTM_GETLINK is not allowed). In this case, ifa_flags is copied over from msg-\u003eifa_flags, which does not set the IFF_BROADCAST flag when adding a broadcast message (https://android.googlesource.com/platform/external/libnl/+/master/lib/route/addr.c#590).\n\nAs libcore expects the IFF_BROADCAST flag to be set for ifaddrs objects that contain a broadcast address (https://android.googlesource.com/platform/libcore/+/master/luni/src/main/native/libcore_io_Linux.cpp#1629), we\u0027re setting it here manually.\n\nIn principle, this could do without the null-check for known_addr as well. Let me know which approach you prefer.",
+      "parentUuid": "3e4ba9e9_ddd1d236",
+      "range": {
+        "startLine": 230,
+        "startChar": 36,
+        "endLine": 230,
+        "endChar": 37
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "73ef54d3_e23c5e56",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-01-23T15:47:19Z",
+      "side": 1,
+      "message": "Copying it over only when needed was mostly done to make sure the behavior would be exactly the same as before for cases where RTM_GETLINK succeeds (the old code never read IFA_LABEL and always copied over the name from a previously known interface), with the additional benefit of limiting memory operations when not needed.\n\nI agree though that it makes sense to copy over the name regardless, and changed it as such. Let me know which approach you prefer.",
+      "parentUuid": "9ef4057b_51b89f63",
+      "range": {
+        "startLine": 238,
+        "startChar": 11,
+        "endLine": 238,
+        "endChar": 15
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "adc63d52_4986c93d",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff67ccaf_720861fa",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-01-23T15:47:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adc63d52_4986c93d",
+      "range": {
+        "startLine": 288,
+        "startChar": 36,
+        "endLine": 288,
+        "endChar": 42
+      },
+      "revId": "b04b90c8206251758b1a71c92f9ad925eceab621",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
