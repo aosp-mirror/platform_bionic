@@ -31,6 +31,7 @@
 #include "malloc_tagged_pointers.h"
 
 #include <platform/bionic/malloc.h>
+#include <platform/bionic/mte_kernel.h>
 
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 

@@ -43,7 +43,6 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
-#include <platform/bionic/mte_kernel.h>
 
 #include "private/WriteProtected.h"
 #include "private/bionic_defs.h"
