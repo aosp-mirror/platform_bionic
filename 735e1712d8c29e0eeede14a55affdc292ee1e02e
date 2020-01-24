@@ -22,6 +22,30 @@
       "revId": "735e1712d8c29e0eeede14a55affdc292ee1e02e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c2adf06_acb1cfb6",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-24T22:04:17Z",
+      "side": 1,
+      "message": "yeah, OpenBSD has an additional __atexit_register_cleanup() that their stdio implementation uses to clean up. we have the explicit call to __libc_stdio_cleanup() at the end of __cxa_finalize() instead. (we\u0027ve never tried to keep static binary size down, since static binaries aren\u0027t an important use case for us.)\n\nat some point we should probably throw out this whole file and start again!",
+      "parentUuid": "d5e73b57_ce1d6d8d",
+      "range": {
+        "startLine": 103,
+        "startChar": 31,
+        "endLine": 103,
+        "endChar": 62
+      },
+      "revId": "735e1712d8c29e0eeede14a55affdc292ee1e02e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
