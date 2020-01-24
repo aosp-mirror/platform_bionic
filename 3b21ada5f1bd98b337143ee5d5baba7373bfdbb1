@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2cbd7041_2d568a9a",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-24T11:42:45Z",
+      "side": 1,
+      "message": "This breaks the build when ANDROID_EXPERIMENTAL_MTE is defined. `#include \u003cplatform/bionic/mte_kernel.h\u003e` needs to be moved from libc_init_common.cpp to this file.",
+      "revId": "3b21ada5f1bd98b337143ee5d5baba7373bfdbb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
