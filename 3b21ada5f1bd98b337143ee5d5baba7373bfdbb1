@@ -16,6 +16,24 @@
       "revId": "3b21ada5f1bd98b337143ee5d5baba7373bfdbb1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb92d133_cebd49a2",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-01-24T17:19:08Z",
+      "side": 1,
+      "message": "I\u0027ve uploaded https://android-review.googlesource.com/c/platform/bionic/+/1217404/ for review, thanks for letting us know!",
+      "parentUuid": "2cbd7041_2d568a9a",
+      "revId": "3b21ada5f1bd98b337143ee5d5baba7373bfdbb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
