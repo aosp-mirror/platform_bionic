@@ -30,4 +30,5 @@
 
 #include <stddef.h>
 
+void SetDefaultHeapTaggingLevel();
 bool SetHeapTaggingLevel(void* arg, size_t arg_size);
