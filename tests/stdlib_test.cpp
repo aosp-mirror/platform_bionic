@@ -29,12 +29,15 @@
 #include <limits>
 #include <string>
 
+#include <android-base/file.h>
 #include <android-base/macros.h>
 #include <gtest/gtest.h>
 
 #include "BionicDeathTest.h"
 #include "math_data_test.h"
 #include "utils.h"
+
+using namespace std::string_literals;
 
 template <typename T = int (*)(char*)>
 class GenericTemporaryFile {
@@ -322,6 +325,17 @@ TEST(stdlib, realpath__ENOENT) {
   ASSERT_EQ(ENOENT, errno);
 }
 
+TEST(stdlib, realpath__ELOOP) {
+  TemporaryDir td;
+  std::string link = std::string(td.path) + "/loop";
+  ASSERT_EQ(0, symlink(link.c_str(), link.c_str()));
+
+  errno = 0;
+  char* p = realpath(link.c_str(), nullptr);
+  ASSERT_TRUE(p == nullptr);
+  ASSERT_EQ(ELOOP, errno);
+}
+
 TEST(stdlib, realpath__component_after_non_directory) {
   errno = 0;
   char* p = realpath("/dev/null/.", nullptr);
@@ -348,6 +362,47 @@ TEST(stdlib, realpath) {
   p = realpath("/proc/self/exe", nullptr);
   ASSERT_STREQ(executable_path, p);
   free(p);
+}
+
+TEST(stdlib, realpath__dot) {
+  char* p = realpath("/proc/./version", nullptr);
+  ASSERT_STREQ("/proc/version", p);
+  free(p);
+}
+
+TEST(stdlib, realpath__dot_dot) {
+  char* p = realpath("/dev/../proc/version", nullptr);
+  ASSERT_STREQ("/proc/version", p);
+  free(p);
+}
+
+TEST(stdlib, realpath__deleted) {
+  TemporaryDir td;
+
+  // Create a file "A".
+  std::string A_path = td.path + "/A"s;
+  ASSERT_TRUE(android::base::WriteStringToFile("test\n", A_path));
+
+  // Get an O_PATH fd for it.
+  android::base::unique_fd fd(open(A_path.c_str(), O_PATH));
+  ASSERT_NE(fd, -1);
+
+  // Create a file "A (deleted)".
+  android::base::unique_fd fd2(open((td.path + "/A (deleted)"s).c_str(),
+                                    O_CREAT | O_TRUNC | O_WRONLY, 0644));
+  ASSERT_NE(fd2, -1);
+
+  // Delete "A".
+  ASSERT_EQ(0, unlink(A_path.c_str()));
+
+  // Now realpath() on the O_PATH fd, and check we *don't* get "A (deleted)".
+  std::string path = android::base::StringPrintf("/proc/%d/fd/%d", static_cast<int>(getpid()),
+                                                 fd.get());
+  errno = 0;
+  char* result = realpath(path.c_str(), nullptr);
+  ASSERT_EQ(nullptr, result) << result;
+  ASSERT_EQ(ENOENT, errno);
+  free(result);
 }
 
 TEST(stdlib, qsort) {
@@ -870,4 +925,25 @@ TEST(stdlib, getloadavg) {
   ASSERT_TRUE(fabs(expected[0] - load[0]) < 0.5) << expected[0] << ' ' << load[0];
   ASSERT_TRUE(fabs(expected[1] - load[1]) < 0.5) << expected[1] << ' ' << load[1];
   ASSERT_TRUE(fabs(expected[2] - load[2]) < 0.5) << expected[2] << ' ' << load[2];
+}
+
+TEST(stdlib, getprogname) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have getprogname()";
+#else
+  // You should always have a name.
+  ASSERT_TRUE(getprogname() != nullptr);
+  // The name should never have a slash in it.
+  ASSERT_TRUE(strchr(getprogname(), '/') == nullptr);
+#endif
+}
+
+TEST(stdlib, setprogname) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have setprogname()";
+#else
+  // setprogname() only takes the basename of what you give it.
+  setprogname("/usr/bin/muppet");
+  ASSERT_STREQ("muppet", getprogname());
+#endif
 }
