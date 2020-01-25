@@ -28,6 +28,7 @@
 
 #include <ifaddrs.h>
 
+#include <async_safe/log.h>
 #include <errno.h>
 #include <linux/if_packet.h>
 #include <net/if.h>
@@ -193,23 +194,26 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
   } else if (hdr->nlmsg_type == RTM_NEWADDR) {
     ifaddrmsg* msg = reinterpret_cast<ifaddrmsg*>(NLMSG_DATA(hdr));
 
-    // We should already know about this from an RTM_NEWLINK message.
-    const ifaddrs_storage* addr = reinterpret_cast<const ifaddrs_storage*>(*out);
-    while (addr != nullptr && addr->interface_index != static_cast<int>(msg->ifa_index)) {
-      addr = reinterpret_cast<const ifaddrs_storage*>(addr->ifa.ifa_next);
+    // We might already know about this interface from an RTM_NEWLINK message.
+    const ifaddrs_storage* known_addr = reinterpret_cast<const ifaddrs_storage*>(*out);
+    while (known_addr != nullptr && known_addr->interface_index != static_cast<int>(msg->ifa_index)) {
+      known_addr = reinterpret_cast<const ifaddrs_storage*>(known_addr->ifa.ifa_next);
     }
-    // If this is an unknown interface, ignore whatever we're being told about it.
-    if (addr == nullptr) return;
 
-    // Create a new ifaddr entry and copy what we already know.
+    // Create a new ifaddr entry, and set the interface index.
     ifaddrs_storage* new_addr = new ifaddrs_storage(out);
-    // We can just copy the name rather than look for IFA_LABEL.
-    strcpy(new_addr->name, addr->name);
-    new_addr->ifa.ifa_name = new_addr->name;
-    new_addr->ifa.ifa_flags = addr->ifa.ifa_flags;
-    new_addr->interface_index = addr->interface_index;
+    new_addr->interface_index = static_cast<int>(msg->ifa_index);
 
-    // Go through the various bits of information and find the address
+    // If this is a known interface, copy what we already know.
+    if (known_addr != nullptr) {
+      strcpy(new_addr->name, known_addr->name);
+      new_addr->ifa.ifa_name = new_addr->name;
+      new_addr->ifa.ifa_flags = known_addr->ifa.ifa_flags;
+    } else {
+      new_addr->ifa.ifa_flags = msg->ifa_flags;
+    }
+
+    // Go through the various bits of information and find the name, address
     // and any broadcast/destination address.
     rtattr* rta = IFA_RTA(msg);
     size_t rta_len = IFA_PAYLOAD(hdr);
@@ -222,14 +226,43 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
       } else if (rta->rta_type == IFA_BROADCAST) {
         if (msg->ifa_family == AF_INET) {
           new_addr->SetBroadcastAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
+          if (known_addr == nullptr) {
+            // We did not read the broadcast flag from an RTM_NEWLINK message.
+            // Ensure that it is set.
+            new_addr->ifa.ifa_flags |= IFF_BROADCAST;
+          }
         }
       } else if (rta->rta_type == IFA_LOCAL) {
         if (msg->ifa_family == AF_INET || msg->ifa_family == AF_INET6) {
           new_addr->SetLocalAddress(msg->ifa_family, RTA_DATA(rta), RTA_PAYLOAD(rta));
         }
+      } else if (rta->rta_type == IFA_LABEL) {
+        if (RTA_PAYLOAD(rta) < sizeof(new_addr->name)) {
+          memcpy(new_addr->name, RTA_DATA(rta), RTA_PAYLOAD(rta));
+          new_addr->ifa.ifa_name = new_addr->name;
+        }
       }
       rta = RTA_NEXT(rta, rta_len);
     }
+  }
+}
+
+static void remove_nameless_interfaces(ifaddrs** list) {
+  ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list);
+  ifaddrs_storage* prev_addr = nullptr;
+  while (addr != nullptr) {
+    ifaddrs* next_addr = addr->ifa.ifa_next;
+    if (strlen(addr->name) == 0) {
+      if (prev_addr == nullptr) {
+        *list = next_addr;
+      } else {
+        prev_addr->ifa.ifa_next = next_addr;
+      }
+      free(addr);
+    } else {
+      prev_addr = addr;
+    }
+    addr = reinterpret_cast<ifaddrs_storage*>(next_addr);
   }
 }
 
@@ -239,13 +272,23 @@ int getifaddrs(ifaddrs** out) {
 
   // Open the netlink socket and ask for all the links and addresses.
   NetlinkConnection nc;
-  bool okay = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out) &&
-              nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
-  if (!okay) {
+  bool getlink_success =
+    nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
+  bool getaddr_success =
+    nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
+
+  if (!getaddr_success) {
     freeifaddrs(*out);
     // Ensure that callers crash if they forget to check for success.
     *out = nullptr;
     return -1;
+  }
+
+  if (!getlink_success) {
+    async_safe_format_log(ANDROID_LOG_INFO, "ifaddrs", "Failed to send RTM_GETLINK request");
+    // If we weren't able to depend on GETLINK messages, it's possible some
+    // interfaces never got their name set. Remove those.
+    remove_nameless_interfaces(out);
   }
 
   return 0;
