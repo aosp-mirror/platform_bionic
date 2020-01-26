@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1929a3d4_827584b0",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-01-26T20:15:08Z",
+      "side": 1,
+      "message": "Actually, reusing NULL records I introduced here can be replaced with a modification to the \u0027ind\u0027 field of a first page in the list.\n\nThis logic I wrote potentially goes through all pages, and it made sense before writing the whole page un-mapping in __cxa_finalize. But with that in place we can be certain that there is at least one non-null record on the first page of the list. (if there weren\u0027t it would have been un-mapped). Hence - we will never go to the second or later pages.\n\nSo I\u0027, giving myself -1 and will write another patchset soon.",
+      "revId": "735e1712d8c29e0eeede14a55affdc292ee1e02e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5e73b57_ce1d6d8d",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 2
