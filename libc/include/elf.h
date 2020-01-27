@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ELF_H
-#define _ELF_H
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -245,13 +244,9 @@ typedef Elf64_Xword Elf64_Relr;
 /* glibc and BSD disagree for DT_ENCODING; glibc looks wrong. */
 #define DT_PREINIT_ARRAY 32
 #define DT_PREINIT_ARRAYSZ 33
-
-/* Experimental support for SHT_RELR sections. For details, see proposal
-   at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg */
-#define DT_RELR 0x6fffe000
-#define DT_RELRSZ 0x6fffe001
-#define DT_RELRENT 0x6fffe003
-#define DT_RELRCOUNT 0x6fffe005
+#define DT_RELRSZ 35
+#define DT_RELR 36
+#define DT_RELRENT 37
 
 /* Android compressed rel/rela sections */
 #define DT_ANDROID_REL (DT_LOOS + 2)
@@ -502,14 +497,11 @@ typedef Elf64_Xword Elf64_Relr;
 #define SHT_PREINIT_ARRAY 16
 #define SHT_GROUP 17
 #define SHT_SYMTAB_SHNDX 18
+#define SHT_RELR 19
 #undef SHT_NUM
-#define SHT_NUM 19
+#define SHT_NUM 20
 #define SHT_LOOS 0x60000000
 #define SHT_HIOS 0x6fffffff
-
-/* Experimental support for SHT_RELR sections. For details, see proposal
-   at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg */
-#define SHT_RELR 0x6fffff00
 
 /* http://www.sco.com/developers/gabi/latest/ch4.symtab.html */
 #define STN_UNDEF 0
@@ -540,4 +532,15 @@ typedef Elf64_Xword Elf64_Relr;
 #define VER_NDX_LOCAL 0
 #define VER_NDX_GLOBAL 1
 
-#endif /* _ELF_H */
+/*
+ * Experimental support for SHT_RELR sections. For details, see proposal
+ * at https://groups.google.com/forum/#!topic/generic-abi/bX460iggiKg.
+ * This was eventually replaced by SHT_RELR and DT_RELR (which are identical
+ * other than their different constants), but those constants are only
+ * supported by the OS starting at API level 30.
+ */
+#define SHT_ANDROID_RELR 0x6fffff00
+#define DT_ANDROID_RELR 0x6fffe000
+#define DT_ANDROID_RELRSZ 0x6fffe001
+#define DT_ANDROID_RELRENT 0x6fffe003
+#define DT_ANDROID_RELRCOUNT 0x6fffe005
