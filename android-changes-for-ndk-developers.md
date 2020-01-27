@@ -456,3 +456,19 @@ Most apps should be unaffected by this change, but apps that hook or try to
 detect hooking of C library functions might need to fix their code to cope
 with IFUNC relocations. The affected functions are from `<string.h>`, but
 may expand to include more functions (and more libraries) in future.
+
+## Relative relocations (RELR)
+
+Android added experimental support for RELR relative relocations
+in API level 28, but using `SHT_` and `DT_` constants in the space
+reserved for OS private use.
+
+API level 30 added support for ELF files using the official `SHT_` and
+`DT_` constants.
+
+The RELR encoding is unrelated to the earlier "packed relocations"
+format available from API level 23.
+
+There are no plans to remove support for ELF files using the older
+OS private use constants for RELR, nor for ELF files using packed
+relocations.

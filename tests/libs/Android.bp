@@ -1497,3 +1497,29 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["segment_gap_inner.cpp"],
 }
+
+
+// -----------------------------------------------------------------------------
+// Check that we support both the old and new SHT_RELR constants.
+// -----------------------------------------------------------------------------
+
+cc_test_library {
+    name: "librelr-new",
+    ldflags: ["-Wl,--no-use-android-relr-tags"],
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["relr.cpp"],
+    // Hack to ensure we're using llvm-objcopy because our binutils prebuilt
+    // only supports the old numbers (http://b/141010852).
+    strip: {
+      keep_symbols: true,
+    },
+}
+
+cc_test_library {
+    name: "librelr-old",
+    ldflags: ["-Wl,--use-android-relr-tags"],
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["relr.cpp"],
+}
