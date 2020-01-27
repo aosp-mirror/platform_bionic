@@ -29,6 +29,7 @@
 #include <ifaddrs.h>
 
 #include <async_safe/log.h>
+#include <cutils/misc.h>           // FIRST_APPLICATION_UID
 #include <errno.h>
 #include <linux/if_packet.h>
 #include <net/if.h>
@@ -272,8 +273,16 @@ int getifaddrs(ifaddrs** out) {
 
   // Open the netlink socket and ask for all the links and addresses.
   NetlinkConnection nc;
-  bool getlink_success =
-    nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
+  // Simulate kernel behavior on R and above: RTM_GETLINK messages can only be
+  // sent by:
+  // - System apps
+  // - Apps with a target SDK version lower than R
+  // TODO(b/141455849): Remove this check when kernel changes are merged.
+  bool getlink_success = false;
+  if (getuid() < FIRST_APPLICATION_UID ||
+      android_get_application_target_sdk_version() < __ANDROID_API_R__) {
+    getlink_success = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
+  }
   bool getaddr_success =
     nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);
 
