@@ -1765,3 +1765,13 @@ TEST(dlfcn, segment_gap) {
 }
 
 #endif
+
+TEST(dlfcn, relr_old) {
+  void* handle = dlopen("librelr-old.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+}
+
+TEST(dlfcn, relr_new) {
+  void* handle = dlopen("librelr-new.so", RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+}
