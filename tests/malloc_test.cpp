@@ -36,14 +36,20 @@
 
 #include <android-base/file.h>
 
-#include "platform/bionic/malloc.h"
-#include "private/bionic_config.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
+
+#include "platform/bionic/malloc.h"
+#include "platform/bionic/reserved_signals.h"
+#include "private/bionic_config.h"
+
 #define HAVE_REALLOCARRAY 1
+
 #else
+
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
+
 #endif
 
 TEST(malloc, malloc_std) {
@@ -1082,7 +1088,7 @@ static void SetAllocationLimitMultipleThreads() {
   // heapprofd handler.
   union sigval signal_value;
   signal_value.sival_int = 0;
-  ASSERT_EQ(0, sigqueue(getpid(), __SIGRTMIN + 4, signal_value));
+  ASSERT_EQ(0, sigqueue(getpid(), BIONIC_SIGNAL_PROFILER, signal_value));
 
   size_t num_successful = 0;
   for (size_t i = 0; i < kNumThreads; i++) {
