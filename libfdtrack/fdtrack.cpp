@@ -110,7 +110,11 @@ void fdtrack_dump() {
       continue;
     }
 
-    std::lock_guard<std::mutex> lock(entry->mutex);
+    if (!entry->mutex.try_lock()) {
+      async_safe_format_log(ANDROID_LOG_WARN, "fdtrack", "fd %d locked, skipping", fd);
+      continue;
+    }
+
     if (entry->backtrace.empty()) {
       continue;
     }
@@ -122,6 +126,8 @@ void fdtrack_dump() {
       async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "  %zu: %s+%" PRIu64, i - frame_skip,
                             frame.function_name.c_str(), frame.function_offset);
     }
+
+    entry->mutex.unlock();
   }
   android_fdtrack_set_enabled(prev);
 }
