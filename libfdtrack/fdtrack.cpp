@@ -32,6 +32,7 @@
 #include <mutex>
 #include <vector>
 
+#include <android/fdsan.h>
 #include <bionic/fdtrack.h>
 
 #include <android-base/no_destructor.h>
@@ -119,7 +120,15 @@ void fdtrack_dump() {
       continue;
     }
 
-    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d:", fd);
+    uint64_t fdsan_owner = android_fdsan_get_owner_tag(fd);
+
+    if (fdsan_owner != 0) {
+      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = %#" PRIx64 ")", fd,
+                            fdsan_owner);
+    } else {
+      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (unowned)", fd);
+    }
+
     const size_t frame_skip = 2;
     for (size_t i = frame_skip; i < entry->backtrace.size(); ++i) {
       auto& frame = entry->backtrace[i];
