@@ -28,8 +28,7 @@
 
 #include <stdatomic.h>
 
-#include <android/fdtrack.h>
-
+#include <platform/bionic/fdtrack.h>
 #include <platform/bionic/reserved_signals.h>
 
 #include "private/bionic_fdtrack.h"
