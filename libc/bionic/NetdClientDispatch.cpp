@@ -18,6 +18,8 @@
 
 #include <sys/socket.h>
 
+#include "private/bionic_fdtrack.h"
+
 #ifdef __i386__
 #define __socketcall __attribute__((__cdecl__))
 #else
@@ -53,7 +55,7 @@ __LIBC_HIDDEN__ NetdClientDispatch __netdClientDispatch __attribute__((aligned(3
 };
 
 int accept4(int fd, sockaddr* addr, socklen_t* addr_length, int flags) {
-    return __netdClientDispatch.accept4(fd, addr, addr_length, flags);
+  return FDTRACK_CREATE(__netdClientDispatch.accept4(fd, addr, addr_length, flags));
 }
 
 int connect(int fd, const sockaddr* addr, socklen_t addr_length) {
@@ -74,5 +76,5 @@ ssize_t sendto(int fd, const void* buf, size_t n, int flags,
 }
 
 int socket(int domain, int type, int protocol) {
-    return __netdClientDispatch.socket(domain, type, protocol);
+  return FDTRACK_CREATE(__netdClientDispatch.socket(domain, type, protocol));
 }
