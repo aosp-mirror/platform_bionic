@@ -31,7 +31,7 @@
 #include <sys/cdefs.h>
 #include <stdatomic.h>
 
-#include <android/fdtrack.h>
+#include "platform/bionic/fdtrack.h"
 
 #include "bionic/pthread_internal.h"
 #include "private/bionic_tls.h"
