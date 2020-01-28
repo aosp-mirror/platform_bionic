@@ -613,6 +613,8 @@ cc_defaults {
         "libdl_preempt_test_2",
         "libdl_test_df_1_global",
         "libgnu-hash-table-library",
+        "librelr-new",
+        "librelr-old",
         "libsysv-hash-table-library",
         "libtestshared",
         "libtest_atexit",
