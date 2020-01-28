@@ -347,3 +347,52 @@ TEST(dl, disable_ld_config_file) {
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
+
+static void RelocationsTest(const char* lib, const char* expectation) {
+#if defined(__BIONIC__)
+  // Does readelf think the .so file looks right?
+  const std::string path = GetTestlibRoot() + "/" + lib;
+  ExecTestHelper eth;
+  eth.SetArgs({ "readelf", "-SW", path.c_str(), nullptr });
+  eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_TRUE(eth.GetOutput().find(expectation) != std::string::npos) << eth.GetOutput();
+
+  // Can we load it?
+  void* handle = dlopen(lib, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+#else
+  UNUSED(lib);
+  UNUSED(expectation);
+  GTEST_SKIP() << "test is not supported on glibc";
+#endif
+}
+
+TEST(dl, relocations_RELR) {
+  RelocationsTest("librelocations-RELR.so",
+      ".relr.dyn            RELR");
+}
+
+TEST(dl, relocations_ANDROID_RELR) {
+  RelocationsTest("librelocations-ANDROID_RELR.so",
+      ".relr.dyn            ANDROID_RELR");
+}
+
+TEST(dl, relocations_ANDROID_REL) {
+  RelocationsTest("librelocations-ANDROID_REL.so",
+#if __LP64__
+      ".rela.dyn            ANDROID_RELA"
+#else
+      ".rel.dyn             ANDROID_REL"
+#endif
+      );
+}
+
+TEST(dl, relocations_fat) {
+  RelocationsTest("librelocations-fat.so",
+#if __LP64__
+      ".rela.dyn            RELA"
+#else
+      ".rel.dyn             REL"
+#endif
+      );
+}
