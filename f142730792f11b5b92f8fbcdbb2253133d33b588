@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd064e66_6676e4c5",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 1483,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-28T16:08:22Z",
+      "side": 1,
+      "message": "i thought these _weren\u0027t_ going in the NDK for now?",
+      "revId": "f142730792f11b5b92f8fbcdbb2253133d33b588",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
