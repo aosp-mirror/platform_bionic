@@ -86,24 +86,26 @@ cc_defaults {
     },
 }
 
+libc_scudo_product_variables = {
+    malloc_not_svelte: {
+        cflags: ["-DUSE_SCUDO"],
+        whole_static_libs: ["libscudo"],
+        exclude_static_libs: [
+            "libjemalloc5",
+            "libc_jemalloc_wrapper",
+        ],
+    },
+}
+
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// To enable scudo, change the below to libc_scudo_defaults
-// and comment out the defaults line in libc_scudo shared
-// library.
+// Enable scudo for non-svelte config by adding the line:
+//     product_variables: libc_scudo_product_variables,
+// to the cc_defaults below. And remove the defaults line
+// in the libc_scudo library.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
-
-    defaults: ["libc_jemalloc5_defaults"],
-}
-
-cc_defaults {
-    name: "libc_jemalloc5_defaults",
-
-    include_dirs: [
-        "external/jemalloc_new/include",
-    ],
 
     whole_static_libs: [
         "libjemalloc5",
@@ -119,30 +121,9 @@ cc_library_static {
     srcs: ["bionic/jemalloc_wrapper.cpp"],
     cflags: ["-fvisibility=hidden"],
 
-    include_dirs: [
-        "external/jemalloc_new/include",
-    ],
-}
-
-cc_defaults {
-    name: "libc_scudo_defaults",
-
-    cflags: [
-        "-DUSE_SCUDO_SVELTE",
-    ],
-
-    product_variables: {
-        malloc_not_svelte: {
-            cflags: [
-                "-UUSE_SCUDO_SVELTE",
-                "-DUSE_SCUDO",
-            ],
-        },
-    },
-
-    whole_static_libs: [
-        "libscudo",
-    ],
+    // Used to pull in the jemalloc include directory so that if the
+    // library is removed, the include directory is also removed.
+    static_libs: ["libjemalloc5"],
 }
 
 // ========================================================
