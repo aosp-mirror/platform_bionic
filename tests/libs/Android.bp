@@ -1500,15 +1500,21 @@ cc_test_library {
 
 
 // -----------------------------------------------------------------------------
-// Check that we support both the old and new SHT_RELR constants.
+// Check that we support all kinds of relocations: regular, "relocation packer",
+// and both the old and new SHT_RELR constants.
 // -----------------------------------------------------------------------------
 
+// This is what got standardized for SHT_RELR.
 cc_test_library {
-    name: "librelr-new",
-    ldflags: ["-Wl,--no-use-android-relr-tags"],
+    name: "librelocations-RELR",
+    ldflags: [
+        "-Wl,--pack-dyn-relocs=relr",
+        "-Wl,--no-use-android-relr-tags",
+    ],
     host_supported: false,
     defaults: ["bionic_testlib_defaults"],
-    srcs: ["relr.cpp"],
+    srcs: ["relocations.cpp"],
+
     // Hack to ensure we're using llvm-objcopy because our binutils prebuilt
     // only supports the old numbers (http://b/141010852).
     strip: {
@@ -1516,10 +1522,32 @@ cc_test_library {
     },
 }
 
+// This is the same encoding as SHT_RELR, but using OS-specific constants.
 cc_test_library {
-    name: "librelr-old",
-    ldflags: ["-Wl,--use-android-relr-tags"],
+    name: "librelocations-ANDROID_RELR",
+    ldflags: [
+        "-Wl,--pack-dyn-relocs=relr",
+        "-Wl,--use-android-relr-tags",
+    ],
     host_supported: false,
     defaults: ["bionic_testlib_defaults"],
-    srcs: ["relr.cpp"],
+    srcs: ["relocations.cpp"],
+}
+
+// This is the old relocation packer encoding (DT_ANDROID_REL/DT_ANDROID_RELA).
+cc_test_library {
+    name: "librelocations-ANDROID_REL",
+    ldflags: ["-Wl,--pack-dyn-relocs=android"],
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["relocations.cpp"],
+}
+
+// This is not packed at all.
+cc_test_library {
+    name: "librelocations-fat",
+    ldflags: ["-Wl,--pack-dyn-relocs=none"],
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["relocations.cpp"],
 }
