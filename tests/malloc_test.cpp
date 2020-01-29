@@ -829,6 +829,63 @@ TEST(malloc, align_check) {
 #endif
 }
 
+// Jemalloc doesn't pass this test right now, so leave it as disabled.
+TEST(malloc, DISABLED_alloc_after_fork) {
+  // Both of these need to be a power of 2.
+  static constexpr size_t kMinAllocationSize = 8;
+  static constexpr size_t kMaxAllocationSize = 2097152;
+
+  static constexpr size_t kNumAllocatingThreads = 5;
+  static constexpr size_t kNumForkLoops = 100;
+
+  std::atomic_bool stop;
+
+  // Create threads that simply allocate and free different sizes.
+  std::vector<std::thread*> threads;
+  for (size_t i = 0; i < kNumAllocatingThreads; i++) {
+    std::thread* t = new std::thread([&stop] {
+      while (!stop) {
+        for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
+          void* ptr = malloc(size);
+          if (ptr == nullptr) {
+            return;
+          }
+          // Make sure this value is not optimized away.
+          asm volatile("" : : "r,m"(ptr) : "memory");
+          free(ptr);
+        }
+      }
+    });
+    threads.push_back(t);
+  }
+
+  // Create a thread to fork and allocate.
+  for (size_t i = 0; i < kNumForkLoops; i++) {
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+      for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
+        void* ptr = malloc(size);
+        ASSERT_TRUE(ptr != nullptr);
+        // Make sure this value is not optimized away.
+        asm volatile("" : : "r,m"(ptr) : "memory");
+        // Make sure we can touch all of the allocation.
+        memset(ptr, 0x1, size);
+        ASSERT_LE(size, malloc_usable_size(ptr));
+        free(ptr);
+      }
+      _exit(10);
+    }
+    ASSERT_NE(-1, pid);
+    AssertChildExited(pid, 10);
+  }
+
+  stop = true;
+  for (auto thread : threads) {
+    thread->join();
+    delete thread;
+  }
+}
+
 TEST(android_mallopt, error_on_unexpected_option) {
 #if defined(__BIONIC__)
   const int unrecognized_option = -1;
