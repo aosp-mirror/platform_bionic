@@ -91,6 +91,7 @@ cc_test_library {
         "eventfd_test.cpp",
         "fcntl_test.cpp",
         "fdsan_test.cpp",
+        "fdtrack_test.cpp",
         "fenv_test.cpp",
         "float_test.cpp",
         "ftw_test.cpp",
