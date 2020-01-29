@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "952da36a_a676170c",
+        "filename": "libfdtrack/fdtrack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-29T02:15:41Z",
+      "side": 1,
+      "message": "don\u0027t we want the tag type?",
+      "range": {
+        "startLine": 124,
+        "startChar": 27,
+        "endLine": 124,
+        "endChar": 54
+      },
+      "revId": "8bb944a1ad136329b8d9441a4f7d9afa868e2340",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
