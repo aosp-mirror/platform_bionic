@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f9f2ce4_490254ed",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-01-29T21:48:20Z",
+      "side": 1,
+      "message": "What happens if a process tries to go from ASYNC to TBI?\nI think there should be a check and a test.",
+      "revId": "d16e6fc56e428557e979ff16513c2392c3790941",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
