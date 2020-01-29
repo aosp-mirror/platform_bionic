@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "77f99e74_57250d14",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-29T01:57:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "946be6b9_fcd147c0",
+      "revId": "442fed98b5ff59c9da56441dd874fc2af8ab77dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1e7f565d_b3b7343a",
         "filename": "tests/libs/relocations.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-01-29T01:45:29Z",
       "side": 1,
       "message": "What does this line do?",
+      "revId": "442fed98b5ff59c9da56441dd874fc2af8ab77dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b133bd7_e29a2a09",
+        "filename": "tests/libs/relocations.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-29T01:57:44Z",
+      "side": 1,
+      "message": "removed.",
+      "parentUuid": "1e7f565d_b3b7343a",
       "revId": "442fed98b5ff59c9da56441dd874fc2af8ab77dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
