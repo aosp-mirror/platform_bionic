@@ -16,6 +16,24 @@
       "revId": "d16e6fc56e428557e979ff16513c2392c3790941",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6853b815_78718453",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-29T22:32:17Z",
+      "side": 1,
+      "message": "I think it\u0027s possible that things will work, but most likely they will break. Same goes for TBI -\u003e ASYNC. Since we don\u0027t need to support either case, I\u0027ll add checks/tests for both.",
+      "parentUuid": "4f9f2ce4_490254ed",
+      "revId": "d16e6fc56e428557e979ff16513c2392c3790941",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
