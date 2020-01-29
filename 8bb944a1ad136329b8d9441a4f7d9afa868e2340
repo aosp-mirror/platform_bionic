@@ -22,6 +22,30 @@
       "revId": "8bb944a1ad136329b8d9441a4f7d9afa868e2340",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae751688_de342396",
+        "filename": "libfdtrack/fdtrack.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-01-29T02:19:51Z",
+      "side": 1,
+      "message": "That\u0027s embedded in the value and can be manually decoded, but if you know you\u0027ve leaked a bunch of owned file descriptors, the tombstone or `debuggerd \u003cpid\u003e` will decode the information for you already. The immediately important information here is actually the other side of the branch, since we know the system_server leak is unowned from the tombstone, so it\u0027ll make filtering through backtraces a tiny bit easier.",
+      "parentUuid": "952da36a_a676170c",
+      "range": {
+        "startLine": 124,
+        "startChar": 27,
+        "endLine": 124,
+        "endChar": 54
+      },
+      "revId": "8bb944a1ad136329b8d9441a4f7d9afa868e2340",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
