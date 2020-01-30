@@ -38,6 +38,7 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    header_libs: ["bionic_libc_platform_headers"],
     // Make the bionic tests implicitly test bionic's shadow call stack support.
     arch: {
         arm64: {
@@ -49,6 +50,12 @@ cc_defaults {
         address: false,
     },
     bootstrap: true,
+
+    product_variables: {
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -117,6 +124,7 @@ cc_test_library {
         "math_force_long_double_test.cpp",
         "membarrier_test.cpp",
         "mntent_test.cpp",
+        "mte_test.cpp",
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
