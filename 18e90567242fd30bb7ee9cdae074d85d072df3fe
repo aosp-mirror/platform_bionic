@@ -90,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "0bdd5b50_7a6febaf",
+        "filename": "libc/platform/bionic/hwcap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T18:16:48Z",
+      "side": 1,
+      "message": "Hmm, let\u0027s just go with the function-level static for now then. If it turns out to be a performance problem in practice we can do something about it.",
+      "parentUuid": "08f64e34_77eca8ee",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2bdd797_04824d8e",
         "filename": "libc/platform/bionic/mte.h",
         "patchSetId": 2
