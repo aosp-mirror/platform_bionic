@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI_ASM_FCNTL_H
 #define _UAPI_ASM_FCNTL_H
+#include <bits/flock.h>
 #include <asm/sgidefs.h>
 #define O_APPEND 0x0008
 #define O_DSYNC 0x0010
@@ -43,15 +44,6 @@
 #endif
 #if _MIPS_SIM != _MIPS_SIM_ABI64
 #include <linux/types.h>
-struct flock {
-  short l_type;
-  short l_whence;
-  __kernel_off_t l_start;
-  __kernel_off_t l_len;
-  long l_sysid;
-  __kernel_pid_t l_pid;
-  long pad[4];
-};
 #define HAVE_ARCH_STRUCT_FLOCK
 #endif
 #include <asm-generic/fcntl.h>
