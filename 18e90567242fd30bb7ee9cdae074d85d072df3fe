@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "81fea89e_c99b08fb",
+        "filename": "libc/platform/bionic/hwcap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T18:58:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bdd5b50_7a6febaf",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2bdd797_04824d8e",
         "filename": "libc/platform/bionic/mte.h",
         "patchSetId": 2
