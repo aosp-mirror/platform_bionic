@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27b928e3_ea295a76",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-30T15:54:34Z",
+      "side": 1,
+      "message": "Nit: I think that `|` would be more idiomatic (initially I thought this was about indexing the array).",
+      "range": {
+        "startLine": 27,
+        "startChar": 81,
+        "endLine": 27,
+        "endChar": 82
+      },
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
