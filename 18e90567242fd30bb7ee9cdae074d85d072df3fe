@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6f4242b9_7477cfe5",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T17:16:34Z",
+      "side": 1,
+      "message": "I think it needs to be in LIBC_R so that it can be used by libmemunreachable. I could add a comment for this like the ones that we have for malloc_backtrace etc above.",
+      "parentUuid": "0adc2075_5d8ffcf8",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dad1ef1e_781a59c1",
         "filename": "libc/platform/bionic/hwcap.h",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-01-30T16:51:48Z",
       "side": 1,
       "message": "does this makes sense? AT_HWCAP* can\u0027t change, so why not just make the call site stash the result in a static?",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b77334db_bb6789c9",
+        "filename": "libc/platform/bionic/hwcap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T17:16:34Z",
+      "side": 1,
+      "message": "This function takes the address of __fast_hwcap2, it isn\u0027t calling it. Note that when I take the address of __fast_hwcap2 I don\u0027t obtain an actual function address, I get the value of getauxval(AT_HWCAP2). That is because the __fast_hwcap2 resolver returns the value of getauxval(AT_HWCAP2) instead of a function pointer as most ifuncs do.\n\nIf we add a function-level static for this, that would cause the compiler to add conditional logic to make sure the static is only initialized once. I\u0027m not sure that we want to do that, since we\u0027re going to need android_unsafe_fp_backtrace (or whatever we decide to call it) to be fast.",
+      "parentUuid": "dad1ef1e_781a59c1",
       "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
