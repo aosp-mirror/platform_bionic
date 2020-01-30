@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,34 @@
  * SUCH DAMAGE.
  */
 
-#include <fcntl.h>
-#include <unistd.h>
+#include <stdatomic.h>
 
-int dup2(int old_fd, int new_fd) {
-  // If old_fd is equal to new_fd and a valid file descriptor, dup2 returns
-  // old_fd without closing it. This is not true of dup3, so we have to
-  // handle this case ourselves.
-  if (old_fd == new_fd) {
-    if (fcntl(old_fd, F_GETFD) == -1) {
-      return -1;
-    }
-    return old_fd;
-  }
+#include <platform/bionic/fdtrack.h>
+#include <platform/bionic/reserved_signals.h>
 
-  return dup3(old_fd, new_fd, 0);
+#include "private/bionic_fdtrack.h"
+#include "private/bionic_tls.h"
+#include "private/bionic_globals.h"
+
+_Atomic(android_fdtrack_hook_t) __android_fdtrack_hook;
+
+bool android_fdtrack_get_enabled() {
+  return !__get_bionic_tls().fdtrack_disabled;
+}
+
+bool android_fdtrack_set_enabled(bool new_value) {
+  auto& tls = __get_bionic_tls();
+  bool prev = !tls.fdtrack_disabled;
+  tls.fdtrack_disabled = !new_value;
+  return prev;
+}
+
+bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* expected,
+                                           android_fdtrack_hook_t value) {
+  return atomic_compare_exchange_strong(&__android_fdtrack_hook, expected, value);
+}
+
+void __libc_init_fdtrack() {
+  // Register a no-op signal handler.
+  signal(BIONIC_SIGNAL_FDTRACK, [](int) {});
 }

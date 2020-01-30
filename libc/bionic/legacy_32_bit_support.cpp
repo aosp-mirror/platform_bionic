@@ -37,26 +37,16 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 
+#include "private/bionic_fdtrack.h"
+
 #if defined(__LP64__)
 #error This code is only needed on 32-bit systems!
 #endif
 
 // System calls we need.
-extern "C" int __fcntl64(int, int, void*);
 extern "C" int __llseek(int, unsigned long, unsigned long, off64_t*, int);
 extern "C" int __preadv64(int, const struct iovec*, int, long, long);
 extern "C" int __pwritev64(int, const struct iovec*, int, long, long);
-
-// For fcntl we use the fcntl64 system call to signal that we're using struct flock64.
-int fcntl(int fd, int cmd, ...) {
-  va_list ap;
-
-  va_start(ap, cmd);
-  void* arg = va_arg(ap, void*);
-  va_end(ap);
-
-  return __fcntl64(fd, cmd, arg);
-}
 
 // For lseek64 we need to use the llseek system call which splits the off64_t in two and
 // returns the off64_t result via a pointer because 32-bit kernels can't return 64-bit results.

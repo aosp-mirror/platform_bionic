@@ -43,6 +43,7 @@
 #include <platform/bionic/reserved_signals.h>
 #include <sys/system_properties.h>
 
+#include "private/bionic_fdtrack.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
@@ -245,6 +246,7 @@ uint64_t android_fdsan_get_tag_value(uint64_t tag) {
 }
 
 int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
+  FDTRACK_CLOSE(fd);
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
     return __close(fd);
