@@ -22,6 +22,30 @@
       "revId": "945001da54637082fb30ea2a8bc50beb24442ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f684bfef_d20d2bd0",
+        "filename": "libc/kernel/uapi/asm-mips/asm/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T16:23:48Z",
+      "side": 0,
+      "message": "yeah, we haven\u0027t been able to build for mips for several years now. to reduce confusion, i plan to stop generating the unused mips headers in a later change. it\u0027s annoying when they show up in codesearch/grep with their misleadingly different contents too.",
+      "parentUuid": "7a83b59e_56f85bf9",
+      "range": {
+        "startLine": 51,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "945001da54637082fb30ea2a8bc50beb24442ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
