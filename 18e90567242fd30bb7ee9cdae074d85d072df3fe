@@ -97,6 +97,30 @@
       "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d62e3fe_c5747207",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-01-30T17:05:14Z",
+      "side": 1,
+      "message": "Sorry I wasn\u0027t thinking straight, I was assuming the pointer wasn\u0027t tagged in the first place... This is fine then.",
+      "parentUuid": "7e0a0756_56b9fb37",
+      "range": {
+        "startLine": 27,
+        "startChar": 81,
+        "endLine": 27,
+        "endChar": 82
+      },
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
