@@ -16,6 +16,24 @@
       "revId": "63baf6f776ce3de952f100613cf05cfd8776e05a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b39c077b_a0ee25e4",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T01:42:07Z",
+      "side": 1,
+      "message": "Hmm, that would at least require the architecture to be aarch64, and it would be nice to test that this is a no-op on non-aarch64.",
+      "parentUuid": "cefc7637_7fbf971b",
+      "revId": "63baf6f776ce3de952f100613cf05cfd8776e05a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
