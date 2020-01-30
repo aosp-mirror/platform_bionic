@@ -70,6 +70,30 @@
       "revId": "945001da54637082fb30ea2a8bc50beb24442ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1f706f71_c1743cef",
+        "filename": "libc/kernel/uapi/asm-mips/asm/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T23:37:58Z",
+      "side": 0,
+      "message": "(it turns out this is way harder than i\u0027d realized, but i\u0027ve made a start on changing the tool that we\u0027ll need a new prebuilt of that will then let us ... you get the idea! i\u0027m assuming you\u0027re not particularly interested in the details though, so i won\u0027t add you to the CLs unless i hear otherwise.)",
+      "parentUuid": "d67f5d18_3057baab",
+      "range": {
+        "startLine": 51,
+        "startChar": 7,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "945001da54637082fb30ea2a8bc50beb24442ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
