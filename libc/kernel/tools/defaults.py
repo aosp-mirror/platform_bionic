@@ -90,6 +90,8 @@ kernel_token_replacements = {
 kernel_struct_replacements = set(
         [
           "epoll_event",
+          "flock",
+          "flock64",
           "in_addr",
           "ip_mreq_source",
           "ip_msfilter",
