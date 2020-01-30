@@ -52,6 +52,24 @@
       "revId": "63baf6f776ce3de952f100613cf05cfd8776e05a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "542ce4c2_28f4315f",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-01-30T01:59:32Z",
+      "side": 1,
+      "message": "That\u0027s true. If we want GWP-ASan to work on MTE hardware I guess the tests in aosp/1197046 would need to change as well. I\u0027ll change this test to use pointer tags.",
+      "parentUuid": "58d7b970_951de455",
+      "revId": "63baf6f776ce3de952f100613cf05cfd8776e05a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
