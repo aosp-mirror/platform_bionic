@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "0adc2075_5d8ffcf8",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 1485,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T16:51:48Z",
+      "side": 1,
+      "message": "(i think this should be in LIBC_PLATFORM rather than LIBC_R?)",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dad1ef1e_781a59c1",
+        "filename": "libc/platform/bionic/hwcap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T16:51:48Z",
+      "side": 1,
+      "message": "does this makes sense? AT_HWCAP* can\u0027t change, so why not just make the call site stash the result in a static?",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2bdd797_04824d8e",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T16:51:48Z",
+      "side": 1,
+      "message": "(here)",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "27b928e3_ea295a76",
         "filename": "tests/mte_test.cpp",
         "patchSetId": 2
