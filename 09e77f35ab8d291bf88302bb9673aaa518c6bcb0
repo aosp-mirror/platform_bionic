@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10e9db81_9ee1cecb",
+        "filename": "libc/include/.clang-format",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-01-30T20:18:29Z",
+      "side": 1,
+      "message": "Probably want to add the other two lines I recently added:\n\nSortIncludes: false\nSortUsingDeclarations: false\n\nBut feel free to do this in a follow-on cl (or I\u0027ll do it).",
+      "revId": "09e77f35ab8d291bf88302bb9673aaa518c6bcb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
