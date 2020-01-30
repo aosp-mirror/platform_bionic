@@ -51,14 +51,32 @@
 
 __BEGIN_DECLS
 
-#ifdef __LP64__
+#if defined(__LP64__)
+
 /* LP64 kernels don't have F_*64 defines because their flock is 64-bit. */
+
 /** Flag for flock(). */
 #define F_GETLK64  F_GETLK
 /** Flag for flock(). */
 #define F_SETLK64  F_SETLK
 /** Flag for flock(). */
 #define F_SETLKW64 F_SETLKW
+
+#elif defined(__USE_FILE_OFFSET64)
+
+/* For _FILE_OFFSET_BITS=64, redirect the constants to the off64_t variants. */
+
+#undef F_GETLK
+#undef F_SETLK
+#undef F_SETLKW
+
+/** Flag for flock(). */
+#define F_GETLK F_GETLK64
+/** Flag for flock(). */
+#define F_SETLK F_SETLK64
+/** Flag for flock(). */
+#define F_SETLKW F_SETLKW64
+
 #endif
 
 /** Flag for open(). */
