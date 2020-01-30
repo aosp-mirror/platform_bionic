@@ -16,6 +16,24 @@
       "revId": "09e77f35ab8d291bf88302bb9673aaa518c6bcb0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8daec098_15d1a631",
+        "filename": "libc/include/.clang-format",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T21:42:35Z",
+      "side": 1,
+      "message": "yeah, good idea. but i don\u0027t want to play treehugger roulette again, so i\u0027ll do it separately :-)",
+      "parentUuid": "10e9db81_9ee1cecb",
+      "revId": "09e77f35ab8d291bf88302bb9673aaa518c6bcb0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
