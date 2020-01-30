@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "08f64e34_77eca8ee",
+        "filename": "libc/platform/bionic/hwcap.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-01-30T17:45:01Z",
+      "side": 1,
+      "message": "i\u0027m not comfortable with this as an API though. we could do something like what we have with __libc_sysinfo. we already have a ton of calls to getauxval() in the linker that could be replaced by one pass through auxv setting up globals?\n\ni\u0027d rather libmemunreachable inlined its own private copy or have a static library than have us export it from libc.",
+      "parentUuid": "b77334db_bb6789c9",
+      "revId": "18e90567242fd30bb7ee9cdae074d85d072df3fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2bdd797_04824d8e",
         "filename": "libc/platform/bionic/mte.h",
         "patchSetId": 2
