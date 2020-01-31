@@ -32,7 +32,8 @@
 #include <mutex>
 #include <vector>
 
-#include <android/fdtrack.h>
+#include <android/fdsan.h>
+#include <bionic/fdtrack.h>
 
 #include <android-base/no_destructor.h>
 #include <android-base/thread_annotations.h>
@@ -110,18 +111,32 @@ void fdtrack_dump() {
       continue;
     }
 
-    std::lock_guard<std::mutex> lock(entry->mutex);
+    if (!entry->mutex.try_lock()) {
+      async_safe_format_log(ANDROID_LOG_WARN, "fdtrack", "fd %d locked, skipping", fd);
+      continue;
+    }
+
     if (entry->backtrace.empty()) {
       continue;
     }
 
-    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d:", fd);
+    uint64_t fdsan_owner = android_fdsan_get_owner_tag(fd);
+
+    if (fdsan_owner != 0) {
+      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = %#" PRIx64 ")", fd,
+                            fdsan_owner);
+    } else {
+      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (unowned)", fd);
+    }
+
     const size_t frame_skip = 2;
     for (size_t i = frame_skip; i < entry->backtrace.size(); ++i) {
       auto& frame = entry->backtrace[i];
       async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "  %zu: %s+%" PRIu64, i - frame_skip,
                             frame.function_name.c_str(), frame.function_offset);
     }
+
+    entry->mutex.unlock();
   }
   android_fdtrack_set_enabled(prev);
 }
