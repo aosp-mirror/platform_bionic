@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3024b975_aa52f908",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-01-31T21:55:39Z",
+      "side": 1,
+      "message": "if (file",
+      "range": {
+        "startLine": 3460,
+        "startChar": 4,
+        "endLine": 3460,
+        "endChar": 11
+      },
+      "revId": "acf05c7b1aa27cbdb813958f8027e73ade150acc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
