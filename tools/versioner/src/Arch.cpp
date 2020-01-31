@@ -28,12 +28,6 @@ std::string to_string(const Arch& arch) {
     case Arch::arm64:
       return "arm64";
 
-    case Arch::mips:
-      return "mips";
-
-    case Arch::mips64:
-      return "mips64";
-
     case Arch::x86:
       return "x86";
 
@@ -47,8 +41,6 @@ std::string to_string(const Arch& arch) {
 static const std::unordered_map<std::string, Arch> arch_name_map{
   {"arm", Arch::arm},
   {"arm64", Arch::arm64},
-  {"mips", Arch::mips},
-  {"mips64", Arch::mips64},
   {"x86", Arch::x86},
   {"x86_64", Arch::x86_64},
 };
