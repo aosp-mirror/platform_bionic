@@ -93,6 +93,7 @@ cc_test_library {
         "fdsan_test.cpp",
         "fdtrack_test.cpp",
         "fenv_test.cpp",
+        "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
