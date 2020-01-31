@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,31 +26,36 @@
  * SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <sys/cdefs.h>
+#pragma once
+
 #include <sys/auxv.h>
-#include <private/bionic_auxv.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_ifuncs.h>
-#include <elf.h>
-#include <errno.h>
+#include <bionic/mte_kernel.h>
 
-// This function needs to be safe to call before TLS is set up, so it can't
-// access errno or the stack protector.
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists) {
-  for (ElfW(auxv_t)* v = __libc_shared_globals()->auxv; v->a_type != AT_NULL; ++v) {
-    if (v->a_type == type) {
-      exists = true;
-      return v->a_un.a_val;
+#ifdef __aarch64__
+inline bool mte_supported() {
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
+#else
+  static bool supported = false;
+#endif
+  return supported;
+}
+#endif
+
+struct ScopedDisableMTE {
+  ScopedDisableMTE() {
+#ifdef __aarch64__
+    if (mte_supported()) {
+      __asm__ __volatile__(".arch_extension mte; msr tco, #1");
     }
+#endif
   }
-  exists = false;
-  return 0;
-}
 
-extern "C" unsigned long getauxval(unsigned long type) {
-  bool exists;
-  unsigned long result = __bionic_getauxval(type, exists);
-  if (!exists) errno = ENOENT;
-  return result;
-}
+  ~ScopedDisableMTE() {
+#ifdef __aarch64__
+    if (mte_supported()) {
+      __asm__ __volatile__(".arch_extension mte; msr tco, #0");
+    }
+#endif
+  }
+};
