@@ -25,7 +25,7 @@
 #include <unistd.h>
 
 #if defined(__BIONIC__)
-#include <android/fdtrack.h>
+#include "platform/bionic/fdtrack.h"
 #endif
 
 #include <vector>
