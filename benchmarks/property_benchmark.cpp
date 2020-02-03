@@ -20,6 +20,7 @@
 #include <unistd.h>
 
 #include <string>
+#include <vector>
 
 #include <android-base/file.h>
 
@@ -191,5 +192,31 @@ static void BM_property_serial(benchmark::State& state) {
   delete[] pinfo;
 }
 BIONIC_BENCHMARK_WITH_ARG(BM_property_serial, "NUM_PROPS");
+
+// This benchmarks find the actual properties currently set on the system and accessible by the
+// user that runs this benchmark (aka this is best run as root).  It is not comparable between
+// devices, nor even boots, but is useful to understand the the real end-to-end speed, including
+// costs to find the correct property file within /dev/__properties__.
+static void BM_property_find_real(benchmark::State& state) {
+  std::vector<std::string> properties;
+  __system_property_foreach(
+      [](const prop_info* pi, void* cookie) {
+        __system_property_read_callback(pi,
+                                        [](void* cookie, const char* name, const char*, unsigned) {
+                                          auto properties =
+                                              reinterpret_cast<std::vector<std::string>*>(cookie);
+                                          properties->emplace_back(name);
+                                        },
+                                        cookie);
+      },
+      &properties);
+
+  while (state.KeepRunning()) {
+    for (const auto& property : properties) {
+      __system_property_find(property.c_str());
+    }
+  }
+}
+BIONIC_BENCHMARK(BM_property_find_real);
 
 #endif  // __BIONIC__
