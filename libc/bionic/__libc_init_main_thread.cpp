@@ -81,6 +81,7 @@ extern "C" void __libc_init_main_thread_early(const KernelArgumentBlock& args,
   __set_tls(&temp_tcb->tls_slot(0));
   main_thread.tid = __getpid();
   main_thread.set_cached_pid(main_thread.tid);
+  main_thread.stack_top = reinterpret_cast<uintptr_t>(args.argv);
 }
 
 // This code is used both by each new pthread and the code that initializes the main thread.

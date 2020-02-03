@@ -125,6 +125,10 @@ class pthread_internal_t {
   //    code to handle retries.
   void* shadow_call_stack_guard_region;
 
+  // A pointer to the top of the stack. This lets android_unsafe_frame_pointer_chase determine the
+  // top of the stack quickly, which would otherwise require special logic for the main thread.
+  uintptr_t stack_top;
+
   Lock startup_handshake_lock;
 
   void* mmap_base;
