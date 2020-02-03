@@ -1286,12 +1286,14 @@ cc_library_static {
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
         "bionic/__cxa_thread_atexit_impl.cpp",
+        "bionic/android_unsafe_frame_pointer_chase.cpp",
         "stdlib/atexit.c",
         "bionic/fork.cpp",
     ],
 
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
+    header_libs: ["bionic_libc_platform_headers"],
     name: "libc_pthread",
 }
 
