@@ -724,12 +724,12 @@ static bool walk_dependencies_tree(soinfo* root_soinfo, F action) {
 }
 
 
-static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
-                                            soinfo* root,
-                                            soinfo* skip_until,
-                                            soinfo** found,
-                                            SymbolName& symbol_name,
-                                            const version_info* vi) {
+static const ElfW(Sym)* dlsym_handle_lookup_impl(android_namespace_t* ns,
+                                                 soinfo* root,
+                                                 soinfo* skip_until,
+                                                 soinfo** found,
+                                                 SymbolName& symbol_name,
+                                                 const version_info* vi) {
   const ElfW(Sym)* result = nullptr;
   bool skip_lookup = skip_until != nullptr;
 
@@ -753,38 +753,6 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
   });
 
   return result;
-}
-
-static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
-                                            const char* name,
-                                            const version_info* vi,
-                                            soinfo** found,
-                                            soinfo* caller,
-                                            void* handle);
-
-// This is used by dlsym(3).  It performs symbol lookup only within the
-// specified soinfo object and its dependencies in breadth first order.
-static const ElfW(Sym)* dlsym_handle_lookup(soinfo* si,
-                                            soinfo** found,
-                                            const char* name,
-                                            const version_info* vi) {
-  // According to man dlopen(3) and posix docs in the case when si is handle
-  // of the main executable we need to search not only in the executable and its
-  // dependencies but also in all libraries loaded with RTLD_GLOBAL.
-  //
-  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
-  // libraries and they are loaded in breath-first (correct) order we can just execute
-  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
-  if (si == solist_get_somain()) {
-    return dlsym_linear_lookup(&g_default_namespace, name, vi, found, nullptr, RTLD_DEFAULT);
-  }
-
-  SymbolName symbol_name(name);
-  // note that the namespace is not the namespace associated with caller_addr
-  // we use ns associated with root si intentionally here. Using caller_ns
-  // causes problems when user uses dlopen_ext to open a library in the separate
-  // namespace and then calls dlsym() on the handle.
-  return dlsym_handle_lookup(si->get_primary_namespace(), si, nullptr, found, symbol_name, vi);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -830,16 +798,16 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     }
   }
 
-  // If not found - use dlsym_handle_lookup for caller's local_group
+  // If not found - use dlsym_handle_lookup_impl for caller's local_group
   if (s == nullptr && caller != nullptr) {
     soinfo* local_group_root = caller->get_local_group_root();
 
-    return dlsym_handle_lookup(local_group_root->get_primary_namespace(),
-                               local_group_root,
-                               (handle == RTLD_NEXT) ? caller : nullptr,
-                               found,
-                               symbol_name,
-                               vi);
+    return dlsym_handle_lookup_impl(local_group_root->get_primary_namespace(),
+                                    local_group_root,
+                                    (handle == RTLD_NEXT) ? caller : nullptr,
+                                    found,
+                                    symbol_name,
+                                    vi);
   }
 
   if (s != nullptr) {
@@ -848,6 +816,31 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   }
 
   return s;
+}
+
+// This is used by dlsym(3).  It performs symbol lookup only within the
+// specified soinfo object and its dependencies in breadth first order.
+static const ElfW(Sym)* dlsym_handle_lookup(soinfo* si,
+                                            soinfo** found,
+                                            const char* name,
+                                            const version_info* vi) {
+  // According to man dlopen(3) and posix docs in the case when si is handle
+  // of the main executable we need to search not only in the executable and its
+  // dependencies but also in all libraries loaded with RTLD_GLOBAL.
+  //
+  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
+  // libraries and they are loaded in breath-first (correct) order we can just execute
+  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
+  if (si == solist_get_somain()) {
+    return dlsym_linear_lookup(&g_default_namespace, name, vi, found, nullptr, RTLD_DEFAULT);
+  }
+
+  SymbolName symbol_name(name);
+  // note that the namespace is not the namespace associated with caller_addr
+  // we use ns associated with root si intentionally here. Using caller_ns
+  // causes problems when user uses dlopen_ext to open a library in the separate
+  // namespace and then calls dlsym() on the handle.
+  return dlsym_handle_lookup_impl(si->get_primary_namespace(), si, nullptr, found, symbol_name, vi);
 }
 
 soinfo* find_containing_library(const void* p) {
