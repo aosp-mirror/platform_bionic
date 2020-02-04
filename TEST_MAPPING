@@ -4,6 +4,9 @@
       "name": "CtsBionicTestCases"
     },
     {
+      "name": "fdtrack_test"
+    },
+    {
       "name": "malloc_debug_system_tests"
     },
     {
