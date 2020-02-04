@@ -39,6 +39,7 @@
 #include <procinfo/process_map.h>
 #include <ziparchive/zip_archive.h>
 
+#include "core_shared_libs.h"
 #include "gtest_globals.h"
 #include "utils.h"
 #include "dlext_private.h"
@@ -713,7 +714,7 @@ std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
 static const char* g_public_lib = "libnstest_public.so";
 
 // These are libs shared with default namespace
-static const std::string g_core_shared_libs = "libc.so:libc++.so:libdl.so:libm.so";
+static const std::string g_core_shared_libs = kCoreSharedLibs;
 
 TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
@@ -2053,6 +2054,23 @@ TEST(dlext, ns_anonymous) {
                ns_get_dlopened_string_private());
 
   ASSERT_TRUE(ns_get_dlopened_string_anon() != ns_get_dlopened_string_private());
+}
+
+TEST(dlext, ns_hidden_child) {
+  ExecTestHelper eth;
+
+  std::string helper = GetTestlibRoot() + "/ns_hidden_child_helper/ns_hidden_child_helper";
+  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
+  std::string app_ns_dir = GetTestlibRoot() + "/ns_hidden_child_app";
+  eth.SetArgs({ helper.c_str(), app_ns_dir.c_str(), nullptr });
+
+  // Add the main libns_hidden_child_*.so libraries to the search path of the default namespace.
+  std::string env = "LD_LIBRARY_PATH=" + GetTestlibRoot();
+  eth.SetEnv({ env.c_str(), nullptr });
+
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+          "public_function is non-null\n"
+          "internal_function is null\n");
 }
 
 TEST(dlext, dlopen_handle_value_platform) {

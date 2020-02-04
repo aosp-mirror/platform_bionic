@@ -71,7 +71,7 @@ bool android_namespace_t::is_accessible(const std::string& file) {
 // Are symbols from this shared object accessible for symbol lookups in a library from this
 // namespace?
 bool android_namespace_t::is_accessible(soinfo* s) {
-  auto is_accessible_ftor = [this] (soinfo* si) {
+  auto is_accessible_ftor = [this] (soinfo* si, bool allow_secondary) {
     // This is workaround for apps hacking into soinfo list.
     // and inserting their own entries into it. (http://b/37191433)
     if (!si->has_min_version(3)) {
@@ -84,20 +84,37 @@ bool android_namespace_t::is_accessible(soinfo* s) {
       return true;
     }
 
-    const android_namespace_list_t& secondary_namespaces = si->get_secondary_namespaces();
-    if (secondary_namespaces.find(this) != secondary_namespaces.end()) {
-      return true;
+    // When we're looking up symbols, we want to search libraries from the same namespace (whether
+    // the namespace membership is primary or secondary), but we also want to search the immediate
+    // dependencies of libraries in our namespace. (e.g. Supposing that libapp.so -> libandroid.so
+    // crosses a namespace boundary, we want to search libandroid.so but not any of libandroid.so's
+    // dependencies).
+    //
+    // Some libraries may be present in this namespace via the secondary namespace list:
+    //  - the executable
+    //  - LD_PRELOAD and DF_1_GLOBAL libraries
+    //  - libraries inherited during dynamic namespace creation (e.g. because of
+    //    RTLD_GLOBAL / DF_1_GLOBAL / ANDROID_NAMESPACE_TYPE_SHARED)
+    //
+    // When a library's membership is secondary, we want to search its symbols, but not the symbols
+    // of its dependencies. The executable may depend on internal system libraries which should not
+    // be searched.
+    if (allow_secondary) {
+      const android_namespace_list_t& secondary_namespaces = si->get_secondary_namespaces();
+      if (secondary_namespaces.find(this) != secondary_namespaces.end()) {
+        return true;
+      }
     }
 
     return false;
   };
 
-  if (is_accessible_ftor(s)) {
+  if (is_accessible_ftor(s, true)) {
     return true;
   }
 
   return !s->get_parents().visit([&](soinfo* si) {
-    return !is_accessible_ftor(si);
+    return !is_accessible_ftor(si, false);
   });
 }
 
