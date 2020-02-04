@@ -30,5 +30,13 @@
  *
  */
 
-int	__cxa_atexit(void (*)(void *), void *, void *);
-void	__cxa_finalize(void *);
+#pragma once
+
+#include <sys/cdefs.h>
+
+__BEGIN_DECLS
+
+int __cxa_atexit(void (*)(void*), void*, void*);
+void __cxa_finalize(void*);
+
+__END_DECLS
