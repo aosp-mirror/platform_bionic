@@ -33,6 +33,7 @@
 
 #include <dlfcn.h>
 
+// Given an absolute path, can this library be loaded into this namespace?
 bool android_namespace_t::is_accessible(const std::string& file) {
   if (!is_isolated_) {
     return true;
@@ -67,6 +68,8 @@ bool android_namespace_t::is_accessible(const std::string& file) {
   return false;
 }
 
+// Are symbols from this shared object accessible for symbol lookups in a library from this
+// namespace?
 bool android_namespace_t::is_accessible(soinfo* s) {
   auto is_accessible_ftor = [this] (soinfo* si) {
     // This is workaround for apps hacking into soinfo list.
