@@ -469,6 +469,56 @@ cc_test_library {
 }
 
 // -----------------------------------------------------------------------------
+// ns_hidden_child linker namespace test
+// -----------------------------------------------------------------------------
+
+cc_test {
+    name: "ns_hidden_child_helper",
+    host_supported: false,
+    defaults: ["bionic_testlib_defaults"],
+    srcs: ["ns_hidden_child_helper.cpp"],
+    shared_libs: [
+        "libns_hidden_child_internal",
+        "libns_hidden_child_global",
+        "libdl_android",
+    ],
+    ldflags: ["-Wl,--rpath,${ORIGIN}/.."],
+}
+
+cc_test_library {
+    name: "libns_hidden_child_global",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["ns_hidden_child_global.cpp"],
+    shared_libs: ["libns_hidden_child_internal"],
+    ldflags: ["-Wl,-z,global"],
+}
+
+cc_test_library {
+    name: "libns_hidden_child_internal",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["ns_hidden_child_internal.cpp"],
+}
+
+cc_test_library {
+    name: "libns_hidden_child_public",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["ns_hidden_child_public.cpp"],
+    shared_libs: ["libns_hidden_child_internal"],
+}
+
+cc_test_library {
+    name: "libns_hidden_child_app",
+    defaults: ["bionic_testlib_defaults"],
+    host_supported: false,
+    srcs: ["ns_hidden_child_app.cpp"],
+    shared_libs: ["libns_hidden_child_public"],
+    relative_install_path: "bionic-loader-test-libs/ns_hidden_child_app",
+}
+
+// -----------------------------------------------------------------------------
 // Build DT_RUNPATH test helper libraries
 //
 // Dependencies
