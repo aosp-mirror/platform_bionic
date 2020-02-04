@@ -1859,16 +1859,6 @@ cc_library_headers {
                 "kernel/uapi/asm-arm64",
             ],
         },
-        mips: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
-            ],
-        },
-        mips64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
-            ],
-        },
         x86: {
             export_include_dirs: [
                 "kernel/uapi/asm-x86",
@@ -2195,24 +2185,6 @@ ndk_headers {
     license: "NOTICE",
 }
 
-// Not actually used in the NDK, but needed to build AOSP for mips.
-ndk_headers {
-    name: "libc_asm_mips",
-    from: "kernel/uapi/asm-mips",
-    to: "mipsel-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
-    license: "NOTICE",
-}
-
-// Not actually used in the NDK, but needed to build AOSP for mips64.
-ndk_headers {
-    name: "libc_asm_mips64",
-    from: "kernel/uapi/asm-mips",
-    to: "mips64el-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
-    license: "NOTICE",
-}
-
 ndk_headers {
     name: "libc_asm_x86",
     from: "kernel/uapi/asm-x86",
@@ -2256,16 +2228,6 @@ llndk_library {
         arm64: {
             export_include_dirs: [
                 "kernel/uapi/asm-arm64",
-            ],
-        },
-        mips: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
-            ],
-        },
-        mips64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
             ],
         },
         x86: {
@@ -2352,30 +2314,6 @@ cc_object {
     ],
 }
 
-cc_object {
-    name: "libseccomp_gen_syscall_nrs_mips",
-    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
-    cflags: [
-        "-D_MIPS_SIM=_MIPS_SIM_ABI32",
-    ],
-    local_include_dirs: [
-        "kernel/uapi/asm-mips",
-        "kernel/uapi",
-    ],
-}
-
-cc_object {
-    name: "libseccomp_gen_syscall_nrs_mips64",
-    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
-    cflags: [
-        "-D_MIPS_SIM=_MIPS_SIM_ABI64",
-    ],
-    local_include_dirs: [
-        "kernel/uapi/asm-mips",
-        "kernel/uapi",
-    ],
-}
-
 // Generate the C++ policy sources for app and system seccomp-bpf filters.
 python_binary_host {
     name: "genseccomp",
@@ -2435,8 +2373,6 @@ cc_genrule {
         "SYSCALLS.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2469,8 +2405,6 @@ cc_genrule {
         ":generate_app_zygote_blacklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2478,8 +2412,6 @@ cc_genrule {
     out: [
         "arm64_app_zygote_policy.cpp",
         "arm_app_zygote_policy.cpp",
-        "mips64_app_zygote_policy.cpp",
-        "mips_app_zygote_policy.cpp",
         "x86_64_app_zygote_policy.cpp",
         "x86_app_zygote_policy.cpp",
     ],
@@ -2500,8 +2432,6 @@ cc_genrule {
         "SECCOMP_BLACKLIST_APP.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2509,8 +2439,6 @@ cc_genrule {
     out: [
         "arm64_app_policy.cpp",
         "arm_app_policy.cpp",
-        "mips64_app_policy.cpp",
-        "mips_app_policy.cpp",
         "x86_64_app_policy.cpp",
         "x86_app_policy.cpp",
     ],
@@ -2530,8 +2458,6 @@ cc_genrule {
         "SECCOMP_BLACKLIST_COMMON.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2539,8 +2465,6 @@ cc_genrule {
     out: [
         "arm64_system_policy.cpp",
         "arm_system_policy.cpp",
-        "mips64_system_policy.cpp",
-        "mips_system_policy.cpp",
         "x86_64_system_policy.cpp",
         "x86_system_policy.cpp",
     ],

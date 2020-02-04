@@ -6,7 +6,7 @@ import time, os, sys
 from utils import *
 
 # the list of supported architectures
-kernel_archs = [ 'arm', 'arm64', 'mips', 'x86' ]
+kernel_archs = [ 'arm', 'arm64', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -41,18 +41,12 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
-    "mips": {"__MIPSEB__": kCppUndefinedMacro,
-             "__MIPSEL__": "1",
-             "CONFIG_32BIT": "_ABIO32",
-             "CONFIG_CPU_LITTLE_ENDIAN": "1",
-             "__SANE_USERSPACE_TYPES__": "1",},
     "x86": {},
     }
 
 kernel_arch_token_replacements = {
     "arm": {},
     "arm64": {},
-    "mips": {"off_t":"__kernel_off_t"},
     "x86": {},
     }
 
