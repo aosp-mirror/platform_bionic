@@ -16,3 +16,11 @@ cc_library_shared {
     allow_undefined_symbols: true,
     recovery_available: true,
 }
+
+cc_test {
+    name: "fdtrack_test",
+    srcs: ["fdtrack_test.cpp"],
+    whole_static_libs: ["libBionicCtsGtestMain"],
+    static_libs: ["liblog"],
+    test_suites: ["device-tests"],
+}
