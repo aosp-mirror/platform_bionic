@@ -20,6 +20,14 @@
 #define __QEDR_USER_H__
 #include <linux/types.h>
 #define QEDR_ABI_VERSION (8)
+enum qedr_alloc_ucontext_flags {
+  QEDR_ALLOC_UCTX_RESERVED = 1 << 0,
+  QEDR_ALLOC_UCTX_DB_REC = 1 << 1
+};
+struct qedr_alloc_ucontext_req {
+  __u32 context_flags;
+  __u32 reserved;
+};
 struct qedr_alloc_ucontext_resp {
   __aligned_u64 db_pa;
   __u32 db_size;
@@ -50,6 +58,7 @@ struct qedr_create_cq_uresp {
   __u32 db_offset;
   __u16 icid;
   __u16 reserved;
+  __aligned_u64 db_rec_addr;
 };
 struct qedr_create_qp_ureq {
   __u32 qp_handle_hi;
@@ -68,6 +77,8 @@ struct qedr_create_qp_uresp {
   __u16 rq_icid;
   __u32 rq_db2_offset;
   __u32 reserved;
+  __aligned_u64 sq_db_rec_addr;
+  __aligned_u64 rq_db_rec_addr;
 };
 struct qedr_create_srq_ureq {
   __aligned_u64 prod_pair_addr;
@@ -78,5 +89,8 @@ struct qedr_create_srq_uresp {
   __u16 srq_id;
   __u16 reserved0;
   __u32 reserved1;
+};
+struct qedr_user_db_rec {
+  __aligned_u64 db_data;
 };
 #endif

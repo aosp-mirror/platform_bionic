@@ -19,11 +19,12 @@
 #ifndef __ASM_GENERIC_SEMBUF_H
 #define __ASM_GENERIC_SEMBUF_H
 #include <asm/bitsperlong.h>
+#include <asm/ipcbuf.h>
 struct semid64_ds {
   struct ipc64_perm sem_perm;
 #if __BITS_PER_LONG == 64
-  __kernel_time_t sem_otime;
-  __kernel_time_t sem_ctime;
+  long sem_otime;
+  long sem_ctime;
 #else
   unsigned long sem_otime;
   unsigned long sem_otime_high;

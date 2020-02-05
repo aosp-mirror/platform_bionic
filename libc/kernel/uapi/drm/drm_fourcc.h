@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 #define fourcc_code(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
-#define DRM_FORMAT_BIG_ENDIAN (1 << 31)
+#define DRM_FORMAT_BIG_ENDIAN (1U << 31)
 #define DRM_FORMAT_INVALID 0
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
 #define DRM_FORMAT_R8 fourcc_code('R', '8', ' ', ' ')
@@ -178,7 +178,10 @@ extern "C" {
 #define DRM_FORMAT_MOD_BROADCOM_SAND128 DRM_FORMAT_MOD_BROADCOM_SAND128_COL_HEIGHT(0)
 #define DRM_FORMAT_MOD_BROADCOM_SAND256 DRM_FORMAT_MOD_BROADCOM_SAND256_COL_HEIGHT(0)
 #define DRM_FORMAT_MOD_BROADCOM_UIF fourcc_mod_code(BROADCOM, 6)
-#define DRM_FORMAT_MOD_ARM_AFBC(__afbc_mode) fourcc_mod_code(ARM, __afbc_mode)
+#define DRM_FORMAT_MOD_ARM_CODE(__type,__val) fourcc_mod_code(ARM, ((__u64) (__type) << 52) | ((__val) & 0x000fffffffffffffULL))
+#define DRM_FORMAT_MOD_ARM_TYPE_AFBC 0x00
+#define DRM_FORMAT_MOD_ARM_TYPE_MISC 0x01
+#define DRM_FORMAT_MOD_ARM_AFBC(__afbc_mode) DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_AFBC, __afbc_mode)
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_MASK 0xf
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 (1ULL)
 #define AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 (2ULL)
@@ -192,6 +195,7 @@ extern "C" {
 #define AFBC_FORMAT_MOD_SC (1ULL << 9)
 #define AFBC_FORMAT_MOD_DB (1ULL << 10)
 #define AFBC_FORMAT_MOD_BCH (1ULL << 11)
+#define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
 #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
 #ifdef __cplusplus
 }

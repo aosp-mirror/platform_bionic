@@ -29,6 +29,10 @@ kernel_known_macros = {
     "__HAVE_BUILTIN_BSWAP16__": "1",
     "__HAVE_BUILTIN_BSWAP32__": "1",
     "__HAVE_BUILTIN_BSWAP64__": "1",
+    # Use this to remove the struct __kernel_old_timeval definition.
+    # Otherwise, there will be two struct timeval definitions when
+    # __kernel_old_timeval is renamed to timeval.
+    "__kernel_old_timeval": "1",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -76,6 +80,12 @@ kernel_token_replacements = {
     "__attribute_const__": "__attribute__((__const__))",
     # In this case the kernel tries to keep out of our way, but we're happy to use its definition.
     "__kernel_sockaddr_storage": "sockaddr_storage",
+    # The kernel started using struct __kernel_old_timeval in some places,
+    # which is the exact same as struct timeval. Replace that name with
+    # timeval so that kernel structures all use the same named structure.
+    # If struct __kernel_old_timeval and struct timeval become different,
+    # then a different solution needs to be implemented.
+    "__kernel_old_timeval": "timeval",
     }
 
 
