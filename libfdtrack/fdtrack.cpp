@@ -27,6 +27,7 @@
  */
 
 #include <inttypes.h>
+#include <stdint.h>
 
 #include <array>
 #include <mutex>
@@ -47,6 +48,11 @@ struct FdEntry {
 };
 
 extern "C" void fdtrack_dump();
+
+using fdtrack_callback_t = bool (*)(int fd, const char* const* function_names,
+                                    const uint64_t* function_offsets, size_t count, void* arg);
+extern "C" void fdtrack_iterate(fdtrack_callback_t callback, void* arg);
+
 static void fd_hook(android_fdtrack_event* event);
 
 // Backtraces for the first 4k file descriptors ought to be enough to diagnose an fd leak.
@@ -61,6 +67,10 @@ static unwindstack::LocalUnwinder& Unwinder() {
 }
 
 __attribute__((constructor)) static void ctor() {
+  for (auto& entry : stack_traces) {
+    entry.backtrace.reserve(kStackDepth);
+  }
+
   signal(BIONIC_SIGNAL_FDTRACK, [](int) { fdtrack_dump(); });
   if (Unwinder().Init()) {
     android_fdtrack_hook_t expected = nullptr;
@@ -97,15 +107,12 @@ static void fd_hook(android_fdtrack_event* event) {
   }
 }
 
-void fdtrack_dump() {
-  if (!installed) {
-    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack not installed");
-  } else {
-    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack dumping...");
-  }
-
+void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
   bool prev = android_fdtrack_set_enabled(false);
+
   for (int fd = 0; fd < static_cast<int>(stack_traces.size()); ++fd) {
+    const char* function_names[kStackDepth];
+    uint64_t function_offsets[kStackDepth];
     FdEntry* entry = GetFdEntry(fd);
     if (!entry) {
       continue;
@@ -117,26 +124,60 @@ void fdtrack_dump() {
     }
 
     if (entry->backtrace.empty()) {
+      entry->mutex.unlock();
+      continue;
+    } else if (entry->backtrace.size() < 2) {
+      async_safe_format_log(ANDROID_LOG_WARN, "fdtrack", "fd %d missing frames: size = %zu", fd,
+                            entry->backtrace.size());
+
+      entry->mutex.unlock();
       continue;
     }
 
-    uint64_t fdsan_owner = android_fdsan_get_owner_tag(fd);
-
-    if (fdsan_owner != 0) {
-      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = %#" PRIx64 ")", fd,
-                            fdsan_owner);
-    } else {
-      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (unowned)", fd);
-    }
-
-    const size_t frame_skip = 2;
+    constexpr size_t frame_skip = 2;
     for (size_t i = frame_skip; i < entry->backtrace.size(); ++i) {
-      auto& frame = entry->backtrace[i];
-      async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "  %zu: %s+%" PRIu64, i - frame_skip,
-                            frame.function_name.c_str(), frame.function_offset);
+      size_t j = i - frame_skip;
+      function_names[j] = entry->backtrace[i].function_name.c_str();
+      function_offsets[j] = entry->backtrace[i].function_offset;
     }
+
+    bool should_continue =
+        callback(fd, function_names, function_offsets, entry->backtrace.size() - frame_skip, arg);
 
     entry->mutex.unlock();
+
+    if (!should_continue) {
+      break;
+    }
   }
+
   android_fdtrack_set_enabled(prev);
+}
+
+void fdtrack_dump() {
+  if (!installed) {
+    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack not installed");
+  } else {
+    async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fdtrack dumping...");
+  }
+
+  fdtrack_iterate(
+      [](int fd, const char* const* function_names, const uint64_t* function_offsets, size_t count,
+         void*) {
+        uint64_t fdsan_owner = android_fdsan_get_owner_tag(fd);
+        if (fdsan_owner != 0) {
+          async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = %#" PRIx64 ")", fd,
+                                fdsan_owner);
+        } else {
+          async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (unowned)", fd);
+        }
+
+        for (size_t i = 0; i < count; ++i) {
+          async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "  %zu: %s+%" PRIu64, i,
+                                function_names[i], function_offsets[i]);
+        }
+
+        return true;
+      },
+      nullptr);
 }
