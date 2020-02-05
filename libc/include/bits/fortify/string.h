@@ -45,21 +45,13 @@ extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
         __overloadable {
-    size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_ge(bos_dst, copy_amount)) {
-        return __builtin_memcpy(dst, src, copy_amount);
-    }
-    return __builtin___memcpy_chk(dst, src, copy_amount, bos_dst);
+    return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) __overloadable {
-    size_t bos_dst = __bos0(dst);
-    if (__bos_trivially_ge(bos_dst, len)) {
-        return __builtin_memmove(dst, src, len);
-    }
-    return __builtin___memmove_chk(dst, src, len, bos_dst);
+    return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 #endif
 
@@ -87,12 +79,10 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'stpcpy' called with string bigger than buffer") {
 #if __ANDROID_API__ >= 21 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos_dst = __bos(dst);
-    if (!__bos_trivially_gt(bos_dst, __builtin_strlen(src))) {
-        return __builtin___stpcpy_chk(dst, src, bos_dst);
-    }
-#endif
+    return __builtin___stpcpy_chk(dst, src, __bos(dst));
+#else
     return __builtin_stpcpy(dst, src);
+#endif
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -101,12 +91,10 @@ char* strcpy(char* const dst __pass_object_size, const char* src)
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos_dst = __bos(dst);
-    if (!__bos_trivially_gt(bos_dst, __builtin_strlen(src))) {
-        return __builtin___strcpy_chk(dst, src, bos_dst);
-    }
-#endif
+    return __builtin___strcpy_chk(dst, src, __bos(dst));
+#else
     return __builtin_strcpy(dst, src);
+#endif
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -135,12 +123,10 @@ void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable
         /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
         __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos0(s);
-    if (!__bos_trivially_ge(bos, n)) {
-        return __builtin___memset_chk(s, c, n, bos);
-    }
-#endif
+    return __builtin___memset_chk(s, c, n, __bos0(s));
+#else
     return __builtin_memset(s, c, n);
+#endif
 }
 
 #if __ANDROID_API__ >= 23 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
@@ -205,13 +191,10 @@ size_t strlcpy(char* const dst __pass_object_size, const char* src, size_t size)
         __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
                          "'strlcpy' called with size bigger than buffer") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos(dst);
-
-    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __strlcpy_chk(dst, src, size, bos);
-    }
-#endif
+    return __strlcpy_chk(dst, src, size, __bos(dst));
+#else
     return __call_bypassing_fortify(strlcpy)(dst, src, size);
+#endif
 }
 
 __BIONIC_FORTIFY_INLINE
@@ -220,11 +203,7 @@ size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
         __clang_error_if(__bos_unevaluated_lt(__bos(dst), size),
                          "'strlcat' called with size bigger than buffer") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos(dst);
-
-    if (bos != __BIONIC_FORTIFY_UNKNOWN_SIZE) {
-        return __strlcat_chk(dst, src, size, bos);
-    }
+    return __strlcat_chk(dst, src, size, __bos(dst));
 #endif
     return __call_bypassing_fortify(strlcat)(dst, src, size);
 }
