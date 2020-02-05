@@ -136,6 +136,10 @@ struct pvrdma_create_qp {
   __u32 sbuf_size;
   __aligned_u64 qp_addr;
 };
+struct pvrdma_create_qp_resp {
+  __u32 qpn;
+  __u32 qp_handle;
+};
 struct pvrdma_ex_cmp_swap {
   __aligned_u64 swap_val;
   __aligned_u64 compare_val;

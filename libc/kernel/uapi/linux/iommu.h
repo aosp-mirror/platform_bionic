@@ -83,4 +83,70 @@ struct iommu_page_response {
   __u32 grpid;
   __u32 code;
 };
+enum iommu_inv_granularity {
+  IOMMU_INV_GRANU_DOMAIN,
+  IOMMU_INV_GRANU_PASID,
+  IOMMU_INV_GRANU_ADDR,
+  IOMMU_INV_GRANU_NR,
+};
+struct iommu_inv_addr_info {
+#define IOMMU_INV_ADDR_FLAGS_PASID (1 << 0)
+#define IOMMU_INV_ADDR_FLAGS_ARCHID (1 << 1)
+#define IOMMU_INV_ADDR_FLAGS_LEAF (1 << 2)
+  __u32 flags;
+  __u32 archid;
+  __u64 pasid;
+  __u64 addr;
+  __u64 granule_size;
+  __u64 nb_granules;
+};
+struct iommu_inv_pasid_info {
+#define IOMMU_INV_PASID_FLAGS_PASID (1 << 0)
+#define IOMMU_INV_PASID_FLAGS_ARCHID (1 << 1)
+  __u32 flags;
+  __u32 archid;
+  __u64 pasid;
+};
+struct iommu_cache_invalidate_info {
+#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+  __u32 version;
+#define IOMMU_CACHE_INV_TYPE_IOTLB (1 << 0)
+#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB (1 << 1)
+#define IOMMU_CACHE_INV_TYPE_PASID (1 << 2)
+#define IOMMU_CACHE_INV_TYPE_NR (3)
+  __u8 cache;
+  __u8 granularity;
+  __u8 padding[2];
+  union {
+    struct iommu_inv_pasid_info pasid_info;
+    struct iommu_inv_addr_info addr_info;
+  };
+};
+struct iommu_gpasid_bind_data_vtd {
+#define IOMMU_SVA_VTD_GPASID_SRE (1 << 0)
+#define IOMMU_SVA_VTD_GPASID_EAFE (1 << 1)
+#define IOMMU_SVA_VTD_GPASID_PCD (1 << 2)
+#define IOMMU_SVA_VTD_GPASID_PWT (1 << 3)
+#define IOMMU_SVA_VTD_GPASID_EMTE (1 << 4)
+#define IOMMU_SVA_VTD_GPASID_CD (1 << 5)
+  __u64 flags;
+  __u32 pat;
+  __u32 emt;
+};
+struct iommu_gpasid_bind_data {
+#define IOMMU_GPASID_BIND_VERSION_1 1
+  __u32 version;
+#define IOMMU_PASID_FORMAT_INTEL_VTD 1
+  __u32 format;
+#define IOMMU_SVA_GPASID_VAL (1 << 0)
+  __u64 flags;
+  __u64 gpgd;
+  __u64 hpasid;
+  __u64 gpasid;
+  __u32 addr_width;
+  __u8 padding[12];
+  union {
+    struct iommu_gpasid_bind_data_vtd vtd;
+  };
+};
 #endif
