@@ -52,6 +52,24 @@
       "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e425bd8a_8b2a6465",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-06T16:32:31Z",
+      "side": 1,
+      "message": "Think I\u0027ve found it with Peter\u0027s help - GWP-ASan PRNG uses a dynamic TLS reference. Fixing upstream and will re-patch up this test.",
+      "parentUuid": "daa11026_c058b406",
+      "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
