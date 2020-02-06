@@ -70,6 +70,24 @@
       "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ec25469_690a0ad2",
+        "filename": "tests/elftls_dl_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-06T22:40:18Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "e425bd8a_8b2a6465",
+      "revId": "4fd41d9528ea92f9a99124e650797a4580e517a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
