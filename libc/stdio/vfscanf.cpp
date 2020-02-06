@@ -31,6 +31,7 @@
  * SUCH DAMAGE.
  */
 
+#include <ctype.h>
 #include <inttypes.h>
 #include <stdarg.h>
 #include <stddef.h>
@@ -41,7 +42,6 @@
 #include <wctype.h>
 #include "local.h"
 
-#include <private/bionic_ctype.h>
 #include <private/bionic_fortify.h>
 #include <platform/bionic/macros.h>
 #include <private/bionic_mbstate.h>
@@ -111,8 +111,8 @@ int __svfscanf(FILE* fp, const char* fmt0, va_list ap) {
   for (;;) {
     c = *fmt++;
     if (c == 0) return nassigned;
-    if (IsSpace(c)) {
-      while ((fp->_r > 0 || __srefill(fp) == 0) && IsSpace(*fp->_p)) nread++, fp->_r--, fp->_p++;
+    if (isspace(c)) {
+      while ((fp->_r > 0 || __srefill(fp) == 0) && isspace(*fp->_p)) nread++, fp->_r--, fp->_p++;
       continue;
     }
     if (c != '%') goto literal;
@@ -287,7 +287,7 @@ literal:
         return EOF;
 
       default: /* compat */
-        if (IsUpper(c)) flags |= LONG;
+        if (isupper(c)) flags |= LONG;
         c = CT_INT;
         base = 10;
         break;
@@ -310,7 +310,7 @@ literal:
      * that suppress this.
      */
     if ((flags & NOSKIP) == 0) {
-      while (IsSpace(*fp->_p)) {
+      while (isspace(*fp->_p)) {
         nread++;
         if (--fp->_r > 0) {
           fp->_p++;
@@ -431,7 +431,7 @@ literal:
             wcp = va_arg(ap, wchar_t*);
           }
           size_t bytes = 0;
-          while ((c == CT_CCL || !IsSpace(*fp->_p)) && width != 0) {
+          while ((c == CT_CCL || !isspace(*fp->_p)) && width != 0) {
             if (bytes == MB_CUR_MAX) {
               fp->_flags |= __SERR;
               goto input_failure;
