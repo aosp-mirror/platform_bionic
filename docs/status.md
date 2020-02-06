@@ -32,13 +32,16 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
 
 Missing functionality:
   * `<aio.h>`
+  * `<monetary.h>`. See
+    [discussion](https://github.com/android/ndk/issues/1182).
   * `<wordexp.h>`
   * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
     because of the difficulty and cost of implementing it, and the difficulty
     of using it correctly. See
     [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
     for more about thread cancellation.
-  * Robust mutexes
+  * Robust mutexes. See
+    [discussion](https://github.com/android/ndk/issues/1181).
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
