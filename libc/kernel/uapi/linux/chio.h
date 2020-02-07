@@ -16,6 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
+#ifndef _UAPI_LINUX_CHIO_H
+#define _UAPI_LINUX_CHIO_H
 #define CHET_MT 0
 #define CHET_ST 1
 #define CHET_IE 2
@@ -116,3 +118,4 @@ struct changer_set_voltag {
 #define CHIOINITELEM _IO('c', 17)
 #define CHIOSVOLTAG _IOW('c', 18, struct changer_set_voltag)
 #define CHIOGVPARAMS _IOR('c', 19, struct changer_vendor_params)
+#endif

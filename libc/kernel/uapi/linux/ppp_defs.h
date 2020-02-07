@@ -105,7 +105,15 @@ struct ppp_comp_stats {
   struct compstat d;
 };
 struct ppp_idle {
-  __kernel_time_t xmit_idle;
-  __kernel_time_t recv_idle;
+  __kernel_old_time_t xmit_idle;
+  __kernel_old_time_t recv_idle;
+};
+struct ppp_idle32 {
+  __s32 xmit_idle;
+  __s32 recv_idle;
+};
+struct ppp_idle64 {
+  __s64 xmit_idle;
+  __s64 recv_idle;
 };
 #endif

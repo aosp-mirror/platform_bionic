@@ -23,9 +23,9 @@ struct shmid64_ds {
   struct ipc64_perm shm_perm;
   size_t shm_segsz;
 #if __BITS_PER_LONG == 64
-  __kernel_time_t shm_atime;
-  __kernel_time_t shm_dtime;
-  __kernel_time_t shm_ctime;
+  long shm_atime;
+  long shm_dtime;
+  long shm_ctime;
 #else
   unsigned long shm_atime;
   unsigned long shm_atime_high;
