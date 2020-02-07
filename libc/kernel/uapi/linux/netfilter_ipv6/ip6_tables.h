@@ -141,6 +141,6 @@ struct ip6t_get_entries {
   struct ip6t_entry entrytable[0];
 };
 static __inline__ struct xt_entry_target * ip6t_get_target(struct ip6t_entry * e) {
-  return(void *) e + e->target_offset;
+  return(struct xt_entry_target *) ((char *) e + e->target_offset);
 }
 #endif

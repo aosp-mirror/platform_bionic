@@ -301,6 +301,7 @@ struct drm_amdgpu_gem_op {
 #define AMDGPU_VM_MTYPE_WC (2 << 5)
 #define AMDGPU_VM_MTYPE_CC (3 << 5)
 #define AMDGPU_VM_MTYPE_UC (4 << 5)
+#define AMDGPU_VM_MTYPE_RW (5 << 5)
 struct drm_amdgpu_gem_va {
   __u32 handle;
   __u32 _pad;

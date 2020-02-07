@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI_SCC_H
 #define _UAPI_SCC_H
+#include <linux/sockios.h>
 #define PA0HZP 0x00
 #define EAGLE 0x01
 #define PC100 0x02

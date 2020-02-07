@@ -710,6 +710,7 @@ enum {
   TCA_PIE_BETA,
   TCA_PIE_ECN,
   TCA_PIE_BYTEMODE,
+  TCA_PIE_DQ_RATE_ESTIMATOR,
   __TCA_PIE_MAX
 };
 #define TCA_PIE_MAX (__TCA_PIE_MAX - 1)
@@ -717,6 +718,7 @@ struct tc_pie_xstats {
   __u64 prob;
   __u32 delay;
   __u32 avg_dq_rate;
+  __u32 dq_rate_estimating;
   __u32 packets_in;
   __u32 dropped;
   __u32 overlimit;

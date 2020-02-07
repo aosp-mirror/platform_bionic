@@ -59,4 +59,7 @@ struct blk_zone_range {
 #define BLKRESETZONE _IOW(0x12, 131, struct blk_zone_range)
 #define BLKGETZONESZ _IOR(0x12, 132, __u32)
 #define BLKGETNRZONES _IOR(0x12, 133, __u32)
+#define BLKOPENZONE _IOW(0x12, 134, struct blk_zone_range)
+#define BLKCLOSEZONE _IOW(0x12, 135, struct blk_zone_range)
+#define BLKFINISHZONE _IOW(0x12, 136, struct blk_zone_range)
 #endif
