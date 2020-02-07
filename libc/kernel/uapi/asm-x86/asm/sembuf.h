@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _ASM_X86_SEMBUF_H
 #define _ASM_X86_SEMBUF_H
+#include <asm/ipcbuf.h>
 struct semid64_ds {
   struct ipc64_perm sem_perm;
 #ifdef __i386__
@@ -26,9 +27,9 @@ struct semid64_ds {
   unsigned long sem_ctime;
   unsigned long sem_ctime_high;
 #else
-  __kernel_time_t sem_otime;
+  __kernel_long_t sem_otime;
   __kernel_ulong_t __unused1;
-  __kernel_time_t sem_ctime;
+  __kernel_long_t sem_ctime;
   __kernel_ulong_t __unused2;
 #endif
   __kernel_ulong_t sem_nsems;

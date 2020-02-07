@@ -44,6 +44,7 @@
 #define CLONE_NEWPID 0x20000000
 #define CLONE_NEWNET 0x40000000
 #define CLONE_IO 0x80000000
+#define CLONE_CLEAR_SIGHAND 0x100000000ULL
 #ifndef __ASSEMBLY__
 struct clone_args {
   __aligned_u64 flags;
@@ -54,9 +55,12 @@ struct clone_args {
   __aligned_u64 stack;
   __aligned_u64 stack_size;
   __aligned_u64 tls;
+  __aligned_u64 set_tid;
+  __aligned_u64 set_tid_size;
 };
 #endif
 #define CLONE_ARGS_SIZE_VER0 64
+#define CLONE_ARGS_SIZE_VER1 80
 #define SCHED_NORMAL 0
 #define SCHED_FIFO 1
 #define SCHED_RR 2

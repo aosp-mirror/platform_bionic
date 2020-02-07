@@ -30,9 +30,9 @@
 struct __kernel_legacy_shmid_ds {
   struct __kernel_legacy_ipc_perm shm_perm;
   int shm_segsz;
-  __kernel_time_t shm_atime;
-  __kernel_time_t shm_dtime;
-  __kernel_time_t shm_ctime;
+  __kernel_old_time_t shm_atime;
+  __kernel_old_time_t shm_dtime;
+  __kernel_old_time_t shm_ctime;
   __kernel_ipc_pid_t shm_cpid;
   __kernel_ipc_pid_t shm_lpid;
   unsigned short shm_nattch;
