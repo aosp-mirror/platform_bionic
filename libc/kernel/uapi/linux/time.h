@@ -23,12 +23,12 @@
 #ifndef _STRUCT_TIMESPEC
 #define _STRUCT_TIMESPEC
 struct timespec {
-  __kernel_time_t tv_sec;
+  __kernel_old_time_t tv_sec;
   long tv_nsec;
 };
 #endif
 struct timeval {
-  __kernel_time_t tv_sec;
+  __kernel_old_time_t tv_sec;
   __kernel_suseconds_t tv_usec;
 };
 struct timezone {
