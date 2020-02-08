@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59e5166e_e9eca958",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-08T01:38:56Z",
+      "side": 1,
+      "message": "running",
+      "range": {
+        "startLine": 178,
+        "startChar": 26,
+        "endLine": 178,
+        "endChar": 34
+      },
+      "revId": "6e55e12e6292a5acd8fe26980cdf3f34e8c1b4db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ddf27c7_fb23629d",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-08T01:38:56Z",
+      "side": 1,
+      "message": "This logic seems wrong to me. If the page has a single non-NULL entry at fns[0], then we want to detect it and set ind to 1.",
+      "range": {
+        "startLine": 252,
+        "startChar": 8,
+        "endLine": 252,
+        "endChar": 75
+      },
+      "revId": "6e55e12e6292a5acd8fe26980cdf3f34e8c1b4db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
