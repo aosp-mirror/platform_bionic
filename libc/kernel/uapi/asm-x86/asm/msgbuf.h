@@ -21,11 +21,12 @@
 #if !defined(__x86_64__) || !defined(__ILP32__)
 #include <asm-generic/msgbuf.h>
 #else
+#include <asm/ipcbuf.h>
 struct msqid64_ds {
   struct ipc64_perm msg_perm;
-  __kernel_time_t msg_stime;
-  __kernel_time_t msg_rtime;
-  __kernel_time_t msg_ctime;
+  __kernel_long_t msg_stime;
+  __kernel_long_t msg_rtime;
+  __kernel_long_t msg_ctime;
   __kernel_ulong_t msg_cbytes;
   __kernel_ulong_t msg_qnum;
   __kernel_ulong_t msg_qbytes;

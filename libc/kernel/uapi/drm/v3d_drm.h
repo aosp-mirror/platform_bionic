@@ -38,6 +38,7 @@ extern "C" {
 #define DRM_IOCTL_V3D_GET_BO_OFFSET DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_GET_BO_OFFSET, struct drm_v3d_get_bo_offset)
 #define DRM_IOCTL_V3D_SUBMIT_TFU DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_TFU, struct drm_v3d_submit_tfu)
 #define DRM_IOCTL_V3D_SUBMIT_CSD DRM_IOW(DRM_COMMAND_BASE + DRM_V3D_SUBMIT_CSD, struct drm_v3d_submit_csd)
+#define DRM_V3D_SUBMIT_CL_FLUSH_CACHE 0x01
 struct drm_v3d_submit_cl {
   __u32 bcl_start;
   __u32 bcl_end;
@@ -51,7 +52,7 @@ struct drm_v3d_submit_cl {
   __u32 qts;
   __u64 bo_handles;
   __u32 bo_handle_count;
-  __u32 pad;
+  __u32 flags;
 };
 struct drm_v3d_wait_bo {
   __u32 handle;
@@ -79,6 +80,7 @@ enum drm_v3d_param {
   DRM_V3D_PARAM_V3D_CORE0_IDENT2,
   DRM_V3D_PARAM_SUPPORTS_TFU,
   DRM_V3D_PARAM_SUPPORTS_CSD,
+  DRM_V3D_PARAM_SUPPORTS_CACHE_FLUSH,
 };
 struct drm_v3d_get_param {
   __u32 param;

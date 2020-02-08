@@ -43,10 +43,10 @@ struct xt_sctp_info {
   __u32 invflags;
 };
 #define bytes(type) (sizeof(type) * 8)
-#define SCTP_CHUNKMAP_SET(chunkmap,type) do { (chunkmap)[type / bytes(__u32)] |= 1 << (type % bytes(__u32)); } while(0)
-#define SCTP_CHUNKMAP_CLEAR(chunkmap,type) do { (chunkmap)[type / bytes(__u32)] &= ~(1 << (type % bytes(__u32))); } while(0)
+#define SCTP_CHUNKMAP_SET(chunkmap,type) do { (chunkmap)[type / bytes(__u32)] |= 1u << (type % bytes(__u32)); } while(0)
+#define SCTP_CHUNKMAP_CLEAR(chunkmap,type) do { (chunkmap)[type / bytes(__u32)] &= ~(1u << (type % bytes(__u32))); } while(0)
 #define SCTP_CHUNKMAP_IS_SET(chunkmap,type) \
-({ ((chunkmap)[type / bytes(__u32)] & (1 << (type % bytes(__u32)))) ? 1 : 0; \
+({ ((chunkmap)[type / bytes(__u32)] & (1u << (type % bytes(__u32)))) ? 1 : 0; \
 })
 #define SCTP_CHUNKMAP_RESET(chunkmap) memset((chunkmap), 0, sizeof(chunkmap))
 #define SCTP_CHUNKMAP_SET_ALL(chunkmap) memset((chunkmap), ~0U, sizeof(chunkmap))

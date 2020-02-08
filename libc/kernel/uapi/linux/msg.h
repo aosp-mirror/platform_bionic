@@ -29,9 +29,9 @@ struct __kernel_legacy_msqid_ds {
   struct __kernel_legacy_ipc_perm msg_perm;
   struct msg * msg_first;
   struct msg * msg_last;
-  __kernel_time_t msg_stime;
-  __kernel_time_t msg_rtime;
-  __kernel_time_t msg_ctime;
+  __kernel_old_time_t msg_stime;
+  __kernel_old_time_t msg_rtime;
+  __kernel_old_time_t msg_ctime;
   unsigned long msg_lcbytes;
   unsigned long msg_lqbytes;
   unsigned short msg_cbytes;
