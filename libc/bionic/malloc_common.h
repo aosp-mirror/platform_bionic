@@ -74,6 +74,8 @@ __END_DECLS
 
 #endif
 
+const MallocDispatch* NativeAllocatorDispatch();
+
 static inline const MallocDispatch* GetDispatchTable() {
   return atomic_load_explicit(&__libc_globals->current_dispatch_table, memory_order_acquire);
 }
