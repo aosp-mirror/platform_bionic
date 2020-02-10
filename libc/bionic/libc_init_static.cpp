@@ -157,13 +157,6 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   layout.finish_layout();
 }
 
-// The program startup function __libc_init() defined here is
-// used for static executables only (i.e. those that don't depend
-// on shared libraries). It is called from arch-$ARCH/bionic/crtbegin_static.S
-// which is directly invoked by the kernel when the program is launched.
-//
-// The 'structors' parameter contains pointers to various initializer
-// arrays that must be run before the program's 'main' routine is launched.
 __noreturn static void __real_libc_init(void *raw_args,
                                         void (*onexit)(void) __unused,
                                         int (*slingshot)(int, char**, char**),
@@ -204,6 +197,10 @@ __noreturn static void __real_libc_init(void *raw_args,
 
 extern "C" void __hwasan_init_static();
 
+// This __libc_init() is only used for static executables, and is called from crtbegin.c.
+//
+// The 'structors' parameter contains pointers to various initializer
+// arrays that must be run before the program's 'main' routine is launched.
 __attribute__((no_sanitize("hwaddress")))
 __noreturn void __libc_init(void* raw_args,
                             void (*onexit)(void) __unused,
