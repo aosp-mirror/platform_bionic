@@ -27,8 +27,6 @@
  */
 
 /*
- * libc_init_dynamic.c
- *
  * This source files provides two important functions for dynamic
  * executables:
  *
@@ -38,10 +36,7 @@
  *   shared libraries the program depends on).
  *
  * - a program launch function (__libc_init), which is called after
- *   all dynamic linking has been performed. Technically, it is called
- *   from arch-$ARCH/bionic/crtbegin_dynamic.S which is itself called
- *   by the dynamic linker after all libraries have been loaded and
- *   initialized.
+ *   all dynamic linking has been performed.
  */
 
 #include <stddef.h>
