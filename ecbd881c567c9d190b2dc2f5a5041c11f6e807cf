@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3cb3204a_ddf95091",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-02-11T16:21:36Z",
+      "side": 1,
+      "message": "this will always rewrite the whole array - in many cases needlessly. You could skip the non-null records at the beginning",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 5
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff93699b_23806489",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-02-11T16:21:36Z",
+      "side": 1,
+      "message": "Probably non-issue:\n\nYou are unmapping potentially different size than you mapped.\nAs far as I understand this will not leak because all pages that contain the passed address range will be unmapped. And the range you pass will span all pages.\n\nIt would leak only if sizeof(AtexitFn) exceeded pagesize - Which I do not think can happen.",
+      "range": {
+        "startLine": 112,
+        "startChar": 19,
+        "endLine": 112,
+        "endChar": 47
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34c5bba3_526c667f",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-02-11T16:21:36Z",
+      "side": 1,
+      "message": "this link is dead - 404\n\nWould this work as a replacement?:\nhttps://itanium-cxx-abi.github.io/cxx-abi/abi.html#dso-dtor",
+      "range": {
+        "startLine": 144,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 57
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
