@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "08c16f00_7699086c",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-02-11T13:00:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59e5166e_e9eca958",
+      "range": {
+        "startLine": 178,
+        "startChar": 26,
+        "endLine": 178,
+        "endChar": 34
+      },
+      "revId": "6e55e12e6292a5acd8fe26980cdf3f34e8c1b4db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ddf27c7_fb23629d",
         "filename": "libc/stdlib/atexit.c",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "6e55e12e6292a5acd8fe26980cdf3f34e8c1b4db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375f9079_61c90427",
+        "filename": "libc/stdlib/atexit.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1630289
+      },
+      "writtenOn": "2020-02-11T13:00:26Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. Fixed in the next patchset",
+      "parentUuid": "3ddf27c7_fb23629d",
+      "range": {
+        "startLine": 252,
+        "startChar": 8,
+        "endLine": 252,
+        "endChar": 75
+      },
+      "revId": "6e55e12e6292a5acd8fe26980cdf3f34e8c1b4db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
