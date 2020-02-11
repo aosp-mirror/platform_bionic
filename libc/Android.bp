@@ -47,6 +47,9 @@ libc_common_flags = [
     // Clang's exit-time destructor registration hides __dso_handle, but
     // __dso_handle needs to have default visibility on ARM32. See b/73485611.
     "-Wexit-time-destructors",
+
+    // GWP-ASan requires platform TLS.
+    "-fno-emulated-tls",
 ]
 
 // Define some common cflags
@@ -61,6 +64,8 @@ cc_defaults {
     include_dirs: [
         "bionic/libc/async_safe/include",
     ],
+
+    header_libs: ["gwp_asan_headers"],
 
     stl: "none",
     system_shared_libs: [],
@@ -111,6 +116,7 @@ cc_defaults {
         "libjemalloc5",
         "libc_jemalloc_wrapper",
     ],
+    header_libs: ["gwp_asan_headers"],
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -1391,6 +1397,7 @@ cc_library_static {
     ],
     ramdisk_available: false,
     srcs: libc_common_src_files + [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1418,6 +1425,7 @@ cc_library_static {
     ],
 
     whole_static_libs: [
+        "gwp_asan",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1597,6 +1605,7 @@ filegroup {
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
@@ -1614,6 +1623,7 @@ filegroup {
 filegroup {
     name: "libc_sources_static",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1648,6 +1658,7 @@ cc_library {
         srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1656,6 +1667,7 @@ cc_library {
     shared: {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_dynamic",
             "libc_common_shared",
         ],
@@ -2504,6 +2516,7 @@ cc_library {
 cc_defaults {
     name: "libc_scudo_wrapper_defaults",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
@@ -2512,12 +2525,21 @@ cc_defaults {
         "bionic/scudo_wrapper.cpp",
         "bionic/__set_errno.cpp",
     ],
-    cflags: ["-DUSE_SCUDO"],
+    cflags: [
+        "-DUSE_SCUDO",
+        "-fno-emulated-tls", // Required for GWP-ASan.
+    ],
     shared_libs: ["libscudo_wrapper"],
 
-    header_libs: ["libc_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+    ],
 
-    static_libs: ["libasync_safe"],
+    static_libs: [
+        "libasync_safe",
+        "gwp_asan",
+    ],
 
     arch: {
         arm: {
