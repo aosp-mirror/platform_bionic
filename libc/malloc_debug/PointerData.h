@@ -38,7 +38,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 #include <unwindstack/LocalUnwinder.h>
 
 #include "OptionData.h"
@@ -152,7 +152,7 @@ class PointerData : public OptionData {
 
   static void GetAllocList(std::vector<ListInfoType>* list);
   static void LogLeaks();
-  static void DumpLiveToFile(FILE* fp);
+  static void DumpLiveToFile(int fd);
 
   static void GetInfo(uint8_t** info, size_t* overall_size, size_t* info_size, size_t* total_memory,
                       size_t* backtrace_size);

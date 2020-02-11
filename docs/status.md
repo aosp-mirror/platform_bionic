@@ -32,9 +32,16 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
 
 Missing functionality:
   * `<aio.h>`
+  * `<monetary.h>`. See
+    [discussion](https://github.com/android/ndk/issues/1182).
   * `<wordexp.h>`
-  * Thread cancellation (`pthread_cancel`).
-  * Robust mutexes
+  * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
+    because of the difficulty and cost of implementing it, and the difficulty
+    of using it correctly. See
+    [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
+    for more about thread cancellation.
+  * Robust mutexes. See
+    [discussion](https://github.com/android/ndk/issues/1181).
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
@@ -48,6 +55,10 @@ New libc functions in R (API level 30):
   * `memfd_create` and `mlock2` (GNU extensions).
   * `renameat2` (GNU extension).
   * `pthread_cond_clockwait`/`pthread_mutex_clocklock`/`pthread_rwlock_clockrdlock`/`pthread_rwlock_clockwrlock`/`sem_clockwait`
+
+New libc behavior in R (API level 30):
+  * [fdsan](fdsan.md) now aborts when it detects common file descriptor errors,
+    rather than just logging.
 
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
@@ -68,7 +79,7 @@ New libc behavior in Q (API level 29):
     is unchanged.
   * Support in strptime for `%F`, `%G`, `%g`, `%P`, `%u`, `%V`, and `%v`.
     (strftime already supported them all.)
-  * [fdsan](fdsan.md) detects common file descriptor errors at runtime.
+  * [fdsan](fdsan.md) detects and logs common file descriptor errors at runtime.
 
 New libc functions in P (API level 28):
   * `aligned_alloc`
@@ -213,18 +224,31 @@ New libc functions in J (API level 16):
   * all of <sys/xattr.h>.
 
 libc function count over time:
-  G 803, H 825, I 826, J 846, J-MR1 873, J-MR2 881, K 896, L 1116, M 1181, N 1226, O 1278
 
+| OS    | API level | Function count |
+|-------|-----------|----------------|
+| J     | 16        | 842            |
+| J MR1 | 17        | 870            |
+| J MR2 | 18        | 878            |
+| K     | 19        | 893            |
+| L     | 21        | 1118           |
+| M     | 23        | 1183           |
+| N     | 24        | 1228           |
+| O     | 26        | 1280           |
+| P     | 28        | 1378           |
+| Q     | 29        | 1394           |
+
+Data collected by:
 ```
-ndk-r17$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
-  echo $i; nm $i | grep -vw [AbdNnt] | grep -vw B | wc -l ; done
+ndk-r21$ for i in `ls -1v platforms/android-*/arch-arm/usr/lib/libc.so` ; do \
+  echo $i; nm $i | grep -w T | wc -l ; done
 ```
 
 ### libm
 
 Current libm symbols: https://android.googlesource.com/platform/bionic/+/master/libm/libm.map.txt
 
-0 remaining missing POSIX libm functions.
+0 remaining missing C11/POSIX libm functions.
 
 New libm functions in O (API level 26):
   * <complex.h> `clog`/`clogf`, `cpow`/`cpowf` functions.
@@ -239,10 +263,6 @@ New libm functions in L (API level 21):
 
 New libm functions in J-MR2 (API level 18):
   * <math.h> `log2`, `log2f`.
-
-libm function count over time:
-  G 158, J-MR2 164, L 220, M 265, O 284
-
 
 
 ## Target API level behavioral differences

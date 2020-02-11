@@ -16,7 +16,7 @@ import sys
 import tempfile
 
 
-SupportedArchitectures = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
+SupportedArchitectures = [ "arm", "arm64", "x86", "x86_64" ]
 
 syscall_stub_header = \
 """
@@ -467,6 +467,9 @@ class SysCallsTxtParser:
             for arch in string.split(arch_list, ','):
                 if arch in SupportedArchitectures:
                     t[arch] = True
+                elif arch in ['mips', 'mips64']:
+                    # Unused.
+                    pass
                 else:
                     E("invalid syscall architecture '%s' in '%s'" % (arch, line))
                     return

@@ -98,6 +98,7 @@ enum nft_hook_attributes {
   NFTA_HOOK_HOOKNUM,
   NFTA_HOOK_PRIORITY,
   NFTA_HOOK_DEV,
+  NFTA_HOOK_DEVS,
   __NFTA_HOOK_MAX
 };
 #define NFTA_HOOK_MAX (__NFTA_HOOK_MAX - 1)
@@ -324,6 +325,7 @@ enum nft_lookup_attributes {
 enum nft_dynset_ops {
   NFT_DYNSET_OP_ADD,
   NFT_DYNSET_OP_UPDATE,
+  NFT_DYNSET_OP_DELETE,
 };
 enum nft_dynset_flags {
   NFT_DYNSET_F_INV = (1 << 0),
@@ -420,6 +422,9 @@ enum nft_meta_keys {
   NFT_META_OIFKIND,
   NFT_META_BRI_IIFPVID,
   NFT_META_BRI_IIFVPROTO,
+  NFT_META_TIME_NS,
+  NFT_META_TIME_DAY,
+  NFT_META_TIME_HOUR,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,
@@ -764,7 +769,8 @@ enum nft_ct_expectation_attributes {
 #define NFT_OBJECT_CT_TIMEOUT 7
 #define NFT_OBJECT_SECMARK 8
 #define NFT_OBJECT_CT_EXPECT 9
-#define __NFT_OBJECT_MAX 10
+#define NFT_OBJECT_SYNPROXY 10
+#define __NFT_OBJECT_MAX 11
 #define NFT_OBJECT_MAX (__NFT_OBJECT_MAX - 1)
 enum nft_object_attributes {
   NFTA_OBJ_UNSPEC,
@@ -786,6 +792,7 @@ enum nft_flowtable_attributes {
   NFTA_FLOWTABLE_USE,
   NFTA_FLOWTABLE_HANDLE,
   NFTA_FLOWTABLE_PAD,
+  NFTA_FLOWTABLE_FLAGS,
   __NFTA_FLOWTABLE_MAX
 };
 #define NFTA_FLOWTABLE_MAX (__NFTA_FLOWTABLE_MAX - 1)

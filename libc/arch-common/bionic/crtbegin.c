@@ -72,7 +72,7 @@ __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 // To ensure that the .tdata input section isn't deleted (e.g. by
 // --gc-sections), the .text input section (which contains _start) has a
 // relocation to the .tdata input section.
-#if __ANDROID_API__ >= __ANDROID_API_Q__
+#if __ANDROID_API__ >= 29
 #if defined(__arm__)
 asm("  .section .tdata,\"awT\",%progbits\n"
     "  .p2align 5\n"

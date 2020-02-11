@@ -92,8 +92,14 @@ static void check_hw_feature_supported(pid_t child, HwFeature feature) {
                        feature == HwFeature::Watchpoint ? NT_ARM_HW_WATCH : NT_ARM_HW_BREAK, &iov);
   if (result == -1) {
     ASSERT_EQ(EINVAL, errno);
+    GTEST_SKIP() << "Hardware support missing";
+  } else if ((dreg_state.dbg_info & 0xff) == 0) {
+    if (feature == HwFeature::Watchpoint) {
+      GTEST_SKIP() << "Kernel reports zero hardware watchpoints";
+    } else {
+      GTEST_SKIP() << "Kernel reports zero hardware breakpoints";
+    }
   }
-  if ((dreg_state.dbg_info & 0xff) == 0) GTEST_SKIP() << "hardware support missing";
 #else
   // We assume watchpoints and breakpoints are always supported on x86.
   UNUSED(child);

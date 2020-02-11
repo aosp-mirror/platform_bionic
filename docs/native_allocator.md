@@ -100,6 +100,19 @@ To run all of the compliance tests:
 The allocation tests are not meant to be complete, so it is expected
 that a native allocator will have its own set of tests that can be run.
 
+### Libmemunreachable Tests
+The libmemunreachable tests verify that the iterator functions are working
+properly.
+
+To run all of the tests:
+
+    adb shell /data/nativetest64/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest/memunreachable_binder_test/memunreachable_binder_test
+    adb shell /data/nativetest64/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest/memunreachable_test/memunreachable_test
+    adb shell /data/nativetest64/memunreachable_unit_test/memunreachable_unit_test
+    adb shell /data/nativetest/memunreachable_unit_test/memunreachable_unit_test
+
 ### CTS Entropy Test
 In addition to the bionic tests, there is also a CTS test that is designed
 to verify that the addresses returned by malloc are sufficiently randomized
@@ -130,6 +143,32 @@ benchmarks. These benchmarks can be built using this command:
 
 These benchmarks are only used to verify the speed of the allocator and
 ignore anything related to RSS and virtual address space consumed.
+
+For all of these benchmark runs, it can be useful to add these two options:
+
+    --benchmark_repetitions=XX
+    --benchmark_report_aggregates_only=true
+
+This will run the benchmark XX times and then give a mean, median, and stddev
+and helps to get a number that can be compared to the new allocator.
+
+In addition, there is another option:
+
+    --bionic_cpu=XX
+
+Which will lock the benchmark to only run on core XX. This also avoids
+any issue related to the code migrating from one core to another
+with different characteristics. For example, on a big-little cpu, if the
+benchmark moves from big to little or vice-versa, this can cause scores
+to fluctuate in indeterminate ways.
+
+For most runs, the best set of options to add is:
+
+    --benchmark_repetitions=10 --benchmark_report_aggregates_only=true --bionic_cpu=3
+
+On most phones with a big-little cpu, the third core is the little core.
+Choosing to run on the little core can tend to highlight any performance
+differences.
 
 #### Allocate/Free Benchmarks
 These are the benchmarks to verify the allocation speed of a loop doing a
@@ -227,6 +266,30 @@ To run the benchmarks with `mallopt(M_DECAY_TIME, 1)`, use these commands:
 
 These numbers should be as performant as the current allocator.
 
+#### mallinfo Benchmark
+This benchmark only verifies that mallinfo is still close to the performance
+of the current allocator.
+
+To run the benchmark, use these commands:
+
+    adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallinfo
+    adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallinfo
+
+Calls to mallinfo are used in ART so a new allocator is required to be
+nearly as performant as the current allocator.
+
+#### mallopt M\_PURGE Benchmark
+This benchmark tracks the cost of calling `mallopt(M_PURGE, 0)`. As with the
+mallinfo benchmark, it's not necessary for this to be better than the previous
+allocator, only that the performance be in the same order of magnitude.
+
+To run the benchmark, use these commands:
+
+    adb shell /data/benchmarktest64/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallopt_purge
+    adb shell /data/benchmarktest/bionic-benchmarks/bionic-benchmarks --benchmark_filter=BM_mallopt_purge
+
+These calls are used to free unused memory pages back to the kernel.
+
 ### Memory Trace Benchmarks
 These benchmarks measure all three axes of a native allocator, RSS, virtual
 address space consumed, speed of allocation. They are designed to
@@ -263,21 +326,22 @@ so it is not possible to create a completely accurate replay.
 To generate these traces, see the [Malloc Debug documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md),
 the option [record\_allocs](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_debug/README.md#record_allocs_total_entries).
 
-To run these benchmarks, first copy the trace files to the target and
-unzip them using these commands:
+To run these benchmarks, first copy the trace files to the target using
+these commands:
 
     adb shell push system/extras/traces /data/local/tmp
-    adb shell 'cd /data/local/tmp/traces && for name in *.zip; do unzip $name; done'
 
 Since all of the traces come from applications, the `memory_replay` program
 will always call `mallopt(M_DECAY_TIME, 1)' before running the trace.
 
 Run the benchmark thusly:
 
-    adb shell memory_replay64 /data/local/tmp/traces/XXX.txt
-    adb shell memory_replay32 /data/local/tmp/traces/XXX.txt
+    adb shell memory_replay64 /data/local/tmp/traces/XXX.zip
+    adb shell memory_replay32 /data/local/tmp/traces/XXX.zip
 
-Where XXX.txt is the name of a trace file.
+Where XXX.zip is the name of a zipped trace file. The `memory_replay`
+program also can process text files, but all trace files are currently
+checked in as zip files.
 
 Every 100000 allocation operations, a dump of the RSS and VA space will be
 performed. At the end, a final RSS and VA space number will be printed.

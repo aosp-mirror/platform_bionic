@@ -127,22 +127,20 @@ TEST(pthread_leak, join) {
 // http://b/36045112
 TEST(pthread_leak, detach) {
   LeakChecker lc;
-  constexpr int kThreadCount = 100;
 
-  // Devices with low power cores/low number of cores can not finish test in time hence decreasing
-  // threads count to 90.
-  // http://b/129924384.
-  int threads_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? kThreadCount : (kThreadCount - 10);
+  // Ancient devices with only 2 cores need a lower limit.
+  // http://b/129924384 and https://issuetracker.google.com/142210680.
+  const int thread_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? 100 : 50;
 
   for (size_t pass = 0; pass < 1; ++pass) {
-    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[kThreadCount] = {};
+    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[thread_count];
 
     pthread_barrier_t barrier;
-    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, threads_count + 1), 0);
+    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
 
     // Start child threads.
-    pid_t tids[kThreadCount];
-    for (int i = 0; i < threads_count; ++i) {
+    pid_t tids[thread_count];
+    for (int i = 0; i < thread_count; ++i) {
       threads[i] = {&barrier, &tids[i]};
       const auto thread_function = +[](void* ptr) -> void* {
         thread_data* data = static_cast<thread_data*>(ptr);
@@ -158,7 +156,7 @@ TEST(pthread_leak, detach) {
     pthread_barrier_wait(&barrier);
     ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-    WaitUntilAllThreadsExited(tids, threads_count);
+    WaitUntilAllThreadsExited(tids, thread_count);
 
     // A native bridge implementation might need a warm up pass to reach a steady state.
     // http://b/37920774.

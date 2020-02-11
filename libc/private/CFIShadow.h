@@ -19,8 +19,8 @@
 
 #include <stdint.h>
 
-#include "private/bionic_page.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/page.h"
+#include "platform/bionic/macros.h"
 
 constexpr unsigned kLibraryAlignmentBits = 18;
 constexpr size_t kLibraryAlignment = 1UL << kLibraryAlignmentBits;

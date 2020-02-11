@@ -119,7 +119,7 @@ char* strsignal(int __signal);
 int strcoll(const char* __lhs, const char* __rhs) __attribute_pure__;
 size_t strxfrm(char* __dst, const char* __src, size_t __n);
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 int strcoll_l(const char* __lhs, const char* __rhs, locale_t __l) __attribute_pure__ __INTRODUCED_IN(21);
 size_t strxfrm_l(char* __dst, const char* __src, size_t __n, locale_t __l) __INTRODUCED_IN(21);
 #else

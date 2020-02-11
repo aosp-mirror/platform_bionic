@@ -18,7 +18,7 @@
 
 #include <errno.h>
 
-#include "bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 class ErrnoRestorer {
  public:

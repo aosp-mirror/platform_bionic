@@ -42,7 +42,7 @@
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
@@ -54,29 +54,10 @@
 void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
-// This code is used both by each new pthread and the code that initializes the main thread.
-__attribute__((no_stack_protector))
-void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread) {
-#ifdef TLS_SLOT_SELF
-  // On x86, slot 0 must point to itself so code can read the thread pointer by
-  // loading %fs:0 or %gs:0.
-  tcb->tls_slot(TLS_SLOT_SELF) = &tcb->tls_slot(TLS_SLOT_SELF);
-#endif
-  tcb->tls_slot(TLS_SLOT_THREAD_ID) = thread;
-}
-
 __attribute__((no_stack_protector))
 void __init_tcb_stack_guard(bionic_tcb* tcb) {
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
   tcb->tls_slot(TLS_SLOT_STACK_GUARD) = reinterpret_cast<void*>(__stack_chk_guard);
-}
-
-__attribute__((no_stack_protector))
-void __init_tcb_dtv(bionic_tcb* tcb) {
-  // Initialize the DTV slot to a statically-allocated empty DTV. The first
-  // access to a dynamic TLS variable allocates a new DTV.
-  static const TlsDtv zero_dtv = {};
-  __set_tcb_dtv(tcb, const_cast<TlsDtv*>(&zero_dtv));
 }
 
 void __init_bionic_tls_ptrs(bionic_tcb* tcb, bionic_tls* tls) {
@@ -319,6 +300,7 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->mmap_size = mapping.mmap_size;
   thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
   thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
+  thread->stack_top = reinterpret_cast<uintptr_t>(stack_top);
 
   *tcbp = tcb;
   *child_stack = stack_top;

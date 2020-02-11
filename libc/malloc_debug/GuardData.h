@@ -33,7 +33,7 @@
 
 #include <vector>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 #include "OptionData.h"
 

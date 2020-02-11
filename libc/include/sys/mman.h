@@ -54,7 +54,7 @@ void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t
 void* mmap(void* __addr, size_t __size, int __prot, int __flags, int __fd, off_t __offset);
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 /**
  * mmap64() is a variant of mmap() that takes a 64-bit offset even on LP32.
  *
@@ -173,7 +173,7 @@ int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
 
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= 23
 
 /*
  * Some third-party code uses the existence of POSIX_MADV_NORMAL to detect the

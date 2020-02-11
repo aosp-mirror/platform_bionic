@@ -29,6 +29,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stdint.h>
 
 // Structures for android_mallopt.
 
@@ -84,6 +85,35 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
+  // Change the heap tagging state. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  //   arg = HeapTaggingLevel*
+  //   arg_size = sizeof(HeapTaggingLevel)
+  M_SET_HEAP_TAGGING_LEVEL = 8,
+#define M_SET_HEAP_TAGGING_LEVEL M_SET_HEAP_TAGGING_LEVEL
+  // Query whether the current process is considered to be profileable by the
+  // Android platform. Result is assigned to the arg pointer's destination.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_GET_PROCESS_PROFILEABLE = 9,
+#define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
+  // Maybe enable GWP-ASan. Set *arg to force GWP-ASan to be turned on,
+  // otherwise this mallopt() will internally decide whether to sample the
+  // process. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_INITIALIZE_GWP_ASAN = 10,
+#define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
+};
+
+enum HeapTaggingLevel {
+  // Disable heap tagging. The program must use prctl(PR_SET_TAGGED_ADDR_CTRL) to disable memory tag
+  // checks before disabling heap tagging. Heap tagging may not be re-enabled after being disabled.
+  M_HEAP_TAGGING_LEVEL_NONE = 0,
+  // Address-only tagging. Heap pointers have a non-zero tag in the most significant byte which is
+  // checked in free(). Memory accesses ignore the tag.
+  M_HEAP_TAGGING_LEVEL_TBI = 1,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

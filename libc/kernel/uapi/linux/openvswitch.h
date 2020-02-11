@@ -70,6 +70,7 @@ struct ovs_vport_stats {
 };
 #define OVS_DP_F_UNALIGNED (1 << 0)
 #define OVS_DP_F_VPORT_PIDS (1 << 1)
+#define OVS_DP_F_TC_RECIRC_SHARING (1 << 2)
 #define OVSP_LOCAL ((__u32) 0)
 #define OVS_PACKET_FAMILY "ovs_packet"
 #define OVS_PACKET_VERSION 0x1
@@ -91,6 +92,7 @@ enum ovs_packet_attr {
   OVS_PACKET_ATTR_PROBE,
   OVS_PACKET_ATTR_MRU,
   OVS_PACKET_ATTR_LEN,
+  OVS_PACKET_ATTR_HASH,
   __OVS_PACKET_ATTR_MAX
 };
 #define OVS_PACKET_ATTR_MAX (__OVS_PACKET_ATTR_MAX - 1)

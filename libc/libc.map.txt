@@ -332,7 +332,7 @@ LIBC {
     execvp;
     execvpe; # introduced=21
     exit;
-    faccessat; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    faccessat;
     fallocate; # introduced=21
     fallocate64; # introduced=21
     fchdir;
@@ -358,9 +358,9 @@ LIBC {
     fgets;
     fgetwc;
     fgetws;
-    fgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fgetxattr;
     fileno;
-    flistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    flistxattr;
     flock;
     flockfile;
     fmemopen; # introduced=23
@@ -379,13 +379,13 @@ LIBC {
     free;
     freeaddrinfo;
     freelocale; # introduced=21
-    fremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fremovexattr;
     freopen;
     fscanf;
     fseek;
     fseeko;
     fsetpos;
-    fsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    fsetxattr;
     fstat;
     fstat64; # introduced=21
     fstatat;
@@ -488,7 +488,7 @@ LIBC {
     getutent;
     getwc;
     getwchar;
-    getxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    getxattr;
     gmtime;
     gmtime64; # arm x86 mips
     gmtime64_r; # arm x86 mips
@@ -596,14 +596,14 @@ LIBC {
     ldexp;
     ldiv;
     lfind; # introduced=21
-    lgetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lgetxattr;
     link;
     linkat; # introduced=21
     listen;
-    listxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    listxattr;
     llabs; # introduced-arm=19 introduced-arm64=21 introduced-mips=19 introduced-mips64=21 introduced-x86=19 introduced-x86_64=21
     lldiv;
-    llistxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    llistxattr;
     localeconv; # introduced=21
     localtime;
     localtime64; # arm x86 mips
@@ -612,11 +612,11 @@ LIBC {
     login_tty; # introduced=23
     longjmp;
     lrand48;
-    lremovexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lremovexattr;
     lsearch; # introduced=21
     lseek;
     lseek64;
-    lsetxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    lsetxattr;
     lstat;
     lstat64; # introduced=21
     madvise;
@@ -723,7 +723,7 @@ LIBC {
     pause;
     pclose;
     perror;
-    personality; # introduced-arm=15 introduced-arm64=21 introduced-mips=15 introduced-mips64=21 introduced-x86=15 introduced-x86_64=21
+    personality;
     pipe;
     pipe2;
     poll;
@@ -850,7 +850,7 @@ LIBC {
     rand_r; # introduced=21
     random; # introduced=21
     read;
-    readahead; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    readahead;
     readdir;
     readdir64; # introduced=21
     readdir64_r; # introduced=21
@@ -870,7 +870,7 @@ LIBC {
     regexec;
     regfree;
     remove;
-    removexattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    removexattr;
     remque; # introduced=21
     rename;
     renameat;
@@ -950,7 +950,7 @@ LIBC {
     setuid;
     setutent;
     setvbuf;
-    setxattr; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    setxattr;
     shutdown;
     sigaction;
     sigaddset; # introduced=21
@@ -1068,13 +1068,13 @@ LIBC {
     tcsendbreak; # introduced=21
     tcsetattr; # introduced=21
     tcsetpgrp;
-    tdelete; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
-    tdestroy; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tdelete;
+    tdestroy;
     tee; # introduced=21
     telldir; # introduced=23
     tempnam;
-    tfind; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
-    tgkill; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tfind;
+    tgkill;
     time;
     timegm; # introduced-arm=12 introduced-arm64=21 introduced-mips=12 introduced-mips64=21 introduced-x86=12 introduced-x86_64=21
     timegm64; # arm x86 mips
@@ -1103,7 +1103,7 @@ LIBC {
     towupper_l; # introduced=21
     truncate;
     truncate64; # introduced=21
-    tsearch; # introduced-arm=16 introduced-arm64=21 introduced-mips=16 introduced-mips64=21 introduced-x86=16 introduced-x86_64=21
+    tsearch;
     ttyname;
     ttyname_r;
     twalk; # introduced=21
@@ -1468,10 +1468,10 @@ LIBC_Q { # introduced=Q
     __system_properties_init; # apex
 
     # Used by libmemunreachable
-    malloc_backtrace; # apex vndk
-    malloc_disable; # apex vndk
-    malloc_enable; # apex vndk
-    malloc_iterate; # apex vndk
+    malloc_backtrace; # apex llndk
+    malloc_disable; # apex llndk
+    malloc_enable; # apex llndk
+    malloc_iterate; # apex llndk
 
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
@@ -1517,15 +1517,40 @@ LIBC_R { # introduced=R
     tss_delete;
     tss_get;
     tss_set;
+
+    # Unwinder implementation
+    __aeabi_unwind_cpp_pr0; # apex llndk arm
+    __aeabi_unwind_cpp_pr1; # apex llndk arm
+    __aeabi_unwind_cpp_pr2; # apex llndk arm
+    __deregister_frame; # apex llndk arm64 x86 x86_64
+    __gnu_unwind_frame; # apex llndk arm
+    __register_frame; # apex llndk arm64 x86 x86_64
+    _Unwind_Backtrace; # apex llndk
+    _Unwind_Complete; # apex llndk arm
+    _Unwind_DeleteException; # apex llndk
+    _Unwind_Find_FDE; # apex llndk
+    _Unwind_FindEnclosingFunction; # apex llndk
+    _Unwind_ForcedUnwind; # apex llndk arm64 x86 x86_64
+    _Unwind_GetCFA; # apex llndk
+    _Unwind_GetDataRelBase; # apex llndk
+    _Unwind_GetGR; # apex llndk
+    _Unwind_GetIP; # apex llndk
+    _Unwind_GetIPInfo; # apex llndk
+    _Unwind_GetLanguageSpecificData; # apex llndk
+    _Unwind_GetRegionStart; # apex llndk
+    _Unwind_GetTextRelBase; # apex llndk
+    _Unwind_RaiseException; # apex llndk
+    _Unwind_Resume; # apex llndk
+    _Unwind_Resume_or_Rethrow; # apex llndk
+    _Unwind_SetGR; # apex llndk
+    _Unwind_SetIP; # apex llndk
+    _Unwind_VRS_Get; # apex llndk arm
+    _Unwind_VRS_Pop; # apex llndk arm
+    _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
 
 LIBC_PRIVATE {
   global:
-    ___Unwind_Backtrace; # arm
-    ___Unwind_ForcedUnwind; # arm
-    ___Unwind_RaiseException; # arm
-    ___Unwind_Resume; # arm
-    ___Unwind_Resume_or_Rethrow; # arm
     __accept4; # arm x86 mips
     __adddf3; # arm
     __addsf3; # arm
@@ -1596,9 +1621,6 @@ LIBC_PRIVATE {
     __aeabi_ul2d; # arm
     __aeabi_ul2f; # arm
     __aeabi_uldivmod; # arm
-    __aeabi_unwind_cpp_pr0; # arm
-    __aeabi_unwind_cpp_pr1; # arm
-    __aeabi_unwind_cpp_pr2; # arm
     __arm_fadvise64_64; # arm
     __ashldi3; # arm
     __ashrdi3; # arm
@@ -1635,24 +1657,7 @@ LIBC_PRIVATE {
     __getdents64; # arm x86 mips
     __gnu_ldivmod_helper; # arm
     __gnu_uldivmod_helper; # arm
-    __gnu_Unwind_Backtrace; # arm
-    __gnu_unwind_execute; # arm
     __gnu_Unwind_Find_exidx; # arm
-    __gnu_Unwind_ForcedUnwind; # arm
-    __gnu_unwind_frame; # arm
-    __gnu_Unwind_RaiseException; # arm
-    __gnu_Unwind_Restore_VFP; # arm
-    __gnu_Unwind_Restore_VFP_D; # arm
-    __gnu_Unwind_Restore_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Restore_WMMXC; # arm
-    __gnu_Unwind_Restore_WMMXD; # arm
-    __gnu_Unwind_Resume; # arm
-    __gnu_Unwind_Resume_or_Rethrow; # arm
-    __gnu_Unwind_Save_VFP; # arm
-    __gnu_Unwind_Save_VFP_D; # arm
-    __gnu_Unwind_Save_VFP_D_16_to_31; # arm
-    __gnu_Unwind_Save_WMMXC; # arm
-    __gnu_Unwind_Save_WMMXD; # arm
     __gtdf2; # arm
     __gtsf2; # arm
     __ledf2; # arm
@@ -1671,7 +1676,6 @@ LIBC_PRIVATE {
     __popcount_tab; # arm
     __popcountsi2; # arm x86 mips
     __pthread_gettid; # arm x86 mips
-    __restore_core_regs; # arm
     __sclose; # arm x86 mips
     __sdidinit; # arm x86 mips
     __set_errno; # arm x86 mips
@@ -1698,26 +1702,12 @@ LIBC_PRIVATE {
     __unordsf2; # arm
     __wait4; # arm x86 mips
     _fwalk; # arm x86 mips
-    _Unwind_Backtrace; # arm
-    _Unwind_Complete; # arm
-    _Unwind_DeleteException; # arm
-    _Unwind_ForcedUnwind; # arm
-    _Unwind_GetCFA; # arm
-    _Unwind_GetDataRelBase; # arm
-    _Unwind_GetLanguageSpecificData; # arm
-    _Unwind_GetRegionStart; # arm
-    _Unwind_GetTextRelBase; # arm
-    _Unwind_RaiseException; # arm
-    _Unwind_Resume; # arm
-    _Unwind_Resume_or_Rethrow; # arm
-    _Unwind_VRS_Get; # arm
-    _Unwind_VRS_Pop; # arm
-    _Unwind_VRS_Set; # arm
     android_getaddrinfofornetcontext;
     android_gethostbyaddrfornet;
     android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
     android_gethostbynamefornetcontext;
+    android_unsafe_frame_pointer_chase;
     arc4random_addrandom; # arm x86 mips
     arc4random_stir; # arm x86 mips
     atexit; # arm
@@ -1735,7 +1725,6 @@ LIBC_PRIVATE {
     memswap; # arm x86 mips
     pthread_attr_getstackaddr; # arm x86 mips
     pthread_attr_setstackaddr; # arm x86 mips
-    restore_core_regs; # arm
     SHA1Final; # arm x86 mips
     SHA1Init; # arm x86 mips
     SHA1Transform; # arm x86 mips
@@ -1764,6 +1753,9 @@ LIBC_PLATFORM {
     __system_property_set_filename;
     __system_property_update;
     android_fdsan_get_fd_table;
+    android_fdtrack_compare_exchange_hook; # llndk
+    android_fdtrack_get_enabled; # llndk
+    android_fdtrack_set_enabled; # llndk
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;

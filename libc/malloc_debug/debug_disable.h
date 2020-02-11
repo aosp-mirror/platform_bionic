@@ -30,7 +30,7 @@
 
 #include <sys/cdefs.h>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 // =============================================================================
 // Used to disable the debug allocation calls.

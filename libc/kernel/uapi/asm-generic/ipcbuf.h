@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef __ASM_GENERIC_IPCBUF_H
 #define __ASM_GENERIC_IPCBUF_H
+#include <linux/posix_types.h>
 struct ipc64_perm {
   __kernel_key_t key;
   __kernel_uid32_t uid;

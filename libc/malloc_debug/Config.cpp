@@ -38,7 +38,7 @@
 #include <string>
 #include <vector>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 #include "Config.h"
 #include "debug_log.h"

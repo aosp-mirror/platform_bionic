@@ -16,11 +16,10 @@
 
 // Deliberately overwrite the stack canary.
 __attribute__((noinline)) void modify_stack_protector_test() {
-  char buf[128];
   // We can't use memset here because it's fortified, and we want to test
   // the line of defense *after* that.
   // Without volatile, the generic x86/x86-64 targets don't write to the stack.
-  volatile char* p = buf;
-  int size = static_cast<int>(sizeof(buf) + sizeof(void*));
-  while ((p - buf) < size) *p++ = '\0';
+  volatile char* p;
+  p = reinterpret_cast<volatile char*>(&p + 1);
+  *p = '\0';
 }

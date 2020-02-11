@@ -23,20 +23,20 @@
 #define GOYA_KMD_SRAM_RESERVED_SIZE_FROM_START 0x8000
 enum goya_queue_id {
   GOYA_QUEUE_ID_DMA_0 = 0,
-  GOYA_QUEUE_ID_DMA_1,
-  GOYA_QUEUE_ID_DMA_2,
-  GOYA_QUEUE_ID_DMA_3,
-  GOYA_QUEUE_ID_DMA_4,
-  GOYA_QUEUE_ID_CPU_PQ,
-  GOYA_QUEUE_ID_MME,
-  GOYA_QUEUE_ID_TPC0,
-  GOYA_QUEUE_ID_TPC1,
-  GOYA_QUEUE_ID_TPC2,
-  GOYA_QUEUE_ID_TPC3,
-  GOYA_QUEUE_ID_TPC4,
-  GOYA_QUEUE_ID_TPC5,
-  GOYA_QUEUE_ID_TPC6,
-  GOYA_QUEUE_ID_TPC7,
+  GOYA_QUEUE_ID_DMA_1 = 1,
+  GOYA_QUEUE_ID_DMA_2 = 2,
+  GOYA_QUEUE_ID_DMA_3 = 3,
+  GOYA_QUEUE_ID_DMA_4 = 4,
+  GOYA_QUEUE_ID_CPU_PQ = 5,
+  GOYA_QUEUE_ID_MME = 6,
+  GOYA_QUEUE_ID_TPC0 = 7,
+  GOYA_QUEUE_ID_TPC1 = 8,
+  GOYA_QUEUE_ID_TPC2 = 9,
+  GOYA_QUEUE_ID_TPC3 = 10,
+  GOYA_QUEUE_ID_TPC4 = 11,
+  GOYA_QUEUE_ID_TPC5 = 12,
+  GOYA_QUEUE_ID_TPC6 = 13,
+  GOYA_QUEUE_ID_TPC7 = 14,
   GOYA_QUEUE_ID_SIZE
 };
 enum goya_engine_id {
@@ -66,7 +66,12 @@ enum hl_device_status {
 #define HL_INFO_DRAM_USAGE 2
 #define HL_INFO_HW_IDLE 3
 #define HL_INFO_DEVICE_STATUS 4
+#define HL_INFO_DEVICE_UTILIZATION 6
+#define HL_INFO_HW_EVENTS_AGGREGATE 7
+#define HL_INFO_CLK_RATE 8
+#define HL_INFO_RESET_COUNT 9
 #define HL_INFO_VERSION_MAX_LEN 128
+#define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
   __u64 sram_base_address;
   __u64 dram_base_address;
@@ -84,6 +89,7 @@ struct hl_info_hw_ip_info {
   __u8 dram_enabled;
   __u8 pad[2];
   __u8 armcp_version[HL_INFO_VERSION_MAX_LEN];
+  __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
@@ -97,15 +103,31 @@ struct hl_info_device_status {
   __u32 status;
   __u32 pad;
 };
+struct hl_info_device_utilization {
+  __u32 utilization;
+  __u32 pad;
+};
+struct hl_info_clk_rate {
+  __u32 cur_clk_rate_mhz;
+  __u32 max_clk_rate_mhz;
+};
+struct hl_info_reset_count {
+  __u32 hard_reset_cnt;
+  __u32 soft_reset_cnt;
+};
 struct hl_info_args {
   __u64 return_pointer;
   __u32 return_size;
   __u32 op;
-  __u32 ctx_id;
+  union {
+    __u32 ctx_id;
+    __u32 period_ms;
+  };
   __u32 pad;
 };
 #define HL_CB_OP_CREATE 0
 #define HL_CB_OP_DESTROY 1
+#define HL_MAX_CB_SIZE 0x200000
 struct hl_cb_in {
   __u64 cb_handle;
   __u32 op;
@@ -129,6 +151,7 @@ struct hl_cs_chunk {
 };
 #define HL_CS_FLAGS_FORCE_RESTORE 0x1
 #define HL_CS_STATUS_SUCCESS 0
+#define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
   __u64 chunks_restore;
   __u64 chunks_execute;

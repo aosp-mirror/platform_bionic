@@ -63,7 +63,7 @@ static __inline__ __always_inline void __bionic_bzero(void* b, size_t len) {
   __builtin_memset(b, 0, len);
 }
 
-#if !defined(__i386__) || __ANDROID_API__ >= __ANDROID_API_J_MR2__
+#if !defined(__i386__) || __ANDROID_API__ >= 18
 /**
  * [ffs(3)](http://man7.org/linux/man-pages/man3/ffs.3.html) finds the first set bit in `__i`.
  *

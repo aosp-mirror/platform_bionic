@@ -40,8 +40,10 @@
 #include <unistd.h>
 
 #include <async_safe/log.h>
+#include <platform/bionic/reserved_signals.h>
 #include <sys/system_properties.h>
 
+#include "private/bionic_fdtrack.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_inline_raise.h"
 #include "pthread_internal.h"
@@ -168,8 +170,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
                                      ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
       __BIONIC_FALLTHROUGH;
     case ANDROID_FDSAN_ERROR_LEVEL_WARN_ALWAYS:
-      // DEBUGGER_SIGNAL
-      inline_raise(__SIGRTMIN + 3, &abort_message);
+      inline_raise(BIONIC_SIGNAL_DEBUGGER, &abort_message);
       break;
 
     case ANDROID_FDSAN_ERROR_LEVEL_FATAL:
@@ -245,6 +246,7 @@ uint64_t android_fdsan_get_tag_value(uint64_t tag) {
 }
 
 int android_fdsan_close_with_tag(int fd, uint64_t expected_tag) {
+  FDTRACK_CLOSE(fd);
   FdEntry* fde = GetFdEntry(fd);
   if (!fde) {
     return __close(fd);

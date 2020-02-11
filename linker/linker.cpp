@@ -63,11 +63,11 @@
 #include "linker_namespaces.h"
 #include "linker_sleb128.h"
 #include "linker_phdr.h"
-#include "linker_relocs.h"
-#include "linker_reloc_iterators.h"
+#include "linker_relocate.h"
 #include "linker_tls.h"
 #include "linker_utils.h"
 
+#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "android-base/macros.h"
 #include "android-base/strings.h"
@@ -94,7 +94,7 @@ static const char* const kLdConfigArchFilePath = "/system/etc/ld.config." ABI_ST
 static const char* const kLdConfigFilePath = "/system/etc/ld.config.txt";
 static const char* const kLdConfigVndkLiteFilePath = "/system/etc/ld.config.vndk_lite.txt";
 
-static const char* const kLdGeneratedConfigFilePath = "/dev/linkerconfig/ld.config.txt";
+static const char* const kLdGeneratedConfigFilePath = "/linkerconfig/ld.config.txt";
 
 #if defined(__LP64__)
 static const char* const kSystemLibDir        = "/system/lib64";
@@ -208,7 +208,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   };
 
   // If you're targeting N, you don't get the greylist.
-  if (g_greylist_disabled || get_application_target_sdk_version() >= __ANDROID_API_N__) {
+  if (g_greylist_disabled || get_application_target_sdk_version() >= 24) {
     return false;
   }
 
@@ -251,7 +251,7 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
   // New mapping for new apex should be added below
 
   // Nothing to do if target sdk version is Q or above
-  if (get_application_target_sdk_version() >= __ANDROID_API_Q__) {
+  if (get_application_target_sdk_version() >= 29) {
     return false;
   }
 
@@ -274,35 +274,6 @@ static bool translateSystemPathToApexPath(const char* name, std::string* out_nam
 // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
-
-#if STATS
-struct linker_stats_t {
-  int count[kRelocMax];
-};
-
-static linker_stats_t linker_stats;
-
-void count_relocation(RelocationKind kind) {
-  ++linker_stats.count[kind];
-}
-
-void print_linker_stats() {
-  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol (%d cached)",
-         g_argv[0],
-         linker_stats.count[kRelocAbsolute],
-         linker_stats.count[kRelocRelative],
-         linker_stats.count[kRelocCopy],
-         linker_stats.count[kRelocSymbol],
-         linker_stats.count[kRelocSymbolCached]);
-}
-#else
-void count_relocation(RelocationKind) {
-}
-#endif
-
-#if COUNT_PAGES
-uint32_t bitmask[4096];
-#endif
 
 static void notify_gdb_of_load(soinfo* info) {
   if (info->is_linker() || info->is_main_executable()) {
@@ -489,100 +460,6 @@ int do_dl_iterate_phdr(int (*cb)(dl_phdr_info* info, size_t size, void* data), v
     }
   }
   return rv;
-}
-
-
-bool soinfo_do_lookup(soinfo* si_from, const char* name, const version_info* vi,
-                      soinfo** si_found_in, const soinfo_list_t& global_group,
-                      const soinfo_list_t& local_group, const ElfW(Sym)** symbol) {
-  SymbolName symbol_name(name);
-  const ElfW(Sym)* s = nullptr;
-
-  /* "This element's presence in a shared object library alters the dynamic linker's
-   * symbol resolution algorithm for references within the library. Instead of starting
-   * a symbol search with the executable file, the dynamic linker starts from the shared
-   * object itself. If the shared object fails to supply the referenced symbol, the
-   * dynamic linker then searches the executable file and other shared objects as usual."
-   *
-   * http://www.sco.com/developers/gabi/2012-12-31/ch5.dynamic.html
-   *
-   * Note that this is unlikely since static linker avoids generating
-   * relocations for -Bsymbolic linked dynamic executables.
-   */
-  if (si_from->has_DT_SYMBOLIC) {
-    DEBUG("%s: looking up %s in local scope (DT_SYMBOLIC)", si_from->get_realpath(), name);
-    if (!si_from->find_symbol_by_name(symbol_name, vi, &s)) {
-      return false;
-    }
-
-    if (s != nullptr) {
-      *si_found_in = si_from;
-    }
-  }
-
-  // 1. Look for it in global_group
-  if (s == nullptr) {
-    bool error = false;
-    global_group.visit([&](soinfo* global_si) {
-      DEBUG("%s: looking up %s in %s (from global group)",
-          si_from->get_realpath(), name, global_si->get_realpath());
-      if (!global_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
-      if (s != nullptr) {
-        *si_found_in = global_si;
-        return false;
-      }
-
-      return true;
-    });
-
-    if (error) {
-      return false;
-    }
-  }
-
-  // 2. Look for it in the local group
-  if (s == nullptr) {
-    bool error = false;
-    local_group.visit([&](soinfo* local_si) {
-      if (local_si == si_from && si_from->has_DT_SYMBOLIC) {
-        // we already did this - skip
-        return true;
-      }
-
-      DEBUG("%s: looking up %s in %s (from local group)",
-          si_from->get_realpath(), name, local_si->get_realpath());
-      if (!local_si->find_symbol_by_name(symbol_name, vi, &s)) {
-        error = true;
-        return false;
-      }
-
-      if (s != nullptr) {
-        *si_found_in = local_si;
-        return false;
-      }
-
-      return true;
-    });
-
-    if (error) {
-      return false;
-    }
-  }
-
-  if (s != nullptr) {
-    TRACE_TYPE(LOOKUP, "si %s sym %s s->st_value = %p, "
-               "found in %s, base = %p, load bias = %p",
-               si_from->get_realpath(), name, reinterpret_cast<void*>(s->st_value),
-               (*si_found_in)->get_realpath(), reinterpret_cast<void*>((*si_found_in)->base),
-               reinterpret_cast<void*>((*si_found_in)->load_bias));
-  }
-
-  *symbol = s;
-  return true;
 }
 
 ProtectedDataGuard::ProtectedDataGuard() {
@@ -847,12 +724,12 @@ static bool walk_dependencies_tree(soinfo* root_soinfo, F action) {
 }
 
 
-static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
-                                            soinfo* root,
-                                            soinfo* skip_until,
-                                            soinfo** found,
-                                            SymbolName& symbol_name,
-                                            const version_info* vi) {
+static const ElfW(Sym)* dlsym_handle_lookup_impl(android_namespace_t* ns,
+                                                 soinfo* root,
+                                                 soinfo* skip_until,
+                                                 soinfo** found,
+                                                 SymbolName& symbol_name,
+                                                 const version_info* vi) {
   const ElfW(Sym)* result = nullptr;
   bool skip_lookup = skip_until != nullptr;
 
@@ -866,11 +743,7 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
       return kWalkSkip;
     }
 
-    if (!current_soinfo->find_symbol_by_name(symbol_name, vi, &result)) {
-      result = nullptr;
-      return kWalkStop;
-    }
-
+    result = current_soinfo->find_symbol_by_name(symbol_name, vi);
     if (result != nullptr) {
       *found = current_soinfo;
       return kWalkStop;
@@ -880,38 +753,6 @@ static const ElfW(Sym)* dlsym_handle_lookup(android_namespace_t* ns,
   });
 
   return result;
-}
-
-static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
-                                            const char* name,
-                                            const version_info* vi,
-                                            soinfo** found,
-                                            soinfo* caller,
-                                            void* handle);
-
-// This is used by dlsym(3).  It performs symbol lookup only within the
-// specified soinfo object and its dependencies in breadth first order.
-static const ElfW(Sym)* dlsym_handle_lookup(soinfo* si,
-                                            soinfo** found,
-                                            const char* name,
-                                            const version_info* vi) {
-  // According to man dlopen(3) and posix docs in the case when si is handle
-  // of the main executable we need to search not only in the executable and its
-  // dependencies but also in all libraries loaded with RTLD_GLOBAL.
-  //
-  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
-  // libraries and they are loaded in breath-first (correct) order we can just execute
-  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
-  if (si == solist_get_somain()) {
-    return dlsym_linear_lookup(&g_default_namespace, name, vi, found, nullptr, RTLD_DEFAULT);
-  }
-
-  SymbolName symbol_name(name);
-  // note that the namespace is not the namespace associated with caller_addr
-  // we use ns associated with root si intentionally here. Using caller_ns
-  // causes problems when user uses dlopen_ext to open a library in the separate
-  // namespace and then calls dlsym() on the handle.
-  return dlsym_handle_lookup(si->get_primary_namespace(), si, nullptr, found, symbol_name, vi);
 }
 
 /* This is used by dlsym(3) to performs a global symbol lookup. If the
@@ -946,31 +787,27 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
     // Do not skip RTLD_LOCAL libraries in dlsym(RTLD_DEFAULT, ...)
     // if the library is opened by application with target api level < M.
     // See http://b/21565766
-    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 &&
-        si->get_target_sdk_version() >= __ANDROID_API_M__) {
+    if ((si->get_rtld_flags() & RTLD_GLOBAL) == 0 && si->get_target_sdk_version() >= 23) {
       continue;
     }
 
-    if (!si->find_symbol_by_name(symbol_name, vi, &s)) {
-      return nullptr;
-    }
-
+    s = si->find_symbol_by_name(symbol_name, vi);
     if (s != nullptr) {
       *found = si;
       break;
     }
   }
 
-  // If not found - use dlsym_handle_lookup for caller's local_group
+  // If not found - use dlsym_handle_lookup_impl for caller's local_group
   if (s == nullptr && caller != nullptr) {
     soinfo* local_group_root = caller->get_local_group_root();
 
-    return dlsym_handle_lookup(local_group_root->get_primary_namespace(),
-                               local_group_root,
-                               (handle == RTLD_NEXT) ? caller : nullptr,
-                               found,
-                               symbol_name,
-                               vi);
+    return dlsym_handle_lookup_impl(local_group_root->get_primary_namespace(),
+                                    local_group_root,
+                                    (handle == RTLD_NEXT) ? caller : nullptr,
+                                    found,
+                                    symbol_name,
+                                    vi);
   }
 
   if (s != nullptr) {
@@ -979,6 +816,31 @@ static const ElfW(Sym)* dlsym_linear_lookup(android_namespace_t* ns,
   }
 
   return s;
+}
+
+// This is used by dlsym(3).  It performs symbol lookup only within the
+// specified soinfo object and its dependencies in breadth first order.
+static const ElfW(Sym)* dlsym_handle_lookup(soinfo* si,
+                                            soinfo** found,
+                                            const char* name,
+                                            const version_info* vi) {
+  // According to man dlopen(3) and posix docs in the case when si is handle
+  // of the main executable we need to search not only in the executable and its
+  // dependencies but also in all libraries loaded with RTLD_GLOBAL.
+  //
+  // Since RTLD_GLOBAL is always set for the main executable and all dt_needed shared
+  // libraries and they are loaded in breath-first (correct) order we can just execute
+  // dlsym(RTLD_DEFAULT, ...); instead of doing two stage lookup.
+  if (si == solist_get_somain()) {
+    return dlsym_linear_lookup(&g_default_namespace, name, vi, found, nullptr, RTLD_DEFAULT);
+  }
+
+  SymbolName symbol_name(name);
+  // note that the namespace is not the namespace associated with caller_addr
+  // we use ns associated with root si intentionally here. Using caller_ns
+  // causes problems when user uses dlopen_ext to open a library in the separate
+  // namespace and then calls dlsym() on the handle.
+  return dlsym_handle_lookup_impl(si->get_primary_namespace(), si, nullptr, found, symbol_name, vi);
 }
 
 soinfo* find_containing_library(const void* p) {
@@ -1235,10 +1097,10 @@ const char* fix_dt_needed(const char* dt_needed, const char* sopath __unused) {
 #if !defined(__LP64__)
   // Work around incorrect DT_NEEDED entries for old apps: http://b/21364029
   int app_target_api_level = get_application_target_sdk_version();
-  if (app_target_api_level < __ANDROID_API_M__) {
+  if (app_target_api_level < 23) {
     const char* bname = basename(dt_needed);
     if (bname != dt_needed) {
-      DL_WARN_documented_change(__ANDROID_API_M__,
+      DL_WARN_documented_change(23,
                                 "invalid-dt_needed-entries-enforced-for-api-level-23",
                                 "library \"%s\" has invalid DT_NEEDED entry \"%s\"",
                                 sopath, dt_needed, app_target_api_level);
@@ -1387,7 +1249,7 @@ static bool load_library(android_namespace_t* ns,
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
         const char* sopath = needed_or_dlopened_by == nullptr ? "(unknown)" :
                                                       needed_or_dlopened_by->get_realpath();
-        DL_WARN_documented_change(__ANDROID_API_N__,
+        DL_WARN_documented_change(24,
                                   "private-api-enforced-for-api-level-24",
                                   "library \"%s\" (\"%s\") needed or dlopened by \"%s\" "
                                   "is not accessible by namespace \"%s\"",
@@ -1506,7 +1368,16 @@ static bool load_library(android_namespace_t* ns,
   // Open the file.
   int fd = open_library(ns, zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
-    DL_OPEN_ERR("library \"%s\" not found", name);
+    if (task->is_dt_needed()) {
+      if (needed_by->is_main_executable()) {
+        DL_OPEN_ERR("library \"%s\" not found: needed by main executable", name);
+      } else {
+        DL_OPEN_ERR("library \"%s\" not found: needed by %s in namespace %s", name,
+                    needed_by->get_realpath(), task->get_start_from()->get_name());
+      }
+    } else {
+      DL_OPEN_ERR("library \"%s\" not found", name);
+    }
     return false;
   }
 
@@ -1929,6 +1800,9 @@ bool find_libraries(android_namespace_t* ns,
       });
 
     soinfo_list_t global_group = local_group_ns->get_global_group();
+    SymbolLookupList lookup_list(global_group, local_group);
+    soinfo* local_group_root = local_group.front();
+
     bool linked = local_group.visit([&](soinfo* si) {
       // Even though local group may contain accessible soinfos from other namespaces
       // we should avoid linking them (because if they are not linked -> they
@@ -1943,7 +1817,8 @@ bool find_libraries(android_namespace_t* ns,
         if (__libc_shared_globals()->load_hook) {
           __libc_shared_globals()->load_hook(si->load_bias, si->phdr, si->phnum);
         }
-        if (!si->link_image(global_group, local_group, link_extinfo, &relro_fd_offset) ||
+        lookup_list.set_dt_symbolic_lib(si->has_DT_SYMBOLIC ? si : nullptr);
+        if (!si->link_image(lookup_list, local_group_root, link_extinfo, &relro_fd_offset) ||
             !get_cfi_shadow()->AfterLoad(si, solist_get_head())) {
           return false;
         }
@@ -2690,11 +2565,9 @@ bool link_namespaces_all_libs(android_namespace_t* namespace_from,
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr) {
   if (g_is_ldd) return 0;
 
-  typedef ElfW(Addr) (*ifunc_resolver_t)(void);
-  ifunc_resolver_t ifunc_resolver = reinterpret_cast<ifunc_resolver_t>(resolver_addr);
-  ElfW(Addr) ifunc_addr = ifunc_resolver();
+  ElfW(Addr) ifunc_addr = __bionic_call_ifunc_resolver(resolver_addr);
   TRACE_TYPE(RELO, "Called ifunc_resolver@%p. The result is %p",
-      ifunc_resolver, reinterpret_cast<void*>(ifunc_addr));
+      reinterpret_cast<void *>(resolver_addr), reinterpret_cast<void*>(ifunc_addr));
 
   return ifunc_addr;
 }
@@ -2816,25 +2689,38 @@ static bool for_each_verdef(const soinfo* si, F functor) {
   return true;
 }
 
-bool find_verdef_version_index(const soinfo* si, const version_info* vi, ElfW(Versym)* versym) {
+ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi) {
   if (vi == nullptr) {
-    *versym = kVersymNotNeeded;
-    return true;
+    return kVersymNotNeeded;
   }
 
-  *versym = kVersymGlobal;
+  ElfW(Versym) result = kVersymGlobal;
 
-  return for_each_verdef(si,
+  if (!for_each_verdef(si,
     [&](size_t, const ElfW(Verdef)* verdef, const ElfW(Verdaux)* verdaux) {
       if (verdef->vd_hash == vi->elf_hash &&
           strcmp(vi->name, si->get_string(verdaux->vda_name)) == 0) {
-        *versym = verdef->vd_ndx;
+        result = verdef->vd_ndx;
         return true;
       }
 
       return false;
     }
-  );
+  )) {
+    // verdef should have already been validated in prelink_image.
+    async_safe_fatal("invalid verdef after prelinking: %s, %s",
+                     si->get_realpath(), linker_get_error_buffer());
+  }
+
+  return result;
+}
+
+// Validate the library's verdef section. On error, returns false and invokes DL_ERR.
+bool validate_verdef_section(const soinfo* si) {
+  return for_each_verdef(si,
+    [&](size_t, const ElfW(Verdef)*, const ElfW(Verdaux)*) {
+      return false;
+    });
 }
 
 bool VersionTracker::init_verdef(const soinfo* si_from) {
@@ -2924,565 +2810,11 @@ bool soinfo::relocate_relr() {
   return true;
 }
 
-#if !defined(__mips__)
-#if defined(USE_RELA)
-static ElfW(Addr) get_addend(ElfW(Rela)* rela, ElfW(Addr) reloc_addr __unused) {
-  return rela->r_addend;
-}
-#else
-static ElfW(Addr) get_addend(ElfW(Rel)* rel, ElfW(Addr) reloc_addr) {
-  if (ELFW(R_TYPE)(rel->r_info) == R_GENERIC_RELATIVE ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_IRELATIVE ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_DTPREL ||
-      ELFW(R_TYPE)(rel->r_info) == R_GENERIC_TLS_TPREL) {
-    return *reinterpret_cast<ElfW(Addr)*>(reloc_addr);
-  }
-  return 0;
-}
-#endif
-
-static bool is_tls_reloc(ElfW(Word) type) {
-  switch (type) {
-    case R_GENERIC_TLS_DTPMOD:
-    case R_GENERIC_TLS_DTPREL:
-    case R_GENERIC_TLS_TPREL:
-    case R_GENERIC_TLSDESC:
-      return true;
-    default:
-      return false;
-  }
-}
-
-template<typename ElfRelIteratorT>
-bool soinfo::relocate(const VersionTracker& version_tracker, ElfRelIteratorT&& rel_iterator,
-                      const soinfo_list_t& global_group, const soinfo_list_t& local_group) {
-  const size_t tls_tp_base = __libc_shared_globals()->static_tls_layout.offset_thread_pointer();
-  std::vector<std::pair<TlsDescriptor*, size_t>> deferred_tlsdesc_relocs;
-
-  struct {
-    // Cache key
-    ElfW(Word) sym;
-
-    // Cache value
-    const ElfW(Sym)* s;
-    soinfo* lsi;
-  } symbol_lookup_cache;
-
-  symbol_lookup_cache.sym = 0;
-
-  for (size_t idx = 0; rel_iterator.has_next(); ++idx) {
-    const auto rel = rel_iterator.next();
-    if (rel == nullptr) {
-      return false;
-    }
-
-    ElfW(Word) type = ELFW(R_TYPE)(rel->r_info);
-    ElfW(Word) sym = ELFW(R_SYM)(rel->r_info);
-
-    ElfW(Addr) reloc = static_cast<ElfW(Addr)>(rel->r_offset + load_bias);
-    ElfW(Addr) sym_addr = 0;
-    const char* sym_name = nullptr;
-    ElfW(Addr) addend = get_addend(rel, reloc);
-
-    DEBUG("Processing \"%s\" relocation at index %zd", get_realpath(), idx);
-    if (type == R_GENERIC_NONE) {
-      continue;
-    }
-
-    const ElfW(Sym)* s = nullptr;
-    soinfo* lsi = nullptr;
-
-    if (sym == 0) {
-      // By convention in ld.bfd and lld, an omitted symbol on a TLS relocation
-      // is a reference to the current module.
-      if (is_tls_reloc(type)) {
-        lsi = this;
-      }
-    } else if (ELF_ST_BIND(symtab_[sym].st_info) == STB_LOCAL && is_tls_reloc(type)) {
-      // In certain situations, the Gold linker accesses a TLS symbol using a
-      // relocation to an STB_LOCAL symbol in .dynsym of either STT_SECTION or
-      // STT_TLS type. Bionic doesn't support these relocations, so issue an
-      // error. References:
-      //  - https://groups.google.com/d/topic/generic-abi/dJ4_Y78aQ2M/discussion
-      //  - https://sourceware.org/bugzilla/show_bug.cgi?id=17699
-      s = &symtab_[sym];
-      sym_name = get_string(s->st_name);
-      DL_ERR("unexpected TLS reference to local symbol \"%s\": "
-             "sym type %d, rel type %u (idx %zu of \"%s\")",
-             sym_name, ELF_ST_TYPE(s->st_info), type, idx, get_realpath());
-      return false;
-    } else {
-      sym_name = get_string(symtab_[sym].st_name);
-
-      if (sym == symbol_lookup_cache.sym) {
-        s = symbol_lookup_cache.s;
-        lsi = symbol_lookup_cache.lsi;
-        count_relocation(kRelocSymbolCached);
-      } else {
-        const version_info* vi = nullptr;
-
-        if (!lookup_version_info(version_tracker, sym, sym_name, &vi)) {
-          return false;
-        }
-
-        if (!soinfo_do_lookup(this, sym_name, vi, &lsi, global_group, local_group, &s)) {
-          return false;
-        }
-
-        symbol_lookup_cache.sym = sym;
-        symbol_lookup_cache.s = s;
-        symbol_lookup_cache.lsi = lsi;
-      }
-
-      if (s == nullptr) {
-        // We only allow an undefined symbol if this is a weak reference...
-        s = &symtab_[sym];
-        if (ELF_ST_BIND(s->st_info) != STB_WEAK) {
-          DL_ERR("cannot locate symbol \"%s\" referenced by \"%s\"...", sym_name, get_realpath());
-          return false;
-        }
-
-        /* IHI0044C AAELF 4.5.1.1:
-
-           Libraries are not searched to resolve weak references.
-           It is not an error for a weak reference to remain unsatisfied.
-
-           During linking, the value of an undefined weak reference is:
-           - Zero if the relocation type is absolute
-           - The address of the place if the relocation is pc-relative
-           - The address of nominal base address if the relocation
-             type is base-relative.
-         */
-
-        switch (type) {
-          case R_GENERIC_JUMP_SLOT:
-          case R_GENERIC_GLOB_DAT:
-          case R_GENERIC_RELATIVE:
-          case R_GENERIC_IRELATIVE:
-          case R_GENERIC_TLS_DTPMOD:
-          case R_GENERIC_TLS_DTPREL:
-          case R_GENERIC_TLS_TPREL:
-          case R_GENERIC_TLSDESC:
-#if defined(__aarch64__)
-          case R_AARCH64_ABS64:
-          case R_AARCH64_ABS32:
-          case R_AARCH64_ABS16:
-#elif defined(__x86_64__)
-          case R_X86_64_32:
-          case R_X86_64_64:
-#elif defined(__arm__)
-          case R_ARM_ABS32:
-#elif defined(__i386__)
-          case R_386_32:
-#endif
-            /*
-             * The sym_addr was initialized to be zero above, or the relocation
-             * code below does not care about value of sym_addr.
-             * No need to do anything.
-             */
-            break;
-#if defined(__x86_64__)
-          case R_X86_64_PC32:
-            sym_addr = reloc;
-            break;
-#elif defined(__i386__)
-          case R_386_PC32:
-            sym_addr = reloc;
-            break;
-#endif
-          default:
-            DL_ERR("unknown weak reloc type %d @ %p (%zu)", type, rel, idx);
-            return false;
-        }
-      } else { // We got a definition.
-#if !defined(__LP64__)
-        // When relocating dso with text_relocation .text segment is
-        // not executable. We need to restore elf flags before resolving
-        // STT_GNU_IFUNC symbol.
-        bool protect_segments = has_text_relocations &&
-                                lsi == this &&
-                                ELF_ST_TYPE(s->st_info) == STT_GNU_IFUNC;
-        if (protect_segments) {
-          if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
-            DL_ERR("can't protect segments for \"%s\": %s",
-                   get_realpath(), strerror(errno));
-            return false;
-          }
-        }
-#endif
-        if (is_tls_reloc(type)) {
-          if (ELF_ST_TYPE(s->st_info) != STT_TLS) {
-            DL_ERR("reference to non-TLS symbol \"%s\" from TLS relocation in \"%s\"",
-                   sym_name, get_realpath());
-            return false;
-          }
-          if (lsi->get_tls() == nullptr) {
-            DL_ERR("TLS relocation refers to symbol \"%s\" in solib \"%s\" with no TLS segment",
-                   sym_name, lsi->get_realpath());
-            return false;
-          }
-          sym_addr = s->st_value;
-        } else {
-          if (ELF_ST_TYPE(s->st_info) == STT_TLS) {
-            DL_ERR("reference to TLS symbol \"%s\" from non-TLS relocation in \"%s\"",
-                   sym_name, get_realpath());
-            return false;
-          }
-          sym_addr = lsi->resolve_symbol_address(s);
-        }
-#if !defined(__LP64__)
-        if (protect_segments) {
-          if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-            DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-                   get_realpath(), strerror(errno));
-            return false;
-          }
-        }
-#endif
-      }
-      count_relocation(kRelocSymbol);
-    }
-
-    switch (type) {
-      case R_GENERIC_JUMP_SLOT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO JMP_SLOT %16p <- %16p %s\n",
-                   reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
-
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
-        break;
-      case R_GENERIC_GLOB_DAT:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO GLOB_DAT %16p <- %16p %s\n",
-                   reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
-        break;
-      case R_GENERIC_RELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO RELATIVE %16p <- %16p\n",
-                   reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(load_bias + addend));
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = (load_bias + addend);
-        break;
-      case R_GENERIC_IRELATIVE:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO IRELATIVE %16p <- %16p\n",
-                    reinterpret_cast<void*>(reloc),
-                    reinterpret_cast<void*>(load_bias + addend));
-        {
-#if !defined(__LP64__)
-          // When relocating dso with text_relocation .text segment is
-          // not executable. We need to restore elf flags for this
-          // particular call.
-          if (has_text_relocations) {
-            if (phdr_table_protect_segments(phdr, phnum, load_bias) < 0) {
-              DL_ERR("can't protect segments for \"%s\": %s",
-                     get_realpath(), strerror(errno));
-              return false;
-            }
-          }
-#endif
-          ElfW(Addr) ifunc_addr = call_ifunc_resolver(load_bias + addend);
-#if !defined(__LP64__)
-          // Unprotect it afterwards...
-          if (has_text_relocations) {
-            if (phdr_table_unprotect_segments(phdr, phnum, load_bias) < 0) {
-              DL_ERR("can't unprotect loadable segments for \"%s\": %s",
-                     get_realpath(), strerror(errno));
-              return false;
-            }
-          }
-#endif
-          *reinterpret_cast<ElfW(Addr)*>(reloc) = ifunc_addr;
-        }
-        break;
-      case R_GENERIC_TLS_TPREL:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        {
-          ElfW(Addr) tpoff = 0;
-          if (lsi == nullptr) {
-            // Unresolved weak relocation. Leave tpoff at 0 to resolve
-            // &weak_tls_symbol to __get_tls().
-          } else {
-            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
-            const TlsModule& mod = get_tls_module(lsi->get_tls()->module_id);
-            if (mod.static_offset != SIZE_MAX) {
-              tpoff += mod.static_offset - tls_tp_base;
-            } else {
-              DL_ERR("TLS symbol \"%s\" in dlopened \"%s\" referenced from \"%s\" using IE access model",
-                     sym_name, lsi->get_realpath(), get_realpath());
-              return false;
-            }
-          }
-          tpoff += sym_addr + addend;
-          TRACE_TYPE(RELO, "RELO TLS_TPREL %16p <- %16p %s\n",
-                     reinterpret_cast<void*>(reloc),
-                     reinterpret_cast<void*>(tpoff), sym_name);
-          *reinterpret_cast<ElfW(Addr)*>(reloc) = tpoff;
-        }
-        break;
-      case R_GENERIC_TLS_DTPMOD:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        {
-          size_t module_id = 0;
-          if (lsi == nullptr) {
-            // Unresolved weak relocation. Evaluate the module ID to 0.
-          } else {
-            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
-            module_id = lsi->get_tls()->module_id;
-          }
-          TRACE_TYPE(RELO, "RELO TLS_DTPMOD %16p <- %zu %s\n",
-                     reinterpret_cast<void*>(reloc), module_id, sym_name);
-          *reinterpret_cast<ElfW(Addr)*>(reloc) = module_id;
-        }
-        break;
-      case R_GENERIC_TLS_DTPREL:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO TLS_DTPREL %16p <- %16p %s\n",
-                   reinterpret_cast<void*>(reloc),
-                   reinterpret_cast<void*>(sym_addr + addend), sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-        break;
-
-#if defined(__aarch64__)
-      // Bionic currently only implements TLSDESC for arm64. This implementation should work with
-      // other architectures, as long as the resolver functions are implemented.
-      case R_GENERIC_TLSDESC:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        {
-          TlsDescriptor* desc = reinterpret_cast<TlsDescriptor*>(reloc);
-          if (lsi == nullptr) {
-            // Unresolved weak relocation.
-            desc->func = tlsdesc_resolver_unresolved_weak;
-            desc->arg = addend;
-            TRACE_TYPE(RELO, "RELO TLSDESC %16p <- unresolved weak 0x%zx %s\n",
-                       reinterpret_cast<void*>(reloc), static_cast<size_t>(addend), sym_name);
-          } else {
-            CHECK(lsi->get_tls() != nullptr); // We rejected a missing TLS segment above.
-            size_t module_id = lsi->get_tls()->module_id;
-            const TlsModule& mod = get_tls_module(module_id);
-            if (mod.static_offset != SIZE_MAX) {
-              desc->func = tlsdesc_resolver_static;
-              desc->arg = mod.static_offset - tls_tp_base + sym_addr + addend;
-              TRACE_TYPE(RELO, "RELO TLSDESC %16p <- static (0x%zx - 0x%zx + 0x%zx + 0x%zx) %s\n",
-                         reinterpret_cast<void*>(reloc), mod.static_offset, tls_tp_base,
-                         static_cast<size_t>(sym_addr), static_cast<size_t>(addend), sym_name);
-            } else {
-              tlsdesc_args_.push_back({
-                .generation = mod.first_generation,
-                .index.module_id = module_id,
-                .index.offset = sym_addr + addend,
-              });
-              // Defer the TLSDESC relocation until the address of the TlsDynamicResolverArg object
-              // is finalized.
-              deferred_tlsdesc_relocs.push_back({ desc, tlsdesc_args_.size() - 1 });
-              const TlsDynamicResolverArg& desc_arg = tlsdesc_args_.back();
-              TRACE_TYPE(RELO, "RELO TLSDESC %16p <- dynamic (gen %zu, mod %zu, off %zu) %s",
-                         reinterpret_cast<void*>(reloc), desc_arg.generation,
-                         desc_arg.index.module_id, desc_arg.index.offset, sym_name);
-            }
-          }
-        }
-        break;
-#endif  // defined(__aarch64__)
-
-#if defined(__aarch64__)
-      case R_AARCH64_ABS64:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS64 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-        break;
-      case R_AARCH64_ABS32:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS32 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_ABS16:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS16 %16llx <- %16llx %s\n",
-                   reloc, sym_addr + addend, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend)) &&
-              ((sym_addr + addend) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = (sym_addr + addend);
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL64:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL64 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-        break;
-      case R_AARCH64_PREL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT32_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT32_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-      case R_AARCH64_PREL16:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL16 %16llx <- %16llx - %16llx %s\n",
-                   reloc, sym_addr + addend, rel->r_offset, sym_name);
-        {
-          const ElfW(Addr) min_value = static_cast<ElfW(Addr)>(INT16_MIN);
-          const ElfW(Addr) max_value = static_cast<ElfW(Addr)>(UINT16_MAX);
-          if ((min_value <= (sym_addr + addend - rel->r_offset)) &&
-              ((sym_addr + addend - rel->r_offset) <= max_value)) {
-            *reinterpret_cast<ElfW(Addr)*>(reloc) = sym_addr + addend - rel->r_offset;
-          } else {
-            DL_ERR("0x%016llx out of range 0x%016llx to 0x%016llx",
-                   sym_addr + addend - rel->r_offset, min_value, max_value);
-            return false;
-          }
-        }
-        break;
-
-      case R_AARCH64_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0056b/IHI0056B_aaelf64.pdf
-         *
-         * Section 4.6.11 "Dynamic relocations"
-         * R_AARCH64_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_AARCH64_COPY relocations are not supported", get_realpath());
-        return false;
-#elif defined(__x86_64__)
-      case R_X86_64_32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_X86_64_32 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
-                   static_cast<size_t>(sym_addr), sym_name);
-        *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend;
-        break;
-      case R_X86_64_64:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_X86_64_64 %08zx <- +%08zx %s", static_cast<size_t>(reloc),
-                   static_cast<size_t>(sym_addr), sym_name);
-        *reinterpret_cast<Elf64_Addr*>(reloc) = sym_addr + addend;
-        break;
-      case R_X86_64_PC32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_X86_64_PC32 %08zx <- +%08zx (%08zx - %08zx) %s",
-                   static_cast<size_t>(reloc), static_cast<size_t>(sym_addr - reloc),
-                   static_cast<size_t>(sym_addr), static_cast<size_t>(reloc), sym_name);
-        *reinterpret_cast<Elf32_Addr*>(reloc) = sym_addr + addend - reloc;
-        break;
-#elif defined(__arm__)
-      case R_ARM_ABS32:
-        count_relocation(kRelocAbsolute);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO ABS %08x <- %08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
-        break;
-      case R_ARM_REL32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO REL32 %08x <- %08x - %08x %s",
-                   reloc, sym_addr, rel->r_offset, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr - rel->r_offset;
-        break;
-      case R_ARM_COPY:
-        /*
-         * ET_EXEC is not supported so this should not happen.
-         *
-         * http://infocenter.arm.com/help/topic/com.arm.doc.ihi0044d/IHI0044D_aaelf.pdf
-         *
-         * Section 4.6.1.10 "Dynamic relocations"
-         * R_ARM_COPY may only appear in executable objects where e_type is
-         * set to ET_EXEC.
-         */
-        DL_ERR("%s R_ARM_COPY relocations are not supported", get_realpath());
-        return false;
-#elif defined(__i386__)
-      case R_386_32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_386_32 %08x <- +%08x %s", reloc, sym_addr, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += sym_addr;
-        break;
-      case R_386_PC32:
-        count_relocation(kRelocRelative);
-        MARK(rel->r_offset);
-        TRACE_TYPE(RELO, "RELO R_386_PC32 %08x <- +%08x (%08x - %08x) %s",
-                   reloc, (sym_addr - reloc), sym_addr, reloc, sym_name);
-        *reinterpret_cast<ElfW(Addr)*>(reloc) += (sym_addr - reloc);
-        break;
-#endif
-      default:
-        DL_ERR("unknown reloc type %d @ %p (%zu)", type, rel, idx);
-        return false;
-    }
-  }
-
-#if defined(__aarch64__)
-  // Bionic currently only implements TLSDESC for arm64.
-  for (const std::pair<TlsDescriptor*, size_t>& pair : deferred_tlsdesc_relocs) {
-    TlsDescriptor* desc = pair.first;
-    desc->func = tlsdesc_resolver_dynamic;
-    desc->arg = reinterpret_cast<size_t>(&tlsdesc_args_[pair.second]);
-  }
-#endif
-
-  return true;
-}
-#endif  // !defined(__mips__)
-
 // An empty list of soinfos
 static soinfo_list_t g_empty_list;
 
 bool soinfo::prelink_image() {
+  if (flags_ & FLAG_PRELINKED) return true;
   /* Extract dynamic section */
   ElfW(Word) dynamic_flags = 0;
   phdr_table_get_dynamic_section(phdr, phnum, load_bias, &dynamic, &dynamic_flags);
@@ -3731,14 +3063,17 @@ bool soinfo::prelink_image() {
 
 #endif
       case DT_RELR:
+      case DT_ANDROID_RELR:
         relr_ = reinterpret_cast<ElfW(Relr)*>(load_bias + d->d_un.d_ptr);
         break;
 
       case DT_RELRSZ:
+      case DT_ANDROID_RELRSZ:
         relr_count_ = d->d_un.d_val / sizeof(ElfW(Relr));
         break;
 
       case DT_RELRENT:
+      case DT_ANDROID_RELRENT:
         if (d->d_un.d_val != sizeof(ElfW(Relr))) {
           DL_ERR("invalid DT_RELRENT: %zd", static_cast<size_t>(d->d_un.d_val));
           return false;
@@ -3746,7 +3081,8 @@ bool soinfo::prelink_image() {
         break;
 
       // Ignored (see DT_RELCOUNT comments for details).
-      case DT_RELRCOUNT:
+      // There is no DT_RELRCOUNT specifically because it would only be ignored.
+      case DT_ANDROID_RELRCOUNT:
         break;
 
       case DT_INIT:
@@ -3968,19 +3304,25 @@ bool soinfo::prelink_image() {
   if (soname_ == nullptr &&
       this != solist_get_somain() &&
       (flags_ & FLAG_LINKER) == 0 &&
-      get_application_target_sdk_version() < __ANDROID_API_M__) {
+      get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN_documented_change(__ANDROID_API_M__,
+    DL_WARN_documented_change(23,
                               "missing-soname-enforced-for-api-level-23",
                               "\"%s\" has no DT_SONAME (will use %s instead)",
                               get_realpath(), soname_);
 
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }
+
+  // Validate each library's verdef section once, so we don't have to validate
+  // it each time we look up a symbol with a version.
+  if (!validate_verdef_section(this)) return false;
+
+  flags_ |= FLAG_PRELINKED;
   return true;
 }
 
-bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& local_group,
+bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group_root,
                         const android_dlextinfo* extinfo, size_t* relro_fd_offset) {
   if (is_image_linked()) {
     // already linked.
@@ -3992,7 +3334,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
                          get_realpath(), reinterpret_cast<void*>(base));
   }
 
-  local_group_root_ = local_group.front();
+  local_group_root_ = local_group_root;
   if (local_group_root_ == nullptr) {
     local_group_root_ = this;
   }
@@ -4001,17 +3343,11 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     target_sdk_version_ = get_application_target_sdk_version();
   }
 
-  VersionTracker version_tracker;
-
-  if (!version_tracker.init(this)) {
-    return false;
-  }
-
 #if !defined(__LP64__)
   if (has_text_relocations) {
     // Fail if app is targeting M or above.
     int app_target_api_level = get_application_target_sdk_version();
-    if (app_target_api_level >= __ANDROID_API_M__) {
+    if (app_target_api_level >= 23) {
       DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
                      "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
                      "Enforced-for-API-level-23)", get_realpath());
@@ -4019,7 +3355,7 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
     }
     // Make segments writable to allow text relocations to work properly. We will later call
     // phdr_table_protect_segments() after all of them are applied.
-    DL_WARN_documented_change(__ANDROID_API_M__,
+    DL_WARN_documented_change(23,
                               "Text-Relocations-Enforced-for-API-level-23",
                               "\"%s\" has text relocations",
                               get_realpath());
@@ -4031,78 +3367,9 @@ bool soinfo::link_image(const soinfo_list_t& global_group, const soinfo_list_t& 
   }
 #endif
 
-  if (android_relocs_ != nullptr) {
-    // check signature
-    if (android_relocs_size_ > 3 &&
-        android_relocs_[0] == 'A' &&
-        android_relocs_[1] == 'P' &&
-        android_relocs_[2] == 'S' &&
-        android_relocs_[3] == '2') {
-      DEBUG("[ android relocating %s ]", get_realpath());
-
-      bool relocated = false;
-      const uint8_t* packed_relocs = android_relocs_ + 4;
-      const size_t packed_relocs_size = android_relocs_size_ - 4;
-
-      relocated = relocate(
-          version_tracker,
-          packed_reloc_iterator<sleb128_decoder>(
-            sleb128_decoder(packed_relocs, packed_relocs_size)),
-          global_group, local_group);
-
-      if (!relocated) {
-        return false;
-      }
-    } else {
-      DL_ERR("bad android relocation header.");
-      return false;
-    }
-  }
-
-  if (relr_ != nullptr) {
-    DEBUG("[ relocating %s relr ]", get_realpath());
-    if (!relocate_relr()) {
-      return false;
-    }
-  }
-
-#if defined(USE_RELA)
-  if (rela_ != nullptr) {
-    DEBUG("[ relocating %s rela ]", get_realpath());
-    if (!relocate(version_tracker,
-            plain_reloc_iterator(rela_, rela_count_), global_group, local_group)) {
-      return false;
-    }
-  }
-  if (plt_rela_ != nullptr) {
-    DEBUG("[ relocating %s plt rela ]", get_realpath());
-    if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rela_, plt_rela_count_), global_group, local_group)) {
-      return false;
-    }
-  }
-#else
-  if (rel_ != nullptr) {
-    DEBUG("[ relocating %s rel ]", get_realpath());
-    if (!relocate(version_tracker,
-            plain_reloc_iterator(rel_, rel_count_), global_group, local_group)) {
-      return false;
-    }
-  }
-  if (plt_rel_ != nullptr) {
-    DEBUG("[ relocating %s plt rel ]", get_realpath());
-    if (!relocate(version_tracker,
-            plain_reloc_iterator(plt_rel_, plt_rel_count_), global_group, local_group)) {
-      return false;
-    }
-  }
-#endif
-
-#if defined(__mips__)
-  if (!mips_relocate_got(version_tracker, global_group, local_group)) {
+  if (!relocate(lookup_list)) {
     return false;
   }
-#endif
 
   DEBUG("[ finished linking %s ]", get_realpath());
 
@@ -4180,6 +3447,12 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
   if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
+    // Check auto-generated ld.config.txt first
+    std::string generated_apex_config = "/linkerconfig/" + paths[2] + "/ld.config.txt";
+    if (file_exists(generated_apex_config.c_str())) {
+      return generated_apex_config;
+    }
+
     return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
   }
   return "";
@@ -4188,19 +3461,6 @@ static std::string get_ld_config_file_apex_path(const char* executable_path) {
 static std::string get_ld_config_file_vndk_path() {
   if (android::base::GetBoolProperty("ro.vndk.lite", false)) {
     return kLdConfigVndkLiteFilePath;
-  }
-
-  // Use generated linker config if flag is set
-  // TODO(b/138920271) Do not check property once it is confirmed as stable
-  // TODO(b/139638519) This file should also cover legacy or vndk-lite config
-  if (android::base::GetProperty("ro.vndk.version", "") != "" &&
-      android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
-    if (file_exists(kLdGeneratedConfigFilePath)) {
-      return kLdGeneratedConfigFilePath;
-    } else {
-      DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
-              kLdGeneratedConfigFilePath);
-    }
   }
 
   std::string ld_config_file_vndk = kLdConfigFilePath;
@@ -4234,6 +3494,18 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   path = kLdConfigArchFilePath;
   if (file_exists(path.c_str())) {
     return path;
+  }
+
+  // Use generated linker config if flag is set
+  // TODO(b/138920271) Do not check property once it is confirmed as stable
+  if (android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
+    if (file_exists(kLdGeneratedConfigFilePath)) {
+      return kLdGeneratedConfigFilePath;
+    } else {
+      // TODO(b/146386369) : Adjust log level and add more condition to log only when necessary
+      INFO("Warning: failed to find generated linker configuration from \"%s\"",
+           kLdGeneratedConfigFilePath);
+    }
   }
 
   path = get_ld_config_file_vndk_path();
@@ -4340,11 +3612,13 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   // we also need vdso to be available for all namespaces (if present)
   soinfo* vdso = solist_get_vdso();
   for (auto it : namespaces) {
-    it.second->add_soinfo(ld_android_so);
-    if (vdso != nullptr) {
-      it.second->add_soinfo(vdso);
+    if (it.second != &g_default_namespace) {
+      it.second->add_soinfo(ld_android_so);
+      if (vdso != nullptr) {
+        it.second->add_soinfo(vdso);
+      }
+      // somain and ld_preloads are added to these namespaces after LD_PRELOAD libs are linked
     }
-    // somain and ld_preloads are added to these namespaces after LD_PRELOAD libs are linked
   }
 
   set_application_target_sdk_version(config->target_sdk_version());

@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_SIGNAL_INLINES_H_
-#define _ANDROID_LEGACY_SIGNAL_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+#if __ANDROID_API__ < 21
 
 #include <errno.h>
 #include <signal.h>
@@ -119,6 +118,4 @@ static __inline sighandler_t signal(int s, sighandler_t f) {
 
 __END_DECLS
 
-#endif /* __ANDROID_API__ < __ANDROID_API_L__ */
-
-#endif /* _ANDROID_LEGACY_SIGNAL_INLINES_H_ */
+#endif

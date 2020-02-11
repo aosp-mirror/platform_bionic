@@ -36,7 +36,7 @@
 #include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
 #include "private/bionic_globals.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/bionic_tls.h"
 #include "pthread_internal.h"
 

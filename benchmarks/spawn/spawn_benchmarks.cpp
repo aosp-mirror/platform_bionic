@@ -26,57 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <spawn.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-#include <android-base/file.h>
-#include <android-base/stringprintf.h>
-#include <benchmark/benchmark.h>
-
-static std::string test_program(const char* name) {
-#if defined(__LP64__)
-  return android::base::GetExecutableDirectory() + "/" + name + "64";
-#else
-  return android::base::GetExecutableDirectory() + "/" + name + "32";
-#endif
-}
-
-extern char** environ;
-
-static void BM_spawn_test(benchmark::State& state, const char* const* argv) {
-  for (auto _ : state) {
-    pid_t child = 0;
-    if (int spawn_err = posix_spawn(&child, argv[0], nullptr, nullptr, const_cast<char**>(argv),
-                                    environ)) {
-      state.SkipWithError(android::base::StringPrintf(
-          "posix_spawn of %s failed: %s", argv[0], strerror(spawn_err)).c_str());
-      break;
-    }
-
-    int wstatus = 0;
-    const pid_t wait_result = TEMP_FAILURE_RETRY(waitpid(child, &wstatus, 0));
-    if (wait_result != child) {
-      state.SkipWithError(android::base::StringPrintf(
-          "waitpid on pid %d for %s failed: %s",
-          static_cast<int>(child), argv[0], strerror(errno)).c_str());
-      break;
-    }
-    if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) == 127) {
-      state.SkipWithError(android::base::StringPrintf("could not exec %s", argv[0]).c_str());
-      break;
-    }
-  }
-}
-
-#define SPAWN_BENCHMARK(name, ...)                                                    \
-    BENCHMARK_CAPTURE(BM_spawn_test, name, (const char*[]) { __VA_ARGS__, nullptr })  \
-        ->UseRealTime()                                                               \
-        ->Unit(benchmark::kMicrosecond)                                               \
+#include "spawn_benchmark.h"
 
 SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
 SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());

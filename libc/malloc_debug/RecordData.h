@@ -36,7 +36,7 @@
 #include <mutex>
 #include <string>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 
 class RecordEntry {
  public:

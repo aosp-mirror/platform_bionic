@@ -190,6 +190,7 @@ struct br_mdb_entry {
 #define MDB_PERMANENT 1
   __u8 state;
 #define MDB_FLAGS_OFFLOAD (1 << 0)
+#define MDB_FLAGS_FAST_LEAVE (1 << 1)
   __u8 flags;
   __u16 vid;
   struct {
