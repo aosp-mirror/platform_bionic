@@ -293,12 +293,12 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
   //
   // The libraries are packaged in the runtime APEX together with libc.so.
   // However, since the libc.so is searched via the symlink in the system
-  // partition (/system/lib/libc.so -> /apex/com.android.runtime/bionic.libc.so)
+  // partition (/system/lib/libc.so -> /apex/com.android.runtime/bionic/libc.so)
   // libc.so is loaded into the default namespace. If we just dlopen() here, the
   // linker will load the libs found in /system/lib which might be incompatible
   // with libc.so in the runtime APEX. Use android_dlopen_ext to explicitly load
   // the ones in the runtime APEX.
-  struct android_namespace_t* runtime_ns = android_get_exported_namespace("runtime");
+  struct android_namespace_t* runtime_ns = android_get_exported_namespace("com.android.runtime");
   if (runtime_ns != nullptr) {
     const android_dlextinfo dlextinfo = {
       .flags = ANDROID_DLEXT_USE_NAMESPACE,
