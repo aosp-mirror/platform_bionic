@@ -344,7 +344,7 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
   // Do a pointer swap so that all of the functions become valid at once to
   // avoid any initialization order problems.
   atomic_store(&globals->default_dispatch_table, &globals->malloc_dispatch_table);
-  if (GetDispatchTable() == nullptr) {
+  if (!MallocLimitInstalled()) {
     atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
   }
 
