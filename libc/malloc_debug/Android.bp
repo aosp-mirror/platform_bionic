@@ -65,14 +65,6 @@ cc_library {
 
     stl: "libc++_static",
 
-    // Only need this for arm since libc++ uses its own unwind code that
-    // doesn't mix with the other default unwind code.
-    arch: {
-        arm: {
-            static_libs: ["libunwind_llvm"],
-        },
-    },
-
     static_libs: [
         "libasync_safe",
         "libbase",
@@ -165,6 +157,7 @@ cc_test {
 // ==============================================================
 cc_test {
     name: "malloc_debug_system_tests",
+    isolated: true,
 
     include_dirs: [
         "bionic/libc",
@@ -189,4 +182,5 @@ cc_test {
         "-Werror",
         "-O0",
     ],
+    test_suites: ["general-tests"],
 }

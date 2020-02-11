@@ -38,6 +38,7 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    header_libs: ["bionic_libc_platform_headers"],
     // Make the bionic tests implicitly test bionic's shadow call stack support.
     arch: {
         arm64: {
@@ -49,6 +50,12 @@ cc_defaults {
         address: false,
     },
     bootstrap: true,
+
+    product_variables: {
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -91,7 +98,9 @@ cc_test_library {
         "eventfd_test.cpp",
         "fcntl_test.cpp",
         "fdsan_test.cpp",
+        "fdtrack_test.cpp",
         "fenv_test.cpp",
+        "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
@@ -117,6 +126,7 @@ cc_test_library {
         "math_force_long_double_test.cpp",
         "membarrier_test.cpp",
         "mntent_test.cpp",
+        "mte_test.cpp",
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
@@ -211,6 +221,9 @@ cc_test_library {
                 "libprocinfo",
                 "libsystemproperties",
             ],
+            srcs: [
+                "tagged_pointers_test.cpp",
+            ],
         },
     },
 
@@ -282,6 +295,20 @@ cc_test_library {
     },
 }
 
+cc_test_library {
+    name: "libBionicFramePointerTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "android_unsafe_frame_pointer_chase_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    cflags: [
+        "-fno-omit-frame-pointer",
+    ],
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -312,26 +339,20 @@ cc_defaults {
     },
 }
 
-// If building this fails, then we have both FORTIFY and ASAN enabled, which
-// isn't desirable. (Ideally, we'd emit FORTIFY diagnostics even with ASAN
-// enabled, but that's not a reality today.) This is meant to be otherwise
-// unused.
-cc_test_library {
-    name: "fortify_disabled_for_asan",
+// Ensures that FORTIFY checks aren't run when ASAN is on.
+cc_test {
+    name: "bionic-fortify-runtime-asan-test",
     defaults: [
         "bionic_clang_fortify_tests_w_flags",
     ],
     cflags: [
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
-        // "sanitize: address" doesn't work on platforms where libasan isn't
-        // enabled. Since the intent is just to build this, we can get away with
-        // passing this flag on its own.
-        "-fsanitize=address",
     ],
-    // Ignore that we don't have ASAN symbols linked in.
-    allow_undefined_symbols: true,
-    srcs: ["clang_fortify_tests.cpp"],
+    sanitize: {
+        address: true,
+    },
+    srcs: ["clang_fortify_asan.cpp"],
 }
 
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
@@ -437,6 +458,7 @@ cc_test_library {
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
+        "libBionicFramePointerTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
@@ -616,6 +638,10 @@ cc_defaults {
         "libdl_preempt_test_2",
         "libdl_test_df_1_global",
         "libgnu-hash-table-library",
+        "librelocations-ANDROID_RELR",
+        "librelocations-ANDROID_REL",
+        "librelocations-RELR",
+        "librelocations-fat",
         "libsysv-hash-table-library",
         "libtestshared",
         "libtest_atexit",
@@ -721,6 +747,11 @@ cc_defaults {
         "libnstest_ns_a_public1_internal",
         "libnstest_ns_b_public2",
         "libnstest_ns_b_public3",
+        "ns_hidden_child_helper",
+        "libns_hidden_child_global",
+        "libns_hidden_child_internal",
+        "libns_hidden_child_public",
+        "libns_hidden_child_app",
         "libsegment_gap_inner",
         "libsegment_gap_outer",
         "ld_preload_test_helper",
@@ -749,6 +780,33 @@ cc_test {
     shared_libs: [
         "libc_scudo",
     ],
+}
+
+cc_test {
+    name: "bionic-stress-tests",
+    defaults: [
+        "bionic_tests_defaults",
+    ],
+
+    // For now, these tests run forever, so do not use the isolation framework.
+    isolated: false,
+
+    srcs: [
+        "malloc_stress_test.cpp",
+    ],
+
+    shared_libs: [
+        "libbase",
+    ],
+
+    target: {
+        android: {
+            static_libs: [
+                "libmeminfo",
+                "libprocinfo",
+            ],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------

@@ -28,7 +28,7 @@
 
 #include <signal.h>
 
-#include "private/sigrtmin.h"
+#include <platform/bionic/reserved_signals.h>
 
 int __libc_current_sigrtmin() {
   return __SIGRTMIN + __SIGRT_RESERVED;

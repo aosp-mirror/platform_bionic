@@ -28,6 +28,7 @@
 #include <android/dlext.h>
 #include <android-base/file.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -38,6 +39,7 @@
 #include <procinfo/process_map.h>
 #include <ziparchive/zip_archive.h>
 
+#include "core_shared_libs.h"
 #include "gtest_globals.h"
 #include "utils.h"
 #include "dlext_private.h"
@@ -229,9 +231,9 @@ TEST(dlext, android_dlopen_ext_force_load_soname_exception) {
   dlclose(handle);
 }
 
-TEST(dlfcn, dlopen_from_nullptr_android_api_level) {
+TEST(dlfcn, dlopen_from_nullptr_android_api_level_28) {
   // Regression test for http://b/123972211. Testing dlopen(nullptr) when target sdk is P
-  android_set_application_target_sdk_version(__ANDROID_API_P__);
+  android_set_application_target_sdk_version(28);
   ASSERT_TRUE(dlopen(nullptr, RTLD_NOW) != nullptr);
 }
 
@@ -712,7 +714,7 @@ std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
 static const char* g_public_lib = "libnstest_public.so";
 
 // These are libs shared with default namespace
-static const std::string g_core_shared_libs = "libc.so:libc++.so:libdl.so:libm.so";
+static const std::string g_core_shared_libs = kCoreSharedLibs;
 
 TEST(dlext, ns_smoke) {
   static const char* root_lib = "libnstest_root.so";
@@ -1228,7 +1230,7 @@ TEST(dlext, ns_greylist_enabled) {
   extinfo.library_namespace = ns;
 
   // An app targeting M can open libnativehelper.so because it's on the greylist.
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
@@ -1240,7 +1242,7 @@ TEST(dlext, ns_greylist_enabled) {
   dlclose(handle);
 
   // An app targeting N no longer has the greylist.
-  android_set_application_target_sdk_version(__ANDROID_API_N__);
+  android_set_application_target_sdk_version(24);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
@@ -1265,7 +1267,7 @@ TEST(dlext, ns_greylist_disabled_by_default) {
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns;
 
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
@@ -1374,7 +1376,10 @@ TEST(dlext, ns_isolated) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  const char* error = dlerror();
+  ASSERT_MATCH(error,
+               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
+               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated1)");
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1502,7 +1507,9 @@ TEST(dlext, ns_shared) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
+  ASSERT_MATCH(dlerror(),
+               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
+               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated_shared)");
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1762,7 +1769,10 @@ TEST(dlext, ns_isolated_rtld_global) {
 
   handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle1 == nullptr);
-  ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
+  ASSERT_MATCH(
+      dlerror(),
+      R"(dlopen failed: library "libnstest_public.so" not found: needed by \S+libnstest_root.so)"
+      R"( in namespace isolated2)");
 }
 
 TEST(dlext, ns_inaccessible_error_message) {
@@ -2005,10 +2015,15 @@ TEST(dlext, ns_anonymous) {
     // For some natively bridged environments this code might be missing
     // the executable flag. This is because the guest code is not supposed
     // to be executed directly and making it non-executable is more secure.
-    // If this is the case we assume that the first segment is the one that
-    // has this flag.
-    ASSERT_TRUE((maps_to_copy[0].perms & PROT_WRITE) == 0);
-    maps_to_copy[0].perms |= PROT_EXEC;
+    // In this case we assume the segment with the function is executable.
+    for (auto& rec : maps_to_copy) {
+      if (ns_get_dlopened_string_addr >= rec.addr_start &&
+          ns_get_dlopened_string_addr < rec.addr_end) {
+        ASSERT_TRUE((rec.perms & PROT_WRITE) == 0);
+        rec.perms |= PROT_EXEC;
+        break;
+      }
+    }
   }
 
   // copy
@@ -2041,6 +2056,23 @@ TEST(dlext, ns_anonymous) {
   ASSERT_TRUE(ns_get_dlopened_string_anon() != ns_get_dlopened_string_private());
 }
 
+TEST(dlext, ns_hidden_child) {
+  ExecTestHelper eth;
+
+  std::string helper = GetTestlibRoot() + "/ns_hidden_child_helper/ns_hidden_child_helper";
+  chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
+  std::string app_ns_dir = GetTestlibRoot() + "/ns_hidden_child_app";
+  eth.SetArgs({ helper.c_str(), app_ns_dir.c_str(), nullptr });
+
+  // Add the main libns_hidden_child_*.so libraries to the search path of the default namespace.
+  std::string env = "LD_LIBRARY_PATH=" + GetTestlibRoot();
+  eth.SetEnv({ env.c_str(), nullptr });
+
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+          "public_function is non-null\n"
+          "internal_function is null\n");
+}
+
 TEST(dlext, dlopen_handle_value_platform) {
   void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(handle) & 1) != 0)
@@ -2049,7 +2081,7 @@ TEST(dlext, dlopen_handle_value_platform) {
 }
 
 TEST(dlext, dlopen_handle_value_app_compat) {
-  android_set_application_target_sdk_version(__ANDROID_API_M__);
+  android_set_application_target_sdk_version(23);
   void* handle = dlopen("libtest_dlsym_from_this.so", RTLD_NOW | RTLD_LOCAL);
   ASSERT_TRUE(reinterpret_cast<uintptr_t>(handle) % sizeof(uintptr_t) == 0)
           << "dlopen should return valid pointer";

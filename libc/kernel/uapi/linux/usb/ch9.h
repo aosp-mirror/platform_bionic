@@ -380,6 +380,8 @@ struct usb_ext_cap_descriptor {
 #define USB_BESL_SUPPORT (1 << 2)
 #define USB_BESL_BASELINE_VALID (1 << 3)
 #define USB_BESL_DEEP_VALID (1 << 4)
+#define USB_SET_BESL_BASELINE(p) (((p) & 0xf) << 8)
+#define USB_SET_BESL_DEEP(p) (((p) & 0xf) << 12)
 #define USB_GET_BESL_BASELINE(p) (((p) & (0xf << 8)) >> 8)
 #define USB_GET_BESL_DEEP(p) (((p) & (0xf << 12)) >> 12)
 } __attribute__((packed));

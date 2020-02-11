@@ -32,7 +32,7 @@
 #include <errno.h>
 #include <unistd.h>
 
-#include "private/ErrnoRestorer.h"
+#include "private/ScopedFd.h"
 
 extern "C" int __fchmodat(int, const char*, mode_t);
 
@@ -47,20 +47,15 @@ int fchmodat(int dirfd, const char* pathname, mode_t mode, int flags) {
     // at https://sourceware.org/bugzilla/show_bug.cgi?id=14578
     // comment #10
 
-    int fd = openat(dirfd, pathname, O_PATH | O_NOFOLLOW | O_CLOEXEC);
-    if (fd == -1) {
-      return -1; // returns errno from openat
-    }
+    ScopedFd fd(openat(dirfd, pathname, O_PATH | O_NOFOLLOW | O_CLOEXEC));
+    if (fd.get() == -1) return -1;
 
     // POSIX requires that ENOTSUP be returned when the system
     // doesn't support setting the mode of a symbolic link.
     // This is true for all Linux kernels.
     // We rely on the O_PATH compatibility layer added in the
     // fchmod() function to get errno correct.
-    int result = fchmod(fd, mode);
-    ErrnoRestorer errno_restorer; // don't let close() clobber errno
-    close(fd);
-    return result;
+    return fchmod(fd.get(), mode);
   }
 
   return __fchmodat(dirfd, pathname, mode);

@@ -18,29 +18,38 @@
 
 #include <elf.h>
 #include <limits.h>
+#include <malloc.h>
 #include <pthread.h>
+#include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <malloc.h>
 #include <unistd.h>
 
 #include <atomic>
+#include <thread>
+
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
 
-#include "platform/bionic/malloc.h"
-#include "private/bionic_config.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
+
+#include "platform/bionic/malloc.h"
+#include "platform/bionic/reserved_signals.h"
+#include "private/bionic_config.h"
+
 #define HAVE_REALLOCARRAY 1
+
 #else
+
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
+
 #endif
 
 TEST(malloc, malloc_std) {
@@ -358,15 +367,20 @@ TEST(malloc, valloc_overflow) {
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
-  char* buf;
-  size_t bufsize;
-  FILE* memstream = open_memstream(&buf, &bufsize);
-  ASSERT_NE(nullptr, memstream);
-  ASSERT_EQ(0, malloc_info(0, memstream));
-  ASSERT_EQ(0, fclose(memstream));
+
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
 
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
@@ -416,17 +430,21 @@ TEST(malloc, malloc_info_matches_mallinfo) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
 
-  char* buf;
-  size_t bufsize;
-  FILE* memstream = open_memstream(&buf, &bufsize);
-  ASSERT_NE(nullptr, memstream);
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
   size_t mallinfo_before_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, malloc_info(0, memstream));
+  ASSERT_EQ(0, malloc_info(0, fp));
   size_t mallinfo_after_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, fclose(memstream));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
 
   size_t total_allocated_bytes = 0;
   auto root = doc.FirstChildElement();
@@ -698,6 +716,176 @@ TEST(malloc, mallinfo) {
 #endif
 }
 
+template <typename Type>
+void __attribute__((optnone)) VerifyAlignment(Type* floating) {
+  size_t expected_alignment = alignof(Type);
+  if (expected_alignment != 0) {
+    ASSERT_EQ(0U, (expected_alignment - 1) & reinterpret_cast<uintptr_t>(floating))
+        << "Expected alignment " << expected_alignment << " ptr value " << floating;
+  }
+}
+
+template <typename Type>
+void __attribute__((optnone)) TestAllocateType() {
+  // The number of allocations to do in a row. This is to attempt to
+  // expose the worst case alignment for native allocators that use
+  // bins.
+  static constexpr size_t kMaxConsecutiveAllocs = 100;
+
+  // Verify using new directly.
+  Type* types[kMaxConsecutiveAllocs];
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    types[i] = new Type;
+    VerifyAlignment(types[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    delete types[i];
+  }
+
+  // Verify using malloc.
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    types[i] = reinterpret_cast<Type*>(malloc(sizeof(Type)));
+    ASSERT_TRUE(types[i] != nullptr);
+    VerifyAlignment(types[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+  for (size_t i = 0; i < kMaxConsecutiveAllocs; i++) {
+    free(types[i]);
+  }
+
+  // Verify using a vector.
+  std::vector<Type> type_vector(kMaxConsecutiveAllocs);
+  for (size_t i = 0; i < type_vector.size(); i++) {
+    VerifyAlignment(&type_vector[i]);
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+}
+
+#if defined(__ANDROID__)
+static void __attribute__((optnone)) AndroidVerifyAlignment(size_t alloc_size, size_t aligned_bytes) {
+  void* ptrs[100];
+  uintptr_t mask = aligned_bytes - 1;
+  for (size_t i = 0; i < sizeof(ptrs) / sizeof(void*); i++) {
+    ptrs[i] = malloc(alloc_size);
+    ASSERT_TRUE(ptrs[i] != nullptr);
+    ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptrs[i]) & mask)
+        << "Expected at least " << aligned_bytes << " byte alignment: size "
+        << alloc_size << " actual ptr " << ptrs[i];
+  }
+}
+#endif
+
+TEST(malloc, align_check) {
+  // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_445
+  // for a discussion of type alignment.
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<float>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<double>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long double>());
+
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char16_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<char32_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<wchar_t>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<signed char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<short int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<long long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned char>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned short int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned long int>());
+  ASSERT_NO_FATAL_FAILURE(TestAllocateType<unsigned long long int>());
+
+#if defined(__ANDROID__)
+  // On Android, there is a lot of code that expects certain alignments:
+  // - Allocations of a size that rounds up to a multiple of 16 bytes
+  //   must have at least 16 byte alignment.
+  // - Allocations of a size that rounds up to a multiple of 8 bytes and
+  //   not 16 bytes, are only required to have at least 8 byte alignment.
+  // This is regardless of whether it is in a 32 bit or 64 bit environment.
+
+  // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2293.htm for
+  // a discussion of this alignment mess. The code below is enforcing
+  // strong-alignment, since who knows what code depends on this behavior now.
+  for (size_t i = 1; i <= 128; i++) {
+    size_t rounded = (i + 7) & ~7;
+    if ((rounded % 16) == 0) {
+      AndroidVerifyAlignment(i, 16);
+    } else {
+      AndroidVerifyAlignment(i, 8);
+    }
+    if (::testing::Test::HasFatalFailure()) {
+      return;
+    }
+  }
+#endif
+}
+
+// Jemalloc doesn't pass this test right now, so leave it as disabled.
+TEST(malloc, DISABLED_alloc_after_fork) {
+  // Both of these need to be a power of 2.
+  static constexpr size_t kMinAllocationSize = 8;
+  static constexpr size_t kMaxAllocationSize = 2097152;
+
+  static constexpr size_t kNumAllocatingThreads = 5;
+  static constexpr size_t kNumForkLoops = 100;
+
+  std::atomic_bool stop;
+
+  // Create threads that simply allocate and free different sizes.
+  std::vector<std::thread*> threads;
+  for (size_t i = 0; i < kNumAllocatingThreads; i++) {
+    std::thread* t = new std::thread([&stop] {
+      while (!stop) {
+        for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
+          void* ptr = malloc(size);
+          if (ptr == nullptr) {
+            return;
+          }
+          // Make sure this value is not optimized away.
+          asm volatile("" : : "r,m"(ptr) : "memory");
+          free(ptr);
+        }
+      }
+    });
+    threads.push_back(t);
+  }
+
+  // Create a thread to fork and allocate.
+  for (size_t i = 0; i < kNumForkLoops; i++) {
+    pid_t pid;
+    if ((pid = fork()) == 0) {
+      for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
+        void* ptr = malloc(size);
+        ASSERT_TRUE(ptr != nullptr);
+        // Make sure this value is not optimized away.
+        asm volatile("" : : "r,m"(ptr) : "memory");
+        // Make sure we can touch all of the allocation.
+        memset(ptr, 0x1, size);
+        ASSERT_LE(size, malloc_usable_size(ptr));
+        free(ptr);
+      }
+      _exit(10);
+    }
+    ASSERT_NE(-1, pid);
+    AssertChildExited(pid, 10);
+  }
+
+  stop = true;
+  for (auto thread : threads) {
+    thread->join();
+    delete thread;
+  }
+}
+
 TEST(android_mallopt, error_on_unexpected_option) {
 #if defined(__BIONIC__)
   const int unrecognized_option = -1;
@@ -953,7 +1141,11 @@ static void SetAllocationLimitMultipleThreads() {
 
   // Let them go all at once.
   go = true;
-  ASSERT_EQ(0, kill(getpid(), __SIGRTMIN + 4));
+  // Send hardcoded signal (BIONIC_SIGNAL_PROFILER with value 0) to trigger
+  // heapprofd handler.
+  union sigval signal_value;
+  signal_value.sival_int = 0;
+  ASSERT_EQ(0, sigqueue(getpid(), BIONIC_SIGNAL_PROFILER, signal_value));
 
   size_t num_successful = 0;
   for (size_t i = 0; i < kNumThreads; i++) {

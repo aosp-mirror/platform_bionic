@@ -42,9 +42,9 @@
 __BEGIN_DECLS
 
 // FIXME: implement these in HWASan allocator.
-int __sanitizer_iterate(uintptr_t base, size_t size,
-                        void (*callback)(uintptr_t base, size_t size, void* arg),
-                        void* arg);
+int __sanitizer_malloc_iterate(uintptr_t base, size_t size,
+                               void (*callback)(uintptr_t base, size_t size, void* arg),
+                               void* arg);
 void __sanitizer_malloc_disable();
 void __sanitizer_malloc_enable();
 int __sanitizer_malloc_info(int options, FILE* fp);
@@ -60,6 +60,11 @@ __END_DECLS
 #include "scudo.h"
 #define Malloc(function)  scudo_ ## function
 
+#elif defined(USE_SCUDO_SVELTE)
+
+#include "scudo.h"
+#define Malloc(function)  scudo_svelte_ ## function
+
 #else
 
 #include "jemalloc.h"
@@ -69,7 +74,7 @@ __END_DECLS
 
 #endif
 
-extern bool gZygoteChild;
+const MallocDispatch* NativeAllocatorDispatch();
 
 static inline const MallocDispatch* GetDispatchTable() {
   return atomic_load_explicit(&__libc_globals->current_dispatch_table, memory_order_acquire);

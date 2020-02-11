@@ -353,11 +353,6 @@ static Config g_config;
 
 static constexpr const char* kDefaultConfigName = "default";
 static constexpr const char* kPropertyAdditionalNamespaces = "additional.namespaces";
-#if defined(__LP64__)
-static constexpr const char* kLibParamValue = "lib64";
-#else
-static constexpr const char* kLibParamValue = "lib";
-#endif
 
 class Properties {
  public:
@@ -401,15 +396,17 @@ class Properties {
     split_path(paths_str.c_str(), ":", &paths);
 
     std::vector<std::pair<std::string, std::string>> params;
-    params.push_back({ "LIB", kLibParamValue });
+    params.push_back({ "LIB", kLibPath });
     if (target_sdk_version_ != 0) {
       char buf[16];
       async_safe_format_buffer(buf, sizeof(buf), "%d", target_sdk_version_);
       params.push_back({ "SDK_VER", buf });
     }
 
-    static std::string vndk = Config::get_vndk_version_string('-');
-    params.push_back({ "VNDK_VER", vndk });
+    static std::string vndk_ver = Config::get_vndk_version_string('-');
+    params.push_back({ "VNDK_VER", vndk_ver });
+    static std::string vndk_apex_ver = Config::get_vndk_version_string('v');
+    params.push_back({ "VNDK_APEX_VER", vndk_apex_ver });
 
     for (auto& path : paths) {
       format_string(&path, params);

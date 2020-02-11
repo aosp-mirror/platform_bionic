@@ -97,7 +97,8 @@ struct kvm_vcpu_events {
   struct {
     __u8 serror_pending;
     __u8 serror_has_esr;
-    __u8 pad[6];
+    __u8 ext_dabt_pending;
+    __u8 pad[5];
     __u64 serror_esr;
   } exception;
   __u32 reserved[12];
@@ -187,8 +188,10 @@ struct kvm_vcpu_events {
 #define KVM_DEV_ARM_ITS_RESTORE_TABLES 2
 #define KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES 3
 #define KVM_DEV_ARM_ITS_CTRL_RESET 4
+#define KVM_ARM_IRQ_VCPU2_SHIFT 28
+#define KVM_ARM_IRQ_VCPU2_MASK 0xf
 #define KVM_ARM_IRQ_TYPE_SHIFT 24
-#define KVM_ARM_IRQ_TYPE_MASK 0xff
+#define KVM_ARM_IRQ_TYPE_MASK 0xf
 #define KVM_ARM_IRQ_VCPU_SHIFT 16
 #define KVM_ARM_IRQ_VCPU_MASK 0xff
 #define KVM_ARM_IRQ_NUM_SHIFT 0

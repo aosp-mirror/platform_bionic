@@ -64,6 +64,8 @@
 
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
+#include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
@@ -74,34 +76,20 @@
 // =============================================================================
 pthread_mutex_t gGlobalsMutateLock = PTHREAD_MUTEX_INITIALIZER;
 
-bool gZygoteChild = false;
-
 _Atomic bool gGlobalsMutating = false;
-// =============================================================================
 
-static constexpr MallocDispatch __libc_malloc_default_dispatch
-  __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    Malloc(malloc),
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
-#endif
-    Malloc(realloc),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
-#endif
-    Malloc(iterate),
-    Malloc(malloc_disable),
-    Malloc(malloc_enable),
-    Malloc(mallopt),
-    Malloc(aligned_alloc),
-    Malloc(malloc_info),
-  };
+static bool gZygoteChild = false;
+
+// In a Zygote child process, this is set to true if profiling of this process
+// is allowed. Note that this is set at a later time than gZygoteChild. The
+// latter is set during the fork (while still in zygote's SELinux domain). While
+// this bit is set after the child is specialized (and has transferred SELinux
+// domains if applicable). These two flags are read by the
+// BIONIC_SIGNAL_PROFILER handler, which does nothing if the process is not
+// profileable.
+static _Atomic bool gZygoteChildProfileable = false;
+
+// =============================================================================
 
 static constexpr char kHooksSharedLib[] = "libc_malloc_hooks.so";
 static constexpr char kHooksPrefix[] = "hooks";
@@ -184,7 +172,8 @@ static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const
   if (!InitMallocFunction<MallocRealloc>(impl_handler, &table->realloc, prefix, "realloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocIterate>(impl_handler, &table->iterate, prefix, "iterate")) {
+  if (!InitMallocFunction<MallocIterate>(impl_handler, &table->malloc_iterate, prefix,
+                                         "malloc_iterate")) {
     return false;
   }
   if (!InitMallocFunction<MallocMallocDisable>(impl_handler, &table->malloc_disable, prefix,
@@ -249,6 +238,12 @@ static bool CheckLoadMallocDebug(char** options) {
   return true;
 }
 
+void SetGlobalFunctions(void* functions[]) {
+  for (size_t i = 0; i < FUNC_LAST; i++) {
+    gFunctions[i] = functions[i];
+  }
+}
+
 static void ClearGlobalFunctions() {
   for (size_t i = 0; i < FUNC_LAST; i++) {
     gFunctions[i] = nullptr;
@@ -298,12 +293,12 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
   //
   // The libraries are packaged in the runtime APEX together with libc.so.
   // However, since the libc.so is searched via the symlink in the system
-  // partition (/system/lib/libc.so -> /apex/com.android.runtime/bionic.libc.so)
+  // partition (/system/lib/libc.so -> /apex/com.android.runtime/bionic/libc.so)
   // libc.so is loaded into the default namespace. If we just dlopen() here, the
   // linker will load the libs found in /system/lib which might be incompatible
   // with libc.so in the runtime APEX. Use android_dlopen_ext to explicitly load
   // the ones in the runtime APEX.
-  struct android_namespace_t* runtime_ns = android_get_exported_namespace("runtime");
+  struct android_namespace_t* runtime_ns = android_get_exported_namespace("com.android.runtime");
   if (runtime_ns != nullptr) {
     const android_dlextinfo dlextinfo = {
       .flags = ANDROID_DLEXT_USE_NAMESPACE,
@@ -332,7 +327,15 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
 
 bool FinishInstallHooks(libc_globals* globals, const char* options, const char* prefix) {
   init_func_t init_func = reinterpret_cast<init_func_t>(gFunctions[FUNC_INITIALIZE]);
-  if (!init_func(&__libc_malloc_default_dispatch, &gZygoteChild, options)) {
+
+  // If GWP-ASan was initialised, we should use it as the dispatch table for
+  // heapprofd/malloc_debug/malloc_debug.
+  const MallocDispatch* prev_dispatch = GetDefaultDispatchTable();
+  if (prev_dispatch == nullptr) {
+    prev_dispatch = NativeAllocatorDispatch();
+  }
+
+  if (!init_func(prev_dispatch, &gZygoteChild, options)) {
     error_log("%s: failed to enable malloc %s", getprogname(), prefix);
     ClearGlobalFunctions();
     return false;
@@ -376,6 +379,8 @@ static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
 
+  MaybeInitGwpAsanFromLibc();
+
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
   bool hook_installed = false;
@@ -389,13 +394,10 @@ static void MallocInitImpl(libc_globals* globals) {
     if (HeapprofdShouldLoad()) {
       HeapprofdInstallHooksAtInit(globals);
     }
-
-    // Install this last to avoid as many race conditions as possible.
-    HeapprofdInstallSignalHandler();
   } else {
-    // Install a signal handler that prints an error since we don't support
-    // heapprofd and any other hook to be installed at the same time.
-    HeapprofdInstallErrorSignalHandler();
+    // Record the fact that incompatible hooks are active, to skip any later
+    // heapprofd signal handler invocations.
+    HeapprofdRememberHookConflict();
   }
 }
 
@@ -464,6 +466,7 @@ extern "C" ssize_t malloc_backtrace(void* pointer, uintptr_t* frames, size_t fra
 // =============================================================================
 // Platform-internal mallopt variant.
 // =============================================================================
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_ZYGOTE_CHILD) {
     if (arg != nullptr || arg_size != 0) {
@@ -471,6 +474,27 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     gZygoteChild = true;
+    return true;
+  }
+  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
+    if (arg != nullptr || arg_size != 0) {
+      errno = EINVAL;
+      return false;
+    }
+    atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
+    // Also check if heapprofd should start profiling from app startup.
+    HeapprofdInitZygoteChildProfiling();
+    return true;
+  }
+  if (opcode == M_GET_PROCESS_PROFILEABLE) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    // Native processes are considered profileable. Zygote children are considered
+    // profileable only when appropriately tagged.
+    *reinterpret_cast<bool*>(arg) =
+        !gZygoteChild || atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire);
     return true;
   }
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
@@ -497,6 +521,17 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     }
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
   }
+  if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
+    return SetHeapTaggingLevel(arg, arg_size);
+  }
+  if (opcode == M_INITIALIZE_GWP_ASAN) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    return MaybeInitGwpAsan(*reinterpret_cast<bool*>(arg));
+  }
+  // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
 }
 // =============================================================================

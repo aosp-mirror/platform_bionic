@@ -55,7 +55,7 @@ static char *rcsid = "$OpenBSD: getopt_long.c,v 1.16 2004/02/04 18:17:25 millert
 #endif /* LIBC_SCCS and not lint */
 #endif
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/libc/stdlib/getopt_long.c 342757 2019-01-04 03:13:24Z kevans $");
 
 #include <err.h>
 #include <errno.h>
@@ -481,6 +481,8 @@ start:
 #endif
 		if (*place == '-') {
 			place++;		/* --foo long option */
+			if (*place == '\0')
+				return (BADARG);	/* malformed option */
 #ifdef GNU_COMPATIBLE
 			dash_prefix = DD_PREFIX;
 #endif

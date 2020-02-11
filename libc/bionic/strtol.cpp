@@ -27,12 +27,11 @@
  * SUCH DAMAGE.
  */
 
+#include <ctype.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
-
-#include <private/bionic_ctype.h>
 
 template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, int base) {
   // Ensure that base is between 2 and 36 inclusive, or the special value of 0.
@@ -49,7 +48,7 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   int c;
   do {
     c = *s++;
-  } while (IsSpace(c));
+  } while (isspace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -58,8 +57,7 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
     neg = 0;
     if (c == '+') c = *s++;
   }
-  if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
+  if ((base == 0 || base == 16) && c == '0' && (*s == 'x' || *s == 'X') && isxdigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
@@ -74,10 +72,10 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   int any = 0;
   T acc = 0;
   for (; ; c = *s++) {
-    if (IsDigit(c)) {
+    if (isdigit(c)) {
       c -= '0';
-    } else if (IsAlpha(c)) {
-      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (isalpha(c)) {
+      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }
@@ -116,7 +114,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   int c;
   do {
     c = *s++;
-  } while (IsSpace(c));
+  } while (isspace(c));
   int neg;
   if (c == '-') {
     neg = 1;
@@ -125,8 +123,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
     neg = 0;
     if (c == '+') c = *s++;
   }
-  if ((base == 0 || base == 16) && c == '0' &&
-      (*s == 'x' || *s == 'X') && IsXDigit(s[1])) {
+  if ((base == 0 || base == 16) && c == '0' && (*s == 'x' || *s == 'X') && isxdigit(s[1])) {
     c = s[1];
     s += 2;
     base = 16;
@@ -138,10 +135,10 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
   T acc = 0;
   int any = 0;
   for (; ; c = *s++) {
-    if (IsDigit(c)) {
+    if (isdigit(c)) {
       c -= '0';
-    } else if (IsAlpha(c)) {
-      c -= IsUpper(c) ? 'A' - 10 : 'a' - 10;
+    } else if (isalpha(c)) {
+      c -= isupper(c) ? 'A' - 10 : 'a' - 10;
     } else {
       break;
     }

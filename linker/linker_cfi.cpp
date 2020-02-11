@@ -30,7 +30,7 @@
 
 #include "linker_debug.h"
 #include "linker_globals.h"
-#include "private/bionic_page.h"
+#include "platform/bionic/page.h"
 
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -142,8 +142,7 @@ static soinfo* find_libdl(soinfo* solist) {
 
 static uintptr_t soinfo_find_symbol(soinfo* si, const char* s) {
   SymbolName name(s);
-  const ElfW(Sym) * sym;
-  if (si->find_symbol_by_name(name, nullptr, &sym) && sym) {
+  if (const ElfW(Sym)* sym = si->find_symbol_by_name(name, nullptr)) {
     return si->resolve_symbol_address(sym);
   }
   return 0;

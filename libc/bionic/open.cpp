@@ -31,6 +31,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "private/bionic_fdtrack.h"
 #include "private/bionic_fortify.h"
 
 extern "C" int __openat(int, const char*, int, int);
@@ -62,13 +63,13 @@ int open(const char* pathname, int flags, ...) {
     va_end(args);
   }
 
-  return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), mode);
+  return FDTRACK_CREATE(__openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), mode));
 }
 __strong_alias(open64, open);
 
 int __open_2(const char* pathname, int flags) {
   if (needs_mode(flags)) __fortify_fatal("open: called with O_CREAT/O_TMPFILE but no mode");
-  return __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0);
+  return FDTRACK_CREATE_NAME("open", __openat(AT_FDCWD, pathname, force_O_LARGEFILE(flags), 0));
 }
 
 int openat(int fd, const char *pathname, int flags, ...) {
@@ -81,11 +82,11 @@ int openat(int fd, const char *pathname, int flags, ...) {
     va_end(args);
   }
 
-  return __openat(fd, pathname, force_O_LARGEFILE(flags), mode);
+  return FDTRACK_CREATE_NAME("openat", __openat(fd, pathname, force_O_LARGEFILE(flags), mode));
 }
 __strong_alias(openat64, openat);
 
 int __openat_2(int fd, const char* pathname, int flags) {
   if (needs_mode(flags)) __fortify_fatal("open: called with O_CREAT/O_TMPFILE but no mode");
-  return __openat(fd, pathname, force_O_LARGEFILE(flags), 0);
+  return FDTRACK_CREATE_NAME("openat", __openat(fd, pathname, force_O_LARGEFILE(flags), 0));
 }

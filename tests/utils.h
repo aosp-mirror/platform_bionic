@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#ifndef __TEST_UTILS_H
-#define __TEST_UTILS_H
+#pragma once
 
+#include <dirent.h>
 #include <dlfcn.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -68,10 +68,8 @@ static inline bool running_with_hwasan() {
 
 static inline void* untag_address(void* addr) {
 #if defined(__LP64__)
-  if (running_with_hwasan()) {
-    constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
-    addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
-  }
+  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
+  addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
 #endif
   return addr;
 }
@@ -255,4 +253,28 @@ class ExecTestHelper {
 };
 #endif
 
-#endif
+class FdLeakChecker {
+ public:
+  FdLeakChecker() {
+  }
+
+  ~FdLeakChecker() {
+    size_t end_count = CountOpenFds();
+    EXPECT_EQ(start_count_, end_count);
+  }
+
+ private:
+  static size_t CountOpenFds() {
+    auto fd_dir = std::unique_ptr<DIR, decltype(&closedir)>{ opendir("/proc/self/fd"), closedir };
+    size_t count = 0;
+    dirent* de = nullptr;
+    while ((de = readdir(fd_dir.get())) != nullptr) {
+      if (de->d_type == DT_LNK) {
+        ++count;
+      }
+    }
+    return count;
+  }
+
+  size_t start_count_ = CountOpenFds();
+};

@@ -27,6 +27,7 @@
  */
 
 #include "libc_init_common.h"
+#include "heap_tagging.h"
 
 #include <elf.h>
 #include <errno.h>
@@ -93,7 +94,7 @@ void __libc_init_common() {
   // Initialize various globals.
   environ = __libc_shared_globals()->init_environ;
   errno = 0;
-  __progname = __libc_shared_globals()->init_progname ?: "<unknown>";
+  setprogname(__libc_shared_globals()->init_progname ?: "<unknown>");
 
 #if !defined(__LP64__)
   __check_max_thread_id();
@@ -101,11 +102,16 @@ void __libc_init_common() {
 
   __libc_add_main_thread();
 
-  // Register atfork handlers to take and release the arc4random lock.
-  pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
-
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
+  __libc_init_fdtrack();
+
+  SetDefaultHeapTaggingLevel();
+}
+
+void __libc_init_fork_handler() {
+  // Register atfork handlers to take and release the arc4random lock.
+  pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
 }
 
 __noreturn static void __early_abort(int line) {

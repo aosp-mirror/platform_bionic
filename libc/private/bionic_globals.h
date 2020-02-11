@@ -44,6 +44,7 @@
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
+  uintptr_t heap_pointer_tag;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -99,6 +100,8 @@ struct libc_shared_globals {
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
 __LIBC_HIDDEN__ void __libc_init_fdsan();
+__LIBC_HIDDEN__ void __libc_init_fdtrack();
+__LIBC_HIDDEN__ void __libc_init_profiling_handlers();
 
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals);

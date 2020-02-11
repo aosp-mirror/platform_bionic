@@ -30,7 +30,7 @@
 
 #include <pthread.h>
 
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 template <bool write> class ScopedRWLock {
  public:

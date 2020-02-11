@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 #include <string>
 #include <iostream>
@@ -85,54 +86,86 @@ TEST(dl, lib_does_not_preempt_global_protected) {
 #else
   static constexpr const char* kPathToLinker = "/system/bin/linker";
 #endif
+
+#if defined (__aarch64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm64/linker64";
+#elif defined (__arm__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/arm/linker";
+#elif defined (__x86_64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86_64/linker64";
+#elif defined (__i386__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/x86/linker";
+#elif defined (__mips__)
+#if defined(__LP64__)
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips64/linker64";
+#else
+  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips/linker";
 #endif
+#else
+#error "Unknown architecture"
+#endif
+
+const char* PathToLinker() {
+  // On the systems with emulated architecture linker would be of different
+  // architecture. Try to use alternate paths first.
+  struct stat buffer;
+  if (stat(kAlternatePathToLinker, &buffer) == 0) {
+    return kAlternatePathToLinker;
+  }
+  return kPathToLinker;
+}
+#endif  // defined(__BIONIC__)
 
 TEST(dl, exec_linker) {
 #if defined(__BIONIC__)
-  std::string usage_prefix = std::string("Usage: ") + kPathToLinker;
+  const char* path_to_linker = PathToLinker();
+  std::string usage_prefix = std::string("Usage: ") + path_to_linker;
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  eth.SetArgs({ path_to_linker, nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
   ASSERT_EQ(0u, eth.GetOutput().find(usage_prefix)) << "Test output:\n" << eth.GetOutput();
 #endif
 }
 
 TEST(dl, exec_linker_load_file) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string helper = GetTestlibRoot() +
       "/exec_linker_helper/exec_linker_helper";
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
-      "__progname=" + helper + "\n" +
+      "__progname=exec_linker_helper\n" +
       "helper_func called\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_from_zip) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string helper = GetTestlibRoot() +
       "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip!/libdir/exec_linker_helper";
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
-      "__progname=" + helper + "\n" +
+      "__progname=exec_linker_helper\n" +
       "helper_func called\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 #endif
 }
 
 TEST(dl, exec_linker_load_self) {
 #if defined(__BIONIC__)
+  const char* path_to_linker = PathToLinker();
   std::string error_message = "error: linker cannot load itself\n";
   ExecTestHelper eth;
-  eth.SetArgs({ kPathToLinker, kPathToLinker, nullptr });
-  eth.Run([&]() { execve(kPathToLinker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
+  eth.SetArgs({ path_to_linker, path_to_linker, nullptr });
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
 }
 
@@ -204,7 +237,10 @@ TEST(dl, exec_with_ld_preload) {
 // The two libs are in ns2/ subdir.
 TEST(dl, exec_without_ld_config_file) {
 #if defined(__BIONIC__)
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string error_message =
+      "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() +
+      "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" "
+      "not found: needed by main executable\n";
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   chmod(helper.c_str(), 0755);
@@ -244,8 +280,7 @@ TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
-    // LD_CONFIG_FILE is not supported on user build
-    return;
+    GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
@@ -267,8 +302,7 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
   if (!is_debuggable_build()) {
-    // LD_CONFIG_FILE is not supported on user build
-    return;
+    GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
@@ -292,14 +326,15 @@ TEST(dl, disable_ld_config_file) {
   if (getuid() == 0) {
     // when executed from the shell (e.g. not as part of CTS), skip the test.
     // This test is only for CTS.
-    return;
+    GTEST_SKIP() << "test is not supported with root uid";
   }
   if (is_debuggable_build()) {
-    // Skip the test for non production devices
-    return;
+    GTEST_SKIP() << "test is not supported on debuggable build";
   }
 
-  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" not found\n";
+  std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
+      "\"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": " +
+      "library \"ld_config_test_helper_lib1.so\" not found: needed by main executable\n";
   std::string helper = GetTestlibRoot() +
       "/ld_config_test_helper/ld_config_test_helper";
   TemporaryFile config_file;
@@ -311,4 +346,53 @@ TEST(dl, disable_ld_config_file) {
   eth.SetEnv({ env.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
+}
+
+static void RelocationsTest(const char* lib, const char* expectation) {
+#if defined(__BIONIC__)
+  // Does readelf think the .so file looks right?
+  const std::string path = GetTestlibRoot() + "/" + lib;
+  ExecTestHelper eth;
+  eth.SetArgs({ "readelf", "-SW", path.c_str(), nullptr });
+  eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_TRUE(eth.GetOutput().find(expectation) != std::string::npos) << eth.GetOutput();
+
+  // Can we load it?
+  void* handle = dlopen(lib, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+#else
+  UNUSED(lib);
+  UNUSED(expectation);
+  GTEST_SKIP() << "test is not supported on glibc";
+#endif
+}
+
+TEST(dl, relocations_RELR) {
+  RelocationsTest("librelocations-RELR.so",
+      ".relr.dyn            RELR");
+}
+
+TEST(dl, relocations_ANDROID_RELR) {
+  RelocationsTest("librelocations-ANDROID_RELR.so",
+      ".relr.dyn            ANDROID_RELR");
+}
+
+TEST(dl, relocations_ANDROID_REL) {
+  RelocationsTest("librelocations-ANDROID_REL.so",
+#if __LP64__
+      ".rela.dyn            ANDROID_RELA"
+#else
+      ".rel.dyn             ANDROID_REL"
+#endif
+      );
+}
+
+TEST(dl, relocations_fat) {
+  RelocationsTest("librelocations-fat.so",
+#if __LP64__
+      ".rela.dyn            RELA"
+#else
+      ".rel.dyn             REL"
+#endif
+      );
 }

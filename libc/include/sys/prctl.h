@@ -37,21 +37,6 @@
 
 #include <linux/prctl.h>
 
-/**
- * Names a VMA (mmap'ed region). The second argument must be `PR_SET_VMA_ANON_NAME`,
- * the third and fourth are a `void*` pointer to the VMA and its `size_t` length in
- * bytes, and the final argument is a `const char*` pointer to the name.
- *
- * Note that the kernel keeps the pointer to the name rather than copying the name,
- * so the lifetime of the string should be at least as long as that of the VMA.
- */
-#define PR_SET_VMA 0x53564d41
-
-/**
- * For use with `PR_SET_VMA`.
- */
-#define PR_SET_VMA_ANON_NAME 0
-
 __BEGIN_DECLS
 
 /**

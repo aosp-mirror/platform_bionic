@@ -30,7 +30,7 @@
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+#if __ANDROID_API__ < 21
 
 #include <errno.h>
 #include <sys/mman.h>
@@ -68,4 +68,4 @@ static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flag
 
 __END_DECLS
 
-#endif  /* __ANDROID_API__ < __ANDROID_API_L__ */
+#endif

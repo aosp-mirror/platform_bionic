@@ -18,6 +18,8 @@
  ****************************************************************************/
 #ifndef _ASM_GENERIC_FCNTL_H
 #define _ASM_GENERIC_FCNTL_H
+#include <bits/flock64.h>
+#include <bits/flock.h>
 #include <linux/types.h>
 #define O_ACCMODE 00000003
 #define O_RDONLY 00000000
@@ -145,26 +147,10 @@ struct f_owner_ex {
 #ifndef __ARCH_FLOCK_PAD
 #define __ARCH_FLOCK_PAD
 #endif
-struct flock {
-  short l_type;
-  short l_whence;
-  __kernel_off_t l_start;
-  __kernel_off_t l_len;
-  __kernel_pid_t l_pid;
-  __ARCH_FLOCK_PAD
-};
 #endif
 #ifndef HAVE_ARCH_STRUCT_FLOCK64
 #ifndef __ARCH_FLOCK64_PAD
 #define __ARCH_FLOCK64_PAD
 #endif
-struct flock64 {
-  short l_type;
-  short l_whence;
-  __kernel_loff_t l_start;
-  __kernel_loff_t l_len;
-  __kernel_pid_t l_pid;
-  __ARCH_FLOCK64_PAD
-};
 #endif
 #endif
