@@ -46,6 +46,30 @@
       "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8436b3d9_e12afdea",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-12T01:49:30Z",
+      "side": 1,
+      "message": "I worry that this could escalate to a security issue. Obviously, crashing your own process isn\u0027t a big deal, but if you could somehow force a high privilege process to somehow do a call to this while trying to enable heapprofd, you could cause it to crash, or something more nefarious. And some malicious code can do some really clever things, so it seems better to err on the side of caution and avoid this problem completely. And sometimes an attack only needs to find a way to crash some process reliably to trigger an attack.\n\nI don\u0027t think it\u0027s too hard to plug this hole. If it starts to get tricky, then it might be worth doing something not as hard.\n\nI also wouldn\u0027t be opposed to you submiting this, and I\u0027ll fix the potential races in a subsequent cl.",
+      "parentUuid": "95d34455_fa443bfe",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 52
+      },
+      "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
