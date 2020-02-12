@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43667548_bd1bc780",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-12T01:27:09Z",
+      "side": 1,
+      "message": "I didn\u0027t realize this before, but this is actually incorrect. I would suggest putting this into a function and follow the model that is going on in EnableLimitDispatchTable (the non-static version).\n\nThe code in the static executable needs to add a mutex lock and getting it because now two different threads could call mallopt at the same time and try to mutate the globals at the same time. The old limit code was designed to avoid that situation, so it didn\u0027t need the lock. I think the gGlobalsMutateLock needs to move to malloc_common.h and malloc_common.cpp, then for the static version, add a lock before doing the mutate, and add a lock in EnableLimitDispatchTable static version.",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 52
+      },
+      "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
