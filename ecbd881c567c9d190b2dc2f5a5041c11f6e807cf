@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "2e72c160_1c82d1dd",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-02-12T18:42:31Z",
+      "side": 1,
+      "message": "Could move this to the beginning for the few extra bytes saved :D \n\nAlso this doesn\u0027t necessarily needs to be uint64_t we just want to check if the version changed from previous iteration in __cxa_finalize, so unless someone do exact number of version bumps to wrap around to the same value we are fine. Even if we modulo wrap around it will work as expected. But I digress, because uint64_t is perfectly fine, could be size_t for those 32-bit folks. (I guess it is safe to assume no one would exceed this number of atexits)",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 20
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca036be8_e851790d",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-02-12T18:42:31Z",
+      "side": 1,
+      "message": "Have you considered making those functions private? They doesn\u0027t seem to be useful standalone and with current interface of this class both `append_entry` and `erase_entry` will fail if they are called without explicitly calling `set_writable` first. \n\nI mean public interface of this class should include only methods to access/add/remove data, rest is implementation specific and can be hidden inside.",
+      "range": {
+        "startLine": 69,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 19
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5a473510_21d5a6c2",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 2
@@ -58,6 +104,29 @@
         "startChar": 37,
         "endLine": 100,
         "endChar": 45
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2faae132_fc6ec6b4",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-02-12T18:42:31Z",
+      "side": 1,
+      "message": "For the first allocation you are calling this with size\u003d\u003d0 and src\u003d\u003dnullptr... Calling memcpy with nullptr is UB.",
+      "range": {
+        "startLine": 111,
+        "startChar": 0,
+        "endLine": 111,
+        "endChar": 60
       },
       "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
@@ -135,6 +204,29 @@
     },
     {
       "key": {
+        "uuid": "f301903e_6bbdcafc",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-02-12T18:42:31Z",
+      "side": 1,
+      "message": "nitpick: Have you considered negating this condition and adding `continue`? :)",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 169,
+        "endChar": 81
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3d524486_e693bde3",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 2
@@ -146,6 +238,29 @@
       "writtenOn": "2020-02-12T06:12:23Z",
       "side": 1,
       "message": "move this before the if to make the if condition shorter?",
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "763b0f06_d481bba3",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-02-12T18:42:31Z",
+      "side": 1,
+      "message": "Given this usecase we could have `pop_entry` instead that would erase for array and return given entry. Hmm, maybe pop is not good name...",
+      "range": {
+        "startLine": 175,
+        "startChar": 16,
+        "endLine": 175,
+        "endChar": 27
+      },
       "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
