@@ -22,6 +22,30 @@
       "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95d34455_fa443bfe",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-12T01:30:25Z",
+      "side": 1,
+      "message": "M_INITIALIZE_GWP_ASAN is only callable before any threads have spawned (https://cs.android.com/android/platform/superproject/+/master:bionic/libc/bionic/gwp_asan_wrappers.cpp;l\u003d213), so I don\u0027t think this affects us here.",
+      "parentUuid": "43667548_bd1bc780",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 52
+      },
+      "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
