@@ -379,7 +379,7 @@ static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
 
-  MaybeInitGwpAsanFromLibc();
+  MaybeInitGwpAsanFromLibc(globals);
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
@@ -529,7 +529,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       errno = EINVAL;
       return false;
     }
-    return MaybeInitGwpAsan(*reinterpret_cast<bool*>(arg));
+    __libc_globals.mutate([&](libc_globals* globals) {
+      return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
+    });
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
