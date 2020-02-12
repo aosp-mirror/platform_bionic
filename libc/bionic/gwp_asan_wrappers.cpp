@@ -195,7 +195,7 @@ bool ShouldGwpAsanSampleProcess() {
   return false;
 }
 
-bool MaybeInitGwpAsanFromLibc() {
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
   // Never initialize the Zygote here. A Zygote chosen for sampling would also
   // have all of its children sampled. Instead, the Zygote child will choose
   // whether it samples or not just after the Zygote forks. For
@@ -205,14 +205,14 @@ bool MaybeInitGwpAsanFromLibc() {
   if (progname && strncmp(progname, "app_process", 11) == 0) {
     return false;
   }
-  return MaybeInitGwpAsan(false);
+  return MaybeInitGwpAsan(globals);
 }
 
 static bool GwpAsanInitialized = false;
 
 // Maybe initializes GWP-ASan. Called by android_mallopt() and libc's
 // initialisation. This should always be called in a single-threaded context.
-bool MaybeInitGwpAsan(bool force_init) {
+bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
   if (GwpAsanInitialized) {
     error_log("GWP-ASan was already initialized for this process.");
     return false;
@@ -239,17 +239,15 @@ bool MaybeInitGwpAsan(bool force_init) {
 
   // GWP-ASan's initialization is always called in a single-threaded context, so
   // we can initialize lock-free.
-  __libc_globals.mutate([](libc_globals* globals) {
-    // Set GWP-ASan as the malloc dispatch table.
-    globals->malloc_dispatch_table = gwp_asan_dispatch;
-    atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
+  // Set GWP-ASan as the malloc dispatch table.
+  globals->malloc_dispatch_table = gwp_asan_dispatch;
+  atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
 
-    // If malloc_limit isn't installed, we can skip the default_dispatch_table
-    // lookup.
-    if (GetDispatchTable() == nullptr) {
-      atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
-    }
-  });
+  // If malloc_limit isn't installed, we can skip the default_dispatch_table
+  // lookup.
+  if (GetDispatchTable() == nullptr) {
+    atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
+  }
 
 #ifndef LIBC_STATIC
   SetGlobalFunctions(gwp_asan_gfunctions);
