@@ -94,6 +94,30 @@
       "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8acf05dc_0d613e32",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-02-12T02:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3659ff42_24b30ee7",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 52
+      },
+      "revId": "bba80dcd80709ad6e4c4cc8097fa72acc961c413",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
