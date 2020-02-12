@@ -104,10 +104,9 @@ libc_scudo_product_variables = {
 
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// Enable scudo for non-svelte config by adding the line:
+// To disable scudo for the non-svelte config remove the line:
 //     product_variables: libc_scudo_product_variables,
-// to the cc_defaults below. And remove the defaults line
-// in the libc_scudo library.
+// in the cc_defaults below.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
@@ -117,6 +116,7 @@ cc_defaults {
         "libc_jemalloc_wrapper",
     ],
     header_libs: ["gwp_asan_headers"],
+    product_variables: libc_scudo_product_variables,
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -2566,7 +2566,6 @@ cc_defaults {
 
 cc_library_shared {
     name: "libc_scudo",
-    defaults: ["libc_scudo_wrapper_defaults"],
     vendor_available: true,
     stl: "none",
     system_shared_libs: [],
