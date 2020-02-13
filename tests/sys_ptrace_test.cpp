@@ -257,9 +257,6 @@ static void watchpoint_imprecise_child(Uint128_t& data) {
   asm volatile("stm %0, { r0, r1, r2, r3 }" : : "r"(&data));
 #elif defined(__aarch64__)
   asm volatile("stp x0, x1, %0" : : "m"(data));
-#elif defined(__mips__)
-// TODO
-  UNUSED(data);
 #endif
 }
 
