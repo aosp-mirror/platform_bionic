@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4abb4936_8dc616b3",
+        "filename": "tests/signal_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-13T21:52:59Z",
+      "side": 0,
+      "message": "You lost this change, did you mean to remove it?",
+      "range": {
+        "startLine": 611,
+        "startChar": 2,
+        "endLine": 611,
+        "endChar": 28
+      },
+      "revId": "97d053283f4c100baed8677f7a7af98a976a2e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
