@@ -28,11 +28,12 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <stddef.h>
 
 // Hooks for libc to possibly install GWP-ASan.
-bool MaybeInitGwpAsanFromLibc();
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
 
 // Maybe initialize GWP-ASan. Set force_init to true to bypass process sampling.
-bool MaybeInitGwpAsan(bool force_init = false);
+bool MaybeInitGwpAsan(libc_globals* globals, bool force_init = false);

@@ -45,6 +45,7 @@
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
+#include "malloc_limit.h"
 
 static constexpr char kHeapprofdSharedLib[] = "heapprofd_client.so";
 static constexpr char kHeapprofdPrefix[] = "heapprofd";
@@ -189,7 +190,7 @@ void HandleHeapprofdSignal() {
       __libc_globals.mutate([](libc_globals* globals) {
         atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
         auto dispatch_table = GetDispatchTable();
-        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
+        if (!MallocLimitInstalled() || dispatch_table == &globals->malloc_dispatch_table) {
           atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
         }
       });

@@ -277,17 +277,10 @@ bool InitSharedLibrary(void* impl_handle, const char* shared_lib, const char* pr
   return true;
 }
 
-// Note about USE_SCUDO. This file is compiled into libc.so and libc_scudo.so.
-// When compiled into libc_scudo.so, the libc_malloc_* libraries don't need
-// to be loaded from the runtime namespace since libc_scudo.so is not from
-// the runtime APEX, but is copied to any APEX that needs it.
-#ifndef USE_SCUDO
 extern "C" struct android_namespace_t* android_get_exported_namespace(const char* name);
-#endif
 
 void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispatch* dispatch_table) {
   void* impl_handle = nullptr;
-#ifndef USE_SCUDO
   // Try to load the libc_malloc_* libs from the "runtime" namespace and then
   // fall back to dlopen() to load them from the default namespace.
   //
@@ -306,7 +299,6 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
     };
     impl_handle = android_dlopen_ext(shared_lib, RTLD_NOW | RTLD_LOCAL, &dlextinfo);
   }
-#endif
 
   if (impl_handle == nullptr) {
     impl_handle = dlopen(shared_lib, RTLD_NOW | RTLD_LOCAL);
@@ -344,7 +336,7 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
   // Do a pointer swap so that all of the functions become valid at once to
   // avoid any initialization order problems.
   atomic_store(&globals->default_dispatch_table, &globals->malloc_dispatch_table);
-  if (GetDispatchTable() == nullptr) {
+  if (!MallocLimitInstalled()) {
     atomic_store(&globals->current_dispatch_table, &globals->malloc_dispatch_table);
   }
 
@@ -379,7 +371,7 @@ static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
 
-  MaybeInitGwpAsanFromLibc();
+  MaybeInitGwpAsanFromLibc(globals);
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
@@ -529,7 +521,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       errno = EINVAL;
       return false;
     }
-    return MaybeInitGwpAsan(*reinterpret_cast<bool*>(arg));
+    __libc_globals.mutate([&](libc_globals* globals) {
+      return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
+    });
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
