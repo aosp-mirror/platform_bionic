@@ -387,9 +387,6 @@ TEST(malloc, malloc_info) {
   ASSERT_STREQ("malloc", root->Name());
   std::string version(root->Attribute("version"));
   if (version == "jemalloc-1") {
-    // Verify jemalloc version of this data.
-    ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
-
     auto arena = root->FirstChildElement();
     for (; arena != nullptr; arena = arena->NextSiblingElement()) {
       int val;
@@ -418,10 +415,18 @@ TEST(malloc, malloc_info) {
         }
       }
     }
+  } else if (version == "scudo-1") {
+    auto element = root->FirstChildElement();
+    for (; element != nullptr; element = element->NextSiblingElement()) {
+      int val;
+
+      ASSERT_STREQ("alloc", element->Name());
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, element->QueryIntAttribute("size", &val));
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, element->QueryIntAttribute("count", &val));
+    }
   } else {
-    // Do not verify output for scudo or debug malloc.
-    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
-        << "Unknown version: " << version;
+    // Do not verify output for debug malloc.
+    ASSERT_TRUE(version == "debug-malloc-1") << "Unknown version: " << version;
   }
 #endif
 }
@@ -452,9 +457,6 @@ TEST(malloc, malloc_info_matches_mallinfo) {
   ASSERT_STREQ("malloc", root->Name());
   std::string version(root->Attribute("version"));
   if (version == "jemalloc-1") {
-    // Verify jemalloc version of this data.
-    ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
-
     auto arena = root->FirstChildElement();
     for (; arena != nullptr; arena = arena->NextSiblingElement()) {
       int val;
@@ -477,10 +479,22 @@ TEST(malloc, malloc_info_matches_mallinfo) {
     // since malloc_info allocates some memory.
     EXPECT_LE(mallinfo_before_allocated_bytes, total_allocated_bytes);
     EXPECT_GE(mallinfo_after_allocated_bytes, total_allocated_bytes);
+  } else if (version == "scudo-1") {
+    auto element = root->FirstChildElement();
+    for (; element != nullptr; element = element->NextSiblingElement()) {
+      ASSERT_STREQ("alloc", element->Name());
+      int size;
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, element->QueryIntAttribute("size", &size));
+      int count;
+      ASSERT_EQ(tinyxml2::XML_SUCCESS, element->QueryIntAttribute("count", &count));
+      total_allocated_bytes += size * count;
+    }
+    // Scudo only gives the information on the primary, so simply make
+    // sure that the value is non-zero.
+    EXPECT_NE(0U, total_allocated_bytes);
   } else {
-    // Do not verify output for scudo or debug malloc.
-    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
-        << "Unknown version: " << version;
+    // Do not verify output for debug malloc.
+    ASSERT_TRUE(version == "debug-malloc-1") << "Unknown version: " << version;
   }
 #endif
 }
