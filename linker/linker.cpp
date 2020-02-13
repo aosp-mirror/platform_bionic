@@ -3443,7 +3443,9 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
-// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/*
+// Given an `executable_path` starting with "/apex/<name>/bin/, return
+// "/linkerconfig/<name>/ld.config.txt" (or "/apex/<name>/etc/ld.config.txt", if
+// the former does not exist).
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
   if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
