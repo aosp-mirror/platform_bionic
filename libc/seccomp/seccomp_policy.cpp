@@ -75,29 +75,6 @@ static const size_t secondary_system_filter_size = x86_system_filter_size;
 
 static const long secondary_setresgid = __x86_setresgid;
 static const long secondary_setresuid = __x86_setresuid;
-#elif defined __mips__ || defined __mips64__
-
-#define DUAL_ARCH
-#define PRIMARY_ARCH AUDIT_ARCH_MIPSEL64
-static const struct sock_filter* primary_app_filter = mips64_app_filter;
-static const size_t primary_app_filter_size = mips64_app_filter_size;
-static const struct sock_filter* primary_app_zygote_filter = mips64_app_zygote_filter;
-static const size_t primary_app_zygote_filter_size = mips64_app_zygote_filter_size;
-static const struct sock_filter* primary_system_filter = mips64_system_filter;
-static const size_t primary_system_filter_size = mips64_system_filter_size;
-
-static const long primary_setresgid = __mips64_setresgid;
-static const long primary_setresuid = __mips64_setresuid;
-#define SECONDARY_ARCH AUDIT_ARCH_MIPSEL
-static const struct sock_filter* secondary_app_filter = mips_app_filter;
-static const size_t secondary_app_filter_size = mips_app_filter_size;
-static const struct sock_filter* secondary_app_zygote_filter = mips_app_zygote_filter;
-static const size_t secondary_app_zygote_filter_size = mips_app_zygote_filter_size;
-static const struct sock_filter* secondary_system_filter = mips_system_filter;
-static const size_t secondary_system_filter_size = mips_system_filter_size;
-
-static const long secondary_setresgid = __mips_setresgid;
-static const long secondary_setresuid = __mips_setresuid;
 #else
 #error No architecture was defined!
 #endif
