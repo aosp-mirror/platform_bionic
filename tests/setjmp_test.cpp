@@ -224,10 +224,6 @@ TEST(setjmp, setjmp_fp_registers) {
 #define __JB_SIGFLAG 8
 #elif defined(__x86_64)
 #define __JB_SIGFLAG 8
-#elif defined(__mips__) && defined(__LP64__)
-#define __JB_SIGFLAG 1
-#elif defined(__mips__)
-#define __JB_SIGFLAG 2
 #endif
 
 TEST(setjmp, setjmp_cookie) {
@@ -235,13 +231,7 @@ TEST(setjmp, setjmp_cookie) {
   int value = setjmp(jb);
   ASSERT_EQ(0, value);
 
-#if defined(__mips__) && !defined(__LP64__)
-  // round address to 8-byte boundry
-  uintptr_t jb_aligned = reinterpret_cast<uintptr_t>(jb) & ~7L;
-  long* sigflag = reinterpret_cast<long*>(jb_aligned) + __JB_SIGFLAG;
-#else
   long* sigflag = reinterpret_cast<long*>(jb) + __JB_SIGFLAG;
-#endif
 
   // Make sure there's actually a cookie.
   EXPECT_NE(0, *sigflag & ~1);
