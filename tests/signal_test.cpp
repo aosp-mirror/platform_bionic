@@ -282,8 +282,7 @@ static void TestSigAction(int (sigaction_fn)(int, const SigActionT*, SigActionT*
                           int sig) {
   // Both bionic and glibc set SA_RESTORER when talking to the kernel on arm,
   // arm64, x86, and x86-64. The version of glibc we're using also doesn't
-  // define SA_RESTORER, but luckily it's the same value everywhere, and mips
-  // doesn't use the bit for anything.
+  // define SA_RESTORER, but luckily it's the same value everywhere.
   static const unsigned sa_restorer = 0x4000000;
 
   // See what's currently set for this signal.
@@ -598,18 +597,12 @@ TEST(signal, sys_siglist) {
 }
 
 TEST(signal, limits) {
-  // This comes from the kernel.
+  // These come from the kernel.
   ASSERT_EQ(32, __SIGRTMIN);
+  ASSERT_EQ(64, __SIGRTMAX);
 
   // We reserve a non-zero number at the bottom for ourselves.
   ASSERT_GT(SIGRTMIN, __SIGRTMIN);
-
-  // MIPS has more signals than everyone else.
-#if defined(__mips__)
-  ASSERT_EQ(128, __SIGRTMAX);
-#else
-  ASSERT_EQ(64, __SIGRTMAX);
-#endif
 
   // We don't currently reserve any at the top.
   ASSERT_EQ(SIGRTMAX, __SIGRTMAX);

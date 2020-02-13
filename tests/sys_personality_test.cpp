@@ -21,9 +21,7 @@
 TEST(sys_personality, current_persona) {
   int persona = personality(0xffffffff) & PER_MASK;
 #if defined(__BIONIC__)
-// When personality syscall is executed on mips64, for a 32bit process
-// sys_32_personality() is called, which converts PER_LINUX32 -> PER_LINUX
-#if defined(__LP64__) || (__mips==32 && __mips_isa_rev>2)
+#if defined(__LP64__)
   ASSERT_EQ(PER_LINUX, persona);
 #else
   ASSERT_EQ(PER_LINUX32, persona);
