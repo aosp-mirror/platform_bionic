@@ -4,28 +4,6 @@
 # The final seccomp whitelist is SYSCALLS.TXT - SECCOMP_BLACKLIST.TXT + SECCOMP_WHITELIST.TXT
 # Any entry in the blacklist must be in the syscalls file and not be in the whitelist file
 #
-# Each non-blank, non-comment line has the following format:
-#
-# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
-#
-# where:
-#       arch_list ::= "all" | arch+
-#       arch      ::= "arm" | "arm64" | "mips" | "mips64" | "x86" | "x86_64"
-#
-# Note:
-#      - syscall_name corresponds to the name of the syscall, which may differ from
-#        the exported function name (example: the exit syscall is implemented by the _exit()
-#        function, which is not the same as the standard C exit() function which calls it)
-
-#      - alias_list is optional comma separated list of function aliases
-#
-#      - The call_id parameter, given that func_name and syscall_name have
-#        been provided, allows the user to specify dispatch style syscalls.
-#        For example, socket() syscall on i386 actually becomes:
-#          socketcall(__NR_socket, 1, *(rest of args on stack)).
-#
-#      - Each parameter type is assumed to be stored in 32 bits.
-#
 # This file is processed by a python script named genseccomp.py.
 
 # Note: Some privileged syscalls are still needed in app process after fork before uid change,
@@ -33,21 +11,21 @@
 # the process still has CAP_SYS_ADMIN; changing the uid would remove that capability.
 
 # syscalls to modify IDs
-int     setgid:setgid32(gid_t)     arm,x86
-int     setgid:setgid(gid_t)       arm64,mips,mips64,x86_64
-int     setuid:setuid32(uid_t)    arm,x86
-int     setuid:setuid(uid_t)      arm64,mips,mips64,x86_64
-int     setregid:setregid32(gid_t, gid_t)  arm,x86
-int     setregid:setregid(gid_t, gid_t)    arm64,mips,mips64,x86_64
-int     setreuid:setreuid32(uid_t, uid_t)   arm,x86
-int     setreuid:setreuid(uid_t, uid_t)     arm64,mips,mips64,x86_64
-int     setresgid:setresgid32(gid_t, gid_t, gid_t)   arm,x86
-int     setresgid:setresgid(gid_t, gid_t, gid_t)     arm64,mips,mips64,x86_64
+int     setgid:setgid32(gid_t)     lp32
+int     setgid:setgid(gid_t)       lp64
+int     setuid:setuid32(uid_t)    lp32
+int     setuid:setuid(uid_t)      lp64
+int     setregid:setregid32(gid_t, gid_t)  lp32
+int     setregid:setregid(gid_t, gid_t)    lp64
+int     setreuid:setreuid32(uid_t, uid_t)   lp32
+int     setreuid:setreuid(uid_t, uid_t)     lp64
+int     setresgid:setresgid32(gid_t, gid_t, gid_t)   lp32
+int     setresgid:setresgid(gid_t, gid_t, gid_t)     lp64
 # setresuid is explicitly allowed, see above.
 int     setfsgid(gid_t)  all
 int     setfsuid(uid_t)  all
-int     setgroups:setgroups32(int, const gid_t*)   arm,x86
-int     setgroups:setgroups(int, const gid_t*)     arm64,mips,mips64,x86_64
+int     setgroups:setgroups32(int, const gid_t*)   lp32
+int     setgroups:setgroups(int, const gid_t*)     lp64
 
 # syscalls to modify times
 int     adjtimex(struct timex*)   all
