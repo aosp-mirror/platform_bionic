@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f385708f_664f3fc4",
+        "filename": "libc/arch-common/bionic/note_android_ident.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-02-14T04:03:49Z",
+      "side": 1,
+      "message": "Don\u0027t really need to name this.",
+      "range": {
+        "startLine": 29,
+        "startChar": 78,
+        "endLine": 29,
+        "endChar": 94
+      },
+      "revId": "d43edcdddcb78b0094ade979e6ca1e8d3bf0979c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
