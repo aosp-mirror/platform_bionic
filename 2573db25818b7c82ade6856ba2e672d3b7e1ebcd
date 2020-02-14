@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ed63e7b_ce5d2359",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2016,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T02:31:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be6aefd6_e58eada6",
+      "range": {
+        "startLine": 2016,
+        "startChar": 0,
+        "endLine": 2016,
+        "endChar": 4
+      },
+      "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c91854a2_36b939a5",
         "filename": "libc/arch-common/bionic/note_android_ident.h",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c0b967e_7cf12662",
+        "filename": "libc/arch-common/bionic/note_android_ident.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T02:31:31Z",
+      "side": 1,
+      "message": "yeah, if we can\u0027t trust the compiler to correctly align a section, we\u0027re doomed. removed.",
+      "parentUuid": "c91854a2_36b939a5",
+      "range": {
+        "startLine": 29,
+        "startChar": 53,
+        "endLine": 29,
+        "endChar": 70
+      },
+      "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8dfa158c_1bd9a8a3",
+        "filename": "libc/arch-common/bionic/note_android_ident.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T02:31:31Z",
+      "side": 1,
+      "message": "readelf thinks it\u0027s fine as it is, but i agree that your suggestion seems more intention-revealing, so i\u0027ve made that change.",
+      "parentUuid": "9bfdd0cb_1f4e6045",
+      "range": {
+        "startLine": 40,
+        "startChar": 2,
+        "endLine": 40,
+        "endChar": 6
+      },
+      "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f88e143_9589b097",
         "filename": "libc/arch-common/bionic/note_android_ident.h",
         "patchSetId": 3
@@ -85,6 +157,24 @@
       "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa827746_f8980e9d",
+        "filename": "libc/arch-common/bionic/note_android_ident.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-14T02:31:31Z",
+      "side": 1,
+      "message": "shrug. clang-format is certifiably insane.",
+      "parentUuid": "9f88e143_9589b097",
+      "revId": "2573db25818b7c82ade6856ba2e672d3b7e1ebcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
