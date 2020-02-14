@@ -613,20 +613,6 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
-        mips: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
-        mips64: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -881,60 +867,6 @@ cc_library_static {
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
-            ],
-        },
-
-        mips: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips/bionic/__bionic_clone.S",
-                "arch-mips/bionic/cacheflush.cpp",
-                "arch-mips/bionic/_exit_with_stack_teardown.S",
-                "arch-mips/bionic/libcrt_compat.c",
-                "arch-mips/bionic/setjmp.S",
-                "arch-mips/bionic/syscall.S",
-                "arch-mips/bionic/vfork.S",
-            ],
-            exclude_srcs: [
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips64/bionic/__bionic_clone.S",
-                "arch-mips64/bionic/_exit_with_stack_teardown.S",
-                "arch-mips64/bionic/setjmp.S",
-                "arch-mips64/bionic/syscall.S",
-                "arch-mips64/bionic/vfork.S",
-                "arch-mips64/bionic/stat.cpp",
-            ],
-            exclude_srcs: [
                 "bionic/strchr.cpp",
                 "bionic/strnlen.c",
             ],
@@ -1990,12 +1922,6 @@ cc_defaults {
     defaults: ["crt_defaults"],
 
     arch: {
-        mips: {
-            cflags: ["-fPIC"],
-        },
-        mips64: {
-            cflags: ["-fPIC"],
-        },
         x86: {
             cflags: ["-fPIC"],
         },
@@ -2050,26 +1976,6 @@ cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
-
     defaults: ["crt_defaults"],
 }
 
@@ -2087,25 +1993,6 @@ cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
     defaults: ["crt_defaults"],
 }
 
