@@ -33,11 +33,8 @@
 
 #include <android-base/macros.h>
 
-// TODO(dimitry): move this to linker_defines.h? Unless it is removed by
-// consequent refactoring steps.
-
-// Android uses RELA for aarch64 and x86_64. mips64 still uses REL.
-#if defined(__aarch64__) || defined(__x86_64__)
+// Android uses RELA for LP64.
+#if defined(__LP64__)
 #define USE_RELA 1
 #endif
 
