@@ -62,8 +62,6 @@ libc/
   arch-arm/
   arch-arm64/
   arch-common/
-  arch-mips/
-  arch-mips64/
   arch-x86/
   arch-x86_64/
     # Each architecture has its own subdirectory for stuff that isn't shared

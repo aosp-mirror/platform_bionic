@@ -65,11 +65,11 @@ in the 64-bit ABI even though they're identical to the non-`64` names.
 
 ## `sigset_t` is too small for real-time signals
 
-On 32-bit Android, `sigset_t` is too small for ARM and x86 (but correct for
-MIPS). This means that there is no support for real-time signals in 32-bit
-code. Android P (API level 28) adds `sigset64_t` and a corresponding function
-for every function that takes a `sigset_t` (so `sigprocmask64` takes a
-`sigset64_t` where `sigprocmask` takes a `sigset_t`).
+On 32-bit Android, `sigset_t` is too small for ARM and x86. This means that
+there is no support for real-time signals in 32-bit code. Android P (API
+level 28) adds `sigset64_t` and a corresponding function for every function
+that takes a `sigset_t` (so `sigprocmask64` takes a `sigset64_t` where
+`sigprocmask` takes a `sigset_t`).
 
 On 32-bit Android, `struct sigaction` is also too small because it contains
 a `sigset_t`. We also offer a `struct sigaction64` and `sigaction64` function
