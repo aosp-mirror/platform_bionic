@@ -324,7 +324,6 @@ cc_binary {
     },
 
     compile_multilib: "both",
-    xom: false,
 
     recovery_available: true,
     apex_available: [
