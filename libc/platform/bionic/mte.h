@@ -42,20 +42,26 @@ inline bool mte_supported() {
 }
 #endif
 
-struct ScopedDisableMTE {
-  ScopedDisableMTE() {
 #ifdef __aarch64__
+class ScopedDisableMTE {
+  size_t prev_tco_;
+
+ public:
+  ScopedDisableMTE() {
     if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, #1");
+      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=r"(prev_tco_));
     }
-#endif
   }
 
   ~ScopedDisableMTE() {
-#ifdef __aarch64__
     if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, #0");
+      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
     }
-#endif
   }
 };
+#else
+struct ScopedDisableMTE {
+  // Silence unused variable warnings in non-aarch64 builds.
+  ScopedDisableMTE() {}
+};
+#endif
