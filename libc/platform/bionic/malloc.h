@@ -97,6 +97,14 @@ enum {
   //   arg_size = sizeof(bool)
   M_GET_PROCESS_PROFILEABLE = 9,
 #define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
+  // Maybe enable GWP-ASan. Set *arg to force GWP-ASan to be turned on,
+  // otherwise this mallopt() will internally decide whether to sample the
+  // process. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_INITIALIZE_GWP_ASAN = 10,
+#define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
 };
 
 enum HeapTaggingLevel {

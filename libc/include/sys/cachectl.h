@@ -26,12 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_CACHECTL_H
-#define _SYS_CACHECTL_H 1
+#pragma once
 
 #include <sys/cdefs.h>
-#ifdef __mips__
-#include <asm/cachectl.h>
-#endif
 
-#endif
+/* This header file is obsolete. */

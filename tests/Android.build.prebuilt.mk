@@ -25,8 +25,6 @@ LOCAL_SRC_FILES_arm := prebuilt-elf-files/arm/$(bionic_tests_module)
 LOCAL_SRC_FILES_arm64 := prebuilt-elf-files/arm64/$(bionic_tests_module)
 LOCAL_SRC_FILES_x86 := prebuilt-elf-files/x86/$(bionic_tests_module)
 LOCAL_SRC_FILES_x86_64 := prebuilt-elf-files/x86_64/$(bionic_tests_module)
-LOCAL_SRC_FILES_mips := prebuilt-elf-files/mips/$(bionic_tests_module)
-LOCAL_SRC_FILES_mips64 := prebuilt-elf-files/mips64/$(bionic_tests_module)
 include $(BUILD_PREBUILT)
 bionic-loader-test-libs-target: $(LOCAL_MODULE)
 .PHONY: bionic-loader-test-libs-target

@@ -643,12 +643,6 @@ bool soinfo::relocate(const SymbolLookupList& lookup_list) {
   }
 #endif
 
-#if defined(__mips__)
-  if (!mips_relocate_got(version_tracker, global_group, local_group)) {
-    return false;
-  }
-#endif
-
   // Once the tlsdesc_args_ vector's size is finalized, we can write the addresses of its elements
   // into the TLSDESC relocations.
 #if defined(__aarch64__)

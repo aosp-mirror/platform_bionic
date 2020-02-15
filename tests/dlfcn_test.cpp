@@ -273,8 +273,6 @@ TEST(dlfcn, dlopen_vdso) {
   dlclose(handle);
 }
 
-// mips doesn't support ifuncs
-#if !defined(__mips__)
 TEST(dlfcn, ifunc_variable) {
   typedef const char* (*fn_ptr)();
 
@@ -367,7 +365,6 @@ TEST(dlfcn, ifunc_ctor_call_rtld_lazy) {
   ASSERT_STREQ("true", is_ctor_called());
   dlclose(handle);
 }
-#endif
 
 TEST(dlfcn, dlopen_check_relocation_dt_needed_order) {
   // This is the structure of the test library and
@@ -989,12 +986,6 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
 #elif defined (__x86_64__)
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
-#elif defined (__mips__)
-#if defined(__LP64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/mips64/"
-#else
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/mips/"
-#endif
 #else
 #error "Unknown architecture"
 #endif
@@ -1047,10 +1038,7 @@ TEST(dlfcn, dladdr_invalid) {
   ASSERT_TRUE(dlerror() == nullptr); // dladdr(3) doesn't set dlerror(3).
 }
 
-// GNU-style ELF hash tables are incompatible with the MIPS ABI.
-// MIPS requires .dynsym to be sorted to match the GOT but GNU-style requires sorting by hash code.
 TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
-#if !defined(__mips__)
   dlerror(); // Clear any pending errors.
   void* handle = dlopen("libgnu-hash-table-library.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
@@ -1067,9 +1055,6 @@ TEST(dlfcn, dlopen_library_with_only_gnu_hash) {
   ASSERT_TRUE(fn == dlinfo.dli_saddr);
   ASSERT_STREQ("getRandomNumber", dlinfo.dli_sname);
   ASSERT_SUBSTR("libgnu-hash-table-library.so", dlinfo.dli_fname);
-#else
-  GTEST_SKIP() << "mips toolchain does not support '--hash-style=gnu'";
-#endif
 }
 
 TEST(dlfcn, dlopen_library_with_only_sysv_hash) {

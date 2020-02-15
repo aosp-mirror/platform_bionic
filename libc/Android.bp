@@ -47,6 +47,9 @@ libc_common_flags = [
     // Clang's exit-time destructor registration hides __dso_handle, but
     // __dso_handle needs to have default visibility on ARM32. See b/73485611.
     "-Wexit-time-destructors",
+
+    // GWP-ASan requires platform TLS.
+    "-fno-emulated-tls",
 ]
 
 // Define some common cflags
@@ -61,6 +64,8 @@ cc_defaults {
     include_dirs: [
         "bionic/libc/async_safe/include",
     ],
+
+    header_libs: ["gwp_asan_headers"],
 
     stl: "none",
     system_shared_libs: [],
@@ -99,10 +104,9 @@ libc_scudo_product_variables = {
 
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// Enable scudo for non-svelte config by adding the line:
+// To disable scudo for the non-svelte config remove the line:
 //     product_variables: libc_scudo_product_variables,
-// to the cc_defaults below. And remove the defaults line
-// in the libc_scudo library.
+// in the cc_defaults below.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
@@ -111,6 +115,8 @@ cc_defaults {
         "libjemalloc5",
         "libc_jemalloc_wrapper",
     ],
+    header_libs: ["gwp_asan_headers"],
+    product_variables: libc_scudo_product_variables,
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -607,20 +613,6 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
-        mips: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
-        mips64: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -875,60 +867,6 @@ cc_library_static {
             ],
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
-            ],
-        },
-
-        mips: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips/bionic/__bionic_clone.S",
-                "arch-mips/bionic/cacheflush.cpp",
-                "arch-mips/bionic/_exit_with_stack_teardown.S",
-                "arch-mips/bionic/libcrt_compat.c",
-                "arch-mips/bionic/setjmp.S",
-                "arch-mips/bionic/syscall.S",
-                "arch-mips/bionic/vfork.S",
-            ],
-            exclude_srcs: [
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips64/bionic/__bionic_clone.S",
-                "arch-mips64/bionic/_exit_with_stack_teardown.S",
-                "arch-mips64/bionic/setjmp.S",
-                "arch-mips64/bionic/syscall.S",
-                "arch-mips64/bionic/vfork.S",
-                "arch-mips64/bionic/stat.cpp",
-            ],
-            exclude_srcs: [
                 "bionic/strchr.cpp",
                 "bionic/strnlen.c",
             ],
@@ -1391,6 +1329,7 @@ cc_library_static {
     ],
     ramdisk_available: false,
     srcs: libc_common_src_files + [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1418,6 +1357,7 @@ cc_library_static {
     ],
 
     whole_static_libs: [
+        "gwp_asan",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1597,6 +1537,7 @@ filegroup {
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
@@ -1614,6 +1555,7 @@ filegroup {
 filegroup {
     name: "libc_sources_static",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
@@ -1648,6 +1590,7 @@ cc_library {
         srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1656,6 +1599,7 @@ cc_library {
     shared: {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_dynamic",
             "libc_common_shared",
         ],
@@ -1978,12 +1922,6 @@ cc_defaults {
     defaults: ["crt_defaults"],
 
     arch: {
-        mips: {
-            cflags: ["-fPIC"],
-        },
-        mips64: {
-            cflags: ["-fPIC"],
-        },
         x86: {
             cflags: ["-fPIC"],
         },
@@ -2038,26 +1976,6 @@ cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
-
     defaults: ["crt_defaults"],
 }
 
@@ -2075,25 +1993,6 @@ cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
     defaults: ["crt_defaults"],
 }
 
@@ -2504,6 +2403,7 @@ cc_library {
 cc_defaults {
     name: "libc_scudo_wrapper_defaults",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
@@ -2512,12 +2412,21 @@ cc_defaults {
         "bionic/scudo_wrapper.cpp",
         "bionic/__set_errno.cpp",
     ],
-    cflags: ["-DUSE_SCUDO"],
+    cflags: [
+        "-DUSE_SCUDO",
+        "-fno-emulated-tls", // Required for GWP-ASan.
+    ],
     shared_libs: ["libscudo_wrapper"],
 
-    header_libs: ["libc_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+    ],
 
-    static_libs: ["libasync_safe"],
+    static_libs: [
+        "libasync_safe",
+        "gwp_asan",
+    ],
 
     arch: {
         arm: {
@@ -2544,7 +2453,6 @@ cc_defaults {
 
 cc_library_shared {
     name: "libc_scudo",
-    defaults: ["libc_scudo_wrapper_defaults"],
     vendor_available: true,
     stl: "none",
     system_shared_libs: [],

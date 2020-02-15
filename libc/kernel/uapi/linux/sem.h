@@ -32,8 +32,8 @@
 #define SEM_STAT_ANY 20
 struct __kernel_legacy_semid_ds {
   struct __kernel_legacy_ipc_perm sem_perm;
-  __kernel_time_t sem_otime;
-  __kernel_time_t sem_ctime;
+  __kernel_old_time_t sem_otime;
+  __kernel_old_time_t sem_ctime;
   struct sem * sem_base;
   struct sem_queue * sem_pending;
   struct sem_queue * * sem_pending_last;

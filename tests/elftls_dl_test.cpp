@@ -164,8 +164,9 @@ TEST(elftls_dl, dtv_resize) {
   static_assert(sizeof(TlsDtv) == 3 * sizeof(void*),
                 "This test assumes that the Dtv has a 3-word header");
 
-  // Initially there are 3 modules:
+  // Initially there are 4 modules:
   //  - the main test executable
+  //  - libc
   //  - libtest_elftls_shared_var
   //  - libtest_elftls_tprel
 
@@ -175,7 +176,7 @@ TEST(elftls_dl, dtv_resize) {
   ASSERT_EQ(nullptr, zero_dtv->next);
   ASSERT_EQ(kTlsGenerationNone, zero_dtv->generation);
 
-  // Load the fourth module.
+  // Load the fifth module.
   auto func1 = LOAD_LIB("libtest_elftls_dynamic_filler_1.so");
   ASSERT_EQ(101, func1());
 
@@ -186,17 +187,9 @@ TEST(elftls_dl, dtv_resize) {
   ASSERT_EQ(zero_dtv, initial_dtv->next);
   ASSERT_LT(0u, initial_dtv->generation);
 
-  // Load module 5.
+  // Load module 6.
   auto func2 = LOAD_LIB("libtest_elftls_dynamic_filler_2.so");
   ASSERT_EQ(102, func1());
-  ASSERT_EQ(201, func2());
-  ASSERT_EQ(initial_dtv, dtv());
-  ASSERT_EQ(5u, initial_dtv->count);
-
-  // Load module 6.
-  auto func3 = LOAD_LIB("libtest_elftls_dynamic_filler_3.so");
-  ASSERT_EQ(103, func1());
-  ASSERT_EQ(202, func2());
 
 #if defined(__aarch64__)
   // The arm64 TLSDESC resolver doesn't update the DTV if it is new enough for
@@ -207,12 +200,19 @@ TEST(elftls_dl, dtv_resize) {
   ASSERT_EQ(13u, dtv()->count);
 #endif
 
-  ASSERT_EQ(301, func3());
-
+  ASSERT_EQ(201, func2());
   TlsDtv* new_dtv = dtv();
-  ASSERT_EQ(13u, new_dtv->count);
   ASSERT_NE(initial_dtv, new_dtv);
   ASSERT_EQ(initial_dtv, new_dtv->next);
+  ASSERT_EQ(13u, new_dtv->count);
+
+  // Load module 7.
+  auto func3 = LOAD_LIB("libtest_elftls_dynamic_filler_3.so");
+  ASSERT_EQ(103, func1());
+  ASSERT_EQ(202, func2());
+  ASSERT_EQ(301, func3());
+
+  ASSERT_EQ(new_dtv, dtv());
 
 #undef LOAD_LIB
 #else

@@ -205,22 +205,6 @@ filegroup {
     ],
 }
 
-filegroup {
-    name: "linker_sources_mips",
-    srcs: [
-        "arch/mips/begin.S",
-        "linker_mips.cpp",
-    ],
-}
-
-filegroup {
-    name: "linker_sources_mips64",
-    srcs: [
-        "arch/mips64/begin.S",
-        "linker_mips.cpp",
-    ],
-}
-
 cc_defaults {
     name: "linker_version_script_overlay",
     arch: {
@@ -228,8 +212,6 @@ cc_defaults {
         arm64:  { version_script: "linker.generic.map"  },
         x86:    { version_script: "linker.generic.map"  },
         x86_64: { version_script: "linker.generic.map"  },
-        mips:   { version_script: "linker.generic.map"  },
-        mips64: { version_script: "linker.generic.map"  },
     },
 }
 
@@ -255,14 +237,6 @@ cc_defaults {
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
-            static_libs: ["libgcc_stripped"],
-        },
-        mips: {
-            srcs: [":linker_sources_mips"],
-            static_libs: ["libgcc_stripped"],
-        },
-        mips64: {
-            srcs: [":linker_sources_mips64"],
             static_libs: ["libgcc_stripped"],
         },
     },
@@ -350,7 +324,6 @@ cc_binary {
     },
 
     compile_multilib: "both",
-    xom: false,
 
     recovery_available: true,
     apex_available: [

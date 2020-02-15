@@ -26,15 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_SIGNAL_TYPES_H_
-#define _BITS_SIGNAL_TYPES_H_
+#pragma once
 
 #include <limits.h>
 #include <sys/cdefs.h>
 #include <sys/types.h>
 
-/* For 64-bit (and mips), the kernel's struct sigaction doesn't match the
- * POSIX one, so we need to expose our own and translate behind the scenes.
+/* For 64-bit, the kernel's struct sigaction doesn't match the POSIX one,
+ * so we need to expose our own and translate behind the scenes.
  * For 32-bit, we're stuck with the definitions we already shipped,
  * even though they contain a sigset_t that's too small. See sigaction64.
  */
@@ -56,10 +55,10 @@ typedef int sig_atomic_t;
 typedef __sighandler_t sig_t; /* BSD compatibility. */
 typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 
-/* sigset_t is already large enough on LP64 and mips, but other LP32's sigset_t
+/* sigset_t is already large enough on LP64, but LP32's sigset_t
  * is just `unsigned long`.
  */
-#if defined(__LP64__) || defined(__mips__)
+#if defined(__LP64__)
 typedef sigset_t sigset64_t;
 #else
 typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
@@ -75,21 +74,6 @@ typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
   }; \
   sigset_t sa_mask; \
   void (*sa_restorer)(void); \
-
-struct sigaction { __SIGACTION_BODY };
-struct sigaction64 { __SIGACTION_BODY };
-
-#undef __SIGACTION_BODY
-
-#elif defined(__mips__)
-
-#define __SIGACTION_BODY \
-  int sa_flags; \
-  union { \
-    sighandler_t sa_handler; \
-    void (*sa_sigaction)(int, struct siginfo*, void*); \
-  }; \
-  sigset_t sa_mask; \
 
 struct sigaction { __SIGACTION_BODY };
 struct sigaction64 { __SIGACTION_BODY };
@@ -121,7 +105,5 @@ struct sigaction64 {
   void (*sa_restorer)(void);
   sigset64_t sa_mask;
 };
-
-#endif
 
 #endif

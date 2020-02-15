@@ -41,6 +41,7 @@
 #include <private/bionic_config.h>
 #include <platform/bionic/malloc.h>
 
+#include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_limit.h"
@@ -316,8 +317,44 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
     return SetHeapTaggingLevel(arg, arg_size);
   }
+  if (opcode == M_INITIALIZE_GWP_ASAN) {
+    if (arg == nullptr || arg_size != sizeof(bool)) {
+      errno = EINVAL;
+      return false;
+    }
+    __libc_globals.mutate([&](libc_globals* globals) {
+      return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
+    });
+  }
   errno = ENOTSUP;
   return false;
 }
 #endif
 // =============================================================================
+
+static constexpr MallocDispatch __libc_malloc_default_dispatch __attribute__((unused)) = {
+  Malloc(calloc),
+  Malloc(free),
+  Malloc(mallinfo),
+  Malloc(malloc),
+  Malloc(malloc_usable_size),
+  Malloc(memalign),
+  Malloc(posix_memalign),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  Malloc(pvalloc),
+#endif
+  Malloc(realloc),
+#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
+  Malloc(valloc),
+#endif
+  Malloc(malloc_iterate),
+  Malloc(malloc_disable),
+  Malloc(malloc_enable),
+  Malloc(mallopt),
+  Malloc(aligned_alloc),
+  Malloc(malloc_info),
+};
+
+const MallocDispatch* NativeAllocatorDispatch() {
+  return &__libc_malloc_default_dispatch;
+}
