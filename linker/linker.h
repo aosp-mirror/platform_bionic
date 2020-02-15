@@ -51,20 +51,6 @@
 #define ELFW(what) ELF32_ ## what
 #endif
 
-// mips64 interprets Elf64_Rel structures' r_info field differently.
-// bionic (like other C libraries) has macros that assume regular ELF files,
-// but the dynamic linker needs to be able to load mips64 ELF files.
-#if defined(__mips__) && defined(__LP64__)
-#undef ELF64_R_SYM
-#undef ELF64_R_TYPE
-#undef ELF64_R_INFO
-#define ELF64_R_SYM(info)   (((info) >> 0) & 0xffffffff)
-#define ELF64_R_SSYM(info)  (((info) >> 32) & 0xff)
-#define ELF64_R_TYPE3(info) (((info) >> 40) & 0xff)
-#define ELF64_R_TYPE2(info) (((info) >> 48) & 0xff)
-#define ELF64_R_TYPE(info)  (((info) >> 56) & 0xff)
-#endif
-
 #define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE | DF_1_PIE)
 
 // Class used construct version dependency graph.

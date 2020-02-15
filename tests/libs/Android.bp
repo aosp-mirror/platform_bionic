@@ -333,10 +333,6 @@ cc_test_library {
         "libnstest_public",
         "libnstest_private",
     ],
-    // The dlext.ns_anonymous test copies the loaded segments of this shared
-    // object into a new mapping, so every segment must be readable. Turn off
-    // eXecute-Only-Memory. See http://b/123034666.
-    xom: false,
 }
 
 cc_test_library {
