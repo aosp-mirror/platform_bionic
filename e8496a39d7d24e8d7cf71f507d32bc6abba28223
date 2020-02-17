@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "839982fc_02254639",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-02-17T11:37:39Z",
+      "side": 1,
+      "message": "At this point it\u0027s probably clearer to #ifdef the whole class, especially since the #else branch only needs `class ScopedDisableMTE {};`",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 1
+      },
+      "revId": "e8496a39d7d24e8d7cf71f507d32bc6abba28223",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c89cb19_09700f46",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-02-17T11:37:39Z",
+      "side": 1,
+      "message": "Not needed since there\u0027s no input.",
+      "range": {
+        "startLine": 54,
+        "startChar": 79,
+        "endLine": 54,
+        "endChar": 80
+      },
+      "revId": "e8496a39d7d24e8d7cf71f507d32bc6abba28223",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
