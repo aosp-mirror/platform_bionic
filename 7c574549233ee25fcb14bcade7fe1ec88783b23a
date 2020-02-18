@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9bea959c_7f11fc55",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-18T20:07:16Z",
+      "side": 1,
+      "message": "UNUSED(load) etc",
+      "revId": "7c574549233ee25fcb14bcade7fe1ec88783b23a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
