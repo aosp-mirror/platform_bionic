@@ -3448,16 +3448,12 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return path;
   }
 
-  // Use generated linker config if flag is set
-  // TODO(b/138920271) Do not check property once it is confirmed as stable
-  if (android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
-    if (file_exists(kLdGeneratedConfigFilePath)) {
-      return kLdGeneratedConfigFilePath;
-    } else {
-      // TODO(b/146386369) : Adjust log level and add more condition to log only when necessary
-      INFO("Warning: failed to find generated linker configuration from \"%s\"",
-           kLdGeneratedConfigFilePath);
-    }
+  if (file_exists(kLdGeneratedConfigFilePath)) {
+    return kLdGeneratedConfigFilePath;
+  } else {
+    // TODO(b/146386369) : Adjust log level and add more condition to log only when necessary
+    INFO("Warning: failed to find generated linker configuration from \"%s\"",
+         kLdGeneratedConfigFilePath);
   }
 
   path = get_ld_config_file_vndk_path();
