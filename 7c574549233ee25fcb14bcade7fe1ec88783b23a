@@ -16,6 +16,24 @@
       "revId": "7c574549233ee25fcb14bcade7fe1ec88783b23a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610ad3d6_c3fcc2bd",
+        "filename": "tests/mte_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-18T21:15:14Z",
+      "side": 1,
+      "message": "This appears to be defined in android-base/macros.h where there\u0027s a comment saying that it\u0027s deprecated and ATTRIBUTE_UNUSED should be used instead. So I switched to that.\n\n(I personally prefer (void)foo in general since it\u0027s less typing, but it\u0027s probably better to be consistent.)",
+      "parentUuid": "9bea959c_7f11fc55",
+      "revId": "7c574549233ee25fcb14bcade7fe1ec88783b23a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
