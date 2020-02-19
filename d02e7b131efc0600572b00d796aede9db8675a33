@@ -16,6 +16,24 @@
       "revId": "d02e7b131efc0600572b00d796aede9db8675a33",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3797c75b_3718b0ad",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-02-19T18:12:20Z",
+      "side": 1,
+      "message": "clang will complain about it if you give it -Wunreachable-code-return, which isn\u0027t under -Wall or -Wextra.\n\nSince this is a system header, those warnings will generally be suppressed by default. So my guess is that none of the -Werror projects that use this as a non-system header have -Wunreachable-code-return enabled.\n\nLooks like clang has:\n-Wunreachable-code-loop-increment\n-Wunreachable-code-break\n-Wunreachable-code-return\n\nThese can apparently get quite aggressive, which is why they\u0027re not currently on by default.\n\nI\u0027ll enable these globally for a build of some random lunch combo and see how many of each of those I hit.\n\n+srhines fyi",
+      "parentUuid": "03852ebb_fc8e36ab",
+      "revId": "d02e7b131efc0600572b00d796aede9db8675a33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
