@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03852ebb_fc8e36ab",
+        "filename": "libc/include/bits/fortify/string.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-19T16:11:40Z",
+      "side": 1,
+      "message": "how did the compiler not notice this?",
+      "revId": "d02e7b131efc0600572b00d796aede9db8675a33",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
