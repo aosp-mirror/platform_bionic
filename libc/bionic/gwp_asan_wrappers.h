@@ -37,3 +37,8 @@ bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
 
 // Maybe initialize GWP-ASan. Set force_init to true to bypass process sampling.
 bool MaybeInitGwpAsan(libc_globals* globals, bool force_init = false);
+
+// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
+// heapprofd's signal-initialization sequence to determine the intermediate
+// dispatch pointer to use when initing.
+bool DispatchIsGwpAsan(const MallocDispatch* dispatch);

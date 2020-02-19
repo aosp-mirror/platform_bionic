@@ -27,6 +27,7 @@
  */
 
 #include <platform/bionic/malloc.h>
+#include <private/bionic_arc4random.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -190,9 +191,15 @@ static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
   Malloc(malloc_info),
 };
 
-// TODO(mitchp): Turn on GWP-ASan here probabilistically.
+// The probability (1 / kProcessSampleRate) that a process will be ranodmly
+// selected for sampling. kProcessSampleRate should always be a power of two to
+// avoid modulo bias.
+static constexpr uint8_t kProcessSampleRate = 128;
+
 bool ShouldGwpAsanSampleProcess() {
-  return false;
+  uint8_t random_number;
+  __libc_safe_arc4random_buf(&random_number, sizeof(random_number));
+  return random_number % kProcessSampleRate == 0;
 }
 
 bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
@@ -258,4 +265,8 @@ bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
   gwp_asan_initialize(NativeAllocatorDispatch(), nullptr, nullptr);
 
   return true;
+}
+
+bool DispatchIsGwpAsan(const MallocDispatch* dispatch) {
+  return dispatch == &gwp_asan_dispatch;
 }
