@@ -39,6 +39,12 @@ void linker_debuggerd_init() {
       return __libc_shared_globals()->abort_msg;
     },
     .post_dump = &notify_gdb_of_libraries,
+    .get_gwp_asan_state = []() {
+      return __libc_shared_globals()->gwp_asan_state;
+    },
+    .get_gwp_asan_metadata = []() {
+      return __libc_shared_globals()->gwp_asan_metadata;
+    },
   };
   debuggerd_init(&callbacks);
 }
