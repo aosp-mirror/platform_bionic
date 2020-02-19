@@ -65,6 +65,10 @@ struct libc_globals {
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
 struct abort_msg_t;
+namespace gwp_asan {
+struct AllocatorState;
+struct AllocationMetadata;
+};  // namespace gwp_asan
 
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
@@ -96,6 +100,9 @@ struct libc_shared_globals {
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
+
+  const gwp_asan::AllocatorState *gwp_asan_state = nullptr;
+  const gwp_asan::AllocationMetadata *gwp_asan_metadata = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
