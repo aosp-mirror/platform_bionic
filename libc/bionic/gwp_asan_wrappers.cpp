@@ -259,3 +259,7 @@ bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
 
   return true;
 }
+
+bool DispatchIsGwpAsan(const MallocDispatch* dispatch) {
+  return dispatch == &gwp_asan_dispatch;
+}
