@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5b7f735_70786690",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-20T23:06:31Z",
+      "side": 1,
+      "message": "(i\u0027m happy to put these into \u003csignal.h\u003e and decoding them in debuggerd like we do the other si_code values if that\u0027s helpful... though you probably already know these as well as we already know signals 9 and 11!)",
+      "revId": "abbc626733731a9c141c745864e159b35bc37e5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "782cfed9_66bfe87d",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-20T23:06:31Z",
+      "side": 1,
+      "message": "UNUSED",
+      "revId": "abbc626733731a9c141c745864e159b35bc37e5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
