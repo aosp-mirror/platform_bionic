@@ -27,6 +27,7 @@
  */
 
 #include <platform/bionic/malloc.h>
+#include <private/bionic_arc4random.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -66,7 +67,9 @@ bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
   Opts.InstallForkHandlers = true;
 
   GuardedAlloc.init(Opts);
-  info_log("GWP-ASan has been enabled.");
+  // TODO(b/149790891): The log line below causes ART tests to fail as they're
+  // not expecting any output. Disable the output for now.
+  // info_log("GWP-ASan has been enabled.");
   return true;
 }
 
@@ -190,9 +193,15 @@ static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
   Malloc(malloc_info),
 };
 
-// TODO(mitchp): Turn on GWP-ASan here probabilistically.
+// The probability (1 / kProcessSampleRate) that a process will be ranodmly
+// selected for sampling. kProcessSampleRate should always be a power of two to
+// avoid modulo bias.
+static constexpr uint8_t kProcessSampleRate = 128;
+
 bool ShouldGwpAsanSampleProcess() {
-  return false;
+  uint8_t random_number;
+  __libc_safe_arc4random_buf(&random_number, sizeof(random_number));
+  return random_number % kProcessSampleRate == 0;
 }
 
 bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
