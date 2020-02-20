@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3bd87e9a_5c1f8119",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-20T23:27:01Z",
+      "side": 1,
+      "message": "From the discussion at https://patchwork.kernel.org/patch/11286021/ it looks like these constants may change, so I\u0027d prefer to wait until they are stabilized. The current tombstones don\u0027t look too bad (SEGV_ADIDERR is what SPARC ADI calls a \"disrupting\" error, which is roughly similar to MTE\u0027s asynchronous errors).\n\n*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\nBuild fingerprint: \u0027Android/fvp/fvpbase:R/AOSP.MASTER/eng.pcc.20200219.114136:eng/test-keys\u0027\nRevision: \u00270\u0027\nABI: \u0027arm64\u0027\nTimestamp: 2020-02-20 02:25:56+0000\npid: 1564, tid: 1632, name: AndroidTestSuit  \u003e\u003e\u003e android.jni.cts \u003c\u003c\u003c\nuid: 10105\nsignal 11 (SIGSEGV), code 6 (SEGV_ADIDERR), fault addr 0x0\n    x0  0000000000000000  x1  0000006d561fc708  x2  0000006d561fc768  x3  0000000000000003\n    x4  0000006d561fd7e8  x5  0000000000000000  x6  0100006dcbf14880  x7  0000000000000000\n    x8  00000000000000ae  x9  0000000000000004  x10 0000000000000000  x11 0000000000000000\n    x12 000000000000813a  x13 000000018b9b88fe  x14 002ef7ed00000000  x15 000000000a000000\n    x16 0000006ffc33a918  x17 0000006ffeae9570  x18 0000006d04b9e000  x19 0000000000000000\n    x20 0000006d561fc630  x21 0000000000000004  x22 0000006d561fc768  x23 0000000000000003\n    x24 0000006d561fc708  x25 0000006d56200000  x26 0000006d56200000  x27 0000006ffc33b000\n    x28 0000000000000001  x29 0000006d561fc6a0\n    lr  0000006ffc338a8c  sp  0000006d561fc630  pc  0000006ffeae9574  pst 0000000020001000",
+      "parentUuid": "b5b7f735_70786690",
+      "revId": "abbc626733731a9c141c745864e159b35bc37e5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "782cfed9_66bfe87d",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 11
@@ -33,6 +51,24 @@
       "revId": "abbc626733731a9c141c745864e159b35bc37e5b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0454030_c5a30470",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-20T23:27:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "782cfed9_66bfe87d",
+      "revId": "abbc626733731a9c141c745864e159b35bc37e5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
