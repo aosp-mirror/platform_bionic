@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da12405d_ef0e5cba",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1581772
+      },
+      "writtenOn": "2020-02-20T14:58:20Z",
+      "side": 1,
+      "message": "TAG_SHIFT? Same below.",
+      "range": {
+        "startLine": 62,
+        "startChar": 47,
+        "endLine": 62,
+        "endChar": 49
+      },
+      "revId": "94037f60863673b86ee4da5ff6df95b18827320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
