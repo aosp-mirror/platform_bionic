@@ -48,4 +48,7 @@
 #define PR_MTE_EXCL_SHIFT 3
 #define PR_MTE_EXCL_MASK (0xffffUL << PR_MTE_EXCL_SHIFT)
 
+#define SEGV_MTEAERR 6
+#define SEGV_MTESERR 7
+
 #endif

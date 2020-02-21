@@ -33,11 +33,11 @@
 #include <platform/bionic/malloc.h>
 #include <platform/bionic/mte_kernel.h>
 
+extern "C" void scudo_malloc_disable_memory_tagging();
+
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
-  // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
-  // returns -EINVAL) if the kernel doesn't understand the prctl.
 #if defined(__aarch64__)
 #define PR_SET_TAGGED_ADDR_CTRL 55
 #define PR_TAGGED_ADDR_ENABLE (1UL << 0)
@@ -47,15 +47,23 @@ void SetDefaultHeapTaggingLevel() {
   // syscall arguments.
   if (prctl(PR_SET_TAGGED_ADDR_CTRL,
             PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (1 << PR_MTE_EXCL_SHIFT), 0, 0, 0) == 0) {
+    heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
     return;
   }
 #endif // ANDROID_EXPERIMENTAL_MTE
 
+  // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
+  // returns -EINVAL) if the kernel doesn't understand the prctl.
   if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0) {
+#if !__has_feature(hwaddress_sanitizer)
     heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
     __libc_globals.mutate([](libc_globals* globals) {
-      globals->heap_pointer_tag = reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT;
+      // Arrange for us to set pointer tags to POINTER_TAG, check tags on
+      // deallocation and untag when passing pointers to the allocator.
+      globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
+                                  (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
     });
+#endif  // hwaddress_sanitizer
   }
 #endif  // aarch64
 }
@@ -66,16 +74,22 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
   }
 
   auto tag_level = *reinterpret_cast<HeapTaggingLevel*>(arg);
+  if (tag_level == heap_tagging_level) {
+    return true;
+  }
+
   switch (tag_level) {
     case M_HEAP_TAGGING_LEVEL_NONE:
       break;
     case M_HEAP_TAGGING_LEVEL_TBI:
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
       if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
         error_log(
             "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
-        return false;
+      } else {
+        error_log("SetHeapTaggingLevel: switching between TBI and ASYNC is not supported");
       }
-      break;
+      return false;
     default:
       error_log("SetHeapTaggingLevel: unknown tagging level");
       return false;
@@ -83,8 +97,16 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
   heap_tagging_level = tag_level;
   info_log("SetHeapTaggingLevel: tag level set to %d", tag_level);
 
-  if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE && __libc_globals->heap_pointer_tag != 0) {
-    __libc_globals.mutate([](libc_globals* globals) { globals->heap_pointer_tag = 0; });
+  if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+#if defined(USE_SCUDO)
+    scudo_malloc_disable_memory_tagging();
+#endif
+    __libc_globals.mutate([](libc_globals* globals) {
+      // Preserve the untag mask (we still want to untag pointers when passing them to the
+      // allocator if we were doing so before), but clear the fixed tag and the check mask,
+      // so that pointers are no longer tagged and checks no longer happen.
+      globals->heap_pointer_tag &= 0xffull << UNTAG_SHIFT;
+    });
   }
 
   return true;
