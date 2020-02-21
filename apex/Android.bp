@@ -14,13 +14,6 @@ apex_key {
     private_key: "com.android.runtime.pem",
 }
 
-prebuilt_etc {
-    name: "com.android.runtime.ld.config.txt",
-    src: "ld.config.txt",
-    filename: "ld.config.txt",
-    installable: false,
-}
-
 apex {
     name: "com.android.runtime",
     compile_multilib: "both",
@@ -38,7 +31,6 @@ apex {
             binaries: ["linker"],
         },
     },
-    prebuilts: ["com.android.runtime.ld.config.txt"],
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
 }
