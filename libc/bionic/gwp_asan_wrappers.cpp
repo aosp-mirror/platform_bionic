@@ -26,8 +26,10 @@
  * SUCH DAMAGE.
  */
 
+#include <platform/bionic/android_unsafe_frame_pointer_chase.h>
 #include <platform/bionic/malloc.h>
 #include <private/bionic_arc4random.h>
+#include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -65,11 +67,15 @@ bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
   Opts.SampleRate = 2500;
   Opts.InstallSignalHandlers = false;
   Opts.InstallForkHandlers = true;
+  Opts.Backtrace = android_unsafe_frame_pointer_chase;
 
   GuardedAlloc.init(Opts);
   // TODO(b/149790891): The log line below causes ART tests to fail as they're
   // not expecting any output. Disable the output for now.
   // info_log("GWP-ASan has been enabled.");
+
+  __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
+  __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
   return true;
 }
 
