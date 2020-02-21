@@ -25,6 +25,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -40,7 +42,10 @@
 
 #if defined(__BIONIC__)
 
+#include "SignalUtils.h"
+
 #include "platform/bionic/malloc.h"
+#include "platform/bionic/mte_kernel.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/bionic_config.h"
 
@@ -1194,5 +1199,72 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
   }
 #else
   GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+template <int SiCode> void CheckSiCode(int, siginfo_t* info, void*) {
+  if (info->si_code != SiCode) {
+    _exit(2);
+  }
+  _exit(1);
+}
+
+static bool SetTagCheckingLevel(int level) {
+  int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  if (tagged_addr_ctrl < 0) {
+    return false;
+  }
+
+  tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | level;
+  return prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) == 0;
+}
+#endif
+
+TEST(android_mallopt, tag_level) {
+#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
+    GTEST_SKIP() << "requires MTE support";
+    return;
+  }
+
+  std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+
+  // First, check that memory tagging is enabled and the default tag checking level is async.
+  // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
+  // mismatching tag before each allocation.
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTEAERR>, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(1), "");
+
+  EXPECT_TRUE(SetTagCheckingLevel(PR_MTE_TCF_SYNC));
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTESERR>, SA_SIGINFO);
+        p[-1] = 42;
+      },
+      testing::ExitedWithCode(1), "");
+
+  EXPECT_TRUE(SetTagCheckingLevel(PR_MTE_TCF_NONE));
+  volatile int oob ATTRIBUTE_UNUSED = p[-1];
+
+  HeapTaggingLevel tag_level = M_HEAP_TAGGING_LEVEL_TBI;
+  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+
+  tag_level = M_HEAP_TAGGING_LEVEL_NONE;
+  EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+  std::unique_ptr<int[]> p2 = std::make_unique<int[]>(4);
+  EXPECT_EQ(0u, reinterpret_cast<uintptr_t>(p2.get()) >> 56);
+
+  tag_level = M_HEAP_TAGGING_LEVEL_ASYNC;
+  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+
+  tag_level = M_HEAP_TAGGING_LEVEL_NONE;
+  EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
+#else
+  GTEST_SKIP() << "arm64 only";
 #endif
 }
