@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e5b41afd_da50f5b8",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-21T21:59:07Z",
+      "side": 1,
+      "message": "dead?",
+      "range": {
+        "startLine": 257,
+        "startChar": 32,
+        "endLine": 257,
+        "endChar": 65
+      },
+      "revId": "02eb6674de12c9a4135666f160c6b95a94216149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcb98320_ee04c6d0",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-21T21:59:07Z",
+      "side": 1,
+      "message": "check for failure?",
+      "revId": "02eb6674de12c9a4135666f160c6b95a94216149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
