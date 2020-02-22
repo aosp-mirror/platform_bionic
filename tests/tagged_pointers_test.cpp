@@ -18,6 +18,7 @@
 #include <sys/prctl.h>
 
 #include "platform/bionic/malloc.h"
+#include "platform/bionic/mte.h"
 #include "utils.h"
 
 #include <bionic/malloc_tagged_pointers.h>
@@ -39,6 +40,10 @@ TEST(tagged_pointers, check_tagged_pointer_dies) {
   }
 
 #ifdef __aarch64__
+  if (mte_supported()) {
+    GTEST_SKIP() << "Tagged pointers are not used on MTE hardware.";
+  }
+
   void *x = malloc(1);
 
   // Ensure that `x` has a pointer tag.
@@ -50,6 +55,9 @@ TEST(tagged_pointers, check_tagged_pointer_dies) {
   HeapTaggingLevel tag_level = M_HEAP_TAGGING_LEVEL_TBI;
   EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
   EXPECT_DEATH(free(untag_address(malloc(1))), "Pointer tag for 0x[a-zA-Z0-9]* was truncated");
+
+  tag_level = M_HEAP_TAGGING_LEVEL_ASYNC;
+  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
 
   x = malloc(1);
   void *y = malloc(1);

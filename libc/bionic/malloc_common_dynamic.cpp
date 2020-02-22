@@ -291,7 +291,7 @@ void* LoadSharedLibrary(const char* shared_lib, const char* prefix, MallocDispat
   // linker will load the libs found in /system/lib which might be incompatible
   // with libc.so in the runtime APEX. Use android_dlopen_ext to explicitly load
   // the ones in the runtime APEX.
-  struct android_namespace_t* runtime_ns = android_get_exported_namespace("com.android.runtime");
+  struct android_namespace_t* runtime_ns = android_get_exported_namespace("com_android_runtime");
   if (runtime_ns != nullptr) {
     const android_dlextinfo dlextinfo = {
       .flags = ANDROID_DLEXT_USE_NAMESPACE,
