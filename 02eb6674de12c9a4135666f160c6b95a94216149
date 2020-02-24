@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f9b3354c_936b050e",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-02-24T09:57:46Z",
+      "side": 1,
+      "message": "Thanks, that makes sense.",
+      "parentUuid": "e5b41afd_da50f5b8",
+      "range": {
+        "startLine": 257,
+        "startChar": 32,
+        "endLine": 257,
+        "endChar": 65
+      },
+      "revId": "02eb6674de12c9a4135666f160c6b95a94216149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcb98320_ee04c6d0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 2
@@ -39,6 +63,24 @@
       "revId": "02eb6674de12c9a4135666f160c6b95a94216149",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82730a9a_33a1dbe4",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-02-24T09:57:46Z",
+      "side": 1,
+      "message": "Thanks for catching this.\n\nI made the failure-check a separate check in the latest patchset, for a clear separation between when resolving happens and how it happens. Let me know if you\u0027d prefer me to merge it with the empty-test on the line before it.",
+      "parentUuid": "bcb98320_ee04c6d0",
+      "revId": "02eb6674de12c9a4135666f160c6b95a94216149",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
