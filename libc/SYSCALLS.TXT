@@ -208,6 +208,7 @@ ssize_t listxattr(const char*, char*, size_t) all
 ssize_t llistxattr(const char*, char*, size_t) all
 int     removexattr(const char*, const char*) all
 int     lremovexattr(const char*, const char*) all
+int statx(int, const char*, int, unsigned, struct statx*) all
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
 
