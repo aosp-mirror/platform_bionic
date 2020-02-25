@@ -166,6 +166,7 @@ cc_test_library {
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
         "sstream_test.cpp",
+        "sys_auxv_test.cpp",
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
