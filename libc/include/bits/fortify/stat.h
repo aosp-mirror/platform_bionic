@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_STAT_H_
-#error "Never include this file directly; instead, include <sys/stat.h>"
-#endif
+#pragma once
 
 mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
 mode_t __umask_real(mode_t mode) __RENAME(umask);
