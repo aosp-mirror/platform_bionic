@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,32 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-/**
- * @file bits/auxvec.h
- * @brief Constants for use with getauxval().
- */
+#include <sys/auxv.h>
 
-#include <sys/cdefs.h>
+TEST(sys_auxv, getauxval_HWCAP) {
+  __attribute__((__unused__)) unsigned long hwcap = getauxval(AT_HWCAP);
 
-#include <linux/auxvec.h>
-
-// AT_HWCAP isn't useful without these constants.
-#if __has_include(<asm/hwcap.h>)
-#include <asm/hwcap.h>
+  // Check that the constants for *using* AT_HWCAP are also available.
+#if defined(__arm__)
+  ASSERT_NE(0, HWCAP_THUMB);
+#elif defined(__aarch64__)
+  ASSERT_NE(0, HWCAP_FP);
 #endif
-#if __has_include(<asm/hwcap2.h>)
-#include <asm/hwcap2.h>
-#endif
+}
 
-/** Historical SuperH cruft. Irrelevant on Android. */
-#define AT_FPUCW 18
-/** Historical PowerPC cruft. Irrelevant on Android. */
-#define AT_DCACHEBSIZE 19
-/** Historical PowerPC cruft. Irrelevant on Android. */
-#define AT_ICACHEBSIZE 20
-/** Historical PowerPC cruft. Irrelevant on Android. */
-#define AT_UCACHEBSIZE 21
-/** Historical PowerPC cruft. Irrelevant on Android. */
-#define AT_IGNOREPPC 22
+TEST(sys_auxv, getauxval_HWCAP2) {
+#if defined(AT_HWCAP2)
+  __attribute__((__unused__)) unsigned long hwcap = getauxval(AT_HWCAP2);
+
+  // Check that the constants for *using* AT_HWCAP2 are also available.
+#if defined(__arm__)
+  ASSERT_NE(0, HWCAP2_AES);
+#elif defined(__aarch64__)
+  ASSERT_NE(0, HWCAP2_SVE2);
+#endif
+#else
+  GTEST_SKIP() << "No AT_HWCAP2 for this architecture.";
+#endif
+}
