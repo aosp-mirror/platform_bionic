@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_STAT_H_
-#define _SYS_STAT_H_
+#pragma once
+
+/**
+ * @file sys/stat.h
+ * @brief File status.
+ */
 
 #include <bits/timespec.h>
 #include <linux/stat.h>
@@ -169,8 +173,16 @@ int mknodat(int __dir_fd, const char* __path, mode_t __mode, dev_t __dev) __INTR
 int utimensat(int __dir_fd, const char* __path, const struct timespec __times[2], int __flags);
 int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19);
 
+#if defined(__USE_GNU)
+/**
+ * [statx(2)](http://man7.org/linux/man-pages/man2/statx.2.html) returns
+ * extended file status information.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
+int statx(int __dir_fd, const char* __path, int __flags, unsigned __mask, struct statx* __buf) __INTRODUCED_IN(30);
+#endif
+
 __END_DECLS
 
 #include <android/legacy_sys_stat_inlines.h>
-
-#endif
