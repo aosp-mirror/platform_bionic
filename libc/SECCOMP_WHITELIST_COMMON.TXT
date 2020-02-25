@@ -54,8 +54,6 @@ ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, 
 # Since Linux 4.6, glibc 2.26.
 ssize_t preadv2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
 ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
-# Since Linux 4.11, glibc 2.30.
-int statx(int, const char*, int, unsigned int, statx*) all
 # Since Linux 5.1, not in glibc.
 int clock_gettime64(clockid_t, timespec64*) lp32
 int clock_settime64(clockid_t, const timespec64*) lp32
