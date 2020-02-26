@@ -173,26 +173,46 @@ void HandleHeapprofdSignal() {
   // not ever have a conflict modifying the globals.
   if (!atomic_exchange(&gGlobalsMutating, true)) {
     if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
-      // If the backing dispatch is GWP-ASan, we should use GWP-ASan as the
-      // intermediate dispatch table during initialisation. It may be possible
-      // at this point in time that heapprofd is *already* the default dispatch,
-      // and as such we don't want to use heapprofd as the backing store
-      // (otherwise infinite recursion occurs).
-      gPreviousDefaultDispatchTable = nullptr;
       const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
-      if (DispatchIsGwpAsan(default_dispatch)) {
+
+      // Below, we initialize heapprofd lazily by redirecting libc's malloc() to
+      // call MallocInitHeapprofdHook, which spawns off a thread and initializes
+      // heapprofd. During the short period between now and when heapprofd is
+      // initialized, allocations may need to be serviced. There are three
+      // possible configurations:
+
+      if (default_dispatch == nullptr) {
+        //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
+        //  this case, everything but malloc() should come from the system
+        //  allocator.
+        gPreviousDefaultDispatchTable = nullptr;
+        gEphemeralDispatch = *NativeAllocatorDispatch();
+      } else if (DispatchIsGwpAsan(default_dispatch)) {
+        //  2. GWP-ASan was installed. We should use GWP-ASan for everything but
+        //  malloc() in the interim period before heapprofd is properly
+        //  installed. After heapprofd is finished installing, we will use
+        //  GWP-ASan as heapprofd's backing allocator to allow heapprofd and
+        //  GWP-ASan to coexist.
         gPreviousDefaultDispatchTable = default_dispatch;
+        gEphemeralDispatch = *default_dispatch;
+      } else {
+        // 3. It may be possible at this point in time that heapprofd is
+        // *already* the default dispatch, and as such we don't want to use
+        // heapprofd as the backing store for itself (otherwise infinite
+        // recursion occurs). We will use the system allocator functions. Note:
+        // We've checked that no other malloc interceptors are being used by
+        // validating `gHeapprofdIncompatibleHooks` above, so we don't need to
+        // worry about that case here.
+        gPreviousDefaultDispatchTable = nullptr;
+        gEphemeralDispatch = *NativeAllocatorDispatch();
       }
 
-      __libc_globals.mutate([](libc_globals* globals) {
-        // Wholesale copy the malloc dispatch table here. If the current/default
-        // dispatch table is pointing to the malloc_dispatch_table, we can't
-        // modify it as it may be racy. This dispatch table copy is ephemeral,
-        // and the dispatch tables will be resolved back to the global
-        // malloc_dispatch_table after initialization finishes.
-        gEphemeralDispatch = globals->malloc_dispatch_table;
-        gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
+      // Now, replace the malloc function so that the next call to malloc() will
+      // initialize heapprofd.
+      gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
 
+      // And finally, install these new malloc-family interceptors.
+      __libc_globals.mutate([](libc_globals* globals) {
         atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
         if (!MallocLimitInstalled()) {
           atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
