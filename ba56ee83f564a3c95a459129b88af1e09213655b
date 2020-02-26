@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e9153de1_1dddf313",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-02-26T19:49:13Z",
+      "side": 1,
+      "message": "Not needed, the skip will stop execution like failing an assert.",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "ba56ee83f564a3c95a459129b88af1e09213655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
