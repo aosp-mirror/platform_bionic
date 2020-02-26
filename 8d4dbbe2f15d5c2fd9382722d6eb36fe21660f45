@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "85ab4aca_a61aa058",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-26T16:47:52Z",
+      "side": 1,
+      "message": "remove this comment, or generalize it now that we\u0027re turning on multiple things? \"Ensure that the tests exercise shadow call stack support and the hint space PAC/BTI instructions.\"?",
+      "revId": "8d4dbbe2f15d5c2fd9382722d6eb36fe21660f45",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
