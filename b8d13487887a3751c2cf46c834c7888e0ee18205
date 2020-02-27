@@ -16,6 +16,24 @@
       "revId": "b8d13487887a3751c2cf46c834c7888e0ee18205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd529f4_71fdfdf6",
+        "filename": "libc/bionic/android_unsafe_frame_pointer_chase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-27T19:06:40Z",
+      "side": 1,
+      "message": "SS_ONSTACK is supposed to indicate whether we\u0027re currently on the signal stack. I guess it\u0027s possible that someone could be setting sp, but that\u0027s a pre-existing problem and I\u0027m not sure if we can do much about that without making this much slower.",
+      "parentUuid": "b47d52c1_c26f8394",
+      "revId": "b8d13487887a3751c2cf46c834c7888e0ee18205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
