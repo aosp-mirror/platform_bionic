@@ -34,6 +34,24 @@
       "revId": "b8d13487887a3751c2cf46c834c7888e0ee18205",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e5bf01e_3e4f7bab",
+        "filename": "libc/bionic/android_unsafe_frame_pointer_chase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-27T19:12:45Z",
+      "side": 1,
+      "message": "Oh wow, I did not realize that.\n\nAs for the latter, it\u0027s less of a problem due to application opt-in. Also, I don\u0027t recall seeing it with sanitizers.",
+      "parentUuid": "bcd529f4_71fdfdf6",
+      "revId": "b8d13487887a3751c2cf46c834c7888e0ee18205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
