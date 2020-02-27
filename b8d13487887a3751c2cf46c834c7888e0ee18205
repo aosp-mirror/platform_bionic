@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b47d52c1_c26f8394",
+        "filename": "libc/bionic/android_unsafe_frame_pointer_chase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-02-27T18:54:17Z",
+      "side": 1,
+      "message": "what if we are not currently on the altstack, and there is an inaccessible gap between two stacks? I think we need to picking whichever \"end\" is nearest to and higher than current SP.\n\nI\u0027m mildly worried about people running on their own stacks w/o telling pthread about it.",
+      "revId": "b8d13487887a3751c2cf46c834c7888e0ee18205",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
