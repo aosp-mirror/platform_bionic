@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "f7c9ef08_a0ebe22b",
+        "filename": "libc/bionic/sigaltstack.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-27T17:30:58Z",
+      "side": 1,
+      "message": "Maybe? We\u0027re already wrapping sigaction, which makes it less likely that direct syscalls are happening such that things are working already. We\u0027d need a table of real signal handlers or something since sigaction doesn\u0027t take a void* parameter (unless we can abuse sa_restorer for that purpose).\n\nAnother idea that I had was to say \"only ART is allowed to allocate in the signal handler\" and change ART\u0027s signal handler to set the flag, but that might not be practical since I don\u0027t know what mono et al are doing.",
+      "parentUuid": "5e6d7078_e0c4c6af",
+      "revId": "6671506ab79ba5acaa9fedf2cbf52b6e9d2c061e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a8aaa173_4073f5c2",
         "filename": "tests/android_unsafe_frame_pointer_chase_test.cpp",
         "patchSetId": 1
