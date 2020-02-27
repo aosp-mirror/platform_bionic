@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "76c8554f_605dd920",
+        "filename": "libc/bionic/sigaltstack.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-27T17:10:20Z",
+      "side": 1,
+      "message": "Yeah, maybe we should just do that if we can\u0027t think of anything better. I previously experimented with that approach and the main problem is that the cost of the syscall dominates compared to the rest of the work, which isn\u0027t too concerning for GWP-ASan since it\u0027s sampled, but perhaps more concerning for MTE sync mode since we\u0027re going to be calling this on every malloc/free (but if we do per-process sampling maybe it wouldn\u0027t be too bad).\n\nI\u0027ve been experimenting with a branch of scudo with a call to android_unsafe_frame_pointer_chase() (and some other work) inserted at each malloc/free (to emulate MTE sync mode). The current measurement on a flame is:\n\nBM_stdlib_malloc_free_default/8             140 ns          139 ns      4254984 bytes_per_second\u003d54.8033M/s\nBM_stdlib_malloc_free_default/64            139 ns          138 ns      5048223 bytes_per_second\u003d440.874M/s\nBM_stdlib_malloc_free_default/512           139 ns          138 ns      5051737 bytes_per_second\u003d3.44808G/s\nBM_stdlib_malloc_free_default/1024          138 ns          137 ns      5085966 bytes_per_second\u003d6.93907G/s\nBM_stdlib_malloc_free_default/8192          139 ns          139 ns      5036226 bytes_per_second\u003d54.819G/s\nBM_stdlib_malloc_free_default/16384         140 ns          140 ns      5010041 bytes_per_second\u003d109.241G/s\nBM_stdlib_malloc_free_default/32768         141 ns          141 ns      4972726 bytes_per_second\u003d216.22G/s\nBM_stdlib_malloc_free_default/65536         146 ns          146 ns      4798060 bytes_per_second\u003d418.804G/s\nBM_stdlib_malloc_free_default/131072      21869 ns        21810 ns        30523 bytes_per_second\u003d5.59696G/s\n\nWith this patch I get:\n\nBM_stdlib_malloc_free_default/8                          139 ns          139 ns      5053608 bytes_per_second\u003d54.9969M/s\nBM_stdlib_malloc_free_default/64                         140 ns          140 ns      5017708 bytes_per_second\u003d436.731M/s\nBM_stdlib_malloc_free_default/512                        139 ns          139 ns      5042365 bytes_per_second\u003d3.43343G/s\nBM_stdlib_malloc_free_default/1024                       138 ns          138 ns      5073547 bytes_per_second\u003d6.9044G/s\nBM_stdlib_malloc_free_default/8192                       140 ns          140 ns      4999336 bytes_per_second\u003d54.4488G/s\nBM_stdlib_malloc_free_default/16384                      141 ns          140 ns      5007882 bytes_per_second\u003d108.85G/s\nBM_stdlib_malloc_free_default/32768                      142 ns          142 ns      4925540 bytes_per_second\u003d214.676G/s\nBM_stdlib_malloc_free_default/65536                      145 ns          145 ns      4843151 bytes_per_second\u003d422.031G/s\nBM_stdlib_malloc_free_default/131072                   19558 ns        19507 ns        34867 bytes_per_second\u003d6.25786G/s\n\nAnd with a call to sigaltstack inserted in android_unsafe_frame_pointer_chase() I get:\n\nBM_stdlib_malloc_free_default/8             265 ns          264 ns      2346109 bytes_per_second\u003d28.9005M/s\nBM_stdlib_malloc_free_default/64            253 ns          252 ns      2778474 bytes_per_second\u003d241.768M/s\nBM_stdlib_malloc_free_default/512           252 ns          251 ns      2784100 bytes_per_second\u003d1.89708G/s\nBM_stdlib_malloc_free_default/1024          252 ns          251 ns      2780754 bytes_per_second\u003d3.79501G/s\nBM_stdlib_malloc_free_default/8192          253 ns          252 ns      2772482 bytes_per_second\u003d30.2335G/s\nBM_stdlib_malloc_free_default/16384         254 ns          254 ns      2752018 bytes_per_second\u003d60.0811G/s\nBM_stdlib_malloc_free_default/32768         257 ns          256 ns      2736511 bytes_per_second\u003d119.235G/s\nBM_stdlib_malloc_free_default/65536         261 ns          260 ns      2692141 bytes_per_second\u003d234.626G/s\nBM_stdlib_malloc_free_default/131072      24504 ns        24434 ns        30367 bytes_per_second\u003d4.9959G/s",
+      "parentUuid": "b18118d6_5bc5cc0c",
+      "revId": "6671506ab79ba5acaa9fedf2cbf52b6e9d2c061e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a8aaa173_4073f5c2",
         "filename": "tests/android_unsafe_frame_pointer_chase_test.cpp",
         "patchSetId": 1
@@ -30,6 +48,30 @@
       "writtenOn": "2020-02-27T15:47:00Z",
       "side": 1,
       "message": "`type*` here and elsewhere. (i thought we had the clang-format repo upload hook now?)",
+      "range": {
+        "startLine": 77,
+        "startChar": 13,
+        "endLine": 77,
+        "endChar": 19
+      },
+      "revId": "6671506ab79ba5acaa9fedf2cbf52b6e9d2c061e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8c99e54_4a1d9cad",
+        "filename": "tests/android_unsafe_frame_pointer_chase_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-02-27T17:10:20Z",
+      "side": 1,
+      "message": "Yeah, I\u0027ll fix that, sorry. (I don\u0027t use repo upload, I git push directly.)",
+      "parentUuid": "a8aaa173_4073f5c2",
       "range": {
         "startLine": 77,
         "startChar": 13,
