@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b18118d6_5bc5cc0c",
+        "filename": "libc/bionic/sigaltstack.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-27T15:47:00Z",
+      "side": 1,
+      "message": "isn\u0027t this just another vote for \"leave sigaltstack() alone, but call `sigaltstack(nullptr, \u0026ss)` when we actually want the information?\".\n\nthis is also unreliable in the case where people have just made sigaltstack system calls directly.",
+      "revId": "6671506ab79ba5acaa9fedf2cbf52b6e9d2c061e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8aaa173_4073f5c2",
+        "filename": "tests/android_unsafe_frame_pointer_chase_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-27T15:47:00Z",
+      "side": 1,
+      "message": "`type*` here and elsewhere. (i thought we had the clang-format repo upload hook now?)",
+      "range": {
+        "startLine": 77,
+        "startChar": 13,
+        "endLine": 77,
+        "endChar": 19
+      },
+      "revId": "6671506ab79ba5acaa9fedf2cbf52b6e9d2c061e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
