@@ -22,6 +22,30 @@
       "revId": "70efb524240a4278fbb4b2a20337632549ea92e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de6930ef_90698dcc",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-27T23:26:26Z",
+      "side": 1,
+      "message": "The set_writable call was only changing the first (capacity * sizeof(AtexitEntry)) bytes of the mapping, which split the VMA. If the process doesn\u0027t fork, then setting the first part back to R+W allows the two VMAs to merge. If the process *does* fork, then mprotect doesn\u0027t re-merge the VMAs, and mremap fails with EFAULT.\n\nI think mremap will work as long as the VMA isn\u0027t split.",
+      "parentUuid": "e619afd2_4035df6e",
+      "range": {
+        "startLine": 94,
+        "startChar": 36,
+        "endLine": 94,
+        "endChar": 47
+      },
+      "revId": "70efb524240a4278fbb4b2a20337632549ea92e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
