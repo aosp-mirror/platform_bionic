@@ -2949,25 +2949,15 @@ bool soinfo::prelink_image() {
         break;
 
       case DT_PLTGOT:
-#if defined(__mips__)
-        // Used by mips and mips64.
-        plt_got_ = reinterpret_cast<ElfW(Addr)**>(load_bias + d->d_un.d_ptr);
-#endif
-        // Ignore for other platforms... (because RTLD_LAZY is not supported)
+        // Ignored (because RTLD_LAZY is not supported).
         break;
 
       case DT_DEBUG:
         // Set the DT_DEBUG entry to the address of _r_debug for GDB
         // if the dynamic table is writable
-// FIXME: not working currently for N64
-// The flags for the LOAD and DYNAMIC program headers do not agree.
-// The LOAD section containing the dynamic table has been mapped as
-// read-only, but the DYNAMIC header claims it is writable.
-#if !(defined(__mips__) && defined(__LP64__))
         if ((dynamic_flags & PF_W) != 0) {
           d->d_un.d_val = reinterpret_cast<uintptr_t>(&_r_debug);
         }
-#endif
         break;
 #if defined(USE_RELA)
       case DT_RELA:
@@ -3162,41 +3152,7 @@ bool soinfo::prelink_image() {
                   get_realpath(), reinterpret_cast<void*>(d->d_un.d_val));
         }
         break;
-#if defined(__mips__)
-      case DT_MIPS_RLD_MAP:
-        // Set the DT_MIPS_RLD_MAP entry to the address of _r_debug for GDB.
-        {
-          r_debug** dp = reinterpret_cast<r_debug**>(load_bias + d->d_un.d_ptr);
-          *dp = &_r_debug;
-        }
-        break;
-      case DT_MIPS_RLD_MAP_REL:
-        // Set the DT_MIPS_RLD_MAP_REL entry to the address of _r_debug for GDB.
-        {
-          r_debug** dp = reinterpret_cast<r_debug**>(
-              reinterpret_cast<ElfW(Addr)>(d) + d->d_un.d_val);
-          *dp = &_r_debug;
-        }
-        break;
 
-      case DT_MIPS_RLD_VERSION:
-      case DT_MIPS_FLAGS:
-      case DT_MIPS_BASE_ADDRESS:
-      case DT_MIPS_UNREFEXTNO:
-        break;
-
-      case DT_MIPS_SYMTABNO:
-        mips_symtabno_ = d->d_un.d_val;
-        break;
-
-      case DT_MIPS_LOCAL_GOTNO:
-        mips_local_gotno_ = d->d_un.d_val;
-        break;
-
-      case DT_MIPS_GOTSYM:
-        mips_gotsym_ = d->d_un.d_val;
-        break;
-#endif
       // Ignored: "Its use has been superseded by the DF_BIND_NOW flag"
       case DT_BIND_NOW:
         break;
@@ -3253,12 +3209,6 @@ bool soinfo::prelink_image() {
         break;
     }
   }
-
-#if defined(__mips__) && !defined(__LP64__)
-  if (!mips_check_and_adjust_fp_modes()) {
-    return false;
-  }
-#endif
 
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
         reinterpret_cast<void*>(base), strtab_, symtab_);
@@ -3443,10 +3393,18 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
   return namespaces;
 }
 
-// return /apex/<name>/etc/ld.config.txt from /apex/<name>/bin/*
+// Given an `executable_path` starting with "/apex/<name>/bin/, return
+// "/linkerconfig/<name>/ld.config.txt" (or "/apex/<name>/etc/ld.config.txt", if
+// the former does not exist).
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
   if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
+    // Check auto-generated ld.config.txt first
+    std::string generated_apex_config = "/linkerconfig/" + paths[2] + "/ld.config.txt";
+    if (file_exists(generated_apex_config.c_str())) {
+      return generated_apex_config;
+    }
+
     return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
   }
   return "";
@@ -3490,16 +3448,12 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return path;
   }
 
-  // Use generated linker config if flag is set
-  // TODO(b/138920271) Do not check property once it is confirmed as stable
-  if (android::base::GetBoolProperty("sys.linker.use_generated_config", true)) {
-    if (file_exists(kLdGeneratedConfigFilePath)) {
-      return kLdGeneratedConfigFilePath;
-    } else {
-      // TODO(b/146386369) : Adjust log level and add more condition to log only when necessary
-      INFO("Warning: failed to find generated linker configuration from \"%s\"",
-           kLdGeneratedConfigFilePath);
-    }
+  if (file_exists(kLdGeneratedConfigFilePath)) {
+    return kLdGeneratedConfigFilePath;
+  } else {
+    // TODO(b/146386369) : Adjust log level and add more condition to log only when necessary
+    INFO("Warning: failed to find generated linker configuration from \"%s\"",
+         kLdGeneratedConfigFilePath);
   }
 
   path = get_ld_config_file_vndk_path();

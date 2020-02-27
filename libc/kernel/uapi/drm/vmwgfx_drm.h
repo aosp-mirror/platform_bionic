@@ -266,7 +266,8 @@ struct drm_vmw_shader_arg {
 enum drm_vmw_surface_flags {
   drm_vmw_surface_flag_shareable = (1 << 0),
   drm_vmw_surface_flag_scanout = (1 << 1),
-  drm_vmw_surface_flag_create_buffer = (1 << 2)
+  drm_vmw_surface_flag_create_buffer = (1 << 2),
+  drm_vmw_surface_flag_coherent = (1 << 3),
 };
 struct drm_vmw_gb_surface_create_req {
   __u32 svga3d_flags;

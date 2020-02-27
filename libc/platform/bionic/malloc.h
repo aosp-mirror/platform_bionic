@@ -97,6 +97,14 @@ enum {
   //   arg_size = sizeof(bool)
   M_GET_PROCESS_PROFILEABLE = 9,
 #define M_GET_PROCESS_PROFILEABLE M_GET_PROCESS_PROFILEABLE
+  // Maybe enable GWP-ASan. Set *arg to force GWP-ASan to be turned on,
+  // otherwise this mallopt() will internally decide whether to sample the
+  // process. The program must be single threaded at the point when the
+  // android_mallopt function is called.
+  //   arg = bool*
+  //   arg_size = sizeof(bool)
+  M_INITIALIZE_GWP_ASAN = 10,
+#define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
 };
 
 enum HeapTaggingLevel {
@@ -106,6 +114,8 @@ enum HeapTaggingLevel {
   // Address-only tagging. Heap pointers have a non-zero tag in the most significant byte which is
   // checked in free(). Memory accesses ignore the tag.
   M_HEAP_TAGGING_LEVEL_TBI = 1,
+  // Enable heap tagging if supported, at a level appropriate for asynchronous memory tag checks.
+  M_HEAP_TAGGING_LEVEL_ASYNC = 2,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

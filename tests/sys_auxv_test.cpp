@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,32 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <gtest/gtest.h>
 
-// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
-ENTRY_PRIVATE(_exit_with_stack_teardown)
-  li	$v0, __NR_munmap
-  syscall
-  // If munmap failed, we ignore the failure and exit anyway.
+#include <sys/auxv.h>
 
-  li	$a0, 0
-  li	$v0, __NR_exit
-  syscall
-  // The exit syscall does not return.
-END(_exit_with_stack_teardown)
+TEST(sys_auxv, getauxval_HWCAP) {
+  __attribute__((__unused__)) unsigned long hwcap = getauxval(AT_HWCAP);
+
+  // Check that the constants for *using* AT_HWCAP are also available.
+#if defined(__arm__)
+  ASSERT_NE(0, HWCAP_THUMB);
+#elif defined(__aarch64__)
+  ASSERT_NE(0, HWCAP_FP);
+#endif
+}
+
+TEST(sys_auxv, getauxval_HWCAP2) {
+#if defined(AT_HWCAP2)
+  __attribute__((__unused__)) unsigned long hwcap = getauxval(AT_HWCAP2);
+
+  // Check that the constants for *using* AT_HWCAP2 are also available.
+#if defined(__arm__)
+  ASSERT_NE(0, HWCAP2_AES);
+#elif defined(__aarch64__)
+  ASSERT_NE(0, HWCAP2_SVE2);
+#endif
+#else
+  GTEST_SKIP() << "No AT_HWCAP2 for this architecture.";
+#endif
+}

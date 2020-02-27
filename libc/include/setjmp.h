@@ -48,12 +48,6 @@
 #define _JBLEN 64
 #elif defined(__i386__)
 #define _JBLEN 10
-#elif defined(__mips__)
-  #if defined(__LP64__)
-  #define _JBLEN 25
-  #else
-  #define _JBLEN 157
-  #endif
 #elif defined(__x86_64__)
 #define _JBLEN 11
 #endif

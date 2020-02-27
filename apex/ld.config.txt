@@ -1,8 +1,0 @@
-# Copyright (C) 2019 The Android Open Source Project
-#
-# Bionic loader config file for the Runtime APEX. This is a minimal config to
-# make the linker able to load itself as an executable (it just needs to exist).
-
-dir.runtime = /apex/com.android.runtime/bin/
-
-[runtime]

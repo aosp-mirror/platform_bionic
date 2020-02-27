@@ -22,6 +22,14 @@
 #include <android-base/file.h>
 #include <gtest/gtest.h>
 
+#if defined(__BIONIC__)
+#define HAVE_STATX
+#elif defined(__GLIBC_PREREQ)
+#if __GLIBC_PREREQ(2, 28)
+#define HAVE_STATX
+#endif
+#endif
+
 TEST(sys_stat, futimens) {
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != nullptr);
@@ -93,6 +101,24 @@ TEST(sys_stat, stat64_lstat64_fstat64) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_EQ(0, fstat64(fd, &sb));
   close(fd);
+}
+
+TEST(sys_stat, statx) {
+#if defined(HAVE_STATX)
+  struct statx sx;
+  int rc = statx(AT_FDCWD, "/proc/version", AT_STATX_SYNC_AS_STAT, STATX_ALL, &sx);
+  if (rc == -1 && errno == ENOSYS) {
+    GTEST_SKIP() << "statx returned ENOSYS";
+    return;
+  }
+  ASSERT_EQ(0, rc);
+  struct stat64 sb;
+  ASSERT_EQ(0, stat64("/proc/version", &sb));
+  EXPECT_EQ(sb.st_ino, sx.stx_ino);
+  EXPECT_EQ(sb.st_mode, sx.stx_mode);
+#else
+  GTEST_SKIP() << "statx not available";
+#endif
 }
 
 TEST(sys_stat, fchmodat_EFAULT_file) {

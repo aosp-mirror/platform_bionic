@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,39 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
-#include <sys/cachectl.h>
+#pragma once
 
-#include <async_safe/log.h>
+#include <private/bionic_globals.h>
+#include <private/bionic_malloc_dispatch.h>
+#include <stddef.h>
 
-// Linux historically defines a cacheflush(3) routine for MIPS
-// with this signature:
+// Hooks for libc to possibly install GWP-ASan.
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
 
-//   int cacheflush(char *addr, int nbytes, int cache);
+// Maybe initialize GWP-ASan. Set force_init to true to bypass process sampling.
+bool MaybeInitGwpAsan(libc_globals* globals, bool force_init = false);
 
-// Android defines an alternate cacheflush routine which exposes the
-// ARM system call interface:
-
-//   int cacheflush (long start, long end, long flags)
-
-// This is an attempt to maintain compatibility between the historical MIPS
-// usage for software previously ported to MIPS and Android specific
-// uses of cacheflush().
-
-int cacheflush(long start, long end, long /*flags*/) {
-  if (end < start) {
-    // It looks like this is really a MIPS-style cacheflush call.
-    static bool warned = false;
-    if (!warned) {
-      async_safe_format_log(ANDROID_LOG_WARN, "libc",
-                            "cacheflush called with (start,len) instead of (start,end)");
-      warned = true;
-    }
-    end += start;
-  }
-
-  // Use the GCC builtin. This will generate inline synci instructions if available,
-  // or call _flush_cache(start, len, BCACHE) directly.
-  __builtin___clear_cache(reinterpret_cast<char*>(start), reinterpret_cast<char*>(end));
-  return 0;
-}
+// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
+// heapprofd's signal-initialization sequence to determine the intermediate
+// dispatch pointer to use when initing.
+bool DispatchIsGwpAsan(const MallocDispatch* dispatch);

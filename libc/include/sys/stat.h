@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_STAT_H_
-#define _SYS_STAT_H_
+#pragma once
+
+/**
+ * @file sys/stat.h
+ * @brief File status.
+ */
 
 #include <bits/timespec.h>
 #include <linux/stat.h>
@@ -36,7 +40,7 @@
 
 __BEGIN_DECLS
 
-#if defined(__aarch64__) || (defined(__mips__) && defined(__LP64__))
+#if defined(__aarch64__)
 #define __STAT64_BODY \
   dev_t st_dev; \
   ino_t st_ino; \
@@ -55,25 +59,6 @@ __BEGIN_DECLS
   struct timespec st_ctim; \
   unsigned int __unused4; \
   unsigned int __unused5; \
-
-#elif defined(__mips__) && !defined(__LP64__)
-#define __STAT64_BODY \
-  unsigned int st_dev; \
-  unsigned int __pad0[3]; \
-  unsigned long long st_ino; \
-  mode_t st_mode; \
-  nlink_t st_nlink; \
-  uid_t st_uid; \
-  gid_t st_gid; \
-  unsigned int st_rdev; \
-  unsigned int __pad1[3]; \
-  long long st_size; \
-  struct timespec st_atim; \
-  struct timespec st_mtim; \
-  struct timespec st_ctim; \
-  unsigned int st_blksize; \
-  unsigned int __pad2; \
-  unsigned long long st_blocks; \
 
 #elif defined(__x86_64__)
 #define __STAT64_BODY \
@@ -188,8 +173,16 @@ int mknodat(int __dir_fd, const char* __path, mode_t __mode, dev_t __dev) __INTR
 int utimensat(int __dir_fd, const char* __path, const struct timespec __times[2], int __flags);
 int futimens(int __dir_fd, const struct timespec __times[2]) __INTRODUCED_IN(19);
 
+#if defined(__USE_GNU)
+/**
+ * [statx(2)](http://man7.org/linux/man-pages/man2/statx.2.html) returns
+ * extended file status information.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
+int statx(int __dir_fd, const char* __path, int __flags, unsigned __mask, struct statx* __buf) __INTRODUCED_IN(30);
+#endif
+
 __END_DECLS
 
 #include <android/legacy_sys_stat_inlines.h>
-
-#endif

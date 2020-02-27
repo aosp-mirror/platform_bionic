@@ -37,6 +37,14 @@
 
 #include <linux/auxvec.h>
 
+// AT_HWCAP isn't useful without these constants.
+#if __has_include(<asm/hwcap.h>)
+#include <asm/hwcap.h>
+#endif
+#if __has_include(<asm/hwcap2.h>)
+#include <asm/hwcap2.h>
+#endif
+
 /** Historical SuperH cruft. Irrelevant on Android. */
 #define AT_FPUCW 18
 /** Historical PowerPC cruft. Irrelevant on Android. */

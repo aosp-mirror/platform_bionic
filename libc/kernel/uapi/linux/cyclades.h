@@ -26,9 +26,9 @@ struct cyclades_monitor {
   unsigned long char_last;
 };
 struct cyclades_idle_stats {
-  __kernel_time_t in_use;
-  __kernel_time_t recv_idle;
-  __kernel_time_t xmit_idle;
+  __kernel_old_time_t in_use;
+  __kernel_old_time_t recv_idle;
+  __kernel_old_time_t xmit_idle;
   unsigned long recv_bytes;
   unsigned long xmit_bytes;
   unsigned long overruns;

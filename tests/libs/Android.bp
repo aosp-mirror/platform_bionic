@@ -117,14 +117,6 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlext_test_library.cpp"],
     ldflags: ["-Wl,--hash-style=gnu"],
-    arch: {
-        mips: {
-            enabled: false,
-        },
-        mips64: {
-            enabled: false,
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
@@ -341,10 +333,6 @@ cc_test_library {
         "libnstest_public",
         "libnstest_private",
     ],
-    // The dlext.ns_anonymous test copies the loaded segments of this shared
-    // object into a new mapping, so every segment must be readable. Turn off
-    // eXecute-Only-Memory. See http://b/123034666.
-    xom: false,
 }
 
 cc_test_library {
@@ -1120,15 +1108,6 @@ cc_test_library {
     name: "libtest_ifunc",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc.cpp"],
-
-    arch: {
-        mips: {
-            enabled: false,
-        },
-        mips64: {
-            enabled: false,
-        },
-    },
 }
 
 cc_test_library {
@@ -1136,30 +1115,12 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc_variable.cpp"],
     shared_libs: ["libtest_ifunc_variable_impl"],
-
-    arch: {
-        mips: {
-            enabled: false,
-        },
-        mips64: {
-            enabled: false,
-        },
-    },
 }
 
 cc_test_library {
     name: "libtest_ifunc_variable_impl",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["dlopen_testlib_ifunc_variable_impl.cpp"],
-
-    arch: {
-        mips: {
-            enabled: false,
-        },
-        mips64: {
-            enabled: false,
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------
