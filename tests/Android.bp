@@ -39,10 +39,14 @@ cc_defaults {
         "-D__STDC_LIMIT_MACROS",
     ],
     header_libs: ["bionic_libc_platform_headers"],
-    // Make the bionic tests implicitly test bionic's shadow call stack support.
+    // Ensure that the tests exercise shadow call stack support and
+    // the hint space PAC/BTI instructions.
     arch: {
         arm64: {
-           cflags: ["-fsanitize=shadow-call-stack"],
+            cflags: [
+                "-fsanitize=shadow-call-stack",
+                "-mbranch-protection=standard",
+            ],
         },
     },
     stl: "libc++",
