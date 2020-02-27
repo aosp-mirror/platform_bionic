@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e619afd2_4035df6e",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-02-27T05:16:29Z",
+      "side": 1,
+      "message": "This should have been AtexitEntry. As-is, the new atexit bionic test fails. (I didn\u0027t notice it because I was rebuilding libc and I needed to rebuild libc.bootstrap.)\n\nI don\u0027t know why the test fails, though. It passes with --no_isolate and only fails when the test is forked from the main gtest process. mremap fails.",
+      "range": {
+        "startLine": 94,
+        "startChar": 36,
+        "endLine": 94,
+        "endChar": 47
+      },
+      "revId": "70efb524240a4278fbb4b2a20337632549ea92e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
