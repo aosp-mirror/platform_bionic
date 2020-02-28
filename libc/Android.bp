@@ -777,6 +777,7 @@ cc_library_static {
         "bionic/android_set_abort_message.cpp",
 
         "bionic/strchr.cpp",
+        "bionic/strchrnul.cpp",
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
     ],
@@ -837,25 +838,17 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
-                "arch-arm64/generic/bionic/stpcpy.S",
-                "arch-arm64/generic/bionic/strcpy.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
 
-                "arch-arm64/default/bionic/memchr.S",
-                "arch-arm64/default/bionic/strchr.S",
-                "arch-arm64/default/bionic/strcmp.S",
-                "arch-arm64/default/bionic/strlen.S",
-                "arch-arm64/default/bionic/strncmp.S",
-                "arch-arm64/default/bionic/strnlen.S",
-
                 "arch-arm64/mte/bionic/memchr.c",
-                "arch-arm64/mte/bionic/strchr.cpp",
+                "arch-arm64/mte/bionic/stpcpy.S",
+                "arch-arm64/mte/bionic/strchrnul.cpp",
+                "arch-arm64/mte/bionic/strrchr.cpp",
                 "arch-arm64/mte/bionic/strcmp.c",
-                "arch-arm64/mte/bionic/strlen.c",
+                "arch-arm64/mte/bionic/strcpy.S",
                 "arch-arm64/mte/bionic/strncmp.c",
                 "arch-arm64/mte/bionic/strnlen.c",
 
@@ -868,7 +861,9 @@ cc_library_static {
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
                 "bionic/strchr.cpp",
+                "bionic/strchrnul.cpp",
                 "bionic/strnlen.c",
+                "bionic/strrchr.cpp",
             ],
         },
 
@@ -1121,7 +1116,6 @@ cc_library_static {
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
-        "bionic/strchrnul.cpp",
         "bionic/strerror.cpp",
         "bionic/string_l.cpp",
         "bionic/strings_l.cpp",
@@ -1358,6 +1352,7 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "libarm-optimized-routines-string",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1388,6 +1383,7 @@ cc_library_static {
     name: "libc_nopthread",
 
     whole_static_libs: [
+        "libarm-optimized-routines-string",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_bootstrap",
