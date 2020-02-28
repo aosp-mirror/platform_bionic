@@ -18,6 +18,8 @@
 
 #if defined(__BIONIC__)
 
+#include <sys/mman.h>
+
 #include "platform/bionic/android_unsafe_frame_pointer_chase.h"
 
 // Prevent tail calls inside recurse.
@@ -72,19 +74,23 @@ TEST(android_unsafe_frame_pointer_chase, main_thread) {
   EXPECT_TRUE(CheckFrames(frames, size));
 }
 
-static void *BacktraceThread(void *) {
+static const char* tester_func() {
   size_t size = recurse(kNumFrames, 0, 0);
 
   uintptr_t frames[kNumFrames + 2];
   size_t size2 = recurse(kNumFrames, frames, kNumFrames + 2);
   if (size2 != size) {
-    return (void*)"size2 != size";
+    return "size2 != size";
   }
 
   if (!CheckFrames(frames, size)) {
-    return (void*)"CheckFrames failed";
+    return "CheckFrames failed";
   }
   return nullptr;
+}
+
+static void* BacktraceThread(void*) {
+  return (void*)tester_func();
 }
 
 TEST(android_unsafe_frame_pointer_chase, pthread) {
@@ -93,6 +99,60 @@ TEST(android_unsafe_frame_pointer_chase, pthread) {
   void* retval;
   ASSERT_EQ(0, pthread_join(t, &retval));
   EXPECT_EQ(nullptr, reinterpret_cast<char*>(retval));
+}
+
+static bool g_handler_called;
+static const char* g_handler_tester_result;
+
+static void BacktraceHandler(int) {
+  g_handler_called = true;
+  g_handler_tester_result = tester_func();
+}
+
+static constexpr size_t kStackSize = 16384;
+
+static void* SignalBacktraceThread(void* sp) {
+  stack_t ss;
+  ss.ss_sp = sp;
+  ss.ss_flags = 0;
+  ss.ss_size = kStackSize;
+  sigaltstack(&ss, nullptr);
+
+  struct sigaction s = {};
+  s.sa_handler = BacktraceHandler;
+  s.sa_flags = SA_ONSTACK;
+  sigaction(SIGRTMIN, &s, nullptr);
+
+  raise(SIGRTMIN);
+  return nullptr;
+}
+
+TEST(android_unsafe_frame_pointer_chase, sigaltstack) {
+  // Create threads where the alternate stack appears both after and before the regular stack, and
+  // call android_unsafe_frame_pointer_chase from a signal handler. Without handling for the
+  // alternate signal stack, this would cause false negatives or potential false positives in the
+  // android_unsafe_frame_pointer_chase function.
+  void* stacks =
+      mmap(nullptr, kStackSize * 2, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
+
+  for (unsigned i = 0; i != 2; ++i) {
+    pthread_t t;
+    pthread_attr_t attr;
+    ASSERT_EQ(0, pthread_attr_init(&attr));
+    ASSERT_EQ(0, pthread_attr_setstack(&attr, reinterpret_cast<char*>(stacks) + kStackSize * i,
+                                       kStackSize));
+
+    ASSERT_EQ(0, pthread_create(&t, &attr, SignalBacktraceThread,
+                                reinterpret_cast<char*>(stacks) + kStackSize * (1 - i)));
+    void* retval;
+    ASSERT_EQ(0, pthread_join(t, &retval));
+
+    EXPECT_TRUE(g_handler_called);
+    EXPECT_EQ(nullptr, g_handler_tester_result);
+    g_handler_called = false;
+  }
+
+  munmap(stacks, kStackSize * 2);
 }
 
 #endif // __BIONIC__
