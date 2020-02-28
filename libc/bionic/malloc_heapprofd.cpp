@@ -301,10 +301,17 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
       error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
     }
   }
-  // Get an allocation from libc malloc. If we had a previous dispatch table,
-  // this will come from it - otherwise, we'll get it from the system
-  // allocator.
-  return malloc(bytes);
+  // If we had a previous dispatch table, use that to service the allocation,
+  // otherwise fall back to the native allocator.
+  // `gPreviousDefaultDispatchTable` won't change underneath us, as it's
+  // protected by the `gHeapProfdInitInProgress` lock (which we currently hold).
+  // The lock was originally taken by our caller in `HandleHeapprofdSignal()`,
+  // and will be released by `CommonInstallHooks()` via. our `InitHeapprofd()`
+  // thread that we just created.
+  if (gPreviousDefaultDispatchTable) {
+    return gPreviousDefaultDispatchTable->malloc(bytes);
+  }
+  return NativeAllocatorDispatch()->malloc(bytes);
 }
 
 bool HeapprofdInitZygoteChildProfiling() {
