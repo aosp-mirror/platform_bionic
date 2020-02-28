@@ -1,0 +1,152 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4f7ecdd9_06178d22",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "maybe explicitly say \" `fn`\" at the end of this, and or comment the previous line as \"// The __cxa_atexit callback\".",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6939586b_847e1da1",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "move public first?",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bc14be8_c4b632e9",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "juts define these inline above?",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54bd4bd5_8c62a000",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "5?",
+      "range": {
+        "startLine": 89,
+        "startChar": 58,
+        "endLine": 89,
+        "endChar": 59
+      },
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88affdab_9d7098cd",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "so \"compact\" is both \"dense\" *and* \"no trailing empty entries\" (other than ones because size \u003c capacity, which is normal)? comment up by the declaration?\n\n(does it matter that just having one blanked-out entry at the end counts as \"not compact\"? i\u0027d assumed \"not compact\" would imply \"there\u0027s likely at least a page to be saved\".)",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e4be0f3_7cf69926",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "might be clearer to have this lock be in AtexitArray with lock() and unlock() as member functions rather than a separate global?",
+      "range": {
+        "startLine": 189,
+        "startChar": 23,
+        "endLine": 189,
+        "endChar": 36
+      },
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "663c4374_2106e3e0",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "(append_entry could do its own locking, leaving this a one-liner.)",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3baacbb_9f69c4dd",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-28T21:56:03Z",
+      "side": 1,
+      "message": "ah, so it\u0027s only one call to recompact per closed library, so i guess it doesn\u0027t matter?",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
