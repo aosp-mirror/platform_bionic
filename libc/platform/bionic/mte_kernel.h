@@ -37,7 +37,7 @@
 
 #ifdef ANDROID_EXPERIMENTAL_MTE
 
-#define HWCAP2_MTE (1 << 10)
+#define HWCAP2_MTE (1 << 18)
 #define PROT_MTE 0x20
 
 #define PR_MTE_TCF_SHIFT 1
@@ -45,10 +45,10 @@
 #define PR_MTE_TCF_SYNC (1UL << PR_MTE_TCF_SHIFT)
 #define PR_MTE_TCF_ASYNC (2UL << PR_MTE_TCF_SHIFT)
 #define PR_MTE_TCF_MASK (3UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_EXCL_SHIFT 3
-#define PR_MTE_EXCL_MASK (0xffffUL << PR_MTE_EXCL_SHIFT)
+#define PR_MTE_TAG_SHIFT 3
+#define PR_MTE_TAG_MASK (0xffffUL << PR_MTE_TAG_SHIFT)
 
-#define SEGV_MTEAERR 6
-#define SEGV_MTESERR 7
+#define SEGV_MTEAERR 8
+#define SEGV_MTESERR 9
 
 #endif
