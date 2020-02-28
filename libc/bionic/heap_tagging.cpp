@@ -46,7 +46,8 @@ void SetDefaultHeapTaggingLevel() {
   // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in
   // syscall arguments.
   if (prctl(PR_SET_TAGGED_ADDR_CTRL,
-            PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (1 << PR_MTE_EXCL_SHIFT), 0, 0, 0) == 0) {
+            PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (0xfffe << PR_MTE_TAG_SHIFT), 0, 0,
+            0) == 0) {
     heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
     return;
   }
