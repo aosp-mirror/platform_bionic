@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,5 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
-
-#define strlen strlen_mte
-#include <upstream-openbsd/lib/libc/string/strlen.c>
+#define strchrnul strchrnul_mte
+#include <bionic/strchrnul.cpp>
