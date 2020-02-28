@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,5 +26,5 @@
  * SUCH DAMAGE.
  */
 
-#define strchr strchr_mte
-#include <bionic/strchr.cpp>
+#define strrchr strrchr_mte
+#include <bionic/strrchr.cpp>
