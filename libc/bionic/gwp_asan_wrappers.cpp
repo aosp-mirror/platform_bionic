@@ -177,7 +177,8 @@ void gwp_asan_malloc_enable() {
 }
 
 static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
-  gwp_asan_calloc,
+  // TODO(b/150456936) - GWP-ASan's calloc is disabled for now.
+  Malloc(calloc),
   gwp_asan_free,
   Malloc(mallinfo),
   gwp_asan_malloc,
