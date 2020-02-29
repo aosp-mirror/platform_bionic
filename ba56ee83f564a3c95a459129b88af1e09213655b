@@ -22,6 +22,30 @@
       "revId": "ba56ee83f564a3c95a459129b88af1e09213655b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba382c64_fbaf1aff",
+        "filename": "tests/sys_stat_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-02-29T02:29:39Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/bionic/+/1247207",
+      "parentUuid": "e9153de1_1dddf313",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 112,
+        "endChar": 10
+      },
+      "revId": "ba56ee83f564a3c95a459129b88af1e09213655b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
