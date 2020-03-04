@@ -1225,7 +1225,6 @@ TEST(android_mallopt, tag_level) {
 #if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
   if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
     GTEST_SKIP() << "requires MTE support";
-    return;
   }
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
