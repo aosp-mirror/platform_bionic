@@ -253,6 +253,10 @@ static void* LimitValloc(size_t bytes) {
 }
 #endif
 
+bool MallocLimitInstalled() {
+  return GetDispatchTable() == &__limit_dispatch;
+}
+
 #if defined(LIBC_STATIC)
 static bool EnableLimitDispatchTable() {
   // This is the only valid way to modify the dispatch tables for a

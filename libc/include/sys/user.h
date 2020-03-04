@@ -172,22 +172,6 @@ struct user {
   unsigned long fault_address;
 };
 
-#elif defined(__mips__)
-
-struct user {
-  unsigned long regs[180 / sizeof(unsigned long) + 64];
-  size_t u_tsize;
-  size_t u_dsize;
-  size_t u_ssize;
-  unsigned long start_code;
-  unsigned long start_data;
-  unsigned long start_stack;
-  long int signal;
-  void* u_ar0;
-  unsigned long magic;
-  char u_comm[32];
-};
-
 #elif defined(__arm__)
 
 struct user_fpregs {

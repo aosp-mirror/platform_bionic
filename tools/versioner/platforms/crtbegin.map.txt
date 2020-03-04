@@ -3,5 +3,5 @@
 
 CRTBEGIN {
   global:
-    atexit;  # arm64 x86 x86_64 mips mips64
+    atexit;  # arm64 x86 x86_64
 };

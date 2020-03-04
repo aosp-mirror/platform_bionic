@@ -28,7 +28,6 @@
 
 #include <ifaddrs.h>
 
-#include <async_safe/log.h>
 #include <cutils/misc.h>           // FIRST_APPLICATION_UID
 #include <errno.h>
 #include <linux/if_packet.h>
@@ -248,11 +247,20 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
   }
 }
 
-static void remove_nameless_interfaces(ifaddrs** list) {
+static void resolve_or_remove_nameless_interfaces(ifaddrs** list) {
   ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list);
   ifaddrs_storage* prev_addr = nullptr;
   while (addr != nullptr) {
     ifaddrs* next_addr = addr->ifa.ifa_next;
+
+    // Try resolving interfaces without a name first.
+    if (strlen(addr->name) == 0) {
+      if (if_indextoname(addr->interface_index, addr->name) != nullptr) {
+        addr->ifa.ifa_name = addr->name;
+      }
+    }
+
+    // If the interface could not be resolved, remove it.
     if (strlen(addr->name) == 0) {
       if (prev_addr == nullptr) {
         *list = next_addr;
@@ -273,11 +281,9 @@ int getifaddrs(ifaddrs** out) {
 
   // Open the netlink socket and ask for all the links and addresses.
   NetlinkConnection nc;
-  // Simulate kernel behavior on R and above: RTM_GETLINK messages can only be
-  // sent by:
+  // SELinux policy only allows RTM_GETLINK messages to be sent by:
   // - System apps
   // - Apps with a target SDK version lower than R
-  // TODO(b/141455849): Remove this check when kernel changes are merged.
   bool getlink_success = false;
   if (getuid() < FIRST_APPLICATION_UID ||
       android_get_application_target_sdk_version() < __ANDROID_API_R__) {
@@ -294,10 +300,9 @@ int getifaddrs(ifaddrs** out) {
   }
 
   if (!getlink_success) {
-    async_safe_format_log(ANDROID_LOG_INFO, "ifaddrs", "Failed to send RTM_GETLINK request");
     // If we weren't able to depend on GETLINK messages, it's possible some
-    // interfaces never got their name set. Remove those.
-    remove_nameless_interfaces(out);
+    // interfaces never got their name set. Resolve them using if_indextoname or remove them.
+    resolve_or_remove_nameless_interfaces(out);
   }
 
   return 0;

@@ -53,8 +53,7 @@ int sched_rr_get_interval(pid_t __pid, struct timespec* __quantum);
 
 #if defined(__USE_GNU)
 
-int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...)
-    __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_MIPS(12) __INTRODUCED_IN_X86(17);
+int clone(int (*__fn)(void*), void* __child_stack, int __flags, void* __arg, ...) __INTRODUCED_IN_ARM(9) __INTRODUCED_IN_X86(17);
 int unshare(int __flags) __INTRODUCED_IN(17);
 int sched_getcpu(void);
 int setns(int __fd, int __ns_type) __INTRODUCED_IN(21);

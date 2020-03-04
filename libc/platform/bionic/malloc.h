@@ -114,6 +114,8 @@ enum HeapTaggingLevel {
   // Address-only tagging. Heap pointers have a non-zero tag in the most significant byte which is
   // checked in free(). Memory accesses ignore the tag.
   M_HEAP_TAGGING_LEVEL_TBI = 1,
+  // Enable heap tagging if supported, at a level appropriate for asynchronous memory tag checks.
+  M_HEAP_TAGGING_LEVEL_ASYNC = 2,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

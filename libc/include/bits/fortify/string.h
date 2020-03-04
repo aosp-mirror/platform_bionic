@@ -204,21 +204,17 @@ size_t strlcat(char* const dst __pass_object_size, const char* src, size_t size)
                          "'strlcat' called with size bigger than buffer") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
     return __strlcat_chk(dst, src, size, __bos(dst));
-#endif
+#else
     return __call_bypassing_fortify(strlcat)(dst, src, size);
+#endif
 }
 
+#if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 __BIONIC_FORTIFY_INLINE
 size_t strlen(const char* const s __pass_object_size0) __overloadable {
-#if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
-    size_t bos = __bos0(s);
-
-    if (!__bos_trivially_gt(bos, __builtin_strlen(s))) {
-        return __strlen_chk(s, bos);
-    }
-#endif
-    return __builtin_strlen(s);
+    return __strlen_chk(s, __bos0(s));
 }
+#endif
 
 __BIONIC_FORTIFY_INLINE
 char* strchr(const char* const s __pass_object_size, int c) __overloadable {

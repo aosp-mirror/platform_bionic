@@ -57,6 +57,12 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
 
   auto begin = reinterpret_cast<uintptr_t>(__builtin_frame_address(0));
   uintptr_t end = __get_thread()->stack_top;
+
+  stack_t ss;
+  if (sigaltstack(nullptr, &ss) == 0 && (ss.ss_flags & SS_ONSTACK)) {
+    end = reinterpret_cast<uintptr_t>(ss.ss_sp) + ss.ss_size;
+  }
+
   size_t num_frames = 0;
   while (1) {
     auto* frame = reinterpret_cast<frame_record*>(begin);

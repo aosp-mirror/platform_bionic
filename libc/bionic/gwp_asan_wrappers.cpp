@@ -26,7 +26,10 @@
  * SUCH DAMAGE.
  */
 
+#include <platform/bionic/android_unsafe_frame_pointer_chase.h>
 #include <platform/bionic/malloc.h>
+#include <private/bionic_arc4random.h>
+#include <private/bionic_globals.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -64,9 +67,15 @@ bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
   Opts.SampleRate = 2500;
   Opts.InstallSignalHandlers = false;
   Opts.InstallForkHandlers = true;
+  Opts.Backtrace = android_unsafe_frame_pointer_chase;
 
   GuardedAlloc.init(Opts);
-  info_log("GWP-ASan has been enabled.");
+  // TODO(b/149790891): The log line below causes ART tests to fail as they're
+  // not expecting any output. Disable the output for now.
+  // info_log("GWP-ASan has been enabled.");
+
+  __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
+  __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
   return true;
 }
 
@@ -168,7 +177,8 @@ void gwp_asan_malloc_enable() {
 }
 
 static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
-  gwp_asan_calloc,
+  // TODO(b/150456936) - GWP-ASan's calloc is disabled for now.
+  Malloc(calloc),
   gwp_asan_free,
   Malloc(mallinfo),
   gwp_asan_malloc,
@@ -190,12 +200,18 @@ static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
   Malloc(malloc_info),
 };
 
-// TODO(mitchp): Turn on GWP-ASan here probabilistically.
+// The probability (1 / kProcessSampleRate) that a process will be ranodmly
+// selected for sampling. kProcessSampleRate should always be a power of two to
+// avoid modulo bias.
+static constexpr uint8_t kProcessSampleRate = 128;
+
 bool ShouldGwpAsanSampleProcess() {
-  return false;
+  uint8_t random_number;
+  __libc_safe_arc4random_buf(&random_number, sizeof(random_number));
+  return random_number % kProcessSampleRate == 0;
 }
 
-bool MaybeInitGwpAsanFromLibc() {
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
   // Never initialize the Zygote here. A Zygote chosen for sampling would also
   // have all of its children sampled. Instead, the Zygote child will choose
   // whether it samples or not just after the Zygote forks. For
@@ -205,14 +221,14 @@ bool MaybeInitGwpAsanFromLibc() {
   if (progname && strncmp(progname, "app_process", 11) == 0) {
     return false;
   }
-  return MaybeInitGwpAsan(false);
+  return MaybeInitGwpAsan(globals);
 }
 
 static bool GwpAsanInitialized = false;
 
 // Maybe initializes GWP-ASan. Called by android_mallopt() and libc's
 // initialisation. This should always be called in a single-threaded context.
-bool MaybeInitGwpAsan(bool force_init) {
+bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
   if (GwpAsanInitialized) {
     error_log("GWP-ASan was already initialized for this process.");
     return false;
@@ -239,17 +255,15 @@ bool MaybeInitGwpAsan(bool force_init) {
 
   // GWP-ASan's initialization is always called in a single-threaded context, so
   // we can initialize lock-free.
-  __libc_globals.mutate([](libc_globals* globals) {
-    // Set GWP-ASan as the malloc dispatch table.
-    globals->malloc_dispatch_table = gwp_asan_dispatch;
-    atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
+  // Set GWP-ASan as the malloc dispatch table.
+  globals->malloc_dispatch_table = gwp_asan_dispatch;
+  atomic_store(&globals->default_dispatch_table, &gwp_asan_dispatch);
 
-    // If malloc_limit isn't installed, we can skip the default_dispatch_table
-    // lookup.
-    if (GetDispatchTable() == nullptr) {
-      atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
-    }
-  });
+  // If malloc_limit isn't installed, we can skip the default_dispatch_table
+  // lookup.
+  if (GetDispatchTable() == nullptr) {
+    atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
+  }
 
 #ifndef LIBC_STATIC
   SetGlobalFunctions(gwp_asan_gfunctions);
@@ -260,4 +274,8 @@ bool MaybeInitGwpAsan(bool force_init) {
   gwp_asan_initialize(NativeAllocatorDispatch(), nullptr, nullptr);
 
   return true;
+}
+
+bool DispatchIsGwpAsan(const MallocDispatch* dispatch) {
+  return dispatch == &gwp_asan_dispatch;
 }
