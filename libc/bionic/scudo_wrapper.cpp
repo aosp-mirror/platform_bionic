@@ -40,9 +40,17 @@ __attribute__((constructor(1))) static void __scudo_preinit() {
   __libc_globals.mutate(__libc_init_malloc);
 }
 
+extern "C" libc_shared_globals* __loader_shared_globals();
+
+__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
+  return __loader_shared_globals();
+}
+
 #if defined(__i386__)
 __LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
 #endif
+
+extern "C" void scudo_malloc_disable_memory_tagging() {}
 
 int scudo_mallopt(int /*param*/, int /*value*/) {
   return 0;

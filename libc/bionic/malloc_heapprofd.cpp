@@ -42,9 +42,11 @@
 #include <private/bionic_malloc_dispatch.h>
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
+#include "malloc_limit.h"
 
 static constexpr char kHeapprofdSharedLib[] = "heapprofd_client.so";
 static constexpr char kHeapprofdPrefix[] = "heapprofd";
@@ -84,30 +86,6 @@ static _Atomic bool gHeapprofdInitHookInstalled = false;
 static _Atomic bool gHeapprofdIncompatibleHooks = false;
 
 extern "C" void* MallocInitHeapprofdHook(size_t);
-
-static constexpr MallocDispatch __heapprofd_init_dispatch
-  __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    MallocInitHeapprofdHook, // malloc replacement
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
-#endif
-    Malloc(realloc),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
-#endif
-    Malloc(malloc_iterate),
-    Malloc(malloc_disable),
-    Malloc(malloc_enable),
-    Malloc(mallopt),
-    Malloc(aligned_alloc),
-    Malloc(malloc_info),
-  };
 
 constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
 constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
@@ -175,6 +153,15 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
 //   is loaded synchronously).
 // In both cases, the caller is responsible for verifying that the process is
 // considered profileable.
+
+// Previously installed default dispatch table, if it exists. This is used to
+// load heapprofd properly when GWP-ASan was already installed. If GWP-ASan was
+// already installed, heapprofd will take over the dispatch table, but will use
+// GWP-ASan as the backing dispatch. This variable is atomically protected by
+// gHeapprofdInitInProgress.
+static const MallocDispatch* gPreviousDefaultDispatchTable = nullptr;
+static MallocDispatch gEphemeralDispatch;
+
 void HandleHeapprofdSignal() {
   if (atomic_load_explicit(&gHeapprofdIncompatibleHooks, memory_order_acquire)) {
     error_log("%s: not enabling heapprofd, malloc_debug/malloc_hooks are enabled.", getprogname());
@@ -186,11 +173,49 @@ void HandleHeapprofdSignal() {
   // not ever have a conflict modifying the globals.
   if (!atomic_exchange(&gGlobalsMutating, true)) {
     if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
+      const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
+
+      // Below, we initialize heapprofd lazily by redirecting libc's malloc() to
+      // call MallocInitHeapprofdHook, which spawns off a thread and initializes
+      // heapprofd. During the short period between now and when heapprofd is
+      // initialized, allocations may need to be serviced. There are three
+      // possible configurations:
+
+      if (default_dispatch == nullptr) {
+        //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
+        //  this case, everything but malloc() should come from the system
+        //  allocator.
+        gPreviousDefaultDispatchTable = nullptr;
+        gEphemeralDispatch = *NativeAllocatorDispatch();
+      } else if (DispatchIsGwpAsan(default_dispatch)) {
+        //  2. GWP-ASan was installed. We should use GWP-ASan for everything but
+        //  malloc() in the interim period before heapprofd is properly
+        //  installed. After heapprofd is finished installing, we will use
+        //  GWP-ASan as heapprofd's backing allocator to allow heapprofd and
+        //  GWP-ASan to coexist.
+        gPreviousDefaultDispatchTable = default_dispatch;
+        gEphemeralDispatch = *default_dispatch;
+      } else {
+        // 3. It may be possible at this point in time that heapprofd is
+        // *already* the default dispatch, and as such we don't want to use
+        // heapprofd as the backing store for itself (otherwise infinite
+        // recursion occurs). We will use the system allocator functions. Note:
+        // We've checked that no other malloc interceptors are being used by
+        // validating `gHeapprofdIncompatibleHooks` above, so we don't need to
+        // worry about that case here.
+        gPreviousDefaultDispatchTable = nullptr;
+        gEphemeralDispatch = *NativeAllocatorDispatch();
+      }
+
+      // Now, replace the malloc function so that the next call to malloc() will
+      // initialize heapprofd.
+      gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
+
+      // And finally, install these new malloc-family interceptors.
       __libc_globals.mutate([](libc_globals* globals) {
-        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
-        auto dispatch_table = GetDispatchTable();
-        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
-          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
+        atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
+        if (!MallocLimitInstalled()) {
+          atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
         }
       });
     }
@@ -240,6 +265,12 @@ static void CommonInstallHooks(libc_globals* globals) {
     return;
   }
 
+  // Before we set the new default_dispatch_table in FinishInstallHooks, save
+  // the previous dispatch table. If DispatchReset() gets called later, we want
+  // to be able to restore the dispatch. We're still under
+  // gHeapprofdInitInProgress locks at this point.
+  gPreviousDefaultDispatchTable = GetDefaultDispatchTable();
+
   if (FinishInstallHooks(globals, nullptr, kHeapprofdPrefix)) {
     atomic_store(&gHeapprofdHandle, impl_handle);
   } else if (!reusing_handle) {
@@ -273,10 +304,9 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
   if (!atomic_exchange(&gHeapprofdInitHookInstalled, true)) {
     pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
+      atomic_store(&globals->default_dispatch_table, gPreviousDefaultDispatchTable);
+      if (!MallocLimitInstalled()) {
+        atomic_store(&globals->current_dispatch_table, gPreviousDefaultDispatchTable);
       }
     });
     pthread_mutex_unlock(&gGlobalsMutateLock);
@@ -291,7 +321,17 @@ extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
       error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
     }
   }
-  return Malloc(malloc)(bytes);
+  // If we had a previous dispatch table, use that to service the allocation,
+  // otherwise fall back to the native allocator.
+  // `gPreviousDefaultDispatchTable` won't change underneath us, as it's
+  // protected by the `gHeapProfdInitInProgress` lock (which we currently hold).
+  // The lock was originally taken by our caller in `HandleHeapprofdSignal()`,
+  // and will be released by `CommonInstallHooks()` via. our `InitHeapprofd()`
+  // thread that we just created.
+  if (gPreviousDefaultDispatchTable) {
+    return gPreviousDefaultDispatchTable->malloc(bytes);
+  }
+  return NativeAllocatorDispatch()->malloc(bytes);
 }
 
 bool HeapprofdInitZygoteChildProfiling() {
@@ -308,10 +348,9 @@ static bool DispatchReset() {
   if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
     pthread_mutex_lock(&gGlobalsMutateLock);
     __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
+      atomic_store(&globals->default_dispatch_table, gPreviousDefaultDispatchTable);
+      if (!MallocLimitInstalled()) {
+        atomic_store(&globals->current_dispatch_table, gPreviousDefaultDispatchTable);
       }
     });
     pthread_mutex_unlock(&gGlobalsMutateLock);

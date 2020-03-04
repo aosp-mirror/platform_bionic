@@ -1,44 +1,19 @@
 # This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
 # Note that the resultant policy is applied only to zygote spawned processes.
 #
-# Each non-blank, non-comment line has the following format:
-#
-# return_type func_name[|alias_list][:syscall_name[:socketcall_id]]([parameter_list]) arch_list
-#
-# where:
-#       arch_list ::= "all" | arch+
-#       arch      ::= "arm" | "arm64" | "mips" | "mips64" | "x86" | "x86_64"
-#
-# Note:
-#      - syscall_name corresponds to the name of the syscall, which may differ from
-#        the exported function name (example: the exit syscall is implemented by the _exit()
-#        function, which is not the same as the standard C exit() function which calls it)
-
-#      - alias_list is optional comma separated list of function aliases
-#
-#      - The call_id parameter, given that func_name and syscall_name have
-#        been provided, allows the user to specify dispatch style syscalls.
-#        For example, socket() syscall on i386 actually becomes:
-#          socketcall(__NR_socket, 1, *(rest of args on stack)).
-#
-#      - Each parameter type is assumed to be stored in 32 bits.
-#
 # This file is processed by a python script named genseccomp.py.
 
 # syscalls needed to boot android
-int	pivot_root:pivot_root(const char *new_root, const char *put_old)	arm64,x86_64,mips64
-int	ioprio_get:ioprio_get(int which, int who)	arm64,x86_64,mips64
-int	ioprio_set:ioprio_set(int which, int who, int ioprio)	arm64,x86_64,mips64
+int	pivot_root:pivot_root(const char *new_root, const char *put_old)	lp64
+int	ioprio_get:ioprio_get(int which, int who)	lp64
+int	ioprio_set:ioprio_set(int which, int who, int ioprio)	lp64
 pid_t	gettid:gettid()	all
 int	futex:futex(int *uaddr, int futex_op, int val, const struct timespec *timeout, int *uaddr2, int val3)	all
 int	clone:clone(int (*fn)(void *), void *child_stack, int flags, void *arg, ..) all
-int	sigreturn:sigreturn(unsigned long __unused)	arm,x86,mips
+int	sigreturn:sigreturn(unsigned long __unused)	lp32
 int	rt_sigreturn:rt_sigreturn(unsigned long __unused)	all
 int	rt_tgsigqueueinfo:int rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *uinfo)	all
 int	restart_syscall:int restart_syscall()	all
-int	fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)	mips64
-int	fstat64|fstat:fstat(int, struct stat*)	mips64
-int	_flush_cache:cacheflush(char* addr, const int nbytes, const int op)	mips64
 
 # vfork is used by java.lang.ProcessBuilder
 pid_t	vfork:vfork()	arm,x86,x86_64
@@ -79,8 +54,6 @@ ssize_t copy_file_range(int fd_in, loff_t* off_in, int fd_out, loff_t* off_out, 
 # Since Linux 4.6, glibc 2.26.
 ssize_t preadv2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
 ssize_t pwritev2(int fd, const struct iovec* iov, int iovcnt, off_t offset, int flags) all
-# Since Linux 4.11, glibc 2.30.
-int statx(int, const char*, int, unsigned int, statx*) all
 # Since Linux 5.1, not in glibc.
 int clock_gettime64(clockid_t, timespec64*) lp32
 int clock_settime64(clockid_t, const timespec64*) lp32

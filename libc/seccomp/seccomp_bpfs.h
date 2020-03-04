@@ -46,17 +46,3 @@ extern const struct sock_filter x86_64_app_zygote_filter[];
 extern const size_t x86_64_app_zygote_filter_size;
 extern const struct sock_filter x86_64_system_filter[];
 extern const size_t x86_64_system_filter_size;
-
-extern const struct sock_filter mips_app_filter[];
-extern const size_t mips_app_filter_size;
-extern const struct sock_filter mips_app_zygote_filter[];
-extern const size_t mips_app_zygote_filter_size;
-extern const struct sock_filter mips_system_filter[];
-extern const size_t mips_system_filter_size;
-
-extern const struct sock_filter mips64_app_filter[];
-extern const size_t mips64_app_filter_size;
-extern const struct sock_filter mips64_app_zygote_filter[];
-extern const size_t mips64_app_zygote_filter_size;
-extern const struct sock_filter mips64_system_filter[];
-extern const size_t mips64_system_filter_size;

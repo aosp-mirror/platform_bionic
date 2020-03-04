@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,5 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
-
-// void _exit_with_stack_teardown(void* stackBase, size_t stackSize)
-ENTRY_PRIVATE(_exit_with_stack_teardown)
-  li	$v0, __NR_munmap
-  syscall
-  // If munmap failed, we ignore the failure and exit anyway.
-
-  li	$a0, 0
-  li	$v0, __NR_exit
-  syscall
-  // The exit syscall does not return.
-END(_exit_with_stack_teardown)
+#define strchrnul strchrnul_mte
+#include <bionic/strchrnul.cpp>

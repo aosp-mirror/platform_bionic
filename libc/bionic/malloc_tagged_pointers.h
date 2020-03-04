@@ -47,44 +47,62 @@
 // rely on the implementation-defined value of this pointer tag, as it may
 // change.
 static constexpr uintptr_t POINTER_TAG = 0x3C;
+static constexpr unsigned UNTAG_SHIFT = 40;
+static constexpr unsigned CHECK_SHIFT = 48;
 static constexpr unsigned TAG_SHIFT = 56;
 #if defined(__aarch64__)
 static constexpr uintptr_t ADDRESS_MASK = (static_cast<uintptr_t>(1) << TAG_SHIFT) - 1;
 static constexpr uintptr_t TAG_MASK = static_cast<uintptr_t>(0xFF) << TAG_SHIFT;
+
+static inline uintptr_t FixedPointerTag() {
+  return __libc_globals->heap_pointer_tag & TAG_MASK;
+}
+
+static inline uintptr_t PointerCheckMask() {
+  return (__libc_globals->heap_pointer_tag << (TAG_SHIFT - CHECK_SHIFT)) & TAG_MASK;
+}
+
+static inline uintptr_t PointerUntagMask() {
+  return ~(__libc_globals->heap_pointer_tag << (TAG_SHIFT - UNTAG_SHIFT));
+}
 #endif // defined(__aarch64__)
 
 // Return a forcibly-tagged pointer.
 static inline void* TagPointer(void* ptr) {
 #if defined(__aarch64__)
-  return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(ptr) |
-                                 reinterpret_cast<uintptr_t>(__libc_globals->heap_pointer_tag));
+  return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(ptr) | FixedPointerTag());
 #else
   async_safe_fatal("Attempting to tag a pointer (%p) on non-aarch64.", ptr);
 #endif
 }
 
-#if defined(__aarch64__) && !__has_feature(hwaddress_sanitizer)
+#if defined(__aarch64__)
 // Return a forcibly-untagged pointer. The pointer tag is not checked for
 // validity.
 static inline void* UntagPointer(const volatile void* ptr) {
   return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(ptr) & ADDRESS_MASK);
 }
 
-static void* SlowPathPointerCheck(const volatile void* ptr) {
-  uintptr_t ptr_tag = reinterpret_cast<uintptr_t>(ptr) & TAG_MASK;
-  uintptr_t heap_tag = reinterpret_cast<uintptr_t>(__libc_globals->heap_pointer_tag);
+// Untag the pointer, and check the pointer tag iff the kernel supports tagged pointers and the
+// pointer tag isn't being used by HWASAN or MTE. If the tag is incorrect, trap.
+static inline void* MaybeUntagAndCheckPointer(const volatile void* ptr) {
+  if (__predict_false(ptr == nullptr)) {
+    return nullptr;
+  }
+
+  uintptr_t ptr_int = reinterpret_cast<uintptr_t>(ptr);
 
   // Applications may disable pointer tagging, which will be propagated to
   // libc in the zygote. This means that there may already be tagged heap
   // allocations that will fail when checked against the zero-ed heap tag. The
-  // check bellow allows us to turn *off* pointer tagging and still allow
-  // tagged heap allocations to be freed, as long as they're using *our* tag.
-  if (__predict_false(heap_tag != 0 || ptr_tag != (POINTER_TAG << TAG_SHIFT))) {
+  // check below allows us to turn *off* pointer tagging (by setting PointerCheckMask() and
+  // FixedPointerTag() to zero) and still allow tagged heap allocations to be freed.
+  if ((ptr_int & PointerCheckMask()) != FixedPointerTag()) {
     // TODO(b/145604058) - Upstream tagged pointers documentation and provide
     // a link to it in the abort message here.
     async_safe_fatal("Pointer tag for %p was truncated.", ptr);
   }
-  return UntagPointer(ptr);
+  return reinterpret_cast<void*>(ptr_int & PointerUntagMask());
 }
 
 // Return a tagged pointer iff the kernel supports tagged pointers, and `ptr` is
@@ -96,23 +114,7 @@ static inline void* MaybeTagPointer(void* ptr) {
   return ptr;
 }
 
-// Untag the pointer, and check the pointer tag iff the kernel supports tagged
-// pointers. If the tag is incorrect, trap.
-static inline void* MaybeUntagAndCheckPointer(const volatile void* ptr) {
-  if (__predict_false(ptr == nullptr)) {
-    return nullptr;
-  }
-
-  uintptr_t ptr_tag = reinterpret_cast<uintptr_t>(ptr) & TAG_MASK;
-  uintptr_t heap_tag = reinterpret_cast<uintptr_t>(__libc_globals->heap_pointer_tag);
-
-  if (__predict_false(heap_tag != ptr_tag)) {
-    return SlowPathPointerCheck(ptr);
-  }
-  return UntagPointer(ptr);
-}
-
-#else  // defined(__aarch64__) && !__has_feature(hwaddress_sanitizer)
+#else  // defined(__aarch64__)
 static inline void* UntagPointer(const volatile void* ptr) {
   return const_cast<void*>(ptr);
 }
@@ -125,4 +127,4 @@ static inline void* MaybeUntagAndCheckPointer(const volatile void* ptr) {
   return const_cast<void *>(ptr);
 }
 
-#endif  // defined(__aarch64__) && !__has_feature(hwaddress_sanitizer)
+#endif  // defined(__aarch64__)

@@ -74,7 +74,8 @@ TEST(malloc_stress, multiple_threads_forever) {
     uint64_t rss_bytes = 0;
     uint64_t vss_bytes = 0;
     for (auto& vma : maps) {
-      if (vma.name == "[anon:libc_malloc]" || android::base::StartsWith(vma.name, "[anon:scudo:")) {
+      if (vma.name == "[anon:libc_malloc]" || android::base::StartsWith(vma.name, "[anon:scudo:") ||
+          android::base::StartsWith(vma.name, "[anon:GWP-ASan")) {
         android::meminfo::Vma update_vma(vma);
         ASSERT_TRUE(proc_mem.FillInVmaStats(update_vma));
         rss_bytes += update_vma.usage.rss;
