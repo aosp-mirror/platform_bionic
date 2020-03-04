@@ -47,9 +47,9 @@
 // If you change this, also change __ndk_legacy___libc_current_sigrtmin
 // in <android/legacy_signal_inlines.h> to match.
 
-#define BIONIC_SIGNAL_DEBUGGER __SIGRTMIN + 3
-#define BIONIC_SIGNAL_PROFILER __SIGRTMIN + 4
-#define BIONIC_SIGNAL_FDTRACK __SIGRTMIN + 7
+#define BIONIC_SIGNAL_DEBUGGER (__SIGRTMIN + 3)
+#define BIONIC_SIGNAL_PROFILER (__SIGRTMIN + 4)
+#define BIONIC_SIGNAL_FDTRACK (__SIGRTMIN + 7)
 
 #define __SIGRT_RESERVED 8
 static inline __always_inline sigset64_t filter_reserved_signals(sigset64_t sigset, int how) {
