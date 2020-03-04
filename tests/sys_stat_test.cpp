@@ -109,7 +109,6 @@ TEST(sys_stat, statx) {
   int rc = statx(AT_FDCWD, "/proc/version", AT_STATX_SYNC_AS_STAT, STATX_ALL, &sx);
   if (rc == -1 && errno == ENOSYS) {
     GTEST_SKIP() << "statx returned ENOSYS";
-    return;
   }
   ASSERT_EQ(0, rc);
   struct stat64 sb;
