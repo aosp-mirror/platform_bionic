@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d78a7ceb_b1a22c4f",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1639949
+      },
+      "writtenOn": "2020-03-04T10:42:06Z",
+      "side": 1,
+      "message": "Yes, moving fields can reduce struct size, because of alignment requirements and possible padding that are added between fields to ensure the requirement is meet.",
+      "parentUuid": "2b9687fd_2209da50",
+      "range": {
+        "startLine": 62,
+        "startChar": 2,
+        "endLine": 62,
+        "endChar": 20
+      },
+      "revId": "ecbd881c567c9d190b2dc2f5a5041c11f6e807cf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ca036be8_e851790d",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 2
