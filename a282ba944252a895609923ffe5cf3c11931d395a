@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "524d1e7c_8c6c0f56",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:58:06Z",
+      "side": 1,
+      "message": "Follow up: I seem to recall that one reason for allowing \"_initialize\" through during an active session was to for the case when the target was effectively done with a profiling session, but wouldn\u0027t notice it if there were no allocations/deallocations to finalize the teardown (so the additional \"_initialize\" would proactively poke the client lib, and force it to notice the stop).\n\nIs that accurate? Were there other reasons? Do we really want to keep that property (at the expense of, what I believe will be, a more complicated state transition diagram here)?",
+      "parentUuid": "c0dd7a39_78902558",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 73
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a4f0871b_783cc9aa",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
