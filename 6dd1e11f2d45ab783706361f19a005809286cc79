@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b7963ea_93e383c9",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-06T23:34:46Z",
+      "side": 1,
+      "message": "whether the lock lives inside or alongside the data structure, it would be good to have the lock annotations on it. we can do that in a later patch though.",
+      "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14af1201_f40e2d95",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-06T23:34:46Z",
+      "side": 1,
+      "message": "create a new private/bionic_cxa.h instead? (seems like we already have a few other copies of these declarations, plus some other __cxa_ functions that we could move too.)",
+      "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

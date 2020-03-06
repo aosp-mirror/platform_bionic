@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7df8d6f3_5c88fe43",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-06T23:34:46Z",
+      "side": 0,
+      "message": "move to bionic/ since it\u0027s completely rewritten at this point? (the stdlib and stdio directories were for things that were neither upstream nor fully rewritten, and we had yet to pick a direction in which to push.)",
+      "revId": "1a1888f801e1efc4232a3e709d959232659af0c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
