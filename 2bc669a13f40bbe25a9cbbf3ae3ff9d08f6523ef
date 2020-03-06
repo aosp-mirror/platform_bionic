@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9b6a8c01_8997e774",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f7ecdd9_06178d22",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6939586b_847e1da1",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "d8355fe1_61b3a257",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6939586b_847e1da1",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc14be8_c4b632e9",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 4
@@ -50,6 +86,24 @@
       "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b10a244_57372ac2",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bc14be8_c4b632e9",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "0eae25e7_46716a72",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "I was trying to grow the array 20% at a time, or at least one page. Doubling it is probably more obvious behavior, I think, but it would map more pages than we need. They will be clean, though, so it should be OK?\n\n(But maybe I can just add a comment saying we\u0027re increasing the capacity 20% at a time...)",
+      "parentUuid": "54bd4bd5_8c62a000",
+      "range": {
+        "startLine": 89,
+        "startChar": 58,
+        "endLine": 89,
+        "endChar": 59
+      },
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "88affdab_9d7098cd",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 4
@@ -87,6 +165,24 @@
       "writtenOn": "2020-02-28T21:56:03Z",
       "side": 1,
       "message": "so \"compact\" is both \"dense\" *and* \"no trailing empty entries\" (other than ones because size \u003c capacity, which is normal)? comment up by the declaration?\n\n(does it matter that just having one blanked-out entry at the end counts as \"not compact\"? i\u0027d assumed \"not compact\" would imply \"there\u0027s likely at least a page to be saved\".)",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd812a4f_91d623d1",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "I could track the number of extracted elements and do recompaction only when we know it will save a page.",
+      "parentUuid": "88affdab_9d7098cd",
       "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -133,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "079bbc37_e00d7cec",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "I think most of the AtexitArray methods need to be called with the lock already acquired, though. It seems more consistent to leave the locking outside the class?",
+      "parentUuid": "663c4374_2106e3e0",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f3baacbb_9f69c4dd",
         "filename": "libc/stdlib/atexit.cpp",
         "patchSetId": 4
@@ -144,6 +258,24 @@
       "writtenOn": "2020-02-28T21:56:03Z",
       "side": 1,
       "message": "ah, so it\u0027s only one call to recompact per closed library, so i guess it doesn\u0027t matter?",
+      "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad436fbe_8fd80d18",
+        "filename": "libc/stdlib/atexit.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-06T22:48:53Z",
+      "side": 1,
+      "message": "Yeah, we only call recompact once per unloaded library. (But a single call to dlclose could result in multiple calls to __cxa_finalize.)\n\nMy thinking is that we already did a linear scan of all the __cxa_finalize callbacks, so doing another scan isn\u0027t asymptotically worse.\n\nI think we can also skip this recompaction on program exit (dso \u003d\u003d nullptr).",
+      "parentUuid": "f3baacbb_9f69c4dd",
       "revId": "2bc669a13f40bbe25a9cbbf3ae3ff9d08f6523ef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
