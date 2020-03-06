@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6af8cb10_f0759a1d",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "We do need to be able to call initialize when hooked are installed, because uninstalling hooks may fail (if it races with malloc_limit, e.g.). In that case we would *never* be able to profile that process again, which is bad.",
+      "parentUuid": "524d1e7c_8c6c0f56",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 73
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4f0871b_783cc9aa",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -92,6 +116,30 @@
       "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43ed8b13_3a303bfd",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a4f0871b_783cc9aa",
+      "range": {
+        "startLine": 92,
+        "startChar": 28,
+        "endLine": 92,
+        "endChar": 29
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -118,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "054a9e90_cb55ed47",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "Added comment.",
+      "parentUuid": "073c8caf_b2ba9f3e",
+      "range": {
+        "startLine": 107,
+        "startChar": 5,
+        "endLine": 107,
+        "endChar": 22
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af4a32ae_401a6500",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -138,6 +210,30 @@
       "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85d1effb_d6cb0a62",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af4a32ae_401a6500",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 52
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -164,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "05eaf388_a93b3e4c",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb0e0cbc_2f330f39",
+      "range": {
+        "startLine": 285,
+        "startChar": 42,
+        "endLine": 285,
+        "endChar": 53
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9779b7ec_a907e193",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -187,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "27adcbe9_8c91be56",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "Where else would the caller be getting the raw libc_globals to pass to this?",
+      "parentUuid": "9779b7ec_a907e193",
+      "range": {
+        "startLine": 346,
+        "startChar": 5,
+        "endLine": 346,
+        "endChar": 32
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0c61d49_63820598",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -198,6 +342,30 @@
       "writtenOn": "2020-03-06T15:38:58Z",
       "side": 1,
       "message": "Any practical harm in locking here? Even if we don\u0027t expect any potential races during that stage of init (I presume?), it\u0027d be simpler to reason about the state transitions if we used kWithoutLock only in the signal handler case.",
+      "range": {
+        "startLine": 347,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 28
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee54dbba_fe86ed1e",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "I do not think it is actually simpler to reason about. kWithLock can still fail (if it is raced by a kWithoutLock), just a bit more less likely to be raced (because it excludes all the kWithLock races). My point being: either way, we need to deal with being raced.",
+      "parentUuid": "a0c61d49_63820598",
       "range": {
         "startLine": 347,
         "startChar": 16,
@@ -233,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "0e1a4ab0_3a9e66db",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "There is no need for a dedicated state for this, as the phthread_create can happen whenever there are no hooks installed.\n\nAlso yes, that was the idea that this makes it more likely for forward progress to be made for weird scheduling.",
+      "parentUuid": "9aa3223e_c39744e3",
+      "range": {
+        "startLine": 385,
+        "startChar": 6,
+        "endLine": 385,
+        "endChar": 52
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "752a8337_dbb640cc",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -253,6 +445,30 @@
       "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1503f53_d34df0de",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-06T21:31:00Z",
+      "side": 1,
+      "message": "expected2 does, but good call!",
+      "parentUuid": "752a8337_dbb640cc",
+      "range": {
+        "startLine": 399,
+        "startChar": 10,
+        "endLine": 399,
+        "endChar": 39
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
