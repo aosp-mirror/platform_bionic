@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5db3bb48_db20b0c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 27
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "TBH, I couldn\u0027t follow this explanation (also, I don\u0027t see how DispatchReset is relevant).\n\nHowever, I think I see a different possible race between the two functions you mention. Consider:\n1) Signal handler runs, sets gHeapprofdInitInProgress\u003d\u003dtrue and hijacks malloc for the pthread-spawner.\n2) *two* threads (A and B) enter MallocInitHeapprofdHook concurrently, one (B) gets descheduled immediately, before it has a chance to cmpxchg against gHeapprofdInitHookInstalled.\n3) Thread A sets gHeapprofdInitHookInstalled\u003d\u003dtrue, spawns the pthread, which in turn completes the initialization of the hooks (ultimtely unsetting both gHeapprofdInitHookInstalled and gHeapprofdInitInProgress).\n4) Now we\u0027re in a situation where a new the signal handler invocation is allowed to enter its mutation on L175, *but also* thread B, once it\u0027s scheduled again, can successfully enter the mutation on L306.",
+      "range": {
+        "startLine": 20,
+        "startChar": 51,
+        "endLine": 23,
+        "endChar": 54
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0dd7a39_78902558",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "Main comment (rest are nits/suggestions):\n\nDo you remember why we allow heapprofd\u0027s \"_initialize\" to be called during an active profiling session (only to be rejected based on the master shared_ptr status in the client hooks)? There\u0027s no session pre-emption, right? Were there issues with guaranteeing that the client succeeds in calling DispatchReset at the end of the profiling session?\n\nI don\u0027t remember all of the issues, but could we instead make this state machine more closely track the state of the profiling session, and disallow the re-initialization until a successful ResetDispatch? Wouldn\u0027t we then be able to simplify the state machine to something linear (from the signal handler entry point of view), like: \nkInitial -\u003e kHijackedMalloc -\u003e kPthreadActive -\u003e kHooksInstalled -\u003e kResetting -\u003e kInitial (+ kIncompatibleHooks)",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 73
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f0871b_783cc9aa",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "\u003c",
+      "range": {
+        "startLine": 92,
+        "startChar": 28,
+        "endLine": 92,
+        "endChar": 29
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "073c8caf_b2ba9f3e",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "optional: how about something like:\n{ kAcquireLockAndFlag, kMaybeAcquireFlagOnly }\nreasoning: it\u0027d be helpful to highlight that the latter mode is a single attempt (and the caller must inspect the return value to check whether the flag exchange succeeded).\nAlternatively, a comment highlighting that instead.",
+      "range": {
+        "startLine": 107,
+        "startChar": 5,
+        "endLine": 107,
+        "endChar": 22
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af4a32ae_401a6500",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "stale comment?",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 227,
+        "endChar": 52
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb0e0cbc_2f330f39",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "nit: typo at \"transititon\" (also elsewhere)",
+      "range": {
+        "startLine": 285,
+        "startChar": 42,
+        "endLine": 285,
+        "endChar": 53
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9779b7ec_a907e193",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "optional: I\u0027d suggest adding a short comment stating that this must be called from within a __libc_globals.mutate(...) block (i.e. the caller is responsible for that).",
+      "range": {
+        "startLine": 346,
+        "startChar": 5,
+        "endLine": 346,
+        "endChar": 32
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a0c61d49_63820598",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "Any practical harm in locking here? Even if we don\u0027t expect any potential races during that stage of init (I presume?), it\u0027d be simpler to reason about the state transitions if we used kWithoutLock only in the signal handler case.",
+      "range": {
+        "startLine": 347,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 28
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9aa3223e_c39744e3",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "at a glance, this transition looks odd since it\u0027s returning to the initial state. The expectation is that the pthread will take over with initialization, so wouldn\u0027t it be more natural to transition to a dedicated state?\n\naside: I wonder whether it\u0027s realistic for the intercepted malloc to be in a scope from within which the pthread creation cannot succeed (i.e. does the pthread creation rely on any particular locks, and are there any associated re-entrancy issues?). Need to ensure forward progress is made in that case (I believe that as written, it would work out since we\u0027re returning to the initial state).\n\n(see also the comment above about session preemption / overlapping sessions)",
+      "range": {
+        "startLine": 385,
+        "startChar": 6,
+        "endLine": 385,
+        "endChar": 52
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "752a8337_dbb640cc",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-06T15:38:58Z",
+      "side": 1,
+      "message": "|expected| holds the value we failed to cpmxchg with, so can (and should) log that instead?",
+      "range": {
+        "startLine": 399,
+        "startChar": 10,
+        "endLine": 399,
+        "endChar": 39
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
