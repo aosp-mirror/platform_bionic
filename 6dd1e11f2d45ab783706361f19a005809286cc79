@@ -33,6 +33,24 @@
       "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50dfcef1_f62d12b8",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-07T05:10:29Z",
+      "side": 1,
+      "message": "Maybe in a later CL?\n\nAside: cxxabi.h\u0027s __cxa_finalize has the wrong return type (It\u0027s int, but should be void): https://reviews.llvm.org/D75795\n\nAlso, it looks like __cxa_thread_finalize is a Bionic-only function. It\u0027s not part of the IA-64 C++ ABI or defined in other libc\u0027s. It isn\u0027t exported from libc.so, so we could rename it we wanted to.",
+      "parentUuid": "14af1201_f40e2d95",
+      "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
