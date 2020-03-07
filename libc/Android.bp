@@ -1692,7 +1692,10 @@ cc_library {
 
     stubs: {
         symbol_file: "libc.map.txt",
-        versions: ["10000"],
+        versions: [
+            "29",
+            "10000",
+        ],
     },
 
     apex_available: [
