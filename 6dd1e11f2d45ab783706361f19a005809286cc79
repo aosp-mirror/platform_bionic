@@ -51,6 +51,24 @@
       "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "684b9a9c_c6efc681",
+        "filename": "libc/stdlib/atexit.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-07T05:15:44Z",
+      "side": 1,
+      "message": "\u003e Maybe in a later CL?\n\nyeah, sgtm.\n\n\u003e cxxabi.h\n\nthey also seem to have thrown it all in an #if __cplusplus too, so we can\u0027t just reuse that :-(\n\n\u003e __cxa_thread_finalize ... rename it we wanted to\n\nyeah, might make sense to give that a __bionic_ name. though as long as it\u0027s not exported it doesn\u0027t really matter.",
+      "parentUuid": "50dfcef1_f62d12b8",
+      "revId": "6dd1e11f2d45ab783706361f19a005809286cc79",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
