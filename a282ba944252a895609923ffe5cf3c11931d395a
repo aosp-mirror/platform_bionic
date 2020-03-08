@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "3126e3fc_bc18ba85",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-08T18:58:27Z",
+      "side": 1,
+      "message": "As mentioned over chat, let\u0027s keep things as is for now. Though I can think of ways of making reset eventually succeed (e.g. keeping the pthread alive for teardown, or having shutting-down hooks continuously try to reset dispatch, until they eventually succeed).",
+      "parentUuid": "6af8cb10_f0759a1d",
+      "range": {
+        "startLine": 51,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 73
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4f0871b_783cc9aa",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -331,6 +355,30 @@
     },
     {
       "key": {
+        "uuid": "09ecc800_6124d441",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-08T18:58:27Z",
+      "side": 1,
+      "message": "good point, I was tunnel-visioning on the function body alone.",
+      "parentUuid": "27adcbe9_8c91be56",
+      "range": {
+        "startLine": 346,
+        "startChar": 5,
+        "endLine": 346,
+        "endChar": 32
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a0c61d49_63820598",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -378,6 +426,30 @@
     },
     {
       "key": {
+        "uuid": "42d05ffd_703f0655",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-08T18:58:27Z",
+      "side": 1,
+      "message": "But I\u0027d argue that: kWithoutLock exists for the signal handler (as that cannot take the pthread mutex), while all other codepaths can use the mutex consistently. By using the kWithoutLock here, it\u0027s ambiguous to the reader as to whether:\n* the lock cannot be taken while in this function for whatever reason\n* it\u0027s unnecessary to lock (since there cannot be races at that point during init)\n\nI\u0027d argue that there\u0027s no reason to present that ambiguity. Furthermore, since we assume that the lock is uncontended, grabbing it should be cheap, right?\n\n(sorry, I ended up overlooking that kWithLock can still fail while writing some of the initial comments, this pass should be more conscious of that)",
+      "parentUuid": "ee54dbba_fe86ed1e",
+      "range": {
+        "startLine": 347,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 28
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9aa3223e_c39744e3",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -413,6 +485,30 @@
       "side": 1,
       "message": "There is no need for a dedicated state for this, as the phthread_create can happen whenever there are no hooks installed.\n\nAlso yes, that was the idea that this makes it more likely for forward progress to be made for weird scheduling.",
       "parentUuid": "9aa3223e_c39744e3",
+      "range": {
+        "startLine": 385,
+        "startChar": 6,
+        "endLine": 385,
+        "endChar": 52
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bf02e87_f744f519",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-08T18:58:27Z",
+      "side": 1,
+      "message": "2nd pass: yeah, transitioning to kInitial makes sense if we\u0027re not guaranteeing pthread spawning to succeed.",
+      "parentUuid": "0e1a4ab0_3a9e66db",
       "range": {
         "startLine": 385,
         "startChar": 6,
