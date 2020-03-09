@@ -16,9 +16,12 @@
 
 #include <gtest/gtest.h>
 
-// The real <stdatomic.h> checks for the availability of C++'s atomics and uses them if present. Since
-// we want to test the libc versions, we instead include <bits/stdatomic.h> where they're actually defined.
+#if defined(__ANDROID__)
 #include <bits/stdatomic.h>
+#else
+#undef _USING_LIBCXX  //TODO(b/137876753): Remove this
+#include <stdatomic.h>
+#endif
 
 #include <pthread.h>
 #include <stdint.h>
