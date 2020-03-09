@@ -15,14 +15,9 @@
  */
 
 #include <gtest/gtest.h>
-
-#if defined(__ANDROID__)
-#include <bits/stdatomic.h>
-#else
-#undef _USING_LIBCXX  //TODO(b/137876753): Remove this
+// Fool stdatomic.h into not using <atomic>.
+#undef _USING_LIBCXX
 #include <stdatomic.h>
-#endif
-
 #include <pthread.h>
 #include <stdint.h>
 
