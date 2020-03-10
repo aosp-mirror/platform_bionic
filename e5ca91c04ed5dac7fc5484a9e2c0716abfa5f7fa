@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88caee81_7bfd0370",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-10T15:43:13Z",
+      "side": 1,
+      "message": "nit:space",
+      "range": {
+        "startLine": 113,
+        "startChar": 64,
+        "endLine": 113,
+        "endChar": 65
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9025b5e3_30953933",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-10T15:43:13Z",
+      "side": 1,
+      "message": "Why is this lock-free? libc should be initialized enough to lock here IIUC, and it\u0027s possible to get the profiling signal at libc init time.",
+      "range": {
+        "startLine": 346,
+        "startChar": 21,
+        "endLine": 346,
+        "endChar": 33
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2547ed1b_fe6fd8d7",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-10T15:43:13Z",
+      "side": 1,
+      "message": "This is UB if pthread_create failed.",
+      "range": {
+        "startLine": 392,
+        "startChar": 0,
+        "endLine": 392,
+        "endChar": 64
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "589b319a_2ff69d78",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-10T15:43:13Z",
+      "side": 1,
+      "message": "This is now racy, right? `gHeapProfdState` is now either `kInitialState` (if `InitHeapprofd`) hasn\u0027t completed (or failed), or `kHookInstalled`. Another thread can handle the Heapprofd signal, and set the dispatch table.",
+      "range": {
+        "startLine": 404,
+        "startChar": 2,
+        "endLine": 404,
+        "endChar": 73
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
