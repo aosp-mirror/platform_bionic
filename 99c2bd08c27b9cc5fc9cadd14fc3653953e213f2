@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "d470c6a9_d110b2c8",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-10T13:06:39Z",
+      "side": 1,
+      "message": "If we\u0027re keeping the \"state\" variable as atomic (and therefore not guaranteeing that all interesting reads/changes happen under the atomic flag), then fine to keep the transitional states as is (as some future code might indeed be reading the state from outside of the mutually excluded regions).\n\nI was thinking that if we were to move the state to a normal (always flag-protected) variable, this would directly collapse to:\nkInitialState -\u003e kEphemeralHookInstalled -\u003e kInitialState\nkInitialState -\u003e kHookInstalled -\u003e {kInitialState, kEphemeralHookInstalled}\nkInitialState -\u003e kIncompatibleHooks\n\nAs all the intermediate states couldn\u0027t be observed. Arguably that would make the state machine easier to understand.\n\nBut since I see the argument for keeping the state atomic for future flexibility, fine to keep as is. (feel free to resolve once you\u0027ve read this)",
+      "parentUuid": "07978fea_f8552147",
+      "range": {
+        "startLine": 95,
+        "startChar": 5,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "99c2bd08c27b9cc5fc9cadd14fc3653953e213f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "43bcebac_772eea7c",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 28
@@ -366,6 +390,30 @@
       "side": 1,
       "message": "I think it is fundamentally neater not to conflate the state machine with that most modifications happen to use another lock.\n\nFor instance: another possibility to implement this is to exchange the state first, then try ModifyGlobals, if fails swap back to were we were before. That might be neater for locking purposes (less contention), but not for this CL.",
       "parentUuid": "e033db22_787170e4",
+      "range": {
+        "startLine": 148,
+        "startChar": 7,
+        "endLine": 148,
+        "endChar": 14
+      },
+      "revId": "99c2bd08c27b9cc5fc9cadd14fc3653953e213f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f8d4397_8890d3d6",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-10T13:06:39Z",
+      "side": 1,
+      "message": "Sounds good. Let\u0027s keep this as an atomic for future flexibility.",
+      "parentUuid": "002decfb_4ce30564",
       "range": {
         "startLine": 148,
         "startChar": 7,
