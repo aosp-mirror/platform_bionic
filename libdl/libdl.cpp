@@ -138,16 +138,4 @@ int android_get_application_target_sdk_version() {
   return __loader_android_get_application_target_sdk_version();
 }
 
-#if defined(__arm__)
-// An arm32 unwinding table has an R_ARM_NONE relocation to
-// __aeabi_unwind_cpp_pr0. This shared library will never invoke the unwinder,
-// so it doesn't actually need the routine. Define a dummy version here,
-// because the real version calls libc functions (e.g. memcpy, abort), which
-// would create a dependency cycle with libc.so.
-__attribute__((visibility("hidden")))
-void __aeabi_unwind_cpp_pr0() {
-  __builtin_trap();
-}
-#endif
-
 } // extern "C"
