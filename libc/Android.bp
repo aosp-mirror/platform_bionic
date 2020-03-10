@@ -1225,7 +1225,7 @@ cc_library_static {
         // so we can't include them in libc_ndk.a.
         "bionic/__cxa_thread_atexit_impl.cpp",
         "bionic/android_unsafe_frame_pointer_chase.cpp",
-        "stdlib/atexit.c",
+        "bionic/atexit.cpp",
         "bionic/fork.cpp",
     ],
 
