@@ -98,6 +98,7 @@ cc_defaults {
     static_libs: [
         "libziparchive",
         "libbase",
+        "libdl", // libbase uses dlsym
         "libz",
 
         "libasync_safe",
