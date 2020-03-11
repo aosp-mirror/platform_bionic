@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "d06d52db_9871c96b",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-11T17:19:26Z",
+      "side": 1,
+      "message": "Just to reduce the number of behaviour changes in this CL. I\u0027d like to keep as much as possible as is while addressing the issues we found.",
+      "parentUuid": "71bc6b8c_2534ba71",
+      "range": {
+        "startLine": 346,
+        "startChar": 21,
+        "endLine": 346,
+        "endChar": 33
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3003a857_c6658130",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 31
@@ -329,6 +353,30 @@
       "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45f78094_09dbc8a9",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-11T17:19:26Z",
+      "side": 1,
+      "message": "Done. Added rationale why this needs to be atomic.",
+      "parentUuid": "9527f42d_18fdf2c9",
+      "range": {
+        "startLine": 404,
+        "startChar": 2,
+        "endLine": 404,
+        "endChar": 73
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
