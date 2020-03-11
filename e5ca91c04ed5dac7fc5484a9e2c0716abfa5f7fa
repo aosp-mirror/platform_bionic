@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "71bc6b8c_2534ba71",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-11T17:00:31Z",
+      "side": 1,
+      "message": "Yep - but why wouldn\u0027t we use kWithLock here?",
+      "parentUuid": "445cf817_d18984ba",
+      "range": {
+        "startLine": 346,
+        "startChar": 21,
+        "endLine": 346,
+        "endChar": 33
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3003a857_c6658130",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 31
@@ -281,6 +305,30 @@
       "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9527f42d_18fdf2c9",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-03-11T17:00:31Z",
+      "side": 1,
+      "message": "It may be benign, but it\u0027s still a race between the read (here) and the write (in `HandleHeapprofdSignal`). If you\u0027re okay with the race, I\u0027d suggest making `gPreviousDefaultDispatchTable` atomic and loading/storing using relaxed atomics (and document that this is a race-by-design).",
+      "parentUuid": "9b9ee4e5_2f18cf5f",
+      "range": {
+        "startLine": 404,
+        "startChar": 2,
+        "endLine": 404,
+        "endChar": 73
+      },
+      "revId": "e5ca91c04ed5dac7fc5484a9e2c0716abfa5f7fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     },
     {
       "key": {
