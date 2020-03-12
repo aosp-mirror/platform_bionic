@@ -58,7 +58,7 @@
 #include <async_safe/log.h>
 #include <async_safe/CHECK.h>
 
-#define LINKER_VERBOSITY_PRINT  -1
+#define LINKER_VERBOSITY_PRINT (-1)
 #define LINKER_VERBOSITY_INFO   0
 #define LINKER_VERBOSITY_TRACE  1
 #define LINKER_VERBOSITY_DEBUG  2
