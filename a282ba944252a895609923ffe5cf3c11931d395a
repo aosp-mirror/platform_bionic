@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "570b202b_ecb69e0b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 27
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-12T13:40:37Z",
+      "side": 1,
+      "message": "resolving",
+      "parentUuid": "5db3bb48_db20b0c7",
+      "range": {
+        "startLine": 20,
+        "startChar": 51,
+        "endLine": 23,
+        "endChar": 54
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c0dd7a39_78902558",
         "filename": "libc/bionic/malloc_heapprofd.cpp",
         "patchSetId": 27
@@ -447,6 +471,30 @@
       "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15a40f1d_c148554f",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-12T13:40:37Z",
+      "side": 1,
+      "message": "resolving",
+      "parentUuid": "42d05ffd_703f0655",
+      "range": {
+        "startLine": 347,
+        "startChar": 16,
+        "endLine": 347,
+        "endChar": 28
+      },
+      "revId": "a282ba944252a895609923ffe5cf3c11931d395a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
