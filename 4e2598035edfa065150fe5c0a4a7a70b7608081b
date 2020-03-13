@@ -22,6 +22,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28355f21_ef8f4b35",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2020-03-13T15:51:59Z",
+      "side": 1,
+      "message": "Actually, this change prevents the path translation from \"/system/lib/libicuuc.so\" if the file \"/system/lib/libicuuc.so\" exists. Is it what you mean by \"wrong\" dir?",
+      "parentUuid": "4d61377a_3fee27b4",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
