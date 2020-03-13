@@ -70,6 +70,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc9fc6c6_8309c58c",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2020-03-13T16:25:43Z",
+      "side": 1,
+      "message": "No concrete use case. Actually, if /system/lib/libicuuc.so shows up, IIUC, either one copy loaded into memory won\u0027t work properly in the app process, because it was not initialized by libcore properly.\n\nI am making this change now to make debugging a little easier only, because if you call dlopen(\"/system/lib/libicuuc.so\", 0) and the real path exists, you don\u0027t want the linker to translate it.\n\nFYI. it happened temporarily in master and it works fine (https://r.android.com/920836), because all libs in /system links libandroidicu today. \n\nAlso, I also reproduced this situation today after running some extra make command, e.g. \"m libicuuc\" before flashing the device. The device also works fine IIUC.",
+      "parentUuid": "3c48281e_dfc5566d",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
