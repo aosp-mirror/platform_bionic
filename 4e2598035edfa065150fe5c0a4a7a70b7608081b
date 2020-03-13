@@ -142,6 +142,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610b850f_af012e04",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-13T21:59:55Z",
+      "side": 1,
+      "message": "\u003e I can reproduce out/target/product/walleye/system/lib/libicuuc.so by running \"m libicuuc\". You may try on your machine.\n\nIndeed, that needs looking into. I also found several other ART internal libraries in /system. Filed b/151466650.\n\n\u003e FYI. this CL actually re-enables the log when the /system lib exists.\n\nThat\u0027s nowhere near loud enough in my opinion. Why should it not be abort()?",
+      "parentUuid": "56f97713_ef0193a7",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
