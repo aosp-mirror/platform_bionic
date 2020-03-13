@@ -46,6 +46,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c48281e_dfc5566d",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-13T15:54:20Z",
+      "side": 1,
+      "message": "Yes. I wonder if we should support having those libs in /system/lib at all. When does that happen?",
+      "parentUuid": "28355f21_ef8f4b35",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
