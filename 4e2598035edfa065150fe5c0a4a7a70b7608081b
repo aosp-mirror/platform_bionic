@@ -94,6 +94,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1bbd65c_468419f9",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-13T16:54:01Z",
+      "side": 1,
+      "message": "\u003e if you call dlopen(\"/system/lib/libicuuc.so\", 0) and the real path exists, /.../\n\nBut why would it exist there? I can see devs getting confused if they happen to ad-hoc adb push it there and then it\u0027s still not loaded, but that doesn\u0027t necessarily make it a use case we want to support. Another option is that the linker complains suitably loudly, maybe even aborts.\n\n\u003e after running some extra make command, e.g. \"m libicuuc\" /.../\n\nYou ended up with libicuuc.so in the system image after that? That\u0027s a bug I thought was fixed: b/129006418",
+      "parentUuid": "fc9fc6c6_8309c58c",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
