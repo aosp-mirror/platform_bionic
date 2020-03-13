@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d61377a_3fee27b4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-13T15:46:10Z",
+      "side": 1,
+      "message": "Do we need to support this? I thought the plan was to use flattened APEXes when not using real ones, and that keeps all the paths the same. From a linker namespace perspective I get nervous seeing libs in the \"wrong\" dirs.",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
