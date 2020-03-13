@@ -45,7 +45,8 @@ cc_defaults {
         arm64: {
             cflags: [
                 "-fsanitize=shadow-call-stack",
-                "-mbranch-protection=standard",
+                // Disable this option for now: see b/151372823
+                //"-mbranch-protection=standard",
             ],
         },
     },
