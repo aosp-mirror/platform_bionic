@@ -190,6 +190,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85f0f3b9_9a658d59",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2020-03-14T01:18:42Z",
+      "side": 1,
+      "message": "Actually, this happens on the non-native architecture, because APEX does not have the non-native library, right? I don\u0027t think we need to abort() there, because it\u0027s WAI under the current design.",
+      "parentUuid": "ec5eaa97_415f191b",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
