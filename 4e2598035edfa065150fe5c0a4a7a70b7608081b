@@ -166,6 +166,30 @@
       "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec5eaa97_415f191b",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2020-03-14T01:14:31Z",
+      "side": 1,
+      "message": "It\u0027s a code path calling from app, but isn\u0027t triggered for every dlopen call. If we abort() here, it terminates the app process, but it does not tell the device manufacturer that something wrong in the /system, and abort() sounds like going to the opposite direction of resolving the app compat issue.\n\nIf abort() is preferred, I think it\u0027s a separate bug. IMO, I think we just need a CTS for checking the absence of libicuuc.so in /system, and IIRC, CtsJniTestCases checks that today.",
+      "parentUuid": "610b850f_af012e04",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
