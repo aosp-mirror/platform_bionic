@@ -22,6 +22,23 @@
       "revId": "815b21ea04a75066cbc202675c474e45f45f8d2c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7350ccb7_8d716f57",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3453,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-16T16:19:02Z",
+      "side": 1,
+      "message": "no need for else after return.",
+      "revId": "815b21ea04a75066cbc202675c474e45f45f8d2c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
