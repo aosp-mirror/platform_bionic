@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "838de009_23dec223",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-16T01:12:59Z",
+      "side": 1,
+      "message": "Typo: \"enable\"",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 7
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d61377a_3fee27b4",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -205,6 +228,30 @@
       "side": 1,
       "message": "Actually, this happens on the non-native architecture, because APEX does not have the non-native library, right? I don\u0027t think we need to abort() there, because it\u0027s WAI under the current design.",
       "parentUuid": "ec5eaa97_415f191b",
+      "range": {
+        "startLine": 2184,
+        "startChar": 7,
+        "endLine": 2184,
+        "endChar": 46
+      },
+      "revId": "4e2598035edfa065150fe5c0a4a7a70b7608081b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e177557a_4876abc1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-16T01:12:59Z",
+      "side": 1,
+      "message": "Since, as you say, /system/lib absence is tested with CTS there\u0027s no app compat concern, is there? My suggestion with abort() is based only on the use case of someone adb push\u0027ing a copy to /system/lib. I don\u0027t have a strong opinion about whether that should complain loudly with abort() or not - I\u0027m also fine with just keeping the old code (but feel free to clean up the comment).\n\nWith non-native architecture, you mean NDK translation? In that case the non-native libs are in /system/lib/arm(64), if I\u0027m not mistaken. Then this path translation wouldn\u0027t kick in anyway.\n\nSo bottom line, I still don\u0027t see a use case that motivates enabling this check. It can only hide problems with broken system images that have libs in places they shouldn\u0027t be. Am I missing something?",
+      "parentUuid": "85f0f3b9_9a658d59",
       "range": {
         "startLine": 2184,
         "startChar": 7,
