@@ -28,7 +28,10 @@ apex {
     ],
     multilib: {
         both: {
-            binaries: ["linker"],
+            binaries: [
+                "crash_dump",
+                "linker",
+            ],
         },
     },
     key: "com.android.runtime.key",
