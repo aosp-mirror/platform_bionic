@@ -29,11 +29,6 @@ cc_library_static {
     sanitize: {
         never: true,
     },
-
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.runtime",
-    ],
 }
 
 cc_library {
