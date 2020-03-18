@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de34c1a4_f2f4d6bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-18T17:51:52Z",
+      "side": 1,
+      "message": "well, no, it doesn\u0027t (as you say in the code comment later)... it just reduces the size of the window.\n\nwe said no to something similar from the code profiling folks recently. can you check /proc/pid/status first, since a process only ever moves in the not-ready -\u003e ready direction?",
+      "range": {
+        "startLine": 9,
+        "startChar": 19,
+        "endLine": 9,
+        "endChar": 24
+      },
+      "revId": "d6a4dd298a68d03977a9f32c44764b4a65c68e5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
