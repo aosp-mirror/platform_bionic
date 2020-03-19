@@ -318,6 +318,24 @@
     },
     {
       "key": {
+        "uuid": "810cd173_91788222",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-19T23:54:18Z",
+      "side": 1,
+      "message": "AFAIK, programs usually don\u0027t use much TLS memory.\n\n\u003e I want to make the mmap size consistent across processes\n\nIs there a reason?\n\n\u003e If we *don\u0027t* make this change, we\u0027d have to make kCachedThreadStackGuardSize dynamic and vary it per-process. Why do that?\n\nDo you mean kCachedThreadStackMmapSize? I think kCachedThreadStackGuardSize would still be constant.",
+      "parentUuid": "01030bb0_4502b55f",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "17ca602c_3079acda",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
