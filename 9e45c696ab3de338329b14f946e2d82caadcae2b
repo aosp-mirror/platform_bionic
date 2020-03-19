@@ -1,0 +1,244 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12ac5319_36a0cf36",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "why are you using subs for this?",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "728e3f24_85dbdd75",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "(line up all the comments, or comment blocks instead.)",
+      "range": {
+        "startLine": 35,
+        "startChar": 14,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "444566a1_0e93c1b2",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "i feel like there\u0027s a better verb than \"get\", but i\u0027m struggling to think of it.",
+      "range": {
+        "startLine": 62,
+        "startChar": 35,
+        "endLine": 62,
+        "endChar": 38
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0555595_dba2a446",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "it\u0027s probably time to rip this out instead of add more...",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4e76044_d679b20f",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "is this the best unit?",
+      "range": {
+        "startLine": 219,
+        "startChar": 36,
+        "endLine": 219,
+        "endChar": 53
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20a5fe54_13de7691",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "who\u0027s the intended user of this?",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b86c9a4_25af246e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "i don\u0027t want to add unnecessary API; the zygote can just do this itself.",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17ca602c_3079acda",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "?",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26d5d0fc_d3398e09",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 682,
+        "startChar": 41,
+        "endLine": 682,
+        "endChar": 87
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c947f5c7_8cbc288e",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "prefer the usual terms \"size\" and \"capacity\".",
+      "range": {
+        "startLine": 106,
+        "startChar": 9,
+        "endLine": 106,
+        "endChar": 23
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e9ed2a9_ff25764c",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "31",
+      "range": {
+        "startLine": 287,
+        "startChar": 71,
+        "endLine": 287,
+        "endChar": 73
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "086daeb3_25d6fa01",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1524,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-19T23:12:59Z",
+      "side": 1,
+      "message": "LIBC_S\n\nbut see also comments above.\n\ni also wonder whether pthread_set_stack_cache_size_np should be an android_mallopt instead. that\u0027s certainly more extensible if we end up having more tunables here.",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
