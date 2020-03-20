@@ -4,10 +4,16 @@
       "name": "CtsBionicTestCases"
     },
     {
+      "name": "fdtrack_test"
+    },
+    {
       "name": "malloc_debug_system_tests"
     },
     {
       "name": "malloc_hooks_system_tests"
+    },
+    {
+      "name": "memunreachable_unit_test"
     }
   ]
 }

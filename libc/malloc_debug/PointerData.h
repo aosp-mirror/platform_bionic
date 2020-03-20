@@ -38,7 +38,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <private/bionic_macros.h>
+#include <platform/bionic/macros.h>
 #include <unwindstack/LocalUnwinder.h>
 
 #include "OptionData.h"

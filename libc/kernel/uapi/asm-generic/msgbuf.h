@@ -19,12 +19,13 @@
 #ifndef __ASM_GENERIC_MSGBUF_H
 #define __ASM_GENERIC_MSGBUF_H
 #include <asm/bitsperlong.h>
+#include <asm/ipcbuf.h>
 struct msqid64_ds {
   struct ipc64_perm msg_perm;
 #if __BITS_PER_LONG == 64
-  __kernel_time_t msg_stime;
-  __kernel_time_t msg_rtime;
-  __kernel_time_t msg_ctime;
+  long msg_stime;
+  long msg_rtime;
+  long msg_ctime;
 #else
   unsigned long msg_stime;
   unsigned long msg_stime_high;

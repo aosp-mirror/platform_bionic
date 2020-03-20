@@ -4,6 +4,7 @@
 cc_library_static {
     name: "libdl_static",
     defaults: ["linux_bionic_supported"],
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -32,6 +33,7 @@ cc_library_static {
 
 cc_library {
     name: "libdl",
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     static_ndk_lib: true,
@@ -109,7 +111,10 @@ cc_library {
 
     stubs: {
         symbol_file: "libdl.map.txt",
-        versions: ["10000"],
+        versions: [
+            "29",
+            "10000",
+        ],
     },
 
     apex_available: [
@@ -122,6 +127,7 @@ cc_library {
     name: "libdl_android",
 
     defaults: ["linux_bionic_supported"],
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 

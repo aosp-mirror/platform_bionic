@@ -277,7 +277,9 @@ static std::vector<T> Intersection(const std::set<T>& a, const std::set<T>& b) {
 }
 
 // Perform a sanity check on a symbol's declarations, enforcing the following invariants:
-//   1. At most one inline definition of the function exists.
+//   1. At most one inline definition of the function exists (overloaded inline functions for
+//      _FORTIFY_SOURCE do not count because they are usually introduced to intercept the original
+//      functions or usually have enable_if attributes).
 //   2. All of the availability declarations for a symbol are compatible.
 //      If a function is declared as an inline before a certain version, the inline definition
 //      should have no version tag.
@@ -290,7 +292,7 @@ static bool checkSymbol(const Symbol& symbol) {
   std::unordered_map<const Declaration*, std::set<CompilationType>> inline_definitions;
   for (const auto& decl_it : symbol.declarations) {
     const Declaration* decl = &decl_it.second;
-    if (decl->is_definition) {
+    if (decl->is_definition && !decl->fortify_inline) {
       std::set<CompilationType> compilation_types = getCompilationTypes(decl);
       for (const auto& inline_def_it : inline_definitions) {
         auto intersection = Intersection(compilation_types, inline_def_it.second);

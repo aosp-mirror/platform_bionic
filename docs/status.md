@@ -32,9 +32,16 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
 
 Missing functionality:
   * `<aio.h>`
+  * `<monetary.h>`. See
+    [discussion](https://github.com/android/ndk/issues/1182).
   * `<wordexp.h>`
-  * Thread cancellation (`pthread_cancel`).
-  * Robust mutexes
+  * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
+    because of the difficulty and cost of implementing it, and the difficulty
+    of using it correctly. See
+    [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
+    for more about thread cancellation.
+  * Robust mutexes. See
+    [discussion](https://github.com/android/ndk/issues/1181).
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
@@ -45,9 +52,13 @@ Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/
 
 New libc functions in R (API level 30):
   * Full C11 `<threads.h>` (available as inlines for older API levels).
-  * `memfd_create` and `mlock2` (GNU extensions).
-  * `renameat2` (GNU extension).
+  * `memfd_create` and `mlock2` (Linux-specific GNU extensions).
+  * `renameat2` and `statx` (Linux-specific GNU extensions).
   * `pthread_cond_clockwait`/`pthread_mutex_clocklock`/`pthread_rwlock_clockrdlock`/`pthread_rwlock_clockwrlock`/`sem_clockwait`
+
+New libc behavior in R (API level 30):
+  * [fdsan](fdsan.md) now aborts when it detects common file descriptor errors,
+    rather than just logging.
 
 New libc functions in Q (API level 29):
   * `timespec_get` (C11 `<time.h>` addition)
@@ -68,7 +79,7 @@ New libc behavior in Q (API level 29):
     is unchanged.
   * Support in strptime for `%F`, `%G`, `%g`, `%P`, `%u`, `%V`, and `%v`.
     (strftime already supported them all.)
-  * [fdsan](fdsan.md) detects common file descriptor errors at runtime.
+  * [fdsan](fdsan.md) detects and logs common file descriptor errors at runtime.
 
 New libc functions in P (API level 28):
   * `aligned_alloc`

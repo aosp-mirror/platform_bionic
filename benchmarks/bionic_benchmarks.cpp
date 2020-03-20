@@ -39,6 +39,8 @@
 
 static const std::vector<int> kCommonSizes{
   8,
+  16,
+  32,
   64,
   512,
   1 * KB,

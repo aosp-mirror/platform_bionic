@@ -359,6 +359,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_CS_TIMESTAMP_FREQUENCY 51
 #define I915_PARAM_MMAP_GTT_COHERENT 52
 #define I915_PARAM_HAS_EXEC_SUBMIT_FENCE 53
+#define I915_PARAM_PERF_REVISION 54
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -711,6 +712,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_RECOVERABLE 0x8
 #define I915_CONTEXT_PARAM_VM 0x9
 #define I915_CONTEXT_PARAM_ENGINES 0xa
+#define I915_CONTEXT_PARAM_PERSISTENCE 0xb
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -820,6 +822,7 @@ enum drm_i915_perf_property_id {
   DRM_I915_PERF_PROP_OA_METRICS_SET,
   DRM_I915_PERF_PROP_OA_FORMAT,
   DRM_I915_PERF_PROP_OA_EXPONENT,
+  DRM_I915_PERF_PROP_HOLD_PREEMPTION,
   DRM_I915_PERF_PROP_MAX
 };
 struct drm_i915_perf_open_param {
@@ -832,6 +835,7 @@ struct drm_i915_perf_open_param {
 };
 #define I915_PERF_IOCTL_ENABLE _IO('i', 0x0)
 #define I915_PERF_IOCTL_DISABLE _IO('i', 0x1)
+#define I915_PERF_IOCTL_CONFIG _IO('i', 0x2)
 struct drm_i915_perf_record_header {
   __u32 type;
   __u16 pad;
@@ -856,8 +860,12 @@ struct drm_i915_query_item {
   __u64 query_id;
 #define DRM_I915_QUERY_TOPOLOGY_INFO 1
 #define DRM_I915_QUERY_ENGINE_INFO 2
+#define DRM_I915_QUERY_PERF_CONFIG 3
   __s32 length;
   __u32 flags;
+#define DRM_I915_QUERY_PERF_CONFIG_LIST 1
+#define DRM_I915_QUERY_PERF_CONFIG_DATA_FOR_UUID 2
+#define DRM_I915_QUERY_PERF_CONFIG_DATA_FOR_ID 3
   __u64 data_ptr;
 };
 struct drm_i915_query {
@@ -889,6 +897,15 @@ struct drm_i915_query_engine_info {
   __u32 num_engines;
   __u32 rsvd[3];
   struct drm_i915_engine_info engines[];
+};
+struct drm_i915_query_perf_config {
+  union {
+    __u64 n_configs;
+    __u64 config;
+    char uuid[36];
+  };
+  __u32 flags;
+  __u8 data[];
 };
 #ifdef __cplusplus
 }

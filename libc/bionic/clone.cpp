@@ -35,7 +35,7 @@
 #include "pthread_internal.h"
 
 #include "private/bionic_defs.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 
 extern "C" pid_t __bionic_clone(uint32_t flags, void* child_stack, int* parent_tid, void* tls, int* child_tid, int (*fn)(void*), void* arg);
 extern "C" __noreturn void __exit(int status);

@@ -31,6 +31,7 @@
 #include <sys/auxv.h>
 #include <private/bionic_auxv.h>
 #include <private/bionic_globals.h>
+#include <private/bionic_ifuncs.h>
 #include <elf.h>
 #include <errno.h>
 

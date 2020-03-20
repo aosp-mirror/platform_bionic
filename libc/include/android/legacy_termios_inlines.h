@@ -26,12 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_TERMIOS_INLINES_H_
-#define _ANDROID_LEGACY_TERMIOS_INLINES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+// The last bugfixes to <bits/termios_inlines.h> were
+// 5da96467a99254c963aef44e75167661d3e02278, so even those these functions were
+// in API level 21, ensure that everyone's using the latest versions.
+#if __ANDROID_API__ < 28
 
 #include <linux/termios.h>
 #include <sys/ioctl.h>
@@ -41,5 +43,3 @@
 #include <bits/termios_inlines.h>
 
 #endif
-
-#endif /* _ANDROID_LEGACY_TERMIOS_INLINES_H_ */

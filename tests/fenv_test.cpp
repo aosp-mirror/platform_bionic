@@ -27,7 +27,7 @@ static void TestRounding(float expectation1, float expectation2) {
   volatile float m = 0x1.0p23f;
   volatile float x = f + m;
   ASSERT_FLOAT_EQ(expectation1, x);
-  x -= m;
+  x = x - m;
   ASSERT_EQ(expectation2, x);
 }
 

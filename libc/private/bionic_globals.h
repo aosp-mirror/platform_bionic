@@ -44,6 +44,7 @@
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
+  uintptr_t heap_pointer_tag;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -64,6 +65,10 @@ struct libc_globals {
 __LIBC_HIDDEN__ extern WriteProtected<libc_globals> __libc_globals;
 
 struct abort_msg_t;
+namespace gwp_asan {
+struct AllocatorState;
+struct AllocationMetadata;
+};  // namespace gwp_asan
 
 // Globals shared between the dynamic linker and libc.so.
 struct libc_shared_globals {
@@ -95,10 +100,15 @@ struct libc_shared_globals {
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
+
+  const gwp_asan::AllocatorState *gwp_asan_state = nullptr;
+  const gwp_asan::AllocationMetadata *gwp_asan_metadata = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
 __LIBC_HIDDEN__ void __libc_init_fdsan();
+__LIBC_HIDDEN__ void __libc_init_fdtrack();
+__LIBC_HIDDEN__ void __libc_init_profiling_handlers();
 
 __LIBC_HIDDEN__ void __libc_init_malloc(libc_globals* globals);
 __LIBC_HIDDEN__ void __libc_init_setjmp_cookie(libc_globals* globals);

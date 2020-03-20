@@ -6,10 +6,11 @@ bionic_coverage = false
 cc_library {
     name: "libm",
     defaults: ["linux_bionic_supported"],
+    ramdisk_available: true,
     recovery_available: true,
     static_ndk_lib: true,
 
-    whole_static_libs: ["libarm-optimized-routines"],
+    whole_static_libs: ["libarm-optimized-routines-math"],
 
     srcs: [
         "upstream-freebsd/lib/msun/bsdsrc/b_exp.c",
@@ -498,7 +499,10 @@ cc_library {
 
     stubs: {
         symbol_file: "libm.map.txt",
-        versions: ["10000"],
+        versions: [
+            "29",
+            "10000",
+        ],
     },
 
     apex_available: [

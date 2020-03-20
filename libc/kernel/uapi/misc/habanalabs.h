@@ -68,7 +68,10 @@ enum hl_device_status {
 #define HL_INFO_DEVICE_STATUS 4
 #define HL_INFO_DEVICE_UTILIZATION 6
 #define HL_INFO_HW_EVENTS_AGGREGATE 7
+#define HL_INFO_CLK_RATE 8
+#define HL_INFO_RESET_COUNT 9
 #define HL_INFO_VERSION_MAX_LEN 128
+#define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
   __u64 sram_base_address;
   __u64 dram_base_address;
@@ -86,6 +89,7 @@ struct hl_info_hw_ip_info {
   __u8 dram_enabled;
   __u8 pad[2];
   __u8 armcp_version[HL_INFO_VERSION_MAX_LEN];
+  __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
@@ -103,6 +107,14 @@ struct hl_info_device_utilization {
   __u32 utilization;
   __u32 pad;
 };
+struct hl_info_clk_rate {
+  __u32 cur_clk_rate_mhz;
+  __u32 max_clk_rate_mhz;
+};
+struct hl_info_reset_count {
+  __u32 hard_reset_cnt;
+  __u32 soft_reset_cnt;
+};
 struct hl_info_args {
   __u64 return_pointer;
   __u32 return_size;
@@ -115,6 +127,7 @@ struct hl_info_args {
 };
 #define HL_CB_OP_CREATE 0
 #define HL_CB_OP_DESTROY 1
+#define HL_MAX_CB_SIZE 0x200000
 struct hl_cb_in {
   __u64 cb_handle;
   __u32 op;
@@ -138,6 +151,7 @@ struct hl_cs_chunk {
 };
 #define HL_CS_FLAGS_FORCE_RESTORE 0x1
 #define HL_CS_STATUS_SUCCESS 0
+#define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
   __u64 chunks_restore;
   __u64 chunks_execute;

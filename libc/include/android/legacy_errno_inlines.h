@@ -26,12 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _ANDROID_LEGACY_ERRNO_INLINES_H
-#define _ANDROID_LEGACY_ERRNO_INLINES_H
+#pragma once
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < __ANDROID_API_L__
+#if __ANDROID_API__ < 21
 
 #include <errno.h>
 
@@ -45,4 +44,3 @@ static __inline int __attribute__((deprecated)) __set_errno(int n) {
 __END_DECLS
 
 #endif
-#endif /* _ANDROID_LEGACY_ERRNO_INLINES_H */

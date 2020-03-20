@@ -6,7 +6,7 @@ import time, os, sys
 from utils import *
 
 # the list of supported architectures
-kernel_archs = [ 'arm', 'arm64', 'mips', 'x86' ]
+kernel_archs = [ 'arm', 'arm64', 'x86' ]
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -29,6 +29,10 @@ kernel_known_macros = {
     "__HAVE_BUILTIN_BSWAP16__": "1",
     "__HAVE_BUILTIN_BSWAP32__": "1",
     "__HAVE_BUILTIN_BSWAP64__": "1",
+    # Use this to remove the struct __kernel_old_timeval definition.
+    # Otherwise, there will be two struct timeval definitions when
+    # __kernel_old_timeval is renamed to timeval.
+    "__kernel_old_timeval": "1",
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
@@ -41,18 +45,12 @@ kernel_remove_config_macros = True
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
     "arm64": {},
-    "mips": {"__MIPSEB__": kCppUndefinedMacro,
-             "__MIPSEL__": "1",
-             "CONFIG_32BIT": "_ABIO32",
-             "CONFIG_CPU_LITTLE_ENDIAN": "1",
-             "__SANE_USERSPACE_TYPES__": "1",},
     "x86": {},
     }
 
 kernel_arch_token_replacements = {
     "arm": {},
     "arm64": {},
-    "mips": {"off_t":"__kernel_off_t"},
     "x86": {},
     }
 
@@ -82,6 +80,12 @@ kernel_token_replacements = {
     "__attribute_const__": "__attribute__((__const__))",
     # In this case the kernel tries to keep out of our way, but we're happy to use its definition.
     "__kernel_sockaddr_storage": "sockaddr_storage",
+    # The kernel started using struct __kernel_old_timeval in some places,
+    # which is the exact same as struct timeval. Replace that name with
+    # timeval so that kernel structures all use the same named structure.
+    # If struct __kernel_old_timeval and struct timeval become different,
+    # then a different solution needs to be implemented.
+    "__kernel_old_timeval": "timeval",
     }
 
 
@@ -90,6 +94,8 @@ kernel_token_replacements = {
 kernel_struct_replacements = set(
         [
           "epoll_event",
+          "flock",
+          "flock64",
           "in_addr",
           "ip_mreq_source",
           "ip_msfilter",

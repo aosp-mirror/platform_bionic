@@ -16,7 +16,7 @@ import sys
 import tempfile
 
 
-SupportedArchitectures = [ "arm", "arm64", "mips", "mips64", "x86", "x86_64" ]
+SupportedArchitectures = [ "arm", "arm64", "x86", "x86_64" ]
 
 syscall_stub_header = \
 """
@@ -76,56 +76,6 @@ arm64_call = syscall_stub_header + """\
     b.hi    __set_errno_internal
 
     ret
-END(%(func)s)
-"""
-
-
-#
-# MIPS assembler template for each syscall stub
-#
-
-mips_call = syscall_stub_header + """\
-    .set noreorder
-    .cpload $t9
-    li $v0, %(__NR_name)s
-    syscall
-    bnez $a3, 1f
-    move $a0, $v0
-    j $ra
-    nop
-1:
-    la $t9,__set_errno_internal
-    j $t9
-    nop
-    .set reorder
-END(%(func)s)
-"""
-
-
-#
-# MIPS64 assembler template for each syscall stub
-#
-
-mips64_call = syscall_stub_header + """\
-    .set push
-    .set noreorder
-    li $v0, %(__NR_name)s
-    syscall
-    bnez $a3, 1f
-    move $a0, $v0
-    j $ra
-    nop
-1:
-    move $t0, $ra
-    bal 2f
-    nop
-2:
-    .cpsetup $ra, $t1, 2b
-    LA $t9, __set_errno_internal
-    .cpreturn
-    j $t9
-    move $ra, $t0
-    .set pop
 END(%(func)s)
 """
 
@@ -277,14 +227,6 @@ def arm_eabi_genstub(syscall):
 
 def arm64_genstub(syscall):
     return arm64_call % syscall
-
-
-def mips_genstub(syscall):
-    return mips_call % syscall
-
-
-def mips64_genstub(syscall):
-    return mips64_call % syscall
 
 
 def x86_genstub(syscall):
@@ -455,17 +397,17 @@ class SysCallsTxtParser:
         if arch_list == "all":
             for arch in SupportedArchitectures:
                 t[arch] = True
-        elif arch_list == "lp32":
-            for arch in SupportedArchitectures:
-                if "64" not in arch:
-                    t[arch] = True
-        elif arch_list == "lp64":
-            for arch in SupportedArchitectures:
-                if "64" in arch:
-                    t[arch] = True
         else:
             for arch in string.split(arch_list, ','):
-                if arch in SupportedArchitectures:
+                if arch == "lp32":
+                    for arch in SupportedArchitectures:
+                        if "64" not in arch:
+                          t[arch] = True
+                elif arch == "lp64":
+                    for arch in SupportedArchitectures:
+                        if "64" in arch:
+                            t[arch] = True
+                elif arch in SupportedArchitectures:
                     t[arch] = True
                 else:
                     E("invalid syscall architecture '%s' in '%s'" % (arch, line))
@@ -507,12 +449,6 @@ def main(arch, syscall_file):
         elif syscall["socketcall_id"] >= 0:
             E("socketcall_id for dispatch syscalls is only supported for x86 in '%s'" % t)
             return
-
-        if syscall.has_key("mips"):
-            syscall["asm-mips"] = add_footer(32, mips_genstub(syscall), syscall)
-
-        if syscall.has_key("mips64"):
-            syscall["asm-mips64"] = add_footer(64, mips64_genstub(syscall), syscall)
 
         if syscall.has_key("x86_64"):
             syscall["asm-x86_64"] = add_footer(64, x86_64_genstub(syscall), syscall)

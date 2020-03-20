@@ -94,6 +94,8 @@ struct pppol2tp_ioc_stats {
 #define PPPIOCGDEBUG _IOR('t', 65, int)
 #define PPPIOCSDEBUG _IOW('t', 64, int)
 #define PPPIOCGIDLE _IOR('t', 63, struct ppp_idle)
+#define PPPIOCGIDLE32 _IOR('t', 63, struct ppp_idle32)
+#define PPPIOCGIDLE64 _IOR('t', 63, struct ppp_idle64)
 #define PPPIOCNEWUNIT _IOWR('t', 62, int)
 #define PPPIOCATTACH _IOW('t', 61, int)
 #define PPPIOCDETACH _IOW('t', 60, int)

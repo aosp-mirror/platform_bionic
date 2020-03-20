@@ -27,8 +27,6 @@
  */
 
 /*
- * libc_init_dynamic.c
- *
  * This source files provides two important functions for dynamic
  * executables:
  *
@@ -38,10 +36,7 @@
  *   shared libraries the program depends on).
  *
  * - a program launch function (__libc_init), which is called after
- *   all dynamic linking has been performed. Technically, it is called
- *   from arch-$ARCH/bionic/crtbegin_dynamic.S which is itself called
- *   by the dynamic linker after all libraries have been loaded and
- *   initialized.
+ *   all dynamic linking has been performed.
  */
 
 #include <stddef.h>
@@ -53,7 +48,7 @@
 
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -98,6 +93,9 @@ static void __libc_preinit_impl() {
 
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);
+
+  // Install reserved signal handlers for assisting the platform's profilers.
+  __libc_init_profiling_handlers();
 
   __libc_init_fork_handler();
 

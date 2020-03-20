@@ -38,10 +38,16 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
-    // Make the bionic tests implicitly test bionic's shadow call stack support.
+    header_libs: ["bionic_libc_platform_headers"],
+    // Ensure that the tests exercise shadow call stack support and
+    // the hint space PAC/BTI instructions.
     arch: {
         arm64: {
-           cflags: ["-fsanitize=shadow-call-stack"],
+            cflags: [
+                "-fsanitize=shadow-call-stack",
+                // Disable this option for now: see b/151372823
+                //"-mbranch-protection=standard",
+            ],
         },
     },
     stl: "libc++",
@@ -49,6 +55,12 @@ cc_defaults {
         address: false,
     },
     bootstrap: true,
+
+    product_variables: {
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -72,6 +84,7 @@ cc_test_library {
     defaults: ["bionic_tests_defaults"],
     srcs: [
         "__aeabi_read_tp_test.cpp",
+        "__cxa_atexit_test.cpp",
         "alloca_test.cpp",
         "android_get_device_api_level.cpp",
         "arpa_inet_test.cpp",
@@ -91,7 +104,9 @@ cc_test_library {
         "eventfd_test.cpp",
         "fcntl_test.cpp",
         "fdsan_test.cpp",
+        "fdtrack_test.cpp",
         "fenv_test.cpp",
+        "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
@@ -117,6 +132,7 @@ cc_test_library {
         "math_force_long_double_test.cpp",
         "membarrier_test.cpp",
         "mntent_test.cpp",
+        "mte_test.cpp",
         "netdb_test.cpp",
         "net_if_test.cpp",
         "netinet_ether_test.cpp",
@@ -156,6 +172,7 @@ cc_test_library {
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
         "sstream_test.cpp",
+        "sys_auxv_test.cpp",
         "sys_epoll_test.cpp",
         "sys_mman_test.cpp",
         "sys_msg_test.cpp",
@@ -210,6 +227,9 @@ cc_test_library {
                 "libasync_safe",
                 "libprocinfo",
                 "libsystemproperties",
+            ],
+            srcs: [
+                "tagged_pointers_test.cpp",
             ],
         },
     },
@@ -280,6 +300,20 @@ cc_test_library {
     sanitize: {
         fuzzer: false,
     },
+}
+
+cc_test_library {
+    name: "libBionicFramePointerTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "android_unsafe_frame_pointer_chase_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    cflags: [
+        "-fno-omit-frame-pointer",
+    ],
 }
 
 // -----------------------------------------------------------------------------
@@ -431,6 +465,7 @@ cc_test_library {
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
+        "libBionicFramePointerTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
@@ -610,6 +645,10 @@ cc_defaults {
         "libdl_preempt_test_2",
         "libdl_test_df_1_global",
         "libgnu-hash-table-library",
+        "librelocations-ANDROID_RELR",
+        "librelocations-ANDROID_REL",
+        "librelocations-RELR",
+        "librelocations-fat",
         "libsysv-hash-table-library",
         "libtestshared",
         "libtest_atexit",
@@ -715,6 +754,11 @@ cc_defaults {
         "libnstest_ns_a_public1_internal",
         "libnstest_ns_b_public2",
         "libnstest_ns_b_public3",
+        "ns_hidden_child_helper",
+        "libns_hidden_child_global",
+        "libns_hidden_child_internal",
+        "libns_hidden_child_public",
+        "libns_hidden_child_app",
         "libsegment_gap_inner",
         "libsegment_gap_outer",
         "ld_preload_test_helper",

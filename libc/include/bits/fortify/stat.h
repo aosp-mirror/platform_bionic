@@ -26,9 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_STAT_H_
-#error "Never include this file directly; instead, include <sys/stat.h>"
-#endif
+#pragma once
 
 mode_t __umask_chk(mode_t) __INTRODUCED_IN(18);
 mode_t __umask_real(mode_t mode) __RENAME(umask);
@@ -41,7 +39,7 @@ mode_t umask(mode_t mode)
     __overloadable
     __enable_if(1, "")
     __clang_error_if(mode & ~0777, "'umask' called with invalid mode") {
-#if __ANDROID_API__ >= __ANDROID_API_J_MR2__ && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
+#if __ANDROID_API__ >= 18 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
   return __umask_chk(mode);
 #else
   return __umask_real(mode);

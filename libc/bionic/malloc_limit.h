@@ -32,3 +32,7 @@
 
 // Function prototypes.
 bool LimitEnable(void* arg, size_t arg_size);
+
+// Returns true if malloc_limit is installed (by checking the current dispatch
+// table).
+bool MallocLimitInstalled();

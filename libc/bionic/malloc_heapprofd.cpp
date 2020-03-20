@@ -42,111 +42,110 @@
 #include <private/bionic_malloc_dispatch.h>
 #include <sys/system_properties.h>
 
+#include "gwp_asan_wrappers.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
+#include "malloc_limit.h"
+
+// Installing heapprofd hooks is a multi step process, as outlined below.
+//
+// The incremental hooking and a dedicated task thread are used since we cannot
+// do heavy work within a signal handler, or when blocking a malloc invocation.
+//
+// +--->+-------------+------------------+
+// | +->+kInitialState+----------------+ |  malloc functions are not intercepted in any way.
+// | |  +-------+-----+                | |
+// | |          |                      | |
+// | |          v                      | |
+// | |  +-------+----------------+     | |  currently installing the ephemeral hooks.
+// | |  |kInstallingEphemeralHook|<--+ | |
+// | |  +-------+----------------+   | | |
+// | |          |                    | | |
+// | |          v                    | | |
+// | |  +-------+---------------+    | | |  ephemeral hooks are installed. on the first call to
+// | |  |kEphemeralHookInstalled|    | | |  malloc these hooks spawn a thread that installs the
+// | |  +-------+---------------+    | | |  heapprofd hooks.
+// | |          |                    | | |
+// | |          v                    | | |
+// | |  +-------+--------------+     | | |  first call to malloc happened. the hooks are reset to
+// | +--|kRemovingEphemeralHook|     | | |  kInitialState.
+// |    +----------------------+     | | |
+// |                                 | | |
+// |                                 | | |
+// |    +---------------+            | | |  currently installing the heapprofd hook
+// |    |kInstallingHook|<-----------|-+ |
+// |    +-------+-------+            |   |
+// |            |                    |   |
+// |            v                    |   |
+// |    +-------+------+             |   |  heapprofd hooks are installed. these forward calls to
+// |    |kHookInstalled|-------------+   |  malloc / free / etc. to heapprofd_client.so.
+// |    +-------+------+                 |
+// |            |                        |
+// |            v                        |
+// |    +-------+---------+              |  currently resetting the hooks to default.
+// |----+kUninstallingHook|              |
+//      +-----------------+              |
+//                                       |
+//                                       |
+//      +------------------+             |  malloc debug / malloc hooks are active. these take
+//      |kIncompatibleHooks+<------------+  precendence over heapprofd, so heapprofd will not get
+//      +------------------+                enabled. this is a terminal state.
+//
+enum MallocHeapprofdState : uint8_t {
+  kInitialState,
+  kInstallingEphemeralHook,
+  kEphemeralHookInstalled,
+  kRemovingEphemeralHook,
+  kInstallingHook,
+  kHookInstalled,
+  kUninstallingHook,
+  kIncompatibleHooks
+};
+
+enum ModifyGlobalsMode {
+  kWithLock,   // all calls to MaybeModifyGlobals with kWithLock will serialise. they can fail
+               // due to a concurrent call with kWithoutLock.
+  kWithoutLock // calls to MaybeModifyGlobals with kWithoutLock do not serialise. they can fail
+               // due to concurrent calls with kWithoutLock or kWithLock.
+};
+
+// Provide mutual exclusion so no two threads try to modify the globals at the same time.
+template <typename Fn>
+bool MaybeModifyGlobals(ModifyGlobalsMode mode, Fn f) {
+  bool success = false;
+  if (mode == kWithLock) {
+    pthread_mutex_lock(&gGlobalsMutateLock);
+  }
+  // As we have grabbed the mutex, the following condition should always hold, except
+  // if we are currently running HandleHeapprofdSignal.
+  if (!atomic_exchange(&gGlobalsMutating, true)) {
+    f();
+    success = true;
+    atomic_store(&gGlobalsMutating, false);
+  } else {
+    error_log("%s: heapprofd client: concurrent modification.", getprogname());
+  }
+  if (mode == kWithLock) {
+    pthread_mutex_unlock(&gGlobalsMutateLock);
+  }
+  return success;
+}
+
+extern "C" void* MallocInitHeapprofdHook(size_t);
 
 static constexpr char kHeapprofdSharedLib[] = "heapprofd_client.so";
 static constexpr char kHeapprofdPrefix[] = "heapprofd";
 static constexpr char kHeapprofdPropertyEnable[] = "heapprofd.enable";
-static constexpr int kHeapprofdSignal = __SIGRTMIN + 4;
-
-// The logic for triggering heapprofd (at runtime) is as follows:
-// 1. HEAPPROFD_SIGNAL is received by the process, entering the
-//    MaybeInstallInitHeapprofdHook signal handler.
-// 2. If the initialization is not already in flight
-//    (gHeapprofdInitInProgress is false), the malloc hook is set to
-//    point at InitHeapprofdHook, and gHeapprofdInitInProgress is set to
-//    true.
-// 3. The next malloc call enters InitHeapprofdHook, which removes the malloc
-//    hook, and spawns a detached pthread to run the InitHeapprofd task.
-//    (gHeapprofdInitHook_installed atomic is used to perform this once.)
-// 4. InitHeapprofd, on a dedicated pthread, loads the heapprofd client library,
-//    installs the full set of heapprofd hooks, and invokes the client's
-//    initializer. The dedicated pthread then terminates.
-// 5. gHeapprofdInitInProgress and gHeapprofdInitHookInstalled are
-//    reset to false such that heapprofd can be reinitialized. Reinitialization
-//    means that a new profiling session is started, and any still active is
-//    torn down.
-//
-// The incremental hooking and a dedicated task thread are used since we cannot
-// do heavy work within a signal handler, or when blocking a malloc invocation.
-
-// The handle returned by dlopen when previously loading the heapprofd
-// hooks. nullptr if shared library has not been already been loaded.
-static _Atomic (void*) gHeapprofdHandle = nullptr;
-
-static _Atomic bool gHeapprofdInitInProgress = false;
-static _Atomic bool gHeapprofdInitHookInstalled = false;
-
-// In a Zygote child process, this is set to true if profiling of this process
-// is allowed. Note that this is set at a later time than the global
-// gZygoteChild. The latter is set during the fork (while still in
-// zygote's SELinux domain). While this bit is set after the child is
-// specialized (and has transferred SELinux domains if applicable).
-static _Atomic bool gZygoteChildProfileable = false;
-
-extern "C" void* MallocInitHeapprofdHook(size_t);
-
-static constexpr MallocDispatch __heapprofd_init_dispatch
-  __attribute__((unused)) = {
-    Malloc(calloc),
-    Malloc(free),
-    Malloc(mallinfo),
-    MallocInitHeapprofdHook,
-    Malloc(malloc_usable_size),
-    Malloc(memalign),
-    Malloc(posix_memalign),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(pvalloc),
-#endif
-    Malloc(realloc),
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-    Malloc(valloc),
-#endif
-    Malloc(malloc_iterate),
-    Malloc(malloc_disable),
-    Malloc(malloc_enable),
-    Malloc(mallopt),
-    Malloc(aligned_alloc),
-    Malloc(malloc_info),
-  };
-
-static void MaybeInstallInitHeapprofdHook(int) {
-  // Zygote child processes must be marked profileable.
-  if (gZygoteChild &&
-      !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
-    error_log("%s: not enabling heapprofd, not marked profileable.", getprogname());
-    return;
-  }
-
-  // Checking this variable is only necessary when this could conflict with
-  // the change to enable the allocation limit. All other places will
-  // not ever have a conflict modifying the globals.
-  if (!atomic_exchange(&gGlobalsMutating, true)) {
-    if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
-      __libc_globals.mutate([](libc_globals* globals) {
-        atomic_store(&globals->default_dispatch_table, &__heapprofd_init_dispatch);
-        auto dispatch_table = GetDispatchTable();
-        if (dispatch_table == nullptr || dispatch_table == &globals->malloc_dispatch_table) {
-          atomic_store(&globals->current_dispatch_table, &__heapprofd_init_dispatch);
-        }
-      });
-    }
-    atomic_store(&gGlobalsMutating, false);
-  } else {
-    // The only way you can get to this point is if the signal has been
-    // blocked by a call to HeapprofdMaskSignal. The raise below will
-    // do nothing until a call to HeapprofdUnmaskSignal, which will cause
-    // the signal to be resent. Using this avoids the need for a busy loop
-    // waiting for gGlobalsMutating to change back to false.
-    raise(kHeapprofdSignal);
-  }
-}
 
 constexpr char kHeapprofdProgramPropertyPrefix[] = "heapprofd.enable.";
 constexpr size_t kHeapprofdProgramPropertyPrefixSize = sizeof(kHeapprofdProgramPropertyPrefix) - 1;
 constexpr size_t kMaxCmdlineSize = 512;
+
+// The handle returned by dlopen when previously loading the heapprofd
+// hooks. nullptr if shared library has not been already been loaded.
+static _Atomic (void*) gHeapprofdHandle = nullptr;
+static _Atomic MallocHeapprofdState gHeapprofdState = kInitialState;
 
 static bool GetHeapprofdProgramProperty(char* data, size_t size) {
   if (size < kHeapprofdProgramPropertyPrefixSize) {
@@ -203,6 +202,96 @@ static bool GetHeapprofdProgramProperty(char* data, size_t size) {
   return true;
 }
 
+// Runtime triggering entry-point. Two possible call sites:
+// * when receiving a profiling signal with a si_value indicating heapprofd.
+// * when a Zygote child is marking itself as profileable, and there's a
+//   matching profiling request for this process (in which case heapprofd client
+//   is loaded synchronously).
+// In both cases, the caller is responsible for verifying that the process is
+// considered profileable.
+
+// Previously installed default dispatch table, if it exists. This is used to
+// load heapprofd properly when GWP-ASan was already installed. If GWP-ASan was
+// already installed, heapprofd will take over the dispatch table, but will use
+// GWP-ASan as the backing dispatch. Writes to this variable is atomically
+// protected by MaybeModifyGlobals.
+// Reads are not protected, so this is atomic. We cannot fail the call in
+// MallocInitHeapprofdHook.
+static _Atomic (const MallocDispatch*) gPreviousDefaultDispatchTable = nullptr;
+static MallocDispatch gEphemeralDispatch;
+
+void HandleHeapprofdSignal() {
+  if (atomic_load(&gHeapprofdState) == kIncompatibleHooks) {
+    error_log("%s: not enabling heapprofd, malloc_debug/malloc_hooks are enabled.", getprogname());
+    return;
+  }
+
+  // We cannot grab the mutex here, as this is used in a signal handler.
+  MaybeModifyGlobals(kWithoutLock, [] {
+    MallocHeapprofdState expected = kInitialState;
+    // If hooks are already installed, we still want to install ephemeral hooks to retrigger
+    // heapprofd client initialization.
+    MallocHeapprofdState expected2 = kHookInstalled;
+    if (atomic_compare_exchange_strong(&gHeapprofdState, &expected,
+          kInstallingEphemeralHook) ||
+        atomic_compare_exchange_strong(&gHeapprofdState, &expected2,
+          kInstallingEphemeralHook)) {
+      const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
+
+      // Below, we initialize heapprofd lazily by redirecting libc's malloc() to
+      // call MallocInitHeapprofdHook, which spawns off a thread and initializes
+      // heapprofd. During the short period between now and when heapprofd is
+      // initialized, allocations may need to be serviced. There are three
+      // possible configurations:
+
+      if (default_dispatch == nullptr) {
+        //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
+        //  this case, everything but malloc() should come from the system
+        //  allocator.
+        atomic_store(&gPreviousDefaultDispatchTable, nullptr);
+        gEphemeralDispatch = *NativeAllocatorDispatch();
+      } else if (DispatchIsGwpAsan(default_dispatch)) {
+        //  2. GWP-ASan was installed. We should use GWP-ASan for everything but
+        //  malloc() in the interim period before heapprofd is properly
+        //  installed. After heapprofd is finished installing, we will use
+        //  GWP-ASan as heapprofd's backing allocator to allow heapprofd and
+        //  GWP-ASan to coexist.
+        atomic_store(&gPreviousDefaultDispatchTable, default_dispatch);
+        gEphemeralDispatch = *default_dispatch;
+      } else {
+        // 3. It may be possible at this point in time that heapprofd is
+        // *already* the default dispatch, and as such we don't want to use
+        // heapprofd as the backing store for itself (otherwise infinite
+        // recursion occurs). We will use the system allocator functions. Note:
+        // We've checked that no other malloc interceptors are being used by
+        // validating `gHeapprofdIncompatibleHooks` above, so we don't need to
+        // worry about that case here.
+        atomic_store(&gPreviousDefaultDispatchTable, nullptr);
+        gEphemeralDispatch = *NativeAllocatorDispatch();
+      }
+
+      // Now, replace the malloc function so that the next call to malloc() will
+      // initialize heapprofd.
+      gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
+
+      // And finally, install these new malloc-family interceptors.
+      __libc_globals.mutate([](libc_globals* globals) {
+        atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
+        if (!MallocLimitInstalled()) {
+          atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
+        }
+      });
+      atomic_store(&gHeapprofdState, kEphemeralHookInstalled);
+    } else {
+      error_log("%s: heapprofd: failed to transition kInitialState -> kInstallingEphemeralHook. "
+          "current state (possible race): %d", getprogname(), expected2);
+    }
+  });
+  // Otherwise, we're racing against malloc_limit's enable logic (at most once
+  // per process, and a niche feature). This is highly unlikely, so simply give
+  // up if it does happen.
+}
+
 bool HeapprofdShouldLoad() {
   // First check for heapprofd.enable. If it is set to "all", enable
   // heapprofd for all processes. Otherwise, check heapprofd.enable.${prog},
@@ -226,38 +315,8 @@ bool HeapprofdShouldLoad() {
   return property_value[0] != '\0';
 }
 
-void HeapprofdInstallSignalHandler() {
-  struct sigaction action = {};
-  action.sa_handler = MaybeInstallInitHeapprofdHook;
-  sigaction(kHeapprofdSignal, &action, nullptr);
-}
-
-extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
-
-void HeapprofdMaskSignal() {
-  sigset64_t mask_set;
-  // Need to use this function instead because sigprocmask64 filters
-  // out this signal.
-  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
-  sigaddset64(&mask_set, kHeapprofdSignal);
-  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
-}
-
-void HeapprofdUnmaskSignal() {
-  sigset64_t mask_set;
-  __rt_sigprocmask(SIG_SETMASK, nullptr, &mask_set, sizeof(mask_set));
-  sigdelset64(&mask_set, kHeapprofdSignal);
-  __rt_sigprocmask(SIG_SETMASK, &mask_set, nullptr, sizeof(mask_set));
-}
-
-static void DisplayError(int) {
-  error_log("Cannot install heapprofd while malloc debug/malloc hooks are enabled.");
-}
-
-void HeapprofdInstallErrorSignalHandler() {
-  struct sigaction action = {};
-  action.sa_handler = DisplayError;
-  sigaction(kHeapprofdSignal, &action, nullptr);
+void HeapprofdRememberHookConflict() {
+  atomic_store(&gHeapprofdState, kIncompatibleHooks);
 }
 
 static void CommonInstallHooks(libc_globals* globals) {
@@ -272,99 +331,130 @@ static void CommonInstallHooks(libc_globals* globals) {
     return;
   }
 
+  // Before we set the new default_dispatch_table in FinishInstallHooks, save
+  // the previous dispatch table. If DispatchReset() gets called later, we want
+  // to be able to restore the dispatch. We're still under
+  // MaybeModifyGlobals locks at this point.
+  atomic_store(&gPreviousDefaultDispatchTable, GetDefaultDispatchTable());
+
   if (FinishInstallHooks(globals, nullptr, kHeapprofdPrefix)) {
     atomic_store(&gHeapprofdHandle, impl_handle);
   } else if (!reusing_handle) {
     dlclose(impl_handle);
   }
-
-  atomic_store(&gHeapprofdInitInProgress, false);
 }
 
 void HeapprofdInstallHooksAtInit(libc_globals* globals) {
-  if (atomic_exchange(&gHeapprofdInitInProgress, true)) {
-    return;
-  }
-  CommonInstallHooks(globals);
+  MaybeModifyGlobals(kWithoutLock, [globals] {
+    MallocHeapprofdState expected = kInitialState;
+    if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
+      CommonInstallHooks(globals);
+      atomic_store(&gHeapprofdState, kHookInstalled);
+    } else {
+      error_log("%s: heapprofd: failed to transition kInitialState -> kInstallingHook. "
+          "current state (possible race): %d", getprogname(), expected);
+    }
+  });
 }
 
 static void* InitHeapprofd(void*) {
-  pthread_mutex_lock(&gGlobalsMutateLock);
-  __libc_globals.mutate([](libc_globals* globals) {
-    CommonInstallHooks(globals);
+  MaybeModifyGlobals(kWithLock, [] {
+    MallocHeapprofdState expected = kInitialState;
+    if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
+      __libc_globals.mutate([](libc_globals* globals) {
+        CommonInstallHooks(globals);
+      });
+      atomic_store(&gHeapprofdState, kHookInstalled);
+    } else {
+      error_log("%s: heapprofd: failed to transition kInitialState -> kInstallingHook. "
+          "current state (possible race): %d", getprogname(), expected);
+    }
   });
-  pthread_mutex_unlock(&gGlobalsMutateLock);
-
-  // Allow to install hook again to re-initialize heap profiling after the
-  // current session finished.
-  atomic_store(&gHeapprofdInitHookInstalled, false);
   return nullptr;
 }
 
 extern "C" void* MallocInitHeapprofdHook(size_t bytes) {
-  if (!atomic_exchange(&gHeapprofdInitHookInstalled, true)) {
-    pthread_mutex_lock(&gGlobalsMutateLock);
-    __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
-      }
-    });
-    pthread_mutex_unlock(&gGlobalsMutateLock);
+  MaybeModifyGlobals(kWithLock, [] {
+    MallocHeapprofdState expected = kEphemeralHookInstalled;
+    if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kRemovingEphemeralHook)) {
+      __libc_globals.mutate([](libc_globals* globals) {
+        const MallocDispatch* previous_dispatch = atomic_load(&gPreviousDefaultDispatchTable);
+        atomic_store(&globals->default_dispatch_table, previous_dispatch);
+        if (!MallocLimitInstalled()) {
+          atomic_store(&globals->current_dispatch_table, previous_dispatch);
+        }
+      });
+      atomic_store(&gHeapprofdState, kInitialState);
 
-    pthread_t thread_id;
-    if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) != 0) {
-      error_log("%s: heapprofd: failed to pthread_create.", getprogname());
-    } else if (pthread_detach(thread_id) != 0) {
-      error_log("%s: heapprofd: failed to pthread_detach", getprogname());
+      pthread_t thread_id;
+      if (pthread_create(&thread_id, nullptr, InitHeapprofd, nullptr) != 0) {
+        error_log("%s: heapprofd: failed to pthread_create.", getprogname());
+      } else if (pthread_setname_np(thread_id, "heapprofdinit") != 0) {
+        error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
+      } else if (pthread_detach(thread_id) != 0) {
+        error_log("%s: heapprofd: failed to pthread_detach", getprogname());
+      }
+    } else {
+      warning_log("%s: heapprofd: could not transition kEphemeralHookInstalled -> "
+          "kRemovingEphemeralHook. current state (possible race): %d. this can be benign "
+          "if two threads try this transition at the same time", getprogname(),
+          expected);
     }
-    if (pthread_setname_np(thread_id, "heapprofdinit") != 0) {
-      error_log("%s: heapprod: failed to pthread_setname_np", getprogname());
-    }
+  });
+  // If we had a previous dispatch table, use that to service the allocation,
+  // otherwise fall back to the native allocator.
+  // This could be modified by a concurrent HandleHeapprofdSignal, but that is
+  // benign as we will dispatch to the ephemeral handler, which will then dispatch
+  // to the underlying one.
+  const MallocDispatch* previous_dispatch = atomic_load(&gPreviousDefaultDispatchTable);
+  if (previous_dispatch) {
+    return previous_dispatch->malloc(bytes);
   }
-  return Malloc(malloc)(bytes);
+  return NativeAllocatorDispatch()->malloc(bytes);
 }
 
-// Marks this process as a profileable zygote child.
-static bool HandleInitZygoteChildProfiling() {
-  atomic_store_explicit(&gZygoteChildProfileable, true, memory_order_release);
-
+bool HeapprofdInitZygoteChildProfiling() {
   // Conditionally start "from startup" profiling.
   if (HeapprofdShouldLoad()) {
-    // Directly call the signal handler (will correctly guard against
-    // concurrent signal delivery).
-    MaybeInstallInitHeapprofdHook(kHeapprofdSignal);
+    // Directly call the signal handler codepath (properly protects against
+    // concurrent invocations).
+    HandleHeapprofdSignal();
   }
   return true;
 }
 
 static bool DispatchReset() {
-  if (!atomic_exchange(&gHeapprofdInitInProgress, true)) {
-    pthread_mutex_lock(&gGlobalsMutateLock);
-    __libc_globals.mutate([](libc_globals* globals) {
-      auto old_dispatch = GetDefaultDispatchTable();
-      atomic_store(&globals->default_dispatch_table, nullptr);
-      if (GetDispatchTable() == old_dispatch) {
-        atomic_store(&globals->current_dispatch_table, nullptr);
-      }
-    });
-    pthread_mutex_unlock(&gGlobalsMutateLock);
-    atomic_store(&gHeapprofdInitInProgress, false);
+  if (atomic_load(&gHeapprofdState) == kInitialState) {
     return true;
   }
-  errno = EAGAIN;
-  return false;
+
+  bool success = false;
+  MaybeModifyGlobals(kWithLock, [&success] {
+    MallocHeapprofdState expected = kHookInstalled;
+
+    if(atomic_compare_exchange_strong(&gHeapprofdState, &expected, kUninstallingHook)){
+      __libc_globals.mutate([](libc_globals* globals) {
+        const MallocDispatch* previous_dispatch = atomic_load(&gPreviousDefaultDispatchTable);
+        atomic_store(&globals->default_dispatch_table, previous_dispatch);
+        if (!MallocLimitInstalled()) {
+          atomic_store(&globals->current_dispatch_table, previous_dispatch);
+        }
+      });
+      atomic_store(&gHeapprofdState, kInitialState);
+      success = true;
+    } else {
+      error_log("%s: heapprofd: failed to transition kHookInstalled -> kUninstallingHook. "
+          "current state (possible race): %d", getprogname(),
+          expected);
+    }
+  });
+  if (!success) {
+    errno = EAGAIN;
+  }
+  return success;
 }
 
 bool HeapprofdMallopt(int opcode, void* arg, size_t arg_size) {
-  if (opcode == M_INIT_ZYGOTE_CHILD_PROFILING) {
-    if (arg != nullptr || arg_size != 0) {
-      errno = EINVAL;
-      return false;
-    }
-    return HandleInitZygoteChildProfiling();
-  }
   if (opcode == M_RESET_HOOKS) {
     if (arg != nullptr || arg_size != 0) {
       errno = EINVAL;

@@ -46,13 +46,8 @@ __BEGIN_DECLS
 
 struct timespec;
 
-#ifdef __mips__
-#define SOCK_DGRAM      1
-#define SOCK_STREAM     2
-#else
 #define SOCK_STREAM     1
 #define SOCK_DGRAM      2
-#endif
 #define SOCK_RAW        3
 #define SOCK_RDM        4
 #define SOCK_SEQPACKET  5
@@ -112,7 +107,7 @@ struct cmsghdr {
    ? (struct cmsghdr*) (msg)->msg_control : (struct cmsghdr*) NULL)
 #define CMSG_OK(mhdr, cmsg) ((cmsg)->cmsg_len >= sizeof(struct cmsghdr) &&   (cmsg)->cmsg_len <= (unsigned long)   ((mhdr)->msg_controllen -   ((char*)(cmsg) - (char*)(mhdr)->msg_control)))
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 struct cmsghdr* __cmsg_nxthdr(struct msghdr* __msg, struct cmsghdr* __cmsg) __INTRODUCED_IN(21);
 #else
 /* TODO(danalbert): Move this into libandroid_support. */
@@ -127,7 +122,7 @@ static inline struct cmsghdr* __cmsg_nxthdr(struct msghdr* msg, struct cmsghdr* 
   }
   return ptr;
 }
-#endif /* __ANDROID_API__ >= __ANDROID_API_L__ */
+#endif
 
 #define SCM_RIGHTS 0x01
 #define SCM_CREDENTIALS 0x02
