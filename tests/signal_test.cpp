@@ -154,44 +154,6 @@ TEST(signal, raise_in_signal_handler) {
   raise(SIGALRM);
 }
 
-TEST(signal, sigwait_SIGALRM) {
-  ScopedSignalHandler ssh(SIGALRM, [](int sig) { ASSERT_EQ(SIGALRM, sig); });
-
-  sigset_t wait_set;
-  sigemptyset(&wait_set);
-  sigaddset(&wait_set, SIGALRM);
-
-  alarm(1);
-
-  int received_signal;
-  errno = 0;
-  ASSERT_EQ(0, sigwait(&wait_set, &received_signal));
-  ASSERT_EQ(0, errno);
-  ASSERT_EQ(SIGALRM, received_signal);
-}
-
-TEST(signal, sigwait64_SIGRTMIN) {
-  ScopedSignalHandler ssh(SIGRTMIN, [](int sig) { ASSERT_EQ(SIGRTMIN, sig); });
-
-  sigset64_t wait_set;
-  sigemptyset64(&wait_set);
-  sigaddset64(&wait_set, SIGRTMIN);
-
-  pid_t tid = gettid();
-  std::thread thread([&tid]() {
-    sleep(1);
-    tgkill(getpid(), tid, SIGRTMIN);
-  });
-
-  int received_signal;
-  errno = 0;
-  ASSERT_EQ(0, sigwait64(&wait_set, &received_signal));
-  ASSERT_EQ(0, errno);
-  ASSERT_EQ(SIGRTMIN, received_signal);
-
-  thread.join();
-}
-
 static int g_sigsuspend_signal_handler_call_count = 0;
 
 TEST(signal, sigsuspend_sigpending) {
@@ -620,8 +582,7 @@ static void SigqueueSignalHandler(int signum, siginfo_t* info, void*) {
 
 TEST(signal, sigqueue) {
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval;
-  sigval.sival_int = 1;
+  sigval_t sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
   ASSERT_EQ(0, errno);
@@ -630,8 +591,7 @@ TEST(signal, sigqueue) {
 
 TEST(signal, pthread_sigqueue_self) {
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval;
-  sigval.sival_int = 1;
+  sigval_t sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, pthread_sigqueue(pthread_self(), SIGALRM, sigval));
   ASSERT_EQ(0, errno);
@@ -640,8 +600,7 @@ TEST(signal, pthread_sigqueue_self) {
 
 TEST(signal, pthread_sigqueue_other) {
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval;
-  sigval.sival_int = 1;
+  sigval_t sigval = {.sival_int = 1};
 
   sigset_t mask;
   sigfillset(&mask);
@@ -664,6 +623,44 @@ TEST(signal, pthread_sigqueue_other) {
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
 }
 
+TEST(signal, sigwait_SIGALRM) {
+  SignalMaskRestorer smr;
+
+  // Block SIGALRM.
+  sigset_t just_SIGALRM;
+  sigemptyset(&just_SIGALRM);
+  sigaddset(&just_SIGALRM, SIGALRM);
+  ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, nullptr));
+
+  // Raise SIGALRM.
+  sigval_t sigval = {.sival_int = 1};
+  ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
+
+  // Get pending SIGALRM.
+  int sig;
+  ASSERT_EQ(0, sigwait(&just_SIGALRM, &sig));
+  ASSERT_EQ(SIGALRM, sig);
+}
+
+TEST(signal, sigwait64_SIGRTMIN) {
+  SignalMaskRestorer smr;
+
+  // Block SIGRTMIN.
+  sigset64_t just_SIGRTMIN;
+  sigemptyset64(&just_SIGRTMIN);
+  sigaddset64(&just_SIGRTMIN, SIGRTMIN);
+  ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, &just_SIGRTMIN, nullptr));
+
+  // Raise SIGRTMIN.
+  sigval_t sigval = {.sival_int = 1};
+  ASSERT_EQ(0, sigqueue(getpid(), SIGRTMIN, sigval));
+
+  // Get pending SIGRTMIN.
+  int sig;
+  ASSERT_EQ(0, sigwait64(&just_SIGRTMIN, &sig));
+  ASSERT_EQ(SIGRTMIN, sig);
+}
+
 TEST(signal, sigwaitinfo) {
   SignalMaskRestorer smr;
 
@@ -674,8 +671,7 @@ TEST(signal, sigwaitinfo) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, nullptr));
 
   // Raise SIGALRM.
-  sigval_t sigval;
-  sigval.sival_int = 1;
+  sigval_t sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
 
   // Get pending SIGALRM.
@@ -697,8 +693,7 @@ TEST(signal, sigwaitinfo64_SIGRTMIN) {
   ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, &just_SIGRTMIN, nullptr));
 
   // Raise SIGRTMIN.
-  sigval_t sigval;
-  sigval.sival_int = 1;
+  sigval_t sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGRTMIN, sigval));
 
   // Get pending SIGRTMIN.
