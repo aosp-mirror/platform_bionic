@@ -336,6 +336,24 @@
     },
     {
       "key": {
+        "uuid": "b10263b7_15368711",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-20T02:20:07Z",
+      "side": 1,
+      "message": "\u003e AFAIK, programs usually don\u0027t use much TLS memory.\n\u003e \n\u003e \u003e I want to make the mmap size consistent across processes\n\u003e \n\u003e Is there a reason?\n\nYes: so we can reason about what a default-sized stack means.\n\n\u003e \n\u003e \u003e If we *don\u0027t* make this change, we\u0027d have to make kCachedThreadStackGuardSize dynamic and vary it per-process. Why do that?\n\u003e \n\u003e Do you mean kCachedThreadStackMmapSize? I think kCachedThreadStackGuardSize would still be constant.\n\nYes, thanks.\n\nBesides: there\u0027s an address space efficiency issue: suppose stack_guard_size and stack_size are both page-aligned, as is typical. Then, if we have even one byte of TLS, we grow mmap_size by a whole page. Why should we do that? If we subtract that one byte of TLS from the thread stack, we don\u0027t need to round up to the next page size boundary.",
+      "parentUuid": "810cd173_91788222",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "17ca602c_3079acda",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
