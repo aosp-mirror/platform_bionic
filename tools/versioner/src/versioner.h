@@ -38,7 +38,7 @@ static const std::unordered_map<std::string, std::set<Arch>> header_blacklist = 
   { "sys/_system_properties.h", supported_archs },
 
   // time64.h #errors when included on LP64 archs.
-  { "time64.h", { Arch::arm64, Arch::mips64, Arch::x86_64 } },
+  { "time64.h", { Arch::arm64, Arch::x86_64 } },
 };
 
 static const std::unordered_set<std::string> missing_symbol_whitelist = {

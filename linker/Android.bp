@@ -156,6 +156,7 @@ filegroup {
         "linker_dlwarning.cpp",
         "linker_cfi.cpp",
         "linker_config.cpp",
+        "linker_debug.cpp",
         "linker_gdb_support.cpp",
         "linker_globals.cpp",
         "linker_libc_support.c",
@@ -164,6 +165,7 @@ filegroup {
         "linker_logger.cpp",
         "linker_mapped_file_fragment.cpp",
         "linker_phdr.cpp",
+        "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
         "linker_tls.cpp",
@@ -176,6 +178,7 @@ filegroup {
     name: "linker_sources_arm",
     srcs: [
         "arch/arm/begin.S",
+        "arch/arm_neon/linker_gnu_hash_neon.cpp",
     ],
 }
 
@@ -184,6 +187,7 @@ filegroup {
     srcs: [
         "arch/arm64/begin.S",
         "arch/arm64/tlsdesc_resolver.S",
+        "arch/arm_neon/linker_gnu_hash_neon.cpp",
     ],
 }
 
@@ -201,22 +205,6 @@ filegroup {
     ],
 }
 
-filegroup {
-    name: "linker_sources_mips",
-    srcs: [
-        "arch/mips/begin.S",
-        "linker_mips.cpp",
-    ],
-}
-
-filegroup {
-    name: "linker_sources_mips64",
-    srcs: [
-        "arch/mips64/begin.S",
-        "linker_mips.cpp",
-    ],
-}
-
 cc_defaults {
     name: "linker_version_script_overlay",
     arch: {
@@ -224,8 +212,6 @@ cc_defaults {
         arm64:  { version_script: "linker.generic.map"  },
         x86:    { version_script: "linker.generic.map"  },
         x86_64: { version_script: "linker.generic.map"  },
-        mips:   { version_script: "linker.generic.map"  },
-        mips64: { version_script: "linker.generic.map"  },
     },
 }
 
@@ -243,18 +229,15 @@ cc_defaults {
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
+            static_libs: ["libgcc_stripped"],
         },
         x86: {
             srcs: [":linker_sources_x86"],
+            static_libs: ["libgcc_stripped"],
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
-        },
-        mips: {
-            srcs: [":linker_sources_mips"],
-        },
-        mips64: {
-            srcs: [":linker_sources_mips64"],
+            static_libs: ["libgcc_stripped"],
         },
     },
 
@@ -341,7 +324,6 @@ cc_binary {
     },
 
     compile_multilib: "both",
-    xom: false,
 
     recovery_available: true,
     apex_available: [
@@ -416,6 +398,7 @@ cc_library {
 
     name: "ld-android",
     defaults: ["linux_bionic_supported", "linker_version_script_overlay"],
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -456,10 +439,12 @@ cc_test {
         "linked_list_test.cpp",
         "linker_sleb128_test.cpp",
         "linker_utils_test.cpp",
+        "linker_gnu_hash_test.cpp",
 
         // Parts of the linker that we're testing.
         "linker_block_allocator.cpp",
         "linker_config.cpp",
+        "linker_debug.cpp",
         "linker_test_globals.cpp",
         "linker_utils.cpp",
     ],
@@ -469,4 +454,30 @@ cc_test {
         "libbase",
         "liblog",
     ],
+
+    arch: {
+        arm: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+        arm64: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+    },
+}
+
+cc_benchmark {
+    name: "linker-benchmarks",
+
+    srcs: [
+        "linker_gnu_hash_benchmark.cpp",
+    ],
+
+    arch: {
+        arm: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+        arm64: {
+            srcs: ["arch/arm_neon/linker_gnu_hash_neon.cpp"],
+        },
+    },
 }

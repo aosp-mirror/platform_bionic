@@ -46,7 +46,7 @@
 
 #include <bits/seek_constants.h>
 
-#if __ANDROID_API__ < __ANDROID_API_N__
+#if __ANDROID_API__ < 24
 #include <bits/struct_file.h>
 #endif
 
@@ -58,7 +58,7 @@ typedef off64_t fpos64_t;
 struct __sFILE;
 typedef struct __sFILE FILE;
 
-#if __ANDROID_API__ >= __ANDROID_API_M__
+#if __ANDROID_API__ >= 23
 extern FILE* stdin __INTRODUCED_IN(23);
 extern FILE* stdout __INTRODUCED_IN(23);
 extern FILE* stderr __INTRODUCED_IN(23);

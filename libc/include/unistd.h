@@ -282,7 +282,7 @@ int ttyname_r(int __fd, char* __buf, size_t __buf_size);
 
 int acct(const char* __path);
 
-#if __ANDROID_API__ >= __ANDROID_API_L__
+#if __ANDROID_API__ >= 21
 int getpagesize(void) __INTRODUCED_IN(21);
 #else
 static __inline__ int getpagesize(void) {
@@ -294,7 +294,7 @@ long syscall(long __number, ...);
 
 int daemon(int __no_chdir, int __no_close);
 
-#if defined(__arm__) || (defined(__mips__) && !defined(__LP64__))
+#if defined(__arm__)
 int cacheflush(long __addr, long __nbytes, long __cache);
     /* __attribute__((deprecated("use __builtin___clear_cache instead"))); */
 #endif

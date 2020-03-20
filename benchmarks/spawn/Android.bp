@@ -26,10 +26,45 @@
 // SUCH DAMAGE.
 //
 
+cc_defaults {
+    name: "bionic_spawn_benchmark_targets",
+    host_supported: true,
+    target: {
+        darwin: {
+            enabled: false,
+        },
+        windows: {
+            enabled: false,
+        },
+        linux_glibc_x86: {
+            enabled: false,
+        },
+    },
+}
+
+cc_library_static {
+    name: "libbionic_spawn_benchmark",
+    defaults: ["bionic_spawn_benchmark_targets"],
+
+    srcs: ["spawn_benchmark.cpp"],
+    export_include_dirs: ["include"],
+    static_libs: [
+        "libbase",
+        "libgoogle-benchmark",
+        "liblog",
+    ],
+}
+
 cc_benchmark {
     name: "bionic-spawn-benchmarks",
+    defaults: ["bionic_spawn_benchmark_targets"],
+
     srcs: ["spawn_benchmarks.cpp"],
-    static_libs: ["libbase"],
+    static_libs: [
+        "libbase",
+        "libbionic_spawn_benchmark",
+        "liblog",
+    ],
 
     // Install these binaries in the same directory as the main benchmark binary.
     data: [
@@ -37,29 +72,20 @@ cc_benchmark {
         ":bench_noop_nostl",
         ":bench_noop_static",
     ],
-
-    host_supported: true,
-    target: {
-        darwin: { enabled: false },
-        windows: { enabled: false },
-        linux_glibc_x86: { enabled: false },
-    },
 }
 
 cc_defaults {
     name: "noop_binary_defaults",
+    defaults: ["bionic_spawn_benchmark_targets"],
 
     compile_multilib: "both",
     multilib: {
-        lib32: { suffix: "32" },
-        lib64: { suffix: "64" },
-    },
-
-    host_supported: true,
-    target: {
-        darwin: { enabled: false },
-        windows: { enabled: false },
-        linux_glibc_x86: { enabled: false },
+        lib32: {
+            suffix: "32",
+        },
+        lib64: {
+            suffix: "64",
+        },
     },
 }
 
@@ -77,7 +103,7 @@ cc_binary {
                 "-Wl,--rpath,${ORIGIN}/../../lib64",
             ],
         },
-    }
+    },
 }
 
 cc_binary {

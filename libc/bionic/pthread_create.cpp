@@ -42,7 +42,7 @@
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
-#include "private/bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
@@ -300,6 +300,7 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->mmap_size = mapping.mmap_size;
   thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
   thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
+  thread->stack_top = reinterpret_cast<uintptr_t>(stack_top);
 
   *tcbp = tcb;
   *child_stack = stack_top;

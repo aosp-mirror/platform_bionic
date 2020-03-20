@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _BITS_PTHREAD_TYPES_H_
-#define _BITS_PTHREAD_TYPES_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
@@ -44,7 +43,7 @@ typedef struct {
 #endif
 } pthread_attr_t;
 
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= 24
 typedef struct {
 #if defined(__LP64__)
   int64_t __private[4];
@@ -54,7 +53,7 @@ typedef struct {
 } pthread_barrier_t;
 #endif
 
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= 24
 typedef int pthread_barrierattr_t;
 #endif
 
@@ -92,7 +91,7 @@ typedef struct {
 
 typedef long pthread_rwlockattr_t;
 
-#if __ANDROID_API__ >= __ANDROID_API_N__
+#if __ANDROID_API__ >= 24
 typedef struct {
 #if defined(__LP64__)
   int64_t __private;
@@ -103,5 +102,3 @@ typedef struct {
 #endif
 
 typedef long pthread_t;
-
-#endif

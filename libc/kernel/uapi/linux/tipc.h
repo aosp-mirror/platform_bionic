@@ -112,6 +112,7 @@ struct sockaddr_tipc {
 #define TIPC_GROUP_JOIN 135
 #define TIPC_GROUP_LEAVE 136
 #define TIPC_SOCK_RECVQ_USED 137
+#define TIPC_NODELAY 138
 #define TIPC_GROUP_LOOPBACK 0x1
 #define TIPC_GROUP_MEMBER_EVTS 0x2
 struct tipc_group_req {
@@ -136,6 +137,15 @@ struct tipc_sioc_nodeid_req {
   __u32 peer;
   char node_id[TIPC_NODEID_LEN];
 };
+#define TIPC_AEAD_ALG_NAME (32)
+struct tipc_aead_key {
+  char alg_name[TIPC_AEAD_ALG_NAME];
+  unsigned int keylen;
+  char key[];
+};
+#define TIPC_AEAD_KEYLEN_MIN (16 + 4)
+#define TIPC_AEAD_KEYLEN_MAX (32 + 4)
+#define TIPC_AEAD_KEY_SIZE_MAX (sizeof(struct tipc_aead_key) + TIPC_AEAD_KEYLEN_MAX)
 #define TIPC_CFG_SRV 0
 #define TIPC_ZONE_SCOPE 1
 #define TIPC_ADDR_NAMESEQ 1

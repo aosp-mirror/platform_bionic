@@ -36,7 +36,7 @@
 
 #include <platform/bionic/tls.h>
 
-#include "bionic_macros.h"
+#include "platform/bionic/macros.h"
 #include "grp_pwd.h"
 
 /** WARNING WARNING WARNING
@@ -127,6 +127,9 @@ struct bionic_tls {
 
   group_state_t group;
   passwd_state_t passwd;
+
+  char fdtrack_disabled;
+  char padding[3];
 
   // Initialize the main thread's final object using its bootstrap object.
   void copy_from_bootstrap(const bionic_tls* boot __attribute__((unused))) {

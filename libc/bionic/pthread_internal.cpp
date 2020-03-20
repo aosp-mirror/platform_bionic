@@ -100,8 +100,8 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id, const char* cal
     }
   }
 
-  // Historically we'd return null, but
-  if (android_get_application_target_sdk_version() >= __ANDROID_API_O__) {
+  // Historically we'd return null, but from API level 26 we catch this error.
+  if (android_get_application_target_sdk_version() >= 26) {
     if (thread == nullptr) {
       // This seems to be a common mistake, and it's relatively harmless because
       // there will never be a valid thread at address 0, whereas other invalid

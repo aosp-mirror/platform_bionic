@@ -29,7 +29,8 @@
 #include <errno.h>
 #include <signal.h>
 
-#include "private/sigrtmin.h"
+#include <platform/bionic/reserved_signals.h>
+
 #include "private/SigSetConverter.h"
 
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);

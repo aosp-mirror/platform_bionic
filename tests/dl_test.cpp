@@ -95,12 +95,6 @@ TEST(dl, lib_does_not_preempt_global_protected) {
   static constexpr const char* kAlternatePathToLinker = "/system/bin/x86_64/linker64";
 #elif defined (__i386__)
   static constexpr const char* kAlternatePathToLinker = "/system/bin/x86/linker";
-#elif defined (__mips__)
-#if defined(__LP64__)
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips64/linker64";
-#else
-  static constexpr const char* kAlternatePathToLinker = "/system/bin/mips/linker";
-#endif
 #else
 #error "Unknown architecture"
 #endif
@@ -135,7 +129,7 @@ TEST(dl, exec_linker_load_file) {
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
-      "__progname=" + helper + "\n" +
+      "__progname=exec_linker_helper\n" +
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
@@ -151,7 +145,7 @@ TEST(dl, exec_linker_load_from_zip) {
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
-      "__progname=" + helper + "\n" +
+      "__progname=exec_linker_helper\n" +
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
@@ -346,4 +340,53 @@ TEST(dl, disable_ld_config_file) {
   eth.SetEnv({ env.c_str(), nullptr });
   eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, EXIT_FAILURE, error_message.c_str());
 #endif
+}
+
+static void RelocationsTest(const char* lib, const char* expectation) {
+#if defined(__BIONIC__)
+  // Does readelf think the .so file looks right?
+  const std::string path = GetTestlibRoot() + "/" + lib;
+  ExecTestHelper eth;
+  eth.SetArgs({ "readelf", "-SW", path.c_str(), nullptr });
+  eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_TRUE(eth.GetOutput().find(expectation) != std::string::npos) << eth.GetOutput();
+
+  // Can we load it?
+  void* handle = dlopen(lib, RTLD_NOW);
+  ASSERT_TRUE(handle != nullptr) << dlerror();
+#else
+  UNUSED(lib);
+  UNUSED(expectation);
+  GTEST_SKIP() << "test is not supported on glibc";
+#endif
+}
+
+TEST(dl, relocations_RELR) {
+  RelocationsTest("librelocations-RELR.so",
+      ".relr.dyn            RELR");
+}
+
+TEST(dl, relocations_ANDROID_RELR) {
+  RelocationsTest("librelocations-ANDROID_RELR.so",
+      ".relr.dyn            ANDROID_RELR");
+}
+
+TEST(dl, relocations_ANDROID_REL) {
+  RelocationsTest("librelocations-ANDROID_REL.so",
+#if __LP64__
+      ".rela.dyn            ANDROID_RELA"
+#else
+      ".rel.dyn             ANDROID_REL"
+#endif
+      );
+}
+
+TEST(dl, relocations_fat) {
+  RelocationsTest("librelocations-fat.so",
+#if __LP64__
+      ".rela.dyn            RELA"
+#else
+      ".rel.dyn             REL"
+#endif
+      );
 }

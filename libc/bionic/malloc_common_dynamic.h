@@ -45,3 +45,6 @@ bool FinishInstallHooks(libc_globals* globals, const char* options, const char* 
 // Lock for globals, to guarantee that only one thread is doing a mutate.
 extern pthread_mutex_t gGlobalsMutateLock;
 extern _Atomic bool gGlobalsMutating;
+
+// Function hooks instantiations, used by dispatch-table allocators to install themselves.
+void SetGlobalFunctions(void* functions[]);

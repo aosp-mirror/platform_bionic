@@ -853,6 +853,20 @@ TEST(STDIO_TEST, snprintf_asterisk_overflow) {
   ASSERT_EQ(ENOMEM, errno);
 }
 
+// Inspired by https://github.com/landley/toybox/issues/163.
+TEST(STDIO_TEST, printf_NULL) {
+  char buf[128];
+  char* null = nullptr;
+  EXPECT_EQ(4, snprintf(buf, sizeof(buf), "<%*.*s>", 2, 2, null));
+  EXPECT_STREQ("<(n>", buf);
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%*.*s>", 2, 8, null));
+  EXPECT_STREQ("<(null)>", buf);
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%*.*s>", 8, 2, null));
+  EXPECT_STREQ("<      (n>", buf);
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%*.*s>", 8, 8, null));
+  EXPECT_STREQ("<  (null)>", buf);
+}
+
 TEST(STDIO_TEST, fprintf) {
   TemporaryFile tf;
 

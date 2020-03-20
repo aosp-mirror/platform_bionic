@@ -83,7 +83,9 @@ struct fscrypt_key_specifier {
 struct fscrypt_add_key_arg {
   struct fscrypt_key_specifier key_spec;
   __u32 raw_size;
-  __u32 __reserved[9];
+  __u32 __reserved[8];
+#define __FSCRYPT_ADD_KEY_FLAG_HW_WRAPPED 0x00000001
+  __u32 __flags;
   __u8 raw[];
 };
 struct fscrypt_remove_key_arg {

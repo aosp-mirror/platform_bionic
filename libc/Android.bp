@@ -47,6 +47,9 @@ libc_common_flags = [
     // Clang's exit-time destructor registration hides __dso_handle, but
     // __dso_handle needs to have default visibility on ARM32. See b/73485611.
     "-Wexit-time-destructors",
+
+    // GWP-ASan requires platform TLS.
+    "-fno-emulated-tls",
 ]
 
 // Define some common cflags
@@ -62,6 +65,8 @@ cc_defaults {
         "bionic/libc/async_safe/include",
     ],
 
+    header_libs: ["gwp_asan_headers"],
+
     stl: "none",
     system_shared_libs: [],
     sanitize: {
@@ -71,6 +76,7 @@ cc_defaults {
         fuzzer: false,
     },
     native_coverage: false,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -85,29 +91,32 @@ cc_defaults {
     },
 }
 
+libc_scudo_product_variables = {
+    malloc_not_svelte: {
+        cflags: ["-DUSE_SCUDO"],
+        whole_static_libs: ["libscudo"],
+        exclude_static_libs: [
+            "libjemalloc5",
+            "libc_jemalloc_wrapper",
+        ],
+    },
+}
+
 // Defaults for native allocator libs/includes to make it
 // easier to change.
-// To enable scudo, change the below to libc_scudo_defaults
-// and comment out the defaults line in libc_scudo shared
-// library.
+// To disable scudo for the non-svelte config remove the line:
+//     product_variables: libc_scudo_product_variables,
+// in the cc_defaults below.
 // ========================================================
 cc_defaults {
     name: "libc_native_allocator_defaults",
-
-    defaults: ["libc_jemalloc5_defaults"],
-}
-
-cc_defaults {
-    name: "libc_jemalloc5_defaults",
-
-    include_dirs: [
-        "external/jemalloc_new/include",
-    ],
 
     whole_static_libs: [
         "libjemalloc5",
         "libc_jemalloc_wrapper",
     ],
+    header_libs: ["gwp_asan_headers"],
+    product_variables: libc_scudo_product_variables,
 }
 
 // Functions not implemented by jemalloc directly, or that need to
@@ -118,30 +127,9 @@ cc_library_static {
     srcs: ["bionic/jemalloc_wrapper.cpp"],
     cflags: ["-fvisibility=hidden"],
 
-    include_dirs: [
-        "external/jemalloc_new/include",
-    ],
-}
-
-cc_defaults {
-    name: "libc_scudo_defaults",
-
-    cflags: [
-        "-DUSE_SCUDO_SVELTE",
-    ],
-
-    product_variables: {
-        malloc_not_svelte: {
-            cflags: [
-                "-UUSE_SCUDO_SVELTE",
-                "-DUSE_SCUDO",
-            ],
-        },
-    },
-
-    whole_static_libs: [
-        "libscudo",
-    ],
+    // Used to pull in the jemalloc include directory so that if the
+    // library is removed, the include directory is also removed.
+    static_libs: ["libjemalloc5"],
 }
 
 // ========================================================
@@ -359,7 +347,6 @@ cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/glob.c",
-        "upstream-freebsd/lib/libc/stdlib/realpath.c",
     ],
 
     cflags: [
@@ -626,20 +613,6 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
-        mips: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
-        mips64: {
-            exclude_srcs: [
-                "upstream-openbsd/lib/libc/string/memchr.c",
-                "upstream-openbsd/lib/libc/string/strcpy.c",
-                "upstream-openbsd/lib/libc/string/strncmp.c",
-            ],
-        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -804,6 +777,7 @@ cc_library_static {
         "bionic/android_set_abort_message.cpp",
 
         "bionic/strchr.cpp",
+        "bionic/strchrnul.cpp",
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
     ],
@@ -864,25 +838,17 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
-                "arch-arm64/generic/bionic/stpcpy.S",
-                "arch-arm64/generic/bionic/strcpy.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
 
-                "arch-arm64/default/bionic/memchr.S",
-                "arch-arm64/default/bionic/strchr.S",
-                "arch-arm64/default/bionic/strcmp.S",
-                "arch-arm64/default/bionic/strlen.S",
-                "arch-arm64/default/bionic/strncmp.S",
-                "arch-arm64/default/bionic/strnlen.S",
-
                 "arch-arm64/mte/bionic/memchr.c",
-                "arch-arm64/mte/bionic/strchr.cpp",
+                "arch-arm64/mte/bionic/stpcpy.S",
+                "arch-arm64/mte/bionic/strchrnul.cpp",
+                "arch-arm64/mte/bionic/strrchr.cpp",
                 "arch-arm64/mte/bionic/strcmp.c",
-                "arch-arm64/mte/bionic/strlen.c",
+                "arch-arm64/mte/bionic/strcpy.S",
                 "arch-arm64/mte/bionic/strncmp.c",
                 "arch-arm64/mte/bionic/strnlen.c",
 
@@ -895,61 +861,9 @@ cc_library_static {
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
                 "bionic/strchr.cpp",
+                "bionic/strchrnul.cpp",
                 "bionic/strnlen.c",
-            ],
-        },
-
-        mips: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips/bionic/__bionic_clone.S",
-                "arch-mips/bionic/cacheflush.cpp",
-                "arch-mips/bionic/_exit_with_stack_teardown.S",
-                "arch-mips/bionic/libcrt_compat.c",
-                "arch-mips/bionic/setjmp.S",
-                "arch-mips/bionic/syscall.S",
-                "arch-mips/bionic/vfork.S",
-            ],
-            exclude_srcs: [
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips/string/memcmp.c",
-                "arch-mips/string/memcpy.c",
-                "arch-mips/string/memset.S",
-                "arch-mips/string/strcmp.S",
-                "arch-mips/string/strncmp.S",
-                "arch-mips/string/strlen.c",
-                "arch-mips/string/strnlen.c",
-                "arch-mips/string/strchr.c",
-                "arch-mips/string/strcpy.c",
-                "arch-mips/string/memchr.c",
-                "arch-mips/string/memmove.c",
-
-                "arch-mips64/bionic/__bionic_clone.S",
-                "arch-mips64/bionic/_exit_with_stack_teardown.S",
-                "arch-mips64/bionic/setjmp.S",
-                "arch-mips64/bionic/syscall.S",
-                "arch-mips64/bionic/vfork.S",
-                "arch-mips64/bionic/stat.cpp",
-            ],
-            exclude_srcs: [
-                "bionic/strchr.cpp",
-                "bionic/strnlen.c",
+                "bionic/strrchr.cpp",
             ],
         },
 
@@ -1104,7 +1018,7 @@ cc_library_static {
         "bionic/clone.cpp",
         "bionic/ctype.cpp",
         "bionic/dirent.cpp",
-        "bionic/dup2.cpp",
+        "bionic/dup.cpp",
         "bionic/environ.cpp",
         "bionic/error.cpp",
         "bionic/eventfd_read.cpp",
@@ -1113,7 +1027,9 @@ cc_library_static {
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
+        "bionic/fcntl.cpp",
         "bionic/fdsan.cpp",
+        "bionic/fdtrack.cpp",
         "bionic/ffs.cpp",
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
@@ -1179,8 +1095,10 @@ cc_library_static {
         "bionic/raise.cpp",
         "bionic/rand.cpp",
         "bionic/readlink.cpp",
+        "bionic/realpath.cpp",
         "bionic/reboot.cpp",
         "bionic/recv.cpp",
+        "bionic/recvmsg.cpp",
         "bionic/rename.cpp",
         "bionic/rmdir.cpp",
         "bionic/scandir.cpp",
@@ -1198,7 +1116,6 @@ cc_library_static {
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
-        "bionic/strchrnul.cpp",
         "bionic/strerror.cpp",
         "bionic/string_l.cpp",
         "bionic/strings_l.cpp",
@@ -1301,12 +1218,14 @@ cc_library_static {
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
         "bionic/__cxa_thread_atexit_impl.cpp",
-        "stdlib/atexit.c",
+        "bionic/android_unsafe_frame_pointer_chase.cpp",
+        "bionic/atexit.cpp",
         "bionic/fork.cpp",
     ],
 
     cppflags: ["-Wold-style-cast"],
     include_dirs: ["bionic/libstdc++/include"],
+    header_libs: ["bionic_libc_platform_headers"],
     name: "libc_pthread",
 }
 
@@ -1402,7 +1321,10 @@ cc_library_static {
         "libc_defaults",
         "libc_native_allocator_defaults",
     ],
+    ramdisk_available: false,
     srcs: libc_common_src_files + [
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
@@ -1429,6 +1351,8 @@ cc_library_static {
     ],
 
     whole_static_libs: [
+        "gwp_asan",
+        "libarm-optimized-routines-string",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1459,6 +1383,7 @@ cc_library_static {
     name: "libc_nopthread",
 
     whole_static_libs: [
+        "libarm-optimized-routines-string",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_bootstrap",
@@ -1608,9 +1533,12 @@ filegroup {
     srcs: [
         "arch-common/bionic/crtbegin_so.c",
         "arch-common/bionic/crtbrand.S",
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
         "bionic/icu.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
+        "bionic/android_profiling_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
         "bionic/malloc_limit.cpp",
         "bionic/ndk_cruft.cpp",
@@ -1623,6 +1551,8 @@ filegroup {
 filegroup {
     name: "libc_sources_static",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
@@ -1656,6 +1586,7 @@ cc_library {
         srcs: [ ":libc_sources_static" ],
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1664,6 +1595,7 @@ cc_library {
     shared: {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
+            "gwp_asan",
             "libc_init_dynamic",
             "libc_common_shared",
         ],
@@ -1717,7 +1649,7 @@ cc_library {
                 keep_symbols_and_debug_frame: true,
             },
 
-            whole_static_libs: [ "libgcc_stripped" ],
+            whole_static_libs: [ "libunwind_llvm" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
@@ -1727,6 +1659,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1740,6 +1674,8 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
@@ -1749,12 +1685,17 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
+
+            whole_static_libs: [ "libgcc_stripped" ],
         },
     },
 
     stubs: {
         symbol_file: "libc.map.txt",
-        versions: ["10000"],
+        versions: [
+            "29",
+            "10000",
+        ],
     },
 
     apex_available: [
@@ -1804,12 +1745,16 @@ cc_library_headers {
     name: "bionic_libc_platform_headers",
     visibility: [
         "//art:__subpackages__",
-        "//bionic/libc:__subpackages__",
+        "//bionic:__subpackages__",
         "//frameworks:__subpackages__",
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
+        "//system/core/debuggerd:__subpackages__",
+        "//system/memory/libmemunreachable:__subpackages__",
     ],
     host_supported: true,
+    vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
@@ -1826,12 +1771,21 @@ cc_library_headers {
 
     host_supported: true,
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
     no_libcrt: true,
     stl: "none",
     system_shared_libs: [],
+
+    // The build system generally requires that any dependencies of a target
+    // with an sdk_version must have a lower sdk_version. By setting sdk_version
+    // to 1 we let targets with an sdk_version that need to depend on the libc
+    // headers but cannot depend on libc itself due to circular dependencies
+    // (such as libunwind_llvm) depend on the headers. Setting sdk_version to 1
+    // is correct because the headers can support any sdk_version.
+    sdk_version: "1",
 
     export_include_dirs: [
         "include",
@@ -1848,16 +1802,6 @@ cc_library_headers {
         arm64: {
             export_include_dirs: [
                 "kernel/uapi/asm-arm64",
-            ],
-        },
-        mips: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
-            ],
-        },
-        mips64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
             ],
         },
         x86: {
@@ -1958,6 +1902,7 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
+    ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -1976,12 +1921,6 @@ cc_defaults {
     defaults: ["crt_defaults"],
 
     arch: {
-        mips: {
-            cflags: ["-fPIC"],
-        },
-        mips64: {
-            cflags: ["-fPIC"],
-        },
         x86: {
             cflags: ["-fPIC"],
         },
@@ -2036,26 +1975,6 @@ cc_object {
     name: "crtbegin_static1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
-
     defaults: ["crt_defaults"],
 }
 
@@ -2073,25 +1992,6 @@ cc_object {
     name: "crtbegin_dynamic1",
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
-
-    arch: {
-        mips: {
-            srcs: [
-                "arch-mips/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-        mips64: {
-            srcs: [
-                "arch-mips64/bionic/crtbegin.c",
-            ],
-            exclude_srcs: [
-                "arch-common/bionic/crtbegin.c",
-            ],
-        },
-    },
     defaults: ["crt_defaults"],
 }
 
@@ -2185,24 +2085,6 @@ ndk_headers {
     license: "NOTICE",
 }
 
-// Not actually used in the NDK, but needed to build AOSP for mips.
-ndk_headers {
-    name: "libc_asm_mips",
-    from: "kernel/uapi/asm-mips",
-    to: "mipsel-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
-    license: "NOTICE",
-}
-
-// Not actually used in the NDK, but needed to build AOSP for mips64.
-ndk_headers {
-    name: "libc_asm_mips64",
-    from: "kernel/uapi/asm-mips",
-    to: "mips64el-linux-android",
-    srcs: ["kernel/uapi/asm-mips/**/*.h"],
-    license: "NOTICE",
-}
-
 ndk_headers {
     name: "libc_asm_x86",
     from: "kernel/uapi/asm-x86",
@@ -2246,16 +2128,6 @@ llndk_library {
         arm64: {
             export_include_dirs: [
                 "kernel/uapi/asm-arm64",
-            ],
-        },
-        mips: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
-            ],
-        },
-        mips64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-mips",
             ],
         },
         x86: {
@@ -2342,30 +2214,6 @@ cc_object {
     ],
 }
 
-cc_object {
-    name: "libseccomp_gen_syscall_nrs_mips",
-    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
-    cflags: [
-        "-D_MIPS_SIM=_MIPS_SIM_ABI32",
-    ],
-    local_include_dirs: [
-        "kernel/uapi/asm-mips",
-        "kernel/uapi",
-    ],
-}
-
-cc_object {
-    name: "libseccomp_gen_syscall_nrs_mips64",
-    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
-    cflags: [
-        "-D_MIPS_SIM=_MIPS_SIM_ABI64",
-    ],
-    local_include_dirs: [
-        "kernel/uapi/asm-mips",
-        "kernel/uapi",
-    ],
-}
-
 // Generate the C++ policy sources for app and system seccomp-bpf filters.
 python_binary_host {
     name: "genseccomp",
@@ -2425,8 +2273,6 @@ cc_genrule {
         "SYSCALLS.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2459,8 +2305,6 @@ cc_genrule {
         ":generate_app_zygote_blacklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2468,8 +2312,6 @@ cc_genrule {
     out: [
         "arm64_app_zygote_policy.cpp",
         "arm_app_zygote_policy.cpp",
-        "mips64_app_zygote_policy.cpp",
-        "mips_app_zygote_policy.cpp",
         "x86_64_app_zygote_policy.cpp",
         "x86_app_zygote_policy.cpp",
     ],
@@ -2490,8 +2332,6 @@ cc_genrule {
         "SECCOMP_BLACKLIST_APP.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2499,8 +2339,6 @@ cc_genrule {
     out: [
         "arm64_app_policy.cpp",
         "arm_app_policy.cpp",
-        "mips64_app_policy.cpp",
-        "mips_app_policy.cpp",
         "x86_64_app_policy.cpp",
         "x86_app_policy.cpp",
     ],
@@ -2520,8 +2358,6 @@ cc_genrule {
         "SECCOMP_BLACKLIST_COMMON.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_mips",
-        ":libseccomp_gen_syscall_nrs_mips64",
         ":libseccomp_gen_syscall_nrs_x86",
         ":libseccomp_gen_syscall_nrs_x86_64",
     ],
@@ -2529,8 +2365,6 @@ cc_genrule {
     out: [
         "arm64_system_policy.cpp",
         "arm_system_policy.cpp",
-        "mips64_system_policy.cpp",
-        "mips_system_policy.cpp",
         "x86_64_system_policy.cpp",
         "x86_system_policy.cpp",
     ],
@@ -2568,6 +2402,8 @@ cc_library {
 cc_defaults {
     name: "libc_scudo_wrapper_defaults",
     srcs: [
+        "bionic/gwp_asan_wrappers.cpp",
+        "bionic/heap_tagging.cpp",
         "bionic/malloc_common.cpp",
         "bionic/malloc_common_dynamic.cpp",
         "bionic/malloc_heapprofd.cpp",
@@ -2575,12 +2411,21 @@ cc_defaults {
         "bionic/scudo_wrapper.cpp",
         "bionic/__set_errno.cpp",
     ],
-    cflags: ["-DUSE_SCUDO"],
+    cflags: [
+        "-DUSE_SCUDO",
+        "-fno-emulated-tls", // Required for GWP-ASan.
+    ],
     shared_libs: ["libscudo_wrapper"],
 
-    header_libs: ["libc_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+    ],
 
-    static_libs: ["libasync_safe"],
+    static_libs: [
+        "libasync_safe",
+        "gwp_asan",
+    ],
 
     arch: {
         arm: {
@@ -2607,7 +2452,6 @@ cc_defaults {
 
 cc_library_shared {
     name: "libc_scudo",
-    defaults: ["libc_scudo_wrapper_defaults"],
     vendor_available: true,
     stl: "none",
     system_shared_libs: [],
