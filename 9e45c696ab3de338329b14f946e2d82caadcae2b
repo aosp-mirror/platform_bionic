@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "2cf4795f_4a035248",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33c33790_331146a0",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "728e3f24_85dbdd75",
         "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 7
@@ -81,6 +99,30 @@
       "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "657bdf00_6d604263",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 7
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7bc6543_e301c173",
+      "range": {
+        "startLine": 35,
+        "startChar": 14,
+        "endLine": 35,
+        "endChar": 16
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -248,6 +290,24 @@
     },
     {
       "key": {
+        "uuid": "754ba797_41999e3e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Expanded the comment in the header. The other option is to change the mprotect() stub to automatically detect changing the protection of one of the current thread\u0027s stacks, but I don\u0027t want that much complexity in a low-level function that should be unsurprising.",
+      "parentUuid": "ab432f83_255c5def",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b86c9a4_25af246e",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
@@ -389,6 +449,24 @@
     },
     {
       "key": {
+        "uuid": "fc8bae99_77536377",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24b6798a_4101b582",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26d5d0fc_d3398e09",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
@@ -433,6 +511,30 @@
       "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc98d40c_514fa99e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5ed3127_8442589d",
+      "range": {
+        "startLine": 682,
+        "startChar": 41,
+        "endLine": 682,
+        "endChar": 87
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -527,6 +629,30 @@
       "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f065ff20_5a43dd38",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-24T00:36:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5058c3ef_8ce5b2d6",
+      "range": {
+        "startLine": 287,
+        "startChar": 71,
+        "endLine": 287,
+        "endChar": 73
+      },
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
