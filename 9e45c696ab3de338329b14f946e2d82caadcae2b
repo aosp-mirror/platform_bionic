@@ -414,6 +414,24 @@
     },
     {
       "key": {
+        "uuid": "23abced1_b631ddac",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-24T02:01:07Z",
+      "side": 1,
+      "message": "I\u0027m still not convinced that\u0027s a good change.\n\nThe bionic_tls struct is part of static TLS (currently 12200 bytes for 64-bit, 11080 bytes for 32-bit). Adding one extra byte of TLS won\u0027t map an extra page. I would think dirty pages are the bigger concern(?), and they aren\u0027t affected by this change.\n\nIf a program configures a small stack stack with pthread_attr_setstacksize, then it will need to include enough stack for the TLS, including the 11-12K from bionic_tls, and any other DSOs loaded with the executable. In a way, I suppose it\u0027s not different from needing to anticipate the size of the stack frames in functions called from the thread.\n\nThe other TLS implementations I\u0027ve tested all allow allocating TLS variables larger than the stack.",
+      "parentUuid": "b10263b7_15368711",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "17ca602c_3079acda",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
