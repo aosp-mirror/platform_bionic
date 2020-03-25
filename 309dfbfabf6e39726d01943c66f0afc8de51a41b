@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7cb4cc85_eecd74e2",
+        "filename": "tests/spawn_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-25T16:28:20Z",
+      "side": 1,
+      "message": "Might need to be excluded from glibc test variants (which I don\u0027t know how to run). Deferring to Elliott.\n\nSeparately: nit: could we use reserved_signals.h in the test?",
+      "range": {
+        "startLine": 407,
+        "startChar": 2,
+        "endLine": 407,
+        "endChar": 50
+      },
+      "revId": "309dfbfabf6e39726d01943c66f0afc8de51a41b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
