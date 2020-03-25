@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1caf10ef_a91e0d97",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "?",
+      "parentUuid": "22616430_740f8b6a",
+      "range": {
+        "startLine": 206,
+        "startChar": 22,
+        "endLine": 206,
+        "endChar": 41
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0be492d8_43514ad2",
         "filename": "benchmarks/pthread_benchmark.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b24aed73_640e25e7",
+        "filename": "benchmarks/pthread_benchmark.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0be492d8_43514ad2",
+      "range": {
+        "startLine": 232,
+        "startChar": 42,
+        "endLine": 232,
+        "endChar": 49
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5ac44395_e5a0df5c",
         "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 8
@@ -62,6 +110,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5310369_2cf671dc",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ac44395_e5a0df5c",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "f445ceeb_3481b052",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eeb145c2_85c4f6ad",
+      "range": {
+        "startLine": 42,
+        "startChar": 11,
+        "endLine": 42,
+        "endChar": 13
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29ff75c3_a6583c7b",
         "filename": "libc/arch-arm64/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 8
@@ -108,6 +198,30 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7154fd99_32f054ab",
+        "filename": "libc/arch-arm64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29ff75c3_a6583c7b",
+      "range": {
+        "startLine": 37,
+        "startChar": 47,
+        "endLine": 37,
+        "endChar": 49
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +248,30 @@
     },
     {
       "key": {
+        "uuid": "73e1de96_8c21e107",
+        "filename": "libc/arch-arm64/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 8
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "225f36b5_dcba110e",
+      "range": {
+        "startLine": 40,
+        "startChar": 12,
+        "endLine": 40,
+        "endChar": 14
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "18d741de_b6b16198",
         "filename": "libc/bionic/__libc_init_main_thread.cpp",
         "patchSetId": 8
@@ -151,6 +289,24 @@
     },
     {
       "key": {
+        "uuid": "ae4c0d4f_afe9fd1d",
+        "filename": "libc/bionic/__libc_init_main_thread.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "ok",
+      "parentUuid": "18d741de_b6b16198",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e2635d2_6a849ce3",
         "filename": "libc/bionic/fork.cpp",
         "patchSetId": 8
@@ -165,6 +321,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "563e0d9c_16f5f94a",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e2635d2_6a849ce3",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -191,6 +365,30 @@
     },
     {
       "key": {
+        "uuid": "b5f234c1_11adb62c",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8187659_ff424000",
+      "range": {
+        "startLine": 102,
+        "startChar": 48,
+        "endLine": 102,
+        "endChar": 68
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23ed5dec_5f8e4741",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
@@ -214,6 +412,30 @@
     },
     {
       "key": {
+        "uuid": "ab95c6c1_f4bcb727",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "No: if we do the allocation in pthread_create, we prolong pthread_create for however long the allocation takes. If we allocate in the created thread instead, pthread_create can return sooner and the creating that can get on with whatever it was doing. There\u0027s a comment in pthread_create to this effect. I\u0027ll add one here too.",
+      "parentUuid": "23ed5dec_5f8e4741",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 3
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28151e32_037f819c",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
@@ -225,6 +447,24 @@
       "writtenOn": "2020-03-24T01:18:55Z",
       "side": 1,
       "message": "use a recursive mutex instead, like most of the rest of the code?",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1a6dcb1_7d2f8749",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "We\u0027d still need the bool. The comment just explains a beneficial effect of the logic we\u0027d need anyway. We\u0027d never take the recursive mutex recursively.",
+      "parentUuid": "28151e32_037f819c",
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -245,6 +485,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36cbf042_cc3688cd",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Yes, but only for the main thread, and for the main thread, donate_stack_on_exit is false because the requested stack allocation size is zero. Should ART touch every page on the main thread\u0027s stack? No, I think? But I don\u0027t want to touch that logic here.",
+      "parentUuid": "c7a92540_2a3f793d",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -271,6 +529,30 @@
     },
     {
       "key": {
+        "uuid": "6cc7e3a8_430a634e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Thanks. Will fix.",
+      "parentUuid": "7a7d7e3f_4361ef45",
+      "range": {
+        "startLine": 406,
+        "startChar": 51,
+        "endLine": 406,
+        "endChar": 57
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6179ca99_278c327b",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
@@ -291,6 +573,30 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7002340_916816a8",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "We use ANDROID_LOG_WARN for the mprotect failure above, don\u0027t we? I\u0027ll change both to ANDROID_LOG_ERROR.",
+      "parentUuid": "6179ca99_278c327b",
+      "range": {
+        "startLine": 454,
+        "startChar": 28,
+        "endLine": 454,
+        "endChar": 44
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -317,6 +623,30 @@
     },
     {
       "key": {
+        "uuid": "6061a3b0_b077f143",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "And that\u0027s what I meant. :-) I can see how that phrasing might be ambiguous. I\u0027ll find some other expression.",
+      "parentUuid": "390e3d45_6a61af21",
+      "range": {
+        "startLine": 548,
+        "startChar": 38,
+        "endLine": 548,
+        "endChar": 41
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb08ce9a_640fa875",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 8
@@ -331,6 +661,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e78f4b5f_ca7839d8",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb08ce9a_640fa875",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -357,6 +705,30 @@
     },
     {
       "key": {
+        "uuid": "ea8cf2ba_221e82b5",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "021ad8b3_981b8ae6",
+      "range": {
+        "startLine": 49,
+        "startChar": 5,
+        "endLine": 49,
+        "endChar": 19
+      },
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f4bf7d8e_647bb195",
         "filename": "libc/bionic/pthread_internal.cpp",
         "patchSetId": 8
@@ -371,6 +743,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "941d1f3e_9f2c70d7",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "I was trying to keep all the names in one place. Changed.",
+      "parentUuid": "f4bf7d8e_647bb195",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -391,6 +781,24 @@
     },
     {
       "key": {
+        "uuid": "0317349d_def70ba2",
+        "filename": "libc/bionic/pthread_internal.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd9abc50_a81f9372",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c252d8e1_6c1a82f8",
         "filename": "libc/include/pthread.h",
         "patchSetId": 8
@@ -408,6 +816,24 @@
     },
     {
       "key": {
+        "uuid": "a63915e4_e6c5608e",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "\u003e this still seems like a weird API to me. and it seems like the ART change always calls this on every stack?\n\nNo. The ART changes in this topic teach ART not to adjust thread mappings until we actually see a stack overflow, and stack overflows are hopefully very rare.\n\n\u003e do we expect anyone except ART to need to use this?\n\nYes: anyone who mprotects the stack needs to call this function. Does anyone except ART? Probably not. Another option is just changing mprotect (and mmap? and munmap?) to detect when it\u0027s mutating on the calling thread\u0027s stack page protections and internally do what pthread_prevent_stack_reuse_np does --- but I\u0027m hesitant to complicate mprotect when we could just expose this function. WDYT?\n\n(Presumably, mprotect on a non-current thread\u0027s stack is rare enough that we don\u0027t have to worry about it.)",
+      "parentUuid": "c252d8e1_6c1a82f8",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "066c666c_3461705d",
         "filename": "libc/include/pthread.h",
         "patchSetId": 8
@@ -419,6 +845,24 @@
       "writtenOn": "2020-03-24T01:18:55Z",
       "side": 1,
       "message": "i\u0027m not convinced this pulls its weight. why doesn\u0027t the zygote just create and destroy n threads? what\u0027s the actual measured cost?",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1d93700_4bf8c25a",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "\u003e what\u0027s the actual measured cost?\n\nI\u0027ll measure. But I expect to see a lot of scheduling variance in joining all those threads, and this variance wouldn\u0027t show up in a tight benchmark. It doesn\u0027t feel right to block device boot on creating and joining a pile of threads. It\u0027s a lot simpler to just provide an API to do the right thing (and not schedule()). Would it help if we didn\u0027t put the API in the header?",
+      "parentUuid": "066c666c_3461705d",
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true

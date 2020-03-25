@@ -432,6 +432,24 @@
     },
     {
       "key": {
+        "uuid": "cd9a5408_289d6a01",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-25T10:56:28Z",
+      "side": 1,
+      "message": "All right. You\u0027ve convinced me. I\u0027ll restore the old static TLS behavior.",
+      "parentUuid": "23abced1_b631ddac",
+      "revId": "9e45c696ab3de338329b14f946e2d82caadcae2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "17ca602c_3079acda",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 7
