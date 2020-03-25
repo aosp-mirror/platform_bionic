@@ -1459,11 +1459,11 @@ static bool find_library_internal(android_namespace_t* ns,
                                   LoadTask* task,
                                   ZipArchiveCache* zip_archive_cache,
                                   LoadTaskList* load_tasks,
-                                  int rtld_flags,
-                                  bool search_linked_namespaces) {
+                                  int rtld_flags) {
   soinfo* candidate;
 
-  if (find_loaded_library_by_soname(ns, task->get_name(), search_linked_namespaces, &candidate)) {
+  if (find_loaded_library_by_soname(ns, task->get_name(), true /* search_linked_namespaces */,
+                                    &candidate)) {
     LD_LOG(kLogDlopen,
            "find_library_internal(ns=%s, task=%s): Already loaded (by soname): %s",
            ns->get_name(), task->get_name(), candidate->get_realpath());
@@ -1476,7 +1476,8 @@ static bool find_library_internal(android_namespace_t* ns,
   TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder... ]",
         task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
+  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
+                   true /* search_linked_namespaces */)) {
     return true;
   }
 
@@ -1491,39 +1492,33 @@ static bool find_library_internal(android_namespace_t* ns,
            ns->get_name(), task->get_name(), g_default_namespace.get_name());
     ns = &g_default_namespace;
     if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
-                     search_linked_namespaces)) {
+                     true /* search_linked_namespaces */)) {
       return true;
     }
   }
   // END OF WORKAROUND
 
-  if (search_linked_namespaces) {
-    // if a library was not found - look into linked namespaces
-    // preserve current dlerror in the case it fails.
-    DlErrorRestorer dlerror_restorer;
-    LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Trying %zu linked namespaces",
-           ns->get_name(), task->get_name(), ns->linked_namespaces().size());
-    for (auto& linked_namespace : ns->linked_namespaces()) {
-      if (find_library_in_linked_namespace(linked_namespace, task)) {
-        if (task->get_soinfo() == nullptr) {
-          // try to load the library - once namespace boundary is crossed
-          // we need to load a library within separate load_group
-          // to avoid using symbols from foreign namespace while.
-          //
-          // However, actual linking is deferred until when the global group
-          // is fully identified and is applied to all namespaces.
-          // Otherwise, the libs in the linked namespace won't get symbols from
-          // the global group.
-          if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks, rtld_flags, false)) {
-            LD_LOG(
-                kLogDlopen, "find_library_internal(ns=%s, task=%s): Found in linked namespace %s",
-                ns->get_name(), task->get_name(), linked_namespace.linked_namespace()->get_name());
-            return true;
-          }
-        } else {
-          // lib is already loaded
-          return true;
-        }
+  // if a library was not found - look into linked namespaces
+  // preserve current dlerror in the case it fails.
+  DlErrorRestorer dlerror_restorer;
+  LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Trying %zu linked namespaces",
+         ns->get_name(), task->get_name(), ns->linked_namespaces().size());
+  for (auto& linked_namespace : ns->linked_namespaces()) {
+    if (find_library_in_linked_namespace(linked_namespace, task)) {
+      // Library is already loaded.
+      if (task->get_soinfo() != nullptr) {
+        // n.b. This code path runs when find_library_in_linked_namespace found an already-loaded
+        // library by soname. That should only be possible with a greylist lookup, where we switch
+        // the namespace, because otherwise, find_library_in_linked_namespace is duplicating the
+        // soname scan done in this function's first call to find_loaded_library_by_soname.
+        return true;
+      }
+
+      if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks,
+                       rtld_flags, false /* search_linked_namespaces */)) {
+        LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Found in linked namespace %s",
+               ns->get_name(), task->get_name(), linked_namespace.linked_namespace()->get_name());
+        return true;
       }
     }
   }
@@ -1560,7 +1555,6 @@ bool find_libraries(android_namespace_t* ns,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
-                    bool search_linked_namespaces,
                     std::vector<android_namespace_t*>* namespaces) {
   // Step 0: prepare.
   std::unordered_map<const soinfo*, ElfReader> readers_map;
@@ -1616,8 +1610,7 @@ bool find_libraries(android_namespace_t* ns,
                                task,
                                &zip_archive_cache,
                                &load_tasks,
-                               rtld_flags,
-                               search_linked_namespaces || is_dt_needed)) {
+                               rtld_flags)) {
       return false;
     }
 
@@ -1859,8 +1852,7 @@ static soinfo* find_library(android_namespace_t* ns,
                              0,
                              rtld_flags,
                              extinfo,
-                             false /* add_as_children */,
-                             true /* search_linked_namespaces */)) {
+                             false /* add_as_children */)) {
     if (si != nullptr) {
       soinfo_unload(si);
     }
