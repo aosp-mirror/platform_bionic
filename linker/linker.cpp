@@ -1062,14 +1062,6 @@ static int open_library(android_namespace_t* ns,
     }
   }
 
-  // For the bootstrap linker, search for the bootstrap bionic libraries (e.g. libc.so).
-#if !defined(__ANDROID_APEX__)
-  if (fd == -1) {
-    std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset, bootstrap_paths, realpath);
-  }
-#endif
-
   // Finally search the namespace's main search path list.
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
@@ -2422,6 +2414,21 @@ static void add_soinfos_to_namespace(const soinfo_list_t& soinfos, android_names
   for (auto si : soinfos) {
     si->add_secondary_namespace(ns);
   }
+}
+
+std::vector<std::string> fix_lib_paths(std::vector<std::string> paths) {
+  // For the bootstrap linker, insert /system/${LIB}/bootstrap in front of /system/${LIB} in any
+  // namespace search path. The bootstrap linker should prefer to use the bootstrap bionic libraries
+  // (e.g. libc.so).
+#if !defined(__ANDROID_APEX__)
+  for (size_t i = 0; i < paths.size(); ++i) {
+    if (paths[i] == kSystemLibDir) {
+      paths.insert(paths.begin() + i, std::string(kSystemLibDir) + "/bootstrap");
+      ++i;
+    }
+  }
+#endif
+  return paths;
 }
 
 android_namespace_t* create_namespace(const void* caller_addr,
