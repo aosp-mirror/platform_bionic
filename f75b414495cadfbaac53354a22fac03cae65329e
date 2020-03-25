@@ -102,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "4606e2ea_e01b8184",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1268571
+      },
+      "writtenOn": "2020-03-25T10:18:31Z",
+      "side": 1,
+      "message": "People can use that to target processes. I don\u0027t think we should expect them to know what is zygote-child and what isn\u0027t. Trying to find that out in heapprofd before sending the signal sounds like more trouble than just ignoring it in the client always.",
+      "parentUuid": "e1c13df9_9ae07db5",
+      "revId": "f75b414495cadfbaac53354a22fac03cae65329e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "716405a1_17a34e02",
         "filename": "libc/bionic/android_profiling_dynamic.cpp",
         "patchSetId": 4
