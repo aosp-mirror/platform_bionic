@@ -537,10 +537,10 @@ class LoadTask {
 
   static deleter_t deleter;
 
-  static LoadTask* create(const char* name,
-                          soinfo* needed_by,
-                          android_namespace_t* start_from,
-                          std::unordered_map<const soinfo*, ElfReader>* readers_map) {
+  // needed_by is NULL iff dlopen is called from memory that isn't part of any known soinfo.
+  static LoadTask* create(const char* _Nonnull name, soinfo* _Nullable needed_by,
+                          android_namespace_t* _Nonnull start_from,
+                          std::unordered_map<const soinfo*, ElfReader>* _Nonnull readers_map) {
     LoadTask* ptr = TypeBasedAllocator<LoadTask>::alloc();
     return new (ptr) LoadTask(name, needed_by, start_from, readers_map);
   }
@@ -1040,40 +1040,24 @@ static int open_library(android_namespace_t* ns,
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
-    int fd = -1;
-
-    if (strstr(name, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(zip_archive_cache, name, file_offset, realpath);
-    }
-
-    if (fd == -1) {
-      fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
-      if (fd != -1) {
-        *file_offset = 0;
-        if (!realpath_fd(fd, realpath)) {
-          if (!is_first_stage_init()) {
-            PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-                  name);
-          }
-          *realpath = name;
-        }
-      }
-    }
-
-    return fd;
+    return open_library_at_path(zip_archive_cache, name, file_offset, realpath);
   }
 
-  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the default library path
+  // LD_LIBRARY_PATH has the highest priority. We don't have to check accessibility when searching
+  // the namespace's path lists, because anything found on a namespace path list should always be
+  // accessible.
   int fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_ld_library_paths(), realpath);
+
+  // Try the DT_RUNPATH, and verify that the library is accessible.
   if (fd == -1 && needed_by != nullptr) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath(), realpath);
-    // Check if the library is accessible
     if (fd != -1 && !ns->is_accessible(*realpath)) {
       close(fd);
       fd = -1;
     }
   }
 
+  // For the bootstrap linker, search for the bootstrap bionic libraries (e.g. libc.so).
 #if !defined(__ANDROID_APEX__)
   if (fd == -1) {
     std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
@@ -1081,6 +1065,7 @@ static int open_library(android_namespace_t* ns,
   }
 #endif
 
+  // Finally search the namespace's main search path list.
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
@@ -1282,9 +1267,6 @@ static bool load_library(android_namespace_t* ns,
   }
 
   soinfo* si = soinfo_alloc(ns, realpath.c_str(), &file_stat, file_offset, rtld_flags);
-  if (si == nullptr) {
-    return false;
-  }
 
   task->set_soinfo(si);
 
@@ -1337,14 +1319,13 @@ static bool load_library(android_namespace_t* ns,
   soinfo* needed_by = task->get_needed_by();
   const android_dlextinfo* extinfo = task->get_extinfo();
 
-  off64_t file_offset;
-  std::string realpath;
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
-    file_offset = 0;
+    off64_t file_offset = 0;
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
       file_offset = extinfo->library_fd_offset;
     }
 
+    std::string realpath;
     if (!realpath_fd(extinfo->library_fd, &realpath)) {
       if (!is_first_stage_init()) {
         PRINT(
@@ -1362,10 +1343,12 @@ static bool load_library(android_namespace_t* ns,
 
   LD_LOG(kLogDlopen,
          "load_library(ns=%s, task=%s, flags=0x%x, search_linked_namespaces=%d): calling "
-         "open_library with realpath=%s",
-         ns->get_name(), name, rtld_flags, search_linked_namespaces, realpath.c_str());
+         "open_library",
+         ns->get_name(), name, rtld_flags, search_linked_namespaces);
 
   // Open the file.
+  off64_t file_offset;
+  std::string realpath;
   int fd = open_library(ns, zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
     if (task->is_dt_needed()) {
