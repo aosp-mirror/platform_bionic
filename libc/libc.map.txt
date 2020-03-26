@@ -1550,6 +1550,12 @@ LIBC_R { # introduced=R
     _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
 
+LIBC_S { # introduced=31
+  global:
+    ffsl;
+    ffsll;
+} LIBC_R;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86
