@@ -866,6 +866,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edc0728a_8244364d",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1017430
+      },
+      "writtenOn": "2020-03-26T19:29:18Z",
+      "side": 1,
+      "message": "enh, when would the zygote create those threads? post-fork? the mmap_sem contention at that point would be severe (which is why this change is beneficial)",
+      "parentUuid": "a1d93700_4bf8c25a",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
