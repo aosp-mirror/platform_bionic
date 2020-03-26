@@ -1550,7 +1550,7 @@ LIBC_R { # introduced=R
     _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
 
-LIBC_S { # introduced=31
+LIBC_S { # introduced=S
   global:
     ffsl;
     ffsll;
