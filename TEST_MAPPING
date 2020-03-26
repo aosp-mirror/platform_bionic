@@ -7,6 +7,9 @@
       "name": "fdtrack_test"
     },
     {
+      "name": "gwp_asan_unittest"
+    },
+    {
       "name": "malloc_debug_system_tests"
     },
     {
