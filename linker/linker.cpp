@@ -602,6 +602,11 @@ class LoadTask {
     return start_from_;
   }
 
+  void remove_cached_elf_reader() {
+    CHECK(si_ != nullptr);
+    (*elf_readers_map_).erase(si_);
+  }
+
   const ElfReader& get_elf_reader() const {
     CHECK(si_ != nullptr);
     return (*elf_readers_map_)[si_];
@@ -1272,8 +1277,9 @@ static bool load_library(android_namespace_t* ns,
 
   // Read the ELF header and some of the segments.
   if (!task->read(realpath.c_str(), file_stat.st_size)) {
-    soinfo_free(si);
+    task->remove_cached_elf_reader();
     task->set_soinfo(nullptr);
+    soinfo_free(si);
     return false;
   }
 
