@@ -3273,9 +3273,8 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     // Fail if app is targeting M or above.
     int app_target_api_level = get_application_target_sdk_version();
     if (app_target_api_level >= 23) {
-      DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
-                     "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
-                     "Enforced-for-API-level-23)", get_realpath());
+      DL_ERR_AND_LOG("\"%s\" has text relocations (%s#Text-Relocations-Enforced-for-API-level-23)",
+                     get_realpath(), kBionicChangesUrl);
       return false;
     }
     // Make segments writable to allow text relocations to work properly. We will later call
