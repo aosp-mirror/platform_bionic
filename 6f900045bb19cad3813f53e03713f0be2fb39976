@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a7ef7a1_a5fe7a78",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2496,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:35:39Z",
+      "side": 1,
+      "message": "should set_default_library_paths() call fix_lib_paths() itself instead?",
+      "range": {
+        "startLine": 2496,
+        "startChar": 6,
+        "endLine": 2496,
+        "endChar": 31
+      },
+      "revId": "6f900045bb19cad3813f53e03713f0be2fb39976",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
