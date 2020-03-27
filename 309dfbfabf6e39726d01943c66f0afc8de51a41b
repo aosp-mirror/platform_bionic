@@ -46,6 +46,30 @@
       "revId": "309dfbfabf6e39726d01943c66f0afc8de51a41b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37ebf3dc_0a309c5d",
+        "filename": "tests/spawn_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 407,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-03-27T15:23:45Z",
+      "side": 1,
+      "message": "meh, the glibc tests need a lot of hand-holding anyway. whoever next wants to use them can fix this if they care (or just use --gtest_filter to run the tests they\u0027re actually interested in, which is all i ever do).\n\nwould be good to use the new constants (and it looks like those two references to `+ 0` are the only other places in tests that should be fixed anyway).",
+      "parentUuid": "9932c7be_ce5630ab",
+      "range": {
+        "startLine": 407,
+        "startChar": 2,
+        "endLine": 407,
+        "endChar": 50
+      },
+      "revId": "309dfbfabf6e39726d01943c66f0afc8de51a41b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
