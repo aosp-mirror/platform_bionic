@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _DIRENT_H_
-#define _DIRENT_H_
+#pragma once
+
+/**
+ * @file dirent.h
+ * @brief Directory entry iteration.
+ */
 
 #include <stdint.h>
 #include <sys/cdefs.h>
@@ -35,17 +39,23 @@
 
 __BEGIN_DECLS
 
-#ifndef DT_UNKNOWN
+/** d_type value when the type is not known. */
 #define DT_UNKNOWN 0
+/** d_type value for a FIFO. */
 #define DT_FIFO 1
+/** d_type value for a character device. */
 #define DT_CHR 2
+/** d_type value for a directory. */
 #define DT_DIR 4
+/** d_type value for a block device. */
 #define DT_BLK 6
+/** d_type value for a regular file. */
 #define DT_REG 8
+/** d_type value for a symbolic link. */
 #define DT_LNK 10
+/** d_type value for a socket. */
 #define DT_SOCK 12
 #define DT_WHT 14
-#endif
 
 #if defined(__LP64__)
 #define __DIRENT64_INO_T ino_t
@@ -60,7 +70,9 @@ __BEGIN_DECLS
     unsigned char d_type; \
     char d_name[256]; \
 
+/** The structure returned by readdir(). Identical to dirent64 on Android. */
 struct dirent { __DIRENT64_BODY };
+/** The structure returned by readdir64(). Identical to dirent on Android. */
 struct dirent64 { __DIRENT64_BODY };
 
 #undef __DIRENT64_BODY
@@ -74,29 +86,158 @@ struct dirent64 { __DIRENT64_BODY };
 
 #define d_fileno d_ino
 
+/** The structure returned by opendir()/fopendir(). */
 typedef struct DIR DIR;
 
+/**
+ * [opendir(3)](http://man7.org/linux/man-pages/man3/opendir.3.html)
+ * opens a directory stream for the directory at `__path`.
+ *
+ * Returns null and sets `errno` on failure.
+ */
 DIR* opendir(const char* __path);
+
+/**
+ * [fopendir(3)](http://man7.org/linux/man-pages/man3/opendir.3.html)
+ * opens a directory stream for the directory at `__dir_fd`.
+ *
+ * Returns null and sets `errno` on failure.
+ */
 DIR* fdopendir(int __dir_fd);
+
+/**
+ * [readdir(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
+ * returns the next directory entry in the given directory.
+ *
+ * Returns a pointer to a directory entry on success,
+ * or returns null and leaves `errno` unchanged at the end of the directory,
+ * or returns null and sets `errno` on failure.
+ */
 struct dirent* readdir(DIR* __dir);
+
+/**
+ * [readdir64(3)](http://man7.org/linux/man-pages/man3/readdir.3.html)
+ * returns the next directory entry in the given directory.
+ *
+ * Returns a pointer to a directory entry on success,
+ * or returns null and leaves `errno` unchanged at the end of the directory,
+ * or returns null and sets `errno` on failure.
+ */
 struct dirent64* readdir64(DIR* __dir) __INTRODUCED_IN(21);
+
 int readdir_r(DIR* __dir, struct dirent* __entry, struct dirent** __buffer) __attribute__((__deprecated__("readdir_r is deprecated; use readdir instead")));
 int readdir64_r(DIR* __dir, struct dirent64* __entry, struct dirent64** __buffer) __INTRODUCED_IN(21) __attribute__((__deprecated__("readdir64_r is deprecated; use readdir64 instead")));
+
+/**
+ * [closedir(3)](http://man7.org/linux/man-pages/man3/closedir.3.html)
+ * closes a directory stream.
+ *
+ * Returns 0 on success and returns -1 and sets `errno` on failure.
+ */
 int closedir(DIR* __dir);
+
+/**
+ * [rewinddir(3)](http://man7.org/linux/man-pages/man3/rewinddir.3.html)
+ * rewinds a directory stream to the first entry.
+ */
 void rewinddir(DIR* __dir);
+
+/**
+ * [seekdir(3)](http://man7.org/linux/man-pages/man3/seekdir.3.html)
+ * seeks a directory stream to the given entry, which must be a value returned
+ * by telldir().
+ *
+ * Available since API level 23.
+ */
 void seekdir(DIR* __dir, long __location) __INTRODUCED_IN(23);
+
+/**
+ * [telldir(3)](http://man7.org/linux/man-pages/man3/telldir.3.html)
+ * returns a value representing the current position in the directory
+ * for use with seekdir().
+ *
+ * Returns the current position on success and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 23.
+ */
 long telldir(DIR* __dir) __INTRODUCED_IN(23);
+
+/**
+ * [dirfd(3)](http://man7.org/linux/man-pages/man3/dirfd.3.html)
+ * returns the file descriptor backing the given directory stream.
+ *
+ * Returns a file descriptor on success and returns -1 and sets `errno` on failure.
+ */
 int dirfd(DIR* __dir);
+
+/**
+ * [alphasort](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * comparator for use with scandir() that uses strcoll().
+ */
 int alphasort(const struct dirent** __lhs, const struct dirent** __rhs);
+
+/**
+ * [alphasort64](http://man7.org/linux/man-pages/man3/alphasort.3.html) is a
+ * comparator for use with scandir64() that uses strcmp().
+ *
+ * Available since API level 21.
+ */
 int alphasort64(const struct dirent64** __lhs, const struct dirent64** __rhs) __INTRODUCED_IN(21);
-int scandir64(const char* __path, struct dirent64*** __name_list, int (*__filter)(const struct dirent64*), int (*__comparator)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(21);
+
+/**
+ * [scandir(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)
+ * scans all the directory `__path`, filtering entries with `__filter` and
+ * sorting them with qsort() using the given `__comparator`, and storing them
+ * into `__name_list`. Passing NULL as the filter accepts all entries.
+ *
+ * Returns the number of entries returned in the list on success,
+ * and returns -1 and sets `errno` on failure.
+ */
 int scandir(const char* __path, struct dirent*** __name_list, int (*__filter)(const struct dirent*), int (*__comparator)(const struct dirent**, const struct dirent**));
 
+/**
+ * [scandir64(3)](http://man7.org/linux/man-pages/man3/scandir.3.html)
+ * scans all the directory `__path`, filtering entries with `__filter` and
+ * sorting them with qsort() using the given `__comparator`, and storing them
+ * into `__name_list`. Passing NULL as the filter accepts all entries.
+ *
+ * Returns the number of entries returned in the list on success,
+ * and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 21.
+ */
+int scandir64(const char* __path, struct dirent64*** __name_list, int (*__filter)(const struct dirent64*), int (*__comparator)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(21);
+
 #if defined(__USE_GNU)
+
+/**
+ * [scandirat64(3)](http://man7.org/linux/man-pages/man3/scandirat.3.html)
+ * scans all the directory referenced by the pair of `__dir_fd` and `__path`,
+ * filtering entries with `__filter` and sorting them with qsort() using the
+ * given `__comparator`, and storing them into `__name_list`. Passing NULL as
+ * the filter accepts all entries.
+ *
+ * Returns the number of entries returned in the list on success,
+ * and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 24.
+ */
 int scandirat64(int __dir_fd, const char* __path, struct dirent64*** __name_list, int (*__filter)(const struct dirent64*), int (*__comparator)(const struct dirent64**, const struct dirent64**)) __INTRODUCED_IN(24);
+
+/**
+ * [scandirat(3)](http://man7.org/linux/man-pages/man3/scandirat.3.html)
+ * scans all the directory referenced by the pair of `__dir_fd` and `__path`,
+ * filtering entries with `__filter` and sorting them with qsort() using the
+ * given `__comparator`, and storing them into `__name_list`. Passing NULL as
+ * the filter accepts all entries.
+ *
+ * Returns the number of entries returned in the list on success,
+ * and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 24.
+ */
 int scandirat(int __dir_fd, const char* __path, struct dirent*** __name_list, int (*__filter)(const struct dirent*), int (*__comparator)(const struct dirent**, const struct dirent**)) __INTRODUCED_IN(24);
+
 #endif
 
 __END_DECLS
-
-#endif
