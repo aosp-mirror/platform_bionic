@@ -31,6 +31,8 @@
 # if !defined(POSIX_SPAWN_SETSID)
 #  define POSIX_SPAWN_SETSID 0
 # endif
+#else
+#include <platform/bionic/reserved_signals.h>
 #endif
 
 TEST(spawn, posix_spawnattr_init_posix_spawnattr_destroy) {
@@ -292,7 +294,7 @@ struct ProcStat {
   pid_t sid;
 };
 
-static void GetChildStat(posix_spawnattr_t* sa, ProcStat* ps) {
+static __attribute__((unused)) void GetChildStat(posix_spawnattr_t* sa, ProcStat* ps) {
   std::string content;
   CatFileToString(sa, "/proc/self/stat", &content);
 
@@ -307,7 +309,7 @@ struct ProcStatus {
   uint64_t sigign;
 };
 
-static void GetChildStatus(posix_spawnattr_t* sa, ProcStatus* ps) {
+static void __attribute__((unused)) GetChildStatus(posix_spawnattr_t* sa, ProcStatus* ps) {
   std::string content;
   CatFileToString(sa, "/proc/self/status", &content);
 
@@ -377,6 +379,9 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETPGROUP_set) {
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't ignore the same signals.";
+#else
   // Block SIGBUS in the parent...
   sigset_t just_SIGBUS;
   sigemptyset(&just_SIGBUS);
@@ -400,15 +405,21 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
   // TIMER_SIGNAL should also be blocked.
   uint64_t expected_blocked = 0;
   SignalSetAdd(&expected_blocked, SIGALRM);
-  SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
+  SignalSetAdd(&expected_blocked, BIONIC_SIGNAL_POSIX_TIMERS);
   EXPECT_EQ(expected_blocked, ps.sigblk);
 
-  EXPECT_EQ(static_cast<uint64_t>(0), ps.sigign);
+  uint64_t expected_ignored = 0;
+  SignalSetAdd(&expected_ignored, BIONIC_SIGNAL_ART_PROFILER);
+  EXPECT_EQ(expected_ignored, ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+#endif
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't ignore the same signals.";
+#else
   // Ignore SIGALRM and SIGCONT in the parent...
   ASSERT_NE(SIG_ERR, signal(SIGALRM, SIG_IGN));
   ASSERT_NE(SIG_ERR, signal(SIGCONT, SIG_IGN));
@@ -430,14 +441,16 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
 
   // TIMER_SIGNAL should be blocked.
   uint64_t expected_blocked = 0;
-  SignalSetAdd(&expected_blocked, __SIGRTMIN + 0);
+  SignalSetAdd(&expected_blocked, BIONIC_SIGNAL_POSIX_TIMERS);
   EXPECT_EQ(expected_blocked, ps.sigblk);
 
   uint64_t expected_ignored = 0;
   SignalSetAdd(&expected_ignored, SIGCONT);
+  SignalSetAdd(&expected_ignored, BIONIC_SIGNAL_ART_PROFILER);
   EXPECT_EQ(expected_ignored, ps.sigign);
 
   ASSERT_EQ(0, posix_spawnattr_destroy(&sa));
+#endif
 }
 
 TEST(spawn, signal_stress) {
