@@ -117,6 +117,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0be507ff_d6f17a3f",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-30T22:58:20Z",
+      "side": 1,
+      "message": "\u003e Bionic\u0027s wrappers for signal masking/blocking/unblocking transparently insert/remove the reserved handlers from the signal sets,\n\nWe could teach bionic to keep the signal blocked until the first sigaction. This approach would mean that the ART signal wouldn\u0027t get unblocked though. If that\u0027s a problem, maybe we could fold it into BIONIC_SIGNAL_PROFILER and dispatch to ART based on the sigqueue integer.",
+      "parentUuid": "ed39c19c_b596e77d",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
