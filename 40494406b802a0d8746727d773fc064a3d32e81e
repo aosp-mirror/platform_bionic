@@ -22,6 +22,30 @@
       "revId": "40494406b802a0d8746727d773fc064a3d32e81e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9886d1e_94b1d536",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-03-30T23:54:00Z",
+      "side": 1,
+      "message": "I believe it\u0027s still needed to avoid a vector\u003cstring\u003e copy. The `library_paths` expression is an lvalue (even though the parameter type is an rval-reference), so without std::move, constructing fix_lib_path\u0027s parameter would use the copy-ctor, not the move-ctor.\n\nRelevant: \"Is an Rvalue Reference an Rvalue?\" http://thbecker.net/articles/rvalue_references/section_05.html\n\nDemo: https://rextester.com/BCCM27785\n\nAside: This CL should be adding no calls to vector\u003cstring\u003e\u0027s copy constructor. fix_lib_paths itself should move its parameter to its return value. In this case, Clang would issue a -Wredundant-move warning for `return std::move(paths)`.",
+      "parentUuid": "af639e8a_68af5423",
+      "range": {
+        "startLine": 105,
+        "startChar": 43,
+        "endLine": 105,
+        "endChar": 52
+      },
+      "revId": "40494406b802a0d8746727d773fc064a3d32e81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
