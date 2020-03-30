@@ -45,6 +45,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc83162e_8c07ef27",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-30T21:43:42Z",
+      "side": 1,
+      "message": "I was more concerned over the signals staying blocked for such processes, in which case the kernel would have to queue the RT signals (I believe it has to, and will keep queueing them up to the O(10k) queue limit on a typical Android device?).\n\nFTR, I don\u0027t think it\u0027d be a problem in practice regardless, given that the effective signalling rates for the reserved signals should be low.",
+      "parentUuid": "5d5c73b3_96f857f6",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
