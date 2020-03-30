@@ -68,7 +68,7 @@ enum {
 #define PTHREAD_ONCE_INIT 0
 
 #if __ANDROID_API__ >= 24
-#define PTHREAD_BARRIER_SERIAL_THREAD -1
+#define PTHREAD_BARRIER_SERIAL_THREAD (-1)
 #endif
 
 #if defined(__LP64__)
