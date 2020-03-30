@@ -1747,6 +1747,7 @@ cc_library_headers {
         "//art:__subpackages__",
         "//bionic:__subpackages__",
         "//frameworks:__subpackages__",
+        "//external/gwp_asan:__subpackages__",
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
@@ -1774,6 +1775,12 @@ cc_library_headers {
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+        "com.android.art.debug",
+        "com.android.art.release",
+    ],
 
     no_libcrt: true,
     stl: "none",
@@ -1905,6 +1912,10 @@ cc_defaults {
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
 
     cflags: [
         "-Wno-gcc-compat",
