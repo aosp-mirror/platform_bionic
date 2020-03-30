@@ -22,6 +22,29 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d5c73b3_96f857f6",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-30T21:19:52Z",
+      "side": 1,
+      "message": "If that happens, all that goes wrong is that the non-bionic process in question doesn\u0027t get profiling and debugging signals --- not the end of the world. If that process uses those signals for its own purposes, it\u0027s going to malfunction when we send system-wide signals no matter what.",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
