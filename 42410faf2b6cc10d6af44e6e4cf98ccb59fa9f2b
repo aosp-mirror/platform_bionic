@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a7ee6a8b_d7f45d2a",
+        "filename": "libc/include/dirent.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-03-30T20:48:55Z",
+      "side": 1,
+      "message": "Doesn\u0027t agree with the header or the map file.",
+      "revId": "42410faf2b6cc10d6af44e6e4cf98ccb59fa9f2b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
