@@ -45,7 +45,8 @@ cc_defaults {
         arm64: {
             cflags: [
                 "-fsanitize=shadow-call-stack",
-                "-mbranch-protection=standard",
+                // Disable this option for now: see b/151372823
+                //"-mbranch-protection=standard",
             ],
         },
     },
@@ -774,17 +775,6 @@ cc_test {
     name: "bionic-unit-tests",
     defaults: [
         "bionic_unit_tests_defaults",
-    ],
-}
-
-cc_test {
-    name: "bionic-unit-tests-scudo",
-    defaults: [
-        "bionic_unit_tests_defaults",
-    ],
-
-    shared_libs: [
-        "libc_scudo",
     ],
 }
 
