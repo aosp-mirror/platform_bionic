@@ -779,17 +779,6 @@ cc_test {
 }
 
 cc_test {
-    name: "bionic-unit-tests-scudo",
-    defaults: [
-        "bionic_unit_tests_defaults",
-    ],
-
-    shared_libs: [
-        "libc_scudo",
-    ],
-}
-
-cc_test {
     name: "bionic-stress-tests",
     defaults: [
         "bionic_tests_defaults",

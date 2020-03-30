@@ -63,6 +63,14 @@ __LIBC_HIDDEN__ void __libc_init_profiling_handlers() {
   action.sa_flags = SA_SIGINFO | SA_RESTART;
   action.sa_sigaction = HandleProfilingSignal;
   sigaction(BIONIC_SIGNAL_PROFILER, &action, nullptr);
+
+  // The perfetto_hprof ART plugin installs a signal handler to handle this signal. That plugin
+  // does not get loaded for a) non-apps, b) non-profilable apps on user. The default signal
+  // disposition is to crash. We do not want the target to crash if we accidentally target a
+  // non-app or non-profilable process.
+  //
+  // This does *not* get run for processes that statically link libc, and those will still crash.
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
 }
 
 static void HandleSigsysSeccompOverride(int, siginfo_t*, void*);
