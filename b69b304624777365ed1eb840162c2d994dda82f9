@@ -93,6 +93,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed39c19c_b596e77d",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-30T22:14:11Z",
+      "side": 1,
+      "message": "I\u0027m mostly writing this for the current state of the profiling signal handlers. The assumptions are:\n* it\u0027s safe to discard the signal that was enqueued after execve\u0027s block, as it\u0027s not relevant to the new process image (even though the PID has stayed the same)\n* it\u0027s not a big deal to discard a signal that is delivered early in the process\u0027 startup (before libc/ART establish the correct signal handlers).\n\nI agree that the alternative of keeping the signals blocked until libc/ART/etc would be nice in theory (and avoid polluting the linker), but my main concern is that would be too brittle to achieve in practice. Bionic\u0027s wrappers for signal masking/blocking/unblocking transparently insert/remove the reserved handlers from the signal sets, so it\u0027s super easy for some common code to accidentally, and prematurely, unblock the reserved signals.\n\nAs an example, afaict, the destructor of ScopedSignalBlocker in the linker will end up unblocking all of the reserved signals (as the sigprocmask(SET_MASK) ends up going through reserved_signals.h\u0027s filtering): https://cs.android.com/android/platform/superproject/+/master:bionic/linker/linker_tls.cpp;l\u003d63\n\nLosing some signals (early in the image\u0027s lifetime) is ok for the profilers. It might not generalise, but I\u0027m not sure how to practically guarantee that the block stays until the relevant library otherwise.",
+      "parentUuid": "90161df8_adb25d14",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
