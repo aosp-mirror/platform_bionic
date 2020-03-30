@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af639e8a_68af5423",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-30T15:08:08Z",
+      "side": 1,
+      "message": "This no longer serves any purpose since fix_lib_paths doesn\u0027t do perfect forwarding.",
+      "range": {
+        "startLine": 105,
+        "startChar": 43,
+        "endLine": 105,
+        "endChar": 52
+      },
+      "revId": "40494406b802a0d8746727d773fc064a3d32e81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
