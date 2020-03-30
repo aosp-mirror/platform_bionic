@@ -69,6 +69,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90161df8_adb25d14",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-03-30T21:55:54Z",
+      "side": 1,
+      "message": "BTW, don\u0027t we want to unblock these signals only after we set up the actual handlers? Here, you set them to SIG_IGN, then change the mask, and if we do that, we get a window where we can lose the signal. If we sigaction first and _then_ unmask, we never drop a signal.\n\n\u003e  the kernel would have to queue the RT signals (I believe it has to, and will keep queueing them up to the O(10k) queue limit \n\nI just had a wonderful idea for making fork bombs worse. :-)",
+      "parentUuid": "cc83162e_8c07ef27",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
