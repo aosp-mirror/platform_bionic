@@ -303,7 +303,7 @@
 
 /* Intended for use in evaluated contexts. */
 #define __bos_dynamic_check_impl_and(bos_val, op, index, cond) \
-  (bos_val == __BIONIC_FORTIFY_UNKNOWN_SIZE ||                 \
+  ((bos_val) == __BIONIC_FORTIFY_UNKNOWN_SIZE ||                 \
    (__builtin_constant_p(index) && bos_val op index && (cond)))
 
 #define __bos_dynamic_check_impl(bos_val, op, index) \
