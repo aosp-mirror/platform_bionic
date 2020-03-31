@@ -141,6 +141,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec8fa57f_3cab9db4",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-03-31T14:28:33Z",
+      "side": 1,
+      "message": "Yes, we could in theory introduce something like a static bool to disable blocked signal filtering until libc acks that it has prepared the reserved handlers, but I do question whether that extra complexity is warranted, at least at this point in time.\n\n(ftr, next sigaction is on the next line of the linker, linker_debuggerd_init installs the BIONIC_SIGNAL_DEBUGGER handler)",
+      "parentUuid": "0be507ff_d6f17a3f",
+      "range": {
+        "startLine": 317,
+        "startChar": 47,
+        "endLine": 319,
+        "endChar": 42
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
