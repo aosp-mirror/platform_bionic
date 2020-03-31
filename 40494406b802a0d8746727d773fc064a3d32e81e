@@ -46,6 +46,30 @@
       "revId": "40494406b802a0d8746727d773fc064a3d32e81e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c0f46c3_640f89f9",
+        "filename": "linker/linker_namespaces.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-03-31T00:30:35Z",
+      "side": 1,
+      "message": "Sorry, I thought you needed std::vector\u003cstd::string\u003e\u0026\u0026 to fix_lib_paths to avoid the copy, but your demo proves me wrong. (Somewhat confusingly it\u0027s still called \"copy initialization\" even when it\u0027s an rvalue and the move constructor is used, which is buried in a note some way down in https://en.cppreference.com/w/cpp/language/copy_initialization.) Thanks for the explanation.",
+      "parentUuid": "e9886d1e_94b1d536",
+      "range": {
+        "startLine": 105,
+        "startChar": 43,
+        "endLine": 105,
+        "endChar": 52
+      },
+      "revId": "40494406b802a0d8746727d773fc064a3d32e81e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
