@@ -537,10 +537,10 @@ class LoadTask {
 
   static deleter_t deleter;
 
-  static LoadTask* create(const char* name,
-                          soinfo* needed_by,
-                          android_namespace_t* start_from,
-                          std::unordered_map<const soinfo*, ElfReader>* readers_map) {
+  // needed_by is NULL iff dlopen is called from memory that isn't part of any known soinfo.
+  static LoadTask* create(const char* _Nonnull name, soinfo* _Nullable needed_by,
+                          android_namespace_t* _Nonnull start_from,
+                          std::unordered_map<const soinfo*, ElfReader>* _Nonnull readers_map) {
     LoadTask* ptr = TypeBasedAllocator<LoadTask>::alloc();
     return new (ptr) LoadTask(name, needed_by, start_from, readers_map);
   }
@@ -600,6 +600,11 @@ class LoadTask {
   // returns the namespace from where we need to start loading this.
   const android_namespace_t* get_start_from() const {
     return start_from_;
+  }
+
+  void remove_cached_elf_reader() {
+    CHECK(si_ != nullptr);
+    (*elf_readers_map_).erase(si_);
   }
 
   const ElfReader& get_elf_reader() const {
@@ -1040,47 +1045,24 @@ static int open_library(android_namespace_t* ns,
 
   // If the name contains a slash, we should attempt to open it directly and not search the paths.
   if (strchr(name, '/') != nullptr) {
-    int fd = -1;
-
-    if (strstr(name, kZipFileSeparator) != nullptr) {
-      fd = open_library_in_zipfile(zip_archive_cache, name, file_offset, realpath);
-    }
-
-    if (fd == -1) {
-      fd = TEMP_FAILURE_RETRY(open(name, O_RDONLY | O_CLOEXEC));
-      if (fd != -1) {
-        *file_offset = 0;
-        if (!realpath_fd(fd, realpath)) {
-          if (!is_first_stage_init()) {
-            PRINT("warning: unable to get realpath for the library \"%s\". Will use given path.",
-                  name);
-          }
-          *realpath = name;
-        }
-      }
-    }
-
-    return fd;
+    return open_library_at_path(zip_archive_cache, name, file_offset, realpath);
   }
 
-  // Otherwise we try LD_LIBRARY_PATH first, and fall back to the default library path
+  // LD_LIBRARY_PATH has the highest priority. We don't have to check accessibility when searching
+  // the namespace's path lists, because anything found on a namespace path list should always be
+  // accessible.
   int fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_ld_library_paths(), realpath);
+
+  // Try the DT_RUNPATH, and verify that the library is accessible.
   if (fd == -1 && needed_by != nullptr) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, needed_by->get_dt_runpath(), realpath);
-    // Check if the library is accessible
     if (fd != -1 && !ns->is_accessible(*realpath)) {
       close(fd);
       fd = -1;
     }
   }
 
-#if !defined(__ANDROID_APEX__)
-  if (fd == -1) {
-    std::vector<std::string> bootstrap_paths = { std::string(kSystemLibDir) + "/bootstrap" };
-    fd = open_library_on_paths(zip_archive_cache, name, file_offset, bootstrap_paths, realpath);
-  }
-#endif
-
+  // Finally search the namespace's main search path list.
   if (fd == -1) {
     fd = open_library_on_paths(zip_archive_cache, name, file_offset, ns->get_default_library_paths(), realpath);
   }
@@ -1282,16 +1264,14 @@ static bool load_library(android_namespace_t* ns,
   }
 
   soinfo* si = soinfo_alloc(ns, realpath.c_str(), &file_stat, file_offset, rtld_flags);
-  if (si == nullptr) {
-    return false;
-  }
 
   task->set_soinfo(si);
 
   // Read the ELF header and some of the segments.
   if (!task->read(realpath.c_str(), file_stat.st_size)) {
-    soinfo_free(si);
+    task->remove_cached_elf_reader();
     task->set_soinfo(nullptr);
+    soinfo_free(si);
     return false;
   }
 
@@ -1337,14 +1317,13 @@ static bool load_library(android_namespace_t* ns,
   soinfo* needed_by = task->get_needed_by();
   const android_dlextinfo* extinfo = task->get_extinfo();
 
-  off64_t file_offset;
-  std::string realpath;
   if (extinfo != nullptr && (extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD) != 0) {
-    file_offset = 0;
+    off64_t file_offset = 0;
     if ((extinfo->flags & ANDROID_DLEXT_USE_LIBRARY_FD_OFFSET) != 0) {
       file_offset = extinfo->library_fd_offset;
     }
 
+    std::string realpath;
     if (!realpath_fd(extinfo->library_fd, &realpath)) {
       if (!is_first_stage_init()) {
         PRINT(
@@ -1362,10 +1341,12 @@ static bool load_library(android_namespace_t* ns,
 
   LD_LOG(kLogDlopen,
          "load_library(ns=%s, task=%s, flags=0x%x, search_linked_namespaces=%d): calling "
-         "open_library with realpath=%s",
-         ns->get_name(), name, rtld_flags, search_linked_namespaces, realpath.c_str());
+         "open_library",
+         ns->get_name(), name, rtld_flags, search_linked_namespaces);
 
   // Open the file.
+  off64_t file_offset;
+  std::string realpath;
   int fd = open_library(ns, zip_archive_cache, name, needed_by, &file_offset, &realpath);
   if (fd == -1) {
     if (task->is_dt_needed()) {
@@ -1476,11 +1457,11 @@ static bool find_library_internal(android_namespace_t* ns,
                                   LoadTask* task,
                                   ZipArchiveCache* zip_archive_cache,
                                   LoadTaskList* load_tasks,
-                                  int rtld_flags,
-                                  bool search_linked_namespaces) {
+                                  int rtld_flags) {
   soinfo* candidate;
 
-  if (find_loaded_library_by_soname(ns, task->get_name(), search_linked_namespaces, &candidate)) {
+  if (find_loaded_library_by_soname(ns, task->get_name(), true /* search_linked_namespaces */,
+                                    &candidate)) {
     LD_LOG(kLogDlopen,
            "find_library_internal(ns=%s, task=%s): Already loaded (by soname): %s",
            ns->get_name(), task->get_name(), candidate->get_realpath());
@@ -1493,7 +1474,8 @@ static bool find_library_internal(android_namespace_t* ns,
   TRACE("[ \"%s\" find_loaded_library_by_soname failed (*candidate=%s@%p). Trying harder... ]",
         task->get_name(), candidate == nullptr ? "n/a" : candidate->get_realpath(), candidate);
 
-  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags, search_linked_namespaces)) {
+  if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
+                   true /* search_linked_namespaces */)) {
     return true;
   }
 
@@ -1508,39 +1490,33 @@ static bool find_library_internal(android_namespace_t* ns,
            ns->get_name(), task->get_name(), g_default_namespace.get_name());
     ns = &g_default_namespace;
     if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
-                     search_linked_namespaces)) {
+                     true /* search_linked_namespaces */)) {
       return true;
     }
   }
   // END OF WORKAROUND
 
-  if (search_linked_namespaces) {
-    // if a library was not found - look into linked namespaces
-    // preserve current dlerror in the case it fails.
-    DlErrorRestorer dlerror_restorer;
-    LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Trying %zu linked namespaces",
-           ns->get_name(), task->get_name(), ns->linked_namespaces().size());
-    for (auto& linked_namespace : ns->linked_namespaces()) {
-      if (find_library_in_linked_namespace(linked_namespace, task)) {
-        if (task->get_soinfo() == nullptr) {
-          // try to load the library - once namespace boundary is crossed
-          // we need to load a library within separate load_group
-          // to avoid using symbols from foreign namespace while.
-          //
-          // However, actual linking is deferred until when the global group
-          // is fully identified and is applied to all namespaces.
-          // Otherwise, the libs in the linked namespace won't get symbols from
-          // the global group.
-          if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks, rtld_flags, false)) {
-            LD_LOG(
-                kLogDlopen, "find_library_internal(ns=%s, task=%s): Found in linked namespace %s",
-                ns->get_name(), task->get_name(), linked_namespace.linked_namespace()->get_name());
-            return true;
-          }
-        } else {
-          // lib is already loaded
-          return true;
-        }
+  // if a library was not found - look into linked namespaces
+  // preserve current dlerror in the case it fails.
+  DlErrorRestorer dlerror_restorer;
+  LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Trying %zu linked namespaces",
+         ns->get_name(), task->get_name(), ns->linked_namespaces().size());
+  for (auto& linked_namespace : ns->linked_namespaces()) {
+    if (find_library_in_linked_namespace(linked_namespace, task)) {
+      // Library is already loaded.
+      if (task->get_soinfo() != nullptr) {
+        // n.b. This code path runs when find_library_in_linked_namespace found an already-loaded
+        // library by soname. That should only be possible with a greylist lookup, where we switch
+        // the namespace, because otherwise, find_library_in_linked_namespace is duplicating the
+        // soname scan done in this function's first call to find_loaded_library_by_soname.
+        return true;
+      }
+
+      if (load_library(linked_namespace.linked_namespace(), task, zip_archive_cache, load_tasks,
+                       rtld_flags, false /* search_linked_namespaces */)) {
+        LD_LOG(kLogDlopen, "find_library_internal(ns=%s, task=%s): Found in linked namespace %s",
+               ns->get_name(), task->get_name(), linked_namespace.linked_namespace()->get_name());
+        return true;
       }
     }
   }
@@ -1577,7 +1553,6 @@ bool find_libraries(android_namespace_t* ns,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
-                    bool search_linked_namespaces,
                     std::vector<android_namespace_t*>* namespaces) {
   // Step 0: prepare.
   std::unordered_map<const soinfo*, ElfReader> readers_map;
@@ -1633,8 +1608,7 @@ bool find_libraries(android_namespace_t* ns,
                                task,
                                &zip_archive_cache,
                                &load_tasks,
-                               rtld_flags,
-                               search_linked_namespaces || is_dt_needed)) {
+                               rtld_flags)) {
       return false;
     }
 
@@ -1876,8 +1850,7 @@ static soinfo* find_library(android_namespace_t* ns,
                              0,
                              rtld_flags,
                              extinfo,
-                             false /* add_as_children */,
-                             true /* search_linked_namespaces */)) {
+                             false /* add_as_children */)) {
     if (si != nullptr) {
       soinfo_unload(si);
     }
@@ -2441,6 +2414,21 @@ static void add_soinfos_to_namespace(const soinfo_list_t& soinfos, android_names
   for (auto si : soinfos) {
     si->add_secondary_namespace(ns);
   }
+}
+
+std::vector<std::string> fix_lib_paths(std::vector<std::string> paths) {
+  // For the bootstrap linker, insert /system/${LIB}/bootstrap in front of /system/${LIB} in any
+  // namespace search path. The bootstrap linker should prefer to use the bootstrap bionic libraries
+  // (e.g. libc.so).
+#if !defined(__ANDROID_APEX__)
+  for (size_t i = 0; i < paths.size(); ++i) {
+    if (paths[i] == kSystemLibDir) {
+      paths.insert(paths.begin() + i, std::string(kSystemLibDir) + "/bootstrap");
+      ++i;
+    }
+  }
+#endif
+  return paths;
 }
 
 android_namespace_t* create_namespace(const void* caller_addr,
@@ -3298,9 +3286,8 @@ bool soinfo::link_image(const SymbolLookupList& lookup_list, soinfo* local_group
     // Fail if app is targeting M or above.
     int app_target_api_level = get_application_target_sdk_version();
     if (app_target_api_level >= 23) {
-      DL_ERR_AND_LOG("\"%s\" has text relocations (https://android.googlesource.com/platform/"
-                     "bionic/+/master/android-changes-for-ndk-developers.md#Text-Relocations-"
-                     "Enforced-for-API-level-23)", get_realpath());
+      DL_ERR_AND_LOG("\"%s\" has text relocations (%s#Text-Relocations-Enforced-for-API-level-23)",
+                     get_realpath(), kBionicChangesUrl);
       return false;
     }
     // Make segments writable to allow text relocations to work properly. We will later call
