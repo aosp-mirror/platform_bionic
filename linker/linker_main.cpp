@@ -460,7 +460,6 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                       RTLD_GLOBAL,
                       nullptr,
                       true /* add_as_children */,
-                      true /* search_linked_namespaces */,
                       &namespaces)) {
     __linker_cannot_link(g_argv[0]);
   } else if (needed_libraries_count == 0) {
