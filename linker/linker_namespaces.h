@@ -34,6 +34,8 @@
 #include <vector>
 #include <unordered_set>
 
+std::vector<std::string> fix_lib_paths(std::vector<std::string> paths);
+
 struct android_namespace_t;
 
 struct android_namespace_link_t {
@@ -100,10 +102,10 @@ struct android_namespace_t {
     return default_library_paths_;
   }
   void set_default_library_paths(std::vector<std::string>&& library_paths) {
-    default_library_paths_ = std::move(library_paths);
+    default_library_paths_ = fix_lib_paths(std::move(library_paths));
   }
   void set_default_library_paths(const std::vector<std::string>& library_paths) {
-    default_library_paths_ = library_paths;
+    default_library_paths_ = fix_lib_paths(library_paths);
   }
 
   const std::vector<std::string>& get_permitted_paths() const {
