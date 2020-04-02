@@ -280,6 +280,8 @@ struct nd_opt_hdr {		/* Neighbor discovery option header */
 #define ND_OPT_ROUTE_INFO		24	/* RFC 4191 */
 #define ND_OPT_RDNSS			25	/* RFC 6016 */
 #define ND_OPT_DNSSL			31	/* RFC 6016 */
+#define ND_OPT_CAPTIVE_PORTAL		37	/* RFC 7710 */
+#define ND_OPT_PREF64			38	/* RFC-ietf-6man-ra-pref64-09 */
 
 struct nd_opt_route_info {	/* route info */
 	u_int8_t	nd_opt_rti_type;
@@ -333,6 +335,19 @@ struct nd_opt_dnssl {		/* DNSSL option RFC 6106 */
 	u_int16_t	nd_opt_dnssl_reserved;
 	u_int32_t	nd_opt_dnssl_lifetime;
 	/* followed by list of IP prefixes */
+} __packed;
+
+struct nd_opt_captive_portal {	/* CAPTIVE PORTAL option RFC 7710 */
+	u_int8_t	nd_opt_captive_portal_type;   // ND_OPT_CAPTIVE_PORTAL
+	u_int8_t	nd_opt_captive_portal_len;    // in 8 byte units
+	u_int8_t	nd_opt_captive_portal_uri[];  // 6 + n*8 bytes
+} __packed;
+
+struct nd_opt_pref64 {		/* PREF64 option RFC-ietf-6man-ra-pref64-09 */
+	u_int8_t	nd_opt_pref64_type;          // ND_OPT_PREF64
+	u_int8_t	nd_opt_pref64_len;           // 8 byte units, thus '2'
+	u_int16_t	nd_opt_pref64_lifetime_plc;  // net endian, 13 + 3 bits
+	u_int8_t	nd_opt_pref64_prefix[12];    // top 96 bits
 } __packed;
 
 /*
