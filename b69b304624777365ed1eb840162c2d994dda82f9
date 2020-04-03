@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c0b289a7_9d170ace",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-04-03T22:05:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ac4a008_f3da5b4d",
+      "range": {
+        "startLine": 54,
+        "startChar": 33,
+        "endLine": 54,
+        "endChar": 67
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31df1417_ea4267d1",
         "filename": "libc/bionic/exec.cpp",
         "patchSetId": 4
@@ -69,6 +93,30 @@
       "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "259ff981_cc9e9ad5",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1128769
+      },
+      "writtenOn": "2020-04-03T22:05:59Z",
+      "side": 1,
+      "message": "Very sloppy of me, good catch.",
+      "parentUuid": "31df1417_ea4267d1",
+      "range": {
+        "startLine": 69,
+        "startChar": 35,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "b69b304624777365ed1eb840162c2d994dda82f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
