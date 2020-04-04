@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "86a3fb40_d1e7ef6f",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "3c6ae7bb_1c86d916",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 2
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a61d4f4_b588801c",
         "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
         "patchSetId": 10
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "96872879_474cf712",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "I expect the common case to be returning the stack to the cache, but I don\u0027t think it really matters: the branch predictor will be able to figure it out, and the unconditional jump below shouldn\u0027t disturb pipelining.",
+      "parentUuid": "5a61d4f4_b588801c",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fead206_aecaa59e",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -56,6 +98,24 @@
       "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20820c23_9956bce9",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "I think it\u0027s fine here. It\u0027s not a lot of logic. I just wish we could avoid the SCS stack stuff in processes that we know can\u0027t properly use SCS because they clobber x18.",
+      "parentUuid": "5fead206_aecaa59e",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "8ed7ae79_cc5f3dcb",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95605885_a6b08a4e",
+      "range": {
+        "startLine": 129,
+        "startChar": 72,
+        "endLine": 129,
+        "endChar": 76
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30c0fdbe_75596e1d",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "58252cc9_4f743c63",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "I think most of the time, developers think in terms of the number of threads they create, not in terms of the number of bytes occupied by those thread stacks (if they even know or care), so I think the unit is the right one. I\u0027ve changed the function name.",
+      "parentUuid": "30c0fdbe_75596e1d",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c3458b2c_760b36c3",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 10
@@ -113,6 +215,24 @@
       "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffde143f_aa6bd6fb",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "\u003e since it\u0027s one of the things that worries me the most\n\nMe too. The Mono runtime also mprotects its stack and we can\u0027t change it, so I agree we need to make reuse ineligibility automatic.\n\n\u003e  and was wondering whether we should actually just automate this if you ask us about a stack\u0027s address \u0026 size?\n\nI started to implement this idea but it got too complex. One problem is that ART asks for the thread stack bounds so it can do manual overflow checking in the interpreter, and changing the interpreter to do stack probing instead would be disruptive. Another problem is that we\u0027d need to make pthread_getattr_np async-signal-safe so ART could call it in the overflow handler, and thanks to the use stdio to get proc stuff, it\u0027s not async-signal-safe now.\n\nI instead made mprotect on a thread\u0027s own stack make the thread ineligible for stack reuse. In practice, managed VM things (ART, Mono) mprotect a thread\u0027s stack from the thread itself, so this check should be good enough.",
+      "parentUuid": "c3458b2c_760b36c3",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -139,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "688546a0_60cedf21",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33e824b9_e33888ba",
+      "range": {
+        "startLine": 388,
+        "startChar": 8,
+        "endLine": 388,
+        "endChar": 25
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f1f0f1e_714a04da",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 10
@@ -159,6 +303,30 @@
       "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aca9e8ac_f012cc30",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:38:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f1f0f1e_714a04da",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 3
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
