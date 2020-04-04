@@ -902,6 +902,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3681b1ef_216dcd46",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-04T22:52:43Z",
+      "side": 1,
+      "message": "I wrote a little test that compares pthread_create and pthread_join with the equivalent mmap operations. (The test does munmap too in the latter case, but that just makes the result conservative.) To simulate scheduler load from other random stuff during boot, I started 20 busy-loop shell processes in the background. The create-and-join benchmark was about 100x slower (in wall clock time) than the equivalent-mmap benchmark, and that\u0027s entirely due to scheduler contention on the join. Calling schedule() a bunch during boot is really bad and we should have an API that allocates the stacks directly.",
+      "parentUuid": "6fa7cba1_e7ea56d0",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
