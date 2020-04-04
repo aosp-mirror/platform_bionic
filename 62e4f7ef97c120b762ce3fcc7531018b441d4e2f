@@ -1,0 +1,164 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c6ae7bb_1c86d916",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "sorry, when i said .L i didn\u0027t mean \"L\" as a placeholder for the label; i meant \".foo\" -\u003e \".Lfoo\" or \".L_foo\".\n\n(the intel-written .S files use `#define L(label) .L##label` which is also fine. if you prefer that, i\u0027ll go through later and move that #define into bionic_asm.h and switch everyone over.)\n\n\nsince you\u0027re probably thinking i\u0027m a complete crackpot at this point, i\u0027ll explain that this is genuinely how you tell the linker that this is a local symbol.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 2
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a61d4f4_b588801c",
+        "filename": "libc/arch-arm/bionic/_exit_with_stack_teardown.S",
+        "patchSetId": 10
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "is this still the common case? (i\u0027m wondering if we should just \u0027eq\u0027 these inline at the top and avoid the branch?)",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fead206_aecaa59e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "(since you\u0027ve touched this most recently, and weren\u0027t involved in the initial implementation --- did you find it helpful that the SCS stuff was in the same file? or would it have been as good/better in its own file?)",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95605885_a6b08a4e",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "in the child\n\n(just to be completely clear about why you care)",
+      "range": {
+        "startLine": 129,
+        "startChar": 72,
+        "endLine": 129,
+        "endChar": 76
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30c0fdbe_75596e1d",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "i\u0027m still a bit uncomfortable about this unit, but i think if we rename this s/size/count/ it\u0027s okay. (strictly it\u0027s a _capacity_ but i think that brings us back to the \"doesn\u0027t that mean the unit is bytes?\" problem.)",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3458b2c_760b36c3",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "i was thinking more about this -- since it\u0027s one of the things that worries me the most -- and was wondering whether we should actually just automate this if you ask us about a stack\u0027s address \u0026 size?\n\ni feel like we either need to paper over this behavior change in a conservative manner (i\u0027m ignoring for now that you might be doing stuff like taking the address of a local and working out what page it\u0027s on and assuming you\u0027re at least asking us where your stack is), or this needs to be an API level guarded feature in the zygote. atm aiui you\u0027re planning to turn this on for everyone all the time, so i think we need to do a better job of making it \"just work\". (or it could be added behind the \"gating and logging\" stuff.)",
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33e824b9_e33888ba",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "(this should either be removed before committing, or tied to a debug system property like the linker logging.)",
+      "range": {
+        "startLine": 388,
+        "startChar": 8,
+        "endLine": 388,
+        "endChar": 25
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f1f0f1e_714a04da",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "move this into a separate function? just have\n\n  StackCacheEntry* sce \u003d thread-\u003estack_cache_entry;\n  if (sce) __...();\n\nhere?",
+      "range": {
+        "startLine": 77,
+        "startChar": 2,
+        "endLine": 137,
+        "endChar": 3
+      },
+      "revId": "62e4f7ef97c120b762ce3fcc7531018b441d4e2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

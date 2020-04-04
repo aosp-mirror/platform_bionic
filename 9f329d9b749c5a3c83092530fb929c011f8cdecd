@@ -884,6 +884,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fa7cba1_e7ea56d0",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-04T17:06:00Z",
+      "side": 1,
+      "message": "no, pre-fork, just like when you\u0027d call this API.\n\nif the cost of the contention (plus the extra work of actually creating/destroying threads rather than just stacks) is genuinely significantly higher that the cost of spinning up the threads, then we\u0027ll have a stronger argument for adding a strictly unnecessary API. but i\u0027d want to see that data first.",
+      "parentUuid": "edc0728a_8244364d",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
