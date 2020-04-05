@@ -1700,6 +1700,7 @@ cc_library {
         symbol_file: "libc.map.txt",
         versions: [
             "29",
+            "R",
             "10000",
         ],
     },
