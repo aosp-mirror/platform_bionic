@@ -46,7 +46,6 @@ struct utp_upiu_req {
   union {
     struct utp_upiu_cmd sc;
     struct utp_upiu_query qr;
-    struct utp_upiu_query tr;
     struct utp_upiu_query uc;
   };
 };
