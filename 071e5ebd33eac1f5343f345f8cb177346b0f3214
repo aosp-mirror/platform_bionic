@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea76a340_16271cdf",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-04-06T20:42:53Z",
+      "side": 1,
+      "message": "update the pointer tag only if the current level is TBI?",
+      "revId": "071e5ebd33eac1f5343f345f8cb177346b0f3214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "810337f3_56234228",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-04-06T20:42:53Z",
+      "side": 1,
+      "message": "should this be part of a different change?",
+      "revId": "071e5ebd33eac1f5343f345f8cb177346b0f3214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
