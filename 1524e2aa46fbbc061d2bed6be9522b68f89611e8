@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e5babe2_5318caf2",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-07T23:20:58Z",
+      "side": 1,
+      "message": "char*",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 14
+      },
+      "revId": "1524e2aa46fbbc061d2bed6be9522b68f89611e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
