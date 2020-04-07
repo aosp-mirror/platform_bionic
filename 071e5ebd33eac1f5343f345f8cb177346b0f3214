@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d0062738_4f484e5d",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-04-07T21:45:04Z",
+      "side": 1,
+      "message": "Done. I also changed the code to set heap_pointer_tag explicitly instead of masking out bits, so that the behaviour is clearer.",
+      "parentUuid": "ea76a340_16271cdf",
+      "revId": "071e5ebd33eac1f5343f345f8cb177346b0f3214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "810337f3_56234228",
         "filename": "libc/platform/bionic/mte_kernel.h",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "071e5ebd33eac1f5343f345f8cb177346b0f3214",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfce92d0_35836204",
+        "filename": "libc/platform/bionic/mte_kernel.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-04-07T21:45:04Z",
+      "side": 1,
+      "message": "Yes, and the ReadTag part of the system/core change could be its own change as well (with its own tests). Done.",
+      "parentUuid": "810337f3_56234228",
+      "revId": "071e5ebd33eac1f5343f345f8cb177346b0f3214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
