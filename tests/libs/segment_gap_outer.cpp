@@ -1,6 +1,5 @@
 #include <android/dlext.h>
 #include <dlfcn.h>
-#include <jni.h>
 #include <stdlib.h>
 
 extern "C" void text_before_start_of_gap() {}
