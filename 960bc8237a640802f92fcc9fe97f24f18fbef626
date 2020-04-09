@@ -16,6 +16,29 @@
       "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "097ce494_1be82251",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1856,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-09T21:54:53Z",
+      "side": 1,
+      "message": "these seem very different. arm-optimized-routines, jemalloc_new, and scudo are all *parts* of bionic, and so they legitimately live above this comment.\n\nart, boringssl, and minijail are just wrong. we should either fix the build system so that cc_object does the right thing, or fix those projects to not use cc_object (since it seems like you\u0027re saying that\u0027s possible).",
+      "range": {
+        "startLine": 1855,
+        "startChar": 7,
+        "endLine": 1856,
+        "endChar": 44
+      },
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
