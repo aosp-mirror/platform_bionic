@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2154d15d_23190d9f",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-04-09T21:24:32Z",
+      "side": 1,
+      "message": "This is a potential regression for users that used to be using -I\n\nI\u0027m a bit surprised to see we support this property arbitrarily, we had intentionally limited the ability for modules to expose -isystem arguments to dependencies.",
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
