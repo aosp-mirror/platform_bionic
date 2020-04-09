@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f4e15938_b6b25bd3",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-09T17:33:44Z",
+      "side": 1,
+      "message": "where does this come from? i don\u0027t see it in codesearch.",
+      "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
