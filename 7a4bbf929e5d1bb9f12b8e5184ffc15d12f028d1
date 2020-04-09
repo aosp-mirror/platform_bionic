@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "424262b5_b0745bbb",
+        "filename": "docs/status.md",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-09T18:20:16Z",
+      "side": 1,
+      "message": "The phrasing here is a bit unclear and I\u0027m afraid it\u0027ll make people think execve is less safe than it is. I\u0027d say something like \"execve internally and temporarily changes the current thread\u0027s errno value and signal mask, making execve technically async-signal-unsafe. execve restores this state before returning, but a signal handler that interrupts execve can observe this transiently-mutated state. Please don\u0027t longjmp out of execve. (siglongjmp is okay.)\"\n\nIn particular, I want people to understand that it *is* safe to call execve from inside, say, a SIGSEGV handler as part of some crash reporting doohickey.",
+      "range": {
+        "startLine": 47,
+        "startChar": 39,
+        "endLine": 49,
+        "endChar": 25
+      },
+      "revId": "7a4bbf929e5d1bb9f12b8e5184ffc15d12f028d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
