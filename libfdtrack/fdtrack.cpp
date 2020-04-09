@@ -166,7 +166,7 @@ void fdtrack_dump() {
          void*) {
         uint64_t fdsan_owner = android_fdsan_get_owner_tag(fd);
         if (fdsan_owner != 0) {
-          async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = %#" PRIx64 ")", fd,
+          async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (owner = 0x%" PRIx64 ")", fd,
                                 fdsan_owner);
         } else {
           async_safe_format_log(ANDROID_LOG_INFO, "fdtrack", "fd %d: (unowned)", fd);
