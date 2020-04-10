@@ -34,6 +34,24 @@
       "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd9ea442_acee2f2d",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-10T19:09:25Z",
+      "side": 1,
+      "message": "...at which point i realize that \"runtime\" is *us*, not ART. man, i hate that terrible name!",
+      "parentUuid": "e82d4e67_17d74d92",
+      "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
