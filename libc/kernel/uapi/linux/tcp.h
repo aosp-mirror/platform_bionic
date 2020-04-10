@@ -217,15 +217,17 @@ enum {
   TCP_NLA_DSACK_DUPS,
   TCP_NLA_REORD_SEEN,
   TCP_NLA_SRTT,
+  TCP_NLA_TIMEOUT_REHASH,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
-#define TCP_MD5SIG_FLAG_PREFIX 1
+#define TCP_MD5SIG_FLAG_PREFIX 0x1
+#define TCP_MD5SIG_FLAG_IFINDEX 0x2
 struct tcp_md5sig {
   struct sockaddr_storage tcpm_addr;
   __u8 tcpm_flags;
   __u8 tcpm_prefixlen;
   __u16 tcpm_keylen;
-  __u32 __tcpm_pad;
+  int tcpm_ifindex;
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
 struct tcp_diag_md5sig {
