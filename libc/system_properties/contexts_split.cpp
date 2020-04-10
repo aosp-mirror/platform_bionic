@@ -114,8 +114,6 @@ static void ListFree(List** list) {
 }
 
 // The below two functions are duplicated from label_support.c in libselinux.
-// TODO: Find a location suitable for these functions such that both libc and
-// libselinux can share a common source file.
 
 // The read_spec_entries and read_spec_entry functions may be used to
 // replace sscanf to read entries from spec files. The file and

@@ -405,8 +405,8 @@ static void expect_ids(T ids, bool is_group) {
   }
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
-  // TODO(73062966): We still don't have a good way to create vendor AIDs in the system or other
-  // non-vendor partitions, therefore we keep this check disabled.
+  // Prior to R, we didn't have a mechanism to create vendor AIDs in the system or other non-vendor
+  // partitions, therefore we disabled the rest of these checks for older API levels.
   if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 29) {
     return;
   }
