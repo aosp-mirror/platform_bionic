@@ -16,6 +16,24 @@
       "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e82d4e67_17d74d92",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-04-10T03:08:16Z",
+      "side": 1,
+      "message": "the dependency chain is\n\nlibasync_safe_headers \u003c- libsystemproperties \u003c- libc_bionic_ndk \u003c- libc_nopthread \u003c- libc_common \n\u003c- libc_common_shared \u003c- libc",
+      "parentUuid": "f4e15938_b6b25bd3",
+      "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
