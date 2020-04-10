@@ -20,6 +20,7 @@
 #define _UAPI_LINUX_SWAB_H
 #include <linux/types.h>
 #include <linux/compiler.h>
+#include <asm/bitsperlong.h>
 #include <asm/swab.h>
 #define ___constant_swab16(x) ((__u16) ((((__u16) (x) & (__u16) 0x00ffU) << 8) | (((__u16) (x) & (__u16) 0xff00U) >> 8)))
 #define ___constant_swab32(x) ((__u32) ((((__u32) (x) & (__u32) 0x000000ffUL) << 24) | (((__u32) (x) & (__u32) 0x0000ff00UL) << 8) | (((__u32) (x) & (__u32) 0x00ff0000UL) >> 8) | (((__u32) (x) & (__u32) 0xff000000UL) >> 24)))
@@ -53,6 +54,9 @@ static inline __attribute__((__const__)) __u32 __fswahb32(__u32 val) {
 #define __swab16(x) (__u16) __builtin_bswap16((__u16) (x))
 #define __swab32(x) (__u32) __builtin_bswap32((__u32) (x))
 #define __swab64(x) (__u64) __builtin_bswap64((__u64) (x))
+#if __BITS_PER_LONG == 64
+#else
+#endif
 #define __swahw32(x) (__builtin_constant_p((__u32) (x)) ? ___constant_swahw32(x) : __fswahw32(x))
 #define __swahb32(x) (__builtin_constant_p((__u32) (x)) ? ___constant_swahb32(x) : __fswahb32(x))
 static __always_inline __u16 __swab16p(const __u16 * p) {

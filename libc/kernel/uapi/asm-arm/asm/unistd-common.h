@@ -407,4 +407,6 @@
 #define __NR_fspick (__NR_SYSCALL_BASE + 433)
 #define __NR_pidfd_open (__NR_SYSCALL_BASE + 434)
 #define __NR_clone3 (__NR_SYSCALL_BASE + 435)
+#define __NR_openat2 (__NR_SYSCALL_BASE + 437)
+#define __NR_pidfd_getfd (__NR_SYSCALL_BASE + 438)
 #endif
