@@ -702,6 +702,9 @@
 #if defined(__NR_openat)
   #define SYS_openat __NR_openat
 #endif
+#if defined(__NR_openat2)
+  #define SYS_openat2 __NR_openat2
+#endif
 #if defined(__NR_pause)
   #define SYS_pause __NR_pause
 #endif
@@ -719,6 +722,9 @@
 #endif
 #if defined(__NR_personality)
   #define SYS_personality __NR_personality
+#endif
+#if defined(__NR_pidfd_getfd)
+  #define SYS_pidfd_getfd __NR_pidfd_getfd
 #endif
 #if defined(__NR_pidfd_open)
   #define SYS_pidfd_open __NR_pidfd_open
