@@ -22,6 +22,30 @@
       "revId": "b73aaafbc54390b7b4bed6c2a78aaf91877a50f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b93ede87_f644470b",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-04-10T17:54:32Z",
+      "side": 1,
+      "message": "Cut the comment.",
+      "parentUuid": "ab244c2c_6a3f4aa1",
+      "range": {
+        "startLine": 43,
+        "startChar": 31,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "b73aaafbc54390b7b4bed6c2a78aaf91877a50f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
