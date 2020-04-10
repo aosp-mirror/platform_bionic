@@ -19,7 +19,6 @@
 #ifndef __LINUX_UAPI_SND_ASOC_H
 #define __LINUX_UAPI_SND_ASOC_H
 #include <linux/types.h>
-#include <sound/asound.h>
 #define SND_SOC_TPLG_MAX_CHAN 8
 #define SND_SOC_TPLG_MAX_FORMATS 16
 #define SND_SOC_TPLG_STREAM_CONFIG_MAX 8

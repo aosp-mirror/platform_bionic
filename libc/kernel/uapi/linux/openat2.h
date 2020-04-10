@@ -16,15 +16,17 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef GIGASET_INTERFACE_H
-#define GIGASET_INTERFACE_H
-#include <linux/ioctl.h>
-#define GIGASET_IOCTL 0x47
-#define GIGASET_REDIR _IOWR(GIGASET_IOCTL, 0, int)
-#define GIGASET_CONFIG _IOWR(GIGASET_IOCTL, 1, int)
-#define GIGASET_BRKCHARS _IOW(GIGASET_IOCTL, 2, unsigned char[6])
-#define GIGASET_VERSION _IOWR(GIGASET_IOCTL, 3, unsigned[4])
-#define GIGVER_DRIVER 0
-#define GIGVER_COMPAT 1
-#define GIGVER_FWBASE 2
+#ifndef _UAPI_LINUX_OPENAT2_H
+#define _UAPI_LINUX_OPENAT2_H
+#include <linux/types.h>
+struct open_how {
+  __u64 flags;
+  __u64 mode;
+  __u64 resolve;
+};
+#define RESOLVE_NO_XDEV 0x01
+#define RESOLVE_NO_MAGICLINKS 0x02
+#define RESOLVE_NO_SYMLINKS 0x04
+#define RESOLVE_BENEATH 0x08
+#define RESOLVE_IN_ROOT 0x10
 #endif
