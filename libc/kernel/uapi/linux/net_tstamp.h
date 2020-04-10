@@ -49,6 +49,7 @@ enum hwtstamp_tx_types {
   HWTSTAMP_TX_OFF,
   HWTSTAMP_TX_ON,
   HWTSTAMP_TX_ONESTEP_SYNC,
+  HWTSTAMP_TX_ONESTEP_P2P,
 };
 enum hwtstamp_rx_filters {
   HWTSTAMP_FILTER_NONE,
