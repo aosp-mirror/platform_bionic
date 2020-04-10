@@ -52,6 +52,7 @@ enum nft_registers {
 #define NFT_REG_MAX (__NFT_REG_MAX - 1)
 #define NFT_REG_SIZE 16
 #define NFT_REG32_SIZE 4
+#define NFT_REG32_COUNT (NFT_REG32_15 - NFT_REG32_00 + 1)
 enum nft_verdicts {
   NFT_CONTINUE = - 1,
   NFT_BREAK = - 2,
@@ -172,9 +173,16 @@ enum nft_set_policies {
 enum nft_set_desc_attributes {
   NFTA_SET_DESC_UNSPEC,
   NFTA_SET_DESC_SIZE,
+  NFTA_SET_DESC_CONCAT,
   __NFTA_SET_DESC_MAX
 };
 #define NFTA_SET_DESC_MAX (__NFTA_SET_DESC_MAX - 1)
+enum nft_set_field_attributes {
+  NFTA_SET_FIELD_UNSPEC,
+  NFTA_SET_FIELD_LEN,
+  __NFTA_SET_FIELD_MAX
+};
+#define NFTA_SET_FIELD_MAX (__NFTA_SET_FIELD_MAX - 1)
 enum nft_set_attributes {
   NFTA_SET_UNSPEC,
   NFTA_SET_TABLE,
@@ -210,6 +218,7 @@ enum nft_set_elem_attributes {
   NFTA_SET_ELEM_EXPR,
   NFTA_SET_ELEM_PAD,
   NFTA_SET_ELEM_OBJREF,
+  NFTA_SET_ELEM_KEY_END,
   __NFTA_SET_ELEM_MAX
 };
 #define NFTA_SET_ELEM_MAX (__NFTA_SET_ELEM_MAX - 1)
@@ -256,6 +265,11 @@ enum nft_immediate_attributes {
   __NFTA_IMMEDIATE_MAX
 };
 #define NFTA_IMMEDIATE_MAX (__NFTA_IMMEDIATE_MAX - 1)
+enum nft_bitwise_ops {
+  NFT_BITWISE_BOOL,
+  NFT_BITWISE_LSHIFT,
+  NFT_BITWISE_RSHIFT,
+};
 enum nft_bitwise_attributes {
   NFTA_BITWISE_UNSPEC,
   NFTA_BITWISE_SREG,
@@ -263,6 +277,8 @@ enum nft_bitwise_attributes {
   NFTA_BITWISE_LEN,
   NFTA_BITWISE_MASK,
   NFTA_BITWISE_XOR,
+  NFTA_BITWISE_OP,
+  NFTA_BITWISE_DATA,
   __NFTA_BITWISE_MAX
 };
 #define NFTA_BITWISE_MAX (__NFTA_BITWISE_MAX - 1)
@@ -425,6 +441,8 @@ enum nft_meta_keys {
   NFT_META_TIME_NS,
   NFT_META_TIME_DAY,
   NFT_META_TIME_HOUR,
+  NFT_META_SDIF,
+  NFT_META_SDIFNAME,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,

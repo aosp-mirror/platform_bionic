@@ -40,21 +40,37 @@ struct io_uring_sqe {
     __u32 timeout_flags;
     __u32 accept_flags;
     __u32 cancel_flags;
+    __u32 open_flags;
+    __u32 statx_flags;
+    __u32 fadvise_advice;
   };
   __u64 user_data;
   union {
-    __u16 buf_index;
+    struct {
+      __u16 buf_index;
+      __u16 personality;
+    };
     __u64 __pad2[3];
   };
 };
-#define IOSQE_FIXED_FILE (1U << 0)
-#define IOSQE_IO_DRAIN (1U << 1)
-#define IOSQE_IO_LINK (1U << 2)
-#define IOSQE_IO_HARDLINK (1U << 3)
+enum {
+  IOSQE_FIXED_FILE_BIT,
+  IOSQE_IO_DRAIN_BIT,
+  IOSQE_IO_LINK_BIT,
+  IOSQE_IO_HARDLINK_BIT,
+  IOSQE_ASYNC_BIT,
+};
+#define IOSQE_FIXED_FILE (1U << IOSQE_FIXED_FILE_BIT)
+#define IOSQE_IO_DRAIN (1U << IOSQE_IO_DRAIN_BIT)
+#define IOSQE_IO_LINK (1U << IOSQE_IO_LINK_BIT)
+#define IOSQE_IO_HARDLINK (1U << IOSQE_IO_HARDLINK_BIT)
+#define IOSQE_ASYNC (1U << IOSQE_ASYNC_BIT)
 #define IORING_SETUP_IOPOLL (1U << 0)
 #define IORING_SETUP_SQPOLL (1U << 1)
 #define IORING_SETUP_SQ_AFF (1U << 2)
 #define IORING_SETUP_CQSIZE (1U << 3)
+#define IORING_SETUP_CLAMP (1U << 4)
+#define IORING_SETUP_ATTACH_WQ (1U << 5)
 enum {
   IORING_OP_NOP,
   IORING_OP_READV,
@@ -73,6 +89,19 @@ enum {
   IORING_OP_ASYNC_CANCEL,
   IORING_OP_LINK_TIMEOUT,
   IORING_OP_CONNECT,
+  IORING_OP_FALLOCATE,
+  IORING_OP_OPENAT,
+  IORING_OP_CLOSE,
+  IORING_OP_FILES_UPDATE,
+  IORING_OP_STATX,
+  IORING_OP_READ,
+  IORING_OP_WRITE,
+  IORING_OP_FADVISE,
+  IORING_OP_MADVISE,
+  IORING_OP_SEND,
+  IORING_OP_RECV,
+  IORING_OP_OPENAT2,
+  IORING_OP_EPOLL_CTL,
   IORING_OP_LAST,
 };
 #define IORING_FSYNC_DATASYNC (1U << 0)
@@ -115,13 +144,16 @@ struct io_uring_params {
   __u32 sq_thread_cpu;
   __u32 sq_thread_idle;
   __u32 features;
-  __u32 resv[4];
+  __u32 wq_fd;
+  __u32 resv[3];
   struct io_sqring_offsets sq_off;
   struct io_cqring_offsets cq_off;
 };
 #define IORING_FEAT_SINGLE_MMAP (1U << 0)
 #define IORING_FEAT_NODROP (1U << 1)
 #define IORING_FEAT_SUBMIT_STABLE (1U << 2)
+#define IORING_FEAT_RW_CUR_POS (1U << 3)
+#define IORING_FEAT_CUR_PERSONALITY (1U << 4)
 #define IORING_REGISTER_BUFFERS 0
 #define IORING_UNREGISTER_BUFFERS 1
 #define IORING_REGISTER_FILES 2
@@ -129,9 +161,27 @@ struct io_uring_params {
 #define IORING_REGISTER_EVENTFD 4
 #define IORING_UNREGISTER_EVENTFD 5
 #define IORING_REGISTER_FILES_UPDATE 6
+#define IORING_REGISTER_EVENTFD_ASYNC 7
+#define IORING_REGISTER_PROBE 8
+#define IORING_REGISTER_PERSONALITY 9
+#define IORING_UNREGISTER_PERSONALITY 10
 struct io_uring_files_update {
   __u32 offset;
   __u32 resv;
   __aligned_u64 fds;
+};
+#define IO_URING_OP_SUPPORTED (1U << 0)
+struct io_uring_probe_op {
+  __u8 op;
+  __u8 resv;
+  __u16 flags;
+  __u32 resv2;
+};
+struct io_uring_probe {
+  __u8 last_op;
+  __u8 ops_len;
+  __u16 resv;
+  __u32 resv2[3];
+  struct io_uring_probe_op ops[0];
 };
 #endif

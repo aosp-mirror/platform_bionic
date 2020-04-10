@@ -35,6 +35,17 @@ kernel_known_macros = {
     "__kernel_old_timeval": "1",
     }
 
+# this is the set of known kernel data structures we want to remove from
+# the final headers
+kernel_structs_to_remove = set(
+        [
+          # Remove the structures since they are still the same as
+          # timeval, itimerval.
+          "__kernel_old_timeval",
+          "__kernel_old_itimerval",
+        ]
+    )
+
 # define to true if you want to remove all defined(CONFIG_FOO) tests
 # from the clean headers. testing shows that this is not strictly necessary
 # but just generates cleaner results
@@ -86,6 +97,8 @@ kernel_token_replacements = {
     # If struct __kernel_old_timeval and struct timeval become different,
     # then a different solution needs to be implemented.
     "__kernel_old_timeval": "timeval",
+    # Do the same for __kernel_old_itimerval as for timeval.
+    "__kernel_old_itimerval": "itimerval",
     }
 
 
