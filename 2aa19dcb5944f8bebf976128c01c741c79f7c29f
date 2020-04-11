@@ -52,6 +52,24 @@
       "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6660ce64_3cd5d591",
+        "filename": "libc/async_safe/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-04-11T02:36:37Z",
+      "side": 1,
+      "message": "i guess you want com.android.bionic. Perhaps we could work on supporting renaming apexes (though with low priority).\n\nfiled b/153767170",
+      "parentUuid": "cd9ea442_acee2f2d",
+      "revId": "2aa19dcb5944f8bebf976128c01c741c79f7c29f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
