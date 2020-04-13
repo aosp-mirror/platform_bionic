@@ -45,6 +45,7 @@
 #define CLONE_NEWNET 0x40000000
 #define CLONE_IO 0x80000000
 #define CLONE_CLEAR_SIGHAND 0x100000000ULL
+#define CLONE_NEWTIME 0x00000080
 #ifndef __ASSEMBLY__
 struct clone_args {
   __aligned_u64 flags;

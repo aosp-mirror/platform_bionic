@@ -18,12 +18,13 @@
  ****************************************************************************/
 #ifndef _UAPI_SERIO_H
 #define _UAPI_SERIO_H
+#include <linux/const.h>
 #include <linux/ioctl.h>
 #define SPIOCSTYPE _IOW('q', 0x01, unsigned long)
-#define SERIO_TIMEOUT BIT(0)
-#define SERIO_PARITY BIT(1)
-#define SERIO_FRAME BIT(2)
-#define SERIO_OOB_DATA BIT(3)
+#define SERIO_TIMEOUT _BITUL(0)
+#define SERIO_PARITY _BITUL(1)
+#define SERIO_FRAME _BITUL(2)
+#define SERIO_OOB_DATA _BITUL(3)
 #define SERIO_XT 0x00
 #define SERIO_8042 0x01
 #define SERIO_RS232 0x02

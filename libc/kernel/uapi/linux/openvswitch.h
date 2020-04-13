@@ -366,6 +366,12 @@ struct ovs_action_push_mpls {
   __be32 mpls_lse;
   __be16 mpls_ethertype;
 };
+struct ovs_action_add_mpls {
+  __be32 mpls_lse;
+  __be16 mpls_ethertype;
+  __u16 tun_flags;
+};
+#define OVS_MPLS_L3_TUNNEL_FLAG_MASK (1 << 0)
 struct ovs_action_push_vlan {
   __be16 vlan_tpid;
   __be16 vlan_tci;
@@ -439,6 +445,7 @@ enum ovs_action_attr {
   OVS_ACTION_ATTR_METER,
   OVS_ACTION_ATTR_CLONE,
   OVS_ACTION_ATTR_CHECK_PKT_LEN,
+  OVS_ACTION_ATTR_ADD_MPLS,
   __OVS_ACTION_ATTR_MAX,
 };
 #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
