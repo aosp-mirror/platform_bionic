@@ -56,11 +56,46 @@ struct bkey {
 #define BCACHE_SB_VERSION_BDEV_WITH_OFFSET 4
 #define BCACHE_SB_MAX_VERSION 4
 #define SB_SECTOR 8
+#define SB_OFFSET (SB_SECTOR << SECTOR_SHIFT)
 #define SB_SIZE 4096
 #define SB_LABEL_SIZE 32
 #define SB_JOURNAL_BUCKETS 256U
 #define MAX_CACHES_PER_SET 8
 #define BDEV_DATA_START_DEFAULT 16
+struct cache_sb_disk {
+  __le64 csum;
+  __le64 offset;
+  __le64 version;
+  __u8 magic[16];
+  __u8 uuid[16];
+  union {
+    __u8 set_uuid[16];
+    __le64 set_magic;
+  };
+  __u8 label[SB_LABEL_SIZE];
+  __le64 flags;
+  __le64 seq;
+  __le64 pad[8];
+  union {
+    struct {
+      __le64 nbuckets;
+      __le16 block_size;
+      __le16 bucket_size;
+      __le16 nr_in_set;
+      __le16 nr_this_dev;
+    };
+    struct {
+      __le64 data_offset;
+    };
+  };
+  __le32 last_mount;
+  __le16 first_bucket;
+  union {
+    __le16 njournal_buckets;
+    __le16 keys;
+  };
+  __le64 d[SB_JOURNAL_BUCKETS];
+};
 struct cache_sb {
   __u64 csum;
   __u64 offset;
