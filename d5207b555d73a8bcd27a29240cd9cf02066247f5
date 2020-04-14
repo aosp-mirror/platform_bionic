@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b2b41e52_d9151749",
+        "filename": "libc/bionic/mprotect.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-14T05:39:35Z",
+      "side": 1,
+      "message": "It costs practically nothing. According to a benchmark on my Taimen (hacked up pthread_benchmark.cpp), mprotect on a single page (noop --- setting a PROT_READ|PROT_WRITE page to the same) costs about 186ns. The range check (extracted into a separate function) costs ~0.7ns. This check is trivial compared to the cost of a system call.",
+      "parentUuid": "e2e81220_3d9608db",
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cfcbff71_0b63b692",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 11
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "03b650c8_599b6343",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-14T05:39:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cfcbff71_0b63b692",
+      "range": {
+        "startLine": 226,
+        "startChar": 75,
+        "endLine": 226,
+        "endChar": 86
+      },
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61908422_6fd97b11",
         "filename": "libc/bionic/pthread_create.cpp",
         "patchSetId": 11
@@ -62,6 +104,30 @@
       "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a01cb98_2eba261b",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1130394
+      },
+      "writtenOn": "2020-04-14T05:39:35Z",
+      "side": 1,
+      "message": "I was trying to avoid a second property lookup, but ok.",
+      "parentUuid": "61908422_6fd97b11",
+      "range": {
+        "startLine": 327,
+        "startChar": 7,
+        "endLine": 327,
+        "endChar": 10
+      },
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
