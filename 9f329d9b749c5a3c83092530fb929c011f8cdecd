@@ -876,6 +876,24 @@
     },
     {
       "key": {
+        "uuid": "5955ec4e_c56636fa",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 292,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-14T01:37:39Z",
+      "side": 1,
+      "message": "yeah, i\u0027m assuming only VMs need to call this (v8 too?) and they know they do, so i think that\u0027s okay, but then this is definitely a feature that\u0027s gated on API level.",
+      "parentUuid": "a63915e4_e6c5608e",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "066c666c_3461705d",
         "filename": "libc/include/pthread.h",
         "patchSetId": 8
@@ -962,6 +980,24 @@
       "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "366becf6_5b2bf360",
+        "filename": "libc/include/pthread.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-14T01:37:39Z",
+      "side": 1,
+      "message": "what were the actual numbers?",
+      "parentUuid": "3681b1ef_216dcd46",
+      "revId": "9f329d9b749c5a3c83092530fb929c011f8cdecd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

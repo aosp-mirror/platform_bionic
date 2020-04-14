@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e2e81220_3d9608db",
+        "filename": "libc/bionic/mprotect.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-14T01:37:39Z",
+      "side": 1,
+      "message": "what does this cost?\n\ndoes this affect process startup? (or are the 74ish calls even for a trivial process not enough to make this measurable?)",
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfcbff71_0b63b692",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-14T01:37:39Z",
+      "side": 1,
+      "message": "to %zu threads",
+      "range": {
+        "startLine": 226,
+        "startChar": 75,
+        "endLine": 226,
+        "endChar": 86
+      },
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61908422_6fd97b11",
+        "filename": "libc/bionic/pthread_create.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-14T01:37:39Z",
+      "side": 1,
+      "message": "on/off and logging should be orthogonal. nothing else works like this, except the historical malloc_debug which was so bad we removed it and replaced it with orthogonal controls :-)",
+      "range": {
+        "startLine": 327,
+        "startChar": 7,
+        "endLine": 327,
+        "endChar": 10
+      },
+      "revId": "d5207b555d73a8bcd27a29240cd9cf02066247f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
