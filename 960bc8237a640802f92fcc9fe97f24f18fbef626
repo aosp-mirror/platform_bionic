@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "010a4766_2ca1542e",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-15T15:40:32Z",
+      "side": 1,
+      "message": "dwillemsen explained to me via IM that *not* declaring these as system -- although that seems wrong -- is better in terms of what warnings you get. the assumption being that you can\u0027t [normally] change system headers, so there\u0027s no point giving you warnings for them.\n\nbut it sounds like you\u0027re saying we weren\u0027t getting that anyway? so even though we\u0027d tried to clean this up in the past, the build\u0027s probably broken now? it\u0027s worth a try, but i\u0027m happy to try that later if you\u0027re saying that currently that would be a change from the status quo anyway...",
+      "parentUuid": "eaf14afa_b9ec43e7",
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "097ce494_1be82251",
         "filename": "libc/Android.bp",
         "patchSetId": 6
