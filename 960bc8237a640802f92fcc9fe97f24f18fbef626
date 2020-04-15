@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "ebed343e_f158b4e8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-04-15T15:58:42Z",
+      "side": 1,
+      "message": "Yes, given that -I is ignored when -isystem has the same path, and the -isystem paths as far as I understand are added pretty much everywhere when Bionic is used, i think not much changes in that regard.\n\nAfter https://r.android.com/1281872 is in it would be possible to have an alternative header lib for internal or test use where these aren\u0027t system paths, and it\u0027d actually take effect.",
+      "parentUuid": "010a4766_2ca1542e",
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "097ce494_1be82251",
         "filename": "libc/Android.bp",
         "patchSetId": 6
