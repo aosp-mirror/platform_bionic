@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "eaf14afa_b9ec43e7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1810,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-04-15T13:50:23Z",
+      "side": 1,
+      "message": "\u003e This is a potential regression for users that used to be using -I\n\nIt\u0027s necessary to keep the behaviour of bionicHeaders in global.go. gcc says:\n\n\"If a standard system include directory, or a directory specified with -isystem, is also specified with -I, the -I option is ignored.\"\n\nGiven that the -isystem paths were implicitly added in all(?) bionic configurations, the export_include_dirs here would only be significant if this library was depended on in some other configuration. Can that happen? If it does then these paths will be visited later, which isn\u0027t necessarily an issue. I think it\u0027s worth trying like this first and only add back the old non-system paths if it turns out to be a significant problem.\n\n\u003e I\u0027m a bit surprised to see we support this property arbitrarily, we had intentionally limited the ability for modules to expose -isystem arguments to dependencies.\n\nI\u0027d say this is a very legitimate use, so I\u0027m not sure the limitation isn\u0027t working. Maybe it changed with the work on b/138182343, where SDK snapshotting support for export_system_include_dirs was added.",
+      "parentUuid": "2154d15d_23190d9f",
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "097ce494_1be82251",
         "filename": "libc/Android.bp",
         "patchSetId": 6
@@ -39,6 +57,30 @@
       "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73b0ea5f_4bbc7f72",
+        "filename": "libc/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1856,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-04-15T13:50:23Z",
+      "side": 1,
+      "message": "\u003e these seem very different. arm-optimized-routines, jemalloc_new, and scudo are all *parts* of bionic, and so they legitimately live above this comment.\n\nMoved those up.\n\n\u003e art, boringssl, and minijail are just wrong. we should either fix the build system so that cc_object does the right thing, or fix those projects to not use cc_object (since it seems like you\u0027re saying that\u0027s possible).\n\nI\u0027ve looked a bit closer at them, and I\u0027m not sure changing them to use something else is the right way. Let\u0027s continue that discussion on b/153662223.",
+      "parentUuid": "097ce494_1be82251",
+      "range": {
+        "startLine": 1855,
+        "startChar": 7,
+        "endLine": 1856,
+        "endChar": 44
+      },
+      "revId": "960bc8237a640802f92fcc9fe97f24f18fbef626",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
