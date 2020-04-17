@@ -55,6 +55,7 @@ extern "C" {
 #define DRM_VMW_CREATE_EXTENDED_CONTEXT 26
 #define DRM_VMW_GB_SURFACE_CREATE_EXT 27
 #define DRM_VMW_GB_SURFACE_REF_EXT 28
+#define DRM_VMW_MSG 29
 #define DRM_VMW_PARAM_NUM_STREAMS 0
 #define DRM_VMW_PARAM_NUM_FREE_STREAMS 1
 #define DRM_VMW_PARAM_3D 2
@@ -350,6 +351,12 @@ struct drm_vmw_gb_surface_ref_ext_rep {
 union drm_vmw_gb_surface_reference_ext_arg {
   struct drm_vmw_gb_surface_ref_ext_rep rep;
   struct drm_vmw_surface_arg req;
+};
+struct drm_vmw_msg_arg {
+  __u64 send;
+  __u64 receive;
+  __s32 send_only;
+  __u32 receive_len;
 };
 #ifdef __cplusplus
 }

@@ -20,7 +20,9 @@
 #define _UAPI__SOUND_ASOUND_H
 #ifdef __linux__
 #include <linux/types.h>
+#include <asm/byteorder.h>
 #else
+#include <endian.h>
 #include <sys/ioctl.h>
 #endif
 #include <stdlib.h>
@@ -101,7 +103,7 @@ struct snd_hwdep_dsp_image {
 #define SNDRV_HWDEP_IOCTL_INFO _IOR('H', 0x01, struct snd_hwdep_info)
 #define SNDRV_HWDEP_IOCTL_DSP_STATUS _IOR('H', 0x02, struct snd_hwdep_dsp_status)
 #define SNDRV_HWDEP_IOCTL_DSP_LOAD _IOW('H', 0x03, struct snd_hwdep_dsp_image)
-#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 14)
+#define SNDRV_PCM_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 15)
 typedef unsigned long snd_pcm_uframes_t;
 typedef signed long snd_pcm_sframes_t;
 enum {
@@ -234,6 +236,9 @@ typedef int __bitwise snd_pcm_subformat_t;
 #define SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME 0x08000000
 #define SNDRV_PCM_INFO_DRAIN_TRIGGER 0x40000000
 #define SNDRV_PCM_INFO_FIFO_IN_FRAMES 0x80000000
+#if __BITS_PER_LONG == 32 && defined(__USE_TIME_BITS64)
+#define __SND_STRUCT_TIME64
+#endif
 typedef int __bitwise snd_pcm_state_t;
 #define SNDRV_PCM_STATE_OPEN ((__force snd_pcm_state_t) 0)
 #define SNDRV_PCM_STATE_SETUP ((__force snd_pcm_state_t) 1)
@@ -247,8 +252,17 @@ typedef int __bitwise snd_pcm_state_t;
 #define SNDRV_PCM_STATE_LAST SNDRV_PCM_STATE_DISCONNECTED
 enum {
   SNDRV_PCM_MMAP_OFFSET_DATA = 0x00000000,
-  SNDRV_PCM_MMAP_OFFSET_STATUS = 0x80000000,
-  SNDRV_PCM_MMAP_OFFSET_CONTROL = 0x81000000,
+  SNDRV_PCM_MMAP_OFFSET_STATUS_OLD = 0x80000000,
+  SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD = 0x81000000,
+  SNDRV_PCM_MMAP_OFFSET_STATUS_NEW = 0x82000000,
+  SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW = 0x83000000,
+#ifdef __SND_STRUCT_TIME64
+  SNDRV_PCM_MMAP_OFFSET_STATUS = SNDRV_PCM_MMAP_OFFSET_STATUS_NEW,
+  SNDRV_PCM_MMAP_OFFSET_CONTROL = SNDRV_PCM_MMAP_OFFSET_CONTROL_NEW,
+#else
+  SNDRV_PCM_MMAP_OFFSET_STATUS = SNDRV_PCM_MMAP_OFFSET_STATUS_OLD,
+  SNDRV_PCM_MMAP_OFFSET_CONTROL = SNDRV_PCM_MMAP_OFFSET_CONTROL_OLD,
+#endif
 };
 union snd_pcm_sync_id {
   unsigned char id[16];
@@ -351,8 +365,12 @@ enum {
   SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_SYNCHRONIZED = 5,
   SNDRV_PCM_AUDIO_TSTAMP_TYPE_LAST = SNDRV_PCM_AUDIO_TSTAMP_TYPE_LINK_SYNCHRONIZED
 };
+typedef struct {
+  unsigned char pad[sizeof(time_t) - sizeof(int)];
+} __time_pad;
 struct snd_pcm_status {
   snd_pcm_state_t state;
+  __time_pad pad1;
   struct timespec trigger_tstamp;
   struct timespec tstamp;
   snd_pcm_uframes_t appl_ptr;
@@ -368,29 +386,87 @@ struct snd_pcm_status {
   __u32 audio_tstamp_accuracy;
   unsigned char reserved[52 - 2 * sizeof(struct timespec)];
 };
-struct snd_pcm_mmap_status {
+#ifdef __SND_STRUCT_TIME64
+#define __snd_pcm_mmap_status64 snd_pcm_mmap_status
+#define __snd_pcm_mmap_control64 snd_pcm_mmap_control
+#define __snd_pcm_sync_ptr64 snd_pcm_sync_ptr
+#define __snd_timespec64 timespec
+struct __snd_timespec {
+  __s32 tv_sec;
+  __s32 tv_nsec;
+};
+#else
+#define __snd_pcm_mmap_status snd_pcm_mmap_status
+#define __snd_pcm_mmap_control snd_pcm_mmap_control
+#define __snd_pcm_sync_ptr snd_pcm_sync_ptr
+#define __snd_timespec timespec
+struct __snd_timespec64 {
+  __s64 tv_sec;
+  __s64 tv_nsec;
+};
+#endif
+struct __snd_pcm_mmap_status {
   snd_pcm_state_t state;
   int pad1;
   snd_pcm_uframes_t hw_ptr;
-  struct timespec tstamp;
+  struct __snd_timespec tstamp;
   snd_pcm_state_t suspended_state;
-  struct timespec audio_tstamp;
+  struct __snd_timespec audio_tstamp;
 };
-struct snd_pcm_mmap_control {
+struct __snd_pcm_mmap_control {
   snd_pcm_uframes_t appl_ptr;
   snd_pcm_uframes_t avail_min;
 };
 #define SNDRV_PCM_SYNC_PTR_HWSYNC (1 << 0)
 #define SNDRV_PCM_SYNC_PTR_APPL (1 << 1)
 #define SNDRV_PCM_SYNC_PTR_AVAIL_MIN (1 << 2)
-struct snd_pcm_sync_ptr {
+struct __snd_pcm_sync_ptr {
   unsigned int flags;
   union {
-    struct snd_pcm_mmap_status status;
+    struct __snd_pcm_mmap_status status;
     unsigned char reserved[64];
   } s;
   union {
-    struct snd_pcm_mmap_control control;
+    struct __snd_pcm_mmap_control control;
+    unsigned char reserved[64];
+  } c;
+};
+#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __BIG_ENDIAN : defined(__BIG_ENDIAN)
+typedef char __pad_before_uframe[sizeof(__u64) - sizeof(snd_pcm_uframes_t)];
+typedef char __pad_after_uframe[0];
+#endif
+#if defined(__BYTE_ORDER) ? __BYTE_ORDER == __LITTLE_ENDIAN : defined(__LITTLE_ENDIAN)
+typedef char __pad_before_uframe[0];
+typedef char __pad_after_uframe[sizeof(__u64) - sizeof(snd_pcm_uframes_t)];
+#endif
+struct __snd_pcm_mmap_status64 {
+  snd_pcm_state_t state;
+  __u32 pad1;
+  __pad_before_uframe __pad1;
+  snd_pcm_uframes_t hw_ptr;
+  __pad_after_uframe __pad2;
+  struct __snd_timespec64 tstamp;
+  snd_pcm_state_t suspended_state;
+  __u32 pad3;
+  struct __snd_timespec64 audio_tstamp;
+};
+struct __snd_pcm_mmap_control64 {
+  __pad_before_uframe __pad1;
+  snd_pcm_uframes_t appl_ptr;
+  __pad_before_uframe __pad2;
+  __pad_before_uframe __pad3;
+  snd_pcm_uframes_t avail_min;
+  __pad_after_uframe __pad4;
+};
+struct __snd_pcm_sync_ptr64 {
+  __u32 flags;
+  __u32 pad1;
+  union {
+    struct __snd_pcm_mmap_status64 status;
+    unsigned char reserved[64];
+  } s;
+  union {
+    struct __snd_pcm_mmap_control64 control;
     unsigned char reserved[64];
   } c;
 };
@@ -465,6 +541,8 @@ enum {
 #define SNDRV_PCM_IOCTL_STATUS _IOR('A', 0x20, struct snd_pcm_status)
 #define SNDRV_PCM_IOCTL_DELAY _IOR('A', 0x21, snd_pcm_sframes_t)
 #define SNDRV_PCM_IOCTL_HWSYNC _IO('A', 0x22)
+#define __SNDRV_PCM_IOCTL_SYNC_PTR _IOWR('A', 0x23, struct __snd_pcm_sync_ptr)
+#define __SNDRV_PCM_IOCTL_SYNC_PTR64 _IOWR('A', 0x23, struct __snd_pcm_sync_ptr64)
 #define SNDRV_PCM_IOCTL_SYNC_PTR _IOWR('A', 0x23, struct snd_pcm_sync_ptr)
 #define SNDRV_PCM_IOCTL_STATUS_EXT _IOWR('A', 0x24, struct snd_pcm_status)
 #define SNDRV_PCM_IOCTL_CHANNEL_INFO _IOR('A', 0x32, struct snd_pcm_channel_info)
@@ -484,7 +562,7 @@ enum {
 #define SNDRV_PCM_IOCTL_READN_FRAMES _IOR('A', 0x53, struct snd_xfern)
 #define SNDRV_PCM_IOCTL_LINK _IOW('A', 0x60, int)
 #define SNDRV_PCM_IOCTL_UNLINK _IO('A', 0x61)
-#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 0)
+#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 1)
 enum {
   SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
   SNDRV_RAWMIDI_STREAM_INPUT,
@@ -515,6 +593,7 @@ struct snd_rawmidi_params {
 };
 struct snd_rawmidi_status {
   int stream;
+  __time_pad pad1;
   struct timespec tstamp;
   size_t avail;
   size_t xruns;
@@ -526,7 +605,7 @@ struct snd_rawmidi_status {
 #define SNDRV_RAWMIDI_IOCTL_STATUS _IOWR('W', 0x20, struct snd_rawmidi_status)
 #define SNDRV_RAWMIDI_IOCTL_DROP _IOW('W', 0x30, int)
 #define SNDRV_RAWMIDI_IOCTL_DRAIN _IOW('W', 0x31, int)
-#define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 6)
+#define SNDRV_TIMER_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 7)
 enum {
   SNDRV_TIMER_CLASS_NONE = - 1,
   SNDRV_TIMER_CLASS_SLAVE = 0,
@@ -614,7 +693,7 @@ struct snd_timer_status {
 };
 #define SNDRV_TIMER_IOCTL_PVERSION _IOR('T', 0x00, int)
 #define SNDRV_TIMER_IOCTL_NEXT_DEVICE _IOWR('T', 0x01, struct snd_timer_id)
-#define SNDRV_TIMER_IOCTL_TREAD _IOW('T', 0x02, int)
+#define SNDRV_TIMER_IOCTL_TREAD_OLD _IOW('T', 0x02, int)
 #define SNDRV_TIMER_IOCTL_GINFO _IOWR('T', 0x03, struct snd_timer_ginfo)
 #define SNDRV_TIMER_IOCTL_GPARAMS _IOW('T', 0x04, struct snd_timer_gparams)
 #define SNDRV_TIMER_IOCTL_GSTATUS _IOWR('T', 0x05, struct snd_timer_gstatus)
@@ -626,6 +705,12 @@ struct snd_timer_status {
 #define SNDRV_TIMER_IOCTL_STOP _IO('T', 0xa1)
 #define SNDRV_TIMER_IOCTL_CONTINUE _IO('T', 0xa2)
 #define SNDRV_TIMER_IOCTL_PAUSE _IO('T', 0xa3)
+#define SNDRV_TIMER_IOCTL_TREAD64 _IOW('T', 0xa4, int)
+#if __BITS_PER_LONG == 64
+#define SNDRV_TIMER_IOCTL_TREAD SNDRV_TIMER_IOCTL_TREAD_OLD
+#else
+#define SNDRV_TIMER_IOCTL_TREAD ((sizeof(__kernel_long_t) >= sizeof(time_t)) ? SNDRV_TIMER_IOCTL_TREAD_OLD : SNDRV_TIMER_IOCTL_TREAD64)
+#endif
 struct snd_timer_read {
   unsigned int resolution;
   unsigned int ticks;
@@ -649,10 +734,12 @@ enum {
 };
 struct snd_timer_tread {
   int event;
+  __time_pad pad1;
   struct timespec tstamp;
   unsigned int val;
+  __time_pad pad2;
 };
-#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 7)
+#define SNDRV_CTL_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 8)
 struct snd_ctl_card_info {
   int card;
   int pad;
@@ -686,7 +773,6 @@ typedef int __bitwise snd_ctl_elem_iface_t;
 #define SNDRV_CTL_ELEM_ACCESS_WRITE (1 << 1)
 #define SNDRV_CTL_ELEM_ACCESS_READWRITE (SNDRV_CTL_ELEM_ACCESS_READ | SNDRV_CTL_ELEM_ACCESS_WRITE)
 #define SNDRV_CTL_ELEM_ACCESS_VOLATILE (1 << 2)
-#define SNDRV_CTL_ELEM_ACCESS_TIMESTAMP (1 << 3)
 #define SNDRV_CTL_ELEM_ACCESS_TLV_READ (1 << 4)
 #define SNDRV_CTL_ELEM_ACCESS_TLV_WRITE (1 << 5)
 #define SNDRV_CTL_ELEM_ACCESS_TLV_READWRITE (SNDRV_CTL_ELEM_ACCESS_TLV_READ | SNDRV_CTL_ELEM_ACCESS_TLV_WRITE)
@@ -745,11 +831,7 @@ struct snd_ctl_elem_info {
     } enumerated;
     unsigned char reserved[128];
   } value;
-  union {
-    unsigned short d[4];
-    unsigned short * d_ptr;
-  } dimen;
-  unsigned char reserved[64 - 4 * sizeof(unsigned short)];
+  unsigned char reserved[64];
 };
 struct snd_ctl_elem_value {
   struct snd_ctl_elem_id id;
@@ -773,8 +855,7 @@ struct snd_ctl_elem_value {
     } bytes;
     struct snd_aes_iec958 iec958;
   } value;
-  struct timespec tstamp;
-  unsigned char reserved[128 - sizeof(struct timespec)];
+  unsigned char reserved[128];
 };
 struct snd_ctl_tlv {
   unsigned int numid;
