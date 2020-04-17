@@ -79,5 +79,13 @@ typedef struct {
   unsigned int interval;
   unsigned int timeout;
 } cisco_proto;
+typedef struct {
+  unsigned short dce;
+  unsigned int modulo;
+  unsigned int window;
+  unsigned int t1;
+  unsigned int t2;
+  unsigned int n2;
+} x25_hdlc_proto;
 #endif
 #endif

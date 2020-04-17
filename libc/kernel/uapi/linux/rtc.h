@@ -63,7 +63,11 @@ struct rtc_pll_info {
 #define RTC_WKALM_RD _IOR('p', 0x10, struct rtc_wkalrm)
 #define RTC_PLL_GET _IOR('p', 0x11, struct rtc_pll_info)
 #define RTC_PLL_SET _IOW('p', 0x12, struct rtc_pll_info)
-#define RTC_VL_READ _IOR('p', 0x13, int)
+#define RTC_VL_DATA_INVALID BIT(0)
+#define RTC_VL_BACKUP_LOW BIT(1)
+#define RTC_VL_BACKUP_EMPTY BIT(2)
+#define RTC_VL_ACCURACY_LOW BIT(3)
+#define RTC_VL_READ _IOR('p', 0x13, unsigned int)
 #define RTC_VL_CLR _IO('p', 0x14)
 #define RTC_IRQF 0x80
 #define RTC_PF 0x40

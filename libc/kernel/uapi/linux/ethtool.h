@@ -207,6 +207,10 @@ enum ethtool_stringset {
   ETH_SS_TUNABLES,
   ETH_SS_PHY_STATS,
   ETH_SS_PHY_TUNABLES,
+  ETH_SS_LINK_MODES,
+  ETH_SS_MSG_CLASSES,
+  ETH_SS_WOL_MODES,
+  ETH_SS_COUNT
 };
 struct ethtool_gstrings {
   __u32 cmd;
@@ -726,6 +730,7 @@ enum ethtool_link_mode_bit_indices {
 #define WAKE_MAGIC (1 << 5)
 #define WAKE_MAGICSECURE (1 << 6)
 #define WAKE_FILTER (1 << 7)
+#define WOL_MODE_COUNT 8
 #define TCP_V4_FLOW 0x01
 #define UDP_V4_FLOW 0x02
 #define SCTP_V4_FLOW 0x03

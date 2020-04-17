@@ -29,6 +29,7 @@
 #define TEE_GEN_CAP_PRIVILEGED (1 << 1)
 #define TEE_GEN_CAP_REG_MEM (1 << 2)
 #define TEE_IMPL_ID_OPTEE 1
+#define TEE_IMPL_ID_AMDTEE 2
 #define TEE_OPTEE_CAP_TZ (1 << 0)
 struct tee_ioctl_version_data {
   __u32 impl_id;
