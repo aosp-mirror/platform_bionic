@@ -31,6 +31,7 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,48 +40,48 @@
 #include <unistd.h>
 
 #include "private/ErrnoRestorer.h"
-#include "private/ScopedSignalBlocker.h"
 
-static FILE* __tmpfile_dir(const char* tmp_dir) {
+static FILE* __fd_to_fp(int fd) {
+  FILE* fp = fdopen(fd, "w+");
+  if (fp != nullptr) return fp;
+
+  ErrnoRestorer errno_restorer;
+  close(fd);
+  return nullptr;
+}
+
+static FILE* __tmpfile_dir_legacy(const char* tmp_dir) {
   char* path = nullptr;
   if (asprintf(&path, "%s/tmp.XXXXXXXXXX", tmp_dir) == -1) {
     return nullptr;
   }
 
-  int fd;
-  {
-    ScopedSignalBlocker ssb;
-    fd = mkstemp(path);
-    if (fd == -1) {
-      free(path);
-      return nullptr;
-    }
-
-    // Unlink the file now so that it's removed when closed.
-    unlink(path);
+  int fd = mkstemp(path);
+  if (fd == -1) {
     free(path);
-
-    // Can we still use the file now it's unlinked?
-    // File systems without hard link support won't have the usual Unix semantics.
-    struct stat sb;
-    int rc = fstat(fd, &sb);
-    if (rc == -1) {
-      ErrnoRestorer errno_restorer;
-      close(fd);
-      return nullptr;
-    }
+    return nullptr;
   }
 
-  // Turn the file descriptor into a FILE*.
-  FILE* fp = fdopen(fd, "w+");
-  if (fp != nullptr) {
-    return fp;
+  // Unlink the file now so that it's removed when closed.
+  unlink(path);
+  free(path);
+
+  // Can we still use the file now it's unlinked?
+  // File systems without hard link support won't have the usual Unix semantics.
+  struct stat sb;
+  if (fstat(fd, &sb) == -1) {
+    ErrnoRestorer errno_restorer;
+    close(fd);
+    return nullptr;
   }
 
-  // Failure. Clean up. We already unlinked, so we just need to close.
-  ErrnoRestorer errno_restorer;
-  close(fd);
-  return nullptr;
+  return __fd_to_fp(fd);
+}
+
+static FILE* __tmpfile_dir(const char* tmp_dir) {
+  int fd = open(tmp_dir, O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
+  if (fd == -1) return __tmpfile_dir_legacy(tmp_dir);
+  return __fd_to_fp(fd);
 }
 
 FILE* tmpfile() {
