@@ -237,6 +237,30 @@
       "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b064d3ec_2eab57a8",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-04-20T20:57:29Z",
+      "side": 1,
+      "message": "(resolving)",
+      "parentUuid": "6453191c_eff057f1",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
