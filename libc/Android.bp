@@ -906,6 +906,7 @@ cc_library_static {
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
+                "arch-x86/bionic/__x86.get_pc_thunk.S",
 
                 // ssse3 functions
                 "arch-x86/atom/string/ssse3-strcat-atom.S",
