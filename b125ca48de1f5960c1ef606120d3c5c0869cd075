@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "dc9f65d7_fbadc817",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-04-20T16:45:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1c12f853_d19ec631",
+      "range": {
+        "startLine": 45,
+        "startChar": 55,
+        "endLine": 46,
+        "endChar": 8
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "167c31d0_904ae857",
         "filename": "libc/bionic/malloc_tagged_pointers.h",
         "patchSetId": 2
@@ -180,6 +204,30 @@
       "side": 1,
       "message": "We discussed, at some point, the idea of using some kind of quick crc-like function to determine the tag. I think the only arguments against were performance (on malloc stress benchmarks that are sensitive even to a single cycle on the fast path) and determinism.\n\nI kind of like this idea. Consider that otherwise we may end up with code that implicitly depends on the highest bit of address being 1. Such code would only run on Android.\n\nAnother note - with MTE, we still want to set the highest half-byte to a non-zero value.",
       "parentUuid": "e13cfed5_7919ffc1",
+      "range": {
+        "startLine": 50,
+        "startChar": 41,
+        "endLine": 50,
+        "endChar": 45
+      },
+      "revId": "b125ca48de1f5960c1ef606120d3c5c0869cd075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6453191c_eff057f1",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-04-20T16:45:11Z",
+      "side": 1,
+      "message": "I think if we want to CRC, we should probably do it in a follow up - but happy to investigate later. Okay with this patchset for now to catch \"negative pointer\" use?",
+      "parentUuid": "5aff800e_d6d446aa",
       "range": {
         "startLine": 50,
         "startChar": 41,
