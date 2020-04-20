@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af573655_2dc06bb3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-20T17:28:00Z",
+      "side": 1,
+      "message": "__x86.get_pc_thunk.S?",
+      "revId": "dbf66f777146295652625dd8b25e5cb559177a23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
