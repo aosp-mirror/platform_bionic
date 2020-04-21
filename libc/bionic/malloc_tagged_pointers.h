@@ -43,10 +43,11 @@
 // is also deliberately different from the standard pattern-init tag (0xAA), as
 // to be distinguishable from an uninitialized-pointer access. The first and
 // second nibbles are also deliberately designed to be the bitset-mirror of each
-// other (0b1100, 0b0011) in order to reduce incidental matches. Users must not
-// rely on the implementation-defined value of this pointer tag, as it may
-// change.
-static constexpr uintptr_t POINTER_TAG = 0x3C;
+// other (0b1011, 0b0100) in order to reduce incidental matches. We also ensure
+// that the top bit is set, as this catches incorrect code that assumes that a
+// "negative" pointer indicates error. Users must not rely on the
+// implementation-defined value of this pointer tag, as it may change.
+static constexpr uintptr_t POINTER_TAG = 0xB4;
 static constexpr unsigned UNTAG_SHIFT = 40;
 static constexpr unsigned CHECK_SHIFT = 48;
 static constexpr unsigned TAG_SHIFT = 56;
