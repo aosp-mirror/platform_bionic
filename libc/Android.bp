@@ -1780,6 +1780,18 @@ cc_library_headers {
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    visibility: [
+        ":__subpackages__", // visible to bionic
+        // ... and only to these places (b/152668052)
+        "//external/gwp_asan",
+        "//external/libunwind_llvm",
+        "//system/core/property_service/libpropertyinfoparser",
+        "//system/extras/toolchain-extras",
+    ],
 
     no_libcrt: true,
     stl: "none",
@@ -1911,6 +1923,10 @@ cc_defaults {
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
 
     cflags: [
         "-Wno-gcc-compat",
