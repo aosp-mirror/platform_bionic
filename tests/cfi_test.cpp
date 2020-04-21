@@ -18,6 +18,8 @@
 #include <gtest/gtest.h>
 #include <sys/stat.h>
 
+#include <vector>
+
 #include "BionicDeathTest.h"
 #include "gtest_globals.h"
 #include "utils.h"
@@ -34,6 +36,14 @@ size_t __cfi_shadow_size();
 }
 
 static void f() {}
+
+static void test_cfi_slowpath_with_alloc() {
+  std::vector<void*> allocs;
+  for (size_t i = 0; i < 1000; i++) {
+    allocs.push_back(malloc(4096));
+    __cfi_slowpath(46, allocs.back());
+  }
+}
 
 TEST(cfi_test, basic) {
 #if defined(__BIONIC__)
@@ -88,10 +98,11 @@ TEST(cfi_test, basic) {
   // CFI check for a stack address. This is always invalid and gets the process killed.
   EXPECT_DEATH(__cfi_slowpath(45, reinterpret_cast<void*>(&c)), "");
 
-  // CFI check for a heap address. This is always invalid and gets the process killed.
-  void* p = malloc(4096);
-  EXPECT_DEATH(__cfi_slowpath(46, p), "");
-  free(p);
+  // CFI check for a heap address.
+  // It's possible that this allocation could wind up in the same CFI granule as
+  // an unchecked library, which means the below might not crash. To force a
+  // crash keep allocating up to a max until there is a crash.
+  EXPECT_DEATH(test_cfi_slowpath_with_alloc(), "");
 
   // Check all the addresses.
   const size_t bss_size = 1024 * 1024;
