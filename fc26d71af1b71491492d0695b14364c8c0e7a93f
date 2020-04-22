@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c568e3e_bc54dc84",
+        "filename": "libc/bionic/scudo/scudo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-04-22T19:35:25Z",
+      "side": 1,
+      "message": "It looks like this isn\u0027t the correct spelling for the option (the correct spelling is `dealloc_type_mismatch`), so the option has no effect. Even if it were spelt correctly, it wouldn\u0027t have any effect either because the default is false. Maybe we should remove this?",
+      "revId": "fc26d71af1b71491492d0695b14364c8c0e7a93f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
