@@ -16,6 +16,24 @@
       "revId": "fc26d71af1b71491492d0695b14364c8c0e7a93f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "606dbffc_e0e0a68c",
+        "filename": "libc/bionic/scudo/scudo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1272474
+      },
+      "writtenOn": "2020-04-22T20:24:01Z",
+      "side": 1,
+      "message": "This is an artifact of the non-standalone to standalone migration.\nThis is the non-standalone option name (defaults to true), the new one is \"dealloc_type_mismatch\", and defaults to false unlike.",
+      "parentUuid": "6c568e3e_bc54dc84",
+      "revId": "fc26d71af1b71491492d0695b14364c8c0e7a93f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
