@@ -34,6 +34,24 @@
       "revId": "fc26d71af1b71491492d0695b14364c8c0e7a93f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "952184b7_d3ee85d8",
+        "filename": "libc/bionic/scudo/scudo.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-04-23T22:40:42Z",
+      "side": 1,
+      "message": "This code isn\u0027t being used any more, so it\u0027s probably not worth modifying. I\u0027m only leaving it around in case some oem wants to switch back to jemalloc and reuse this code. I plan to delete it shortly.",
+      "parentUuid": "606dbffc_e0e0a68c",
+      "revId": "fc26d71af1b71491492d0695b14364c8c0e7a93f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
