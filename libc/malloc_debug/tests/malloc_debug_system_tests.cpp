@@ -40,7 +40,7 @@
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
 #include <gtest/gtest.h>
-#include <log/log.h>
+#include <log/log_read.h>
 
 #include <string>
 #include <thread>
