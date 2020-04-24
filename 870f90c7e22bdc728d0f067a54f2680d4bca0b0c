@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21477926_eb6cb1d2",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1272474
+      },
+      "writtenOn": "2020-04-24T22:30:34Z",
+      "side": 1,
+      "message": "Won\u0027t __scudo_get_stack_depot_addr \u0026 info_addr be unavailable if Scudo isn\u0027t linked in?",
+      "revId": "870f90c7e22bdc728d0f067a54f2680d4bca0b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
