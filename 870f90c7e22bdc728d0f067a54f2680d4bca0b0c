@@ -34,6 +34,24 @@
       "revId": "870f90c7e22bdc728d0f067a54f2680d4bca0b0c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "531cb957_4a0446a0",
+        "filename": "libc/bionic/malloc_common_dynamic.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-04-24T22:51:29Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "a4e8887a_977d4586",
+      "revId": "870f90c7e22bdc728d0f067a54f2680d4bca0b0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
