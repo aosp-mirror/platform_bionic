@@ -284,6 +284,7 @@ android_namespace_t* __loader_android_get_exported_namespace(const char* name) {
 }
 
 void __loader_cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *CallerPc) {
+  ScopedPthreadMutexLocker locker(&g_dl_mutex);
   CFIShadowWriter::CfiFail(CallSiteTypeId, Ptr, DiagData, CallerPc);
 }
 
