@@ -20,20 +20,26 @@
 
 #include "platform/bionic/macros.h"
 
+// This code needs to really block all the signals, not just the user-visible
+// ones. We call __rt_sigprocmask(2) directly so we don't mask out our own
+// signals (https://issuetracker.google.com/153624226 was a pthread_exit(3)
+// crash because a request to dump the thread's stack came in as it was exiting).
+extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
+
 class ScopedSignalBlocker {
  public:
   // Block all signals.
   explicit ScopedSignalBlocker() {
     sigset64_t set;
     sigfillset64(&set);
-    sigprocmask64(SIG_BLOCK, &set, &old_set_);
+    __rt_sigprocmask(SIG_BLOCK, &set, &old_set_, sizeof(sigset64_t));
   }
 
   // Block just the specified signal.
   explicit ScopedSignalBlocker(int signal) {
     sigset64_t set = {};
     sigaddset64(&set, signal);
-    sigprocmask64(SIG_BLOCK, &set, &old_set_);
+    __rt_sigprocmask(SIG_BLOCK, &set, &old_set_, sizeof(sigset64_t));
   }
 
   ~ScopedSignalBlocker() {
@@ -41,7 +47,7 @@ class ScopedSignalBlocker {
   }
 
   void reset() {
-    sigprocmask64(SIG_SETMASK, &old_set_, nullptr);
+    __rt_sigprocmask(SIG_SETMASK, &old_set_, nullptr, sizeof(sigset64_t));
   }
 
   sigset64_t old_set_;
