@@ -22,6 +22,30 @@
       "revId": "8d987f1ac5f3eff120cad94c3c3a75fc1ad9cd81",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ad943fc_381a50a9",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-04-28T18:32:13Z",
+      "side": 1,
+      "message": "sorry :\u0027(. i\u0027ll send you a patch",
+      "parentUuid": "bdcfa407_0209a94d",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 14
+      },
+      "revId": "8d987f1ac5f3eff120cad94c3c3a75fc1ad9cd81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
