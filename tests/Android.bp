@@ -190,7 +190,6 @@ cc_test_library {
         "system_properties_test2.cpp",
         "termios_test.cpp",
         "tgmath_test.c",
-        "threads_test.cpp",
         "time_test.cpp",
         "uchar_test.cpp",
         "unistd_nofortify_test.cpp",
@@ -241,15 +240,6 @@ cc_test_library {
     cflags: [
         "-fno-emulated-tls",
     ],
-    // With fuzzer builds, compiler instrumentation generates a reference to the
-    // __sancov_lowest_stack variable, which (for now) is defined by the fuzzer
-    // library as an emutls symbol. The -fno-emulated-tls flag above configures
-    // the compiler to reference an ordinary ELF TLS __sancov_lowest_stack
-    // symbol instead, which isn't defined. Disable the fuzzer for this test
-    // until the platform is switched to ELF TLS.
-    sanitize: {
-        fuzzer: false,
-    },
 }
 
 cc_test_library {
@@ -271,33 +261,11 @@ cc_test_library {
     cflags: [
         "-fno-emulated-tls",
     ],
-    // With fuzzer builds, compiler instrumentation generates a reference to the
-    // __sancov_lowest_stack variable, which (for now) is defined by the fuzzer
-    // library as an emutls symbol. The -fno-emulated-tls flag above configures
-    // the compiler to reference an ordinary ELF TLS __sancov_lowest_stack
-    // symbol instead, which isn't defined. Disable the fuzzer for this test
-    // until the platform is switched to ELF TLS.
-    sanitize: {
-        fuzzer: false,
-    },
 }
 
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
-
-cc_defaults {
-    name: "bionic_clang_fortify_tests_w_flags",
-    cflags: [
-        "-Wno-builtin-memcpy-chk-size",
-        "-Wno-format-security",
-        "-Wno-format-zero-length",
-        "-Wno-fortify-source",
-        "-Wno-memset-transposed-args",
-        "-Wno-strlcpy-strlcat-size",
-        "-Wno-strncat-size",
-    ],
-}
 
 cc_defaults {
     name: "bionic_fortify_tests_defaults",
@@ -318,9 +286,6 @@ cc_defaults {
 // unused.
 cc_test_library {
     name: "fortify_disabled_for_asan",
-    defaults: [
-        "bionic_clang_fortify_tests_w_flags",
-    ],
     cflags: [
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
@@ -331,7 +296,7 @@ cc_test_library {
     ],
     // Ignore that we don't have ASAN symbols linked in.
     allow_undefined_symbols: true,
-    srcs: ["clang_fortify_tests.cpp"],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }
 
 // Ensure we don't use FORTIFY'ed functions with the static analyzer/clang-tidy:
@@ -340,15 +305,12 @@ cc_test_library {
 // enabled. The library that results from building this is meant to be unused.
 cc_test_library {
     name: "fortify_disabled_for_tidy",
-    defaults: [
-        "bionic_clang_fortify_tests_w_flags",
-    ],
     cflags: [
         "-Werror",
         "-D_FORTIFY_SOURCE=2",
         "-D__clang_analyzer__",
     ],
-    srcs: ["clang_fortify_tests.cpp"],
+    srcs: ["fortify_filecheck_diagnostics_test.cpp"],
 }
 
 cc_test_library {
@@ -381,53 +343,6 @@ cc_test_library {
     },
 }
 
-cc_defaults {
-    name: "bionic_new_fortify_tests_defaults",
-    defaults: [
-        "bionic_clang_fortify_tests_w_flags",
-    ],
-    cflags: [
-        "-U_FORTIFY_SOURCE",
-    ],
-    srcs: ["clang_fortify_tests.cpp"],
-    target: {
-        host: {
-            clang_cflags: ["-D__clang__"],
-        },
-    },
-}
-
-cc_test_library {
-    name: "libfortify1-new-tests-clang",
-    defaults: [
-        "bionic_new_fortify_tests_defaults",
-        "bionic_tests_defaults",
-    ],
-    cflags: [
-        "-D_FORTIFY_SOURCE=1",
-        "-DTEST_NAME=Fortify1_clang_new",
-    ],
-    shared: {
-        enabled: false,
-    },
-}
-
-cc_test_library {
-    name: "libfortify2-new-tests-clang",
-    defaults: [
-        "bionic_new_fortify_tests_defaults",
-        "bionic_tests_defaults",
-    ],
-    cflags: [
-        "-D_FORTIFY_SOURCE=2",
-        "-DTEST_NAME=Fortify2_clang_new",
-    ],
-    shared: {
-        enabled: false,
-    },
-}
-
-
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -438,9 +353,7 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libfortify1-tests-clang",
-        "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
-        "libfortify2-new-tests-clang",
     ],
     shared: {
         enabled: false,
@@ -561,6 +474,7 @@ cc_defaults {
         android: {
             shared_libs: [
                 "ld-android",
+                "libandroidicu",
                 "libdl",
                 "libdl_android",
                 "libdl_preempt_test_1",
@@ -749,33 +663,6 @@ cc_test {
     shared_libs: [
         "libc_scudo",
     ],
-}
-
-cc_test {
-    name: "bionic-stress-tests",
-    defaults: [
-        "bionic_tests_defaults",
-    ],
-
-    // For now, these tests run forever, so do not use the isolation framework.
-    isolated: false,
-
-    srcs: [
-        "malloc_stress_test.cpp",
-    ],
-
-    shared_libs: [
-        "libbase",
-    ],
-
-    target: {
-        android: {
-            static_libs: [
-                "libmeminfo",
-                "libprocinfo",
-            ],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------

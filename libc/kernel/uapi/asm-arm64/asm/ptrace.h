@@ -45,9 +45,8 @@
 #define PSR_s 0x00ff0000
 #define PSR_x 0x0000ff00
 #define PSR_c 0x000000ff
-#define PTRACE_SYSEMU 31
-#define PTRACE_SYSEMU_SINGLESTEP 32
 #ifndef __ASSEMBLY__
+#include <linux/prctl.h>
 struct user_pt_regs {
   __u64 regs[31];
   __u64 sp;
@@ -80,8 +79,8 @@ struct user_sve_header {
 #define SVE_PT_REGS_MASK (1 << 0)
 #define SVE_PT_REGS_FPSIMD 0
 #define SVE_PT_REGS_SVE SVE_PT_REGS_MASK
-#define SVE_PT_VL_INHERIT ((1 << 17) >> 16)
-#define SVE_PT_VL_ONEXEC ((1 << 18) >> 16)
+#define SVE_PT_VL_INHERIT (PR_SVE_VL_INHERIT >> 16)
+#define SVE_PT_VL_ONEXEC (PR_SVE_SET_VL_ONEXEC >> 16)
 #define SVE_PT_REGS_OFFSET ((sizeof(struct user_sve_header) + (__SVE_VQ_BYTES - 1)) / __SVE_VQ_BYTES * __SVE_VQ_BYTES)
 #define SVE_PT_FPSIMD_OFFSET SVE_PT_REGS_OFFSET
 #define SVE_PT_FPSIMD_SIZE(vq,flags) (sizeof(struct user_fpsimd_state))
@@ -105,15 +104,6 @@ struct user_sve_header {
 struct user_pac_mask {
   __u64 data_mask;
   __u64 insn_mask;
-};
-struct user_pac_address_keys {
-  __uint128_t apiakey;
-  __uint128_t apibkey;
-  __uint128_t apdakey;
-  __uint128_t apdbkey;
-};
-struct user_pac_generic_keys {
-  __uint128_t apgakey;
 };
 #endif
 #endif

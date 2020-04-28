@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef _BIONIC_NETBSD_PORT_BEFORE_H_included
+#define _BIONIC_NETBSD_PORT_BEFORE_H_included
 
 #include "namespace.h"
 #include <sys/cdefs.h>
@@ -23,3 +24,5 @@
 
 #define ISC_FORMAT_PRINTF(a,b) __printflike(a,b)
 #define ISC_SOCKLEN_T socklen_t
+
+#endif

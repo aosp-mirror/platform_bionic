@@ -17,7 +17,6 @@
 #include <err.h>
 #include <inttypes.h>
 #include <pthread.h>
-#include <sched.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
@@ -31,28 +30,26 @@
 #include <vector>
 
 #include <android-base/macros.h>
-#include <android-base/threads.h>
 
 #include "utils.h"
 
 using namespace std::chrono_literals;
 
-static void WaitUntilAllThreadsExited(pid_t* tids, size_t tid_count) {
+static void WaitUntilAllExited(pid_t* pids, size_t pid_count) {
   // Wait until all children have exited.
   bool alive = true;
   while (alive) {
     alive = false;
-    for (size_t i = 0; i < tid_count; ++i) {
-      if (tids[i] != 0) {
-        if (tgkill(getpid(), tids[i], 0) == 0) {
+    for (size_t i = 0; i < pid_count; ++i) {
+      if (pids[i] != 0) {
+        if (kill(pids[i], 0) == 0) {
           alive = true;
         } else {
           EXPECT_EQ(errno, ESRCH);
-          tids[i] = 0;  // Skip in next loop.
+          pids[i] = 0;  // Skip in next loop.
         }
       }
     }
-    sched_yield();
   }
 }
 
@@ -128,19 +125,16 @@ TEST(pthread_leak, join) {
 TEST(pthread_leak, detach) {
   LeakChecker lc;
 
-  // Ancient devices with only 2 cores need a lower limit.
-  // http://b/129924384 and https://issuetracker.google.com/142210680.
-  const int thread_count = (sysconf(_SC_NPROCESSORS_CONF) > 2) ? 100 : 50;
-
-  for (size_t pass = 0; pass < 1; ++pass) {
-    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[thread_count];
+  for (size_t pass = 0; pass < 2; ++pass) {
+    constexpr int kThreadCount = 100;
+    struct thread_data { pthread_barrier_t* barrier; pid_t* tid; } threads[kThreadCount] = {};
 
     pthread_barrier_t barrier;
-    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, thread_count + 1), 0);
+    ASSERT_EQ(pthread_barrier_init(&barrier, nullptr, kThreadCount + 1), 0);
 
     // Start child threads.
-    pid_t tids[thread_count];
-    for (int i = 0; i < thread_count; ++i) {
+    pid_t tids[kThreadCount];
+    for (int i = 0; i < kThreadCount; ++i) {
       threads[i] = {&barrier, &tids[i]};
       const auto thread_function = +[](void* ptr) -> void* {
         thread_data* data = static_cast<thread_data*>(ptr);
@@ -156,7 +150,7 @@ TEST(pthread_leak, detach) {
     pthread_barrier_wait(&barrier);
     ASSERT_EQ(pthread_barrier_destroy(&barrier), 0);
 
-    WaitUntilAllThreadsExited(tids, thread_count);
+    WaitUntilAllExited(tids, arraysize(tids));
 
     // A native bridge implementation might need a warm up pass to reach a steady state.
     // http://b/37920774.

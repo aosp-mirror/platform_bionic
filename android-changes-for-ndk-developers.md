@@ -1,10 +1,7 @@
-# Android linker changes for NDK developers
+# Android changes for NDK developers
 
 This document details important changes related to native code
 loading in various Android releases.
-
-See also [bionic status](docs/status.md) for general libc/libm/libdl
-behavior changes.
 
 Required tools: the NDK has an _arch_-linux-android-readelf binary
 (e.g. arm-linux-androideabi-readelf or i686-linux-android-readelf)
@@ -49,10 +46,6 @@ versions older than JB-MR2, you might want to consider
 [ReLinker](https://github.com/KeepSafe/ReLinker) which claims to solve
 these problems automatically.
 
-Alternatively, if you don't have too many dependencies, it can be easiest to
-simply link all of your code into one big library and sidestep the details of
-library and symbol lookup changes on all past (and future) Android versions.
-
 ## Changes to library search order
 
 We have made various fixes to library search order when resolving symbols.
@@ -71,14 +64,6 @@ the breadth-first transitive closure of the library and its DT_NEEDED
 libraries. The M dynamic linker searches the global group followed by
 the local group. This allows ASAN, for example, to ensure that it can
 intercept any symbol.
-
-
-## LD_PRELOAD and 32/64 bit
-
-LD_PRELOAD applies to both 32- and 64-bit processes. This means that you
-should avoid saying something like `/system/lib/libfoo.so` and just say
-`libfoo.so` instead, letting the dynamic linker find the correct library
-on its search path.
 
 
 ## RTLD_LOCAL (Available in API level >= 23)
@@ -345,16 +330,6 @@ default. Ensure you're using the current NDK and that you haven't
 configured your build system to generate incorrect SONAME entries (using
 the -soname linker option).
 
-## `__register_atfork` (Available in API level >= 23)
-
-To allow `atfork` and `pthread_atfork` handlers to be unregistered on
-`dlclose`, the implementation changed in API level 23. Unfortunately this
-requires a new libc function `__register_atfork`. Code using these functions
-that is built with a target API level >= 23 therefore will not load on earlier
-versions of Android, with an error referencing `__register_atfork`.
-
-*Resolution*: build your code with an NDK target API level that matches your
-app's minimum API level, or avoid using `atfork`/`pthread_atfork`.
 
 ## DT_RUNPATH support (Available in API level >= 24)
 

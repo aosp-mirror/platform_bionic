@@ -126,7 +126,14 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSyste
 
   cmd.push_back("-DANDROID");
   cmd.push_back("-D__ANDROID_API__="s + std::to_string(type.api_level));
+  // FIXME: Re-enable FORTIFY properly once our clang in external/ is new enough
+  // to support diagnose_if without giving us syntax errors.
+#if 0
   cmd.push_back("-D_FORTIFY_SOURCE=2");
+#else
+  cmd.push_back("-D_FORTIFY_SOURCE=0");
+  cmd.push_back("-D__BIONIC_DECLARE_FORTIFY_HELPERS");
+#endif
   cmd.push_back("-D_GNU_SOURCE");
   cmd.push_back("-D_FILE_OFFSET_BITS="s + std::to_string(type.file_offset_bits));
 
@@ -251,7 +258,7 @@ void compileHeader(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSystem> vfs,
 
   Compiler.setInvocation(std::move(invocation));
   Compiler.setDiagnostics(diags.get());
-  Compiler.createFileManager(vfs);
+  Compiler.setVirtualFileSystem(vfs);
 
   VersionerASTAction versioner_action(header_database, type);
   if (!Compiler.ExecuteAction(versioner_action)) {

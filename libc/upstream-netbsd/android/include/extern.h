@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef _BIONIC_NETBSD_EXTERN_H_included
+#define _BIONIC_NETBSD_EXTERN_H_included
 
 #include <sys/cdefs.h>
 
@@ -23,3 +24,5 @@ __BEGIN_DECLS
 const char* __strsignal(int, char*, size_t);
 
 __END_DECLS
+
+#endif

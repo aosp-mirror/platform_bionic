@@ -37,7 +37,6 @@
 #include <async_safe/log.h>
 
 #include "private/ErrnoRestorer.h"
-#include "private/ScopedFd.h"
 
 // This file mmap's /*/etc/passwd and /*/etc/group in order to return their contents without any
 // allocations.  Note that these files and the strings contained within them are explicitly not
@@ -231,16 +230,19 @@ bool MmapFile::GetFile(const char** start, const char** end) {
 }
 
 bool MmapFile::DoMmap() {
-  ScopedFd fd(open(filename_, O_CLOEXEC | O_NOFOLLOW | O_RDONLY));
+  int fd = open(filename_, O_CLOEXEC | O_NOFOLLOW | O_RDONLY);
 
   struct stat fd_stat;
-  if (fstat(fd.get(), &fd_stat) == -1) {
+  if (fstat(fd, &fd_stat) == -1) {
+    close(fd);
     return false;
   }
 
   auto mmap_size = fd_stat.st_size;
 
-  void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd.get(), 0);
+  void* map_result = mmap(nullptr, mmap_size, PROT_READ, MAP_SHARED, fd, 0);
+  close(fd);
+
   if (map_result == MAP_FAILED) {
     return false;
   }
@@ -268,8 +270,8 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
 
   while (line_beginning < end) {
     line_beginning = ParseLine(line_beginning, end, line->fields, line->kNumFields);
-    // To comply with Treble, users/groups from each partition need to be prefixed with
-    // the partition name.
+    // To comply with Treble, users/groups from the vendor partition need to be prefixed with
+    // vendor_.
     if (required_prefix_ != nullptr) {
       if (strncmp(line->fields[0], required_prefix_, strlen(required_prefix_)) != 0) {
         char name[kGrpPwdBufferSize];

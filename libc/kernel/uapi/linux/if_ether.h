@@ -72,7 +72,6 @@
 #define ETH_P_802_EX1 0x88B5
 #define ETH_P_PREAUTH 0x88C7
 #define ETH_P_TIPC 0x88CA
-#define ETH_P_LLDP 0x88CC
 #define ETH_P_MACSEC 0x88E5
 #define ETH_P_8021AH 0x88E7
 #define ETH_P_MVRP 0x88F5
@@ -91,7 +90,6 @@
 #define ETH_P_QINQ2 0x9200
 #define ETH_P_QINQ3 0x9300
 #define ETH_P_EDSA 0xDADA
-#define ETH_P_DSA_8021Q 0xDADB
 #define ETH_P_IFE 0xED3E
 #define ETH_P_AF_IUCV 0xFBFB
 #define ETH_P_802_3_MIN 0x0600

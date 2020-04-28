@@ -53,20 +53,8 @@ void DL_WARN_documented_change(int api_level, const char* doc_link, const char* 
 
 #define DL_ERR_AND_LOG(fmt, x...) \
   do { \
-    DL_ERR(fmt, ##x); \
-    PRINT(fmt, ##x); \
-  } while (false)
-
-#define DL_OPEN_ERR(fmt, x...) \
-  do { \
-    DL_ERR(fmt, ##x); \
-    LD_LOG(kLogDlopen, fmt, ##x); \
-  } while (false)
-
-#define DL_SYM_ERR(fmt, x...) \
-  do { \
-    DL_ERR(fmt, ##x); \
-    LD_LOG(kLogDlsym, fmt, ##x); \
+    DL_ERR(fmt, x); \
+    PRINT(fmt, x); \
   } while (false)
 
 constexpr ElfW(Versym) kVersymNotNeeded = 0;
@@ -99,5 +87,3 @@ class DlErrorRestorer {
  private:
   std::string saved_error_msg_;
 };
-
-__LIBC_HIDDEN__ extern bool g_is_ldd;

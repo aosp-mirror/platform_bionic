@@ -646,15 +646,6 @@ static inline __always_inline void NormalMutexUnlock(pthread_mutex_internal_t* m
         // we call wake, the thread we eventually wake will find an unlocked mutex
         // and will execute. Either way we have correct behavior and nobody is
         // orphaned on the wait queue.
-        //
-        // The pthread_mutex_internal_t object may have been deallocated between the
-        // atomic exchange and the wake call. In that case, this wake call could
-        // target unmapped memory or memory used by an otherwise unrelated futex
-        // operation. Even if the kernel avoids spurious futex wakeups from its
-        // point of view, this wake call could trigger a spurious wakeup in any
-        // futex accessible from this process. References:
-        //  - https://lkml.org/lkml/2014/11/27/472
-        //  - http://austingroupbugs.net/view.php?id=811#c2267
         __futex_wake_ex(&mutex->state, shared, 1);
     }
 }
@@ -987,24 +978,6 @@ int pthread_mutex_timedlock(pthread_mutex_t* mutex_interface, const struct times
 int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* mutex_interface,
                                          const struct timespec* abs_timeout) {
     return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
-}
-
-int pthread_mutex_clocklock(pthread_mutex_t* mutex_interface, clockid_t clock,
-                            const struct timespec* abs_timeout) {
-  switch (clock) {
-    case CLOCK_MONOTONIC:
-      return __pthread_mutex_timedlock(mutex_interface, false, abs_timeout, __FUNCTION__);
-    case CLOCK_REALTIME:
-      return __pthread_mutex_timedlock(mutex_interface, true, abs_timeout, __FUNCTION__);
-    default: {
-      pthread_mutex_internal_t* mutex = __get_internal_mutex(mutex_interface);
-      uint16_t old_state = atomic_load_explicit(&mutex->state, memory_order_relaxed);
-      if (IsMutexDestroyed(old_state)) {
-        return HandleUsingDestroyedMutex(mutex_interface, __FUNCTION__);
-      }
-      return EINVAL;
-    }
-  }
 }
 
 int pthread_mutex_destroy(pthread_mutex_t* mutex_interface) {

@@ -29,8 +29,6 @@
 #include <fcntl.h>
 #include <sys/syscall.h>
 
-#include <private/bionic_ifuncs.h>
-
 extern "C" {
 
 enum CpuVariant {
@@ -91,6 +89,20 @@ static int ifunc_close(int fd) {
     return r0;
 }
 
+#define DEFINE_IFUNC(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+    __attribute__((visibility("hidden"))) \
+    name##_func* name##_resolver()
+
+#define DECLARE_FUNC(type, name) \
+    __attribute__((visibility("hidden"))) \
+    type name
+
+#define RETURN_FUNC(type, name) { \
+        DECLARE_FUNC(type, name); \
+        return name; \
+    }
+
 static bool is_same_name(const char* a, const char* b) {
     static_assert(MAX_CPU_NAME_LEN % sizeof(int) == 0, "");
     const int* ia = reinterpret_cast<const int*>(a);
@@ -143,17 +155,17 @@ static CpuVariant get_cpu_variant() {
 }
 
 typedef void* memmove_func(void* __dst, const void* __src, size_t __n);
-DEFINE_IFUNC_FOR(memmove) {
+DEFINE_IFUNC(memmove) {
     RETURN_FUNC(memmove_func, memmove_a15);
 }
 
 typedef void* memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC_FOR(memcpy) {
-    return memmove_resolver(hwcap);
+DEFINE_IFUNC(memcpy) {
+    return memmove_resolver();
 }
 
 typedef void* __memcpy_func(void*, const void*, size_t);
-DEFINE_IFUNC_FOR(__memcpy) {
+DEFINE_IFUNC(__memcpy) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__memcpy_func, __memcpy_a7);
@@ -173,7 +185,7 @@ DEFINE_IFUNC_FOR(__memcpy) {
 }
 
 typedef void* __memset_chk_func(void* s, int c, size_t n, size_t n2);
-DEFINE_IFUNC_FOR(__memset_chk) {
+DEFINE_IFUNC(__memset_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -190,7 +202,7 @@ DEFINE_IFUNC_FOR(__memset_chk) {
 }
 
 typedef void* memset_func(void* __dst, int __ch, size_t __n);
-DEFINE_IFUNC_FOR(memset) {
+DEFINE_IFUNC(memset) {
     switch(get_cpu_variant()) {
         case kCortexA7:
         case kCortexA53:
@@ -207,7 +219,7 @@ DEFINE_IFUNC_FOR(memset) {
 }
 
 typedef char* strcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC_FOR(strcpy) {
+DEFINE_IFUNC(strcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcpy_func, strcpy_a9);
@@ -217,7 +229,7 @@ DEFINE_IFUNC_FOR(strcpy) {
 }
 
 typedef char* __strcpy_chk_func(char* dst, const char* src, size_t dst_len);
-DEFINE_IFUNC_FOR(__strcpy_chk) {
+DEFINE_IFUNC(__strcpy_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcpy_chk_func, __strcpy_chk_a7);
@@ -236,7 +248,7 @@ DEFINE_IFUNC_FOR(__strcpy_chk) {
 }
 
 typedef char* stpcpy_func(char* __dst, const char* __src);
-DEFINE_IFUNC_FOR(stpcpy) {
+DEFINE_IFUNC(stpcpy) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(stpcpy_func, stpcpy_a9);
@@ -246,7 +258,7 @@ DEFINE_IFUNC_FOR(stpcpy) {
 }
 
 typedef char* strcat_func(char* __dst, const char* __src);
-DEFINE_IFUNC_FOR(strcat) {
+DEFINE_IFUNC(strcat) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strcat_func, strcat_a9);
@@ -256,7 +268,7 @@ DEFINE_IFUNC_FOR(strcat) {
 }
 
 typedef char* __strcat_chk_func(char* dst, const char* src, size_t dst_buf_size);
-DEFINE_IFUNC_FOR(__strcat_chk) {
+DEFINE_IFUNC(__strcat_chk) {
     switch(get_cpu_variant()) {
         case kCortexA7:
             RETURN_FUNC(__strcat_chk_func, __strcat_chk_a7);
@@ -275,12 +287,21 @@ DEFINE_IFUNC_FOR(__strcat_chk) {
 }
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
-DEFINE_IFUNC_FOR(strcmp) {
-    RETURN_FUNC(strcmp_func, strcmp_a15);
+DEFINE_IFUNC(strcmp) {
+    switch(get_cpu_variant()) {
+        case kCortexA9:
+            RETURN_FUNC(strcmp_func, strcmp_a9);
+        case kCortexA55:
+        case kKrait:
+        case kKryo:
+            RETURN_FUNC(strcmp_func, strcmp_krait);
+        default:
+            RETURN_FUNC(strcmp_func, strcmp_a15);
+    }
 }
 
 typedef size_t strlen_func(const char* __s);
-DEFINE_IFUNC_FOR(strlen) {
+DEFINE_IFUNC(strlen) {
     switch(get_cpu_variant()) {
         case kCortexA9:
             RETURN_FUNC(strlen_func, strlen_a9);

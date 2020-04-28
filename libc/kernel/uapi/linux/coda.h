@@ -38,6 +38,10 @@ typedef unsigned __int64 u_quad_t;
 typedef unsigned long long u_quad_t;
 #endif
 #define inline
+struct timespec {
+  long ts_sec;
+  long ts_nsec;
+};
 #else
 #include <sys/time.h>
 typedef unsigned long long u_quad_t;
@@ -52,6 +56,12 @@ typedef unsigned long long u_quad_t;
 #endif
 #else
 #define cdev_t dev_t
+#endif
+#ifdef __CYGWIN32__
+struct timespec {
+  time_t tv_sec;
+  long tv_nsec;
+};
 #endif
 #ifndef __BIT_TYPES_DEFINED__
 #define __BIT_TYPES_DEFINED__
@@ -122,10 +132,6 @@ enum coda_vtype {
   C_VFIFO,
   C_VBAD
 };
-struct coda_timespec {
-  int64_t tv_sec;
-  long tv_nsec;
-};
 struct coda_vattr {
   long va_type;
   u_short va_mode;
@@ -135,9 +141,9 @@ struct coda_vattr {
   long va_fileid;
   u_quad_t va_size;
   long va_blocksize;
-  struct coda_timespec va_atime;
-  struct coda_timespec va_mtime;
-  struct coda_timespec va_ctime;
+  struct timespec va_atime;
+  struct timespec va_mtime;
+  struct timespec va_ctime;
   u_long va_gen;
   u_long va_flags;
   cdev_t va_rdev;
@@ -184,18 +190,17 @@ struct coda_statfs {
 #define CODA_STATFS 34
 #define CODA_STORE 35
 #define CODA_RELEASE 36
-#define CODA_ACCESS_INTENT 37
-#define CODA_NCALLS 38
+#define CODA_NCALLS 37
 #define DOWNCALL(opcode) (opcode >= CODA_REPLACE && opcode <= CODA_PURGEFID)
 #define VC_MAXDATASIZE 8192
 #define VC_MAXMSGSIZE sizeof(union inputArgs) + sizeof(union outputArgs) + VC_MAXDATASIZE
 #define CIOC_KERNEL_VERSION _IOWR('c', 10, size_t)
-#define CODA_KERNEL_VERSION 5
+#define CODA_KERNEL_VERSION 3
 struct coda_in_hdr {
   u_int32_t opcode;
   u_int32_t unique;
-  __kernel_pid_t pid;
-  __kernel_pid_t pgid;
+  pid_t pid;
+  pid_t pgid;
   vuid_t uid;
 };
 struct coda_out_hdr {
@@ -434,21 +439,6 @@ struct coda_statfs_out {
   struct coda_out_hdr oh;
   struct coda_statfs stat;
 };
-#define CODA_ACCESS_TYPE_READ 1
-#define CODA_ACCESS_TYPE_WRITE 2
-#define CODA_ACCESS_TYPE_MMAP 3
-#define CODA_ACCESS_TYPE_READ_FINISH 4
-#define CODA_ACCESS_TYPE_WRITE_FINISH 5
-struct coda_access_intent_in {
-  struct coda_in_hdr ih;
-  struct CodaFid VFid;
-  int count;
-  int pos;
-  int type;
-};
-struct coda_access_intent_out {
-  struct coda_out_hdr out;
-};
 #define CODA_NOCACHE 0x80000000
 union inputArgs {
   struct coda_in_hdr ih;
@@ -474,7 +464,6 @@ union inputArgs {
   struct coda_open_by_fd_in coda_open_by_fd;
   struct coda_open_by_path_in coda_open_by_path;
   struct coda_statfs_in coda_statfs;
-  struct coda_access_intent_in coda_access_intent;
 };
 union outputArgs {
   struct coda_out_hdr oh;

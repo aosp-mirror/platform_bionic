@@ -12,4 +12,3 @@ UseTab: Never
 PenaltyExcessCharacter: 32
 
 Cpp11BracedListStyle: false
-IncludeBlocks: Preserve

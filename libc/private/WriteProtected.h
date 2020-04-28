@@ -46,16 +46,6 @@ class WriteProtected {
 
   WriteProtectedContents<T> contents;
 
-  int set_protection(int prot) {
-    auto addr = &contents;
-#if __has_feature(hwaddress_sanitizer)
-    // The mprotect system call does not currently untag pointers, so do it
-    // ourselves.
-    addr = untag_address(addr);
-#endif
-    return mprotect(reinterpret_cast<void*>(addr), PAGE_SIZE, prot);
-  }
-
  public:
   WriteProtected() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtected);
@@ -65,7 +55,7 @@ class WriteProtected {
     // multiple times by accident.
     memset(&contents, 0, sizeof(contents));
 
-    if (set_protection(PROT_READ)) {
+    if (mprotect(&contents, PAGE_SIZE, PROT_READ)) {
       async_safe_fatal("failed to make WriteProtected nonwritable in initialize");
     }
   }
@@ -80,12 +70,12 @@ class WriteProtected {
 
   template <typename Mutator>
   void mutate(Mutator mutator) {
-    if (set_protection(PROT_READ | PROT_WRITE) != 0) {
+    if (mprotect(&contents, PAGE_SIZE, PROT_READ | PROT_WRITE) != 0) {
       async_safe_fatal("failed to make WriteProtected writable in mutate: %s",
                        strerror(errno));
     }
     mutator(&contents.value);
-    if (set_protection(PROT_READ) != 0) {
+    if (mprotect(&contents, PAGE_SIZE, PROT_READ) != 0) {
       async_safe_fatal("failed to make WriteProtected nonwritable in mutate: %s",
                        strerror(errno));
     }

@@ -46,7 +46,6 @@
 
 #include "private/bionic_defs.h"
 #include "private/bionic_macros.h"
-#include "private/ScopedFd.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
@@ -54,8 +53,8 @@ static const char* kServiceVersionPropertyName = "ro.property_service.version";
 class PropertyServiceConnection {
  public:
   PropertyServiceConnection() : last_error_(0) {
-    socket_.reset(::socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0));
-    if (socket_.get() == -1) {
+    socket_ = ::socket(AF_LOCAL, SOCK_STREAM | SOCK_CLOEXEC, 0);
+    if (socket_ == -1) {
       last_error_ = errno;
       return;
     }
@@ -67,15 +66,15 @@ class PropertyServiceConnection {
     addr.sun_family = AF_LOCAL;
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
-    if (TEMP_FAILURE_RETRY(connect(socket_.get(),
-                                   reinterpret_cast<sockaddr*>(&addr), alen)) == -1) {
+    if (TEMP_FAILURE_RETRY(connect(socket_, reinterpret_cast<sockaddr*>(&addr), alen)) == -1) {
       last_error_ = errno;
-      socket_.reset();
+      close(socket_);
+      socket_ = -1;
     }
   }
 
   bool IsValid() {
-    return socket_.get() != -1;
+    return socket_ != -1;
   }
 
   int GetLastError() {
@@ -83,12 +82,18 @@ class PropertyServiceConnection {
   }
 
   bool RecvInt32(int32_t* value) {
-    int result = TEMP_FAILURE_RETRY(recv(socket_.get(), value, sizeof(*value), MSG_WAITALL));
+    int result = TEMP_FAILURE_RETRY(recv(socket_, value, sizeof(*value), MSG_WAITALL));
     return CheckSendRecvResult(result, sizeof(*value));
   }
 
   int socket() {
-    return socket_.get();
+    return socket_;
+  }
+
+  ~PropertyServiceConnection() {
+    if (socket_ != -1) {
+      close(socket_);
+    }
   }
 
  private:
@@ -104,7 +109,7 @@ class PropertyServiceConnection {
     return last_error_ == 0;
   }
 
-  ScopedFd socket_;
+  int socket_;
   int last_error_;
 
   friend class SocketWriter;

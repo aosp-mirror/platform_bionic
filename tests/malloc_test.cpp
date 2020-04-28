@@ -33,8 +33,8 @@
 
 #include <android-base/file.h>
 
-#include "platform/bionic/malloc.h"
 #include "private/bionic_config.h"
+#include "private/bionic_malloc.h"
 #include "utils.h"
 
 #if defined(__BIONIC__)
@@ -312,72 +312,50 @@ TEST(malloc, realloc_overflow) {
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 extern "C" void* pvalloc(size_t);
 extern "C" void* valloc(size_t);
-#endif
 
 TEST(malloc, pvalloc_std) {
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   size_t pagesize = sysconf(_SC_PAGESIZE);
   void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   ASSERT_LE(pagesize, malloc_usable_size(ptr));
   free(ptr);
-#else
-  GTEST_SKIP() << "pvalloc not supported.";
-#endif
 }
 
 TEST(malloc, pvalloc_overflow) {
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   ASSERT_EQ(nullptr, pvalloc(SIZE_MAX));
-#else
-  GTEST_SKIP() << "pvalloc not supported.";
-#endif
 }
 
 TEST(malloc, valloc_std) {
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   size_t pagesize = sysconf(_SC_PAGESIZE);
-  void* ptr = valloc(100);
+  void* ptr = pvalloc(100);
   ASSERT_TRUE(ptr != nullptr);
   ASSERT_TRUE((reinterpret_cast<uintptr_t>(ptr) & (pagesize-1)) == 0);
   free(ptr);
-#else
-  GTEST_SKIP() << "valloc not supported.";
-#endif
 }
 
 TEST(malloc, valloc_overflow) {
-#if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   ASSERT_EQ(nullptr, valloc(SIZE_MAX));
-#else
-  GTEST_SKIP() << "valloc not supported.";
-#endif
 }
+#endif
 
 TEST(malloc, malloc_info) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
-
-  TemporaryFile tf;
-  ASSERT_TRUE(tf.fd != -1);
-  FILE* fp = fdopen(tf.fd, "w+");
-  tf.release();
-  ASSERT_TRUE(fp != nullptr);
-  ASSERT_EQ(0, malloc_info(0, fp));
-  ASSERT_EQ(0, fclose(fp));
-
-  std::string contents;
-  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+  char* buf;
+  size_t bufsize;
+  FILE* memstream = open_memstream(&buf, &bufsize);
+  ASSERT_NE(nullptr, memstream);
+  ASSERT_EQ(0, malloc_info(0, memstream));
+  ASSERT_EQ(0, fclose(memstream));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
 
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  std::string version(root->Attribute("version"));
-  if (version == "jemalloc-1") {
+  if (std::string(root->Attribute("version")) == "jemalloc-1") {
     // Verify jemalloc version of this data.
     ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
@@ -410,9 +388,9 @@ TEST(malloc, malloc_info) {
       }
     }
   } else {
-    // Do not verify output for scudo or debug malloc.
-    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
-        << "Unknown version: " << version;
+    // Only verify that this is debug-malloc-1, the malloc debug unit tests
+    // verify the output.
+    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
   }
 #endif
 }
@@ -421,28 +399,23 @@ TEST(malloc, malloc_info_matches_mallinfo) {
 #ifdef __BIONIC__
   SKIP_WITH_HWASAN; // hwasan does not implement malloc_info
 
-  TemporaryFile tf;
-  ASSERT_TRUE(tf.fd != -1);
-  FILE* fp = fdopen(tf.fd, "w+");
-  tf.release();
-  ASSERT_TRUE(fp != nullptr);
+  char* buf;
+  size_t bufsize;
+  FILE* memstream = open_memstream(&buf, &bufsize);
+  ASSERT_NE(nullptr, memstream);
   size_t mallinfo_before_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, malloc_info(0, memstream));
   size_t mallinfo_after_allocated_bytes = mallinfo().uordblks;
-  ASSERT_EQ(0, fclose(fp));
-
-  std::string contents;
-  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+  ASSERT_EQ(0, fclose(memstream));
 
   tinyxml2::XMLDocument doc;
-  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(buf));
 
   size_t total_allocated_bytes = 0;
   auto root = doc.FirstChildElement();
   ASSERT_NE(nullptr, root);
   ASSERT_STREQ("malloc", root->Name());
-  std::string version(root->Attribute("version"));
-  if (version == "jemalloc-1") {
+  if (std::string(root->Attribute("version")) == "jemalloc-1") {
     // Verify jemalloc version of this data.
     ASSERT_STREQ("jemalloc-1", root->Attribute("version"));
 
@@ -469,9 +442,9 @@ TEST(malloc, malloc_info_matches_mallinfo) {
     EXPECT_LE(mallinfo_before_allocated_bytes, total_allocated_bytes);
     EXPECT_GE(mallinfo_after_allocated_bytes, total_allocated_bytes);
   } else {
-    // Do not verify output for scudo or debug malloc.
-    ASSERT_TRUE(version == "scudo-1" || version == "debug-malloc-1")
-        << "Unknown version: " << version;
+    // Only verify that this is debug-malloc-1, the malloc debug unit tests
+    // verify the output.
+    ASSERT_STREQ("debug-malloc-1", root->Attribute("version"));
   }
 #endif
 }

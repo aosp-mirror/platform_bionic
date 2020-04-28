@@ -91,8 +91,8 @@ struct mallinfo debug_mallinfo();
 int debug_mallopt(int param, int value);
 int debug_malloc_info(int options, FILE* fp);
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size);
-int debug_malloc_iterate(uintptr_t base, size_t size,
-                         void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
+int debug_iterate(uintptr_t base, size_t size,
+                  void (*callback)(uintptr_t base, size_t size, void* arg), void* arg);
 void debug_malloc_disable();
 void debug_malloc_enable();
 
@@ -252,16 +252,9 @@ static void* InitHeader(Header* header, void* orig_pointer, size_t size) {
   return g_debug->GetPointer(header);
 }
 
-extern "C" void __asan_init() __attribute__((weak));
-
 bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* zygote_child,
                       const char* options) {
   if (zygote_child == nullptr || options == nullptr) {
-    return false;
-  }
-
-  if (__asan_init != 0) {
-    error_log("malloc debug cannot be enabled alongside ASAN");
     return false;
   }
 
@@ -785,23 +778,16 @@ int debug_malloc_info(int options, FILE* fp) {
   if (DebugCallsDisabled() || !g_debug->TrackPointers()) {
     return g_dispatch->malloc_info(options, fp);
   }
-
-  // Make sure any pending output is written to the file.
-  fflush(fp);
-
   ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
-  // Avoid any issues where allocations are made that will be freed
-  // in the fclose.
-  int fd = fileno(fp);
-  MallocXmlElem root(fd, "malloc", "version=\"debug-malloc-1\"");
+  MallocXmlElem root(fp, "malloc", "version=\"debug-malloc-1\"");
   std::vector<ListInfoType> list;
   PointerData::GetAllocList(&list);
 
   size_t alloc_num = 0;
   for (size_t i = 0; i < list.size(); i++) {
-    MallocXmlElem alloc(fd, "allocation", "nr=\"%zu\"", alloc_num);
+    MallocXmlElem alloc(fp, "allocation", "nr=\"%zu\"", alloc_num);
 
     size_t total = 1;
     size_t size = list[i].size;
@@ -809,8 +795,8 @@ int debug_malloc_info(int options, FILE* fp) {
       i++;
       total++;
     }
-    MallocXmlElem(fd, "size").Contents("%zu", list[i].size);
-    MallocXmlElem(fd, "total").Contents("%zu", total);
+    MallocXmlElem(fp, "size").Contents("%zu", list[i].size);
+    MallocXmlElem(fp, "total").Contents("%zu", total);
     alloc_num++;
   }
   return 0;
@@ -841,7 +827,7 @@ int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
   return (*memptr != nullptr) ? 0 : ENOMEM;
 }
 
-int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
+int debug_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t, size_t, void*),
                   void* arg) {
   ScopedConcurrentLock lock;
   if (g_debug->TrackPointers()) {
@@ -854,7 +840,7 @@ int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t
 
   // An option that adds a header will add pointer tracking, so no need to
   // check if headers are enabled.
-  return g_dispatch->malloc_iterate(base, size, callback, arg);
+  return g_dispatch->iterate(base, size, callback, arg);
 }
 
 void debug_malloc_disable() {
@@ -912,28 +898,25 @@ void* debug_valloc(size_t size) {
 
 static std::mutex g_dump_lock;
 
-static void write_dump(int fd) {
-  dprintf(fd, "Android Native Heap Dump v1.2\n\n");
+static void write_dump(FILE* fp) {
+  fprintf(fp, "Android Native Heap Dump v1.2\n\n");
 
   std::string fingerprint = android::base::GetProperty("ro.build.fingerprint", "unknown");
-  dprintf(fd, "Build fingerprint: '%s'\n\n", fingerprint.c_str());
+  fprintf(fp, "Build fingerprint: '%s'\n\n", fingerprint.c_str());
 
-  PointerData::DumpLiveToFile(fd);
+  PointerData::DumpLiveToFile(fp);
 
-  dprintf(fd, "MAPS\n");
+  fprintf(fp, "MAPS\n");
   std::string content;
   if (!android::base::ReadFileToString("/proc/self/maps", &content)) {
-    dprintf(fd, "Could not open /proc/self/maps\n");
+    fprintf(fp, "Could not open /proc/self/maps\n");
   } else {
-    dprintf(fd, "%s", content.c_str());
+    fprintf(fp, "%s", content.c_str());
   }
-  dprintf(fd, "END\n");
+  fprintf(fp, "END\n");
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {
-  // Make sure any pending output is written to the file.
-  fflush(fp);
-
   ScopedConcurrentLock lock;
   ScopedDisableDebugCalls disable;
 
@@ -943,8 +926,7 @@ bool debug_write_malloc_leak_info(FILE* fp) {
     return false;
   }
 
-  write_dump(fileno(fp));
-
+  write_dump(fp);
   return true;
 }
 
@@ -954,13 +936,13 @@ void debug_dump_heap(const char* file_name) {
 
   std::lock_guard<std::mutex> guard(g_dump_lock);
 
-  int fd = open(file_name, O_RDWR | O_CREAT | O_NOFOLLOW | O_TRUNC | O_CLOEXEC, 0644);
-  if (fd == -1) {
+  FILE* fp = fopen(file_name, "w+e");
+  if (fp == nullptr) {
     error_log("Unable to create file: %s", file_name);
     return;
   }
 
   error_log("Dumping to file: %s\n", file_name);
-  write_dump(fd);
-  close(fd);
+  write_dump(fp);
+  fclose(fp);
 }

@@ -50,7 +50,10 @@ static inline T* align_up(T* p, size_t align) {
 }
 
 #if defined(__arm__)
-#define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined r14")
+// Do not emit anything for arm, clang does not allow emiting an arm unwind
+// directive.
+// #define BIONIC_STOP_UNWIND asm volatile(".cantunwind")
+#define BIONIC_STOP_UNWIND
 #elif defined(__aarch64__)
 #define BIONIC_STOP_UNWIND asm volatile(".cfi_undefined x30")
 #elif defined(__i386__)
@@ -84,12 +87,3 @@ char (&ArraySizeHelper(T (&array)[N]))[N];  // NOLINT(readability/casting)
 #else
 #define __BIONIC_FALLTHROUGH
 #endif
-
-template <typename T>
-static inline T* untag_address(T* p) {
-#if defined(__aarch64__)
-  return reinterpret_cast<T*>(reinterpret_cast<uintptr_t>(p) & ((1ULL << 56) - 1));
-#else
-  return p;
-#endif
-}

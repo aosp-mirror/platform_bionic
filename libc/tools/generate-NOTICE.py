@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # Run with directory arguments from any directory, with no special setup required.
+# Or:
+# for i in libc libdl libm linker libstdc++ ; do ./libc/tools/generate-NOTICE.py $i > $i/NOTICE ; done
 
 import ftplib
 import hashlib

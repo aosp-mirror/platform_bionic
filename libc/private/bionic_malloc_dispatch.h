@@ -70,7 +70,7 @@ struct MallocDispatch {
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   MallocValloc valloc;
 #endif
-  MallocIterate malloc_iterate;
+  MallocIterate iterate;
   MallocMallocDisable malloc_disable;
   MallocMallocEnable malloc_enable;
   MallocMallopt mallopt;

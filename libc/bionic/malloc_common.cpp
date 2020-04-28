@@ -39,7 +39,7 @@
 #include <stdio.h>
 
 #include <private/bionic_config.h>
-#include <platform/bionic/malloc.h>
+#include <private/bionic_malloc.h>
 
 #include "malloc_common.h"
 #include "malloc_limit.h"
@@ -215,9 +215,9 @@ extern "C" int malloc_iterate(uintptr_t base, size_t size,
     void (*callback)(uintptr_t base, size_t size, void* arg), void* arg) {
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
-    return dispatch_table->malloc_iterate(base, size, callback, arg);
+    return dispatch_table->iterate(base, size, callback, arg);
   }
-  return Malloc(malloc_iterate)(base, size, callback, arg);
+  return Malloc(iterate)(base, size, callback, arg);
 }
 
 // Disable calls to malloc so malloc_iterate gets a consistent view of
@@ -247,10 +247,9 @@ extern "C" ssize_t malloc_backtrace(void*, uintptr_t*, size_t) {
 
 #if __has_feature(hwaddress_sanitizer)
 // FIXME: implement these in HWASan allocator.
-extern "C" int __sanitizer_malloc_iterate(uintptr_t base __unused, size_t size __unused,
-                                          void (*callback)(uintptr_t base, size_t size, void* arg)
-                                              __unused,
-                                          void* arg __unused) {
+extern "C" int __sanitizer_iterate(uintptr_t base __unused, size_t size __unused,
+                                   void (*callback)(uintptr_t base, size_t size, void* arg) __unused,
+                                   void* arg __unused) {
   return 0;
 }
 

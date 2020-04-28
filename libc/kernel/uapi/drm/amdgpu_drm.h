@@ -117,8 +117,6 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_QUERY2_FLAGS_RESET (1 << 0)
 #define AMDGPU_CTX_QUERY2_FLAGS_VRAMLOST (1 << 1)
 #define AMDGPU_CTX_QUERY2_FLAGS_GUILTY (1 << 2)
-#define AMDGPU_CTX_QUERY2_FLAGS_RAS_CE (1 << 3)
-#define AMDGPU_CTX_QUERY2_FLAGS_RAS_UE (1 << 4)
 #define AMDGPU_CTX_PRIORITY_UNSET - 2048
 #define AMDGPU_CTX_PRIORITY_VERY_LOW - 1023
 #define AMDGPU_CTX_PRIORITY_LOW - 512
@@ -160,12 +158,11 @@ union drm_amdgpu_vm {
   struct drm_amdgpu_vm_out out;
 };
 #define AMDGPU_SCHED_OP_PROCESS_PRIORITY_OVERRIDE 1
-#define AMDGPU_SCHED_OP_CONTEXT_PRIORITY_OVERRIDE 2
 struct drm_amdgpu_sched_in {
   __u32 op;
   __u32 fd;
   __s32 priority;
-  __u32 ctx_id;
+  __u32 flags;
 };
 union drm_amdgpu_sched {
   struct drm_amdgpu_sched_in in;
@@ -326,9 +323,6 @@ struct drm_amdgpu_gem_va {
 #define AMDGPU_CHUNK_ID_SYNCOBJ_IN 0x04
 #define AMDGPU_CHUNK_ID_SYNCOBJ_OUT 0x05
 #define AMDGPU_CHUNK_ID_BO_HANDLES 0x06
-#define AMDGPU_CHUNK_ID_SCHEDULED_DEPENDENCIES 0x07
-#define AMDGPU_CHUNK_ID_SYNCOBJ_TIMELINE_WAIT 0x08
-#define AMDGPU_CHUNK_ID_SYNCOBJ_TIMELINE_SIGNAL 0x09
 struct drm_amdgpu_cs_chunk {
   __u32 chunk_id;
   __u32 length_dw;
@@ -352,7 +346,6 @@ union drm_amdgpu_cs {
 #define AMDGPU_IB_FLAG_PREAMBLE (1 << 1)
 #define AMDGPU_IB_FLAG_PREEMPT (1 << 2)
 #define AMDGPU_IB_FLAG_TC_WB_NOT_INVALIDATE (1 << 3)
-#define AMDGPU_IB_FLAG_RESET_GDS_MAX_WAVE_ID (1 << 4)
 struct drm_amdgpu_cs_chunk_ib {
   __u32 _pad;
   __u32 flags;
@@ -375,11 +368,6 @@ struct drm_amdgpu_cs_chunk_fence {
 };
 struct drm_amdgpu_cs_chunk_sem {
   __u32 handle;
-};
-struct drm_amdgpu_cs_chunk_syncobj {
-  __u32 handle;
-  __u32 flags;
-  __u64 point;
 };
 #define AMDGPU_FENCE_TO_HANDLE_GET_SYNCOBJ 0
 #define AMDGPU_FENCE_TO_HANDLE_GET_SYNCOBJ_FD 1
@@ -425,7 +413,6 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_GFX_RLC_RESTORE_LIST_GPM_MEM 0x10
 #define AMDGPU_INFO_FW_GFX_RLC_RESTORE_LIST_SRM_MEM 0x11
 #define AMDGPU_INFO_FW_DMCU 0x12
-#define AMDGPU_INFO_FW_TA 0x13
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -453,21 +440,6 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_SENSOR_STABLE_PSTATE_GFX_MCLK 0x9
 #define AMDGPU_INFO_NUM_VRAM_CPU_PAGE_FAULTS 0x1E
 #define AMDGPU_INFO_VRAM_LOST_COUNTER 0x1F
-#define AMDGPU_INFO_RAS_ENABLED_FEATURES 0x20
-#define AMDGPU_INFO_RAS_ENABLED_UMC (1 << 0)
-#define AMDGPU_INFO_RAS_ENABLED_SDMA (1 << 1)
-#define AMDGPU_INFO_RAS_ENABLED_GFX (1 << 2)
-#define AMDGPU_INFO_RAS_ENABLED_MMHUB (1 << 3)
-#define AMDGPU_INFO_RAS_ENABLED_ATHUB (1 << 4)
-#define AMDGPU_INFO_RAS_ENABLED_PCIE (1 << 5)
-#define AMDGPU_INFO_RAS_ENABLED_HDP (1 << 6)
-#define AMDGPU_INFO_RAS_ENABLED_XGMI (1 << 7)
-#define AMDGPU_INFO_RAS_ENABLED_DF (1 << 8)
-#define AMDGPU_INFO_RAS_ENABLED_SMN (1 << 9)
-#define AMDGPU_INFO_RAS_ENABLED_SEM (1 << 10)
-#define AMDGPU_INFO_RAS_ENABLED_MP0 (1 << 11)
-#define AMDGPU_INFO_RAS_ENABLED_MP1 (1 << 12)
-#define AMDGPU_INFO_RAS_ENABLED_FUSE (1 << 13)
 #define AMDGPU_INFO_MMR_SE_INDEX_SHIFT 0
 #define AMDGPU_INFO_MMR_SE_INDEX_MASK 0xff
 #define AMDGPU_INFO_MMR_SH_INDEX_SHIFT 8
@@ -546,7 +518,6 @@ struct drm_amdgpu_info_firmware {
 #define AMDGPU_VRAM_TYPE_HBM 6
 #define AMDGPU_VRAM_TYPE_DDR3 7
 #define AMDGPU_VRAM_TYPE_DDR4 8
-#define AMDGPU_VRAM_TYPE_GDDR6 9
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -595,7 +566,6 @@ struct drm_amdgpu_info_device {
   __u32 cu_ao_bitmap[4][4];
   __u64 high_va_offset;
   __u64 high_va_max;
-  __u32 pa_sc_tile_steering_override;
 };
 struct drm_amdgpu_info_hw_ip {
   __u32 hw_ip_version_major;
@@ -630,7 +600,6 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_CZ 135
 #define AMDGPU_FAMILY_AI 141
 #define AMDGPU_FAMILY_RV 142
-#define AMDGPU_FAMILY_NV 143
 #ifdef __cplusplus
 }
 #endif

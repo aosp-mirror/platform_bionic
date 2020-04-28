@@ -18,39 +18,38 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <unistd.h>
 
 #include <private/bionic_macros.h>
 
 class MallocXmlElem {
  public:
   // Name must be valid throughout lifetime of the object.
-  explicit MallocXmlElem(int fd, const char* name,
-                         const char* attr_fmt = nullptr, ...) : fd_(fd), name_(name) {
-    dprintf(fd_, "<%s", name_);
+  explicit MallocXmlElem(FILE* fp, const char* name,
+                         const char* attr_fmt = nullptr, ...) : fp_(fp), name_(name) {
+    fprintf(fp, "<%s", name_);
     if (attr_fmt != nullptr) {
       va_list args;
       va_start(args, attr_fmt);
-      write(fd_, " ", 1);
-      vdprintf(fd_, attr_fmt, args);
+      fputc(' ', fp_);
+      vfprintf(fp_, attr_fmt, args);
       va_end(args);
     }
-    write(fd_, ">", 1);
+    fputc('>', fp_);
   }
 
   ~MallocXmlElem() noexcept {
-    dprintf(fd_, "</%s>", name_);
+    fprintf(fp_, "</%s>", name_);
   }
 
   void Contents(const char* fmt, ...) {
     va_list args;
     va_start(args, fmt);
-    vdprintf(fd_, fmt, args);
+    vfprintf(fp_, fmt, args);
     va_end(args);
   }
 
 private:
-  int fd_;
+  FILE* fp_;
   const char* name_;
 
   BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(MallocXmlElem);

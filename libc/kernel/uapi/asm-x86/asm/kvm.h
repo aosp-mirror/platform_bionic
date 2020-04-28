@@ -317,23 +317,14 @@ struct kvm_sync_regs {
 #define KVM_X86_QUIRK_LINT0_REENABLED (1 << 0)
 #define KVM_X86_QUIRK_CD_NW_CLEARED (1 << 1)
 #define KVM_X86_QUIRK_LAPIC_MMIO_HOLE (1 << 2)
-#define KVM_X86_QUIRK_OUT_7E_INC_RIP (1 << 3)
-#define KVM_X86_QUIRK_MISC_ENABLE_NO_MWAIT (1 << 4)
-#define KVM_STATE_NESTED_FORMAT_VMX 0
-#define KVM_STATE_NESTED_FORMAT_SVM 1
 #define KVM_STATE_NESTED_GUEST_MODE 0x00000001
 #define KVM_STATE_NESTED_RUN_PENDING 0x00000002
 #define KVM_STATE_NESTED_EVMCS 0x00000004
 #define KVM_STATE_NESTED_SMM_GUEST_MODE 0x00000001
 #define KVM_STATE_NESTED_SMM_VMXON 0x00000002
-#define KVM_STATE_NESTED_VMX_VMCS_SIZE 0x1000
-struct kvm_vmx_nested_state_data {
-  __u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-  __u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
-};
-struct kvm_vmx_nested_state_hdr {
+struct kvm_vmx_nested_state {
   __u64 vmxon_pa;
-  __u64 vmcs12_pa;
+  __u64 vmcs_pa;
   struct {
     __u16 flags;
   } smm;
@@ -343,21 +334,9 @@ struct kvm_nested_state {
   __u16 format;
   __u32 size;
   union {
-    struct kvm_vmx_nested_state_hdr vmx;
+    struct kvm_vmx_nested_state vmx;
     __u8 pad[120];
-  } hdr;
-  union {
-    struct kvm_vmx_nested_state_data vmx[0];
-  } data;
+  };
+  __u8 data[0];
 };
-struct kvm_pmu_event_filter {
-  __u32 action;
-  __u32 nevents;
-  __u32 fixed_counter_bitmap;
-  __u32 flags;
-  __u32 pad[4];
-  __u64 events[0];
-};
-#define KVM_PMU_EVENT_ALLOW 0
-#define KVM_PMU_EVENT_DENY 1
 #endif

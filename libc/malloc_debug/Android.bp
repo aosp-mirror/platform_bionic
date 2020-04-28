@@ -3,8 +3,8 @@
 // ==============================================================
 // Used by libmemunreachable
 cc_library_static {
+
     name: "libc_malloc_debug_backtrace",
-    vendor_available: true,
 
     srcs: [
         "backtrace.cpp",
@@ -16,6 +16,7 @@ cc_library_static {
     whole_static_libs: [
         "libbase",
         "libasync_safe",
+        "libdemangle",
     ],
 
     include_dirs: ["bionic/libc"],
@@ -27,22 +28,11 @@ cc_library_static {
     },
     native_coverage: false,
 
-    target: {
-        android: {
-            static_libs: ["libc++demangle"],
-        },
-    },
-
     // -Wno-error=format-zero-length needed for gcc to compile.
     cflags: [
         "-Wall",
         "-Werror",
         "-Wno-error=format-zero-length",
-    ],
-
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.runtime",
     ],
 }
 
@@ -76,6 +66,7 @@ cc_library {
     static_libs: [
         "libasync_safe",
         "libbase",
+        "libdemangle",
         "libc_malloc_debug_backtrace",
     ],
 
@@ -107,15 +98,6 @@ cc_library {
         "-Wno-error=format-zero-length",
         "-Wthread-safety",
     ],
-
-    apex_available: [
-        "com.android.runtime",
-    ],
-    static: {
-        apex_available: [
-            "//apex_available:platform",
-        ],
-    },
 }
 
 // ==============================================================
@@ -138,12 +120,9 @@ cc_test {
         "bionic/libc/async_safe/include",
     ],
 
-    header_libs: [
-        "bionic_libc_platform_headers",
-    ],
-
     static_libs: [
         "libc_malloc_debug",
+        "libdemangle",
         "libtinyxml2",
     ],
 
@@ -166,13 +145,7 @@ cc_test {
 cc_test {
     name: "malloc_debug_system_tests",
 
-    include_dirs: [
-        "bionic/libc",
-    ],
-
-    header_libs: [
-        "bionic_libc_platform_headers",
-    ],
+    include_dirs: ["bionic/libc"],
 
     srcs: [
         "tests/malloc_debug_system_tests.cpp",

@@ -72,12 +72,9 @@ struct android_namespace_link_t {
 
 struct android_namespace_t {
  public:
-  android_namespace_t() :
-    is_isolated_(false),
-    is_greylist_enabled_(false),
-    is_also_used_as_anonymous_(false) {}
+  android_namespace_t() : name_(nullptr), is_isolated_(false), is_greylist_enabled_(false) {}
 
-  const char* get_name() const { return name_.c_str(); }
+  const char* get_name() const { return name_; }
   void set_name(const char* name) { name_ = name; }
 
   bool is_isolated() const { return is_isolated_; }
@@ -85,9 +82,6 @@ struct android_namespace_t {
 
   bool is_greylist_enabled() const { return is_greylist_enabled_; }
   void set_greylist_enabled(bool enabled) { is_greylist_enabled_ = enabled; }
-
-  bool is_also_used_as_anonymous() const { return is_also_used_as_anonymous_; }
-  void set_also_used_as_anonymous(bool yes) { is_also_used_as_anonymous_ = yes; }
 
   const std::vector<std::string>& get_ld_library_paths() const {
     return ld_library_paths_;
@@ -167,10 +161,9 @@ struct android_namespace_t {
   soinfo_list_t get_shared_group();
 
  private:
-  std::string name_;
+  const char* name_;
   bool is_isolated_;
   bool is_greylist_enabled_;
-  bool is_also_used_as_anonymous_;
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
   std::vector<std::string> permitted_paths_;

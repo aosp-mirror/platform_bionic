@@ -98,7 +98,6 @@ class pthread_internal_t {
   void* (*start_routine)(void*);
   void* start_routine_arg;
   void* return_value;
-  sigset64_t start_mask;
 
   void* alternate_signal_stack;
 
@@ -130,11 +129,6 @@ class pthread_internal_t {
   void* mmap_base;
   size_t mmap_size;
 
-  // The location of the VMA to label as the thread's stack_and_tls.
-  void* mmap_base_unguarded;
-  size_t mmap_size_unguarded;
-  char vma_name_buffer[32];
-
   thread_local_dtor* thread_local_dtors;
 
   /*
@@ -153,8 +147,6 @@ class pthread_internal_t {
 struct ThreadMapping {
   char* mmap_base;
   size_t mmap_size;
-  char* mmap_base_unguarded;
-  size_t mmap_size_unguarded;
 
   char* static_tls;
   char* stack_base;
@@ -170,7 +162,6 @@ __LIBC_HIDDEN__ void __free_temp_bionic_tls(bionic_tls* tls);
 __LIBC_HIDDEN__ void __init_additional_stacks(pthread_internal_t*);
 __LIBC_HIDDEN__ int __init_thread(pthread_internal_t* thread);
 __LIBC_HIDDEN__ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_size);
-__LIBC_HIDDEN__ void __set_stack_and_tls_vma_name(bool is_main_thread);
 
 __LIBC_HIDDEN__ pthread_t __pthread_internal_add(pthread_internal_t* thread);
 __LIBC_HIDDEN__ pthread_internal_t* __pthread_internal_find(pthread_t pthread_id, const char* caller);

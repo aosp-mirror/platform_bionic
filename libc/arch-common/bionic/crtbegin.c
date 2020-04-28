@@ -63,29 +63,6 @@ __asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #undef PRE
 #undef POST
 
-// On arm32 and arm64, when targeting Q and up, overalign the TLS segment to
-// (8 * sizeof(void*)), which reserves enough space between the thread pointer
-// and the executable's TLS segment for Bionic's TLS slots. It has the side
-// effect of placing a 0-sized TLS segment into Android executables that don't
-// use TLS, but this should be harmless.
-//
-// To ensure that the .tdata input section isn't deleted (e.g. by
-// --gc-sections), the .text input section (which contains _start) has a
-// relocation to the .tdata input section.
-#if __ANDROID_API__ >= __ANDROID_API_Q__
-#if defined(__arm__)
-asm("  .section .tdata,\"awT\",%progbits\n"
-    "  .p2align 5\n"
-    "  .text\n"
-    "  .reloc 0, R_ARM_NONE, .tdata\n");
-#elif defined(__aarch64__)
-asm("  .section .tdata,\"awT\",@progbits\n"
-    "  .p2align 6\n"
-    "  .text\n"
-    "  .reloc 0, R_AARCH64_NONE, .tdata\n");
-#endif
-#endif
-
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"

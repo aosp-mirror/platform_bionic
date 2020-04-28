@@ -33,8 +33,6 @@
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 
-#include "private/ScopedFd.h"
-
 struct nlmsghdr;
 
 class NetlinkConnection {
@@ -46,7 +44,7 @@ class NetlinkConnection {
   bool ReadResponses(void callback(void*, nlmsghdr*), void* context);
 
  private:
-  ScopedFd fd_;
+  int fd_;
   char* data_;
   size_t size_;
 };

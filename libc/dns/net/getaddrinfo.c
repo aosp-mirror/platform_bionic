@@ -470,7 +470,7 @@ android_getaddrinfo_proxy(
 			break;
 		}
 
-		ai = calloc(1, sizeof(struct addrinfo) + sizeof(struct sockaddr_storage));
+		struct addrinfo* ai = calloc(1, sizeof(struct addrinfo) + sizeof(struct sockaddr_storage));
 		if (ai == NULL) {
 			break;
 		}

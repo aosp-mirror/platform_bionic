@@ -15,11 +15,9 @@
  */
 
 #include <gtest/gtest.h>
-
-// The real <stdatomic.h> checks for the availability of C++'s atomics and uses them if present. Since
-// we want to test the libc versions, we instead include <bits/stdatomic.h> where they're actually defined.
-#include <bits/stdatomic.h>
-
+// Fool stdatomic.h into not using <atomic>.
+#undef _USING_LIBCXX
+#include <stdatomic.h>
 #include <pthread.h>
 #include <stdint.h>
 

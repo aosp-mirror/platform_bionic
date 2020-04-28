@@ -31,7 +31,7 @@ template <typename FunctionType>
 static void netdClientInitFunction(void* handle, const char* symbol, FunctionType* function) {
     typedef void (*InitFunctionType)(FunctionType*);
     InitFunctionType initFunction = reinterpret_cast<InitFunctionType>(dlsym(handle, symbol));
-    if (initFunction != nullptr) {
+    if (initFunction != NULL) {
         initFunction(function);
     }
 }
@@ -45,23 +45,20 @@ static void netdClientInitImpl() {
         return;
     }
 
-    void* handle = dlopen("libnetd_client.so", RTLD_NOW);
-    if (handle == nullptr) {
+    void* netdClientHandle = dlopen("libnetd_client.so", RTLD_NOW);
+    if (netdClientHandle == NULL) {
         // If the library is not available, it's not an error. We'll just use
         // default implementations of functions that it would've overridden.
         return;
     }
-
-    netdClientInitFunction(handle, "netdClientInitAccept4", &__netdClientDispatch.accept4);
-    netdClientInitFunction(handle, "netdClientInitConnect", &__netdClientDispatch.connect);
-    netdClientInitFunction(handle, "netdClientInitSendmmsg", &__netdClientDispatch.sendmmsg);
-    netdClientInitFunction(handle, "netdClientInitSendmsg", &__netdClientDispatch.sendmsg);
-    netdClientInitFunction(handle, "netdClientInitSendto", &__netdClientDispatch.sendto);
-    netdClientInitFunction(handle, "netdClientInitSocket", &__netdClientDispatch.socket);
-
-    netdClientInitFunction(handle, "netdClientInitNetIdForResolv",
+    netdClientInitFunction(netdClientHandle, "netdClientInitAccept4",
+                           &__netdClientDispatch.accept4);
+    netdClientInitFunction(netdClientHandle, "netdClientInitConnect",
+                           &__netdClientDispatch.connect);
+    netdClientInitFunction(netdClientHandle, "netdClientInitNetIdForResolv",
                            &__netdClientDispatch.netIdForResolv);
-    netdClientInitFunction(handle, "netdClientInitDnsOpenProxy",
+    netdClientInitFunction(netdClientHandle, "netdClientInitSocket", &__netdClientDispatch.socket);
+    netdClientInitFunction(netdClientHandle, "netdClientInitDnsOpenProxy",
                            &__netdClientDispatch.dnsOpenProxy);
 }
 

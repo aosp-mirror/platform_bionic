@@ -59,11 +59,26 @@ ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x
 # Compile time tests.
 # -----------------------------------------------------------------------------
 
-FORTIFY_LEVEL := 1
-include $(LOCAL_PATH)/make_fortify_compile_test.mk
+# Some of these are intentionally using = instead of := since we need access to
+# some variables not initialtized until we're in the build system.
 
-FORTIFY_LEVEL := 2
-include $(LOCAL_PATH)/make_fortify_compile_test.mk
+include $(CLEAR_VARS)
+LOCAL_ADDITIONAL_DEPENDENCIES := \
+    $(LOCAL_PATH)/Android.mk \
+    $(LOCAL_PATH)/file-check-cxx \
+    | $(HOST_OUT_EXECUTABLES)/FileCheck$(HOST_EXECUTABLE_SUFFIX) \
+
+LOCAL_CXX := $(LOCAL_PATH)/file-check-cxx \
+    $(HOST_OUT_EXECUTABLES)/FileCheck \
+    $(LLVM_PREBUILTS_PATH)/clang++ \
+    CLANG \
+
+LOCAL_CLANG := true
+LOCAL_MODULE := bionic-compile-time-tests-clang++
+LOCAL_CPPFLAGS := -Wall -Werror
+LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000
+LOCAL_SRC_FILES := fortify_filecheck_diagnostics_test.cpp
+include $(BUILD_STATIC_LIBRARY)
 
 endif # linux-x86
 

@@ -36,10 +36,6 @@
 
 #pragma once
 
-/**
- * `__BIONIC__` is always defined if you're building with bionic. See
- * https://android.googlesource.com/platform/bionic/+/master/docs/defines.md.
- */
 #define __BIONIC__ 1
 
 #if defined(__cplusplus)
@@ -90,7 +86,6 @@
 #define __noreturn __attribute__((__noreturn__))
 #define __mallocfunc  __attribute__((__malloc__))
 #define __packed __attribute__((__packed__))
-#define __returns_twice __attribute__((__returns_twice__))
 #define __unused __attribute__((__unused__))
 #define __used __attribute__((__used__))
 
@@ -293,24 +288,6 @@
 #define __pass_object_size __pass_object_size_n(__bos_level)
 #define __pass_object_size0 __pass_object_size_n(0)
 
-/* Intended for use in unevaluated contexts, e.g. diagnose_if conditions. */
-#define __bos_unevaluated_lt(bos_val, val) \
-  ((bos_val) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (bos_val) < (val))
-
-#define __bos_unevaluated_le(bos_val, val) \
-  ((bos_val) != __BIONIC_FORTIFY_UNKNOWN_SIZE && (bos_val) <= (val))
-
-/* Intended for use in evaluated contexts. */
-#define __bos_dynamic_check_impl_and(bos_val, op, index, cond) \
-  (bos_val == __BIONIC_FORTIFY_UNKNOWN_SIZE ||                 \
-   (__builtin_constant_p(index) && bos_val op index && (cond)))
-
-#define __bos_dynamic_check_impl(bos_val, op, index) \
-  __bos_dynamic_check_impl_and(bos_val, op, index, 1)
-
-#define __bos_trivially_ge(bos_val, index) __bos_dynamic_check_impl((bos_val), >=, (index))
-#define __bos_trivially_gt(bos_val, index) __bos_dynamic_check_impl((bos_val), >, (index))
-
 #if defined(__BIONIC_FORTIFY) || defined(__BIONIC_DECLARE_FORTIFY_HELPERS)
 #  define __BIONIC_INCLUDE_FORTIFY_HEADERS 1
 #endif
@@ -359,6 +336,3 @@ int __size_mul_overflow(__SIZE_TYPE__ a, __SIZE_TYPE__ b, __SIZE_TYPE__ *result)
 
 #include <android/versioning.h>
 #include <android/api-level.h>
-#if __has_include(<android/ndk-version.h>)
-#include <android/ndk-version.h>
-#endif

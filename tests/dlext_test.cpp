@@ -28,9 +28,10 @@
 #include <android/dlext.h>
 #include <android-base/file.h>
 #include <android-base/strings.h>
-#include <android-base/test_utils.h>
 
+#include <linux/memfd.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/vfs.h>
 #include <sys/wait.h>
@@ -133,7 +134,10 @@ TEST_F(DlExtTest, ExtInfoUseFdWithOffset) {
   ZipArchiveHandle handle;
   ASSERT_EQ(0, OpenArchive(lib_path.c_str(), &handle));
   ZipEntry zip_entry;
-  ASSERT_EQ(0, FindEntry(handle, kLibZipSimpleZip, &zip_entry));
+  ZipString zip_name;
+  zip_name.name = reinterpret_cast<const uint8_t*>(kLibZipSimpleZip);
+  zip_name.name_length = strlen(kLibZipSimpleZip);
+  ASSERT_EQ(0, FindEntry(handle, zip_name, &zip_entry));
   extinfo.library_fd_offset = zip_entry.offset;
   CloseArchive(handle);
 
@@ -362,10 +366,8 @@ TEST_F(DlExtTest, ReservedRecursive) {
 
   uint32_t* taxicab_number = reinterpret_cast<uint32_t*>(dlsym(handle_, "dlopen_testlib_taxicab_number"));
   ASSERT_DL_NOTNULL(taxicab_number);
-  // Untag the pointer so that it can be compared with start, which will be untagged.
-  void* addr = reinterpret_cast<void*>(untag_address(taxicab_number));
-  EXPECT_GE(addr, start);
-  EXPECT_LT(addr, reinterpret_cast<char*>(start) + kLibSize);
+  EXPECT_GE(reinterpret_cast<void*>(taxicab_number), start);
+  EXPECT_LT(reinterpret_cast<void*>(taxicab_number), reinterpret_cast<char*>(start) + kLibSize);
   EXPECT_EQ(1729U, *taxicab_number);
 }
 
@@ -601,7 +603,7 @@ TEST_F(DlExtRelroSharingTest, VerifyMemorySaving) {
 void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pid,
             size_t* total_pss) {
   android::meminfo::ProcMemInfo proc_mem(pid);
-  const std::vector<android::meminfo::Vma>& maps = proc_mem.MapsWithoutUsageStats();
+  const std::vector<android::meminfo::Vma>& maps = proc_mem.Maps();
   ASSERT_GT(maps.size(), 0UL);
 
   // Calculate total PSS of the library.
@@ -613,9 +615,7 @@ void GetPss(bool shared_relro, const char* lib, const char* relro_file, pid_t pi
           saw_relro_file = true;
       }
 
-      android::meminfo::Vma update_vma(vma);
-      ASSERT_TRUE(proc_mem.FillInVmaStats(update_vma));
-      *total_pss += update_vma.usage.pss;
+      *total_pss += vma.usage.pss;
     }
   }
 
@@ -945,7 +945,7 @@ TEST(dlext, dlopen_ext_use_memfd) {
   const std::string lib_path = GetTestlibRoot() + "/libtest_simple.so";
 
   // create memfd
-  int memfd = memfd_create("foobar", MFD_CLOEXEC);
+  int memfd = syscall(__NR_memfd_create, "foobar", MFD_CLOEXEC);
   if (memfd == -1 && errno == ENOSYS) {
     return;
   }
@@ -1375,10 +1375,7 @@ TEST(dlext, ns_isolated) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  const char* error = dlerror();
-  ASSERT_MATCH(error,
-               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
-               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated1)");
+  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1506,9 +1503,7 @@ TEST(dlext, ns_shared) {
 
   void* handle2 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle2 == nullptr);
-  ASSERT_MATCH(dlerror(),
-               R"(dlopen failed: library "libnstest_private_external.so" not found: needed by )"
-               R"(\S+libnstest_root_not_isolated.so in namespace private_isolated_shared)");
+  ASSERT_STREQ("dlopen failed: library \"libnstest_private_external.so\" not found", dlerror());
 
   // Check dlopen by absolute path
   handle2 = android_dlopen_ext(lib_private_external_path.c_str(), RTLD_NOW, &extinfo);
@@ -1768,10 +1763,7 @@ TEST(dlext, ns_isolated_rtld_global) {
 
   handle1 = android_dlopen_ext(root_lib, RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle1 == nullptr);
-  ASSERT_MATCH(
-      dlerror(),
-      R"(dlopen failed: library "libnstest_public.so" not found: needed by \S+libnstest_root.so)"
-      R"( in namespace isolated2)");
+  ASSERT_STREQ("dlopen failed: library \"libnstest_public.so\" not found", dlerror());
 }
 
 TEST(dlext, ns_inaccessible_error_message) {

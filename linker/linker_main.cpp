@@ -32,7 +32,6 @@
 #include <sys/auxv.h>
 
 #include "linker_debug.h"
-#include "linker_debuggerd.h"
 #include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
@@ -40,8 +39,6 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
-#include "private/bionic_auxv.h"
-#include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
@@ -49,6 +46,9 @@
 #include "android-base/unique_fd.h"
 #include "android-base/strings.h"
 #include "android-base/stringprintf.h"
+#ifdef __ANDROID__
+#include "debuggerd/handler.h"
+#endif
 
 #include <async_safe/log.h>
 #include <bionic/libc_init_common.h>
@@ -62,8 +62,6 @@ static ElfW(Addr) get_elf_exec_load_bias(const ElfW(Ehdr)* elf);
 
 static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                    ElfW(Addr)* base, ElfW(Addr)* load_bias);
-
-static void set_bss_vma_name(soinfo* si);
 
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
@@ -119,7 +117,6 @@ soinfo* solist_get_vdso() {
   return vdso;
 }
 
-bool g_is_ldd;
 int g_ld_debug_verbosity;
 
 static std::vector<std::string> g_ld_preload_names;
@@ -178,12 +175,11 @@ static void add_vdso() {
 }
 
 // Initializes an soinfo's link_map_head field using other fields from the
-// soinfo (phdr, phnum, load_bias). The soinfo's realpath must not change after
-// this function is called.
-static void init_link_map_head(soinfo& info) {
+// soinfo (phdr, phnum, load_bias).
+static void init_link_map_head(soinfo& info, const char* linker_path) {
   auto& map = info.link_map_head;
   map.l_addr = info.load_bias;
-  map.l_name = const_cast<char*>(info.get_realpath());
+  map.l_name = const_cast<char*>(linker_path);
   phdr_table_get_dynamic_section(info.phdr, info.phnum, info.load_bias, &map.l_ld, nullptr);
 }
 
@@ -235,9 +231,9 @@ static ExecutableInfo get_executable_info() {
 }
 
 #if defined(__LP64__)
-static char kFallbackLinkerPath[] = "/system/bin/linker64";
+static char kLinkerPath[] = "/system/bin/linker64";
 #else
-static char kFallbackLinkerPath[] = "/system/bin/linker";
+static char kLinkerPath[] = "/system/bin/linker";
 #endif
 
 __printflike(1, 2)
@@ -311,7 +307,15 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   __system_properties_init(); // may use 'environ'
 
   // Register the debuggerd signal handler.
-  linker_debuggerd_init();
+#ifdef __ANDROID__
+  debuggerd_callbacks_t callbacks = {
+    .get_abort_message = []() {
+      return __libc_shared_globals()->abort_msg;
+    },
+    .post_dump = &notify_gdb_of_libraries,
+  };
+  debuggerd_init(&callbacks);
+#endif
 
   g_linker_logger.ResetState();
 
@@ -345,11 +349,15 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
                                                 get_executable_info();
 
-  INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
+  // Assign to a static variable for the sake of the debug map, which needs
+  // a C-style string to last until the program exits.
+  static std::string exe_path = exe_info.path;
+
+  INFO("[ Linking executable \"%s\" ]", exe_path.c_str());
 
   // Initialize the main exe's soinfo.
   soinfo* si = soinfo_alloc(&g_default_namespace,
-                            exe_info.path.c_str(), &exe_info.file_stat,
+                            exe_path.c_str(), &exe_info.file_stat,
                             0, RTLD_GLOBAL);
   somain = si;
   si->phdr = exe_info.phdr;
@@ -358,27 +366,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   si->size = phdr_table_get_load_size(si->phdr, si->phnum);
   si->dynamic = nullptr;
   si->set_main_executable();
-  init_link_map_head(*si);
-
-  set_bss_vma_name(si);
-
-  // Use the executable's PT_INTERP string as the solinker filename in the
-  // dynamic linker's module list. gdb reads both PT_INTERP and the module list,
-  // and if the paths for the linker are different, gdb will report that the
-  // PT_INTERP linker path was unloaded once the module list is initialized.
-  // There are three situations to handle:
-  //  - the APEX linker (/system/bin/linker[64] -> /apex/.../linker[64])
-  //  - the ASAN linker (/system/bin/linker_asan[64] -> /apex/.../linker[64])
-  //  - the bootstrap linker (/system/bin/bootstrap/linker[64])
-  const char *interp = phdr_table_get_interpreter_name(somain->phdr, somain->phnum,
-                                                       somain->load_bias);
-  if (interp == nullptr) {
-    // This case can happen if the linker attempts to execute itself
-    // (e.g. "linker64 /system/bin/linker64").
-    interp = kFallbackLinkerPath;
-  }
-  solinker->set_realpath(interp);
-  init_link_map_head(*solinker);
+  init_link_map_head(*si, exe_path.c_str());
 
   // Register the main executable and the linker upfront to have
   // gdb aware of them before loading the rest of the dependency
@@ -409,14 +397,14 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                          "\"%s\": error: Android 5.0 and later only support "
                          "position-independent executables (-fPIE).\n",
                          g_argv[0]);
-    _exit(EXIT_FAILURE);
+    exit(EXIT_FAILURE);
   }
 
   // Use LD_LIBRARY_PATH and LD_PRELOAD (but only if we aren't setuid/setgid).
   parse_LD_LIBRARY_PATH(ldpath_env);
   parse_LD_PRELOAD(ldpreload_env);
 
-  std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_info.path.c_str());
+  std::vector<android_namespace_t*> namespaces = init_default_namespaces(exe_path.c_str());
 
   if (!si->prelink_image()) __linker_cannot_link(g_argv[0]);
 
@@ -479,16 +467,42 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
 #if TIMING
   gettimeofday(&t1, nullptr);
-  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0],
-        static_cast<int>(((static_cast<long long>(t1.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t1.tv_usec)) -
-                         ((static_cast<long long>(t0.tv_sec) * 1000000LL) +
-                          static_cast<long long>(t0.tv_usec))));
+  PRINT("LINKER TIME: %s: %d microseconds", g_argv[0], (int) (
+           (((long long)t1.tv_sec * 1000000LL) + (long long)t1.tv_usec) -
+           (((long long)t0.tv_sec * 1000000LL) + (long long)t0.tv_usec)));
 #endif
 #if STATS
-  print_linker_stats();
+  PRINT("RELO STATS: %s: %d abs, %d rel, %d copy, %d symbol", g_argv[0],
+         linker_stats.count[kRelocAbsolute],
+         linker_stats.count[kRelocRelative],
+         linker_stats.count[kRelocCopy],
+         linker_stats.count[kRelocSymbol]);
 #endif
-#if TIMING || STATS
+#if COUNT_PAGES
+  {
+    unsigned n;
+    unsigned i;
+    unsigned count = 0;
+    for (n = 0; n < 4096; n++) {
+      if (bitmask[n]) {
+        unsigned x = bitmask[n];
+#if defined(__LP64__)
+        for (i = 0; i < 32; i++) {
+#else
+        for (i = 0; i < 8; i++) {
+#endif
+          if (x & 1) {
+            count++;
+          }
+          x >>= 1;
+        }
+      }
+    }
+    PRINT("PAGES MODIFIED: %s: %d (%dKB)", g_argv[0], count, count * 4);
+  }
+#endif
+
+#if TIMING || STATS || COUNT_PAGES
   fflush(stdout);
 #endif
 
@@ -542,64 +556,6 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
   async_safe_fatal("Could not find a PHDR: broken executable?");
 }
 
-/*
- * Set anonymous VMA name for .bss section.  For DSOs loaded by the linker, this
- * is done by ElfReader.  This function is here for DSOs loaded by the kernel,
- * namely the linker itself and the main executable.
- */
-static void set_bss_vma_name(soinfo* si) {
-  for (size_t i = 0; i < si->phnum; ++i) {
-    auto phdr = &si->phdr[i];
-
-    if (phdr->p_type != PT_LOAD) {
-      continue;
-    }
-
-    ElfW(Addr) seg_start = phdr->p_vaddr + si->load_bias;
-    ElfW(Addr) seg_page_end = PAGE_END(seg_start + phdr->p_memsz);
-    ElfW(Addr) seg_file_end = PAGE_END(seg_start + phdr->p_filesz);
-
-    if (seg_page_end > seg_file_end) {
-      prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
-            reinterpret_cast<void*>(seg_file_end), seg_page_end - seg_file_end,
-            ".bss");
-    }
-  }
-}
-
-// TODO: There is a similar ifunc resolver calling loop in libc_init_static.cpp, but that version
-// uses weak symbols, which don't work in the linker prior to its relocation. This version also
-// supports a load bias. When we stop supporting the gold linker in the NDK, then maybe we can use
-// non-weak definitions and merge the two loops.
-#if defined(USE_RELA)
-extern __LIBC_HIDDEN__ ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
-
-static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
-  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
-    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
-    ElfW(Addr) resolver = r->r_addend + load_bias;
-    *offset = __bionic_call_ifunc_resolver(resolver);
-  }
-}
-#else
-extern __LIBC_HIDDEN__ ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
-
-static void call_ifunc_resolvers(ElfW(Addr) load_bias) {
-  for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
-    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset + load_bias);
-    ElfW(Addr) resolver = *offset + load_bias;
-    *offset = __bionic_call_ifunc_resolver(resolver);
-  }
-}
-#endif
-
-// Usable before ifunc resolvers have been called. This function is compiled with -ffreestanding.
-static void linker_memclr(void* dst, size_t cnt) {
-  for (size_t i = 0; i < cnt; ++i) {
-    reinterpret_cast<char*>(dst)[i] = '\0';
-  }
-}
-
 // Detect an attempt to run the linker on itself. e.g.:
 //   /system/bin/linker64 /system/bin/linker64
 // Use priority-1 to run this constructor before other constructors.
@@ -633,8 +589,7 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   // Initialize TLS early so system calls and errno work.
   KernelArgumentBlock args(raw_args);
-  bionic_tcb temp_tcb __attribute__((uninitialized));
-  linker_memclr(&temp_tcb, sizeof(temp_tcb));
+  bionic_tcb temp_tcb = {};
   __libc_init_main_thread_early(args, &temp_tcb);
 
   // When the linker is run by itself (rather than as an interpreter for
@@ -652,15 +607,11 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   ElfW(Ehdr)* elf_hdr = reinterpret_cast<ElfW(Ehdr)*>(linker_addr);
   ElfW(Phdr)* phdr = reinterpret_cast<ElfW(Phdr)*>(linker_addr + elf_hdr->e_phoff);
 
-  // string.h functions must not be used prior to calling the linker's ifunc resolvers.
-  const ElfW(Addr) load_bias = get_elf_exec_load_bias(elf_hdr);
-  call_ifunc_resolvers(load_bias);
-
   soinfo tmp_linker_so(nullptr, nullptr, nullptr, 0, 0);
 
   tmp_linker_so.base = linker_addr;
   tmp_linker_so.size = phdr_table_get_load_size(phdr, elf_hdr->e_phnum);
-  tmp_linker_so.load_bias = load_bias;
+  tmp_linker_so.load_bias = get_elf_exec_load_bias(elf_hdr);
   tmp_linker_so.dynamic = nullptr;
   tmp_linker_so.phdr = phdr;
   tmp_linker_so.phnum = elf_hdr->e_phnum;
@@ -695,9 +646,6 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // couldn't make system calls on x86 at that point, but we can now...
   if (!tmp_linker_so.protect_relro()) __linker_cannot_link(args.argv[0]);
 
-  // And we can set VMA name for the bss section now
-  set_bss_vma_name(&tmp_linker_so);
-
   // Initialize the linker's static libc's globals
   __libc_init_globals();
 
@@ -710,29 +658,22 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // linker's _start.
   const char* exe_to_load = nullptr;
   if (getauxval(AT_ENTRY) == reinterpret_cast<uintptr_t>(&_start)) {
-    if (args.argc == 3 && !strcmp(args.argv[1], "--list")) {
-      // We're being asked to behave like ldd(1).
-      g_is_ldd = true;
-      exe_to_load = args.argv[2];
-    } else if (args.argc <= 1 || !strcmp(args.argv[1], "--help")) {
+    if (args.argc <= 1 || !strcmp(args.argv[1], "--help")) {
       async_safe_format_fd(STDOUT_FILENO,
-         "Usage: %s [--list] PROGRAM [ARGS-FOR-PROGRAM...]\n"
-         "       %s [--list] path.zip!/PROGRAM [ARGS-FOR-PROGRAM...]\n"
+         "Usage: %s program [arguments...]\n"
+         "       %s path.zip!/program [arguments...]\n"
          "\n"
          "A helper program for linking dynamic executables. Typically, the kernel loads\n"
          "this program because it's the PT_INTERP of a dynamic executable.\n"
          "\n"
          "This program can also be run directly to load and run a dynamic executable. The\n"
          "executable can be inside a zip file if it's stored uncompressed and at a\n"
-         "page-aligned offset.\n"
-         "\n"
-         "The --list option gives behavior equivalent to ldd(1) on other systems.\n",
+         "page-aligned offset.\n",
          args.argv[0], args.argv[0]);
-      _exit(EXIT_SUCCESS);
-    } else {
-      exe_to_load = args.argv[1];
-      __libc_shared_globals()->initial_linker_arg_count = 1;
+      exit(0);
     }
+    exe_to_load = args.argv[1];
+    __libc_shared_globals()->initial_linker_arg_count = 1;
   }
 
   // store argc/argv/envp to use them for calling constructors
@@ -744,12 +685,11 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // Initialize static variables. Note that in order to
   // get correct libdl_info we need to call constructors
   // before get_libdl_info().
-  sonext = solist = solinker = get_libdl_info(tmp_linker_so);
+  sonext = solist = solinker = get_libdl_info(kLinkerPath, tmp_linker_so);
   g_default_namespace.add_soinfo(solinker);
+  init_link_map_head(*solinker, kLinkerPath);
 
   ElfW(Addr) start_address = linker_main(args, exe_to_load);
-
-  if (g_is_ldd) _exit(EXIT_SUCCESS);
 
   INFO("[ Jumping to _start (%p)... ]", reinterpret_cast<void*>(start_address));
 

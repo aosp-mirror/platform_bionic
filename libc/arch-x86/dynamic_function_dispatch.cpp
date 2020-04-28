@@ -28,9 +28,21 @@
 
 #include <stddef.h>
 
-#include <private/bionic_ifuncs.h>
-
 extern "C" {
+
+#define DEFINE_IFUNC_FOR(name) \
+    name##_func name __attribute__((ifunc(#name "_resolver"))); \
+    __attribute__((visibility("hidden"))) \
+    name##_func* name##_resolver()
+
+#define DECLARE_FUNC(type, name) \
+    __attribute__((visibility("hidden"))) \
+    type name
+
+#define RETURN_FUNC(type, name) { \
+        DECLARE_FUNC(type, name); \
+        return name; \
+    }
 
 typedef int memcmp_func(const void* __lhs, const void* __rhs, size_t __n);
 DEFINE_IFUNC_FOR(memcmp) {
@@ -93,13 +105,6 @@ DEFINE_IFUNC_FOR(wmemcmp) {
     if (__builtin_cpu_supports("sse4.1")) RETURN_FUNC(wmemcmp_func, wmemcmp_sse4);
     if (__builtin_cpu_is("atom")) RETURN_FUNC(wmemcmp_func, wmemcmp_atom);
     RETURN_FUNC(wmemcmp_func, wmemcmp_freebsd);
-}
-
-typedef int wmemset_func(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
-DEFINE_IFUNC_FOR(wmemset) {
-    __builtin_cpu_init();
-    if (__builtin_cpu_supports("avx2")) RETURN_FUNC(wmemset_func, wmemset_avx2);
-    RETURN_FUNC(wmemset_func, wmemset_freebsd);
 }
 
 typedef int strcmp_func(const char* __lhs, const char* __rhs);

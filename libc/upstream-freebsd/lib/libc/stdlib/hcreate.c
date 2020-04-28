@@ -1,6 +1,4 @@
 /*-
- * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
- *
  * Copyright (c) 2015 Nuxi, https://nuxi.nl/
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +24,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/libc/stdlib/hcreate.c 326193 2017-11-25 17:12:48Z pfg $");
+__FBSDID("$FreeBSD: head/lib/libc/stdlib/hcreate.c 292767 2015-12-27 07:50:11Z ed $");
 
 #include <search.h>
 #include <stdbool.h>

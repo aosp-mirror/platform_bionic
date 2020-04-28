@@ -125,7 +125,6 @@ enum nft_chain_attributes {
   NFTA_CHAIN_TYPE,
   NFTA_CHAIN_COUNTERS,
   NFTA_CHAIN_PAD,
-  NFTA_CHAIN_FLAGS,
   __NFTA_CHAIN_MAX
 };
 #define NFTA_CHAIN_MAX (__NFTA_CHAIN_MAX - 1)
@@ -140,7 +139,6 @@ enum nft_rule_attributes {
   NFTA_RULE_USERDATA,
   NFTA_RULE_PAD,
   NFTA_RULE_ID,
-  NFTA_RULE_POSITION_ID,
   __NFTA_RULE_MAX
 };
 #define NFTA_RULE_MAX (__NFTA_RULE_MAX - 1)
@@ -373,7 +371,6 @@ enum nft_exthdr_flags {
 enum nft_exthdr_op {
   NFT_EXTHDR_OP_IPV6,
   NFT_EXTHDR_OP_TCPOPT,
-  NFT_EXTHDR_OP_IPV4,
   __NFT_EXTHDR_OP_MAX
 };
 #define NFT_EXTHDR_OP_MAX (__NFT_EXTHDR_OP_MAX - 1)
@@ -416,10 +413,6 @@ enum nft_meta_keys {
   NFT_META_CGROUP,
   NFT_META_PRANDOM,
   NFT_META_SECPATH,
-  NFT_META_IIFKIND,
-  NFT_META_OIFKIND,
-  NFT_META_BRI_IIFPVID,
-  NFT_META_BRI_IIFVPROTO,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,
@@ -500,7 +493,7 @@ enum nft_ct_keys {
   NFT_CT_DST_IP,
   NFT_CT_SRC_IP6,
   NFT_CT_DST_IP6,
-  NFT_CT_ID,
+  NFT_CT_TIMEOUT,
   __NFT_CT_MAX
 };
 #define NFT_CT_MAX (__NFT_CT_MAX - 1)
@@ -578,7 +571,7 @@ enum nft_log_level {
   NFT_LOGLEVEL_AUDIT,
   __NFT_LOGLEVEL_MAX
 };
-#define NFT_LOGLEVEL_MAX (__NFT_LOGLEVEL_MAX - 1)
+#define NFT_LOGLEVEL_MAX (__NFT_LOGLEVEL_MAX + 1)
 enum nft_queue_attributes {
   NFTA_QUEUE_UNSPEC,
   NFTA_QUEUE_NUM,
@@ -744,16 +737,6 @@ enum nft_ct_timeout_timeout_attributes {
   __NFTA_CT_TIMEOUT_MAX,
 };
 #define NFTA_CT_TIMEOUT_MAX (__NFTA_CT_TIMEOUT_MAX - 1)
-enum nft_ct_expectation_attributes {
-  NFTA_CT_EXPECT_UNSPEC,
-  NFTA_CT_EXPECT_L3PROTO,
-  NFTA_CT_EXPECT_L4PROTO,
-  NFTA_CT_EXPECT_DPORT,
-  NFTA_CT_EXPECT_TIMEOUT,
-  NFTA_CT_EXPECT_SIZE,
-  __NFTA_CT_EXPECT_MAX,
-};
-#define NFTA_CT_EXPECT_MAX (__NFTA_CT_EXPECT_MAX - 1)
 #define NFT_OBJECT_UNSPEC 0
 #define NFT_OBJECT_COUNTER 1
 #define NFT_OBJECT_QUOTA 2
@@ -763,8 +746,7 @@ enum nft_ct_expectation_attributes {
 #define NFT_OBJECT_TUNNEL 6
 #define NFT_OBJECT_CT_TIMEOUT 7
 #define NFT_OBJECT_SECMARK 8
-#define NFT_OBJECT_CT_EXPECT 9
-#define __NFT_OBJECT_MAX 10
+#define __NFT_OBJECT_MAX 9
 #define NFT_OBJECT_MAX (__NFT_OBJECT_MAX - 1)
 enum nft_object_attributes {
   NFTA_OBJ_UNSPEC,
@@ -801,21 +783,9 @@ enum nft_osf_attributes {
   NFTA_OSF_UNSPEC,
   NFTA_OSF_DREG,
   NFTA_OSF_TTL,
-  NFTA_OSF_FLAGS,
   __NFTA_OSF_MAX,
 };
 #define NFTA_OSF_MAX (__NFTA_OSF_MAX - 1)
-enum nft_osf_flags {
-  NFT_OSF_F_VERSION = (1 << 0),
-};
-enum nft_synproxy_attributes {
-  NFTA_SYNPROXY_UNSPEC,
-  NFTA_SYNPROXY_MSS,
-  NFTA_SYNPROXY_WSCALE,
-  NFTA_SYNPROXY_FLAGS,
-  __NFTA_SYNPROXY_MAX,
-};
-#define NFTA_SYNPROXY_MAX (__NFTA_SYNPROXY_MAX - 1)
 enum nft_devices_attributes {
   NFTA_DEVICE_UNSPEC,
   NFTA_DEVICE_NAME,
@@ -952,18 +922,10 @@ enum nft_tunnel_keys {
   __NFT_TUNNEL_MAX
 };
 #define NFT_TUNNEL_MAX (__NFT_TUNNEL_MAX - 1)
-enum nft_tunnel_mode {
-  NFT_TUNNEL_MODE_NONE,
-  NFT_TUNNEL_MODE_RX,
-  NFT_TUNNEL_MODE_TX,
-  __NFT_TUNNEL_MODE_MAX
-};
-#define NFT_TUNNEL_MODE_MAX (__NFT_TUNNEL_MODE_MAX - 1)
 enum nft_tunnel_attributes {
   NFTA_TUNNEL_UNSPEC,
   NFTA_TUNNEL_KEY,
   NFTA_TUNNEL_DREG,
-  NFTA_TUNNEL_MODE,
   __NFTA_TUNNEL_MAX
 };
 #define NFTA_TUNNEL_MAX (__NFTA_TUNNEL_MAX - 1)

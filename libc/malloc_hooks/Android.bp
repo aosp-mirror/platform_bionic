@@ -32,15 +32,6 @@ cc_library {
         "-Werror",
         "-fno-stack-protector",
     ],
-
-    apex_available: [
-        "com.android.runtime",
-    ],
-    static: {
-        apex_available: [
-            "//apex_available:platform",
-        ],
-    },
 }
 
 // ==============================================================
@@ -58,13 +49,7 @@ cc_test {
     shared_libs: ["libbase"],
 
     local_include_dirs: ["tests"],
-    include_dirs: [
-        "bionic/libc",
-        "bionic"
-    ],
-    header_libs: [
-        "bionic_libc_platform_headers",
-    ],
+    include_dirs: ["bionic/libc", "bionic"],
 
     cflags: [
         "-Wall",

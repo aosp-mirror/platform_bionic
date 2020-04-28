@@ -23,7 +23,7 @@ void* dlopen(const char* /*filename*/, int /*flag*/) {
 }
 
 char* dlerror() {
-  return const_cast<char*>("libdl.a is a stub --- use libdl.so instead");
+  return nullptr;
 }
 
 void* dlsym(void* /*handle*/, const char* /*symbol*/) {
@@ -41,3 +41,9 @@ int dladdr(const void* /*addr*/, Dl_info* /*info*/) {
 int dlclose(void* /*handle*/) {
   return -1;
 }
+
+#if defined(__arm__)
+_Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr /*pc*/, int* /*pcount*/) {
+  return 0;
+}
+#endif

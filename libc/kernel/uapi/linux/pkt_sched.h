@@ -18,7 +18,6 @@
  ****************************************************************************/
 #ifndef __LINUX_PKT_SCHED_H
 #define __LINUX_PKT_SCHED_H
-#include <linux/const.h>
 #include <linux/types.h>
 #define TC_PRIO_BESTEFFORT 0
 #define TC_PRIO_FILLER 1
@@ -714,7 +713,7 @@ enum {
 };
 #define TCA_PIE_MAX (__TCA_PIE_MAX - 1)
 struct tc_pie_xstats {
-  __u64 prob;
+  __u32 prob;
   __u32 delay;
   __u32 avg_dq_rate;
   __u32 packets_in;
@@ -741,9 +740,8 @@ struct tc_etf_qopt {
   __s32 delta;
   __s32 clockid;
   __u32 flags;
-#define TC_ETF_DEADLINE_MODE_ON _BITUL(0)
-#define TC_ETF_OFFLOAD_ON _BITUL(1)
-#define TC_ETF_SKIP_SOCK_CHECK _BITUL(2)
+#define TC_ETF_DEADLINE_MODE_ON BIT(0)
+#define TC_ETF_OFFLOAD_ON BIT(1)
 };
 enum {
   TCA_ETF_UNSPEC,
@@ -770,7 +768,6 @@ enum {
   TCA_CAKE_INGRESS,
   TCA_CAKE_ACK_FILTER,
   TCA_CAKE_SPLIT_GSO,
-  TCA_CAKE_FWMARK,
   __TCA_CAKE_MAX
 };
 #define TCA_CAKE_MAX (__TCA_CAKE_MAX - 1)
@@ -877,7 +874,6 @@ enum {
   __TCA_TAPRIO_SCHED_MAX,
 };
 #define TCA_TAPRIO_SCHED_MAX (__TCA_TAPRIO_SCHED_MAX - 1)
-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST 0x1
 enum {
   TCA_TAPRIO_ATTR_UNSPEC,
   TCA_TAPRIO_ATTR_PRIOMAP,
@@ -886,11 +882,6 @@ enum {
   TCA_TAPRIO_ATTR_SCHED_SINGLE_ENTRY,
   TCA_TAPRIO_ATTR_SCHED_CLOCKID,
   TCA_TAPRIO_PAD,
-  TCA_TAPRIO_ATTR_ADMIN_SCHED,
-  TCA_TAPRIO_ATTR_SCHED_CYCLE_TIME,
-  TCA_TAPRIO_ATTR_SCHED_CYCLE_TIME_EXTENSION,
-  TCA_TAPRIO_ATTR_FLAGS,
-  TCA_TAPRIO_ATTR_TXTIME_DELAY,
   __TCA_TAPRIO_ATTR_MAX,
 };
 #define TCA_TAPRIO_ATTR_MAX (__TCA_TAPRIO_ATTR_MAX - 1)

@@ -19,7 +19,6 @@
 #ifndef _UAPI_LINUX_ERRQUEUE_H
 #define _UAPI_LINUX_ERRQUEUE_H
 #include <linux/types.h>
-#include <linux/time_types.h>
 struct sock_extended_err {
   __u32 ee_errno;
   __u8 ee_origin;
@@ -43,9 +42,6 @@ struct sock_extended_err {
 #define SO_EE_CODE_TXTIME_MISSED 2
 struct scm_timestamping {
   struct timespec ts[3];
-};
-struct scm_timestamping64 {
-  struct __kernel_timespec ts[3];
 };
 enum {
   SCM_TSTAMP_SND,

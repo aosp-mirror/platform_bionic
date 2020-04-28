@@ -39,7 +39,8 @@ struct rxe_global_route {
 struct rxe_av {
   __u8 port_num;
   __u8 network_type;
-  __u8 dmac[6];
+  __u16 reserved1;
+  __u32 reserved2;
   struct rxe_global_route grh;
   union {
     struct sockaddr_in _sockaddr_in;

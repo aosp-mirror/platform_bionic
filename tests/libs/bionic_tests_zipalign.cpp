@@ -37,20 +37,21 @@ static void usage() {
   fprintf(stderr, "    The output zip file that will be created from the input file.\n");
 }
 
-using ZipData = std::pair<std::unique_ptr<ZipEntry>, std::string>;
+using ZipData = std::pair<std::unique_ptr<ZipEntry>, std::unique_ptr<ZipString>>;
 
 static bool GetEntries(ZipArchiveHandle handle, std::vector<ZipData>* entries) {
   void* cookie;
-  int32_t return_value = StartIteration(handle, &cookie);
+  int32_t return_value = StartIteration(handle, &cookie, nullptr, nullptr);
   if (return_value != 0) {
     fprintf(stderr, "Unable to iterate over entries: %s\n", ErrorCodeString(return_value));
     return false;
   }
 
   ZipEntry entry;
-  std::string name;
+  ZipString name;
   while ((return_value = Next(cookie, &entry, &name)) == 0) {
-    entries->emplace_back(std::make_pair(std::make_unique<ZipEntry>(entry), name));
+    entries->emplace_back(std::make_pair(std::make_unique<ZipEntry>(entry),
+                                         std::make_unique<ZipString>(name)));
   }
   if (return_value != -1) {
     fprintf(stderr, "Error while iterating over zip entries: %s\n", ErrorCodeString(return_value));
@@ -77,12 +78,13 @@ static bool CreateAlignedZip(ZipArchiveHandle& handle, FILE* zip_dst, uint32_t a
   int32_t error;
   for (auto& entry : entries) {
     ZipEntry* zip_entry = entry.first.get();
-    std::string& zip_name = entry.second;
+    ZipString* zip_str = entry.second.get();
 
     size_t flags = 0;
     if ((zip_entry->method & kCompressDeflated) != 0) {
       flags |= ZipWriter::kCompress;
     }
+    std::string zip_name(reinterpret_cast<const char*>(zip_str->name), zip_str->name_length);
     error = writer.StartAlignedEntry(zip_name.c_str(), flags, alignment);
     if (error != 0) {
       fprintf(stderr, "StartAlignedEntry failed: %s\n", ZipWriter::ErrorCodeString(error));

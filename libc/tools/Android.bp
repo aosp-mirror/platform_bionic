@@ -1,4 +1,0 @@
-filegroup {
-    name: "bionic-gensyscalls",
-    srcs: ["gensyscalls.py"]
-}

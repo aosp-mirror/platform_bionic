@@ -57,10 +57,10 @@
 
 #include <android/dlext.h>
 
-#include <platform/bionic/malloc.h>
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <private/bionic_malloc.h>
 
 #include <sys/system_properties.h>
 
@@ -95,7 +95,7 @@ static constexpr MallocDispatch __libc_malloc_default_dispatch
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
     Malloc(valloc),
 #endif
-    Malloc(malloc_iterate),
+    Malloc(iterate),
     Malloc(malloc_disable),
     Malloc(malloc_enable),
     Malloc(mallopt),
@@ -184,8 +184,7 @@ static bool InitMallocFunctions(void* impl_handler, MallocDispatch* table, const
   if (!InitMallocFunction<MallocRealloc>(impl_handler, &table->realloc, prefix, "realloc")) {
     return false;
   }
-  if (!InitMallocFunction<MallocIterate>(impl_handler, &table->malloc_iterate, prefix,
-                                         "malloc_iterate")) {
+  if (!InitMallocFunction<MallocIterate>(impl_handler, &table->iterate, prefix, "iterate")) {
     return false;
   }
   if (!InitMallocFunction<MallocMallocDisable>(impl_handler, &table->malloc_disable, prefix,

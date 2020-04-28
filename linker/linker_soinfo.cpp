@@ -391,15 +391,13 @@ static void call_array(const char* array_name __unused,
 }
 
 void soinfo::call_pre_init_constructors() {
-  if (g_is_ldd) return;
-
   // DT_PREINIT_ARRAY functions are called before any other constructors for executables,
   // but ignored in a shared library.
   call_array("DT_PREINIT_ARRAY", preinit_array_, preinit_array_count_, false, get_realpath());
 }
 
 void soinfo::call_constructors() {
-  if (constructors_called || g_is_ldd) {
+  if (constructors_called) {
     return;
   }
 
@@ -550,16 +548,6 @@ void soinfo::set_nodelete() {
   rtld_flags_ |= RTLD_NODELETE;
 }
 
-void soinfo::set_realpath(const char* path) {
-#if defined(__work_around_b_24465209__)
-  if (has_min_version(2)) {
-    realpath_ = path;
-  }
-#else
-  realpath_ = path;
-#endif
-}
-
 const char* soinfo::get_realpath() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
@@ -649,6 +637,10 @@ void soinfo::add_secondary_namespace(android_namespace_t* secondary_ns) {
 android_namespace_list_t& soinfo::get_secondary_namespaces() {
   CHECK(has_min_version(3));
   return secondary_namespaces_;
+}
+
+soinfo_tls* soinfo::get_tls() const {
+  return has_min_version(5) ? tls_.get() : nullptr;
 }
 
 ElfW(Addr) soinfo::resolve_symbol_address(const ElfW(Sym)* s) const {

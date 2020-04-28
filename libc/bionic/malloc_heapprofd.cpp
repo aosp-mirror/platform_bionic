@@ -37,8 +37,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <platform/bionic/malloc.h>
 #include <private/bionic_config.h>
+#include <private/bionic_malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <sys/system_properties.h>
 
@@ -104,7 +104,7 @@ static constexpr MallocDispatch __heapprofd_init_dispatch
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
     Malloc(valloc),
 #endif
-    Malloc(malloc_iterate),
+    Malloc(iterate),
     Malloc(malloc_disable),
     Malloc(malloc_enable),
     Malloc(mallopt),
@@ -116,7 +116,6 @@ static void MaybeInstallInitHeapprofdHook(int) {
   // Zygote child processes must be marked profileable.
   if (gZygoteChild &&
       !atomic_load_explicit(&gZygoteChildProfileable, memory_order_acquire)) {
-    error_log("%s: not enabling heapprofd, not marked profileable.", getprogname());
     return;
   }
 

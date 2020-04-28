@@ -1,6 +1,4 @@
 /*-
- * SPDX-License-Identifier: BSD-2-Clause
- *
  * Copyright (c)1999 Citrus Project,
  * All rights reserved.
  *
@@ -34,7 +32,7 @@
 __RCSID("$NetBSD: wcsncat.c,v 1.1 2000/12/23 23:14:36 itojun Exp $");
 #endif /* LIBC_SCCS and not lint */
 #endif
-__FBSDID("$FreeBSD: head/lib/libc/string/wcsncat.c 326193 2017-11-25 17:12:48Z pfg $");
+__FBSDID("$FreeBSD$");
 
 #include <wchar.h>
 
@@ -50,7 +48,7 @@ wcsncat(wchar_t * __restrict s1, const wchar_t * __restrict s2, size_t n)
 		p++;
 	q = p;
 	r = s2;
-	while (n && *r) {
+	while (*r && n) {
 		*q++ = *r++;
 		n--;
 	}

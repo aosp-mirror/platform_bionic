@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef PRIVATE_NETD_CLIENT_DISPATCH_H
+#define PRIVATE_NETD_CLIENT_DISPATCH_H
 
 #include <sys/cdefs.h>
 #include <sys/socket.h>
@@ -24,9 +25,6 @@ __BEGIN_DECLS
 struct NetdClientDispatch {
     int (*accept4)(int, struct sockaddr*, socklen_t*, int);
     int (*connect)(int, const struct sockaddr*, socklen_t);
-    int (*sendmmsg)(int, const struct mmsghdr*, unsigned int, int);
-    ssize_t (*sendmsg)(int, const struct msghdr*, unsigned int);
-    int (*sendto)(int, const void*, size_t, int, const struct sockaddr*, socklen_t);
     int (*socket)(int, int, int);
     unsigned (*netIdForResolv)(unsigned);
     int (*dnsOpenProxy)();
@@ -35,3 +33,5 @@ struct NetdClientDispatch {
 extern __LIBC_HIDDEN__ struct NetdClientDispatch __netdClientDispatch;
 
 __END_DECLS
+
+#endif  // PRIVATE_NETD_CLIENT_DISPATCH_H

@@ -60,7 +60,6 @@
 #define PORT_SUNZILOG 38
 #define PORT_SUNSAB 39
 #define PORT_NPCM 40
-#define PORT_TEGRA_TCU 41
 #define PORT_PCH_8LINE 44
 #define PORT_PCH_2LINE 45
 #define PORT_DZ 46
@@ -88,6 +87,7 @@
 #define PORT_M32R_SIO 68
 #define PORT_JSM 69
 #define PORT_PNX8XXX 70
+#define PORT_NETX 71
 #define PORT_SUNHV 72
 #define PORT_S3C2412 73
 #define PORT_UARTLITE 74
@@ -135,6 +135,4 @@
 #define PORT_MPS2UART 116
 #define PORT_MTK_BTIF 117
 #define PORT_RDA 118
-#define PORT_MLB_USIO 119
-#define PORT_SIFIVE_V0 120
 #endif

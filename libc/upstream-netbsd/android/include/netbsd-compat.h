@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef _BIONIC_NETBSD_COMPAT_H_included
+#define _BIONIC_NETBSD_COMPAT_H_included
 
 #define _BSD_SOURCE
 #define _GNU_SOURCE
@@ -46,3 +47,5 @@ int reallocarr(void*, size_t, size_t);
 /* Use appropriate shell depending on process's executable. */
 __LIBC_HIDDEN__ extern const char* __bionic_get_shell_path();
 #define _PATH_BSHELL __bionic_get_shell_path()
+
+#endif

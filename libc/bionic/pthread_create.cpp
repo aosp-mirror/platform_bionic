@@ -54,10 +54,29 @@
 void __init_user_desc(struct user_desc*, bool, void*);
 #endif
 
+// This code is used both by each new pthread and the code that initializes the main thread.
+__attribute__((no_stack_protector))
+void __init_tcb(bionic_tcb* tcb, pthread_internal_t* thread) {
+#ifdef TLS_SLOT_SELF
+  // On x86, slot 0 must point to itself so code can read the thread pointer by
+  // loading %fs:0 or %gs:0.
+  tcb->tls_slot(TLS_SLOT_SELF) = &tcb->tls_slot(TLS_SLOT_SELF);
+#endif
+  tcb->tls_slot(TLS_SLOT_THREAD_ID) = thread;
+}
+
 __attribute__((no_stack_protector))
 void __init_tcb_stack_guard(bionic_tcb* tcb) {
   // GCC looks in the TLS for the stack guard on x86, so copy it there from our global.
   tcb->tls_slot(TLS_SLOT_STACK_GUARD) = reinterpret_cast<void*>(__stack_chk_guard);
+}
+
+__attribute__((no_stack_protector))
+void __init_tcb_dtv(bionic_tcb* tcb) {
+  // Initialize the DTV slot to a statically-allocated empty DTV. The first
+  // access to a dynamic TLS variable allocates a new DTV.
+  static const TlsDtv zero_dtv = {};
+  __set_tcb_dtv(tcb, const_cast<TlsDtv*>(&zero_dtv));
 }
 
 void __init_bionic_tls_ptrs(bionic_tcb* tcb, bionic_tls* tls) {
@@ -235,8 +254,6 @@ ThreadMapping __allocate_thread_mapping(size_t stack_size, size_t stack_guard_si
   ThreadMapping result = {};
   result.mmap_base = space;
   result.mmap_size = mmap_size;
-  result.mmap_base_unguarded = space + stack_guard_size;
-  result.mmap_size_unguarded = mmap_size - stack_guard_size - PTHREAD_GUARD_SIZE;
   result.static_tls = space + mmap_size - PTHREAD_GUARD_SIZE - layout.size();
   result.stack_base = space;
   result.stack_top = result.static_tls;
@@ -298,34 +315,11 @@ static int __allocate_thread(pthread_attr_t* attr, bionic_tcb** tcbp, void** chi
   thread->attr = *attr;
   thread->mmap_base = mapping.mmap_base;
   thread->mmap_size = mapping.mmap_size;
-  thread->mmap_base_unguarded = mapping.mmap_base_unguarded;
-  thread->mmap_size_unguarded = mapping.mmap_size_unguarded;
 
   *tcbp = tcb;
   *child_stack = stack_top;
   return 0;
 }
-
-void __set_stack_and_tls_vma_name(bool is_main_thread) {
-  // Name the thread's stack-and-tls area to help with debugging. This mapped area also includes
-  // static TLS data, which is typically a few pages (e.g. bionic_tls).
-  pthread_internal_t* thread = __get_thread();
-  const char* name;
-  if (is_main_thread) {
-    name = "stack_and_tls:main";
-  } else {
-    // The kernel doesn't copy the name string, but this variable will last at least as long as the
-    // mapped area. The mapped area's VMAs are unmapped with a single call to munmap.
-    auto& name_buffer = thread->vma_name_buffer;
-    static_assert(arraysize(name_buffer) >= arraysize("stack_and_tls:") + 11 + 1);
-    async_safe_format_buffer(name_buffer, arraysize(name_buffer), "stack_and_tls:%d", thread->tid);
-    name = name_buffer;
-  }
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, thread->mmap_base_unguarded, thread->mmap_size_unguarded,
-        name);
-}
-
-extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
 __attribute__((no_sanitize("hwaddress")))
 static int __pthread_start(void* arg) {
@@ -339,9 +333,7 @@ static int __pthread_start(void* arg) {
   // accesses previously made by the creating thread are visible to us.
   thread->startup_handshake_lock.lock();
 
-  __set_stack_and_tls_vma_name(false);
   __init_additional_stacks(thread);
-  __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
@@ -404,12 +396,7 @@ int pthread_create(pthread_t* thread_out, pthread_attr_t const* attr,
   __init_user_desc(&tls_descriptor, false, tls);
   tls = &tls_descriptor;
 #endif
-
-  sigset64_t block_all_mask;
-  sigfillset64(&block_all_mask);
-  __rt_sigprocmask(SIG_SETMASK, &block_all_mask, &thread->start_mask, sizeof(thread->start_mask));
   int rc = clone(__pthread_start, child_stack, flags, thread, &(thread->tid), tls, &(thread->tid));
-  __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
   if (rc == -1) {
     int clone_errno = errno;
     // We don't have to unlock the mutex at all because clone(2) failed so there's no child waiting to
