@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bdcfa407_0209a94d",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-04-28T18:30:15Z",
+      "side": 1,
+      "message": "type* in bionic. (though i see the gwp-asan ones above are wrong too :-( )",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 107,
+        "endChar": 14
+      },
+      "revId": "8d987f1ac5f3eff120cad94c3c3a75fc1ad9cd81",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
