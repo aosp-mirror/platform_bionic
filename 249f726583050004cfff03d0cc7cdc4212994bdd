@@ -16,6 +16,24 @@
       "revId": "249f726583050004cfff03d0cc7cdc4212994bdd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e77677b1_8f63ceb9",
+        "filename": "tests/utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-04-28T16:56:24Z",
+      "side": 1,
+      "message": "The header was available even on linux_glibc. Since it\u0027s x86 untag_address() effectively did the same as the define below, so my conclusion is that the MTE tests compiled and trivially succeeded there.",
+      "parentUuid": "cb7bdc4c_1ac2b59f",
+      "revId": "249f726583050004cfff03d0cc7cdc4212994bdd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
