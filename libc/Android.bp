@@ -1779,6 +1779,13 @@ cc_library_headers {
     system_shared_libs: [],
     stl: "none",
     sdk_version: "current",
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+        "com.android.art.release", // from libdexfile_external
+        "com.android.art.debug", // from libdexfile_external
+    ],
 }
 
 // libc_headers for libasync_safe and libpropertyinfoparser
