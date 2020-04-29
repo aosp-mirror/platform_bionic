@@ -88,6 +88,12 @@ cc_defaults {
         experimental_mte: {
             cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
         },
+        malloc_zero_contents: {
+            cflags: ["-DSCUDO_ZERO_CONTENTS"],
+        },
+        malloc_pattern_fill_contents: {
+            cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+        },
     },
 }
 
