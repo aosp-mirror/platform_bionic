@@ -25,11 +25,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#if defined(__BIONIC__)
 #include <bionic/macros.h>
-#else
-#define untag_address(p) p
-#endif
 
 #include <atomic>
 #include <string>
