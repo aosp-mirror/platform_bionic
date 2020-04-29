@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+#include <sys/cdefs.h>
+
+#if defined(__BIONIC__)
+
 #include <gtest/gtest.h>
 
 #include <android-base/macros.h>
@@ -46,3 +50,5 @@ static void test_tag_mismatch() {
 TEST(mte_test, ScopedDisableMTE) {
   test_tag_mismatch();
 }
+
+#endif  // __BIONIC__
