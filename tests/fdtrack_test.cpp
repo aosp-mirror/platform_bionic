@@ -20,6 +20,7 @@
 #include <err.h>
 #include <errno.h>
 #include <fcntl.h>
+#include <netinet/in.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -30,7 +31,12 @@
 
 #include <vector>
 
+#include <android-base/cmsg.h>
 #include <android-base/unique_fd.h>
+
+using android::base::ReceiveFileDescriptors;
+using android::base::SendFileDescriptors;
+using android::base::unique_fd;
 
 #if defined(__BIONIC__)
 std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
@@ -60,19 +66,16 @@ std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
 
   return std::move(events);
 }
-#endif
 
-TEST(fdtrack, open) {
-#if defined(__BIONIC__)
-  static int fd = -1;
-  auto events = FdtrackRun([]() { fd = open("/dev/null", O_WRONLY | O_CLOEXEC); });
-  ASSERT_NE(-1, fd);
-  ASSERT_EQ(1U, events.size());
-  ASSERT_EQ(fd, events[0].fd);
-  ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CREATE, events[0].type);
-  ASSERT_STREQ("open", events[0].data.create.function_name);
-#endif
+const char* FdtrackEventTypeToName(android_fdtrack_event_type event_type) {
+  switch (event_type) {
+    case ANDROID_FDTRACK_EVENT_TYPE_CREATE:
+      return "created";
+    case ANDROID_FDTRACK_EVENT_TYPE_CLOSE:
+      return "closed";
+  }
 }
+#endif
 
 TEST(fdtrack, close) {
 #if defined(__BIONIC__)
@@ -118,3 +121,96 @@ TEST(fdtrack, enable_disable) {
   ASSERT_STREQ("open", events[1].data.create.function_name);
 #endif
 }
+
+struct require_semicolon;
+
+#if defined(__BIONIC__)
+#define FDTRACK_TEST_NAME(test_name, fdtrack_name, expression)                            \
+  TEST(fdtrack, test_name) {                                                              \
+    static int fd = -1;                                                                   \
+    auto events = FdtrackRun([]() { fd = expression; });                                  \
+    ASSERT_NE(-1, fd);                                                                    \
+    if (events.size() != 1) {                                                             \
+      fprintf(stderr, "too many events received: expected 1, got %zu:\n", events.size()); \
+      for (size_t i = 0; i < events.size(); ++i) {                                        \
+        auto& event = events[i];                                                          \
+        if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {                            \
+          fprintf(stderr, "  event %zu: fd %d created by %s\n", i, event.fd,              \
+                  event.data.create.function_name);                                       \
+        } else if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {                      \
+          fprintf(stderr, "  event %zu: fd %d closed\n", i, event.fd);                    \
+        } else {                                                                          \
+          errx(1, "unexpected fdtrack event type: %d", event.type);                       \
+        }                                                                                 \
+      }                                                                                   \
+      FAIL();                                                                             \
+      return;                                                                             \
+    }                                                                                     \
+    ASSERT_EQ(1U, events.size());                                                         \
+    ASSERT_EQ(fd, events[0].fd);                                                          \
+    ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CREATE, events[0].type);                         \
+    ASSERT_STREQ(fdtrack_name, events[0].data.create.function_name);                      \
+  }                                                                                       \
+  struct require_semicolon
+#else
+#define FDTRACK_TEST_NAME(name, fdtrack_name, expression) \
+  TEST(fdtrack, name) {}                                  \
+  struct require_semicolon
+#endif
+
+#define FDTRACK_TEST(name, expression) FDTRACK_TEST_NAME(name, #name, expression)
+
+// clang-format misformats statement expressions pretty badly here:
+// clang-format off
+FDTRACK_TEST(open, open("/dev/null", O_WRONLY | O_CLOEXEC));
+FDTRACK_TEST(openat, openat(AT_EMPTY_PATH, "/dev/null", O_WRONLY | O_CLOEXEC));
+FDTRACK_TEST(socket, socket(AF_UNIX, SOCK_STREAM, 0));
+
+FDTRACK_TEST(dup, dup(STDOUT_FILENO));
+FDTRACK_TEST(dup2, dup2(STDOUT_FILENO, STDERR_FILENO));
+FDTRACK_TEST(dup3, dup3(STDOUT_FILENO, STDERR_FILENO, 0));
+FDTRACK_TEST_NAME(fcntl_F_DUPFD, "F_DUPFD", fcntl(STDOUT_FILENO, F_DUPFD, 0));
+FDTRACK_TEST_NAME(fcntl_F_DUPFD_CLOEXEC, "F_DUPFD_CLOEXEC", fcntl(STDOUT_FILENO, F_DUPFD_CLOEXEC, 0));
+
+#if 0
+// Why is this generating an extra socket/close event?
+FDTRACK_TEST(accept, ({
+  android_fdtrack_set_enabled(false);
+  int listener = socket(AF_INET, SOCK_STREAM, 0);
+  ASSERT_NE(-1, listener);
+
+  sockaddr_in addr = {
+      .sin_family = AF_INET,
+      .sin_port = 0,
+      .sin_addr = {htonl(INADDR_LOOPBACK)},
+  };
+  socklen_t addrlen = sizeof(addr);
+
+  ASSERT_NE(-1, bind(listener, reinterpret_cast<sockaddr*>(&addr), addrlen)) << strerror(errno);
+  ASSERT_NE(-1, getsockname(listener, reinterpret_cast<sockaddr*>(&addr), &addrlen));
+  ASSERT_EQ(static_cast<size_t>(addrlen), sizeof(addr));
+  ASSERT_NE(-1, listen(listener, 1));
+
+  int connector = socket(AF_INET, SOCK_STREAM, 0);
+  ASSERT_NE(-1, connector);
+  ASSERT_NE(-1, connect(connector, reinterpret_cast<sockaddr*>(&addr), addrlen));
+
+  android_fdtrack_set_enabled(true);
+  int accepted = accept(listener, nullptr, nullptr);
+  accepted;
+}));
+#endif
+
+FDTRACK_TEST(recvmsg, ({
+  android_fdtrack_set_enabled(false);
+  int sockets[2];
+  ASSERT_NE(-1, socketpair(AF_UNIX, SOCK_SEQPACKET, 0, sockets));
+  ASSERT_EQ(3, SendFileDescriptors(sockets[0], "foo", 3, STDIN_FILENO));
+  android_fdtrack_set_enabled(true);
+
+  char buf[4];
+  unique_fd received_fd;
+  ASSERT_EQ(3, ReceiveFileDescriptors(sockets[1], buf, sizeof(buf), &received_fd));
+  received_fd.release();
+}));
+// clang-format on
