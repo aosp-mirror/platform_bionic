@@ -22,12 +22,6 @@ cc_defaults {
         darwin: {
             enabled: false,
         },
-        android: {
-            header_libs: ["bionic_libc_platform_headers"],
-        },
-        linux_bionic: {
-            header_libs: ["bionic_libc_platform_headers"],
-        },
     },
     cflags: [
         "-fstack-protector-all",
@@ -44,6 +38,7 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    header_libs: ["bionic_libc_platform_headers"],
     // Ensure that the tests exercise shadow call stack support and
     // the hint space PAC/BTI instructions.
     arch: {
