@@ -1751,7 +1751,6 @@ genrule {
 // Headers that only other parts of the platform can include.
 cc_library_headers {
     name: "bionic_libc_platform_headers",
-    defaults: ["linux_bionic_supported"],
     visibility: [
         "//art:__subpackages__",
         "//bionic:__subpackages__",
@@ -1763,6 +1762,7 @@ cc_library_headers {
         "//system/core/libunwindstack:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
     ],
+    host_supported: true,
     vendor_available: true,
     ramdisk_available: true,
     recovery_available: true,
