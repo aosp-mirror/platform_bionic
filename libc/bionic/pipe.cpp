@@ -28,6 +28,24 @@
 
 #include <unistd.h>
 
+#include "private/bionic_fdtrack.h"
+
+extern "C" int __pipe2(int pipefd[2], int flags);
+
 int pipe(int pipefd[2]) {
-  return pipe2(pipefd, 0);
+  int rc = __pipe2(pipefd, 0);
+  if (rc == 0) {
+    FDTRACK_CREATE(pipefd[0]);
+    FDTRACK_CREATE(pipefd[1]);
+  }
+  return rc;
+}
+
+int pipe2(int pipefd[2], int flags) {
+  int rc = __pipe2(pipefd, flags);
+  if (rc == 0) {
+    FDTRACK_CREATE(pipefd[0]);
+    FDTRACK_CREATE(pipefd[1]);
+  }
+  return rc;
 }
