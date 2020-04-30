@@ -29,6 +29,18 @@
 #include <sys/eventfd.h>
 #include <unistd.h>
 
+#include "private/bionic_fdtrack.h"
+
+extern "C" int __eventfd(unsigned int initval, int flags);
+
+int eventfd(unsigned int initval, int flags) {
+  return FDTRACK_CREATE(__eventfd(initval, flags));
+}
+
 int eventfd_read(int fd, eventfd_t* value) {
   return (read(fd, value, sizeof(*value)) == sizeof(*value)) ? 0 : -1;
+}
+
+int eventfd_write(int fd, eventfd_t value) {
+  return (write(fd, &value, sizeof(value)) == sizeof(value)) ? 0 : -1;
 }
