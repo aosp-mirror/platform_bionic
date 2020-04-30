@@ -312,7 +312,7 @@ int __epoll_create1:epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
 
-int eventfd:eventfd2(unsigned int, int)  all
+int __eventfd:eventfd2(unsigned int, int)  all
 
 void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
