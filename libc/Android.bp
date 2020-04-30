@@ -1117,6 +1117,7 @@ cc_library_static {
         "bionic/signal.cpp",
         "bionic/sigprocmask.cpp",
         "bionic/sleep.cpp",
+        "bionic/socketpair.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
