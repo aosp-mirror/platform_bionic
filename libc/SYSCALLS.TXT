@@ -126,7 +126,7 @@ int         __fcntl64:fcntl64(int, int, void*)  lp32
 int         __fcntl:fcntl(int, int, void*)  lp64
 int         flock(int, int)   all
 int         __fchmod:fchmod(int, mode_t)  all
-int         pipe2(int*, int) all
+int         __pipe2:pipe2(int*, int) all
 int         __dup:dup(int)  all
 int         __dup3:dup3(int, int, int)   all
 int         fsync(int)  all
