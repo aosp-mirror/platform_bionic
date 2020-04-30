@@ -125,32 +125,45 @@ TEST(fdtrack, enable_disable) {
 struct require_semicolon;
 
 #if defined(__BIONIC__)
-#define FDTRACK_TEST_NAME(test_name, fdtrack_name, expression)                            \
-  TEST(fdtrack, test_name) {                                                              \
-    static int fd = -1;                                                                   \
-    auto events = FdtrackRun([]() { fd = expression; });                                  \
-    ASSERT_NE(-1, fd);                                                                    \
-    if (events.size() != 1) {                                                             \
-      fprintf(stderr, "too many events received: expected 1, got %zu:\n", events.size()); \
-      for (size_t i = 0; i < events.size(); ++i) {                                        \
-        auto& event = events[i];                                                          \
-        if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {                            \
-          fprintf(stderr, "  event %zu: fd %d created by %s\n", i, event.fd,              \
-                  event.data.create.function_name);                                       \
-        } else if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {                      \
-          fprintf(stderr, "  event %zu: fd %d closed\n", i, event.fd);                    \
-        } else {                                                                          \
-          errx(1, "unexpected fdtrack event type: %d", event.type);                       \
-        }                                                                                 \
-      }                                                                                   \
-      FAIL();                                                                             \
-      return;                                                                             \
-    }                                                                                     \
-    ASSERT_EQ(1U, events.size());                                                         \
-    ASSERT_EQ(fd, events[0].fd);                                                          \
-    ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CREATE, events[0].type);                         \
-    ASSERT_STREQ(fdtrack_name, events[0].data.create.function_name);                      \
-  }                                                                                       \
+void SetFdResult(std::vector<int>* output, int fd) {
+  output->push_back(fd);
+}
+
+void SetFdResult(std::vector<int>* output, std::vector<int> fds) {
+  *output = fds;
+}
+
+#define FDTRACK_TEST_NAME(test_name, fdtrack_name, expression)                                   \
+  TEST(fdtrack, test_name) {                                                                     \
+    static std::vector<int> expected_fds;                                                        \
+    auto events = FdtrackRun([]() { SetFdResult(&expected_fds, expression); });                  \
+    for (auto& fd : expected_fds) {                                                              \
+      ASSERT_NE(-1, fd);                                                                         \
+    }                                                                                            \
+    if (events.size() != expected_fds.size()) {                                                  \
+      fprintf(stderr, "too many events received: expected %zu, got %zu:\n", expected_fds.size(), \
+              events.size());                                                                    \
+      for (size_t i = 0; i < events.size(); ++i) {                                               \
+        auto& event = events[i];                                                                 \
+        if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {                                   \
+          fprintf(stderr, "  event %zu: fd %d created by %s\n", i, event.fd,                     \
+                  event.data.create.function_name);                                              \
+        } else if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {                             \
+          fprintf(stderr, "  event %zu: fd %d closed\n", i, event.fd);                           \
+        } else {                                                                                 \
+          errx(1, "unexpected fdtrack event type: %d", event.type);                              \
+        }                                                                                        \
+      }                                                                                          \
+      FAIL();                                                                                    \
+      return;                                                                                    \
+    }                                                                                            \
+    for (auto& event : events) {                                                                 \
+      ASSERT_NE(expected_fds.end(),                                                              \
+                std::find(expected_fds.begin(), expected_fds.end(), events[0].fd));              \
+      ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CREATE, event.type);                                  \
+      ASSERT_STREQ(fdtrack_name, event.data.create.function_name);                               \
+    }                                                                                            \
+  }                                                                                              \
   struct require_semicolon
 #else
 #define FDTRACK_TEST_NAME(name, fdtrack_name, expression) \
@@ -171,6 +184,22 @@ FDTRACK_TEST(dup2, dup2(STDOUT_FILENO, STDERR_FILENO));
 FDTRACK_TEST(dup3, dup3(STDOUT_FILENO, STDERR_FILENO, 0));
 FDTRACK_TEST_NAME(fcntl_F_DUPFD, "F_DUPFD", fcntl(STDOUT_FILENO, F_DUPFD, 0));
 FDTRACK_TEST_NAME(fcntl_F_DUPFD_CLOEXEC, "F_DUPFD_CLOEXEC", fcntl(STDOUT_FILENO, F_DUPFD_CLOEXEC, 0));
+
+FDTRACK_TEST(pipe, ({
+  std::vector<int> fds = { -1, -1};
+  if (pipe(fds.data()) != 0) {
+    err(1, "pipe failed");
+  }
+  fds;
+}));
+
+FDTRACK_TEST(pipe2, ({
+  std::vector<int> fds = { -1, -1};
+  if (pipe2(fds.data(), O_CLOEXEC) != 0) {
+    err(1, "pipe failed");
+  }
+  fds;
+}));
 
 #if 0
 // Why is this generating an extra socket/close event?
