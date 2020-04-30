@@ -308,7 +308,7 @@ ssize_t tee(int, int, size_t, unsigned int)  all
 ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
 ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
 
-int epoll_create1(int)  all
+int __epoll_create1:epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
 

@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <netinet/in.h>
 #include <stdlib.h>
+#include <sys/epoll.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -200,6 +201,9 @@ FDTRACK_TEST(pipe2, ({
   }
   fds;
 }));
+
+FDTRACK_TEST(epoll_create, epoll_create(1));
+FDTRACK_TEST(epoll_create1, epoll_create1(0));
 
 #if 0
 // Why is this generating an extra socket/close event?
