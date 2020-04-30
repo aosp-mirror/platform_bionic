@@ -126,7 +126,7 @@ int         __fcntl64:fcntl64(int, int, void*)  lp32
 int         __fcntl:fcntl(int, int, void*)  lp64
 int         flock(int, int)   all
 int         __fchmod:fchmod(int, mode_t)  all
-int         pipe2(int*, int) all
+int         __pipe2:pipe2(int*, int) all
 int         __dup:dup(int)  all
 int         __dup3:dup3(int, int, int)   all
 int         fsync(int)  all
@@ -243,7 +243,7 @@ int     __signalfd4:signalfd4(int, const sigset64_t*, size_t, int)  all
 
 # sockets
 int           __socket:socket(int, int, int)              arm,lp64
-int           socketpair(int, int, int, int*)    arm,lp64
+int           __socketpair:socketpair(int, int, int, int*)    arm,lp64
 int           bind(int, struct sockaddr*, socklen_t)  arm,lp64
 int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,lp64
 int           listen(int, int)                   arm,lp64
@@ -267,7 +267,7 @@ int           __connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
 int           listen:socketcall:4(int, int)                   x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
 int           getpeername:socketcall:7(int, struct sockaddr*, socklen_t*)  x86
-int           socketpair:socketcall:8(int, int, int, int*)    x86
+int           __socketpair:socketcall:8(int, int, int, int*)    x86
 ssize_t       __sendto:socketcall:11(int, const void*, size_t, int, const struct sockaddr*, socklen_t)  x86
 ssize_t       recvfrom:socketcall:12(int, void*, size_t, unsigned int, struct sockaddr*, socklen_t*)  x86
 int           shutdown:socketcall:13(int, int)  x86
@@ -308,11 +308,11 @@ ssize_t tee(int, int, size_t, unsigned int)  all
 ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
 ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
 
-int epoll_create1(int)  all
+int __epoll_create1:epoll_create1(int)  all
 int epoll_ctl(int, int op, int, struct epoll_event*)  all
 int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64_t*, size_t)  all
 
-int eventfd:eventfd2(unsigned int, int)  all
+int __eventfd:eventfd2(unsigned int, int)  all
 
 void _exit|_Exit:exit_group(int)  all
 void __exit:exit(int)  all
