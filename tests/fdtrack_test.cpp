@@ -203,6 +203,14 @@ FDTRACK_TEST(pipe2, ({
   fds;
 }));
 
+FDTRACK_TEST(socketpair, ({
+  std::vector<int> fds = { -1, -1};
+  if (socketpair(AF_UNIX, SOCK_SEQPACKET, 0, fds.data()) != 0) {
+    err(1, "socketpair failed");
+  }
+  fds;
+}));
+
 FDTRACK_TEST(epoll_create, epoll_create(1));
 FDTRACK_TEST(epoll_create1, epoll_create1(0));
 
