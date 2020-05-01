@@ -72,7 +72,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
 
     // <math.h> maps fool onto foo on 32-bit, since long double is the same as double.
     if (auto asm_attr = decl->getAttr<AsmLabelAttr>()) {
-      return asm_attr->getLabel();
+      return asm_attr->getLabel().str();
     }
 
     // The decl might not have a name (e.g. bitfields).
@@ -84,7 +84,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
         return mangled;
       }
 
-      return identifier->getName();
+      return identifier->getName().str();
     }
 
     return "<unnamed>";
@@ -173,7 +173,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
               &arch_availability[Arch::x86_64].introduced } },
         };
 
-        if (auto it = prefix_map.find(fragments[0]); it != prefix_map.end()) {
+        if (auto it = prefix_map.find(fragments[0].str()); it != prefix_map.end()) {
           int value;
           if (fragments[1].getAsInteger(10, value)) {
             errx(1, "invalid __ANDROID_AVAILABILITY_DUMP__ annotation: '%s'",
@@ -201,7 +201,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     }
 
     Location location = {
-      .filename = filename,
+      .filename = filename.str(),
       .start = {
         .line = src_manager.getExpansionLineNumber(expansion_range.getBegin()),
         .column = src_manager.getExpansionColumnNumber(expansion_range.getBegin()),
