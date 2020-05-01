@@ -29,6 +29,3 @@
 #include <sys/eventfd.h>
 #include <unistd.h>
 
-int eventfd_write(int fd, eventfd_t value) {
-  return (write(fd, &value, sizeof(value)) == sizeof(value)) ? 0 : -1;
-}
