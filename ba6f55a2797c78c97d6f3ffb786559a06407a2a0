@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0a83dcd_f930dccf",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-05-01T18:23:26Z",
+      "side": 1,
+      "message": "Not sure about the code style here.\nThis file has static functions that start with a letter, with __, with __libc_, and some other files like heap_tagging.cpp even use camel case.",
+      "revId": "ba6f55a2797c78c97d6f3ffb786559a06407a2a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "353dc196_1060760a",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-05-01T18:23:26Z",
+      "side": 1,
+      "message": "Removed the check for USE_SCUDO. This way enabling pattern or zero init on svelte devices will result in a compilation error instead of silently ignoring the problem.",
+      "revId": "ba6f55a2797c78c97d6f3ffb786559a06407a2a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
