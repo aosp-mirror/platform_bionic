@@ -446,7 +446,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
       continue;
     }
 
-    std::string rel_path = path.substr(src_dir.length() + 1);
+    std::string rel_path = path.substr(src_dir.length() + 1).str();
     std::string dst_path = dst_dir + "/" + rel_path;
     llvm::StringRef parent_path = llvm::sys::path::parent_path(dst_path);
     if (llvm::sys::fs::create_directories(parent_path)) {
@@ -471,13 +471,13 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     GuardMap guard_map;
     for (const auto& it : orig_guard_map) {
       Location loc = it.first;
-      loc.end = findNextSemicolon(file_lines[file_path], loc.end);
+      loc.end = findNextSemicolon(file_lines[file_path.str()], loc.end);
       guard_map[loc] = it.second;
     }
 
     // TODO: Make sure that the Locations don't overlap.
     // TODO: Merge adjacent non-identical guards.
-    mergeGuards(file_lines[file_path], guard_map);
+    mergeGuards(file_lines[file_path.str()], guard_map);
 
     if (!file_path.startswith(src_dir)) {
       errx(1, "input file %s is not in %s\n", file_path.str().c_str(), src_dir.c_str());
@@ -487,7 +487,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     llvm::StringRef rel_path = file_path.substr(src_dir.size(), file_path.size() - src_dir.size());
     std::string output_path = (llvm::Twine(dst_dir) + rel_path).str();
 
-    rewriteFile(output_path, file_lines[file_path], guard_map);
+    rewriteFile(output_path, file_lines[file_path.str()], guard_map);
   }
 
   return true;
