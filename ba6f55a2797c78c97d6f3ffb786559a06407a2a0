@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "a9281912_63da8bbd",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-01T20:48:38Z",
+      "side": 1,
+      "message": "it\u0027s all historical accident. we used to have \"visibility by obscurity\" but now we have actual ELF visibility. (even for new areas i tend to use the __ prefix anyway, just as an extra clue in a stack trace that \"this was our internal stuff, nothing to do with you\".)\n\nseems like the majority is __libc_init_blah, so may as well carry on the tradition?",
+      "parentUuid": "b0a83dcd_f930dccf",
+      "revId": "ba6f55a2797c78c97d6f3ffb786559a06407a2a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "353dc196_1060760a",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "ba6f55a2797c78c97d6f3ffb786559a06407a2a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "323d5e11_40c4959b",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-01T20:48:38Z",
+      "side": 1,
+      "message": "good idea!",
+      "parentUuid": "353dc196_1060760a",
+      "revId": "ba6f55a2797c78c97d6f3ffb786559a06407a2a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
