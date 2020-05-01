@@ -1022,8 +1022,7 @@ cc_library_static {
         "bionic/dup.cpp",
         "bionic/environ.cpp",
         "bionic/error.cpp",
-        "bionic/eventfd_read.cpp",
-        "bionic/eventfd_write.cpp",
+        "bionic/eventfd.cpp",
         "bionic/exec.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
@@ -1114,6 +1113,7 @@ cc_library_static {
         "bionic/signal.cpp",
         "bionic/sigprocmask.cpp",
         "bionic/sleep.cpp",
+        "bionic/socketpair.cpp",
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
@@ -1701,6 +1701,7 @@ cc_library {
         symbol_file: "libc.map.txt",
         versions: [
             "29",
+            "R",
             "10000",
         ],
     },
@@ -1750,6 +1751,7 @@ genrule {
 // Headers that only other parts of the platform can include.
 cc_library_headers {
     name: "bionic_libc_platform_headers",
+    defaults: ["linux_bionic_supported"],
     visibility: [
         "//art:__subpackages__",
         "//bionic:__subpackages__",
@@ -1761,7 +1763,6 @@ cc_library_headers {
         "//system/core/libunwindstack:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
     ],
-    host_supported: true,
     vendor_available: true,
     ramdisk_available: true,
     recovery_available: true,

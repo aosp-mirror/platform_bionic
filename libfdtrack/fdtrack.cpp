@@ -60,7 +60,7 @@ static constexpr size_t kFdTableSize = 4096;
 static constexpr size_t kStackDepth = 10;
 
 static bool installed = false;
-static std::array<FdEntry, kFdTableSize> stack_traces;
+static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
 static unwindstack::LocalUnwinder& Unwinder() {
   static android::base::NoDestructor<unwindstack::LocalUnwinder> unwinder;
   return *unwinder.get();
