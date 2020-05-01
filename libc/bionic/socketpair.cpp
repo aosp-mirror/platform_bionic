@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/eventfd.h>
+#include <sys/socket.h>
 #include <unistd.h>
 
-int eventfd_read(int fd, eventfd_t* value) {
-  return (read(fd, value, sizeof(*value)) == sizeof(*value)) ? 0 : -1;
+#include "private/bionic_fdtrack.h"
+
+extern "C" int __socketpair(int domain, int type, int protocol, int sv[2]);
+
+int socketpair(int domain, int type, int protocol, int sv[2]) {
+  int rc = __socketpair(domain, type, protocol, sv);
+  if (rc == 0) {
+    FDTRACK_CREATE(sv[0]);
+    FDTRACK_CREATE(sv[1]);
+  }
+  return rc;
 }
