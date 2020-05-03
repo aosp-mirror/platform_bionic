@@ -167,6 +167,8 @@ FORTIFY_TEST(string) {
     EXPECT_FORTIFY_DEATH(memcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{will always overflow}}
     EXPECT_FORTIFY_DEATH(memmove(small_buffer, large_buffer, sizeof(large_buffer)));
+    // FIXME(gbiv): look into removing mempcpy's diagnose_if bits once the b/149839606 roll sticks.
+    // expected-error@+2{{will always overflow}}
     // expected-error@+1{{size bigger than buffer}}
     EXPECT_FORTIFY_DEATH(mempcpy(small_buffer, large_buffer, sizeof(large_buffer)));
     // expected-error@+1{{will always overflow}}
