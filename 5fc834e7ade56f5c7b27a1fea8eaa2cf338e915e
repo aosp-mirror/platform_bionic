@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8ba4514_9b07735e",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-05-04T23:14:35Z",
+      "side": 1,
+      "message": "Is this supposed to be heap_tagging_level? If not, why have two switches on the same variable? It\u0027s really confusing to have two different ones like you\u0027ve done.",
+      "range": {
+        "startLine": 104,
+        "startChar": 10,
+        "endLine": 104,
+        "endChar": 19
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5bab36a_f52a7cc5",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-05-04T23:14:35Z",
+      "side": 1,
+      "message": "I think it would be better to break this up into separate tests, but if you can do this in one test that\u0027s probably fine.\n\nAt the very least, it looks you are missing a few cases:\n- Pass an unknown tag_level.\n- Changing the level from TBI to ASYNC/SYNC\n- Changing the level form ASYNC to TBI\n\nIt kind of looks like there might be a bug in that code on some of those transitions, but it\u0027s hard to tell.",
+      "range": {
+        "startLine": 1253,
+        "startChar": 2,
+        "endLine": 1271,
+        "endChar": 88
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "087add12_283584b6",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-05-04T23:14:35Z",
+      "side": 1,
+      "message": "Unfortunately, I didn\u0027t notice this when you first did this, but you can\u0027t have tests that only exist for bionic. In order to work with the fragile CTS infrastructure, all tests need to be displayed when running bionic-unit-tests --list on the host version of the bionic test. Without that, I think these tests are simply ignored by CTS, or maybe not even executed.",
+      "range": {
+        "startLine": 37,
+        "startChar": 22,
+        "endLine": 37,
+        "endChar": 47
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ef81bba_ef1c61d8",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-05-04T23:14:35Z",
+      "side": 1,
+      "message": "It\u0027s weird that you\u0027ve split the testing of this functionality across two different test files. Can you combine them into one file so it\u0027s not necessary to look in two different files to see if all test cases are covered?\n\nIt seems like this might be a better test location.",
+      "range": {
+        "startLine": 62,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 89
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
