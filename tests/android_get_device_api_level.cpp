@@ -35,6 +35,6 @@
 TEST(android_get_device_api_level, smoke) {
 #if __BIONIC__
   // This will fail if you run the tests on an old device, but who does that?
-  ASSERT_GE(29, android_get_device_api_level());
+  ASSERT_GE(android_get_device_api_level(), 29);
 #endif
 }
