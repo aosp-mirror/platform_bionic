@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c760d37_a6cbd2ed",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-05-05T20:31:36Z",
+      "side": 1,
+      "message": "No, they\u0027re meant to be the same variable. I\u0027ve combined them together.",
+      "parentUuid": "e8ba4514_9b07735e",
+      "range": {
+        "startLine": 104,
+        "startChar": 10,
+        "endLine": 104,
+        "endChar": 19
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a5bab36a_f52a7cc5",
         "filename": "tests/malloc_test.cpp",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2020-05-04T23:14:35Z",
       "side": 1,
       "message": "I think it would be better to break this up into separate tests, but if you can do this in one test that\u0027s probably fine.\n\nAt the very least, it looks you are missing a few cases:\n- Pass an unknown tag_level.\n- Changing the level from TBI to ASYNC/SYNC\n- Changing the level form ASYNC to TBI\n\nIt kind of looks like there might be a bug in that code on some of those transitions, but it\u0027s hard to tell.",
+      "range": {
+        "startLine": 1253,
+        "startChar": 2,
+        "endLine": 1271,
+        "endChar": 88
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dddd0ba5_09d2a49f",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1271,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-05-05T20:31:36Z",
+      "side": 1,
+      "message": "These (and corresponding tests in tagged_pointer_dies) have been moved to a couple of new tests that should be testing all the transitions.",
+      "parentUuid": "a5bab36a_f52a7cc5",
       "range": {
         "startLine": 1253,
         "startChar": 2,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a6a04959_34cd54f4",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-05-05T20:31:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "087add12_283584b6",
+      "range": {
+        "startLine": 37,
+        "startChar": 22,
+        "endLine": 37,
+        "endChar": 47
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ef81bba_ef1c61d8",
         "filename": "tests/tagged_pointers_test.cpp",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2020-05-04T23:14:35Z",
       "side": 1,
       "message": "It\u0027s weird that you\u0027ve split the testing of this functionality across two different test files. Can you combine them into one file so it\u0027s not necessary to look in two different files to see if all test cases are covered?\n\nIt seems like this might be a better test location.",
+      "range": {
+        "startLine": 62,
+        "startChar": 1,
+        "endLine": 63,
+        "endChar": 89
+      },
+      "revId": "5fc834e7ade56f5c7b27a1fea8eaa2cf338e915e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6483e18_7cedd59d",
+        "filename": "tests/tagged_pointers_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-05-05T20:31:36Z",
+      "side": 1,
+      "message": "I renamed the test file to heap_tagging_level_test.cpp and moved the other test here. I also cleaned things up a bit so that we only have one test that NONE pointers are untagged, which is used in both the non-MTE and MTE cases.",
+      "parentUuid": "4ef81bba_ef1c61d8",
       "range": {
         "startLine": 62,
         "startChar": 1,
