@@ -1794,6 +1794,8 @@ cc_library_headers {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
+    // used by most APEXes indirectly via libunwind_llvm
+    min_sdk_version: "apex_inherit",
     visibility: [
         ":__subpackages__", // visible to bionic
         // ... and only to these places (b/152668052)
@@ -1937,7 +1939,8 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-
+    // crt* objects are used by most cc_binary/cc_library in "anyapex"
+    min_sdk_version: "apex_inherit",
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -2491,6 +2494,11 @@ cc_library_shared {
     allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.media.swcodec",
+    ],
+    min_sdk_version: "29",
 }
 
 subdirs = [
