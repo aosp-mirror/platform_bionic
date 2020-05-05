@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e69cae1_9034027c",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-05-05T22:14:33Z",
+      "side": 1,
+      "message": "This is a style nit, but would it be better to put some of these checks at the top?\n\nFor example, move the heap_tagging_level check as is above the switch. Then modify the second if check to something like:\n\nif (tag_level \u003d\u003d M_HEAP_TAGGING_LEVEL_TBI \u0026\u0026 heap_tagging_level !\u003d M_HEAP_TAGGING_LEVEL_NONE ||\n    heap_tagging_level \u003d\u003d M_HEAP_TAGGING_LEVEL_TBI \u0026\u0026 tag_level !\u003d M_HEAP_TAGGING_LEVEL_NONE) {\n}\n\nThen the switch doesn\u0027t require a second if check and all error checking is happening before the switch. But this is your code so feel free to ignore this suggestion.",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 7
+      },
+      "revId": "d3060019de533cc1e1ccf444c80b37ebb3490c9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
