@@ -46,6 +46,8 @@ cc_object {
 
     prefix_symbols: "__dlwrap_",
 
+    header_libs: ["libc_headers"],
+
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
 }
@@ -404,6 +406,7 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
+    header_libs: ["libc_headers"],
 
     // Opt out of native_coverage when opting out of system_shared_libs
     native_coverage: false,
