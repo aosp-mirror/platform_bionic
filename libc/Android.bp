@@ -65,7 +65,13 @@ cc_defaults {
         "bionic/libc/async_safe/include",
     ],
 
-    header_libs: ["gwp_asan_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+    ],
+    export_header_lib_headers: [
+        "libc_headers",
+    ],
 
     stl: "none",
     system_shared_libs: [],
@@ -1583,7 +1589,6 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
-    export_include_dirs: ["include"],
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1781,9 +1786,13 @@ cc_library_headers {
     sdk_version: "current",
 }
 
-// libc_headers for libasync_safe and libpropertyinfoparser
 cc_library_headers {
-    name: "libc_headers",
+    // Internal lib for use in libc_headers. Since we cannot intersect arch{}
+    // and target{} in the same module, this one specifies the arch-dependent
+    // include paths, and then libc_headers filters by target so that the
+    // headers only are included for Bionic targets.
+    name: "libc_headers_arch",
+    visibility: ["//visibility:private"],
 
     host_supported: true,
     vendor_available: true,
@@ -1796,14 +1805,6 @@ cc_library_headers {
     ],
     // used by most APEXes indirectly via libunwind_llvm
     min_sdk_version: "apex_inherit",
-    visibility: [
-        ":__subpackages__", // visible to bionic
-        // ... and only to these places (b/152668052)
-        "//external/gwp_asan",
-        "//external/libunwind_llvm",
-        "//system/core/property_service/libpropertyinfoparser",
-        "//system/extras/toolchain-extras",
-    ],
 
     no_libcrt: true,
     stl: "none",
@@ -1817,34 +1818,75 @@ cc_library_headers {
     // is correct because the headers can support any sdk_version.
     sdk_version: "1",
 
-    export_include_dirs: [
+    export_system_include_dirs: [
         "include",
         "kernel/uapi",
+        "kernel/android/scsi",
         "kernel/android/uapi",
     ],
 
     arch: {
         arm: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm"],
         },
         arm64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm64",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm64"],
         },
         x86: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
         x86_64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
+}
+
+cc_library_headers {
+    name: "libc_headers",
+    host_supported: true,
+    native_bridge_supported: true,
+    vendor_available: true,
+    ramdisk_available: true,
+    recovery_available: true,
+    sdk_version: "1",
+
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    // used by most APEXes indirectly via libunwind_llvm
+    min_sdk_version: "apex_inherit",
+    visibility: [
+        "//bionic:__subpackages__", // visible to bionic
+        // ... and only to these places (b/152668052)
+        "//external/arm-optimized-routines",
+        "//external/gwp_asan",
+        "//external/jemalloc_new",
+        "//external/libunwind_llvm",
+        "//external/scudo",
+        "//system/core/property_service/libpropertyinfoparser",
+        "//system/extras/toolchain-extras",
+        // TODO(b/153662223): Clean up these users that needed visibility when
+        // the implicit addition of system Bionic paths was removed.
+        "//art/tools/cpp-define-generator",
+        "//external/boringssl",
+        "//external/minijail",
+    ],
+
+    stl: "none",
+    no_libcrt: true,
+    system_shared_libs: [],
+
+    target: {
+        android: {
+            header_libs: ["libc_headers_arch"],
+            export_header_lib_headers: ["libc_headers_arch"],
+        },
+        linux_bionic: {
+            header_libs: ["libc_headers_arch"],
+            export_header_lib_headers: ["libc_headers_arch"],
+        },
+    }
 }
 
 // ========================================================
