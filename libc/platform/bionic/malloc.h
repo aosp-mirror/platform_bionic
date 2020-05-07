@@ -116,6 +116,8 @@ enum HeapTaggingLevel {
   M_HEAP_TAGGING_LEVEL_TBI = 1,
   // Enable heap tagging if supported, at a level appropriate for asynchronous memory tag checks.
   M_HEAP_TAGGING_LEVEL_ASYNC = 2,
+  // Enable heap tagging if supported, at a level appropriate for synchronous memory tag checks.
+  M_HEAP_TAGGING_LEVEL_SYNC = 3,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
