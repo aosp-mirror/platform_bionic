@@ -103,6 +103,9 @@ struct libc_shared_globals {
 
   const gwp_asan::AllocatorState* gwp_asan_state = nullptr;
   const gwp_asan::AllocationMetadata* gwp_asan_metadata = nullptr;
+
+  const char* scudo_stack_depot = nullptr;
+  const char* scudo_region_info = nullptr;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
