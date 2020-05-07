@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e87dad6d_af4e8dc1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-05-07T21:31:18Z",
+      "side": 0,
+      "message": "I\u0027m wondering why this whitespace was removed.",
+      "range": {
+        "startLine": 106,
+        "startChar": 40,
+        "endLine": 106,
+        "endChar": 46
+      },
+      "revId": "95c00dcf0bb3cae35a199efcb93b81092983c151",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
