@@ -26,6 +26,7 @@ cc_library_static {
     stl: "none",
     system_shared_libs: [],
     header_libs: ["libc_headers"],
+    export_header_lib_headers: ["libc_headers"],
 
     sanitize: {
         never: true,
