@@ -22,6 +22,30 @@
       "revId": "95c00dcf0bb3cae35a199efcb93b81092983c151",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a9dbd01_ada23eed",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1047684
+      },
+      "writtenOn": "2020-05-07T23:14:27Z",
+      "side": 0,
+      "message": "oh. the verify check and clang format during repo upload forces me to do it. I can revert this format change.",
+      "parentUuid": "e87dad6d_af4e8dc1",
+      "range": {
+        "startLine": 106,
+        "startChar": 40,
+        "endLine": 106,
+        "endChar": 46
+      },
+      "revId": "95c00dcf0bb3cae35a199efcb93b81092983c151",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
