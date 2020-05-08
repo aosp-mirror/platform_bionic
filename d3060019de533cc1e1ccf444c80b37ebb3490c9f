@@ -22,6 +22,23 @@
       "revId": "d3060019de533cc1e1ccf444c80b37ebb3490c9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62293653_f1e53f2b",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2020-05-08T13:53:42Z",
+      "side": 1,
+      "message": "This \u0027else if\u0027 condition appears to be identical to the \u0027if\u0027 condition, so it will always be false.  Did we intend a different condition for either the \u0027if\u0027 or \u0027else if\u0027 condition?",
+      "revId": "d3060019de533cc1e1ccf444c80b37ebb3490c9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
