@@ -39,6 +39,24 @@
       "revId": "d3060019de533cc1e1ccf444c80b37ebb3490c9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9a20eb5_7d2a3ac2",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-05-08T17:09:17Z",
+      "side": 1,
+      "message": "Thanks for catching that. Sent aosp/1306754 with the fix.\n\nThis was missed due to missing coverage in debuggerd_test for a stack trace. I will improve the tests so that we\u0027re testing that we collect *a* stack trace even though it isn\u0027t practical to check the contents of the stack trace itself.",
+      "parentUuid": "62293653_f1e53f2b",
+      "revId": "d3060019de533cc1e1ccf444c80b37ebb3490c9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
