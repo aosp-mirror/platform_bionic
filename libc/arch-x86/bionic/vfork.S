@@ -37,13 +37,25 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
   .cfi_adjust_cfa_offset 4
   .cfi_rel_offset ecx, 0
 
-  // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
+  // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
   movl    %gs:0, %eax
   movl    (TLS_SLOT_THREAD_ID * 4)(%eax), %eax
-  movl    $0, 12(%eax)
+  movl    12(%eax), %edx
+  movl    $0x80000000, 12(%eax)
 
   movl    $__NR_vfork, %eax
   int     $0x80
+
+  test    %eax, %eax
+  jz      1f
+
+  // rc != 0: restore the previous cached_pid_/vforked_ values.
+  pushl   %ecx
+  movl    %gs:0, %ecx
+  movl    (TLS_SLOT_THREAD_ID * 4)(%ecx), %ecx
+  movl    %edx, 12(%ecx)
+  popl    %ecx
+
   cmpl    $-MAX_ERRNO, %eax
   jb      1f
   negl    %eax

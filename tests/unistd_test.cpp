@@ -41,6 +41,10 @@
 
 #include "private/get_cpu_count_from_string.h"
 
+#if defined(__BIONIC__)
+#include "bionic/pthread_internal.h"
+#endif
+
 #if defined(NOFORTIFY)
 #define UNISTD_TEST unistd_nofortify
 #define UNISTD_DEATHTEST unistd_nofortify_DeathTest
@@ -429,6 +433,45 @@ TEST(UNISTD_TEST, fsync) {
 
 TEST(UNISTD_TEST, syncfs) {
   TestSyncFunction(syncfs);
+}
+
+TEST(UNISTD_TEST, vfork) {
+#if defined(__BIONIC__)
+  pthread_internal_t* self = __get_thread();
+
+  pid_t cached_pid;
+  ASSERT_TRUE(self->get_cached_pid(&cached_pid));
+  ASSERT_EQ(syscall(__NR_getpid), cached_pid);
+  ASSERT_FALSE(self->is_vforked());
+
+  pid_t rc = vfork();
+  ASSERT_NE(-1, rc);
+  if (rc == 0) {
+    if (self->get_cached_pid(&cached_pid)) {
+      const char* error = "__get_thread()->cached_pid_ set after vfork\n";
+      write(STDERR_FILENO, error, strlen(error));
+      _exit(1);
+    }
+
+    if (!self->is_vforked()) {
+      const char* error = "__get_thread()->vforked_ not set after vfork\n";
+      write(STDERR_FILENO, error, strlen(error));
+      _exit(1);
+    }
+
+    _exit(0);
+  } else {
+    ASSERT_TRUE(self->get_cached_pid(&cached_pid));
+    ASSERT_EQ(syscall(__NR_getpid), cached_pid);
+    ASSERT_FALSE(self->is_vforked());
+
+    int status;
+    pid_t wait_result = waitpid(rc, &status, 0);
+    ASSERT_EQ(wait_result, rc);
+    ASSERT_TRUE(WIFEXITED(status));
+    ASSERT_EQ(0, WEXITSTATUS(status));
+  }
+#endif
 }
 
 static void AssertGetPidCorrect() {
