@@ -40,6 +40,8 @@ static debugger_process_info get_process_info() {
       .fdsan_table = &__libc_shared_globals()->fd_table,
       .gwp_asan_state = __libc_shared_globals()->gwp_asan_state,
       .gwp_asan_metadata = __libc_shared_globals()->gwp_asan_metadata,
+      .scudo_stack_depot = __libc_shared_globals()->scudo_stack_depot,
+      .scudo_region_info = __libc_shared_globals()->scudo_region_info,
   };
 }
 #endif
