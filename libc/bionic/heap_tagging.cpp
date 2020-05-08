@@ -109,7 +109,7 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(0);
 #endif
-      } else if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+      } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(1);
 #endif
