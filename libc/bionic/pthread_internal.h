@@ -70,9 +70,12 @@ class pthread_internal_t {
   pid_t tid;
 
  private:
-  pid_t cached_pid_;
+  uint32_t cached_pid_ : 31;
+  uint32_t vforked_ : 1;
 
  public:
+  bool is_vforked() { return vforked_; }
+
   pid_t invalidate_cached_pid() {
     pid_t old_value;
     get_cached_pid(&old_value);

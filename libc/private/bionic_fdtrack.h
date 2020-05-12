@@ -47,7 +47,8 @@ extern "C" _Atomic(android_fdtrack_hook_t) __android_fdtrack_hook;
 #define FDTRACK_CREATE_NAME(name, fd_value)                       \
   ({                                                              \
     int __fd = (fd_value);                                        \
-    if (__fd != -1 && __predict_false(__android_fdtrack_hook)) {  \
+    if (__fd != -1 && __predict_false(__android_fdtrack_hook) &&  \
+        !__predict_false(__get_thread()->is_vforked())) {         \
       bionic_tls& tls = __get_bionic_tls();                       \
       /* fdtrack_disabled is only true during reentrant calls. */ \
       if (!__predict_false(tls.fdtrack_disabled)) {               \
@@ -76,7 +77,8 @@ extern "C" _Atomic(android_fdtrack_hook_t) __android_fdtrack_hook;
 #define FDTRACK_CLOSE(fd_value)                                  \
   ({                                                             \
     int __fd = (fd_value);                                       \
-    if (__fd != -1 && __predict_false(__android_fdtrack_hook)) { \
+    if (__fd != -1 && __predict_false(__android_fdtrack_hook) && \
+        !__predict_false(__get_thread()->is_vforked())) {        \
       bionic_tls& tls = __get_bionic_tls();                      \
       if (!__predict_false(tls.fdtrack_disabled)) {              \
         int saved_errno = errno;                                 \

@@ -31,17 +31,27 @@
 
 ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
+    // r3 = &__get_tls()[TLS_SLOT_THREAD_ID]
     mrc     p15, 0, r3, c13, c0, 3
     ldr     r3, [r3, #(TLS_SLOT_THREAD_ID * 4)]
-    mov     r0, #0
+
+    // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
+    mov     r0, #0x80000000
+    ldr     r1, [r3, #12]
     str     r0, [r3, #12]
 
     mov     ip, r7
     ldr     r7, =__NR_vfork
     swi     #0
     mov     r7, ip
+
+    teq     r0, #0
+    bxeq    lr
+
+    // rc != 0: reset cached_pid_ and vforked_.
+    str     r1, [r3, #12]
     cmn     r0, #(MAX_ERRNO + 1)
+
     bxls    lr
     neg     r0, r0
     b       __set_errno_internal
