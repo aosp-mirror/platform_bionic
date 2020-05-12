@@ -35,14 +35,22 @@ ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
   popq    %rdi  // Grab the return address.
 
-  // __get_tls()[TLS_SLOT_THREAD_ID]->cached_pid_ = 0
-  mov    %fs:0, %rax
-  mov    (TLS_SLOT_THREAD_ID * 8)(%rax), %rax
-  movl   $0, 20(%rax)
+  // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
+  mov     %fs:0, %r8
+  mov     (TLS_SLOT_THREAD_ID * 8)(%r8), %r8
+  movl    20(%r8), %r9d
+  movl    $0x80000000, 20(%r8)
 
   movl    $__NR_vfork, %eax
   syscall
   pushq   %rdi  // Restore the return address.
+
+  test    %eax, %eax
+  jz      1f
+
+  // rc != 0: restore the previous cached_pid_/vforked_ values.
+  movl    %r9d, 20(%r8)
+
   cmpq    $-MAX_ERRNO, %rax
   jb      1f
   negl    %eax
