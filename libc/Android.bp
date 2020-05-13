@@ -2548,7 +2548,7 @@ cc_library_shared {
         "//apex_available:platform",
         "com.android.media.swcodec",
     ],
-    min_sdk_version: "29",
+    min_sdk_version: "apex_inherit",
 }
 
 subdirs = [
