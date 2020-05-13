@@ -23,6 +23,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #if defined(__BIONIC__)
 #include <android/fdsan.h>
@@ -191,4 +192,22 @@ TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
   android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
   EXPECT_FDSAN_DEATH(close(fd_moved.get()), "expected to be unowned, actually owned by unique_fd");
 #endif
+}
+
+TEST_F(FdsanTest, vfork) {
+  android::base::unique_fd fd(open("/dev/null", O_RDONLY));
+
+  pid_t rc = vfork();
+  ASSERT_NE(-1, rc);
+
+  if (rc == 0) {
+    close(fd.get());
+    _exit(0);
+  }
+
+  int status;
+  pid_t wait_result = waitpid(rc, &status, 0);
+  ASSERT_EQ(wait_result, rc);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
 }
