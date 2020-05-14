@@ -69,6 +69,47 @@
       "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4648b0e6_e4ed74bb",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-14T16:29:57Z",
+      "side": 1,
+      "message": "if you\u0027re asking \"should there be a code comment?\", as long as the build system\u0027s automatically doing the right thing (as you say it is), i don\u0027t think there\u0027s any need.\n\nbut if you were just guessing what my first question would be, well done! :-)",
+      "parentUuid": "ae6b04d5_6aaea1f1",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 23
+      },
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14bbf1ba_9e263f69",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-14T16:29:57Z",
+      "side": 1,
+      "message": "this means that any apex using libasync_safe gets their own copy, right?\n\nif so, that seems fine by me. the other libraries are NDK so we already have strong compatibility guarantees, and this is the only library i\u0027m a bit worried about. (but which i don\u0027t think anyone has the time to do anything about any time soon.)",
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
