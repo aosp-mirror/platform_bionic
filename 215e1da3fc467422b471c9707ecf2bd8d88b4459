@@ -152,6 +152,24 @@
       "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "93995676_437b69a6",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-05-14T16:56:07Z",
+      "side": 1,
+      "message": "yeah, i\u0027m not worried about that part. thanks!",
+      "parentUuid": "a1abaf06_4c005525",
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
