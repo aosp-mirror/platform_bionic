@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ae6c7bdd_f9d7db4f",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-05-14T20:03:42Z",
+      "side": 1,
+      "message": "native_bridge linker takes linker_bin_template, sources added here are replaced.\n\nyou cut a piece from linker.cpp, which is in linker_bin_template - so it should be fine to have it here in target-independent srcs list. it will not get into native_bridge linker",
+      "parentUuid": "17a67a1a_2e95c811",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71d79a82_2d1bf2fb",
         "filename": "linker/Android.bp",
         "patchSetId": 2
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "To make sure linker could be built. This rewrite isn\u0027t useful on host thus I\u0027m not sure we want to have it there.",
       "parentUuid": "71d79a82_2d1bf2fb",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a4169b5_b2d29b1c",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-05-14T20:03:42Z",
+      "side": 1,
+      "message": "this way you change existing linux_bionic linker, which is not good",
+      "parentUuid": "f8b461ec_79f2ab7b",
       "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
