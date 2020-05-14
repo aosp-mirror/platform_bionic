@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "0b8b3c0e_d9875f5b",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-05-14T16:47:40Z",
+      "side": 1,
+      "message": "It was the latter. Thanks! :)",
+      "parentUuid": "4648b0e6_e4ed74bb",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 23
+      },
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14bbf1ba_9e263f69",
         "filename": "apex/Android.bp",
         "patchSetId": 2
@@ -110,6 +134,24 @@
       "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1abaf06_4c005525",
+        "filename": "apex/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-05-14T16:47:40Z",
+      "side": 1,
+      "message": "\u003e this means that any apex using libasync_safe gets their own copy, right?\n\nYes, exactly.\n\nAfaics it means the boundary with the strong compatibility guarantees ends up at the log socket and its wire protocol, and I thought that was already the case.",
+      "parentUuid": "14bbf1ba_9e263f69",
+      "revId": "215e1da3fc467422b471c9707ecf2bd8d88b4459",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
