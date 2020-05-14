@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "61386f3d_2077e16c",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-05-14T19:31:36Z",
+      "side": 1,
+      "message": "can we have this in common srcs here (not in linker_bin_template)?",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71d79a82_2d1bf2fb",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-05-14T19:31:36Z",
+      "side": 1,
+      "message": "why do we need this?",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
