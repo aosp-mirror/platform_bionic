@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "17a67a1a_2e95c811",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-14T19:53:28Z",
+      "side": 1,
+      "message": "I specifically wanted to move it out of common srcs since EVERYTHING in common srcs is merged into linker.\n\nWhy would we need to carry around native code which does something that we don\u0027t need (even if we would make it quiescent with a linker trick) ?",
+      "parentUuid": "61386f3d_2077e16c",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "71d79a82_2d1bf2fb",
         "filename": "linker/Android.bp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2020-05-14T19:31:36Z",
       "side": 1,
       "message": "why do we need this?",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8b461ec_79f2ab7b",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-14T19:53:28Z",
+      "side": 1,
+      "message": "To make sure linker could be built. This rewrite isn\u0027t useful on host thus I\u0027m not sure we want to have it there.",
+      "parentUuid": "71d79a82_2d1bf2fb",
       "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
