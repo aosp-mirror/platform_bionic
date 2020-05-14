@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "16919b12_c0d86b2e",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-14T20:45:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae6c7bdd_f9d7db4f",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71d79a82_2d1bf2fb",
         "filename": "linker/Android.bp",
         "patchSetId": 2
@@ -105,6 +123,24 @@
       "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "144233c4_7259ed76",
+        "filename": "linker/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-14T20:45:53Z",
+      "side": 1,
+      "message": "I guess. Fixed.",
+      "parentUuid": "0a4169b5_b2d29b1c",
+      "revId": "e54aa948af24916e77b43064aff74f5e4eced3da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
