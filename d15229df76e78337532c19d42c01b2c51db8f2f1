@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d3d3c16_4a33bb25",
+        "filename": "linker/linker_translate_path.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-05-15T06:15:04Z",
+      "side": 1,
+      "message": "maybe rename to translateLibraryPath? so any future library path translations can be added there as needed without name confusion?\n\nalso, what happens in native_bridge linker is actually not system to apex path translation :)",
+      "revId": "d15229df76e78337532c19d42c01b2c51db8f2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
