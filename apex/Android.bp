@@ -37,3 +37,28 @@ apex {
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
 }
+
+sdk {
+    name: "runtime-module-sdk",
+    defaults: ["linux_bionic_supported"],
+
+    native_header_libs: [
+        "bionic_libc_platform_headers",
+        "libc_headers",
+    ],
+    native_shared_libs: [
+        "libc",
+        "libdl",
+        "libdl_android",
+        "libm",
+    ],
+    native_static_libs: [
+        "libasync_safe",
+    ],
+    native_objects: [
+        "crtbegin_dynamic",
+        "crtbegin_so",
+        "crtend_android",
+        "crtend_so",
+    ],
+}
