@@ -16,6 +16,24 @@
       "revId": "d15229df76e78337532c19d42c01b2c51db8f2f1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05402beb_a4745665",
+        "filename": "linker/linker_translate_path.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-15T09:46:16Z",
+      "side": 1,
+      "message": "If we consider \"/system/lib/arm\" \"a temporary replacement form native_client APEX\" then it\u0027s more or less what happens.\n\nYes, we translate paths from system APEX to \"our own APEX\"... but I\u0027m not even sure we need to do that, actually.\n\nWe ARE doing such translation on Q thus maybe we should... let\u0027s first fix code then discuss if we may rip that part out.",
+      "parentUuid": "0d3d3c16_4a33bb25",
+      "revId": "d15229df76e78337532c19d42c01b2c51db8f2f1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
