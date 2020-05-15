@@ -16,17 +16,6 @@
 
 #include "gtest_globals.h"
 
-#include <string>
-#include <vector>
-
-// Use the normal gtest format so that cts can parse the results.
-extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
-  static const char* initial_args[] = {"--gtest_format"};
-  *args = initial_args;
-  *num_args = 1;
-  return true;
-}
-
 std::string GetTestlibRoot() {
   return "/data/local/tmp/lib/bionic-loader-test-libs";
 }
