@@ -65,7 +65,13 @@ cc_defaults {
         "bionic/libc/async_safe/include",
     ],
 
-    header_libs: ["gwp_asan_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+    ],
+    export_header_lib_headers: [
+        "libc_headers",
+    ],
 
     stl: "none",
     system_shared_libs: [],
@@ -87,6 +93,12 @@ cc_defaults {
     product_variables: {
         experimental_mte: {
             cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
+        malloc_zero_contents: {
+            cflags: ["-DSCUDO_ZERO_CONTENTS"],
+        },
+        malloc_pattern_fill_contents: {
+            cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
         },
     },
 }
@@ -1577,7 +1589,6 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
-    export_include_dirs: ["include"],
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1756,6 +1767,7 @@ cc_library_headers {
         "//art:__subpackages__",
         "//bionic:__subpackages__",
         "//frameworks:__subpackages__",
+        "//device/generic/goldfish-opengl:__subpackages__",
         "//external/gwp_asan:__subpackages__",
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
@@ -1773,11 +1785,22 @@ cc_library_headers {
     system_shared_libs: [],
     stl: "none",
     sdk_version: "current",
+
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.runtime",
+        "com.android.art.release", // from libdexfile_external
+        "com.android.art.debug", // from libdexfile_external
+    ],
 }
 
-// libc_headers for libasync_safe and libpropertyinfoparser
 cc_library_headers {
-    name: "libc_headers",
+    // Internal lib for use in libc_headers. Since we cannot intersect arch{}
+    // and target{} in the same module, this one specifies the arch-dependent
+    // include paths, and then libc_headers filters by target so that the
+    // headers only are included for Bionic targets.
+    name: "libc_headers_arch",
+    visibility: ["//visibility:private"],
 
     host_supported: true,
     vendor_available: true,
@@ -1788,14 +1811,8 @@ cc_library_headers {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    visibility: [
-        ":__subpackages__", // visible to bionic
-        // ... and only to these places (b/152668052)
-        "//external/gwp_asan",
-        "//external/libunwind_llvm",
-        "//system/core/property_service/libpropertyinfoparser",
-        "//system/extras/toolchain-extras",
-    ],
+    // used by most APEXes indirectly via libunwind_llvm
+    min_sdk_version: "apex_inherit",
 
     no_libcrt: true,
     stl: "none",
@@ -1809,34 +1826,75 @@ cc_library_headers {
     // is correct because the headers can support any sdk_version.
     sdk_version: "1",
 
-    export_include_dirs: [
+    export_system_include_dirs: [
         "include",
         "kernel/uapi",
+        "kernel/android/scsi",
         "kernel/android/uapi",
     ],
 
     arch: {
         arm: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm"],
         },
         arm64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm64",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm64"],
         },
         x86: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
         x86_64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
+}
+
+cc_library_headers {
+    name: "libc_headers",
+    host_supported: true,
+    native_bridge_supported: true,
+    vendor_available: true,
+    ramdisk_available: true,
+    recovery_available: true,
+    sdk_version: "1",
+
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    // used by most APEXes indirectly via libunwind_llvm
+    min_sdk_version: "apex_inherit",
+    visibility: [
+        "//bionic:__subpackages__", // visible to bionic
+        // ... and only to these places (b/152668052)
+        "//external/arm-optimized-routines",
+        "//external/gwp_asan",
+        "//external/jemalloc_new",
+        "//external/libunwind_llvm",
+        "//external/scudo",
+        "//system/core/property_service/libpropertyinfoparser",
+        "//system/extras/toolchain-extras",
+        // TODO(b/153662223): Clean up these users that needed visibility when
+        // the implicit addition of system Bionic paths was removed.
+        "//art/tools/cpp-define-generator",
+        "//external/boringssl",
+        "//external/minijail",
+    ],
+
+    stl: "none",
+    no_libcrt: true,
+    system_shared_libs: [],
+
+    target: {
+        android: {
+            header_libs: ["libc_headers_arch"],
+            export_header_lib_headers: ["libc_headers_arch"],
+        },
+        linux_bionic: {
+            header_libs: ["libc_headers_arch"],
+            export_header_lib_headers: ["libc_headers_arch"],
+        },
+    }
 }
 
 // ========================================================
@@ -1931,7 +1989,8 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-
+    // crt* objects are used by most cc_binary/cc_library in "anyapex"
+    min_sdk_version: "apex_inherit",
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -2485,6 +2544,11 @@ cc_library_shared {
     allow_undefined_symbols: true,
     // Like libc, disable native coverage for libc_scudo.
     native_coverage: false,
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.media.swcodec",
+    ],
+    min_sdk_version: "apex_inherit",
 }
 
 subdirs = [

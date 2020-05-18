@@ -289,4 +289,24 @@ FDTRACK_TEST(recvmsg, ({
   ASSERT_EQ(3, ReceiveFileDescriptors(sockets[1], buf, sizeof(buf), &received_fd));
   received_fd.release();
 }));
+
+FDTRACK_TEST_NAME(vfork, "open", ({
+  int fd = open("/dev/null", O_RDONLY);
+
+  pid_t rc = vfork();
+  ASSERT_NE(-1, rc);
+
+  if (rc == 0) {
+    close(fd);
+    _exit(0);
+  }
+
+  int status;
+  pid_t wait_result = waitpid(rc, &status, 0);
+  ASSERT_EQ(wait_result, rc);
+  ASSERT_TRUE(WIFEXITED(status));
+  ASSERT_EQ(0, WEXITSTATUS(status));
+
+  fd;
+}));
 // clang-format on
