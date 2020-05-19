@@ -16,6 +16,24 @@
       "revId": "563914e041db553eb3de1e655132932645fde368",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab09f3b3_e4e5685e",
+        "filename": "linker/linker_translate_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-05-19T00:32:55Z",
+      "side": 1,
+      "message": "Good catch. Of course since that pointer is never null here everything works.\n\nBut yeah, embarrassing result of refactoring.",
+      "parentUuid": "5774b01e_02499b29",
+      "revId": "563914e041db553eb3de1e655132932645fde368",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
