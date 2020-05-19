@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5774b01e_02499b29",
+        "filename": "linker/linker_translate_path.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-05-19T00:27:19Z",
+      "side": 1,
+      "message": "I assume this line shouldn\u0027t be here? It\u0027s followed by \"return true\".",
+      "revId": "563914e041db553eb3de1e655132932645fde368",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
