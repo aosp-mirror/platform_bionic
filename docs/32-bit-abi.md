@@ -81,13 +81,23 @@ For source compatibility, the names containing `64` are also available
 in the 64-bit ABI even though they're identical to the non-`64` names.
 
 
-## `time_t` is 32-bit
+## `time_t` is 32-bit on LP32 (y2038)
 
-On 32-bit Android, `time_t` is 32-bit. The header `<time64.h>` and type
-`time64_t` exist as a workaround, but the kernel interfaces exposed on 32-bit
-Android all use the 32-bit `time_t`.
+On 32-bit Android, `time_t` is 32-bit, which will overflow in 2038.
 
-In the 64-bit ABI, `time_t` is 64-bit.
+In the 64-bit ABI, `time_t` is 64-bit, which will not overflow until
+long after the death of the star around which we currently circle.
+
+The header `<time64.h>` and type `time64_t` exist as a workaround,
+but the kernel interfaces exposed on 32-bit Android all use the 32-bit
+`time_t` and `struct timespec`/`struct timeval`. Linux 5.x kernels
+do offer extra interfaces so that 32-bit processes can pass 64-bit
+times to/from the kernel, but we do not plan on adding support for
+these to the C library. Convenient use of the new calls would require
+an equivalent to `_FILE_OFFSET_BITS=64`, which we wouldn't be able
+to globally flip for reasons similar to `_FILE_OFFSET_BITS`, mentioned
+above. All apps are already required to offer 64-bit variants, and we
+expect 64-bit-only devices within the next few years.
 
 
 ## `pthread_mutex_t` is too small for large pids
