@@ -48,6 +48,7 @@
 // in <android/legacy_signal_inlines.h> to match.
 
 #define BIONIC_SIGNAL_POSIX_TIMERS (__SIGRTMIN + 0)
+#define BIONIC_SIGNAL_BACKTRACE (__SIGRTMIN + 1)
 #define BIONIC_SIGNAL_DEBUGGER (__SIGRTMIN + 3)
 #define BIONIC_SIGNAL_PROFILER (__SIGRTMIN + 4)
 #define BIONIC_SIGNAL_ART_PROFILER (__SIGRTMIN + 6)
