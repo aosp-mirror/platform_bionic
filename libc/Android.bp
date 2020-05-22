@@ -1774,6 +1774,7 @@ cc_library_headers {
         "//system/core/debuggerd:__subpackages__",
         "//system/core/libunwindstack:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
+        "//tools/security/sanitizer-status:__subpackages__",
     ],
     vendor_available: true,
     ramdisk_available: true,
