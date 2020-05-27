@@ -1,0 +1,10 @@
+# This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
+# Note that the resultant policy is applied only to zygote spawned processes.
+#
+# This file is processed by a python script named genseccomp.py.
+#
+# The syscalls below are prioritized above other syscalls when checking seccomp policy, in
+# the order of appearance in this file.
+
+futex
+ioctl
