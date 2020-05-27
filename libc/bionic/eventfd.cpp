@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2010 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,40 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <sys/eventfd.h>
+#include <unistd.h>
 
-#include <sys/auxv.h>
-#include <bionic/mte_kernel.h>
+#include "private/bionic_fdtrack.h"
 
-inline bool mte_supported() {
-#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-  static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
-#else
-  static bool supported = false;
-#endif
-  return supported;
+extern "C" int __eventfd(unsigned int initval, int flags);
+
+int eventfd(unsigned int initval, int flags) {
+  return FDTRACK_CREATE(__eventfd(initval, flags));
 }
 
-#ifdef __aarch64__
-class ScopedDisableMTE {
-  size_t prev_tco_;
+int eventfd_read(int fd, eventfd_t* value) {
+  return (read(fd, value, sizeof(*value)) == sizeof(*value)) ? 0 : -1;
+}
 
- public:
-  ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=r"(prev_tco_));
-    }
-  }
-
-  ~ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
-    }
-  }
-};
-#else
-struct ScopedDisableMTE {
-  // Silence unused variable warnings in non-aarch64 builds.
-  ScopedDisableMTE() {}
-};
-#endif
+int eventfd_write(int fd, eventfd_t value) {
+  return (write(fd, &value, sizeof(value)) == sizeof(value)) ? 0 : -1;
+}

@@ -26,40 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <sys/socket.h>
+#include <unistd.h>
 
-#include <sys/auxv.h>
-#include <bionic/mte_kernel.h>
+#include "private/bionic_fdtrack.h"
 
-inline bool mte_supported() {
-#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-  static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
-#else
-  static bool supported = false;
-#endif
-  return supported;
+extern "C" int __socketpair(int domain, int type, int protocol, int sv[2]);
+
+int socketpair(int domain, int type, int protocol, int sv[2]) {
+  int rc = __socketpair(domain, type, protocol, sv);
+  if (rc == 0) {
+    FDTRACK_CREATE(sv[0]);
+    FDTRACK_CREATE(sv[1]);
+  }
+  return rc;
 }
-
-#ifdef __aarch64__
-class ScopedDisableMTE {
-  size_t prev_tco_;
-
- public:
-  ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=r"(prev_tco_));
-    }
-  }
-
-  ~ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
-    }
-  }
-};
-#else
-struct ScopedDisableMTE {
-  // Silence unused variable warnings in non-aarch64 builds.
-  ScopedDisableMTE() {}
-};
-#endif

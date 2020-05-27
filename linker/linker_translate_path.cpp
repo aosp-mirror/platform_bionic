@@ -26,40 +26,48 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include "linker.h"
+#include "linker_translate_path.h"
+#include "linker_utils.h"
 
-#include <sys/auxv.h>
-#include <bionic/mte_kernel.h>
-
-inline bool mte_supported() {
-#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-  static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
+#if defined(__LP64__)
+#define APEX_LIB(apex, name) \
+  { "/system/lib64/" name, "/apex/" apex "/lib64/" name }
 #else
-  static bool supported = false;
+#define APEX_LIB(apex, name) \
+  { "/system/lib/" name, "/apex/" apex "/lib/" name }
 #endif
-  return supported;
+
+
+// Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
+/**
+ * Translate /system path to /apex path if needed
+ * The workaround should work only when targetSdkVersion < Q.
+ *
+ * param out_name_to_apex pointing to /apex path
+ * return true if translation is needed
+ */
+bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
+  static constexpr const char* kPathTranslationQ[][2] = {
+      APEX_LIB("com.android.i18n", "libicui18n.so"),
+      APEX_LIB("com.android.i18n", "libicuuc.so")
+  };
+
+  if (name == nullptr) {
+    return false;
+  }
+
+  auto comparator = [name](auto p) { return strcmp(name, p[0]) == 0; };
+
+  if (get_application_target_sdk_version() < __ANDROID_API_Q__) {
+    if (auto it =
+            std::find_if(std::begin(kPathTranslationQ), std::end(kPathTranslationQ), comparator);
+        it != std::end(kPathTranslationQ)) {
+      *out_name_to_apex = (*it)[1];
+      return true;
+    }
+  }
+
+  return false;
 }
-
-#ifdef __aarch64__
-class ScopedDisableMTE {
-  size_t prev_tco_;
-
- public:
-  ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; mrs %0, tco; msr tco, #1" : "=r"(prev_tco_));
-    }
-  }
-
-  ~ScopedDisableMTE() {
-    if (mte_supported()) {
-      __asm__ __volatile__(".arch_extension mte; msr tco, %0" : : "r"(prev_tco_));
-    }
-  }
-};
-#else
-struct ScopedDisableMTE {
-  // Silence unused variable warnings in non-aarch64 builds.
-  ScopedDisableMTE() {}
-};
-#endif
+// End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.

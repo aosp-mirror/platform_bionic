@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2008 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,9 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/eventfd.h>
-#include <unistd.h>
+#pragma once
 
-int eventfd_read(int fd, eventfd_t* value) {
-  return (read(fd, value, sizeof(*value)) == sizeof(*value)) ? 0 : -1;
-}
+#include <string>
+
+bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex);
