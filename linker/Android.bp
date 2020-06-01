@@ -316,6 +316,10 @@ cc_binary {
         "linker_version_script_overlay",
     ],
 
+    srcs: [
+        "linker_translate_path.cpp",
+    ],
+
     symlinks: ["linker_asan"],
     multilib: {
         lib64: {
