@@ -16,22 +16,14 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _DMA_BUF_UAPI_H_
-#define _DMA_BUF_UAPI_H_
+#ifndef _UAPI_HISI_QM_H
+#define _UAPI_HISI_QM_H
 #include <linux/types.h>
-struct dma_buf_sync {
-  __u64 flags;
+struct hisi_qp_ctx {
+  __u16 id;
+  __u16 qc_type;
 };
-#define DMA_BUF_SYNC_READ (1 << 0)
-#define DMA_BUF_SYNC_WRITE (2 << 0)
-#define DMA_BUF_SYNC_RW (DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE)
-#define DMA_BUF_SYNC_START (0 << 2)
-#define DMA_BUF_SYNC_END (1 << 2)
-#define DMA_BUF_SYNC_VALID_FLAGS_MASK (DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
-#define DMA_BUF_NAME_LEN 32
-#define DMA_BUF_BASE 'b'
-#define DMA_BUF_IOCTL_SYNC _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-#define DMA_BUF_SET_NAME _IOW(DMA_BUF_BASE, 1, const char *)
-#define DMA_BUF_SET_NAME_A _IOW(DMA_BUF_BASE, 1, u32)
-#define DMA_BUF_SET_NAME_B _IOW(DMA_BUF_BASE, 1, u64)
+#define HISI_QM_API_VER_BASE "hisi_qm_v1"
+#define HISI_QM_API_VER2_BASE "hisi_qm_v2"
+#define UACCE_CMD_QM_SET_QP_CTX _IOWR('H', 10, struct hisi_qp_ctx)
 #endif

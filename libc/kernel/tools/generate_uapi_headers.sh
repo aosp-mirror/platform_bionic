@@ -264,9 +264,9 @@ for arch in "${ARCH_LIST[@]}"; do
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
 
-# The arm types.h uapi header is not properly being generated, so copy it
-# directly.
-cp "${KERNEL_DIR}/include/uapi/asm-generic/types.h" \
+# The arm kvm.h uapi header was removed from arch so copy it from the
+# tools/arch directory.
+cp "${KERNEL_DIR}/tools/arch/arm/include/uapi/asm/kvm.h" \
    "${ANDROID_KERNEL_DIR}/uapi/asm-arm/asm"
 
 # Verify if modified headers have changed.
