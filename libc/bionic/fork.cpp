@@ -37,8 +37,16 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __clone_for_fork() {
   pthread_internal_t* self = __get_thread();
 
-  return clone(nullptr, nullptr, (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD), nullptr,
-               nullptr, nullptr, &(self->tid));
+  int result = clone(nullptr, nullptr, (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD),
+                     nullptr, nullptr, nullptr, &(self->tid));
+
+  if (result == 0) {
+    // Update the cached pid in child, since clone() will not set it directly (as
+    // self->tid is updated by the kernel).
+    self->set_cached_pid(gettid());
+  }
+
+  return result;
 }
 
 int fork() {
@@ -47,10 +55,6 @@ int fork() {
   int result = __clone_for_fork();
 
   if (result == 0) {
-    // Update the cached pid, since clone() will not set it directly (as
-    // self->tid is updated by the kernel).
-    __get_thread()->set_cached_pid(gettid());
-
     // Disable fdsan post-fork, so we don't falsely trigger on processes that
     // fork, close all of their fds blindly, and then exec.
     android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
