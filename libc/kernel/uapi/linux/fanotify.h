@@ -36,8 +36,9 @@
 #define FAN_OPEN_PERM 0x00010000
 #define FAN_ACCESS_PERM 0x00020000
 #define FAN_OPEN_EXEC_PERM 0x00040000
-#define FAN_ONDIR 0x40000000
+#define FAN_DIR_MODIFY 0x00080000
 #define FAN_EVENT_ON_CHILD 0x08000000
+#define FAN_ONDIR 0x40000000
 #define FAN_CLOSE (FAN_CLOSE_WRITE | FAN_CLOSE_NOWRITE)
 #define FAN_MOVE (FAN_MOVED_FROM | FAN_MOVED_TO)
 #define FAN_CLOEXEC 0x00000001
@@ -77,6 +78,7 @@ struct fanotify_event_metadata {
   __s32 pid;
 };
 #define FAN_EVENT_INFO_TYPE_FID 1
+#define FAN_EVENT_INFO_TYPE_DFID_NAME 2
 struct fanotify_event_info_header {
   __u8 info_type;
   __u8 pad;

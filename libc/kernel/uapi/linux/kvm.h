@@ -355,11 +355,16 @@ struct kvm_s390_mem_op {
   __u32 size;
   __u32 op;
   __u64 buf;
-  __u8 ar;
-  __u8 reserved[31];
+  union {
+    __u8 ar;
+    __u32 sida_offset;
+    __u8 reserved[32];
+  };
 };
 #define KVM_S390_MEMOP_LOGICAL_READ 0
 #define KVM_S390_MEMOP_LOGICAL_WRITE 1
+#define KVM_S390_MEMOP_SIDA_READ 2
+#define KVM_S390_MEMOP_SIDA_WRITE 3
 #define KVM_S390_MEMOP_F_CHECK_ONLY (1ULL << 0)
 #define KVM_S390_MEMOP_F_INJECT_EXCEPTION (1ULL << 1)
 struct kvm_interrupt {
@@ -789,6 +794,8 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_ARM_NISV_TO_USER 177
 #define KVM_CAP_ARM_INJECT_EXT_DABT 178
 #define KVM_CAP_S390_VCPU_RESETS 179
+#define KVM_CAP_S390_PROTECTED 180
+#define KVM_CAP_PPC_SECURE_GUEST 181
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1113,6 +1120,33 @@ struct kvm_enc_region {
 #define KVM_ARM_VCPU_FINALIZE _IOW(KVMIO, 0xc2, int)
 #define KVM_S390_NORMAL_RESET _IO(KVMIO, 0xc3)
 #define KVM_S390_CLEAR_RESET _IO(KVMIO, 0xc4)
+struct kvm_s390_pv_sec_parm {
+  __u64 origin;
+  __u64 length;
+};
+struct kvm_s390_pv_unp {
+  __u64 addr;
+  __u64 size;
+  __u64 tweak;
+};
+enum pv_cmd_id {
+  KVM_PV_ENABLE,
+  KVM_PV_DISABLE,
+  KVM_PV_SET_SEC_PARMS,
+  KVM_PV_UNPACK,
+  KVM_PV_VERIFY,
+  KVM_PV_PREP_RESET,
+  KVM_PV_UNSHARE_ALL,
+};
+struct kvm_pv_cmd {
+  __u32 cmd;
+  __u16 rc;
+  __u16 rrc;
+  __u64 data;
+  __u32 flags;
+  __u32 reserved[3];
+};
+#define KVM_S390_PV_COMMAND _IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,
@@ -1231,4 +1265,6 @@ struct kvm_hyperv_eventfd {
 };
 #define KVM_HYPERV_CONN_ID_MASK 0x00ffffff
 #define KVM_HYPERV_EVENTFD_DEASSIGN (1 << 0)
+#define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (1 << 0)
+#define KVM_DIRTY_LOG_INITIALLY_SET (1 << 1)
 #endif
