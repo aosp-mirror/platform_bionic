@@ -59,8 +59,10 @@ struct inet_diag_req_raw {
 enum {
   INET_DIAG_REQ_NONE,
   INET_DIAG_REQ_BYTECODE,
+  INET_DIAG_REQ_SK_BPF_STORAGES,
+  __INET_DIAG_REQ_MAX,
 };
-#define INET_DIAG_REQ_MAX INET_DIAG_REQ_BYTECODE
+#define INET_DIAG_REQ_MAX (__INET_DIAG_REQ_MAX - 1)
 struct inet_diag_bc_op {
   unsigned char code;
   unsigned char yes;
@@ -124,6 +126,7 @@ enum {
   INET_DIAG_CLASS_ID,
   INET_DIAG_MD5SIG,
   INET_DIAG_ULP_INFO,
+  INET_DIAG_SK_BPF_STORAGES,
   __INET_DIAG_MAX,
 };
 #define INET_DIAG_MAX (__INET_DIAG_MAX - 1)
@@ -131,6 +134,7 @@ enum {
   INET_ULP_INFO_UNSPEC,
   INET_ULP_INFO_NAME,
   INET_ULP_INFO_TLS,
+  INET_ULP_INFO_MPTCP,
   __INET_ULP_INFO_MAX,
 };
 #define INET_ULP_INFO_MAX (__INET_ULP_INFO_MAX - 1)
