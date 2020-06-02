@@ -16,22 +16,23 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _DMA_BUF_UAPI_H_
-#define _DMA_BUF_UAPI_H_
+#ifndef _UAPI_LINUX_UM_TIMETRAVEL_H
+#define _UAPI_LINUX_UM_TIMETRAVEL_H
 #include <linux/types.h>
-struct dma_buf_sync {
-  __u64 flags;
+struct um_timetravel_msg {
+  __u32 op;
+  __u32 seq;
+  __u64 time;
 };
-#define DMA_BUF_SYNC_READ (1 << 0)
-#define DMA_BUF_SYNC_WRITE (2 << 0)
-#define DMA_BUF_SYNC_RW (DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE)
-#define DMA_BUF_SYNC_START (0 << 2)
-#define DMA_BUF_SYNC_END (1 << 2)
-#define DMA_BUF_SYNC_VALID_FLAGS_MASK (DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
-#define DMA_BUF_NAME_LEN 32
-#define DMA_BUF_BASE 'b'
-#define DMA_BUF_IOCTL_SYNC _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-#define DMA_BUF_SET_NAME _IOW(DMA_BUF_BASE, 1, const char *)
-#define DMA_BUF_SET_NAME_A _IOW(DMA_BUF_BASE, 1, u32)
-#define DMA_BUF_SET_NAME_B _IOW(DMA_BUF_BASE, 1, u64)
+enum um_timetravel_ops {
+  UM_TIMETRAVEL_ACK = 0,
+  UM_TIMETRAVEL_START = 1,
+  UM_TIMETRAVEL_REQUEST = 2,
+  UM_TIMETRAVEL_WAIT = 3,
+  UM_TIMETRAVEL_GET = 4,
+  UM_TIMETRAVEL_UPDATE = 5,
+  UM_TIMETRAVEL_RUN = 6,
+  UM_TIMETRAVEL_FREE_UNTIL = 7,
+  UM_TIMETRAVEL_GET_TOD = 8,
+};
 #endif

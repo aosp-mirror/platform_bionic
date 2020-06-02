@@ -40,6 +40,17 @@ struct gpioline_info {
   char consumer[32];
 };
 #define GPIOHANDLES_MAX 64
+enum {
+  GPIOLINE_CHANGED_REQUESTED = 1,
+  GPIOLINE_CHANGED_RELEASED,
+  GPIOLINE_CHANGED_CONFIG,
+};
+struct gpioline_info_changed {
+  struct gpioline_info info;
+  __u64 timestamp;
+  __u32 event_type;
+  __u32 padding[5];
+};
 #define GPIOHANDLE_REQUEST_INPUT (1UL << 0)
 #define GPIOHANDLE_REQUEST_OUTPUT (1UL << 1)
 #define GPIOHANDLE_REQUEST_ACTIVE_LOW (1UL << 2)
@@ -85,6 +96,8 @@ struct gpioevent_data {
 };
 #define GPIO_GET_CHIPINFO_IOCTL _IOR(0xB4, 0x01, struct gpiochip_info)
 #define GPIO_GET_LINEINFO_IOCTL _IOWR(0xB4, 0x02, struct gpioline_info)
+#define GPIO_GET_LINEINFO_WATCH_IOCTL _IOWR(0xB4, 0x0b, struct gpioline_info)
+#define GPIO_GET_LINEINFO_UNWATCH_IOCTL _IOWR(0xB4, 0x0c, __u32)
 #define GPIO_GET_LINEHANDLE_IOCTL _IOWR(0xB4, 0x03, struct gpiohandle_request)
 #define GPIO_GET_LINEEVENT_IOCTL _IOWR(0xB4, 0x04, struct gpioevent_request)
 #endif

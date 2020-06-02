@@ -16,22 +16,15 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _DMA_BUF_UAPI_H_
-#define _DMA_BUF_UAPI_H_
+#ifndef _UAPIUUACCE_H
+#define _UAPIUUACCE_H
 #include <linux/types.h>
-struct dma_buf_sync {
-  __u64 flags;
+#include <linux/ioctl.h>
+#define UACCE_CMD_START_Q _IO('W', 0)
+#define UACCE_CMD_PUT_Q _IO('W', 1)
+#define UACCE_DEV_SVA BIT(0)
+enum uacce_qfrt {
+  UACCE_QFRT_MMIO = 0,
+  UACCE_QFRT_DUS = 1,
 };
-#define DMA_BUF_SYNC_READ (1 << 0)
-#define DMA_BUF_SYNC_WRITE (2 << 0)
-#define DMA_BUF_SYNC_RW (DMA_BUF_SYNC_READ | DMA_BUF_SYNC_WRITE)
-#define DMA_BUF_SYNC_START (0 << 2)
-#define DMA_BUF_SYNC_END (1 << 2)
-#define DMA_BUF_SYNC_VALID_FLAGS_MASK (DMA_BUF_SYNC_RW | DMA_BUF_SYNC_END)
-#define DMA_BUF_NAME_LEN 32
-#define DMA_BUF_BASE 'b'
-#define DMA_BUF_IOCTL_SYNC _IOW(DMA_BUF_BASE, 0, struct dma_buf_sync)
-#define DMA_BUF_SET_NAME _IOW(DMA_BUF_BASE, 1, const char *)
-#define DMA_BUF_SET_NAME_A _IOW(DMA_BUF_BASE, 1, u32)
-#define DMA_BUF_SET_NAME_B _IOW(DMA_BUF_BASE, 1, u64)
 #endif
