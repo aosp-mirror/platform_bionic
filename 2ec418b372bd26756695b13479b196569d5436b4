@@ -87,6 +87,24 @@
       "revId": "2ec418b372bd26756695b13479b196569d5436b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3e02986_7710a479",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-06-03T01:45:31Z",
+      "side": 1,
+      "message": "Changing it to __clone_for_fork(pid_t* tid) sounds good to me.",
+      "parentUuid": "138c9d78_b5a60472",
+      "revId": "2ec418b372bd26756695b13479b196569d5436b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
