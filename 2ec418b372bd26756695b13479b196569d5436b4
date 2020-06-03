@@ -69,6 +69,24 @@
       "revId": "2ec418b372bd26756695b13479b196569d5436b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "138c9d78_b5a60472",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-06-03T00:45:42Z",
+      "side": 1,
+      "message": "I don\u0027t see any correctness issues here. Since clone() is called without CLONE_SETTLS, tls in child and parent point to the same memory address (although in different processes).\n\nThat said, if Ryan doesn\u0027t mind, I can change it to __clone_for_fork(pid_t* tid). I don\u0027t really have any strong preference.",
+      "parentUuid": "6b8dce30_9ec82074",
+      "revId": "2ec418b372bd26756695b13479b196569d5436b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
