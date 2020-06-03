@@ -38,6 +38,7 @@ struct drm_lima_get_param {
   __u32 pad;
   __u64 value;
 };
+#define LIMA_BO_FLAG_HEAP (1 << 0)
 struct drm_lima_gem_create {
   __u32 size;
   __u32 flags;
