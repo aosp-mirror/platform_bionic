@@ -51,6 +51,24 @@
       "revId": "2ec418b372bd26756695b13479b196569d5436b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b8dce30_9ec82074",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-06-03T00:06:53Z",
+      "side": 1,
+      "message": "Is the double-call a correctness issue? It shouldn\u0027t be an efficiency issue -- __get_thread is inlined and only a couple of instructions.",
+      "parentUuid": "baaa218e_68bb7089",
+      "revId": "2ec418b372bd26756695b13479b196569d5436b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
