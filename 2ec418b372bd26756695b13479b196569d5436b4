@@ -105,6 +105,24 @@
       "revId": "2ec418b372bd26756695b13479b196569d5436b4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdbb7ed2_6d60618e",
+        "filename": "libc/bionic/fork.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-06-03T06:04:06Z",
+      "side": 1,
+      "message": "The reason why I\u0027d suggest not to pass tid is as follows:\n\nnow the logic of __clone_for_fork is \u0027do fork and set/clear pthread_internal_t tid field of the new child thread\u0027\n\nthis is exactly what native_bridge overwrite can do by calling host \u0027fork\u0027.\n\nbut if you pass tid explicitly, the semantics will be \u0027do fork and set/clear tid by this pointer\u0027. to stay on the safe side, native_bridge overwrite will have to check, that given pointer actually points to child thread\u0027s pthread_internal_t tid field, it cannot do the job for an arbitrary tid pointer.\n\nso by not passing tid explicitly we ensure all calls to __clone_for_fork are consistent.\n\nif you are concerned about double call of __get_thread, then we can do all tid manipulations within __clone_for_fork, which is IMHO even more consistent:\n\n  int __clone_for_fork() {\n    pthread_internal_t* self \u003d __get_thread();\n    int result \u003d clone(..., \u0026(self-\u003etid));\n    if (result \u003d\u003d 0) {\n      self-\u003eset_cached_pid(gettid());\n    }\n    return result;\n  }\n\nthen \u0027fork\u0027 itself doesn\u0027t touch pthread_internal_t at all. but, we check clone result twice 😊",
+      "parentUuid": "b3e02986_7710a479",
+      "revId": "2ec418b372bd26756695b13479b196569d5436b4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
