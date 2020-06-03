@@ -218,6 +218,7 @@ enum {
   TCP_NLA_REORD_SEEN,
   TCP_NLA_SRTT,
   TCP_NLA_TIMEOUT_REHASH,
+  TCP_NLA_BYTES_NOTSENT,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
 #define TCP_MD5SIG_FLAG_PREFIX 0x1
@@ -241,5 +242,7 @@ struct tcp_zerocopy_receive {
   __u64 address;
   __u32 length;
   __u32 recv_skip_hint;
+  __u32 inq;
+  __s32 err;
 };
 #endif
