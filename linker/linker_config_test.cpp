@@ -47,6 +47,7 @@
 #define ARCH_SUFFIX ""
 #endif
 
+// clang-format off
 static const char* config_str =
   "# comment \n"
   "dir.test = /data/local/tmp\n"
@@ -88,8 +89,10 @@ static const char* config_str =
   "namespace.vndk_in_system.visible = true\n"
   "namespace.vndk_in_system.search.paths = /system/${LIB}\n"
   "namespace.vndk_in_system.permitted.paths = /system/${LIB}\n"
-  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so:libtinyxml2.so\n"
+  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so\n"
+  "namespace.vndk_in_system.whitelisted += libtinyxml2.so\n"
   "\n";
+// clang-format on
 
 static bool write_version(const std::string& path, uint32_t version) {
   std::string content = android::base::StringPrintf("%d", version);
