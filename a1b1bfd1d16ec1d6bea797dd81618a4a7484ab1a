@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "181c2d21_39fc8d8d",
+        "filename": "libc/bionic/exec.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-06-04T21:53:02Z",
+      "side": 1,
+      "message": "an alternative would be to do `enum class ExecVariant { L, LE, LP }`",
+      "parentUuid": "38f9d7eb_22552f7e",
+      "range": {
+        "startLine": 47,
+        "startChar": 7,
+        "endLine": 47,
+        "endChar": 12
+      },
+      "revId": "a1b1bfd1d16ec1d6bea797dd81618a4a7484ab1a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33e2a380_3d37d6cb",
         "filename": "libc/bionic/exec.cpp",
         "patchSetId": 1
