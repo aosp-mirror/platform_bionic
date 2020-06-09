@@ -41,7 +41,6 @@ int __clone_for_fork() {
                nullptr, nullptr, &(self->tid));
 }
 
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int fork() {
   __bionic_atfork_run_prepare();
 
