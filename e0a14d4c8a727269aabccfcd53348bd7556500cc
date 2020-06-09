@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "057cca82_381bab6b",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-06-09T23:05:48Z",
+      "side": 1,
+      "message": "(from `#define FD_SETSIZE 1024`)",
+      "range": {
+        "startLine": 59,
+        "startChar": 71,
+        "endLine": 59,
+        "endChar": 81
+      },
+      "revId": "e0a14d4c8a727269aabccfcd53348bd7556500cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

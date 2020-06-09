@@ -118,6 +118,30 @@
       "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c5df2e9_43b75463",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-06-09T23:05:48Z",
+      "side": 1,
+      "message": "+__printflike, and preferring slightly smaller code given the lack of strong preference. Done. :)",
+      "parentUuid": "0189862c_f1ccebda",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
