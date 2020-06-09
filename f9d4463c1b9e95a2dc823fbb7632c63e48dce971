@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f32e88e3_994e7d48",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-06-09T22:23:57Z",
+      "side": 1,
+      "message": "Should we rewrite this as something that can be inlined instead? Something along the lines of \n\n    template\u003ctypename... Args\u003e\n    static void __fortify_fatal(const char* fmt, Args\u0026\u0026... args) {\n        async_safe_fatal_va_list(\"FORTIFY\", fmt, args...);\n        abort();\n    }",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
