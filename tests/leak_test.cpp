@@ -109,23 +109,21 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
 
 // http://b/36045112
 TEST(pthread_leak, join) {
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
+
   LeakChecker lc;
 
-  for (size_t pass = 0; pass < 2; ++pass) {
-    for (int i = 0; i < 100; ++i) {
-      pthread_t thread;
-      ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
-      ASSERT_EQ(0, pthread_join(thread, nullptr));
-    }
-
-    // A native bridge implementation might need a warm up pass to reach a steady state.
-    // http://b/37920774.
-    if (pass == 0) lc.Reset();
+  for (int i = 0; i < 100; ++i) {
+    pthread_t thread;
+    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+    ASSERT_EQ(0, pthread_join(thread, nullptr));
   }
 }
 
 // http://b/36045112
 TEST(pthread_leak, detach) {
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
+
   LeakChecker lc;
 
   // Ancient devices with only 2 cores need a lower limit.
@@ -158,8 +156,7 @@ TEST(pthread_leak, detach) {
 
     WaitUntilAllThreadsExited(tids, thread_count);
 
-    // A native bridge implementation might need a warm up pass to reach a steady state.
-    // http://b/37920774.
+    // TODO(b/158573595): the test is flaky without the warmup pass.
     if (pass == 0) lc.Reset();
   }
 }
