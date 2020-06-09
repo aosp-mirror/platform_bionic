@@ -22,6 +22,30 @@
       "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd7d1a63_e83877c7",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-06-09T22:38:59Z",
+      "side": 1,
+      "message": "*shrug*\n\nwe get slightly smaller code from keeping this a function than doing something like `#define __fortify_fatal(...) async_safe_fatal(\"FORTIFY: \" __VA_ARGS__)` (which, provided inlining happens, should be equivalent to what you proposed). since this ultimately abort()s, an extra call + a few insns shouldn\u0027t matter, but whatever\u0027s most consistent with existing style is good with me. please lmk what you\u0027d prefer.\n\n(trying to make that `#define` work also caught a format string that\u0027s broken in a semi-pedantic way. if we stick with an actual function here, happy to add `__printflike` if possible)",
+      "parentUuid": "f32e88e3_994e7d48",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
