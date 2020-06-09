@@ -70,6 +70,30 @@
       "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e0384aa_80b5d280",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-09T22:55:46Z",
+      "side": 1,
+      "message": "yeah, +1 to __printflike.\n\nasync_safe_fatal* functions _aren\u0027t_ [[noreturn]]. see the abort() on L47.",
+      "parentUuid": "c111b1f6_72007800",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
