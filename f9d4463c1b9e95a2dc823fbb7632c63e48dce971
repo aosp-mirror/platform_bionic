@@ -46,6 +46,30 @@
       "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c111b1f6_72007800",
+        "filename": "libc/private/bionic_fortify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-06-09T22:48:12Z",
+      "side": 1,
+      "message": "I figured that\u0027d lead to smaller code because you need to set up the call stack identically, but I guess the fact that async_safe_fatal_va_list isn\u0027t noreturn (should it be? +cferris) means that you get extra code generated to call abort.\n\nI don\u0027t have a strong preference here.",
+      "parentUuid": "cd7d1a63_e83877c7",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "f9d4463c1b9e95a2dc823fbb7632c63e48dce971",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
