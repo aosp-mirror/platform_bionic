@@ -81,7 +81,6 @@ cc_defaults {
         // TODO(b/132640749): Fix broken fuzzer support.
         fuzzer: false,
     },
-    native_coverage: false,
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
