@@ -4,6 +4,7 @@ libc_common_src_files = [
     "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
+    "bionic/exit.cpp",
     "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
@@ -17,7 +18,6 @@ libc_common_src_files = [
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.cpp",
     "stdio/vfwscanf.c",
-    "stdlib/exit.c",
 ]
 
 // off64_t/time64_t support on LP32.
