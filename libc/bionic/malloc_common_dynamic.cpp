@@ -366,12 +366,20 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
   return true;
 }
 
+extern "C" const char* __scudo_get_stack_depot_addr();
+extern "C" const char* __scudo_get_region_info_addr();
+
 // Initializes memory allocation framework once per process.
 static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
 
   MaybeInitGwpAsanFromLibc(globals);
+
+#if defined(USE_SCUDO)
+  __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
+  __libc_shared_globals()->scudo_region_info = __scudo_get_region_info_addr();
+#endif
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.

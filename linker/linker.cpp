@@ -65,6 +65,7 @@
 #include "linker_phdr.h"
 #include "linker_relocate.h"
 #include "linker_tls.h"
+#include "linker_translate_path.h"
 #include "linker_utils.h"
 
 #include "private/bionic_call_ifunc_resolver.h"
@@ -103,7 +104,6 @@ static const char* const kVendorLibDir        = "/vendor/lib64";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib64";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib64";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib64";
-static const char* const kArtApexLibDir       = "/apex/com.android.art/lib64";
 #else
 static const char* const kSystemLibDir        = "/system/lib";
 static const char* const kOdmLibDir           = "/odm/lib";
@@ -111,7 +111,6 @@ static const char* const kVendorLibDir        = "/vendor/lib";
 static const char* const kAsanSystemLibDir    = "/data/asan/system/lib";
 static const char* const kAsanOdmLibDir       = "/data/asan/odm/lib";
 static const char* const kAsanVendorLibDir    = "/data/asan/vendor/lib";
-static const char* const kArtApexLibDir       = "/apex/com.android.art/lib";
 #endif
 
 static const char* const kAsanLibDirPrefix = "/data/asan";
@@ -234,44 +233,6 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   return false;
 }
 // END OF WORKAROUND
-
-// Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
-/**
- * Translate /system path to /apex path if needed
- * The workaround should work only when targetSdkVersion < Q.
- *
- * param out_name_to_apex pointing to /apex path
- * return true if translation is needed
- */
-static bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static const char* const kSystemToArtApexLibs[] = {
-    "libicuuc.so",
-    "libicui18n.so",
-  };
-  // New mapping for new apex should be added below
-
-  // Nothing to do if target sdk version is Q or above
-  if (get_application_target_sdk_version() >= 29) {
-    return false;
-  }
-
-  // If the path isn't /system/lib, there's nothing to do.
-  if (name == nullptr || dirname(name) != kSystemLibDir) {
-    return false;
-  }
-
-  const char* base_name = basename(name);
-
-  for (const char* soname : kSystemToArtApexLibs) {
-    if (strcmp(base_name, soname) == 0) {
-      *out_name_to_apex = std::string(kArtApexLibDir) + "/" + base_name;
-      return true;
-    }
-  }
-
-  return false;
-}
-// End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
 static std::vector<std::string> g_ld_preload_names;
 

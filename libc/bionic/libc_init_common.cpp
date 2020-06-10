@@ -52,6 +52,8 @@
 #include "pthread_internal.h"
 
 extern "C" int __system_properties_init(void);
+extern "C" void scudo_malloc_set_zero_contents(int);
+extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
@@ -83,6 +85,14 @@ static void arc4random_fork_handler() {
   _thread_arc4_lock();
 }
 
+static void __libc_init_malloc_fill_contents() {
+#if defined(SCUDO_PATTERN_FILL_CONTENTS)
+  scudo_malloc_set_pattern_fill_contents(1);
+#elif defined(SCUDO_ZERO_CONTENTS)
+  scudo_malloc_set_zero_contents(1);
+#endif
+}
+
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_add_main_thread() {
   // Get the main thread from TLS and add it to the thread list.
@@ -106,6 +116,7 @@ void __libc_init_common() {
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
 
+  __libc_init_malloc_fill_contents();
   SetDefaultHeapTaggingLevel();
 }
 
@@ -230,37 +241,38 @@ static bool __is_unsafe_environment_variable(const char* name) {
   // of executing a setuid program or the result of an SELinux
   // security transition.
   static constexpr const char* UNSAFE_VARIABLE_NAMES[] = {
-    "ANDROID_DNS_MODE",
-    "GCONV_PATH",
-    "GETCONF_DIR",
-    "HOSTALIASES",
-    "JE_MALLOC_CONF",
-    "LD_AOUT_LIBRARY_PATH",
-    "LD_AOUT_PRELOAD",
-    "LD_AUDIT",
-    "LD_CONFIG_FILE",
-    "LD_DEBUG",
-    "LD_DEBUG_OUTPUT",
-    "LD_DYNAMIC_WEAK",
-    "LD_LIBRARY_PATH",
-    "LD_ORIGIN_PATH",
-    "LD_PRELOAD",
-    "LD_PROFILE",
-    "LD_SHOW_AUXV",
-    "LD_USE_LOAD_BIAS",
-    "LIBC_DEBUG_MALLOC_OPTIONS",
-    "LIBC_HOOKS_ENABLE",
-    "LOCALDOMAIN",
-    "LOCPATH",
-    "MALLOC_CHECK_",
-    "MALLOC_CONF",
-    "MALLOC_TRACE",
-    "NIS_PATH",
-    "NLSPATH",
-    "RESOLV_HOST_CONF",
-    "RES_OPTIONS",
-    "TMPDIR",
-    "TZDIR",
+      "ANDROID_DNS_MODE",
+      "GCONV_PATH",
+      "GETCONF_DIR",
+      "HOSTALIASES",
+      "JE_MALLOC_CONF",
+      "LD_AOUT_LIBRARY_PATH",
+      "LD_AOUT_PRELOAD",
+      "LD_AUDIT",
+      "LD_CONFIG_FILE",
+      "LD_DEBUG",
+      "LD_DEBUG_OUTPUT",
+      "LD_DYNAMIC_WEAK",
+      "LD_LIBRARY_PATH",
+      "LD_ORIGIN_PATH",
+      "LD_PRELOAD",
+      "LD_PROFILE",
+      "LD_SHOW_AUXV",
+      "LD_USE_LOAD_BIAS",
+      "LIBC_DEBUG_MALLOC_OPTIONS",
+      "LIBC_HOOKS_ENABLE",
+      "LOCALDOMAIN",
+      "LOCPATH",
+      "MALLOC_CHECK_",
+      "MALLOC_CONF",
+      "MALLOC_TRACE",
+      "NIS_PATH",
+      "NLSPATH",
+      "RESOLV_HOST_CONF",
+      "RES_OPTIONS",
+      "SCUDO_OPTIONS",
+      "TMPDIR",
+      "TZDIR",
   };
   for (const auto& unsafe_variable_name : UNSAFE_VARIABLE_NAMES) {
     if (env_match(name, unsafe_variable_name) != nullptr) {

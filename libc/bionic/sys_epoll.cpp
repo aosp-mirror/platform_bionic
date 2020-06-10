@@ -30,7 +30,9 @@
 #include <sys/epoll.h>
 
 #include "private/SigSetConverter.h"
+#include "private/bionic_fdtrack.h"
 
+extern "C" int __epoll_create1(int flags);
 extern "C" int __epoll_pwait(int, epoll_event*, int, int, const sigset64_t*, size_t);
 
 int epoll_create(int size) {
@@ -38,7 +40,11 @@ int epoll_create(int size) {
     errno = EINVAL;
     return -1;
   }
-  return epoll_create1(0);
+  return FDTRACK_CREATE(__epoll_create1(0));
+}
+
+int epoll_create1(int flags) {
+  return FDTRACK_CREATE(__epoll_create1(flags));
 }
 
 int epoll_pwait(int fd, epoll_event* events, int max_events, int timeout, const sigset_t* ss) {
