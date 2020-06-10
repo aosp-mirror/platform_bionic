@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "753b0745_497acf44",
+        "filename": "libc/bionic/exit.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-06-10T14:39:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d48255fb_8882ed62",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 6
+      },
+      "revId": "7015ca8a2297581a656f05777d2bf26ed00246f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56734f14_18ed3e7e",
         "filename": "libc/bionic/exit.c",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "7015ca8a2297581a656f05777d2bf26ed00246f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d91cfa2_73d8a4e3",
+        "filename": "libc/bionic/exit.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-06-10T14:39:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56734f14_18ed3e7e",
+      "range": {
+        "startLine": 39,
+        "startChar": 17,
+        "endLine": 39,
+        "endChar": 21
+      },
+      "revId": "7015ca8a2297581a656f05777d2bf26ed00246f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
