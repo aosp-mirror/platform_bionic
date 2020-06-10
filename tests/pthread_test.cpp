@@ -2821,6 +2821,9 @@ TEST(pthread, pthread_attr_getdetachstate__pthread_attr_setdetachstate) {
 }
 
 TEST(pthread, pthread_create__mmap_failures) {
+  // After thread is successfully created, native_bridge might need more memory to run it.
+  SKIP_WITH_NATIVE_BRIDGE;
+
   pthread_attr_t attr;
   ASSERT_EQ(0, pthread_attr_init(&attr));
   ASSERT_EQ(0, pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED));

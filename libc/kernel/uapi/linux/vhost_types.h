@@ -89,6 +89,11 @@ struct vhost_scsi_target {
   unsigned short vhost_tpgt;
   unsigned short reserved;
 };
+struct vhost_vdpa_config {
+  __u32 off;
+  __u32 len;
+  __u8 buf[0];
+};
 #define VHOST_F_LOG_ALL 26
 #define VHOST_NET_F_VIRTIO_NET_HDR 27
 #endif

@@ -51,4 +51,7 @@
 #define SEGV_MTEAERR 8
 #define SEGV_MTESERR 9
 
+#define PTRACE_PEEKMTETAGS 33
+#define PTRACE_POKEMTETAGS 34
+
 #endif
