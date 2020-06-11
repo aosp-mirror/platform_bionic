@@ -36,12 +36,12 @@ __BEGIN_DECLS
 
 // TODO: replace this with something more like <android-base/logging.h>'s family of macros.
 
-#define CHECK(predicate) \
-  do { \
-    if (!(predicate)) { \
-      async_safe_fatal("%s:%d: %s CHECK '" #predicate "' failed", \
-          __FILE__, __LINE__, __FUNCTION__); \
-    } \
-  } while(0)
+#define CHECK(predicate)                                                                \
+  do {                                                                                  \
+    if (!(predicate)) {                                                                 \
+      async_safe_fatal("%s:%d: %s CHECK '%s' failed", __FILE__, __LINE__, __FUNCTION__, \
+                       #predicate);                                                     \
+    }                                                                                   \
+  } while (0)
 
 __END_DECLS
