@@ -38,6 +38,8 @@ extern const char* __progname;
 /* Ignore all __warn_references in OpenBSD. */
 #define __warn_references(sym,msg)
 
+#define PROTO_NORMAL(x)
+
 /* OpenBSD's <ctype.h> uses these names, which conflicted with stlport.
  * Additionally, we changed the numeric/digit type from N to D for libcxx.
  */
