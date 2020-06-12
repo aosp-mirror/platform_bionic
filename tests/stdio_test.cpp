@@ -294,6 +294,34 @@ TEST(STDIO_TEST, snprintf_a) {
   EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
 }
 
+// http://b/152588929
+TEST(STDIO_TEST, snprintf_La) {
+#if defined(__LP64__)
+  char buf[BUFSIZ];
+  union {
+    uint64_t a[2];
+    long double v;
+  } u;
+
+  u.a[0] = UINT64_C(0x9b9b9b9b9b9b9b9b);
+  u.a[1] = UINT64_C(0xdfdfdfdfdfdfdfdf);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", buf);
+
+  u.a[0] = UINT64_C(0xffffffffffffffff);
+  u.a[1] = UINT64_C(0x7ffeffffffffffff);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x1.ffffffffffffffffffffffffffffp+16383>", buf);
+
+  u.a[0] = UINT64_C(0x0000000000000000);
+  u.a[1] = UINT64_C(0x0000000000000000);
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x0p+0>", buf);
+#else
+  GTEST_SKIP() << "no ld128";
+#endif
+}
+
 TEST(STDIO_TEST, snprintf_lc) {
   char buf[BUFSIZ];
   wint_t wc = L'a';
