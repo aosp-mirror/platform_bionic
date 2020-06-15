@@ -2360,11 +2360,11 @@ cc_genrule {
     ],
 }
 
-// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+// SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT = SECCOMP_BLOCKLIST_APP.txt - setresgid*
 genrule {
-    name: "generate_app_zygote_blacklist",
-    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
-    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    name: "generate_app_zygote_blocklist",
+    out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
     cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
 }
 
@@ -2377,11 +2377,11 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
-        ":generate_app_zygote_blacklist",
+        ":generate_app_zygote_blocklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2405,10 +2405,10 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        "SECCOMP_BLACKLIST_APP.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
@@ -2433,9 +2433,9 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
