@@ -56,12 +56,12 @@ def load_syscall_priorities_from_file(file_path):
   return priorities
 
 
-def merge_names(base_names, whitelist_names, blacklist_names):
-  if bool(blacklist_names - base_names):
-    raise RuntimeError("Blacklist item not in bionic - aborting " + str(
-        blacklist_names - base_names))
+def merge_names(base_names, allowlist_names, blocklist_names):
+  if bool(blocklist_names - base_names):
+    raise RuntimeError("blocklist item not in bionic - aborting " + str(
+        blocklist_names - base_names))
 
-  return (base_names - blacklist_names) | whitelist_names
+  return (base_names - blocklist_names) | allowlist_names
 
 
 def extract_priority_syscalls(syscalls, priorities):
@@ -230,19 +230,19 @@ def construct_bpf(syscalls, architecture, name_modifier, priorities):
 def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files, syscall_NRs, priority_file):
   for arch in SupportedArchitectures:
     base_names = load_syscall_names_from_file(base_syscall_file, arch)
-    whitelist_names = set()
-    blacklist_names = set()
+    allowlist_names = set()
+    blocklist_names = set()
     for f in syscall_files:
-      if "blacklist" in f.lower():
-        blacklist_names |= load_syscall_names_from_file(f, arch)
+      if "blocklist" in f.lower():
+        blocklist_names |= load_syscall_names_from_file(f, arch)
       else:
-        whitelist_names |= load_syscall_names_from_file(f, arch)
+        allowlist_names |= load_syscall_names_from_file(f, arch)
     priorities = []
     if priority_file:
       priorities = load_syscall_priorities_from_file(priority_file)
 
     allowed_syscalls = []
-    for name in merge_names(base_names, whitelist_names, blacklist_names):
+    for name in merge_names(base_names, allowlist_names, blocklist_names):
       try:
         allowed_syscalls.append((name, syscall_NRs[arch][name]))
       except:
@@ -274,8 +274,8 @@ def main():
                       help=("The path of the input files. In order to "
                             "simplify the build rules, it can take any of the "
                             "following files: \n"
-                            "* /blacklist.*\.txt$/ syscall blacklist.\n"
-                            "* /whitelist.*\.txt$/ syscall whitelist.\n"
+                            "* /blocklist.*\.txt$/ syscall blocklist.\n"
+                            "* /allowlist.*\.txt$/ syscall allowlist.\n"
                             "* /priority.txt$/ priorities for bpf rules.\n"
                             "* otherwise, syscall name-number mapping.\n"))
   args = parser.parse_args()
