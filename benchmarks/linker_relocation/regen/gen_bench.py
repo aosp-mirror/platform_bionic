@@ -62,7 +62,7 @@ kBionicSonames: Set[str] = set([
 ])
 
 # Skip these symbols so the benchmark runs on multiple C libraries (glibc, Bionic, musl).
-kBionicSymbolBlacklist: Set[str] = set([
+kBionicIgnoredSymbols: Set[str] = set([
     '__FD_ISSET_chk',
     '__FD_SET_chk',
     '__assert',
@@ -169,7 +169,7 @@ def make_asm_file(lib: LoadedLibrary, is_main: bool, out_filename: Path, map_out
         nonlocal defs
         d = defs.get(name)
         if d is not None and d.soname in kBionicSonames:
-            if name in kBionicSymbolBlacklist: return None
+            if name in kBionicIgnoredSymbols: return None
             # Discard relocations to newer Bionic symbols, because there aren't many of them, and
             # they would limit where the benchmark can run.
             if ver == 'LIBC': return name
