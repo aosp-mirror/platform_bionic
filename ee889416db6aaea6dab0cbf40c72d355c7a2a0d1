@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ed40a66d_09feaedb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-16T04:22:03Z",
+      "side": 1,
+      "message": "From your #2:\n\n  out/target/product/vsoc_x86/data/nativetest/bionic-loader-test-libs\n\nThat path no longer includes these binaries, they\u0027d be getting installed into:\n\n  out/target/product/vsoc_x86/system/bin/*.so\n\nSo you were likely pulling stale files from a previous build. The treehugger runs use `m installclean` in between builds which made this fail, but we also have a dangling rule checker that runs on checkbuilds that very explicitly catches this general problem:\n\n Dependencies in out found with no rule to create them:\n  out/target/product/crosshatch/data/nativetest/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so:\n    outputs:\n      out/host/linux-x86/cts/android-cts/testcases/lib32/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so\n      out/host/linux-x86/mts/android-mts/testcases/lib32/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so\n      out/host/linux-x86/vts10/android-vts10/testcases/lib32/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so\n      out/target/product/crosshatch/testcases/CtsBionicTestCases/lib32/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so",
+      "parentUuid": "5e34fc9e_0a694352",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
@@ -72,6 +90,30 @@
       "side": 1,
       "message": "Hmm, I guess the difference would be in how they are referenced in the linking step of bionic-unit-tests? Looking at the ninja actions registered from cc_prebuilt_binary (with strip-none), these modules really just do a glorified `cp`.\n\nIf this is incorrect, I\u0027d like to understand why the tests are still passing 😊",
       "parentUuid": "5c503c95_01a7f114",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 18
+      },
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "560d3c80_e3803fb7",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-16T04:22:03Z",
+      "side": 1,
+      "message": "It\u0027s largely how they\u0027re referenced and where they get installed, but it also controls the defaults on things like `compile_multilib`:\n\n \"first\" for executables, where we only need to install the \"primary\" architecture\n \"both\" for libraries where we may need to install both 32 and 64-bit to support different executables. (We also set this for cc_test executables, as we\u0027d like to test both in many cases).",
+      "parentUuid": "cef818d4_fe858024",
       "range": {
         "startLine": 78,
         "startChar": 12,
