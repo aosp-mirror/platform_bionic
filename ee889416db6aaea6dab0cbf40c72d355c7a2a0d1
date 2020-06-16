@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "d86a8613_266a6f16",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-16T04:24:35Z",
+      "side": 1,
+      "message": "(we don\u0027t run the dangling rules check all the time because it can get expensive, but we should probably make it easier to run)",
+      "parentUuid": "ed40a66d_09feaedb",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
