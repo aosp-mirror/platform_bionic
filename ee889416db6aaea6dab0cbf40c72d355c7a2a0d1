@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "2ba92de5_4d73f34d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-16T22:13:25Z",
+      "side": 1,
+      "message": "#1 also has the benefit that it tells the build system that these are actually test libraries, and therefore they should never be installed onto a shipping device.",
+      "parentUuid": "5c56a718_5af1e431",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
