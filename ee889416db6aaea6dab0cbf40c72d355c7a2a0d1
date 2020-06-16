@@ -127,6 +127,24 @@
     },
     {
       "key": {
+        "uuid": "63144c2b_7d4c2b33",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-06-16T22:26:36Z",
+      "side": 1,
+      "message": "Thanks a bunch for your thorough responses! Your justifications for going forward with a new `cc_prebuilt_test_library` module type make a lot of sense. \nI\u0027ve filed b/159152903, assigned to myself, and will look into that this week.",
+      "parentUuid": "2ba92de5_4d73f34d",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
