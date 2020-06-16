@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "5c56a718_5af1e431",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2020-06-16T22:10:03Z",
+      "side": 1,
+      "message": "I think #1 needs to be fixed by adding a cc_prebuilt_test_library (we don\u0027t have prebuilts support for every module type, we\u0027ve generally been adding them as they come up). Then these can follow the same approach taken by the other cc_test_library modules in bionic/tests/libs/Android.bp -- the base install path is the common folder, with relative_install_path to put them where they need to go.\n\n#3 the data property lists files, if you want to reference a module you need to prepend it with \u0027:\u0027 (but you\u0027ll just run into other issues requiring #4)\n\n#4 may be reasonable, but as you mention, requires changes to the install location, and we\u0027d need to change the tests to expect this. I suspect #1 is far simpler, especially since these tests end up packaged up in CTS too, which adds another level of complexity.",
+      "parentUuid": "a8f49c1e_61c4a4f4",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
