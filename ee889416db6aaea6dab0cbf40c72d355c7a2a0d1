@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "a8f49c1e_61c4a4f4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-06-16T21:31:32Z",
+      "side": 1,
+      "message": "I was almost certain I double/triple checked that I was not installing artifacts from previous builds, but alas, now when doing things from scratch, I do see some key tests failing that can be explained by these missing artifacts. How frustrating.\n\nI\u0027m having some difficulty figuring out what rules to use here.\n\n1. I don\u0027t see a way to use `cc_test_library` with prebuilt .so\n\n2. If I use `cc_prebuilt_library_shared`, and still depend on these libraries via `required`, the libraries are not added appropriately in the test data directory\n\n3. If I use `cc_prebuilt_library_shared` and use `data`, I get an error. For example:\n`module \"bionic-unit-tests\" variant \"android_x86\": module source path \"bionic/tests/libtest_invalid-rw_load_segment\" does not exist`\n\n4. If I use `cc_prebuilt_library_shared`, and use the new `data_libs` attribute I\u0027ve implemented pending in aosp/1324844, then the libraries are indeed added adjacent to `bionic-unit-tests`, and not under its sibling directory `bionic-loader-test-libs`, as was done previously. This is true even if I add `relative_install_path: \"bionic-loader-test-libs\"` to the prebuilt library modules; it\u0027s completely ignored. \n\n\nI can\u0027t find a better way to do this, so I\u0027m thinking I\u0027ll need to make sure that `data_libs` respects `relative_install_path` appropriately, and go forward with that. That said, it still looks impossible to place these libraries in the appropriate directory, as `relative_install_path: \"../bionic-loader-test-libs\"` would be necessary, which doesn\u0027t seem possible using relative_install_path.\n\nAny suggestions?",
+      "parentUuid": "d86a8613_266a6f16",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
