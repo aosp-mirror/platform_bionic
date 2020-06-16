@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5e34fc9e_0a694352",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-06-16T03:08:39Z",
+      "side": 1,
+      "message": "To be exact, I tested using the following steps:\n\n1. Ensure /data/local/tmp is empty on-device\n\n2. adb push out/target/product/vsoc_x86/data/nativetest/bionic-loader-test-libs out/target/product/vsoc_x86/data/nativetest/bionic-unit-tests /data/local/tmp\n\n3. adb shell LD_LIBRARY_PATH\u003d/data/local/tmp/libs /data/local/tmp/bionic-unit-tests/bionic-unit-tests\n\n\nAnything else I should double check this with? I assumed LD_LIBRARY_PATH would be good, here, but I can\u0027t remember if the tests might look somewhere else if libraries can\u0027t be found at the LD_LIBRARY_PATH location.",
+      "parentUuid": "662acbca_a2f2dbfc",
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5c503c95_01a7f114",
         "filename": "tests/Android.bp",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2020-06-15T23:44:05Z",
       "side": 1,
       "message": "These probably should be libraries, even though the Android.mk marked them as EXECUTABLES",
+      "range": {
+        "startLine": 78,
+        "startChar": 12,
+        "endLine": 78,
+        "endChar": 18
+      },
+      "revId": "ee889416db6aaea6dab0cbf40c72d355c7a2a0d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cef818d4_fe858024",
+        "filename": "tests/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-06-16T03:08:39Z",
+      "side": 1,
+      "message": "Hmm, I guess the difference would be in how they are referenced in the linking step of bionic-unit-tests? Looking at the ninja actions registered from cc_prebuilt_binary (with strip-none), these modules really just do a glorified `cp`.\n\nIf this is incorrect, I\u0027d like to understand why the tests are still passing 😊",
+      "parentUuid": "5c503c95_01a7f114",
       "range": {
         "startLine": 78,
         "startChar": 12,
