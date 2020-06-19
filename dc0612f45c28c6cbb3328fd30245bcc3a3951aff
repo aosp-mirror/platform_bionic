@@ -22,6 +22,29 @@
       "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "315ccf0a_b4734819",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2020-06-19T09:23:40Z",
+      "side": 1,
+      "message": "More comments around tzdata_found might help. I found this difficult to understand, though I did eventually see what was going on.\n\nAlternative suggestion:\n\nAIUI, -2 means \"file not found\" (which is expected / fine, except if you get to the very bottom without finding any files) and -1 means \"file was found, but the zone ID wasn\u0027t found OR the file is corrupt\". Zone ID not found is ok / normal, while \"file is corrupt\" is up to us how we treat.\n\nI think the logic would be better if it was generally:\n\nif (fd \u003e\u003d -1) return fd;\n\nAt the bottom, it\u0027s always an error case that can be logged.\n\ni.e. if we find the tzdata file, then it\u0027s expected to be complete so it is therefore authoritative about what zones exist. There\u0027s no real requirement to try other copies of the data to see if we can find the zone there instead - this file is always \"complete\".\n\nI think it may make sense to continue to try fallback if we can detect the \"file is corrupt\" cases. That would need some of the existing -1 cases to become -2 (or a different \"keep going\" value (-3?)) in __bionic_open_tzdata_path.\n\nIn fact, I think the only case that would remain returning -1 would be the one with \"specific_zone_offset \u003d\u003d -1\". All the others look like file access errors.",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
