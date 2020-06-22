@@ -8,3 +8,5 @@
 
 int     swapon(const char*, int) all
 int     swapoff(const char*) all
+
+ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int) all
