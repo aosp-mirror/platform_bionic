@@ -93,6 +93,30 @@
       "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b10c51d8_e487743a",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1038039
+      },
+      "writtenOn": "2020-06-22T14:08:06Z",
+      "side": 1,
+      "message": "\u003e Perhaps, but that changes the semantics much more and will probably need more thought on the \n\u003e compat aspects. \n\nI\u0027ve tweaked this code / added all of the fallbacks and many of the comments over the years so unless there\u0027s an objection from enh@ I\u0027d like to avoid the continued fallback if the zone ID doesn\u0027t exist in an extant file, and avoid the tzdata_found variable as it adds more things to think about (and further cements the impression that the existing behavior is \"intentional\").\n\nIMO, there\u0027s no point in keeping unnecessary behavior working. Now\u0027s the best time in the dev cycle to change things like this because it gives us plenty of soak.\n\nIMO, the logic should always have been \"if the file doesn\u0027t exist then fallback, otherwise use the one we\u0027ve found for everything\". Yes, it\u0027s possible we might find cases where a file exists but is corrupt or inaccessible, but they\u0027re not ones that we need to support (or if they are, we learn something, should probably be logging, and the code comments can be updated).\n\n\u003e To me it looks intentional that it continues to look through all tzdata\u0027s until it finds one \n\u003e with the given olson_id.\n\nI think much of the current structure comes from me and speaking for myself: No, it wasn\u0027t intentional. You can go all the way back to where I added the first fallback if you want to see how it has evolved:\n\nhttps://r.android.com/137162\n\n[It looks like the relevant bug is actually http://b/19941636]\n\nI can tell you that when I made that first change I didn\u0027t really understand / consider the \"zone ID not found case\" at all or why it might be different from \"file not found\" because I didn\u0027t know all of the things I know now (and time zone \"experts\" were thin on the ground).\n\nBTW - the host behavior doesn\u0027t _have_ to mirror the on-device behavior exactly, but I\u0027ve tried to keep it similar for rpl@, who was trying to do his host environment work. We have hackery in the host build in .mk files to pretend we\u0027ve got an APEX which ideally would be removed and replaced with a proper host apex environment.\n\n\u003e This CL doesn\u0027t change behaviour at all when /system/usr/share/zoneinfo/tzdata exists, which \n\u003e I presume is always the case on real devices.\n\nJust FYI - The \"normal\" behavior is that \"/apex/com.android.tzdata/etc/tz/tzdata\" exists and should be used for everything. \"/apex/com.android.tzdata/etc/tz/tzdata\" is no longer considered optional in CTS since R, IIRC.\n\n\"/system/usr/share/zoneinfo/tzdata\" is only expected to be used in cases where /apex isn\u0027t available. e.g. /apex hasn\u0027t been mounted yet (or won\u0027t be, perhaps for libc in recovery or other unusual cases). \n\n\"/system/usr/share/zoneinfo/tzdata\" has also been kept in /system for binaries that have statically linked old copies of libc from the NDK, or apps that have hardcoded that path for some other reason. It\u0027s inherently not updatable and would ideally be removed but there\u0027s various wacky bionic environments to deal with and no [strong reason for | benefit to] removing the file.\n\n\"/data/misc/zoneinfo/current/tzdata\" *may* be going away in the next major release but has been kept because not all devices / form factors have a mainline update story yet (so keeping APK updates was desirable). So, TBD.",
+      "parentUuid": "9063a1fa_919c024d",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
