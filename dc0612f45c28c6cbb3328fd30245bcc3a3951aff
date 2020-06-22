@@ -117,6 +117,30 @@
       "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75ed976f_13572914",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-06-22T14:21:45Z",
+      "side": 1,
+      "message": "My case is when /apex/com.android.tzdata/etc/tz/tzdata exists and /system/usr/share/zoneinfo/tzdata doesn\u0027t, which as I said only happens (to my knowledge) in ARTs chroot test setup.\n\nMaybe it\u0027s wrong/unsupported to not have /system/usr/share/zoneinfo/tzdata - the whole chroot setup is after all unsupported by Android as a whole, and hence very brittle. I\u0027m perfectly fine to handle the problem on that side instead (https://r.android.com/1344561) and drop this CL.",
+      "parentUuid": "b10c51d8_e487743a",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
