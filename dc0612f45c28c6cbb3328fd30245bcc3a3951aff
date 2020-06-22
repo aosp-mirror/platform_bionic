@@ -69,6 +69,30 @@
       "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9063a1fa_919c024d",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2020-06-22T12:59:10Z",
+      "side": 1,
+      "message": "\u003e I think the logic would be better if it was generally:\n\u003e \n\u003e if (fd \u003e\u003d -1) return fd;\n\nPerhaps, but that changes the semantics much more and will probably need more thought on the compat aspects. To me it looks intentional that it continues to look through all tzdata\u0027s until it finds one with the given olson_id.\n\nThis CL doesn\u0027t change behaviour at all when /system/usr/share/zoneinfo/tzdata exists, which I presume is always the case on real devices. I can of course just fix our chroot environment to look more like a real device instead, but this seemed like a better (and still safe) thing to do.\n\nAs for making the code easier to understand without changing the logic, I\u0027ve added a comment.\n\n\u003e fwiw, i _still_ haven\u0027t understood why this isn\u0027t wrong!\n\nSorry, I don\u0027t understand what you\u0027re referring to.",
+      "parentUuid": "315ccf0a_b4734819",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
