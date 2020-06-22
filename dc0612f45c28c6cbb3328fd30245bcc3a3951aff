@@ -141,6 +141,30 @@
       "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e6c1284_dddb4528",
+        "filename": "libc/tzcode/bionic.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-22T15:18:52Z",
+      "side": 1,
+      "message": "\u003e IMO, there\u0027s no point in keeping unnecessary behavior working. Now\u0027s the best time in the dev cycle to change things like this because it gives us plenty of soak.\n\nyeah, that makes more sense to me too. do you want to do that or shall i? (probably worth copy \u0026 pasting your essay into the bug too, since future archaeologists are more likely to find the bug than these review comments.)",
+      "parentUuid": "75ed976f_13572914",
+      "range": {
+        "startLine": 219,
+        "startChar": 16,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "dc0612f45c28c6cbb3328fd30245bcc3a3951aff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
