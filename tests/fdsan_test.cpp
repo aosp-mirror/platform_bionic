@@ -194,7 +194,7 @@ TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
 #endif
 }
 
-TEST_F(FdsanTest, DISABLED_vfork) {
+TEST_F(FdsanTest, vfork) {
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
 
   pid_t rc = vfork();

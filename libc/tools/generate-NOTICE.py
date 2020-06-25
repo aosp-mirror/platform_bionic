@@ -26,6 +26,7 @@ def is_interesting(path):
     uninteresting_extensions = [
         ".bp",
         ".map",
+        ".md",
         ".mk",
         ".py",
         ".pyc",
@@ -34,7 +35,7 @@ def is_interesting(path):
     ]
     if os.path.splitext(path)[1] in uninteresting_extensions:
         return False
-    if path.endswith("/notice") or path.endswith("/readme"):
+    if path.endswith("/notice") or path.endswith("/readme") or path.endswith("/pylintrc"):
         return False
     return True
 
@@ -137,7 +138,7 @@ def do_file(path):
 
     if not "Copyright" in content:
         if "public domain" in content.lower():
-            warn("ignoring public domain file %s" % path)
+            warn_verbose("ignoring public domain file %s" % path)
             return
         warn('no copyright notice found in "%s" (%d lines)' % (path, len(lines)))
         return

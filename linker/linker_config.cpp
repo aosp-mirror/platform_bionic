@@ -325,7 +325,8 @@ static bool parse_config_file(const char* ld_config_file_path,
           value = "," + value;
           (*properties)[name].append_value(std::move(value));
         } else if (android::base::EndsWith(name, ".paths") ||
-                   android::base::EndsWith(name, ".shared_libs")) {
+                   android::base::EndsWith(name, ".shared_libs") ||
+                   android::base::EndsWith(name, ".whitelisted")) {
           value = ":" + value;
           (*properties)[name].append_value(std::move(value));
         } else {

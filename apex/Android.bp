@@ -62,3 +62,13 @@ sdk {
         "crtend_so",
     ],
 }
+
+module_exports {
+    name: "runtime-module-host-exports",
+    defaults: ["linux_bionic_supported"],
+    device_supported: false,
+
+    native_binaries: [
+        "linker",
+    ],
+}

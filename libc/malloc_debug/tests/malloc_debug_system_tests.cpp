@@ -42,11 +42,19 @@
 #include <gtest/gtest.h>
 #include <log/log_read.h>
 
+#include <atomic>
 #include <string>
 #include <thread>
 #include <vector>
 
+#include <backtrace/Backtrace.h>
+#include <backtrace/BacktraceMap.h>
+
 #include <bionic/malloc.h>
+
+// All DISABLED_ tests are designed to be executed after malloc debug
+// is enabled. These tests don't run be default, and are executed
+// by wrappers that will enable various malloc debug features.
 
 static constexpr time_t kTimeoutSeconds = 10;
 
@@ -524,4 +532,43 @@ TEST(MallocDebugSystemTest, write_leak_info_header) {
 
   ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"},
                           std::vector<const char*>{" HAS INVALID TAG ", "USED AFTER FREE ", "UNKNOWN POINTER "}));
+}
+
+TEST(MallocTests, DISABLED_malloc_and_backtrace_deadlock) {
+  std::atomic_bool running(false);
+  pid_t tid;
+  std::thread thread([&tid, &running] {
+    tid = gettid();
+    running = true;
+    while (running) {
+      void* ptr = malloc(200);
+      if (ptr == nullptr) {
+        return;
+      }
+      free(ptr);
+    }
+  });
+
+  while (!running) {
+  }
+
+  static constexpr size_t kNumUnwinds = 1000;
+  for (size_t i = 0; i < kNumUnwinds; i++) {
+    std::unique_ptr<Backtrace> backtrace(Backtrace::Create(getpid(), tid));
+    ASSERT_TRUE(backtrace->Unwind(0)) << "Failed on unwind " << i;
+    ASSERT_LT(1, backtrace->NumFrames()) << "Failed on unwind " << i;
+  }
+  running = false;
+  thread.join();
+}
+
+TEST(MallocDebugSystemTest, malloc_and_backtrace_deadlock) {
+  pid_t pid;
+  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_malloc_and_backtrace_deadlock",
+                               "verbose verify_pointers", &pid, 0, 180));
+
+  // Make sure that malloc debug is enabled and that no timeouts occur during
+  // unwinds.
+  ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"},
+                                      std::vector<const char*>{"Timed out waiting for "}));
 }

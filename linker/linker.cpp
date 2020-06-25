@@ -301,13 +301,14 @@ static void soinfo_free(soinfo* si) {
     return;
   }
 
-  if (si->base != 0 && si->size != 0) {
+  void* start = reinterpret_cast<void*>(si->has_min_version(6) ? si->get_map_start() : si->base);
+  size_t size = si->has_min_version(6) ? si->get_map_size() : si->size;
+  if (start != nullptr && size != 0) {
     if (!si->is_mapped_by_caller()) {
-      munmap(reinterpret_cast<void*>(si->base), si->size);
+      munmap(start, size);
     } else {
       // remap the region as PROT_NONE, MAP_ANONYMOUS | MAP_NORESERVE
-      mmap(reinterpret_cast<void*>(si->base), si->size, PROT_NONE,
-           MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+      mmap(start, size, PROT_NONE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
     }
   }
 
@@ -599,6 +600,8 @@ class LoadTask {
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
+    si_->set_map_start(elf_reader.map_start());
+    si_->set_map_size(elf_reader.map_size());
 
     return true;
   }

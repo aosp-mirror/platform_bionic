@@ -446,6 +446,7 @@ enum ovs_action_attr {
   OVS_ACTION_ATTR_CLONE,
   OVS_ACTION_ATTR_CHECK_PKT_LEN,
   OVS_ACTION_ATTR_ADD_MPLS,
+  OVS_ACTION_ATTR_DEC_TTL,
   __OVS_ACTION_ATTR_MAX,
 };
 #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
@@ -508,5 +509,10 @@ struct ovs_zone_limit {
   int zone_id;
   __u32 limit;
   __u32 count;
+};
+enum ovs_dec_ttl_attr {
+  OVS_DEC_TTL_ATTR_UNSPEC,
+  OVS_DEC_TTL_ATTR_ACTION,
+  __OVS_DEC_TTL_ATTR_MAX
 };
 #endif

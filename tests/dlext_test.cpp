@@ -244,7 +244,6 @@ TEST(dlfcn, dlopen_system_libicuuc_android_api_level_28) {
   ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicui18n.so", RTLD_NOW) != nullptr);
 }
 
-/* TODO: Re-enable test when the cuttlefish build is fixed. http://b/156315785
 TEST(dlfcn, dlopen_system_libicuuc_android_api_level_29) {
   android_set_application_target_sdk_version(29);
   ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicuuc.so", RTLD_NOW) == nullptr);
@@ -255,7 +254,6 @@ TEST(dlfcn, dlopen_system_libicuuc_android_api_level_current) {
   ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicuuc.so", RTLD_NOW) == nullptr);
   ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicui18n.so", RTLD_NOW) == nullptr);
 }
-*/
 
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";

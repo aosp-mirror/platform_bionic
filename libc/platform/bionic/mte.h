@@ -31,16 +31,14 @@
 #include <sys/auxv.h>
 #include <bionic/mte_kernel.h>
 
-#ifdef __aarch64__
 inline bool mte_supported() {
-#ifdef ANDROID_EXPERIMENTAL_MTE
+#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
   static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 #else
   static bool supported = false;
 #endif
   return supported;
 }
-#endif
 
 #ifdef __aarch64__
 class ScopedDisableMTE {

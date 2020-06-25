@@ -35,4 +35,5 @@
 #define VIRTIO_ID_IOMMU 23
 #define VIRTIO_ID_FS 26
 #define VIRTIO_ID_PMEM 27
+#define VIRTIO_ID_MAC80211_HWSIM 29
 #endif

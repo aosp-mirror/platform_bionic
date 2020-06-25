@@ -244,6 +244,17 @@ struct vfio_device_ioeventfd {
   __s32 fd;
 };
 #define VFIO_DEVICE_IOEVENTFD _IO(VFIO_TYPE, VFIO_BASE + 16)
+struct vfio_device_feature {
+  __u32 argsz;
+  __u32 flags;
+#define VFIO_DEVICE_FEATURE_MASK (0xffff)
+#define VFIO_DEVICE_FEATURE_GET (1 << 16)
+#define VFIO_DEVICE_FEATURE_SET (1 << 17)
+#define VFIO_DEVICE_FEATURE_PROBE (1 << 18)
+  __u8 data[];
+};
+#define VFIO_DEVICE_FEATURE _IO(VFIO_TYPE, VFIO_BASE + 17)
+#define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN (0)
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;

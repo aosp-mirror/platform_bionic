@@ -4,6 +4,7 @@ libc_common_src_files = [
     "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
+    "bionic/exit.cpp",
     "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
@@ -17,7 +18,6 @@ libc_common_src_files = [
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.cpp",
     "stdio/vfwscanf.c",
-    "stdlib/exit.c",
 ]
 
 // off64_t/time64_t support on LP32.
@@ -620,6 +620,7 @@ cc_library_static {
         arm64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -854,15 +855,6 @@ cc_library_static {
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
-
-                "arch-arm64/mte/bionic/memchr.c",
-                "arch-arm64/mte/bionic/stpcpy.S",
-                "arch-arm64/mte/bionic/strchrnul.cpp",
-                "arch-arm64/mte/bionic/strrchr.cpp",
-                "arch-arm64/mte/bionic/strcmp.c",
-                "arch-arm64/mte/bionic/strcpy.S",
-                "arch-arm64/mte/bionic/strncmp.c",
-                "arch-arm64/mte/bionic/strnlen.c",
 
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -1774,6 +1766,7 @@ cc_library_headers {
         "//system/core/debuggerd:__subpackages__",
         "//system/core/libunwindstack:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
+        "//tools/security/sanitizer-status:__subpackages__",
     ],
     vendor_available: true,
     ramdisk_available: true,
@@ -2367,11 +2360,11 @@ cc_genrule {
     ],
 }
 
-// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+// SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT = SECCOMP_BLOCKLIST_APP.txt - setresgid*
 genrule {
-    name: "generate_app_zygote_blacklist",
-    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
-    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    name: "generate_app_zygote_blocklist",
+    out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
     cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
 }
 
@@ -2384,10 +2377,11 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        ":generate_app_zygote_blacklist",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
+        ":generate_app_zygote_blocklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2411,10 +2405,11 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        "SECCOMP_BLACKLIST_APP.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
+        "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2438,9 +2433,10 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2480,75 +2476,6 @@ cc_library {
     static: {
         static_libs: ["libbase"],
     },
-}
-
-// This is a temporary library that will use scudo as the native memory
-// allocator. To use it, add it as the first shared library.
-cc_defaults {
-    name: "libc_scudo_wrapper_defaults",
-    srcs: [
-        "bionic/gwp_asan_wrappers.cpp",
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
-        "bionic/malloc_common_dynamic.cpp",
-        "bionic/malloc_heapprofd.cpp",
-        "bionic/malloc_limit.cpp",
-        "bionic/scudo_wrapper.cpp",
-        "bionic/__set_errno.cpp",
-    ],
-    cflags: [
-        "-DUSE_SCUDO",
-        "-fno-emulated-tls", // Required for GWP-ASan.
-    ],
-    shared_libs: ["libscudo_wrapper"],
-
-    header_libs: [
-        "libc_headers",
-        "gwp_asan_headers",
-    ],
-
-    static_libs: [
-        "libasync_safe",
-        "gwp_asan",
-    ],
-
-    arch: {
-        arm: {
-            srcs: [":syscalls-arm.S"],
-        },
-        arm64: {
-            srcs: [":syscalls-arm64.S"],
-        },
-        x86: {
-            srcs: [
-                "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                ":syscalls-x86.S",
-            ],
-        },
-        x86_64: {
-            srcs: [":syscalls-x86_64.S"],
-        },
-    },
-
-    // Mark this library as global so it overrides all the allocation
-    // definitions properly.
-    ldflags: ["-Wl,-z,global"],
-}
-
-cc_library_shared {
-    name: "libc_scudo",
-    vendor_available: true,
-    stl: "none",
-    system_shared_libs: [],
-
-    allow_undefined_symbols: true,
-    // Like libc, disable native coverage for libc_scudo.
-    native_coverage: false,
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.media.swcodec",
-    ],
-    min_sdk_version: "apex_inherit",
 }
 
 subdirs = [

@@ -30,13 +30,13 @@
 
 #include <inttypes.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/resource.h>
 #include <unistd.h>
 
 #include <async_safe/log.h>
 
 #include "private/bionic_defs.h"
-#include "private/bionic_string_utils.h"
 #include "private/ErrnoRestorer.h"
 #include "pthread_internal.h"
 
