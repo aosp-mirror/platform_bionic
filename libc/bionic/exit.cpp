@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-#define strcmp strcmp_mte
-#include <upstream-openbsd/lib/libc/string/strcmp.c>
+#include "private/bionic_defs.h"
+
+extern "C" void __cxa_finalize(void* dso_handle);
+extern "C" void __cxa_thread_finalize();
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void exit(int status) {
+  __cxa_thread_finalize();
+  __cxa_finalize(nullptr);
+  _exit(status);
+}

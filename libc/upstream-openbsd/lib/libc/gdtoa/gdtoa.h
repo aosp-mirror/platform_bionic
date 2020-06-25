@@ -112,7 +112,18 @@ extern void __freedtoa ANSI((char*));
 extern float  strtof ANSI((CONST char *, char **));
 extern double strtod ANSI((CONST char *, char **));
 extern int __strtodg ANSI((CONST char*, char**, FPI*, Long*, ULong*));
+char	*__hdtoa(double, const char *, int, int *, int *, char **);
+char	*__hldtoa(long double, const char *, int, int *, int *, char **);
+char	*__ldtoa(long double *, int, int, int *, int *, char **);
 
+PROTO_NORMAL(__dtoa);
+PROTO_NORMAL(__gdtoa);
+PROTO_NORMAL(__freedtoa);
+PROTO_NORMAL(__hdtoa);
+PROTO_NORMAL(__hldtoa);
+PROTO_NORMAL(__ldtoa);
+
+__BEGIN_HIDDEN_DECLS
 extern char*	__g_ddfmt  ANSI((char*, double*, int, size_t));
 extern char*	__g_dfmt   ANSI((char*, double*, int, size_t));
 extern char*	__g_ffmt   ANSI((char*, float*,  int, size_t));
@@ -148,6 +159,7 @@ extern int	__strtopxL ANSI((CONST char*, char**, void*));
 #define __strtopx(s,se,x) strtorx(s,se,1,x)
 #define __strtopxL(s,se,x) strtorxL(s,se,1,x)
 #endif
+__END_HIDDEN_DECLS
 
 #ifdef __cplusplus
 }
