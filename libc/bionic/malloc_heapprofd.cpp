@@ -56,8 +56,8 @@
 // +--->+-------------+------------------+
 // | +->+kInitialState+----------------+ |  malloc functions are not intercepted in any way.
 // | |  +-------+-----+                | |
-// | |          |                      | |
-// | |          v                      | |
+// | |          | HandleHeapprofd      | |
+// | |          v Signal()             | |
 // | |  +-------+----------------+     | |  currently installing the ephemeral hooks.
 // | |  |kInstallingEphemeralHook|<--+ | |
 // | |  +-------+----------------+   | | |
@@ -65,9 +65,9 @@
 // | |          v                    | | |
 // | |  +-------+---------------+    | | |  ephemeral hooks are installed. on the first call to
 // | |  |kEphemeralHookInstalled|    | | |  malloc these hooks spawn a thread that installs the
-// | |  +-------+---------------+    | | |  heapprofd hooks.
-// | |          |                    | | |
-// | |          v                    | | |
+// | |  +-------+---------------+    A B C  heapprofd hooks.
+// | |          | MallocInit         | | |
+// | |          v HeapprofdHook ()   | | |
 // | |  +-------+--------------+     | | |  first call to malloc happened. the hooks are reset to
 // | +--|kRemovingEphemeralHook|     | | |  kInitialState.
 // |    +----------------------+     | | |
@@ -81,7 +81,7 @@
 // |    +-------+------+             |   |  heapprofd hooks are installed. these forward calls to
 // |    |kHookInstalled|-------------+   |  malloc / free / etc. to heapprofd_client.so.
 // |    +-------+------+                 |
-// |            |                        |
+// |            | DispatchReset()        |
 // |            v                        |
 // |    +-------+---------+              |  currently resetting the hooks to default.
 // |----+kUninstallingHook|              |
@@ -92,6 +92,10 @@
 //      |kIncompatibleHooks+<------------+  precendence over heapprofd, so heapprofd will not get
 //      +------------------+                enabled. this is a terminal state.
 //
+//
+// A) HandleHeapprofdSignal()
+// B) HeapprofdInstallHooksAtInit() / InitHeapprofd()
+// C) HeapprofdRememberHookConflict()
 enum MallocHeapprofdState : uint8_t {
   kInitialState,
   kInstallingEphemeralHook,
