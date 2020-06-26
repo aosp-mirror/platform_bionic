@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "9c34e531_f11879a1",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3379,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-26T15:44:08Z",
+      "side": 1,
+      "message": "`return getpid() !\u003d 1;`\n\n(i thought we already had this \"are we init?\" check somewhere in the linker though?)",
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f5c559a1_7ceda829",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
@@ -89,6 +106,29 @@
         "startChar": 63,
         "endLine": 3380,
         "endChar": 69
+      },
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe33f5fd_be10e214",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3416,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-06-26T15:44:08Z",
+      "side": 1,
+      "message": "if you\u0027re factoring out, seems like you should keep the two unrelated reasons for not having linker config together...",
+      "range": {
+        "startLine": 3414,
+        "startChar": 2,
+        "endLine": 3416,
+        "endChar": 24
       },
       "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
