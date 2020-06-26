@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "0c351330_e9e347e4",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3379,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-06-26T15:54:36Z",
+      "side": 1,
+      "message": "It\u0027s \"are we first stage init\" [1], since /proc isn\u0027t mounted yet and thus the calls that require it will fail (for example: readlink(/proc/self/exe).  By the time that we\u0027ve transitioned away from first stage init, /proc is set up, so it\u0027s a different case than this one.\n\n1: https://cs.android.com/android/platform/superproject/+/master:bionic/linker/linker_utils.cpp;l\u003d257?q\u003dis_first_stage_init",
+      "parentUuid": "9c34e531_f11879a1",
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f5c559a1_7ceda829",
         "filename": "linker/linker.cpp",
         "patchSetId": 1
