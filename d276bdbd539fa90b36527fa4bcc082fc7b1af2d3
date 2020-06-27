@@ -151,6 +151,30 @@
       "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "915caae9_4c259eb3",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3416,
+      "author": {
+        "id": 1413436
+      },
+      "writtenOn": "2020-06-27T14:23:30Z",
+      "side": 1,
+      "message": "Moved the condition to new function. Thanks for the suggestion :)",
+      "parentUuid": "fe33f5fd_be10e214",
+      "range": {
+        "startLine": 3414,
+        "startChar": 2,
+        "endLine": 3416,
+        "endChar": 24
+      },
+      "revId": "d276bdbd539fa90b36527fa4bcc082fc7b1af2d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
