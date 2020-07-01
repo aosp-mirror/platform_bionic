@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "128b46b0_372534ab",
+        "filename": "tests/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-07-01T05:57:11Z",
+      "side": 1,
+      "message": "I also wonder which of the tests actually require libLLVM* ?\n\nMaybe another option is to split these tests in a separate test library and disabe just that?",
+      "revId": "b0375a033ec174c571ac42eaa1fdd67796e5cab6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
