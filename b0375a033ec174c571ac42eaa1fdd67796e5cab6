@@ -16,6 +16,24 @@
       "revId": "b0375a033ec174c571ac42eaa1fdd67796e5cab6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1b4a758_39485c93",
+        "filename": "tests/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-07-01T13:27:03Z",
+      "side": 1,
+      "message": "Dimitry\u0027s tests for elf hash and packed revocations: http://go/aog/311952\n\nThat\u0027s why I wanted to ask him about that, too.",
+      "parentUuid": "128b46b0_372534ab",
+      "revId": "b0375a033ec174c571ac42eaa1fdd67796e5cab6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
