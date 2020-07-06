@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3af6d1a7_e3315640",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1052644
+      },
+      "writtenOn": "2020-07-06T17:13:13Z",
+      "side": 1,
+      "message": "Pretty cool!\n\nLate LGTM.",
+      "revId": "a8cf3fef2aa2201014c35c3487da222ccfedfc1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
