@@ -49,8 +49,6 @@ class ElfReader {
   size_t phdr_count() const { return phdr_num_; }
   ElfW(Addr) load_start() const { return reinterpret_cast<ElfW(Addr)>(load_start_); }
   size_t load_size() const { return load_size_; }
-  ElfW(Addr) map_start() const { return reinterpret_cast<ElfW(Addr)>(map_start_); }
-  size_t map_size() const { return map_size_; }
   ElfW(Addr) load_bias() const { return load_bias_; }
   const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
@@ -98,10 +96,6 @@ class ElfReader {
   void* load_start_;
   // Size in bytes of reserved address space.
   size_t load_size_;
-  // First page of reserved address space including randomized padding.
-  void* map_start_;
-  // Size in bytes of reserved address space including randomized padding.
-  size_t map_size_;
   // Load bias.
   ElfW(Addr) load_bias_;
 

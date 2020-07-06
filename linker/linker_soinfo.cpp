@@ -900,24 +900,6 @@ void soinfo::generate_handle() {
   g_soinfo_handles_map[handle_] = this;
 }
 
-void soinfo::set_map_start(ElfW(Addr) map_start) {
-  CHECK(has_min_version(6));
-  map_start_ = map_start;
-}
-ElfW(Addr) soinfo::get_map_start() const {
-  CHECK(has_min_version(6));
-  return map_start_;
-}
-
-void soinfo::set_map_size(size_t map_size) {
-  CHECK(has_min_version(6));
-  map_size_ = map_size;
-}
-size_t soinfo::get_map_size() const {
-  CHECK(has_min_version(6));
-  return map_size_;
-}
-
 // TODO(dimitry): Move SymbolName methods to a separate file.
 
 uint32_t calculate_elf_hash(const char* name) {
