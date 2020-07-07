@@ -520,8 +520,7 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
-static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** map_start,
-                                         size_t* map_size) {
+static void* ReserveAligned(size_t size, size_t align) {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   if (align == PAGE_SIZE) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
@@ -533,12 +532,7 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** map_s
 
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-#if defined(__LP64__)
-  constexpr size_t kLibraryPadding = 1ul << 24;
-#else
-  constexpr size_t kLibraryPadding = 0;
-#endif
-  size_t mmap_size = align_up(size + kLibraryPadding, align) + align - PAGE_SIZE;
+  size_t mmap_size = align_up(size, align) + align - PAGE_SIZE;
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
@@ -552,18 +546,8 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** map_s
   // created. Don't randomize then.
   size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
   uint8_t* start = first + n * PAGE_SIZE;
-  // Unmap the extra space around the allocation.
-  // Keep it mapped PROT_NONE on 64-bit targets where address space is plentiful to make it harder
-  // to defeat ASLR by probing for readable memory mappings.
-#if defined(__LP64__)
-  *map_start = mmap_ptr;
-  *map_size = mmap_size;
-#else
   munmap(mmap_ptr, start - mmap_ptr);
   munmap(start + size, mmap_ptr + mmap_size - (start + size));
-  *map_start = start;
-  *map_size = size;
-#endif
   return start;
 }
 
@@ -587,15 +571,13 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, &map_start_, &map_size_);
+    start = ReserveAligned(load_size_, kLibraryAlignment);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
     }
   } else {
     start = address_space->start_addr;
-    map_start_ = start;
-    map_size_ = load_size_;
     mapped_by_caller_ = true;
 
     // Update the reserved address space to subtract the space used by this library.
