@@ -264,11 +264,6 @@ for arch in "${ARCH_LIST[@]}"; do
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
 
-# The arm types.h uapi header is not properly being generated, so copy it
-# directly.
-cp "${KERNEL_DIR}/include/uapi/asm-generic/types.h" \
-   "${ANDROID_KERNEL_DIR}/uapi/asm-arm/asm"
-
 # Verify if modified headers have changed.
 verify_modified_hdrs "${KERNEL_DIR}/include/scsi" \
                      "${ANDROID_KERNEL_DIR}/scsi" \

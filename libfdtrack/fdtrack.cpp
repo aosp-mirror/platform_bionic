@@ -57,7 +57,10 @@ static void fd_hook(android_fdtrack_event* event);
 
 // Backtraces for the first 4k file descriptors ought to be enough to diagnose an fd leak.
 static constexpr size_t kFdTableSize = 4096;
-static constexpr size_t kStackDepth = 10;
+
+// 32 frames, plus two to skip from fdtrack itself.
+static constexpr size_t kStackDepth = 34;
+static constexpr size_t kStackFrameSkip = 2;
 
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
@@ -134,15 +137,14 @@ void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
       continue;
     }
 
-    constexpr size_t frame_skip = 2;
-    for (size_t i = frame_skip; i < entry->backtrace.size(); ++i) {
-      size_t j = i - frame_skip;
+    for (size_t i = kStackFrameSkip; i < entry->backtrace.size(); ++i) {
+      size_t j = i - kStackFrameSkip;
       function_names[j] = entry->backtrace[i].function_name.c_str();
       function_offsets[j] = entry->backtrace[i].function_offset;
     }
 
-    bool should_continue =
-        callback(fd, function_names, function_offsets, entry->backtrace.size() - frame_skip, arg);
+    bool should_continue = callback(fd, function_names, function_offsets,
+                                    entry->backtrace.size() - kStackFrameSkip, arg);
 
     entry->mutex.unlock();
 

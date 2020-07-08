@@ -110,6 +110,7 @@ struct incfs_get_filled_blocks_args {
   __u32 start_index;
   __u32 end_index;
   __u32 total_blocks_out;
+  __u32 data_blocks_out;
   __u32 range_buffer_size_out;
   __u32 index_out;
 };

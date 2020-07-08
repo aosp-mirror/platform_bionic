@@ -100,7 +100,8 @@ enum perf_event_sample_format {
   PERF_SAMPLE_REGS_INTR = 1U << 18,
   PERF_SAMPLE_PHYS_ADDR = 1U << 19,
   PERF_SAMPLE_AUX = 1U << 20,
-  PERF_SAMPLE_MAX = 1U << 21,
+  PERF_SAMPLE_CGROUP = 1U << 21,
+  PERF_SAMPLE_MAX = 1U << 22,
   __PERF_SAMPLE_CALLCHAIN_EARLY = 1ULL << 63,
 };
 enum perf_branch_sample_type_shift {
@@ -121,6 +122,7 @@ enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_NO_FLAGS_SHIFT = 14,
   PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT = 15,
   PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT = 16,
+  PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT = 17,
   PERF_SAMPLE_BRANCH_MAX_SHIFT
 };
 enum perf_branch_sample_type {
@@ -141,6 +143,7 @@ enum perf_branch_sample_type {
   PERF_SAMPLE_BRANCH_NO_FLAGS = 1U << PERF_SAMPLE_BRANCH_NO_FLAGS_SHIFT,
   PERF_SAMPLE_BRANCH_NO_CYCLES = 1U << PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT,
   PERF_SAMPLE_BRANCH_TYPE_SAVE = 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
+  PERF_SAMPLE_BRANCH_HW_INDEX = 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
   PERF_SAMPLE_BRANCH_MAX = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
 };
 enum {
@@ -200,7 +203,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, __reserved_1 : 32;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, __reserved_1 : 31;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -332,6 +335,7 @@ enum perf_event_type {
   PERF_RECORD_NAMESPACES = 16,
   PERF_RECORD_KSYMBOL = 17,
   PERF_RECORD_BPF_EVENT = 18,
+  PERF_RECORD_CGROUP = 19,
   PERF_RECORD_MAX,
 };
 enum perf_record_ksymbol_type {

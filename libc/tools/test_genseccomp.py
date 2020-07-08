@@ -29,20 +29,20 @@ int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,x86
 int         fchown:fchown(int, uid_t, gid_t)    arm64,x86_64
     """))
 
-    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+    allowlist = cStringIO.StringIO(textwrap.dedent("""\
 ssize_t     read(int, void*, size_t)        all
     """))
 
     empty = cStringIO.StringIO(textwrap.dedent("""\
     """))
 
-    names = genseccomp.get_names([bionic, whitelist, empty], "arm")
+    names = genseccomp.get_names([bionic, allowlist, empty], "arm")
     bionic.seek(0)
-    whitelist.seek(0)
+    allowlist.seek(0)
     empty.seek(0)
-    names64 = genseccomp.get_names([bionic, whitelist, empty], "arm64")
+    names64 = genseccomp.get_names([bionic, allowlist, empty], "arm64")
     bionic.seek(0)
-    whitelist.seek(0)
+    allowlist.seek(0)
     empty.seek(0)
 
     self.assertIn("fchown", names64)
@@ -52,45 +52,45 @@ ssize_t     read(int, void*, size_t)        all
     self.assertIn("read", names)
     self.assertIn("read", names64)
 
-    # Blacklist item must be in bionic
-    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+    # Blocklist item must be in bionic
+    blocklist = cStringIO.StringIO(textwrap.dedent("""\
 int         fchown2:fchown2(int, uid_t, gid_t)    arm64,x86_64
     """))
     with self.assertRaises(RuntimeError):
-      genseccomp.get_names([bionic, whitelist, blacklist], "arm")
+      genseccomp.get_names([bionic, allowlist, blocklist], "arm")
     bionic.seek(0)
-    whitelist.seek(0)
-    blacklist.seek(0)
+    allowlist.seek(0)
+    blocklist.seek(0)
 
-    # Test blacklist item is removed
-    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+    # Test blocklist item is removed
+    blocklist = cStringIO.StringIO(textwrap.dedent("""\
 int         fchown:fchown(int, uid_t, gid_t)    arm64,x86_64
     """))
-    names = genseccomp.get_names([bionic, whitelist, blacklist], "arm64")
+    names = genseccomp.get_names([bionic, allowlist, blocklist], "arm64")
     bionic.seek(0)
-    whitelist.seek(0)
-    blacklist.seek(0)
+    allowlist.seek(0)
+    blocklist.seek(0)
     self.assertIn("read", names)
     self.assertNotIn("fchown", names)
 
-    # Blacklist item must not be in whitelist
-    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+    # Blocklist item must not be in allowlist
+    allowlist = cStringIO.StringIO(textwrap.dedent("""\
 int         fchown:fchown(int, uid_t, gid_t)    arm64,x86_64
     """))
     with self.assertRaises(RuntimeError):
-      genseccomp.get_names([empty, whitelist, blacklist], "arm")
+      genseccomp.get_names([empty, allowlist, blocklist], "arm")
     empty.seek(0)
-    whitelist.seek(0)
-    blacklist.seek(0)
+    allowlist.seek(0)
+    blocklist.seek(0)
 
-    # No dups in bionic and whitelist
-    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+    # No dups in bionic and allowlist
+    allowlist = cStringIO.StringIO(textwrap.dedent("""\
 int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,x86
     """))
     with self.assertRaises(RuntimeError):
-      genseccomp.get_names([bionic, whitelist, empty], "arm")
+      genseccomp.get_names([bionic, allowlist, empty], "arm")
     bionic.seek(0)
-    whitelist.seek(0)
+    allowlist.seek(0)
     empty.seek(0)
 
   def test_convert_names_to_NRs(self):
@@ -186,14 +186,14 @@ int __llseek:_llseek(int, unsigned long, unsigned long, off64_t*, int) arm,x86
     int         fchown:fchown(int, uid_t, gid_t)    arm64,x86_64
     """))
 
-    whitelist = cStringIO.StringIO(textwrap.dedent("""\
+    allowlist = cStringIO.StringIO(textwrap.dedent("""\
     ssize_t     read(int, void*, size_t)        all
     """))
 
-    blacklist = cStringIO.StringIO(textwrap.dedent("""\
+    blocklist = cStringIO.StringIO(textwrap.dedent("""\
     """))
 
-    syscall_files = [syscalls, whitelist, blacklist]
+    syscall_files = [syscalls, allowlist, blocklist]
     output = genseccomp.construct_bpf(syscall_files, "arm", self.get_headers("arm"),
                                       self.get_switches("arm"))
 
