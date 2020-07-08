@@ -301,14 +301,13 @@ static void soinfo_free(soinfo* si) {
     return;
   }
 
-  void* start = reinterpret_cast<void*>(si->has_min_version(6) ? si->get_map_start() : si->base);
-  size_t size = si->has_min_version(6) ? si->get_map_size() : si->size;
-  if (start != nullptr && size != 0) {
+  if (si->base != 0 && si->size != 0) {
     if (!si->is_mapped_by_caller()) {
-      munmap(start, size);
+      munmap(reinterpret_cast<void*>(si->base), si->size);
     } else {
       // remap the region as PROT_NONE, MAP_ANONYMOUS | MAP_NORESERVE
-      mmap(start, size, PROT_NONE, MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
+      mmap(reinterpret_cast<void*>(si->base), si->size, PROT_NONE,
+           MAP_FIXED | MAP_PRIVATE | MAP_ANONYMOUS | MAP_NORESERVE, -1, 0);
     }
   }
 
@@ -600,8 +599,6 @@ class LoadTask {
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
-    si_->set_map_start(elf_reader.map_start());
-    si_->set_map_size(elf_reader.map_size());
 
     return true;
   }
@@ -3375,6 +3372,22 @@ static std::string get_ld_config_file_vndk_path() {
   return ld_config_file_vndk;
 }
 
+bool is_linker_config_expected(const char* executable_path) {
+  // Do not raise message from a host environment which is expected to miss generated linker
+  // configuration.
+#if !defined(__ANDROID__)
+  return false;
+#endif
+
+  if (strcmp(executable_path, "/system/bin/init") == 0) {
+    // Generated linker configuration can be missed from processes executed
+    // with init binary
+    return false;
+  }
+
+  return true;
+}
+
 static std::string get_ld_config_file_path(const char* executable_path) {
 #ifdef USE_LD_CONFIG_FILE
   // This is a debugging/testing only feature. Must not be available on
@@ -3403,12 +3416,10 @@ static std::string get_ld_config_file_path(const char* executable_path) {
     return kLdGeneratedConfigFilePath;
   }
 
-  // Do not raise message from a host environment which is expected to miss generated linker
-  // configuration.
-#if defined(__ANDROID__)
-  DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
-          kLdGeneratedConfigFilePath);
-#endif
+  if (is_linker_config_expected(executable_path)) {
+    DL_WARN("Warning: failed to find generated linker configuration from \"%s\"",
+            kLdGeneratedConfigFilePath);
+  }
 
   path = get_ld_config_file_vndk_path();
   if (file_exists(path.c_str())) {

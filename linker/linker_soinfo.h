@@ -66,7 +66,7 @@
 #define FLAG_PRELINKED        0x00000400 // prelink_image has successfully processed this soinfo
 #define FLAG_NEW_SOINFO       0x40000000 // new soinfo format
 
-#define SOINFO_VERSION 6
+#define SOINFO_VERSION 5
 
 ElfW(Addr) call_ifunc_resolver(ElfW(Addr) resolver_addr);
 
@@ -345,12 +345,6 @@ struct soinfo {
 
   SymbolLookupLib get_lookup_lib();
 
-  void set_map_start(ElfW(Addr) map_start);
-  ElfW(Addr) get_map_start() const;
-
-  void set_map_size(size_t map_size);
-  size_t get_map_size() const;
-
  private:
   bool is_image_linked() const;
   void set_image_linked();
@@ -429,10 +423,6 @@ struct soinfo {
   // version >= 5
   std::unique_ptr<soinfo_tls> tls_;
   std::vector<TlsDynamicResolverArg> tlsdesc_args_;
-
-  // version >= 6
-  ElfW(Addr) map_start_;
-  size_t map_size_;
 };
 
 // This function is used by dlvsym() to calculate hash of sym_ver
