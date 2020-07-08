@@ -53,6 +53,10 @@
 #define __BIONIC_STRINGS_INLINE static __inline
 #endif
 
+#undef ffs
+#undef ffsl
+#undef ffsll
+
 __BEGIN_DECLS
 
 /** Deprecated. Use memmove() instead. */

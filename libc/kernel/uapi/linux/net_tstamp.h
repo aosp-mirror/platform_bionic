@@ -50,6 +50,7 @@ enum hwtstamp_tx_types {
   HWTSTAMP_TX_ON,
   HWTSTAMP_TX_ONESTEP_SYNC,
   HWTSTAMP_TX_ONESTEP_P2P,
+  __HWTSTAMP_TX_CNT
 };
 enum hwtstamp_rx_filters {
   HWTSTAMP_FILTER_NONE,
@@ -68,6 +69,7 @@ enum hwtstamp_rx_filters {
   HWTSTAMP_FILTER_PTP_V2_SYNC,
   HWTSTAMP_FILTER_PTP_V2_DELAY_REQ,
   HWTSTAMP_FILTER_NTP_ALL,
+  __HWTSTAMP_FILTER_CNT
 };
 struct scm_ts_pktinfo {
   __u32 if_index;

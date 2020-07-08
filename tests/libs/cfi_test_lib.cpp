@@ -67,12 +67,9 @@ struct A {
   void check_cfi_self() {
     g_last_type_id = 0;
     assert(&__cfi_slowpath);
-    // CFI check for an invalid address. Normally, this would kill the process by routing the call
-    // back to the calling module's __cfi_check, which does the right thing based on
-    // -fsanitize-recover / -fsanitize-trap. But this module has custom __cfi_check that does not do
-    // any of that, so the result looks like a passing check.
-    int zz;
-    __cfi_slowpath(13, static_cast<void*>(&zz));
+    // CFI check for an address inside this DSO. This goes to the current module's __cfi_check,
+    // which updates g_last_type_id.
+    __cfi_slowpath(13, static_cast<void*>(&g_last_type_id));
     assert(g_last_type_id == 13);
     // CFI check for a libc function. This never goes into this module's __cfi_check, and must pass.
     __cfi_slowpath(14, reinterpret_cast<void*>(&exit));

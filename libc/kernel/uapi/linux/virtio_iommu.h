@@ -26,18 +26,18 @@
 #define VIRTIO_IOMMU_F_PROBE 4
 #define VIRTIO_IOMMU_F_MMIO 5
 struct virtio_iommu_range_64 {
-  __le64 start;
-  __le64 end;
+  __u64 start;
+  __u64 end;
 };
 struct virtio_iommu_range_32 {
-  __le32 start;
-  __le32 end;
+  __u32 start;
+  __u32 end;
 };
 struct virtio_iommu_config {
-  __le64 page_size_mask;
+  __u64 page_size_mask;
   struct virtio_iommu_range_64 input_range;
   struct virtio_iommu_range_32 domain_range;
-  __le32 probe_size;
+  __u32 probe_size;
 };
 #define VIRTIO_IOMMU_T_ATTACH 0x01
 #define VIRTIO_IOMMU_T_DETACH 0x02

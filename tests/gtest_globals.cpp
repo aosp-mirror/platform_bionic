@@ -29,7 +29,7 @@ std::string GetTestlibRoot() {
 
   std::string out_path;
   if (!android::base::Realpath(path.c_str(), &out_path)) {
-    printf("Failed to get realpath for \"%s\"", path.c_str());
+    printf("Failed to get realpath for \"%s\"\n", path.c_str());
     abort();
   }
 
@@ -37,7 +37,7 @@ std::string GetTestlibRoot() {
 
   std::string real_path;
   if (!android::base::Realpath(out_path, &real_path)) {
-    printf("\"%s\": does not exists", out_path.c_str());
+    printf("\"%s\": does not exists\n", out_path.c_str());
     abort();
   }
 

@@ -1005,3 +1005,7 @@ TEST(time, timespec_get) {
   GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
 }
+
+TEST(time, difftime) {
+  ASSERT_EQ(1.0, difftime(1, 0));
+}

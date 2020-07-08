@@ -71,6 +71,7 @@ extern "C" {
 #define DRM_VMW_PARAM_DX 12
 #define DRM_VMW_PARAM_HW_CAPS2 13
 #define DRM_VMW_PARAM_SM4_1 14
+#define DRM_VMW_PARAM_SM5 15
 enum drm_vmw_handle_type {
   DRM_VMW_HANDLE_LEGACY = 0,
   DRM_VMW_HANDLE_PRIME = 1
@@ -330,15 +331,16 @@ struct drm_vmw_handle_close_arg {
 };
 #define drm_vmw_unref_dmabuf_arg drm_vmw_handle_close_arg
 enum drm_vmw_surface_version {
-  drm_vmw_gb_surface_v1
+  drm_vmw_gb_surface_v1,
 };
 struct drm_vmw_gb_surface_create_ext_req {
   struct drm_vmw_gb_surface_create_req base;
   enum drm_vmw_surface_version version;
-  uint32_t svga3d_flags_upper_32_bits;
-  SVGA3dMSPattern multisample_pattern;
-  SVGA3dMSQualityLevel quality_level;
-  uint64_t must_be_zero;
+  __u32 svga3d_flags_upper_32_bits;
+  __u32 multisample_pattern;
+  __u32 quality_level;
+  __u32 buffer_byte_stride;
+  __u32 must_be_zero;
 };
 union drm_vmw_gb_surface_create_ext_arg {
   struct drm_vmw_gb_surface_create_rep rep;

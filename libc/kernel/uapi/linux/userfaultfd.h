@@ -20,15 +20,16 @@
 #define _LINUX_USERFAULTFD_H
 #include <linux/types.h>
 #define UFFD_API ((__u64) 0xAA)
-#define UFFD_API_FEATURES (UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM | UFFD_FEATURE_SIGBUS | UFFD_FEATURE_THREAD_ID)
+#define UFFD_API_FEATURES (UFFD_FEATURE_PAGEFAULT_FLAG_WP | UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM | UFFD_FEATURE_SIGBUS | UFFD_FEATURE_THREAD_ID)
 #define UFFD_API_IOCTLS ((__u64) 1 << _UFFDIO_REGISTER | (__u64) 1 << _UFFDIO_UNREGISTER | (__u64) 1 << _UFFDIO_API)
-#define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE)
+#define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE | (__u64) 1 << _UFFDIO_WRITEPROTECT)
 #define UFFD_API_RANGE_IOCTLS_BASIC ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY)
 #define _UFFDIO_REGISTER (0x00)
 #define _UFFDIO_UNREGISTER (0x01)
 #define _UFFDIO_WAKE (0x02)
 #define _UFFDIO_COPY (0x03)
 #define _UFFDIO_ZEROPAGE (0x04)
+#define _UFFDIO_WRITEPROTECT (0x06)
 #define _UFFDIO_API (0x3F)
 #define UFFDIO 0xAA
 #define UFFDIO_API _IOWR(UFFDIO, _UFFDIO_API, struct uffdio_api)
@@ -37,6 +38,7 @@
 #define UFFDIO_WAKE _IOR(UFFDIO, _UFFDIO_WAKE, struct uffdio_range)
 #define UFFDIO_COPY _IOWR(UFFDIO, _UFFDIO_COPY, struct uffdio_copy)
 #define UFFDIO_ZEROPAGE _IOWR(UFFDIO, _UFFDIO_ZEROPAGE, struct uffdio_zeropage)
+#define UFFDIO_WRITEPROTECT _IOWR(UFFDIO, _UFFDIO_WRITEPROTECT, struct uffdio_writeprotect)
 struct uffd_msg {
   __u8 event;
   __u8 reserved1;
@@ -106,6 +108,7 @@ struct uffdio_copy {
   __u64 src;
   __u64 len;
 #define UFFDIO_COPY_MODE_DONTWAKE ((__u64) 1 << 0)
+#define UFFDIO_COPY_MODE_WP ((__u64) 1 << 1)
   __u64 mode;
   __s64 copy;
 };
@@ -114,5 +117,11 @@ struct uffdio_zeropage {
 #define UFFDIO_ZEROPAGE_MODE_DONTWAKE ((__u64) 1 << 0)
   __u64 mode;
   __s64 zeropage;
+};
+struct uffdio_writeprotect {
+  struct uffdio_range range;
+#define UFFDIO_WRITEPROTECT_MODE_WP ((__u64) 1 << 0)
+#define UFFDIO_WRITEPROTECT_MODE_DONTWAKE ((__u64) 1 << 1)
+  __u64 mode;
 };
 #endif

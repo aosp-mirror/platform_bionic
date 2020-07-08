@@ -725,6 +725,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_VM 0x9
 #define I915_CONTEXT_PARAM_ENGINES 0xa
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
+#define I915_CONTEXT_PARAM_RINGSIZE 0xc
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
