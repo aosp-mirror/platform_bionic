@@ -75,7 +75,11 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
     EXPECT_STREQ("/", pwd->pw_dir);
   }
 
-  EXPECT_STREQ("/bin/sh", pwd->pw_shell);
+  // This has changed over time and that causes new GSI + old vendor images testing to fail.
+  // This parameter doesn't matter on Android, so simply ignore its value for older vendor images.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) >= 30) {
+    EXPECT_STREQ("/bin/sh", pwd->pw_shell);
+  }
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
