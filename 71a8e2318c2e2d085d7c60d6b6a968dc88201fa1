@@ -1,0 +1,301 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f04320f_feaf9d22",
+        "filename": "libc/bionic/bionic_allocator.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "why is this missing?",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89684dd5_589f6a67",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "explain why this is the right place to do this? i\u0027d have expected this to be in pthread_exit() instead?",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ca595a_4d6ffbf7",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "yeah, roughly here :-)",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b500f8c4_2d92fdaf",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "there\u0027s no need to explain any of these.",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 36
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8dde9b4_3e419ecb",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "why an array rather than a linked list?\n\nwhat do we see at the moment in practice, one callback per sanitizer? (because there\u0027s a separate array per .so aiui?)",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "043374dc_7e23fe0d",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "since there\u0027s nothing useful the caller can do, we should just fatal on failure and make this function void.",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5091e67_eb02ee1a",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "this should be fatal too, no?",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d349014_aa06ba73",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "and then remove this.",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 0
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18980285_2ae26d47",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "feel free to just use locals to give names to these. probably more readable that way.",
+      "range": {
+        "startLine": 113,
+        "startChar": 9,
+        "endLine": 113,
+        "endChar": 26
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6063b53_c80d2dbb",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "why is this split into two headers?",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69cda64c_0a3a794e",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "this should be in the @file block above.\n\n(and, sadly, you need to copy the \"Available since\" into _all_ the doc comments because our tooling is crap :-( )",
+      "range": {
+        "startLine": 42,
+        "startChar": 3,
+        "endLine": 46,
+        "endChar": 32
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f56c5270_27678233",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "probably worth explaining what that means. specifically, it\u0027s _before_ the TLS is freed. so this callback can still do anything it wants and touch any thread locals etc (whereas the current text implies that that might not be the case).",
+      "range": {
+        "startLine": 58,
+        "startChar": 35,
+        "endLine": 58,
+        "endChar": 79
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0245fbcc_d390bfe8",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "(like i said earlier, i think all of these should just be void.)",
+      "range": {
+        "startLine": 66,
+        "startChar": 3,
+        "endLine": 66,
+        "endChar": 10
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70ef1dec_1049c01f",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "maybe TlsModule? oh, i see that\u0027s already been used. that\u0027s unfortunate. ModuleInfo then?",
+      "range": {
+        "startLine": 145,
+        "startChar": 7,
+        "endLine": 145,
+        "endChar": 21
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8876f7f_4e34c3c4",
+        "filename": "tests/libs/sys_thread_properties_test.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T16:09:40Z",
+      "side": 1,
+      "message": "usually we\u0027d call this executable something like \"_helper\" and then the \"_test\" would be a regular gtest that runs this and checks its output. (so the job of the helper is just to produce output in the right order.)",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
