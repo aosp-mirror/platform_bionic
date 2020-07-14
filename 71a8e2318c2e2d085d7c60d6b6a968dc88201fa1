@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "39408a3a_f5f1eaca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 36
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Hi, Please see https://android-review.googlesource.com/c/platform/bionic/+/1228403\n\nI could not figure out how to update this CL (`repo upload` kept failing with \"no branches ready for upload\")\n\nAfter wasting the whole day, I decided to just go with the easy path and create a new review.\n(Sorry for any inconvenience)",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f04320f_feaf9d22",
         "filename": "libc/bionic/bionic_allocator.cpp",
         "patchSetId": 36
@@ -13,6 +30,24 @@
       "writtenOn": "2020-07-14T16:09:40Z",
       "side": 1,
       "message": "why is this missing?",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b453354_df7b41e4",
+        "filename": "libc/bionic/bionic_allocator.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 385,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "On a second thought, maybe this is redundant? The thread_exit_callback would have been enough. (It\u0027s called before a thread\u0027s DTLS is freed)\n\nI had originally thought this on_destruction_cb should be called when a chunk of DTLS is freed, even when its thread is not dying yet, but now I don\u0027t think it\u0027s possible to find that point (because the memory is lazily allocated and freed).\n WDYT?",
+      "parentUuid": "0f04320f_feaf9d22",
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -36,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "cab737ba_6faeb658",
+        "filename": "libc/bionic/bionic_elf_tls.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89684dd5_589f6a67",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c4ca595a_4d6ffbf7",
         "filename": "libc/bionic/pthread_exit.cpp",
         "patchSetId": 36
@@ -50,6 +103,24 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d7b5fde_a028a3ff",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Added comment in the other file",
+      "parentUuid": "c4ca595a_4d6ffbf7",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +147,30 @@
     },
     {
       "key": {
+        "uuid": "4bbba5a0_4df3c434",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b500f8c4_2d92fdaf",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 36
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8dde9b4_3e419ecb",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 36
@@ -87,6 +182,24 @@
       "writtenOn": "2020-07-14T16:09:40Z",
       "side": 1,
       "message": "why an array rather than a linked list?\n\nwhat do we see at the moment in practice, one callback per sanitizer? (because there\u0027s a separate array per .so aiui?)",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56f4a75b_25f85959",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "\u003e Why an array rather than a linked list?\n\nSorry, I\u0027m not sure if you comment was literally about making this a linkedlist or if it was about bounded vs unbounded?\n\nThe original proposal suggested 8, which I assumed was because we don\u0027t want this to grow unchecked.",
+      "parentUuid": "b8dde9b4_3e419ecb",
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -110,6 +223,24 @@
     },
     {
       "key": {
+        "uuid": "d4ae9496_9ec89e9c",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done. Made this an all other functions here die on errors.",
+      "parentUuid": "043374dc_7e23fe0d",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5091e67_eb02ee1a",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 36
@@ -124,6 +255,24 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "166954ad_1de7f966",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5091e67_eb02ee1a",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -150,6 +299,30 @@
     },
     {
       "key": {
+        "uuid": "47d6b8e6_29a10651",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d349014_aa06ba73",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 0
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "18980285_2ae26d47",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 36
@@ -173,6 +346,30 @@
     },
     {
       "key": {
+        "uuid": "e0c8eba2_0fe838d3",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18980285_2ae26d47",
+      "range": {
+        "startLine": 113,
+        "startChar": 9,
+        "endLine": 113,
+        "endChar": 26
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6063b53_c80d2dbb",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 36
@@ -187,6 +384,24 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aba117ae_ebb22bd2",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "The typedefs in that header are used both here and libc/private/bionic_elf_tls.h\n\nCouldn\u0027t put them in bionic_elf_tls.h because it\u0027s a private header and we can\u0027t include it here.\nCouldn\u0027t put them here because bionic_elf_tls.h cannot include this header w/o creating a cyclic dependency.\n\nSo we had two choices:\n - re-def in both places\n - put them in a shared header.",
+      "parentUuid": "d6063b53_c80d2dbb",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -213,6 +428,30 @@
     },
     {
       "key": {
+        "uuid": "8df3e1a7_9654c4bd",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69cda64c_0a3a794e",
+      "range": {
+        "startLine": 42,
+        "startChar": 3,
+        "endLine": 46,
+        "endChar": 32
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f56c5270_27678233",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 36
@@ -233,6 +472,30 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97136019_55f6217e",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f56c5270_27678233",
+      "range": {
+        "startLine": 58,
+        "startChar": 35,
+        "endLine": 58,
+        "endChar": 79
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -259,6 +522,30 @@
     },
     {
       "key": {
+        "uuid": "5fbd060b_c667915e",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0245fbcc_d390bfe8",
+      "range": {
+        "startLine": 66,
+        "startChar": 3,
+        "endLine": 66,
+        "endChar": 10
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70ef1dec_1049c01f",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 36
@@ -279,6 +566,30 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11b73fe0_62aded84",
+        "filename": "libc/private/bionic_elf_tls.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-14T22:02:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70ef1dec_1049c01f",
+      "range": {
+        "startLine": 145,
+        "startChar": 7,
+        "endLine": 145,
+        "endChar": 21
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
