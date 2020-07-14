@@ -423,6 +423,24 @@
     },
     {
       "key": {
+        "uuid": "e5a4743b_74eafe11",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T23:29:13Z",
+      "side": 1,
+      "message": "we can just use the actual types there.\n\nhonestly, i\u0027m still not convinced these typedefs add any value even in the public header. and i can\u0027t think of any precedent for typedefs for function pointers in POSIX [but i can think of a lot of counterexamples]. the headers are more readable without the typedefs, and i\u0027m struggling to imagine that any caller would have any use for them?",
+      "parentUuid": "aba117ae_ebb22bd2",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "69cda64c_0a3a794e",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 36
@@ -561,6 +579,29 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0a0e06a_b985f604",
+        "filename": "libc/include/sys/thread_properties_defines.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T23:29:13Z",
+      "side": 1,
+      "message": "remember this is C, so we\u0027ll need to say `(void)`. i keep hoping that the next C standard will fix that, but i\u0027ve been waiting 25 years with no luck yet :-(",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     },
     {
       "key": {
