@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "d9d5f039_20688e14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 36
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-14T23:30:26Z",
+      "side": 1,
+      "message": "(too late now, but when you\u0027re in `git commit` [or if you\u0027re using `git commit --amend` after the fact] you can simply edit the Change-Id line if you want to overwrite an existing gerrit change.)",
+      "parentUuid": "2811382e_e8db1e2e",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f04320f_feaf9d22",
         "filename": "libc/bionic/bionic_allocator.cpp",
         "patchSetId": 36
