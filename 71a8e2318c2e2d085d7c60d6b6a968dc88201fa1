@@ -459,6 +459,24 @@
     },
     {
       "key": {
+        "uuid": "427c0670_dfcb52bf",
+        "filename": "libc/include/sys/thread_properties.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T01:29:48Z",
+      "side": 1,
+      "message": "Resolved (removed the `*_defines.h` header and use the actual types here)\n\nThough, I\u0027ve moved the type def to the private header to use there because spelling out the function-pointer types in various places is a bit hairy.",
+      "parentUuid": "e5a4743b_74eafe11",
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69cda64c_0a3a794e",
         "filename": "libc/include/sys/thread_properties.h",
         "patchSetId": 36
@@ -620,6 +638,30 @@
       "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ed059b_939533ce",
+        "filename": "libc/include/sys/thread_properties_defines.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-07-15T01:29:48Z",
+      "side": 1,
+      "message": "Done\n(I could\u0027ve sworn I didn\u0027t get any compilation error when I built this ... )",
+      "parentUuid": "b0a0e06a_b985f604",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
