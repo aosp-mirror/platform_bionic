@@ -665,6 +665,30 @@
     },
     {
       "key": {
+        "uuid": "f9dd348e_0b648b11",
+        "filename": "libc/include/sys/thread_properties_defines.h",
+        "patchSetId": 36
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-15T15:56:47Z",
+      "side": 1,
+      "message": "it\u0027s not an error, it just means something different. in C++ it means \"no arguments\". in C it means \"i\u0027m not telling you what the arguments are\".",
+      "parentUuid": "e8ed059b_939533ce",
+      "range": {
+        "startLine": 44,
+        "startChar": 32,
+        "endLine": 44,
+        "endChar": 34
+      },
+      "revId": "71a8e2318c2e2d085d7c60d6b6a968dc88201fa1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70ef1dec_1049c01f",
         "filename": "libc/private/bionic_elf_tls.h",
         "patchSetId": 36
