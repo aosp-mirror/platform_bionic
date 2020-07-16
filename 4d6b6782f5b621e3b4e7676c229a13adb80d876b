@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd2cfda0_2b48f521",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-16T15:07:56Z",
+      "side": 1,
+      "message": "otherwise lgtm, but you probably want rprichard\u0027s opinion rather than mine :-)",
+      "revId": "4d6b6782f5b621e3b4e7676c229a13adb80d876b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f1a07c9_db9773ab",
+        "filename": "linker/linker_phdr.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-16T15:07:56Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 101,
+        "startChar": 5,
+        "endLine": 101,
+        "endChar": 15
+      },
+      "revId": "4d6b6782f5b621e3b4e7676c229a13adb80d876b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
