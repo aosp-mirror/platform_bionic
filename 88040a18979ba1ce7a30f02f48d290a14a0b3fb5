@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b727e198_63547adf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T15:13:55Z",
+      "side": 1,
+      "message": "what does \"clients\" mean? untrusted apps? all apps? everything except netd? everything?",
+      "range": {
+        "startLine": 10,
+        "startChar": 43,
+        "endLine": 10,
+        "endChar": 50
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3389572_ae67a591",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T15:13:55Z",
+      "side": 1,
+      "message": "i thought this ioctl was already locked down?",
+      "range": {
+        "startLine": 11,
+        "startChar": 57,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb444035_65f213c0",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T15:13:55Z",
+      "side": 1,
+      "message": "use libc as the tag for libc errors, and include ifaddrs in the next message.",
+      "range": {
+        "startLine": 283,
+        "startChar": 46,
+        "endLine": 283,
+        "endChar": 53
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aecd2356_8a30a737",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T15:13:55Z",
+      "side": 1,
+      "message": "typically we go for \"x(interesting arg 1, interesting arg 2) failed: detail\". always include quotes around strings to make it clearer when there\u0027s dodgy data like the empty string or a single space or whatever. and never log numeric errno --- it differs between architectures. (also no punctuation at the end.)\n\nso here something like `ioctl(SIOCGIFFLAGS, \\\"%s\\\") failed: %s` or `ioctl(SIOCGIFFLAGS) for \\\"%s\\\" failed: %s`.",
+      "range": {
+        "startLine": 284,
+        "startChar": 81,
+        "endLine": 284,
+        "endChar": 86
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68bfad9b_a560fba1",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T15:13:55Z",
+      "side": 1,
+      "message": "why error above but only warning here?",
+      "range": {
+        "startLine": 296,
+        "startChar": 28,
+        "endLine": 296,
+        "endChar": 44
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
