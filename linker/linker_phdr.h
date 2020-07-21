@@ -49,6 +49,8 @@ class ElfReader {
   size_t phdr_count() const { return phdr_num_; }
   ElfW(Addr) load_start() const { return reinterpret_cast<ElfW(Addr)>(load_start_); }
   size_t load_size() const { return load_size_; }
+  ElfW(Addr) gap_start() const { return reinterpret_cast<ElfW(Addr)>(gap_start_); }
+  size_t gap_size() const { return gap_size_; }
   ElfW(Addr) load_bias() const { return load_bias_; }
   const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
@@ -96,6 +98,10 @@ class ElfReader {
   void* load_start_;
   // Size in bytes of reserved address space.
   size_t load_size_;
+  // First page of inaccessible gap mapping reserved for this DSO.
+  void* gap_start_;
+  // Size in bytes of the gap mapping.
+  size_t gap_size_;
   // Load bias.
   ElfW(Addr) load_bias_;
 
