@@ -520,7 +520,8 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
 
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
-static void* ReserveAligned(size_t size, size_t align) {
+static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_gap_start,
+                                         size_t* out_gap_size) {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
   if (align == PAGE_SIZE) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
@@ -530,6 +531,15 @@ static void* ReserveAligned(size_t size, size_t align) {
     return mmap_ptr;
   }
 
+  // Minimum alignment of shared library gap. For efficiency, this should match the second level
+  // page size of the platform.
+#if defined(__LP64__)
+  constexpr size_t kGapAlignment = 1ul << 21;  // 2MB
+#else
+  constexpr size_t kGapAlignment = 0;
+#endif
+  // Maximum gap size, in the units of kGapAlignment.
+  constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
   size_t mmap_size = align_up(size, align) + align - PAGE_SIZE;
@@ -538,16 +548,49 @@ static void* ReserveAligned(size_t size, size_t align) {
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
+  size_t gap_size = 0;
+  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, align));
+  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, align) - 1);
+  if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
+    // This library crosses a 2MB boundary and will fragment a new huge page.
+    // Lets take advantage of that and insert a random number of inaccessible huge pages before that
+    // to improve address randomization and make it harder to locate this library code by probing.
+    munmap(mmap_ptr, mmap_size);
+    align = std::max(align, kGapAlignment);
+    gap_size =
+        kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
+    mmap_size = align_up(size + gap_size, align) + align - PAGE_SIZE;
+    mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
+    if (mmap_ptr == MAP_FAILED) {
+      return nullptr;
+    }
+  }
+
+  uint8_t *gap_end, *gap_start;
+  if (gap_size) {
+    gap_end = align_down(mmap_ptr + mmap_size, kGapAlignment);
+    gap_start = gap_end - gap_size;
+  } else {
+    gap_start = gap_end = mmap_ptr + mmap_size;
+  }
 
   uint8_t* first = align_up(mmap_ptr, align);
-  uint8_t* last = align_down(mmap_ptr + mmap_size, align) - size;
+  uint8_t* last = align_down(gap_start, align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
   size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
   uint8_t* start = first + n * PAGE_SIZE;
+  // Unmap the extra space around the allocation.
+  // Keep it mapped PROT_NONE on 64-bit targets where address space is plentiful to make it harder
+  // to defeat ASLR by probing for readable memory mappings.
   munmap(mmap_ptr, start - mmap_ptr);
-  munmap(start + size, mmap_ptr + mmap_size - (start + size));
+  munmap(start + size, gap_start - (start + size));
+  if (gap_end != mmap_ptr + mmap_size) {
+    munmap(gap_end, mmap_ptr + mmap_size - gap_end);
+  }
+  *out_gap_start = gap_start;
+  *out_gap_size = gap_size;
   return start;
 }
 
@@ -571,13 +614,15 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveAligned(load_size_, kLibraryAlignment);
+    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, &gap_start_, &gap_size_);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
     }
   } else {
     start = address_space->start_addr;
+    gap_start_ = nullptr;
+    gap_size_ = 0;
     mapped_by_caller_ = true;
 
     // Update the reserved address space to subtract the space used by this library.
