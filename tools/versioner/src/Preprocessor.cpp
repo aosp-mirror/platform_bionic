@@ -237,7 +237,7 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
   return "("s + Join(expressions, ") || (") + ")";
 }
 
-// Assumes that nothing crazy is happening (e.g. having the semicolon be in a macro)
+// Assumes that nothing weird is happening (e.g. having the semicolon be in a macro).
 static FileLocation findNextSemicolon(const std::deque<std::string>& lines, FileLocation start) {
   unsigned current_line = start.line;
   unsigned current_column = start.column;
@@ -373,8 +373,8 @@ static void mergeGuards(std::deque<std::string>& file_lines, GuardMap& guard_map
 
     guard_map.erase(current);
     guard_map.erase(next);
-    bool dummy;
-    std::tie(current, dummy) = guard_map.insert(std::make_pair(merged, avail));
+    bool unused;
+    std::tie(current, unused) = guard_map.insert(std::make_pair(merged, avail));
     next = current;
     ++next;
   }
