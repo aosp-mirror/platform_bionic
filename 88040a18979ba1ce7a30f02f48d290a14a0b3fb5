@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "2398f1f2_8c4d4785",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T18:07:53Z",
+      "side": 1,
+      "message": "well, we can\u0027t change the past, so that means this is fine for now. if/when the security folks want to lock this down, we can worry about that then. and since _you\u0027re_ the relevant \"security folks\", i\u0027m not too worried about surprises :-)\n\n(i didn\u0027t have any insider information --- i just struggle to keep track of which ioctls are/aren\u0027t allowed, in which contexts. especially because it does change over time.)\n\n((i would have written better tests for this code, which would let us add an extra \"is this still working\" test here, but sadly what network interfaces are available and what we expect them to look like is a bit of a worst case for test writing, and i don\u0027t have any good ideas.))",
+      "parentUuid": "2dd38849_c2e28ce9",
+      "range": {
+        "startLine": 11,
+        "startChar": 57,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eb444035_65f213c0",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 3
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "It seemed less severe if `ioctl(SIOCGIFFLAGS)` can not be called for (potentially) a single interface, but maybe it\u0027s better to consider this an error just as well. Changed it to be an error for now, but let me know which one you think makes most sense.",
       "parentUuid": "68bfad9b_a560fba1",
+      "range": {
+        "startLine": 296,
+        "startChar": 28,
+        "endLine": 296,
+        "endChar": 44
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56cc37ce_5980858a",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-21T18:07:53Z",
+      "side": 1,
+      "message": "we\u0027re assuming this shouldn\u0027t happen, and \"this is why your getifaddrs() call failed/produced unexpected results\" seems necessary for app developers to debug, so i think it makes sense to have both at the same level but, like you, don\u0027t have a strong opinion on _which_. error seems fine given the \"we\u0027re assuming this shouldn\u0027t happen\".",
+      "parentUuid": "06abb8aa_0cf06c08",
       "range": {
         "startLine": 296,
         "startChar": 28,
