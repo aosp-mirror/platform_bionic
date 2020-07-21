@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "be941360_1837e0b4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-21T17:15:21Z",
+      "side": 1,
+      "message": "Sorry, I meant to say \"non-system apps\". This refers to r.android.com/1212285, where non-system apps targeting R+ will no longer be able to send RTM_GETLINK messages. Changed it in the latest patchset description.",
+      "parentUuid": "b727e198_63547adf",
+      "range": {
+        "startLine": 10,
+        "startChar": 43,
+        "endLine": 10,
+        "endChar": 50
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3389572_ae67a591",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2020-07-21T15:13:55Z",
       "side": 1,
       "message": "i thought this ioctl was already locked down?",
+      "range": {
+        "startLine": 11,
+        "startChar": 57,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dd38849_c2e28ce9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-21T17:15:21Z",
+      "side": 1,
+      "message": "I checked this with an app targeting API 30, which was able to send an SIOCGIFFLAGS ioctl, and which got the correct flags from a getifaddrs() call when running this change. Please let me know if we shouldn\u0027t be depending on this.",
+      "parentUuid": "b3389572_ae67a591",
       "range": {
         "startLine": 11,
         "startChar": 57,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7a74a1f0_16a27489",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-21T17:15:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb444035_65f213c0",
+      "range": {
+        "startLine": 283,
+        "startChar": 46,
+        "endLine": 283,
+        "endChar": 53
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aecd2356_8a30a737",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 3
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "c86b8919_2717fd4f",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-21T17:15:21Z",
+      "side": 1,
+      "message": "Sorry, I wasn\u0027t aware of the standard format. Fixed, thanks for the explanation :-)",
+      "parentUuid": "aecd2356_8a30a737",
+      "range": {
+        "startLine": 284,
+        "startChar": 81,
+        "endLine": 284,
+        "endChar": 86
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68bfad9b_a560fba1",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 3
@@ -105,6 +201,30 @@
       "writtenOn": "2020-07-21T15:13:55Z",
       "side": 1,
       "message": "why error above but only warning here?",
+      "range": {
+        "startLine": 296,
+        "startChar": 28,
+        "endLine": 296,
+        "endChar": 44
+      },
+      "revId": "88040a18979ba1ce7a30f02f48d290a14a0b3fb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06abb8aa_0cf06c08",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-07-21T17:15:21Z",
+      "side": 1,
+      "message": "It seemed less severe if `ioctl(SIOCGIFFLAGS)` can not be called for (potentially) a single interface, but maybe it\u0027s better to consider this an error just as well. Changed it to be an error for now, but let me know which one you think makes most sense.",
+      "parentUuid": "68bfad9b_a560fba1",
       "range": {
         "startLine": 296,
         "startChar": 28,
