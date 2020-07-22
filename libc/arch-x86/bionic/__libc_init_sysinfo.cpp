@@ -37,8 +37,8 @@ __LIBC_HIDDEN__ __attribute__((__naked__)) void __libc_int0x80() {
 }
 
 __LIBC_HIDDEN__ void __libc_init_sysinfo() {
-  bool dummy;
-  __libc_sysinfo = reinterpret_cast<void*>(__bionic_getauxval(AT_SYSINFO, dummy));
+  bool unused;
+  __libc_sysinfo = reinterpret_cast<void*>(__bionic_getauxval(AT_SYSINFO, &unused));
 }
 
 // TODO: lose this function and just access __libc_sysinfo directly.
