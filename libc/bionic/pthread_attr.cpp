@@ -192,7 +192,8 @@ static int __pthread_attr_getstack_main_thread(void** stack_base, size_t* stack_
     return errno;
   }
 
-  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack for sanity's sake.
+  // If the current RLIMIT_STACK is RLIM_INFINITY, only admit to an 8MiB stack
+  // in case callers such as ART take infinity too literally.
   if (stack_limit.rlim_cur == RLIM_INFINITY) {
     stack_limit.rlim_cur = 8 * 1024 * 1024;
   }
