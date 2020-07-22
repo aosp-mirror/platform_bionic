@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b84ed3a_838314b5",
+        "filename": "benchmarks/semaphore_benchmark.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-07-22T17:24:22Z",
+      "side": 0,
+      "message": "I take it that this code is unused and you\u0027re just getting rid of it in the same CL instead of fixing it?\n\n(Just checking that this isn\u0027t deleted by mistake)",
+      "revId": "c79ea239415963d4a38752d0f3efe50531c8e04f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

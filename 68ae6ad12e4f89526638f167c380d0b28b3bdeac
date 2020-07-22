@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5947d9e0_1666a0b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-07-22T17:24:22Z",
+      "side": 1,
+      "message": "+1 to check that you actually mean to do those inline changes.  I\u0027m okay either way, but they stick out.",
+      "revId": "68ae6ad12e4f89526638f167c380d0b28b3bdeac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c16b39_1257145a",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-07-22T17:24:22Z",
+      "side": 1,
+      "message": "But we can pass non-const refs now.\n\n(Also this change has nothing to do with the commit message)",
+      "range": {
+        "startLine": 40,
+        "startChar": 69,
+        "endLine": 40,
+        "endChar": 74
+      },
+      "revId": "68ae6ad12e4f89526638f167c380d0b28b3bdeac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
