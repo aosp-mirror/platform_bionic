@@ -4,4 +4,4 @@ versioner: conflicting inline definitions for symbol foo:
       no availability
     static definition @ headers/bar.h:5:1
       no availability
-versioner: sanity check failed
+versioner: validity check failed
