@@ -39,6 +39,30 @@
       "revId": "68ae6ad12e4f89526638f167c380d0b28b3bdeac",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83c33c95_ab05bac2",
+        "filename": "libc/bionic/getauxval.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-22T17:28:46Z",
+      "side": 1,
+      "message": "yeah, but i found myself confused by the calling code (which was flagged for use of \"dummy\") passing an uninitialized variable, which seemed like a bad sign and a suggestion that maybe this code is less unclear with a pointer.\n\n(given that most of the interfaces in libc have to be C, this is probably the worst project to use non-const references. but don\u0027t worry --- i\u0027m not coming for them in general :-) )",
+      "parentUuid": "c1c16b39_1257145a",
+      "range": {
+        "startLine": 40,
+        "startChar": 69,
+        "endLine": 40,
+        "endChar": 74
+      },
+      "revId": "68ae6ad12e4f89526638f167c380d0b28b3bdeac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
