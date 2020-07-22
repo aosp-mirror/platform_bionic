@@ -41,8 +41,8 @@ extern "C" char* get_large_tls_var_addr() {
 // section, but does not have an entry in the dynsym table and whose
 // solib-relative address appears to overlap with the large TLS variable.
 extern "C" void* get_local_addr() {
-  static char dummy[1024];
-  return &dummy[512];
+  static char buf[1024];
+  return &buf[512];
 }
 
 // This variable comes from libtest_elftls_shared_var.so, which is part of
