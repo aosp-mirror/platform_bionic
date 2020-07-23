@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b38f623e_d7520453",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-07-23T20:19:29Z",
+      "side": 1,
+      "message": "jiyong: will this change anything beyond what\u0027s intended by https://android-review.googlesource.com/c/platform/build/soong/+/1363344? I\u0027m not sure what all the implications of this property are.",
+      "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
