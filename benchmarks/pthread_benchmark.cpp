@@ -53,15 +53,14 @@ static void BM_pthread_setspecific(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_pthread_setspecific);
 
-static void DummyPthreadOnceInitFunction() {
-}
+static void NoOpPthreadOnceInitFunction() {}
 
 static void BM_pthread_once(benchmark::State& state) {
   static pthread_once_t once = PTHREAD_ONCE_INIT;
-  pthread_once(&once, DummyPthreadOnceInitFunction);
+  pthread_once(&once, NoOpPthreadOnceInitFunction);
 
   while (state.KeepRunning()) {
-    pthread_once(&once, DummyPthreadOnceInitFunction);
+    pthread_once(&once, NoOpPthreadOnceInitFunction);
   }
 }
 BIONIC_BENCHMARK(BM_pthread_once);

@@ -2022,7 +2022,7 @@ TEST(dlext, ns_anonymous) {
     }
   }
 
-  // some sanity checks..
+  // Some validity checks.
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
   ASSERT_TRUE(maps_to_copy.size() > 0);

@@ -90,12 +90,12 @@ static char* make_path(const char* path_prefix_variable,
 // byte[12] tzdata_version  -- "tzdata2012f\0"
 // int index_offset
 // int data_offset
-// int zonetab_offset
+// int final_offset
 struct bionic_tzdata_header_t {
   char tzdata_version[12];
   int32_t index_offset;
   int32_t data_offset;
-  int32_t zonetab_offset;
+  int32_t final_offset;
 };
 static constexpr size_t NAME_LENGTH = 40;
 struct index_entry_t {
