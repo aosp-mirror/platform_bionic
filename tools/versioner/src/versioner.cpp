@@ -276,7 +276,7 @@ static std::vector<T> Intersection(const std::set<T>& a, const std::set<T>& b) {
   return intersection;
 }
 
-// Perform a sanity check on a symbol's declarations, enforcing the following invariants:
+// Perform a validity check on a symbol's declarations, enforcing the following invariants:
 //   1. At most one inline definition of the function exists (overloaded inline functions for
 //      _FORTIFY_SOURCE do not count because they are usually introduced to intercept the original
 //      functions or usually have enable_if attributes).
@@ -334,7 +334,7 @@ static bool checkSymbol(const Symbol& symbol) {
   return true;
 }
 
-static bool sanityCheck(const HeaderDatabase* database) {
+static bool validityCheck(const HeaderDatabase* database) {
   bool error = false;
   std::string cwd = getWorkingDir() + "/";
 
@@ -676,8 +676,8 @@ int main(int argc, char** argv) {
   if (dump) {
     declaration_database->dump(location.header_path + "/");
   } else {
-    if (!sanityCheck(declaration_database.get())) {
-      printf("versioner: sanity check failed\n");
+    if (!validityCheck(declaration_database.get())) {
+      printf("versioner: validity check failed\n");
       failed = true;
     }
 

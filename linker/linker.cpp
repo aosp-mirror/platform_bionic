@@ -311,6 +311,10 @@ static void soinfo_free(soinfo* si) {
     }
   }
 
+  if (si->has_min_version(6) && si->get_gap_size()) {
+    munmap(reinterpret_cast<void*>(si->get_gap_start()), si->get_gap_size());
+  }
+
   TRACE("name %s: freeing soinfo @ %p", si->get_realpath(), si);
 
   if (!solist_remove_soinfo(si)) {
@@ -599,6 +603,8 @@ class LoadTask {
     si_->load_bias = elf_reader.load_bias();
     si_->phnum = elf_reader.phdr_count();
     si_->phdr = elf_reader.loaded_phdr();
+    si_->set_gap_start(elf_reader.gap_start());
+    si_->set_gap_size(elf_reader.gap_size());
 
     return true;
   }
@@ -3162,7 +3168,7 @@ bool soinfo::prelink_image() {
   DEBUG("si->base = %p, si->strtab = %p, si->symtab = %p",
         reinterpret_cast<void*>(base), strtab_, symtab_);
 
-  // Sanity checks.
+  // Validity checks.
   if (relocating_linker && needed_count != 0) {
     DL_ERR("linker cannot have DT_NEEDED dependencies on other libraries");
     return false;

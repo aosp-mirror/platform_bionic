@@ -30,4 +30,4 @@
 
 #include <sys/cdefs.h>
 
-__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool& exists);
+__LIBC_HIDDEN__ unsigned long __bionic_getauxval(unsigned long type, bool* exists);

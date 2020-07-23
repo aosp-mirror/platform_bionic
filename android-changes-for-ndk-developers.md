@@ -218,7 +218,7 @@ from known vulnerabilities.
 
 Each ELF file has additional information contained in the section
 headers. These headers must be present now, because the dynamic linker
-uses them for sanity checking. Some developers strip them in an
+uses them for validity checking. Some developers strip them in an
 attempt to obfuscate the binary and prevent reverse engineering. (This
 doesn't really help because it is possible to reconstruct the stripped
 information using widely-available tools.)
