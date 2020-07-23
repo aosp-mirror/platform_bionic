@@ -192,7 +192,7 @@ struct three_atomics {
   atomic_uint_least32_t z;
 };
 
-// Very simple acquire/release memory ordering sanity check.
+// Very simple acquire/release memory ordering smoke test.
 static void* writer(void* arg) {
   three_atomics* a = reinterpret_cast<three_atomics*>(arg);
   for (uint_least32_t i = 0; i <= BIG; i+=2) {
@@ -239,7 +239,7 @@ static void* reader(void* arg) {
 }
 
 TEST(stdatomic, ordering) {
-  // Run a memory ordering sanity test.
+  // Run a memory ordering smoke test.
   void* result;
   three_atomics a;
   atomic_init(&a.x, 0ul);
