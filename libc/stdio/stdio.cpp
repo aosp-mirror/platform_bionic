@@ -1026,9 +1026,9 @@ int vsnprintf(char* s, size_t n, const char* fmt, va_list ap) {
   __check_count("vsnprintf", "size", n);
 
   // Stdio internals do not deal correctly with zero length buffer.
-  char dummy;
+  char one_byte_buffer[1];
   if (n == 0) {
-    s = &dummy;
+    s = one_byte_buffer;
     n = 1;
   }
 
