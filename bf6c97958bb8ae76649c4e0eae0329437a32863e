@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "caf723b6_ead1c73c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-07-23T23:38:22Z",
+      "side": 1,
+      "message": "Uploaded https://googleplex-android-review.git.corp.google.com/c/platform/build/soong/+/12222134 for dealing with the allowlist, since that file isn\u0027t in AOSP yet. Will get that submitted and then this should pass treehugger again.",
+      "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b38f623e_d7520453",
         "filename": "libc/Android.bp",
         "patchSetId": 4
