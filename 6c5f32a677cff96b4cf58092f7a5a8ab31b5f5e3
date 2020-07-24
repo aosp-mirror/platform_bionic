@@ -16,6 +16,24 @@
       "revId": "6c5f32a677cff96b4cf58092f7a5a8ab31b5f5e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23f5adb5_9f0dc5a7",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-24T06:15:47Z",
+      "side": 1,
+      "message": "I suppose we should do the same for all the other sections? e.g.:\n\n    *(.rodata .rodata.*)\n    *(.dynamic)\n    *(.bss .bss.*)\n\nIf we want to match .bss.*, for completeness, I think we\u0027d have to add the section attribute to the variable.",
+      "parentUuid": "d8b1fb75_df320e6a",
+      "revId": "6c5f32a677cff96b4cf58092f7a5a8ab31b5f5e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
