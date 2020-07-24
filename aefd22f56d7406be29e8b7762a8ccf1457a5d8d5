@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "8c18b6f7_fac6cb12",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T18:01:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04c703e6_a77a8a2c",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "762a1957_b480daa5",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 3
