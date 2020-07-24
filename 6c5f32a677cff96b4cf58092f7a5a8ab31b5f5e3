@@ -34,6 +34,24 @@
       "revId": "6c5f32a677cff96b4cf58092f7a5a8ab31b5f5e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3216188_b50ef973",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T07:25:59Z",
+      "side": 1,
+      "message": "I rewrote it into a new section `.custom_bss`. The only difference with the original is that we still have an extra `.fini_array.0`, but since the original linker script didn\u0027t manipulate those sections, I don\u0027t think this one should really matter.",
+      "parentUuid": "23f5adb5_9f0dc5a7",
+      "revId": "6c5f32a677cff96b4cf58092f7a5a8ab31b5f5e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

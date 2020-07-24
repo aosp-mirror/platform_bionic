@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "646ce5c4_1fd812a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T07:25:59Z",
+      "side": 1,
+      "message": "I won\u0027t autosubmit as I\u0027d like to make sure that both Ryan and Fangrui agree with my approach here. I\u0027m not very familiar with linker scripts, and I feel like there are too many ways that I can get this subtly wrong. The tests are passing though (except TH seems to have a flaky/broken test that is independent of this CL).",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c5a03b3_217a7595",
+        "filename": "tests/libs/segment_gap_outer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T07:25:59Z",
+      "side": 1,
+      "message": "This seemed better (and less ambiguous) than my previous names.",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "471e88f9_602b3c39",
+        "filename": "tests/libs/segment_gap_outer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T07:25:59Z",
+      "side": 1,
+      "message": "Restored this to the original code, which is more readable.",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
