@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d8b1fb75_df320e6a",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1430422
+      },
+      "writtenOn": "2020-07-24T05:54:49Z",
+      "side": 1,
+      "message": "If you happen to have `.text` as well, .text : {*(.text .text.*)} works better.\n\nThe current rule relies on the subtle orphan section placement.",
+      "revId": "6c5f32a677cff96b4cf58092f7a5a8ab31b5f5e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
