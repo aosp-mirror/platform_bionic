@@ -28,6 +28,7 @@
 
 #include <ifaddrs.h>
 
+#include <async_safe/log.h>
 #include <cutils/misc.h>           // FIRST_APPLICATION_UID
 #include <errno.h>
 #include <linux/if_packet.h>
@@ -205,12 +206,12 @@ static void __getifaddrs_callback(void* context, nlmsghdr* hdr) {
     new_addr->interface_index = static_cast<int>(msg->ifa_index);
 
     // If this is a known interface, copy what we already know.
+    // If we don't know about this interface yet, we try to resolve the name and flags using ioctl
+    // calls during postprocessing.
     if (known_addr != nullptr) {
       strcpy(new_addr->name, known_addr->name);
       new_addr->ifa.ifa_name = new_addr->name;
       new_addr->ifa.ifa_flags = known_addr->ifa.ifa_flags;
-    } else {
-      new_addr->ifa.ifa_flags = msg->ifa_flags;
     }
 
     // Go through the various bits of information and find the name, address
@@ -271,7 +272,31 @@ static void resolve_or_remove_nameless_interfaces(ifaddrs** list) {
     } else {
       prev_addr = addr;
     }
+
     addr = reinterpret_cast<ifaddrs_storage*>(next_addr);
+  }
+}
+
+static void get_interface_flags_via_ioctl(ifaddrs** list) {
+  ScopedFd s(socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC, 0));
+  if (s.get() == -1) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                          "socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC) failed in ifaddrs: %s",
+                          strerror(errno));
+    return;
+  }
+
+  for (ifaddrs_storage* addr = reinterpret_cast<ifaddrs_storage*>(*list); addr != nullptr;
+       addr = reinterpret_cast<ifaddrs_storage*>(addr->ifa.ifa_next)) {
+    ifreq ifr = {};
+    strlcpy(ifr.ifr_name, addr->ifa.ifa_name, sizeof(ifr.ifr_name));
+    if (ioctl(s.get(), SIOCGIFFLAGS, &ifr) != -1) {
+      addr->ifa.ifa_flags = ifr.ifr_flags;
+    } else {
+      async_safe_format_log(ANDROID_LOG_ERROR, "libc",
+                            "ioctl(SIOCGIFFLAGS) for \"%s\" failed in ifaddrs: %s",
+                            addr->ifa.ifa_name, strerror(errno));
+    }
   }
 }
 
@@ -303,6 +328,9 @@ int getifaddrs(ifaddrs** out) {
     // If we weren't able to depend on GETLINK messages, it's possible some
     // interfaces never got their name set. Resolve them using if_indextoname or remove them.
     resolve_or_remove_nameless_interfaces(out);
+    // Similarly, without GETLINK messages, interfaces will not have their flags set.
+    // Resolve them using the SIOCGIFFLAGS ioctl call.
+    get_interface_flags_via_ioctl(out);
   }
 
   return 0;
