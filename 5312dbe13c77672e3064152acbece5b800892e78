@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c555cbd_3ddc8737",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 926,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-24T15:41:03Z",
+      "side": 1,
+      "message": "Good idea. Done.",
+      "parentUuid": "7d3739d4_3c88ab17",
+      "range": {
+        "startLine": 926,
+        "startChar": 0,
+        "endLine": 926,
+        "endChar": 19
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8533cabd_a5cf1246",
         "filename": "tests/Android.bp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2020-07-22T20:54:03Z",
       "side": 1,
       "message": "nit: any reason for the appending rather than one list?",
+      "range": {
+        "startLine": 930,
+        "startChar": 14,
+        "endLine": 941,
+        "endChar": 9
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6a073bf7_e2e8c76a",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-24T15:41:03Z",
+      "side": 1,
+      "message": "Nope. Oops. Done.",
+      "parentUuid": "8533cabd_a5cf1246",
       "range": {
         "startLine": 930,
         "startChar": 14,
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "Or `cc_library_host_static`",
       "parentUuid": "dbcc396d_286489b9",
+      "range": {
+        "startLine": 946,
+        "startChar": 0,
+        "endLine": 948,
+        "endChar": 6
+      },
+      "revId": "5312dbe13c77672e3064152acbece5b800892e78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07f5fc8d_b9a14dca",
+        "filename": "tests/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 948,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-24T15:41:03Z",
+      "side": 1,
+      "message": "Hmm, I think the tests actually do build for the device architecture, so this change makes things fail. (I don\u0027t exactly understand why)\n\n  File bionic/tests/clang_fortify_tests.cpp Line 54: \u0027expected-no-diagnostics\u0027 directive cannot follow other expected directives",
+      "parentUuid": "d2db88d3_59bdf2f0",
       "range": {
         "startLine": 946,
         "startChar": 0,
