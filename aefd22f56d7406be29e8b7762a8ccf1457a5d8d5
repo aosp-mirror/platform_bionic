@@ -70,6 +70,24 @@
     },
     {
       "key": {
+        "uuid": "04c703e6_a77a8a2c",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T18:01:05Z",
+      "side": 1,
+      "message": "You are correct. I\u0027m not sure why I had it the other way (and why that worked) with the previous version.",
+      "parentUuid": "2933d6ab_8633d10f",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "762a1957_b480daa5",
         "filename": "tests/libs/segment_gap_outer.lds",
         "patchSetId": 3
@@ -84,6 +102,24 @@
       "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3890a19c_44d7658c",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2020-07-24T18:01:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "762a1957_b480daa5",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
