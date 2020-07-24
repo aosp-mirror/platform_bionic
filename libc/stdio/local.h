@@ -259,8 +259,8 @@ extern void __sinit(void);  // Not actually implemented.
 size_t parsefloat(FILE*, char*, char*);
 size_t wparsefloat(FILE*, wchar_t*, wchar_t*);
 
-// Check a FILE* isn't nullptr, so we can emit a message while crashing
-// instead of doing a blind null-dereference.
+// Check a FILE* isn't nullptr, so we can emit a clear diagnostic message
+// instead of just crashing with SIGSEGV.
 #define CHECK_FP(fp) \
   if (fp == nullptr) __fortify_fatal("%s: null FILE*", __FUNCTION__)
 
