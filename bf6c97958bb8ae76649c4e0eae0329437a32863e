@@ -33,6 +33,24 @@
       "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f1122cb_80fa421d",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-07-24T02:00:55Z",
+      "side": 1,
+      "message": "This just ensures that this module is not included in any APEX whose min_sdk_version is older than 16. Setting this to 16 shouldn\u0027t cause any harm, but as this module will be split into multiple variants each of which is specific to an API level, I think min_sdk_version of a variant should better be automatically set to the API level that it is for.",
+      "parentUuid": "b38f623e_d7520453",
+      "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
