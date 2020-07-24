@@ -50,6 +50,40 @@
       "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2933d6ab_8633d10f",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-07-24T14:58:53Z",
+      "side": 1,
+      "message": "Are you sure that is what the section is called? I believe that it should take its name from the section attribute exactly, even with -ffunction-sections, i.e. it should be named \".custom_text\".",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "762a1957_b480daa5",
+        "filename": "tests/libs/segment_gap_outer.lds",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-07-24T14:58:53Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "aefd22f56d7406be29e8b7762a8ccf1457a5d8d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
