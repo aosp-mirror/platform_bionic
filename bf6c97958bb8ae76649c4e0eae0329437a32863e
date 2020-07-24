@@ -51,6 +51,24 @@
       "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "767fb191_6c7a9b37",
+        "filename": "libc/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-07-24T02:49:29Z",
+      "side": 1,
+      "message": "I now understand why you changed this into a number; to create versions from 16 to current. Please ignore my comment above.",
+      "parentUuid": "2f1122cb_80fa421d",
+      "revId": "bf6c97958bb8ae76649c4e0eae0329437a32863e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
