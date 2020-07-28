@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b41d86c5_92eb89bd",
+        "filename": "tests/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T05:26:27Z",
+      "side": 0,
+      "message": "It looks like https://android-review.googlesource.com/c/platform/bionic/+/1209414/ removed the read of $(build_host).",
+      "revId": "b5f301eaafdc23f05fe5558fb0406a0ab04fc807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

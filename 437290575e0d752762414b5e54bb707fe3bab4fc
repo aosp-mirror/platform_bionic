@@ -16,6 +16,57 @@
       "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5463cb9_de35f5d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T05:26:27Z",
+      "side": 1,
+      "message": "The fast way to run the bionic tests:\n\n    m bionic-unit-tests\n    adb root\n    adb sync (or `adb sync data` to sync just the /data partition)\n    adb shell /data/nativetest[64]/bionic-unit-tests/bionic-unit-tests --gtest_filter\u003ddlfcn.dlopen_invalid\\\\\\*\n\nAlso, the tests run as part of CTS:\n\n    atest CtsBionicTestCases\n\nCurrently this patch prevents the CTS variant from building, because gtest_globals_cts.cpp doesn\u0027t define a GetPrebuiltElfDir(). IIRC, the CTS variant is expected to run without root, and the directory layout is different.\n\nThe CTS variant uses its own Android.mk to place each test file into the expected place:\n\nhttps://source.corp.google.com/android/cts/tests/tests/bionic/Android.build.copy.libs.mk\n\nFWIW: There\u0027s a third way of running the tests called apct, that AFAIK can\u0027t be run by hand:\n\nhttps://source.corp.google.com/piper///depot/google3/wireless/android/test_tools/atp/config/test/apct/bionic/native_test.gcl\n\nThe gcl file mentions the \u0027nativetest[64]/bionic-loader-test-libs\u0027 directory, but it also mentions the \u0027nativetest[64]/bionic-unit-tests\u0027 directory, which would contains the prebuilts after this CL.\n\nI think I\u0027ll upload a revision...\n",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9cd5a129_3857b0d7",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T05:26:27Z",
+      "side": 1,
+      "message": "Using data_libs seems to put each library into two places:\n\n(the module\u0027s default install dir)\n/data/nativetest[64]/bionic-loader-test-libs/prebuilt-elf-files/\n\n(the installation for bionic-unit-tests itself)\n/data/nativetest[64]/bionic-unit-tests/bionic-loader-test-libs/prebuilt-elf-files/\n\nPreviously, bionic-unit-tests only expects the first bionic-loader-test-libs directory. If I continue using required, but remove the \".so\" extension, it seems to work...",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2aed8f1_652602ab",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T05:26:27Z",
+      "side": 1,
+      "message": "The comment here could be improved. It\u0027s not initializing `path` to $ANDROID_DATA, but something more like $ANDROID_DATA/somedir/binary-dir/.. or $ANDROID_DATA/somedir.\n\nAlso, I suggest using android::base::GetExecutableDirectory.",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
