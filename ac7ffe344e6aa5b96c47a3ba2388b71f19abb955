@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9504aff1_b6759a6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-07-28T23:33:01Z",
+      "side": 1,
+      "message": "Looking for a dr-no +1.\nThis is a CTS test fix.",
+      "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
