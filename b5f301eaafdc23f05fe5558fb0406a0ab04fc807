@@ -34,6 +34,24 @@
       "revId": "b5f301eaafdc23f05fe5558fb0406a0ab04fc807",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "39751ca7_0ff5e57a",
+        "filename": "tests/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T23:04:25Z",
+      "side": 0,
+      "message": "Yeah, I think it makes sense to remove it.",
+      "parentUuid": "1e184320_eb2b019e",
+      "revId": "b5f301eaafdc23f05fe5558fb0406a0ab04fc807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

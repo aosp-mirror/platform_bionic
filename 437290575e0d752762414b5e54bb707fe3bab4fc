@@ -71,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "afde7d08_d0ec6eae",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-28T23:04:25Z",
+      "side": 1,
+      "message": "I tested again, and it looks like you\u0027re right. Building bionic-unit-tests only installs the prebuilt ELF files into the nativetest[64]/bionic-unit-tests/bionic-loader-test-libs directory.\n\nI did notice that running \"atest CtsBionicTestCases\" with patchset 6 installs the prebuilts into nativetest[64]/bionic-loader-test-libs, so maybe that\u0027s what I had done.\n\nIn any case, it\u0027s good to have just the single bionic-loader-test-libs directory.",
+      "parentUuid": "3af9bfaa_543ae6ad",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c2aed8f1_652602ab",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 6
