@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "3af9bfaa_543ae6ad",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-28T17:46:55Z",
+      "side": 1,
+      "message": "If using data_libs (and *not* required), I don\u0027t see the library added to the module\u0027s default install dir. That is, I only see the files added to `/data/nativetest[64]/bionic-unit-tests/bionic-loader-test-libs/prebuilt-elf-files/`, not `/data/nativetest[64]/bionic-loader-test-libs/prebuilt-elf-files/`. \n\n(I\u0027m reproducing this by clearing my out/ directory then running `m bionic-unit-tests` on  aosp_cf_x86_phone-userdebug)\n\n```\n\n$ find out/target/product/vsoc_x86/data | grep libtest_invalid-empty_shdr_table.so\n```\n\nout/target/product/vsoc_x86/data/nativetest/bionic-unit-tests/bionic-loader-test-libs/prebuilt-elf-files/libtest_invalid-empty_shdr_table.so\n\nIs this different than what you\u0027re finding?",
+      "parentUuid": "9cd5a129_3857b0d7",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c2aed8f1_652602ab",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 6
@@ -67,6 +85,24 @@
       "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8159cdde_2e09d09a",
+        "filename": "tests/gtest_globals.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-28T17:46:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2aed8f1_652602ab",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }

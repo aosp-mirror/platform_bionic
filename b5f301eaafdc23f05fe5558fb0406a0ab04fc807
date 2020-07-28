@@ -16,6 +16,24 @@
       "revId": "b5f301eaafdc23f05fe5558fb0406a0ab04fc807",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e184320_eb2b019e",
+        "filename": "tests/Android.mk",
+        "patchSetId": 6
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-28T17:46:55Z",
+      "side": 0,
+      "message": "Indeed. Sound good to carry on with its removal, then, or is there something we should consider reverting?",
+      "parentUuid": "b41d86c5_92eb89bd",
+      "revId": "b5f301eaafdc23f05fe5558fb0406a0ab04fc807",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
