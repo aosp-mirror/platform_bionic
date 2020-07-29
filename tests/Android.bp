@@ -72,6 +72,217 @@ cc_defaults {
 }
 
 // -----------------------------------------------------------------------------
+// Prebuilt shared libraries for use in tests.
+// -----------------------------------------------------------------------------
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-rw_load_segment",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-rw_load_segment.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-rw_load_segment.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-rw_load_segment.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-rw_load_segment.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-unaligned_shdr_offset",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-unaligned_shdr_offset.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-unaligned_shdr_offset.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-unaligned_shdr_offset.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-unaligned_shdr_offset.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-zero_shentsize",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-zero_shentsize.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shentsize.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shentsize.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-zero_shentsize.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-zero_shstrndx",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-zero_shstrndx.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shstrndx.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shstrndx.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-zero_shstrndx.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-empty_shdr_table",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-empty_shdr_table.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-empty_shdr_table.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-empty_shdr_table.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-empty_shdr_table.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-zero_shdr_table_offset",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-zero_shdr_table_offset.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shdr_table_offset.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shdr_table_offset.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-zero_shdr_table_offset.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-zero_shdr_table_content",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-zero_shdr_table_content.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shdr_table_content.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shdr_table_content.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-zero_shdr_table_content.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-textrels",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-textrels.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-textrels.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-textrels.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-textrels.so"],
+        },
+    },
+}
+
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-textrels2",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-textrels2.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-textrels2.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-textrels2.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-textrels2.so"],
+        },
+    },
+}
+
+// -----------------------------------------------------------------------------
 // All standard tests.
 // -----------------------------------------------------------------------------
 
@@ -736,15 +947,15 @@ cc_defaults {
         "libtest_with_dependency_loop",
         "libtest_with_dependency",
         "libtest_indirect_thread_local_dtor",
-        "libtest_invalid-empty_shdr_table.so",
-        "libtest_invalid-rw_load_segment.so",
-        "libtest_invalid-unaligned_shdr_offset.so",
-        "libtest_invalid-zero_shdr_table_content.so",
-        "libtest_invalid-zero_shdr_table_offset.so",
-        "libtest_invalid-zero_shentsize.so",
-        "libtest_invalid-zero_shstrndx.so",
-        "libtest_invalid-textrels.so",
-        "libtest_invalid-textrels2.so",
+        "libtest_invalid-empty_shdr_table",
+        "libtest_invalid-rw_load_segment",
+        "libtest_invalid-unaligned_shdr_offset",
+        "libtest_invalid-zero_shdr_table_content",
+        "libtest_invalid-zero_shdr_table_offset",
+        "libtest_invalid-zero_shentsize",
+        "libtest_invalid-zero_shstrndx",
+        "libtest_invalid-textrels",
+        "libtest_invalid-textrels2",
         "libtest_thread_local_dtor",
         "libtest_thread_local_dtor2",
         "preinit_getauxval_test_helper",
