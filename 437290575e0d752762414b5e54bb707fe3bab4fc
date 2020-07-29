@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "a922b809_e44016ee",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-29T02:07:29Z",
+      "side": 1,
+      "message": "sgtm. I think this change is ready to go.",
+      "parentUuid": "dbaa9b56_00961d21",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2aed8f1_652602ab",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 6
