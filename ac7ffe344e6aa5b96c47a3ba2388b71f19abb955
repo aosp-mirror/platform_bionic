@@ -50,6 +50,41 @@
       "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9975b5b1_9619faef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-29T15:10:40Z",
+      "side": 1,
+      "message": "some branches are like that, and you have to use autosubmit and let the machines do it for you. step one of their takeover.",
+      "parentUuid": "8b77c3f4_a7ae444b",
+      "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4fca455_e64e5db6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-29T15:10:40Z",
+      "side": 1,
+      "message": "some branche",
+      "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
