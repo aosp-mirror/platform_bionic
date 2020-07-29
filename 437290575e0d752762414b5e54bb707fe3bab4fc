@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "dbaa9b56_00961d21",
+        "filename": "tests/Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-07-29T01:57:13Z",
+      "side": 1,
+      "message": "I agree it\u0027s cleaner to have a single location; perhaps we continue to use `required` until we can migrate everything at once to `data_libs`, then we revisit isolating the new location under bionic-unit-tests.\n\nThis change LGTM. Anything else lingering before we get this approved?",
+      "parentUuid": "afde7d08_d0ec6eae",
+      "revId": "437290575e0d752762414b5e54bb707fe3bab4fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2aed8f1_652602ab",
         "filename": "tests/gtest_globals.cpp",
         "patchSetId": 6
