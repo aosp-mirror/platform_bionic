@@ -662,6 +662,46 @@ TEST(malloc, mallopt_purge) {
 #endif
 }
 
+#if defined(__BIONIC__)
+static void GetAllocatorVersion(bool* allocator_scudo) {
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+
+  tinyxml2::XMLDocument doc;
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
+
+  auto root = doc.FirstChildElement();
+  ASSERT_NE(nullptr, root);
+  ASSERT_STREQ("malloc", root->Name());
+  std::string version(root->Attribute("version"));
+  *allocator_scudo = (version == "scudo-1");
+}
+#endif
+
+TEST(malloc, mallopt_scudo_only_options) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+  ASSERT_EQ(1, mallopt(M_CACHE_COUNT_MAX, 100));
+  ASSERT_EQ(1, mallopt(M_CACHE_SIZE_MAX, 1024 * 1024 * 2));
+  ASSERT_EQ(1, mallopt(M_TSDS_COUNT_MAX, 8));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 TEST(malloc, reallocarray_overflow) {
 #if HAVE_REALLOCARRAY
   // Values that cause overflow to a result small enough (8 on LP64) that malloc would "succeed".
