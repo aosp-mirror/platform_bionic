@@ -1623,9 +1623,7 @@ TEST(dlext, compat_elf_hash_and_relocation_tables) {
 #endif //  defined(__arm__)
 
 TEST(dlfcn, dlopen_invalid_rw_load_segment) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-rw_load_segment.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-rw_load_segment.so";
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\": W+E load segments are not allowed";
@@ -1633,9 +1631,7 @@ TEST(dlfcn, dlopen_invalid_rw_load_segment) {
 }
 
 TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-unaligned_shdr_offset.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-unaligned_shdr_offset.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1644,9 +1640,7 @@ TEST(dlfcn, dlopen_invalid_unaligned_shdr_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shentsize) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-zero_shentsize.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-zero_shentsize.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1655,9 +1649,7 @@ TEST(dlfcn, dlopen_invalid_zero_shentsize) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-zero_shstrndx.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-zero_shstrndx.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1666,9 +1658,7 @@ TEST(dlfcn, dlopen_invalid_zero_shstrndx) {
 }
 
 TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-empty_shdr_table.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-empty_shdr_table.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1677,9 +1667,7 @@ TEST(dlfcn, dlopen_invalid_empty_shdr_table) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-zero_shdr_table_offset.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-zero_shdr_table_offset.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1688,9 +1676,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_offset) {
 }
 
 TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-zero_shdr_table_content.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-zero_shdr_table_content.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1699,9 +1685,7 @@ TEST(dlfcn, dlopen_invalid_zero_shdr_table_content) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-textrels.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-textrels.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
@@ -1710,9 +1694,7 @@ TEST(dlfcn, dlopen_invalid_textrels) {
 }
 
 TEST(dlfcn, dlopen_invalid_textrels2) {
-  const std::string libpath = GetTestlibRoot() +
-                              "/" + kPrebuiltElfDir +
-                              "/libtest_invalid-textrels2.so";
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-textrels2.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
