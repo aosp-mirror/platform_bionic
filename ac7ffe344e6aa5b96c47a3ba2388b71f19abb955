@@ -33,6 +33,23 @@
       "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8b77c3f4_a7ae444b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-07-29T01:39:34Z",
+      "side": 1,
+      "message": "Huh. Why don\u0027t I have permission to submit this change?",
+      "revId": "ac7ffe344e6aa5b96c47a3ba2388b71f19abb955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
