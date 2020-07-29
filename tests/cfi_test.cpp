@@ -85,9 +85,6 @@ TEST(cfi_test, basic) {
   EXPECT_EQ(get_global_address(), get_last_address());
   EXPECT_EQ(c, get_count());
 
-  // CFI check for a stack address. This is always invalid and gets the process killed.
-  EXPECT_DEATH(__cfi_slowpath(45, reinterpret_cast<void*>(&c)), "");
-
   // CFI check for a heap address. This is always invalid and gets the process killed.
   void* p = malloc(4096);
   EXPECT_DEATH(__cfi_slowpath(46, p), "");
