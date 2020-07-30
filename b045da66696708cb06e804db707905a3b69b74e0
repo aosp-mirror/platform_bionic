@@ -16,6 +16,24 @@
       "revId": "b045da66696708cb06e804db707905a3b69b74e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c277f4e0_7033b180",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-30T16:55:17Z",
+      "side": 1,
+      "message": "for backwards compatibility we\u0027ll need to continue to support the old terms too. (i did put rprichard\u0027s name in column H of the spreadsheet, but sadly that\u0027s a long way to scroll to the right to see...)",
+      "parentUuid": "2a73b093_9f3d88cd",
+      "revId": "b045da66696708cb06e804db707905a3b69b74e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
