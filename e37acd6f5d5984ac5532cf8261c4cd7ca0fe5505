@@ -36,6 +36,57 @@
     },
     {
       "key": {
+        "uuid": "80ec60cc_281dd052",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-30T22:59:35Z",
+      "side": 1,
+      "message": "The \"allowed_libs\" name sounds good to me.\n",
+      "revId": "e37acd6f5d5984ac5532cf8261c4cd7ca0fe5505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "953005e5_ff93ac7e",
+        "filename": "linker/ld.config.format.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-30T22:59:35Z",
+      "side": 1,
+      "message": "Just use a comment. The [name] syntax has meaning in ld.config.txt, so writing [deprecated] makes the file broken.\n\ne.g. The [example_section] section has a corresponding dir.example_section.",
+      "revId": "e37acd6f5d5984ac5532cf8261c4cd7ca0fe5505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b46305fc_10059448",
+        "filename": "linker/linker_config.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-07-30T22:59:35Z",
+      "side": 1,
+      "message": "IIUC:\n\n    ns.whitelisted \u003d foo:bar\n\nturns into\n\n    foo:bar:\n\nturns into\n\n    [\"foo\", \"bar\", \"\"]\n\nI think we shouldn\u0027t start adding an empty library name to the end of the list, even if it does mostly work.",
+      "revId": "e37acd6f5d5984ac5532cf8261c4cd7ca0fe5505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "78d9490d_be04b748",
         "filename": "linker/linker_config_test.cpp",
         "patchSetId": 2
