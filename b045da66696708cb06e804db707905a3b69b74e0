@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a73b093_9f3d88cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-07-30T15:29:53Z",
+      "side": 1,
+      "message": "Can we use simply \u0027allowed\u0027 or \u0027permitted\u0027 here?  We shouldn\u0027t create new terms (\u0027allowlisted\u0027) when we can express this with existing and allowed terms.\n\nIf it\u0027s a bit ambiguous what is allowed, then can we use \u0027allowed_libs\u0027?  That\u0027s clearer than \u0027allowlisted\u0027.",
+      "revId": "b045da66696708cb06e804db707905a3b69b74e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
