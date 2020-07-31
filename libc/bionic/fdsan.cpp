@@ -137,7 +137,7 @@ __printflike(1, 0) static void fdsan_error(const char* fmt, ...) {
     return;
   }
 
-  // Lots of code will (sensibly) fork, blindly call close on all of their fds,
+  // Lots of code will (sensibly) fork, call close on all of their fds,
   // and then exec. Compare our cached pid value against the real one to detect
   // this scenario and permit it.
   pid_t cached_pid = __get_cached_pid();
