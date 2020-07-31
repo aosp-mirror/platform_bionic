@@ -39,6 +39,30 @@
       "revId": "26b06073f6874ee719422f4986738f6bc622448c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf74a646_dbefd3e2",
+        "filename": "libc/upstream-openbsd/android/include/openbsd-compat.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-07-31T23:46:59Z",
+      "side": 1,
+      "message": "(as you can see on L73-74 above, we don\u0027t bother for stuff like this that\u0027s between upstream and itself.)",
+      "parentUuid": "3a6b8bfe_261d22ad",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 67
+      },
+      "revId": "26b06073f6874ee719422f4986738f6bc622448c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
