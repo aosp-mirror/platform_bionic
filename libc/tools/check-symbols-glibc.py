@@ -182,9 +182,9 @@ known = set([
   '_ctype_',
   '__libc_init',
 ])
-# POSIX has some stuff that's too stupid for words (a64l) or not actually
-# implemented in glibc unless you count always failing with ENOSYS as
-# being implemented (fattach). Other stuff (fmtmsg) isn't used in any
+# POSIX has some stuff that's unusable in the modern world (a64l) or not
+# actually implemented in glibc unless you count always failing with ENOSYS
+# as being implemented (fattach). Other stuff (fmtmsg) isn't used in any
 # codebase I have access to, internal or external.
 in_posix_and_glibc_but_dead_or_useless = set([
   'a64l', # obsolete
