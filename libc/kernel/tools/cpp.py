@@ -267,7 +267,7 @@ class CppTokenizer(object):
 
     def parseString(self, lines):
         """Parse a list of text lines into a BlockList object."""
-        file_ = 'dummy.c'
+        file_ = 'no-filename-available.c'
         self._tu = self._indexer.parse(file_, self.clang_flags,
                                        unsaved_files=[(file_, lines)],
                                        options=self.options)
