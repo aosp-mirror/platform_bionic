@@ -63,7 +63,3 @@ class LinkerLogger {
 
 extern LinkerLogger g_linker_logger;
 extern char** g_argv;
-
-// If the system property debug.ld.greylist_disabled is true, we'll not use the greylist
-// regardless of API level.
-extern bool g_greylist_disabled;
