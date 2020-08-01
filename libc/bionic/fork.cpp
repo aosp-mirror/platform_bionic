@@ -34,7 +34,7 @@
 #include "pthread_internal.h"
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
-int __clone_for_fork() {
+extern "C" __LIBC_HIDDEN__ int __clone_for_fork() {
   pthread_internal_t* self = __get_thread();
 
   int result = clone(nullptr, nullptr, (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID | SIGCHLD),
