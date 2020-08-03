@@ -186,6 +186,9 @@
 #if defined(__NR_faccessat)
   #define SYS_faccessat __NR_faccessat
 #endif
+#if defined(__NR_faccessat2)
+  #define SYS_faccessat2 __NR_faccessat2
+#endif
 #if defined(__NR_fadvise64)
   #define SYS_fadvise64 __NR_fadvise64
 #endif

@@ -34,6 +34,7 @@
 #define KVM_FEATURE_PV_SEND_IPI 11
 #define KVM_FEATURE_POLL_CONTROL 12
 #define KVM_FEATURE_PV_SCHED_YIELD 13
+#define KVM_FEATURE_ASYNC_PF_INT 14
 #define KVM_HINTS_REALTIME 0
 #define KVM_FEATURE_CLOCKSOURCE_STABLE_BIT 24
 #define MSR_KVM_WALL_CLOCK 0x11
@@ -45,6 +46,8 @@
 #define MSR_KVM_STEAL_TIME 0x4b564d03
 #define MSR_KVM_PV_EOI_EN 0x4b564d04
 #define MSR_KVM_POLL_CONTROL 0x4b564d05
+#define MSR_KVM_ASYNC_PF_INT 0x4b564d06
+#define MSR_KVM_ASYNC_PF_ACK 0x4b564d07
 struct kvm_steal_time {
   __u64 steal;
   __u32 version;
@@ -70,6 +73,8 @@ struct kvm_clock_pairing {
 #define KVM_ASYNC_PF_ENABLED (1 << 0)
 #define KVM_ASYNC_PF_SEND_ALWAYS (1 << 1)
 #define KVM_ASYNC_PF_DELIVERY_AS_PF_VMEXIT (1 << 2)
+#define KVM_ASYNC_PF_DELIVERY_AS_INT (1 << 3)
+#define KVM_ASYNC_PF_VEC_MASK GENMASK(7, 0)
 #define KVM_MMU_OP_WRITE_PTE 1
 #define KVM_MMU_OP_FLUSH_TLB 2
 #define KVM_MMU_OP_RELEASE_PT 3
@@ -92,8 +97,9 @@ struct kvm_mmu_op_release_pt {
 #define KVM_PV_REASON_PAGE_NOT_PRESENT 1
 #define KVM_PV_REASON_PAGE_READY 2
 struct kvm_vcpu_pv_apf_data {
-  __u32 reason;
-  __u8 pad[60];
+  __u32 flags;
+  __u32 token;
+  __u8 pad[56];
   __u32 enabled;
 };
 #define KVM_PV_EOI_BIT 0
