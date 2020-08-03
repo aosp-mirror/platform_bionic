@@ -326,7 +326,8 @@ static bool parse_config_file(const char* ld_config_file_path,
           (*properties)[name].append_value(std::move(value));
         } else if (android::base::EndsWith(name, ".paths") ||
                    android::base::EndsWith(name, ".shared_libs") ||
-                   android::base::EndsWith(name, ".whitelisted")) {
+                   android::base::EndsWith(name, ".whitelisted") ||
+                   android::base::EndsWith(name, ".allowed_libs")) {
           value = ":" + value;
           (*properties)[name].append_value(std::move(value));
         } else {
@@ -564,10 +565,15 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     ns_config->set_isolated(properties.get_bool(property_name_prefix + ".isolated"));
     ns_config->set_visible(properties.get_bool(property_name_prefix + ".visible"));
 
-    std::string whitelisted =
+    std::string allowed_libs =
         properties.get_string(property_name_prefix + ".whitelisted", &lineno);
-    if (!whitelisted.empty()) {
-      ns_config->set_whitelisted_libs(android::base::Split(whitelisted, ":"));
+    const std::string libs = properties.get_string(property_name_prefix + ".allowed_libs", &lineno);
+    if (!allowed_libs.empty() && !libs.empty()) {
+      allowed_libs += ":";
+    }
+    allowed_libs += libs;
+    if (!allowed_libs.empty()) {
+      ns_config->set_allowed_libs(android::base::Split(allowed_libs, ":"));
     }
 
     // these are affected by is_asan flag

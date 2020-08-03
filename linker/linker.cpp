@@ -207,7 +207,7 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
   };
 
   // If you're targeting N, you don't get the greylist.
-  if (g_greylist_disabled || get_application_target_sdk_version() >= 24) {
+  if (get_application_target_sdk_version() >= 24) {
     return false;
   }
 
@@ -3500,7 +3500,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     ns->set_isolated(ns_config->isolated());
     ns->set_default_library_paths(ns_config->search_paths());
     ns->set_permitted_paths(ns_config->permitted_paths());
-    ns->set_whitelisted_libs(ns_config->whitelisted_libs());
+    ns->set_allowed_libs(ns_config->allowed_libs());
 
     namespaces[ns_config->name()] = ns;
     if (ns_config->visible()) {
