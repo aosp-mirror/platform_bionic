@@ -1010,7 +1010,6 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
-        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1177,12 +1176,30 @@ cc_library_static {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
-    whole_static_libs: ["libsystemproperties"],
+    whole_static_libs: [
+        "libc_bionic_systrace",
+        "libsystemproperties",
+    ],
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+}
+
+// ========================================================
+// libc_bionic_systrace.a
+// ========================================================
+
+cc_library_static {
+    name: "libc_bionic_systrace",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/bionic_systrace.cpp",
+    ],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 // ========================================================
