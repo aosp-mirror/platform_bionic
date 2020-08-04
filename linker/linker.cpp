@@ -186,10 +186,10 @@ static bool maybe_accessible_via_namespace_links(android_namespace_t* ns, const 
   return false;
 }
 
-// TODO(dimitry): The grey-list is a workaround for http://b/26394120 ---
+// TODO(dimitry): The exempt-list is a workaround for http://b/26394120 ---
 // gradually remove libraries from this list until it is gone.
-static bool is_greylisted(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
-  static const char* const kLibraryGreyList[] = {
+static bool is_exempt_lib(android_namespace_t* ns, const char* name, const soinfo* needed_by) {
+  static const char* const kLibraryExemptList[] = {
     "libandroid_runtime.so",
     "libbinder.so",
     "libcrypto.so",
@@ -206,13 +206,13 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     nullptr
   };
 
-  // If you're targeting N, you don't get the greylist.
+  // If you're targeting N, you don't get the exempt-list.
   if (get_application_target_sdk_version() >= 24) {
     return false;
   }
 
   // if the library needed by a system library - implicitly assume it
-  // is greylisted unless it is in the list of shared libraries for one or
+  // is exempt unless it is in the list of shared libraries for one or
   // more linked namespaces
   if (needed_by != nullptr && is_system_library(needed_by->get_realpath())) {
     return !maybe_accessible_via_namespace_links(ns, name);
@@ -224,8 +224,8 @@ static bool is_greylisted(android_namespace_t* ns, const char* name, const soinf
     name = basename(name);
   }
 
-  for (size_t i = 0; kLibraryGreyList[i] != nullptr; ++i) {
-    if (strcmp(name, kLibraryGreyList[i]) == 0) {
+  for (size_t i = 0; kLibraryExemptList[i] != nullptr; ++i) {
+    if (strcmp(name, kLibraryExemptList[i]) == 0) {
       return true;
     }
   }
@@ -632,7 +632,7 @@ class LoadTask {
   bool close_fd_;
   off64_t file_offset_;
   std::unordered_map<const soinfo*, ElfReader>* elf_readers_map_;
-  // TODO(dimitry): needed by workaround for http://b/26394120 (the grey-list)
+  // TODO(dimitry): needed by workaround for http://b/26394120 (the exempt-list)
   bool is_dt_needed_;
   // END OF WORKAROUND
   const android_namespace_t* const start_from_;
@@ -1187,12 +1187,12 @@ static bool load_library(android_namespace_t* ns,
   // do not check accessibility using realpath if fd is located on tmpfs
   // this enables use of memfd_create() for apps
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
-    // TODO(dimitry): workaround for http://b/26394120 - the grey-list
+    // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
 
     // TODO(dimitry) before O release: add a namespace attribute to have this enabled
     // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
-    if (is_greylisted(ns, name, needed_by)) {
+    if (is_exempt_lib(ns, name, needed_by)) {
       // print warning only if needed by non-system library
       if (needed_by == nullptr || !is_system_library(needed_by->get_realpath())) {
         const soinfo* needed_or_dlopened_by = task->get_needed_by();
@@ -1446,14 +1446,14 @@ static bool find_library_internal(android_namespace_t* ns,
     return true;
   }
 
-  // TODO(dimitry): workaround for http://b/26394120 (the grey-list)
-  if (ns->is_greylist_enabled() && is_greylisted(ns, task->get_name(), task->get_needed_by())) {
-    // For the libs in the greylist, switch to the default namespace and then
+  // TODO(dimitry): workaround for http://b/26394120 (the exempt-list)
+  if (ns->is_exempt_list_enabled() && is_exempt_lib(ns, task->get_name(), task->get_needed_by())) {
+    // For the libs in the exempt-list, switch to the default namespace and then
     // try the load again from there. The library could be loaded from the
     // default namespace or from another namespace (e.g. runtime) that is linked
     // from the default namespace.
     LD_LOG(kLogDlopen,
-           "find_library_internal(ns=%s, task=%s): Greylisted library - trying namespace %s",
+           "find_library_internal(ns=%s, task=%s): Exempt system library - trying namespace %s",
            ns->get_name(), task->get_name(), g_default_namespace.get_name());
     ns = &g_default_namespace;
     if (load_library(ns, task, zip_archive_cache, load_tasks, rtld_flags,
@@ -1473,9 +1473,9 @@ static bool find_library_internal(android_namespace_t* ns,
       // Library is already loaded.
       if (task->get_soinfo() != nullptr) {
         // n.b. This code path runs when find_library_in_linked_namespace found an already-loaded
-        // library by soname. That should only be possible with a greylist lookup, where we switch
-        // the namespace, because otherwise, find_library_in_linked_namespace is duplicating the
-        // soname scan done in this function's first call to find_loaded_library_by_soname.
+        // library by soname. That should only be possible with a exempt-list lookup, where we
+        // switch the namespace, because otherwise, find_library_in_linked_namespace is duplicating
+        // the soname scan done in this function's first call to find_loaded_library_by_soname.
         return true;
       }
 
@@ -2426,7 +2426,7 @@ android_namespace_t* create_namespace(const void* caller_addr,
   android_namespace_t* ns = new (g_namespace_allocator.alloc()) android_namespace_t();
   ns->set_name(name);
   ns->set_isolated((type & ANDROID_NAMESPACE_TYPE_ISOLATED) != 0);
-  ns->set_greylist_enabled((type & ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED) != 0);
+  ns->set_exempt_list_enabled((type & ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED) != 0);
   ns->set_also_used_as_anonymous((type & ANDROID_NAMESPACE_TYPE_ALSO_USED_AS_ANONYMOUS) != 0);
 
   if ((type & ANDROID_NAMESPACE_TYPE_SHARED) != 0) {
