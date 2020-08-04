@@ -100,6 +100,9 @@ cc_defaults {
         malloc_pattern_fill_contents: {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
         },
+        malloc_not_svelte: {
+            cflags: ["-DUSE_SCUDO"],
+        },
     },
 }
 
