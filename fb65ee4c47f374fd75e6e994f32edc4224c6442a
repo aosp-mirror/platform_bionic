@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8305db4a_7550319e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-08-04T17:27:34Z",
+      "side": 1,
+      "message": "The only drawback is that it\u0027s not as easy to revert to jemalloc after this change. But since I will, hopefully, remove jemalloc completely for S, I think this is fine.",
+      "revId": "fb65ee4c47f374fd75e6e994f32edc4224c6442a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
