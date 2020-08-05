@@ -34,6 +34,24 @@
       "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e2b7e36_13582d46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-08-05T22:17:17Z",
+      "side": 1,
+      "message": "This is unrelated. The discussion in internal CL is about making __BIONIC_WEAK_FOR_NATIVE_BRIDGE less offensive for native build. But the mechanism itself will stay, we need it in the emulated build anyway, to overwrite things that should be shared with native libc.\n\nWhile we share pthread_internal_t between emulated and native, we need to overwrite access to pthread_internal_t::stack_top to return emulated value instead of native value - so we need to move the access to a __BIONIC_WEAK_FOR_NATIVE_BRIDGE function.",
+      "parentUuid": "be1ad81b_6151e04e",
+      "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
