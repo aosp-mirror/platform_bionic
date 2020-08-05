@@ -86,10 +86,13 @@ static void arc4random_fork_handler() {
 }
 
 static void __libc_init_malloc_fill_contents() {
+// TODO(b/158870657) make this unconditional when all devices support SCUDO.
+#if defined(USE_SCUDO)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
   scudo_malloc_set_pattern_fill_contents(1);
 #elif defined(SCUDO_ZERO_CONTENTS)
   scudo_malloc_set_zero_contents(1);
+#endif
 #endif
 }
 
