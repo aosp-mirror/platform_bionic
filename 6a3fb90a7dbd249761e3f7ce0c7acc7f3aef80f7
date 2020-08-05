@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "90fac870_791c169b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2020-08-05T23:59:17Z",
+      "side": 1,
+      "message": "When I tested with `lunch aosp_arm64-userdebug`, the resulting. zip file contains like following:\n        └── snapshot\n            ├── Android.bp\n            └── x86_64\n                └── bin\n                    └── linkerconfig\nIs this right?",
+      "revId": "6a3fb90a7dbd249761e3f7ce0c7acc7f3aef80f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
