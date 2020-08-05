@@ -16,6 +16,24 @@
       "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "be1ad81b_6151e04e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-05T21:09:02Z",
+      "side": 1,
+      "message": "i thought from the thread on the internal CL you were going to go the `__BIONIC_WEAK_FOR_NATIVE_BRIDGE` \u003d\u003d `inline` route?",
+      "parentUuid": "a2b2f342_2aabf98c",
+      "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
