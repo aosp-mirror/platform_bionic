@@ -52,6 +52,24 @@
       "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2d0f596_6f0d5abf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-05T23:41:03Z",
+      "side": 1,
+      "message": "yes, but my comment on the internal CL was basically \"this function only exists to be fast, so what does this change cost?\". i added pcc@ because if he\u0027s happy (as the main user) then i don\u0027t mind, but if `__BIONIC_WEAK_FOR_NATIVE_BRIDGE` becomes `inline` for normal builds, then there\u0027s not even anything to think about...",
+      "parentUuid": "6e2b7e36_13582d46",
+      "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
