@@ -709,6 +709,17 @@ enum ethtool_link_mode_bit_indices {
 #define DUPLEX_HALF 0x00
 #define DUPLEX_FULL 0x01
 #define DUPLEX_UNKNOWN 0xff
+#define MASTER_SLAVE_CFG_UNSUPPORTED 0
+#define MASTER_SLAVE_CFG_UNKNOWN 1
+#define MASTER_SLAVE_CFG_MASTER_PREFERRED 2
+#define MASTER_SLAVE_CFG_SLAVE_PREFERRED 3
+#define MASTER_SLAVE_CFG_MASTER_FORCE 4
+#define MASTER_SLAVE_CFG_SLAVE_FORCE 5
+#define MASTER_SLAVE_STATE_UNSUPPORTED 0
+#define MASTER_SLAVE_STATE_UNKNOWN 1
+#define MASTER_SLAVE_STATE_MASTER 2
+#define MASTER_SLAVE_STATE_SLAVE 3
+#define MASTER_SLAVE_STATE_ERR 4
 #define PORT_TP 0x00
 #define PORT_AUI 0x01
 #define PORT_MII 0x02
@@ -808,7 +819,9 @@ struct ethtool_link_settings {
   __u8 eth_tp_mdix_ctrl;
   __s8 link_mode_masks_nwords;
   __u8 transceiver;
-  __u8 reserved1[3];
+  __u8 master_slave_cfg;
+  __u8 master_slave_state;
+  __u8 reserved1[1];
   __u32 reserved[7];
   __u32 link_mode_masks[0];
 };

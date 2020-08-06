@@ -43,6 +43,7 @@ enum {
   NDA_LINK_NETNSID,
   NDA_SRC_VNI,
   NDA_PROTOCOL,
+  NDA_NH_ID,
   __NDA_MAX
 };
 #define NDA_MAX (__NDA_MAX - 1)
