@@ -1268,6 +1268,7 @@ cc_test_library {
     name: "libtest_check_rtld_next_from_library",
     defaults: ["bionic_testlib_defaults"],
     srcs: ["check_rtld_next_from_library.cpp"],
+    native_coverage: false,
 }
 
 // -----------------------------------------------------------------------------
