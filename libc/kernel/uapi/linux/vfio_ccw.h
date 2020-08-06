@@ -34,4 +34,12 @@ struct ccw_cmd_region {
   __u32 command;
   __u32 ret_code;
 } __packed;
+struct ccw_schib_region {
+#define SCHIB_AREA_SIZE 52
+  __u8 schib_area[SCHIB_AREA_SIZE];
+} __packed;
+struct ccw_crw_region {
+  __u32 crw;
+  __u32 pad;
+} __packed;
 #endif
