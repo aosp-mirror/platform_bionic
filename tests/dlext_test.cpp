@@ -1228,7 +1228,7 @@ TEST(dlext, ns_unload_between_namespaces_missing_symbol_indirect) {
             dlerror());
 }
 
-TEST(dlext, ns_greylist_enabled) {
+TEST(dlext, ns_exempt_list_enabled) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
   const std::string ns_search_path = GetTestlibRoot() + "/private_namespace_libs";
@@ -1237,7 +1237,7 @@ TEST(dlext, ns_greylist_enabled) {
           android_create_namespace("namespace",
                                    nullptr,
                                    ns_search_path.c_str(),
-                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED,
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED,
                                    nullptr,
                                    nullptr);
 
@@ -1247,26 +1247,26 @@ TEST(dlext, ns_greylist_enabled) {
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns;
 
-  // An app targeting M can open libnativehelper.so because it's on the greylist.
+  // An app targeting M can open libnativehelper.so because it's on the exempt-list.
   android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  // Check that loader did not load another copy of libdl.so while loading greylisted library.
+  // Check that loader did not load another copy of libdl.so while loading exempted library.
   void* dlsym_ptr = dlsym(handle, "dlsym");
   ASSERT_TRUE(dlsym_ptr != nullptr) << dlerror();
   ASSERT_EQ(&dlsym, dlsym_ptr);
 
   dlclose(handle);
 
-  // An app targeting N no longer has the greylist.
+  // An app targeting N no longer has the exempt-list.
   android_set_application_target_sdk_version(24);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
 }
 
-TEST(dlext, ns_greylist_disabled_by_default) {
+TEST(dlext, ns_exempt_list_disabled_by_default) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
   const std::string ns_search_path = GetTestlibRoot() + "/private_namespace_libs";
