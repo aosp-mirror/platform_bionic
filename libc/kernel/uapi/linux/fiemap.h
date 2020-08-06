@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _LINUX_FIEMAP_H
-#define _LINUX_FIEMAP_H
+#ifndef _UAPI_LINUX_FIEMAP_H
+#define _UAPI_LINUX_FIEMAP_H
 #include <linux/types.h>
 struct fiemap_extent {
   __u64 fe_logical;

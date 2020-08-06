@@ -69,6 +69,7 @@ struct rtc_pll_info {
 #define RTC_VL_BACKUP_LOW _BITUL(1)
 #define RTC_VL_BACKUP_EMPTY _BITUL(2)
 #define RTC_VL_ACCURACY_LOW _BITUL(3)
+#define RTC_VL_BACKUP_SWITCH _BITUL(4)
 #define RTC_VL_READ _IOR('p', 0x13, unsigned int)
 #define RTC_VL_CLR _IO('p', 0x14)
 #define RTC_IRQF 0x80
