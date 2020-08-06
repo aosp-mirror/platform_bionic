@@ -267,6 +267,12 @@ struct kfd_ioctl_unmap_memory_from_gpu_args {
   __u32 n_devices;
   __u32 n_success;
 };
+struct kfd_ioctl_alloc_queue_gws_args {
+  __u32 queue_id;
+  __u32 num_gws;
+  __u32 first_gws;
+  __u32 pad;
+};
 struct kfd_ioctl_get_dmabuf_info_args {
   __u64 size;
   __u64 metadata_ptr;
@@ -319,6 +325,7 @@ enum kfd_mmio_remap {
 #define AMDKFD_IOC_GET_QUEUE_WAVE_STATE AMDKFD_IOWR(0x1B, struct kfd_ioctl_get_queue_wave_state_args)
 #define AMDKFD_IOC_GET_DMABUF_INFO AMDKFD_IOWR(0x1C, struct kfd_ioctl_get_dmabuf_info_args)
 #define AMDKFD_IOC_IMPORT_DMABUF AMDKFD_IOWR(0x1D, struct kfd_ioctl_import_dmabuf_args)
+#define AMDKFD_IOC_ALLOC_QUEUE_GWS AMDKFD_IOWR(0x1E, struct kfd_ioctl_alloc_queue_gws_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x1E
+#define AMDKFD_COMMAND_END 0x1F
 #endif
