@@ -409,4 +409,5 @@
 #define __NR_clone3 (__NR_SYSCALL_BASE + 435)
 #define __NR_openat2 (__NR_SYSCALL_BASE + 437)
 #define __NR_pidfd_getfd (__NR_SYSCALL_BASE + 438)
+#define __NR_faccessat2 (__NR_SYSCALL_BASE + 439)
 #endif
