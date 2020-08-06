@@ -43,7 +43,8 @@ struct ptp_clock_caps {
   int pps;
   int n_pins;
   int cross_timestamping;
-  int rsv[13];
+  int adjust_phase;
+  int rsv[12];
 };
 struct ptp_extts_request {
   unsigned int index;

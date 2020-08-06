@@ -79,7 +79,14 @@ struct v4l2_subdev_selection {
   struct v4l2_rect r;
   __u32 reserved[8];
 };
+struct v4l2_subdev_capability {
+  __u32 version;
+  __u32 capabilities;
+  __u32 reserved[14];
+};
+#define V4L2_SUBDEV_CAP_RO_SUBDEV BIT(0)
 #define v4l2_subdev_edid v4l2_edid
+#define VIDIOC_SUBDEV_QUERYCAP _IOR('V', 0, struct v4l2_subdev_capability)
 #define VIDIOC_SUBDEV_G_FMT _IOWR('V', 4, struct v4l2_subdev_format)
 #define VIDIOC_SUBDEV_S_FMT _IOWR('V', 5, struct v4l2_subdev_format)
 #define VIDIOC_SUBDEV_G_FRAME_INTERVAL _IOWR('V', 21, struct v4l2_subdev_frame_interval)

@@ -71,6 +71,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_EXPLICIT_SYNC (1 << 7)
 #define AMDGPU_GEM_CREATE_CP_MQD_GFX9 (1 << 8)
 #define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
+#define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -344,7 +345,7 @@ struct drm_amdgpu_cs_in {
   __u32 ctx_id;
   __u32 bo_list_handle;
   __u32 num_chunks;
-  __u32 _pad;
+  __u32 flags;
   __u64 chunks;
 };
 struct drm_amdgpu_cs_out {
@@ -359,6 +360,8 @@ union drm_amdgpu_cs {
 #define AMDGPU_IB_FLAG_PREEMPT (1 << 2)
 #define AMDGPU_IB_FLAG_TC_WB_NOT_INVALIDATE (1 << 3)
 #define AMDGPU_IB_FLAG_RESET_GDS_MAX_WAVE_ID (1 << 4)
+#define AMDGPU_IB_FLAGS_SECURE (1 << 5)
+#define AMDGPU_IB_FLAG_EMIT_MEM_SYNC (1 << 6)
 struct drm_amdgpu_cs_chunk_ib {
   __u32 _pad;
   __u32 flags;
