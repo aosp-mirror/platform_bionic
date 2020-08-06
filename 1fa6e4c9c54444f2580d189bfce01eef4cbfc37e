@@ -33,6 +33,24 @@
       "revId": "1fa6e4c9c54444f2580d189bfce01eef4cbfc37e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "70321736_bb77b472",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-06T22:42:25Z",
+      "side": 1,
+      "message": "whoops, sorry! Re-running the build...",
+      "parentUuid": "991df4fa_2b213598",
+      "revId": "1fa6e4c9c54444f2580d189bfce01eef4cbfc37e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
