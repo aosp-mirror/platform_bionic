@@ -65,10 +65,14 @@ sdk {
 
 module_exports {
     name: "runtime-module-host-exports",
-    defaults: ["linux_bionic_supported"],
+    host_supported: true,
     device_supported: false,
+    compile_multilib: "64",
 
-    native_binaries: [
-        "linker",
-    ],
+    native_binaries: ["linkerconfig"],
+    target: {
+        linux_bionic: {
+            native_binaries: ["linker"],
+        },
+    },
 }
