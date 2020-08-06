@@ -1592,10 +1592,21 @@ TEST(STRING_TEST, strcoll_smoke) {
 TEST(STRING_TEST, strxfrm_smoke) {
   const char* src1 = "aab";
   char dst1[16] = {};
-  ASSERT_GT(strxfrm(dst1, src1, sizeof(dst1)), 0U);
+  // Dry run.
+  ASSERT_EQ(strxfrm(dst1, src1, 0), 3U);
+  ASSERT_STREQ(dst1, "");
+  // Really do it.
+  ASSERT_EQ(strxfrm(dst1, src1, sizeof(dst1)), 3U);
+
   const char* src2 = "aac";
   char dst2[16] = {};
-  ASSERT_GT(strxfrm(dst2, src2, sizeof(dst2)), 0U);
+  // Dry run.
+  ASSERT_EQ(strxfrm(dst2, src2, 0), 3U);
+  ASSERT_STREQ(dst2, "");
+  // Really do it.
+  ASSERT_EQ(strxfrm(dst2, src2, sizeof(dst2)), 3U);
+
+  // The "transform" of two different strings should cause different outputs.
   ASSERT_TRUE(strcmp(dst1, dst2) < 0);
 }
 
