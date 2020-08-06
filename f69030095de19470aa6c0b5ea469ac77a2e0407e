@@ -70,6 +70,24 @@
       "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "339cb4b3_23d439e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074438
+      },
+      "writtenOn": "2020-08-06T05:27:52Z",
+      "side": 1,
+      "message": "now I see your point, thanks! waiting for Peter\u0027s opinion.\n\nyes, this change might slow things down. though, as the change is in the code that is executed only once, I hope the penalty is neglectable, especially as there is a sigaltstack call as well.\n\noverall, most __BIONIC_WEAK_FOR_NATIVE_BRIDGE annotations now apply to exported functions, so likely not inlined anyway. the exceptions are __clone_for_fork, pair of functions in init and maybe this one. still, improving the normal build looks like the right thing to do.",
+      "parentUuid": "d2d0f596_6f0d5abf",
+      "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
