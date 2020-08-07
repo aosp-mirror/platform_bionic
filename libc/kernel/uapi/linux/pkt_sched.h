@@ -669,6 +669,8 @@ enum {
   TCA_FQ_LOW_RATE_THRESHOLD,
   TCA_FQ_CE_THRESHOLD,
   TCA_FQ_TIMER_SLACK,
+  TCA_FQ_HORIZON,
+  TCA_FQ_HORIZON_DROP,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
@@ -686,6 +688,8 @@ struct tc_fq_qd_stats {
   __u32 throttled_flows;
   __u32 unthrottle_latency_ns;
   __u64 ce_mark;
+  __u64 horizon_drops;
+  __u64 horizon_caps;
 };
 enum {
   TCA_HHF_UNSPEC,

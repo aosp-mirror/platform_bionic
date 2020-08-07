@@ -114,6 +114,7 @@ enum {
 enum {
   IF_LINK_MODE_DEFAULT,
   IF_LINK_MODE_DORMANT,
+  IF_LINK_MODE_TESTING,
 };
 #if __UAPI_DEF_IF_IFMAP
 struct ifmap {

@@ -21,6 +21,7 @@
 #include <linux/vhost_types.h>
 #include <linux/types.h>
 #include <linux/ioctl.h>
+#define VHOST_FILE_UNBIND - 1
 #define VHOST_VIRTIO 0xAF
 #define VHOST_GET_FEATURES _IOR(VHOST_VIRTIO, 0x00, __u64)
 #define VHOST_SET_FEATURES _IOW(VHOST_VIRTIO, 0x00, __u64)
@@ -60,4 +61,5 @@
 #define VHOST_VDPA_SET_CONFIG _IOW(VHOST_VIRTIO, 0x74, struct vhost_vdpa_config)
 #define VHOST_VDPA_SET_VRING_ENABLE _IOW(VHOST_VIRTIO, 0x75, struct vhost_vring_state)
 #define VHOST_VDPA_GET_VRING_NUM _IOR(VHOST_VIRTIO, 0x76, __u16)
+#define VHOST_VDPA_SET_CONFIG_CALL _IOW(VHOST_VIRTIO, 0x77, int)
 #endif

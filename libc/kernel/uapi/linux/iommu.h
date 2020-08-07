@@ -133,6 +133,7 @@ struct iommu_gpasid_bind_data_vtd {
   __u32 pat;
   __u32 emt;
 };
+#define IOMMU_SVA_VTD_GPASID_MTS_MASK (IOMMU_SVA_VTD_GPASID_CD | IOMMU_SVA_VTD_GPASID_EMTE | IOMMU_SVA_VTD_GPASID_PCD | IOMMU_SVA_VTD_GPASID_PWT)
 struct iommu_gpasid_bind_data {
 #define IOMMU_GPASID_BIND_VERSION_1 1
   __u32 version;

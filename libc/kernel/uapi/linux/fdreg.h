@@ -18,9 +18,13 @@
  ****************************************************************************/
 #ifndef _LINUX_FDREG_H
 #define _LINUX_FDREG_H
+#define FD_SRA 0
+#define FD_SRB 1
+#define FD_DOR 2
+#define FD_TDR 3
+#define FD_DSR 4
 #define FD_STATUS 4
 #define FD_DATA 5
-#define FD_DOR 2
 #define FD_DIR 7
 #define FD_DCR 7
 #define STATUS_BUSYMASK 0x0F
