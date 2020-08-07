@@ -1538,13 +1538,31 @@ TEST(STRING_TEST, memmem_strstr_empty_needle) {
 }
 
 TEST(STRING_TEST, memmem_smoke) {
-  const char haystack[] = "big\0daddy\0giant\0haystacks";
-  ASSERT_EQ(haystack, memmem(haystack, sizeof(haystack), "", 0));
-  ASSERT_EQ(haystack + 3, memmem(haystack, sizeof(haystack), "", 1));
+  const char haystack[] = "big\0daddy/giant\0haystacks!";
+
+  // The current memmem() implementation has special cases for needles of
+  // lengths 0, 1, 2, 3, and 4, plus a long needle case. We test matches at the
+  // beginning, middle, and end of the haystack.
+
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "", 0));
+
   ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "b", 1));
-  ASSERT_EQ(haystack + 1, memmem(haystack, sizeof(haystack), "i", 1));
-  ASSERT_EQ(haystack + 4, memmem(haystack, sizeof(haystack), "da", 2));
-  ASSERT_EQ(haystack + 8, memmem(haystack, sizeof(haystack), "y\0g", 3));
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "bi", 2));
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "big", 3));
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "big\0", 4));
+  ASSERT_EQ(haystack + 0, memmem(haystack, sizeof(haystack), "big\0d", 5));
+
+  ASSERT_EQ(haystack + 2, memmem(haystack, sizeof(haystack), "g", 1));
+  ASSERT_EQ(haystack + 10, memmem(haystack, sizeof(haystack), "gi", 2));
+  ASSERT_EQ(haystack + 10, memmem(haystack, sizeof(haystack), "gia", 3));
+  ASSERT_EQ(haystack + 10, memmem(haystack, sizeof(haystack), "gian", 4));
+  ASSERT_EQ(haystack + 10, memmem(haystack, sizeof(haystack), "giant", 5));
+
+  ASSERT_EQ(haystack + 25, memmem(haystack, sizeof(haystack), "!", 1));
+  ASSERT_EQ(haystack + 24, memmem(haystack, sizeof(haystack), "s!", 2));
+  ASSERT_EQ(haystack + 23, memmem(haystack, sizeof(haystack), "ks!", 3));
+  ASSERT_EQ(haystack + 22, memmem(haystack, sizeof(haystack), "cks!", 4));
+  ASSERT_EQ(haystack + 21, memmem(haystack, sizeof(haystack), "acks!", 5));
 }
 
 TEST(STRING_TEST, strstr_smoke) {
