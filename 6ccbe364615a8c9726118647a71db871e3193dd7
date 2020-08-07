@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7e25a7b_5c7fdb7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-07T04:07:24Z",
+      "side": 1,
+      "message": "I don\u0027t understand this compilation error on x86_64.\nIf it\u0027s really building for x86_64, it shouldn\u0027t even get to this `#elif` branch ...\n\n```\nbionic/libc/bionic/sys_thread_properties.cpp:86:44: error: no member named \u0027gs\u0027 in \u0027user_regs_struct\u0027\n#elif defined(i386)\n    tp_reg \u003d reinterpret_cast\u003cvoid**\u003e(regs.gs);\n                                      ~~~~ ^\n```\n\n(https://android-build.googleplex.com/builds/pending/P16117489/test_suites_x86_64/latest/view/logs/build_error.log)",
+      "revId": "6ccbe364615a8c9726118647a71db871e3193dd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
