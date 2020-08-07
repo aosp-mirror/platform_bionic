@@ -88,6 +88,24 @@
       "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4ba83ef6_a8b0a5e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-08-07T00:32:44Z",
+      "side": 1,
+      "message": "This is fine I suppose. We were already forced to put a sigaltstack system call here and the cost of the function call is probably dwarfed by that.",
+      "parentUuid": "339cb4b3_23d439e8",
+      "revId": "f69030095de19470aa6c0b5ea469ac77a2e0407e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
