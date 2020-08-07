@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,13 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
+#pragma once
 
-#define __BIONIC_SWAB_INLINE /* Out of line. */
+#include <sys/cdefs.h>
+
+#if __ANDROID_API__ < 28
+
+#define __BIONIC_SWAB_INLINE static __inline
 #include <bits/swab.h>
+
+#endif
