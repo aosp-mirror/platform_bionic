@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -25,40 +25,24 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <string.h>
-#include <stdio.h>
+
 #include <utmp.h>
 
+#include <errno.h>
 
-void pututline(struct utmp* utmp)
-{
-    FILE* f;
-    struct utmp u;
-    long i;
+void endutent() {}
 
-    if (!(f = fopen(_PATH_UTMP, "w+e")))
-        return;
+void setutent() {}
 
-    while (fread(&u, sizeof(struct utmp), 1, f) == 1)
-    {
-        if (!strncmp(utmp->ut_line, u.ut_line, sizeof(u.ut_line) -1))
-        {
-            if ((i = ftell(f)) < 0)
-                goto ret;
-            if (fseek(f, i - sizeof(struct utmp), SEEK_SET) < 0)
-                goto ret;
-            fwrite(utmp, sizeof(struct utmp), 1, f);
-            goto ret;
-        }
-    }
+utmp* getutent() {
+  return nullptr;
+}
 
+utmp* pututline(const utmp*) {
+  return nullptr;
+}
 
-    fclose(f);
-
-    if (!(f = fopen(_PATH_UTMP, "w+e")))
-        return;
-    fwrite(utmp, sizeof(struct utmp), 1, f);
-
-ret:
-    fclose(f);
+int utmpname(const char*) {
+  errno = ENOTSUP;
+  return -1;
 }
