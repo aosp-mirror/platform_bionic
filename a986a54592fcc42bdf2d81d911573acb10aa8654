@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "5d5c2fe3_8f5cc673",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-10T00:51:29Z",
+      "side": 1,
+      "message": "Thanks. To me, this looks much clearer than before.",
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e086e2c9_aa01c8cf",
         "filename": "libc/include/android/api-level.h",
         "patchSetId": 2
@@ -35,6 +52,29 @@
         "startChar": 45,
         "endLine": 61,
         "endChar": 49
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae01a16a_3de788db",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-10T00:51:29Z",
+      "side": 1,
+      "message": "API level to be precise? Also consider have a link to https://developer.android.com/guide/topics/manifest/uses-sdk-element#ApiLevels?",
+      "range": {
+        "startLine": 61,
+        "startChar": 11,
+        "endLine": 61,
+        "endChar": 21
       },
       "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
@@ -76,6 +116,30 @@
       "writtenOn": "2020-08-08T00:06:04Z",
       "side": 1,
       "message": "When building the OS itself, this ...",
+      "range": {
+        "startLine": 65,
+        "startChar": 60,
+        "endLine": 66,
+        "endChar": 32
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7516c619_099a8dc9",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-10T00:51:29Z",
+      "side": 1,
+      "message": "Actually, whether part of an OS or not doesn\u0027t determine this. It\u0027s the sdk_version (or LOCAL_SDK_VERSION) property. For example, code in APEXes (which I think is part of OS) have `__ANDROID_API__` set to the minSdkVersion of the containing APEX.",
+      "parentUuid": "b3a28cd9_24d34340",
       "range": {
         "startLine": 65,
         "startChar": 60,
@@ -173,6 +237,29 @@
         "startChar": 72,
         "endLine": 78,
         "endChar": 33
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf30385d_60f3106b",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-10T00:51:29Z",
+      "side": 1,
+      "message": "ditto: API levels",
+      "range": {
+        "startLine": 77,
+        "startChar": 75,
+        "endLine": 78,
+        "endChar": 11
       },
       "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
