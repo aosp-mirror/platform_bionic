@@ -154,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "857886e7_f706261a",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-11T05:08:51Z",
+      "side": 1,
+      "message": "This LGTM.",
+      "parentUuid": "fc031b4f_b608912a",
+      "range": {
+        "startLine": 61,
+        "startChar": 11,
+        "endLine": 61,
+        "endChar": 21
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35c00aa5_22af9995",
         "filename": "libc/include/android/api-level.h",
         "patchSetId": 2
@@ -293,6 +317,30 @@
       "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b1c59b6_317be6af",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-08-11T05:08:51Z",
+      "side": 1,
+      "message": "LGTM too.",
+      "parentUuid": "79769ac3_0c5d107d",
+      "range": {
+        "startLine": 65,
+        "startChar": 60,
+        "endLine": 66,
+        "endChar": 32
+      },
+      "revId": "a986a54592fcc42bdf2d81d911573acb10aa8654",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
