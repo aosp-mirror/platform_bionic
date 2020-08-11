@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aef19b4f_2aeff2f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-11T15:30:41Z",
+      "side": 1,
+      "message": "yeah, we can always make changes if we hear from confused users, but this seems like it ought to work for everyone now.",
+      "revId": "b90ed5c66bb12dde196d9fe9043d9cb1f1bb191a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03cab613_c8d0cf8f",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-11T15:30:41Z",
+      "side": 1,
+      "message": "\"must be at least as high as\"? (on the basis that sentences without negation tend to be slightly easier to understand)",
+      "range": {
+        "startLine": 81,
+        "startChar": 38,
+        "endLine": 81,
+        "endChar": 60
+      },
+      "revId": "b90ed5c66bb12dde196d9fe9043d9cb1f1bb191a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
