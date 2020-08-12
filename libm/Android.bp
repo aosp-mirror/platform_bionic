@@ -1,5 +1,3 @@
-bionic_coverage = false
-
 //
 // libm.so and libm.a for target.
 //
@@ -488,7 +486,6 @@ cc_library {
     include_dirs: ["bionic/libc"],
     system_shared_libs: ["libc"],
 
-    native_coverage: bionic_coverage,
     sanitize: {
         address: false,
         fuzzer: false,
