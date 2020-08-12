@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf0c0c13_a4bd9495",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-12T00:16:36Z",
+      "side": 1,
+      "message": "Maybe this change needs NDK-API-Review still?\n",
+      "revId": "d500751443dbd841445f019428099aae42bac007",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
