@@ -114,6 +114,11 @@ TEST(search, tfind_tsearch_twalk_tdestroy) {
   ASSERT_EQ(3U, g_free_calls);
 }
 
+TEST(search, tdestroy_null) {
+  // It's okay to pass a null node, and your callback will not be called.
+  tdestroy(nullptr, nullptr);
+}
+
 struct pod_node {
   explicit pod_node(int i) : i(i) {}
   int i;
@@ -284,4 +289,27 @@ TEST(search, hcreate_r_hsearch_r_hdestroy_r) {
   ASSERT_EQ(1, hsearch_r(ENTRY{.key = const_cast<char*>("a"), .data = nullptr}, FIND, &e, &h2));
   AssertEntry(e, "a", "B");
   hdestroy_r(&h2);
+}
+
+TEST(search, hsearch_resizing) {
+  ASSERT_NE(0, hcreate(1));
+
+  std::vector<char*> entries;
+  // Add enough entries to ensure that we've had to resize.
+  for (char ch = ' '; ch <= '~'; ++ch) {
+    char* p;
+    asprintf(&p, "%c", ch);
+    ENTRY e;
+    e.data = e.key = p;
+    ASSERT_TRUE(hsearch(e, ENTER) != nullptr);
+    entries.push_back(p);
+  }
+
+  // Check they're all there.
+  for (auto& p : entries) {
+    ENTRY* e = hsearch(ENTRY{.key = p, .data = nullptr}, FIND);
+    AssertEntry(e, p, p);
+  }
+
+  for (auto& p : entries) free(p);
 }
