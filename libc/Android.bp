@@ -2001,8 +2001,10 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // crt* objects are used by most cc_binary/cc_library in "anyapex"
-    min_sdk_version: "apex_inherit",
+    // Generate NDK variants of the CRT objects for every supported API level.
+    min_sdk_version: "16",
+    stl: "none",
+    crt: true,
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
