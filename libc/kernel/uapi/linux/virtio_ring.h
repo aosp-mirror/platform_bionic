@@ -34,6 +34,9 @@
 #define VRING_PACKED_EVENT_F_WRAP_CTR 15
 #define VIRTIO_RING_F_INDIRECT_DESC 28
 #define VIRTIO_RING_F_EVENT_IDX 29
+#define VRING_AVAIL_ALIGN_SIZE 2
+#define VRING_USED_ALIGN_SIZE 4
+#define VRING_DESC_ALIGN_SIZE 16
 struct vring_desc {
   __virtio64 addr;
   __virtio32 len;
@@ -49,22 +52,25 @@ struct vring_used_elem {
   __virtio32 id;
   __virtio32 len;
 };
+typedef struct vring_used_elem __attribute__((aligned(VRING_USED_ALIGN_SIZE))) vring_used_elem_t;
 struct vring_used {
   __virtio16 flags;
   __virtio16 idx;
-  struct vring_used_elem ring[];
+  vring_used_elem_t ring[];
 };
+typedef struct vring_desc __attribute__((aligned(VRING_DESC_ALIGN_SIZE))) vring_desc_t;
+typedef struct vring_avail __attribute__((aligned(VRING_AVAIL_ALIGN_SIZE))) vring_avail_t;
+typedef struct vring_used __attribute__((aligned(VRING_USED_ALIGN_SIZE))) vring_used_t;
 struct vring {
   unsigned int num;
-  struct vring_desc * desc;
-  struct vring_avail * avail;
-  struct vring_used * used;
+  vring_desc_t * desc;
+  vring_avail_t * avail;
+  vring_used_t * used;
 };
-#define VRING_AVAIL_ALIGN_SIZE 2
-#define VRING_USED_ALIGN_SIZE 4
-#define VRING_DESC_ALIGN_SIZE 16
+#ifndef VIRTIO_RING_NO_LEGACY
 #define vring_used_event(vr) ((vr)->avail->ring[(vr)->num])
 #define vring_avail_event(vr) (* (__virtio16 *) & (vr)->used->ring[(vr)->num])
+#endif
 struct vring_packed_desc_event {
   __le16 off_wrap;
   __le16 flags;

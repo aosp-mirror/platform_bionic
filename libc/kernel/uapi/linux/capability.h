@@ -105,7 +105,9 @@ struct vfs_ns_cap_data {
 #define CAP_WAKE_ALARM 35
 #define CAP_BLOCK_SUSPEND 36
 #define CAP_AUDIT_READ 37
-#define CAP_LAST_CAP CAP_AUDIT_READ
+#define CAP_PERFMON 38
+#define CAP_BPF 39
+#define CAP_LAST_CAP CAP_BPF
 #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
 #define CAP_TO_INDEX(x) ((x) >> 5)
 #define CAP_TO_MASK(x) (1 << ((x) & 31))

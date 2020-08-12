@@ -49,6 +49,7 @@ enum {
   NHA_ENCAP,
   NHA_GROUPS,
   NHA_MASTER,
+  NHA_FDB,
   __NHA_MAX,
 };
 #define NHA_MAX (__NHA_MAX - 1)

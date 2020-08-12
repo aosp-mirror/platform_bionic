@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#include <unistd.h>
+#include <utmp.h>
 
-#define __BIONIC_SWAB_INLINE /* Out of line. */
-#include <bits/swab.h>
+#include <errno.h>
+
+void endutent() {}
+
+void setutent() {}
+
+utmp* getutent() {
+  return nullptr;
+}
+
+utmp* pututline(const utmp*) {
+  return nullptr;
+}
+
+int utmpname(const char*) {
+  errno = ENOTSUP;
+  return -1;
+}

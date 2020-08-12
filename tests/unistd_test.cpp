@@ -1350,6 +1350,11 @@ TEST(UNISTD_TEST, execve_failure) {
   ASSERT_EQ(EACCES, errno);
 }
 
+static void append_llvm_cov_env_var(std::string& env_str) {
+  if (getenv("LLVM_PROFILE_FILE") != nullptr)
+    env_str.append("__LLVM_PROFILE_RT_INIT_ONCE=__LLVM_PROFILE_RT_INIT_ONCE\n");
+}
+
 TEST(UNISTD_TEST, execve_args) {
   // int execve(const char* path, char* argv[], char* envp[]);
 
@@ -1361,7 +1366,12 @@ TEST(UNISTD_TEST, execve_args) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execl_failure) {
@@ -1386,8 +1396,13 @@ TEST(UNISTD_TEST, execle_failure) {
 TEST(UNISTD_TEST, execle) {
   ExecTestHelper eth;
   eth.SetEnv({"A=B", nullptr});
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
   // int execle(const char* path, const char* arg, ..., char* envp[]);
-  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0, "A=B\n");
+  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execv_failure) {
@@ -1450,7 +1465,11 @@ TEST(UNISTD_TEST, execvpe) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execvpe_ENOEXEC) {
@@ -1538,7 +1557,11 @@ TEST(UNISTD_TEST, fexecve_args) {
   ASSERT_NE(-1, printenv_fd);
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
   close(printenv_fd);
 }
 
