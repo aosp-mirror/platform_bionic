@@ -68,6 +68,7 @@
 #define KEYCTL_RESTRICT_KEYRING 29
 #define KEYCTL_MOVE 30
 #define KEYCTL_CAPABILITIES 31
+#define KEYCTL_WATCH_KEY 32
 struct keyctl_dh_params {
   union {
 #ifndef __cplusplus
@@ -117,4 +118,5 @@ struct keyctl_pkey_params {
 #define KEYCTL_CAPS0_MOVE 0x80
 #define KEYCTL_CAPS1_NS_KEYRING_NAME 0x01
 #define KEYCTL_CAPS1_NS_KEY_TAG 0x02
+#define KEYCTL_CAPS1_NOTIFICATIONS 0x04
 #endif

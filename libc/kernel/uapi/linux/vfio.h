@@ -101,6 +101,7 @@ struct vfio_region_info_cap_type {
 #define VFIO_REGION_TYPE_PCI_VENDOR_MASK (0xffff)
 #define VFIO_REGION_TYPE_GFX (1)
 #define VFIO_REGION_TYPE_CCW (2)
+#define VFIO_REGION_TYPE_MIGRATION (3)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION (1)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG (2)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG (3)
@@ -118,6 +119,24 @@ struct vfio_region_gfx_edid {
 #define VFIO_DEVICE_GFX_LINK_STATE_DOWN 2
 };
 #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD (1)
+#define VFIO_REGION_SUBTYPE_CCW_SCHIB (2)
+#define VFIO_REGION_SUBTYPE_CCW_CRW (3)
+#define VFIO_REGION_SUBTYPE_MIGRATION (1)
+struct vfio_device_migration_info {
+  __u32 device_state;
+#define VFIO_DEVICE_STATE_STOP (0)
+#define VFIO_DEVICE_STATE_RUNNING (1 << 0)
+#define VFIO_DEVICE_STATE_SAVING (1 << 1)
+#define VFIO_DEVICE_STATE_RESUMING (1 << 2)
+#define VFIO_DEVICE_STATE_MASK (VFIO_DEVICE_STATE_RUNNING | VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
+#define VFIO_DEVICE_STATE_VALID(state) (state & VFIO_DEVICE_STATE_RESUMING ? (state & VFIO_DEVICE_STATE_MASK) == VFIO_DEVICE_STATE_RESUMING : 1)
+#define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING))
+#define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_SATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
+  __u32 reserved;
+  __u64 pending_bytes;
+  __u64 data_offset;
+  __u64 data_size;
+};
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
 #define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
 struct vfio_region_info_cap_nvlink2_ssatgt {
@@ -185,6 +204,7 @@ enum {
 };
 enum {
   VFIO_CCW_IO_IRQ_INDEX,
+  VFIO_CCW_CRW_IRQ_INDEX,
   VFIO_CCW_NUM_IRQS
 };
 struct vfio_pci_dependent_device {
@@ -274,6 +294,13 @@ struct vfio_iommu_type1_info_cap_iova_range {
   __u32 reserved;
   struct vfio_iova_range iova_ranges[];
 };
+#define VFIO_IOMMU_TYPE1_INFO_CAP_MIGRATION 2
+struct vfio_iommu_type1_info_cap_migration {
+  struct vfio_info_cap_header header;
+  __u32 flags;
+  __u64 pgsize_bitmap;
+  __u64 max_dirty_bitmap_size;
+};
 #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
 struct vfio_iommu_type1_dma_map {
   __u32 argsz;
@@ -285,15 +312,36 @@ struct vfio_iommu_type1_dma_map {
   __u64 size;
 };
 #define VFIO_IOMMU_MAP_DMA _IO(VFIO_TYPE, VFIO_BASE + 13)
+struct vfio_bitmap {
+  __u64 pgsize;
+  __u64 size;
+  __u64 __user * data;
+};
 struct vfio_iommu_type1_dma_unmap {
   __u32 argsz;
   __u32 flags;
+#define VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP (1 << 0)
   __u64 iova;
   __u64 size;
+  __u8 data[];
 };
 #define VFIO_IOMMU_UNMAP_DMA _IO(VFIO_TYPE, VFIO_BASE + 14)
 #define VFIO_IOMMU_ENABLE _IO(VFIO_TYPE, VFIO_BASE + 15)
 #define VFIO_IOMMU_DISABLE _IO(VFIO_TYPE, VFIO_BASE + 16)
+struct vfio_iommu_type1_dirty_bitmap {
+  __u32 argsz;
+  __u32 flags;
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_START (1 << 0)
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP (1 << 1)
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP (1 << 2)
+  __u8 data[];
+};
+struct vfio_iommu_type1_dirty_bitmap_get {
+  __u64 iova;
+  __u64 size;
+  struct vfio_bitmap bitmap;
+};
+#define VFIO_IOMMU_DIRTY_PAGES _IO(VFIO_TYPE, VFIO_BASE + 17)
 struct vfio_iommu_spapr_tce_ddw_info {
   __u64 pgsizes;
   __u32 max_dynamic_windows_supported;
