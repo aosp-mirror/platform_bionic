@@ -54,9 +54,12 @@ ${LLVM_COV} show \
   --instr-profile=${HOST_PROFDATA_DIR}/bionic.profdata \
   --format=html \
   $OUT/symbols/apex/com.android.runtime/lib64/bionic/libc.so \
+  --object=$OUT/symbols/apex/com.android.runtime/lib64/bionic/libm.so \
   --object=$OUT/symbols/data/nativetest64/bionic-unit-tests/bionic-unit-tests \
   --object=$OUT/symbols/apex/com.android.runtime/lib/bionic/libc.so \
+  --object=$OUT/symbols/apex/com.android.runtime/lib/bionic/libm.so \
   --object=$OUT/symbols/data/nativetest/bionic-unit-tests/bionic-unit-tests \
   /proc/self/cwd/bionic/libc \
+  /proc/self/cwd/bionic/libm \
   --output-dir=${HOST_PROFDATA_DIR}/html \
   --show-region-summary=false
