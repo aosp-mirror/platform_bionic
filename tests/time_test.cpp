@@ -1008,4 +1008,5 @@ TEST(time, timespec_get) {
 
 TEST(time, difftime) {
   ASSERT_EQ(1.0, difftime(1, 0));
+  ASSERT_EQ(-1.0, difftime(0, 1));
 }

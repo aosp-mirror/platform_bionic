@@ -422,6 +422,7 @@ cc_test_library {
         "sys_uio_test.cpp",
         "sys_un_test.cpp",
         "sys_vfs_test.cpp",
+        "sys_wait_test.cpp",
         "sys_xattr_test.cpp",
         "system_properties_test.cpp",
         "system_properties_test2.cpp",
