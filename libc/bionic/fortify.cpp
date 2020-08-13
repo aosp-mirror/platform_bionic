@@ -94,9 +94,6 @@ void __FD_SET_chk(int fd, fd_set* set, size_t set_size) {
 }
 
 char* __fgets_chk(char* dst, int supplied_size, FILE* stream, size_t dst_len_from_compiler) {
-  if (supplied_size < 0) {
-    __fortify_fatal("fgets: buffer size %d < 0", supplied_size);
-  }
   __check_buffer_access("fgets", "write into", supplied_size, dst_len_from_compiler);
   return fgets(dst, supplied_size, stream);
 }
