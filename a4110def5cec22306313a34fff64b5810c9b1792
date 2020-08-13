@@ -46,6 +46,30 @@
       "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e8423dd_f5a06529",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T22:04:40Z",
+      "side": 0,
+      "message": "wfm\n\n\u003e i assume you knew i\u0027ve been taking fortify\u0027s name in vain for random \"your app is broken\" stuff like that?\n\nas long as brokenness is caught, i\u0027m happy :)",
+      "parentUuid": "e3a61cb3_4524c17a",
+      "range": {
+        "startLine": 100,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 23
+      },
+      "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
