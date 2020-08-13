@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0a22e5b_ed63c98d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-13T15:30:43Z",
+      "side": 1,
+      "message": "gbiv for the fgets change. we don\u0027t get coverage for stuff that aborts, plus it was weird that if you did actually manage to call the real fgets you\u0027d get more lenient behavior.",
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
