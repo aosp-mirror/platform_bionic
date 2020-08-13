@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b952232d_8ce19c20",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T17:56:47Z",
+      "side": 0,
+      "message": "i don\u0027t think the new size check will ever reasonably fire on a FORTIFY\u0027ed fgets call. given `__check_buffer_access` has a sig of `void(const char*, const char*, size_t, size_t)`, `supplied_size` will be implicitly converted into a `size_t` w/ sign extension. on 32-bit, the buffer would have to be \u003e 1/2 our addr space. on 64, gooooood luck. :)\n\ndunno how much we care about doing slightly worse with this particular diagnostic, though. if we care, only checking the access if `supplied_size` is positive sgtm",
+      "range": {
+        "startLine": 100,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 23
+      },
+      "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

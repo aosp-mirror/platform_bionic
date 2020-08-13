@@ -16,6 +16,92 @@
       "revId": "7cebf835f310650f67b254295a685918681656fc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd532b9f_273880b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T17:56:47Z",
+      "side": 1,
+      "message": "dunno what the style is here for assertions; i more commonly see \"if \u003d\u003d is there, use assert_eq,\" but the ones i flagged were heavily \"we just want to know if this happened; the actual values don\u0027t matter.\"\n\nignoring those, lgtm with one comment about the fgets change\n\nthanks!",
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a24f4ca_9c8c36a3",
+        "filename": "tests/netinet_ether_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T17:56:47Z",
+      "side": 1,
+      "message": "optional: `ASSERT_EQ(_, nullptr)`?",
+      "range": {
+        "startLine": 55,
+        "startChar": 2,
+        "endLine": 55,
+        "endChar": 13
+      },
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "555bee8e_0d2a807a",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2758,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T17:56:47Z",
+      "side": 1,
+      "message": "optional: assert_eq? (here/below)",
+      "range": {
+        "startLine": 2758,
+        "startChar": 2,
+        "endLine": 2758,
+        "endChar": 13
+      },
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83f0e2db_1c49c062",
+        "filename": "tests/string_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1617,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2020-08-13T17:56:47Z",
+      "side": 1,
+      "message": "optional: assert_lt/gt/eq? (here/below)",
+      "range": {
+        "startLine": 1617,
+        "startChar": 2,
+        "endLine": 1617,
+        "endChar": 13
+      },
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
