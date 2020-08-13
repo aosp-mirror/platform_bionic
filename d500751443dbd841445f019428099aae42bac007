@@ -16,6 +16,23 @@
       "revId": "d500751443dbd841445f019428099aae42bac007",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "429fcf5d_5c139352",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-13T16:24:47Z",
+      "side": 1,
+      "message": "danalbert@, enh@ Could you provide votes for the NDK-API-review?\nThank you!",
+      "revId": "d500751443dbd841445f019428099aae42bac007",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
