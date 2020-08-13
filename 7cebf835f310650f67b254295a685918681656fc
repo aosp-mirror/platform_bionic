@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "ab3b8083_851698d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-13T21:27:03Z",
+      "side": 1,
+      "message": "(yeah, the API is so awful -- and we get it backwards all the time -- that unless the actual value would be useful, i just use _TRUE. plus EQ/NE didn\u0027t work with nullptr for many years.)",
+      "parentUuid": "dd532b9f_273880b6",
+      "revId": "7cebf835f310650f67b254295a685918681656fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a24f4ca_9c8c36a3",
         "filename": "tests/netinet_ether_test.cpp",
         "patchSetId": 2

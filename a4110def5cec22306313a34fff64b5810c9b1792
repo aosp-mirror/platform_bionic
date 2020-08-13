@@ -22,6 +22,30 @@
       "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a61cb3_4524c17a",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-13T21:27:03Z",
+      "side": 0,
+      "message": "i suspect any reasonable person thinks this API takes size_t anyway, and will read \"supplied size 4294967295\" as \"oops, negative\" anyway!\n\n(unlike snprintf and memcpy and the like, i don\u0027t think i\u0027ve ever seen a fortify issue from fgets --- i don\u0027t think anyone\u0027s doing arithmetic and marching through a buffer or whatever, so i\u0027m struggling to imagine how anyone would actually get into this mess in the first place anyway.)\n\n[b/ confirms that we\u0027ve only seen `FORTIFY: fgets: null FILE*` in practice. (i assume you knew i\u0027ve been taking fortify\u0027s name in vain for random \"your app is broken\" stuff like that?)]",
+      "parentUuid": "b952232d_8ce19c20",
+      "range": {
+        "startLine": 100,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 23
+      },
+      "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
