@@ -50,6 +50,24 @@
       "revId": "d500751443dbd841445f019428099aae42bac007",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "179ca07a_74c78bb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-13T19:57:52Z",
+      "side": 1,
+      "message": "Thanks! Submitting now...\n\n\u003e (keep us appraised of progress on the LLVM side though, so we don\u0027t hide this again before S ships!)\n\nWill do! (https://reviews.llvm.org/D85927 if you\u0027d like to follow along)\n\nThere\u0027s another bug b/78022094 that you said would want to use the thread_exit_callback. Would that be a good beta-tester for this too?",
+      "parentUuid": "2c64b07d_02183969",
+      "revId": "d500751443dbd841445f019428099aae42bac007",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
