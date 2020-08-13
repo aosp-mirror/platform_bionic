@@ -16,6 +16,24 @@
       "revId": "dfac5ba9cfacb989d3ced67e6cd22e9be36b4ea4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36b727fc_940d21a8",
+        "filename": "libc/private/bionic_ifuncs.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-08-13T20:02:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c985194_1be82994",
+      "revId": "dfac5ba9cfacb989d3ced67e6cd22e9be36b4ea4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
