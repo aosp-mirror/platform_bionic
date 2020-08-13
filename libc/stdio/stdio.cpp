@@ -773,10 +773,7 @@ char* fgets(char* buf, int n, FILE* fp) {
 // Returns first argument, or nullptr if no characters were read.
 // Does not return nullptr if n == 1.
 char* fgets_unlocked(char* buf, int n, FILE* fp) {
-  if (n <= 0) {
-    errno = EINVAL;
-    return nullptr;
-  }
+  if (n <= 0) __fortify_fatal("fgets: buffer size %d <= 0", n);
 
   _SET_ORIENTATION(fp, -1);
 
