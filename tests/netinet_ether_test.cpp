@@ -34,7 +34,7 @@ TEST(netinet_ether, ether_aton__ether_ntoa) {
 TEST(netinet_ether, ether_aton_r__ether_ntoa_r) {
   ether_addr addr;
   memset(&addr, 0, sizeof(addr));
-  ether_addr* a = ether_aton_r("12:34:56:78:9a:bc", &addr);
+  ether_addr* a = ether_aton_r("12:34:56:78:9a:Bc", &addr);
   ASSERT_EQ(&addr, a);
   ASSERT_EQ(0x12, addr.ether_addr_octet[0]);
   ASSERT_EQ(0x34, addr.ether_addr_octet[1]);
@@ -48,4 +48,12 @@ TEST(netinet_ether, ether_aton_r__ether_ntoa_r) {
   char* p = ether_ntoa_r(&addr, buf);
   ASSERT_EQ(buf, p);
   ASSERT_STREQ("12:34:56:78:9a:bc", buf);
+}
+
+TEST(netinet_ether, ether_aton_r_failures) {
+  ether_addr addr;
+  ASSERT_TRUE(ether_aton_r("12:34:56:78:9a;bc", &addr) == nullptr);
+  ASSERT_TRUE(ether_aton_r("12:34:56:78:9a:bc ", &addr) == nullptr);
+  ASSERT_TRUE(ether_aton_r("g2:34:56:78:9a:bc ", &addr) == nullptr);
+  ASSERT_TRUE(ether_aton_r("1G:34:56:78:9a:bc ", &addr) == nullptr);
 }
