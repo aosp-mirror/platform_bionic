@@ -800,9 +800,24 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   ASSERT_EQ(T(0), fn("123", &end_p, 37));
   ASSERT_EQ(EINVAL, errno);
 
+  // Both leading + or - are always allowed (even for the strtou* family).
+  ASSERT_EQ(T(-123), fn("-123", &end_p, 10));
+  ASSERT_EQ(T(123), fn("+123", &end_p, 10));
+
   // If we see "0x" *not* followed by a hex digit, we shouldn't swallow the 'x'.
   ASSERT_EQ(T(0), fn("0xy", &end_p, 16));
   ASSERT_EQ('x', *end_p);
+
+  // Hexadecimal (both the 0x and the digits) is case-insensitive.
+  ASSERT_EQ(T(0xab), fn("0xab", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0Xab", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0xAB", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0XAB", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0xAb", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0XAb", &end_p, 0));
+
+  // Octal lives! (Sadly.)
+  ASSERT_EQ(T(0666), fn("0666", &end_p, 0));
 
   if (std::numeric_limits<T>::is_signed) {
     // Minimum (such as -128).
@@ -876,6 +891,18 @@ TEST(stdlib, strtoimax_smoke) {
 
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
+}
+
+TEST(stdlib, atoi) {
+  // Implemented using strtol in bionic, so extensive testing unnecessary.
+  ASSERT_EQ(123, atoi("123four"));
+  ASSERT_EQ(0, atoi("hello"));
+}
+
+TEST(stdlib, atol) {
+  // Implemented using strtol in bionic, so extensive testing unnecessary.
+  ASSERT_EQ(123L, atol("123four"));
+  ASSERT_EQ(0L, atol("hello"));
 }
 
 TEST(stdlib, abs) {
