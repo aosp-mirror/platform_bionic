@@ -394,6 +394,26 @@ void BionicAllocator::free(void* ptr) {
   }
 }
 
+size_t BionicAllocator::get_chunk_size(void* ptr) {
+  if (ptr == nullptr) return 0;
+
+  page_info* info = get_page_info_unchecked(ptr);
+  if (memcmp(info->signature, kSignature, sizeof(kSignature)) != 0) {
+    // Invalid pointer (mismatched signature)
+    return 0;
+  }
+  if (info->type == kLargeObject) {
+    return info->allocated_size - (static_cast<char*>(ptr) - reinterpret_cast<char*>(info));
+  }
+
+  BionicSmallObjectAllocator* allocator = get_small_object_allocator(info->type);
+  if (allocator != info->allocator_addr) {
+    // Invalid pointer.
+    return 0;
+  }
+  return allocator->get_block_size();
+}
+
 BionicSmallObjectAllocator* BionicAllocator::get_small_object_allocator(uint32_t type) {
   if (type < kSmallObjectMinSizeLog2 || type > kSmallObjectMaxSizeLog2) {
     async_safe_fatal("invalid type: %u", type);
