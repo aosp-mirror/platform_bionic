@@ -1238,6 +1238,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/sys_thread_properties.cpp",
 
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
