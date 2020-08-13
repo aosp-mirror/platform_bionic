@@ -68,6 +68,24 @@
       "revId": "d500751443dbd841445f019428099aae42bac007",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf431de1_d07342eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-13T20:52:31Z",
+      "side": 1,
+      "message": "i think that bug was actually just referring to the sanitizers anyway? from the bug:\n\"\"\"\nIIRC, there are other runtime libraries that use the pthread-destructor-iteration trick to (try to) run last. It looks like compiler-rt uses the trick for: scudo, safestack, asan, lsan (as well as emutls). If we add a new way to register a thread-exit destructor, maybe we should also look at these other things as well.\n\"\"\"",
+      "parentUuid": "179ca07a_74c78bb9",
+      "revId": "d500751443dbd841445f019428099aae42bac007",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
