@@ -112,7 +112,6 @@ void pthread_exit(void* return_value) {
   munmap(thread->shadow_call_stack_guard_region, SCS_GUARD_REGION_SIZE);
 #endif
 
-  // Free the ELF TLS DTV and all dynamically-allocated ELF TLS memory.
   __free_dynamic_tls(__get_bionic_tcb());
 
   if (old_state == THREAD_DETACHED) {
@@ -128,6 +127,7 @@ void pthread_exit(void* return_value) {
     if (thread->mmap_size != 0) {
       // We need to free mapped space for detached threads when they exit.
       // That's not something we can do in C.
+      __notify_thread_exit_callbacks();
       __hwasan_thread_exit();
       _exit_with_stack_teardown(thread->mmap_base, thread->mmap_size);
     }
@@ -135,6 +135,8 @@ void pthread_exit(void* return_value) {
 
   // No need to free mapped space. Either there was no space mapped, or it is left for
   // the pthread_join caller to clean up.
+  __notify_thread_exit_callbacks();
   __hwasan_thread_exit();
+
   __exit(0);
 }

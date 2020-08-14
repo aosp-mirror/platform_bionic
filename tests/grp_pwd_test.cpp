@@ -820,6 +820,24 @@ TEST(grp, getgrent_iterate) {
 #endif
 }
 
+TEST(grp, getgrouplist) {
+#if defined(__BIONIC__)
+  // Query the number of groups.
+  int ngroups = 0;
+  ASSERT_EQ(-1, getgrouplist("root", 123, nullptr, &ngroups));
+  ASSERT_EQ(1, ngroups);
+
+  // Query the specific groups (just the one you pass in on Android).
+  ngroups = 8;
+  gid_t groups[ngroups];
+  ASSERT_EQ(1, getgrouplist("root", 123, groups, &ngroups));
+  ASSERT_EQ(1, ngroups);
+  ASSERT_EQ(123u, groups[0]);
+#else
+  GTEST_SKIP() << "bionic-only test (groups too unpredictable)";
+#endif
+}
+
 #if defined(__BIONIC__)
 static void TestAidNamePrefix(const std::string& file_path) {
   std::string file_contents;

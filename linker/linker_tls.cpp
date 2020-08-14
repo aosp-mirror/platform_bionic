@@ -128,6 +128,8 @@ void linker_setup_exe_static_tls(const char* progname) {
 void linker_finalize_static_tls() {
   g_static_tls_finished = true;
   __libc_shared_globals()->static_tls_layout.finish_layout();
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  modules.static_module_count = modules.module_count;
 }
 
 void register_soinfo_tls(soinfo* si) {
