@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,41 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <string.h>
-#include <sys/utsname.h>
-#include <unistd.h>
+// Prevent tests from being compiled with glibc because thread_properties.h
+// only exists in Bionic.
+#if defined(__BIONIC__)
 
-int gethostname(char* buf, size_t n) {
-  utsname name = {};
-  uname(&name);
+#include <stdio.h>
+#include <sys/thread_properties.h>
 
-  size_t name_length = static_cast<size_t>(strlen(name.nodename) + 1);
-  if (name_length > n) {
-    errno = ENAMETOOLONG;
-    return -1;
-  }
+// Helper binary for testing thread_exit_cb registration.
 
-  memcpy(buf, name.nodename, name_length);
+void exit_cb_1() {
+  printf("exit_cb_1 called ");
+}
+
+void exit_cb_2() {
+  printf("exit_cb_2 called ");
+}
+
+void exit_cb_3() {
+  printf("exit_cb_3 called");
+}
+
+void test_register_thread_exit_cb() {
+  // Register the exit-cb in reverse order (3,2,1)
+  // so that they'd be called in 1,2,3 order.
+  __libc_register_thread_exit_callback(&exit_cb_3);
+  __libc_register_thread_exit_callback(&exit_cb_2);
+  __libc_register_thread_exit_callback(&exit_cb_1);
+}
+
+int main() {
+  test_register_thread_exit_cb();
   return 0;
 }
+#else
+int main() {
+  return 0;
+}
+#endif  // __BIONIC__

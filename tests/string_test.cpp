@@ -64,6 +64,11 @@ TEST(STRING_TEST, strerror) {
   ASSERT_STREQ("Unknown error 134", strerror(EHWPOISON + 1));
 }
 
+TEST(STRING_TEST, strerror_l) {
+  // bionic just forwards to strerror(3).
+  ASSERT_STREQ("Success", strerror_l(0, LC_GLOBAL_LOCALE));
+}
+
 #if defined(__BIONIC__)
 static void* ConcurrentStrErrorFn(void*) {
   bool equal = (strcmp("Unknown error 2002", strerror(2002)) == 0);
@@ -1607,6 +1612,13 @@ TEST(STRING_TEST, strcoll_smoke) {
   ASSERT_TRUE(strcoll("aac", "aab") > 0);
 }
 
+TEST(STRING_TEST, strcoll_l_smoke) {
+  // bionic just forwards to strcoll(3).
+  ASSERT_TRUE(strcoll_l("aab", "aac", LC_GLOBAL_LOCALE) < 0);
+  ASSERT_TRUE(strcoll_l("aab", "aab", LC_GLOBAL_LOCALE) == 0);
+  ASSERT_TRUE(strcoll_l("aac", "aab", LC_GLOBAL_LOCALE) > 0);
+}
+
 TEST(STRING_TEST, strxfrm_smoke) {
   const char* src1 = "aab";
   char dst1[16] = {};
@@ -1626,6 +1638,16 @@ TEST(STRING_TEST, strxfrm_smoke) {
 
   // The "transform" of two different strings should cause different outputs.
   ASSERT_TRUE(strcmp(dst1, dst2) < 0);
+}
+
+TEST(STRING_TEST, strxfrm_l_smoke) {
+  // bionic just forwards to strxfrm(3), so this is a subset of the
+  // strxfrm test.
+  const char* src1 = "aab";
+  char dst1[16] = {};
+  ASSERT_EQ(strxfrm_l(dst1, src1, 0, LC_GLOBAL_LOCALE), 3U);
+  ASSERT_STREQ(dst1, "");
+  ASSERT_EQ(strxfrm_l(dst1, src1, sizeof(dst1), LC_GLOBAL_LOCALE), 3U);
 }
 
 TEST(STRING_TEST, memccpy_smoke) {

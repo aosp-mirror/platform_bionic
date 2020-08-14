@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2019 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,50 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <string.h>
-#include <sys/utsname.h>
-#include <unistd.h>
+// Prevent tests from being compiled with glibc because thread_properties.h
+// only exists in Bionic.
+#if defined(__BIONIC__)
 
-int gethostname(char* buf, size_t n) {
-  utsname name = {};
-  uname(&name);
+#include <sys/thread_properties.h>
 
-  size_t name_length = static_cast<size_t>(strlen(name.nodename) + 1);
-  if (name_length > n) {
-    errno = ENAMETOOLONG;
-    return -1;
-  }
+#include <dlfcn.h>
+#include <stdio.h>
+#include <unistd.h>  // for gettid
 
-  memcpy(buf, name.nodename, name_length);
+// Helper binary to use TLS-related functions in thread_properties
+
+// Tests __get_static_tls_bound.
+void test_static_tls_bounds() {
+  void* start_addr;
+  void* end_addr;
+
+  __libc_get_static_tls_bounds(reinterpret_cast<void**>(&start_addr),
+                               reinterpret_cast<void**>(&end_addr));
+  printf("done_get_static_tls_bounds\n");
+}
+
+// Tests iterate_dynamic tls chunks.
+// Export a var from the shared so.
+__thread char large_tls_var[4 * 1024 * 1024];
+void test_iter_tls() {
+  void* lib = dlopen("libtest_elftls_dynamic.so", RTLD_LOCAL | RTLD_NOW);
+
+  int i = 0;
+  auto cb = [&](void* dtls_begin, void* dtls_end, size_t dso_id, void* arg) {
+    printf("iterate_cb i = %d\n", i++);
+  };
+  __libc_iterate_dynamic_tls(gettid(), cb, nullptr);
+  printf("done_iterate_dynamic_tls\n");
+}
+
+int main() {
+  test_static_tls_bounds();
+  test_iter_tls();
   return 0;
 }
+
+#else
+int main() {
+  return 0;
+}
+#endif  // __BIONIC__
