@@ -70,6 +70,30 @@
       "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04f43686_16e8db0e",
+        "filename": "libc/bionic/fortify.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-14T00:12:45Z",
+      "side": 0,
+      "message": "my sentiments exactly. i was mainly worried there was some subtle reason why this had to be done in fortify proper. i\u0027ve tended to be a lot stricter --- all the pseudo-fortify \"you can\u0027t pass a NULL FILE*\" checks, for example, are always on regardless of your _FORTIFY_SOURCE setting. so far that\u0027s only confused one person (and my hope is that just reusing \"fortify\" makes it clear that this is a \"your code is wrong\" case).",
+      "parentUuid": "1e8423dd_f5a06529",
+      "range": {
+        "startLine": 100,
+        "startChar": 2,
+        "endLine": 100,
+        "endChar": 23
+      },
+      "revId": "a4110def5cec22306313a34fff64b5810c9b1792",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
