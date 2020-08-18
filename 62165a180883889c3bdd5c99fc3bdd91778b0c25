@@ -16,6 +16,23 @@
       "revId": "62165a180883889c3bdd5c99fc3bdd91778b0c25",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eeea347a_816b9620",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-18T15:34:24Z",
+      "side": 1,
+      "message": "yeah, clang-format is often ugly, but at least it\u0027s consistent...",
+      "revId": "62165a180883889c3bdd5c99fc3bdd91778b0c25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
