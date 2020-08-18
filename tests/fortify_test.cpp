@@ -204,8 +204,9 @@ TEST_F(DEATHTEST, memchr_fortified2) {
   foo myfoo;
   volatile int asize = sizeof(myfoo.a) + 1;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
-  ASSERT_FORTIFY(printf("%s", memchr(myfoo.a, 'a', asize)));
-  ASSERT_FORTIFY(printf("%s", memchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", static_cast<const char*>(memchr(myfoo.a, 'a', asize))));
+  ASSERT_FORTIFY(printf(
+      "%s", static_cast<const char*>(memchr(static_cast<const void*>(myfoo.a), 'a', asize))));
 #else // __BIONIC__
   GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
@@ -216,8 +217,9 @@ TEST_F(DEATHTEST, memrchr_fortified2) {
   foo myfoo;
   volatile int asize = sizeof(myfoo.a) + 1;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
-  ASSERT_FORTIFY(printf("%s", memrchr(myfoo.a, 'a', asize)));
-  ASSERT_FORTIFY(printf("%s", memrchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", static_cast<const char*>(memrchr(myfoo.a, 'a', asize))));
+  ASSERT_FORTIFY(printf(
+      "%s", static_cast<const char*>(memrchr(static_cast<const void*>(myfoo.a), 'a', asize))));
 #else // __BIONIC__
   GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
