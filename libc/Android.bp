@@ -1179,6 +1179,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
