@@ -41,12 +41,13 @@
 #include <sys/_system_properties.h>
 #include <unistd.h>
 
-#include <async_safe/log.h>
 #include <async_safe/CHECK.h>
+#include <async_safe/log.h>
+#include <system_properties/prop_trace.h>
 
-#include "private/bionic_defs.h"
 #include "platform/bionic/macros.h"
 #include "private/ScopedFd.h"
+#include "private/bionic_defs.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
@@ -248,6 +249,8 @@ __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __system_property_set(const char* key, const char* value) {
   if (key == nullptr) return -1;
   if (value == nullptr) value = "";
+
+  SyspropTrace trace(key, value, nullptr /* prop_info */, PropertyAction::kPropertySet);
 
   if (g_propservice_protocol_version == 0) {
     detect_protocol_version();
