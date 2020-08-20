@@ -14,36 +14,41 @@
  * limitations under the License.
  */
 
+#include "private/bionic_systrace.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "private/bionic_lock.h"
-#include "private/bionic_systrace.h"
-#include "private/CachedProperty.h"
-
 #include <async_safe/log.h>
 #include <cutils/trace.h> // For ATRACE_TAG_BIONIC.
+
+#include "private/CachedProperty.h"
+#include "private/bionic_lock.h"
 
 #define WRITE_OFFSET   32
 
 static Lock g_lock;
-static CachedProperty g_debug_atrace_tags_enableflags("debug.atrace.tags.enableflags");
 static uint64_t g_tags;
 static int g_trace_marker_fd = -1;
 
-static bool should_trace() {
-  g_lock.lock();
-  if (g_debug_atrace_tags_enableflags.DidChange()) {
-    g_tags = strtoull(g_debug_atrace_tags_enableflags.Get(), nullptr, 0);
-  }
-  g_lock.unlock();
-  return ((g_tags & ATRACE_TAG_BIONIC) != 0);
+static CachedProperty& GetTagsProp() {
+  static CachedProperty cached_property(kTraceTagsProp);
+  return cached_property;
 }
 
-static int get_trace_marker_fd() {
+bool should_trace(const uint64_t enable_tags) {
+  g_lock.lock();
+  if (GetTagsProp().DidChange()) {
+    g_tags = strtoull(GetTagsProp().Get(), nullptr, 0);
+  }
+  g_lock.unlock();
+  return g_tags & enable_tags;
+}
+
+int get_trace_marker_fd() {
   g_lock.lock();
   if (g_trace_marker_fd == -1) {
     g_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
@@ -55,11 +60,8 @@ static int get_trace_marker_fd() {
   return g_trace_marker_fd;
 }
 
-void bionic_trace_begin(const char* message) {
-  if (!should_trace()) {
-    return;
-  }
-
+// event could be 'B' for begin or 'E' for end.
+void output_trace(const char* message, const char event) {
   int trace_marker_fd = get_trace_marker_fd();
   if (trace_marker_fd == -1) {
     return;
@@ -69,11 +71,20 @@ void bionic_trace_begin(const char* message) {
   // kernel trace_marker.
   int length = strlen(message);
   char buf[length + WRITE_OFFSET];
-  size_t len = async_safe_format_buffer(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
+  size_t len =
+      async_safe_format_buffer(buf, length + WRITE_OFFSET, "%c|%d|%s", event, getpid(), message);
 
   // Tracing may stop just after checking property and before writing the message.
   // So the write is acceptable to fail. See b/20666100.
   TEMP_FAILURE_RETRY(write(trace_marker_fd, buf, len));
+}
+
+void bionic_trace_begin(const char* message) {
+  if (!should_trace()) {
+    return;
+  }
+
+  output_trace(message);
 }
 
 void bionic_trace_end() {
