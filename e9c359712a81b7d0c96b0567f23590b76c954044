@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52e26fb4_14726e3c",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-21T20:52:20Z",
+      "side": 1,
+      "message": "i don\u0027t think you can do this without regretting it later...\n```\n    apex_available: [\n        \"//apex_available:platform\",\n        \"com.android.runtime\",\n        \"com.android.art.debug\",\n        \"com.android.art.release\",\n        \"com.android.media\",\n        \"com.android.media.swcodec\",\n    ],\n```\n\ni think you\u0027ll need to #if the socketcall variant in libasync_safe.",
+      "revId": "e9c359712a81b7d0c96b0567f23590b76c954044",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
