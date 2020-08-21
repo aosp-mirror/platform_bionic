@@ -16,6 +16,24 @@
       "revId": "e9c359712a81b7d0c96b0567f23590b76c954044",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8703a632_5e7d11ab",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-08-21T21:29:08Z",
+      "side": 1,
+      "message": "Ugh, yeah, you\u0027re right. PS3 switches back to the inline socketcall (except implemented correctly this time)",
+      "parentUuid": "52e26fb4_14726e3c",
+      "revId": "e9c359712a81b7d0c96b0567f23590b76c954044",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
