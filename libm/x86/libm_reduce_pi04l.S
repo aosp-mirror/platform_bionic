@@ -3714,5 +3714,5 @@ __4onpi_31l:
 	.type	__4onpi_31l,@object
 	.size	__4onpi_31l,6444
 	.data
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End
