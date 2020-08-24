@@ -113,6 +113,18 @@ TEST(dirent, scandirat_scandirat64) {
   ASSERT_EQ(unsorted_name_list, unsorted_name_list_at64);
 }
 
+static int is_version_filter(const dirent* de) {
+  return !strcmp(de->d_name, "version");
+}
+
+TEST(dirent, scandir_filter) {
+  dirent** entries;
+  errno = 0;
+  ASSERT_EQ(1, scandir("/proc", &entries, is_version_filter, nullptr));
+  ASSERT_STREQ("version", entries[0]->d_name);
+  free(entries);
+}
+
 TEST(dirent, scandir_ENOENT) {
   dirent** entries;
   errno = 0;
