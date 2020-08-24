@@ -888,5 +888,5 @@ static_const_table:
 	.size	static_const_table,2256
 	.data
 	.hidden __libm_sincos_huge
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End

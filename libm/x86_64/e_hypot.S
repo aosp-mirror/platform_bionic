@@ -191,7 +191,7 @@ static_const_table:
 	.type	static_const_table,@object
 	.size	static_const_table,32
 	.data
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 // -- Begin DWARF2 SEGMENT .eh_frame
 	.section .eh_frame,"a",@progbits
 .eh_frame_seg:
