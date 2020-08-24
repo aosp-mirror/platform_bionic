@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
-#include <string.h>
-#include <sys/utsname.h>
-#include <unistd.h>
+#include <gtest/gtest.h>
 
-int gethostname(char* buf, size_t n) {
-  utsname name = {};
-  uname(&name);
+#include <sys/wait.h>
 
-  size_t name_length = static_cast<size_t>(strlen(name.nodename) + 1);
-  if (name_length > n) {
-    errno = ENAMETOOLONG;
-    return -1;
-  }
+TEST(sys_wait, waitid) {
+  pid_t pid = fork();
+  ASSERT_NE(pid, -1);
 
-  memcpy(buf, name.nodename, name_length);
-  return 0;
+  if (pid == 0) _exit(66);
+
+  siginfo_t si = {};
+  ASSERT_EQ(0, waitid(P_PID, pid, &si, WEXITED));
+  ASSERT_EQ(pid, si.si_pid);
+  ASSERT_EQ(66, si.si_status);
+  ASSERT_EQ(CLD_EXITED, si.si_code);
 }

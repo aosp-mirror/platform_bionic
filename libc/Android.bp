@@ -1178,7 +1178,6 @@ cc_library_static {
         },
     },
     whole_static_libs: [
-        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
@@ -1238,6 +1237,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/sys_thread_properties.cpp",
 
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
@@ -2001,8 +2001,10 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // crt* objects are used by most cc_binary/cc_library in "anyapex"
-    min_sdk_version: "apex_inherit",
+    // Generate NDK variants of the CRT objects for every supported API level.
+    min_sdk_version: "16",
+    stl: "none",
+    crt: true,
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",

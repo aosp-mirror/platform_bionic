@@ -28,6 +28,7 @@
 
 #include "private/bionic_elf_tls.h"
 
+#include <async_safe/CHECK.h>
 #include <async_safe/log.h>
 #include <string.h>
 #include <sys/param.h>
@@ -269,6 +270,12 @@ static void update_tls_dtv(bionic_tcb* tcb) {
         continue;
       }
     }
+    if (modules.on_destruction_cb != nullptr) {
+      void* dtls_begin = dtv->modules[i];
+      void* dtls_end =
+          static_cast<void*>(static_cast<char*>(dtls_begin) + allocator.get_chunk_size(dtls_begin));
+      modules.on_destruction_cb(dtls_begin, dtls_end);
+    }
     allocator.free(dtv->modules[i]);
     dtv->modules[i] = nullptr;
   }
@@ -297,6 +304,12 @@ __attribute__((noinline)) static void* tls_get_addr_slow_path(const TlsIndex* ti
       memcpy(mod_ptr, segment.init_ptr, segment.init_size);
     }
     dtv->modules[module_idx] = mod_ptr;
+
+    // Reports the allocation to the listener, if any.
+    if (modules.on_creation_cb != nullptr) {
+      modules.on_creation_cb(mod_ptr,
+                             static_cast<void*>(static_cast<char*>(mod_ptr) + segment.size));
+    }
   }
 
   return static_cast<char*>(mod_ptr) + ti->offset;
@@ -351,6 +364,14 @@ void __free_dynamic_tls(bionic_tcb* tcb) {
       // This module's TLS memory is allocated statically, so don't free it here.
       continue;
     }
+
+    if (modules.on_destruction_cb != nullptr) {
+      void* dtls_begin = dtv->modules[i];
+      void* dtls_end =
+          static_cast<void*>(static_cast<char*>(dtls_begin) + allocator.get_chunk_size(dtls_begin));
+      modules.on_destruction_cb(dtls_begin, dtls_end);
+    }
+
     allocator.free(dtv->modules[i]);
   }
 
@@ -363,4 +384,23 @@ void __free_dynamic_tls(bionic_tcb* tcb) {
 
   // Clear the DTV slot. The DTV must not be used again with this thread.
   tcb->tls_slot(TLS_SLOT_DTV) = nullptr;
+}
+
+// Invokes all the registered thread_exit callbacks, if any.
+void __notify_thread_exit_callbacks() {
+  TlsModules& modules = __libc_shared_globals()->tls_modules;
+  if (modules.first_thread_exit_callback == nullptr) {
+    // If there is no first_thread_exit_callback, there shouldn't be a tail.
+    CHECK(modules.thread_exit_callback_tail_node == nullptr);
+    return;
+  }
+
+  // Callbacks are supposed to be invoked in the reverse order
+  // in which they were registered.
+  CallbackHolder* node = modules.thread_exit_callback_tail_node;
+  while (node != nullptr) {
+    node->cb();
+    node = node->prev;
+  }
+  modules.first_thread_exit_callback();
 }
