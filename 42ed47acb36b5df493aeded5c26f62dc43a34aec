@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "86ac2533_c75bdd84",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-25T22:05:32Z",
+      "side": 1,
+      "message": "I think you need to compile with -fno-emulated-tls. (ELF TLS is only present in Q and up, and the driver defaults to emulated TLS still.)\n\nFWIW: When I want to compile a test program for Android, I download the Android NDK and use its toolchain, e.g.\n\n  ${ANDROID_NDK_R21D}/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android29-clang\n\nNo -target, --sysroot, or -gcc-toolchain argument is needed, and the sysroot (or other NDK headers/libraries) are guaranteed to be compatible with the driver.",
+      "parentUuid": "a964f506_17a39d2a",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
