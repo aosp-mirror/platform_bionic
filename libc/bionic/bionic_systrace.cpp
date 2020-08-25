@@ -31,33 +31,29 @@
 #define WRITE_OFFSET   32
 
 static Lock g_lock;
-static uint64_t g_tags;
-static int g_trace_marker_fd = -1;
-
-static CachedProperty& GetTagsProp() {
-  static CachedProperty cached_property(kTraceTagsProp);
-  return cached_property;
-}
 
 bool should_trace(const uint64_t enable_tags) {
+  static uint64_t tags_val;
+  static CachedProperty tags_prop(kTraceTagsProp);
   g_lock.lock();
-  if (GetTagsProp().DidChange()) {
-    g_tags = strtoull(GetTagsProp().Get(), nullptr, 0);
+  if (tags_prop.DidChange()) {
+    tags_val = strtoull(tags_prop.Get(), nullptr, 0);
   }
   g_lock.unlock();
-  return g_tags & enable_tags;
+  return tags_val & enable_tags;
 }
 
 int get_trace_marker_fd() {
+  static int opened_trace_marker_fd = -1;
   g_lock.lock();
-  if (g_trace_marker_fd == -1) {
-    g_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
-    if (g_trace_marker_fd == -1) {
-      g_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
+  if (opened_trace_marker_fd == -1) {
+    opened_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
+    if (opened_trace_marker_fd == -1) {
+      opened_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     }
   }
   g_lock.unlock();
-  return g_trace_marker_fd;
+  return opened_trace_marker_fd;
 }
 
 // event could be 'B' for begin or 'E' for end.
