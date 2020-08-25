@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a964f506_17a39d2a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-08-25T19:11:47Z",
+      "side": 1,
+      "message": "any time you need x86/x8-64, `acloud create` is your friend:\n\nhttps://g3doc.corp.google.com/company/teams/android/teampages/acloud/getting_started.md?cl\u003dhead",
+      "parentUuid": "d760ee1f_b721b787",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
