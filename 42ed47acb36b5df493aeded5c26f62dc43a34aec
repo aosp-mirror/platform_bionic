@@ -169,6 +169,30 @@
     },
     {
       "key": {
+        "uuid": "86eb5ca7_0bd4a61b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-26T23:24:58Z",
+      "side": 1,
+      "message": "\u003e Using the NDK Clang driver would automatically link against an appropriate crtbegin file.\n\nOh, I didn\u0027t notice that you\u0027re already using the NDK Clang driver.\n\nI forgot -- it\u0027s also necessary to use -fuse-ld\u003dlld.\n\nFrom https://android-review.googlesource.com/c/platform/bionic/+/967181/:\n\n\u003e This variant of the hack is compatible with the gold and lld linkers. The\n\u003e ld.bfd linker will optimize the .tdata output section out if its size is\n\u003e zero, preventing the overalignment in an executable that only has .tbss\n\u003e sections. This problem could be fixed by adding a \". \u003d .;\" statement\n\u003e inside .tdata in ld.bfd\u0027s linker script.\n\nWe\u0027re in the process of switching the NDK to lld as the default linker, which will make -fuse-ld\u003dlld unnecessary.",
+      "parentUuid": "5fe117be_e5750429",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
