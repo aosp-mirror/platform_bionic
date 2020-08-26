@@ -86,10 +86,13 @@ static void arc4random_fork_handler() {
 }
 
 static void __libc_init_malloc_fill_contents() {
+// TODO(b/158870657) make this unconditional when all devices support SCUDO.
+#if defined(USE_SCUDO)
 #if defined(SCUDO_PATTERN_FILL_CONTENTS)
   scudo_malloc_set_pattern_fill_contents(1);
 #elif defined(SCUDO_ZERO_CONTENTS)
   scudo_malloc_set_zero_contents(1);
+#endif
 #endif
 }
 
@@ -359,10 +362,8 @@ void __libc_fini(void* array) {
   Dtor* fini_array = reinterpret_cast<Dtor*>(array);
   const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
 
-  // Sanity check - first entry must be -1.
-  if (array == nullptr || fini_array[0] != minus1) {
-    return;
-  }
+  // Validity check: the first entry must be -1.
+  if (array == nullptr || fini_array[0] != minus1) return;
 
   // Skip over it.
   fini_array += 1;
@@ -373,15 +374,9 @@ void __libc_fini(void* array) {
     ++count;
   }
 
-  // Now call each destructor in reverse order.
+  // Now call each destructor in reverse order, ignoring any -1s.
   while (count > 0) {
     Dtor dtor = fini_array[--count];
-
-    // Sanity check, any -1 in the list is ignored.
-    if (dtor == minus1) {
-      continue;
-    }
-
-    dtor();
+    if (dtor != minus1) dtor();
   }
 }

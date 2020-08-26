@@ -900,6 +900,24 @@ void soinfo::generate_handle() {
   g_soinfo_handles_map[handle_] = this;
 }
 
+void soinfo::set_gap_start(ElfW(Addr) gap_start) {
+  CHECK(has_min_version(6));
+  gap_start_ = gap_start;
+}
+ElfW(Addr) soinfo::get_gap_start() const {
+  CHECK(has_min_version(6));
+  return gap_start_;
+}
+
+void soinfo::set_gap_size(size_t gap_size) {
+  CHECK(has_min_version(6));
+  gap_size_ = gap_size;
+}
+size_t soinfo::get_gap_size() const {
+  CHECK(has_min_version(6));
+  return gap_size_;
+}
+
 // TODO(dimitry): Move SymbolName methods to a separate file.
 
 uint32_t calculate_elf_hash(const char* name) {

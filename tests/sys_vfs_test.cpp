@@ -44,10 +44,24 @@ TEST(sys_vfs, statfs) {
   Check(sb);
 }
 
+TEST(sys_vfs, statfs_failure) {
+  struct statfs sb;
+  errno = 0;
+  ASSERT_EQ(-1, statfs("/does-not-exist", &sb));
+  ASSERT_EQ(ENOENT, errno);
+}
+
 TEST(sys_vfs, statfs64) {
   struct statfs64 sb;
   ASSERT_EQ(0, statfs64("/proc", &sb));
   Check(sb);
+}
+
+TEST(sys_vfs, statfs64_failure) {
+  struct statfs64 sb;
+  errno = 0;
+  ASSERT_EQ(-1, statfs64("/does-not-exist", &sb));
+  ASSERT_EQ(ENOENT, errno);
 }
 
 TEST(sys_vfs, fstatfs) {
@@ -58,10 +72,24 @@ TEST(sys_vfs, fstatfs) {
   Check(sb);
 }
 
+TEST(sys_vfs, fstatfs_failure) {
+  struct statfs sb;
+  errno = 0;
+  ASSERT_EQ(-1, fstatfs(-1, &sb));
+  ASSERT_EQ(EBADF, errno);
+}
+
 TEST(sys_vfs, fstatfs64) {
   struct statfs64 sb;
   int fd = open("/proc", O_RDONLY);
   ASSERT_EQ(0, fstatfs64(fd, &sb));
   close(fd);
   Check(sb);
+}
+
+TEST(sys_vfs, fstatfs64_failure) {
+  struct statfs sb;
+  errno = 0;
+  ASSERT_EQ(-1, fstatfs(-1, &sb));
+  ASSERT_EQ(EBADF, errno);
 }

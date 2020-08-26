@@ -188,6 +188,7 @@ struct v4l2_capability {
 #define V4L2_CAP_STREAMING 0x04000000
 #define V4L2_CAP_META_OUTPUT 0x08000000
 #define V4L2_CAP_TOUCH 0x10000000
+#define V4L2_CAP_IO_MC 0x20000000
 #define V4L2_CAP_DEVICE_CAPS 0x80000000
 struct v4l2_pix_format {
   __u32 width;
@@ -420,7 +421,8 @@ struct v4l2_fmtdesc {
   __u32 flags;
   __u8 description[32];
   __u32 pixelformat;
-  __u32 reserved[4];
+  __u32 mbus_code;
+  __u32 reserved[3];
 };
 #define V4L2_FMT_FLAG_COMPRESSED 0x0001
 #define V4L2_FMT_FLAG_EMULATED 0x0002

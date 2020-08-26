@@ -46,6 +46,7 @@ typedef __s64 Elf64_Sxword;
 #define PT_LOPROC 0x70000000
 #define PT_HIPROC 0x7fffffff
 #define PT_GNU_EH_FRAME 0x6474e550
+#define PT_GNU_PROPERTY 0x6474e553
 #define PT_GNU_STACK (PT_LOOS + 0x474e551)
 #define PN_XNUM 0xffff
 #define ET_NONE 0
@@ -363,6 +364,7 @@ typedef struct elf64_shdr {
 #define NT_MIPS_DSP 0x800
 #define NT_MIPS_FP_MODE 0x801
 #define NT_MIPS_MSA 0x802
+#define NT_GNU_PROPERTY_TYPE_0 5
 typedef struct elf32_note {
   Elf32_Word n_namesz;
   Elf32_Word n_descsz;
@@ -373,4 +375,6 @@ typedef struct elf64_note {
   Elf64_Word n_descsz;
   Elf64_Word n_type;
 } Elf64_Nhdr;
+#define GNU_PROPERTY_AARCH64_FEATURE_1_AND 0xc0000000
+#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI (1U << 0)
 #endif

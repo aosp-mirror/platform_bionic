@@ -66,6 +66,7 @@ enum ctattr_type {
   CTA_LABELS,
   CTA_LABELS_MASK,
   CTA_SYNPROXY,
+  CTA_FILTER,
   __CTA_MAX
 };
 #define CTA_MAX (__CTA_MAX - 1)
@@ -265,4 +266,11 @@ enum ctattr_expect_stats {
   __CTA_STATS_EXP_MAX,
 };
 #define CTA_STATS_EXP_MAX (__CTA_STATS_EXP_MAX - 1)
+enum ctattr_filter {
+  CTA_FILTER_UNSPEC,
+  CTA_FILTER_ORIG_FLAGS,
+  CTA_FILTER_REPLY_FLAGS,
+  __CTA_FILTER_MAX
+};
+#define CTA_FILTER_MAX (__CTA_FILTER_MAX - 1)
 #endif

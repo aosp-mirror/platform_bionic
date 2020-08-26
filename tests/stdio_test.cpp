@@ -294,6 +294,34 @@ TEST(STDIO_TEST, snprintf_a) {
   EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
 }
 
+// http://b/152588929
+TEST(STDIO_TEST, snprintf_La) {
+#if defined(__LP64__)
+  char buf[BUFSIZ];
+  union {
+    uint64_t a[2];
+    long double v;
+  } u;
+
+  u.a[0] = UINT64_C(0x9b9b9b9b9b9b9b9b);
+  u.a[1] = UINT64_C(0xdfdfdfdfdfdfdfdf);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", buf);
+
+  u.a[0] = UINT64_C(0xffffffffffffffff);
+  u.a[1] = UINT64_C(0x7ffeffffffffffff);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x1.ffffffffffffffffffffffffffffp+16383>", buf);
+
+  u.a[0] = UINT64_C(0x0000000000000000);
+  u.a[1] = UINT64_C(0x0000000000000000);
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x0p+0>", buf);
+#else
+  GTEST_SKIP() << "no ld128";
+#endif
+}
+
 TEST(STDIO_TEST, snprintf_lc) {
   char buf[BUFSIZ];
   wint_t wc = L'a';
@@ -341,6 +369,11 @@ TEST(STDIO_TEST, snprintf_n) {
 #else
   GTEST_SKIP() << "glibc does allow %n";
 #endif
+}
+
+TEST(STDIO_TEST, snprintf_measure) {
+  char buf[16];
+  ASSERT_EQ(11, snprintf(buf, 0, "Hello %s", "world"));
 }
 
 TEST(STDIO_TEST, snprintf_smoke) {
@@ -1127,7 +1160,6 @@ TEST(STDIO_TEST, sscanf_mc) {
   free(p1);
 }
 
-
 TEST(STDIO_TEST, sscanf_mlc) {
   // This is so useless that clang doesn't even believe it exists...
 #pragma clang diagnostic push
@@ -1160,7 +1192,6 @@ TEST(STDIO_TEST, sscanf_mlc) {
   free(p1);
 #pragma clang diagnostic pop
 }
-
 
 TEST(STDIO_TEST, sscanf_ms) {
   CheckScanfM(sscanf, "hello", "%ms", 1, "hello");
@@ -2505,6 +2536,16 @@ TEST(STDIO_TEST, puts) {
   eth.Run([&]() { exit(puts("a b c")); }, 0, "a b c\n");
 }
 
+TEST(STDIO_TEST, putchar) {
+  ExecTestHelper eth;
+  eth.Run([&]() { exit(putchar('A')); }, 65, "A");
+}
+
+TEST(STDIO_TEST, putchar_unlocked) {
+  ExecTestHelper eth;
+  eth.Run([&]() { exit(putchar('B')); }, 66, "B");
+}
+
 TEST(STDIO_TEST, unlocked) {
   TemporaryFile tf;
 
@@ -2704,4 +2745,74 @@ TEST(STDIO_TEST, renameat2_flags) {
  ASSERT_NE(0, RENAME_NOREPLACE);
  ASSERT_NE(0, RENAME_WHITEOUT);
 #endif
+}
+
+TEST(STDIO_TEST, fdopen_failures) {
+  FILE* fp;
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+
+  // Nonsense mode.
+  errno = 0;
+  fp = fdopen(fd, "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Mode that isn't a subset of the fd's actual mode.
+  errno = 0;
+  fp = fdopen(fd, "w");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Can't set append on the underlying fd.
+  errno = 0;
+  fp = fdopen(fd, "a");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Bad fd.
+  errno = 0;
+  fp = fdopen(-1, "re");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EBADF, errno);
+
+  close(fd);
+}
+
+TEST(STDIO_TEST, fmemopen_invalid_mode) {
+  errno = 0;
+  FILE* fp = fmemopen(nullptr, 16, "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, fopen_invalid_mode) {
+  errno = 0;
+  FILE* fp = fopen("/proc/version", "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, freopen_invalid_mode) {
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(fp != nullptr);
+
+  errno = 0;
+  fp = freopen("/proc/version", "nonsense", fp);
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, asprintf_smoke) {
+  char* p = nullptr;
+  ASSERT_EQ(11, asprintf(&p, "hello %s", "world"));
+  ASSERT_STREQ("hello world", p);
+  free(p);
+}
+
+TEST(STDIO_TEST, fopen_ENOENT) {
+  errno = 0;
+  FILE* fp = fopen("/proc/does-not-exist", "re");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(ENOENT, errno);
 }

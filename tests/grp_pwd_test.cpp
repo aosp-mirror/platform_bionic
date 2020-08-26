@@ -75,7 +75,11 @@ static void check_passwd(const passwd* pwd, const char* username, uid_t uid, uid
     EXPECT_STREQ("/", pwd->pw_dir);
   }
 
-  EXPECT_STREQ("/bin/sh", pwd->pw_shell);
+  // This has changed over time and that causes new GSI + old vendor images testing to fail.
+  // This parameter doesn't matter on Android, so simply ignore its value for older vendor images.
+  if (android::base::GetIntProperty("ro.product.first_api_level", 0) >= 30) {
+    EXPECT_STREQ("/bin/sh", pwd->pw_shell);
+  }
 }
 
 static void check_getpwuid(const char* username, uid_t uid, uid_type_t uid_type,
@@ -813,6 +817,24 @@ TEST(grp, getgrent_iterate) {
   expect_ids(gids, true);
 #else
   GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(grp, getgrouplist) {
+#if defined(__BIONIC__)
+  // Query the number of groups.
+  int ngroups = 0;
+  ASSERT_EQ(-1, getgrouplist("root", 123, nullptr, &ngroups));
+  ASSERT_EQ(1, ngroups);
+
+  // Query the specific groups (just the one you pass in on Android).
+  ngroups = 8;
+  gid_t groups[ngroups];
+  ASSERT_EQ(1, getgrouplist("root", 123, groups, &ngroups));
+  ASSERT_EQ(1, ngroups);
+  ASSERT_EQ(123u, groups[0]);
+#else
+  GTEST_SKIP() << "bionic-only test (groups too unpredictable)";
 #endif
 }
 
