@@ -145,6 +145,30 @@
     },
     {
       "key": {
+        "uuid": "5fe117be_e5750429",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-26T23:14:47Z",
+      "side": 1,
+      "message": "\u003e The aarch64 failed (with a different error)\n\nThere is a Bionic-specific executable crtbegin object file that adds an empty aligned TLS segment. The extra alignment is a hack to make ELF TLS\u0027s psABI compatible with Bionic\u0027s existing TLS register usage. Using the NDK Clang driver would automatically link against an appropriate crtbegin file.\n\nhttps://android.googlesource.com/platform/bionic/+/refs/heads/android10-dev/docs/elf-tls.md#Bionic-Memory-Layout-Conflicts-with-Common-TLS-Layout\n\nI don\u0027t think it makes sense to report an error for emulated TLS. Emulated TLS is implemented in the compiler and the builtins library, and from libc.so\u0027s point-of-view, an app is just allocating memory with malloc and a pthread key. It doesn\u0027t know anything about emulated TLS per se.\n\nIt\u0027s typical for a thread to have both emulated TLS and ELF TLS. e.g. GWP-ASan in libc.so uses static ELF TLS, but app DSOs will use emulated TLS for compatibility.",
+      "parentUuid": "371c8647_a46667cb",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
