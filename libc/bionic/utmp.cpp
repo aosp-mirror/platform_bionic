@@ -26,5 +26,23 @@
  * SUCH DAMAGE.
  */
 
-#define strrchr strrchr_mte
-#include <bionic/strrchr.cpp>
+#include <utmp.h>
+
+#include <errno.h>
+
+void endutent() {}
+
+void setutent() {}
+
+utmp* getutent() {
+  return nullptr;
+}
+
+utmp* pututline(const utmp*) {
+  return nullptr;
+}
+
+int utmpname(const char*) {
+  errno = ENOTSUP;
+  return -1;
+}

@@ -26,47 +26,41 @@
  * SUCH DAMAGE.
  */
 
-#include <errno.h>
+// Prevent tests from being compiled with glibc because thread_properties.h
+// only exists in Bionic.
+#if defined(__BIONIC__)
+
 #include <stdio.h>
+#include <sys/thread_properties.h>
 
-#include "scudo.h"
-#include "private/bionic_globals.h"
-#include "private/WriteProtected.h"
+// Helper binary for testing thread_exit_cb registration.
 
-__LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
-
-// Call the libc malloc initialisers.
-__attribute__((constructor(1))) static void __scudo_preinit() {
-  __libc_globals.mutate(__libc_init_malloc);
+void exit_cb_1() {
+  printf("exit_cb_1 called ");
 }
 
-extern "C" libc_shared_globals* __loader_shared_globals();
-
-__LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals() {
-  return __loader_shared_globals();
+void exit_cb_2() {
+  printf("exit_cb_2 called ");
 }
 
-#if defined(__i386__)
-__LIBC_HIDDEN__ void* __libc_sysinfo = reinterpret_cast<void*>(__libc_int0x80);
-#endif
+void exit_cb_3() {
+  printf("exit_cb_3 called");
+}
 
-extern "C" void scudo_malloc_disable_memory_tagging() {}
+void test_register_thread_exit_cb() {
+  // Register the exit-cb in reverse order (3,2,1)
+  // so that they'd be called in 1,2,3 order.
+  __libc_register_thread_exit_callback(&exit_cb_3);
+  __libc_register_thread_exit_callback(&exit_cb_2);
+  __libc_register_thread_exit_callback(&exit_cb_1);
+}
 
-int scudo_mallopt(int /*param*/, int /*value*/) {
+int main() {
+  test_register_thread_exit_cb();
   return 0;
 }
-
-int scudo_malloc_info(int /*options*/, FILE* /*fp*/) {
-  errno = ENOTSUP;
-  return -1;
-}
-
-int scudo_malloc_iterate(uintptr_t, size_t, void (*)(uintptr_t, size_t, void*), void*) {
+#else
+int main() {
   return 0;
 }
-
-void scudo_malloc_disable() {
-}
-
-void scudo_malloc_enable() {
-}
+#endif  // __BIONIC__

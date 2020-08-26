@@ -175,11 +175,9 @@ and libssl.so). In order to give you more time to transition, we will
 temporarily support these libraries; so if you see a warning that means
 your code will not work in a future release -- please fix it now!
 
-In O and later, the system property `debug.ld.greylist_disabled` can be
-used to deny access to the greylist even to an app that would normally
-be allowed it. This allows you to test compatibility without bumping the
-app's `targetSdkVersion`. Use `setprop debug.ld.greylist_disabled true`
-to turn this on (any other value leaves the greylist enabled).
+Between O and R, this compatibility mode could be disabled by setting a
+system property (`debug.ld.greylist_disabled`). This property is ignored
+in S and later.
 
 ```
 $ readelf --dynamic libBroken.so | grep NEEDED
@@ -218,7 +216,7 @@ from known vulnerabilities.
 
 Each ELF file has additional information contained in the section
 headers. These headers must be present now, because the dynamic linker
-uses them for sanity checking. Some developers strip them in an
+uses them for validity checking. Some developers strip them in an
 attempt to obfuscate the binary and prevent reverse engineering. (This
 doesn't really help because it is possible to reconstruct the stripped
 information using widely-available tools.)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
+#include <gtest/gtest.h>
 
-#define memchr memchr_mte
-#include <upstream-openbsd/lib/libc/string/memchr.c>
+#include <sys/wait.h>
+
+TEST(sys_wait, waitid) {
+  pid_t pid = fork();
+  ASSERT_NE(pid, -1);
+
+  if (pid == 0) _exit(66);
+
+  siginfo_t si = {};
+  ASSERT_EQ(0, waitid(P_PID, pid, &si, WEXITED));
+  ASSERT_EQ(pid, si.si_pid);
+  ASSERT_EQ(66, si.si_status);
+  ASSERT_EQ(CLD_EXITED, si.si_code);
+}

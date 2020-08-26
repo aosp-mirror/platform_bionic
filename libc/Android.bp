@@ -8,7 +8,6 @@ libc_common_src_files = [
     "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
-    "bionic/pututline.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
     "stdio/fmemopen.cpp",
@@ -81,7 +80,6 @@ cc_defaults {
         // TODO(b/132640749): Fix broken fuzzer support.
         fuzzer: false,
     },
-    native_coverage: false,
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
@@ -99,6 +97,9 @@ cc_defaults {
         },
         malloc_pattern_fill_contents: {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+        },
+        malloc_not_svelte: {
+            cflags: ["-DUSE_SCUDO"],
         },
     },
 }
@@ -389,7 +390,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/gen/nice.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
         "upstream-netbsd/lib/libc/gen/utime.c",
-        "upstream-netbsd/lib/libc/gen/utmp.c",
         "upstream-netbsd/lib/libc/inet/nsap_addr.c",
         "upstream-netbsd/lib/libc/regex/regcomp.c",
         "upstream-netbsd/lib/libc/regex/regerror.c",
@@ -525,6 +525,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdlib/llabs.c",
         "upstream-openbsd/lib/libc/stdlib/lldiv.c",
         "upstream-openbsd/lib/libc/stdlib/lsearch.c",
+        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
         "upstream-openbsd/lib/libc/stdlib/remque.c",
         "upstream-openbsd/lib/libc/stdlib/setenv.c",
         "upstream-openbsd/lib/libc/stdlib/tfind.c",
@@ -566,6 +567,7 @@ cc_library_static {
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/memmem.c",
         "upstream-openbsd/lib/libc/string/strstr.c",
     ],
     cflags: [
@@ -620,6 +622,7 @@ cc_library_static {
         arm64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -855,15 +858,6 @@ cc_library_static {
                 "arch-arm64/generic/bionic/memset.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
 
-                "arch-arm64/mte/bionic/memchr.c",
-                "arch-arm64/mte/bionic/stpcpy.S",
-                "arch-arm64/mte/bionic/strchrnul.cpp",
-                "arch-arm64/mte/bionic/strrchr.cpp",
-                "arch-arm64/mte/bionic/strcmp.c",
-                "arch-arm64/mte/bionic/strcpy.S",
-                "arch-arm64/mte/bionic/strncmp.c",
-                "arch-arm64/mte/bionic/strnlen.c",
-
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
                 "arch-arm64/bionic/setjmp.S",
@@ -1017,7 +1011,6 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
-        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1082,7 +1075,6 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
-        "bionic/memmem.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
@@ -1160,6 +1152,7 @@ cc_library_static {
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
         "bionic/usleep.cpp",
+        "bionic/utmp.cpp",
         "bionic/wait.cpp",
         "bionic/wchar.cpp",
         "bionic/wchar_l.cpp",
@@ -1184,12 +1177,29 @@ cc_library_static {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
-    whole_static_libs: ["libsystemproperties"],
+    whole_static_libs: [
+        "libsystemproperties",
+    ],
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+}
+
+// ========================================================
+// libc_bionic_systrace.a
+// ========================================================
+
+cc_library_static {
+    name: "libc_bionic_systrace",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/bionic_systrace.cpp",
+    ],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 // ========================================================
@@ -1227,6 +1237,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/sys_thread_properties.cpp",
 
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
@@ -1990,8 +2001,10 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // crt* objects are used by most cc_binary/cc_library in "anyapex"
-    min_sdk_version: "apex_inherit",
+    // Generate NDK variants of the CRT objects for every supported API level.
+    min_sdk_version: "16",
+    stl: "none",
+    crt: true,
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -2368,11 +2381,11 @@ cc_genrule {
     ],
 }
 
-// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+// SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT = SECCOMP_BLOCKLIST_APP.txt - setresgid*
 genrule {
-    name: "generate_app_zygote_blacklist",
-    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
-    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    name: "generate_app_zygote_blocklist",
+    out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
     cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
 }
 
@@ -2385,11 +2398,11 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
-        ":generate_app_zygote_blacklist",
+        ":generate_app_zygote_blocklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2413,10 +2426,10 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        "SECCOMP_BLACKLIST_APP.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
@@ -2441,9 +2454,9 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
@@ -2484,75 +2497,6 @@ cc_library {
     static: {
         static_libs: ["libbase"],
     },
-}
-
-// This is a temporary library that will use scudo as the native memory
-// allocator. To use it, add it as the first shared library.
-cc_defaults {
-    name: "libc_scudo_wrapper_defaults",
-    srcs: [
-        "bionic/gwp_asan_wrappers.cpp",
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
-        "bionic/malloc_common_dynamic.cpp",
-        "bionic/malloc_heapprofd.cpp",
-        "bionic/malloc_limit.cpp",
-        "bionic/scudo_wrapper.cpp",
-        "bionic/__set_errno.cpp",
-    ],
-    cflags: [
-        "-DUSE_SCUDO",
-        "-fno-emulated-tls", // Required for GWP-ASan.
-    ],
-    shared_libs: ["libscudo_wrapper"],
-
-    header_libs: [
-        "libc_headers",
-        "gwp_asan_headers",
-    ],
-
-    static_libs: [
-        "libasync_safe",
-        "gwp_asan",
-    ],
-
-    arch: {
-        arm: {
-            srcs: [":syscalls-arm.S"],
-        },
-        arm64: {
-            srcs: [":syscalls-arm64.S"],
-        },
-        x86: {
-            srcs: [
-                "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                ":syscalls-x86.S",
-            ],
-        },
-        x86_64: {
-            srcs: [":syscalls-x86_64.S"],
-        },
-    },
-
-    // Mark this library as global so it overrides all the allocation
-    // definitions properly.
-    ldflags: ["-Wl,-z,global"],
-}
-
-cc_library_shared {
-    name: "libc_scudo",
-    vendor_available: true,
-    stl: "none",
-    system_shared_libs: [],
-
-    allow_undefined_symbols: true,
-    // Like libc, disable native coverage for libc_scudo.
-    native_coverage: false,
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.media.swcodec",
-    ],
-    min_sdk_version: "apex_inherit",
 }
 
 subdirs = [

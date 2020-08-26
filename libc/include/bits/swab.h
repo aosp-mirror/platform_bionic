@@ -26,7 +26,28 @@
  * SUCH DAMAGE.
  */
 
-#include <upstream-openbsd/android/include/openbsd-compat.h>
+#pragma once
 
-#define strcmp strcmp_mte
-#include <upstream-openbsd/lib/libc/string/strcmp.c>
+#include <stdint.h>
+#include <sys/cdefs.h>
+#include <sys/types.h>
+
+#if !defined(__BIONIC_SWAB_INLINE)
+#define __BIONIC_SWAB_INLINE static __inline
+#endif
+
+__BEGIN_DECLS
+
+__BIONIC_SWAB_INLINE void swab(const void* __void_src, void* __void_dst, ssize_t __byte_count) {
+  const uint8_t* __src = __BIONIC_CAST(static_cast, const uint8_t*, __void_src);
+  uint8_t* __dst = __BIONIC_CAST(static_cast, uint8_t*, __void_dst);
+  while (__byte_count > 1) {
+    uint8_t x = *__src++;
+    uint8_t y = *__src++;
+    *__dst++ = y;
+    *__dst++ = x;
+    __byte_count -= 2;
+  }
+}
+
+__END_DECLS
