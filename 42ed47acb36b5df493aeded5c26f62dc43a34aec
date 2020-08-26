@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "fd39454d_6e2a22fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-26T02:02:52Z",
+      "side": 1,
+      "message": "\u003e any time you need x86/x8-64, `acloud create` is your friend:\nThanks! \n\n\u003e I think you need to compile with -fno-emulated-tls.\n\nAh! You\u0027re right. \n\nI\u0027ve tried adding `-fno-emulated-tls`:\n  - The i686 worked https://paste.googleplex.com/6522431826034688\n  - The aarch64 failed (with a different error) https://paste.googleplex.com/5852485647335424\n\nThat\u0027s a little strange but I guess it\u0027s not related to this CL.",
+      "parentUuid": "86ac2533_c75bdd84",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
