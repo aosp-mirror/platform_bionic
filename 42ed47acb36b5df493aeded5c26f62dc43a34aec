@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "371c8647_a46667cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-26T02:09:39Z",
+      "side": 1,
+      "message": "P.S: I\u0027m gonna revert this change. But now that we\u0027re here, is it worth making these functions report errors if they are called for emulated-tls (Is it even detectable from here?)\n\nI\u0027m guessing this is why a bunch of tests from the sanitizers aren\u0027t passing when I try to use this API",
+      "parentUuid": "fd39454d_6e2a22fd",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
