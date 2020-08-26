@@ -16,6 +16,23 @@
       "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ea6e2350_7b294e5b",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1041673
+      },
+      "writtenOn": "2020-08-26T23:06:01Z",
+      "side": 1,
+      "message": "explicit?",
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
