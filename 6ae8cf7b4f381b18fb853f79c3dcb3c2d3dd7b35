@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36f036c2_fc47cf26",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-08-27T19:07:48Z",
+      "side": 1,
+      "message": "Should this wait until the other MTE globals patches are ready?\n\nShould we remove the other prctl call? It seems like if we do this in __libc_init_main_thread_early then it will happen in the right place in the loader and in statically linked executables.",
+      "revId": "6ae8cf7b4f381b18fb853f79c3dcb3c2d3dd7b35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52c21c1f_aba6a0a5",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-08-27T19:07:48Z",
+      "side": 1,
+      "message": "Nit: you can use \u003cbionic/mte_kernel.h\u003e here.",
+      "revId": "6ae8cf7b4f381b18fb853f79c3dcb3c2d3dd7b35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
