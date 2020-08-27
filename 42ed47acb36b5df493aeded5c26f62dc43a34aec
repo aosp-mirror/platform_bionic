@@ -193,6 +193,30 @@
     },
     {
       "key": {
+        "uuid": "b9819b8b_3a5a04d7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-08-27T01:12:23Z",
+      "side": 1,
+      "message": "Thanks! That makes sense. (Re-tested the aarch64 and it looked as expected now https://paste.googleplex.com/5075306214850560).\n\nI\u0027ve reverted the code change but fixed the test to be more meaningful.\nPTAL",
+      "parentUuid": "86eb5ca7_0bd4a61b",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 155
+      },
+      "revId": "42ed47acb36b5df493aeded5c26f62dc43a34aec",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7993a5dc_54c6394c",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
