@@ -54,6 +54,7 @@
 #include <async_safe/log.h>
 #include <bionic/libc_init_common.h>
 #include <bionic/pthread_internal.h>
+#include <platform/bionic/mte_kernel.h>
 
 #include <vector>
 
@@ -621,6 +622,19 @@ __attribute__((constructor(1))) static void detect_self_exec() {
 static ElfW(Addr) __attribute__((noinline))
 __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& linker_so);
 
+// This should be called as early as possible in the startup of the process
+// to allow the dynamic loader to tag globals during relocation. This function
+// turns on MTE in ASYNC mode, but this can be switched to SYNC in libc before
+// heap initialization happens.
+static void enable_mte_if_supported() {
+#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+  // This prctl() ends up being a nop if we failed to enable MTE. That's fine, we'll
+  // just fallback to not supporting MTE for the earliest globals.
+  prctl(PR_SET_TAGGED_ADDR_CTRL,
+        PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (0xfffe << PR_MTE_TAG_SHIFT), 0, 0, 0);
+#endif
+}
+
 /*
  * This is the entry point for the linker, called from begin.S. This
  * method is responsible for fixing the linker's own relocations, and
@@ -635,6 +649,9 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
   KernelArgumentBlock args(raw_args);
   bionic_tcb temp_tcb __attribute__((uninitialized));
   linker_memclr(&temp_tcb, sizeof(temp_tcb));
+
+  enable_mte_if_supported();
+
   __libc_init_main_thread_early(args, &temp_tcb);
 
   // When the linker is run by itself (rather than as an interpreter for

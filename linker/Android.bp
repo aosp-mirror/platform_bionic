@@ -93,6 +93,9 @@ cc_defaults {
         debuggable: {
             cppflags: ["-DUSE_LD_CONFIG_FILE"],
         },
+        experimental_mte: {
+            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        },
     },
 
     cppflags: ["-Wold-style-cast"],
