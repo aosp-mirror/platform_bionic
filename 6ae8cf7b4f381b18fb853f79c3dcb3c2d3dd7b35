@@ -33,6 +33,23 @@
       "revId": "6ae8cf7b4f381b18fb853f79c3dcb3c2d3dd7b35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65f4ba82_f4f1cc90",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-08-27T19:25:42Z",
+      "side": 1,
+      "message": "FYI this also looks like a good place to set PROT_MTE on the main stack.\nI have a local patch that does it in begin.S, but\n * doing it in C++ seems nicer\n * we\u0027d only need to disable stack tagging on 2 functions for this to work: __linker_init and enable_mte_if_supported.",
+      "revId": "6ae8cf7b4f381b18fb853f79c3dcb3c2d3dd7b35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
