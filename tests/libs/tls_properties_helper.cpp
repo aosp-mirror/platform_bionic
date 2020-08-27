@@ -32,6 +32,7 @@
 
 #include <sys/thread_properties.h>
 
+#include <assert.h>
 #include <dlfcn.h>
 #include <stdio.h>
 #include <unistd.h>  // for gettid
@@ -39,12 +40,19 @@
 // Helper binary to use TLS-related functions in thread_properties
 
 // Tests __get_static_tls_bound.
+thread_local int local_var;
 void test_static_tls_bounds() {
-  void* start_addr;
-  void* end_addr;
+  local_var = 123;
+  void* start_addr = nullptr;
+  void* end_addr = nullptr;
 
   __libc_get_static_tls_bounds(reinterpret_cast<void**>(&start_addr),
                                reinterpret_cast<void**>(&end_addr));
+  assert(start_addr != nullptr);
+  assert(end_addr != nullptr);
+
+  assert(&local_var >= start_addr && &local_var < end_addr);
+
   printf("done_get_static_tls_bounds\n");
 }
 
