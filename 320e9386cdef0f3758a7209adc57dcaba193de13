@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6acff23c_b2cda177",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-08-27T01:29:58Z",
+      "side": 1,
+      "message": "I\u0027d prefer assert.h for consistency with the other C++ test files.",
+      "revId": "320e9386cdef0f3758a7209adc57dcaba193de13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
