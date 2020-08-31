@@ -118,6 +118,8 @@ END(_setjmp)
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
+  hint #25 // paciasp
+  .cfi_negate_ra_state
   stp x0, x30, [sp, #-16]!
   .cfi_def_cfa_offset 16
   .cfi_rel_offset x0, 0
@@ -184,6 +186,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 #endif
 
   mov w0, #0
+  hint #29 // autiasp
+  .cfi_negate_ra_state
   ret
 END(sigsetjmp)
 
@@ -250,7 +254,9 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
 1:
   // Restore core registers.
   bic x2, x2, #1
+  // x30 was saved with PAC to jmp_buf in sigsetjmp().
   ldp x30, x10, [x0, #(_JB_X30_SP  * 8)]
+  .cfi_negate_ra_state
   ldp x28, x29, [x0, #(_JB_X28_X29 * 8)]
   ldp x26, x27, [x0, #(_JB_X26_X27 * 8)]
   ldp x24, x25, [x0, #(_JB_X24_X25 * 8)]
@@ -290,6 +296,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   // Set return value.
   cmp w1, wzr
   csinc w0, w1, wzr, ne
+  hint #29 // autiasp
+  .cfi_negate_ra_state
   ret
 END(siglongjmp)
 
@@ -297,3 +305,5 @@ ALIAS_SYMBOL(longjmp, siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(longjmp)
 ALIAS_SYMBOL(_longjmp, siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_longjmp)
+
+NOTE_GNU_PROPERTY()
