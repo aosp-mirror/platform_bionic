@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22a686a0_93104cfe",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "reduce all these by one #?",
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da45940c_90d2fa60",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "explicitly say (before this section?) that fdtrack is currently platform-only and not yet in the NDK?",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 24
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23c7ab65_42596f8b",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "here and in the introduction i feel like i\u0027m missing a word like \"default\". and/or some explanation of why this isn\u0027t in libc.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 20
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8acb443a_8d0d02bb",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "(one of these days we should think about adding an API so libraries can \"claim\" the next unused RT signal. that\u0027s the 80% use case [at least!] and basically unsupported by POSIX.)",
+      "range": {
+        "startLine": 25,
+        "startChar": 1,
+        "endLine": 25,
+        "endChar": 22
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b87abd8b_7abb6853",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "(explicitly state that this is what the \"unsafe\" in the name refers to, since for your purposes this is ironically the safer of the two options?)",
+      "range": {
+        "startLine": 58,
+        "startChar": 7,
+        "endLine": 58,
+        "endChar": 15
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc7b7385_657de1cd",
+        "filename": "docs/fdtrack.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-01T15:07:04Z",
+      "side": 1,
+      "message": "why does the reader care?\n\n(especially since we\u0027ve long since told them they can\u0027t use GCC any more.)",
+      "range": {
+        "startLine": 60,
+        "startChar": 7,
+        "endLine": 60,
+        "endChar": 19
+      },
+      "revId": "12a0eb6c6d20b97d2c7eb8b3e960d753fe6f82e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
