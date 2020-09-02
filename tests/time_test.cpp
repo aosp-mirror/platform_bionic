@@ -363,6 +363,105 @@ TEST(time, strptime_V_G_g) {
   EXPECT_TRUE(memcmp(&tm, &zero, sizeof(tm)) == 0);
 }
 
+TEST(time, strptime_Z) {
+#if defined(__BIONIC__)
+  // glibc doesn't handle %Z at all.
+  // The BSDs only handle hard-coded "GMT" and "UTC", plus whatever two strings
+  // are in the global `tzname` (which correspond to the current $TZ).
+  struct tm tm;
+  setenv("TZ", "Europe/Berlin", 1);
+
+  // "GMT" always works.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("GMT", "%Z", &tm));
+  EXPECT_STREQ("GMT", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // As does "UTC".
+  tm = {};
+  ASSERT_EQ('\0', *strptime("UTC", "%Z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // Europe/Berlin is known as "CET" when there's no DST.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("CET", "%Z", &tm));
+  EXPECT_STREQ("CET", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+
+  // Europe/Berlin is known as "CEST" when there's no DST.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("CEST", "%Z", &tm));
+  EXPECT_STREQ("CEST", tm.tm_zone);
+  EXPECT_EQ(1, tm.tm_isdst);
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+
+  // And as long as we're in Europe/Berlin, those are the only time zone
+  // abbreviations that are recognized.
+  tm = {};
+  ASSERT_TRUE(strptime("PDT", "%Z", &tm) == nullptr);
+#endif
+}
+
+TEST(time, strptime_z) {
+  struct tm tm;
+  setenv("TZ", "Europe/Berlin", 1);
+
+  // "UT" is what RFC822 called UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("UT", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+  // "GMT" is RFC822's other name for UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("GMT", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // "Z" ("Zulu") is a synonym for UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("Z", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // "PST"/"PDT" and the other common US zone abbreviations are all supported.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("PST", "%z", &tm));
+  EXPECT_STREQ("PST", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(-28800, tm.tm_gmtoff);
+  tm = {};
+  ASSERT_EQ('\0', *strptime("PDT", "%z", &tm));
+  EXPECT_STREQ("PDT", tm.tm_zone);
+  EXPECT_EQ(1, tm.tm_isdst);
+  EXPECT_EQ(-25200, tm.tm_gmtoff);
+
+  // +-hh
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+01", "%z", &tm));
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
+  // +-hhmm
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+0130", "%z", &tm));
+  EXPECT_EQ(5400, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
+  // +-hh:mm
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+01:30", "%z", &tm));
+  EXPECT_EQ(5400, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
+}
+
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
   itimerspec ts;
   ts.it_value.tv_sec = value_s;
