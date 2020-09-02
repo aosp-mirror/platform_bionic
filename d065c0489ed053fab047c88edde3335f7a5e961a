@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7870ceea_fc39902f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1431994
+      },
+      "writtenOn": "2020-09-02T12:16:52Z",
+      "side": 1,
+      "message": "Submitting to fix test failures. ",
+      "revId": "d065c0489ed053fab047c88edde3335f7a5e961a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
