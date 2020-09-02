@@ -324,10 +324,16 @@ bool ContextsSplit::Initialize(bool writable, const char* filename, bool* fsetxa
   return true;
 }
 
-prop_area* ContextsSplit::GetPropAreaForName(const char* name) {
+PrefixNode* ContextsSplit::GetPrefixNodeForName(const char* name) {
   auto entry = ListFind(prefixes_, [name](PrefixNode* l) {
     return l->prefix[0] == '*' || !strncmp(l->prefix, name, l->prefix_len);
   });
+
+  return entry;
+}
+
+prop_area* ContextsSplit::GetPropAreaForName(const char* name) {
+  auto entry = GetPrefixNodeForName(name);
   if (!entry) {
     return nullptr;
   }
