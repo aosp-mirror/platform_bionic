@@ -25,3 +25,20 @@ cc_library_static {
     ],
     export_include_dirs: ["include"],
 }
+
+cc_benchmark {
+    name: "property_context_lookup_benchmark",
+    srcs: [
+        "context_lookup_benchmark.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+
+    shared_libs: ["libbase"],
+    static_libs: [
+        "libpropertyinfoserializer",
+        "libsystemproperties",
+        "libasync_safe",
+    ],
+}
