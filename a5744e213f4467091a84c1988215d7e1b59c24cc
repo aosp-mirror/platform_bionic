@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a5345de_b52bed1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-09-02T16:13:45Z",
+      "side": 1,
+      "message": "Turns out I don\u0027t need to include the .cpp after all.",
+      "revId": "a5744e213f4467091a84c1988215d7e1b59c24cc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
