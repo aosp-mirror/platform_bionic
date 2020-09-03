@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "42ee4ffd_e3ccbab3",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "Ok, calling it .note.gnu.property seems fine to me.\n\n\u003e I am not sure I can understand. What do you mean exactly?\n\nWhen I link something with -z,force-bti, I see a PT_NOTE segment and a PT_GNU_PROPERTY segment with the same p_vaddr, p_filesz, p_memsz fields. That\u0027s fine, I just thought it was interesting.",
+      "parentUuid": "433638bb_c2e5947f",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "78731fa0_43a2c1b0",
         "filename": "linker/linker_note_gnu_property.cpp",
         "patchSetId": 2
@@ -122,6 +140,24 @@
       "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c658b82_69670121",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fa40c0c5_ea3eac04",
+      "revId": "4bfecd1673c9eb27dd84b1366308eb73511996a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {

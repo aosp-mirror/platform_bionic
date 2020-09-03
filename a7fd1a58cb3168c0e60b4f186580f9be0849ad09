@@ -19,6 +19,92 @@
     },
     {
       "key": {
+        "uuid": "11877a82_c87bf240",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "I think this needs to use __linker_error instead of DL_ERR. DL_ERR will merely initialize the linker_get_error_buffer() buffer -- it won\u0027t print the message or abort the process.",
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e129df4_30658b4e",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "I believe this should be si-\u003eload_bias rather than si-\u003ebase. (They\u0027re usually the same, but I think they\u0027re different if the first PT_LOAD of a DSO has a non-zero p_vaddr. IIRC that was a normal outcome with Bionic\u0027s old \"relocation_packer\", but not anymore.) This change would affect most/all of the `base` references in this file.",
+      "range": {
+        "startLine": 40,
+        "startChar": 46,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1295734_66efa136",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "e.g. This should be load_bias.",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 79,
+        "endChar": 58
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38d2a537_8f8ac5ff",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "INFO corresponds to LD_DEBUG\u003d1. Maybe this should be TRACE or DEBUG? Or just omitted, maybe...",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 8
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea6e2350_7b294e5b",
         "filename": "linker/linker_note_gnu_property.h",
         "patchSetId": 6
@@ -30,6 +116,29 @@
       "writtenOn": "2020-08-26T23:06:01Z",
       "side": 1,
       "message": "explicit?",
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b29de906_fe9796ca",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-03T06:35:22Z",
+      "side": 1,
+      "message": "I can\u0027t remember if this already came up, but can we set PROT_BTI during the initial load for shared objects? It would reduce the number of memory-mapping syscalls, which has been a concern because they acquire the mmap_sem kernel lock.",
+      "range": {
+        "startLine": 178,
+        "startChar": 19,
+        "endLine": 178,
+        "endChar": 46
+      },
       "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
