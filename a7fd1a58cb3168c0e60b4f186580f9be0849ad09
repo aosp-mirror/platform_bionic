@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "88a7da26_9d15e20e",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11877a82_c87bf240",
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e129df4_30658b4e",
         "filename": "linker/linker_note_gnu_property.cpp",
         "patchSetId": 6
@@ -56,6 +74,30 @@
       "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d383ab40_56dde980",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e129df4_30658b4e",
+      "range": {
+        "startLine": 40,
+        "startChar": 46,
+        "endLine": 40,
+        "endChar": 54
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +124,30 @@
     },
     {
       "key": {
+        "uuid": "6b9f6ee6_553a5252",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1295734_66efa136",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 79,
+        "endChar": 58
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38d2a537_8f8ac5ff",
         "filename": "linker/linker_note_gnu_property.cpp",
         "patchSetId": 6
@@ -105,6 +171,30 @@
     },
     {
       "key": {
+        "uuid": "8c9d6435_e6873f20",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38d2a537_8f8ac5ff",
+      "range": {
+        "startLine": 115,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 8
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ea6e2350_7b294e5b",
         "filename": "linker/linker_note_gnu_property.h",
         "patchSetId": 6
@@ -122,6 +212,24 @@
     },
     {
       "key": {
+        "uuid": "8dddf7bf_16bb13f9",
+        "filename": "linker/linker_note_gnu_property.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea6e2350_7b294e5b",
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b29de906_fe9796ca",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 6
@@ -133,6 +241,30 @@
       "writtenOn": "2020-09-03T06:35:22Z",
       "side": 1,
       "message": "I can\u0027t remember if this already came up, but can we set PROT_BTI during the initial load for shared objects? It would reduce the number of memory-mapping syscalls, which has been a concern because they acquire the mmap_sem kernel lock.",
+      "range": {
+        "startLine": 178,
+        "startChar": 19,
+        "endLine": 178,
+        "endChar": 46
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cdb8025_e9a190db",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-03T12:40:22Z",
+      "side": 1,
+      "message": "I might be wrong here but the reason I choose this is the following.\nLoaded SO-s can be protected if FindGnuPropertySection() is before LoadSegments().\nHowever, in this case read(fd, ...) would be necessary to find the note and couldn\u0027t use virtual addresses - which is very simple.\nThe other point is that kernel does not protect interpreted binaries. This means that the same logic would have to be based on virtual addresses for the main executable.\n\nI will try to implement this suggested approach soon.",
+      "parentUuid": "b29de906_fe9796ca",
       "range": {
         "startLine": 178,
         "startChar": 19,
