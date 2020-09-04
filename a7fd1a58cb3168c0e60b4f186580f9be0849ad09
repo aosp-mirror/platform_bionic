@@ -274,6 +274,30 @@
       "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "074fb913_6d225aee",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-04T04:12:12Z",
+      "side": 1,
+      "message": "Oh, I see the problem.\n\nThe loader normally deals with this sort of problem by mapping fragments of the file (phdr_fragment_, shdr_fragment_, dynamic_fragment_, strtab_fragment_). Three of these fragments are typically very small, and I\u0027ve wondered if the extra mmap calls are bad performance-wise. I don\u0027t what benchmark I\u0027d run, though.\n\nI\u0027m not actually sure there\u0027s a problem with mmap_sem contention, so maybe it\u0027s fine to leave this change as-is, and optimize out the mprotect calls later.",
+      "parentUuid": "4cdb8025_e9a190db",
+      "range": {
+        "startLine": 178,
+        "startChar": 19,
+        "endLine": 178,
+        "endChar": 46
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
