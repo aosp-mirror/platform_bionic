@@ -22,6 +22,30 @@
       "revId": "38d290a11d92dc227a719af2635a50a9a92cb703",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "013783f3_52f391a5",
+        "filename": "libc/platform/scudo_platform_tls_slot.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-10T21:10:02Z",
+      "side": 1,
+      "message": "The idea is that other operating systems like Fuchsia would have a header with the same name, so the required header should not be Android-specific, i.e. should not be \u003cbionic/tls.h\u003e.",
+      "parentUuid": "362cb1d3_6a54031d",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "38d290a11d92dc227a719af2635a50a9a92cb703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
