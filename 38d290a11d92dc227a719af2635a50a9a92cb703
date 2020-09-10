@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "362cb1d3_6a54031d",
+        "filename": "libc/platform/scudo_platform_tls_slot.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-10T21:04:48Z",
+      "side": 1,
+      "message": "Sorry to be not have mentioned this in the first comment, but is there a reason not to put this in tls.h? It seems kind of odd to put this in it\u0027s own file. Is the worry the function wouldn\u0027t be inlined in all cases and result in duplicate definitions?",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "38d290a11d92dc227a719af2635a50a9a92cb703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
