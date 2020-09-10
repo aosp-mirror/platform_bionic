@@ -46,6 +46,30 @@
       "revId": "3da7ade493f7545422d49b2db0ba1482bed71869",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17421a3b_72337ab1",
+        "filename": "libc/platform/scudo_platform_tls_slot.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-10T19:39:50Z",
+      "side": 1,
+      "message": "Then maybe getPlatformAllocatorTlsSlot. The proposed name doesn\u0027t really convey anything meaningful.",
+      "parentUuid": "5e2ffdaa_1b85b471",
+      "range": {
+        "startLine": 33,
+        "startChar": 18,
+        "endLine": 33,
+        "endChar": 36
+      },
+      "revId": "3da7ade493f7545422d49b2db0ba1482bed71869",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
