@@ -46,6 +46,30 @@
       "revId": "38d290a11d92dc227a719af2635a50a9a92cb703",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "961483db_de28ebaa",
+        "filename": "libc/platform/scudo_platform_tls_slot.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-10T21:29:53Z",
+      "side": 1,
+      "message": "I think I would prefer it in tls.h and then add a file in android/include in external/scudo that just included bionic/tls.h. However, I see no reason to hold up on this since it would be really easy to change this and I\u0027m not convinced my idea is any better.",
+      "parentUuid": "013783f3_52f391a5",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 1
+      },
+      "revId": "38d290a11d92dc227a719af2635a50a9a92cb703",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
