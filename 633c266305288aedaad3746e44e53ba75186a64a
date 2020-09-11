@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92137829_987991b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-11T15:52:06Z",
+      "side": 1,
+      "message": "Add a note in the comment that live functions with stack protector can never return after this call?",
+      "revId": "633c266305288aedaad3746e44e53ba75186a64a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
