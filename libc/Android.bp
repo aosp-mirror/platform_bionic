@@ -62,6 +62,7 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
         // For android_filesystem_config.h.
         "system/core/libcutils/include",
     ],
@@ -1077,6 +1078,7 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
+        "bionic/memory_mitigation_state.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
