@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0eeaad8_29911fdd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-15T22:57:06Z",
+      "side": 1,
+      "message": "this can\u0027t go in until libc++ (and the prebuilt ndk\u0027s copy) have been updated, but this presubmit run seems to show that what i have is both necessary and sufficient...",
+      "revId": "650335be5c7dfa4998caf71f950c4bddb6a8839f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
