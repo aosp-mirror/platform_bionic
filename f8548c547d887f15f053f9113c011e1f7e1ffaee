@@ -119,6 +119,24 @@
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57755733_f809550e",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-09-16T18:28:07Z",
+      "side": 1,
+      "message": "Ah - if we\u0027re supporting on/off for the per-thread that sounds good to me.\n\nWhat about \"android_disable_sanitization()\"?",
+      "parentUuid": "958ea1a2_bad86c37",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
