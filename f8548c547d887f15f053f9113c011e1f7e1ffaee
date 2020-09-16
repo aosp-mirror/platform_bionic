@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d73aa1b0_eb412a28",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-16T19:31:36Z",
+      "side": 1,
+      "message": "I\u0027m not entirely sure about disabling tagging process-wide, but we\u0027d need the exact same mechanism for an app to switch itself from async to sync.",
+      "parentUuid": "1c0373ee_cdc48843",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
