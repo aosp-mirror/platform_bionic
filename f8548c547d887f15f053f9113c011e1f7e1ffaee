@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "8e827d5e_44bb23e5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T19:36:04Z",
+      "side": 1,
+      "message": "The idea is that an app may call this after establishing that it needs to change the MTE setting (for example, the app may have its own \"experiments\" mechanism for controlling memory tagging in the field). Typically at the point at which an app\u0027s native code runs there are already multiple threads running, so we need to change this setting in all of them.",
+      "parentUuid": "1c0373ee_cdc48843",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
