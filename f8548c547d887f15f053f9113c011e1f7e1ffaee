@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "5bf5d9f6_4f393e73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T19:47:43Z",
+      "side": 1,
+      "message": "\u003e maybe _that_ should be what goes in the manifest: \"switch me to sync never/always/if-crashy\"?\n\u003e \n\u003e i\u0027m not sure how to manage pcc\u0027s \"i\u0027m running an experiment\" though.\n\nRight, we thought about having this only be a manifest flag but concluded that it wouldn\u0027t provide enough flexibility. For example, \"if-crashy\" as decided by whom? If the app handles the crashes itself then whichever component decides that wouldn\u0027t necessarily see the crashes.",
+      "parentUuid": "90a0c3a6_f7e6382a",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
