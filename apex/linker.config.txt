@@ -1,0 +1,6 @@
+# Extra linker configurations for bionic APEX
+# See https://android.googlesource.com/platform/system/linkerconfig/+/master/README.md#apex_etc_linker_config_txt
+
+[properties]
+# Set bionic APEX as force visible so bionic APEX namespace is accessible via android_get_exported_namespace
+visible = true
