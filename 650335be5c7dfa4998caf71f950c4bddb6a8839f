@@ -16,6 +16,24 @@
       "revId": "650335be5c7dfa4998caf71f950c4bddb6a8839f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6923e1c5_7398fff3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-09-16T07:12:05Z",
+      "side": 1,
+      "message": "Thanks. Yeah, this (and the prebuilt ndk copy) looks fine. It would be great if you share the pointer to the libc++ change (perhaps in the upstream?) I will abandon aosp/1425570 when this gets merged.",
+      "parentUuid": "c0eeaad8_29911fdd",
+      "revId": "650335be5c7dfa4998caf71f950c4bddb6a8839f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
