@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "6ba6af5f_156197e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T18:23:17Z",
+      "side": 1,
+      "message": "\u003e Patch Set 1:\n\u003e \n\u003e Why is this a new API rather than a new android_mallopt option?\n\nThe main reason is that I think {,android_}mallopt should only affect the heap, whereas this API also sets TCF0 which will impact MTE checking for the stack and globals.\n\nIf this is going to be added to one of the mallopt functions, then it should be added to mallopt and not android_mallopt, because it is intended to be a public API. (That would require a carveout of one of the M_ constants for Bionic because they are currently all owned by Scudo, but we can probably deal with that.)",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "667b2b8d_69acd3bc",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
@@ -81,6 +98,24 @@
       "writtenOn": "2020-09-16T17:16:18Z",
       "side": 1,
       "message": "Sorry that it\u0027s taken me a few days to get back to you on this - but I\u0027m not convinced this should affect MTE, for a couple of reasons:\n 1. AFAICT, the fact that this disables MTE is the reason that stops us from being able to turn heap initialization back on afterwards. Given that the thread-only disable_mem_init() function only sets a thread-local variable, I assumed it would be a good use case where a developer would have a hot malloc that they don\u0027t want to eat the cost of MemInit on, and they could just flip it off/on again cheaply.\n 2. At least to me \"disabling heap memory initialization\" seems unrelated to MTE, and I\u0027d be surprised as a user for this side effect to happen. But, this could be solved with a slight rename to \"android_disable_heap_mitigations()\" or something.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "958ea1a2_bad86c37",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T18:23:17Z",
+      "side": 1,
+      "message": "1. Yes, the per-thread API permits toggling. There\u0027s no need to permit it for the per-process API since the API is expected to only be called once (e.g. after the app determines that some criteria for disabling it are satisfied) and not typically around a region of code since that would impact the other threads. Per-thread and per-process satisfy different use cases (wanting to disable only a few mallocs vs all mallocs) so we will need both.\n\n2. Renaming it seems fine. Maybe it shouldn\u0027t mention heap because the process-wide setting of TCF0 to NONE will impact not only heap but stack and globals.",
+      "parentUuid": "a50df221_d797c827",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
