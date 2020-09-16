@@ -36,6 +36,9 @@ apex {
     },
     key: "com.android.runtime.key",
     certificate: ":com.android.runtime.certificate",
+    prebuilts: [
+        "bionic-linker-config",
+    ],
 }
 
 sdk {
@@ -75,4 +78,11 @@ module_exports {
             native_binaries: ["linker"],
         },
     },
+}
+
+prebuilt_etc {
+    name: "bionic-linker-config",
+    src: "linker.config.txt",
+    filename: "linker.config.txt",
+    installable: false,
 }
