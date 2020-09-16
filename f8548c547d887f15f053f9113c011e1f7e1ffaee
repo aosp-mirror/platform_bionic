@@ -36,6 +36,41 @@
     },
     {
       "key": {
+        "uuid": "1ab6719c_540b280a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:21:16Z",
+      "side": 1,
+      "message": "i think we need to make android_mallopt() public for S anyway, for our \"give apps more tuning knobs\" feature.\n\nwe can always give android_mallopt() a more general name (either \"slightly more general\" to make it clear that it\u0027s all memory, not just the heap, or \"fully general\" and have any kind of knob be collected there), but i\u0027d definitely prefer to avoid having a bunch of single-use API for tuning knobs.",
+      "parentUuid": "6ba6af5f_156197e3",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dbf8e1a_fab67123",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:21:16Z",
+      "side": 1,
+      "message": "we have a thread list (and no realistic hope of getting rid of it any time soon), which might be better?",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "667b2b8d_69acd3bc",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
