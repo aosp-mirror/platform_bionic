@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "90a0c3a6_f7e6382a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:40:17Z",
+      "side": 1,
+      "message": "\u003e an app to switch itself from async to sync\n\nbecause you\u0027re thinking that wouldn\u0027t be a one-off decision in the manifest, that would be something they\u0027d do based on their number of crashes?\n\nmaybe _that_ should be what goes in the manifest: \"switch me to sync never/always/if-crashy\"?\n\ni\u0027m not sure how to manage pcc\u0027s \"i\u0027m running an experiment\" though.",
+      "parentUuid": "8e827d5e_44bb23e5",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
