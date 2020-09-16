@@ -137,6 +137,24 @@
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdfe0644_6e37dffb",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-16T19:10:24Z",
+      "side": 1,
+      "message": "Not sure about that name, since I don\u0027t think we\u0027re going to advertise any of these features as a \"sanitizer\". \"android_disable_memory_mitigations()\" could work maybe.",
+      "parentUuid": "57755733_f809550e",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
