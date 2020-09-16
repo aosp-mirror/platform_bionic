@@ -109,6 +109,24 @@
     },
     {
       "key": {
+        "uuid": "f4065cc9_b6b58464",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-16T19:51:55Z",
+      "side": 1,
+      "message": "Exactly. I imagine logic like this can go into Crashlytics and any other crash reporting libraries. There is no way we can make the manifest expressive enough.\n\nTaken to the extreme, an app developer may notice a problem correlates with users doing a particular action in the app, and only enable sync when that is about to happen, perhaps with some sampling on top.",
+      "parentUuid": "5bf5d9f6_4f393e73",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
