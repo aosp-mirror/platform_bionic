@@ -91,6 +91,24 @@
     },
     {
       "key": {
+        "uuid": "7d84730b_b102a847",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:50:29Z",
+      "side": 1,
+      "message": "\u003e If the app handles the crashes itself then whichever component decides that wouldn\u0027t necessarily see the crashes\n\nif the app handles crashes itself, i think that\u0027s a bug they should fix. they\u0027re going to have so many other issues with getting all the other bits of data anyway, that\u0027s a clear \"don\u0027t do that then\".\n\n(though obviously jmgao\u0027s API doesn\u0027t exist _yet_, so we might need to fall back to some kind of \"assembly required\" solution if that doesn\u0027t make it for S.)",
+      "parentUuid": "5bf5d9f6_4f393e73",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
