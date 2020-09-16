@@ -67,6 +67,23 @@
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a50df221_d797c827",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-09-16T17:16:18Z",
+      "side": 1,
+      "message": "Sorry that it\u0027s taken me a few days to get back to you on this - but I\u0027m not convinced this should affect MTE, for a couple of reasons:\n 1. AFAICT, the fact that this disables MTE is the reason that stops us from being able to turn heap initialization back on afterwards. Given that the thread-only disable_mem_init() function only sets a thread-local variable, I assumed it would be a good use case where a developer would have a hot malloc that they don\u0027t want to eat the cost of MemInit on, and they could just flip it off/on again cheaply.\n 2. At least to me \"disabling heap memory initialization\" seems unrelated to MTE, and I\u0027d be surprised as a user for this side effect to happen. But, this could be solved with a slight rename to \"android_disable_heap_mitigations()\" or something.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
