@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c0373ee_cdc48843",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-16T19:22:26Z",
+      "side": 1,
+      "message": "do we actually need to support this? who needs this, and when? can we insist that it\u0027s done while single-threaded instead?",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
