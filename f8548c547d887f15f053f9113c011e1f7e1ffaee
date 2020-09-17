@@ -265,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "00e07bcc_96926568",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-17T01:27:26Z",
+      "side": 1,
+      "message": "Yes, you can just remove/disable the code on lines 144-146 and it should work as expected on non-MTE hardware.",
+      "parentUuid": "cba34869_06359a04",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a50df221_d797c827",
         "filename": "libc/include/android/mem_init.h",
         "patchSetId": 1
