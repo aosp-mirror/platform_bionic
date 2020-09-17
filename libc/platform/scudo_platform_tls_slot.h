@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,34 +28,8 @@
 
 #pragma once
 
-#include "contexts.h"
+#include "bionic/tls.h"
 
-struct PrefixNode;
-class ContextListNode;
-
-class ContextsSplit : public Contexts {
- public:
-  virtual ~ContextsSplit() override {
-  }
-
-  virtual bool Initialize(bool writable, const char* filename, bool* fsetxattr_failed) override;
-  virtual prop_area* GetPropAreaForName(const char* name) override;
-  virtual prop_area* GetSerialPropArea() override {
-    return serial_prop_area_;
-  }
-  virtual void ForEach(void (*propfn)(const prop_info* pi, void* cookie), void* cookie) override;
-  virtual void ResetAccess() override;
-  virtual void FreeAndUnmap() override;
-
-  PrefixNode* GetPrefixNodeForName(const char* name);
-
- protected:
-  bool MapSerialPropertyArea(bool access_rw, bool* fsetxattr_failed);
-  bool InitializePropertiesFromFile(const char* filename);
-  bool InitializeProperties();
-
-  PrefixNode* prefixes_ = nullptr;
-  ContextListNode* contexts_ = nullptr;
-  prop_area* serial_prop_area_ = nullptr;
-  const char* filename_ = nullptr;
-};
+inline uintptr_t *getPlatformAllocatorTlsSlot() {
+  return reinterpret_cast<uintptr_t*>(&__get_tls()[TLS_SLOT_SANITIZER]);
+}
