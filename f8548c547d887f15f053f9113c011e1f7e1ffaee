@@ -247,6 +247,24 @@
     },
     {
       "key": {
+        "uuid": "cba34869_06359a04",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-09-17T01:17:29Z",
+      "side": 1,
+      "message": "I am getting it on ToT builds of cuttlefish.\n\nAssuming L140 will still give the desired behavior on those devices though?",
+      "parentUuid": "c9de161a_5a3ae79f",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a50df221_d797c827",
         "filename": "libc/include/android/mem_init.h",
         "patchSetId": 1
