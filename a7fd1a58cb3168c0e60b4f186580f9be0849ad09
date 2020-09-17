@@ -298,6 +298,30 @@
       "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d7e198d_87333d7f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-17T22:45:36Z",
+      "side": 1,
+      "message": "\u003e I\u0027m not actually sure there\u0027s a problem with mmap_sem contention, so maybe it\u0027s fine to leave this change as-is, and optimize out the mprotect calls later.\n\nis that a +2?",
+      "parentUuid": "074fb913_6d225aee",
+      "range": {
+        "startLine": 178,
+        "startChar": 19,
+        "endLine": 178,
+        "endChar": 46
+      },
+      "revId": "a7fd1a58cb3168c0e60b4f186580f9be0849ad09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
