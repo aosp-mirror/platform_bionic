@@ -213,6 +213,23 @@
     },
     {
       "key": {
+        "uuid": "5eb84986_c116c733",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-17T23:25:38Z",
+      "side": 1,
+      "message": "I don\u0027t think this is sufficient.\nA thread may have started as a child of a not yet processed thread, inheriting the old TCF value, but have not reached the place in pthread_create that reads g_thread_tcf yet.\n\nI don\u0027t think synchronization on the thread list lock is sufficient, either.\n\nGood news is this can only go one thread deep (assuming all threads are created with pthread_create). I think running run_on_all_threads(sync_thread_tcf) one more time before clearing g_thread_tcf_pending would work.\n\nNote __rt_sigprocmask in __pthread_start. Will it cause us to miss the signal?",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
