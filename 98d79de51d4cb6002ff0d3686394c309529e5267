@@ -34,6 +34,24 @@
       "revId": "98d79de51d4cb6002ff0d3686394c309529e5267",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "863ca9b8_cdca9aa7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-18T18:56:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure, it shows as \"Active\" and not \"Ready to submit\". I thought that meant that it needed a CR+2 here but that might just be because presubmit is still running. But I could swear that changes showed as \"Ready to submit\" before even if presubmit hadn\u0027t finished yet. Maybe there was a change in policy? Guess I\u0027ll just wait then.",
+      "parentUuid": "284233cd_de5caf1f",
+      "revId": "98d79de51d4cb6002ff0d3686394c309529e5267",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
