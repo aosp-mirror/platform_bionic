@@ -16,6 +16,24 @@
       "revId": "98d79de51d4cb6002ff0d3686394c309529e5267",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "284233cd_de5caf1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-18T18:50:13Z",
+      "side": 1,
+      "message": "what do you mean? it has +2 ...",
+      "parentUuid": "92a36657_638e51f1",
+      "revId": "98d79de51d4cb6002ff0d3686394c309529e5267",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
