@@ -10,12 +10,10 @@
  */
 
 /*
- * from: @(#)fdlibm.h 5.1 93/09/24
- * $FreeBSD$
+ * Originally based on fdlibm.h 5.1 via FreeBSD.
  */
 
-#ifndef _MATH_H_
-#define _MATH_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <limits.h>
@@ -408,5 +406,3 @@ void sincosl(long double __x, long double* __sin, long double* __cos);
 #endif
 
 __END_DECLS
-
-#endif
