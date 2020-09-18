@@ -50,6 +50,24 @@
       "revId": "1d1c4f9e259e2d095ceafe9e2a222f3ba466db89",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebb36383_a5037ebb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-09-18T22:14:32Z",
+      "side": 1,
+      "message": "This test works with aosp/master, no need to disable there.",
+      "parentUuid": "689a934f_16d16ff9",
+      "revId": "1d1c4f9e259e2d095ceafe9e2a222f3ba466db89",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
