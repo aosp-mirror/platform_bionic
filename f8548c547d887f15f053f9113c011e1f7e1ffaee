@@ -302,6 +302,24 @@
     },
     {
       "key": {
+        "uuid": "fd2b2101_c073cff6",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-18T21:01:32Z",
+      "side": 1,
+      "message": "Global thread lock is acquired in the parent thread after forking the child, this does not help us a lot. If we could introduce an r/w lock before clone call (such that concurrent thread creation does not block, but run_on_all_thread can temporarily block it) that would be a different story. Seeing how many system calls we already do per thread creation event, this should not hurt performance.",
+      "parentUuid": "1fb11d2c_937c838a",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
