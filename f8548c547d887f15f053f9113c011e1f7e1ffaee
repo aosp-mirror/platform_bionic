@@ -284,6 +284,24 @@
     },
     {
       "key": {
+        "uuid": "1fb11d2c_937c838a",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-18T20:52:33Z",
+      "side": 1,
+      "message": "like i said the other day, i\u0027d try to write this in terms of the global thread lock first. i suspect that helps avoid many of the issues.\n\n(but, yes, the fact that \"failure doesn\u0027t really matter\" here is a potential positive. though i do assume that once this \"run on all threads\" mechanism exists someone will try to use it for a case that does matter. such as setuid(). though you could still argue that that would be an improvement over today\u0027s implementation, and we should have actually made that abort in multi-threaded contexts!)",
+      "parentUuid": "fd126c8c_4dbb7015",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
