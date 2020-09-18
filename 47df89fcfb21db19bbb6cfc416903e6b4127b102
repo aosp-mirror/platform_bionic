@@ -71,6 +71,23 @@
     },
     {
       "key": {
+        "uuid": "05e03f74_2e5d4b8a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-09-18T22:20:21Z",
+      "side": 1,
+      "message": "Hmm, gerrit says I have no permission to submit this CL. What is missing here?",
+      "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7a62da8_20246ee2",
         "filename": "tests/utils.h",
         "patchSetId": 2
