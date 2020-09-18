@@ -16,6 +16,23 @@
       "revId": "55c315335da754c540fae82e7ea44e65a4d424fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64334870_9bc935ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1244622
+      },
+      "writtenOn": "2020-09-18T21:18:47Z",
+      "side": 1,
+      "message": "Pls also cp the test change to `aosp/master` so it will be in future releases.",
+      "revId": "55c315335da754c540fae82e7ea44e65a4d424fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
