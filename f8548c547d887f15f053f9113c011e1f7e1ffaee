@@ -266,6 +266,24 @@
     },
     {
       "key": {
+        "uuid": "fd126c8c_4dbb7015",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-18T20:41:08Z",
+      "side": 1,
+      "message": "What do you think about an API for per-process switching between sync and async MTE? It will require the same basic mechanism of issuing the prctl on each thread, but we expect that it will be used more often by apps (e.g. to help isolate memory errors).\n\nThe advantage of having such an API is that if an MTE fault is detected in either sync or async mode, the application will crash either way (but with more information in the sync mode case) so it maybe doesn\u0027t need to be 100% reliable in the sense that in some edge cases it will miss a thread. If we can accept that the API doesn\u0027t have to be reliable we can document that fact and make the implementation simpler by not having to worry about the edge cases.",
+      "parentUuid": "a426e27b_e686108e",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
