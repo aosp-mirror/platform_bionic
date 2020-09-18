@@ -248,6 +248,24 @@
     },
     {
       "key": {
+        "uuid": "a426e27b_e686108e",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-18T19:19:19Z",
+      "side": 1,
+      "message": "this kind of thing is why bionic doesn\u0027t already have this mechanism, even though the mismatch between Linux and POSIX interpretations of things like setuid() call for it.\n\nespecially because this will be so rarely used, i\u0027d prefer not to have this API (at least not in this \"you can call it long after you have a bunch of threads\" form).",
+      "parentUuid": "678cb85a_61d765bb",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
