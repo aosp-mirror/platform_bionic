@@ -230,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "678cb85a_61d765bb",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-18T02:42:04Z",
+      "side": 1,
+      "message": "You\u0027re right, that seems like it could happen. Your proposed solution seems to be correct, despite my disinclination to accept \"do the same thing twice\" as being the correct solution to a race condition bug. I will spend some more time trying to convince myself that it is in fact correct.\n\n\u003e Note __rt_sigprocmask in __pthread_start. Will it cause us to miss the signal?\n\nI don\u0027t think so. If a signal is sent while it is blocked, it will be delivered once it is unblocked again (i.e. at the point where __rt_sigprocmask is called).",
+      "parentUuid": "5eb84986_c116c733",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
