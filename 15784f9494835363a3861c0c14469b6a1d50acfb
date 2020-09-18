@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "809bcc90_31798e7e",
+        "filename": "linker/linker_main.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-18T00:44:20Z",
+      "side": 1,
+      "message": "for consistency with other __linker_error calls, please add a \"error: \" prefix.",
+      "range": {
+        "startLine": 402,
+        "startChar": 22,
+        "endLine": 402,
+        "endChar": 27
+      },
+      "revId": "15784f9494835363a3861c0c14469b6a1d50acfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d75f5ca1_91ed85b9",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-18T00:44:20Z",
+      "side": 1,
+      "message": "I don\u0027t think we ever check that n_descsz fits in p_memsz. Should we? We do verify that p_memsz is big enough for sizeof(ElfW(NhdrGNUProperty)) -- maybe that\u0027s good enough.",
+      "range": {
+        "startLine": 113,
+        "startChar": 18,
+        "endLine": 113,
+        "endChar": 42
+      },
+      "revId": "15784f9494835363a3861c0c14469b6a1d50acfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db0b994a_ea7a512d",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-18T00:44:20Z",
+      "side": 1,
+      "message": "Would it make sense to verify that pr_datasz is the expected value here? (It should be 4 for GNU_PROPERTY_AARCH64_FEATURE_1_AND, I think.) I\u0027m not sure it really is needed - just wondering, since we seem to be checking the bounds of a lot of other things.",
+      "range": {
+        "startLine": 141,
+        "startChar": 6,
+        "endLine": 141,
+        "endChar": 46
+      },
+      "revId": "15784f9494835363a3861c0c14469b6a1d50acfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e19efa25_ce72fd1a",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-18T00:44:20Z",
+      "side": 1,
+      "message": "std::size(error_buffer) ?\n\nIt\u0027s in \u003citerator\u003e in C++17.\n\nAside: It looks like en.cxxreference.com broke the header list for the iterator library functions:\n\nhttps://en.cppreference.com/mwiki/index.php?title\u003dcpp%2Fiterator%2Fsize\u0026diff\u003d117540\u0026oldid\u003d113680",
+      "range": {
+        "startLine": 48,
+        "startChar": 9,
+        "endLine": 48,
+        "endChar": 56
+      },
+      "revId": "15784f9494835363a3861c0c14469b6a1d50acfb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
