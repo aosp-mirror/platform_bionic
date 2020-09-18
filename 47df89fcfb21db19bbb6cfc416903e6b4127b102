@@ -53,6 +53,24 @@
     },
     {
       "key": {
+        "uuid": "b9d64b42_2632a24a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-09-18T22:13:37Z",
+      "side": 1,
+      "message": "This is a backport, already in aosp/master",
+      "parentUuid": "3d960d05_ec3d0835",
+      "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7a62da8_20246ee2",
         "filename": "tests/utils.h",
         "patchSetId": 2
@@ -73,6 +91,30 @@
       "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad8811bb_183b914d",
+        "filename": "tests/utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1069898
+      },
+      "writtenOn": "2020-09-18T22:13:37Z",
+      "side": 1,
+      "message": "Fixed upstream : r.android.com/1431599",
+      "parentUuid": "a7a62da8_20246ee2",
+      "range": {
+        "startLine": 79,
+        "startChar": 72,
+        "endLine": 79,
+        "endChar": 77
+      },
+      "revId": "47df89fcfb21db19bbb6cfc416903e6b4127b102",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
