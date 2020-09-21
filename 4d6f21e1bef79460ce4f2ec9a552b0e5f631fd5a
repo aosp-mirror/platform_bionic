@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f524bcdc_c95b4a89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-09-21T15:35:23Z",
+      "side": 1,
+      "message": "Not ideal, but seems less bad than the status quo given my comments in the commit message.",
+      "revId": "4d6f21e1bef79460ce4f2ec9a552b0e5f631fd5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
