@@ -62,6 +62,8 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        // For android_filesystem_config.h.
+        "system/core/libcutils/include",
     ],
 
     header_libs: [
