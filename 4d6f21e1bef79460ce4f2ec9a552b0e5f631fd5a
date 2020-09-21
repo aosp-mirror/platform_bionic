@@ -52,6 +52,24 @@
       "revId": "4d6f21e1bef79460ce4f2ec9a552b0e5f631fd5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4c995f9_d1180819",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-21T17:32:15Z",
+      "side": 1,
+      "message": "\u003e We could potentially put the group handling code in its own library, which could then include libcutils_headers, but that seems worse, no?\n\nthat\u0027s been existing practice in libc, but i think that makes more sense for things like -Werror\u003dframe-size-larger-than\u003d than it does for just adding something to the include path.",
+      "parentUuid": "6bffba8a_73a35524",
+      "revId": "4d6f21e1bef79460ce4f2ec9a552b0e5f631fd5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
