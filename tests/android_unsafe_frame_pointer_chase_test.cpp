@@ -22,6 +22,8 @@
 
 #include "platform/bionic/android_unsafe_frame_pointer_chase.h"
 
+#include "utils.h"
+
 // Prevent tail calls inside recurse.
 __attribute__((weak, noinline)) size_t nop(size_t val) {
   return val;
@@ -94,6 +96,10 @@ static void* BacktraceThread(void*) {
 }
 
 TEST(android_unsafe_frame_pointer_chase, pthread) {
+  // Android11 missed the fix (r.android.com/1382566) so disabling the test.
+  // It will be re-enabled in the next releases.
+  SKIP_WITH_NATIVE_BRIDGE;
+
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, nullptr, BacktraceThread, nullptr));
   void* retval;

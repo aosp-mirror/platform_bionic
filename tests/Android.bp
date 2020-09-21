@@ -308,6 +308,9 @@ cc_test_library {
     cflags: [
         "-fno-omit-frame-pointer",
     ],
+    static_libs: [
+        "libbase",
+    ],
 }
 
 // -----------------------------------------------------------------------------
