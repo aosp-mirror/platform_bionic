@@ -16,6 +16,23 @@
       "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "426005f7_3c875799",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-21T21:54:24Z",
+      "side": 1,
+      "message": "+danalbert since this looks like a legit NDK build break, but i\u0027m not sure i understand how these CLs cause it... (where the -D__ANDROID_API__ and -target mismatch is coming from.)\n```\nRunning: /buildbot/src/android/master-ndk/out/linux/android-ndk-r22-canary/toolchains/llvm/prebuilt/linux-x86_64/bin/clang -target armv7a-linux-androideabi16 --sysroot /buildbot/src/android/master-ndk/prebuilts/ndk/platform/sysroot -gcc-toolchain /buildbot/src/android/master-ndk/out/linux/android-ndk-r22-canary/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64 -I /buildbot/src/android/master-ndk/bionic/libc/arch-common/bionic -D__ANDROID_API__\u003d17 -DPLATFORM_SDK_VERSION\u003d17 \u0027-DABI_NDK_VERSION\u003d\"r22-canary\"\u0027 \u0027-DABI_NDK_BUILD_NUMBER\u003d\"0\"\u0027 -O2 -fpic -Wl,-r -no-pie -nostdlib -Wa,--noexecstack -Wl,-z,noexecstack -o /buildbot/src/android/master-ndk/out/platforms/android-17/arch-arm/crtbegin_dynamic.o /buildbot/src/android/master-ndk/bionic/libc/arch-common/bionic/crtbegin.c /buildbot/src/android/master-ndk/ndk/sources/crt/crtbrand.S -mfpu\u003dvfpv3-d16In file included from \u003cbuilt-in\u003e:366:\n\u003ccommand line\u003e:1:9: warning: \u0027__ANDROID_API__\u0027 macro redefined [-Wmacro-redefined]\n#define __ANDROID_API__ 17\n        ^\n\u003cbuilt-in\u003e:360:9: note: previous definition is here\n#define __ANDROID_API__ 16\n        ^\n1 warning generated.\n```",
+      "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
