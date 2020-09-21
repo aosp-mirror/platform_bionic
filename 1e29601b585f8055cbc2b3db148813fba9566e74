@@ -33,6 +33,24 @@
       "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05dcd042_a1850f60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-21T22:38:08Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/ndk/+/1433458\n\nThat\u0027s just a warning though. This is the real failure:\n\n/buildbot/src/android/master-ndk/bionic/libc/arch-common/bionic/crtend.S:32:10: fatal error: \u0027private/bionic_asm_arm64.h\u0027 file not found\n#include \u003cprivate/bionic_asm_arm64.h\u003e\n         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n1 error generated.\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/1418557/2/libc/arch-common/bionic/crtend.S adds the include, but the NDK\u0027s build doesn\u0027t include that path. https://android-review.googlesource.com/c/platform/ndk/+/1433460 fixes that (added it to this topic).",
+      "parentUuid": "426005f7_3c875799",
+      "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
