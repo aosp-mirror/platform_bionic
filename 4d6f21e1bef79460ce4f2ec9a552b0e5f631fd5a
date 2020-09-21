@@ -34,6 +34,24 @@
       "revId": "4d6f21e1bef79460ce4f2ec9a552b0e5f631fd5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6bffba8a_73a35524",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-09-21T17:08:50Z",
+      "side": 1,
+      "message": "\u003e this seems a bit broad though (and yet also not broad enough?) --- seems like it\u0027s used in a test too? https://source.corp.google.com/search?q\u003dandroid_filesystem_config%20file:bionic\u0026sq\u003dpackage:%5Eandroid$\n\nAck, I missed the test.\n\n\u003e anyway, it seems like gwp_pwd.cpp is the only \"real\" user of this header? (plus presumably the test so it has another implementation to compare against?)\n\nIndeed grp_pwd.cpp is the real user.  Is there anything that we can do to isolate that file that isn\u0027t worse than including this path for all of libc?  We could potentially put the group handling code in its own library, which could then include libcutils_headers, but that seems worse, no?\n\n\u003e the DNS one is just for AID_DNS --- switch that to \u003cpasswd.h\u003e? (one day we\u0027ll have to do something about the dns resolver duplication, but not today.)\n\nI can change this, but if grp_pwd.cpp references the header, then we don\u0027t gain a ton by removing it.",
+      "parentUuid": "a481ea91_abbeb5f6",
+      "revId": "4d6f21e1bef79460ce4f2ec9a552b0e5f631fd5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
