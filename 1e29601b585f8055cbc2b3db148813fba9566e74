@@ -85,6 +85,29 @@
       "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f46de12c_5e427809",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-22T03:57:20Z",
+      "side": 1,
+      "message": "The new p_memsz check is flagging this segment as too small. I think we need to modify this test to use an appropriately-sized PT_GNU_PROPERTY segment.\n\n\nlinker-unit-tests.note_gnu_property#pt_gnu_property_no_prop:\n\n    bionic/linker/linker_note_gnu_property_test.cpp:300: Failure\n    Expected equality of these values:\n    error_buffer\n    Which is: \"\\\"test_so\\\" PT_GNU_PROPERTY segment reports smaller p_memsz (16) than n_descsz (24).\"\n    \"\"\n\nlinker-unit-tests.note_gnu_property#pt_gnu_property_ok_3:\n\n    bionic/linker/linker_note_gnu_property_test.cpp:338: Failure\n    Expected equality of these values:\n    error_buffer\n    Which is: \"\\\"test_so\\\" PT_GNU_PROPERTY segment reports smaller p_memsz (16) than n_descsz (64).\"\n    \"\"",
+      "range": {
+        "startLine": 76,
+        "startChar": 10,
+        "endLine": 76,
+        "endChar": 50
+      },
+      "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
