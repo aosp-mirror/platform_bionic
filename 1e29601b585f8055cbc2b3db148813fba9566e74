@@ -51,6 +51,40 @@
       "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e455be9_965b6255",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-22T01:46:46Z",
+      "side": 1,
+      "message": "Otherwise, LGTM.\n\n",
+      "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bc9e5e20_df886fe6",
+        "filename": "linker/linker_note_gnu_property.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-22T01:46:46Z",
+      "side": 1,
+      "message": "I think this needs to account for sizeof(ElfW(NhdrGNUProperty)).\n\nProbably something like:\n\n    if (phdr[i].p_memsz - sizeof(ElfW(NhdrGNUProperty)) \u003c note_nhdr-\u003enhdr.n_descsz) {\n\nThen the error message needs some adjustment. Maybe something like this?\n\n    \\\"%s\\\" PT_GNU_PROPERTY segment p_memsz (%zu) is too small for note n_descz (%zu).",
+      "revId": "1e29601b585f8055cbc2b3db148813fba9566e74",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
