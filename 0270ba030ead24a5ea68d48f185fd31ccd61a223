@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "80d71400_baa04012",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-22T22:24:58Z",
+      "side": 1,
+      "message": "There isn\u0027t a great test that we can write for this because in the case where mem init is per-thread disabled the contents of malloc\u0027d memory is unspecified so there isn\u0027t really anything that we can test for. Probably all that we can test for is whether calloc still zeroes memory when mem init is disabled.",
+      "parentUuid": "31cada6a_fa796c42",
+      "revId": "0270ba030ead24a5ea68d48f185fd31ccd61a223",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4cf7bb7_663ba67b",
         "filename": "libc/include/malloc.h",
         "patchSetId": 2
