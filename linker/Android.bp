@@ -39,6 +39,9 @@ cc_object {
         "linker_wrapper.cpp",
     ],
     arch: {
+        arm64: {
+            srcs: ["arch/arm64/begin.S"],
+        },
         x86_64: {
             srcs: ["arch/x86_64/begin.S"],
         },
