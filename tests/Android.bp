@@ -44,6 +44,7 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
+    header_libs: ["libcutils_headers"],
     // Ensure that the tests exercise shadow call stack support and
     // the hint space PAC/BTI instructions.
     arch: {
