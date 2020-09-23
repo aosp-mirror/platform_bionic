@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63e37b22_4228b335",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-23T10:17:28Z",
+      "side": 1,
+      "message": "The linker-unit-tests.note_gnu_property#pt_gnu_property_bad_pr_datasz test is failing:\n\n    bionic/linker/linker_note_gnu_property_test.cpp:332: Failure\n    Expected equality of these values:\n    error_buffer\n    Which is: \"\"\n    \"\\\"\" \"test_so\" \"\\\" \" \".note.gnu.property: property descriptor size is invalid. Expected 4 bytes for \" \"GNU_PROPERTY_AARCH64_FEATURE_1_AND, got 12.\"\n    Which is: \"\\\"test_so\\\" .note.gnu.property: property descriptor size is invalid. Expected 4 bytes for GNU_PROPERTY_AARCH64_FEATURE_1_AND, got 12.\"\n\nI think it\u0027s failing on non-arm64 targets. The GNU_PROPERTY_AARCH64_FEATURE_1_AND macro is still defined to 0xc0000000, but it doesn\u0027t mean anything, so GnuPropertySection::Parse ignores it. That makes sense, so I think the test should be updated.\n\nTo skip a test, do something like:\n\n    TEST(note_gnu_property, pt_gnu_property_bad_pr_datasz) {\n    #if defined(__aarch64__)\n    ...\n    #else\n      GTEST_SKIP() \u003c\u003c \"... message here ...\";\n    #endif\n    }\n\nI suppose some of the other tests (e.g. pt_gnu_property_ok_1) are relying on the property value 0xc0000000 not having any other meaning on some other architecture. i.e. If it did have some meaning, then the 4-byte pr_data might be invalid. I suppose this is OK for now. We can fix the tests if it matters later. It\u0027s probably sufficient to just skip pt_gnu_property_bad_pr_datasz on non-arm64.\n",
+      "revId": "8b7d7fe347f947d0ff59da2a037caa84c7705a86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "464fb6ab_caf3c867",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-23T10:17:28Z",
+      "side": 1,
+      "message": "I think this should be:\n\n    {GNU_PROPERTY_AARCH64_FEATURE_1_BTI, 0, 0}\n\nto ensure that pr_data is 12 bytes in size. I don\u0027t think we want to test reading past the end of the pr_data buffer.",
+      "range": {
+        "startLine": 326,
+        "startChar": 25,
+        "endLine": 326,
+        "endChar": 61
+      },
+      "revId": "8b7d7fe347f947d0ff59da2a037caa84c7705a86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
