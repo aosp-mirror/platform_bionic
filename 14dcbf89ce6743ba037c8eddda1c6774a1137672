@@ -22,6 +22,30 @@
       "revId": "14dcbf89ce6743ba037c8eddda1c6774a1137672",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a4fdff2_9035ecad",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2020-09-23T18:58:12Z",
+      "side": 1,
+      "message": "Yeah, they\u0027re a bit different between the two domains. Next-release and unknown-future-release are different for the NDK. Once S branches, we need to be able to differentiate between S and T. For Java, a branch that contains non-final S APIs has no way of differentiating non-final T APIs.\n\nBut we can\u0027t make this be 10000 until S branches either, because 10000 also has different meaning than it does in Java. For native code it generally means *not* NDK.\n\nThe docs are better at HEAD: https://cs.android.com/android/platform/superproject/+/master:bionic/libc/include/android/api-level.h;l\u003d60;drc\u003dd8f46916b6d1b26bc351a631ca5a6fe099e4b029",
+      "parentUuid": "c06b80fe_c335938c",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 28
+      },
+      "revId": "14dcbf89ce6743ba037c8eddda1c6774a1137672",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
