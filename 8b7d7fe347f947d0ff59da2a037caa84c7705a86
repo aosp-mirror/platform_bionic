@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9d2cc32f_7ec1e6e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-23T14:55:37Z",
+      "side": 1,
+      "message": "Right, sorry for making that mistake.\nI hope I am not blocking too much things around.\nI added a function-like macro SKIP_IF_NO_BTI and added it to\nall tests which would exercise code in the\nGNU_PROPERTY_AARCH64_FEATURE_1_AND case.",
+      "parentUuid": "63e37b22_4228b335",
+      "revId": "8b7d7fe347f947d0ff59da2a037caa84c7705a86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "464fb6ab_caf3c867",
         "filename": "linker/linker_note_gnu_property_test.cpp",
         "patchSetId": 9
@@ -39,6 +57,30 @@
       "revId": "8b7d7fe347f947d0ff59da2a037caa84c7705a86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a79f8ab2_d587bbe9",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-23T14:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "464fb6ab_caf3c867",
+      "range": {
+        "startLine": 326,
+        "startChar": 25,
+        "endLine": 326,
+        "endChar": 61
+      },
+      "revId": "8b7d7fe347f947d0ff59da2a037caa84c7705a86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
