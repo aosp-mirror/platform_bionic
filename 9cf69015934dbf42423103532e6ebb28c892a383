@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4673844_7e98177e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-09-23T18:33:01Z",
+      "side": 1,
+      "message": "P.S: whoops. My bad - actually ptrace gave the right value for `gs` -  but I interpreted it incorrectly ...  \n\n@rprichard: Any idea how to dereference the segment register for another thread? ....",
+      "revId": "9cf69015934dbf42423103532e6ebb28c892a383",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
