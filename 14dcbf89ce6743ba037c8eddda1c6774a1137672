@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c06b80fe_c335938c",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1060959
+      },
+      "writtenOn": "2020-09-23T09:54:54Z",
+      "side": 1,
+      "message": "Hi :) sorry for the late comment, just digging around the various values of the \"next\" API level. Is there a reason this value isn\u0027t shared with Java (which uses 10000)? http://cs/android/frameworks/base/core/java/android/os/Build.java?l\u003d1048\u0026rcl\u003d3f0c50b2f4cca35d1869d72bc689e170211fb7aa",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 28
+      },
+      "revId": "14dcbf89ce6743ba037c8eddda1c6774a1137672",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
