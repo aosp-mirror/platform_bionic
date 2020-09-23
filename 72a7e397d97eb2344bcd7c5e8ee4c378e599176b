@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d828c503_5ba983cf",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-23T21:14:08Z",
+      "side": 1,
+      "message": "We prefer the C++ cast, reintepret_cast\u003cchar*\u003e(...).",
+      "range": {
+        "startLine": 93,
+        "startChar": 14,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "72a7e397d97eb2344bcd7c5e8ee4c378e599176b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
