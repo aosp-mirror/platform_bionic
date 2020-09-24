@@ -22,6 +22,30 @@
       "revId": "72a7e397d97eb2344bcd7c5e8ee4c378e599176b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4802d1e4_4c19a972",
+        "filename": "tests/malloc_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-09-24T17:02:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d828c503_5ba983cf",
+      "range": {
+        "startLine": 93,
+        "startChar": 14,
+        "endLine": 93,
+        "endChar": 22
+      },
+      "revId": "72a7e397d97eb2344bcd7c5e8ee4c378e599176b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
