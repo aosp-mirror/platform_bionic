@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4dd045f_4f133b03",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-24T01:00:10Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that we had two definitions of this struct, which need to match. (With this revision, they match when it matters, but in general, they\u0027re different.)\n\nIt looks like including linker.h and linker_globals.h into this cpp file works.\n\nThat does mean that the bti_supported field isn\u0027t present on non-arm64, so I need to adjust the tests.",
+      "revId": "a1b2c2090988eaa4d16dba8906a115d3ca82c5f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c50253db_08ff3520",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-24T01:00:10Z",
+      "side": 1,
+      "message": "I think the important thing is that the tests are enabled iff the GNU_PROPERTY_AARCH64_FEATURE_1_AND parsing is enabled in GnuPropertySection::Parse, and that\u0027s simply controlled by defined(__aarch64__).\n\nIn practice, AFAICT, bti_supported will be true iff defined(__aarch64__), at least where SKIP_IF_NO_BTI() is expanded.",
+      "range": {
+        "startLine": 69,
+        "startChar": 8,
+        "endLine": 69,
+        "endChar": 22
+      },
+      "revId": "a1b2c2090988eaa4d16dba8906a115d3ca82c5f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d7494f6_95cc8522",
+        "filename": "linker/linker_note_gnu_property_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-24T01:00:10Z",
+      "side": 1,
+      "message": "`false`?",
+      "range": {
+        "startLine": 74,
+        "startChar": 11,
+        "endLine": 74,
+        "endChar": 17
+      },
+      "revId": "a1b2c2090988eaa4d16dba8906a115d3ca82c5f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
