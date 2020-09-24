@@ -42,6 +42,7 @@
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
 #include <llvm/Option/Option.h>
+#include <llvm/Support/Host.h>
 #include <llvm/Support/VirtualFileSystem.h>
 
 #include "Arch.h"
