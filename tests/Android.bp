@@ -991,6 +991,8 @@ cc_defaults {
         "ld_config_test_helper_lib1",
         "ld_config_test_helper_lib2",
         "ld_config_test_helper_lib3",
+        "tls_properties_helper",
+        "thread_exit_cb_helper",
     ],
 }
 
