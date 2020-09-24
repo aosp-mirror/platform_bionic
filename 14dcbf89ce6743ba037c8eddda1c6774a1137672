@@ -46,6 +46,30 @@
       "revId": "14dcbf89ce6743ba037c8eddda1c6774a1137672",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "095653c8_e6370588",
+        "filename": "libc/include/android/api-level.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1060959
+      },
+      "writtenOn": "2020-09-24T09:49:06Z",
+      "side": 1,
+      "message": "Thanks for explaining. It\u0027s arguable whether 31 is the right placeholder though. I\u0027ve also seen 9000 used in places. :shrug:\n\n\u003e For Java, a branch that contains non-final S APIs has no way of differentiating non-final T APIs.\n\nTrue. This is a source of various problems..",
+      "parentUuid": "0a4fdff2_9035ecad",
+      "range": {
+        "startLine": 114,
+        "startChar": 26,
+        "endLine": 114,
+        "endChar": 28
+      },
+      "revId": "14dcbf89ce6743ba037c8eddda1c6774a1137672",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
