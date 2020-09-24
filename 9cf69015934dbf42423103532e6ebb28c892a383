@@ -16,6 +16,24 @@
       "revId": "9cf69015934dbf42423103532e6ebb28c892a383",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5696eb2c_bcede555",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-24T01:28:20Z",
+      "side": 1,
+      "message": "I looked into this at one point, and I think these are the ptrace APIs needed:\n\nhttps://android.googlesource.com/platform/bionic/+/refs/heads/android10-dev/docs/elf-tls.md#Reading-the-Thread-Pointer-with-Ptrace\n\nThe debugger needs to look up TLS using ptrace, so there should be a way to do it.",
+      "parentUuid": "b4673844_7e98177e",
+      "revId": "9cf69015934dbf42423103532e6ebb28c892a383",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
