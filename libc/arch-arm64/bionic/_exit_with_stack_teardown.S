@@ -39,3 +39,5 @@ ENTRY_PRIVATE(_exit_with_stack_teardown)
   svc #0
   // The exit syscall does not return.
 END(_exit_with_stack_teardown)
+
+NOTE_GNU_PROPERTY()

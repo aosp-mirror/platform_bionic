@@ -42,3 +42,5 @@ FUNCTION_DELEGATE(strcpy, __strcpy_aarch64_mte)
 FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
 FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
 FUNCTION_DELEGATE(strncmp, __strncmp_aarch64_mte)
+
+NOTE_GNU_PROPERTY()
