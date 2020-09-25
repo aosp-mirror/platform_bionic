@@ -116,7 +116,7 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: [
             "29",
-            "10000",
+            "current",
         ],
     },
 
@@ -193,7 +193,7 @@ cc_library {
 
     stubs: {
         symbol_file: "libdl_android.map.txt",
-        versions: ["10000"],
+        versions: ["current"],
     },
 
     apex_available: [
