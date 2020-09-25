@@ -498,7 +498,7 @@ cc_library {
         symbol_file: "libm.map.txt",
         versions: [
             "29",
-            "10000",
+            "current",
         ],
     },
 
