@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "758704db_07fa7977",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3146,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-25T21:35:51Z",
+      "side": 1,
+      "message": "I don\u0027t think we should ignore this tag. If it is present then the dynamic loader would be required to sign any .got.plt entries with the IA key. If we don\u0027t want to support this behavior then we should probably report an error if we see it.\n\nUnfortunately binutils 2.33 inserts this tag by default which can occur when building the vDSO for the Linux kernel following the instructions here:\nhttps://cs.android.com/android/platform/superproject/+/master:device/generic/goldfish/fvpbase/README.md;l\u003d105\nAs a result I have been seeing these warnings in FVP for a while.\n\nThe vDSO does not contain PLT entries so there turns out not to be a compatibility problem at runtime.\n\nSince this problem is specific to the experimental MTE configuration of FVP, it would be easiest to conditionalize the error on ANDROID_EXPERIMENTAL_MTE.",
+      "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
