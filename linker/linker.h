@@ -181,3 +181,9 @@ struct address_space_params {
 int get_application_target_sdk_version();
 ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi);
 bool validate_verdef_section(const soinfo* si);
+
+struct platform_properties {
+#if defined(__aarch64__)
+  bool bti_supported = false;
+#endif
+};
