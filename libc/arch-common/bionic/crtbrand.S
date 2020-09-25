@@ -26,6 +26,12 @@
  * SUCH DAMAGE.
  */
 
+#if defined(__aarch64__)
+#include <private/bionic_asm_arm64.h>
+
+__bionic_asm_custom_note_gnu_section()
+#endif
+
   .section .note.android.ident,"a",%note
   .balign 4
   .type abitag, %object

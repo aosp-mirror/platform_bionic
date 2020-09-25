@@ -25,3 +25,5 @@ ENTRY(sqrtf)
   fsqrt s0, s0
   ret
 END(sqrtf)
+
+NOTE_GNU_PROPERTY()
