@@ -16,6 +16,24 @@
       "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "183086a8_db143e56",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3146,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-26T06:29:31Z",
+      "side": 1,
+      "message": "I have a patch on top of this which supports signing the .plt.got entries.\nIf it is interesting I can push it upstream, however, I thought pac-plt is simply experimental that nobody would use before it becomes ABI.\n\nFor reference:\nhttps://github.com/ARM-software/abi-aa/tree/master/pauthabielf64\n\nI am surprised this DT tag is present. Should this be fixed in binutils?\nShould we go with the conditionalized error on ANDROID_EXPERIMENTAL_MTE?",
+      "parentUuid": "758704db_07fa7977",
+      "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
