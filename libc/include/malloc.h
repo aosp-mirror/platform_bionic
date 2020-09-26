@@ -170,6 +170,16 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * Available since API level 28.
  */
 #define M_PURGE (-101)
+/*
+ * mallopt() option for per-thread memory initialization tuning.
+ * The value argument should be one of:
+ * 1: Disable automatic heap initialization and, where possible, memory tagging,
+ *    on this thread.
+ * 0: Normal behavior.
+ *
+ * Available since API level 31.
+ */
+#define M_THREAD_DISABLE_MEM_INIT (-103)
 /**
  * mallopt() option to set the maximum number of items in the secondary
  * cache of the scudo allocator.

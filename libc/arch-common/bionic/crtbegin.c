@@ -49,7 +49,7 @@ __used static void _start_main(void* raw_args) {
 #define POST "; .size _start, .-_start"
 
 #if defined(__aarch64__)
-__asm__(PRE "mov x0,sp; b _start_main" POST);
+__asm__(PRE "/* BTI J */ hint #36; mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
 __asm__(PRE "mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)
