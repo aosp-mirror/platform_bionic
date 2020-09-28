@@ -52,6 +52,24 @@
       "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f2042e1_a5a47861",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3146,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-28T23:10:31Z",
+      "side": 1,
+      "message": "But pac-plt is already in the ABI though?\n\nhttps://developer.arm.com/documentation/ihi0056/g/ (search for PAC_PLT)\n\nIn terms of experimental changes you might be thinking of a separate proposal to add more PAuth features to the ABI.",
+      "parentUuid": "3a0ad02e_7eb6db9d",
+      "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
