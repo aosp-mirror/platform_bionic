@@ -78,13 +78,8 @@ static inline bool running_with_hwasan() {
 
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
-#if defined(__arm__)
-  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa.arm");
+  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
   return pi != nullptr;
-#elif defined(__aarch64__)
-  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa.arm64");
-  return pi != nullptr;
-#endif
 #endif
   return false;
 }

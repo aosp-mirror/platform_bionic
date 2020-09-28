@@ -26,6 +26,12 @@
  * SUCH DAMAGE.
  */
 
+#if defined(__aarch64__)
+#include <private/bionic_asm_arm64.h>
+
+__bionic_asm_custom_note_gnu_section()
+#endif
+
 #if defined(__linux__) && defined(__ELF__)
 	.section .note.GNU-stack,"",%progbits
 #endif
