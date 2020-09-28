@@ -35,6 +35,7 @@
 #define __bionic_asm_custom_entry(f)
 #define __bionic_asm_custom_end(f)
 #define __bionic_asm_function_type @function
+#define __bionic_asm_custom_note_gnu_section()
 
 #if defined(__aarch64__)
 #include <private/bionic_asm_arm64.h>
@@ -82,5 +83,8 @@
 #define ALIAS_SYMBOL(alias, original) \
     .globl alias; \
     .equ alias, original
+
+#define NOTE_GNU_PROPERTY() \
+    __bionic_asm_custom_note_gnu_section()
 
 #endif

@@ -459,6 +459,8 @@ def main(arch, syscall_file):
         if syscall.has_key("asm-%s" % arch):
             print(syscall["asm-%s" % arch])
 
+    if arch == 'arm64':
+        print('\nNOTE_GNU_PROPERTY()\n')
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

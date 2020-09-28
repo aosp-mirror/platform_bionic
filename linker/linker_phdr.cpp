@@ -169,8 +169,16 @@ bool ElfReader::Load(address_space_params* address_space) {
   if (did_load_) {
     return true;
   }
-  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr()) {
+  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr() &&
+      FindGnuPropertySection()) {
     did_load_ = true;
+#if defined(__aarch64__)
+    // For Armv8.5-A loaded executable segments may require PROT_BTI.
+    if (note_gnu_property_.IsBTICompatible()) {
+      did_load_ = (phdr_table_protect_segments(phdr_table_, phdr_num_, load_bias_,
+                                               &note_gnu_property_) == 0);
+    }
+#endif
   }
 
   return did_load_;
@@ -748,15 +756,21 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
-    int prot = PFLAGS_TO_PROT(phdr->p_flags);
-    if ((extra_prot_flags & PROT_WRITE) != 0) {
+    int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
+    if ((prot & PROT_WRITE) != 0) {
       // make sure we're never simultaneously writable / executable
       prot &= ~PROT_EXEC;
     }
+#if defined(__aarch64__)
+    if ((prot & PROT_EXEC) == 0) {
+      // Though it is not specified don't add PROT_BTI if segment is not
+      // executable.
+      prot &= ~PROT_BTI;
+    }
+#endif
 
-    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
-                       seg_page_end - seg_page_start,
-                       prot | extra_prot_flags);
+    int ret =
+        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, prot);
     if (ret < 0) {
       return -1;
     }
@@ -768,16 +782,26 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  * You should only call this after phdr_table_unprotect_segments and
  * applying all relocations.
  *
+ * AArch64: also called from linker_main and ElfReader::Load to apply
+ *     PROT_BTI for loaded main so and other so-s.
+ *
  * Input:
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
+ *   prop        -> GnuPropertySection or nullptr
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
-                                size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, 0);
+int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                ElfW(Addr) load_bias, const GnuPropertySection* prop __unused) {
+  int prot = 0;
+#if defined(__aarch64__)
+  if ((prop != nullptr) && prop->IsBTICompatible()) {
+    prot |= PROT_BTI;
+  }
+#endif
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot);
 }
 
 /* Change the protection of all loaded segments in memory to writable.
@@ -1081,7 +1105,7 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
  * Return:
  *   pointer to the program interpreter string.
  */
-const char* phdr_table_get_interpreter_name(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+const char* phdr_table_get_interpreter_name(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                             ElfW(Addr) load_bias) {
   for (size_t i = 0; i<phdr_count; ++i) {
     const ElfW(Phdr)& phdr = phdr_table[i];
@@ -1122,6 +1146,15 @@ bool ElfReader::FindPhdr() {
 
   DL_ERR("can't find loaded phdr for \"%s\"", name_.c_str());
   return false;
+}
+
+// Tries to find .note.gnu.property section.
+// It is not considered an error if such section is missing.
+bool ElfReader::FindGnuPropertySection() {
+#if defined(__aarch64__)
+  note_gnu_property_ = GnuPropertySection(phdr_table_, phdr_num_, load_start(), name_.c_str());
+#endif
+  return true;
 }
 
 // Ensures that our program header is actually within a loadable

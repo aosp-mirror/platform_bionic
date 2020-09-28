@@ -41,3 +41,32 @@
 
 #undef __bionic_asm_function_type
 #define __bionic_asm_function_type %function
+
+#if defined(__ARM_FEATURE_BTI_DEFAULT)
+#define __bionic_asm_aarch64_feature_bti    (1 << 0)
+#undef __bionic_asm_custom_entry
+#define __bionic_asm_custom_entry(f)        hint #34  // BTI C
+#else
+#define __bionic_asm_aarch64_feature_bti    0
+#endif
+
+#if defined(__ARM_FEATURE_PAC_DEFAULT)
+#define __bionic_asm_aarch64_feature_pac    (1 << 1)
+#else
+#define __bionic_asm_aarch64_feature_pac    0
+#endif
+
+#undef __bionic_asm_custom_note_gnu_section
+#define __bionic_asm_custom_note_gnu_section() \
+    .pushsection .note.gnu.property, "a"; \
+    .balign 8; \
+    .long 4; \
+    .long 0x10; \
+    .long 0x5; /* NT_GNU_PROPERTY_TYPE_0 */ \
+    .asciz "GNU"; \
+    .long 0xc0000000; /* GNU_PROPERTY_AARCH64_FEATURE_1_AND */ \
+    .long 4; \
+    .long (__bionic_asm_aarch64_feature_pac | \
+           __bionic_asm_aarch64_feature_bti); \
+    .long 0; \
+    .popsection; \
