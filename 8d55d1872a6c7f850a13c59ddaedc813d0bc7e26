@@ -88,6 +88,24 @@
       "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a4a9aae_f898d1af",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3146,
+      "author": {
+        "id": 1268141
+      },
+      "writtenOn": "2020-09-29T07:36:59Z",
+      "side": 1,
+      "message": "There are even more constraints there: pac-plt requires return address signing first.\nAlso, I am not sure what d_val of DT_AARCH64_PAC_PLT should be, it is not mentioned.\n\nBTW, zygote would change all keys as of today:\nhttps://android-review.googlesource.com/c/platform/frameworks/base/+/1215821/4/core/jni/com_android_internal_os_Zygote.cpp#1006\n\n\u003e But pac-plt is already in the ABI though?\n\nRight, I was being in hurry. What I mean is that pac-plt is primary to harden lazy-binded runtimes as far as I understand. Since Android does RELRO as you wrote I also don\u0027t think pac-plt would be of any use here.\nIn addition, runtime can\u0027t check which key is used for return address signing by simply looking at the ELF so it can\u0027t enforce platform ABI. That\u0027s why I wrote - incorrectly - \"experimental\": I am expecting the linked ABI proposal to sort these things out.\n\nI am going to push a patch to error-out if the DT tag is present, except for ANDROID_EXPERIMENTAL_MTE.",
+      "parentUuid": "d505edaf_f5bc03b8",
+      "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
