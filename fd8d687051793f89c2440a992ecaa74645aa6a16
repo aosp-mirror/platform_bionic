@@ -70,6 +70,42 @@
     },
     {
       "key": {
+        "uuid": "8db0fb48_b7e363f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-29T22:59:46Z",
+      "side": 1,
+      "message": "The difference between __restore and __restore_rt are the offsets from SP to the sigcontext struct. I thought I checked them against the kernel source, but maybe not. I did verify with `objdump -Wf` that none of the instructions changed, and the same offsets appear in other versions of this trampoline (e.g. in the 32-bit x86 vDSO and in x86_64 glibc).\n\nI tested it by hand, using both libgcc and the LLVM libunwind, and a test program that unwinds through the signal frame. libgcc has a fallback, but it won\u0027t use the fallback if it finds a DWARF FDE.",
+      "parentUuid": "439c48ab_798764e4",
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9a563d1_94480586",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-29T22:59:46Z",
+      "side": 1,
+      "message": "IIRC I tested it by hand, using both libgcc and the LLVM libunwind, and a test program that unwinds through a signal frame. libgcc has a fallback, but AFAIK it won\u0027t use the fallback if it finds the DWARF FDE. LLVM libunwind doesn\u0027t yet have code for detecting signal frames.",
+      "parentUuid": "df003c2e_3fa2de7e",
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "243b2cb0_bc16ffb2",
         "filename": "libc/arch-x86/bionic/__restore.S",
         "patchSetId": 1
@@ -81,6 +117,30 @@
       "writtenOn": "2020-09-29T17:58:53Z",
       "side": 1,
       "message": "Don\u0027t you need to put a dereference op here? Otherwise, the value of the register is just the value of location of the register on the stack, it\u0027s not going to get the value from the stack.",
+      "range": {
+        "startLine": 57,
+        "startChar": 22,
+        "endLine": 57,
+        "endChar": 56
+      },
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d23ef13_b70c343a",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-09-29T22:59:46Z",
+      "side": 1,
+      "message": "I don\u0027t think so. DW_CFA_expression provides the address of the saved value (not the value). A dereference is implied. OTOH, DW_CFA_val_expression provides the value. This is analogous to DW_CFA_offset vs DW_CFA_val_offset.",
+      "parentUuid": "243b2cb0_bc16ffb2",
       "range": {
         "startLine": 57,
         "startChar": 22,
