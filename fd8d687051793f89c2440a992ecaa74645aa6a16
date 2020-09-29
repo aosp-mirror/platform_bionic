@@ -33,6 +33,46 @@
       "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "439c48ab_798764e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-29T17:58:53Z",
+      "side": 1,
+      "message": "Were you able to test this in someway? The libunwindstack handling of the signal handler on x86 is different than this (I haven\u0027t checked the x86_64 parts thoroughly yet). The __restore looks mostly correct (except for a dereference), but the __restore_rt looks very different (and the previous cfi information looks wrong too).\n\nI\u0027m trying to test this myself by building the 64 bit cuttlefish and running some of my unwind through signal tests and disabling my special signal handling code.",
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "243b2cb0_bc16ffb2",
+        "filename": "libc/arch-x86/bionic/__restore.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-29T17:58:53Z",
+      "side": 1,
+      "message": "Don\u0027t you need to put a dereference op here? Otherwise, the value of the register is just the value of location of the register on the stack, it\u0027s not going to get the value from the stack.",
+      "range": {
+        "startLine": 57,
+        "startChar": 22,
+        "endLine": 57,
+        "endChar": 56
+      },
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
