@@ -70,6 +70,24 @@
       "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d505edaf_f5bc03b8",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3146,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-29T01:05:27Z",
+      "side": 1,
+      "message": "I also realized that it is unfortunate that the IA key was chosen for pac-plt (this isn\u0027t in the ABI but is implied by e.g. the implementation in lld) because it is also being used by default for return address signing. This would preclude different IA keys from being used on different threads, or on zygote fork, because changing the IA key would result in all future IA authentications in PLT entries failing. A platform that wants to make use of pac-plt together with thread diversity for IA keys would need to select a different key, most likely IB, for return addresses.\n\nSince pac-plt provides little value on Android because we already have RELRO I think this means we will have to forbid pac-plt on Android and make the presence of this dynamic tag an error.",
+      "parentUuid": "3f2042e1_a5a47861",
+      "revId": "8d55d1872a6c7f850a13c59ddaedc813d0bc7e26",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
