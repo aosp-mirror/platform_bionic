@@ -53,6 +53,23 @@
     },
     {
       "key": {
+        "uuid": "df003c2e_3fa2de7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-09-29T22:38:36Z",
+      "side": 1,
+      "message": "After a lot of pain trying to get cuttlefish to work, neither of the new unwinding appears to work properly. It looks like on x86_64, my unwinding code can properly guess how to do the unwind, but the unwind information is not correct. I suspect the same problem as in X86, you need a deref op.\n\nI don\u0027t know how important this is since the current unwind information looks like it\u0027s wrong too.",
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "243b2cb0_bc16ffb2",
         "filename": "libc/arch-x86/bionic/__restore.S",
         "patchSetId": 1
