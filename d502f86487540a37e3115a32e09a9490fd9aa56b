@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0f74ad5_deb42c96",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-30T22:42:47Z",
+      "side": 1,
+      "message": "stick this in pthread_internal.cpp instead? (and expose this rather than the data.) ... seems like we should probably use this to fix other stuff like setuid()...",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80b3f308_e76c4c18",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-30T22:42:47Z",
+      "side": 1,
+      "message": "do you want an ErrnoRestorer in here too?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ad09b04_a287b223",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-09-30T22:42:47Z",
+      "side": 1,
+      "message": "i think you need to be sure you\u0027re only checking errno in the case where sem_wait() returned -1... wouldn\u0027t `while (TEMP_FAILURE_RETRY(sem_wait(...)) \u003e 0) {` be clearer and more correct?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
