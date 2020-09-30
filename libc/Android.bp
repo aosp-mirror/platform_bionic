@@ -1738,6 +1738,10 @@ cc_library {
     // Sorting bss symbols by size usually results in less dirty pages at run
     // time, because small symbols are grouped together.
     sort_bss_symbols_by_size: true,
+
+    lto: {
+        never: true,
+    },
 }
 
 genrule {
