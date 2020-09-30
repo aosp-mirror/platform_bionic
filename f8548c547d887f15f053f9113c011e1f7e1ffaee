@@ -179,6 +179,24 @@
     },
     {
       "key": {
+        "uuid": "f63c4fd9_0aebe03d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "I moved this to android_mallopt() for now.",
+      "parentUuid": "1ab6719c_540b280a",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3dbf8e1a_fab67123",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
@@ -196,6 +214,24 @@
     },
     {
       "key": {
+        "uuid": "c49a9c04_8e6805ab",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "This now uses the thread list.",
+      "parentUuid": "3dbf8e1a_fab67123",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "667b2b8d_69acd3bc",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
@@ -207,6 +243,24 @@
       "writtenOn": "2020-09-16T04:57:44Z",
       "side": 1,
       "message": "I\u0027ll need to read g_retval before this unlock to avoid a race with another thread calling this function.",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3c2c6d3_7b8b2053",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "No need to do this now that the locking is moved into RAII objects.",
+      "parentUuid": "667b2b8d_69acd3bc",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -320,6 +374,24 @@
     },
     {
       "key": {
+        "uuid": "fb5bd4bb_0be74e61",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "Implemented with a lock around thread creation.",
+      "parentUuid": "fd2b2101_c073cff6",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
         "patchSetId": 1
@@ -334,6 +406,24 @@
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de4143b2_47a458ac",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "985ca01f_32665e59",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -384,6 +474,24 @@
       "side": 1,
       "message": "Yes, you can just remove/disable the code on lines 144-146 and it should work as expected on non-MTE hardware.",
       "parentUuid": "cba34869_06359a04",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfd05f6e_30ac233b",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "Code is now protected with ANDROID_EXPERIMENTAL_MTE.",
+      "parentUuid": "00e07bcc_96926568",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -455,6 +563,24 @@
       "side": 1,
       "message": "Not sure about that name, since I don\u0027t think we\u0027re going to advertise any of these features as a \"sanitizer\". \"android_disable_memory_mitigations()\" could work maybe.",
       "parentUuid": "57755733_f809550e",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c27e6e7_f3ff25e3",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T05:29:42Z",
+      "side": 1,
+      "message": "The API is now android_mallopt(M_DISABLE_MEMORY_MITIDATIONS)\" and the source file to memory_mitigation_state.cpp since this file is expected to be dealing with sync/async state later.",
+      "parentUuid": "bdfe0644_6e37dffb",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
