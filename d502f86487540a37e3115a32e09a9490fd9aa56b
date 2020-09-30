@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c45c11e6_804c102a",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "Seems like a good idea. I\u0027ll do that.",
+      "parentUuid": "d0f74ad5_deb42c96",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80b3f308_e76c4c18",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "ed843f22_0c25508c",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "Do we need to preserve errno here? By the time we\u0027re inside this function android_mallopt is already going to return true so the value of errno shouldn\u0027t matter I think.",
+      "parentUuid": "80b3f308_e76c4c18",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a62dda3a_01d411eb",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -64,6 +100,24 @@
       "writtenOn": "2020-09-30T23:13:03Z",
       "side": 1,
       "message": "Maybe add a brief comment that these locks must be taken in this specific order to avoid inversion?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fabbf103_d33bc5da",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "a62dda3a_01d411eb",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "a93f4b67_e1948f2a",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "The function is called on the current thread on line 52.",
+      "parentUuid": "3059b6e2_47974550",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b0c4e6f_7199b4ec",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -104,6 +176,24 @@
     },
     {
       "key": {
+        "uuid": "20f4aa59_c762dc3c",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "I think we could set sa_mask on our own signal handler to block all signals until the signal handler returns. It wouldn\u0027t do anything for unblockable signals like SIGKILL but those would tend to bring down the entire process anyway so the behavior wouldn\u0027t matter.",
+      "parentUuid": "3b0c4e6f_7199b4ec",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4ad09b04_a287b223",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -115,6 +205,24 @@
       "writtenOn": "2020-09-30T22:42:47Z",
       "side": 1,
       "message": "i think you need to be sure you\u0027re only checking errno in the case where sem_wait() returned -1... wouldn\u0027t `while (TEMP_FAILURE_RETRY(sem_wait(...)) \u003e 0) {` be clearer and more correct?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84200e3_02613b3b",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-09-30T23:32:20Z",
+      "side": 1,
+      "message": "I think this implementation is correct because POSIX specifies that sem_wait can only return 0 or -1, and that\u0027s what our implementation does as well. But it seems fine to use TEMP_FAILURE_RETRY here",
+      "parentUuid": "4ad09b04_a287b223",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
