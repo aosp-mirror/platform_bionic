@@ -36,6 +36,74 @@
     },
     {
       "key": {
+        "uuid": "761cc787_870a207a",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-30T23:13:03Z",
+      "side": 1,
+      "message": "I like this approach very much - it\u0027s clearly correct synchronization-wise.",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a62dda3a_01d411eb",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-30T23:13:03Z",
+      "side": 1,
+      "message": "Maybe add a brief comment that these locks must be taken in this specific order to avoid inversion?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3059b6e2_47974550",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-30T23:13:03Z",
+      "side": 1,
+      "message": "Don\u0027t you want to run g_func on the current thread, too?",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b0c4e6f_7199b4ec",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-09-30T23:13:03Z",
+      "side": 1,
+      "message": "What happens if a thread is killed while running our signal handler, but before sem_post? I presume tgkill will succeed, but then the current thread will wait on the semaphore forever. It\u0027s a fringe case, of course, so maybe it does not matter.",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4ad09b04_a287b223",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
