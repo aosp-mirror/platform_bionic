@@ -124,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "535574cf_f598d4a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-01T08:04:30Z",
+      "side": 1,
+      "message": "I disabled RegsX86::StepIfSignalHandler and RegsX86_64::StepIfSignalHandler with a \"return false\", and tried to run the libunwindstack tests. These tests failed:\n\n  [  FAILED  ] RegsStepIfSignalHandlerTest.x86_step_if_signal_handler_no_siginfo\n  [  FAILED  ] RegsStepIfSignalHandlerTest.x86_step_if_signal_handler_siginfo\n  [  FAILED  ] RegsStepIfSignalHandlerTest.x86_64_step_if_signal_handler\n  [  FAILED  ] UnwindTest.remote_through_signal_with_invalid_func\n  [  FAILED  ] UnwindTest.remote_through_signal_sa_siginfo_with_invalid_func\n\nThese tests passed:\n\n  [       OK ] UnwindTest.remote_through_signal (49 ms)\n  [       OK ] UnwindTest.remote_through_signal_sa_siginfo (45 ms)\n\nThe RegsStepIfSignalHandlerTest test failures make sense because I disabled StepIfSignalHandler.\n\nThe remote_through_signal_with_invalid_func test forks a child, sets up a SIGSEGV handler, then calls NULL in InnerFunction:\n\n      void (*crash_func)() \u003d nullptr;\n      crash_func();\n\nThe test fails because libunwindstack doesn\u0027t show any earlier frames than the sigreturn frame. The problem is in DwarfSectionImpl\u003cAddressType\u003e::Eval:\n\n  // If the pc was set to zero, consider this the final frame.\n  *finished \u003d (cur_regs-\u003epc() \u003d\u003d 0) ? true : false;\n\nThe sigreturn frame restores the PC that faulted, which is 0. I fixed this test by plumbing through the \u0027S\u0027 flag from the CIE, then changing this code to:\n\n  // If the pc was set to zero, consider this the final frame. Exception: if\n  // this is the sigreturn frame, then we want to try to recover the real PC\n  // using the return address (from LR or the stack).\n  *finished \u003d (cur_regs-\u003epc() \u003d\u003d 0 \u0026\u0026 !cie-\u003eis_signal_frame) ? true : false;\n\nI also plumbed the \u0027is_signal_frame\u0027 flag through the Step functions, so that I could enable these adjustments:\n\nhttps://android.googlesource.com/platform/system/core/+/b05c472421d9d4dd919926c95a5c1de4eb9a721a/libunwindstack/Unwinder.cpp#248\n\nI\u0027m not saying we should make these changes to libunwindstack, but they demonstrate that this x86 FDE/CIE is working, and that libunwindstack works if it uses the sigreturn FDE.\n\nFor reference, I uploaded my libunwindstack CL to:\nhttps://android-review.googlesource.com/c/platform/system/core/+/1443619",
+      "parentUuid": "bbb0dbe1_cde3b478",
+      "revId": "fd8d687051793f89c2440a992ecaa74645aa6a16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "243b2cb0_bc16ffb2",
         "filename": "libc/arch-x86/bionic/__restore.S",
         "patchSetId": 1
