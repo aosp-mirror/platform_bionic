@@ -22,6 +22,30 @@
       "revId": "755d469343406eca024255ee0050a58ead6bb6d7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b059972e_feedd239",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T23:40:43Z",
+      "side": 1,
+      "message": "Sorry, I was using shorthand here. The actual call needs to look like this:\n\nandroid_mallopt(M_DISABLE_MEMORY_MITIGATIONS, nullptr, 0);",
+      "parentUuid": "4e12af02_e64b66ab",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 28
+      },
+      "revId": "755d469343406eca024255ee0050a58ead6bb6d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
