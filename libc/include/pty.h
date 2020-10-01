@@ -49,16 +49,17 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
-int openpty(int* _Nonnull __master_fd, int* _Nonnull __slave_fd, char* _Nullable __slave_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
+int openpty(int* _Nonnull __pty_fd, int* _Nonnull __tty_fd, char* _Nullable __tty_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
 
 /**
  * [forkpty(3)](http://man7.org/linux/man-pages/man3/forkpty.3.html) creates
  * a new process connected to a pseudoterminal from openpty().
  *
- * Returns 0 on success and returns -1 and sets `errno` on failure.
+ * Returns 0 in the child/the pid of the child in the parent on success,
+ * and returns -1 and sets `errno` on failure.
  *
  * Available since API level 23.
  */
-int forkpty(int* _Nonnull __master_fd, char* _Nullable __slave_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
+int forkpty(int* _Nonnull __parent_pty_fd, char* _Nullable __child_tty_name, const struct termios* _Nullable __termios_ptr, const struct winsize* _Nullable __winsize_ptr) __INTRODUCED_IN(23);
 
 __END_DECLS

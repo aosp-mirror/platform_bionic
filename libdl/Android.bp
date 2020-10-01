@@ -116,7 +116,7 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: [
             "29",
-            "10000",
+            "current",
         ],
     },
 
@@ -124,6 +124,10 @@ cc_library {
         "//apex_available:platform",
         "com.android.runtime",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 cc_library {
@@ -193,13 +197,17 @@ cc_library {
 
     stubs: {
         symbol_file: "libdl_android.map.txt",
-        versions: ["10000"],
+        versions: ["current"],
     },
 
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 ndk_library {

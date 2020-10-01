@@ -444,9 +444,11 @@ enum {
   TCA_HW_OFFLOAD,
   TCA_INGRESS_BLOCK,
   TCA_EGRESS_BLOCK,
+  TCA_DUMP_FLAGS,
   __TCA_MAX
 };
 #define TCA_MAX (__TCA_MAX - 1)
+#define TCA_DUMP_FLAGS_TERSE (1 << 0)
 #define TCA_RTA(r) ((struct rtattr *) (((char *) (r)) + NLMSG_ALIGN(sizeof(struct tcmsg))))
 #define TCA_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct tcmsg))
 struct nduseroptmsg {

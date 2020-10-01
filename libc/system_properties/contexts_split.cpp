@@ -269,7 +269,7 @@ bool ContextsSplit::InitializeProperties() {
     if (!InitializePropertiesFromFile("/system/etc/selinux/plat_property_contexts")) {
       return false;
     }
-    // Don't check for failure here, so we always have a sane list of properties.
+    // Don't check for failure here, since we don't always have all of these partitions.
     // E.g. In case of recovery, the vendor partition will not have mounted and we
     // still need the system / platform properties to function.
     if (access("/vendor/etc/selinux/vendor_property_contexts", R_OK) != -1) {
@@ -324,10 +324,16 @@ bool ContextsSplit::Initialize(bool writable, const char* filename, bool* fsetxa
   return true;
 }
 
-prop_area* ContextsSplit::GetPropAreaForName(const char* name) {
+PrefixNode* ContextsSplit::GetPrefixNodeForName(const char* name) {
   auto entry = ListFind(prefixes_, [name](PrefixNode* l) {
     return l->prefix[0] == '*' || !strncmp(l->prefix, name, l->prefix_len);
   });
+
+  return entry;
+}
+
+prop_area* ContextsSplit::GetPropAreaForName(const char* name) {
+  auto entry = GetPrefixNodeForName(name);
   if (!entry) {
     return nullptr;
   }

@@ -147,6 +147,7 @@ static void layout_static_tls(KernelArgumentBlock& args) {
     mod.first_generation = kTlsGenerationFirst;
 
     modules.module_count = 1;
+    modules.static_module_count = 1;
     modules.module_table = &mod;
   } else {
     layout.reserve_exe_segment_and_tcb(nullptr, progname);

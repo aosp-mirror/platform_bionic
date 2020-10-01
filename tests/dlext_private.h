@@ -56,10 +56,10 @@ enum {
    */
   ANDROID_NAMESPACE_TYPE_SHARED = 2,
 
-  /* This flag instructs linker to enable grey-list workaround for the namespace.
+  /* This flag instructs linker to enable exempt-list workaround for the namespace.
    * See http://b/26394120 for details.
    */
-  ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED = 0x08000000,
+  ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED = 0x08000000,
 
   ANDROID_NAMESPACE_TYPE_SHARED_ISOLATED = ANDROID_NAMESPACE_TYPE_SHARED |
                                            ANDROID_NAMESPACE_TYPE_ISOLATED,

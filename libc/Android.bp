@@ -8,7 +8,6 @@ libc_common_src_files = [
     "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
-    "bionic/pututline.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
     "stdio/fmemopen.cpp",
@@ -63,6 +62,8 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        // For android_filesystem_config.h.
+        "system/core/libcutils/include",
     ],
 
     header_libs: [
@@ -81,7 +82,6 @@ cc_defaults {
         // TODO(b/132640749): Fix broken fuzzer support.
         fuzzer: false,
     },
-    native_coverage: false,
     ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
@@ -99,6 +99,9 @@ cc_defaults {
         },
         malloc_pattern_fill_contents: {
             cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+        },
+        malloc_not_svelte: {
+            cflags: ["-DUSE_SCUDO"],
         },
     },
 }
@@ -389,7 +392,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/gen/nice.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
         "upstream-netbsd/lib/libc/gen/utime.c",
-        "upstream-netbsd/lib/libc/gen/utmp.c",
         "upstream-netbsd/lib/libc/inet/nsap_addr.c",
         "upstream-netbsd/lib/libc/regex/regcomp.c",
         "upstream-netbsd/lib/libc/regex/regerror.c",
@@ -525,6 +527,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdlib/llabs.c",
         "upstream-openbsd/lib/libc/stdlib/lldiv.c",
         "upstream-openbsd/lib/libc/stdlib/lsearch.c",
+        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
         "upstream-openbsd/lib/libc/stdlib/remque.c",
         "upstream-openbsd/lib/libc/stdlib/setenv.c",
         "upstream-openbsd/lib/libc/stdlib/tfind.c",
@@ -566,6 +569,7 @@ cc_library_static {
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/memmem.c",
         "upstream-openbsd/lib/libc/string/strstr.c",
     ],
     cflags: [
@@ -1009,7 +1013,6 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
-        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1074,7 +1077,6 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
-        "bionic/memmem.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
@@ -1152,6 +1154,7 @@ cc_library_static {
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
         "bionic/usleep.cpp",
+        "bionic/utmp.cpp",
         "bionic/wait.cpp",
         "bionic/wchar.cpp",
         "bionic/wchar_l.cpp",
@@ -1176,12 +1179,29 @@ cc_library_static {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
-    whole_static_libs: ["libsystemproperties"],
+    whole_static_libs: [
+        "libsystemproperties",
+    ],
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+}
+
+// ========================================================
+// libc_bionic_systrace.a
+// ========================================================
+
+cc_library_static {
+    name: "libc_bionic_systrace",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/bionic_systrace.cpp",
+    ],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 // ========================================================
@@ -1219,6 +1239,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/sys_thread_properties.cpp",
 
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
@@ -1705,7 +1726,7 @@ cc_library {
         versions: [
             "29",
             "R",
-            "10000",
+            "current",
         ],
     },
 
@@ -1717,6 +1738,10 @@ cc_library {
     // Sorting bss symbols by size usually results in less dirty pages at run
     // time, because small symbols are grouped together.
     sort_bss_symbols_by_size: true,
+
+    lto: {
+        never: true,
+    },
 }
 
 genrule {
@@ -1982,8 +2007,10 @@ cc_defaults {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // crt* objects are used by most cc_binary/cc_library in "anyapex"
-    min_sdk_version: "apex_inherit",
+    // Generate NDK variants of the CRT objects for every supported API level.
+    min_sdk_version: "16",
+    stl: "none",
+    crt: true,
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",

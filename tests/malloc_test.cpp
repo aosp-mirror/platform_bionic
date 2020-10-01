@@ -84,6 +84,24 @@ TEST(malloc, calloc_std) {
   free(ptr);
 }
 
+TEST(malloc, calloc_mem_init_disabled) {
+#if defined(__BIONIC__)
+  // calloc should still zero memory if mem-init is disabled.
+  // With jemalloc the mallopts will fail but that shouldn't affect the
+  // execution of the test.
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
+  size_t alloc_len = 100;
+  char *ptr = reinterpret_cast<char*>(calloc(1, alloc_len));
+  for (size_t i = 0; i < alloc_len; i++) {
+    ASSERT_EQ(0, ptr[i]);
+  }
+  free(ptr);
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 TEST(malloc, calloc_illegal) {
   SKIP_WITH_HWASAN;
   errno = 0;
@@ -657,6 +675,46 @@ TEST(malloc, mallopt_purge) {
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+#if defined(__BIONIC__)
+static void GetAllocatorVersion(bool* allocator_scudo) {
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+
+  tinyxml2::XMLDocument doc;
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
+
+  auto root = doc.FirstChildElement();
+  ASSERT_NE(nullptr, root);
+  ASSERT_STREQ("malloc", root->Name());
+  std::string version(root->Attribute("version"));
+  *allocator_scudo = (version == "scudo-1");
+}
+#endif
+
+TEST(malloc, mallopt_scudo_only_options) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+  ASSERT_EQ(1, mallopt(M_CACHE_COUNT_MAX, 100));
+  ASSERT_EQ(1, mallopt(M_CACHE_SIZE_MAX, 1024 * 1024 * 2));
+  ASSERT_EQ(1, mallopt(M_TSDS_COUNT_MAX, 8));
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
