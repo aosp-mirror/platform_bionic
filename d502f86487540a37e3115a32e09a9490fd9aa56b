@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "710f59d6_88424f20",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c45c11e6_804c102a",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80b3f308_e76c4c18",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -107,6 +125,24 @@
     },
     {
       "key": {
+        "uuid": "4e8dd6eb_43082689",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "I don\u0027t know if I\u0027d call that weird. I always kind of assume that errno may be clobbered by any function whose errno-clobbering behavior is not documented, so I would save and restore errno in the caller if necessary. We could certainly use ErrnoRestorer in the signal handler though.",
+      "parentUuid": "daaa7b07_c28ff2c1",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a62dda3a_01d411eb",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -139,6 +175,24 @@
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d0e2aea_a0de45fc",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fabbf103_d33bc5da",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -213,6 +267,24 @@
     },
     {
       "key": {
+        "uuid": "b752af6f_694a29cc",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "Although it seems like we could call the function on the current thread in the same way as on the other threads, to me it seemed like a roundabout way of calling the function that could make the code harder to understand. (For example, with a direct call it is \"obvious\" that there is no deadlock situation possible by having the thread post a semaphore to itself.) I left a comment to explain why we are skipping the thread here.",
+      "parentUuid": "5579e850_d3ebf465",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b0c4e6f_7199b4ec",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -245,6 +317,24 @@
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69450a7d_2d427a11",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20f4aa59_c762dc3c",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -298,6 +388,24 @@
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "151d6faf_6c753d0f",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T02:14:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1373fdf2_2443b38c",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
