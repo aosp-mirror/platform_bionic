@@ -49,11 +49,9 @@ __bionic_asm_custom_note_gnu_section()
 #if defined(__linux__) && defined(__ELF__)
 	.section .note.GNU-stack,"",%progbits
 #endif
-#if defined(__i386__) || defined(__x86_64__)
+#if !defined(__arm__)
 	.section	.eh_frame,"a",@progbits
-#if defined(__i386__)
 	.balign 4
-#endif
 	.type	__FRAME_END__, @object
 	.size	__FRAME_END__, 4
 __FRAME_END__:
