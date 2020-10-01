@@ -195,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "5579e850_d3ebf465",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T00:10:03Z",
+      "side": 1,
+      "message": "it is a bit weird though. if we\u0027re sure it\u0027s a good idea, we should probably comment it more clearly. (especially because i suspect any future callers might change to the more obvious behavior.)",
+      "parentUuid": "3f9ec5b4_dc0afe53",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3b0c4e6f_7199b4ec",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
