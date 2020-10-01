@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "962e41dc_a921f8e5",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T19:05:41Z",
+      "side": 1,
+      "message": "is that true? i\u0027d expect ESRCH.\n\ncan we write a stress test?",
+      "range": {
+        "startLine": 172,
+        "startChar": 64,
+        "endLine": 172,
+        "endChar": 90
+      },
+      "revId": "3a7cfbbd14a49fdfb5f9c2fc97f49aad59185798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

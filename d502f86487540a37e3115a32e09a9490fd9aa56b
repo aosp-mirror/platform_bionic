@@ -143,6 +143,24 @@
     },
     {
       "key": {
+        "uuid": "4276b88b_307f04b6",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T19:05:41Z",
+      "side": 1,
+      "message": "yeah, it\u0027s strictly undefined but it\u0027s also annoying when it happens (and most people don\u0027t realize that POSIX actually says this is undefined).\n\ni\u0027m trying to imagine this in other cases (like setuid) but they too seem like things you\u0027d only do effectively \"at startup\" anyway, so unless we come up with more common uses i think this is probably fine.",
+      "parentUuid": "4e8dd6eb_43082689",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a62dda3a_01d411eb",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -282,6 +300,24 @@
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "412cccf9_4ac2ea38",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T19:05:41Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "b752af6f_694a29cc",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
