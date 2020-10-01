@@ -22,6 +22,30 @@
       "revId": "3a7cfbbd14a49fdfb5f9c2fc97f49aad59185798",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d58ec33_90d08f8b",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-01T19:47:39Z",
+      "side": 1,
+      "message": "You\u0027re right, it\u0027s ESRCH. I stopped reading the man page when it mentioned that EINVAL is returned for invalid thread IDs, but apparently that only means thread IDs \u003c\u003d 0: https://github.com/torvalds/linux/blob/fcadab740480e0e0e9fa9bd272acd409884d431a/kernel/signal.c#L3840\n\nESRCH is documented later as the error code used if no such process exists, and that\u0027s what the code does as well: https://github.com/torvalds/linux/blob/fcadab740480e0e0e9fa9bd272acd409884d431a/kernel/signal.c#L3787\n\nI was curious whether we actually needed this check now, since I would expect any terminating thread to be blocked on acquiring the thread list lock when it tries to remove itself from the thread list, which led me to read the pthread_exit() code, where I discovered that only detached threads remove themselves from the thread list (so we would still need the ESRCH check) but more importantly, all signals are blocked until thread exit. So I think this can happen:\n\n1. terminating thread blocks all signals\n2. we send it our signal (successfully, because the thread still exists)\n3. thread terminates without ever having received the signal\n4. sem_wait blocks forever\n\nI think we can fix this by having pthread_exit() do this:\n\n1. take the thread creation lock\n2. block all signals\n3. mark its pthread_internal_t as terminating\n4. release the thread creation lock.\n\nThen we can skip all terminating threads in this function. With that I think we wouldn\u0027t even need to check for ESRCH.\n\nI will see if I can write a stress test. I\u0027m thinking something like one thread that creates and destroys threads in a loop, and another thread that calls run_on_all_threads in a loop.",
+      "parentUuid": "962e41dc_a921f8e5",
+      "range": {
+        "startLine": 172,
+        "startChar": 64,
+        "endLine": 172,
+        "endChar": 90
+      },
+      "revId": "3a7cfbbd14a49fdfb5f9c2fc97f49aad59185798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
