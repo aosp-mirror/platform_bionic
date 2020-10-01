@@ -89,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "daaa7b07_c28ff2c1",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T00:07:29Z",
+      "side": 1,
+      "message": "just seems weird for this function to potentially stomp on errno (even on success for the EINTR case).",
+      "parentUuid": "ed843f22_0c25508c",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a62dda3a_01d411eb",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
         "patchSetId": 6
@@ -241,6 +259,24 @@
       "side": 1,
       "message": "I think this implementation is correct because POSIX specifies that sem_wait can only return 0 or -1, and that\u0027s what our implementation does as well. But it seems fine to use TEMP_FAILURE_RETRY here",
       "parentUuid": "4ad09b04_a287b223",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1373fdf2_2443b38c",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-01T00:07:29Z",
+      "side": 1,
+      "message": "oh, sorry, i thought sem_wait() returned a count but you\u0027re correct.\n\nbut, yeah, TEMP_FAILURE_RETRY is more idiomatic anyway.",
+      "parentUuid": "b84200e3_02613b3b",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
