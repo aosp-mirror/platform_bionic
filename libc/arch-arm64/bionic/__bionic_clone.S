@@ -57,3 +57,5 @@ ENTRY_PRIVATE(__bionic_clone)
     ldp     x0, x1, [sp], #16
     b       __start_thread
 END(__bionic_clone)
+
+NOTE_GNU_PROPERTY()

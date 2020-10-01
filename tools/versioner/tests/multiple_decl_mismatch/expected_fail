@@ -5,4 +5,4 @@ versioner: failed to calculate symbol availability
       obsoleted = 12
     extern declaration @ headers/foo.h:5:1
       obsoleted = 9
-versioner: sanity check failed
+versioner: validity check failed

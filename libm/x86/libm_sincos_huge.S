@@ -664,5 +664,5 @@ _ones:
 	.size	_ones,16
 	.data
 	.hidden __libm_reduce_pi04l
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End

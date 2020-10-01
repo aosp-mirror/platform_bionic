@@ -137,7 +137,7 @@ def build_symbol_index(lib: LoadedLibrary) -> Definitions:
     return defs
 
 
-def sanity_check_rels(root: LoadedLibrary, defs: Definitions) -> None:
+def check_rels(root: LoadedLibrary, defs: Definitions) -> None:
     # Find every symbol for every relocation in the load group.
     has_missing = False
     for lib in bfs_walk(root):
@@ -389,7 +389,7 @@ def main() -> None:
     with open(Path(args.input)) as f:
         root = json_to_elf_tree(json.load(f))
     defs = build_symbol_index(root)
-    sanity_check_rels(root, defs)
+    check_rels(root, defs)
 
     if out.exists(): shutil.rmtree(out)
     os.makedirs(str(out))

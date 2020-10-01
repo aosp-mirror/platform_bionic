@@ -14,14 +14,6 @@
  * limitations under the License.
  */
 
-// -Werror is on whether we like it or not, and we're intentionally doing awful
-// things in this file. GCC is dumb and doesn't have a specific error class for
-// the fortify failures (it's just -Werror), so we can't use anything more
-// constrained than disabling all the warnings in the file :( It also won't let
-// us use system_header in a .cpp file, so we have to #include this from
-// fortify_test_main.cpp.
-#pragma GCC system_header
-
 #include <gtest/gtest.h>
 #include "BionicDeathTest.h"
 
@@ -212,8 +204,9 @@ TEST_F(DEATHTEST, memchr_fortified2) {
   foo myfoo;
   volatile int asize = sizeof(myfoo.a) + 1;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
-  ASSERT_FORTIFY(printf("%s", memchr(myfoo.a, 'a', asize)));
-  ASSERT_FORTIFY(printf("%s", memchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", static_cast<const char*>(memchr(myfoo.a, 'a', asize))));
+  ASSERT_FORTIFY(printf(
+      "%s", static_cast<const char*>(memchr(static_cast<const void*>(myfoo.a), 'a', asize))));
 #else // __BIONIC__
   GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__
@@ -224,8 +217,9 @@ TEST_F(DEATHTEST, memrchr_fortified2) {
   foo myfoo;
   volatile int asize = sizeof(myfoo.a) + 1;
   memcpy(myfoo.a, "0123456789", sizeof(myfoo.a));
-  ASSERT_FORTIFY(printf("%s", memrchr(myfoo.a, 'a', asize)));
-  ASSERT_FORTIFY(printf("%s", memrchr(static_cast<const void*>(myfoo.a), 'a', asize)));
+  ASSERT_FORTIFY(printf("%s", static_cast<const char*>(memrchr(myfoo.a, 'a', asize))));
+  ASSERT_FORTIFY(printf(
+      "%s", static_cast<const char*>(memrchr(static_cast<const void*>(myfoo.a), 'a', asize))));
 #else // __BIONIC__
   GTEST_SKIP() << "glibc is broken";
 #endif // __BIONIC__

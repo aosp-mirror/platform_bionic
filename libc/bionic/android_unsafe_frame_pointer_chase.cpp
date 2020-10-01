@@ -28,8 +28,14 @@
 
 #include "platform/bionic/android_unsafe_frame_pointer_chase.h"
 
-#include "pthread_internal.h"
 #include "platform/bionic/mte.h"
+#include "private/bionic_defs.h"
+#include "pthread_internal.h"
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
+extern "C" __LIBC_HIDDEN__ uintptr_t __get_thread_stack_top() {
+  return __get_thread()->stack_top;
+}
 
 /*
  * Implement fast stack unwinding for stack frames with frame pointers. Stores at most num_entries
@@ -56,7 +62,7 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
   };
 
   auto begin = reinterpret_cast<uintptr_t>(__builtin_frame_address(0));
-  uintptr_t end = __get_thread()->stack_top;
+  auto end = __get_thread_stack_top();
 
   stack_t ss;
   if (sigaltstack(nullptr, &ss) == 0 && (ss.ss_flags & SS_ONSTACK)) {

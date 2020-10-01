@@ -55,8 +55,9 @@ extern "C" {
 // By the time any NDK-built code is running, there are plenty of threads.
 int __isthreaded = 1;
 
-// These were accidentally declared in <unistd.h> because we stupidly used to inline
-// getpagesize() and __getpageshift(). Needed for backwards compatibility with old NDK apps.
+// These were accidentally declared in <unistd.h> because we used to inline
+// getpagesize() and __getpageshift(). Needed for backwards compatibility
+// with old NDK apps.
 unsigned int __page_size = PAGE_SIZE;
 unsigned int __page_shift = 12;
 

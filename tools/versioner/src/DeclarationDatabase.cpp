@@ -190,8 +190,8 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     auto symbol_it = database.symbols.find(declaration_name);
     if (symbol_it == database.symbols.end()) {
       Symbol symbol = {.name = declaration_name };
-      bool dummy;
-      std::tie(symbol_it, dummy) = database.symbols.insert({ declaration_name, symbol });
+      bool unused;
+      std::tie(symbol_it, unused) = database.symbols.insert({declaration_name, symbol});
     }
 
     auto expansion_range = src_manager.getExpansionRange(range);

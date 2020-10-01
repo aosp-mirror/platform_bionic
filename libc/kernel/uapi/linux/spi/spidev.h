@@ -36,6 +36,10 @@
 #define SPI_TX_QUAD 0x200
 #define SPI_RX_DUAL 0x400
 #define SPI_RX_QUAD 0x800
+#define SPI_CS_WORD 0x1000
+#define SPI_TX_OCTAL 0x2000
+#define SPI_RX_OCTAL 0x4000
+#define SPI_3WIRE_HIZ 0x8000
 #define SPI_IOC_MAGIC 'k'
 struct spi_ioc_transfer {
   __u64 tx_buf;
