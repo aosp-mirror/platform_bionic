@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "6294dc08_1c0f2e6e",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-02T23:50:38Z",
+      "side": 1,
+      "message": "tid?",
+      "range": {
+        "startLine": 81,
+        "startChar": 45,
+        "endLine": 81,
+        "endChar": 50
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2a933bd_f10ca554",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 12
