@@ -269,6 +269,30 @@
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cdfb4ab_ce6f73de",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T02:19:20Z",
+      "side": 1,
+      "message": "PS: I\u0027ll update the test to include the -iterate- for another pid. But I did try the snippet above for the x86 and arm64. Seemed to work for me. Please let me know what you found out on the arm32 (don\u0027t have access to one to test. I\u0027m hoping the presubmit bots here would do it for me once I write the test)",
+      "parentUuid": "fc6ec0b0_c68a7748",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 56
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
