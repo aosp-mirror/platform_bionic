@@ -41,6 +41,9 @@ cc_defaults {
         // We want to test deprecated API too.
         "-Wno-deprecated-declarations",
 
+        // Needed to test pthread_internal_t layout.
+        "-Wno-invalid-offsetof",
+
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
@@ -392,6 +395,7 @@ cc_test_library {
         "string_posix_strerror_r_test.cpp",
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
+        "struct_layout_test.cpp",
         "sstream_test.cpp",
         "sys_auxv_test.cpp",
         "sys_epoll_test.cpp",
