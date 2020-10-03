@@ -58,6 +58,7 @@ extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
 // Not public, but well-known in the BSDs.
+__BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 const char* __progname;
 
 void __libc_init_globals() {
