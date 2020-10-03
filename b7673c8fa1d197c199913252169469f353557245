@@ -245,6 +245,30 @@
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc6ec0b0_c68a7748",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T02:10:51Z",
+      "side": 1,
+      "message": "Maybe you could try something like this: https://paste.googleplex.com/6555193165479936",
+      "parentUuid": "0c9def98_2e2fb0c9",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 56
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
