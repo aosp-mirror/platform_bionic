@@ -222,6 +222,29 @@
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c9def98_2e2fb0c9",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-03T00:23:47Z",
+      "side": 1,
+      "message": "Does this call also work with an arm32 kernel? I suspect that PTRACE_GET_THREAD_AREA is required for an arm32 kernel (as opposed to an arm32 program running on an arm64 kernel), but to verify it, I need to invoke ptrace (or invoke __get_bionic_tcb_for_thread with another tid), and I can\u0027t immediately figure out how to use ptrace. (For me, ptrace just fails with ESRCH: \"No such process\".)\n\nI don\u0027t see a test for __libc_iterate_dynamic_tls for a tid other than the current one.",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 56
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
