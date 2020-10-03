@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "01a1097d_32f7146c",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T00:07:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ef60aaf_263149ea",
+      "range": {
+        "startLine": 42,
+        "startChar": 33,
+        "endLine": 42,
+        "endChar": 41
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1c153c8_47a2d639",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 12
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "20a3cc7d_6f9f94f1",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T00:07:53Z",
+      "side": 1,
+      "message": "Done. Clearly I hadn\u0027t tested with x86-64 ...:-)",
+      "parentUuid": "6294dc08_1c0f2e6e",
+      "range": {
+        "startLine": 81,
+        "startChar": 45,
+        "endLine": 81,
+        "endChar": 50
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "280d493d_41a20846",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T00:07:53Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "a1c153c8_47a2d639",
+      "range": {
+        "startLine": 81,
+        "startChar": 2,
+        "endLine": 81,
+        "endChar": 10
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b2a933bd_f10ca554",
         "filename": "libc/bionic/sys_thread_properties.cpp",
         "patchSetId": 12
@@ -85,6 +157,24 @@
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b42b08b1_56e19e92",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T00:07:53Z",
+      "side": 1,
+      "message": "Done. Save and restore the errno.",
+      "parentUuid": "b2a933bd_f10ca554",
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -108,6 +198,30 @@
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a28f98aa_9b226c3a",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-03T00:07:53Z",
+      "side": 1,
+      "message": "Removed but from https://developer.android.com/ndk/guides/abis#x86, is there a plan to move away from hard-coding i386 when you really mean i686?",
+      "parentUuid": "27ec7d39_1a92d23f",
+      "range": {
+        "startLine": 85,
+        "startChar": 35,
+        "endLine": 85,
+        "endChar": 43
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
