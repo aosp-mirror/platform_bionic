@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83d72cff_afb409f5",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-05T18:02:22Z",
+      "side": 1,
+      "message": "see `ErrnoRestorer`.",
+      "revId": "a4d5960221d858313c1e6a84801966f1db47d24a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
