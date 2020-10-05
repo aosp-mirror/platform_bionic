@@ -1476,8 +1476,8 @@ LIBC_Q { # introduced=Q
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
 
-    # Used by libandroid_runtime, libmedia and libmediautils
-    android_mallopt; # apex
+    # Used by libandroid_runtime, libcutils, libmedia, and libmediautils
+    android_mallopt; # apex llndk
 } LIBC_P;
 
 LIBC_R { # introduced=R
