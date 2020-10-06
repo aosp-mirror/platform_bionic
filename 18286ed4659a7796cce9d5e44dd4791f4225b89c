@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b9334ce_fe177ab9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-06T16:04:34Z",
+      "side": 1,
+      "message": "have you talked to the app compat folks? isn\u0027t this at best a year too early? there\u0027s a two-year grace period to get to an API level, right? and even then there\u0027s no requirement for apps that _aren\u0027t_ getting updated to do anything. without explicit app compat sign-off, i\u0027m assuming this isn\u0027t allowed.\n\n(i assume i\u0027m missing something that keeps old apps working, such as the SELinux side of things being conditional on API level. but in that case, don\u0027t you need to get that in first so you don\u0027t break things for dogfooders?)",
+      "revId": "18286ed4659a7796cce9d5e44dd4791f4225b89c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
