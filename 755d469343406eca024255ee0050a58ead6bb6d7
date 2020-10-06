@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "4e12af02_e64b66ab",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 28
       },
       "revId": "755d469343406eca024255ee0050a58ead6bb6d7",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b059972e_feedd239",
         "filename": "/COMMIT_MSG",
@@ -44,8 +45,31 @@
         "endChar": 28
       },
       "revId": "755d469343406eca024255ee0050a58ead6bb6d7",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf484ca0_e538ac4b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-06T22:43:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b059972e_feedd239",
+      "range": {
+        "startLine": 9,
+        "startChar": 13,
+        "endLine": 9,
+        "endChar": 28
+      },
+      "revId": "755d469343406eca024255ee0050a58ead6bb6d7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
