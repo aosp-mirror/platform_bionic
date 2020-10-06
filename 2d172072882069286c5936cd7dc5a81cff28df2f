@@ -34,6 +34,24 @@
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f3a52c0_0a629894",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-06T16:07:17Z",
+      "side": 1,
+      "message": "sadly it\u0027s still just a label. there\u0027s no enforcement of privacy. so in theory, yes, but in practice, it\u0027s only an `extern \"C\"` away.",
+      "parentUuid": "c7e4a0e6_92c8f97f",
+      "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
