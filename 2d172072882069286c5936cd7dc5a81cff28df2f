@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "55ace07f_08c07df0",
         "filename": "libc/libc.map.txt",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "if we\u0027re going to make this API (which i\u0027m not 100% convinced about, though it does definitely make testing more practical, which is a strong argument), i think we should start with it taking a void* rather than have to add an android_run_on_all_threads2 later...",
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c7e4a0e6_92c8f97f",
         "filename": "libc/libc.map.txt",
@@ -32,10 +33,10 @@
       "message": "This is under LIBC_PRIVATE so I thought that it wasn\u0027t required to be stable, or am I mistaken?",
       "parentUuid": "55ace07f_08c07df0",
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "6f3a52c0_0a629894",
         "filename": "libc/libc.map.txt",
@@ -50,10 +51,10 @@
       "message": "sadly it\u0027s still just a label. there\u0027s no enforcement of privacy. so in theory, yes, but in practice, it\u0027s only an `extern \"C\"` away.",
       "parentUuid": "c7e4a0e6_92c8f97f",
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "160acef2_053d82ca",
         "filename": "libc/libc.map.txt",
@@ -68,8 +69,25 @@
       "message": "Sure, there\u0027s no enforcement, but I thought that would be seen as similar to Java programs using reflection to access private methods etc.\n\nI don\u0027t mind adding the void* argument though.",
       "parentUuid": "6f3a52c0_0a629894",
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff77a14d_3f54b64f",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-06T17:22:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "160acef2_053d82ca",
+      "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
