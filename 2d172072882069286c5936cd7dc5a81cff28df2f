@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55ace07f_08c07df0",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-06T16:01:51Z",
+      "side": 1,
+      "message": "if we\u0027re going to make this API (which i\u0027m not 100% convinced about, though it does definitely make testing more practical, which is a strong argument), i think we should start with it taking a void* rather than have to add an android_run_on_all_threads2 later...",
+      "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
