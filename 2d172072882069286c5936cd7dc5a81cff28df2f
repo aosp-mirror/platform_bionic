@@ -52,6 +52,24 @@
       "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160acef2_053d82ca",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 1721,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-06T16:20:49Z",
+      "side": 1,
+      "message": "Sure, there\u0027s no enforcement, but I thought that would be seen as similar to Java programs using reflection to access private methods etc.\n\nI don\u0027t mind adding the void* argument though.",
+      "parentUuid": "6f3a52c0_0a629894",
+      "revId": "2d172072882069286c5936cd7dc5a81cff28df2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
