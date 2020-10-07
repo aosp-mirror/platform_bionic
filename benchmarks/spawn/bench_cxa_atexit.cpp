@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,28 +26,42 @@
  * SUCH DAMAGE.
  */
 
-#include "spawn_benchmark.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
-SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
-SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
-SPAWN_BENCHMARK(bench_cxa_atexit, test_program("bench_cxa_atexit").c_str(), "100000", "_Exit");
-SPAWN_BENCHMARK(bench_cxa_atexit_full, test_program("bench_cxa_atexit").c_str(), "100000", "exit");
+#include <string>
 
-// Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
-// compare Bionic-vs-glibc on a Linux desktop machine.
-#if defined(__GLIBC__)
+extern "C" int __cxa_atexit(void (*func)(void*), void* arg, void* dso);
 
-SPAWN_BENCHMARK(bin_true, "/bin/true");
-SPAWN_BENCHMARK(sh_true, "/bin/sh", "-c", "true");
+extern void* __dso_handle;
 
-#elif defined(__ANDROID__)
+static void dtor_func(void*) {}
 
-SPAWN_BENCHMARK(system_bin_true, "/system/bin/true");
-SPAWN_BENCHMARK(vendor_bin_true, "/vendor/bin/true");
-SPAWN_BENCHMARK(system_sh_true, "/system/bin/sh", "-c", "true");
-SPAWN_BENCHMARK(vendor_sh_true, "/vendor/bin/sh", "-c", "true");
+// Prevent the compiler from optimizing out the __cxa_atexit call.
+void (*volatile g_pdtor_func)(void*) = dtor_func;
 
-#endif
+int main(int argc, char* argv[]) {
+  auto usage = [&argv]() {
+    fprintf(stderr, "usage: %s COUNT MODE\n", argv[0]);
+    fprintf(stderr, "MODE is one of '_Exit' or 'exit'.\n");
+    exit(1);
+  };
 
-BENCHMARK_MAIN();
+  if (argc != 3) usage();
+
+  int count = atoi(argv[1]);
+
+  // Two modes: "_Exit" ==> exit early w/o calling dtors, "exit" ==> call dtors on exit.
+  std::string mode = argv[2];
+  if (mode != "_Exit" && mode != "exit") usage();
+
+  for (int i = 0; i < count; ++i) {
+    __cxa_atexit(g_pdtor_func, nullptr, &__dso_handle);
+  }
+
+  if (mode == "_Exit") {
+    _Exit(0);
+  } else {
+    exit(0);
+  }
+}
