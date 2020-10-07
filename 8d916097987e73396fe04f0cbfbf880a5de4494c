@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "72f72d3d_3183a354",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "There\u0027s no unblock and nor should there be one because this function tears down state required for signal handlers to run. There was effectively no unblock in the previous version of the code either because this function never returns because of the __exit at the end.",
+      "parentUuid": "62225e52_563c6def",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 67
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d3816dd1_3e2a1edc",
         "filename": "libc/bionic/pthread_internal.cpp",
         "patchSetId": 11
@@ -54,6 +78,30 @@
       "writtenOn": "2020-10-07T22:42:49Z",
       "side": 1,
       "message": "Are you worried about this operation taking a lot of time? In other words, should there be some kind of timeout? Doing something similar with the unwinder, there are definitely times where this can take a long time, and that\u0027s when acting on one thread. It\u0027s possible you could be trying to do this on hundreds of threads.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 3
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a19f9f1_fea2d804",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "I don\u0027t think we should have a timeout here because that may cause flakiness, could mask bugs that lead to hangs and also leads to lifetime concerns with g_sem. Most of the time this function will be called during an app\u0027s startup when there won\u0027t be many threads running anyway.",
+      "parentUuid": "d3816dd1_3e2a1edc",
       "range": {
         "startLine": 183,
         "startChar": 0,
@@ -89,6 +137,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "57acaf0d_b834f2c3",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "Yes, we could say that it has no effect when not using scudo.",
+      "parentUuid": "f1551320_9f68aeff",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 89
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5cbfc310_69703d39",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 11
@@ -100,6 +172,30 @@
       "writtenOn": "2020-10-07T22:42:49Z",
       "side": 1,
       "message": "Would this be better using std::thread? It\u0027s kind of confusing to see what\u0027s going on here and I think std::thread would be a little easier to understand. This is more of nit, so feel free to ignore if you want to verify the pthread_XXX functions.",
+      "range": {
+        "startLine": 2985,
+        "startChar": 9,
+        "endLine": 2985,
+        "endChar": 23
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed212089_89e96084",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "As far as I know std::thread doesn\u0027t let you start up the thread in a detached state (there\u0027s std::thread::detach() but that can only be called after startup so it could race with the check for detached state in pthread_exit() and prevent us from exercising that code path). Since we\u0027re really trying to verify the pthread behavior here and for consistency it seems best to use direct pthread calls.",
+      "parentUuid": "5cbfc310_69703d39",
       "range": {
         "startLine": 2985,
         "startChar": 9,
@@ -135,6 +231,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f47e2bd6_e8614480",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3000,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "I could put the two pthread_create calls here in a loop with about 16 iterations with a separate loop to join on the threads perhaps.\n\nI think that the most important thing to test here is that run_on_all_threads can handle a thread at any point in its lifecycle. The number of threads running isn\u0027t really the most important factor because the behavior is essentially the same no matter how many are running.",
+      "parentUuid": "01aa58f4_9ce13475",
+      "range": {
+        "startLine": 2996,
+        "startChar": 0,
+        "endLine": 3000,
+        "endChar": 54
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c0e6c7c4_f0f30271",
         "filename": "tests/pthread_test.cpp",
         "patchSetId": 11
@@ -146,6 +266,30 @@
       "writtenOn": "2020-10-07T22:42:49Z",
       "side": 1,
       "message": "I worry that the way this works, by the time you make the android_run_on_all_threads calls here, all of the threads are really dead and only one is waiting to finish.\n\nHave you verified that these calls are actually being made with threads running?",
+      "range": {
+        "startLine": 3013,
+        "startChar": 0,
+        "endLine": 3013,
+        "endChar": 95
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e8fd145_6ae2fee3",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3013,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-07T23:21:45Z",
+      "side": 1,
+      "message": "Yes, I ran the test with a previous version of the function with buggy behavior (see diff between PS7 and PS8) and verified that it consistently hung (due to the bug). It wouldn\u0027t have hung if there weren\u0027t any threads running when the call was made.",
+      "parentUuid": "c0e6c7c4_f0f30271",
       "range": {
         "startLine": 3013,
         "startChar": 0,
