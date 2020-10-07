@@ -16,6 +16,144 @@
       "message": "seems reasonable to me, but i defer to cferris for +2...",
       "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62225e52_563c6def",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me where the unblock comes from after this point.",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 67
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3816dd1_3e2a1edc",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "Are you worried about this operation taking a lot of time? In other words, should there be some kind of timeout? Doing something similar with the unwinder, there are definitely times where this can take a long time, and that\u0027s when acting on one thread. It\u0027s possible you could be trying to do this on hundreds of threads.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 3
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1551320_9f68aeff",
+        "filename": "libc/platform/bionic/malloc.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "Should this mention this only applies to scudo? Or maybe does not apply to a device using malloc svelte?",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 89
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cbfc310_69703d39",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "Would this be better using std::thread? It\u0027s kind of confusing to see what\u0027s going on here and I think std::thread would be a little easier to understand. This is more of nit, so feel free to ignore if you want to verify the pthread_XXX functions.",
+      "range": {
+        "startLine": 2985,
+        "startChar": 9,
+        "endLine": 2985,
+        "endChar": 23
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01aa58f4_9ce13475",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3000,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "The way this works, it seems like it\u0027s highly likely that there will only ever be about three threads active at any one time. This thread, the detached thread and the joined thread.\n\nI think there should be a test where there are lots of threads active and dying at the same time to help verify that run_on_all_threads is working properly when a lot of threads are running.",
+      "range": {
+        "startLine": 2996,
+        "startChar": 0,
+        "endLine": 3000,
+        "endChar": 54
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0e6c7c4_f0f30271",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3013,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-07T22:42:49Z",
+      "side": 1,
+      "message": "I worry that the way this works, by the time you make the android_run_on_all_threads calls here, all of the threads are really dead and only one is waiting to finish.\n\nHave you verified that these calls are actually being made with threads running?",
+      "range": {
+        "startLine": 3013,
+        "startChar": 0,
+        "endLine": 3013,
+        "endChar": 95
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
