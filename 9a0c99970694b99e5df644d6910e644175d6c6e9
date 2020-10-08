@@ -51,6 +51,24 @@
       "parentUuid": "0d4dd4d2_a1a589f6",
       "revId": "9a0c99970694b99e5df644d6910e644175d6c6e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "027a51f1_987804b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-08T23:28:35Z",
+      "side": 1,
+      "message": "\u003e Do you mean I should expose it to arbitrary apps, in addition to APEXes?\n\nyes, since we have to expose similar API anyway for other reasons.\n\n\u003e What hoops?\n\nthe libcutils CL :-)",
+      "parentUuid": "a0a6eb1a_f526d275",
+      "revId": "9a0c99970694b99e5df644d6910e644175d6c6e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
