@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55c52051_81a1dc8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-08T23:13:22Z",
+      "side": 1,
+      "message": "Please do review - presubmit failure is some problem w/ prebuilts of bionic in some downstream branches. I will figure out how to update those separately.",
+      "revId": "4714e51c01ad960cee1333c650a04a1c1166421a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
