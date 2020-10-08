@@ -389,6 +389,30 @@
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1167240d_029ea4c8",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-08T01:31:11Z",
+      "side": 1,
+      "message": "Thanks for the investigation! Updated the arm32 handling.\n\nStill not sure why the presubmit passed.\nIs the test not run? 😕",
+      "parentUuid": "417e0994_a27a4403",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 56
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

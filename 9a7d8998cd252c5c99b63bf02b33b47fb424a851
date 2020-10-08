@@ -33,6 +33,24 @@
       "message": "I think this sleep() is here to ensure that the parent is in a known state before we examine its DTLS state. That makes sense, but is there some other way to do this that doesn\u0027t add a second of run-time to the tests? I thought ptrace had a way of running a stopped process until it hit a system call.",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd8e5364_a1da5c04",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-08T01:31:11Z",
+      "side": 1,
+      "message": "On a second thought, sleep() is unnecessary here. \nI only had sleep() there because in a previous version of the test, I had the parent trace the child - it had to wait for the child to init.\nBut then I figured it was easier and less code to set up the test if I had the child ptrace the parent. The parent has already done initted here. so no need to sleep/wait for it.",
+      "parentUuid": "69ac00a3_9324d79c",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
