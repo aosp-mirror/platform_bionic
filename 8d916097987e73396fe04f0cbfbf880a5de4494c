@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49e3d639_3d71a519",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-08T20:45:24Z",
+      "side": 1,
+      "message": "I think you are planning to upload a new change (for the comment change), I\u0027m ready to +2 that when you do.",
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "62225e52_563c6def",
@@ -65,6 +82,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3484f19_2213ff8b",
+        "filename": "libc/bionic/pthread_exit.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-08T20:45:24Z",
+      "side": 1,
+      "message": "Sounds reasonable.",
+      "parentUuid": "72f72d3d_3183a354",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 67
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3816dd1_3e2a1edc",
@@ -102,6 +143,30 @@
       "side": 1,
       "message": "I don\u0027t think we should have a timeout here because that may cause flakiness, could mask bugs that lead to hangs and also leads to lifetime concerns with g_sem. Most of the time this function will be called during an app\u0027s startup when there won\u0027t be many threads running anyway.",
       "parentUuid": "d3816dd1_3e2a1edc",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 3
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e05f508_cefce160",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-08T20:45:24Z",
+      "side": 1,
+      "message": "As long as this isn\u0027t called while lots of threads are running, I think this is fine. I\u0027m a little worried that app developers will find a way to call this in weird ways, but that\u0027s on them.",
+      "parentUuid": "7a19f9f1_fea2d804",
       "range": {
         "startLine": 183,
         "startChar": 0,
@@ -206,6 +271,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "407a12b7_209964a4",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-08T20:45:24Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ed212089_89e96084",
+      "range": {
+        "startLine": 2985,
+        "startChar": 9,
+        "endLine": 2985,
+        "endChar": 23
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01aa58f4_9ce13475",
@@ -243,6 +332,30 @@
       "side": 1,
       "message": "I could put the two pthread_create calls here in a loop with about 16 iterations with a separate loop to join on the threads perhaps.\n\nI think that the most important thing to test here is that run_on_all_threads can handle a thread at any point in its lifecycle. The number of threads running isn\u0027t really the most important factor because the behavior is essentially the same no matter how many are running.",
       "parentUuid": "01aa58f4_9ce13475",
+      "range": {
+        "startLine": 2996,
+        "startChar": 0,
+        "endLine": 3000,
+        "endChar": 54
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccaadd30_cc4190f8",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3000,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-08T20:45:24Z",
+      "side": 1,
+      "message": "I wouldn\u0027t bother if it\u0027s working the way you want and caught the particular problem you were trying to catch. If you don\u0027t expect this to called with a lot of threads running, it\u0027s probably okay to skip a lot of threads test for this. There isn\u0027t anything in the implementation that makes me think this would fail, I think a lot of threads test would be more likely to catch kernel bugs.",
+      "parentUuid": "f47e2bd6_e8614480",
       "range": {
         "startLine": 2996,
         "startChar": 0,
