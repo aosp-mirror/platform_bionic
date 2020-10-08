@@ -177,6 +177,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "139d896e_4a70b145",
+        "filename": "libc/bionic/pthread_internal.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-08T22:23:38Z",
+      "side": 1,
+      "message": "tbh, i did wonder if we should never return false and just abort instead. i don\u0027t think there\u0027s any intended use case where failure shouldn\u0027t be fatal. (setuid more strongly than this case.)\n\nbut \"meh\". we don\u0027t think anyone should be calling this anyway, and we\u0027d prevent them from doing so outright if we could do so without losing our own ability to test... we really should get rprichard to come up with a way to make \"private\" really mean something more than \"use `extern \"C\"`\", at least for apps...",
+      "parentUuid": "9e05f508_cefce160",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 188,
+        "endChar": 3
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1551320_9f68aeff",
@@ -309,6 +333,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "ed212089_89e96084",
+      "range": {
+        "startLine": 2985,
+        "startChar": 9,
+        "endLine": 2985,
+        "endChar": 23
+      },
+      "revId": "8d916097987e73396fe04f0cbfbf880a5de4494c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0605bfe3_b6d36968",
+        "filename": "tests/pthread_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2985,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-08T22:23:38Z",
+      "side": 1,
+      "message": "aiui, that\u0027s what this naming monstrosity from C++20 will be: https://en.cppreference.com/w/cpp/thread/jthread\n\n/facepalm",
+      "parentUuid": "407a12b7_209964a4",
       "range": {
         "startLine": 2985,
         "startChar": 9,
