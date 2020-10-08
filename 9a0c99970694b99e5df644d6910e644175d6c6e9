@@ -69,6 +69,24 @@
       "parentUuid": "a0a6eb1a_f526d275",
       "revId": "9a0c99970694b99e5df644d6910e644175d6c6e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24c1649c_98d195b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-08T23:36:29Z",
+      "side": 1,
+      "message": "So you mean remove visibility restriction here entirely? I kind of like having an easy API for it, just because android_mallopt has a few extra options and it gives nice logging (and a single place to change to an abort after scudo is universal, although, given your comment on the parent CL, that might not be necessary in itself). \n\nAlso - after being blocked on the dependency for this for about a month (and countless other things for the past two years), I\u0027m much more interested to have this in and focus on the inevitable fallout that is going to happen when heap zero is merged, before it gets any later in Android S, and this gets delayed another year.\n\nIf you have no objection to exposing android_mallopt S, can you approve and suggest any specific follow-up or niceties separately, and I can gladly do that cleanup work, in parallel with the very unknown amount of work this CL is blocking as visible? (we could also discuss more in email thread \"Expose android_mallopt to vndk processes?\")\n\nAlso, in case you know how, the TH failure is related to \"prebuilts/runtime/mainline/runtime\". I\u0027m assuming I need to merge this CL separately and run a separate update script to update those prebuilts before merging the rest of the topic. Do you have any pointers here?",
+      "parentUuid": "027a51f1_987804b8",
+      "revId": "9a0c99970694b99e5df644d6910e644175d6c6e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
