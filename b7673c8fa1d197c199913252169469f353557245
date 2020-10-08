@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "2ef60aaf_263149ea",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -20,10 +21,10 @@
         "endChar": 41
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "01a1097d_32f7146c",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -44,10 +45,10 @@
         "endChar": 41
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "a1c153c8_47a2d639",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -67,10 +68,10 @@
         "endChar": 10
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "6294dc08_1c0f2e6e",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -90,10 +91,10 @@
         "endChar": 50
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "20a3cc7d_6f9f94f1",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -114,10 +115,10 @@
         "endChar": 50
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "280d493d_41a20846",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -138,10 +139,10 @@
         "endChar": 10
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b2a933bd_f10ca554",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -155,10 +156,10 @@
       "side": 1,
       "message": "this is incorrect if something *before* ptrace() set errno. you need to clear errno first to do a test like this.\n\n(is it ever valid for fs_base to be -1?)",
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "b42b08b1_56e19e92",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -173,10 +174,10 @@
       "message": "Done. Save and restore the errno.",
       "parentUuid": "b2a933bd_f10ca554",
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "27ec7d39_1a92d23f",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -196,10 +197,10 @@
         "endChar": 43
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "a28f98aa_9b226c3a",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -220,10 +221,10 @@
         "endChar": 43
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "b35d7433_dde7cdae",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -244,10 +245,10 @@
         "endChar": 43
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "0c9def98_2e2fb0c9",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -267,10 +268,10 @@
         "endChar": 56
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fc6ec0b0_c68a7748",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -291,10 +292,10 @@
         "endChar": 56
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "8cdfb4ab_ce6f73de",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -315,10 +316,10 @@
         "endChar": 56
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "9fc1f074_343c2f54",
         "filename": "libc/bionic/sys_thread_properties.cpp",
@@ -339,8 +340,31 @@
         "endChar": 56
       },
       "revId": "b7673c8fa1d197c199913252169469f353557245",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c324cd25_5d7cdb29",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-08T01:01:42Z",
+      "side": 1,
+      "message": "This CL passed presubmit, but I think it\u0027s broken on arm32. I used the new Bionic test to run ptrace(PTRACE_GETREGSET, ...) on various targets and saw EIO or EINVAL errors:\n\n * Galaxy Nexus (google/yakju/maguro:4.1.2/JZO54K/485486:user/release-keys): EIO\n * wembley/kb8: EINVAL\n * Android Studio JB arm32 emulator: EINVAL\n * Android Studio N arm32 emulator: EINVAL\n\nThis seems to do the right thing on arm32:\n\n    void** tp_reg \u003d nullptr;\n    if (ptrace(PTRACE_GET_THREAD_AREA, parent_pid, NULL, \u0026tp_reg) \u003d\u003d 0) {",
+      "parentUuid": "9fc1f074_343c2f54",
+      "range": {
+        "startLine": 105,
+        "startChar": 6,
+        "endLine": 105,
+        "endChar": 56
+      },
+      "revId": "b7673c8fa1d197c199913252169469f353557245",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b10c96d_c5d56e73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-08T01:01:42Z",
+      "side": 1,
+      "message": "I used the test_iterate_another_thread_tls function to experiment with the ptrace APIs on arm64.",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69ac00a3_9324d79c",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-08T01:01:42Z",
+      "side": 1,
+      "message": "I think this sleep() is here to ensure that the parent is in a known state before we examine its DTLS state. That makes sense, but is there some other way to do this that doesn\u0027t add a second of run-time to the tests? I thought ptrace had a way of running a stopped process until it hit a system call.",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
