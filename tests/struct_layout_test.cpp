@@ -30,7 +30,7 @@ void tests(CheckSize check_size, CheckOffset check_offset) {
 #define CHECK_OFFSET(name, field, offset) \
     check_offset(#name, #field, offsetof(name, field), offset);
 #ifdef __LP64__
-  CHECK_SIZE(pthread_internal_t, 768);
+  CHECK_SIZE(pthread_internal_t, 776);
   CHECK_OFFSET(pthread_internal_t, next, 0);
   CHECK_OFFSET(pthread_internal_t, prev, 8);
   CHECK_OFFSET(pthread_internal_t, tid, 16);
@@ -44,17 +44,17 @@ void tests(CheckSize check_size, CheckOffset check_offset) {
   CHECK_OFFSET(pthread_internal_t, alternate_signal_stack, 128);
   CHECK_OFFSET(pthread_internal_t, shadow_call_stack_guard_region, 136);
   CHECK_OFFSET(pthread_internal_t, stack_top, 144);
-  CHECK_OFFSET(pthread_internal_t, startup_handshake_lock, 152);
-  CHECK_OFFSET(pthread_internal_t, mmap_base, 160);
-  CHECK_OFFSET(pthread_internal_t, mmap_size, 168);
-  CHECK_OFFSET(pthread_internal_t, mmap_base_unguarded, 176);
-  CHECK_OFFSET(pthread_internal_t, mmap_size_unguarded, 184);
-  CHECK_OFFSET(pthread_internal_t, vma_name_buffer, 192);
-  CHECK_OFFSET(pthread_internal_t, thread_local_dtors, 224);
-  CHECK_OFFSET(pthread_internal_t, current_dlerror, 232);
-  CHECK_OFFSET(pthread_internal_t, dlerror_buffer, 240);
-  CHECK_OFFSET(pthread_internal_t, bionic_tls, 752);
-  CHECK_OFFSET(pthread_internal_t, errno_value, 760);
+  CHECK_OFFSET(pthread_internal_t, startup_handshake_lock, 156);
+  CHECK_OFFSET(pthread_internal_t, mmap_base, 168);
+  CHECK_OFFSET(pthread_internal_t, mmap_size, 176);
+  CHECK_OFFSET(pthread_internal_t, mmap_base_unguarded, 184);
+  CHECK_OFFSET(pthread_internal_t, mmap_size_unguarded, 192);
+  CHECK_OFFSET(pthread_internal_t, vma_name_buffer, 200);
+  CHECK_OFFSET(pthread_internal_t, thread_local_dtors, 232);
+  CHECK_OFFSET(pthread_internal_t, current_dlerror, 240);
+  CHECK_OFFSET(pthread_internal_t, dlerror_buffer, 248);
+  CHECK_OFFSET(pthread_internal_t, bionic_tls, 760);
+  CHECK_OFFSET(pthread_internal_t, errno_value, 768);
   CHECK_SIZE(bionic_tls, 12200);
   CHECK_OFFSET(bionic_tls, key_data, 0);
   CHECK_OFFSET(bionic_tls, locale, 2080);
@@ -71,7 +71,7 @@ void tests(CheckSize check_size, CheckOffset check_offset) {
   CHECK_OFFSET(bionic_tls, fdtrack_disabled, 12192);
   CHECK_OFFSET(bionic_tls, padding, 12193);
 #else
-  CHECK_SIZE(pthread_internal_t, 664);
+  CHECK_SIZE(pthread_internal_t, 668);
   CHECK_OFFSET(pthread_internal_t, next, 0);
   CHECK_OFFSET(pthread_internal_t, prev, 4);
   CHECK_OFFSET(pthread_internal_t, tid, 8);
@@ -85,17 +85,17 @@ void tests(CheckSize check_size, CheckOffset check_offset) {
   CHECK_OFFSET(pthread_internal_t, alternate_signal_stack, 68);
   CHECK_OFFSET(pthread_internal_t, shadow_call_stack_guard_region, 72);
   CHECK_OFFSET(pthread_internal_t, stack_top, 76);
-  CHECK_OFFSET(pthread_internal_t, startup_handshake_lock, 80);
-  CHECK_OFFSET(pthread_internal_t, mmap_base, 88);
-  CHECK_OFFSET(pthread_internal_t, mmap_size, 92);
-  CHECK_OFFSET(pthread_internal_t, mmap_base_unguarded, 96);
-  CHECK_OFFSET(pthread_internal_t, mmap_size_unguarded, 100);
-  CHECK_OFFSET(pthread_internal_t, vma_name_buffer, 104);
-  CHECK_OFFSET(pthread_internal_t, thread_local_dtors, 136);
-  CHECK_OFFSET(pthread_internal_t, current_dlerror, 140);
-  CHECK_OFFSET(pthread_internal_t, dlerror_buffer, 144);
-  CHECK_OFFSET(pthread_internal_t, bionic_tls, 656);
-  CHECK_OFFSET(pthread_internal_t, errno_value, 660);
+  CHECK_OFFSET(pthread_internal_t, startup_handshake_lock, 84);
+  CHECK_OFFSET(pthread_internal_t, mmap_base, 92);
+  CHECK_OFFSET(pthread_internal_t, mmap_size, 96);
+  CHECK_OFFSET(pthread_internal_t, mmap_base_unguarded, 100);
+  CHECK_OFFSET(pthread_internal_t, mmap_size_unguarded, 104);
+  CHECK_OFFSET(pthread_internal_t, vma_name_buffer, 108);
+  CHECK_OFFSET(pthread_internal_t, thread_local_dtors, 140);
+  CHECK_OFFSET(pthread_internal_t, current_dlerror, 144);
+  CHECK_OFFSET(pthread_internal_t, dlerror_buffer, 148);
+  CHECK_OFFSET(pthread_internal_t, bionic_tls, 660);
+  CHECK_OFFSET(pthread_internal_t, errno_value, 664);
   CHECK_SIZE(bionic_tls, 11080);
   CHECK_OFFSET(bionic_tls, key_data, 0);
   CHECK_OFFSET(bionic_tls, locale, 1040);
