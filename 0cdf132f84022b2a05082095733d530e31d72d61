@@ -16,6 +16,23 @@
       "message": "(-topic: needs to be submitted independently from rest of topic, so that I can update mainline prebuilts)",
       "revId": "0cdf132f84022b2a05082095733d530e31d72d61",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d60cc8e6_808beba3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-09T01:55:35Z",
+      "side": 1,
+      "message": "I\u0027m not sure I really like this, but I can\u0027t think of any other way. If I do think of some great solution, then I can update this, but there is no reason to make people wait.",
+      "revId": "0cdf132f84022b2a05082095733d530e31d72d61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
