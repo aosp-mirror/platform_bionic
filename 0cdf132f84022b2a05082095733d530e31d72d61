@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9645ed9_0fd9df0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-09T00:35:18Z",
+      "side": 1,
+      "message": "(-topic: needs to be submitted independently from rest of topic, so that I can update mainline prebuilts)",
+      "revId": "0cdf132f84022b2a05082095733d530e31d72d61",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
