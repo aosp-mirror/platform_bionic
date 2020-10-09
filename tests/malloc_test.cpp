@@ -20,6 +20,7 @@
 #include <limits.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -45,6 +46,7 @@
 #include "SignalUtils.h"
 
 #include "platform/bionic/malloc.h"
+#include "platform/bionic/mte.h"
 #include "platform/bionic/mte_kernel.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/bionic_config.h"
@@ -1255,6 +1257,42 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
     ASSERT_EQ(pid, wait(&status));
     ASSERT_EQ(0, WEXITSTATUS(status));
   }
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(android_mallopt, disable_memory_mitigations) {
+#if defined(__BIONIC__)
+  if (!mte_supported()) {
+    GTEST_SKIP() << "This function can only be tested with MTE";
+  }
+
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  sem_t sem;
+  ASSERT_EQ(0, sem_init(&sem, 0, 0));
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(
+                   &thread, nullptr,
+                   [](void* ptr) -> void* {
+                     auto* sem = reinterpret_cast<sem_t*>(ptr);
+                     sem_wait(sem);
+                     return reinterpret_cast<void*>(prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0));
+                   },
+                   &sem));
+
+  ASSERT_TRUE(android_mallopt(M_DISABLE_MEMORY_MITIGATIONS, nullptr, 0));
+  ASSERT_EQ(0, sem_post(&sem));
+
+  int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  ASSERT_EQ(PR_MTE_TCF_NONE, my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
+
+  void* retval;
+  ASSERT_EQ(0, pthread_join(thread, &retval));
+  int thread_tagged_addr_ctrl = reinterpret_cast<uintptr_t>(retval);
+  ASSERT_EQ(my_tagged_addr_ctrl, thread_tagged_addr_ctrl);
+#endif
 #else
   GTEST_SKIP() << "bionic extension";
 #endif

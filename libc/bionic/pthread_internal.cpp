@@ -29,12 +29,15 @@
 #include "pthread_internal.h"
 
 #include <errno.h>
+#include <semaphore.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
 
 #include <async_safe/log.h>
+#include <bionic/reserved_signals.h>
 
+#include "private/ErrnoRestorer.h"
 #include "private/ScopedRWLock.h"
 #include "private/bionic_futex.h"
 #include "private/bionic_tls.h"
@@ -114,4 +117,77 @@ pthread_internal_t* __pthread_internal_find(pthread_t thread_id, const char* cal
     }
   }
   return nullptr;
+}
+
+bool android_run_on_all_threads(bool (*func)(void*), void* arg) {
+  // Take the locks in this order to avoid inversion (pthread_create ->
+  // __pthread_internal_add).
+  ScopedWriteLock creation_locker(&g_thread_creation_lock);
+  ScopedReadLock list_locker(&g_thread_list_lock);
+
+  // Call the function directly for the current thread so that we don't need to worry about
+  // the consequences of synchronizing with ourselves.
+  if (!func(arg)) {
+    return false;
+  }
+
+  static sem_t g_sem;
+  if (sem_init(&g_sem, 0, 0) != 0) {
+    return false;
+  }
+
+  static bool (*g_func)(void*);
+  static void *g_arg;
+  g_func = func;
+  g_arg = arg;
+
+  static _Atomic(bool) g_retval;
+  atomic_init(&g_retval, true);
+
+  auto handler = [](int, siginfo_t*, void*) {
+    ErrnoRestorer restorer;
+    if (!g_func(g_arg)) {
+      atomic_store(&g_retval, false);
+    }
+    sem_post(&g_sem);
+  };
+
+  struct sigaction act = {}, oldact;
+  act.sa_flags = SA_SIGINFO;
+  act.sa_sigaction = handler;
+  sigfillset(&act.sa_mask);
+  if (sigaction(BIONIC_SIGNAL_RUN_ON_ALL_THREADS, &act, &oldact) != 0) {
+    sem_destroy(&g_sem);
+    return false;
+  }
+
+  pid_t my_pid = getpid();
+  size_t num_tids = 0;
+  for (pthread_internal_t* t = g_thread_list; t != nullptr; t = t->next) {
+    // The function is called directly for the current thread above, so no need to send a signal to
+    // ourselves to call it here.
+    if (t == __get_thread()) continue;
+
+    // If a thread is terminating (has blocked signals) or has already terminated, our signal will
+    // never be received, so we need to check for that condition and skip the thread if it is the
+    // case.
+    if (atomic_load(&t->terminating)) continue;
+
+    if (tgkill(my_pid, t->tid, BIONIC_SIGNAL_RUN_ON_ALL_THREADS) == 0) {
+      ++num_tids;
+    } else {
+      atomic_store(&g_retval, false);
+    }
+  }
+
+  for (size_t i = 0; i != num_tids; ++i) {
+    if (TEMP_FAILURE_RETRY(sem_wait(&g_sem)) != 0) {
+      atomic_store(&g_retval, false);
+      break;
+    }
+  }
+
+  sigaction(BIONIC_SIGNAL_RUN_ON_ALL_THREADS, &oldact, 0);
+  sem_destroy(&g_sem);
+  return atomic_load(&g_retval);
 }
