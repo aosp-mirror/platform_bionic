@@ -16,6 +16,24 @@
       "message": "Hmm, I wonder why I can\u0027t submit this. Maybe it\u0027s because Steve started a presubmit on his followup change? I\u0027ll try setting Presubmit-Ready on this change and see if that makes the submit button appear.",
       "revId": "5d3aa86cd1fe2e8b1920003b14b9a0c91153b111",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98907869_bc18b2ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1120458
+      },
+      "writtenOn": "2020-10-09T01:14:57Z",
+      "side": 1,
+      "message": "No, it is because it needs NDK-API-Review (see left-hand column labels). Remove your PR+1 if you can, since it will invalidate the existing PV+1 (I believe)",
+      "parentUuid": "7e8c878d_171ee32b",
+      "revId": "5d3aa86cd1fe2e8b1920003b14b9a0c91153b111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
