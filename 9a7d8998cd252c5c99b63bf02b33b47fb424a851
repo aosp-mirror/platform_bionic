@@ -69,6 +69,24 @@
       "parentUuid": "dd8e5364_a1da5c04",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b99e03f7_8340b941",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-09T16:56:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "171ccd8b_290b94ed",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

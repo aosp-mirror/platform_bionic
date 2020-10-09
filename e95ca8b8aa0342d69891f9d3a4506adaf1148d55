@@ -22,6 +22,30 @@
       },
       "revId": "e95ca8b8aa0342d69891f9d3a4506adaf1148d55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a4fe657_06b251da",
+        "filename": "libc/bionic/sys_thread_properties.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-09T16:56:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8386f4cb_a47043b8",
+      "range": {
+        "startLine": 113,
+        "startChar": 42,
+        "endLine": 113,
+        "endChar": 46
+      },
+      "revId": "e95ca8b8aa0342d69891f9d3a4506adaf1148d55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
