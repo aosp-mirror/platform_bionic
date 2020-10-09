@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "d0f74ad5_deb42c96",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "stick this in pthread_internal.cpp instead? (and expose this rather than the data.) ... seems like we should probably use this to fix other stuff like setuid()...",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c45c11e6_804c102a",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -32,10 +33,10 @@
       "message": "Seems like a good idea. I\u0027ll do that.",
       "parentUuid": "d0f74ad5_deb42c96",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "710f59d6_88424f20",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -50,10 +51,10 @@
       "message": "Done",
       "parentUuid": "c45c11e6_804c102a",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "80b3f308_e76c4c18",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -67,10 +68,10 @@
       "side": 1,
       "message": "do you want an ErrnoRestorer in here too?",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "761cc787_870a207a",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -84,10 +85,10 @@
       "side": 1,
       "message": "I like this approach very much - it\u0027s clearly correct synchronization-wise.",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "ed843f22_0c25508c",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -102,10 +103,10 @@
       "message": "Do we need to preserve errno here? By the time we\u0027re inside this function android_mallopt is already going to return true so the value of errno shouldn\u0027t matter I think.",
       "parentUuid": "80b3f308_e76c4c18",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "daaa7b07_c28ff2c1",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -120,10 +121,10 @@
       "message": "just seems weird for this function to potentially stomp on errno (even on success for the EINTR case).",
       "parentUuid": "ed843f22_0c25508c",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "4e8dd6eb_43082689",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -138,10 +139,10 @@
       "message": "I don\u0027t know if I\u0027d call that weird. I always kind of assume that errno may be clobbered by any function whose errno-clobbering behavior is not documented, so I would save and restore errno in the caller if necessary. We could certainly use ErrnoRestorer in the signal handler though.",
       "parentUuid": "daaa7b07_c28ff2c1",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "4276b88b_307f04b6",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -156,10 +157,28 @@
       "message": "yeah, it\u0027s strictly undefined but it\u0027s also annoying when it happens (and most people don\u0027t realize that POSIX actually says this is undefined).\n\ni\u0027m trying to imagine this in other cases (like setuid) but they too seem like things you\u0027d only do effectively \"at startup\" anyway, so unless we come up with more common uses i think this is probably fine.",
       "parentUuid": "4e8dd6eb_43082689",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b24aeb3d_68799cb4",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "761cc787_870a207a",
+      "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "a62dda3a_01d411eb",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -173,10 +192,10 @@
       "side": 1,
       "message": "Maybe add a brief comment that these locks must be taken in this specific order to avoid inversion?",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fabbf103_d33bc5da",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -191,10 +210,10 @@
       "message": "Will do.",
       "parentUuid": "a62dda3a_01d411eb",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "9d0e2aea_a0de45fc",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -209,10 +228,10 @@
       "message": "Done",
       "parentUuid": "fabbf103_d33bc5da",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "3059b6e2_47974550",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -226,10 +245,10 @@
       "side": 1,
       "message": "Don\u0027t you want to run g_func on the current thread, too?",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "a93f4b67_e1948f2a",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -244,10 +263,10 @@
       "message": "The function is called on the current thread on line 52.",
       "parentUuid": "3059b6e2_47974550",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "3f9ec5b4_dc0afe53",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -262,10 +281,10 @@
       "message": "Can\u0027t believe that I missed it.",
       "parentUuid": "a93f4b67_e1948f2a",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "5579e850_d3ebf465",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -280,10 +299,10 @@
       "message": "it is a bit weird though. if we\u0027re sure it\u0027s a good idea, we should probably comment it more clearly. (especially because i suspect any future callers might change to the more obvious behavior.)",
       "parentUuid": "3f9ec5b4_dc0afe53",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b752af6f_694a29cc",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -298,10 +317,10 @@
       "message": "Although it seems like we could call the function on the current thread in the same way as on the other threads, to me it seemed like a roundabout way of calling the function that could make the code harder to understand. (For example, with a direct call it is \"obvious\" that there is no deadlock situation possible by having the thread post a semaphore to itself.) I left a comment to explain why we are skipping the thread here.",
       "parentUuid": "5579e850_d3ebf465",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "412cccf9_4ac2ea38",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -316,10 +335,10 @@
       "message": "ack",
       "parentUuid": "b752af6f_694a29cc",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "3b0c4e6f_7199b4ec",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -333,10 +352,10 @@
       "side": 1,
       "message": "What happens if a thread is killed while running our signal handler, but before sem_post? I presume tgkill will succeed, but then the current thread will wait on the semaphore forever. It\u0027s a fringe case, of course, so maybe it does not matter.",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "20f4aa59_c762dc3c",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -351,10 +370,10 @@
       "message": "I think we could set sa_mask on our own signal handler to block all signals until the signal handler returns. It wouldn\u0027t do anything for unblockable signals like SIGKILL but those would tend to bring down the entire process anyway so the behavior wouldn\u0027t matter.",
       "parentUuid": "3b0c4e6f_7199b4ec",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "69450a7d_2d427a11",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -369,10 +388,10 @@
       "message": "Done",
       "parentUuid": "20f4aa59_c762dc3c",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "4ad09b04_a287b223",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -386,10 +405,10 @@
       "side": 1,
       "message": "i think you need to be sure you\u0027re only checking errno in the case where sem_wait() returned -1... wouldn\u0027t `while (TEMP_FAILURE_RETRY(sem_wait(...)) \u003e 0) {` be clearer and more correct?",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b84200e3_02613b3b",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -404,10 +423,10 @@
       "message": "I think this implementation is correct because POSIX specifies that sem_wait can only return 0 or -1, and that\u0027s what our implementation does as well. But it seems fine to use TEMP_FAILURE_RETRY here",
       "parentUuid": "4ad09b04_a287b223",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "1373fdf2_2443b38c",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -422,10 +441,10 @@
       "message": "oh, sorry, i thought sem_wait() returned a count but you\u0027re correct.\n\nbut, yeah, TEMP_FAILURE_RETRY is more idiomatic anyway.",
       "parentUuid": "b84200e3_02613b3b",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "151d6faf_6c753d0f",
         "filename": "libc/bionic/memory_mitigation_state.cpp",
@@ -440,8 +459,7 @@
       "message": "Done",
       "parentUuid": "1373fdf2_2443b38c",
       "revId": "d502f86487540a37e3115a32e09a9490fd9aa56b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

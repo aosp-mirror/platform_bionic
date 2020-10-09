@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "1c0373ee_cdc48843",
         "filename": "/COMMIT_MSG",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "do we actually need to support this? who needs this, and when? can we insist that it\u0027s done while single-threaded instead?",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "d73aa1b0_eb412a28",
         "filename": "/COMMIT_MSG",
@@ -32,10 +33,10 @@
       "message": "I\u0027m not entirely sure about disabling tagging process-wide, but we\u0027d need the exact same mechanism for an app to switch itself from async to sync.",
       "parentUuid": "1c0373ee_cdc48843",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "8e827d5e_44bb23e5",
         "filename": "/COMMIT_MSG",
@@ -50,10 +51,10 @@
       "message": "The idea is that an app may call this after establishing that it needs to change the MTE setting (for example, the app may have its own \"experiments\" mechanism for controlling memory tagging in the field). Typically at the point at which an app\u0027s native code runs there are already multiple threads running, so we need to change this setting in all of them.",
       "parentUuid": "1c0373ee_cdc48843",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "90a0c3a6_f7e6382a",
         "filename": "/COMMIT_MSG",
@@ -68,10 +69,10 @@
       "message": "\u003e an app to switch itself from async to sync\n\nbecause you\u0027re thinking that wouldn\u0027t be a one-off decision in the manifest, that would be something they\u0027d do based on their number of crashes?\n\nmaybe _that_ should be what goes in the manifest: \"switch me to sync never/always/if-crashy\"?\n\ni\u0027m not sure how to manage pcc\u0027s \"i\u0027m running an experiment\" though.",
       "parentUuid": "8e827d5e_44bb23e5",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "5bf5d9f6_4f393e73",
         "filename": "/COMMIT_MSG",
@@ -86,10 +87,10 @@
       "message": "\u003e maybe _that_ should be what goes in the manifest: \"switch me to sync never/always/if-crashy\"?\n\u003e \n\u003e i\u0027m not sure how to manage pcc\u0027s \"i\u0027m running an experiment\" though.\n\nRight, we thought about having this only be a manifest flag but concluded that it wouldn\u0027t provide enough flexibility. For example, \"if-crashy\" as decided by whom? If the app handles the crashes itself then whichever component decides that wouldn\u0027t necessarily see the crashes.",
       "parentUuid": "90a0c3a6_f7e6382a",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "7d84730b_b102a847",
         "filename": "/COMMIT_MSG",
@@ -104,10 +105,10 @@
       "message": "\u003e If the app handles the crashes itself then whichever component decides that wouldn\u0027t necessarily see the crashes\n\nif the app handles crashes itself, i think that\u0027s a bug they should fix. they\u0027re going to have so many other issues with getting all the other bits of data anyway, that\u0027s a clear \"don\u0027t do that then\".\n\n(though obviously jmgao\u0027s API doesn\u0027t exist _yet_, so we might need to fall back to some kind of \"assembly required\" solution if that doesn\u0027t make it for S.)",
       "parentUuid": "5bf5d9f6_4f393e73",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "f4065cc9_b6b58464",
         "filename": "/COMMIT_MSG",
@@ -122,10 +123,28 @@
       "message": "Exactly. I imagine logic like this can go into Crashlytics and any other crash reporting libraries. There is no way we can make the manifest expressive enough.\n\nTaken to the extreme, an app developer may notice a problem correlates with users doing a particular action in the app, and only enable sync when that is about to happen, perhaps with some sampling on top.",
       "parentUuid": "5bf5d9f6_4f393e73",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0c4aac1_6bcf7fef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f4065cc9_b6b58464",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
       "key": {
         "uuid": "6f935ccd_e7ff83ba",
         "filename": "/PATCHSET_LEVEL",
@@ -139,10 +158,10 @@
       "side": 1,
       "message": "A few self-review comments while reading my code again.",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "6ba6af5f_156197e3",
         "filename": "/PATCHSET_LEVEL",
@@ -156,10 +175,10 @@
       "side": 1,
       "message": "\u003e Patch Set 1:\n\u003e \n\u003e Why is this a new API rather than a new android_mallopt option?\n\nThe main reason is that I think {,android_}mallopt should only affect the heap, whereas this API also sets TCF0 which will impact MTE checking for the stack and globals.\n\nIf this is going to be added to one of the mallopt functions, then it should be added to mallopt and not android_mallopt, because it is intended to be a public API. (That would require a carveout of one of the M_ constants for Bionic because they are currently all owned by Scudo, but we can probably deal with that.)",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "1ab6719c_540b280a",
         "filename": "/PATCHSET_LEVEL",
@@ -174,10 +193,10 @@
       "message": "i think we need to make android_mallopt() public for S anyway, for our \"give apps more tuning knobs\" feature.\n\nwe can always give android_mallopt() a more general name (either \"slightly more general\" to make it clear that it\u0027s all memory, not just the heap, or \"fully general\" and have any kind of knob be collected there), but i\u0027d definitely prefer to avoid having a bunch of single-use API for tuning knobs.",
       "parentUuid": "6ba6af5f_156197e3",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "f63c4fd9_0aebe03d",
         "filename": "/PATCHSET_LEVEL",
@@ -192,10 +211,28 @@
       "message": "I moved this to android_mallopt() for now.",
       "parentUuid": "1ab6719c_540b280a",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3af47c24_a5158661",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f63c4fd9_0aebe03d",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "3dbf8e1a_fab67123",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -209,10 +246,10 @@
       "side": 1,
       "message": "we have a thread list (and no realistic hope of getting rid of it any time soon), which might be better?",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c49a9c04_8e6805ab",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -227,10 +264,28 @@
       "message": "This now uses the thread list.",
       "parentUuid": "3dbf8e1a_fab67123",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ee031d4_69df37bf",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c49a9c04_8e6805ab",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "667b2b8d_69acd3bc",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -244,10 +299,10 @@
       "side": 1,
       "message": "I\u0027ll need to read g_retval before this unlock to avoid a race with another thread calling this function.",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "d3c2c6d3_7b8b2053",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -262,10 +317,28 @@
       "message": "No need to do this now that the locking is moved into RAII objects.",
       "parentUuid": "667b2b8d_69acd3bc",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c8c5c3b_0dd7da70",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3c2c6d3_7b8b2053",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "5eb84986_c116c733",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -279,10 +352,10 @@
       "side": 1,
       "message": "I don\u0027t think this is sufficient.\nA thread may have started as a child of a not yet processed thread, inheriting the old TCF value, but have not reached the place in pthread_create that reads g_thread_tcf yet.\n\nI don\u0027t think synchronization on the thread list lock is sufficient, either.\n\nGood news is this can only go one thread deep (assuming all threads are created with pthread_create). I think running run_on_all_threads(sync_thread_tcf) one more time before clearing g_thread_tcf_pending would work.\n\nNote __rt_sigprocmask in __pthread_start. Will it cause us to miss the signal?",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "678cb85a_61d765bb",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -297,10 +370,10 @@
       "message": "You\u0027re right, that seems like it could happen. Your proposed solution seems to be correct, despite my disinclination to accept \"do the same thing twice\" as being the correct solution to a race condition bug. I will spend some more time trying to convince myself that it is in fact correct.\n\n\u003e Note __rt_sigprocmask in __pthread_start. Will it cause us to miss the signal?\n\nI don\u0027t think so. If a signal is sent while it is blocked, it will be delivered once it is unblocked again (i.e. at the point where __rt_sigprocmask is called).",
       "parentUuid": "5eb84986_c116c733",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "a426e27b_e686108e",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -315,10 +388,10 @@
       "message": "this kind of thing is why bionic doesn\u0027t already have this mechanism, even though the mismatch between Linux and POSIX interpretations of things like setuid() call for it.\n\nespecially because this will be so rarely used, i\u0027d prefer not to have this API (at least not in this \"you can call it long after you have a bunch of threads\" form).",
       "parentUuid": "678cb85a_61d765bb",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fd126c8c_4dbb7015",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -333,10 +406,10 @@
       "message": "What do you think about an API for per-process switching between sync and async MTE? It will require the same basic mechanism of issuing the prctl on each thread, but we expect that it will be used more often by apps (e.g. to help isolate memory errors).\n\nThe advantage of having such an API is that if an MTE fault is detected in either sync or async mode, the application will crash either way (but with more information in the sync mode case) so it maybe doesn\u0027t need to be 100% reliable in the sense that in some edge cases it will miss a thread. If we can accept that the API doesn\u0027t have to be reliable we can document that fact and make the implementation simpler by not having to worry about the edge cases.",
       "parentUuid": "a426e27b_e686108e",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "1fb11d2c_937c838a",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -351,10 +424,10 @@
       "message": "like i said the other day, i\u0027d try to write this in terms of the global thread lock first. i suspect that helps avoid many of the issues.\n\n(but, yes, the fact that \"failure doesn\u0027t really matter\" here is a potential positive. though i do assume that once this \"run on all threads\" mechanism exists someone will try to use it for a case that does matter. such as setuid(). though you could still argue that that would be an improvement over today\u0027s implementation, and we should have actually made that abort in multi-threaded contexts!)",
       "parentUuid": "fd126c8c_4dbb7015",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fd2b2101_c073cff6",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -369,10 +442,10 @@
       "message": "Global thread lock is acquired in the parent thread after forking the child, this does not help us a lot. If we could introduce an r/w lock before clone call (such that concurrent thread creation does not block, but run_on_all_thread can temporarily block it) that would be a different story. Seeing how many system calls we already do per thread creation event, this should not hurt performance.",
       "parentUuid": "1fb11d2c_937c838a",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "fb5bd4bb_0be74e61",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -387,10 +460,28 @@
       "message": "Implemented with a lock around thread creation.",
       "parentUuid": "fd2b2101_c073cff6",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e217a92c_296a2ef5",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb5bd4bb_0be74e61",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "985ca01f_32665e59",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -404,10 +495,10 @@
       "side": 1,
       "message": "I think this should be done unconditionally so that we don\u0027t zero init cached secondary allocations when MTE is enabled.",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "de4143b2_47a458ac",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -422,10 +513,10 @@
       "message": "Done",
       "parentUuid": "985ca01f_32665e59",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": false
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c9de161a_5a3ae79f",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -439,10 +530,10 @@
       "side": 1,
       "message": "This might cause build failures for now and will need to be protected with ANDROID_EXPERIMENTAL_MTE.",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "cba34869_06359a04",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -457,10 +548,10 @@
       "message": "I am getting it on ToT builds of cuttlefish.\n\nAssuming L140 will still give the desired behavior on those devices though?",
       "parentUuid": "c9de161a_5a3ae79f",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "00e07bcc_96926568",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -475,10 +566,10 @@
       "message": "Yes, you can just remove/disable the code on lines 144-146 and it should work as expected on non-MTE hardware.",
       "parentUuid": "cba34869_06359a04",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "bfd05f6e_30ac233b",
         "filename": "libc/bionic/android_mem_init.cpp",
@@ -493,10 +584,28 @@
       "message": "Code is now protected with ANDROID_EXPERIMENTAL_MTE.",
       "parentUuid": "00e07bcc_96926568",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa78d5a3_187c0a75",
+        "filename": "libc/bionic/android_mem_init.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfd05f6e_30ac233b",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "a50df221_d797c827",
         "filename": "libc/include/android/mem_init.h",
@@ -510,10 +619,10 @@
       "side": 1,
       "message": "Sorry that it\u0027s taken me a few days to get back to you on this - but I\u0027m not convinced this should affect MTE, for a couple of reasons:\n 1. AFAICT, the fact that this disables MTE is the reason that stops us from being able to turn heap initialization back on afterwards. Given that the thread-only disable_mem_init() function only sets a thread-local variable, I assumed it would be a good use case where a developer would have a hot malloc that they don\u0027t want to eat the cost of MemInit on, and they could just flip it off/on again cheaply.\n 2. At least to me \"disabling heap memory initialization\" seems unrelated to MTE, and I\u0027d be surprised as a user for this side effect to happen. But, this could be solved with a slight rename to \"android_disable_heap_mitigations()\" or something.",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "958ea1a2_bad86c37",
         "filename": "libc/include/android/mem_init.h",
@@ -528,10 +637,10 @@
       "message": "1. Yes, the per-thread API permits toggling. There\u0027s no need to permit it for the per-process API since the API is expected to only be called once (e.g. after the app determines that some criteria for disabling it are satisfied) and not typically around a region of code since that would impact the other threads. Per-thread and per-process satisfy different use cases (wanting to disable only a few mallocs vs all mallocs) so we will need both.\n\n2. Renaming it seems fine. Maybe it shouldn\u0027t mention heap because the process-wide setting of TCF0 to NONE will impact not only heap but stack and globals.",
       "parentUuid": "a50df221_d797c827",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "57755733_f809550e",
         "filename": "libc/include/android/mem_init.h",
@@ -546,10 +655,10 @@
       "message": "Ah - if we\u0027re supporting on/off for the per-thread that sounds good to me.\n\nWhat about \"android_disable_sanitization()\"?",
       "parentUuid": "958ea1a2_bad86c37",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "bdfe0644_6e37dffb",
         "filename": "libc/include/android/mem_init.h",
@@ -564,10 +673,10 @@
       "message": "Not sure about that name, since I don\u0027t think we\u0027re going to advertise any of these features as a \"sanitizer\". \"android_disable_memory_mitigations()\" could work maybe.",
       "parentUuid": "57755733_f809550e",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "8c27e6e7_f3ff25e3",
         "filename": "libc/include/android/mem_init.h",
@@ -582,8 +691,25 @@
       "message": "The API is now android_mallopt(M_DISABLE_MEMORY_MITIDATIONS)\" and the source file to memory_mitigation_state.cpp since this file is expected to be dealing with sync/async state later.",
       "parentUuid": "bdfe0644_6e37dffb",
       "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a6631b2_0d149f49",
+        "filename": "libc/include/android/mem_init.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:24:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c27e6e7_f3ff25e3",
+      "revId": "f8548c547d887f15f053f9113c011e1f7e1ffaee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
