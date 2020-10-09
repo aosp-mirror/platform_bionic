@@ -51,6 +51,24 @@
       "parentUuid": "69ac00a3_9324d79c",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "171ccd8b_290b94ed",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-09T10:28:42Z",
+      "side": 1,
+      "message": "Seems OK, I think. I\u0027m wondering if there\u0027s any guarantee that the parent will be stopped at a particular point. Probably not, I think, but the DTLS state shouldn\u0027t change anywhere from the fork system call to the wait system call, so it should be fine.",
+      "parentUuid": "dd8e5364_a1da5c04",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
