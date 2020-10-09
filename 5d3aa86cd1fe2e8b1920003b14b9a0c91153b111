@@ -34,6 +34,23 @@
       "parentUuid": "7e8c878d_171ee32b",
       "revId": "5d3aa86cd1fe2e8b1920003b14b9a0c91153b111",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdae0b5a_43c61f60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-10-09T01:18:25Z",
+      "side": 1,
+      "message": "I see, thanks.\n\nLooks like the presubmit run started already. I\u0027ll let it run to completion.",
+      "revId": "5d3aa86cd1fe2e8b1920003b14b9a0c91153b111",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
