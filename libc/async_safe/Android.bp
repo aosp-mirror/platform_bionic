@@ -22,8 +22,8 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
+        "com.android.art",
         "com.android.art.debug",
-        "com.android.art.release",
         "com.android.media",
         "com.android.media.swcodec",
     ],
