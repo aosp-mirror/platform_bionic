@@ -62,6 +62,7 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
         // For android_filesystem_config.h.
         "system/core/libcutils/include",
     ],
@@ -1077,6 +1078,7 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
+        "bionic/memory_mitigation_state.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
@@ -1789,6 +1791,7 @@ cc_library_headers {
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
+        "//system/core/libcutils:__subpackages__",
         "//system/core/libunwindstack:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
         "//tools/security/sanitizer-status:__subpackages__",
@@ -1804,11 +1807,10 @@ cc_library_headers {
     stl: "none",
     sdk_version: "current",
 
+    min_sdk_version: "29",
     apex_available: [
         "//apex_available:platform",
-        "com.android.runtime",
-        "com.android.art.release", // from libdexfile_external
-        "com.android.art.debug", // from libdexfile_external
+        "//apex_available:anyapex",
     ],
 }
 
