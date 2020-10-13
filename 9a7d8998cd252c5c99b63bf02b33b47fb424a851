@@ -105,6 +105,24 @@
       "parentUuid": "b99e03f7_8340b941",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e0e06de_a72c3baf",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-13T03:18:53Z",
+      "side": 1,
+      "message": "Could the child attach to and inspect the parent before the parent runs the wait syscall on line 100?",
+      "parentUuid": "91170892_13cbd2c1",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
