@@ -123,6 +123,24 @@
       "parentUuid": "91170892_13cbd2c1",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75c2b75a_cd3ae2a5",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-13T03:59:43Z",
+      "side": 1,
+      "message": "Yeah, it could happen. But that\u0027s fine, I think, because the child does not need any state changed by the parent after the fork. \n\nIn other words, as long as the parent is still alive when the child does the ptrace, it should be fine.",
+      "parentUuid": "1e0e06de_a72c3baf",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
