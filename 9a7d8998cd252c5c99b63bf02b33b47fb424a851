@@ -141,6 +141,24 @@
       "parentUuid": "1e0e06de_a72c3baf",
       "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b66961c_cdd1e154",
+        "filename": "tests/libs/tls_properties_helper.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1631819
+      },
+      "writtenOn": "2020-10-14T17:51:33Z",
+      "side": 1,
+      "message": "Hey @rprichard, any other concern? :-) \n(It would be great to submit this before D89251) Thanks!",
+      "parentUuid": "75c2b75a_cd3ae2a5",
+      "revId": "9a7d8998cd252c5c99b63bf02b33b47fb424a851",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
