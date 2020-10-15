@@ -50,6 +50,7 @@ enum uverbs_methods_device {
   UVERBS_METHOD_INFO_HANDLES,
   UVERBS_METHOD_QUERY_PORT,
   UVERBS_METHOD_GET_CONTEXT,
+  UVERBS_METHOD_QUERY_CONTEXT,
 };
 enum uverbs_attrs_invoke_write_cmd_attr_ids {
   UVERBS_ATTR_CORE_IN,
@@ -63,6 +64,10 @@ enum uverbs_attrs_query_port_cmd_attr_ids {
 enum uverbs_attrs_get_context_attr_ids {
   UVERBS_ATTR_GET_CONTEXT_NUM_COMP_VECTORS,
   UVERBS_ATTR_GET_CONTEXT_CORE_SUPPORT,
+};
+enum uverbs_attrs_query_context_attr_ids {
+  UVERBS_ATTR_QUERY_CONTEXT_NUM_COMP_VECTORS,
+  UVERBS_ATTR_QUERY_CONTEXT_CORE_SUPPORT,
 };
 enum uverbs_attrs_create_cq_cmd_attr_ids {
   UVERBS_ATTR_CREATE_CQ_HANDLE,
@@ -198,6 +203,7 @@ enum uverbs_methods_mr {
   UVERBS_METHOD_DM_MR_REG,
   UVERBS_METHOD_MR_DESTROY,
   UVERBS_METHOD_ADVISE_MR,
+  UVERBS_METHOD_QUERY_MR,
 };
 enum uverbs_attrs_mr_destroy_ids {
   UVERBS_ATTR_DESTROY_MR_HANDLE,
@@ -207,6 +213,13 @@ enum uverbs_attrs_advise_mr_cmd_attr_ids {
   UVERBS_ATTR_ADVISE_MR_ADVICE,
   UVERBS_ATTR_ADVISE_MR_FLAGS,
   UVERBS_ATTR_ADVISE_MR_SGE_LIST,
+};
+enum uverbs_attrs_query_mr_cmd_attr_ids {
+  UVERBS_ATTR_QUERY_MR_HANDLE,
+  UVERBS_ATTR_QUERY_MR_RESP_LKEY,
+  UVERBS_ATTR_QUERY_MR_RESP_RKEY,
+  UVERBS_ATTR_QUERY_MR_RESP_LENGTH,
+  UVERBS_ATTR_QUERY_MR_RESP_IOVA,
 };
 enum uverbs_attrs_create_counters_cmd_attr_ids {
   UVERBS_ATTR_CREATE_COUNTERS_HANDLE,
