@@ -39,6 +39,11 @@
 #include <sys/uio.h>
 #include <sys/user.h>
 
+#if defined(__i386__)
+#include <asm/ldt.h>
+#endif
+
+#include "private/ErrnoRestorer.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"
@@ -72,21 +77,30 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(pid_t tid)
 
   // Find the thread-pointer register for the given thread.
   void** tp_reg = nullptr;
-
-#if defined(__x86_64__) || defined(__i386__)
+#if defined(__x86_64__)
+  {
+    ErrnoRestorer errno_restorer;
+    errno = 0;
+    uintptr_t fs_base = ptrace(PTRACE_PEEKUSER, tid, offsetof(user_regs_struct, fs_base), nullptr);
+    if (errno == 0) {
+      tp_reg = reinterpret_cast<void**>(fs_base);
+    }
+  }
+#elif defined(__i386__)
   struct user_regs_struct regs;
   struct iovec pt_iov = {
       .iov_base = &regs,
       .iov_len = sizeof(regs),
   };
+
   if (ptrace(PTRACE_GETREGSET, tid, NT_PRSTATUS, &pt_iov) == 0) {
-#if defined(__x86_64__)
-    tp_reg = reinterpret_cast<void**>(regs.fs);
-#elif defined(__i386__)
-    tp_reg = reinterpret_cast<void**>(regs.xgs);
-#endif
+    struct user_desc u_info;
+    u_info.entry_number = regs.xgs >> 3;
+    if (ptrace(PTRACE_GET_THREAD_AREA, tid, u_info.entry_number, &u_info) == 0) {
+      tp_reg = reinterpret_cast<void**>(u_info.base_addr);
+    }
   }
-#elif defined(__aarch64__) || defined(__arm__)
+#elif defined(__aarch64__)
   uint64_t reg;
   struct iovec pt_iov {
     .iov_base = &reg, .iov_len = sizeof(reg),
@@ -94,6 +108,11 @@ static inline __always_inline bionic_tcb* __get_bionic_tcb_for_thread(pid_t tid)
 
   if (ptrace(PTRACE_GETREGSET, tid, NT_ARM_TLS, &pt_iov) == 0) {
     tp_reg = reinterpret_cast<void**>(reg);
+  }
+#elif defined(__arm__)
+  if (ptrace(PTRACE_GET_THREAD_AREA, tid, nullptr, &tp_reg) != 0) {
+    // Reset the tp_reg if ptrace was unsuccessful.
+    tp_reg = nullptr;
   }
 #endif
 

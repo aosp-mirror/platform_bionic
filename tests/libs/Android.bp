@@ -80,7 +80,7 @@ cc_test_library {
 }
 
 cc_test {
-   name: "thread_exit_cb_helper.cpp",
+   name: "thread_exit_cb_helper",
    defaults: ["bionic_testlib_defaults"],
    srcs: ["thread_exit_cb_helper.cpp"],
    cflags: ["-fno-emulated-tls"],
