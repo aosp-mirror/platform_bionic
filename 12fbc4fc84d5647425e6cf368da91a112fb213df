@@ -68,6 +68,30 @@
       },
       "revId": "12fbc4fc84d5647425e6cf368da91a112fb213df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e188210_f4f4df9c",
+        "filename": "libc/bionic/atexit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-18T19:27:11Z",
+      "side": 1,
+      "message": "Actually, I realized that is using the right value, but names of the functions and variables fooled me. I would suggest that start be start_index and len be num_indices. Then rename the round functions to something like round_index_XXX so it\u0027s clear that these are operating on indices and not on byte values.",
+      "parentUuid": "9151df00_27a76c8c",
+      "range": {
+        "startLine": 163,
+        "startChar": 53,
+        "endLine": 163,
+        "endChar": 58
+      },
+      "revId": "12fbc4fc84d5647425e6cf368da91a112fb213df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
