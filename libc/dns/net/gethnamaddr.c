@@ -90,6 +90,8 @@
 
 #include "hostent.h"
 
+#include "private/bionic_defs.h"
+
 #define maybe_ok(res, nm, ok) (((res)->options & RES_NOCHECKNAME) != 0U || \
                                (ok)(nm) != 0)
 #define maybe_hnok(res, hn) maybe_ok((res), (hn), res_hnok)
@@ -1533,6 +1535,7 @@ _yp_gethtbyname(void *rv, void *cb_data, va_list ap)
  * Non-reentrant versions.
  */
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 struct hostent *
 gethostbyname(const char *name)
 {
@@ -1590,6 +1593,7 @@ android_gethostbynamefornetcontext(const char *name, int af,
 	return hp;
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 struct hostent *
 gethostbyaddr(const void *addr, socklen_t len, int af)
 {
