@@ -36,12 +36,12 @@
 
 #include <async_safe/log.h>
 
-static void* g_libicuuc_handle = nullptr;
+static void* g_libicu_handle = nullptr;
 
 static bool __find_icu() {
-  g_libicuuc_handle = dlopen("libandroidicu.so", RTLD_LOCAL);
-  if (g_libicuuc_handle == nullptr) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libandroidicu.so: %s",
+  g_libicu_handle = dlopen("libicu.so", RTLD_LOCAL);
+  if (g_libicu_handle == nullptr) {
+    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't open libicu.so: %s",
                           dlerror());
     return false;
   }
@@ -53,14 +53,9 @@ void* __find_icu_symbol(const char* symbol_name) {
   static bool found_icu = __find_icu();
   if (!found_icu) return nullptr;
 
-  char versioned_symbol_name[strlen(symbol_name) + strlen("_android") + 1];
-  snprintf(versioned_symbol_name, sizeof(versioned_symbol_name), "%s_android",
-           symbol_name);
-
-  void* symbol = dlsym(g_libicuuc_handle, versioned_symbol_name);
+  void* symbol = dlsym(g_libicu_handle, symbol_name);
   if (symbol == nullptr) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find %s",
-                          versioned_symbol_name);
+    async_safe_format_log(ANDROID_LOG_ERROR, "bionic-icu", "couldn't find %s", symbol_name);
   }
   return symbol;
 }
