@@ -22,6 +22,30 @@
       },
       "revId": "5927e2ea2212f30be617e90bcd7a2e110269df7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0de512a2_38a4c012",
+        "filename": "libc/bionic/atexit.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-20T08:58:11Z",
+      "side": 1,
+      "message": "I think it probably doesn\u0027t make a difference, but I switched it to size_.\n\nWith size_ instead of capacity_, the first set_writable call will split the VMA, then we may sometimes advise away one or more pages at the end of the first VMA, then set_writable should join the two VMAs again.",
+      "parentUuid": "a3583085_2e968251",
+      "range": {
+        "startLine": 130,
+        "startChar": 24,
+        "endLine": 130,
+        "endChar": 33
+      },
+      "revId": "5927e2ea2212f30be617e90bcd7a2e110269df7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c4b9bfc_37cc57a7",
+        "filename": "libc/bionic/atexit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-20T08:58:11Z",
+      "side": 1,
+      "message": "It\u0027s a C++ member function defined in the class body, so it should be implicitly inline. I was sure this rule applied to non-static member functions, but I wasn\u0027t sure whether static member functions were special. I couldn\u0027t think of a reason why they should be, but I looked it up anyway:\n\nhttps://eel.is/c++draft/class.mem#general-4\nhttps://eel.is/c++draft/class.mem#class.mfct-1",
+      "parentUuid": "6e187206_bafb183b",
+      "range": {
+        "startLine": 76,
+        "startChar": 16,
+        "endLine": 76,
+        "endChar": 40
+      },
+      "revId": "12fbc4fc84d5647425e6cf368da91a112fb213df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f8749e3f_29ade20f",
@@ -37,6 +61,30 @@
       "writtenOn": "2020-10-17T01:44:57Z",
       "side": 1,
       "message": "I know this isn\u0027t code you are working on, but I worry this doesn\u0027t handle overflow the best way. It depends on the capacity overflows on multiplication to find and then abort.\n\nI think it would be better to do a __builtin_mul_overflow and since this is only used in one place put it there. Especially, since this could cause an abort, while all of the other failures in expand_capacity result in an error and a log message, but the process doesn\u0027t end. I don\u0027t know which is better though.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 29
+      },
+      "revId": "12fbc4fc84d5647425e6cf368da91a112fb213df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3974c7c3_f693aae8",
+        "filename": "libc/bionic/atexit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-20T08:58:11Z",
+      "side": 1,
+      "message": "I replaced the overflow handling with __builtin_mul_overflow. I would assume the pathway is unreachable on 64-bit targets.\n\nI kept the separate next_capacity function, to try and keep the code working even if sizeof(AtexitEntry) were larger than a page. That can\u0027t really happen, so maybe the code could static assert that instead.\n\nAs-is, if AtexitEntry were larger than a page, then it would be important to recompute the capacity-in-mapped-bytes rather than reuse the intermediate num_bytes value inside next_capacity. e.g. If AtexitEntry were 6KiB, then the first expansion would be 8KiB for 1 entry, then the second expansion would calculate an intermediate 16KiB for 2 entries, but the true capacity-in-mapped-bytes for 2 entries would only be 12KiB.",
+      "parentUuid": "f8749e3f_29ade20f",
       "range": {
         "startLine": 86,
         "startChar": 0,
@@ -84,6 +132,30 @@
       "side": 1,
       "message": "Actually, I realized that is using the right value, but names of the functions and variables fooled me. I would suggest that start be start_index and len be num_indices. Then rename the round functions to something like round_index_XXX so it\u0027s clear that these are operating on indices and not on byte values.",
       "parentUuid": "9151df00_27a76c8c",
+      "range": {
+        "startLine": 163,
+        "startChar": 53,
+        "endLine": 163,
+        "endChar": 58
+      },
+      "revId": "12fbc4fc84d5647425e6cf368da91a112fb213df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c996997f_5380f55b",
+        "filename": "libc/bionic/atexit.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-20T08:58:11Z",
+      "side": 1,
+      "message": "I switched the parameter names to start_idx and num_entries. Several other parameters already use an \"idx\" abbreviation for \"index\".\n\nI switched the function names to page_start_of_index and page_end_of_index to communicate that the functions take an index and return a page start/end offset value. The functions are static and return size_t (rather than a pointer or uintptr_t) so hopefully that\u0027s sufficient to make it clear that the return values don\u0027t refer to the specific AtexitArray instance\u0027s buffer.",
+      "parentUuid": "3e188210_f4f4df9c",
       "range": {
         "startLine": 163,
         "startChar": 53,
