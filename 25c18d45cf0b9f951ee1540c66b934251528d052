@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6db56d6_8dfecd7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-20T22:52:12Z",
+      "side": 1,
+      "message": "Try again, I booted this on a blueline, and ran bionic unit tests. Since everything booted and there are no failures, I\u0027m going to assume this was a transient failure.",
+      "revId": "25c18d45cf0b9f951ee1540c66b934251528d052",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
