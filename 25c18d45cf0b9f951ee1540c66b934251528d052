@@ -16,6 +16,23 @@
       "message": "Try again, I booted this on a blueline, and ran bionic unit tests. Since everything booted and there are no failures, I\u0027m going to assume this was a transient failure.",
       "revId": "25c18d45cf0b9f951ee1540c66b934251528d052",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50b6b941_f5089deb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2020-10-21T22:50:14Z",
+      "side": 1,
+      "message": "I tried flashing this on my blueline with master and these changes, and I see some odd things, but nothing related to this change. So let me kick this one more time, but I\u0027m not sure what might be causing a problem.",
+      "revId": "25c18d45cf0b9f951ee1540c66b934251528d052",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
