@@ -80,9 +80,8 @@ module_exports {
     },
 }
 
-prebuilt_etc {
+linker_config {
     name: "bionic-linker-config",
-    src: "linker.config.txt",
-    filename: "linker.config.txt",
+    src: "linker.config.json",
     installable: false,
 }
