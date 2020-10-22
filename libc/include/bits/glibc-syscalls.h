@@ -120,6 +120,9 @@
 #if defined(__NR_close)
   #define SYS_close __NR_close
 #endif
+#if defined(__NR_close_range)
+  #define SYS_close_range __NR_close_range
+#endif
 #if defined(__NR_connect)
   #define SYS_connect __NR_connect
 #endif
