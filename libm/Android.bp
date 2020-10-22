@@ -7,6 +7,7 @@ cc_library {
     name: "libm",
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     static_ndk_lib: true,
 

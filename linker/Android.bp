@@ -121,6 +121,7 @@ cc_defaults {
     name: "linker_all_targets",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    vendor_ramdisk_available: true,
     native_bridge_supported: true,
 }
 
@@ -332,6 +333,7 @@ cc_binary {
     compile_multilib: "both",
 
     recovery_available: true,
+    vendor_ramdisk_available: true,
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -405,6 +407,7 @@ cc_library {
     name: "ld-android",
     defaults: ["linux_bionic_supported", "linker_version_script_overlay"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
