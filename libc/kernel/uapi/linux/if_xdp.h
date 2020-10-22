@@ -63,6 +63,9 @@ struct xdp_statistics {
   __u64 rx_dropped;
   __u64 rx_invalid_descs;
   __u64 tx_invalid_descs;
+  __u64 rx_ring_full;
+  __u64 rx_fill_ring_empty_descs;
+  __u64 tx_ring_empty_descs;
 };
 struct xdp_options {
   __u32 flags;
