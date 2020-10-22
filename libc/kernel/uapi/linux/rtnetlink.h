@@ -217,6 +217,7 @@ enum {
 #define RTPROT_NTK 15
 #define RTPROT_DHCP 16
 #define RTPROT_MROUTED 17
+#define RTPROT_KEEPALIVED 18
 #define RTPROT_BABEL 42
 #define RTPROT_BGP 186
 #define RTPROT_ISIS 187
@@ -575,4 +576,5 @@ enum {
 #define RTEXT_FILTER_BRVLAN (1 << 1)
 #define RTEXT_FILTER_BRVLAN_COMPRESSED (1 << 2)
 #define RTEXT_FILTER_SKIP_STATS (1 << 3)
+#define RTEXT_FILTER_MRP (1 << 4)
 #endif

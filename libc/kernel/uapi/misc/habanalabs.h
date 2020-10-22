@@ -223,6 +223,7 @@ enum hl_device_status {
 #define HL_INFO_CLK_RATE 8
 #define HL_INFO_RESET_COUNT 9
 #define HL_INFO_TIME_SYNC 10
+#define HL_INFO_CS_COUNTERS 11
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -272,6 +273,16 @@ struct hl_info_reset_count {
 struct hl_info_time_sync {
   __u64 device_time;
   __u64 host_time;
+};
+struct hl_cs_counters {
+  __u64 out_of_mem_drop_cnt;
+  __u64 parsing_drop_cnt;
+  __u64 queue_full_drop_cnt;
+  __u64 device_in_reset_drop_cnt;
+};
+struct hl_info_cs_counters {
+  struct hl_cs_counters cs_counters;
+  struct hl_cs_counters ctx_cs_counters;
 };
 struct hl_info_args {
   __u64 return_pointer;

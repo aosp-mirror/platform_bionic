@@ -54,7 +54,9 @@ struct bkey {
 #define BCACHE_SB_VERSION_BDEV 1
 #define BCACHE_SB_VERSION_CDEV_WITH_UUID 3
 #define BCACHE_SB_VERSION_BDEV_WITH_OFFSET 4
-#define BCACHE_SB_MAX_VERSION 4
+#define BCACHE_SB_VERSION_CDEV_WITH_FEATURES 5
+#define BCACHE_SB_VERSION_BDEV_WITH_FEATURES 6
+#define BCACHE_SB_MAX_VERSION 6
 #define SB_SECTOR 8
 #define SB_OFFSET (SB_SECTOR << SECTOR_SHIFT)
 #define SB_SIZE 4096
@@ -75,7 +77,10 @@ struct cache_sb_disk {
   __u8 label[SB_LABEL_SIZE];
   __le64 flags;
   __le64 seq;
-  __le64 pad[8];
+  __le64 feature_compat;
+  __le64 feature_incompat;
+  __le64 feature_ro_compat;
+  __le64 pad[5];
   union {
     struct {
       __le64 nbuckets;
@@ -95,9 +100,9 @@ struct cache_sb_disk {
     __le16 keys;
   };
   __le64 d[SB_JOURNAL_BUCKETS];
+  __le16 bucket_size_hi;
 };
 struct cache_sb {
-  __u64 csum;
   __u64 offset;
   __u64 version;
   __u8 magic[16];
@@ -109,14 +114,16 @@ struct cache_sb {
   __u8 label[SB_LABEL_SIZE];
   __u64 flags;
   __u64 seq;
-  __u64 pad[8];
+  __u64 feature_compat;
+  __u64 feature_incompat;
+  __u64 feature_ro_compat;
   union {
     struct {
       __u64 nbuckets;
       __u16 block_size;
-      __u16 bucket_size;
       __u16 nr_in_set;
       __u16 nr_this_dev;
+      __u32 bucket_size;
     };
     struct {
       __u64 data_offset;
