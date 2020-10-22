@@ -69,13 +69,13 @@ struct virtio_mem_resp {
   } u;
 };
 struct virtio_mem_config {
-  __u64 block_size;
-  __u16 node_id;
+  __le64 block_size;
+  __le16 node_id;
   __u8 padding[6];
-  __u64 addr;
-  __u64 region_size;
-  __u64 usable_region_size;
-  __u64 plugged_size;
-  __u64 requested_size;
+  __le64 addr;
+  __le64 region_size;
+  __le64 usable_region_size;
+  __le64 plugged_size;
+  __le64 requested_size;
 };
 #endif

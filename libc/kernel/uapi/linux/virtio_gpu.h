@@ -223,10 +223,10 @@ struct virtio_gpu_resp_edid {
 };
 #define VIRTIO_GPU_EVENT_DISPLAY (1 << 0)
 struct virtio_gpu_config {
-  __u32 events_read;
-  __u32 events_clear;
-  __u32 num_scanouts;
-  __u32 num_capsets;
+  __le32 events_read;
+  __le32 events_clear;
+  __le32 num_scanouts;
+  __le32 num_capsets;
 };
 enum virtio_gpu_formats {
   VIRTIO_GPU_FORMAT_B8G8R8A8_UNORM = 1,

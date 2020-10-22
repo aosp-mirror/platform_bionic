@@ -74,11 +74,11 @@
 #define USB_DEVICE_A_HNP_SUPPORT 4
 #define USB_DEVICE_A_ALT_HNP_SUPPORT 5
 #define USB_DEVICE_DEBUG_MODE 6
-#define TEST_J 1
-#define TEST_K 2
-#define TEST_SE0_NAK 3
-#define TEST_PACKET 4
-#define TEST_FORCE_EN 5
+#define USB_TEST_J 1
+#define USB_TEST_K 2
+#define USB_TEST_SE0_NAK 3
+#define USB_TEST_PACKET 4
+#define USB_TEST_FORCE_ENABLE 5
 #define USB_STATUS_TYPE_STANDARD 0
 #define USB_STATUS_TYPE_PTM 1
 #define USB_DEVICE_U1_ENABLE 48
@@ -176,6 +176,10 @@ struct usb_device_descriptor {
 #define USB_CLASS_CONTENT_SEC 0x0d
 #define USB_CLASS_VIDEO 0x0e
 #define USB_CLASS_WIRELESS_CONTROLLER 0xe0
+#define USB_CLASS_PERSONAL_HEALTHCARE 0x0f
+#define USB_CLASS_AUDIO_VIDEO 0x10
+#define USB_CLASS_BILLBOARD 0x11
+#define USB_CLASS_USB_TYPE_C_BRIDGE 0x12
 #define USB_CLASS_MISC 0xef
 #define USB_CLASS_APP_SPEC 0xfe
 #define USB_CLASS_VENDOR_SPEC 0xff
@@ -195,6 +199,7 @@ struct usb_config_descriptor {
 #define USB_CONFIG_ATT_SELFPOWER (1 << 6)
 #define USB_CONFIG_ATT_WAKEUP (1 << 5)
 #define USB_CONFIG_ATT_BATTERY (1 << 4)
+#define USB_MAX_STRING_LEN 126
 struct usb_string_descriptor {
   __u8 bLength;
   __u8 bDescriptorType;
