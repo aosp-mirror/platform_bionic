@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "273af811_e8ec522e",
         "filename": "tests/fenv_test.cpp",
@@ -14,10 +15,10 @@
       "side": 1,
       "message": "is there a better way to do this than volatile?",
       "revId": "7d66bf9d901f5db995c991e07c0c4b89f73be01b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "857e9ca2_7bec6c57",
         "filename": "tests/fenv_test.cpp",
@@ -32,8 +33,25 @@
       "message": "This is on my plate to do at sometime, but we should copy the DoNotOptimize routine from google benchmarks into base test_utils.h. Then you could use that instead of the need for all of the volatile stuff.",
       "parentUuid": "273af811_e8ec522e",
       "revId": "7d66bf9d901f5db995c991e07c0c4b89f73be01b",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4409cdd_5e734e0d",
+        "filename": "tests/fenv_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-22T20:23:33Z",
+      "side": 1,
+      "message": "http://b/148307629",
+      "parentUuid": "857e9ca2_7bec6c57",
+      "revId": "7d66bf9d901f5db995c991e07c0c4b89f73be01b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
