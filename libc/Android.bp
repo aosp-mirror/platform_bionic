@@ -1604,6 +1604,7 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
+    llndk_stubs: "libc.llndk",
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -2216,7 +2217,7 @@ ndk_library {
 }
 
 llndk_library {
-    name: "libc",
+    name: "libc.llndk",
     symbol_file: "libc.map.txt",
     export_headers_as_system: true,
     export_preprocessed_headers: ["include"],
