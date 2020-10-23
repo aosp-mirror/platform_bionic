@@ -203,7 +203,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, __reserved_1 : 31;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, text_poke : 1, __reserved_1 : 30;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -263,7 +263,7 @@ struct perf_event_mmap_page {
   union {
     __u64 capabilities;
     struct {
-      __u64 cap_bit0 : 1, cap_bit0_is_deprecated : 1, cap_user_rdpmc : 1, cap_user_time : 1, cap_user_time_zero : 1, cap_____res : 59;
+      __u64 cap_bit0 : 1, cap_bit0_is_deprecated : 1, cap_user_rdpmc : 1, cap_user_time : 1, cap_user_time_zero : 1, cap_user_time_short : 1, cap_____res : 58;
     };
   };
   __u16 pmc_width;
@@ -272,7 +272,10 @@ struct perf_event_mmap_page {
   __u64 time_offset;
   __u64 time_zero;
   __u32 size;
-  __u8 __reserved[118 * 8 + 4];
+  __u32 __reserved_1;
+  __u64 time_cycles;
+  __u64 time_mask;
+  __u8 __reserved[116 * 8];
   __u64 data_head;
   __u64 data_tail;
   __u64 data_offset;
@@ -336,11 +339,13 @@ enum perf_event_type {
   PERF_RECORD_KSYMBOL = 17,
   PERF_RECORD_BPF_EVENT = 18,
   PERF_RECORD_CGROUP = 19,
+  PERF_RECORD_TEXT_POKE = 20,
   PERF_RECORD_MAX,
 };
 enum perf_record_ksymbol_type {
   PERF_RECORD_KSYMBOL_TYPE_UNKNOWN = 0,
   PERF_RECORD_KSYMBOL_TYPE_BPF = 1,
+  PERF_RECORD_KSYMBOL_TYPE_OOL = 2,
   PERF_RECORD_KSYMBOL_TYPE_MAX
 };
 #define PERF_RECORD_KSYMBOL_FLAGS_UNREGISTER (1 << 0)

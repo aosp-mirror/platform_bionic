@@ -68,6 +68,14 @@ struct seccomp_notif_resp {
   __s32 error;
   __u32 flags;
 };
+#define SECCOMP_ADDFD_FLAG_SETFD (1UL << 0)
+struct seccomp_notif_addfd {
+  __u64 id;
+  __u32 flags;
+  __u32 srcfd;
+  __u32 newfd;
+  __u32 newfd_flags;
+};
 #define SECCOMP_IOC_MAGIC '!'
 #define SECCOMP_IO(nr) _IO(SECCOMP_IOC_MAGIC, nr)
 #define SECCOMP_IOR(nr,type) _IOR(SECCOMP_IOC_MAGIC, nr, type)
@@ -75,5 +83,6 @@ struct seccomp_notif_resp {
 #define SECCOMP_IOWR(nr,type) _IOWR(SECCOMP_IOC_MAGIC, nr, type)
 #define SECCOMP_IOCTL_NOTIF_RECV SECCOMP_IOWR(0, struct seccomp_notif)
 #define SECCOMP_IOCTL_NOTIF_SEND SECCOMP_IOWR(1, struct seccomp_notif_resp)
-#define SECCOMP_IOCTL_NOTIF_ID_VALID SECCOMP_IOR(2, __u64)
+#define SECCOMP_IOCTL_NOTIF_ID_VALID SECCOMP_IOW(2, __u64)
+#define SECCOMP_IOCTL_NOTIF_ADDFD SECCOMP_IOW(3, struct seccomp_notif_addfd)
 #endif
