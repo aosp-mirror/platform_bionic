@@ -7,6 +7,7 @@ cc_library {
     ramdisk_available: true,
     recovery_available: true,
     static_ndk_lib: true,
+    llndk_stubs: "libm.llndk",
 
     whole_static_libs: ["libarm-optimized-routines-math"],
 
@@ -520,7 +521,7 @@ ndk_library {
 }
 
 llndk_library {
-    name: "libm",
+    name: "libm.llndk",
     native_bridge_supported: true,
     symbol_file: "libm.map.txt",
 }
