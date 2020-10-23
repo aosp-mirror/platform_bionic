@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c04dffc1_7477a5ae",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-23T23:29:47Z",
+      "side": 0,
+      "message": "\u003e Alternatively, we can use the linker magic symbol, but I think we have to keep outputting -1 for compatibility with an old libc.so.\n\nOn second thought, backwards-compatibility requires the -1 marker to be the first entry (for .fini_array, though maybe not the other two), and using the __*_ARRAY__ symbols is a more direct way of locating the marker than the linker symbol. (It\u0027s also less code, because an extern __fini_array_start symbol can\u0027t be used to output the -1 marker.)\n\nIf adding a \".0\" suffix works, I think we should do that.",
+      "parentUuid": "9abd2487_b65e71ae",
+      "revId": "08a43426a0bcbc53cd2a33b3624bc6b3f7176117",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "895542db_89e467a8",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 3
