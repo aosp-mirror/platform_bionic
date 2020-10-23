@@ -20,6 +20,11 @@
 #define _UAPI_LINUX_ERRQUEUE_H
 #include <linux/types.h>
 #include <linux/time_types.h>
+struct sock_ee_data_rfc4884 {
+  __u16 len;
+  __u8 flags;
+  __u8 reserved;
+};
 struct sock_extended_err {
   __u32 ee_errno;
   __u8 ee_origin;
@@ -27,7 +32,10 @@ struct sock_extended_err {
   __u8 ee_code;
   __u8 ee_pad;
   __u32 ee_info;
-  __u32 ee_data;
+  union {
+    __u32 ee_data;
+    struct sock_ee_data_rfc4884 ee_rfc4884;
+  };
 };
 #define SO_EE_ORIGIN_NONE 0
 #define SO_EE_ORIGIN_LOCAL 1
@@ -41,6 +49,7 @@ struct sock_extended_err {
 #define SO_EE_CODE_ZEROCOPY_COPIED 1
 #define SO_EE_CODE_TXTIME_INVALID_PARAM 1
 #define SO_EE_CODE_TXTIME_MISSED 2
+#define SO_EE_RFC4884_FLAG_INVALID 1
 struct scm_timestamping {
   struct timespec ts[3];
 };

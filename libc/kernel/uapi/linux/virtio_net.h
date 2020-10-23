@@ -66,10 +66,10 @@
 #define VIRTIO_NET_RSS_HASH_TYPE_UDP_EX (1 << 8)
 struct virtio_net_config {
   __u8 mac[ETH_ALEN];
-  __u16 status;
-  __u16 max_virtqueue_pairs;
-  __u16 mtu;
-  __u32 speed;
+  __virtio16 status;
+  __virtio16 max_virtqueue_pairs;
+  __virtio16 mtu;
+  __le32 speed;
   __u8 duplex;
   __u8 rss_max_key_size;
   __le16 rss_max_indirection_table_length;
