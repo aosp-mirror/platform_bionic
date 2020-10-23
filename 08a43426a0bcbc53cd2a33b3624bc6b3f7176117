@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9abd2487_b65e71ae",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-23T22:49:54Z",
+      "side": 0,
+      "message": "Maybe a simpler fix is to just append the \".0\" suffix to the section names, so that the __*_ARRAY__ symbols are still first?\n\nAlternatively, we can use the linker magic symbol, but I think we have to keep outputting -1 for compatibility with an old libc.so.",
+      "revId": "08a43426a0bcbc53cd2a33b3624bc6b3f7176117",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "895542db_89e467a8",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-10-23T22:49:54Z",
+      "side": 0,
+      "message": "AFAIK, this code is in libc.so, while crtbegin is linked into NDK executables, so both of these must continue working:\n - old libc.so + new crtbegin\n - new libc.so + old crtbegin\n\nI think they\u0027re broken:\n - old libc.so + new crtbegin \u003d\u003d\u003e no -1 marker, fails validity check\n - new libc.so + old crtbegin \u003d\u003d\u003e tries to call -1 function pointer",
+      "revId": "08a43426a0bcbc53cd2a33b3624bc6b3f7176117",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
