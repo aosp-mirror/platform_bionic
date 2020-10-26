@@ -65,7 +65,10 @@ class MmapFile {
   const char* filename_ = nullptr;
   const char* start_ = nullptr;
   const char* end_ = nullptr;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
   const char* required_prefix_;
+#pragma clang diagnostic pop
 };
 
 class PasswdFile {
