@@ -34,6 +34,29 @@
       "parentUuid": "6579e99a_02e331ed",
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8ec9e6e_26c14da4",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T21:19:41Z",
+      "side": 1,
+      "message": "Note: NDK target is broken because malloc_not_svelte is explicitly set to false, causing libjemalloc5 and libc_jemalloc_wrapper to be used.\n\ncferris / enh, any suggestions?",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
