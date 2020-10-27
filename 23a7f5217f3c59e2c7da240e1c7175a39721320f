@@ -52,6 +52,24 @@
       "parentUuid": "50691cf1_3316e191",
       "revId": "23a7f5217f3c59e2c7da240e1c7175a39721320f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ac61106_34020298",
+        "filename": "linker/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T23:06:06Z",
+      "side": 1,
+      "message": "The problem is that once I mark libc as vendor_ramdisk_available, both the static and shared version are vendor_ramdisk_available, hence this is needed even if it should never be used. It is unfortunate that we can\u0027t make only version of it as vendor_ramdisk_available.",
+      "parentUuid": "18b73969_9276cc2f",
+      "revId": "23a7f5217f3c59e2c7da240e1c7175a39721320f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
