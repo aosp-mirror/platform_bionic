@@ -105,6 +105,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a728a967_7f1ad8d3",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T21:41:22Z",
+      "side": 1,
+      "message": "Steve to confirm, but being Go devices has nothing to do with whether they use vendor ramdisk or not.\n\nEven if they shouldn\u0027t be using vendor_ramdisk, when soong checks the dependencies of modules, it doesn\u0027t know that the vendor-ramdisk variant of libc isn\u0027t used by anything. Maybe Colin has a better idea to disable `libc.vendor_ramdisk` when the device doesn\u0027t build vendor_ramdisk?",
+      "parentUuid": "fe258747_02255ce1",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
