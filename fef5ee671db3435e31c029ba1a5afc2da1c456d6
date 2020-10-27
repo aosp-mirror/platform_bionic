@@ -153,6 +153,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e736c4e_d5502218",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-27T22:03:34Z",
+      "side": 1,
+      "message": "\u003e when soong checks the dependencies of modules, it doesn\u0027t know that the vendor-ramdisk variant of libc isn\u0027t used by anything\n\nyeah, this was what i was worried about initially, but i assumed you abandoning the jemalloc change meant it worked.\n\ni guess if we can\u0027t express what we want to say in the build system it\u0027s fine to include jemalloc for now; in practice it\u0027s no additional maintenance cost to us because it\u0027s just another copy of exactly what they\u0027re already using...",
+      "parentUuid": "9a4b55e9_948438e8",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
