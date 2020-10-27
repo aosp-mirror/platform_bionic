@@ -81,6 +81,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe258747_02255ce1",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-27T21:23:49Z",
+      "side": 1,
+      "message": "that should just be Go devices though, right, and they shouldn\u0027t be using vendor ramdisk?",
+      "parentUuid": "77d57da3_2cca733c",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
