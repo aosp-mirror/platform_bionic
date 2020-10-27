@@ -34,6 +34,24 @@
       "parentUuid": "fa733b3d_d040db0c",
       "revId": "23a7f5217f3c59e2c7da240e1c7175a39721320f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18b73969_9276cc2f",
+        "filename": "linker/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T23:03:02Z",
+      "side": 1,
+      "message": "The dependency comes from libdl. Should I remove vendor_ramdisk_available from libdl, libdl_static, and libdl_android?",
+      "parentUuid": "50691cf1_3316e191",
+      "revId": "23a7f5217f3c59e2c7da240e1c7175a39721320f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
