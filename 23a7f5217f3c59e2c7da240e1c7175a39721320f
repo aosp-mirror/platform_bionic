@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa733b3d_d040db0c",
+        "filename": "linker/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-27T22:52:41Z",
+      "side": 1,
+      "message": "i don\u0027t think you meant to expose this .so file (which by definition can\u0027t be used if you don\u0027t have a dynamic linker).\n\nmake the dynamic linker available (at which point you _might_ need this)?",
+      "revId": "23a7f5217f3c59e2c7da240e1c7175a39721320f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
