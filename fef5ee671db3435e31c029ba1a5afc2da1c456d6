@@ -129,6 +129,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a4b55e9_948438e8",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T21:45:41Z",
+      "side": 1,
+      "message": "Alternatively, I can also add \n\n```\ntarget: {\n  vendor_ramdisk: {\n    cflags / whole_static_libs / exclude_static_libs\n  }\n}\n```",
+      "parentUuid": "a728a967_7f1ad8d3",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
