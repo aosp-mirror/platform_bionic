@@ -57,6 +57,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77d57da3_2cca733c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-27T21:22:44Z",
+      "side": 1,
+      "message": "I did some code search and it appears that some other devices in the tree uses \n\n\n  MALLOC_SVELTE :\u003d true\n\n\ntoo. If I don\u0027t make jemalloc as vendor_ramdisk_available, the build system will also complain on those targets.",
+      "parentUuid": "f8ec9e6e_26c14da4",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
