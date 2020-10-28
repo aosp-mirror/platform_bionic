@@ -124,6 +124,19 @@ struct vbg_ioctl_change_filter {
   } u;
 };
 #define VBG_IOCTL_CHANGE_FILTER_MASK _IOWR('V', 12, struct vbg_ioctl_change_filter)
+struct vbg_ioctl_acquire_guest_caps {
+  struct vbg_ioctl_hdr hdr;
+  union {
+    struct {
+      __u32 flags;
+      __u32 or_mask;
+      __u32 not_mask;
+    } in;
+  } u;
+};
+#define VBGL_IOC_AGC_FLAGS_CONFIG_ACQUIRE_MODE 0x00000001
+#define VBGL_IOC_AGC_FLAGS_VALID_MASK 0x00000001
+#define VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES _IOWR('V', 13, struct vbg_ioctl_acquire_guest_caps)
 struct vbg_ioctl_set_guest_caps {
   struct vbg_ioctl_hdr hdr;
   union {

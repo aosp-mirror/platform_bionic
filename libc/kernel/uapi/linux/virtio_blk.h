@@ -40,27 +40,27 @@
 #endif
 #define VIRTIO_BLK_ID_BYTES 20
 struct virtio_blk_config {
-  __u64 capacity;
-  __u32 size_max;
-  __u32 seg_max;
+  __virtio64 capacity;
+  __virtio32 size_max;
+  __virtio32 seg_max;
   struct virtio_blk_geometry {
-    __u16 cylinders;
+    __virtio16 cylinders;
     __u8 heads;
     __u8 sectors;
   } geometry;
-  __u32 blk_size;
+  __virtio32 blk_size;
   __u8 physical_block_exp;
   __u8 alignment_offset;
-  __u16 min_io_size;
-  __u32 opt_io_size;
+  __virtio16 min_io_size;
+  __virtio32 opt_io_size;
   __u8 wce;
   __u8 unused;
-  __u16 num_queues;
-  __u32 max_discard_sectors;
-  __u32 max_discard_seg;
-  __u32 discard_sector_alignment;
-  __u32 max_write_zeroes_sectors;
-  __u32 max_write_zeroes_seg;
+  __virtio16 num_queues;
+  __virtio32 max_discard_sectors;
+  __virtio32 max_discard_seg;
+  __virtio32 discard_sector_alignment;
+  __virtio32 max_write_zeroes_sectors;
+  __virtio32 max_write_zeroes_seg;
   __u8 write_zeroes_may_unmap;
   __u8 unused1[3];
 } __attribute__((packed));

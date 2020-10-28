@@ -925,12 +925,8 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     std::thread* t = new std::thread([&stop] {
       while (!stop) {
         for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-          void* ptr = malloc(size);
-          if (ptr == nullptr) {
-            return;
-          }
-          // Make sure this value is not optimized away.
-          asm volatile("" : : "r,m"(ptr) : "memory");
+          void* ptr;
+          DoNotOptimize(ptr = malloc(size));
           free(ptr);
         }
       }
@@ -943,10 +939,9 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     pid_t pid;
     if ((pid = fork()) == 0) {
       for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-        void* ptr = malloc(size);
+        void* ptr;
+        DoNotOptimize(ptr = malloc(size));
         ASSERT_TRUE(ptr != nullptr);
-        // Make sure this value is not optimized away.
-        asm volatile("" : : "r,m"(ptr) : "memory");
         // Make sure we can touch all of the allocation.
         memset(ptr, 0x1, size);
         ASSERT_LE(size, malloc_usable_size(ptr));

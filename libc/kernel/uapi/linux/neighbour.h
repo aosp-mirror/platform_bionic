@@ -44,6 +44,7 @@ enum {
   NDA_SRC_VNI,
   NDA_PROTOCOL,
   NDA_NH_ID,
+  NDA_FDB_EXT_ATTRS,
   __NDA_MAX
 };
 #define NDA_MAX (__NDA_MAX - 1)
@@ -136,4 +137,15 @@ enum {
   __NDTA_MAX
 };
 #define NDTA_MAX (__NDTA_MAX - 1)
+enum {
+  FDB_NOTIFY_BIT = (1 << 0),
+  FDB_NOTIFY_INACTIVE_BIT = (1 << 1)
+};
+enum {
+  NFEA_UNSPEC,
+  NFEA_ACTIVITY_NOTIFY,
+  NFEA_DONT_REFRESH,
+  __NFEA_MAX
+};
+#define NFEA_MAX (__NFEA_MAX - 1)
 #endif
