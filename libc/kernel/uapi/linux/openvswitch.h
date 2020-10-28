@@ -42,6 +42,7 @@ enum ovs_datapath_attr {
   OVS_DP_ATTR_MEGAFLOW_STATS,
   OVS_DP_ATTR_USER_FEATURES,
   OVS_DP_ATTR_PAD,
+  OVS_DP_ATTR_MASKS_CACHE_SIZE,
   __OVS_DP_ATTR_MAX
 };
 #define OVS_DP_ATTR_MAX (__OVS_DP_ATTR_MAX - 1)
@@ -55,8 +56,8 @@ struct ovs_dp_megaflow_stats {
   __u64 n_mask_hit;
   __u32 n_masks;
   __u32 pad0;
+  __u64 n_cache_hit;
   __u64 pad1;
-  __u64 pad2;
 };
 struct ovs_vport_stats {
   __u64 rx_packets;
