@@ -201,6 +201,30 @@
       },
       "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f5d5678_68245069",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1121838
+      },
+      "writtenOn": "2020-10-28T17:27:08Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "27afb253_63616542",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 108,
+        "endChar": 21
+      },
+      "revId": "fef5ee671db3435e31c029ba1a5afc2da1c456d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
