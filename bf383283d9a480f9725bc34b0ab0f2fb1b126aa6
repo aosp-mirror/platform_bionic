@@ -33,6 +33,23 @@
       "message": "oh, sorry, i made the mistake of thinking \"yeah, seems okay to me; let\u0027s see what tomcherry thinks\" without actually telling tomcherry...",
       "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7809419_b1ce515a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-10-29T23:52:30Z",
+      "side": 1,
+      "message": "lgtm.  I was worried about host_init_verifier, since it needs to use the device AID\u0027s, etc to operate, but I checked and it reimplements getpwnam() directly to handle them appropriately.",
+      "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
