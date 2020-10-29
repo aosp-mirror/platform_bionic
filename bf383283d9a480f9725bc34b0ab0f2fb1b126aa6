@@ -50,6 +50,42 @@
       "message": "lgtm.  I was worried about host_init_verifier, since it needs to use the device AID\u0027s, etc to operate, but I checked and it reimplements getpwnam() directly to handle them appropriately.",
       "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06ba5a75_599e82b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-29T23:53:35Z",
+      "side": 1,
+      "message": "No worries! And thank you.",
+      "parentUuid": "d7f38349_e01196a6",
+      "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32e3bea1_3c820404",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-29T23:53:35Z",
+      "side": 1,
+      "message": "Ack. Good to know that.",
+      "parentUuid": "f7809419_b1ce515a",
+      "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
