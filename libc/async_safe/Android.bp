@@ -32,6 +32,7 @@ cc_library_static {
 cc_library_headers {
     name: "libasync_safe_headers",
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     defaults: ["linux_bionic_supported"],
