@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "118c3ea4_a0589ed6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-10-29T23:40:01Z",
+      "side": 1,
+      "message": "Ping. I resolved all the outstanding comments.",
+      "revId": "bf383283d9a480f9725bc34b0ab0f2fb1b126aa6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
