@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ef08649_00f34bae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060286
+      },
+      "writtenOn": "2020-10-29T00:32:04Z",
+      "side": 1,
+      "message": "you should also change system/libsysprop/srcs/android/sysprop/HdmiProperties.sysprop",
+      "revId": "bd6236c9da58678d5c424db0ff3b5e359021aded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
