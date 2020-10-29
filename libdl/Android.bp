@@ -5,6 +5,7 @@ cc_library_static {
     name: "libdl_static",
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -36,6 +37,7 @@ cc_library_static {
 cc_library {
     name: "libdl",
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     static_ndk_lib: true,
@@ -136,6 +138,7 @@ cc_library {
 
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
