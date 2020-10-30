@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a70a7c43_036c685e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-30T20:41:20Z",
+      "side": 1,
+      "message": "otherwise lgtm.",
+      "revId": "7a2b575e5ac74268332e8e823365a9438028f1ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a07f1ae_72444977",
+        "filename": "libc/platform/bionic/pac.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-10-30T20:41:20Z",
+      "side": 1,
+      "message": "s/maybe/__bionic/? (\"maybe\" seems _more_ misleading than the technically correct \"always clears all pac bits, of which there may be zero\"? and bionic makes it more obvious where this is coming from.)",
+      "range": {
+        "startLine": 33,
+        "startChar": 17,
+        "endLine": 33,
+        "endChar": 37
+      },
+      "revId": "7a2b575e5ac74268332e8e823365a9438028f1ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
