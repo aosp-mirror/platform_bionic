@@ -6,6 +6,11 @@ loading in various Android releases.
 See also [bionic status](docs/status.md) for general libc/libm/libdl
 behavior changes.
 
+See also the
+[unwinder documentation](https://android.googlesource.com/platform/system/unwinding/+/refs/heads/master/libunwindstack/AndroidVersions.md)
+for details about changes in stack unwinding (crash dumps) between
+different releases.
+
 Required tools: the NDK has an _arch_-linux-android-readelf binary
 (e.g. arm-linux-androideabi-readelf or i686-linux-android-readelf)
 for each architecture (under toolchains/), but you can use readelf for
