@@ -84,6 +84,7 @@ cc_defaults {
         fuzzer: false,
     },
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -1350,6 +1351,7 @@ cc_library_static {
         "libc_native_allocator_defaults",
     ],
     ramdisk_available: false,
+    vendor_ramdisk_available: false,
     srcs: libc_common_src_files + [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
@@ -1799,6 +1801,7 @@ cc_library_headers {
     ],
     vendor_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
@@ -1826,6 +1829,7 @@ cc_library_headers {
     host_supported: true,
     vendor_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     apex_available: [
@@ -1876,6 +1880,7 @@ cc_library_headers {
     native_bridge_supported: true,
     vendor_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     sdk_version: "1",
 
@@ -2004,6 +2009,7 @@ cc_defaults {
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     apex_available: [
