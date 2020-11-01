@@ -46,24 +46,30 @@
 #include "private/android_filesystem_config.h"
 #include "platform/bionic/macros.h"
 
+#if defined(__ANDROID__)
 // Generated android_ids array
 #include "generated_android_ids.h"
+#else
+// Empty array for host; everything is from the database files
+#include "empty_android_ids.h"
+#endif
+
 #include "grp_pwd_file.h"
 
 static PasswdFile passwd_files[] = {
-  { "/system/etc/passwd", "system_" },
-  { "/vendor/etc/passwd", "vendor_" },
-  { "/odm/etc/passwd", "odm_" },
-  { "/product/etc/passwd", "product_" },
-  { "/system_ext/etc/passwd", "system_ext_" },
+    {"/etc/passwd", "system_"},  // symlinks to /system/etc/passwd in Android
+    {"/vendor/etc/passwd", "vendor_"},
+    {"/odm/etc/passwd", "odm_"},
+    {"/product/etc/passwd", "product_"},
+    {"/system_ext/etc/passwd", "system_ext_"},
 };
 
 static GroupFile group_files[] = {
-  { "/system/etc/group", "system_" },
-  { "/vendor/etc/group", "vendor_" },
-  { "/odm/etc/group", "odm_" },
-  { "/product/etc/group", "product_" },
-  { "/system_ext/etc/group", "system_ext_" },
+    {"/etc/group", "system_"},  // symlinks to /system/etc/group in Android
+    {"/vendor/etc/group", "vendor_"},
+    {"/odm/etc/group", "odm_"},
+    {"/product/etc/group", "product_"},
+    {"/system_ext/etc/group", "system_ext_"},
 };
 
 // POSIX seems to envisage an implementation where the <pwd.h> functions are
@@ -194,6 +200,7 @@ static bool platform_id_secondary_user_allowed(id_t id) {
   return false;
 }
 
+#if defined(__ANDROID__)
 static bool is_valid_app_id(id_t id, bool is_group) {
   id_t appid = id % AID_USER_OFFSET;
 
@@ -226,6 +233,12 @@ static bool is_valid_app_id(id_t id, bool is_group) {
 
   return false;
 }
+#else
+static bool is_valid_app_id(id_t, bool) {
+  // Host doesn't have the concept of app_id
+  return false;
+}
+#endif  // if defined(__ANDROID__)
 
 // This provides an iterater for app_ids within the first user's app id's.
 static id_t get_next_app_id(id_t current_id, bool is_group) {
@@ -386,6 +399,7 @@ static void print_app_name_from_gid(const gid_t gid, char* buffer, const int buf
   }
 }
 
+#if defined(__ANDROID__)
 static bool device_launched_before_api_29() {
   // Check if ro.product.first_api_level is set to a value > 0 and < 29, if so, this device was
   // launched before API 29 (Q). Any other value is considered to be either in development or
@@ -420,6 +434,12 @@ static bool is_oem_id(id_t id) {
   return (id >= AID_OEM_RESERVED_START && id <= AID_OEM_RESERVED_END) ||
          (id >= AID_OEM_RESERVED_2_START && id <= AID_OEM_RESERVED_2_END);
 }
+#else
+static bool is_oem_id(id_t) {
+  // no OEM ids in host
+  return false;
+}
+#endif  // if defined(__ANDROID__)
 
 // Translate an OEM name to the corresponding user/group id.
 static id_t oem_id_from_name(const char* name) {
@@ -522,7 +542,7 @@ passwd* getpwuid_internal(uid_t uid, passwd_state_t* state) {
     return android_iinfo_to_passwd(state, android_id_info);
   }
 
-  // Handle OEM range.
+  // Find an entry from the database file
   passwd* pw = oem_id_to_passwd(uid, state);
   if (pw != nullptr) {
     return pw;
@@ -540,6 +560,7 @@ passwd* getpwnam_internal(const char* login, passwd_state_t* state) {
     return android_iinfo_to_passwd(state, android_id_info);
   }
 
+  // Find an entry from the database file
   for (auto& passwd_file : passwd_files) {
     if (passwd_file.FindByName(login, state)) {
       return &state->passwd_;
@@ -681,7 +702,7 @@ static group* getgrgid_internal(gid_t gid, group_state_t* state) {
     return android_iinfo_to_group(state, android_id_info);
   }
 
-  // Handle OEM range.
+  // Find an entry from the database file
   group* grp = oem_id_to_group(gid, state);
   if (grp != nullptr) {
     return grp;
@@ -699,6 +720,7 @@ static group* getgrnam_internal(const char* name, group_state_t* state) {
     return android_iinfo_to_group(state, android_id_info);
   }
 
+  // Find an entry from the database file
   for (auto& group_file : group_files) {
     if (group_file.FindByName(name, state)) {
       return &state->group_;
