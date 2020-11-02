@@ -33,6 +33,10 @@
 #include <platform/bionic/malloc.h>
 #include <platform/bionic/mte_kernel.h>
 
+#include <bionic/pthread_internal.h>
+
+#include "private/ScopedPthreadMutexLocker.h"
+
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
 
@@ -68,7 +72,32 @@ void SetDefaultHeapTaggingLevel() {
 #endif  // aarch64
 }
 
+#ifdef ANDROID_EXPERIMENTAL_MTE
+static bool set_tcf_on_all_threads(int tcf) {
+  static int g_tcf;
+  g_tcf = tcf;
+
+  return android_run_on_all_threads(
+      [](void*) {
+        int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+        if (tagged_addr_ctrl < 0) {
+          return false;
+        }
+
+        tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | g_tcf;
+        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
+          return false;
+        }
+        return true;
+      },
+      nullptr);
+}
+#endif
+
 bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
+  static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  ScopedPthreadMutexLocker locker(&mutex);
+
   if (arg_size != sizeof(HeapTaggingLevel)) {
     return false;
   }
@@ -80,9 +109,6 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
 
   switch (tag_level) {
     case M_HEAP_TAGGING_LEVEL_NONE:
-#if defined(USE_SCUDO)
-      scudo_malloc_disable_memory_tagging();
-#endif
       if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
         __libc_globals.mutate([](libc_globals* globals) {
           // Preserve the untag mask (we still want to untag pointers when passing them to the
@@ -90,7 +116,17 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
           // tagged and checks no longer happen.
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         });
+      } else {
+#if defined(ANDROID_EXPERIMENTAL_MTE)
+        if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
+          error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
+          return false;
+        }
+#endif
       }
+#if defined(USE_SCUDO)
+      scudo_malloc_disable_memory_tagging();
+#endif
       break;
     case M_HEAP_TAGGING_LEVEL_TBI:
     case M_HEAP_TAGGING_LEVEL_ASYNC:
@@ -106,10 +142,16 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
       }
 
       if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+#if defined(ANDROID_EXPERIMENTAL_MTE)
+        set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
+#endif
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(0);
 #endif
       } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
+#if defined(ANDROID_EXPERIMENTAL_MTE)
+        set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
+#endif
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(1);
 #endif
