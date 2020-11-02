@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f91f331_1189410e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-02T17:54:18Z",
+      "side": 1,
+      "message": "the new test is built as both as both a static binary and a dynamic one.\n\n(fwiw, there\u0027s a \"WIP\" gerrit feature you can use to mark a change as a work in progress as opposed to the default state of ready for review.)",
+      "parentUuid": "50edead7_fa9886c7",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32867bc8_6f6d8bdc",
