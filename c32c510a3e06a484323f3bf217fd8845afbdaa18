@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50edead7_fa9886c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2020-11-02T17:46:16Z",
+      "side": 1,
+      "message": "I just want to note - this patch wasn\u0027t done functionality wise before it was taken over. This fixes prioritized constructors in the statically linked case, but dynamic prioritized constructors were still failing. (It\u0027s possible that the alternate solution proposed by Ryan fixes this, but I\u0027d advise explicitly running the test for whether the dynamic case works.)",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32867bc8_6f6d8bdc",
