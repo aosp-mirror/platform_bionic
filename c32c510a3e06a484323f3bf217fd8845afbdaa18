@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32867bc8_6f6d8bdc",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-02T17:43:02Z",
+      "side": 1,
+      "message": "i don\u0027t like this name, but i don\u0027t have a better suggestion :-(\n\ni was hoping there was some __name we could use, but they\u0027re made up by us, and a leading \u0027.\u0027 doesn\u0027t really interact well with unix (nor is it a name we could use in the TEST() macro)!",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7826fbb_d9219663",
+        "filename": "tests/prio_ctor_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-02T17:43:02Z",
+      "side": 1,
+      "message": "not just `{}`?",
+      "range": {
+        "startLine": 21,
+        "startChar": 31,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2262930_31dd17fd",
+        "filename": "tests/prio_ctor_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-02T17:43:02Z",
+      "side": 1,
+      "message": "match the filename?",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 18
+      },
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
