@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "775e47a0_ffa7f03f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2020-11-03T01:20:35Z",
+      "side": 1,
+      "message": "All good, I was fixing this for gcov-based coverage, but got called away for higher priority tasks, so thanks for picking it up.",
+      "parentUuid": "4c658e78_5d5a1b3d",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32867bc8_6f6d8bdc",
