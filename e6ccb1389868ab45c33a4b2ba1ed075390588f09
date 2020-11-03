@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c14f0ac1_31851b7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-11-03T01:46:11Z",
+      "side": 1,
+      "message": "There is no priority suffix on .preinit_array (with bfd, gold, and lld: if there is an input .preinit_array.0 section, then there is also an output .preinit_array.0 section), so PS5 causes a bus fault on the arm64 bionic-unit-tests-static test.",
+      "revId": "e6ccb1389868ab45c33a4b2ba1ed075390588f09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
