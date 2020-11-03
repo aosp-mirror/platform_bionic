@@ -16,6 +16,24 @@
       "message": "seem like legit build failures?\n```\nbionic/libc/bionic/heap_tagging.cpp:120:37: error: use of undeclared identifier \u0027PR_MTE_TCF_NONE\u0027\n        if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {\n                                    ^\nbionic/libc/bionic/heap_tagging.cpp:143:32: error: use of undeclared identifier \u0027PR_MTE_TCF_ASYNC\u0027\n        set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);\n                               ^\nbionic/libc/bionic/heap_tagging.cpp:148:32: error: use of undeclared identifier \u0027PR_MTE_TCF_SYNC\u0027\n        set_tcf_on_all_threads(PR_MTE_TCF_SYNC);\n                               ^\n```",
       "revId": "fbb4cc994cddc3cf94dd191daa3ad237b69f9b47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fa8026d_8dfe14c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-11-03T18:48:34Z",
+      "side": 1,
+      "message": "Yeah, I forgot to try building with ANDROID_EXPERIMENTAL_MTE disabled again. The good news is that this define should finally be (mostly) going away soon now that most of the MTE patches that we need have landed in the upstream kernel. (I say \"mostly\" because we still need https://www.spinics.net/lists/arm-kernel/msg845080.html to land but that impacts much less of the code.)\n\n(If we\u0027d be willing to take kernel headers from a release candidate then I think we could go ahead and clean this up *now*...)",
+      "parentUuid": "e1e7c9d9_d74f879e",
+      "revId": "fbb4cc994cddc3cf94dd191daa3ad237b69f9b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
