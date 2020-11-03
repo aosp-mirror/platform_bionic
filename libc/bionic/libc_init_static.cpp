@@ -60,10 +60,10 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
 
-static void call_array(void(**list)()) {
+static void call_array(init_func_t** list, int argc, char* argv[], char* envp[]) {
   // First element is -1, list is null-terminated
   while (*++list) {
-    (*list)();
+    (*list)(argc, argv, envp);
   }
 }
 
@@ -183,8 +183,8 @@ __noreturn static void __real_libc_init(void *raw_args,
   // Several Linux ABIs don't pass the onexit pointer, and the ones that
   // do never use it.  Therefore, we ignore it.
 
-  call_array(structors->preinit_array);
-  call_array(structors->init_array);
+  call_array(structors->preinit_array, args.argc, args.argv, args.envp);
+  call_array(structors->init_array, args.argc, args.argv, args.envp);
 
   // The executable may have its own destructors listed in its .fini_array
   // so we need to ensure that these are called when the program exits
