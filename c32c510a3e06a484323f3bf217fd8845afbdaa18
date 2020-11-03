@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c658e78_5d5a1b3d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-11-03T01:02:21Z",
+      "side": 1,
+      "message": "FWIW, someone asked me to take over the CL over IM. I don\u0027t remember who...\n\nI added this to the commit message:\n\n\u003e This bug affected all of .preinit_array, .init_array, and .fini_array\n\u003e for static executables. For dynamic executables, only .fini_array was\n\u003e affected, because .preinit_array and .init_array are handled by the\n\u003e dynamic loader instead, which uses DT_{PREINIT,INIT,FINI}_ARRAY[SZ].\n\nFor me, the new test passed for dynamic executables.\n\nIf I understand correctly, PS3 changed the .fini_array ABI for dynamic executables (__libc_fini, from \"require a -1 at the start\" to \"call every entry in .fini_array, even if it\u0027s an old -1 marker\"). I think that would have explained a previous failure (by breaking all existing dynamic executables, like prebuilts).",
+      "parentUuid": "4633f510_99cc8bb4",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32867bc8_6f6d8bdc",
@@ -67,6 +85,24 @@
       "writtenOn": "2020-11-02T17:43:02Z",
       "side": 1,
       "message": "i don\u0027t like this name, but i don\u0027t have a better suggestion :-(\n\ni was hoping there was some __name we could use, but they\u0027re made up by us, and a leading \u0027.\u0027 doesn\u0027t really interact well with unix (nor is it a name we could use in the TEST() macro)!",
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10628359_f179166a",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-11-03T01:02:21Z",
+      "side": 1,
+      "message": "I also can\u0027t think of anything better right away.",
+      "parentUuid": "32867bc8_6f6d8bdc",
       "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -94,6 +130,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e986bbd1_726cb7fa",
+        "filename": "tests/prio_ctor_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-11-03T01:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7826fbb_d9219663",
+      "range": {
+        "startLine": 21,
+        "startChar": 31,
+        "endLine": 21,
+        "endChar": 37
+      },
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f2262930_31dd17fd",
@@ -107,6 +167,30 @@
       "writtenOn": "2020-11-02T17:43:02Z",
       "side": 1,
       "message": "match the filename?",
+      "range": {
+        "startLine": 36,
+        "startChar": 5,
+        "endLine": 36,
+        "endChar": 18
+      },
+      "revId": "c32c510a3e06a484323f3bf217fd8845afbdaa18",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22ac08c4_e27331bb",
+        "filename": "tests/prio_ctor_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2020-11-03T01:02:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2262930_31dd17fd",
       "range": {
         "startLine": 36,
         "startChar": 5,
