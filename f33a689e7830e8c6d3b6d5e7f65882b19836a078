@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5498b132_00b7c4de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-03T16:04:26Z",
+      "side": 1,
+      "message": "isn\u0027t this syzkaller\u0027s job, and if there\u0027s a gap there, we should improve syzkaller instead?",
+      "revId": "f33a689e7830e8c6d3b6d5e7f65882b19836a078",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
