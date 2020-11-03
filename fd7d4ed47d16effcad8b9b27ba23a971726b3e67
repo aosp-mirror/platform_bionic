@@ -34,6 +34,24 @@
       "parentUuid": "fde1b301_7e1a01a6",
       "revId": "fd7d4ed47d16effcad8b9b27ba23a971726b3e67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0322500c_fcfec58e",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-11-03T21:59:41Z",
+      "side": 1,
+      "message": "Yes, but it seems like such an easy change for a very common case.\nAnyway, I don\u0027t insist.",
+      "parentUuid": "84ec1c42_37e9c25d",
+      "revId": "fd7d4ed47d16effcad8b9b27ba23a971726b3e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
