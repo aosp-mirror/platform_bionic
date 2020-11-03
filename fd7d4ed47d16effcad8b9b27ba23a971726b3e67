@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fde1b301_7e1a01a6",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-11-03T21:45:27Z",
+      "side": 1,
+      "message": "Would you like to add a fast path to android_run_on_all_threads to avoid several system calls in the zygote specialization path?",
+      "revId": "fd7d4ed47d16effcad8b9b27ba23a971726b3e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
