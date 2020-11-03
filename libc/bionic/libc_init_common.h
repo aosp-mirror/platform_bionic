@@ -30,10 +30,13 @@
 
 #include <sys/cdefs.h>
 
+typedef void init_func_t(int, char*[], char*[]);
+typedef void fini_func_t(void);
+
 typedef struct {
-  void (**preinit_array)(void);
-  void (**init_array)(void);
-  void (**fini_array)(void);
+  init_func_t** preinit_array;
+  init_func_t** init_array;
+  fini_func_t** fini_array;
 } structors_array_t;
 
 __BEGIN_DECLS
