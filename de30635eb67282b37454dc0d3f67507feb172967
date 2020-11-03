@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05d06363_afd8b429",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115178
+      },
+      "writtenOn": "2020-11-03T13:14:14Z",
+      "side": 1,
+      "message": "Just tested and confirmed this fixes the gcov issue we were seeing.\n\nThanks for picking this up Ryan (I was the one who asked) and thanks Matthew for keeping on top of it.",
+      "revId": "de30635eb67282b37454dc0d3f67507feb172967",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
