@@ -16,6 +16,24 @@
       "message": "Would you like to add a fast path to android_run_on_all_threads to avoid several system calls in the zygote specialization path?",
       "revId": "fd7d4ed47d16effcad8b9b27ba23a971726b3e67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84ec1c42_37e9c25d",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-11-03T21:55:39Z",
+      "side": 1,
+      "message": "We would only be avoiding two calls to sigaction, right? I don\u0027t think the semaphores or non-contended locks will involve syscalls in the single-threaded case. So I\u0027m not sure if it\u0027s worth it.",
+      "parentUuid": "fde1b301_7e1a01a6",
+      "revId": "fd7d4ed47d16effcad8b9b27ba23a971726b3e67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
