@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1e7c9d9_d74f879e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-03T18:37:44Z",
+      "side": 1,
+      "message": "seem like legit build failures?\n```\nbionic/libc/bionic/heap_tagging.cpp:120:37: error: use of undeclared identifier \u0027PR_MTE_TCF_NONE\u0027\n        if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {\n                                    ^\nbionic/libc/bionic/heap_tagging.cpp:143:32: error: use of undeclared identifier \u0027PR_MTE_TCF_ASYNC\u0027\n        set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);\n                               ^\nbionic/libc/bionic/heap_tagging.cpp:148:32: error: use of undeclared identifier \u0027PR_MTE_TCF_SYNC\u0027\n        set_tcf_on_all_threads(PR_MTE_TCF_SYNC);\n                               ^\n```",
+      "revId": "fbb4cc994cddc3cf94dd191daa3ad237b69f9b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
