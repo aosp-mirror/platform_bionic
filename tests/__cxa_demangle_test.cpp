@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,41 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <cxxabi.h>
+#include <gtest/gtest.h>
 
-#include <sys/cdefs.h>
+extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
-typedef void init_func_t(int, char*[], char*[]);
-typedef void fini_func_t(void);
-
-typedef struct {
-  init_func_t** preinit_array;
-  init_func_t** init_array;
-  fini_func_t** fini_array;
-} structors_array_t;
-
-__BEGIN_DECLS
-
-extern int main(int argc, char** argv, char** env);
-
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
-
-__END_DECLS
-
-#if defined(__cplusplus)
-
-__LIBC_HIDDEN__ void __libc_init_globals();
-
-__LIBC_HIDDEN__ void __libc_init_common();
-
-__LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
-
-// The fork handler must be initialised after __libc_init_malloc, as
-// pthread_atfork may call malloc() during its once-init.
-__LIBC_HIDDEN__ void __libc_init_fork_handler();
-
+TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
+#if defined(__aarch64__)
+  char* p = __cxa_demangle("1\006ILeeeEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE", 0, 0, 0);
+  ASSERT_STREQ("\x6<-0x1.cecececececececececececececep+11983", p);
+  free(p);
 #endif
+}
+
+TEST(__cxa_demangle, cxa_demangle_fuzz_167977068) {
+#if defined(__aarch64__)
+  ASSERT_TRUE(__cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0) == nullptr);
+#endif
+}
