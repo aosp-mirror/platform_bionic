@@ -16,6 +16,24 @@
       "message": "isn\u0027t this syzkaller\u0027s job, and if there\u0027s a gap there, we should improve syzkaller instead?",
       "revId": "f33a689e7830e8c6d3b6d5e7f65882b19836a078",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7327d0d_321a7770",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-11-04T09:57:29Z",
+      "side": 1,
+      "message": "Ouch, you\u0027re totally right. I was grepping through AOSP to find references to the netdev ioctls, and couldn\u0027t immediately find anything. Internal syzkaller does have coverage for these though.\n\nThanks for taking a look Elliott; I\u0027ll abandon this change.",
+      "parentUuid": "5498b132_00b7c4de",
+      "revId": "f33a689e7830e8c6d3b6d5e7f65882b19836a078",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
