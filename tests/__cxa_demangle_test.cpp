@@ -41,6 +41,8 @@ TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 
 TEST(__cxa_demangle, cxa_demangle_fuzz_167977068) {
 #if defined(__aarch64__)
-  ASSERT_TRUE(__cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0) == nullptr);
+  char* p = __cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0);
+  ASSERT_EQ(nullptr, p) << p;
+  free(p);
 #endif
 }
