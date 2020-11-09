@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f374729_b8b035e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-09T22:35:03Z",
+      "side": 1,
+      "message": "\u003e Patch Set 7:\n\u003e \n\u003e Thank you\n\nFYI for anyone looking at this CL: this change (which shipped in R) caused a startup regression in a couple of Japanese games (see https://issuetracker.google.com/168043760). a later change (https://android-review.googlesource.com/c/platform/bionic/+/1464716) in AOSP master (for S) addresses that, but you might want to backport to your R releases:\n```\nFix __cxa_atexit run-time regression with many registrations\n\nWhen an array element is added or removed, make only the relevant page\nwritable, rather than the entire array. The entire array is still made\nwritable during recompaction and expansion.\n\nThis change fixes most of a large regression in __cxa_atexit runtime\n(blueline, taskset 10, performance governor, 100000 registrations,\ntimes are in seconds)\n - Q: _Exit\u003d0.292380, exit\u003d0.626801\n - R: _Exit\u003d28.435082, exit\u003d95.785110\n - new: _Exit\u003d0.352285, exit\u003d0.713893\n\nTest: bionic unit tests\nTest: adb shell taskset 10 \\\n  /data/benchmarktest64/bionic-spawn-benchmarks/bionic-spawn-benchmarks \\\n  --benchmark_filter\u003d\u0027atexit\u0027 \\\n  --benchmark_display_aggregates_only\u003dtrue \\\n  --benchmark_repetitions\u003d10\nBug: http://b/168043760\nChange-Id: I88cc15c29c9890b422b7f621f29f98a03ca1f886\n```",
+      "revId": "afa983c8d44400d45c1f0e2b8e90a8be04acf6f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
