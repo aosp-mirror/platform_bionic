@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "510169bc_b919c5e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069991
+      },
+      "writtenOn": "2020-11-10T21:00:39Z",
+      "side": 1,
+      "message": "Thanks for disabling it. It was a supr",
+      "revId": "8589e0909ca11d27efb51d8044b2da94bc1abab8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
