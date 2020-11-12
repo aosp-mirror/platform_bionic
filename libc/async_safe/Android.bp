@@ -9,6 +9,7 @@ cc_library_static {
 
     name: "libasync_safe",
     vendor_available: true,
+    product_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
