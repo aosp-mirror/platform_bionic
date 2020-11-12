@@ -39,7 +39,7 @@ TEST(__cxa_demangle, cxa_demangle_fuzz_152588929) {
 #endif
 }
 
-TEST(__cxa_demangle, cxa_demangle_fuzz_167977068) {
+TEST(__cxa_demangle, DISABLED_cxa_demangle_fuzz_167977068) {
 #if defined(__aarch64__)
   char* p = __cxa_demangle("DTLeeeeeeeeeeeeeeeeeeeeeeeeeEEEEeeEEEE", 0, 0, 0);
   ASSERT_EQ(nullptr, p) << p;
