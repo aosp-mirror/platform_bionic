@@ -308,6 +308,7 @@ cc_test_library {
     srcs: [
         "__aeabi_read_tp_test.cpp",
         "__cxa_atexit_test.cpp",
+        "__cxa_demangle_test.cpp",
         "alloca_test.cpp",
         "android_get_device_api_level.cpp",
         "arpa_inet_test.cpp",
@@ -365,6 +366,7 @@ cc_test_library {
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
         "poll_test.cpp",
+        "prio_ctor_test.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
         "regex_test.cpp",
