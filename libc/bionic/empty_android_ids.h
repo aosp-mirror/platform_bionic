@@ -25,42 +25,15 @@
  * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
-#pragma once
-
-#include <sys/cdefs.h>
-
-typedef void init_func_t(int, char*[], char*[]);
-typedef void fini_func_t(void);
-
-typedef struct {
-  init_func_t** preinit_array;
-  init_func_t** init_array;
-  fini_func_t** fini_array;
-} structors_array_t;
-
-__BEGIN_DECLS
-
-extern int main(int argc, char** argv, char** env);
-
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void),
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const* const structors);
-__LIBC_HIDDEN__ void __libc_fini(void* finit_array);
-
-__END_DECLS
-
-#if defined(__cplusplus)
-
-__LIBC_HIDDEN__ void __libc_init_globals();
-
-__LIBC_HIDDEN__ void __libc_init_common();
-
-__LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
-
-// The fork handler must be initialised after __libc_init_malloc, as
-// pthread_atfork may call malloc() during its once-init.
-__LIBC_HIDDEN__ void __libc_init_fork_handler();
-
+#if defined(__ANDROID__)
+#error "This file is for host only"
 #endif
+
+struct android_id_info {
+  const char name[17];
+  unsigned aid;
+};
+
+static const struct android_id_info android_ids[] = {};
+
+#define android_id_count 0

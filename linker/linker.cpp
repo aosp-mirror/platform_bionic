@@ -3458,23 +3458,19 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
 
   const Config* config = nullptr;
 
-  std::string error_msg;
-
-  std::string ld_config_file_path = get_ld_config_file_path(executable_path);
-
-  INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
-  if (!Config::read_binary_config(ld_config_file_path.c_str(),
-                                  executable_path,
-                                  g_is_asan,
-                                  &config,
-                                  &error_msg)) {
-    if (!error_msg.empty()) {
-      DL_WARN("Warning: couldn't read \"%s\" for \"%s\" (using default configuration instead): %s",
-              ld_config_file_path.c_str(),
-              executable_path,
-              error_msg.c_str());
+  {
+    std::string ld_config_file_path = get_ld_config_file_path(executable_path);
+    INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
+    ScopedTrace trace(("linker config " + ld_config_file_path).c_str());
+    std::string error_msg;
+    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan,
+                                    &config, &error_msg)) {
+      if (!error_msg.empty()) {
+        DL_WARN("Warning: couldn't read '%s' for '%s' (using default configuration instead): %s",
+                ld_config_file_path.c_str(), executable_path, error_msg.c_str());
+      }
+      config = nullptr;
     }
-    config = nullptr;
   }
 
   if (config == nullptr) {
