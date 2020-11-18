@@ -16,6 +16,23 @@
       "message": "enh, cferris: Ping.",
       "revId": "216c73d8b1c3b61441efa6d4dd02aaf1342ddb7d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98d6bcfe_bbf29bc4",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-11-18T16:34:52Z",
+      "side": 1,
+      "message": "static?",
+      "revId": "216c73d8b1c3b61441efa6d4dd02aaf1342ddb7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
