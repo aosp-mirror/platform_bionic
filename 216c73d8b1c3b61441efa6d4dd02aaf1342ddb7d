@@ -33,6 +33,24 @@
       "message": "static?",
       "revId": "216c73d8b1c3b61441efa6d4dd02aaf1342ddb7d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2295f0e3_2b5e92eb",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-11-18T18:27:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98d6bcfe_bbf29bc4",
+      "revId": "216c73d8b1c3b61441efa6d4dd02aaf1342ddb7d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
