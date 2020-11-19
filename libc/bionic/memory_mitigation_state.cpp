@@ -36,36 +36,14 @@
 #include <sys/prctl.h>
 #include <sys/types.h>
 
+#include <bionic/malloc.h>
 #include <bionic/mte.h>
-#include <bionic/reserved_signals.h>
 
+#include "heap_tagging.h"
 #include "private/ScopedRWLock.h"
 #include "pthread_internal.h"
 
 extern "C" void scudo_malloc_set_zero_contents(int zero_contents);
-extern "C" void scudo_malloc_disable_memory_tagging();
-
-#ifdef ANDROID_EXPERIMENTAL_MTE
-static bool set_tcf_on_all_threads(int tcf) {
-  static int g_tcf;
-  g_tcf = tcf;
-
-  return android_run_on_all_threads(
-      [](void*) {
-        int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-        if (tagged_addr_ctrl < 0) {
-          return false;
-        }
-
-        tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | g_tcf;
-        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
-          return false;
-        }
-        return true;
-      },
-      nullptr);
-}
-#endif
 
 bool DisableMemoryMitigations(void* arg, size_t arg_size) {
   if (arg || arg_size) {
@@ -74,13 +52,10 @@ bool DisableMemoryMitigations(void* arg, size_t arg_size) {
 
 #ifdef USE_SCUDO
   scudo_malloc_set_zero_contents(0);
+#endif
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
-  if (mte_supported() && set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
-    scudo_malloc_disable_memory_tagging();
-  }
-#endif
-#endif
+  HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_NONE;
+  SetHeapTaggingLevel(reinterpret_cast<void*>(&level), sizeof(level));
 
   return true;
 }
