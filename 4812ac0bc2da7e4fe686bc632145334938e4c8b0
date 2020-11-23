@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9503ed4a_c7a043ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-11-23T16:31:11Z",
+      "side": 1,
+      "message": "Actually, probably better to use EXPECT_EQ().  There\u0027s no reason to skip the other tests if only a single one fails; it\u0027d be better to see all the results.",
+      "revId": "4812ac0bc2da7e4fe686bc632145334938e4c8b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
