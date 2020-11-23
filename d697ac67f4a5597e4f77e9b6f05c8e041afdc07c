@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f43598ec_8a885ce3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-11-23T20:57:39Z",
+      "side": 1,
+      "message": "These tests work for host glibc.  I haven\u0027t tried CF yet (in part because the build is broken).  I hope the results won\u0027t be different between the two implementations, though if they are... that gives us more reason not to use this.\n\nThe surprising thing that I see is \u0027ab\u0027 and \u0027ab*\u0027 match \u0027ab/cd\u0027, but \u0027ab/\u0027 and \u0027ab?\u0027 do not.  That may be hard enough to explain to convince me that using this is a bad idea.",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
