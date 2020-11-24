@@ -16,6 +16,23 @@
       "message": "These tests work for host glibc.  I haven\u0027t tried CF yet (in part because the build is broken).  I hope the results won\u0027t be different between the two implementations, though if they are... that gives us more reason not to use this.\n\nThe surprising thing that I see is \u0027ab\u0027 and \u0027ab*\u0027 match \u0027ab/cd\u0027, but \u0027ab/\u0027 and \u0027ab?\u0027 do not.  That may be hard enough to explain to convince me that using this is a bad idea.",
       "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54556031_94a5166e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-11-24T13:50:16Z",
+      "side": 1,
+      "message": "Looks like our OpenBSD code and the host glibc do differ.  The below tests pass on host but fail on device.  My take is that it\u0027s an error that they\u0027re failing on device, though with how not well specified FNM_LEADING_DIR is, it may be intentional.  Luckily, these aren\u0027t cases that my ueventd code uses.\n\nbionic/tests/fnmatch_test.cpp:(97) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"*ab\", \"1/2/3/4/ab/cd\", 0x08)\nWhich is: 1\nbionic/tests/fnmatch_test.cpp:(110) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"ab*c\", \"ab/1/2/3/c/d/e\", 0x08)\nWhich is: 1\nfnmatch.leading_dir exited with exitcode 1.",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
