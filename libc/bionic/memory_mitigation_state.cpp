@@ -39,8 +39,10 @@
 #include <bionic/malloc.h>
 #include <bionic/mte.h>
 
+#include <private/ScopedPthreadMutexLocker.h>
+#include <private/ScopedRWLock.h>
+
 #include "heap_tagging.h"
-#include "private/ScopedRWLock.h"
 #include "pthread_internal.h"
 
 extern "C" void scudo_malloc_set_zero_contents(int zero_contents);
@@ -54,8 +56,13 @@ bool DisableMemoryMitigations(void* arg, size_t arg_size) {
   scudo_malloc_set_zero_contents(0);
 #endif
 
-  HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_NONE;
-  SetHeapTaggingLevel(reinterpret_cast<void*>(&level), sizeof(level));
+  ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
+
+  HeapTaggingLevel current_level = GetHeapTaggingLevel();
+  if (current_level != M_HEAP_TAGGING_LEVEL_NONE && current_level != M_HEAP_TAGGING_LEVEL_TBI) {
+    HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_NONE;
+    SetHeapTaggingLevel(reinterpret_cast<void*>(&level), sizeof(level));
+  }
 
   return true;
 }

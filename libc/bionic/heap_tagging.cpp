@@ -30,16 +30,14 @@
 #include "malloc_common.h"
 #include "malloc_tagged_pointers.h"
 
+#include <bionic/pthread_internal.h>
 #include <platform/bionic/malloc.h>
 #include <platform/bionic/mte_kernel.h>
-
-#include <bionic/pthread_internal.h>
-
-#include "private/ScopedPthreadMutexLocker.h"
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
 
+// Protected by `g_heap_tagging_lock`.
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
@@ -94,10 +92,15 @@ static bool set_tcf_on_all_threads(int tcf) {
 }
 #endif
 
-bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
-  static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-  ScopedPthreadMutexLocker locker(&mutex);
+pthread_mutex_t g_heap_tagging_lock = PTHREAD_MUTEX_INITIALIZER;
 
+// Requires `g_heap_tagging_lock` to be held.
+HeapTaggingLevel GetHeapTaggingLevel() {
+  return heap_tagging_level;
+}
+
+// Requires `g_heap_tagging_lock` to be held.
+bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
   if (arg_size != sizeof(HeapTaggingLevel)) {
     return false;
   }
