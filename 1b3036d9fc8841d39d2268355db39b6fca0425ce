@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87a4975a_0c799000",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2020-11-26T00:57:40Z",
+      "side": 1,
+      "message": "side note - this won\u0027t test anything right now because TEST_MAPPING is run on x86 where there\u0027s no TBI, but if CF aarch64 comes along then this will hopefully prevent regressions in future.",
+      "revId": "1b3036d9fc8841d39d2268355db39b6fca0425ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
