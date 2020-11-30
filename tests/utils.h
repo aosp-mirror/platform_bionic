@@ -270,6 +270,8 @@ class ExecTestHelper {
   std::vector<const char*> env_;
   std::string output_;
 };
+
+void RunGwpAsanTest(const char* test_name);
 #endif
 
 class FdLeakChecker {
