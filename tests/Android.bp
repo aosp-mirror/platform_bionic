@@ -41,6 +41,9 @@ cc_defaults {
         // We want to test deprecated API too.
         "-Wno-deprecated-declarations",
 
+        // Needed to test pthread_internal_t layout.
+        "-Wno-invalid-offsetof",
+
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
@@ -305,6 +308,7 @@ cc_test_library {
     srcs: [
         "__aeabi_read_tp_test.cpp",
         "__cxa_atexit_test.cpp",
+        "__cxa_demangle_test.cpp",
         "alloca_test.cpp",
         "android_get_device_api_level.cpp",
         "arpa_inet_test.cpp",
@@ -362,6 +366,7 @@ cc_test_library {
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
         "poll_test.cpp",
+        "prio_ctor_test.cpp",
         "pthread_test.cpp",
         "pty_test.cpp",
         "regex_test.cpp",
@@ -392,6 +397,7 @@ cc_test_library {
         "string_posix_strerror_r_test.cpp",
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
+        "struct_layout_test.cpp",
         "sstream_test.cpp",
         "sys_auxv_test.cpp",
         "sys_epoll_test.cpp",
@@ -987,6 +993,8 @@ cc_defaults {
         "ld_config_test_helper_lib1",
         "ld_config_test_helper_lib2",
         "ld_config_test_helper_lib3",
+        "tls_properties_helper",
+        "thread_exit_cb_helper",
     ],
 }
 

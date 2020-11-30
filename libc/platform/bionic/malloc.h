@@ -85,8 +85,8 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
-  // Change the heap tagging state. The program must be single threaded at the point when the
-  // android_mallopt function is called.
+  // Change the heap tagging state. May be called at any time including when
+  // multiple threads are running.
   //   arg = HeapTaggingLevel*
   //   arg_size = sizeof(HeapTaggingLevel)
   M_SET_HEAP_TAGGING_LEVEL = 8,
@@ -105,18 +105,27 @@ enum {
   //   arg_size = sizeof(bool)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
+  // Disable heap initialization across the whole process. If the hardware supports memory
+  // tagging, it also disables memory tagging. May be called at any time including
+  // when multiple threads are running. arg and arg_size are unused and must be set to 0.
+  // Note that the memory mitigations are only implemented in scudo and therefore this API call will
+  // have no effect when using another allocator.
+  M_DISABLE_MEMORY_MITIGATIONS = 11,
+#define M_DISABLE_MEMORY_MITIGATIONS M_DISABLE_MEMORY_MITIGATIONS
 };
 
 enum HeapTaggingLevel {
-  // Disable heap tagging. The program must use prctl(PR_SET_TAGGED_ADDR_CTRL) to disable memory tag
-  // checks before disabling heap tagging. Heap tagging may not be re-enabled after being disabled.
+  // Disable heap tagging and memory tag checks if supported. Heap tagging may not be re-enabled
+  // after being disabled.
   M_HEAP_TAGGING_LEVEL_NONE = 0,
   // Address-only tagging. Heap pointers have a non-zero tag in the most significant byte which is
   // checked in free(). Memory accesses ignore the tag.
   M_HEAP_TAGGING_LEVEL_TBI = 1,
-  // Enable heap tagging if supported, at a level appropriate for asynchronous memory tag checks.
+  // Enable heap tagging and asynchronous memory tag checks if supported. Disable stack trace
+  // collection.
   M_HEAP_TAGGING_LEVEL_ASYNC = 2,
-  // Enable heap tagging if supported, at a level appropriate for synchronous memory tag checks.
+  // Enable heap tagging and synchronous memory tag checks if supported. Enable stack trace
+  // collection.
   M_HEAP_TAGGING_LEVEL_SYNC = 3,
 };
 

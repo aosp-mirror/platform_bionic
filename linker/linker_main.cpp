@@ -297,6 +297,13 @@ static ExecutableInfo load_executable(const char* orig_path) {
   return result;
 }
 
+static void platform_properties_init() {
+#if defined(__aarch64__)
+  const unsigned long hwcap2 = getauxval(AT_HWCAP2);
+  g_platform_properties.bti_supported = (hwcap2 & HWCAP2_BTI) != 0;
+#endif
+}
+
 static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load) {
   ProtectedDataGuard guard;
 
@@ -310,6 +317,9 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
 
   // Initialize system properties
   __system_properties_init(); // may use 'environ'
+
+  // Initialize platform properties.
+  platform_properties_init();
 
   // Register the debuggerd signal handler.
   linker_debuggerd_init();
@@ -380,6 +390,20 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   }
   solinker->set_realpath(interp);
   init_link_map_head(*solinker);
+
+#if defined(__aarch64__)
+  if (exe_to_load == nullptr) {
+    // Kernel does not add PROT_BTI to executable pages of the loaded ELF.
+    // Apply appropriate protections here if it is needed.
+    auto note_gnu_property = GnuPropertySection(somain);
+    if (note_gnu_property.IsBTICompatible() &&
+        (phdr_table_protect_segments(somain->phdr, somain->phnum, somain->load_bias,
+                                     &note_gnu_property) < 0)) {
+      __linker_error("error: can't protect segments for \"%s\": %s", exe_info.path.c_str(),
+                     strerror(errno));
+    }
+  }
+#endif
 
   // Register the main executable and the linker upfront to have
   // gdb aware of them before loading the rest of the dependency

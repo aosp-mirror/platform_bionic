@@ -156,6 +156,9 @@ struct btrfs_ioctl_dev_info_args {
   __u64 unused[379];
   __u8 path[BTRFS_DEVICE_PATH_NAME_MAX];
 };
+#define BTRFS_FS_INFO_FLAG_CSUM_INFO (1 << 0)
+#define BTRFS_FS_INFO_FLAG_GENERATION (1 << 1)
+#define BTRFS_FS_INFO_FLAG_METADATA_UUID (1 << 2)
 struct btrfs_ioctl_fs_info_args {
   __u64 max_id;
   __u64 num_devices;
@@ -163,8 +166,12 @@ struct btrfs_ioctl_fs_info_args {
   __u32 nodesize;
   __u32 sectorsize;
   __u32 clone_alignment;
-  __u32 reserved32;
-  __u64 reserved[122];
+  __u16 csum_type;
+  __u16 csum_size;
+  __u64 flags;
+  __u64 generation;
+  __u8 metadata_uuid[BTRFS_FSID_SIZE];
+  __u8 reserved[944];
 };
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE (1ULL << 0)
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE_VALID (1ULL << 1)

@@ -111,10 +111,13 @@ extern "C" {
 #define DRM_FORMAT_NV61 fourcc_code('N', 'V', '6', '1')
 #define DRM_FORMAT_NV24 fourcc_code('N', 'V', '2', '4')
 #define DRM_FORMAT_NV42 fourcc_code('N', 'V', '4', '2')
+#define DRM_FORMAT_NV15 fourcc_code('N', 'V', '1', '5')
 #define DRM_FORMAT_P210 fourcc_code('P', '2', '1', '0')
 #define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
 #define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')
 #define DRM_FORMAT_P016 fourcc_code('P', '0', '1', '6')
+#define DRM_FORMAT_Q410 fourcc_code('Q', '4', '1', '0')
+#define DRM_FORMAT_Q401 fourcc_code('Q', '4', '0', '1')
 #define DRM_FORMAT_YUV410 fourcc_code('Y', 'U', 'V', '9')
 #define DRM_FORMAT_YVU410 fourcc_code('Y', 'V', 'U', '9')
 #define DRM_FORMAT_YUV411 fourcc_code('Y', 'U', '1', '1')
@@ -136,8 +139,10 @@ extern "C" {
 #define DRM_FORMAT_MOD_VENDOR_BROADCOM 0x07
 #define DRM_FORMAT_MOD_VENDOR_ARM 0x08
 #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
+#define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
 #define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | ((val) & 0x00ffffffffffffffULL))
+#define DRM_FORMAT_MOD_GENERIC_16_16_TILE DRM_FORMAT_MOD_SAMSUNG_16_16_TILE
 #define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
 #define DRM_FORMAT_MOD_LINEAR fourcc_mod_code(NONE, 0)
 #define I915_FORMAT_MOD_X_TILED fourcc_mod_code(INTEL, 1)
@@ -150,9 +155,6 @@ extern "C" {
 #define DRM_FORMAT_MOD_SAMSUNG_64_32_TILE fourcc_mod_code(SAMSUNG, 1)
 #define DRM_FORMAT_MOD_SAMSUNG_16_16_TILE fourcc_mod_code(SAMSUNG, 2)
 #define DRM_FORMAT_MOD_QCOM_COMPRESSED fourcc_mod_code(QCOM, 1)
-#define DRM_FORMAT_MOD_QCOM_DX fourcc_mod_code(QCOM, 0x2)
-#define DRM_FORMAT_MOD_QCOM_TIGHT fourcc_mod_code(QCOM, 0x4)
-#define DRM_FORMAT_MOD_QCOM_TILE fourcc_mod_code(QCOM, 0x8)
 #define DRM_FORMAT_MOD_VIVANTE_TILED fourcc_mod_code(VIVANTE, 1)
 #define DRM_FORMAT_MOD_VIVANTE_SUPER_TILED fourcc_mod_code(VIVANTE, 2)
 #define DRM_FORMAT_MOD_VIVANTE_SPLIT_TILED fourcc_mod_code(VIVANTE, 3)
@@ -198,8 +200,16 @@ extern "C" {
 #define AFBC_FORMAT_MOD_SC (1ULL << 9)
 #define AFBC_FORMAT_MOD_DB (1ULL << 10)
 #define AFBC_FORMAT_MOD_BCH (1ULL << 11)
+#define AFBC_FORMAT_MOD_USM (1ULL << 12)
 #define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
 #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
+#define __fourcc_mod_amlogic_layout_mask 0xf
+#define __fourcc_mod_amlogic_options_shift 8
+#define __fourcc_mod_amlogic_options_mask 0xf
+#define DRM_FORMAT_MOD_AMLOGIC_FBC(__layout,__options) fourcc_mod_code(AMLOGIC, ((__layout) & __fourcc_mod_amlogic_layout_mask) | (((__options) & __fourcc_mod_amlogic_options_mask) << __fourcc_mod_amlogic_options_shift))
+#define AMLOGIC_FBC_LAYOUT_BASIC (1ULL)
+#define AMLOGIC_FBC_LAYOUT_SCATTER (2ULL)
+#define AMLOGIC_FBC_OPTION_MEM_SAVING (1ULL << 0)
 #ifdef __cplusplus
 }
 #endif
