@@ -24,6 +24,6 @@
 #include <linux/virtio_types.h>
 struct virtio_fs_config {
   __u8 tag[36];
-  __u32 num_request_queues;
+  __le32 num_request_queues;
 } __attribute__((packed));
 #endif

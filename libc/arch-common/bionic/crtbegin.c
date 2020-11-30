@@ -31,9 +31,9 @@
 #include <stdint.h>
 
 #define SECTION(name) __attribute__((__section__(name)))
-SECTION(".preinit_array") void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+SECTION(".preinit_array") init_func_t* __PREINIT_ARRAY__ = (init_func_t*)-1;
+SECTION(".init_array.0") init_func_t* __INIT_ARRAY__ = (init_func_t*)-1;
+SECTION(".fini_array.0") fini_func_t* __FINI_ARRAY__ = (fini_func_t*)-1;
 #undef SECTION
 
 __used static void _start_main(void* raw_args) {
@@ -49,7 +49,7 @@ __used static void _start_main(void* raw_args) {
 #define POST "; .size _start, .-_start"
 
 #if defined(__aarch64__)
-__asm__(PRE "mov x0,sp; b _start_main" POST);
+__asm__(PRE "/* BTI J */ hint #36; mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
 __asm__(PRE "mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)

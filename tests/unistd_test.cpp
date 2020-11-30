@@ -676,14 +676,10 @@ TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
   ASSERT_NE(static_cast<uint64_t>(parent_tid), reinterpret_cast<uint64_t>(result));
 }
 
-static void optimization_barrier(void* arg) {
-  asm volatile("" : : "r"(arg) : "memory");
-}
-
 __attribute__((noinline)) static void HwasanVforkTestChild() {
   // Allocate a tagged region on stack and leave it there.
   char x[10000];
-  optimization_barrier(x);
+  DoNotOptimize(x);
   _exit(0);
 }
 
@@ -700,7 +696,7 @@ __attribute__((noinline, no_sanitize("hwaddress"))) static void HwasanVforkTestP
   // Allocate a region on stack, but don't tag it (see the function attribute).
   // This depends on unallocated stack space at current function entry being untagged.
   char x[10000];
-  optimization_barrier(x);
+  DoNotOptimize(x);
   // Verify that contents of x[] are untagged.
   HwasanReadMemory(x, sizeof(x));
 }

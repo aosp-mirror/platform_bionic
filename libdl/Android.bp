@@ -5,6 +5,7 @@ cc_library_static {
     name: "libdl_static",
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -36,9 +37,11 @@ cc_library_static {
 cc_library {
     name: "libdl",
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     static_ndk_lib: true,
+    llndk_stubs: "libdl.llndk",
 
     defaults: ["linux_bionic_supported"],
 
@@ -116,7 +119,7 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: [
             "29",
-            "10000",
+            "current",
         ],
     },
 
@@ -124,6 +127,10 @@ cc_library {
         "//apex_available:platform",
         "com.android.runtime",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 cc_library {
@@ -131,6 +138,7 @@ cc_library {
 
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -193,13 +201,17 @@ cc_library {
 
     stubs: {
         symbol_file: "libdl_android.map.txt",
-        versions: ["10000"],
+        versions: ["current"],
     },
 
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 ndk_library {
@@ -210,7 +222,7 @@ ndk_library {
 }
 
 llndk_library {
-    name: "libdl",
+    name: "libdl.llndk",
     native_bridge_supported: true,
     symbol_file: "libdl.map.txt",
 }

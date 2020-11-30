@@ -124,6 +124,7 @@ cc_defaults {
     name: "linker_all_targets",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    vendor_ramdisk_available: true,
     native_bridge_supported: true,
 }
 
@@ -169,6 +170,7 @@ filegroup {
         "linker_namespaces.cpp",
         "linker_logger.cpp",
         "linker_mapped_file_fragment.cpp",
+        "linker_note_gnu_property.cpp",
         "linker_phdr.cpp",
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
@@ -335,6 +337,7 @@ cc_binary {
     compile_multilib: "both",
 
     recovery_available: true,
+    vendor_ramdisk_available: true,
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -355,6 +358,10 @@ cc_binary {
                 "liblinker_debuggerd_stub",
             ],
         }
+    },
+
+    lto: {
+        never: true,
     },
 }
 
@@ -408,6 +415,7 @@ cc_library {
     name: "ld-android",
     defaults: ["linux_bionic_supported", "linker_version_script_overlay"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -426,6 +434,10 @@ cc_library {
         "//apex_available:platform",
         "com.android.runtime",
     ],
+
+    lto: {
+        never: true,
+    },
 }
 
 cc_test {
@@ -447,6 +459,7 @@ cc_test {
         "linker_block_allocator_test.cpp",
         "linker_config_test.cpp",
         "linked_list_test.cpp",
+        "linker_note_gnu_property_test.cpp",
         "linker_sleb128_test.cpp",
         "linker_utils_test.cpp",
         "linker_gnu_hash_test.cpp",
@@ -455,6 +468,7 @@ cc_test {
         "linker_block_allocator.cpp",
         "linker_config.cpp",
         "linker_debug.cpp",
+        "linker_note_gnu_property.cpp",
         "linker_test_globals.cpp",
         "linker_utils.cpp",
     ],

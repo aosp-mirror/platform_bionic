@@ -28,3 +28,5 @@
 #define WMEMMOVE
 #include "memmove.S"
 #undef WMEMMOVE
+
+NOTE_GNU_PROPERTY()
