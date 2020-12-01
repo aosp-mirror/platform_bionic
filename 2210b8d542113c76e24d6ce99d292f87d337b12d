@@ -74,6 +74,24 @@
       "parentUuid": "46017464_fd1c3be3",
       "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f41e8b93_faeead93",
+        "filename": "libc/bionic/memory_mitigation_state.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2020-12-01T00:24:58Z",
+      "side": 1,
+      "message": "Well, OK.",
+      "parentUuid": "4f0252e5_c2feb8af",
+      "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
