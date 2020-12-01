@@ -116,6 +116,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2356af2_1f30d364",
+        "filename": "libc/bionic/heap_tagging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-12-01T19:19:57Z",
+      "side": 1,
+      "message": "No.  I was complaining about the lack of annotations on std::unique_ptr, but I haven\u0027t looked into annotations for any of the C functions.",
+      "parentUuid": "31f08945_0d483f2c",
+      "range": {
+        "startLine": 41,
+        "startChar": 43,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46017464_fd1c3be3",
