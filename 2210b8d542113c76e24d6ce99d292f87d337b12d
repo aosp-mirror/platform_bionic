@@ -37,6 +37,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f8f50986_2dd4ea64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-01T18:34:16Z",
+      "side": 1,
+      "message": "oops, actually +tomcherry for the \"didn\u0027t we look at annotating pthread_mutex_t already?\" question...",
+      "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a2b00f87_7496984a",
         "filename": "libc/bionic/heap_tagging.h",
         "patchSetId": 2
