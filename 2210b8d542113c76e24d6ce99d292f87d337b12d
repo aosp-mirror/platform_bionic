@@ -18,6 +18,29 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2b00f87_7496984a",
+        "filename": "libc/bionic/heap_tagging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2020-12-01T00:24:37Z",
+      "side": 1,
+      "message": "I wonder if we should move \u003candroid-base/thread_annotations.h\u003e into bionic and annotate pthread_mutex_t so we can have clang check this for us...",
+      "range": {
+        "startLine": 41,
+        "startChar": 43,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46017464_fd1c3be3",
