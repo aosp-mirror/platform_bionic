@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31f08945_0d483f2c",
+        "filename": "libc/bionic/heap_tagging.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-01T18:33:47Z",
+      "side": 1,
+      "message": "didn\u0027t +tomcherry look at adding the annotations to pthread_mutex_t before? i don\u0027t remember why we didn\u0027t, but i feel sure someone looked and came up with a reason why we couldn\u0027t/shouldn\u0027t...",
+      "parentUuid": "a2b00f87_7496984a",
+      "range": {
+        "startLine": 41,
+        "startChar": 43,
+        "endLine": 46,
+        "endChar": 39
+      },
+      "revId": "2210b8d542113c76e24d6ce99d292f87d337b12d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46017464_fd1c3be3",
