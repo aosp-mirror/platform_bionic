@@ -28,7 +28,19 @@
 
 #pragma once
 
+#include <bionic/pthread_internal.h>
+#include <platform/bionic/malloc.h>
 #include <stddef.h>
 
+// Expected to be called in a single-threaded context during libc init, so no
+// synchronization required.
 void SetDefaultHeapTaggingLevel();
+
+// Lock for the heap tagging level. You may find ScopedPthreadMutexLocker
+// useful for RAII on this lock.
+extern pthread_mutex_t g_heap_tagging_lock;
+
+// These functions can be called in a multithreaded context, and thus should
+// only be called when holding the `g_heap_tagging_lock`.
 bool SetHeapTaggingLevel(void* arg, size_t arg_size);
+HeapTaggingLevel GetHeapTaggingLevel();
