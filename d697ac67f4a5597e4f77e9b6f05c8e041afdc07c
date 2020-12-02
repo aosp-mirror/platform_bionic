@@ -33,6 +33,40 @@
       "message": "Looks like our OpenBSD code and the host glibc do differ.  The below tests pass on host but fail on device.  My take is that it\u0027s an error that they\u0027re failing on device, though with how not well specified FNM_LEADING_DIR is, it may be intentional.  Luckily, these aren\u0027t cases that my ueventd code uses.\n\nbionic/tests/fnmatch_test.cpp:(97) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"*ab\", \"1/2/3/4/ab/cd\", 0x08)\nWhich is: 1\nbionic/tests/fnmatch_test.cpp:(110) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"ab*c\", \"ab/1/2/3/c/d/e\", 0x08)\nWhich is: 1\nfnmatch.leading_dir exited with exitcode 1.",
       "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84132800_e20a6600",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-02T23:17:11Z",
+      "side": 1,
+      "message": "bionic/tests/fnmatch_test.cpp:(97) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"*ab\", \"1/2/3/4/ab/cd\", 0x08)\nWhich is: 1\n\n\n\nthis one confuses me compared to L92. i feel like if L92 isn\u0027t a match, there\u0027s no reasonable world where this is a match. (aiui, you\u0027re saying that glibc disagrees, but i\u0027m unconvinced about trying to take this as a \"fix\" to the BSDs as long as it doesn\u0027t make any sense to me. [sure, there\u0027s the argument that your feature that only exists for compatibility should be compatible, but when that feature seems so wrong -- or at least \"so inexplicable\" -- i can\u0027t help but think \"make it a no-op or remove it\" seems like the better fix!])\n\nmacOS returns 0 for both. which is at least self-consistent, even if it\u0027s what i\u0027d consider the \"both answers are wrong\" resolution. (that\u0027s weird though, we\u0027re BSD but consistently return 1 for both, which is self-consistent and makes some sense to me at least.)",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "368c4318_732d904d",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-02T23:17:11Z",
+      "side": 1,
+      "message": "bionic/tests/fnmatch_test.cpp:(110) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"ab*c\", \"ab/1/2/3/c/d/e\", 0x08)\nWhich is: 1\n\n\nhere too, our result makes more sense than glibc\u0027s?",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
