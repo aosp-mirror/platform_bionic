@@ -26,6 +26,9 @@ apex {
         "libc_malloc_debug",
         "libc_malloc_hooks",
     ],
+    binaries: [
+        "linkerconfig",
+    ],
     multilib: {
         both: {
             binaries: [
