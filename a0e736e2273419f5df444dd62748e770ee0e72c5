@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b684793a_d4a2334b",
+        "filename": "libc/bionic/bind.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1054468
+      },
+      "writtenOn": "2020-12-07T14:35:22Z",
+      "side": 1,
+      "message": "Where does this number come from?",
+      "range": {
+        "startLine": 50,
+        "startChar": 24,
+        "endLine": 50,
+        "endChar": 28
+      },
+      "revId": "a0e736e2273419f5df444dd62748e770ee0e72c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b887bb6_74194f2d",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1054468
+      },
+      "writtenOn": "2020-12-07T14:35:22Z",
+      "side": 1,
+      "message": "Should we have separate lists for these two things?",
+      "range": {
+        "startLine": 314,
+        "startChar": 7,
+        "endLine": 314,
+        "endChar": 41
+      },
+      "revId": "a0e736e2273419f5df444dd62748e770ee0e72c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
