@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30558cde_438266b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-07T16:13:29Z",
+      "side": 1,
+      "message": "Hey Elliott and Narayan,\n\nWould this be an acceptable approach to soft-enabling MAC address restrictions with an allowlist?\n\nThanks in advance for having a look.\n\nKind regards,\nBram",
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

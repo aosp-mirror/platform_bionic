@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f58be6ea_4a78a45f",
+        "filename": "libc/bionic/bind.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-07T16:13:29Z",
+      "side": 1,
+      "message": "Thanks for catching this. I was trying to determine a reasonable maximum app ID length. I\u0027ve now defined the constant MAX_PACKAGE_NAME_LENGTH for this.\n\nI can\u0027t seem to find a canonical value for this, but a quick binary search on package name lengths allows me to go until 230 before `adb install` errors out with `INSTALL_FAILED_INSUFFICIENT_STORAGE`. I chose that as the value for now, but pointers to a better one are most welcome :-)\n\nOf course we can always increase this value depending on the packages included in the allowlist as well, as the only other place they\u0027re used is for logging.",
+      "parentUuid": "b684793a_d4a2334b",
+      "range": {
+        "startLine": 50,
+        "startChar": 24,
+        "endLine": 50,
+        "endChar": 28
+      },
+      "revId": "a0e736e2273419f5df444dd62748e770ee0e72c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2b887bb6_74194f2d",
         "filename": "libc/bionic/ifaddrs.cpp",
         "patchSetId": 5
@@ -37,6 +61,30 @@
       "writtenOn": "2020-12-07T14:35:22Z",
       "side": 1,
       "message": "Should we have separate lists for these two things?",
+      "range": {
+        "startLine": 314,
+        "startChar": 7,
+        "endLine": 314,
+        "endChar": 41
+      },
+      "revId": "a0e736e2273419f5df444dd62748e770ee0e72c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "829c12b0_c735f138",
+        "filename": "libc/bionic/ifaddrs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-07T16:13:29Z",
+      "side": 1,
+      "message": "Good point. I split them up into two lists now.",
+      "parentUuid": "2b887bb6_74194f2d",
       "range": {
         "startLine": 314,
         "startChar": 7,
