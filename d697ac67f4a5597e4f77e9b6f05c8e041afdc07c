@@ -54,6 +54,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2c8b5e03_2e115182",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-12-07T22:13:10Z",
+      "side": 1,
+      "message": "L92 doesn\u0027t match because the first * can\u0027t match /\u0027s due to FNM_PATHNAME.  That one should definitely not match.  If macOS returns 0 for L92, then that\u0027s profoundly broken.\n\nL97 doesn\u0027t have FNM_PATHNAME, so the prefix 1/2/3/4/ is matched by the *.  That leaves us with `ab` remaining in the pattern and `ab/cd` remaining in the string, which is exactly L95, which does match on all platforms.\n\nIf L95, which has a pattern ending in neither * or /, matches subdirectories, then I would expect that subdirectory matching behavior at the end of any string that ends in neither * or / with FNM_LEADING_DIR.  That is not the case in our implementation, and why I think glibc is right.",
+      "parentUuid": "84132800_e20a6600",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "368c4318_732d904d",
         "filename": "tests/fnmatch_test.cpp",
         "patchSetId": 1
@@ -65,6 +83,24 @@
       "writtenOn": "2020-12-02T23:17:11Z",
       "side": 1,
       "message": "bionic/tests/fnmatch_test.cpp:(110) Failure in test fnmatch.leading_dir\nExpected equality of these values:\n0\nfnmatch(\"ab*c\", \"ab/1/2/3/c/d/e\", 0x08)\nWhich is: 1\n\n\nhere too, our result makes more sense than glibc\u0027s?",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38b8129f_dc29d70d",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2020-12-07T22:13:10Z",
+      "side": 1,
+      "message": "Same as above, in my mind this is the same as L95 and L97.  The `ab` in the pattern matches `ab in the string, then the `*` in the pattern matches `/1/2/3/` in the string, which leaves us with `c` in the pattern and `c/d/e` in the string, which is the same case as L95.\n\nMaybe there\u0027s some greedy vs not-greedy matching happening here that\u0027s causing the issue?",
+      "parentUuid": "368c4318_732d904d",
       "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
