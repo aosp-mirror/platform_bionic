@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb71f3af_ea1f5778",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2841,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2020-12-07T09:27:11Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be /data/local/tmp?",
+      "range": {
+        "startLine": 2841,
+        "startChar": 41,
+        "endLine": 2841,
+        "endChar": 44
+      },
+      "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "646e8495_f9f620de",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2849,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2020-12-07T09:27:11Z",
+      "side": 1,
+      "message": "likewise, I\u0027m confused this passes, so I\u0027m probably missing something :)",
+      "range": {
+        "startLine": 2849,
+        "startChar": 42,
+        "endLine": 2849,
+        "endChar": 51
+      },
+      "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
