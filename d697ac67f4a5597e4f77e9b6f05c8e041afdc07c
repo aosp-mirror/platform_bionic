@@ -72,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bfaea5d1_68ea9552",
+        "filename": "tests/fnmatch_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-08T00:34:55Z",
+      "side": 1,
+      "message": "ah, i don\u0027t think i realized that \"dir\" matches \"dir/anything\", though, yes, that makes sense when you point it out! i should add that as one of the regular tests if nothing else!\n\nso, yes, given that i have to then accept that L97 does seem like a bug in our^WNetBSD\u0027s implementation...",
+      "parentUuid": "2c8b5e03_2e115182",
+      "revId": "d697ac67f4a5597e4f77e9b6f05c8e041afdc07c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "368c4318_732d904d",
         "filename": "tests/fnmatch_test.cpp",
         "patchSetId": 1
