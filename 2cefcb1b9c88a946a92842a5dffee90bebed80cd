@@ -106,6 +106,24 @@
       "parentUuid": "21c58a62_1602b54e",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "191059a2_d3031f66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T06:11:03Z",
+      "side": 1,
+      "message": "did something change to cause that then? the bionic unit tests used to need a reboot to get the new bionic previously.\n\n(that is: is there something we can change so the benchmarks pick up the latest bionic too?)",
+      "parentUuid": "eb795a53_8e8c7475",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
