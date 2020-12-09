@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "606de822_cdb980df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T02:08:11Z",
+      "side": 1,
+      "message": "iirc the reason we didn\u0027t have a static benchmarks binary was because ifuncs didn\u0027t work? so probably fine now.\n\nthat said, i have noticed recently that `adb sync` with the bionic apex seems to \"just work\". certainly unit tests seem to pick up new versions of bionic. i\u0027d been meaning to ask +jiyong who\u0027d fixed that so i could peer bonus them!",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
