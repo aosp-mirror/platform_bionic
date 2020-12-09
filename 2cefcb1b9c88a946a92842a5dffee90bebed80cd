@@ -34,6 +34,24 @@
       "parentUuid": "606de822_cdb980df",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10e29f60_32edabd7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-09T02:18:24Z",
+      "side": 1,
+      "message": "Huh, \"adb sync\" works on apexes now? I thought that it needed a reboot, or at least some magic command to make apexd remount the apexes. I should try it again soon.",
+      "parentUuid": "606de822_cdb980df",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
