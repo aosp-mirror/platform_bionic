@@ -124,6 +124,24 @@
       "parentUuid": "eb795a53_8e8c7475",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d528a94d_42f37880",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-12-09T07:21:47Z",
+      "side": 1,
+      "message": "Can you share the build ID where you were able to run the benchmark without reboot? I could investigate. It would be great if you can file a bug with a repro step.\n\n\u003e is there something we can change so the benchmarks pick up the latest bionic too?\n\nWell, if you are okay with flattened APEX, you can follow the steps shown in https://b.corp.google.com/issues/141952744#comment9. (Just build with OVERRIDE_TARGET_FLATTEN_APEX\u003dtrue) If you have to use non-flattend APEX, I don\u0027t have an answer.",
+      "parentUuid": "191059a2_d3031f66",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
