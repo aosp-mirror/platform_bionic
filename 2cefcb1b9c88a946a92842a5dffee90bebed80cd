@@ -70,6 +70,24 @@
       "parentUuid": "10e29f60_32edabd7",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21c58a62_1602b54e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-12-09T03:39:15Z",
+      "side": 1,
+      "message": "Are you two using non-flattened APEX? Then, it can\u0027t be. AFAIK, it still requires reboot or rescan command. There hasn\u0027t been such a change to apexd recently. Let me try that.",
+      "parentUuid": "ffbbc872_d1c4f60a",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
