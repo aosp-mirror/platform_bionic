@@ -57,8 +57,13 @@ void DumpEvent(std::vector<android_fdtrack_event>* events, size_t index) {
   }
 }
 
-std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
+std::vector<android_fdtrack_event> FdtrackRun(void (*func)(), bool reenable = true) {
   // Each bionic test is run in separate process, so we can safely use a static here.
+  // However, since they're all forked, we need to reenable fdtrack.
+  if (reenable) {
+    android_fdtrack_set_globally_enabled(true);
+  }
+
   static std::vector<android_fdtrack_event> events;
   events.clear();
 
@@ -126,6 +131,21 @@ TEST(fdtrack, close) {
   ASSERT_EQ(1U, events.size());
   ASSERT_EQ(fd, events[0].fd);
   ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CLOSE, events[0].type);
+#endif
+}
+
+TEST(fdtrack, fork) {
+#if defined(__BIONIC__)
+  ASSERT_EXIT(
+      []() {
+        static int fd = open("/dev/null", O_WRONLY | O_CLOEXEC);
+        ASSERT_NE(-1, fd);
+
+        auto events = FdtrackRun([]() { close(fd); }, false);
+        ASSERT_EQ(0U, events.size());
+        exit(0);
+      }(),
+      testing::ExitedWithCode(0), "");
 #endif
 }
 
