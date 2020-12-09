@@ -88,6 +88,24 @@
       "parentUuid": "ffbbc872_d1c4f60a",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb795a53_8e8c7475",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-12-09T03:45:13Z",
+      "side": 1,
+      "message": "Just checked. The update isn\u0027t applied until device reboots. Tested on aosp_cf_x86_phone.\n\nThe reason it seems to work might indicate that your test uses the bootstrap copies (system/lib/bootstrap/libc.so, etc.) instead of the one in the APEX.",
+      "parentUuid": "21c58a62_1602b54e",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
