@@ -117,6 +117,30 @@
       },
       "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66b4cf51_68aee7d1",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2849,
+      "author": {
+        "id": 1013030
+      },
+      "writtenOn": "2020-12-09T08:04:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8273c95b_1d911c69",
+      "range": {
+        "startLine": 2849,
+        "startChar": 42,
+        "endLine": 2849,
+        "endChar": 51
+      },
+      "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
