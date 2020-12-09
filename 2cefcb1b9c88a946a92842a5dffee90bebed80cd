@@ -52,6 +52,24 @@
       "parentUuid": "606de822_cdb980df",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffbbc872_d1c4f60a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T02:19:15Z",
+      "side": 1,
+      "message": "yeah, it used to require a reboot for me, but last week (on cuttlefish at least) it \"just worked\".",
+      "parentUuid": "10e29f60_32edabd7",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
