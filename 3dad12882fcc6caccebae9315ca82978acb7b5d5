@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6f5492f0_b4536709",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2841,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T06:26:17Z",
+      "side": 1,
+      "message": "i was thinking i was going to use /tmp for the host, but then decided YAGNI (because no-one should be using these anyway).",
+      "parentUuid": "cb71f3af_ea1f5778",
+      "range": {
+        "startLine": 2841,
+        "startChar": 41,
+        "endLine": 2841,
+        "endChar": 44
+      },
+      "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "646e8495_f9f620de",
         "filename": "tests/stdio_test.cpp",
         "patchSetId": 2
@@ -61,6 +85,30 @@
       "side": 1,
       "message": "oh, I misunderstood what ASSERT_MATCH does :) Might still be beneficial to be more specific here though?",
       "parentUuid": "646e8495_f9f620de",
+      "range": {
+        "startLine": 2849,
+        "startChar": 42,
+        "endLine": 2849,
+        "endChar": 51
+      },
+      "revId": "3dad12882fcc6caccebae9315ca82978acb7b5d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8273c95b_1d911c69",
+        "filename": "tests/stdio_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2849,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T06:26:17Z",
+      "side": 1,
+      "message": "yeah, this was just late-evening stupidity on my part plus _me_ not realizing that ASSERT_MATCH didn\u0027t imply ^$. i\u0027ve fixed the lot.",
+      "parentUuid": "bb967add_3e613038",
       "range": {
         "startLine": 2849,
         "startChar": 42,
