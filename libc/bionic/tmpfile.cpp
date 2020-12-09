@@ -35,6 +35,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -99,3 +100,48 @@ FILE* tmpfile() {
   return fp;
 }
 __strong_alias(tmpfile64, tmpfile);
+
+char* tempnam(const char* dir, const char* prefix) {
+  // This function is a terrible idea, marked deprecated in our headers,
+  // and marked obsolescent by POSIX.1-2008, but we make some effort anyway
+  // since we can't easily remove it...
+
+  // $TMPDIR overrides any directory passed in.
+  char* tmpdir = getenv("TMPDIR");
+  if (tmpdir != nullptr) dir = tmpdir;
+
+  // If we still have no directory, we'll give you a default.
+  // It's useless for apps, but good enough for the shell.
+  if (dir == nullptr) dir = "/data/local/tmp";
+
+  // Default prefix?
+  if (prefix == nullptr) prefix = "tempnam.";
+
+  // Make up a mktemp(3) template and defer to it for the real work.
+  char* path = nullptr;
+  if (asprintf(&path, "%s/%sXXXXXXXXXX", dir, prefix) == -1) return nullptr;
+  if (mktemp(path) == nullptr) {
+    free(path);
+    return nullptr;
+  }
+  return path;
+}
+
+char* tmpnam(char* s) {
+  // This function is a terrible idea, marked deprecated in our headers,
+  // and marked obsolescent by POSIX-1.2008, but we make some effort anyway
+  // since we can't easily remove it...
+
+  // Default buffer?
+  static char buf[L_tmpnam];
+  if (s == nullptr) s = buf;
+
+  // Use $TMPDIR if set, or fall back to /data/local/tmp otherwise.
+  // Useless for apps, but good enough for the shell.
+  const char* dir = getenv("TMPDIR");
+  if (dir == nullptr) dir = "/data/local/tmp";
+
+  // Make up a mktemp(3) template and defer to it for the real work.
+  snprintf(s, L_tmpnam, "%s/tmpnam.XXXXXXXXXX", dir);
+  return mktemp(s);
+}
