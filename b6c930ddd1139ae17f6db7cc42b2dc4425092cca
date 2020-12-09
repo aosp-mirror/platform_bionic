@@ -33,6 +33,70 @@
       "message": "I have no issues with this approach. Elliott ?",
       "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8feef79c_7a45c5c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T18:04:17Z",
+      "side": 1,
+      "message": "(sorry, i\u0027m sure i must have this tab open somewhere because i remember reviewing this already, but clearly never sent anything!)\n\nyeah, i\u0027d have more nits if we were keeping this but since it\u0027s going to be removed before S anyway...\n\nthe socketcall nonsense was the biggest gotcha and you found that yourself anyway :-)",
+      "parentUuid": "e420be15_85ee0713",
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09b552fa_16fd1adc",
+        "filename": "libc/bionic/bionic_appcompat.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T18:04:17Z",
+      "side": 1,
+      "message": "|O_CLOEXEC",
+      "range": {
+        "startLine": 77,
+        "startChar": 40,
+        "endLine": 77,
+        "endChar": 48
+      },
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7cdf03f_fdaacdfb",
+        "filename": "libc/bionic/bionic_appcompat.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-09T18:04:17Z",
+      "side": 1,
+      "message": "do you want this, or do you just want `buffer[len] \u003d 0`?",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 33
+      },
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
