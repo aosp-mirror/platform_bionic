@@ -29,7 +29,6 @@ cc_defaults {
         "bionic_benchmarks.cpp",
         "atomic_benchmark.cpp",
         "ctype_benchmark.cpp",
-        "dlfcn_benchmark.cpp",
         "get_heap_size_benchmark.cpp",
         "inttypes_benchmark.cpp",
         "malloc_benchmark.cpp",
@@ -80,6 +79,9 @@ cc_defaults {
 cc_benchmark {
     name: "bionic-benchmarks",
     defaults: ["bionic-benchmarks-defaults"],
+    srcs: [
+        "dlfcn_benchmark.cpp",
+    ],
     data: ["suites/*"],
     static_libs: [
         "libsystemproperties",
@@ -88,16 +90,26 @@ cc_benchmark {
     include_dirs: ["bionic/libc"],
 }
 
-// We don't build a static benchmark executable because it's not usually
-// useful. If you're trying to run the current benchmarks on an older
-// release, it's (so far at least) always because you want to measure the
-// performance of the old release's libc, and a static benchmark isn't
-// going to let you do that.
+cc_benchmark {
+    name: "bionic-benchmarks-static",
+    defaults: ["bionic-benchmarks-defaults"],
+    data: ["suites/*"],
+    static_libs: [
+        "liblog",
+        "libsystemproperties",
+        "libasync_safe",
+    ],
+    include_dirs: ["bionic/libc"],
+    static_executable: true,
+}
 
 // Build benchmarks for the host (against glibc!). Run with:
 cc_benchmark_host {
     name: "bionic-benchmarks-glibc",
     defaults: ["bionic-benchmarks-defaults"],
+    srcs: [
+        "dlfcn_benchmark.cpp",
+    ],
     target: {
         darwin: {
             // Only supported on linux systems.
