@@ -76,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cd15581_c0b10410",
+        "filename": "libc/bionic/bionic_appcompat.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-10T10:59:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09b552fa_16fd1adc",
+      "range": {
+        "startLine": 77,
+        "startChar": 40,
+        "endLine": 77,
+        "endChar": 48
+      },
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a7cdf03f_fdaacdfb",
@@ -89,6 +113,30 @@
       "writtenOn": "2020-12-09T18:04:17Z",
       "side": 1,
       "message": "do you want this, or do you just want `buffer[len] \u003d 0`?",
+      "range": {
+        "startLine": 83,
+        "startChar": 13,
+        "endLine": 83,
+        "endChar": 33
+      },
+      "revId": "b6c930ddd1139ae17f6db7cc42b2dc4425092cca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8321a808_6b754695",
+        "filename": "libc/bionic/bionic_appcompat.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-10T10:59:18Z",
+      "side": 1,
+      "message": "You\u0027re right, that makes more sense. I added that, and made it read at most bufferlen - 1 bytes above.",
+      "parentUuid": "a7cdf03f_fdaacdfb",
       "range": {
         "startLine": 83,
         "startChar": 13,
