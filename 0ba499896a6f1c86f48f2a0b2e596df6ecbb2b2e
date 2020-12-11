@@ -34,6 +34,23 @@
       "parentUuid": "da2ad284_78d191a4",
       "revId": "0ba499896a6f1c86f48f2a0b2e596df6ecbb2b2e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "533bf6ad_edc5b5a6",
+        "filename": "libc/bionic/bind.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2020-12-11T15:03:25Z",
+      "side": 1,
+      "message": "Note that this line might not be doing what we think it\u0027s doing.  \u0027err\u0027 doesn\u0027t get the return value of getsockopt() (0 on success or -1 on failure); instead it gets the boolean result of the \u0027\u003c\u0027 operation (0 on success or 1 on failure (after the implicit conversion from bool to int)).\n\nIt doesn\u0027t end up mattering here, since the logic is going to work the same either way, and since we don\u0027t end up referencing the \u0027err\u0027 value after writing to it.  But to clear things up for the future, I put up a minor follow-up just to remove \u0027err\u0027 altogether: https://android-review.googlesource.com/c/platform/bionic/+/1525402",
+      "revId": "0ba499896a6f1c86f48f2a0b2e596df6ecbb2b2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
