@@ -357,11 +357,34 @@ cc_binary {
             static_libs: [
                 "liblinker_debuggerd_stub",
             ],
-        }
+        },
+        android_arm64: {
+            pgo: {
+                profile_file: "bionic/linker_arm_arm64.profdata",
+            },
+        },
+        android_arm: {
+            pgo: {
+                profile_file: "bionic/linker_arm_arm64.profdata",
+            },
+        },
+        android_x86_64: {
+            pgo: {
+                profile_file: "bionic/linker_x86_x86_64.profdata",
+            },
+        },
+        android_x86: {
+            pgo: {
+                profile_file: "bionic/linker_x86_x86_64.profdata",
+            },
+        },
     },
 
     lto: {
         never: true,
+    },
+    pgo: {
+        sampling: true,
     },
 }
 
