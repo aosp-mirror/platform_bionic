@@ -160,6 +160,24 @@
       "parentUuid": "d528a94d_42f37880",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a95d805_db141a03",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2020-12-11T04:01:55Z",
+      "side": 1,
+      "message": "Yeah, I thinking about setting it when you do your own build locally. It is definitely not the mainstream (and we actually want to kill it), but ARC++ and Go devices are using flattened APEX, so it\u0027s not something totally untested.",
+      "parentUuid": "41d84177_41ab6ece",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
