@@ -142,6 +142,24 @@
       "parentUuid": "191059a2_d3031f66",
       "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "41d84177_41ab6ece",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-11T01:10:42Z",
+      "side": 1,
+      "message": "\u003e Can you share the build ID where you were able to run the benchmark without reboot? \n\nto be clear: it was the tests, not the benchmarks. (i didn\u0027t try the benchmarks.) and it was just some random ToT last week.\n\n\u003e Well, if you are okay with flattened APEX\n\nmy understanding from https://source.android.com/devices/tech/ota/apex#flattened_apex is that we can\u0027t just make that decision --- it\u0027s a choice that applies to all apexes on a product? oh, i see, you\u0027re saying \"for local testing\". i suppose i could just put that in my environment, but i\u0027m assuming it\u0027s not well tested so i might see other random issues in that case?",
+      "parentUuid": "d528a94d_42f37880",
+      "revId": "2cefcb1b9c88a946a92842a5dffee90bebed80cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
