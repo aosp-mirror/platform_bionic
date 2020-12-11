@@ -41,9 +41,9 @@ extern "C" int __bind(int fd, const struct sockaddr* addr, socklen_t addr_length
 
 int bind(int fd, const struct sockaddr* addr, socklen_t addr_length) {
   if (should_apply_soft_mac_bind_restrictions()) {
-    int sock_protocol, err;
+    int sock_protocol;
     socklen_t sock_length = sizeof(sock_protocol);
-    if ((err = getsockopt(fd, SOL_SOCKET, SO_PROTOCOL, &sock_protocol, &sock_length) < 0)) {
+    if (getsockopt(fd, SOL_SOCKET, SO_PROTOCOL, &sock_protocol, &sock_length) < 0) {
       async_safe_format_log(ANDROID_LOG_ERROR, "mac-restrictions",
                             "Could not get socket protocol: %s", strerror(errno));
     } else if (NETLINK_ROUTE == sock_protocol) {
