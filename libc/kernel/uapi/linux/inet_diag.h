@@ -130,6 +130,7 @@ enum {
   INET_DIAG_ULP_INFO,
   INET_DIAG_SK_BPF_STORAGES,
   INET_DIAG_CGROUP_ID,
+  INET_DIAG_SOCKOPT,
   __INET_DIAG_MAX,
 };
 #define INET_DIAG_MAX (__INET_DIAG_MAX - 1)
@@ -146,6 +147,10 @@ struct inet_diag_meminfo {
   __u32 idiag_wmem;
   __u32 idiag_fmem;
   __u32 idiag_tmem;
+};
+struct inet_diag_sockopt {
+  __u8 recverr : 1, is_icsk : 1, freebind : 1, hdrincl : 1, mc_loop : 1, transparent : 1, mc_all : 1, nodefrag : 1;
+  __u8 bind_address_no_port : 1, recverr_rfc4884 : 1, defer_connect : 1, unused : 5;
 };
 struct tcpvegas_info {
   __u32 tcpv_enabled;

@@ -44,7 +44,6 @@ struct fscrypt_policy_v1 {
   __u8 flags;
   __u8 master_key_descriptor[FSCRYPT_KEY_DESCRIPTOR_SIZE];
 };
-#define fscrypt_policy fscrypt_policy_v1
 #define FSCRYPT_KEY_DESC_PREFIX "fscrypt:"
 #define FSCRYPT_KEY_DESC_PREFIX_SIZE 8
 #define FSCRYPT_MAX_KEY_SIZE 64
@@ -115,15 +114,16 @@ struct fscrypt_get_key_status_arg {
   __u32 user_count;
   __u32 __out_reserved[13];
 };
-#define FS_IOC_SET_ENCRYPTION_POLICY _IOR('f', 19, struct fscrypt_policy)
+#define FS_IOC_SET_ENCRYPTION_POLICY _IOR('f', 19, struct fscrypt_policy_v1)
 #define FS_IOC_GET_ENCRYPTION_PWSALT _IOW('f', 20, __u8[16])
-#define FS_IOC_GET_ENCRYPTION_POLICY _IOW('f', 21, struct fscrypt_policy)
+#define FS_IOC_GET_ENCRYPTION_POLICY _IOW('f', 21, struct fscrypt_policy_v1)
 #define FS_IOC_GET_ENCRYPTION_POLICY_EX _IOWR('f', 22, __u8[9])
 #define FS_IOC_ADD_ENCRYPTION_KEY _IOWR('f', 23, struct fscrypt_add_key_arg)
 #define FS_IOC_REMOVE_ENCRYPTION_KEY _IOWR('f', 24, struct fscrypt_remove_key_arg)
 #define FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS _IOWR('f', 25, struct fscrypt_remove_key_arg)
 #define FS_IOC_GET_ENCRYPTION_KEY_STATUS _IOWR('f', 26, struct fscrypt_get_key_status_arg)
 #define FS_IOC_GET_ENCRYPTION_NONCE _IOR('f', 27, __u8[16])
+#define fscrypt_policy fscrypt_policy_v1
 #define FS_KEY_DESCRIPTOR_SIZE FSCRYPT_KEY_DESCRIPTOR_SIZE
 #define FS_POLICY_FLAGS_PAD_4 FSCRYPT_POLICY_FLAGS_PAD_4
 #define FS_POLICY_FLAGS_PAD_8 FSCRYPT_POLICY_FLAGS_PAD_8
