@@ -20,6 +20,7 @@
 #define _BTRFS_CTREE_H_
 #include <linux/btrfs.h>
 #include <linux/types.h>
+#include <stddef.h>
 #define BTRFS_ROOT_TREE_OBJECTID 1ULL
 #define BTRFS_EXTENT_TREE_OBJECTID 2ULL
 #define BTRFS_CHUNK_TREE_OBJECTID 3ULL
