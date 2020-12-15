@@ -224,6 +224,10 @@ enum hl_device_status {
 #define HL_INFO_RESET_COUNT 9
 #define HL_INFO_TIME_SYNC 10
 #define HL_INFO_CS_COUNTERS 11
+#define HL_INFO_PCI_COUNTERS 12
+#define HL_INFO_CLK_THROTTLE_REASON 13
+#define HL_INFO_SYNC_MANAGER 14
+#define HL_INFO_TOTAL_ENERGY 15
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -235,7 +239,7 @@ struct hl_info_hw_ip_info {
   __u32 device_id;
   __u32 module_id;
   __u32 reserved[2];
-  __u32 armcp_cpld_version;
+  __u32 cpld_version;
   __u32 psoc_pci_pll_nr;
   __u32 psoc_pci_pll_nf;
   __u32 psoc_pci_pll_od;
@@ -243,7 +247,7 @@ struct hl_info_hw_ip_info {
   __u8 tpc_enabled_mask;
   __u8 dram_enabled;
   __u8 pad[2];
-  __u8 armcp_version[HL_INFO_VERSION_MAX_LEN];
+  __u8 cpucp_version[HL_INFO_VERSION_MAX_LEN];
   __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
 };
 struct hl_info_dram_usage {
@@ -253,6 +257,7 @@ struct hl_info_dram_usage {
 struct hl_info_hw_idle {
   __u32 is_idle;
   __u32 busy_engines_mask;
+  __u64 busy_engines_mask_ext;
 };
 struct hl_info_device_status {
   __u32 status;
@@ -274,21 +279,46 @@ struct hl_info_time_sync {
   __u64 device_time;
   __u64 host_time;
 };
+struct hl_info_pci_counters {
+  __u64 rx_throughput;
+  __u64 tx_throughput;
+  __u64 replay_cnt;
+};
+#define HL_CLK_THROTTLE_POWER 0x1
+#define HL_CLK_THROTTLE_THERMAL 0x2
+struct hl_info_clk_throttle {
+  __u32 clk_throttling_reason;
+};
+struct hl_info_energy {
+  __u64 total_energy_consumption;
+};
+struct hl_info_sync_manager {
+  __u32 first_available_sync_object;
+  __u32 first_available_monitor;
+};
 struct hl_cs_counters {
   __u64 out_of_mem_drop_cnt;
   __u64 parsing_drop_cnt;
   __u64 queue_full_drop_cnt;
   __u64 device_in_reset_drop_cnt;
+  __u64 max_cs_in_flight_drop_cnt;
 };
 struct hl_info_cs_counters {
   struct hl_cs_counters cs_counters;
   struct hl_cs_counters ctx_cs_counters;
+};
+enum gaudi_dcores {
+  HL_GAUDI_WS_DCORE,
+  HL_GAUDI_WN_DCORE,
+  HL_GAUDI_EN_DCORE,
+  HL_GAUDI_ES_DCORE
 };
 struct hl_info_args {
   __u64 return_pointer;
   __u32 return_size;
   __u32 op;
   union {
+    __u32 dcore_id;
     __u32 ctx_id;
     __u32 period_ms;
   };
@@ -297,12 +327,13 @@ struct hl_info_args {
 #define HL_CB_OP_CREATE 0
 #define HL_CB_OP_DESTROY 1
 #define HL_MAX_CB_SIZE (0x200000 - 32)
+#define HL_CB_FLAGS_MAP 0x1
 struct hl_cb_in {
   __u64 cb_handle;
   __u32 op;
   __u32 cb_size;
   __u32 ctx_id;
-  __u32 pad;
+  __u32 flags;
 };
 struct hl_cb_out {
   __u64 cb_handle;
