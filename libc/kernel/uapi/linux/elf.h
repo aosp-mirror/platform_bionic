@@ -359,6 +359,7 @@ typedef struct elf64_shdr {
 #define NT_ARM_PAC_MASK 0x406
 #define NT_ARM_PACA_KEYS 0x407
 #define NT_ARM_PACG_KEYS 0x408
+#define NT_ARM_TAGGED_ADDR_CTRL 0x409
 #define NT_ARC_V2 0x600
 #define NT_VMCOREDD 0x700
 #define NT_MIPS_DSP 0x800

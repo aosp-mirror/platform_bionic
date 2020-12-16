@@ -76,6 +76,7 @@ enum iommu_page_response_code {
   IOMMU_PAGE_RESP_FAILURE,
 };
 struct iommu_page_response {
+  __u32 argsz;
 #define IOMMU_PAGE_RESP_VERSION_1 1
   __u32 version;
 #define IOMMU_PAGE_RESP_PASID_VALID (1 << 0)
@@ -109,6 +110,7 @@ struct iommu_inv_pasid_info {
   __u64 pasid;
 };
 struct iommu_cache_invalidate_info {
+  __u32 argsz;
 #define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
   __u32 version;
 #define IOMMU_CACHE_INV_TYPE_IOTLB (1 << 0)
@@ -117,11 +119,11 @@ struct iommu_cache_invalidate_info {
 #define IOMMU_CACHE_INV_TYPE_NR (3)
   __u8 cache;
   __u8 granularity;
-  __u8 padding[2];
+  __u8 padding[6];
   union {
     struct iommu_inv_pasid_info pasid_info;
     struct iommu_inv_addr_info addr_info;
-  };
+  } granu;
 };
 struct iommu_gpasid_bind_data_vtd {
 #define IOMMU_SVA_VTD_GPASID_SRE (1 << 0)
@@ -130,25 +132,28 @@ struct iommu_gpasid_bind_data_vtd {
 #define IOMMU_SVA_VTD_GPASID_PWT (1 << 3)
 #define IOMMU_SVA_VTD_GPASID_EMTE (1 << 4)
 #define IOMMU_SVA_VTD_GPASID_CD (1 << 5)
+#define IOMMU_SVA_VTD_GPASID_LAST (1 << 6)
   __u64 flags;
   __u32 pat;
   __u32 emt;
 };
 #define IOMMU_SVA_VTD_GPASID_MTS_MASK (IOMMU_SVA_VTD_GPASID_CD | IOMMU_SVA_VTD_GPASID_EMTE | IOMMU_SVA_VTD_GPASID_PCD | IOMMU_SVA_VTD_GPASID_PWT)
 struct iommu_gpasid_bind_data {
+  __u32 argsz;
 #define IOMMU_GPASID_BIND_VERSION_1 1
   __u32 version;
 #define IOMMU_PASID_FORMAT_INTEL_VTD 1
+#define IOMMU_PASID_FORMAT_LAST 2
   __u32 format;
+  __u32 addr_width;
 #define IOMMU_SVA_GPASID_VAL (1 << 0)
   __u64 flags;
   __u64 gpgd;
   __u64 hpasid;
   __u64 gpasid;
-  __u32 addr_width;
-  __u8 padding[12];
+  __u8 padding[8];
   union {
     struct iommu_gpasid_bind_data_vtd vtd;
-  };
+  } vendor;
 };
 #endif

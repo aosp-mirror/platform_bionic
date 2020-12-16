@@ -51,6 +51,8 @@ enum uverbs_methods_device {
   UVERBS_METHOD_QUERY_PORT,
   UVERBS_METHOD_GET_CONTEXT,
   UVERBS_METHOD_QUERY_CONTEXT,
+  UVERBS_METHOD_QUERY_GID_TABLE,
+  UVERBS_METHOD_QUERY_GID_ENTRY,
 };
 enum uverbs_attrs_invoke_write_cmd_attr_ids {
   UVERBS_ATTR_CORE_IN,
@@ -283,5 +285,17 @@ enum uverbs_method_async_event {
 };
 enum uverbs_attrs_async_event_create {
   UVERBS_ATTR_ASYNC_EVENT_ALLOC_FD_HANDLE,
+};
+enum uverbs_attrs_query_gid_table_cmd_attr_ids {
+  UVERBS_ATTR_QUERY_GID_TABLE_ENTRY_SIZE,
+  UVERBS_ATTR_QUERY_GID_TABLE_FLAGS,
+  UVERBS_ATTR_QUERY_GID_TABLE_RESP_ENTRIES,
+  UVERBS_ATTR_QUERY_GID_TABLE_RESP_NUM_ENTRIES,
+};
+enum uverbs_attrs_query_gid_entry_cmd_attr_ids {
+  UVERBS_ATTR_QUERY_GID_ENTRY_PORT,
+  UVERBS_ATTR_QUERY_GID_ENTRY_GID_INDEX,
+  UVERBS_ATTR_QUERY_GID_ENTRY_FLAGS,
+  UVERBS_ATTR_QUERY_GID_ENTRY_RESP_ENTRY,
 };
 #endif

@@ -96,6 +96,10 @@ struct vhost_vdpa_config {
   __u32 len;
   __u8 buf[0];
 };
+struct vhost_vdpa_iova_range {
+  __u64 first;
+  __u64 last;
+};
 #define VHOST_F_LOG_ALL 26
 #define VHOST_NET_F_VIRTIO_NET_HDR 27
 #endif
