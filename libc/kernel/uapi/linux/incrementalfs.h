@@ -48,10 +48,12 @@
 #define INCFS_IOC_GET_READ_TIMEOUTS _IOR(INCFS_IOCTL_BASE_CODE, 37, struct incfs_get_read_timeouts_args)
 #define INCFS_IOC_SET_READ_TIMEOUTS _IOW(INCFS_IOCTL_BASE_CODE, 38, struct incfs_set_read_timeouts_args)
 #define INCFS_FEATURE_FLAG_COREFS "corefs"
-#define INCFS_FEATURE_FLAG_REPORT_UID "report_uid"
+#define INCFS_FEATURE_FLAG_ZSTD "zstd"
+#define INCFS_FEATURE_FLAG_V2 "v2"
 enum incfs_compression_alg {
   COMPRESSION_NONE = 0,
-  COMPRESSION_LZ4 = 1
+  COMPRESSION_LZ4 = 1,
+  COMPRESSION_ZSTD = 2,
 };
 enum incfs_block_flags {
   INCFS_BLOCK_FLAGS_NONE = 0,
@@ -147,9 +149,9 @@ struct incfs_get_block_count_args {
 };
 struct incfs_per_uid_read_timeouts {
   __u32 uid;
-  __u32 min_time_ms;
-  __u32 min_pending_time_ms;
-  __u32 max_pending_time_ms;
+  __u32 min_time_us;
+  __u32 min_pending_time_us;
+  __u32 max_pending_time_us;
 };
 struct incfs_get_read_timeouts_args {
   __aligned_u64 timeouts_array;
