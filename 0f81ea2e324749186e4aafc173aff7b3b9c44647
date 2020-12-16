@@ -16,6 +16,57 @@
       "message": "Ping. PTAL",
       "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "369d3b68_e64d3a87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-16T21:16:59Z",
+      "side": 1,
+      "message": "i\u0027m assuming we\u0027re _duplicating_ rather than moving this because folks still need to opt in to building anything with bazel, so only the bazel team will actually be using the new stuff? (but that when that\u0027s no longer true, you\u0027ll come back and remove the soong copy?)",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce996597_8e977842",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-16T21:16:59Z",
+      "side": 1,
+      "message": "can we make these only visible to bionic?",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7151ac09_fb2a2125",
+        "filename": "libc/tools/BUILD.bazel",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2020-12-16T21:16:59Z",
+      "side": 1,
+      "message": "(this too)",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
