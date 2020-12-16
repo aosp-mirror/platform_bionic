@@ -40,7 +40,6 @@
 #include "bionic/gwp_asan_wrappers.h"
 #include "gwp_asan/guarded_pool_allocator.h"
 #include "gwp_asan/options.h"
-#include "gwp_asan/random.h"
 #include "malloc_common.h"
 
 #ifndef LIBC_STATIC

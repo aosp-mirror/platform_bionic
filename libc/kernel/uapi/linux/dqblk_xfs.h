@@ -50,7 +50,10 @@ typedef struct fs_disk_quota {
   __s32 d_btimer;
   __u16 d_iwarns;
   __u16 d_bwarns;
-  __s32 d_padding2;
+  __s8 d_itimer_hi;
+  __s8 d_btimer_hi;
+  __s8 d_rtbtimer_hi;
+  __s8 d_padding2;
   __u64 d_rtb_hardlimit;
   __u64 d_rtb_softlimit;
   __u64 d_rtbcount;
@@ -78,6 +81,7 @@ typedef struct fs_disk_quota {
 #define FS_DQ_ICOUNT (1 << 13)
 #define FS_DQ_RTBCOUNT (1 << 14)
 #define FS_DQ_ACCT_MASK (FS_DQ_BCOUNT | FS_DQ_ICOUNT | FS_DQ_RTBCOUNT)
+#define FS_DQ_BIGTIME (1 << 15)
 #define FS_QUOTA_UDQ_ACCT (1 << 0)
 #define FS_QUOTA_UDQ_ENFD (1 << 1)
 #define FS_QUOTA_GDQ_ACCT (1 << 2)

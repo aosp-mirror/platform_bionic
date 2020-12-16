@@ -58,6 +58,7 @@
 #include <android/dlext.h>
 
 #include <platform/bionic/malloc.h>
+#include <private/ScopedPthreadMutexLocker.h>
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -523,6 +524,7 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
   }
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
+    ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
     return SetHeapTaggingLevel(arg, arg_size);
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {

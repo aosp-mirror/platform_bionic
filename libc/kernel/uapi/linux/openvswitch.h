@@ -516,4 +516,5 @@ enum ovs_dec_ttl_attr {
   OVS_DEC_TTL_ATTR_ACTION,
   __OVS_DEC_TTL_ATTR_MAX
 };
+#define OVS_DEC_TTL_ATTR_MAX (__OVS_DEC_TTL_ATTR_MAX - 1)
 #endif
