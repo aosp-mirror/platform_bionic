@@ -361,6 +361,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_MMAP_GTT_COHERENT 52
 #define I915_PARAM_HAS_EXEC_SUBMIT_FENCE 53
 #define I915_PARAM_PERF_REVISION 54
+#define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -523,6 +524,13 @@ struct drm_i915_gem_exec_fence {
 #define __I915_EXEC_FENCE_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_SIGNAL << 1))
   __u32 flags;
 };
+#define DRM_I915_GEM_EXECBUFFER_EXT_TIMELINE_FENCES 0
+struct drm_i915_gem_execbuffer_ext_timeline_fences {
+  struct i915_user_extension base;
+  __u64 fence_count;
+  __u64 handles_ptr;
+  __u64 values_ptr;
+};
 struct drm_i915_gem_execbuffer2 {
   __u64 buffers_ptr;
   __u32 buffer_count;
@@ -562,7 +570,8 @@ struct drm_i915_gem_execbuffer2 {
 #define I915_EXEC_BATCH_FIRST (1 << 18)
 #define I915_EXEC_FENCE_ARRAY (1 << 19)
 #define I915_EXEC_FENCE_SUBMIT (1 << 20)
-#define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_SUBMIT << 1))
+#define I915_EXEC_USE_EXTENSIONS (1 << 21)
+#define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_USE_EXTENSIONS << 1))
 #define I915_EXEC_CONTEXT_ID_MASK (0xffffffff)
 #define i915_execbuffer2_set_context_id(eb2,context) (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
 #define i915_execbuffer2_get_context_id(eb2) ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)

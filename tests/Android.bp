@@ -332,6 +332,7 @@ cc_test_library {
         "fenv_test.cpp",
         "_FILE_OFFSET_BITS_test.cpp",
         "float_test.cpp",
+        "fnmatch_test.cpp",
         "ftw_test.cpp",
         "getauxval_test.cpp",
         "getcwd_test.cpp",

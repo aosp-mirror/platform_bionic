@@ -82,6 +82,7 @@ enum {
 #define IORING_SETUP_CQSIZE (1U << 3)
 #define IORING_SETUP_CLAMP (1U << 4)
 #define IORING_SETUP_ATTACH_WQ (1U << 5)
+#define IORING_SETUP_R_DISABLED (1U << 6)
 enum {
   IORING_OP_NOP,
   IORING_OP_READV,
@@ -161,6 +162,7 @@ struct io_cqring_offsets {
 #define IORING_CQ_EVENTFD_DISABLED (1U << 0)
 #define IORING_ENTER_GETEVENTS (1U << 0)
 #define IORING_ENTER_SQ_WAKEUP (1U << 1)
+#define IORING_ENTER_SQ_WAIT (1U << 2)
 struct io_uring_params {
   __u32 sq_entries;
   __u32 cq_entries;
@@ -180,17 +182,22 @@ struct io_uring_params {
 #define IORING_FEAT_CUR_PERSONALITY (1U << 4)
 #define IORING_FEAT_FAST_POLL (1U << 5)
 #define IORING_FEAT_POLL_32BITS (1U << 6)
-#define IORING_REGISTER_BUFFERS 0
-#define IORING_UNREGISTER_BUFFERS 1
-#define IORING_REGISTER_FILES 2
-#define IORING_UNREGISTER_FILES 3
-#define IORING_REGISTER_EVENTFD 4
-#define IORING_UNREGISTER_EVENTFD 5
-#define IORING_REGISTER_FILES_UPDATE 6
-#define IORING_REGISTER_EVENTFD_ASYNC 7
-#define IORING_REGISTER_PROBE 8
-#define IORING_REGISTER_PERSONALITY 9
-#define IORING_UNREGISTER_PERSONALITY 10
+enum {
+  IORING_REGISTER_BUFFERS = 0,
+  IORING_UNREGISTER_BUFFERS = 1,
+  IORING_REGISTER_FILES = 2,
+  IORING_UNREGISTER_FILES = 3,
+  IORING_REGISTER_EVENTFD = 4,
+  IORING_UNREGISTER_EVENTFD = 5,
+  IORING_REGISTER_FILES_UPDATE = 6,
+  IORING_REGISTER_EVENTFD_ASYNC = 7,
+  IORING_REGISTER_PROBE = 8,
+  IORING_REGISTER_PERSONALITY = 9,
+  IORING_UNREGISTER_PERSONALITY = 10,
+  IORING_REGISTER_RESTRICTIONS = 11,
+  IORING_REGISTER_ENABLE_RINGS = 12,
+  IORING_REGISTER_LAST
+};
 struct io_uring_files_update {
   __u32 offset;
   __u32 resv;
@@ -209,5 +216,22 @@ struct io_uring_probe {
   __u16 resv;
   __u32 resv2[3];
   struct io_uring_probe_op ops[0];
+};
+struct io_uring_restriction {
+  __u16 opcode;
+  union {
+    __u8 register_op;
+    __u8 sqe_op;
+    __u8 sqe_flags;
+  };
+  __u8 resv;
+  __u32 resv2[3];
+};
+enum {
+  IORING_RESTRICTION_REGISTER_OP = 0,
+  IORING_RESTRICTION_SQE_OP = 1,
+  IORING_RESTRICTION_SQE_FLAGS_ALLOWED = 2,
+  IORING_RESTRICTION_SQE_FLAGS_REQUIRED = 3,
+  IORING_RESTRICTION_LAST
 };
 #endif

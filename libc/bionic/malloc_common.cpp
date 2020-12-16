@@ -38,8 +38,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <private/bionic_config.h>
 #include <platform/bionic/malloc.h>
+#include <private/ScopedPthreadMutexLocker.h>
+#include <private/bionic_config.h>
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
@@ -316,6 +317,7 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     return LimitEnable(arg, arg_size);
   }
   if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
+    ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
     return SetHeapTaggingLevel(arg, arg_size);
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {

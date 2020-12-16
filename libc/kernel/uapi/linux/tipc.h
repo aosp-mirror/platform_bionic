@@ -146,6 +146,7 @@ struct tipc_aead_key {
 #define TIPC_AEAD_KEYLEN_MIN (16 + 4)
 #define TIPC_AEAD_KEYLEN_MAX (32 + 4)
 #define TIPC_AEAD_KEY_SIZE_MAX (sizeof(struct tipc_aead_key) + TIPC_AEAD_KEYLEN_MAX)
+#define TIPC_REKEYING_NOW (~0U)
 #define TIPC_CFG_SRV 0
 #define TIPC_ZONE_SCOPE 1
 #define TIPC_ADDR_NAMESEQ 1

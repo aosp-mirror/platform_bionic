@@ -195,6 +195,8 @@ struct kvm_hyperv_exit {
 #define KVM_EXIT_IOAPIC_EOI 26
 #define KVM_EXIT_HYPERV 27
 #define KVM_EXIT_ARM_NISV 28
+#define KVM_EXIT_X86_RDMSR 29
+#define KVM_EXIT_X86_WRMSR 30
 #define KVM_INTERNAL_ERROR_EMULATION 1
 #define KVM_INTERNAL_ERROR_SIMUL_EX 2
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
@@ -322,6 +324,16 @@ struct kvm_run {
       __u64 esr_iss;
       __u64 fault_ipa;
     } arm_nisv;
+    struct {
+      __u8 error;
+      __u8 pad[7];
+#define KVM_MSR_EXIT_REASON_INVAL (1 << 0)
+#define KVM_MSR_EXIT_REASON_UNKNOWN (1 << 1)
+#define KVM_MSR_EXIT_REASON_FILTER (1 << 2)
+      __u32 reason;
+      __u32 index;
+      __u64 data;
+    } msr;
     char padding[256];
   };
 #define SYNC_REGS_SIZE_BYTES 2048
@@ -816,6 +828,9 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_SMALLER_MAXPHYADDR 185
 #define KVM_CAP_S390_DIAG318 186
 #define KVM_CAP_STEAL_TIME 187
+#define KVM_CAP_X86_USER_SPACE_MSR 188
+#define KVM_CAP_X86_MSR_FILTER 189
+#define KVM_CAP_ENFORCE_PV_FEATURE_CPUID 190
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1167,6 +1182,7 @@ struct kvm_pv_cmd {
   __u32 reserved[3];
 };
 #define KVM_S390_PV_COMMAND _IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
+#define KVM_X86_SET_MSR_FILTER _IOW(KVMIO, 0xc6, struct kvm_msr_filter)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,
