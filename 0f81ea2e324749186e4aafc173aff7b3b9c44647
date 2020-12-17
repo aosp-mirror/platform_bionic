@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f862daa_2c0563cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-12-17T16:06:47Z",
+      "side": 1,
+      "message": "That\u0027s effectively correct.\n\nWe must duplicate these (instead of \"moving\" them) as long as building with Bazel is optional.\n(The alternative to \"moving\" these is having them auto-generated as part of the build. Simple genrules such as this fall into this category, but the infastructure for this is not yet ready)",
+      "parentUuid": "369d3b68_e64d3a87",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ce996597_8e977842",
@@ -52,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae46bf68_4f2113ba",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 4
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-12-17T16:06:47Z",
+      "side": 1,
+      "message": "We can\u0027t make these visibility:private (infrastructure requirements, these need to be visible to the top level package), but we can indeed restrict things to that.",
+      "parentUuid": "ce996597_8e977842",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7151ac09_fb2a2125",
@@ -65,6 +101,24 @@
       "writtenOn": "2020-12-16T21:16:59Z",
       "side": 1,
       "message": "(this too)",
+      "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a20fd713_606d4336",
+        "filename": "libc/tools/BUILD.bazel",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2020-12-17T16:06:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7151ac09_fb2a2125",
       "revId": "0f81ea2e324749186e4aafc173aff7b3b9c44647",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
