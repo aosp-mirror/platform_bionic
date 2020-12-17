@@ -16,6 +16,24 @@
       "message": "Test: verify that apps x, y, z are no longer broken.",
       "revId": "950688ab030ad2a9883ee7b5d94917fea4c09dfa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28357874_8deeae3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1363994
+      },
+      "writtenOn": "2020-12-17T09:26:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "596f478e_074456bc",
+      "revId": "950688ab030ad2a9883ee7b5d94917fea4c09dfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
