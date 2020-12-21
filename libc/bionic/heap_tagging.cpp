@@ -32,7 +32,6 @@
 
 #include <bionic/pthread_internal.h>
 #include <platform/bionic/malloc.h>
-#include <platform/bionic/mte_kernel.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
@@ -54,7 +53,7 @@ void SetDefaultHeapTaggingLevel() {
                                     (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
       });
       break;
-#if defined(ANDROID_EXPERIMENTAL_MTE) && defined(USE_SCUDO)
+#if defined(USE_SCUDO)
     case M_HEAP_TAGGING_LEVEL_SYNC:
       scudo_malloc_set_track_allocation_stacks(1);
       break;
@@ -62,14 +61,13 @@ void SetDefaultHeapTaggingLevel() {
     case M_HEAP_TAGGING_LEVEL_NONE:
       scudo_malloc_disable_memory_tagging();
       break;
-#endif  // ANDROID_EXPERIMENTAL_MTE
+#endif  // USE_SCUDO
     default:
       break;
   }
 #endif  // aarch64
 }
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
 static bool set_tcf_on_all_threads(int tcf) {
   static int g_tcf;
   g_tcf = tcf;
@@ -89,7 +87,6 @@ static bool set_tcf_on_all_threads(int tcf) {
       },
       nullptr);
 }
-#endif
 
 pthread_mutex_t g_heap_tagging_lock = PTHREAD_MUTEX_INITIALIZER;
 
@@ -118,13 +115,9 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
           // tagged and checks no longer happen.
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
         });
-      } else {
-#if defined(ANDROID_EXPERIMENTAL_MTE)
-        if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
-          error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
-          return false;
-        }
-#endif
+      } else if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
+        error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
+        return false;
       }
 #if defined(USE_SCUDO)
       scudo_malloc_disable_memory_tagging();
@@ -144,16 +137,12 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
       }
 
       if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
-#if defined(ANDROID_EXPERIMENTAL_MTE)
         set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
-#endif
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(0);
 #endif
       } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
-#if defined(ANDROID_EXPERIMENTAL_MTE)
         set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
-#endif
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(1);
 #endif
