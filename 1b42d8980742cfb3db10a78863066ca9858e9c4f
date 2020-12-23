@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5bd45111_e6316e08",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2020-12-23T08:24:23Z",
+      "side": 1,
+      "message": "Ah, the _nres symbol is actually hidden:\n\nhttps://cs.android.com/android/platform/superproject/+/master:bionic/libc/dns/resolv/res_state.c;l\u003d138?q\u003d%5Cb%20_nres\n\nSo, yes, nobody can change it from outside. But still, I would prefer the cleaner and safer solution of calling res_nmkquery() direclty.\n\nOr at least fix all the legacy functions to use the thread-local state.",
+      "parentUuid": "cbd7f8f2_149ab322",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "47515c4c_6bbd2e90",
         "filename": "libc/dns/resolv/res_data.c",
         "patchSetId": 1
