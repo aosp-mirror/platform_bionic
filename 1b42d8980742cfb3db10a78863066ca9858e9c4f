@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbd7f8f2_149ab322",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2020-12-23T08:21:41Z",
+      "side": 1,
+      "message": "Client code can simply re-declare the symbol and use it:\n\n  extern res_state _res;\n  _res-\u003eoptions |\u003d RES_XXX;\n\n\n\u003e Do we really need to take care about these options?\nOnly if some app or library used by an app is using them. But we have no good way to know.\n\nA couple of years ago, I discovered that some printer drivers for Android include a full copy of cups, an ancient IPP implementation. When built for Android, it uses all sorts of legacy BSD APIs.\n\nThis time we might get lucky and nothing will break, but why risk it when we have the safer option of calling res_nmkquery()?",
+      "parentUuid": "e437f315_7e5eb926",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "47515c4c_6bbd2e90",
         "filename": "libc/dns/resolv/res_data.c",
         "patchSetId": 1
