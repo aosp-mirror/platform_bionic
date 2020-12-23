@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d96754e8_d18678ae",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2020-12-23T06:17:50Z",
+      "side": 1,
+      "message": "Previously, this code used the global _nres defined here:\nhttps://cs.android.com/android/platform/superproject/+/master:bionic/libc/dns/resolv/res_state.c;l\u003d139?q\u003d_nres\n\nNow instead it uses the thread-local res_state. This subtly changes the semantics for callers which set the RES_USE_DNSSEC or RES_RECURSE options and then call res_mkquery(), expecting a query with the AD or RD bit set:\nhttps://cs.android.com/android/platform/superproject/+/master:bionic/libc/dns/resolv/res_mkquery.c;l\u003d148\n\nSo I think it would be safer to follow this course:\n\n1. Leave res_mkquery() in its current state of misery\n2. Add a prototype for res_nmkquery() in resolv_private.h\n3. Change resNetworkQuery() to call res_nmkquery() with a freshly initialized res_state (not even the thread-local one).",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47515c4c_6bbd2e90",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2020-12-23T06:17:50Z",
+      "side": 1,
+      "message": "If we decide that switching res_mkquery() to the thread-local state is safe, then we should also update the other calls for consistency.\n\nThese non-thread safe functions are considered legacy by other OSes, but since Bionic didn\u0027t even have a prototype res_nmkquery(), code compiled for Android is likely to be still using them.",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
