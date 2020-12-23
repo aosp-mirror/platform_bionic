@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93436e8c_dfaf6b8f",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1273909
+      },
+      "writtenOn": "2020-12-23T12:12:53Z",
+      "side": 1,
+      "message": "After giving this some more thought:\n\nUsing res_nmkquery() form outside bionic would require exposing struct res_state in the public resolv.h. While this is what other libc implementations are doing, it\u0027s a gross API and we don\u0027t want to give any incentives for new code to depend on it.\n\nSo the current approach seems to be the least between two evils: it drifts further away from the semantics of other libcs, but it does so on a legacy API that\u0027s barely used, and can\u0027t possibly be used on Android in conjunction with custom options.",
+      "parentUuid": "5bd45111_e6316e08",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "47515c4c_6bbd2e90",
         "filename": "libc/dns/resolv/res_data.c",
         "patchSetId": 1
