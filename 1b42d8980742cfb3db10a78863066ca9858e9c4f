@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e437f315_7e5eb926",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2020-12-23T06:38:04Z",
+      "side": 1,
+      "message": "RES_RECURSE is part of RES_DEFAULT, hence if the res_state is initialized, should be fine.\nAlso RES_{USE_DNSSEC,RECURSE} are defined in resolv_private.h which hasn\u0027t been exported, so the only way to set options to res_state might be \"res_setoptions\".\nHowever, res_setoptions doesn\u0027t provide any way to set them.\n\nDo we really need to take care about these options?",
+      "parentUuid": "d96754e8_d18678ae",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "47515c4c_6bbd2e90",
         "filename": "libc/dns/resolv/res_data.c",
         "patchSetId": 1
