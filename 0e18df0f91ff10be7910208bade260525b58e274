@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "772c3af6_591344c1",
+        "filename": "libc/arch-arm64/bionic/note_memtag_heap_async.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it be \"Android\" since that\u0027s the name of our namespace? Then the constant on line 37 should be 4 I think. (1 is for crtbrand, don\u0027t know what happened to 2, 3 was apparently for disabling kuser helpers on arm32 but it doesn\u0027t seem to be supported anywhere?) It would be good to create symbolic names for the existing constants as a preliminary step, maybe in bionic/libc/private/bionic_asm.h, and then add this new one to the list, so that we can keep track of what the current assignments are.",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55871cfb_0015d239",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Is this change necessary?",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98da7f32_01323519",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the comment say that the reason why the default is sync is that we\u0027re a cc_test? (For that matter, maybe there should be a test that cc_binaries get no MTE by default.)",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67f46ad0_2071cbca",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Don\u0027t the binaries get the correct mode when they are synced? (At least here everything in /data/nativetest64/bionic-loader-test-libs is executable after a sync.)",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d22e428_db7d9d39",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Shouldn\u0027t these be added to the list of test dependencies in tests/Android.bp?",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65ad43df_857753cf",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2020-12-31T02:38:59Z",
+      "side": 1,
+      "message": "Is this necessary now that the kernel headers have been updated?",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
