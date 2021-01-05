@@ -190,6 +190,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28024a42_2540eeee",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-05T23:36:33Z",
+      "side": 1,
+      "message": "i think it\u0027s still a problem. i had to add a similar hack in a new CTS test a year ago, anyway.",
+      "parentUuid": "e3d6cb8e_fbc299e4",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d22e428_db7d9d39",
         "filename": "tests/libs/Android.bp",
         "patchSetId": 1
