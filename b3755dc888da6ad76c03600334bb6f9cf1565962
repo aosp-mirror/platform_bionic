@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd37bfdc_0f793f9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-05T21:40:22Z",
+      "side": 1,
+      "message": "(i was already wondering whether we shouldn\u0027t be using a struct rather than a long list of arguments for this...)",
+      "revId": "b3755dc888da6ad76c03600334bb6f9cf1565962",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
