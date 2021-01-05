@@ -278,6 +278,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d2bb8ae3_55e903cd",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-05T23:36:40Z",
+      "side": 1,
+      "message": "I think the verbosity will confuse people. \"If it\u0027s not necessary to set both, why\u0027d they do that in the test?\"",
+      "parentUuid": "1811c557_e95a7323",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "65ad43df_857753cf",
         "filename": "tests/libs/heap_tagging_helper.cpp",
         "patchSetId": 1
