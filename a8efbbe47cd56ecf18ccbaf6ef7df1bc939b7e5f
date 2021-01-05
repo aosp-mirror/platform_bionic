@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee7e1253_5c2544d7",
+        "filename": "libc/bionic/malloc_tagged_pointers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T21:08:08Z",
+      "side": 1,
+      "message": "remove the TODO",
+      "revId": "a8efbbe47cd56ecf18ccbaf6ef7df1bc939b7e5f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
