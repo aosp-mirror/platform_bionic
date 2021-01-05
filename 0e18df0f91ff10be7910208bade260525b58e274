@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f9d6d92c_cad4f157",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-05T17:58:53Z",
+      "side": 1,
+      "message": "maybe remove \u0027stack\u0027 from this sentence, \"enables tagging in the main thread\" is descriptive enough, adding \u0027stack\u0027 makes me think that stack tagging is enabled.",
+      "range": {
+        "startLine": 214,
+        "startChar": 75,
+        "endLine": 214,
+        "endChar": 80
+      },
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "55871cfb_0015d239",
         "filename": "libc/platform/bionic/mte.h",
         "patchSetId": 1
@@ -82,6 +105,23 @@
       "writtenOn": "2020-12-31T02:38:59Z",
       "side": 1,
       "message": "Shouldn\u0027t these be added to the list of test dependencies in tests/Android.bp?",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22bd8657_902fc9f6",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-05T17:58:53Z",
+      "side": 1,
+      "message": "Assuming everything in Soong is kosher, shouldn\u0027t require both diag and non-diag entries for memtag_heap if you want diag mode.\n\nsanitize: {\n  diag: {\n    memtag_heap: true,\n  }\n}",
       "revId": "0e18df0f91ff10be7910208bade260525b58e274",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
