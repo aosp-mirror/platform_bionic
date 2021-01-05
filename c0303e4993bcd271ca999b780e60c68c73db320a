@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75cf4d8c_3c5f37fd",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e2d09b1_ae532ded",
+      "range": {
+        "startLine": 164,
+        "startChar": 47,
+        "endLine": 164,
+        "endChar": 48
+      },
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e30eb4d_6c8a9359",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-01-05T23:45:33Z",
       "side": 1,
       "message": "` || `, since these are so intimately related?",
+      "range": {
+        "startLine": 166,
+        "startChar": 25,
+        "endLine": 169,
+        "endChar": 6
+      },
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b56d9a9c_342e76b3",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e30eb4d_6c8a9359",
       "range": {
         "startLine": 166,
         "startChar": 25,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "105345de_775e5ac6",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da32f399_7d694365",
+      "range": {
+        "startLine": 182,
+        "startChar": 50,
+        "endLine": 182,
+        "endChar": 51
+      },
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "012c73f0_396a0b13",
@@ -87,6 +159,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d350cce1_03446c75",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "012c73f0_396a0b13",
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57c74630_306e60e6",
@@ -100,6 +190,24 @@
       "writtenOn": "2021-01-05T23:45:33Z",
       "side": 1,
       "message": "i felt sure we already had something like this lying around, but i can\u0027t find it, so...",
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dff75347_2dfe9654",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:58:39Z",
+      "side": 1,
+      "message": "You are probably thinking about linker/linker_note_gnu_property.cpp.\n\nIt\u0027s different - there can be only one gnu property note, and the code iterates over the items in the note description instead.",
+      "parentUuid": "57c74630_306e60e6",
       "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
