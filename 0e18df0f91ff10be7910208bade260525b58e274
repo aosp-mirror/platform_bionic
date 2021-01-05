@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a289736f_169c3fef",
+        "filename": "libc/arch-arm64/bionic/note_memtag_heap_async.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Done. I could not add it to bionic_asm.h, because it includes more files that I could not figure out how to add to a cc_object target. I created a new header instead.",
+      "parentUuid": "772c3af6_591344c1",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9d6d92c_cad4f157",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-05T17:58:53Z",
       "side": 1,
       "message": "maybe remove \u0027stack\u0027 from this sentence, \"enables tagging in the main thread\" is descriptive enough, adding \u0027stack\u0027 makes me think that stack tagging is enabled.",
+      "range": {
+        "startLine": 214,
+        "startChar": 75,
+        "endLine": 214,
+        "endChar": 80
+      },
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38f6abd9_c0519029",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9d6d92c_cad4f157",
       "range": {
         "startLine": 214,
         "startChar": 75,
@@ -58,6 +100,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b686e77_9995f770",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "55871cfb_0015d239",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98da7f32_01323519",
@@ -71,6 +131,24 @@
       "writtenOn": "2020-12-31T02:38:59Z",
       "side": 1,
       "message": "Shouldn\u0027t the comment say that the reason why the default is sync is that we\u0027re a cc_test? (For that matter, maybe there should be a test that cc_binaries get no MTE by default.)",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9acf9eb7_77becea8",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Done.\nThere is a cc_binary test in the soong change.",
+      "parentUuid": "98da7f32_01323519",
       "revId": "0e18df0f91ff10be7910208bade260525b58e274",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -94,6 +172,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e3d6cb8e_fbc299e4",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "AFAIR this is (or was?) a problem with CTS packaging.",
+      "parentUuid": "67f46ad0_2071cbca",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3d22e428_db7d9d39",
         "filename": "tests/libs/Android.bp",
         "patchSetId": 1
@@ -105,6 +201,24 @@
       "writtenOn": "2020-12-31T02:38:59Z",
       "side": 1,
       "message": "Shouldn\u0027t these be added to the list of test dependencies in tests/Android.bp?",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8248685a_9d0891a6",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d22e428_db7d9d39",
       "revId": "0e18df0f91ff10be7910208bade260525b58e274",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -122,6 +236,24 @@
       "writtenOn": "2021-01-05T17:58:53Z",
       "side": 1,
       "message": "Assuming everything in Soong is kosher, shouldn\u0027t require both diag and non-diag entries for memtag_heap if you want diag mode.\n\nsanitize: {\n  diag: {\n    memtag_heap: true,\n  }\n}",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1811c557_e95a7323",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-05T23:29:57Z",
+      "side": 1,
+      "message": "Right, and there is even a test in soong for just this case, but I\u0027d rather be explicit here.",
+      "parentUuid": "22bd8657_902fc9f6",
       "revId": "0e18df0f91ff10be7910208bade260525b58e274",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
