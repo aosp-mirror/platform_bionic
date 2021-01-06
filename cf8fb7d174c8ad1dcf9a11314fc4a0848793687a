@@ -16,6 +16,23 @@
       "message": "I can\u0027t reproduce the ART presubmit error...",
       "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6ecc23f_1a08240b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-06T23:39:58Z",
+      "side": 1,
+      "message": "It may be because that ART buildbot uses a prebuilt version of bionic in prebuilts/runtime/mainline. You might need to land this in multiple steps, where in step 1 you update bionic, step 2 update the prebuilts (and add the new object files to prebuilts/runtime/mainline/runtime/sdk/Android.bp) and in step 3 update soong.",
+      "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
