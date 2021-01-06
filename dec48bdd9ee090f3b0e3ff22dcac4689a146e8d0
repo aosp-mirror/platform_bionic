@@ -16,6 +16,24 @@
       "message": "stick _ANDROID_ in these and put them in elf.h?\n\nah, that wouldn\u0027t help because you can\u0027t include \u003celf.h\u003e in assembler :-(",
       "revId": "dec48bdd9ee090f3b0e3ff22dcac4689a146e8d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95594496_263eced2",
+        "filename": "libc/private/bionic_asm_note.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-06T19:22:31Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1760e21a_bbd1c272",
+      "revId": "dec48bdd9ee090f3b0e3ff22dcac4689a146e8d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
