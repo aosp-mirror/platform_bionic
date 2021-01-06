@@ -134,8 +134,12 @@ bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
     case M_HEAP_TAGGING_LEVEL_ASYNC:
     case M_HEAP_TAGGING_LEVEL_SYNC:
       if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+#if !__has_feature(hwaddress_sanitizer)
+        // Suppress the error message in HWASan builds. Apps can try to enable TBI (or even MTE
+        // modes) being unaware of HWASan, fail them silently.
         error_log(
             "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
+#endif
         return false;
       } else if (tag_level == M_HEAP_TAGGING_LEVEL_TBI ||
                  heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
