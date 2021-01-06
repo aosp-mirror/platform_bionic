@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d062fdaa_7e17c7b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "otherwise lgtm.",
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3df4aed1_8ac78a0f",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "not needed because you\u0027re in SYSCALLS.TXT.",
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c75e34e_7d95b7e5",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "iovec*",
+      "range": {
+        "startLine": 116,
+        "startChar": 46,
+        "endLine": 116,
+        "endChar": 60
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "feb84ed6_a232bc4f",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "these are the exact same advice flags as madvise(2), right? might be worth making it more explicit that this is \"madvise() for a different pid\".",
+      "range": {
+        "startLine": 166,
+        "startChar": 20,
+        "endLine": 166,
+        "endChar": 26
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5aa33282_823a78f6",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "can we put the [broken] man7 link in anyway? if this doesn\u0027t make it upstream we\u0027ll remove it here anyway, so it seems fine to assume. (and i don\u0027t trust myself to remember to come back and fix this later!)",
+      "range": {
+        "startLine": 166,
+        "startChar": 3,
+        "endLine": 166,
+        "endChar": 8
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6722fca_9cc58246",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "__pid_fd/__iov/__count/__advice/__flags\n\nwe have to be more careful in libc about what\u0027s in the namespace, and we try to use consistent terminology. (here with writev(2) and madvise(2).)\n\nand to double check since it\u0027s unusual: you really mean __pid_fd here, not just __pid?",
+      "range": {
+        "startLine": 170,
+        "startChar": 24,
+        "endLine": 170,
+        "endChar": 29
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cc7f613_0a5ae6a0",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T20:21:53Z",
+      "side": 1,
+      "message": "\u0027p\u0027 \u003e \u0027l\u0027, so sort this last? (or move the \u0027__\u0027 entries to the top of this section. this file seems to be globally inconsistent, but at least it\u0027s *locally* consistent :-) )",
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
