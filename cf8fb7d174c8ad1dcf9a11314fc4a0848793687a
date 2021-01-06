@@ -33,6 +33,24 @@
       "message": "It may be because that ART buildbot uses a prebuilt version of bionic in prebuilts/runtime/mainline. You might need to land this in multiple steps, where in step 1 you update bionic, step 2 update the prebuilts (and add the new object files to prebuilts/runtime/mainline/runtime/sdk/Android.bp) and in step 3 update soong.",
       "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a08e7a9_05157e28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-06T23:56:56Z",
+      "side": 1,
+      "message": "Yeah I just figured out it. Then I would need to split the bionic tests, too, because they depend on the soong change.",
+      "parentUuid": "d6ecc23f_1a08240b",
+      "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
