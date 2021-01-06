@@ -210,6 +210,24 @@
       "parentUuid": "57c74630_306e60e6",
       "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a7469e9_5502e8b8",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-06T00:00:08Z",
+      "side": 1,
+      "message": "ah, yes, that was it. oh well...",
+      "parentUuid": "dff75347_2dfe9654",
+      "revId": "c0303e4993bcd271ca999b780e60c68c73db320a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
