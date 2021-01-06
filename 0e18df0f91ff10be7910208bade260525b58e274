@@ -296,6 +296,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "076973ff_23254bd0",
+        "filename": "tests/libs/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-06T00:21:00Z",
+      "side": 1,
+      "message": "It\u0027s only the case because it is a cc_test target.",
+      "parentUuid": "d2bb8ae3_55e903cd",
+      "revId": "0e18df0f91ff10be7910208bade260525b58e274",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "65ad43df_857753cf",
         "filename": "tests/libs/heap_tagging_helper.cpp",
         "patchSetId": 1
