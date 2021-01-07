@@ -26,8 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm.h>
+#include <private/bionic_asm_note.h>
 
-#define NT_TYPE_IDENT 1
-#define NT_TYPE_KUSER 3
-#define NT_TYPE_MEMTAG 4
+__bionic_asm_custom_note_gnu_section()
+
+  .section ".note.android.memtag", "a", %note
+  .p2align 2
+  .long 1f - 0f         // int32_t namesz
+  .long 3f - 2f         // int32_t descsz
+  .long NT_TYPE_MEMTAG  // int32_t type
+0:
+  .asciz "Android"      // char name[]
+1:
+  .p2align 2
+2:
+  .long (NT_MEMTAG_LEVEL_SYNC | NT_MEMTAG_HEAP) // value
+3:
+  .p2align 2
