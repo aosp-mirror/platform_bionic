@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b7728fc7_d5039c9a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T21:22:33Z",
+      "side": 1,
+      "message": "Sure thing.",
+      "parentUuid": "fb223bd2_a318a31f",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd468dc5_fec38d73",
         "filename": "libc/bionic/abort.cpp",
         "patchSetId": 1
@@ -31,6 +49,24 @@
       "writtenOn": "2021-01-07T20:55:09Z",
       "side": 1,
       "message": "this cure is worse than the disease. just turn the warning off like we do.\n\n(in particular, it assumes that struct fields are in the same order for every architecture, which isn\u0027t true. and since there\u0027s no value to the warning for POD types anyway, adding #ifdef nonsense to silence a useless warning isn\u0027t particularly tempting :-) )",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c3f8c78_1b234f86",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T21:22:33Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "bd468dc5_fec38d73",
       "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -54,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "025c3313_da75eda0",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T21:22:33Z",
+      "side": 1,
+      "message": "Sure, I can give that a try.  I\u0027ve never contributed to OpenBSD before, but I can probably figure out how to do it.",
+      "parentUuid": "ecd5d66f_b9d0bc5a",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9dd59c6a_e046f714",
         "filename": "libc/private/bionic_fdtrack.h",
         "patchSetId": 1
@@ -65,6 +119,24 @@
       "writtenOn": "2021-01-07T20:55:09Z",
       "side": 1,
       "message": "what\u0027s the warning here?",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17da41e3_2b4e8a39",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T21:22:33Z",
+      "side": 1,
+      "message": "../../third_party/android/platform/bionic/libc/bionic/fdsan.cpp:253:3: error: call to object of type \u0027std::atomic\u003candroid_fdtrack_hook_t\u003e\u0027 (aka \u0027atomic\u003cvoid (*)(struct android_fdtrack_event *)\u003e\u0027) is ambiguous\n  FDTRACK_CLOSE(fd);\n  ^~~~~~~~~~~~~~~~~\n../../third_party/android/platform/bionic/libc/private/bionic_fdtrack.h:89:9: note: expanded from macro \u0027FDTRACK_CLOSE\u0027\n        __android_fdtrack_hook(\u0026event);                          \\\n        ^~~~~~~~~~~~~~~~~~~~~~\n../../prebuilt/third_party/clang/linux-x64/bin/../include/c++/v1/atomic:1617:5: note: conversion candidate of type \u0027void (*)(android_fdtrack_event *)\u0027\n    operator _Tp() const volatile _NOEXCEPT {return load();}\n    ^\n../../prebuilt/third_party/clang/linux-x64/bin/../include/c++/v1/atomic:1619:5: note: conversion candidate of type \u0027void (*)(android_fdtrack_event *)\u0027\n    operator _Tp() const _NOEXCEPT          {return load();}\n    ^\n1 error generated.\n\nI think what\u0027s going on here is that I\u0027m using a different C++ standard library than normal.  The way this code is written, it\u0027s seems to be looking for a call operation on the std::atomic, which I don\u0027t see in https://en.cppreference.com/w/cpp/atomic/atomic\n\nThis CL makes the load operation on the atomic explicit.  If you like, we can make the code even more explicit as:\n\n(__android_fdtrack_hook.load())(\u0026event);",
+      "parentUuid": "9dd59c6a_e046f714",
       "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
