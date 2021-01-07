@@ -90,6 +90,7 @@ static void __libc_preinit_impl() {
 
   __libc_init_globals();
   __libc_init_common();
+  __libc_init_scudo();
 
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);

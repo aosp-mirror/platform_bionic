@@ -69,4 +69,10 @@
     .long (__bionic_asm_aarch64_feature_pac | \
            __bionic_asm_aarch64_feature_bti); \
     .long 0; \
-    .popsection; \
+    .popsection;
+
+#define NT_MEMTAG_LEVEL_MASK 3
+#define NT_MEMTAG_LEVEL_DEFAULT 0
+#define NT_MEMTAG_LEVEL_ASYNC 1
+#define NT_MEMTAG_LEVEL_SYNC 2
+#define NT_MEMTAG_HEAP 4
