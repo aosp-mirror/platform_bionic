@@ -70,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "906f2ed6_a67df158",
+        "filename": "libc/arch-arm64/bionic/note_memtag_heap_async.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-07T00:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54720994_53ce8b4d",
+      "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2326238f_c6f78a0c",
@@ -83,6 +101,24 @@
       "writtenOn": "2021-01-06T23:57:57Z",
       "side": 1,
       "message": "nit to align with other notes:\n\n  .section \".note.android.memtag\", \"a\", %note\n  .p2align 2\n  .long 1f - 0f        // int32_t namesz\n  .long 3f - 2f        // int32_t descsz\n  .long NT_TYPE_MEMTAG // int32_t type\n0:\n  .asciz \"Android\"     // char name[]\n1:\n  .p2align 2\n2:\n  .long (NT_MEMTAG_LEVEL_SYNC | NT_MEMTAG_HEAP) // value\n3:\n  .p2align 2",
+      "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "954b8bd3_794979d7",
+        "filename": "libc/arch-arm64/bionic/note_memtag_heap_sync.S",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-07T00:08:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2326238f_c6f78a0c",
       "revId": "cf8fb7d174c8ad1dcf9a11314fc4a0848793687a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
