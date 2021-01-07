@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a45f836_a39aeb13",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2021-01-07T23:42:56Z",
+      "side": 1,
+      "message": "It looks to me like this file tries hard to be C compatible? If so, it should be\n\natomic_load(\u0026__android_fdtrack_hook)\n\nThere also seems to be another instance of this in recvmsg.cpp. We should be consistent.",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 38
+      },
+      "revId": "c288de80d503dd8dfc549390cd6d0dfe8b85a3db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
