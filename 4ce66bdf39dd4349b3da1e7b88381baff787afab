@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb223bd2_a318a31f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T20:55:09Z",
+      "side": 1,
+      "message": "can you split this into one CL for each class of warning, and include the warning in the checkin comment?",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd468dc5_fec38d73",
+        "filename": "libc/bionic/abort.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T20:55:09Z",
+      "side": 1,
+      "message": "this cure is worse than the disease. just turn the warning off like we do.\n\n(in particular, it assumes that struct fields are in the same order for every architecture, which isn\u0027t true. and since there\u0027s no value to the warning for POD types anyway, adding #ifdef nonsense to silence a useless warning isn\u0027t particularly tempting :-) )",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecd5d66f_b9d0bc5a",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T20:55:09Z",
+      "side": 1,
+      "message": "can you send these upstream to OpenBSD? sadly we need our fork for the d_namlen difference between BSD and Linux, but we should try to keep the differences down to just that. (i see that upstream has already moved on from where we last synced. i\u0027ll see about catching us up to that point at least...)",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dd59c6a_e046f714",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T20:55:09Z",
+      "side": 1,
+      "message": "what\u0027s the warning here?",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
