@@ -2145,6 +2145,28 @@ cc_object {
     defaults: ["crt_defaults"],
 }
 
+cc_library_static {
+    name: "note_memtag_heap_async",
+    arch: {
+      arm64: {
+        srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
+      }
+    },
+
+    defaults: ["crt_defaults"],
+}
+
+cc_library_static {
+    name: "note_memtag_heap_sync",
+    arch: {
+      arm64: {
+        srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
+      }
+    },
+
+    defaults: ["crt_defaults"],
+}
+
 // ========================================================
 // NDK headers.
 // ========================================================

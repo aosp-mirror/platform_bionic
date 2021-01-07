@@ -44,6 +44,8 @@
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "platform/bionic/macros.h"
+#include "private/bionic_asm.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_tls.h"
 #include "private/KernelArgumentBlock.h"
 
@@ -158,6 +160,94 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   layout.finish_layout();
 }
 
+#ifdef __aarch64__
+static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
+                               unsigned* result) {
+  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
+    return false;
+  }
+  if (note->n_type != NT_TYPE_MEMTAG) {
+    return false;
+  }
+  if (note->n_descsz != 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected 4", note->n_descsz);
+  }
+  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
+  return true;
+}
+
+static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
+                                  const ElfW(Addr) load_bias) {
+  for (size_t i = 0; i < phdr_ct; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_start[i];
+    if (phdr->p_type != PT_NOTE) {
+      continue;
+    }
+    ElfW(Addr) p = load_bias + phdr->p_vaddr;
+    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
+    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
+      p += sizeof(ElfW(Nhdr));
+      const char* name = reinterpret_cast<const char*>(p);
+      p += align_up(note->n_namesz, 4);
+      const char* desc = reinterpret_cast<const char*>(p);
+      p += align_up(note->n_descsz, 4);
+      if (p > note_end) {
+        break;
+      }
+      unsigned ret;
+      if (__read_memtag_note(note, name, desc, &ret)) {
+        return ret;
+      }
+    }
+  }
+  return 0;
+}
+
+// Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
+// This function is called from the linker before the main executable is relocated.
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
+                                                                         size_t phdr_ct,
+                                                                         uintptr_t load_bias) {
+  unsigned v =
+      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
+
+  if (v & ~(NT_MEMTAG_LEVEL_MASK | NT_MEMTAG_HEAP)) {
+    async_safe_fatal("unrecognized android.memtag note: desc = %d", v);
+  }
+
+  if (v & NT_MEMTAG_HEAP) {
+    unsigned memtag_level = v & NT_MEMTAG_LEVEL_MASK;
+    unsigned long arg = PR_TAGGED_ADDR_ENABLE | (0xfffe << PR_MTE_TAG_SHIFT);
+    HeapTaggingLevel level;
+    switch (memtag_level) {
+      case NT_MEMTAG_LEVEL_ASYNC:
+        arg |= PR_MTE_TCF_ASYNC;
+        level = M_HEAP_TAGGING_LEVEL_ASYNC;
+        break;
+      case NT_MEMTAG_LEVEL_DEFAULT:
+      case NT_MEMTAG_LEVEL_SYNC:
+        arg |= PR_MTE_TCF_SYNC;
+        level = M_HEAP_TAGGING_LEVEL_SYNC;
+        break;
+      default:
+        async_safe_fatal("unrecognized android.memtag note: level = %d", memtag_level);
+    }
+
+    if (prctl(PR_SET_TAGGED_ADDR_CTRL, arg, 0, 0, 0) == 0) {
+      __libc_shared_globals()->initial_heap_tagging_level = level;
+      return;
+    }
+  }
+
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0) {
+    __libc_shared_globals()->initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
+  }
+}
+#else   // __aarch64__
+void __libc_init_mte(const void*, size_t, uintptr_t) {}
+#endif  // __aarch64__
+
 __noreturn static void __real_libc_init(void *raw_args,
                                         void (*onexit)(void) __unused,
                                         int (*slingshot)(int, char**, char**),
@@ -175,6 +265,9 @@ __noreturn static void __real_libc_init(void *raw_args,
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
+  __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
+                  /*load_bias = */ 0);
+  __libc_init_scudo();
   __libc_init_fork_handler();
 
   call_ifunc_resolvers();
