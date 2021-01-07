@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c1be8f8d_91f5524e",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T21:28:11Z",
+      "side": 1,
+      "message": "(i just mail a patch to tech@openbsd.org and usually someone with a commit bit picks it up. might need a ping or two.)",
+      "parentUuid": "025c3313_da75eda0",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9dd59c6a_e046f714",
         "filename": "libc/private/bionic_fdtrack.h",
         "patchSetId": 1
@@ -137,6 +155,24 @@
       "side": 1,
       "message": "../../third_party/android/platform/bionic/libc/bionic/fdsan.cpp:253:3: error: call to object of type \u0027std::atomic\u003candroid_fdtrack_hook_t\u003e\u0027 (aka \u0027atomic\u003cvoid (*)(struct android_fdtrack_event *)\u003e\u0027) is ambiguous\n  FDTRACK_CLOSE(fd);\n  ^~~~~~~~~~~~~~~~~\n../../third_party/android/platform/bionic/libc/private/bionic_fdtrack.h:89:9: note: expanded from macro \u0027FDTRACK_CLOSE\u0027\n        __android_fdtrack_hook(\u0026event);                          \\\n        ^~~~~~~~~~~~~~~~~~~~~~\n../../prebuilt/third_party/clang/linux-x64/bin/../include/c++/v1/atomic:1617:5: note: conversion candidate of type \u0027void (*)(android_fdtrack_event *)\u0027\n    operator _Tp() const volatile _NOEXCEPT {return load();}\n    ^\n../../prebuilt/third_party/clang/linux-x64/bin/../include/c++/v1/atomic:1619:5: note: conversion candidate of type \u0027void (*)(android_fdtrack_event *)\u0027\n    operator _Tp() const _NOEXCEPT          {return load();}\n    ^\n1 error generated.\n\nI think what\u0027s going on here is that I\u0027m using a different C++ standard library than normal.  The way this code is written, it\u0027s seems to be looking for a call operation on the std::atomic, which I don\u0027t see in https://en.cppreference.com/w/cpp/atomic/atomic\n\nThis CL makes the load operation on the atomic explicit.  If you like, we can make the code even more explicit as:\n\n(__android_fdtrack_hook.load())(\u0026event);",
       "parentUuid": "9dd59c6a_e046f714",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b17d7446_e02774ca",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-07T21:28:11Z",
+      "side": 1,
+      "message": "ah, i see. (personally if i was going to do anything i\u0027d be fully explicit, but i\u0027ll let jmgao/hboehm argue about this when you upload the separate CL :-) )",
+      "parentUuid": "17da41e3_2b4e8a39",
       "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
