@@ -18,6 +18,7 @@
 #include <sys/prctl.h>
 
 #if defined(__BIONIC__)
+#include "gtest_globals.h"
 #include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
 #include "utils.h"
@@ -90,7 +91,8 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
 
-  // First, check that memory tagging is enabled and the default tag checking level is async.
+  // First, check that memory tagging is enabled and the default tag checking level is sync.
+  // cc_test targets get sync MTE by default.
   // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
   // mismatching tag before each allocation.
   EXPECT_EXIT(
@@ -98,15 +100,15 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
         ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
         p[-1] = 42;
       },
-      testing::ExitedWithCode(SEGV_MTEAERR), "");
+      testing::ExitedWithCode(SEGV_MTESERR), "");
 
-  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
   EXPECT_EXIT(
       {
         ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
         p[-1] = 42;
       },
-      testing::ExitedWithCode(SEGV_MTESERR), "");
+      testing::ExitedWithCode(SEGV_MTEAERR), "");
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
   volatile int oob ATTRIBUTE_UNUSED = p[-1];
@@ -177,3 +179,34 @@ TEST(heap_tagging_level, tagging_level_transition_sync_none) {
   GTEST_SKIP() << "bionic/arm64 only";
 #endif
 }
+
+enum class MemtagNote { NONE, ASYNC, SYNC };
+class MemtagNoteTest : public testing::TestWithParam<std::tuple<MemtagNote, bool>> {};
+
+TEST_P(MemtagNoteTest, SEGV) {
+#if defined(__BIONIC__) && defined(__aarch64__)
+  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
+    GTEST_SKIP() << "requires MTE support";
+  }
+
+  const char* kNoteSuffix[] = {"disabled", "async", "sync"};
+  const char* kExpectedOutput[] = {"normal exit\n", "SEGV_MTEAERR\n", "SEGV_MTESERR\n"};
+
+  MemtagNote note = std::get<0>(GetParam());
+  bool isStatic = std::get<1>(GetParam());
+  std::string helper_base = std::string("heap_tagging_") + (isStatic ? "static_" : "") +
+                            kNoteSuffix[static_cast<int>(note)] + "_helper";
+  fprintf(stderr, "=== %s\n", helper_base.c_str());
+  std::string helper = GetTestlibRoot() + "/" + helper_base + "/" + helper_base;
+  chmod(helper.c_str(), 0755);
+  ExecTestHelper eth;
+  eth.SetArgs({helper.c_str(), nullptr});
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+          kExpectedOutput[static_cast<int>(note)]);
+#endif
+}
+
+INSTANTIATE_TEST_SUITE_P(, MemtagNoteTest,
+                         testing::Combine(testing::Values(MemtagNote::NONE, MemtagNote::ASYNC,
+                                                          MemtagNote::SYNC),
+                                          testing::Bool()));

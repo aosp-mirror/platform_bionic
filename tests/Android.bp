@@ -990,6 +990,12 @@ cc_defaults {
         "ld_config_test_helper_lib3",
         "tls_properties_helper",
         "thread_exit_cb_helper",
+        "heap_tagging_async_helper",
+        "heap_tagging_sync_helper",
+        "heap_tagging_disabled_helper",
+        "heap_tagging_static_async_helper",
+        "heap_tagging_static_sync_helper",
+        "heap_tagging_static_disabled_helper",
     ],
 }
 
