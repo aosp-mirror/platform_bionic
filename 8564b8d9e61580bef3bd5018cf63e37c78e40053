@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6c037ee_6cd668c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-07T00:09:19Z",
+      "side": 1,
+      "message": "Let\u0027s try landing this patch alone.\n",
+      "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
