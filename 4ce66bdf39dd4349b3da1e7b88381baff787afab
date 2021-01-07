@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d80449a7_ae14c8aa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T23:06:13Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/bionic/+/1542336\nhttps://android-review.googlesource.com/c/platform/bionic/+/1542337\nhttps://android-review.googlesource.com/c/platform/bionic/+/1542338",
+      "parentUuid": "b7728fc7_d5039c9a",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd468dc5_fec38d73",
         "filename": "libc/bionic/abort.cpp",
         "patchSetId": 1
@@ -173,6 +191,24 @@
       "side": 1,
       "message": "ah, i see. (personally if i was going to do anything i\u0027d be fully explicit, but i\u0027ll let jmgao/hboehm argue about this when you upload the separate CL :-) )",
       "parentUuid": "17da41e3_2b4e8a39",
+      "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7473baf_a5815e87",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1159165
+      },
+      "writtenOn": "2021-01-07T23:06:13Z",
+      "side": 1,
+      "message": "Made the load() call explicit and sent to the folks you suggested in https://android-review.googlesource.com/c/platform/bionic/+/1542337",
+      "parentUuid": "b17d7446_e02774ca",
       "revId": "4ce66bdf39dd4349b3da1e7b88381baff787afab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
