@@ -16,6 +16,52 @@
       "message": "Let\u0027s try landing this patch alone.\n",
       "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4054130d_b51e1f21",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1697666
+      },
+      "writtenOn": "2021-01-07T11:31:22Z",
+      "side": 1,
+      "message": "nit: should this be \"memtag\" for consistency ?",
+      "range": {
+        "startLine": 57,
+        "startChar": 33,
+        "endLine": 57,
+        "endChar": 36
+      },
+      "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16a6ec26_7115e3bf",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1697666
+      },
+      "writtenOn": "2021-01-07T11:31:22Z",
+      "side": 1,
+      "message": "\"memtag\" ?",
+      "range": {
+        "startLine": 248,
+        "startChar": 17,
+        "endLine": 248,
+        "endChar": 20
+      },
+      "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
