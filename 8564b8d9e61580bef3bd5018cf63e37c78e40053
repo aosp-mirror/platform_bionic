@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dfab41ab_2ed2f59c",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-07T23:17:02Z",
+      "side": 1,
+      "message": "this one is going away very soon",
+      "parentUuid": "4054130d_b51e1f21",
+      "range": {
+        "startLine": 57,
+        "startChar": 33,
+        "endLine": 57,
+        "endChar": 36
+      },
+      "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "16a6ec26_7115e3bf",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 6
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-07T11:31:22Z",
       "side": 1,
       "message": "\"memtag\" ?",
+      "range": {
+        "startLine": 248,
+        "startChar": 17,
+        "endLine": 248,
+        "endChar": 20
+      },
+      "revId": "8564b8d9e61580bef3bd5018cf63e37c78e40053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c495dfa2_1336fdc1",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-07T23:17:02Z",
+      "side": 1,
+      "message": "i don\u0027t think it matters much...\nI can fold this in one of the future changes",
+      "parentUuid": "16a6ec26_7115e3bf",
       "range": {
         "startLine": 248,
         "startChar": 17,
