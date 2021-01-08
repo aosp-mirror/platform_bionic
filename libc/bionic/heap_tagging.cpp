@@ -42,30 +42,29 @@ static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
 #if defined(__aarch64__)
-#ifdef ANDROID_EXPERIMENTAL_MTE
-  // First, try enabling MTE in asynchronous mode, with tag 0 excluded. This will fail if the kernel
-  // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in
-  // syscall arguments.
-  if (prctl(PR_SET_TAGGED_ADDR_CTRL,
-            PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (0xfffe << PR_MTE_TAG_SHIFT), 0, 0,
-            0) == 0) {
-    heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
-    return;
-  }
-#endif // ANDROID_EXPERIMENTAL_MTE
-
-  // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
-  // returns -EINVAL) if the kernel doesn't understand the prctl.
-  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0) {
 #if !__has_feature(hwaddress_sanitizer)
-    heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
-    __libc_globals.mutate([](libc_globals* globals) {
-      // Arrange for us to set pointer tags to POINTER_TAG, check tags on
-      // deallocation and untag when passing pointers to the allocator.
-      globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
-                                  (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
-    });
-#endif  // hwaddress_sanitizer
+  heap_tagging_level = __libc_shared_globals()->initial_heap_tagging_level;
+#endif
+  switch (heap_tagging_level) {
+    case M_HEAP_TAGGING_LEVEL_TBI:
+      __libc_globals.mutate([](libc_globals* globals) {
+        // Arrange for us to set pointer tags to POINTER_TAG, check tags on
+        // deallocation and untag when passing pointers to the allocator.
+        globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
+                                    (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
+      });
+      break;
+#if defined(ANDROID_EXPERIMENTAL_MTE) && defined(USE_SCUDO)
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      scudo_malloc_set_track_allocation_stacks(1);
+      break;
+
+    case M_HEAP_TAGGING_LEVEL_NONE:
+      scudo_malloc_disable_memory_tagging();
+      break;
+#endif  // ANDROID_EXPERIMENTAL_MTE
+    default:
+      break;
   }
 #endif  // aarch64
 }
