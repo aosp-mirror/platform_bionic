@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bae4624_0e66a173",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T20:28:56Z",
+      "side": 1,
+      "message": "http://b/177076632 recovery_unit_test.ApplyPatchModesTest#PatchModeEmmcTarget failures",
+      "revId": "43978a0a342936dbd8bbc28292824524d9e2253a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
