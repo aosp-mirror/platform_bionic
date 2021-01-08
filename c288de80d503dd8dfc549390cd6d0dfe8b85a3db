@@ -46,6 +46,30 @@
       },
       "revId": "c288de80d503dd8dfc549390cd6d0dfe8b85a3db",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad10397f_43fde931",
+        "filename": "libc/private/bionic_fdtrack.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1042828
+      },
+      "writtenOn": "2021-01-08T00:53:46Z",
+      "side": 1,
+      "message": "Thanks. \n\nDo you mind also changing\n\n  if (!__android_fdtrack_hook) {\n\nto\n  if (!atomic_load(\u0026__android_fdtrack_hook)) {\n\nin libc.bionic/recvmsg.cpp, for consistency?",
+      "parentUuid": "56b084c8_833397e5",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 38
+      },
+      "revId": "c288de80d503dd8dfc549390cd6d0dfe8b85a3db",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
