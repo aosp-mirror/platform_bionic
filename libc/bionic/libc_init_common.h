@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <stdint.h>
 #include <sys/cdefs.h>
 
 typedef void init_func_t(int, char*[], char*[]);
@@ -56,6 +57,8 @@ __END_DECLS
 __LIBC_HIDDEN__ void __libc_init_globals();
 
 __LIBC_HIDDEN__ void __libc_init_common();
+
+__LIBC_HIDDEN__ void __libc_init_scudo();
 
 __LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
 
