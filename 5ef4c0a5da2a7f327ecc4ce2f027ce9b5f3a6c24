@@ -65,6 +65,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "112d35e0_64f57665",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1697666
+      },
+      "writtenOn": "2021-01-08T19:17:48Z",
+      "side": 1,
+      "message": "I did not fully follow but yes, something like HWASAN. I\u0027ll queue this up as a question for the next team meet.",
+      "parentUuid": "c9111348_a9c90998",
+      "range": {
+        "startLine": 190,
+        "startChar": 5,
+        "endLine": 190,
+        "endChar": 30
+      },
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d7edc6e_fa8254f1",
