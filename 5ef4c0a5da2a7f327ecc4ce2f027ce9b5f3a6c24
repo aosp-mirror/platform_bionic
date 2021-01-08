@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4ff57071_8920be5b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T19:02:20Z",
+      "side": 1,
+      "message": "since we know that the only valid values are short, and we\u0027re not caching prop_info*s, __system_property_get() would be fine.",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80ca5da0_fe9ca048",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
@@ -44,6 +61,80 @@
         "endLine": 190,
         "endChar": 30
       },
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d7edc6e_fa8254f1",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T19:02:20Z",
+      "side": 1,
+      "message": "is there a better name for this, since it\u0027s not static?",
+      "range": {
+        "startLine": 195,
+        "startChar": 5,
+        "endLine": 195,
+        "endChar": 32
+      },
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd274e4e_40cf64f9",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T19:02:20Z",
+      "side": 1,
+      "message": "inline single-use constants.",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e1acea2_101f4376",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T19:02:20Z",
+      "side": 1,
+      "message": "` \u003d __gnu_basename(progname)`?\n\n(i\u0027m surprised we don\u0027t already have basename lying around, tbh!)",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3744f80e_acd56d63",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T19:02:20Z",
+      "side": 1,
+      "message": "why aren\u0027t these just strcmp()?",
       "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
