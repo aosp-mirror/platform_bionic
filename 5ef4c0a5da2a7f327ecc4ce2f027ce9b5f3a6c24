@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80ca5da0_fe9ca048",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1697666
+      },
+      "writtenOn": "2021-01-08T10:18:02Z",
+      "side": 1,
+      "message": "Am I correct in saying that \"$export MEMTAG_OPTIONS\u003dasync\" in early-init makes all processes run with MTE async? \n\nThat would be a great and easy way to use MTE during bring-up.",
+      "range": {
+        "startLine": 190,
+        "startChar": 5,
+        "endLine": 190,
+        "endChar": 30
+      },
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
