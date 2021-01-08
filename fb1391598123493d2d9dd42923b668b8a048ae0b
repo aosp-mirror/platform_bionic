@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f96a101c_59e91e10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-08T19:33:02Z",
+      "side": 1,
+      "message": "apct/ota/recovery is freshly broken at ToT :( ",
+      "revId": "fb1391598123493d2d9dd42923b668b8a048ae0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
