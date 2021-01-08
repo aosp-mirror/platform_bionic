@@ -16,6 +16,23 @@
       "message": "FYI for now.\nI\u0027d like to add them as arm64-only if possible.",
       "revId": "a95f822bdd3cdb48cd2b3a492662b821cbd489a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3360b5fa_b5481b0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-08T17:35:08Z",
+      "side": 1,
+      "message": "Is it OK to go ahead with this? It adds extra note_memtag*.a libraries in all the android arches and linux_bionic/x86_64 that are empty archives taking 8 bytes each.\n\nThe bionic ELF note change has disabled MTE everywhere and now there is no way to enable it back until we go full circle, update the prebuilts and land the build system change.\n\n",
+      "revId": "a95f822bdd3cdb48cd2b3a492662b821cbd489a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
