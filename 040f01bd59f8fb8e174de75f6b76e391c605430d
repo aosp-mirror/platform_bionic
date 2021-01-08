@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b2d89ff_faa769a8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T01:42:54Z",
+      "side": 1,
+      "message": "yeah, -Wgcc-compat is another of those annoying-and-useless warnings that we turn off.\n\n(have you looked at the `-Wno-` stuff in our build files?)",
+      "revId": "040f01bd59f8fb8e174de75f6b76e391c605430d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
