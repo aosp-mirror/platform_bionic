@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4793c30f_32596b3a",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-08T01:42:47Z",
+      "side": 1,
+      "message": "review note - deliberately non-static to allow gwp-asan to use this in the future (from __libc_init_malloc)",
+      "revId": "208ef28eb64f674a278e81c0f2e7e01bb10e15b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
