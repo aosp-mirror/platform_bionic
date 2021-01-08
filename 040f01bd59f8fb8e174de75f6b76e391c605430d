@@ -34,6 +34,24 @@
       "parentUuid": "1b2d89ff_faa769a8",
       "revId": "040f01bd59f8fb8e174de75f6b76e391c605430d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e0a1b9b_a17e04b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-08T01:48:22Z",
+      "side": 1,
+      "message": "yeah, historical accident --- when GCC was our compiler, we had to deal with its nonsense. (and there\u0027s no compiler warning to help us clean those up :-) )",
+      "parentUuid": "2bd0619b_800ceaf2",
+      "revId": "040f01bd59f8fb8e174de75f6b76e391c605430d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
