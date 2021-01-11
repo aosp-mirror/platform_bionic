@@ -26,25 +26,15 @@
  * SUCH DAMAGE.
  */
 
-#include <platform/bionic/mte_kernel.h>
 #include <private/bionic_ifuncs.h>
 #include <stddef.h>
 #include <sys/auxv.h>
 
 extern "C" {
 
-static bool supports_mte(unsigned long hwcap2) {
-#ifdef ANDROID_EXPERIMENTAL_MTE
-    return hwcap2 & HWCAP2_MTE;
-#else
-    (void)hwcap2;
-    return false;
-#endif
-}
-
 typedef void* memchr_func(const void*, int, size_t);
 DEFINE_IFUNC_FOR(memchr) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(memchr_func, __memchr_aarch64_mte);
     } else {
         RETURN_FUNC(memchr_func, __memchr_aarch64);
@@ -53,7 +43,7 @@ DEFINE_IFUNC_FOR(memchr) {
 
 typedef int stpcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(stpcpy) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(stpcpy_func, __stpcpy_aarch64_mte);
     } else {
         RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
@@ -62,7 +52,7 @@ DEFINE_IFUNC_FOR(stpcpy) {
 
 typedef char* strchr_func(const char*, int);
 DEFINE_IFUNC_FOR(strchr) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strchr_func, __strchr_aarch64_mte);
     } else {
         RETURN_FUNC(strchr_func, __strchr_aarch64);
@@ -71,7 +61,7 @@ DEFINE_IFUNC_FOR(strchr) {
 
 typedef char* strchrnul_func(const char*, int);
 DEFINE_IFUNC_FOR(strchrnul) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strchrnul_func, __strchrnul_aarch64_mte);
     } else {
         RETURN_FUNC(strchrnul_func, __strchrnul_aarch64);
@@ -80,7 +70,7 @@ DEFINE_IFUNC_FOR(strchrnul) {
 
 typedef int strcmp_func(const char*, const char*);
 DEFINE_IFUNC_FOR(strcmp) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strcmp_func, __strcmp_aarch64_mte);
     } else {
         RETURN_FUNC(strcmp_func, __strcmp_aarch64);
@@ -89,7 +79,7 @@ DEFINE_IFUNC_FOR(strcmp) {
 
 typedef int strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strcpy_func, __strcpy_aarch64_mte);
     } else {
         RETURN_FUNC(strcpy_func, __strcpy_aarch64);
@@ -98,7 +88,7 @@ DEFINE_IFUNC_FOR(strcpy) {
 
 typedef size_t strlen_func(const char*);
 DEFINE_IFUNC_FOR(strlen) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strlen_func, __strlen_aarch64_mte);
     } else {
         RETURN_FUNC(strlen_func, __strlen_aarch64);
@@ -107,7 +97,7 @@ DEFINE_IFUNC_FOR(strlen) {
 
 typedef int strncmp_func(const char*, const char*, int);
 DEFINE_IFUNC_FOR(strncmp) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strncmp_func, __strncmp_aarch64_mte);
     } else {
         RETURN_FUNC(strncmp_func, __strncmp_aarch64);
@@ -116,7 +106,7 @@ DEFINE_IFUNC_FOR(strncmp) {
 
 typedef char* strrchr_func(const char*, int);
 DEFINE_IFUNC_FOR(strrchr) {
-    if (supports_mte(arg->_hwcap2)) {
+    if (arg->_hwcap2 & HWCAP2_MTE) {
         RETURN_FUNC(strrchr_func, __strrchr_aarch64_mte);
     } else {
         RETURN_FUNC(strrchr_func, __strrchr_aarch64);

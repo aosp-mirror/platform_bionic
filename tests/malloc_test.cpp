@@ -47,7 +47,6 @@
 
 #include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
-#include "platform/bionic/mte_kernel.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/bionic_config.h"
 
@@ -1263,7 +1262,6 @@ TEST(android_mallopt, disable_memory_mitigations) {
     GTEST_SKIP() << "This function can only be tested with MTE";
   }
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
   sem_t sem;
   ASSERT_EQ(0, sem_init(&sem, 0, 0));
 
@@ -1287,7 +1285,6 @@ TEST(android_mallopt, disable_memory_mitigations) {
   ASSERT_EQ(0, pthread_join(thread, &retval));
   int thread_tagged_addr_ctrl = reinterpret_cast<uintptr_t>(retval);
   ASSERT_EQ(my_tagged_addr_ctrl, thread_tagged_addr_ctrl);
-#endif
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
