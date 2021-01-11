@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "420e4066_c9af5d06",
+        "filename": "libc/bionic/fts.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T19:54:48Z",
+      "side": 0,
+      "message": "this is in \u003cmalloc.h\u003e now. (recallocarray(3) is still OpenBSD-specific though.)",
+      "revId": "08959d98b1d695ba00b683b6d473f20a7daac0ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

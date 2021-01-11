@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9127f944_b5495fee",
+        "filename": "libc/private/bsd_sys_param.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T19:54:48Z",
+      "side": 1,
+      "message": "(copy \u0026 pasted from openbsd-compat.h.)",
+      "revId": "e1dc4f62eb0475244f69b04f77eeaba18ea179a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
