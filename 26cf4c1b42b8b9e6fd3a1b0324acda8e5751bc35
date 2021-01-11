@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d23dacaf_4df2156d",
+        "filename": "libc/SECCOMP_ALLOWLIST_COMMON.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3df4aed1_8ac78a0f",
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c75e34e_7d95b7e5",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-01-06T20:21:53Z",
       "side": 1,
       "message": "iovec*",
+      "range": {
+        "startLine": 116,
+        "startChar": 46,
+        "endLine": 116,
+        "endChar": 60
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e76c3e53_1266d328",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c75e34e_7d95b7e5",
       "range": {
         "startLine": 116,
         "startChar": 46,
@@ -104,6 +146,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "79582ac3_ef0beed4",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5aa33282_823a78f6",
+      "range": {
+        "startLine": 166,
+        "startChar": 3,
+        "endLine": 166,
+        "endChar": 8
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "604329b9_5e2c25e5",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "feb84ed6_a232bc4f",
+      "range": {
+        "startLine": 166,
+        "startChar": 20,
+        "endLine": 166,
+        "endChar": 26
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6722fca_9cc58246",
@@ -127,6 +217,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74566937_44a488a4",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done and yes, the argument is the __pid_fd",
+      "parentUuid": "f6722fca_9cc58246",
+      "range": {
+        "startLine": 170,
+        "startChar": 24,
+        "endLine": 170,
+        "endChar": 29
+      },
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cc7f613_0a5ae6a0",
@@ -140,6 +254,24 @@
       "writtenOn": "2021-01-06T20:21:53Z",
       "side": 1,
       "message": "\u0027p\u0027 \u003e \u0027l\u0027, so sort this last? (or move the \u0027__\u0027 entries to the top of this section. this file seems to be globally inconsistent, but at least it\u0027s *locally* consistent :-) )",
+      "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5735ca90_7e82eee2",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-11T21:03:31Z",
+      "side": 1,
+      "message": "Done, moved the __* entries to the top of the section",
+      "parentUuid": "8cc7f613_0a5ae6a0",
       "revId": "26cf4c1b42b8b9e6fd3a1b0324acda8e5751bc35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
