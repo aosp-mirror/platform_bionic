@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4a40688_fb88606e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T21:59:47Z",
+      "side": 1,
+      "message": "docs nits, but otherwise lgtm.",
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d7a3151_03d6dde6",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T21:59:47Z",
+      "side": 1,
+      "message": "like",
+      "range": {
+        "startLine": 167,
+        "startChar": 14,
+        "endLine": 167,
+        "endChar": 16
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b307368_46cb1a7d",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T21:59:47Z",
+      "side": 1,
+      "message": "\"applies to the process specified by the given file descriptor\"\n\nor\n\n\"applies to the process specified by the given PID file descriptor\"\n\n(based on reading a few of the existing man7 pidfd-related pages, that seems to be how they\u0027re being referred to)",
+      "range": {
+        "startLine": 167,
+        "startChar": 32,
+        "endLine": 167,
+        "endChar": 67
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4bbd459a_a0975623",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T21:59:47Z",
+      "side": 1,
+      "message": "__advi*c*e :-)\n\n(advise the is verb, advice the noun)",
+      "range": {
+        "startLine": 171,
+        "startChar": 81,
+        "endLine": 171,
+        "endChar": 89
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
