@@ -161,6 +161,23 @@
       "message": "why aren\u0027t these just strcmp()?",
       "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a29b32bc_66f3703d",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-11T21:31:28Z",
+      "side": 1,
+      "message": "It\u0027s a bit weird that get_environment_memtag_setting returns NT_* constants. Not a big deal, but maybe better to return M_HEAP_TAGGING_LEVEL_*?",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
