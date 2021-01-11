@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d99524ec_efd7752c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-11T16:45:43Z",
+      "side": 1,
+      "message": "CVS seems to have caught up over the weekend, so this is now revision 1.60...",
+      "revId": "03ac158cabd53d15ebfc7699b2a789f4d00db29a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
