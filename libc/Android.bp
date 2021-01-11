@@ -269,6 +269,7 @@ cc_library_static {
         "-Wno-unused-parameter",
         "-include netbsd-compat.h",
         "-Wframe-larger-than=66000",
+        "-include private/bsd_sys_param.h",
     ],
 
     local_include_dirs: [
@@ -579,6 +580,7 @@ cc_library_static {
     ],
 
     local_include_dirs: [
+        "private",
         "upstream-openbsd/android/include/",
         "upstream-openbsd/lib/libc/include/",
         "upstream-openbsd/lib/libc/gdtoa/",
