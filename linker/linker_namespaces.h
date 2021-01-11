@@ -56,9 +56,6 @@ struct android_namespace_link_t {
   }
 
   bool is_accessible(const char* soname) const {
-    if (soname == nullptr) {
-      return false;
-    }
     return allow_all_shared_libs_ || shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
   }
 

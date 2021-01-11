@@ -1339,8 +1339,7 @@ static bool find_loaded_library_by_soname(android_namespace_t* ns,
                                           const char* name,
                                           soinfo** candidate) {
   return !ns->soinfo_list().visit([&](soinfo* si) {
-    const char* soname = si->get_soname();
-    if (soname != nullptr && (strcmp(name, soname) == 0)) {
+    if (strcmp(name, si->get_soname()) == 0) {
       *candidate = si;
       return false;
     }
@@ -2571,9 +2570,8 @@ bool VersionTracker::init_verneed(const soinfo* si_from) {
 
     const char* target_soname = si_from->get_string(verneed->vn_file);
     // find it in dependencies
-    soinfo* target_si = si_from->get_children().find_if([&](const soinfo* si) {
-      return si->get_soname() != nullptr && strcmp(si->get_soname(), target_soname) == 0;
-    });
+    soinfo* target_si = si_from->get_children().find_if(
+        [&](const soinfo* si) { return strcmp(si->get_soname(), target_soname) == 0; });
 
     if (target_si == nullptr) {
       DL_ERR("cannot find \"%s\" from verneed[%zd] in DT_NEEDED list for \"%s\"",
@@ -3214,15 +3212,12 @@ bool soinfo::prelink_image() {
   // for apps targeting sdk version < M.) Make an exception for
   // the main executable and linker; they do not need to have dt_soname.
   // TODO: >= O the linker doesn't need this workaround.
-  if (soname_ == nullptr &&
-      this != solist_get_somain() &&
-      (flags_ & FLAG_LINKER) == 0 &&
+  if (soname_.empty() && this != solist_get_somain() && (flags_ & FLAG_LINKER) == 0 &&
       get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
-    DL_WARN_documented_change(23,
-                              "missing-soname-enforced-for-api-level-23",
-                              "\"%s\" has no DT_SONAME (will use %s instead)",
-                              get_realpath(), soname_);
+    DL_WARN_documented_change(23, "missing-soname-enforced-for-api-level-23",
+                              "\"%s\" has no DT_SONAME (will use %s instead)", get_realpath(),
+                              soname_.c_str());
 
     // Don't call add_dlwarning because a missing DT_SONAME isn't important enough to show in the UI
   }

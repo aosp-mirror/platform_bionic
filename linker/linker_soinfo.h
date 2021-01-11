@@ -401,7 +401,7 @@ struct soinfo {
   uint8_t* android_relocs_;
   size_t android_relocs_size_;
 
-  const char* soname_;
+  std::string soname_;
   std::string realpath_;
 
   const ElfW(Versym)* versym_;
