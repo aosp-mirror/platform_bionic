@@ -54,10 +54,9 @@ static FTSENT	*fts_sort(FTS *, FTSENT *, int);
 static u_short	 fts_stat(FTS *, FTSENT *, int, int);
 static int	 fts_safe_changedir(FTS *, FTSENT *, int, const char *);
 
+/* Android: OpenBSD source compatibility workarounds. */
+#include "private/bsd_sys_param.h"
 #define DEF_WEAK(s) /* nothing */
-#define ALIGNBYTES (sizeof(uintptr_t) - 1)
-#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
-void* reallocarray(void*, size_t, size_t);
 void* recallocarray(void*, size_t, size_t, size_t);
 
 #define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
