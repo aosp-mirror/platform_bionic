@@ -1,6 +1,40 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5c2b463_98bcdf92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T22:20:32Z",
+      "side": 1,
+      "message": "(sorry, accidentally didn\u0027t send this with the last lot --- i had two windows open :-( )",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8444c6a5_ab400780",
+        "filename": "libc/bionic/__gnu_basename.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T22:20:32Z",
+      "side": 1,
+      "message": "(huh, i didn\u0027t realize this wasn\u0027t already in \u003cstring.h\u003e. as long as there\u0027s only one `extern`er, just inline it rather than add a header.)",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32b88fb8_52402ad5",
