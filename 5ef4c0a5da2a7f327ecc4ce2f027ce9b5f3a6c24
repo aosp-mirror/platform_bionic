@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3d4f224b_44cad31f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "__system_property_get doesn\u0027t accept an output buffer length, and while we\u0027re currently using PROP_VALUE_MAX in the caller, it seems a little bit of a weak assumption that the caller of `get_presiding_config_string` will provide us a buffer size \u003e\u003d PROP_VALUE_MAX.",
+      "parentUuid": "4ff57071_8920be5b",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80ca5da0_fe9ca048",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3
@@ -112,6 +130,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16ae2a6b_aa8a6a89",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 195,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "changed to get_config_from_env_or_sysprops",
+      "parentUuid": "6d7edc6e_fa8254f1",
+      "range": {
+        "startLine": 195,
+        "startChar": 5,
+        "endLine": 195,
+        "endChar": 32
+      },
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd274e4e_40cf64f9",
@@ -125,6 +167,24 @@
       "writtenOn": "2021-01-08T19:02:20Z",
       "side": 1,
       "message": "inline single-use constants.",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a44d556c_b0b79230",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd274e4e_40cf64f9",
       "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -146,6 +206,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43f9865d_d44f1771",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1e1acea2_101f4376",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3744f80e_acd56d63",
@@ -163,6 +241,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "392c9259_2c65ba54",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "done (and also made it explicit that get_presiding_config_string will always make options_str a null-terminated buffer if it returns true)",
+      "parentUuid": "3744f80e_acd56d63",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a29b32bc_66f3703d",
@@ -176,6 +272,24 @@
       "writtenOn": "2021-01-11T21:31:28Z",
       "side": 1,
       "message": "It\u0027s a bit weird that get_environment_memtag_setting returns NT_* constants. Not a big deal, but maybe better to return M_HEAP_TAGGING_LEVEL_*?",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d783f246_d2d50faa",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T21:13:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a29b32bc_66f3703d",
       "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
