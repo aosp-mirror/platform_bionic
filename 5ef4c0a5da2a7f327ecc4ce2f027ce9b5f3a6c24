@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75e4d6e7_3a6f19fb",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Roger that.",
+      "parentUuid": "3cc16e64_326e5d43",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "80ca5da0_fe9ca048",

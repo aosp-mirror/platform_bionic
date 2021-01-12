@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f525e4b_f6b69557",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32b88fb8_52402ad5",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8da4a029_6c184bae",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-01-12T21:38:37Z",
       "side": 1,
       "message": "i meant fully inline: just use the literal directly in the one place it\u0027s used.",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13831828_52d6133b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8da4a029_6c184bae",
       "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -81,6 +117,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23bd8165_ca46e992",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39cae006_b03b92c7",
+      "range": {
+        "startLine": 271,
+        "startChar": 40,
+        "endLine": 271,
+        "endChar": 46
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee0e93db_7e095bd0",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d70e1aa9_f6b3135e",
+      "range": {
+        "startLine": 271,
+        "startChar": 25,
+        "endLine": 271,
+        "endChar": 37
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "065e53bf_f147b6ca",
@@ -94,6 +178,30 @@
       "writtenOn": "2021-01-12T21:38:37Z",
       "side": 1,
       "message": "there\u0027s no name for this?",
+      "range": {
+        "startLine": 335,
+        "startChar": 20,
+        "endLine": 335,
+        "endChar": 26
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50c9e608_0e1ed7f2",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T22:11:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "065e53bf_f147b6ca",
       "range": {
         "startLine": 335,
         "startChar": 20,
