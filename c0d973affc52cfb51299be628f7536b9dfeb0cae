@@ -22,6 +22,30 @@
       },
       "revId": "c0d973affc52cfb51299be628f7536b9dfeb0cae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49404a85_fc2a482f",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-12T21:06:50Z",
+      "side": 1,
+      "message": "I added it manually, following guidelines from previous syscalls, for some reason clang format doesnt pick up this long line, so i fixed it manually, let me know if it looks good now",
+      "parentUuid": "3d4fa60c_5bc5658c",
+      "range": {
+        "startLine": 171,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 113
+      },
+      "revId": "c0d973affc52cfb51299be628f7536b9dfeb0cae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
