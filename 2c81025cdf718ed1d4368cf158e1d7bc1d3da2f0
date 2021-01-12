@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc5ef86f_e29396c8",
+        "filename": "libc/bionic/__gnu_basename.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-12T23:08:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8444c6a5_ab400780",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32b88fb8_52402ad5",
