@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dae50ebd_dbf2e097",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T17:11:00Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9c95131_8c3fd24d",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T17:11:00Z",
+      "side": 1,
+      "message": "didn\u0027t pcc@ just remove this?",
+      "range": {
+        "startLine": 187,
+        "startChar": 59,
+        "endLine": 187,
+        "endChar": 83
+      },
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25ea4269_53285b6c",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T17:11:00Z",
+      "side": 1,
+      "message": "(you can use __unused [\u003d\u003d __attribute__((__unused__))] to say what you mean instead.)",
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
