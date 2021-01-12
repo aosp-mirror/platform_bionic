@@ -67,12 +67,6 @@ cc_defaults {
     // Use the bootstrap version of bionic because some tests call private APIs
     // that aren't exposed by the APEX bionic stubs.
     bootstrap: true,
-
-    product_variables: {
-        experimental_mte: {
-            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
-        },
-    },
 }
 
 // -----------------------------------------------------------------------------

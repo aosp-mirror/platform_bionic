@@ -93,9 +93,6 @@ cc_defaults {
     ldflags: ["-Wl,-z,muldefs"],
 
     product_variables: {
-        experimental_mte: {
-            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
-        },
         malloc_zero_contents: {
             cflags: ["-DSCUDO_ZERO_CONTENTS"],
         },
