@@ -64,6 +64,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f5244cc_894bc47d",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-12T22:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b307368_46cb1a7d",
+      "range": {
+        "startLine": 167,
+        "startChar": 32,
+        "endLine": 167,
+        "endChar": 67
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a8a7445_c6f29dc4",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-12T22:57:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d7a3151_03d6dde6",
+      "range": {
+        "startLine": 167,
+        "startChar": 14,
+        "endLine": 167,
+        "endChar": 16
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4bbd459a_a0975623",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-01-11T21:59:47Z",
       "side": 1,
       "message": "__advi*c*e :-)\n\n(advise the is verb, advice the noun)",
+      "range": {
+        "startLine": 171,
+        "startChar": 81,
+        "endLine": 171,
+        "endChar": 89
+      },
+      "revId": "0662349410c874a437b7f66f9470a0199f1580f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04287f85_94a804dd",
+        "filename": "libc/include/sys/mman.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1562839
+      },
+      "writtenOn": "2021-01-12T22:57:39Z",
+      "side": 1,
+      "message": "Ops. Done",
+      "parentUuid": "4bbd459a_a0975623",
       "range": {
         "startLine": 171,
         "startChar": 81,
