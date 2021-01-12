@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3cc16e64_326e5d43",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "i think it was jessewilson who used to say \"if we can\u0027t trust ourselves...\".",
+      "parentUuid": "3d4f224b_44cad31f",
+      "revId": "5ef4c0a5da2a7f327ecc4ce2f027ce9b5f3a6c24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80ca5da0_fe9ca048",
         "filename": "libc/bionic/libc_init_static.cpp",
         "patchSetId": 3

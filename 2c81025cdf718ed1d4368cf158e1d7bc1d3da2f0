@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32b88fb8_52402ad5",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "(nit: prefer `dst` for symmetry with `src`.)",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8da4a029_6c184bae",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "i meant fully inline: just use the literal directly in the one place it\u0027s used.",
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d70e1aa9_f6b3135e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "i think we can safely ignore sizeof(char) --- it\u0027s about the only thing the C standard *does* guarantee :-)",
+      "range": {
+        "startLine": 271,
+        "startChar": 25,
+        "endLine": 271,
+        "endChar": 37
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39cae006_b03b92c7",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "you should be able to just use strlen() on string constants too. (plus `strlen() + 1` is more obviously correct than being clever with sizeof().)",
+      "range": {
+        "startLine": 271,
+        "startChar": 40,
+        "endLine": 271,
+        "endChar": 46
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "065e53bf_f147b6ca",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-12T21:38:37Z",
+      "side": 1,
+      "message": "there\u0027s no name for this?",
+      "range": {
+        "startLine": 335,
+        "startChar": 20,
+        "endLine": 335,
+        "endChar": 26
+      },
+      "revId": "2c81025cdf718ed1d4368cf158e1d7bc1d3da2f0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
