@@ -76,14 +76,14 @@ TEST(heap_tagging_level, tagged_pointer_dies) {
 #endif // defined(__BIONIC__)
 }
 
-#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+#if defined(__BIONIC__) && defined(__aarch64__)
 void ExitWithSiCode(int, siginfo_t* info, void*) {
   _exit(info->si_code);
 }
 #endif
 
 TEST(heap_tagging_level, sync_async_bad_accesses_die) {
-#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+#if defined(__BIONIC__) && defined(__aarch64__)
   if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
     GTEST_SKIP() << "requires MTE support";
   }
@@ -110,6 +110,8 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
   volatile int oob ATTRIBUTE_UNUSED = p[-1];
+#else
+  GTEST_SKIP() << "bionic/arm64 only";
 #endif
 }
 
