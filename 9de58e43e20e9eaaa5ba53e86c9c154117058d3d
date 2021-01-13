@@ -34,6 +34,24 @@
       "parentUuid": "8818daba_0c2f13a9",
       "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e8fcd35_cb1d2a92",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-13T23:43:41Z",
+      "side": 1,
+      "message": "Okay, it looks like it can\u0027t return NONE.\n\nBut if MTE is supported then we will return on line 322 so we won\u0027t get here, right? So do we need this part of the condition at all?",
+      "parentUuid": "752b2cb8_c1f566ba",
+      "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
