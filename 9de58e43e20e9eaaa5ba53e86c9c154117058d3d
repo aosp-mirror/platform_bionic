@@ -16,6 +16,24 @@
       "message": "Shouldn\u0027t it be level !\u003d M_HEAP_TAGGING_LEVEL_NONE?",
       "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "752b2cb8_c1f566ba",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-13T23:39:29Z",
+      "side": 1,
+      "message": "__get_heap_tagging_level returns M_HEAP_TAGGING_LEVEL_TBI if there\u0027s no MTE support (and we only want to try and fallback to TBI if MTE was supported)",
+      "parentUuid": "8818daba_0c2f13a9",
+      "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
