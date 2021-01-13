@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1837b7d_b0aab37e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-13T17:10:26Z",
+      "side": 1,
+      "message": "bluetooth crashes at boot. retrying just in case it\u0027s them rather than us...",
+      "revId": "d44c8831a6645c9fe4336334d13ed34d230eb7a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
