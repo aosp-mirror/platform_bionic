@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab97a88f_09de2d63",
+        "filename": "libc/platform/bionic/mte.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-13T00:18:27Z",
+      "side": 1,
+      "message": "(nice comment, thanks!)",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
