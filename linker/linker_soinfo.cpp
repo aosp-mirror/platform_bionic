@@ -695,7 +695,7 @@ void soinfo::set_soname(const char* soname) {
   if (has_min_version(2)) {
     soname_ = soname;
   }
-  strlcpy(old_name_, soname_, sizeof(old_name_));
+  strlcpy(old_name_, soname_.c_str(), sizeof(old_name_));
 #else
   soname_ = soname;
 #endif
@@ -704,12 +704,12 @@ void soinfo::set_soname(const char* soname) {
 const char* soinfo::get_soname() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
-    return soname_;
+    return soname_.c_str();
   } else {
     return old_name_;
   }
 #else
-  return soname_;
+  return soname_.c_str();
 #endif
 }
 
