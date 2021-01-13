@@ -29,10 +29,9 @@
 #pragma once
 
 #include <sys/auxv.h>
-#include <bionic/mte_kernel.h>
 
 inline bool mte_supported() {
-#if defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
+#if defined(__aarch64__)
   static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 #else
   static bool supported = false;
