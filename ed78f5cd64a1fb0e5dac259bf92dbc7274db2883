@@ -73,6 +73,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "51abd00c_8f52b1fa",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-13T01:22:44Z",
+      "side": 1,
+      "message": "(resolved offline, might need some digging on the scudo side to ensure tests are compatible on both MTE-enabled and MTE-disabled modes when the hardware is MTE-capable)",
+      "parentUuid": "6c117044_36d80355",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "ab97a88f_09de2d63",
         "filename": "libc/platform/bionic/mte.h",
         "patchSetId": 7
