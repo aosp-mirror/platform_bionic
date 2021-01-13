@@ -3193,26 +3193,27 @@ bool soinfo::prelink_image() {
     return false;
   }
 
-  // second pass - parse entries relying on strtab
-  for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
-    switch (d->d_tag) {
-      case DT_SONAME:
-        set_soname(get_string(d->d_un.d_val));
-        break;
-      case DT_RUNPATH:
-        set_dt_runpath(get_string(d->d_un.d_val));
-        break;
+  // Second pass - parse entries relying on strtab. Skip this while relocating the linker so as to
+  // avoid doing heap allocations until later in the linker's initialization.
+  if (!relocating_linker) {
+    for (ElfW(Dyn)* d = dynamic; d->d_tag != DT_NULL; ++d) {
+      switch (d->d_tag) {
+        case DT_SONAME:
+          set_soname(get_string(d->d_un.d_val));
+          break;
+        case DT_RUNPATH:
+          set_dt_runpath(get_string(d->d_un.d_val));
+          break;
+      }
     }
   }
 
-  // Before M release linker was using basename in place of soname.
-  // In the case when dt_soname is absent some apps stop working
-  // because they can't find dt_needed library by soname.
-  // This workaround should keep them working. (Applies only
-  // for apps targeting sdk version < M.) Make an exception for
-  // the main executable and linker; they do not need to have dt_soname.
-  // TODO: >= O the linker doesn't need this workaround.
-  if (soname_.empty() && this != solist_get_somain() && (flags_ & FLAG_LINKER) == 0 &&
+  // Before M release, linker was using basename in place of soname. In the case when DT_SONAME is
+  // absent some apps stop working because they can't find DT_NEEDED library by soname. This
+  // workaround should keep them working. (Applies only for apps targeting sdk version < M.) Make
+  // an exception for the main executable, which does not need to have DT_SONAME. The linker has an
+  // DT_SONAME but the soname_ field is initialized later on.
+  if (soname_.empty() && this != solist_get_somain() && !relocating_linker &&
       get_application_target_sdk_version() < 23) {
     soname_ = basename(realpath_.c_str());
     DL_WARN_documented_change(23, "missing-soname-enforced-for-api-level-23",
