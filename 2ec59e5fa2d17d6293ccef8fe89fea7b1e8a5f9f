@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d34254e_d11c98e6",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-13T00:09:13Z",
+      "side": 1,
+      "message": "That would be a pretty big diff. In a separate change?",
+      "parentUuid": "dae50ebd_dbf2e097",
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9c95131_8c3fd24d",
@@ -41,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0869656_49932167",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-13T00:09:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9c95131_8c3fd24d",
+      "range": {
+        "startLine": 187,
+        "startChar": 59,
+        "endLine": 187,
+        "endChar": 83
+      },
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25ea4269_53285b6c",
@@ -54,6 +96,24 @@
       "writtenOn": "2021-01-12T17:11:00Z",
       "side": 1,
       "message": "(you can use __unused [\u003d\u003d __attribute__((__unused__))] to say what you mean instead.)",
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c77893d_c6be4aff",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-13T00:09:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25ea4269_53285b6c",
       "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
