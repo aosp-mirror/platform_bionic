@@ -16,6 +16,24 @@
       "message": "same line or braces",
       "revId": "66ac694adb78fa3a3999a35e2d47ffa770548cab",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66777781_a81fb42e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-13T18:33:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8451078d_d435757a",
+      "revId": "66ac694adb78fa3a3999a35e2d47ffa770548cab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
