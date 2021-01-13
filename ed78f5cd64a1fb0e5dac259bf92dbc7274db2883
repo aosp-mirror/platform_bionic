@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "709f6649_b5da4754",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-13T00:23:33Z",
+      "side": 1,
+      "message": "We call scudo_malloc_disable_memory_tagging SetDefaultHeapTaggingLevel, but not in the case of M_HEAP_TAGGING_LEVEL_TBI. Is that a bug?",
+      "parentUuid": "cc7fd525_7b14a357",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ab97a88f_09de2d63",
