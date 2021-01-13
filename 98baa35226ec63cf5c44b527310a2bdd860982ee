@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c207d2a5_93066543",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-13T20:38:26Z",
+      "side": 1,
+      "message": "This is not necessary - the field has a static initializer to NONE.",
+      "revId": "98baa35226ec63cf5c44b527310a2bdd860982ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
