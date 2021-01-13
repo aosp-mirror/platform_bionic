@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0359edc_20d6de63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-13T00:30:37Z",
+      "side": 1,
+      "message": "I have this patch locally to fix the problems with Evgeniy\u0027s patch but it will conflict with yours.\n\ndiff --git a/bionic/libc/bionic/libc_init_static.cpp b/bionic/libc/bionic/libc_init_static.cpp\nindex 202cbd5db5..c409f52de9 100644\n--- a/bionic/libc/bionic/libc_init_static.cpp\n+++ b/bionic/libc/bionic/libc_init_static.cpp\n@@ -220,6 +220,8 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,\n   return 0;\n }\n \n+extern \"C\" void scudo_malloc_disable_memory_tagging();\n+\n // Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.\n // This function is called from the linker before the main executable is relocated.\n __attribute__((no_sanitize(\"hwaddress\", \"memtag\"))) void __libc_init_mte(const void* phdr_start,\n@@ -256,7 +258,10 @@ __attribute__((no_sanitize(\"hwaddress\", \"memtag\"))) void __libc_init_mte(const v\n     }\n   }\n \n-  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) \u003d\u003d 0) {\n+  scudo_malloc_disable_memory_tagging();\n+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE | (0xfffe \u003c\u003c PR_MTE_TAG_SHIFT), 0, 0,\n+            0) \u003d\u003d 0 ||\n+      prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) \u003d\u003d 0) {\n     __libc_shared_globals()-\u003einitial_heap_tagging_level \u003d M_HEAP_TAGGING_LEVEL_TBI;\n   }\n }\n",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc7fd525_7b14a357",
@@ -32,6 +49,24 @@
       "side": 1,
       "message": "We call scudo_malloc_disable_memory_tagging SetDefaultHeapTaggingLevel, but not in the case of M_HEAP_TAGGING_LEVEL_TBI. Is that a bug?",
       "parentUuid": "cc7fd525_7b14a357",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c117044_36d80355",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-13T00:30:37Z",
+      "side": 1,
+      "message": "It is a performance issue at least. We should call it to prevent scudo from uselessly initializing tags and setting PROT_MTE on its mappings.",
+      "parentUuid": "709f6649_b5da4754",
       "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
