@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30c7544c_e00bb598",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-13T00:23:58Z",
+      "side": 1,
+      "message": "thanks!\n\nplease keep me updated on the kernel upstreaming process so we can come up with a plan B to keep this out of the NDK if it\u0027s not in an upstream kernel...",
+      "revId": "46fb84a3271add43d658dbc51761d5b393f3b4b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
