@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc7fd525_7b14a357",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-13T00:20:43Z",
+      "side": 1,
+      "message": "We should set the tag inclusion mask to 0xfffe in the case where the level is 0. This will allow stack/globals to get the correct mask and also allow the unit tests to pass in an environment where tagging is disabled after https://reviews.llvm.org/D93731 lands.\n\nWe should also call scudo_malloc_disable_memory_tagging if we ended up deciding to disable MTE.",
+      "revId": "ed78f5cd64a1fb0e5dac259bf92dbc7274db2883",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ab97a88f_09de2d63",
