@@ -16,6 +16,24 @@
       "message": "This is not necessary - the field has a static initializer to NONE.",
       "revId": "98baa35226ec63cf5c44b527310a2bdd860982ee",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bd5bf59_9964c1c4",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-13T21:23:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c207d2a5_93066543",
+      "revId": "98baa35226ec63cf5c44b527310a2bdd860982ee",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
