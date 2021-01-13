@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab8f5fea_29a70250",
+        "filename": "tests/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 993,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-13T00:13:13Z",
+      "side": 1,
+      "message": "(oops. didn\u0027t realize how bad things already were! thanks!)",
+      "parentUuid": "7d34254e_d11c98e6",
+      "revId": "2ec59e5fa2d17d6293ccef8fe89fea7b1e8a5f9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e9c95131_8c3fd24d",
