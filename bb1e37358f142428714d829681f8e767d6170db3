@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "080db1bc_9a2f16da",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T17:27:22Z",
+      "side": 1,
+      "message": "(i thought there was a warning about unnecessary .c_str() calls :-( )",
+      "revId": "bb1e37358f142428714d829681f8e767d6170db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
