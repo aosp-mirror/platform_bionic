@@ -52,6 +52,24 @@
       "parentUuid": "752b2cb8_c1f566ba",
       "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77410f93_c2727e7b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T01:10:57Z",
+      "side": 1,
+      "message": "On an aarch64 device without MTE support, and a binary that sets the ELF note, we reach this branch. Because the MTE prctl will fail, we want to execute this \"backup\" prctl to enable TBI instead.",
+      "parentUuid": "1e8fcd35_cb1d2a92",
+      "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
