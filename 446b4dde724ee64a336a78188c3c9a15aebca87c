@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3976ee0d_147d74a5",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T21:56:05Z",
+      "side": 1,
+      "message": "while we\u0027re on the subject, should we set `errno \u003d EINVAL` here, and \u0027errno \u003d ENOTSUP` on L131/L135? (not sure what we\u0027d say on L115 though, and i struggle to see what a caller can usefully do in any of these cases, so i just shrugged... but i should have explicitly mentioned it!)",
+      "revId": "446b4dde724ee64a336a78188c3c9a15aebca87c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff7d6a1_04e71b95",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
@@ -14,6 +31,30 @@
       "writtenOn": "2021-01-14T21:49:21Z",
       "side": 1,
       "message": "Small nit, but this gets turned into ENOTSUP if arg_size is wrong. However, since this code is going to be deleted in a CL in the future, I don\u0027t think it\u0027s worth changing here.",
+      "range": {
+        "startLine": 328,
+        "startChar": 44,
+        "endLine": 328,
+        "endChar": 81
+      },
+      "revId": "446b4dde724ee64a336a78188c3c9a15aebca87c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87f0602d_72ae43a1",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T21:56:05Z",
+      "side": 1,
+      "message": "yeah, this was already a bit inconsistent with the inlined android_mallopt() options because it returned false without setting errno at all ... but since i\u0027m hoping to delete it before the weekend, \"meh\" :-)\n\n(but, yeah, given my time again just deleting it rather than trying to preserve the check would probably have made more sense!)",
+      "parentUuid": "6ff7d6a1_04e71b95",
       "range": {
         "startLine": 328,
         "startChar": 44,
