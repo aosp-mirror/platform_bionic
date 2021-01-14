@@ -46,6 +46,30 @@
       },
       "revId": "e887d90cb605e41af52327547a219aa8576ce1b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8be82af_fa89a518",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-14T18:07:56Z",
+      "side": 1,
+      "message": "Thanks for correcting me. I read the manual wrong. 😞\n\n I\u0027ve changed the build system to always emit __ANDROID_UNGUARDED_AVAILABILITY__ macro along with the flag.",
+      "parentUuid": "dc595103_751140be",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 45
+      },
+      "revId": "e887d90cb605e41af52327547a219aa8576ce1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
