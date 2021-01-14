@@ -42,5 +42,5 @@ extern pthread_mutex_t g_heap_tagging_lock;
 
 // These functions can be called in a multithreaded context, and thus should
 // only be called when holding the `g_heap_tagging_lock`.
-bool SetHeapTaggingLevel(void* arg, size_t arg_size);
+bool SetHeapTaggingLevel(HeapTaggingLevel level);
 HeapTaggingLevel GetHeapTaggingLevel();

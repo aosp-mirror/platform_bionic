@@ -204,6 +204,60 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 #define M_TSDS_COUNT_MAX (-202)
 
 /**
+ * mallopt() option to disable heap initialization across the whole process.
+ * If the hardware supports memory tagging, this also disables memory tagging.
+ * May be called at any time, including when multiple threads are running. The
+ * value is unused but must be set to 0.
+ *
+ * Note that these memory mitigations are only implemented in scudo and
+ * therefore this will have no effect when using another allocator (such as
+ * jemalloc on Android Go devices).
+ *
+ * Available since API level 31.
+ */
+#define M_BIONIC_DISABLE_MEMORY_MITIGATIONS (-203)
+
+/**
+ * mallopt() option to change the heap tagging state. May be called at any
+ * time, including when multiple threads are running.
+ * The value must be one of the M_HEAP_TAGGING_LEVEL_ constants.
+ *
+ * Available since API level 31.
+ */
+#define M_BIONIC_SET_HEAP_TAGGING_LEVEL (-204)
+
+/**
+ * Constants for use with the M_BIONIC_SET_HEAP_TAGGING_LEVEL mallopt() option.
+ */
+enum HeapTaggingLevel {
+  /**
+   * Disable heap tagging and memory tag checks (if supported).
+   * Heap tagging may not be re-enabled after being disabled.
+   */
+  M_HEAP_TAGGING_LEVEL_NONE = 0,
+#define M_HEAP_TAGGING_LEVEL_NONE M_HEAP_TAGGING_LEVEL_NONE
+  /**
+   * Address-only tagging. Heap pointers have a non-zero tag in the
+   * most significant ("top") byte which is checked in free(). Memory
+   * accesses ignore the tag using arm64's Top Byte Ignore (TBI) feature.
+   */
+  M_HEAP_TAGGING_LEVEL_TBI = 1,
+#define M_HEAP_TAGGING_LEVEL_TBI M_HEAP_TAGGING_LEVEL_TBI
+  /**
+   * Enable heap tagging and asynchronous memory tag checks (if supported).
+   * Disable stack trace collection.
+   */
+  M_HEAP_TAGGING_LEVEL_ASYNC = 2,
+#define M_HEAP_TAGGING_LEVEL_ASYNC M_HEAP_TAGGING_LEVEL_ASYNC
+  /**
+   * Enable heap tagging and synchronous memory tag checks (if supported).
+   * Enable stack trace collection.
+   */
+  M_HEAP_TAGGING_LEVEL_SYNC = 3,
+#define M_HEAP_TAGGING_LEVEL_SYNC M_HEAP_TAGGING_LEVEL_SYNC
+};
+
+/**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
  * heap behavior. Values of `__option` are the `M_` constants from this header.
  *

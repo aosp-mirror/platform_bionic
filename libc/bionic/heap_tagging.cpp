@@ -96,12 +96,7 @@ HeapTaggingLevel GetHeapTaggingLevel() {
 }
 
 // Requires `g_heap_tagging_lock` to be held.
-bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
-  if (arg_size != sizeof(HeapTaggingLevel)) {
-    return false;
-  }
-
-  auto tag_level = *reinterpret_cast<HeapTaggingLevel*>(arg);
+bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   if (tag_level == heap_tagging_level) {
     return true;
   }
