@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28841b30_4572d346",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-01-14T22:15:36Z",
+      "side": 1,
+      "message": "I don\u0027t think we should try and be too fancy. A EINVAL for all cases seems fine to me unless we really do want some way to distinguish among all of the different failures using errno. And there is a log message in a case where something goes wrong in a way we don\u0027t understand.",
+      "parentUuid": "3976ee0d_147d74a5",
+      "revId": "446b4dde724ee64a336a78188c3c9a15aebca87c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff7d6a1_04e71b95",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
