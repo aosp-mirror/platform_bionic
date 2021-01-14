@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c089b815_068695ba",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T19:07:49Z",
+      "side": 1,
+      "message": "do we actually want this to be *fatal*? seems like it might be hard to recover from a typo\u0027ed `adb shell setprop` if this is fatal rather than just an error (but we carry on as if you\u0027d said nothing)?",
+      "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
