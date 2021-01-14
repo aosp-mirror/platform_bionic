@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff7d6a1_04e71b95",
+        "filename": "libc/bionic/malloc_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-01-14T21:49:21Z",
+      "side": 1,
+      "message": "Small nit, but this gets turned into ENOTSUP if arg_size is wrong. However, since this code is going to be deleted in a CL in the future, I don\u0027t think it\u0027s worth changing here.",
+      "range": {
+        "startLine": 328,
+        "startChar": 44,
+        "endLine": 328,
+        "endChar": 81
+      },
+      "revId": "446b4dde724ee64a336a78188c3c9a15aebca87c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
