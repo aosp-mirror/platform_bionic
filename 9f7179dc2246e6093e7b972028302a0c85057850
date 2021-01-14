@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b36ee275_6745bd07",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T20:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a12c0981_904b7d5b",
+      "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00b4163a_7f2b903f",
@@ -67,6 +85,24 @@
       "writtenOn": "2021-01-14T20:19:32Z",
       "side": 1,
       "message": "You can save ~5 lines of code by checking that level is sync or async first (fail otherwise) and then prctl_arg \u003d (level\u003d\u003dsync) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC.\n\nI\u0027m just not a big fan of switch statements ;)",
+      "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fc54caa_d8670828",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T20:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "00b4163a_7f2b903f",
       "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
