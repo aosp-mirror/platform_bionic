@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69ce6363_9c282335",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-14T08:47:56Z",
+      "side": 1,
+      "message": "This is a notable difference, which I think is much better than __ANDROID_APEX__",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 45
+      },
+      "revId": "e887d90cb605e41af52327547a219aa8576ce1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
