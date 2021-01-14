@@ -22,6 +22,30 @@
       },
       "revId": "e887d90cb605e41af52327547a219aa8576ce1b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc595103_751140be",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T17:08:02Z",
+      "side": 1,
+      "message": "this is going to be always true, though, right? aiui from reading the clang docs [which are, admittedly, usually terrible] this means \"the compiler understands this warning\", not \"this warning is enabled\"?\n\n(i think that\u0027s fine for the platform, but it seems a bit too disruptive for the NDK.)",
+      "parentUuid": "69ce6363_9c282335",
+      "range": {
+        "startLine": 48,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 45
+      },
+      "revId": "e887d90cb605e41af52327547a219aa8576ce1b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
