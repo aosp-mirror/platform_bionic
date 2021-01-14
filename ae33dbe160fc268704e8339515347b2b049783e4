@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1458b442_aa34e27f",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T20:49:21Z",
+      "side": 1,
+      "message": "I think the right thing to do with MEMTAG_OPTIONS\u003dbad_value is to default to \"off\", in recognition that they *tried* to do something, rather than falling through to the ELF note (which may or may not exist).",
+      "revId": "ae33dbe160fc268704e8339515347b2b049783e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
