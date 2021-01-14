@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75a5bebb_613a3e3a",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T19:09:59Z",
+      "side": 1,
+      "message": "is there a reason for including this? we don\u0027t usually (as you can see for __INTRODUCED_IN and friends above, for example).",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 0
+      },
+      "revId": "573c46174f8f1e70ede9d5ce4b94f6abf057d470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
