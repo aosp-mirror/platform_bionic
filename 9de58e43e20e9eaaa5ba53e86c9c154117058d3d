@@ -88,6 +88,24 @@
       "parentUuid": "77410f93_c2727e7b",
       "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ee4db90_282f545b",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T18:00:20Z",
+      "side": 1,
+      "message": "Rewrote to be more clear (hopefully).",
+      "parentUuid": "b08f66bc_18f86af5",
+      "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
