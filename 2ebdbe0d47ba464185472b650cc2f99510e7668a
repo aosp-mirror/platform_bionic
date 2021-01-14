@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "8f1148e1_59aa4ee4",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 57
       },
       "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "bea75d65_a4e2af13",
         "filename": "/COMMIT_MSG",
@@ -44,8 +45,31 @@
         "endChar": 57
       },
       "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
-      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
-      "unresolved": true
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e11a9724_b6f389cc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-14T18:05:53Z",
+      "side": 1,
+      "message": "...or should we suppress the warning? e.g.\n\n```\ninline long double nexttoward(long double __lcpp_x, long double __lcpp_y) _NOEXCEPT {\n#pragma clang diagnostic push                                                                                                                                                                                                                              \n#pragma clang diagnostic ignored \"-Wunguarded-availability\" \n    return ::nexttowardl(__lcpp_x, __lcpp_y);\n#pragma clang diagnostic pop\n}\n```",
+      "parentUuid": "bea75d65_a4e2af13",
+      "range": {
+        "startLine": 14,
+        "startChar": 24,
+        "endLine": 14,
+        "endChar": 57
+      },
+      "revId": "2ebdbe0d47ba464185472b650cc2f99510e7668a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
