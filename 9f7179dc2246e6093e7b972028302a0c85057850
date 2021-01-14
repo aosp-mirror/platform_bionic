@@ -16,6 +16,24 @@
       "message": "do we actually want this to be *fatal*? seems like it might be hard to recover from a typo\u0027ed `adb shell setprop` if this is fatal rather than just an error (but we carry on as if you\u0027d said nothing)?",
       "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d91eb92e_dcc30906",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T19:13:14Z",
+      "side": 1,
+      "message": "it\u0027s per-process - which makes it pretty hard to wedge unless you\u0027re setting mte on the \u0027setprop\u0027 binary.\n\nthese sysprops are always non-persistent as well, so restart is always an easy unwedge.\n\nin saying that, maybe it\u0027s a good idea to just warn here. let me make the changes.",
+      "parentUuid": "c089b815_068695ba",
+      "revId": "9f7179dc2246e6093e7b972028302a0c85057850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
