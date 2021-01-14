@@ -33,6 +33,24 @@
       "message": "Would it be better to ignore an invalid value (return false) and look at the elf note next?",
       "revId": "ae33dbe160fc268704e8339515347b2b049783e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5da5306_b5f4621e",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-14T21:13:51Z",
+      "side": 1,
+      "message": "decided offline - let\u0027s go with fallback to elf",
+      "parentUuid": "7752c7fb_fa94f78e",
+      "revId": "ae33dbe160fc268704e8339515347b2b049783e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
