@@ -70,6 +70,24 @@
       "parentUuid": "1e8fcd35_cb1d2a92",
       "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b08f66bc_18f86af5",
+        "filename": "libc/bionic/libc_init_static.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 326,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-01-14T01:17:11Z",
+      "side": 1,
+      "message": "This code looks like it might do the same prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE) twice, but I do not think such path is possible.\n\nIt would be nice to make it clear. Ex. the default branch of the switch should bypass the first prctl. Logic could be like this:\ndo we want MTE (sync or async)? \u003d\u003e try prctl, return if successfull.\nif level\u003d\u003d sync/asan then level\u003dtbi\ndo we want TBI? \u003d\u003e try prctl, return if successful\nlevel\u003dnone",
+      "parentUuid": "77410f93_c2727e7b",
+      "revId": "9de58e43e20e9eaaa5ba53e86c9c154117058d3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
