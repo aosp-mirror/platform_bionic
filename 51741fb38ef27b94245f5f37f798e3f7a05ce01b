@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8de4791f_2addf5ae",
+        "filename": "tests/libs/heap_tagging_helper.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-14T17:28:17Z",
+      "side": 1,
+      "message": "unused here too?",
+      "revId": "51741fb38ef27b94245f5f37f798e3f7a05ce01b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
