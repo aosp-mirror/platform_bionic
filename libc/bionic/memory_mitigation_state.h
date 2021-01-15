@@ -30,4 +30,4 @@
 
 #include <stddef.h>
 
-bool DisableMemoryMitigations(void* arg, size_t arg_size);
+bool DisableMemoryMitigations(int arg);
