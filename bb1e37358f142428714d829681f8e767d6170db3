@@ -16,6 +16,24 @@
       "message": "(i thought there was a warning about unnecessary .c_str() calls :-( )",
       "revId": "bb1e37358f142428714d829681f8e767d6170db3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6025cb4b_0e512083",
+        "filename": "linker/dlfcn.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-15T00:14:54Z",
+      "side": 1,
+      "message": "It looks like clang-tidy has a check that would flag a pattern like this (readability-redundant-string-cstr):\n\n    $ cat test.cpp\n    #include \u003cstring\u003e\n    struct A { std::string str; };\n    void foo(A* src) {\n      A* dst \u003d new A;\n      dst-\u003estr \u003d src-\u003estr.c_str();\n    }\n\n    $ /x/android-ndk-r22/toolchains/llvm/prebuilt/linux-x86_64/bin/clang-tidy  test.cpp --checks\u003dreadability-redundant-string-cstr\n    1 warning generated.\n    /x/mess/test.cpp:5:14: warning: redundant call to \u0027c_str\u0027 [readability-redundant-string-cstr]\n      dst-\u003estr \u003d src-\u003estr.c_str();\n                 ^~~~~~~~~~~~~~~~\n                 src-\u003estr\n\nI suppose it\u0027s not turned on for Bionic?",
+      "parentUuid": "080db1bc_9a2f16da",
+      "revId": "bb1e37358f142428714d829681f8e767d6170db3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
