@@ -22,6 +22,30 @@
       },
       "revId": "573c46174f8f1e70ede9d5ce4b94f6abf057d470",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "418338eb_80d097f1",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-15T01:41:30Z",
+      "side": 1,
+      "message": "I just wanted to be careful. No particular reason beyond that. Removed.",
+      "parentUuid": "75a5bebb_613a3e3a",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 0
+      },
+      "revId": "573c46174f8f1e70ede9d5ce4b94f6abf057d470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
