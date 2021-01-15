@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c41dd150_b3afb4b4",
+        "filename": "libc/bionic/heap_tagging.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-15T00:49:38Z",
+      "side": 1,
+      "message": "(since this isn\u0027t a regression, i\u0027ll add the missing `errno \u003d `s after i\u0027ve finished the other cleanup, and i\u0027ll check all the functions called by mallopt()/android_mallopt()...)",
+      "parentUuid": "28841b30_4572d346",
+      "revId": "446b4dde724ee64a336a78188c3c9a15aebca87c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff7d6a1_04e71b95",
         "filename": "libc/bionic/malloc_common.cpp",
         "patchSetId": 1
