@@ -328,7 +328,7 @@ soinfo* get_libdl_info(const soinfo& linker_si) {
     __libdl_info->ref_count_ = 1;
     __libdl_info->strtab_size_ = linker_si.strtab_size_;
     __libdl_info->local_group_root_ = __libdl_info;
-    __libdl_info->soname_ = linker_si.soname_.c_str();
+    __libdl_info->soname_ = linker_si.soname_;
     __libdl_info->target_sdk_version_ = __ANDROID_API__;
     __libdl_info->generate_handle();
 #if defined(__work_around_b_24465209__)
