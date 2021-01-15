@@ -1579,3 +1579,85 @@ cc_test_library {
     defaults: ["bionic_testlib_defaults"],
     srcs: ["relocations.cpp"],
 }
+
+cc_defaults {
+  name: "bionic_targets_only",
+  enabled: false,
+  target: {
+     android: {
+       enabled: true,
+     },
+     linux_bionic: {
+       enabled: true,
+     },
+   },
+}
+
+cc_test {
+   name: "heap_tagging_sync_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   sanitize: {
+     memtag_heap: true,
+     diag: {
+       memtag_heap: true,
+     },
+   },
+}
+
+cc_test {
+   name: "heap_tagging_async_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   sanitize: {
+     memtag_heap: true,
+     diag: {
+       memtag_heap: false,
+     },
+   },
+}
+
+cc_test {
+   name: "heap_tagging_disabled_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   sanitize: {
+     memtag_heap: false,
+   },
+}
+
+cc_test {
+   name: "heap_tagging_static_sync_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   static_executable: true,
+   sanitize: {
+     memtag_heap: true,
+     diag: {
+       memtag_heap: true,
+     },
+   },
+}
+
+cc_test {
+   name: "heap_tagging_static_async_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   static_executable: true,
+   sanitize: {
+     memtag_heap: true,
+     diag: {
+       memtag_heap: false,
+     },
+   },
+}
+
+cc_test {
+   name: "heap_tagging_static_disabled_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["heap_tagging_helper.cpp"],
+   static_executable: true,
+   sanitize: {
+     memtag_heap: false,
+   },
+}
