@@ -47,8 +47,8 @@
 
 extern "C" void scudo_malloc_set_zero_contents(int zero_contents);
 
-bool DisableMemoryMitigations(void* arg, size_t arg_size) {
-  if (arg || arg_size) {
+bool DisableMemoryMitigations(int arg) {
+  if (arg != 0) {
     return false;
   }
 
@@ -61,7 +61,7 @@ bool DisableMemoryMitigations(void* arg, size_t arg_size) {
   HeapTaggingLevel current_level = GetHeapTaggingLevel();
   if (current_level != M_HEAP_TAGGING_LEVEL_NONE && current_level != M_HEAP_TAGGING_LEVEL_TBI) {
     HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_NONE;
-    SetHeapTaggingLevel(reinterpret_cast<void*>(&level), sizeof(level));
+    SetHeapTaggingLevel(level);
   }
 
   return true;

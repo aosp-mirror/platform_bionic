@@ -1256,7 +1256,7 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(android_mallopt, disable_memory_mitigations) {
+TEST(malloc, disable_memory_mitigations) {
 #if defined(__BIONIC__)
   if (!mte_supported()) {
     GTEST_SKIP() << "This function can only be tested with MTE";
@@ -1275,7 +1275,7 @@ TEST(android_mallopt, disable_memory_mitigations) {
                    },
                    &sem));
 
-  ASSERT_TRUE(android_mallopt(M_DISABLE_MEMORY_MITIGATIONS, nullptr, 0));
+  ASSERT_EQ(1, mallopt(M_BIONIC_DISABLE_MEMORY_MITIGATIONS, 0));
   ASSERT_EQ(0, sem_post(&sem));
 
   int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
