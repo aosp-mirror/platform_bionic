@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -112,21 +113,6 @@ enum {
   // have no effect when using another allocator.
   M_DISABLE_MEMORY_MITIGATIONS = 11,
 #define M_DISABLE_MEMORY_MITIGATIONS M_DISABLE_MEMORY_MITIGATIONS
-};
-
-enum HeapTaggingLevel {
-  // Disable heap tagging and memory tag checks if supported. Heap tagging may not be re-enabled
-  // after being disabled.
-  M_HEAP_TAGGING_LEVEL_NONE = 0,
-  // Address-only tagging. Heap pointers have a non-zero tag in the most significant byte which is
-  // checked in free(). Memory accesses ignore the tag.
-  M_HEAP_TAGGING_LEVEL_TBI = 1,
-  // Enable heap tagging and asynchronous memory tag checks if supported. Disable stack trace
-  // collection.
-  M_HEAP_TAGGING_LEVEL_ASYNC = 2,
-  // Enable heap tagging and synchronous memory tag checks if supported. Enable stack trace
-  // collection.
-  M_HEAP_TAGGING_LEVEL_SYNC = 3,
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as

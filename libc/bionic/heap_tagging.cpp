@@ -52,6 +52,9 @@ void SetDefaultHeapTaggingLevel() {
         globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
                                     (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
       });
+#if defined(USE_SCUDO)
+      scudo_malloc_disable_memory_tagging();
+#endif  // USE_SCUDO
       break;
 #if defined(USE_SCUDO)
     case M_HEAP_TAGGING_LEVEL_SYNC:
@@ -96,12 +99,7 @@ HeapTaggingLevel GetHeapTaggingLevel() {
 }
 
 // Requires `g_heap_tagging_lock` to be held.
-bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
-  if (arg_size != sizeof(HeapTaggingLevel)) {
-    return false;
-  }
-
-  auto tag_level = *reinterpret_cast<HeapTaggingLevel*>(arg);
+bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   if (tag_level == heap_tagging_level) {
     return true;
   }
