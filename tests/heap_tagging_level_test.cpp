@@ -15,11 +15,12 @@
  */
 
 #include <gtest/gtest.h>
+
+#include <malloc.h>
 #include <sys/prctl.h>
 
 #if defined(__BIONIC__)
 #include "gtest_globals.h"
-#include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
 #include "utils.h"
 
@@ -37,7 +38,7 @@ static bool KernelSupportsTaggedPointers() {
 }
 
 static bool SetHeapTaggingLevel(HeapTaggingLevel level) {
-  return android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &level, sizeof(level));
+  return mallopt(M_BIONIC_SET_HEAP_TAGGING_LEVEL, level);
 }
 #endif
 
