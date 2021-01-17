@@ -86,12 +86,6 @@ enum {
   //   arg_size = sizeof(android_mallopt_leak_info_t)
   M_FREE_MALLOC_LEAK_INFO = 7,
 #define M_FREE_MALLOC_LEAK_INFO M_FREE_MALLOC_LEAK_INFO
-  // Change the heap tagging state. May be called at any time including when
-  // multiple threads are running.
-  //   arg = HeapTaggingLevel*
-  //   arg_size = sizeof(HeapTaggingLevel)
-  M_SET_HEAP_TAGGING_LEVEL = 8,
-#define M_SET_HEAP_TAGGING_LEVEL M_SET_HEAP_TAGGING_LEVEL
   // Query whether the current process is considered to be profileable by the
   // Android platform. Result is assigned to the arg pointer's destination.
   //   arg = bool*
@@ -106,13 +100,6 @@ enum {
   //   arg_size = sizeof(bool)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
-  // Disable heap initialization across the whole process. If the hardware supports memory
-  // tagging, it also disables memory tagging. May be called at any time including
-  // when multiple threads are running. arg and arg_size are unused and must be set to 0.
-  // Note that the memory mitigations are only implemented in scudo and therefore this API call will
-  // have no effect when using another allocator.
-  M_DISABLE_MEMORY_MITIGATIONS = 11,
-#define M_DISABLE_MEMORY_MITIGATIONS M_DISABLE_MEMORY_MITIGATIONS
 };
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
