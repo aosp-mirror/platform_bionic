@@ -25,6 +25,8 @@
 
 #include <sys/random.h> // For getentropy.
 
+#include "private/bsd_sys_param.h"
+
 #define __BEGIN_HIDDEN_DECLS _Pragma("GCC visibility push(hidden)")
 #define __END_HIDDEN_DECLS _Pragma("GCC visibility pop")
 
@@ -56,10 +58,6 @@ extern const char* __progname;
 #define issetugid() 0
 
 #define explicit_bzero(p, s) memset(p, 0, s)
-
-/* OpenBSD has these in <sys/param.h>, but "ALIGN" isn't something we want to reserve. */
-#define ALIGNBYTES (sizeof(uintptr_t) - 1)
-#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
 
 /* OpenBSD has this in paths.h. But this directory doesn't normally exist.
  * Even when it does exist, only the 'shell' user has permissions.
