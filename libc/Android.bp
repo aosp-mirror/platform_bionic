@@ -2247,7 +2247,6 @@ ndk_headers {
 
 ndk_library {
     name: "libc",
-    native_bridge_supported: true,
     symbol_file: "libc.map.txt",
     first_version: "9",
 }
