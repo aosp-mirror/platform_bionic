@@ -485,11 +485,8 @@ static void call_function(const char* function_name __unused,
 }
 
 template <typename F>
-static void call_array(const char* array_name __unused,
-                       F* functions,
-                       size_t count,
-                       bool reverse,
-                       const char* realpath) {
+static inline void call_array(const char* array_name __unused, F* functions, size_t count,
+                              bool reverse, const char* realpath) {
   if (functions == nullptr) {
     return;
   }
