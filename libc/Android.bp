@@ -1631,6 +1631,7 @@ cc_library {
             "gwp_asan",
             "libc_init_dynamic",
             "libc_common_shared",
+            "libunwind-exported",
         ],
     },
 
@@ -1672,8 +1673,6 @@ cc_library {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
-
-                whole_static_libs: [ "libunwind_llvm" ],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1692,10 +1691,6 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
-
-            shared: {
-                whole_static_libs: [ "libgcc_stripped" ],
-            },
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1709,10 +1704,6 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
-
-            shared: {
-                whole_static_libs: [ "libgcc_stripped" ],
-            },
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
@@ -1721,10 +1712,6 @@ cc_library {
             // meaningful name resolution.
             strip: {
                 keep_symbols: true,
-            },
-
-            shared: {
-                whole_static_libs: [ "libgcc_stripped" ],
             },
         },
     },
