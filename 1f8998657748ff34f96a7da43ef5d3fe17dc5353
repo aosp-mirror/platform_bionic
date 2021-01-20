@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e8af9d1_655a2d12",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-20T14:28:15Z",
+      "side": 1,
+      "message": "If you have a unit test, it would be much more convincing and it will also be helpful to understand what exactly this change fixes.",
+      "range": {
+        "startLine": 10,
+        "startChar": 6,
+        "endLine": 10,
+        "endChar": 71
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a10c73b1_f9a72043",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-20T14:28:15Z",
+      "side": 1,
+      "message": "Sorry, but I don\u0027t fully understand the implication of this. Last time I touched here is a few years ago.\n",
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6de2f327_c29183f2",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-20T14:28:15Z",
+      "side": 1,
+      "message": "nit for readability: how about moving this out of the for-loop and have another for-loop just for this? The description of the step 1 doesn\u0027t include this and I think what is done here is quite different from the rest of the stuffs done in this for-loop.",
+      "range": {
+        "startLine": 1604,
+        "startChar": 0,
+        "endLine": 1618,
+        "endChar": 5
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
