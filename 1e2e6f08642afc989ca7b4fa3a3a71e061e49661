@@ -34,6 +34,24 @@
       "parentUuid": "805f4024_72e1a4f2",
       "revId": "1e2e6f08642afc989ca7b4fa3a3a71e061e49661",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bc56280_c97e80a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1373864
+      },
+      "writtenOn": "2021-01-20T17:41:24Z",
+      "side": 1,
+      "message": "We need to change libsigchain to a shared_libs dependency in app_process to try it out. It\u0027s probably useful to do that in other places too, e.g. in art_sigchain_tests. But I can\u0027t say if that would be enough to exercise this in a meaningful way.",
+      "parentUuid": "6f977e45_c046d3cb",
+      "revId": "1e2e6f08642afc989ca7b4fa3a3a71e061e49661",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
