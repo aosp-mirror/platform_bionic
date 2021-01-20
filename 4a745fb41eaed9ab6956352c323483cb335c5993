@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbcc86f4_29184a55",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-20T20:45:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e8e2842_b51127c9",
+      "range": {
+        "startLine": 24,
+        "startChar": 20,
+        "endLine": 24,
+        "endChar": 24
+      },
+      "revId": "4a745fb41eaed9ab6956352c323483cb335c5993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c50f64a_2969ba60",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-01-20T20:18:29Z",
       "side": 1,
       "message": "s/with/without ?",
+      "revId": "4a745fb41eaed9ab6956352c323483cb335c5993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f5ba06b_08732954",
+        "filename": "libc/bionic/libc_init_common.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-01-20T20:45:21Z",
+      "side": 1,
+      "message": "fixed - this only affects the primary on MTE hardware when we disable MTE via. the elf note/sysprops/envvar.",
+      "parentUuid": "1c50f64a_2969ba60",
       "revId": "4a745fb41eaed9ab6956352c323483cb335c5993",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
