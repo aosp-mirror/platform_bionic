@@ -232,19 +232,15 @@ cc_defaults {
     arch: {
         arm: {
             srcs: [":linker_sources_arm"],
-            static_libs: ["libunwind_llvm"],
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
-            static_libs: ["libgcc_stripped"],
         },
         x86: {
             srcs: [":linker_sources_x86"],
-            static_libs: ["libgcc_stripped"],
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
-            static_libs: ["libgcc_stripped"],
         },
     },
 
@@ -292,6 +288,7 @@ cc_defaults {
         "libc_nomalloc",
         "libc_dynamic_dispatch",
         "libm",
+        "libunwind",
     ],
 
     // Ensure that if the linker needs __gnu_Unwind_Find_exidx, then the linker will have a
