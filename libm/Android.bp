@@ -516,7 +516,6 @@ cc_library {
 
 ndk_library {
     name: "libm",
-    native_bridge_supported: true,
     symbol_file: "libm.map.txt",
     first_version: "9",
 }
