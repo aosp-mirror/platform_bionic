@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7e8e2842_b51127c9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-01-20T20:35:44Z",
+      "side": 1,
+      "message": "smaps",
+      "range": {
+        "startLine": 24,
+        "startChar": 20,
+        "endLine": 24,
+        "endChar": 24
+      },
+      "revId": "4a745fb41eaed9ab6956352c323483cb335c5993",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c50f64a_2969ba60",
         "filename": "libc/bionic/libc_init_common.cpp",
         "patchSetId": 1
