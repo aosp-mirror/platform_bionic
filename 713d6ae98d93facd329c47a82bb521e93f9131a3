@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cebbebde_d5b517fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-21T00:59:07Z",
+      "side": 1,
+      "message": "yeah, just documenting that API made me uncomfortable. glad to see this fixed so soon :-)",
+      "range": {
+        "startLine": 9,
+        "startChar": 35,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "713d6ae98d93facd329c47a82bb521e93f9131a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20d29a0c_4899651b",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-21T00:59:07Z",
+      "side": 1,
+      "message": "this is",
+      "range": {
+        "startLine": 213,
+        "startChar": 13,
+        "endLine": 213,
+        "endChar": 41
+      },
+      "revId": "713d6ae98d93facd329c47a82bb521e93f9131a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
