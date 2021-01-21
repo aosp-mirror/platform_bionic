@@ -110,6 +110,30 @@
       },
       "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c4115f7_d92c5648",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-21T08:08:38Z",
+      "side": 1,
+      "message": "Ok, I now understand better. Thanks for the explanation. Please don\u0027t take this seriously... but I think an alternative way of achieving the consistent soinfo order is directly enforcing it inside the linker_namespace_t object. add_soinfo wouldn\u0027t simply push_back the soinfo to the list, but will \"insert\" the soinfo at the right position. For example, if the soinfo is DF_1_GLOBAL, it is inserted \"before\" the first non-DF-1-GLOBAL one (if there is any). This wouldn\u0027t require iterating over the list, because we just need to keep the pointer to the first on-DF-1-GLOBAL soinfo. One benefit of this approach IMO is that the ordering requirement is explicitly shown and we don\u0027t need to make the BFS search be dependent on the side effect of what happened during the previous runs.",
+      "parentUuid": "2f7be5a2_08434604",
+      "range": {
+        "startLine": 1604,
+        "startChar": 0,
+        "endLine": 1618,
+        "endChar": 5
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
