@@ -216,7 +216,6 @@ cc_library {
 
 ndk_library {
     name: "libdl",
-    native_bridge_supported: true,
     symbol_file: "libdl.map.txt",
     first_version: "9",
 }
