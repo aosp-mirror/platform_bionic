@@ -2084,6 +2084,8 @@ cc_object {
     local_include_dirs: ["include"],
     srcs: ["arch-common/bionic/crtbegin.c"],
     defaults: ["crt_defaults"],
+    // When using libc.a, we're using the latest library regardless of target API level.
+    min_sdk_version: "current",
 }
 
 cc_object {
@@ -2094,6 +2096,8 @@ cc_object {
         "crtbrand",
     ],
     defaults: ["crt_defaults"],
+    // When using libc.a, we're using the latest library regardless of target API level.
+    min_sdk_version: "current",
 }
 
 cc_object {
