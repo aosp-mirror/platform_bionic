@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "60e2c26c_6f789561",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-21T06:59:22Z",
+      "side": 1,
+      "message": "I\u0027ll try to write a test.",
+      "parentUuid": "5e8af9d1_655a2d12",
+      "range": {
+        "startLine": 10,
+        "startChar": 6,
+        "endLine": 10,
+        "endChar": 71
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a10c73b1_f9a72043",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-20T14:28:15Z",
       "side": 1,
       "message": "nit for readability: how about moving this out of the for-loop and have another for-loop just for this? The description of the step 1 doesn\u0027t include this and I think what is done here is quite different from the rest of the stuffs done in this for-loop.",
+      "range": {
+        "startLine": 1604,
+        "startChar": 0,
+        "endLine": 1618,
+        "endChar": 5
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f7be5a2_08434604",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-21T06:59:22Z",
+      "side": 1,
+      "message": "I think you\u0027re describing the previous behavior, which is what I\u0027m fixing. Associating a shared library to its secondary namespaces needs to happen during the initial BFS search (i.e. \"step 1\") to ensure that, across each namespace, the order of DF_1_GLOBAL libraries is the same.\n\nCurrently, during the BFS search, when a library\u0027s soinfo is created, the library is appended to its primary namespace but not to the secondary ones. The result is that each namespace will have its primary members first, then foreign libraries.\n\nWe can\u0027t delay the primary namespace registration until after step 1 because then we\u0027d load the same library multiple times. find_loaded_library_by_soname needs to find libraries that are in the process of being loaded. (Doing secondary registration earlier can also affect the results of library searching, but I think it\u0027s OK.)\n\nAn example of where it could matter:\n\nSuppose we have an app_process executable that depends on a DF_1_GLOBAL libsigchain.so (in an \"art\" namespace), and we also have an LD_PRELOAD for an ASAN library that interposes the same signal APIs (in \"default\"). Currently, the \"art\" namespace would have libsigchain, then ASAN, while the \"default\" namespace would have ASAN, then libsigchain. dlsym(RTLD_NEXT) would cycle between libsigchain and ASAN, and symbol references in the two namespaces would prefer the library primary to their namespace.\n\n(The loop is mitigated because IIRC libsigchain doesn\u0027t use RTLD_NEXT anymore. It looks for libc.so directly.)\n\nWith this CL, the order is consistent across namespaces: ASAN, then libsigchain. (In general, the order is: exe -\u003e preloads -\u003e BFS walk of exe.)",
+      "parentUuid": "6de2f327_c29183f2",
       "range": {
         "startLine": 1604,
         "startChar": 0,
