@@ -1242,7 +1242,7 @@ static bool load_library(android_namespace_t* ns,
     return false;
   }
 
-  // find and set DT_RUNPATH and dt_soname
+  // Find and set DT_RUNPATH, DT_SONAME, and DT_FLAGS_1.
   // Note that these field values are temporary and are
   // going to be overwritten on soinfo::prelink_image
   // with values from PT_LOAD segments.
@@ -1253,6 +1253,10 @@ static bool load_library(android_namespace_t* ns,
     }
     if (d->d_tag == DT_SONAME) {
       si->set_soname(elf_reader.get_string(d->d_un.d_val));
+    }
+    // We need to identify a DF_1_GLOBAL library early so we can link it to namespaces.
+    if (d->d_tag == DT_FLAGS_1) {
+      si->set_dt_flags_1(d->d_un.d_val);
     }
   }
 
@@ -1552,6 +1556,7 @@ bool find_libraries(android_namespace_t* ns,
   });
 
   ZipArchiveCache zip_archive_cache;
+  soinfo_list_t new_global_group_members;
 
   // Step 1: expand the list of load_tasks to include
   // all DT_NEEDED libraries (do not load them just yet)
@@ -1586,12 +1591,30 @@ bool find_libraries(android_namespace_t* ns,
 
     // When ld_preloads is not null, the first
     // ld_preloads_count libs are in fact ld_preloads.
+    bool is_ld_preload = false;
     if (ld_preloads != nullptr && soinfos_count < ld_preloads_count) {
       ld_preloads->push_back(si);
+      is_ld_preload = true;
     }
 
     if (soinfos_count < library_names_count) {
       soinfos[soinfos_count++] = si;
+    }
+
+    // Add the new global group members to all initial namespaces. Do this secondary namespace setup
+    // at the same time that libraries are added to their primary namespace so that the order of
+    // global group members is the same in the every namespace. Only add a library to a namespace
+    // once, even if it appears multiple times in the dependency graph.
+    if (is_ld_preload || (si->get_dt_flags_1() & DF_1_GLOBAL) != 0) {
+      if (!si->is_linked() && namespaces != nullptr && !new_global_group_members.contains(si)) {
+        new_global_group_members.push_back(si);
+        for (auto linked_ns : *namespaces) {
+          if (si->get_primary_namespace() != linked_ns) {
+            linked_ns->add_soinfo(si);
+            si->add_secondary_namespace(linked_ns);
+          }
+        }
+      }
     }
   }
 
@@ -1649,36 +1672,12 @@ bool find_libraries(android_namespace_t* ns,
     register_soinfo_tls(si);
   }
 
-  // Step 4: Construct the global group. Note: DF_1_GLOBAL bit of a library is
-  // determined at step 3.
-
-  // Step 4-1: DF_1_GLOBAL bit is force set for LD_PRELOADed libs because they
-  // must be added to the global group
+  // Step 4: Construct the global group. DF_1_GLOBAL bit is force set for LD_PRELOADed libs because
+  // they must be added to the global group. Note: The DF_1_GLOBAL bit for a library is normally set
+  // in step 3.
   if (ld_preloads != nullptr) {
     for (auto&& si : *ld_preloads) {
       si->set_dt_flags_1(si->get_dt_flags_1() | DF_1_GLOBAL);
-    }
-  }
-
-  // Step 4-2: Gather all DF_1_GLOBAL libs which were newly loaded during this
-  // run. These will be the new member of the global group
-  soinfo_list_t new_global_group_members;
-  for (auto&& task : load_tasks) {
-    soinfo* si = task->get_soinfo();
-    if (!si->is_linked() && (si->get_dt_flags_1() & DF_1_GLOBAL) != 0) {
-      new_global_group_members.push_back(si);
-    }
-  }
-
-  // Step 4-3: Add the new global group members to all the linked namespaces
-  if (namespaces != nullptr) {
-    for (auto linked_ns : *namespaces) {
-      for (auto si : new_global_group_members) {
-        if (si->get_primary_namespace() != linked_ns) {
-          linked_ns->add_soinfo(si);
-          si->add_secondary_namespace(linked_ns);
-        }
-      }
     }
   }
 
