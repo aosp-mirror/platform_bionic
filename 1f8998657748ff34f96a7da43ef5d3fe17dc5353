@@ -134,6 +134,30 @@
       },
       "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70bccf32_20db64eb",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-22T23:24:46Z",
+      "side": 1,
+      "message": "That approach could ensure some ordering constraints, but it doesn\u0027t seem as general. e.g. Suppose there are two LD_PRELOAD libraries. My current CL will ensure that the order of the two preloads matches the LD_PRELOAD environment variable, in every namespace.\n\nEven for the example I gave above, linker_namespace_t::add_soinfo is called on an LD_PRELOAD library that hasn\u0027t yet been marked DF_1_GLOBAL. Maybe the flag could be set earlier, though.",
+      "parentUuid": "1c4115f7_d92c5648",
+      "range": {
+        "startLine": 1604,
+        "startChar": 0,
+        "endLine": 1618,
+        "endChar": 5
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
