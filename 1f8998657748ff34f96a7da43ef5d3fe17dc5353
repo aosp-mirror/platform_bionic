@@ -158,6 +158,30 @@
       },
       "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "781170d6_b0f3e18e",
+        "filename": "linker/linker.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1618,
+      "author": {
+        "id": 1132673
+      },
+      "writtenOn": "2021-01-25T00:56:58Z",
+      "side": 1,
+      "message": "You are right. I didn\u0027t thought about such a case.",
+      "parentUuid": "70bccf32_20db64eb",
+      "range": {
+        "startLine": 1604,
+        "startChar": 0,
+        "endLine": 1618,
+        "endChar": 5
+      },
+      "revId": "1f8998657748ff34f96a7da43ef5d3fe17dc5353",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
