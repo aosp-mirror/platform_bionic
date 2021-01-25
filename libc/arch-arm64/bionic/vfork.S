@@ -67,7 +67,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
 
     // Clean up stack shadow in the parent process.
     // https://github.com/google/sanitizers/issues/925
-    hint #25 // paciasp
+    paciasp
     .cfi_negate_ra_state
     stp x0, x30, [sp, #-16]!
     .cfi_adjust_cfa_offset 16
@@ -81,7 +81,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     .cfi_adjust_cfa_offset -16
     .cfi_restore x0
     .cfi_restore x30
-    hint #29 // autiasp
+    autiasp
     .cfi_negate_ra_state
 
 #endif
