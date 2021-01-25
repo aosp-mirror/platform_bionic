@@ -523,10 +523,6 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     }
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
   }
-  if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
-    ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
-    return SetHeapTaggingLevel(arg, arg_size);
-  }
   if (opcode == M_INITIALIZE_GWP_ASAN) {
     if (arg == nullptr || arg_size != sizeof(bool)) {
       errno = EINVAL;
@@ -535,9 +531,6 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     __libc_globals.mutate([&](libc_globals* globals) {
       return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
     });
-  }
-  if (opcode == M_DISABLE_MEMORY_MITIGATIONS) {
-    return DisableMemoryMitigations(arg, arg_size);
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);

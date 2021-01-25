@@ -885,7 +885,6 @@ ro.hwui.use_vulkan u:object_r:exported_default_prop:s0 exact bool
 ro.kernel.qemu             u:object_r:exported_default_prop:s0 exact bool
 ro.kernel.qemu.            u:object_r:exported_default_prop:s0
 ro.kernel.android.bootanim u:object_r:exported_default_prop:s0 exact int
-ro.kernel.ebpf.supported   u:object_r:exported_default_prop:s0 exact bool
 
 ro.oem.key1 u:object_r:exported_default_prop:s0 exact string
 
