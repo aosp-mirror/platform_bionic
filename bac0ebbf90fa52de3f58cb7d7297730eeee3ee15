@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4c22dd9_4b161468",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-01-26T22:34:52Z",
+      "side": 1,
+      "message": "I noticed that all of the $FreeBSD: ... $ became just $FreeBSD$. Is that to be expected?",
+      "revId": "bac0ebbf90fa52de3f58cb7d7297730eeee3ee15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
