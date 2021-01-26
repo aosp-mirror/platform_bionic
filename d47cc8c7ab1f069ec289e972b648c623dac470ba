@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "644aeec9_f1e93b3c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-26T22:08:34Z",
+      "side": 1,
+      "message": "for which pragmas? should we be fixing this (upstream?) instead?",
+      "revId": "d47cc8c7ab1f069ec289e972b648c623dac470ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aea22e6b_690f4030",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-26T22:08:34Z",
+      "side": 1,
+      "message": "what pragmas?",
+      "revId": "d47cc8c7ab1f069ec289e972b648c623dac470ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
