@@ -33,13 +33,62 @@
 
 #else
 
-#define __INTRODUCED_IN(api_level)
-#define __DEPRECATED_IN(api_level)
-#define __REMOVED_IN(api_level)
-#define __INTRODUCED_IN_32(api_level)
+// When headers are not processed by the versioner (i.e. compiled into object files),
+// the availability attributed is emitted instead. The clang compiler will make the symbol weak
+// when targeting old api_level and enforce the reference to the symbol to be guarded with
+// __builtin_available(android api_level, *).
+
+// The 'strict' flag is required for NDK clients where the use of "-Wunguarded-availability" cannot
+// be enforced. In the case, the absence of 'strict' makes it possible to call an unavailable API
+// without the __builtin_available check, which will cause a link error at runtime.
+// Android platform build system defines this macro along with -Wunguarded-availability
+#if defined(__ANDROID_UNGUARDED_AVAILABILITY__)
+#define __MAYBE_STRICT
+#else
+#define __MAYBE_STRICT ,strict
+#endif
+
+#define __INTRODUCED_IN(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __DEPRECATED_IN(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,deprecated=api_level)))
+#define __REMOVED_IN(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,obsoleted=api_level)))
+
+// The same availability attribute can't be annotated multiple times. Therefore, the macros are
+// defined for the configuration that it is valid for so that declarations like the below doesn't
+// cause inconsistent availability values which is an error with -Wavailability:
+//
+// void foo() __INTRODUCED_IN_32(30) __INTRODUCED_IN_64(31);
+//
+// This also takes the advantage of the fact that we never use bitness-specific macro with
+// arch-specific macro. In other words,
+//
+// void foo() __INTRODUCED_IN_ARM(30) __INTRODUCED_IN_64(31);
+//
+// hasn't been supported and won't be.
+#if !defined(__LP64__)
+#define __INTRODUCED_IN_32(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
 #define __INTRODUCED_IN_64(api_level)
+#else
+#define __INTRODUCED_IN_32(api_level)
+#define __INTRODUCED_IN_64(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#endif
+
+#if defined(__arm__) || defined(__aarch64__)
+#define __INTRODUCED_IN_ARM(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __INTRODUCED_IN_X86(api_level)
+#elif defined(__i386__) || defined(__x86_64__)
+#define __INTRODUCED_IN_ARM(api_level)
+#define __INTRODUCED_IN_X86(api_level) \
+    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#else
 #define __INTRODUCED_IN_ARM(api_level)
 #define __INTRODUCED_IN_X86(api_level)
+#endif
 
 #define __VERSIONER_NO_GUARD
 #define __VERSIONER_FORTIFY_INLINE
