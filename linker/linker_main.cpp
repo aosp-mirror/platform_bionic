@@ -725,6 +725,13 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
   // Initialize the linker's own global variables
   tmp_linker_so.call_constructors();
 
+  // Setting the linker soinfo's soname can allocate heap memory, so delay it until here.
+  for (const ElfW(Dyn)* d = tmp_linker_so.dynamic; d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_SONAME) {
+      tmp_linker_so.set_soname(tmp_linker_so.get_string(d->d_un.d_val));
+    }
+  }
+
   // When the linker is run directly rather than acting as PT_INTERP, parse
   // arguments and determine the executable to load. When it's instead acting
   // as PT_INTERP, AT_ENTRY will refer to the loaded executable rather than the
