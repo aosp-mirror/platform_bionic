@@ -45,7 +45,7 @@
 #if defined(__ARM_FEATURE_BTI_DEFAULT)
 #define __bionic_asm_aarch64_feature_bti    (1 << 0)
 #undef __bionic_asm_custom_entry
-#define __bionic_asm_custom_entry(f)        hint #34  // BTI C
+#define __bionic_asm_custom_entry(f)        bti c
 #else
 #define __bionic_asm_aarch64_feature_bti    0
 #endif

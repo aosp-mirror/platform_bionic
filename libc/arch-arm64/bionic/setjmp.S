@@ -118,7 +118,7 @@ END(_setjmp)
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
 ENTRY(sigsetjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
-  hint #25 // paciasp
+  paciasp
   .cfi_negate_ra_state
   stp x0, x30, [sp, #-16]!
   .cfi_def_cfa_offset 16
@@ -186,7 +186,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 #endif
 
   mov w0, #0
-  hint #29 // autiasp
+  autiasp
   .cfi_negate_ra_state
   ret
 END(sigsetjmp)
@@ -296,7 +296,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   // Set return value.
   cmp w1, wzr
   csinc w0, w1, wzr, ne
-  hint #29 // autiasp
+  autiasp
   .cfi_negate_ra_state
   ret
 END(siglongjmp)
