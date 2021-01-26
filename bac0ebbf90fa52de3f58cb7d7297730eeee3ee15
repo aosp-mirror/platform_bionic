@@ -16,6 +16,24 @@
       "message": "I noticed that all of the $FreeBSD: ... $ became just $FreeBSD$. Is that to be expected?",
       "revId": "bac0ebbf90fa52de3f58cb7d7297730eeee3ee15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4df8e3d_17bac5b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-26T22:43:07Z",
+      "side": 1,
+      "message": "yeah, that was some CVS thing. they\u0027ve switched to git upstream, so (hopefully) this is the last time we see these flip-flop back and forth between the long and short forms!\n\n(that\u0027s why i included a SHA in the commit message though.)",
+      "parentUuid": "e4c22dd9_4b161468",
+      "revId": "bac0ebbf90fa52de3f58cb7d7297730eeee3ee15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
