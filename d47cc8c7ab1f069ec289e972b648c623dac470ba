@@ -90,6 +90,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "7119b669_396ff3bd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2021-01-27T01:18:20Z",
+      "side": 1,
+      "message": "If we want to change the source file, we can #ifndef __clang_analyzer__ to skip the ignored pragma. NOLINT does not work on the \"diagnostic\" warnings. I tried to disable only some clang-tidy checks, but the warning still came out like unrelated to a specific check.\n\nIf we add \"tidy:false\" to Android.bp, we can disable clang-tidy for one module libm, but not a single file.",
+      "parentUuid": "bdca9e34_73b0b8f8",
+      "revId": "d47cc8c7ab1f069ec289e972b648c623dac470ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "aea22e6b_690f4030",
