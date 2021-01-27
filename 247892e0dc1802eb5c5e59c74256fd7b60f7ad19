@@ -16,6 +16,24 @@
       "message": "should this be a global default for cc_test in the build system, with people having to opt in? or does clang-tidy make sense for other cc_tests?",
       "revId": "247892e0dc1802eb5c5e59c74256fd7b60f7ad19",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51ab2b1c_96f5e2ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010056
+      },
+      "writtenOn": "2021-01-27T21:04:40Z",
+      "side": 1,
+      "message": "I don\u0027t think we want this as a global default because the only ones running global clang-tidy is our team. Fortify is a problematic case because it deliberately is checking that bad code doesn\u0027t function (and sometimes the static analyzer is smart enough to see that ahead of time). It was just a suggestion on that bug that we should consider what we want to do about tests generally, since they aren\u0027t as critical to fix tidy issues in (since the code really doesn\u0027t ship, etc.).",
+      "parentUuid": "86c0510c_b56fde6f",
+      "revId": "247892e0dc1802eb5c5e59c74256fd7b60f7ad19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
