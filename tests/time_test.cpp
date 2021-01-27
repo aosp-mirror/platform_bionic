@@ -851,11 +851,11 @@ TEST(time, clock_getres_unknown) {
 }
 
 TEST(time, clock) {
-  // clock(3) is hard to test, but a 1s sleep should cost less than 5ms.
+  // clock(3) is hard to test, but a 1s sleep should cost less than 10ms.
   clock_t t0 = clock();
   sleep(1);
   clock_t t1 = clock();
-  ASSERT_LT(t1 - t0, 5 * (CLOCKS_PER_SEC / 1000));
+  ASSERT_LT(t1 - t0, 10 * (CLOCKS_PER_SEC / 1000));
 }
 
 static pid_t GetInvalidPid() {
