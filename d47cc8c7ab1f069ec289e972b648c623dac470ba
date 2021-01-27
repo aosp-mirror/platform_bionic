@@ -72,6 +72,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdca9e34_73b0b8f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-27T00:50:28Z",
+      "side": 1,
+      "message": "can we make this clang-tidy only?",
+      "parentUuid": "fdfd117b_f4b70dd9",
+      "revId": "d47cc8c7ab1f069ec289e972b648c623dac470ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "aea22e6b_690f4030",
