@@ -56,6 +56,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fdfd117b_f4b70dd9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2021-01-27T00:39:20Z",
+      "side": 1,
+      "message": "The ignored messages only came for arm targets.\nI guess that clang fix was for x86, not for aarch64 yet.",
+      "parentUuid": "4e716115_d79c9054",
+      "revId": "d47cc8c7ab1f069ec289e972b648c623dac470ba",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "aea22e6b_690f4030",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
