@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86c0510c_b56fde6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-27T20:51:54Z",
+      "side": 1,
+      "message": "should this be a global default for cc_test in the build system, with people having to opt in? or does clang-tidy make sense for other cc_tests?",
+      "revId": "247892e0dc1802eb5c5e59c74256fd7b60f7ad19",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
