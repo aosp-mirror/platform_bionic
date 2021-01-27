@@ -51,6 +51,23 @@
       "message": "legit NDK breakage:\n```\n/buildbot/src/android/master-ndk/bionic/libm/upstream-freebsd/lib/msun/src/k_exp.c:108:2: error: implicit declaration of function \u0027sincos\u0027 is invalid in C99 [-Werror,-Wimplicit-function-declaration]\n        sincos(y, \u0026s, \u0026c);\n        ^\n1 error generated.\n```",
       "revId": "bac0ebbf90fa52de3f58cb7d7297730eeee3ee15",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "270a050c_2b3f6a5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-01-27T00:57:05Z",
+      "side": 1,
+      "message": "i think https://android-review.googlesource.com/c/platform/ndk/+/1559087 should fix the NDK breakage?",
+      "revId": "bac0ebbf90fa52de3f58cb7d7297730eeee3ee15",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
