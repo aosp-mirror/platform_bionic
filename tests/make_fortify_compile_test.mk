@@ -9,6 +9,7 @@ LOCAL_CXX := $(LOCAL_PATH)/touch-obj-on-success \
 
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests$(FORTIFY_LEVEL)-clang++
+LOCAL_TIDY := false
 LOCAL_CPPFLAGS := -Wall -Wno-error
 LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000 -Xclang -verify
 LOCAL_CPPFLAGS += -DCOMPILATION_TESTS=1 -Wformat-nonliteral
