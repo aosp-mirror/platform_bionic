@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "829c940a_96f58354",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-28T23:37:36Z",
+      "side": 1,
+      "message": "I think we could remove the -Wl,--exclude-libs\u003d from here, and in Soong, once libgcc*.a is gone and the builtins archives have hidden symbols.\n",
+      "revId": "b1a402f08f92a7fc2ebfad979f63430b31d24477",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
