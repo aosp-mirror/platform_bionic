@@ -89,7 +89,7 @@ enum nf_tables_msg_types {
   NFT_MSG_MAX,
 };
 enum nft_list_attributes {
-  NFTA_LIST_UNPEC,
+  NFTA_LIST_UNSPEC,
   NFTA_LIST_ELEM,
   __NFTA_LIST_MAX
 };
@@ -113,9 +113,16 @@ enum nft_table_attributes {
   NFTA_TABLE_USE,
   NFTA_TABLE_HANDLE,
   NFTA_TABLE_PAD,
+  NFTA_TABLE_USERDATA,
   __NFTA_TABLE_MAX
 };
 #define NFTA_TABLE_MAX (__NFTA_TABLE_MAX - 1)
+enum nft_chain_flags {
+  NFT_CHAIN_BASE = (1 << 0),
+  NFT_CHAIN_HW_OFFLOAD = (1 << 1),
+  NFT_CHAIN_BINDING = (1 << 2),
+};
+#define NFT_CHAIN_FLAGS (NFT_CHAIN_BASE | NFT_CHAIN_HW_OFFLOAD | NFT_CHAIN_BINDING)
 enum nft_chain_attributes {
   NFTA_CHAIN_UNSPEC,
   NFTA_CHAIN_TABLE,
@@ -128,6 +135,8 @@ enum nft_chain_attributes {
   NFTA_CHAIN_COUNTERS,
   NFTA_CHAIN_PAD,
   NFTA_CHAIN_FLAGS,
+  NFTA_CHAIN_ID,
+  NFTA_CHAIN_USERDATA,
   __NFTA_CHAIN_MAX
 };
 #define NFTA_CHAIN_MAX (__NFTA_CHAIN_MAX - 1)
@@ -143,6 +152,7 @@ enum nft_rule_attributes {
   NFTA_RULE_PAD,
   NFTA_RULE_ID,
   NFTA_RULE_POSITION_ID,
+  NFTA_RULE_CHAIN_ID,
   __NFTA_RULE_MAX
 };
 #define NFTA_RULE_MAX (__NFTA_RULE_MAX - 1)
@@ -250,6 +260,7 @@ enum nft_verdict_attributes {
   NFTA_VERDICT_UNSPEC,
   NFTA_VERDICT_CODE,
   NFTA_VERDICT_CHAIN,
+  NFTA_VERDICT_CHAIN_ID,
   __NFTA_VERDICT_MAX
 };
 #define NFTA_VERDICT_MAX (__NFTA_VERDICT_MAX - 1)
@@ -370,6 +381,7 @@ enum nft_payload_bases {
 enum nft_payload_csum_types {
   NFT_PAYLOAD_CSUM_NONE,
   NFT_PAYLOAD_CSUM_INET,
+  NFT_PAYLOAD_CSUM_SCTP,
 };
 enum nft_payload_csum_flags {
   NFT_PAYLOAD_L4CSUM_PSEUDOHDR = (1 << 0),
@@ -498,6 +510,7 @@ enum nft_socket_attributes {
 enum nft_socket_keys {
   NFT_SOCKET_TRANSPARENT,
   NFT_SOCKET_MARK,
+  NFT_SOCKET_WILDCARD,
   __NFT_SOCKET_MAX
 };
 #define NFT_SOCKET_MAX (__NFT_SOCKET_MAX - 1)
@@ -801,6 +814,7 @@ enum nft_object_attributes {
   NFTA_OBJ_USE,
   NFTA_OBJ_HANDLE,
   NFTA_OBJ_PAD,
+  NFTA_OBJ_USERDATA,
   __NFTA_OBJ_MAX
 };
 #define NFTA_OBJ_MAX (__NFTA_OBJ_MAX - 1)

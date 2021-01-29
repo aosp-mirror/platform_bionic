@@ -178,6 +178,9 @@ enum mlx5_ib_flow_matcher_methods {
   MLX5_IB_METHOD_FLOW_MATCHER_CREATE = (1U << UVERBS_ID_NS_SHIFT),
   MLX5_IB_METHOD_FLOW_MATCHER_DESTROY,
 };
+enum mlx5_ib_device_query_context_attrs {
+  MLX5_IB_ATTR_QUERY_CONTEXT_RESP_UCTX = (1U << UVERBS_ID_NS_SHIFT),
+};
 #define MLX5_IB_DW_MATCH_PARAM 0x80
 struct mlx5_ib_match_params {
   __u32 match_params[MLX5_IB_DW_MATCH_PARAM];
@@ -204,7 +207,7 @@ enum mlx5_ib_create_flow_attrs {
   MLX5_IB_ATTR_CREATE_FLOW_ARR_COUNTERS_DEVX_OFFSET,
   MLX5_IB_ATTR_CREATE_FLOW_FLAGS,
 };
-enum mlx5_ib_destoy_flow_attrs {
+enum mlx5_ib_destroy_flow_attrs {
   MLX5_IB_ATTR_DESTROY_FLOW_HANDLE = (1U << UVERBS_ID_NS_SHIFT),
 };
 enum mlx5_ib_flow_methods {
@@ -225,5 +228,12 @@ enum mlx5_ib_create_flow_action_create_packet_reformat_attrs {
   MLX5_IB_ATTR_CREATE_PACKET_REFORMAT_TYPE,
   MLX5_IB_ATTR_CREATE_PACKET_REFORMAT_FT_TYPE,
   MLX5_IB_ATTR_CREATE_PACKET_REFORMAT_DATA_BUF,
+};
+enum mlx5_ib_query_pd_attrs {
+  MLX5_IB_ATTR_QUERY_PD_HANDLE = (1U << UVERBS_ID_NS_SHIFT),
+  MLX5_IB_ATTR_QUERY_PD_RESP_PDN,
+};
+enum mlx5_ib_pd_methods {
+  MLX5_IB_METHOD_PD_QUERY = (1U << UVERBS_ID_NS_SHIFT),
 };
 #endif

@@ -22,6 +22,10 @@
 #include <linux/socket.h>
 #include <linux/in.h>
 #include <linux/in6.h>
+enum {
+  RXE_NETWORK_TYPE_IPV4 = 1,
+  RXE_NETWORK_TYPE_IPV6 = 2,
+};
 union rxe_gid {
   __u8 raw[16];
   struct {

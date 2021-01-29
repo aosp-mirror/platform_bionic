@@ -26,6 +26,9 @@ apex {
         "libc_malloc_debug",
         "libc_malloc_hooks",
     ],
+    binaries: [
+        "linkerconfig",
+    ],
     multilib: {
         both: {
             binaries: [
@@ -57,6 +60,8 @@ sdk {
     ],
     native_static_libs: [
         "libasync_safe",
+        "note_memtag_heap_async",
+        "note_memtag_heap_sync",
     ],
     native_objects: [
         "crtbegin_dynamic",
@@ -80,9 +85,8 @@ module_exports {
     },
 }
 
-prebuilt_etc {
+linker_config {
     name: "bionic-linker-config",
-    src: "linker.config.txt",
-    filename: "linker.config.txt",
+    src: "linker.config.json",
     installable: false,
 }

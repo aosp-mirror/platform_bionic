@@ -20,6 +20,7 @@
 #include <limits.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -45,7 +46,7 @@
 #include "SignalUtils.h"
 
 #include "platform/bionic/malloc.h"
-#include "platform/bionic/mte_kernel.h"
+#include "platform/bionic/mte.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/bionic_config.h"
 
@@ -923,12 +924,8 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     std::thread* t = new std::thread([&stop] {
       while (!stop) {
         for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-          void* ptr = malloc(size);
-          if (ptr == nullptr) {
-            return;
-          }
-          // Make sure this value is not optimized away.
-          asm volatile("" : : "r,m"(ptr) : "memory");
+          void* ptr;
+          DoNotOptimize(ptr = malloc(size));
           free(ptr);
         }
       }
@@ -941,10 +938,9 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     pid_t pid;
     if ((pid = fork()) == 0) {
       for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-        void* ptr = malloc(size);
+        void* ptr;
+        DoNotOptimize(ptr = malloc(size));
         ASSERT_TRUE(ptr != nullptr);
-        // Make sure this value is not optimized away.
-        asm volatile("" : : "r,m"(ptr) : "memory");
         // Make sure we can touch all of the allocation.
         memset(ptr, 0x1, size);
         ASSERT_LE(size, malloc_usable_size(ptr));
@@ -1255,6 +1251,40 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
     ASSERT_EQ(pid, wait(&status));
     ASSERT_EQ(0, WEXITSTATUS(status));
   }
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(malloc, disable_memory_mitigations) {
+#if defined(__BIONIC__)
+  if (!mte_supported()) {
+    GTEST_SKIP() << "This function can only be tested with MTE";
+  }
+
+  sem_t sem;
+  ASSERT_EQ(0, sem_init(&sem, 0, 0));
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(
+                   &thread, nullptr,
+                   [](void* ptr) -> void* {
+                     auto* sem = reinterpret_cast<sem_t*>(ptr);
+                     sem_wait(sem);
+                     return reinterpret_cast<void*>(prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0));
+                   },
+                   &sem));
+
+  ASSERT_EQ(1, mallopt(M_BIONIC_DISABLE_MEMORY_MITIGATIONS, 0));
+  ASSERT_EQ(0, sem_post(&sem));
+
+  int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  ASSERT_EQ(PR_MTE_TCF_NONE, my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
+
+  void* retval;
+  ASSERT_EQ(0, pthread_join(thread, &retval));
+  int thread_tagged_addr_ctrl = reinterpret_cast<uintptr_t>(retval);
+  ASSERT_EQ(my_tagged_addr_ctrl, thread_tagged_addr_ctrl);
 #else
   GTEST_SKIP() << "bionic extension";
 #endif

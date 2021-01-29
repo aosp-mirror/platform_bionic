@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 1
+#define KFD_IOCTL_MINOR_VERSION 3
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -287,6 +287,18 @@ struct kfd_ioctl_import_dmabuf_args {
   __u32 gpu_id;
   __u32 dmabuf_fd;
 };
+enum kfd_smi_event {
+  KFD_SMI_EVENT_NONE = 0,
+  KFD_SMI_EVENT_VMFAULT = 1,
+  KFD_SMI_EVENT_THERMAL_THROTTLE = 2,
+  KFD_SMI_EVENT_GPU_PRE_RESET = 3,
+  KFD_SMI_EVENT_GPU_POST_RESET = 4,
+};
+#define KFD_SMI_EVENT_MASK_FROM_INDEX(i) (1ULL << ((i) - 1))
+struct kfd_ioctl_smi_events_args {
+  __u32 gpuid;
+  __u32 anon_fd;
+};
 enum kfd_mmio_remap {
   KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL = 0,
   KFD_MMIO_REMAP_HDP_REG_FLUSH_CNTL = 4,
@@ -326,6 +338,7 @@ enum kfd_mmio_remap {
 #define AMDKFD_IOC_GET_DMABUF_INFO AMDKFD_IOWR(0x1C, struct kfd_ioctl_get_dmabuf_info_args)
 #define AMDKFD_IOC_IMPORT_DMABUF AMDKFD_IOWR(0x1D, struct kfd_ioctl_import_dmabuf_args)
 #define AMDKFD_IOC_ALLOC_QUEUE_GWS AMDKFD_IOWR(0x1E, struct kfd_ioctl_alloc_queue_gws_args)
+#define AMDKFD_IOC_SMI_EVENTS AMDKFD_IOWR(0x1F, struct kfd_ioctl_smi_events_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x1F
+#define AMDKFD_COMMAND_END 0x20
 #endif

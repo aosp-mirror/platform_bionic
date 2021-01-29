@@ -16,17 +16,11 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _MIC_IOCTL_H_
-#define _MIC_IOCTL_H_
+#ifndef _UAPI_REMOTEPROC_CDEV_H_
+#define _UAPI_REMOTEPROC_CDEV_H_
+#include <linux/ioctl.h>
 #include <linux/types.h>
-struct mic_copy_desc {
-  struct iovec * iov;
-  __u32 iovcnt;
-  __u8 vr_idx;
-  __u8 update_used;
-  __u32 out_len;
-};
-#define MIC_VIRTIO_ADD_DEVICE _IOWR('s', 1, struct mic_device_desc *)
-#define MIC_VIRTIO_COPY_DESC _IOWR('s', 2, struct mic_copy_desc *)
-#define MIC_VIRTIO_CONFIG_CHANGE _IOWR('s', 5, __u8 *)
+#define RPROC_MAGIC 0xB7
+#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, __s32)
+#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, __s32)
 #endif

@@ -27,10 +27,10 @@
 #define VIRTIO_CONSOLE_F_EMERG_WRITE 2
 #define VIRTIO_CONSOLE_BAD_ID (~(__u32) 0)
 struct virtio_console_config {
-  __u16 cols;
-  __u16 rows;
-  __u32 max_nr_ports;
-  __u32 emerg_wr;
+  __virtio16 cols;
+  __virtio16 rows;
+  __virtio32 max_nr_ports;
+  __virtio32 emerg_wr;
 } __attribute__((packed));
 struct virtio_console_control {
   __virtio32 id;

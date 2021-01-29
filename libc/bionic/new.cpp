@@ -21,7 +21,7 @@
 
 #include <async_safe/log.h>
 
-const std::nothrow_t std::nothrow = {};
+__attribute__((weak)) const std::nothrow_t std::nothrow = {};
 
 void* operator new(std::size_t size) {
     void* p = malloc(size);

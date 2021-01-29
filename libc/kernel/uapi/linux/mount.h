@@ -26,6 +26,7 @@
 #define MS_REMOUNT 32
 #define MS_MANDLOCK 64
 #define MS_DIRSYNC 128
+#define MS_NOSYMFOLLOW 256
 #define MS_NOATIME 1024
 #define MS_NODIRATIME 2048
 #define MS_BIND 4096
