@@ -29,7 +29,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/ld128/s_expl.c 336545 2018-07-20 12:42:24Z bde $");
+__FBSDID("$FreeBSD$");
 
 /*
  * ld128 version of s_expl.c.  See ../ld80/s_expl.c for most comments.
@@ -92,7 +92,10 @@ expl(long double x)
 	t = SUM2P(hi, lo);
 
 	/* Scale by 2**k. */
-	/* XXX sparc64 multiplication is so slow that scalbnl() is faster. */
+	/*
+	 * XXX sparc64 multiplication was so slow that scalbnl() is faster,
+	 * but performance on aarch64 and riscv hasn't yet been quantified.
+	 */
 	if (k >= LDBL_MIN_EXP) {
 		if (k == LDBL_MAX_EXP)
 			RETURNI(t * 2 * 0x1p16383L);
