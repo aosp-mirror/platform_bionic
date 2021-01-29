@@ -35,6 +35,7 @@
 
 #include "private/bionic_constants.h"
 #include "private/bionic_defs.h"
+#include "private/ScopedRWLock.h"
 #include "private/ScopedSignalBlocker.h"
 #include "pthread_internal.h"
 
@@ -103,9 +104,18 @@ void pthread_exit(void* return_value) {
          !atomic_compare_exchange_weak(&thread->join_state, &old_state, THREAD_EXITED_NOT_JOINED)) {
   }
 
-  // We don't want to take a signal after unmapping the stack, the shadow call
-  // stack, or dynamic TLS memory.
-  ScopedSignalBlocker ssb;
+  // android_run_on_all_threads() needs to see signals blocked atomically with setting the
+  // terminating flag, so take the creation lock while doing these operations.
+  {
+    ScopedReadLock locker(&g_thread_creation_lock);
+    atomic_store(&thread->terminating, true);
+
+    // We don't want to take a signal after unmapping the stack, the shadow call stack, or dynamic
+    // TLS memory.
+    sigset64_t set;
+    sigfillset64(&set);
+    __rt_sigprocmask(SIG_BLOCK, &set, nullptr, sizeof(sigset64_t));
+  }
 
 #ifdef __aarch64__
   // Free the shadow call stack and guard pages.

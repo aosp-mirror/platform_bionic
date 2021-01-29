@@ -29,6 +29,7 @@
 #include "platform/bionic/android_unsafe_frame_pointer_chase.h"
 
 #include "platform/bionic/mte.h"
+#include "platform/bionic/pac.h"
 #include "private/bionic_defs.h"
 #include "pthread_internal.h"
 
@@ -73,7 +74,7 @@ __attribute__((no_sanitize("address", "hwaddress"))) size_t android_unsafe_frame
   while (1) {
     auto* frame = reinterpret_cast<frame_record*>(begin);
     if (num_frames < num_entries) {
-      buf[num_frames] = frame->return_addr;
+      buf[num_frames] = __bionic_clear_pac_bits(frame->return_addr);
     }
     ++num_frames;
     if (frame->next_frame < begin + sizeof(frame_record) || frame->next_frame >= end ||

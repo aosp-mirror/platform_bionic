@@ -124,6 +124,7 @@ cc_defaults {
     name: "linker_all_targets",
     defaults: ["linux_bionic_supported"],
     recovery_available: true,
+    vendor_ramdisk_available: true,
     native_bridge_supported: true,
 }
 
@@ -231,19 +232,15 @@ cc_defaults {
     arch: {
         arm: {
             srcs: [":linker_sources_arm"],
-            static_libs: ["libunwind_llvm"],
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
-            static_libs: ["libgcc_stripped"],
         },
         x86: {
             srcs: [":linker_sources_x86"],
-            static_libs: ["libgcc_stripped"],
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
-            static_libs: ["libgcc_stripped"],
         },
     },
 
@@ -291,6 +288,7 @@ cc_defaults {
         "libc_nomalloc",
         "libc_dynamic_dispatch",
         "libm",
+        "libunwind",
     ],
 
     // Ensure that if the linker needs __gnu_Unwind_Find_exidx, then the linker will have a
@@ -336,6 +334,7 @@ cc_binary {
     compile_multilib: "both",
 
     recovery_available: true,
+    vendor_ramdisk_available: true,
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -355,11 +354,34 @@ cc_binary {
             static_libs: [
                 "liblinker_debuggerd_stub",
             ],
-        }
+        },
+        android_arm64: {
+            pgo: {
+                profile_file: "bionic/linker_arm_arm64.profdata",
+            },
+        },
+        android_arm: {
+            pgo: {
+                profile_file: "bionic/linker_arm_arm64.profdata",
+            },
+        },
+        android_x86_64: {
+            pgo: {
+                profile_file: "bionic/linker_x86_x86_64.profdata",
+            },
+        },
+        android_x86: {
+            pgo: {
+                profile_file: "bionic/linker_x86_x86_64.profdata",
+            },
+        },
     },
 
     lto: {
         never: true,
+    },
+    pgo: {
+        sampling: true,
     },
 }
 
@@ -413,6 +435,7 @@ cc_library {
     name: "ld-android",
     defaults: ["linux_bionic_supported", "linker_version_script_overlay"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 

@@ -120,6 +120,9 @@
 #if defined(__NR_close)
   #define SYS_close __NR_close
 #endif
+#if defined(__NR_close_range)
+  #define SYS_close_range __NR_close_range
+#endif
 #if defined(__NR_connect)
   #define SYS_connect __NR_connect
 #endif
@@ -776,6 +779,9 @@
 #endif
 #if defined(__NR_prlimit64)
   #define SYS_prlimit64 __NR_prlimit64
+#endif
+#if defined(__NR_process_madvise)
+  #define SYS_process_madvise __NR_process_madvise
 #endif
 #if defined(__NR_process_vm_readv)
   #define SYS_process_vm_readv __NR_process_vm_readv

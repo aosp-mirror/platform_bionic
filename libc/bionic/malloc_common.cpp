@@ -38,14 +38,16 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include <private/bionic_config.h>
 #include <platform/bionic/malloc.h>
+#include <private/ScopedPthreadMutexLocker.h>
+#include <private/bionic_config.h>
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
 #include "malloc_common.h"
 #include "malloc_limit.h"
 #include "malloc_tagged_pointers.h"
+#include "memory_mitigation_state.h"
 
 // =============================================================================
 // Global variables instantations.
@@ -100,6 +102,15 @@ extern "C" int malloc_info(int options, FILE* fp) {
 }
 
 extern "C" int mallopt(int param, int value) {
+  // Some are handled by libc directly rather than by the allocator.
+  if (param == M_BIONIC_SET_HEAP_TAGGING_LEVEL) {
+    ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
+    return SetHeapTaggingLevel(static_cast<HeapTaggingLevel>(value));
+  }
+  if (param == M_BIONIC_DISABLE_MEMORY_MITIGATIONS) {
+    return DisableMemoryMitigations(value);
+  }
+  // The rest we pass on...
   auto dispatch_table = GetDispatchTable();
   if (__predict_false(dispatch_table != nullptr)) {
     return dispatch_table->mallopt(param, value);
@@ -313,9 +324,6 @@ extern "C" int __sanitizer_malloc_info(int, FILE*) {
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
   if (opcode == M_SET_ALLOCATION_LIMIT_BYTES) {
     return LimitEnable(arg, arg_size);
-  }
-  if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
-    return SetHeapTaggingLevel(arg, arg_size);
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {
     if (arg == nullptr || arg_size != sizeof(bool)) {

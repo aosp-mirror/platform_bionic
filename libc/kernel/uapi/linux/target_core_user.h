@@ -25,6 +25,7 @@
 #define ALIGN_SIZE 64
 #define TCMU_MAILBOX_FLAG_CAP_OOOC (1 << 0)
 #define TCMU_MAILBOX_FLAG_CAP_READ_LEN (1 << 1)
+#define TCMU_MAILBOX_FLAG_CAP_TMR (1 << 2)
 struct tcmu_mailbox {
   __u16 version;
   __u16 flags;
@@ -36,6 +37,7 @@ struct tcmu_mailbox {
 enum tcmu_opcode {
   TCMU_OP_PAD = 0,
   TCMU_OP_CMD,
+  TCMU_OP_TMR,
 };
 struct tcmu_cmd_entry_hdr {
   __u32 len_op;
@@ -67,6 +69,25 @@ struct tcmu_cmd_entry {
       char sense_buffer[TCMU_SENSE_BUFFERSIZE];
     } rsp;
   };
+} __packed;
+struct tcmu_tmr_entry {
+  struct tcmu_cmd_entry_hdr hdr;
+#define TCMU_TMR_UNKNOWN 0
+#define TCMU_TMR_ABORT_TASK 1
+#define TCMU_TMR_ABORT_TASK_SET 2
+#define TCMU_TMR_CLEAR_ACA 3
+#define TCMU_TMR_CLEAR_TASK_SET 4
+#define TCMU_TMR_LUN_RESET 5
+#define TCMU_TMR_TARGET_WARM_RESET 6
+#define TCMU_TMR_TARGET_COLD_RESET 7
+#define TCMU_TMR_LUN_RESET_PRO 128
+  __u8 tmr_type;
+  __u8 __pad1;
+  __u16 __pad2;
+  __u32 cmd_cnt;
+  __u64 __pad3;
+  __u64 __pad4;
+  __u16 cmd_ids[0];
 } __packed;
 #define TCMU_OP_ALIGN_SIZE sizeof(__u64)
 enum tcmu_genl_cmd {

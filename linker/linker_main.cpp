@@ -66,6 +66,8 @@ static void get_elf_base_from_phdr(const ElfW(Phdr)* phdr_table, size_t phdr_cou
 
 static void set_bss_vma_name(soinfo* si);
 
+void __libc_init_mte(const void* phdr_start, size_t phdr_count, uintptr_t load_bias);
+
 // These should be preserved static to avoid emitting
 // RELATIVE relocations for the part of the code running
 // before linker links itself.
@@ -403,6 +405,8 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
                      strerror(errno));
     }
   }
+
+  __libc_init_mte(somain->phdr, somain->phnum, somain->load_bias);
 #endif
 
   // Register the main executable and the linker upfront to have
@@ -720,6 +724,13 @@ __linker_init_post_relocation(KernelArgumentBlock& args, soinfo& tmp_linker_so) 
 
   // Initialize the linker's own global variables
   tmp_linker_so.call_constructors();
+
+  // Setting the linker soinfo's soname can allocate heap memory, so delay it until here.
+  for (const ElfW(Dyn)* d = tmp_linker_so.dynamic; d->d_tag != DT_NULL; ++d) {
+    if (d->d_tag == DT_SONAME) {
+      tmp_linker_so.set_soname(tmp_linker_so.get_string(d->d_un.d_val));
+    }
+  }
 
   // When the linker is run directly rather than acting as PT_INTERP, parse
   // arguments and determine the executable to load. When it's instead acting

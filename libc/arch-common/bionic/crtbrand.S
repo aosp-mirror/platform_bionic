@@ -32,13 +32,15 @@
 __bionic_asm_custom_note_gnu_section()
 #endif
 
+#include <private/bionic_asm_note.h>
+
   .section .note.android.ident,"a",%note
   .balign 4
   .type abitag, %object
 abitag:
   .long 2f-1f                 // int32_t namesz
   .long 3f-2f                 // int32_t descsz
-  .long 1                     // int32_t type
+  .long NT_TYPE_IDENT         // int32_t type
 #ifdef __ANDROID__
 1:.ascii "Android\0"          // char name[]
 2:.long PLATFORM_SDK_VERSION  // int32_t android_api

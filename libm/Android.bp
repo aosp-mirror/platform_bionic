@@ -5,8 +5,10 @@ cc_library {
     name: "libm",
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     static_ndk_lib: true,
+    llndk_stubs: "libm.llndk",
 
     whole_static_libs: ["libarm-optimized-routines-math"],
 
@@ -514,13 +516,12 @@ cc_library {
 
 ndk_library {
     name: "libm",
-    native_bridge_supported: true,
     symbol_file: "libm.map.txt",
     first_version: "9",
 }
 
 llndk_library {
-    name: "libm",
+    name: "libm.llndk",
     native_bridge_supported: true,
     symbol_file: "libm.map.txt",
 }
