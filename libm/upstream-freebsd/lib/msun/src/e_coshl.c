@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/e_coshl.c 306527 2016-09-30 20:20:07Z emaste $");
+__FBSDID("$FreeBSD$");
 
 /*
  * See e_cosh.c for complete comments.
