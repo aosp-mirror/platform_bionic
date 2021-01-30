@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_tanl.c 326219 2017-11-26 02:00:33Z pfg $");
+__FBSDID("$FreeBSD$");
 
 /*
  * Limited testing on pseudorandom numbers drawn within [0:4e8] shows

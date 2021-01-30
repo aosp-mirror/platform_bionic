@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/k_sincos.h 319047 2017-05-28 06:13:38Z mmel $");
+__FBSDID("$FreeBSD$");
 
 static const double
 S1  = -1.66666666666666324348e-01, /* 0xBFC55555, 0x55555549 */
