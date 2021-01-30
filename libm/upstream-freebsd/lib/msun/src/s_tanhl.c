@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_tanhl.c 306527 2016-09-30 20:20:07Z emaste $");
+__FBSDID("$FreeBSD$");
 
 /*
  * See s_tanh.c for complete comments.
