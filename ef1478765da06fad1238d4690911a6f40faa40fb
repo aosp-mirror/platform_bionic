@@ -16,6 +16,24 @@
       "message": "i\u0027m assuming you\u0027ll come back and delete all this after all the dust has settled, but want to go with the minimal change now?",
       "revId": "ef1478765da06fad1238d4690911a6f40faa40fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a7992d5_0e332c21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-01-30T01:57:48Z",
+      "side": 1,
+      "message": "Yeah, there are also -Wl,--exclude-libs lines in build/soong and build/make that can be removed, and libgcc[_stripped].a should be removed. Removing libgcc is blocked on switching the NDK over to libunwind (and removing a rust-\u003elibgcc dependency, b/141331117).",
+      "parentUuid": "a34123bf_6705840f",
+      "revId": "ef1478765da06fad1238d4690911a6f40faa40fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
