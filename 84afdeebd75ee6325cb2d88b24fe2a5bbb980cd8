@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a93e0a21_4f8fda96",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-01T17:10:30Z",
+      "side": 1,
+      "message": "do we have a bug for that that we can link to?",
+      "range": {
+        "startLine": 49,
+        "startChar": 46,
+        "endLine": 49,
+        "endChar": 49
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b76bb20_cb83114a",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-01T17:10:30Z",
+      "side": 1,
+      "message": "i thought you wanted to change this name?",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "818af321_19fd1233",
+        "filename": "libc/include/android/versioning.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-01T17:10:30Z",
+      "side": 1,
+      "message": "is __INTRODUCED_IN_NO_GUARD_FOR_NDK() or __INTRODUCED_IN_NO_NDK_GUARD() a bit less unclear? (i read this as \"introduced in NDK, no guard\".)",
+      "range": {
+        "startLine": 24,
+        "startChar": 8,
+        "endLine": 24,
+        "endChar": 36
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
