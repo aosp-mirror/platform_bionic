@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,34 +26,21 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <private/bionic_asm.h>
+#include <private/bionic_asm_note.h>
 
-// Defines constants used as part of the interface in an experimental MTE branch
-// of the Linux kernel, which may be found at:
-//
-// https://github.com/pcc/linux/tree/android-experimental-mte
-//
-// This interface should not be considered to be stable.
+__bionic_asm_custom_note_gnu_section()
 
-#ifdef ANDROID_EXPERIMENTAL_MTE
-
-#define HWCAP2_MTE (1 << 18)
-#define PROT_MTE 0x20
-
-#define PR_MTE_TCF_SHIFT 1
-#define PR_MTE_TCF_NONE (0UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_SYNC (1UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_ASYNC (2UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TCF_MASK (3UL << PR_MTE_TCF_SHIFT)
-#define PR_MTE_TAG_SHIFT 3
-#define PR_MTE_TAG_MASK (0xffffUL << PR_MTE_TAG_SHIFT)
-
-#define SEGV_MTEAERR 8
-#define SEGV_MTESERR 9
-
-#define PTRACE_PEEKMTETAGS 33
-#define PTRACE_POKEMTETAGS 34
-
-#define NT_ARM_TAGGED_ADDR_CTRL 0x409
-
-#endif
+  .section ".note.android.memtag", "a", %note
+  .p2align 2
+  .long 1f - 0f         // int32_t namesz
+  .long 3f - 2f         // int32_t descsz
+  .long NT_TYPE_MEMTAG  // int32_t type
+0:
+  .asciz "Android"      // char name[]
+1:
+  .p2align 2
+2:
+  .long (NT_MEMTAG_LEVEL_ASYNC | NT_MEMTAG_HEAP) // value
+3:
+  .p2align 2

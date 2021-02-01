@@ -60,6 +60,8 @@ sdk {
     ],
     native_static_libs: [
         "libasync_safe",
+        "note_memtag_heap_async",
+        "note_memtag_heap_sync",
     ],
     native_objects: [
         "crtbegin_dynamic",
