@@ -268,8 +268,16 @@ static bool is_debuggable_build() {
 }
 #endif
 
-// _lib1.so and _lib2.so are now searchable by having another namespace 'ns2'
+// lib1.so and lib2.so are now searchable by having another namespace 'ns2'
 // whose search paths include the 'ns2/' subdir.
+//
+// lib1.so is linked with DF_1_GLOBAL, so both it and the executable are added
+// to every namespace.
+//
+// namespace configuration ('*' indicates primary ns)
+//  - default: exe[*], lib1.so
+//  - ns2: exe, lib1.so[*], lib2.so[*]
+//
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
@@ -285,13 +293,28 @@ TEST(dl, exec_with_ld_config_file) {
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), nullptr });
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "12345");
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+          "foo lib1\n"
+          "lib1_call_funcs\n"
+          "foo lib1\n"
+          "bar lib2\n");
 #endif
 }
 
-// _lib3.so has same symbol as lib2.so but returns 54321. _lib3.so is
-// LD_PRELOADed. This test is to ensure LD_PRELOADed libs are available to
-// additional namespaces other than the default namespace.
+// lib3.so has same foo and bar symbols as lib2.so. lib3.so is LD_PRELOADed.
+// This test ensures that LD_PRELOADed libs are available to all namespaces.
+//
+// namespace configuration ('*' indicates primary ns)
+//  - default: exe[*], lib3.so[*], lib1.so
+//  - ns2: exe, lib3.so, lib1.so[*], lib2.so[*]
+//
+// Ensure that, in both namespaces, a call to foo calls the lib3.so symbol,
+// which then calls the lib1.so symbol using RTLD_NEXT. Ensure that RTLD_NEXT
+// finds nothing when called from lib1.so.
+//
+// For the bar symbol, lib3.so's primary namespace is the default namespace, but
+// lib2.so is not in the default namespace, so using RTLD_NEXT from lib3.so
+// doesn't find the symbol in lib2.so.
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
@@ -308,7 +331,17 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
   eth.SetEnv({ env.c_str(), env2.c_str(), nullptr });
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0, "54321");
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+          "foo lib3\n"
+          "foo lib1\n"
+          "lib1_call_funcs\n"
+          "foo lib3\n"
+          "foo lib1\n"
+          "bar lib3\n"
+          "lib3_call_funcs\n"
+          "foo lib3\n"
+          "foo lib1\n"
+          "bar lib3\n");
 #endif
 }
 

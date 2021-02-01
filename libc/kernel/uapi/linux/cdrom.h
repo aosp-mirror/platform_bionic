@@ -155,7 +155,10 @@ struct cdrom_generic_command {
   unsigned char data_direction;
   int quiet;
   int timeout;
-  void __user * reserved[1];
+  union {
+    void __user * reserved[1];
+    void __user * unused;
+  };
 };
 #define CD_MINS 74
 #define CD_SECS 60

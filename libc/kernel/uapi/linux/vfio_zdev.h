@@ -16,17 +16,39 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _MIC_IOCTL_H_
-#define _MIC_IOCTL_H_
+#ifndef _VFIO_ZDEV_H_
+#define _VFIO_ZDEV_H_
 #include <linux/types.h>
-struct mic_copy_desc {
-  struct iovec * iov;
-  __u32 iovcnt;
-  __u8 vr_idx;
-  __u8 update_used;
-  __u32 out_len;
+#include <linux/vfio.h>
+struct vfio_device_info_cap_zpci_base {
+  struct vfio_info_cap_header header;
+  __u64 start_dma;
+  __u64 end_dma;
+  __u16 pchid;
+  __u16 vfn;
+  __u16 fmb_length;
+  __u8 pft;
+  __u8 gid;
 };
-#define MIC_VIRTIO_ADD_DEVICE _IOWR('s', 1, struct mic_device_desc *)
-#define MIC_VIRTIO_COPY_DESC _IOWR('s', 2, struct mic_copy_desc *)
-#define MIC_VIRTIO_CONFIG_CHANGE _IOWR('s', 5, __u8 *)
+struct vfio_device_info_cap_zpci_group {
+  struct vfio_info_cap_header header;
+  __u64 dasm;
+  __u64 msi_addr;
+  __u64 flags;
+#define VFIO_DEVICE_INFO_ZPCI_FLAG_REFRESH 1
+  __u16 mui;
+  __u16 noi;
+  __u16 maxstbl;
+  __u8 version;
+};
+struct vfio_device_info_cap_zpci_util {
+  struct vfio_info_cap_header header;
+  __u32 size;
+  __u8 util_str[];
+};
+struct vfio_device_info_cap_zpci_pfip {
+  struct vfio_info_cap_header header;
+  __u32 size;
+  __u8 pfip[];
+};
 #endif

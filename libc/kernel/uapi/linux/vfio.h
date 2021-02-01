@@ -58,8 +58,11 @@ struct vfio_device_info {
 #define VFIO_DEVICE_FLAGS_AMBA (1 << 3)
 #define VFIO_DEVICE_FLAGS_CCW (1 << 4)
 #define VFIO_DEVICE_FLAGS_AP (1 << 5)
+#define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)
+#define VFIO_DEVICE_FLAGS_CAPS (1 << 7)
   __u32 num_regions;
   __u32 num_irqs;
+  __u32 cap_offset;
 };
 #define VFIO_DEVICE_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 7)
 #define VFIO_DEVICE_API_PCI_STRING "vfio-pci"
@@ -67,6 +70,10 @@ struct vfio_device_info {
 #define VFIO_DEVICE_API_AMBA_STRING "vfio-amba"
 #define VFIO_DEVICE_API_CCW_STRING "vfio-ccw"
 #define VFIO_DEVICE_API_AP_STRING "vfio-ap"
+#define VFIO_DEVICE_INFO_CAP_ZPCI_BASE 1
+#define VFIO_DEVICE_INFO_CAP_ZPCI_GROUP 2
+#define VFIO_DEVICE_INFO_CAP_ZPCI_UTIL 3
+#define VFIO_DEVICE_INFO_CAP_ZPCI_PFIP 4
 struct vfio_region_info {
   __u32 argsz;
   __u32 flags;
@@ -300,6 +307,11 @@ struct vfio_iommu_type1_info_cap_migration {
   __u32 flags;
   __u64 pgsize_bitmap;
   __u64 max_dirty_bitmap_size;
+};
+#define VFIO_IOMMU_TYPE1_INFO_DMA_AVAIL 3
+struct vfio_iommu_type1_info_dma_avail {
+  struct vfio_info_cap_header header;
+  __u32 avail;
 };
 #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
 struct vfio_iommu_type1_dma_map {

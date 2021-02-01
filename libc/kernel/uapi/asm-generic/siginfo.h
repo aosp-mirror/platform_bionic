@@ -179,7 +179,9 @@ typedef struct siginfo {
 #define SEGV_ACCADI 5
 #define SEGV_ADIDERR 6
 #define SEGV_ADIPERR 7
-#define NSIGSEGV 7
+#define SEGV_MTEAERR 8
+#define SEGV_MTESERR 9
+#define NSIGSEGV 9
 #define BUS_ADRALN 1
 #define BUS_ADRERR 2
 #define BUS_OBJERR 3

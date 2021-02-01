@@ -21,6 +21,7 @@
 #include <linux/types.h>
 #define VIRTIO_GPU_F_VIRGL 0
 #define VIRTIO_GPU_F_EDID 1
+#define VIRTIO_GPU_F_RESOURCE_UUID 2
 enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_UNDEFINED = 0,
   VIRTIO_GPU_CMD_GET_DISPLAY_INFO = 0x0100,
@@ -34,6 +35,7 @@ enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_CMD_GET_CAPSET_INFO,
   VIRTIO_GPU_CMD_GET_CAPSET,
   VIRTIO_GPU_CMD_GET_EDID,
+  VIRTIO_GPU_CMD_RESOURCE_ASSIGN_UUID,
   VIRTIO_GPU_CMD_CTX_CREATE = 0x0200,
   VIRTIO_GPU_CMD_CTX_DESTROY,
   VIRTIO_GPU_CMD_CTX_ATTACH_RESOURCE,
@@ -49,6 +51,7 @@ enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_RESP_OK_CAPSET_INFO,
   VIRTIO_GPU_RESP_OK_CAPSET,
   VIRTIO_GPU_RESP_OK_EDID,
+  VIRTIO_GPU_RESP_OK_RESOURCE_UUID,
   VIRTIO_GPU_RESP_ERR_UNSPEC = 0x1200,
   VIRTIO_GPU_RESP_ERR_OUT_OF_MEMORY,
   VIRTIO_GPU_RESP_ERR_INVALID_SCANOUT_ID,
@@ -237,5 +240,14 @@ enum virtio_gpu_formats {
   VIRTIO_GPU_FORMAT_X8B8G8R8_UNORM = 68,
   VIRTIO_GPU_FORMAT_A8B8G8R8_UNORM = 121,
   VIRTIO_GPU_FORMAT_R8G8B8X8_UNORM = 134,
+};
+struct virtio_gpu_resource_assign_uuid {
+  struct virtio_gpu_ctrl_hdr hdr;
+  __le32 resource_id;
+  __le32 padding;
+};
+struct virtio_gpu_resp_resource_uuid {
+  struct virtio_gpu_ctrl_hdr hdr;
+  __u8 uuid[16];
 };
 #endif

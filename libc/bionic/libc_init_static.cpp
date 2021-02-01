@@ -39,13 +39,17 @@
 #include "libc_init_common.h"
 #include "pthread_internal.h"
 
+#include "platform/bionic/macros.h"
+#include "platform/bionic/mte.h"
 #include "platform/bionic/page.h"
+#include "private/KernelArgumentBlock.h"
+#include "private/bionic_asm.h"
+#include "private/bionic_asm_note.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
-#include "platform/bionic/macros.h"
 #include "private/bionic_tls.h"
-#include "private/KernelArgumentBlock.h"
+#include "sys/system_properties.h"
 
 #if __has_feature(hwaddress_sanitizer)
 #include <sanitizer/hwasan_interface.h>
@@ -59,6 +63,7 @@ __LIBC_HIDDEN__ void* __libc_sysinfo;
 #endif
 
 extern "C" int __cxa_atexit(void (*)(void *), void *, void *);
+extern "C" const char* __gnu_basename(const char* path);
 
 static void call_array(init_func_t** list, int argc, char* argv[], char* envp[]) {
   // First element is -1, list is null-terminated
@@ -158,6 +163,170 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   layout.finish_layout();
 }
 
+// Get the presiding config string, in the following order of priority:
+//   1. Environment variables.
+//   2. System properties, in the order they're specified in sys_prop_names.
+// If neither of these options are specified, this function returns false.
+// Otherwise, it returns true, and the presiding options string is written to
+// the `options` buffer of size `size`. If this function returns true, `options`
+// is guaranteed to be null-terminated. `options_size` should be at least
+// PROP_VALUE_MAX.
+bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const* sys_prop_names,
+                                     size_t sys_prop_names_size, char* options,
+                                     size_t options_size) {
+  const char* env = getenv(env_var_name);
+  if (env && *env != '\0') {
+    strncpy(options, env, options_size);
+    options[options_size - 1] = '\0'; // Ensure null-termination.
+    return true;
+  }
+
+  for (size_t i = 0; i < sys_prop_names_size; ++i) {
+    if (__system_property_get(sys_prop_names[i], options) && *options != '\0') return true;
+  }
+  return false;
+}
+
+#ifdef __aarch64__
+static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
+                               unsigned* result) {
+  if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
+    return false;
+  }
+  if (note->n_type != NT_TYPE_MEMTAG) {
+    return false;
+  }
+  if (note->n_descsz != 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected 4", note->n_descsz);
+  }
+  *result = *reinterpret_cast<const ElfW(Word)*>(desc);
+  return true;
+}
+
+static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
+                                  const ElfW(Addr) load_bias) {
+  for (size_t i = 0; i < phdr_ct; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_start[i];
+    if (phdr->p_type != PT_NOTE) {
+      continue;
+    }
+    ElfW(Addr) p = load_bias + phdr->p_vaddr;
+    ElfW(Addr) note_end = load_bias + phdr->p_vaddr + phdr->p_memsz;
+    while (p + sizeof(ElfW(Nhdr)) <= note_end) {
+      const ElfW(Nhdr)* note = reinterpret_cast<const ElfW(Nhdr)*>(p);
+      p += sizeof(ElfW(Nhdr));
+      const char* name = reinterpret_cast<const char*>(p);
+      p += align_up(note->n_namesz, 4);
+      const char* desc = reinterpret_cast<const char*>(p);
+      p += align_up(note->n_descsz, 4);
+      if (p > note_end) {
+        break;
+      }
+      unsigned ret;
+      if (__read_memtag_note(note, name, desc, &ret)) {
+        return ret;
+      }
+    }
+  }
+  return 0;
+}
+
+// Returns true if there's an environment setting (either sysprop or env var)
+// that should overwrite the ELF note, and places the equivalent heap tagging
+// level into *level.
+static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
+  static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
+
+  const char* progname = __libc_shared_globals()->init_progname;
+  if (progname == nullptr) return false;
+
+  const char* basename = __gnu_basename(progname);
+
+  static constexpr size_t kOptionsSize = PROP_VALUE_MAX;
+  char options_str[kOptionsSize];
+  size_t sysprop_size = strlen(basename) + strlen(kMemtagPrognameSyspropPrefix) + 1;
+  char* sysprop_name = static_cast<char*>(alloca(sysprop_size));
+
+  async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagPrognameSyspropPrefix,
+                           basename);
+
+  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", &sysprop_name,
+                                       /* sys_prop_names_size */ 1, options_str, kOptionsSize)) {
+    return false;
+  }
+
+  if (strcmp("sync", options_str) == 0) {
+    *level = M_HEAP_TAGGING_LEVEL_SYNC;
+  } else if (strcmp("async", options_str) == 0) {
+    *level = M_HEAP_TAGGING_LEVEL_ASYNC;
+  } else if (strcmp("off", options_str) == 0) {
+    *level = M_HEAP_TAGGING_LEVEL_TBI;
+  } else {
+    async_safe_format_log(
+        ANDROID_LOG_ERROR, "libc",
+        "unrecognized memtag level: \"%s\" (options are \"sync\", \"async\", or \"off\").",
+        options_str);
+    return false;
+  }
+
+  return true;
+}
+
+// Returns the initial heap tagging level. Note: This function will never return
+// M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
+// M_HEAP_TAGGING_LEVEL_TBI.
+static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
+                                                 uintptr_t load_bias) {
+  HeapTaggingLevel level;
+  if (get_environment_memtag_setting(&level)) return level;
+
+  unsigned note_val =
+      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
+  if (note_val & ~(NT_MEMTAG_LEVEL_MASK | NT_MEMTAG_HEAP)) {
+    async_safe_fatal("unrecognized android.memtag note: desc = %d", note_val);
+  }
+
+  if (!(note_val & NT_MEMTAG_HEAP)) return M_HEAP_TAGGING_LEVEL_TBI;
+
+  unsigned memtag_level = note_val & NT_MEMTAG_LEVEL_MASK;
+  switch (memtag_level) {
+    case NT_MEMTAG_LEVEL_ASYNC:
+      return M_HEAP_TAGGING_LEVEL_ASYNC;
+    case NT_MEMTAG_LEVEL_DEFAULT:
+    case NT_MEMTAG_LEVEL_SYNC:
+      return M_HEAP_TAGGING_LEVEL_SYNC;
+    default:
+      async_safe_fatal("unrecognized android.memtag note: level = %d", memtag_level);
+  }
+}
+
+// Figure out the desired memory tagging mode (sync/async, heap/globals/stack) for this executable.
+// This function is called from the linker before the main executable is relocated.
+__attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
+                                                                         size_t phdr_ct,
+                                                                         uintptr_t load_bias) {
+  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias);
+
+  if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
+    unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
+    prctl_arg |= (level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
+
+    if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
+      __libc_shared_globals()->initial_heap_tagging_level = level;
+      return;
+    }
+  }
+
+  // MTE was either not enabled, or wasn't supported on this device. Try and use
+  // TBI.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0) {
+    __libc_shared_globals()->initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
+  }
+}
+#else   // __aarch64__
+void __libc_init_mte(const void*, size_t, uintptr_t) {}
+#endif  // __aarch64__
+
 __noreturn static void __real_libc_init(void *raw_args,
                                         void (*onexit)(void) __unused,
                                         int (*slingshot)(int, char**, char**),
@@ -175,6 +344,9 @@ __noreturn static void __real_libc_init(void *raw_args,
   layout_static_tls(args);
   __libc_init_main_thread_final();
   __libc_init_common();
+  __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
+                  /*load_bias = */ 0);
+  __libc_init_scudo();
   __libc_init_fork_handler();
 
   call_ifunc_resolvers();

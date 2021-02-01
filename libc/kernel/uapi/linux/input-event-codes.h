@@ -463,6 +463,9 @@
 #define KEY_10CHANNELSUP 0x1b8
 #define KEY_10CHANNELSDOWN 0x1b9
 #define KEY_IMAGES 0x1ba
+#define KEY_NOTIFICATION_CENTER 0x1bc
+#define KEY_PICKUP_PHONE 0x1bd
+#define KEY_HANGUP_PHONE 0x1be
 #define KEY_DEL_EOL 0x1c0
 #define KEY_DEL_EOS 0x1c1
 #define KEY_INS_LINE 0x1c2
@@ -488,6 +491,7 @@
 #define KEY_FN_F 0x1e2
 #define KEY_FN_S 0x1e3
 #define KEY_FN_B 0x1e4
+#define KEY_FN_RIGHT_SHIFT 0x1e5
 #define KEY_BRL_DOT1 0x1f1
 #define KEY_BRL_DOT2 0x1f2
 #define KEY_BRL_DOT3 0x1f3
