@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "600b1f9c_41d2013a",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-01T20:52:05Z",
+      "side": 1,
+      "message": "not done?",
+      "parentUuid": "69562992_7c25f873",
+      "range": {
+        "startLine": 49,
+        "startChar": 46,
+        "endLine": 49,
+        "endChar": 49
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b76bb20_cb83114a",
         "filename": "libc/include/android/legacy_signal_inlines.h",
         "patchSetId": 1
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "Probably should, but this is blocking a release and I\u0027d rather not get tied down with all the dependent projects that\u0027d be involved in atm. Can follow up with that.",
       "parentUuid": "8b76bb20_cb83114a",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5185c529_335d194f",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-01T20:52:05Z",
+      "side": 1,
+      "message": "ack. (given that i\u0027m struggling to align the branches to remove `#if __ANDROID_API__` comparisons right now, i definitely know what you mean! feel free to sign me up for this naming cleanup too...)",
+      "parentUuid": "2908c4ea_0e626492",
       "range": {
         "startLine": 53,
         "startChar": 12,
