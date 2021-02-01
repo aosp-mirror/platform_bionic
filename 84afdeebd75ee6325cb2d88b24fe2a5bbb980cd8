@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e4238ae_a34da98d",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-02-01T20:54:29Z",
+      "side": 1,
+      "message": "Whoops. Got the one below but forgot this was in two places.",
+      "parentUuid": "600b1f9c_41d2013a",
+      "range": {
+        "startLine": 49,
+        "startChar": 46,
+        "endLine": 49,
+        "endChar": 49
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b76bb20_cb83114a",
@@ -133,6 +157,30 @@
       "side": 1,
       "message": "ack. (given that i\u0027m struggling to align the branches to remove `#if __ANDROID_API__` comparisons right now, i definitely know what you mean! feel free to sign me up for this naming cleanup too...)",
       "parentUuid": "2908c4ea_0e626492",
+      "range": {
+        "startLine": 53,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 46
+      },
+      "revId": "84afdeebd75ee6325cb2d88b24fe2a5bbb980cd8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99919b94_91f459bb",
+        "filename": "libc/include/android/legacy_signal_inlines.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-02-01T20:54:29Z",
+      "side": 1,
+      "message": "That\u0027d definitely help. Quite a few things going unaddressed while I\u0027m chasing this release :(",
+      "parentUuid": "5185c529_335d194f",
       "range": {
         "startLine": 53,
         "startChar": 12,
