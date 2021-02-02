@@ -26,43 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#include "memory_mitigation_state.h"
+#pragma once
 
-#include <dirent.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <stdatomic.h>
-#include <stdlib.h>
-#include <sys/prctl.h>
-#include <sys/types.h>
-
-#include <bionic/malloc.h>
-#include <bionic/mte.h>
-
-#include <private/ScopedPthreadMutexLocker.h>
-#include <private/ScopedRWLock.h>
-
-#include "heap_tagging.h"
-#include "pthread_internal.h"
-
-extern "C" void scudo_malloc_set_zero_contents(int zero_contents);
-
-bool DisableMemoryMitigations(int arg) {
-  if (arg != 0) {
-    return false;
-  }
-
-#ifdef USE_SCUDO
-  scudo_malloc_set_zero_contents(0);
-#endif
-
-  ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
-
-  HeapTaggingLevel current_level = GetHeapTaggingLevel();
-  if (current_level != M_HEAP_TAGGING_LEVEL_NONE && current_level != M_HEAP_TAGGING_LEVEL_TBI) {
-    HeapTaggingLevel level = M_HEAP_TAGGING_LEVEL_NONE;
-    SetHeapTaggingLevel(level);
-  }
-
-  return true;
-}
+// Sets heap zero initialization to on (true) or off (false). Returns false on
+// failure, true otherwise.
+bool SetHeapZeroInitialize(bool zero_init);
