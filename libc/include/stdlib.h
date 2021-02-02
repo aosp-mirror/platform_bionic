@@ -160,10 +160,10 @@ int getloadavg(double __averages[], int __n) __INTRODUCED_IN(29);
 const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char* __name) __INTRODUCED_IN(21);
 
-int mblen(const char* __s, size_t __n) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+int mblen(const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
 size_t mbstowcs(wchar_t* __dst, const char* __src, size_t __n);
-int mbtowc(wchar_t* __wc_ptr, const char* __s, size_t __n) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
-int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN(21) __VERSIONER_NO_GUARD;
+int mbtowc(wchar_t* __wc_ptr, const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
 size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n);
 
