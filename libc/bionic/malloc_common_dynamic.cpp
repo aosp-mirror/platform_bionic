@@ -67,11 +67,11 @@
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
+#include "heap_zero_init.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
 #include "malloc_limit.h"
-#include "memory_mitigation_state.h"
 
 // =============================================================================
 // Global variables instantations.
