@@ -22,6 +22,30 @@
       },
       "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf7df999_ee097813",
+        "filename": "libc/tools/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-03T19:36:34Z",
+      "side": 1,
+      "message": "Probably, yes. I don\u0027t know of anyone driving a Py2 deprecation within Android yet.",
+      "parentUuid": "9011d061_5cb13ee9",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
