@@ -194,6 +194,24 @@
       "parentUuid": "e651f325_43661b82",
       "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45264ddd_5a0d209e",
+        "filename": "libc/system_properties/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T22:47:21Z",
+      "side": 1,
+      "message": "ah, makes sense. i\u0027m happy to just have a clean up later then. (or you could sort the .bp now to make this go away?)\n\ni thought +ccross already went through this with soong (and minimizing OTA update sizes)? i thought we already sorted source files inside the build system to avoid this? or was that only for globbing? is there a reason not to do it for all source if that isn\u0027t already the case?",
+      "parentUuid": "0ffd188a_ede25b9f",
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
