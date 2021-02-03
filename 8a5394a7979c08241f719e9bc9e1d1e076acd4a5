@@ -70,6 +70,30 @@
       },
       "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfa7fd2c_50959803",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1793801
+      },
+      "writtenOn": "2021-02-03T02:36:30Z",
+      "side": 1,
+      "message": "Yes you understood it correctly. I want to delete this line.",
+      "parentUuid": "2d7d131a_72b2fabd",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 7
+      },
+      "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
