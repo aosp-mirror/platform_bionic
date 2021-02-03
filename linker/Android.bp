@@ -409,7 +409,7 @@ cc_library {
         "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
     ],
 
