@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d4088d_0e66977b",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-03T15:24:42Z",
+      "side": 1,
+      "message": "Yes.\n\nhttps://paste.googleplex.com/6142137646186496?raw",
+      "parentUuid": "f144d7b9_74640a03",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8da7da72_cf637c03",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-03T15:20:07Z",
       "side": 1,
       "message": "FWIW, the eventual mapping for cc_defaults could be modeled after this (I do realize that this does not come from a cc_defaults rule)",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 11
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa25e5ba_8fb7998c",
+        "filename": "libc/libc_flags.bzl",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-03T15:24:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8da7da72_cf637c03",
       "range": {
         "startLine": 2,
         "startChar": 0,
