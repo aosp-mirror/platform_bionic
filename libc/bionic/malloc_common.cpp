@@ -44,10 +44,10 @@
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
+#include "heap_zero_init.h"
 #include "malloc_common.h"
 #include "malloc_limit.h"
 #include "malloc_tagged_pointers.h"
-#include "memory_mitigation_state.h"
 
 // =============================================================================
 // Global variables instantations.
@@ -107,8 +107,8 @@ extern "C" int mallopt(int param, int value) {
     ScopedPthreadMutexLocker locker(&g_heap_tagging_lock);
     return SetHeapTaggingLevel(static_cast<HeapTaggingLevel>(value));
   }
-  if (param == M_BIONIC_DISABLE_MEMORY_MITIGATIONS) {
-    return DisableMemoryMitigations(value);
+  if (param == M_BIONIC_ZERO_INIT) {
+    return SetHeapZeroInitialize(value);
   }
   // The rest we pass on...
   auto dispatch_table = GetDispatchTable();
