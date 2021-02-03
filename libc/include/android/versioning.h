@@ -21,12 +21,14 @@
 #if defined(__BIONIC_VERSIONER)
 
 #define __INTRODUCED_IN(api_level) __attribute__((annotate("introduced_in=" #api_level)))
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __attribute__((annotate("introduced_in=" #api_level))) __VERSIONER_NO_GUARD
 #define __DEPRECATED_IN(api_level) __attribute__((annotate("deprecated_in=" #api_level)))
 #define __REMOVED_IN(api_level) __attribute__((annotate("obsoleted_in=" #api_level)))
 #define __INTRODUCED_IN_32(api_level) __attribute__((annotate("introduced_in_32=" #api_level)))
 #define __INTRODUCED_IN_64(api_level) __attribute__((annotate("introduced_in_64=" #api_level)))
 #define __INTRODUCED_IN_ARM(api_level) __attribute__((annotate("introduced_in_arm=" #api_level)))
 #define __INTRODUCED_IN_X86(api_level) __attribute__((annotate("introduced_in_x86=" #api_level)))
+#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __attribute__((annotate("introduced_in_x86=" #api_level))) __VERSIONER_NO_GUARD
 
 #define __VERSIONER_NO_GUARD __attribute__((annotate("versioner_no_guard")))
 #define __VERSIONER_FORTIFY_INLINE __attribute__((annotate("versioner_fortify_inline")))
@@ -42,10 +44,19 @@
 // be enforced. In the case, the absence of 'strict' makes it possible to call an unavailable API
 // without the __builtin_available check, which will cause a link error at runtime.
 // Android platform build system defines this macro along with -Wunguarded-availability
+//
+// The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
+// allows libc++ to refer to these functions in inlines without needing to guard them, needed since
+// libc++ doesn't currently guard these calls. There's no risk to the apps though because using
+// those APIs will still cause a link error.
 #if defined(__ANDROID_UNGUARDED_AVAILABILITY__)
 #define __MAYBE_STRICT
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
+#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
 #else
 #define __MAYBE_STRICT ,strict
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
+#define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
 #endif
 
 #define __INTRODUCED_IN(api_level) \
