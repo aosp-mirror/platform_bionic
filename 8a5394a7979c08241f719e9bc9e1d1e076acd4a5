@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fe83c40_8f50dbb8",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1022077
+      },
+      "writtenOn": "2021-02-03T02:24:23Z",
+      "side": 1,
+      "message": "this needs to be unblock not blocked.",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 7
+      },
+      "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
