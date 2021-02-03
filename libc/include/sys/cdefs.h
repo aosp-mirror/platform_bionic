@@ -202,11 +202,18 @@
  * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
  * use __RENAME_LDBL it would actually cause the function to be introduced later because the
  * `long double` variant appeared before the `double` variant.
+ *
+ * The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
+ * allows libc++ to refer to these functions in inlines without needing to guard them, needed since
+ * libc++ doesn't currently guard these calls. There's no risk to the apps though because using
+ * those APIs will still cause a link error.
  */
 #if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
+#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN_NO_GUARD_FOR_NDK(regular_api_level)
 #else
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
+#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN_NO_GUARD_FOR_NDK(rewrite_api_level)
 #endif
 
 /*

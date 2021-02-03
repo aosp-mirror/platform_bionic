@@ -26,8 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include "heap_zero_init.h"
 
-#include <stddef.h>
+extern "C" void scudo_malloc_set_zero_contents(int zero_contents);
 
-bool DisableMemoryMitigations(int arg);
+bool SetHeapZeroInitialize(bool zero_init __attribute__((__unused__))) {
+#ifdef USE_SCUDO
+  scudo_malloc_set_zero_contents(zero_init);
+  return true;
+#endif
+  return false;
+}

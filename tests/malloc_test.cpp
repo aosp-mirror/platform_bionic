@@ -32,8 +32,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <atomic>
 #include <thread>
+#include <vector>
 
 #include <tinyxml2.h>
 
@@ -1256,7 +1258,67 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(malloc, disable_memory_mitigations) {
+void TestHeapZeroing(int num_iterations, int (*get_alloc_size)(int iteration)) {
+  std::vector<void*> allocs;
+  constexpr int kMaxBytesToCheckZero = 64;
+  const char kBlankMemory[kMaxBytesToCheckZero] = {};
+
+  for (int i = 0; i < num_iterations; ++i) {
+    int size = get_alloc_size(i);
+    allocs.push_back(malloc(size));
+    memset(allocs.back(), 'X', std::min(size, kMaxBytesToCheckZero));
+  }
+
+  for (void* alloc : allocs) {
+    free(alloc);
+  }
+  allocs.clear();
+
+  for (int i = 0; i < num_iterations; ++i) {
+    int size = get_alloc_size(i);
+    allocs.push_back(malloc(size));
+    ASSERT_EQ(0, memcmp(allocs.back(), kBlankMemory, std::min(size, kMaxBytesToCheckZero)));
+  }
+
+  for (void* alloc : allocs) {
+    free(alloc);
+  }
+}
+
+TEST(malloc, zero_init) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+
+  mallopt(M_BIONIC_ZERO_INIT, 1);
+
+  // Test using a block of 4K small (1-32 byte) allocations.
+  TestHeapZeroing(/* num_iterations */ 0x1000, [](int iteration) -> int {
+    return 1 + iteration % 32;
+  });
+
+  // Also test large allocations that land in the scudo secondary, as this is
+  // the only part of Scudo that's changed by enabling zero initialization with
+  // MTE. Uses 32 allocations, totalling 60MiB memory. Decay time (time to
+  // release secondary allocations back to the OS) was modified to 0ms/1ms by
+  // mallopt_decay. Ensure that we delay for at least a second before releasing
+  // pages to the OS in order to avoid implicit zeroing by the kernel.
+  mallopt(M_DECAY_TIME, 1000);
+  TestHeapZeroing(/* num_iterations */ 32, [](int iteration) -> int {
+    return 1 << (19 + iteration % 4);
+  });
+
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Note that MTE is enabled on cc_tests on devices that support MTE.
+TEST(malloc, disable_mte) {
 #if defined(__BIONIC__)
   if (!mte_supported()) {
     GTEST_SKIP() << "This function can only be tested with MTE";
@@ -1275,7 +1337,7 @@ TEST(malloc, disable_memory_mitigations) {
                    },
                    &sem));
 
-  ASSERT_EQ(1, mallopt(M_BIONIC_DISABLE_MEMORY_MITIGATIONS, 0));
+  ASSERT_EQ(1, mallopt(M_BIONIC_SET_HEAP_TAGGING_LEVEL, M_HEAP_TAGGING_LEVEL_NONE));
   ASSERT_EQ(0, sem_post(&sem));
 
   int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
