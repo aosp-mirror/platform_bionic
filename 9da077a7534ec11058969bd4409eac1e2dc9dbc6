@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "547da0c8_e4fc5ad1",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-03T16:19:19Z",
+      "side": 1,
+      "message": "We don\u0027t, but eventually we\u0027ll need it, and convert modules to it ( https://source.corp.google.com/search?q\u003df:Android.bp%20%22python_binary_host%22). I don\u0027t see why we shouldn\u0027t start using it now.",
+      "parentUuid": "68d52edf_8e390d2c",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8da7da72_cf637c03",
@@ -132,6 +156,24 @@
       "writtenOn": "2021-02-03T16:05:18Z",
       "side": 1,
       "message": "please assume that anywhere the source files aren\u0027t sorted is a bug, not a feature :-)",
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e651f325_43661b82",
+        "filename": "libc/system_properties/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-03T16:19:19Z",
+      "side": 1,
+      "message": "Ack, sorted.",
+      "parentUuid": "d3b1890b_c0da2e2a",
       "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
