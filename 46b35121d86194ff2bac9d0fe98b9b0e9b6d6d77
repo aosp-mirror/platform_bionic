@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39db1f11_fdc4efff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T23:28:24Z",
+      "side": 1,
+      "message": "hmm, that\u0027s weird. at this point i think we definitely need to talk to ARM about this...",
+      "revId": "46b35121d86194ff2bac9d0fe98b9b0e9b6d6d77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c3ee7d8_d3e133d7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T23:28:24Z",
+      "side": 1,
+      "message": "if it\u0027s only strlen.c that\u0027s affected, use #pragma inside that file instead?\n\nas i was saying on the bug, i don\u0027t like the idea of turning off *all* inline assembler diagnostics!",
+      "revId": "46b35121d86194ff2bac9d0fe98b9b0e9b6d6d77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
