@@ -94,6 +94,30 @@
       },
       "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bd298a7_2598a83e",
+        "filename": "libc/tools/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-03T22:59:36Z",
+      "side": 1,
+      "message": "(discussed offline, resolving to unblock this CL)",
+      "parentUuid": "7a0e156c_0cda9c7f",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
