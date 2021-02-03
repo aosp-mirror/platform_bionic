@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9011d061_5cb13ee9",
+        "filename": "libc/tools/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T16:46:45Z",
+      "side": 1,
+      "message": "dwillemsen: is this something we should be working on? (aiui this is saying \"our script doesn\u0027t work with python3 yet\"?)",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
