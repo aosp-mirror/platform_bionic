@@ -16,15 +16,6 @@ python_binary_host {
     data: [
         ":all_kernel_uapi_headers",
     ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
 }
 
 python_binary_host {
