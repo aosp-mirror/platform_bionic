@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "27a04854_48d0f72e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T20:55:45Z",
+      "side": 1,
+      "message": "i was asking that over IM :-)\n\ni\u0027m happy either way, as long as i know which you\u0027re trying to do. (and you know that we won\u0027t even try to keep the .bazel files up to date until you delete the .bp files :-) )",
+      "parentUuid": "92a6dbf4_7d5a88c7",
+      "revId": "8c0e52146cf16278f9dbe8bff79929bfe4048d67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "67f73741_3d5b0968",
         "filename": "libc/libc_flags.bzl",
         "patchSetId": 2
