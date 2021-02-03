@@ -2,3 +2,51 @@ filegroup {
     name: "bionic-gensyscalls",
     srcs: ["gensyscalls.py"]
 }
+
+// Generate the C++ policy sources for app and system seccomp-bpf filters.
+python_binary_host {
+    name: "genseccomp",
+    main: "genseccomp.py",
+
+    srcs: [
+        "genseccomp.py",
+        "gensyscalls.py",
+    ],
+
+    data: [
+        ":all_kernel_uapi_headers",
+    ],
+
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
+python_binary_host {
+    name: "genfunctosyscallnrs",
+    main: "genfunctosyscallnrs.py",
+
+    srcs: [
+        "genseccomp.py",
+        "genfunctosyscallnrs.py",
+        "gensyscalls.py",
+    ],
+
+    data: [
+        ":all_kernel_uapi_headers",
+    ],
+
+    version: {
+        py2: {
+            enabled: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}

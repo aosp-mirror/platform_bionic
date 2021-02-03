@@ -2356,53 +2356,11 @@ cc_object {
     ],
 }
 
-// Generate the C++ policy sources for app and system seccomp-bpf filters.
-python_binary_host {
-    name: "genseccomp",
-    main: "tools/genseccomp.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
+filegroup {
+    name: "all_kernel_uapi_headers",
+    srcs: ["kernel/uapi/**/*.h"],
 }
 
-python_binary_host {
-    name: "genfunctosyscallnrs",
-    main: "tools/genfunctosyscallnrs.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/genfunctosyscallnrs.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
-}
 
 cc_genrule {
     name: "func_to_syscall_nrs",
