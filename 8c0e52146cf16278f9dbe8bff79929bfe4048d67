@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67f73741_3d5b0968",
+        "filename": "libc/libc_flags.bzl",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-03T16:26:44Z",
+      "side": 1,
+      "message": "that bug was closed as obsolete?\n\ndo you have an example failure?",
+      "revId": "8c0e52146cf16278f9dbe8bff79929bfe4048d67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
