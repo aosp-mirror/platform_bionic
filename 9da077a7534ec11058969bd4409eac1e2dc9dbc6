@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "68d52edf_8e390d2c",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1066075
+      },
+      "writtenOn": "2021-02-03T15:41:06Z",
+      "side": 1,
+      "message": "Wow. Looking at the Blueprint file, just calls the .py file:\n\nhttps://cs.android.com/android/platform/superproject/+/master:build/make/tools/fs_config/Android.bp;l\u003d44;drc\u003d8b2e7c9c51448d1ff47f19ca6a6892775aea660b\n\nDo we need the whole py_binary machinery for this? It\u0027s yet another layer of complexity we\u0027d pull in as a dependency...",
+      "parentUuid": "56d4088d_0e66977b",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8da7da72_cf637c03",
         "filename": "libc/libc_flags.bzl",
         "patchSetId": 1
