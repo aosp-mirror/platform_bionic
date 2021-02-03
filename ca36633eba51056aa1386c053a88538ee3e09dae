@@ -46,6 +46,30 @@
       },
       "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d990021c_ec1e78ab",
+        "filename": "libc/tools/Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-03T19:39:59Z",
+      "side": 1,
+      "message": "\u003e If I fix the scripts to work on both, I can just delete all this? I\u0027m guessing that means I\u0027ll get py2 for now though, so I might regress?\n\nIf you drop the entire version segment, it\u0027ll default to py3. There shouldn\u0027t be a need for both py2 \u0026 py3 compatibility.",
+      "parentUuid": "bf7df999_ee097813",
+      "range": {
+        "startLine": 20,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "ca36633eba51056aa1386c053a88538ee3e09dae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
