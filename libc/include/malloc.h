@@ -204,18 +204,19 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
 #define M_TSDS_COUNT_MAX (-202)
 
 /**
- * mallopt() option to disable heap initialization across the whole process.
- * If the hardware supports memory tagging, this also disables memory tagging.
- * May be called at any time, including when multiple threads are running. The
- * value is unused but must be set to 0.
+ * mallopt() option to decide whether heap memory is zero-initialized on
+ * allocation across the whole process. May be called at any time, including
+ * when multiple threads are running. An argument of zero indicates memory
+ * should not be zero-initialized, any other value indicates to initialize heap
+ * memory to zero.
  *
- * Note that these memory mitigations are only implemented in scudo and
- * therefore this will have no effect when using another allocator (such as
- * jemalloc on Android Go devices).
+ * Note that this memory mitigations is only implemented in scudo and therefore
+ * this will have no effect when using another allocator (such as jemalloc on
+ * Android Go devices).
  *
  * Available since API level 31.
  */
-#define M_BIONIC_DISABLE_MEMORY_MITIGATIONS (-203)
+#define M_BIONIC_ZERO_INIT (-203)
 
 /**
  * mallopt() option to change the heap tagging state. May be called at any
