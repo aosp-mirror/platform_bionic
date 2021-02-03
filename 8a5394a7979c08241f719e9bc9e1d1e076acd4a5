@@ -46,6 +46,30 @@
       },
       "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d7d131a_72b2fabd",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2021-02-03T02:33:21Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure you want to just delete this line: we don\u0027t want the signal to be handled specially: we just want to make sure apps don\u0027t accidentally reuse the same number.",
+      "parentUuid": "2d22db88_3e6ce9aa",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 7
+      },
+      "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
