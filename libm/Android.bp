@@ -287,6 +287,11 @@ cc_library {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
+            no_libcrt: true,
+            shared: {
+                // For backwards-compatibility, some arm32 builtins are exported from libm.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+            },
         },
 
         arm64: {
