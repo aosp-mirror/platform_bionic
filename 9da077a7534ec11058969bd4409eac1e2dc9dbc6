@@ -176,6 +176,24 @@
       "parentUuid": "d3b1890b_c0da2e2a",
       "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ffd188a_ede25b9f",
+        "filename": "libc/system_properties/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-03T20:21:17Z",
+      "side": 1,
+      "message": "For context, the original prototype\u0027s goal was in attempt to bit-for-bit match Soong-built bionic with Bazel-built bionic.\nWhile it\u0027d be nice to achieve this again, it may be less worth our time, especially if it depends on little things like sorting. We\u0027re better off devising more intelligent diff tools if we care to ensure the output artifacts are \"identical\" :)",
+      "parentUuid": "e651f325_43661b82",
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
