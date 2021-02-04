@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 
 import argparse
-import collections
 import logging
+import operator
 import os
 import re
-import subprocess
 import textwrap
 
 from gensyscalls import SupportedArchitectures, SysCallsTxtParser
@@ -16,7 +15,7 @@ BPF_JEQ = "BPF_JUMP(BPF_JMP|BPF_JEQ|BPF_K, {0}, {1}, {2})"
 BPF_ALLOW = "BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_ALLOW)"
 
 
-class SyscallRange(object):
+class SyscallRange:
   def __init__(self, name, value):
     self.names = [name]
     self.begin = value
@@ -35,23 +34,23 @@ class SyscallRange(object):
 def load_syscall_names_from_file(file_path, architecture):
   parser = SysCallsTxtParser()
   parser.parse_open_file(open(file_path))
-  return set([x["name"] for x in parser.syscalls if x.get(architecture)])
+  return {x["name"] for x in parser.syscalls if x.get(architecture)}
 
 
 def load_syscall_priorities_from_file(file_path):
   format_re = re.compile(r'^\s*([A-Za-z_][A-Za-z0-9_]+)\s*$')
   priorities = []
-  with open(file_path) as f:
-    for line in f:
-      m = format_re.match(line)
-      if not m:
+  with open(file_path) as priority_file:
+    for line in priority_file:
+      match = format_re.match(line)
+      if match is None:
         continue
       try:
-        name = m.group(1)
+        name = match.group(1)
         priorities.append(name)
-      except:
-        logging.debug('Failed to parse %s from %s', (line, file_path))
-        pass
+      except IndexError:
+        # TODO: This should be impossible becauase it wouldn't have matched?
+        logging.exception('Failed to parse %s from %s', line, file_path)
 
   return priorities
 
@@ -93,7 +92,7 @@ def parse_syscall_NRs(names_path):
   with open(names_path) as f:
     for line in f:
       m = constant_re.match(line)
-      if not m:
+      if m is None:
         continue
       try:
         name = m.group(1)
@@ -102,12 +101,21 @@ def parse_syscall_NRs(names_path):
                                   m.group(2)))
 
         constants[name] = value
-      except:
+      except:  # pylint: disable=bare-except
+        # TODO: This seems wrong.
+        # Key error doesn't seem like the error the original author was trying
+        # to catch. It looks like the intent was to catch IndexError from
+        # match.group() for non-matching lines, but that's impossible because
+        # the match object is checked and continued if not matched. What
+        # actually happens is that KeyError is thrown by constants[x.group(0)]
+        # on at least the first run because the dict is empty.
+        #
+        # It's also matching syntax errors because not all C integer literals
+        # are valid Python integer literals, e.g. 10L.
         logging.debug('Failed to parse %s', line)
-        pass
 
   syscalls = {}
-  for name, value in constants.iteritems():
+  for name, value in constants.items():
     if not name.startswith("__NR_") and not name.startswith("__ARM_NR"):
       continue
     if name.startswith("__NR_"):
@@ -120,7 +128,7 @@ def parse_syscall_NRs(names_path):
 
 def convert_NRs_to_ranges(syscalls):
   # Sort the values so we convert to ranges and binary chop
-  syscalls = sorted(syscalls, lambda x, y: cmp(x[1], y[1]))
+  syscalls = sorted(syscalls, key=operator.itemgetter(1))
 
   # Turn into a list of ranges. Keep the names for the comments
   ranges = []
@@ -148,12 +156,12 @@ def convert_to_intermediate_bpf(ranges):
     # We will replace {fail} and {allow} with appropriate range jumps later
     return [BPF_JGE.format(ranges[0].end, "{fail}", "{allow}") +
             ", //" + "|".join(ranges[0].names)]
-  else:
-    half = (len(ranges) + 1) / 2
-    first = convert_to_intermediate_bpf(ranges[:half])
-    second = convert_to_intermediate_bpf(ranges[half:])
-    jump = [BPF_JGE.format(ranges[half].begin, len(first), 0) + ","]
-    return jump + first + second
+
+  half = (len(ranges) + 1) // 2
+  first = convert_to_intermediate_bpf(ranges[:half])
+  second = convert_to_intermediate_bpf(ranges[half:])
+  jump = [BPF_JGE.format(ranges[half].begin, len(first), 0) + ","]
+  return jump + first + second
 
 
 # Converts the prioritized syscalls to a bpf list that  is prepended to the
@@ -162,7 +170,7 @@ def convert_to_intermediate_bpf(ranges):
 # immediately
 def convert_priority_to_intermediate_bpf(priority_syscalls):
   result = []
-  for i, syscall in enumerate(priority_syscalls):
+  for syscall in priority_syscalls:
     result.append(BPF_JEQ.format(syscall[1], "{allow}", 0) +
                   ", //" + syscall[0])
   return result
@@ -227,7 +235,8 @@ def construct_bpf(syscalls, architecture, name_modifier, priorities):
   return convert_bpf_to_output(bpf, architecture, name_modifier)
 
 
-def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files, syscall_NRs, priority_file):
+def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files,
+               syscall_NRs, priority_file):
   for arch in SupportedArchitectures:
     base_names = load_syscall_names_from_file(base_syscall_file, arch)
     allowlist_names = set()
@@ -251,7 +260,6 @@ def gen_policy(name_modifier, out_dir, base_syscall_file, syscall_files, syscall
     output = construct_bpf(allowed_syscalls, arch, name_modifier, priorities)
 
     # And output policy
-    existing = ""
     filename_modifier = "_" + name_modifier if name_modifier else ""
     output_path = os.path.join(out_dir,
                                "{}{}_policy.cpp".format(arch, filename_modifier))
@@ -274,8 +282,8 @@ def main():
                       help=("The path of the input files. In order to "
                             "simplify the build rules, it can take any of the "
                             "following files: \n"
-                            "* /blocklist.*\.txt$/ syscall blocklist.\n"
-                            "* /allowlist.*\.txt$/ syscall allowlist.\n"
+                            "* /blocklist.*\\.txt$/ syscall blocklist.\n"
+                            "* /allowlist.*\\.txt$/ syscall allowlist.\n"
                             "* /priority.txt$/ priorities for bpf rules.\n"
                             "* otherwise, syscall name-number mapping.\n"))
   args = parser.parse_args()
