@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfbf16c2_ff7568ed",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1337669
+      },
+      "writtenOn": "2021-02-04T06:55:12Z",
+      "side": 1,
+      "message": "shouldn\u0027t this be `((mode \u0026 RWX) \u003d\u003d 0) || ((mode \u0026 ~RWX) !\u003d 0)`? that is we want to ensure at least one of RWX bits and only RWX bits are present in `mode`",
+      "range": {
+        "startLine": 61,
+        "startChar": 24,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "82e73954d25531a523ac5f1b15dbcd1b7e2b300d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
