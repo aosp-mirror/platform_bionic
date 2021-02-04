@@ -25,7 +25,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_clog.c 333577 2018-05-13 09:54:34Z kib $");
+__FBSDID("$FreeBSD$");
 
 #include <complex.h>
 #include <float.h>
