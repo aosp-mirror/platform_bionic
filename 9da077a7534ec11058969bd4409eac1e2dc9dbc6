@@ -212,6 +212,24 @@
       "parentUuid": "0ffd188a_ede25b9f",
       "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9272c9ed_4116d622",
+        "filename": "libc/system_properties/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-02-04T00:22:23Z",
+      "side": 1,
+      "message": "Soong doesn\u0027t sort source files because the ordering can be meaningful (although that\u0027s generally a bad idea).  It keeps them in the same order as found in the Android.bp file.  It only sorts globs to prevent filesystem order from affecting build output.\n\nbpfmt -s will attempt to sort lists within blocks separated by blank lines.",
+      "parentUuid": "45264ddd_5a0d209e",
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
