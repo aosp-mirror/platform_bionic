@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c52f5ade_a8009234",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1066075
+      },
+      "writtenOn": "2021-02-04T07:45:23Z",
+      "side": 1,
+      "message": "You have two choices then:\n\n1. Investigate deeply what is the difference between Bazel\u0027s Python rules and those of Soong\n2. Just put the lines in and hope it works\n\nI thought neither of these was very appealing, but if you\u0027re fine with them, sure.",
+      "parentUuid": "547da0c8_e4fc5ad1",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8da7da72_cf637c03",
