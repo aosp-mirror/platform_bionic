@@ -94,6 +94,30 @@
       },
       "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91162492_e0d5f1ff",
+        "filename": "libc/platform/bionic/reserved_signals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1793801
+      },
+      "writtenOn": "2021-02-04T08:38:41Z",
+      "side": 1,
+      "message": "1. It is rejected to use SIGWINCH in ART module to save the app profile.\n2. Requested to use by registering a new signal in the reserved_signal.h file\n3. To define and use a new signal, it must be combined with\u0027unblock\u0027.\n4. \u0027unblock\u0027 deletes the signal information added to the SignalSet in the ART module.\n\nIt is understood as a difficult situation to have a dedicated signal for Profile Save.\nIf it is impossible, we will try to use SIGUSR1 that was previously defined to save profile with GC.",
+      "parentUuid": "cfa7fd2c_50959803",
+      "range": {
+        "startLine": 89,
+        "startChar": 2,
+        "endLine": 89,
+        "endChar": 7
+      },
+      "revId": "8a5394a7979c08241f719e9bc9e1d1e076acd4a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
