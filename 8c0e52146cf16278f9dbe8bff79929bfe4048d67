@@ -51,6 +51,24 @@
       "message": "that bug was closed as obsolete?\n\ndo you have an example failure?",
       "revId": "8c0e52146cf16278f9dbe8bff79929bfe4048d67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8ef6a4b_759d1b5d",
+        "filename": "libc/libc_flags.bzl",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-04T08:18:32Z",
+      "side": 1,
+      "message": "Yeah, closed as obsolete during the bug scrub, with the intention to revisit ~now-ish. I can\u0027t repro it now -- added it back.",
+      "parentUuid": "67f73741_3d5b0968",
+      "revId": "8c0e52146cf16278f9dbe8bff79929bfe4048d67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

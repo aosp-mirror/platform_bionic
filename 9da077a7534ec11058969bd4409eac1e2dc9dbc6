@@ -120,6 +120,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b384fca_5c30fec8",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-04T08:18:32Z",
+      "side": 1,
+      "message": "While 1) is planned for in the migration tracking sheet, I\u0027ll go with 2, since it works.",
+      "parentUuid": "c52f5ade_a8009234",
+      "range": {
+        "startLine": 328,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 9
+      },
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8da7da72_cf637c03",
@@ -252,6 +276,24 @@
       "side": 1,
       "message": "Soong doesn\u0027t sort source files because the ordering can be meaningful (although that\u0027s generally a bad idea).  It keeps them in the same order as found in the Android.bp file.  It only sorts globs to prevent filesystem order from affecting build output.\n\nbpfmt -s will attempt to sort lists within blocks separated by blank lines.",
       "parentUuid": "45264ddd_5a0d209e",
+      "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4049fcd8_27e7acc9",
+        "filename": "libc/system_properties/BUILD.bazel",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-04T08:18:32Z",
+      "side": 1,
+      "message": "Ack, reverted to match the Android.bp file for now, and let\u0027s do the cleanup later.\n\nI also added prop_trace.cpp to match the Android.bp srcs list.",
+      "parentUuid": "9272c9ed_4116d622",
       "revId": "9da077a7534ec11058969bd4409eac1e2dc9dbc6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
