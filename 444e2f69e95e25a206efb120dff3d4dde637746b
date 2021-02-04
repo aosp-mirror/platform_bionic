@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90d61551_d1723069",
+        "filename": "libm/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-04T23:58:44Z",
+      "side": 1,
+      "message": "should we remove this then?",
+      "revId": "444e2f69e95e25a206efb120dff3d4dde637746b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
