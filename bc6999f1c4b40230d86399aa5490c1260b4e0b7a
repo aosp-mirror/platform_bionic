@@ -16,6 +16,24 @@
       "message": "ouch! that was a lot worse than i was expecting... now i\u0027m _really_ glad i didn\u0027t try to finish it myself!\n\ncan we run python unit tests in presubmit?",
       "revId": "bc6999f1c4b40230d86399aa5490c1260b4e0b7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab8f9803_b458d182",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-02-04T01:31:17Z",
+      "side": 1,
+      "message": "It would have been easier had I not bothered getting the tests working again. Given that they\u0027ve been broken for 2 years I\u0027d probably have been justified in skipping that, but oh well 😊\n\n\u003e can we run python unit tests in presubmit?\n\nI think it\u0027s possible. From what I remember it\u0027s annoying to get them into a place where the soong-built test and the locally-run test are both easy to use. I can play with that a bit later.",
+      "parentUuid": "48e62825_6785d404",
+      "revId": "bc6999f1c4b40230d86399aa5490c1260b4e0b7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
