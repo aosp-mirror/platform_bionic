@@ -34,6 +34,24 @@
       "parentUuid": "90d61551_d1723069",
       "revId": "444e2f69e95e25a206efb120dff3d4dde637746b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f3f8346_3d6925dc",
+        "filename": "libm/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-05T00:09:03Z",
+      "side": 1,
+      "message": "ah, duh. i see. please keep the bug open to come back and clean this up when we can though...",
+      "parentUuid": "e19e66c8_0d0577f8",
+      "revId": "444e2f69e95e25a206efb120dff3d4dde637746b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
