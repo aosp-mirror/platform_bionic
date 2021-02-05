@@ -16,6 +16,24 @@
       "message": "should we remove this then?",
       "revId": "444e2f69e95e25a206efb120dff3d4dde637746b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e19e66c8_0d0577f8",
+        "filename": "libm/Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1052399
+      },
+      "writtenOn": "2021-02-05T00:07:47Z",
+      "side": 1,
+      "message": "Maybe in the future after all builds are switched to the new compiler.",
+      "parentUuid": "90d61551_d1723069",
+      "revId": "444e2f69e95e25a206efb120dff3d4dde637746b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
