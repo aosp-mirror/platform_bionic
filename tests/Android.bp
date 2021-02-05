@@ -1017,6 +1017,10 @@ cc_test {
 
     // For now, these tests run forever, so do not use the isolation framework.
     isolated: false,
+    // Running forever, do not consider unit test.
+    test_options: {
+        unit_test: false,
+    },
 
     srcs: [
         "malloc_stress_test.cpp",
