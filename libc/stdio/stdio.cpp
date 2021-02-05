@@ -50,11 +50,12 @@
 
 #include <async_safe/log.h>
 
-#include "local.h"
 #include "glue.h"
+#include "local.h"
+#include "private/ErrnoRestorer.h"
+#include "private/FdPath.h"
 #include "private/__bionic_get_shell_path.h"
 #include "private/bionic_fortify.h"
-#include "private/ErrnoRestorer.h"
 #include "private/thread_private.h"
 
 #include "private/bsd_sys_param.h" // For ALIGN/ALIGNBYTES.
@@ -225,25 +226,26 @@ extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
   _fwalk(__sflush);
 }
 
-static FILE* __fopen(int fd, int flags) {
+static FILE* __finit(FILE* fp, int fd, int flags) {
+  if (fp == nullptr) return nullptr;
+
+  fp->_file = fd;
+  android_fdsan_exchange_owner_tag(fd, 0, __get_file_tag(fp));
+  fp->_flags = flags;
+  fp->_cookie = fp;
+  fp->_read = __sread;
+  fp->_write = __swrite;
+  fp->_close = __sclose;
+  _EXT(fp)->_seek64 = __sseek64;
+
 #if !defined(__LP64__)
   if (fd > SHRT_MAX) {
     errno = EMFILE;
+    fclose(fp);
     return nullptr;
   }
 #endif
 
-  FILE* fp = __sfp();
-  if (fp != nullptr) {
-    fp->_file = fd;
-    android_fdsan_exchange_owner_tag(fd, 0, __get_file_tag(fp));
-    fp->_flags = flags;
-    fp->_cookie = fp;
-    fp->_read = __sread;
-    fp->_write = __swrite;
-    fp->_close = __sclose;
-    _EXT(fp)->_seek64 = __sseek64;
-  }
   return fp;
 }
 
@@ -257,14 +259,15 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  FILE* fp = __fopen(fd, flags);
+  FILE* fp = __finit(__sfp(), fd, flags);
   if (fp == nullptr) {
     ErrnoRestorer errno_restorer;
     close(fd);
     return nullptr;
   }
 
-  // For append mode, even though we use O_APPEND, we need to seek to the end now.
+  // For append mode, O_APPEND sets the write position for free, but we need to
+  // set the read position manually.
   if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
@@ -295,15 +298,26 @@ FILE* fdopen(int fd, const char* mode) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
-  return __fopen(fd, flags);
+  return __finit(__sfp(), fd, flags);
 }
 
-// Re-direct an existing, open (probably) file to some other file.
-// ANSI is written such that the original file gets closed if at
-// all possible, no matter what.
-// TODO: rewrite this mess completely.
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
   CHECK_FP(fp);
+
+  // POSIX says: "If pathname is a null pointer, the freopen() function shall
+  // attempt to change the mode of the stream to that specified by mode, as if
+  // the name of the file currently associated with the stream had been used. In
+  // this case, the file descriptor associated with the stream need not be
+  // closed if the call to freopen() succeeds. It is implementation-defined
+  // which changes of mode are permitted (if any), and under what
+  // circumstances."
+  //
+  // Linux is quite restrictive about what changes you can make with F_SETFL,
+  // and in particular won't let you touch the access bits. It's easiest and
+  // most effective to just rely on /proc/self/fd/...
+  FdPath fd_path(fp->_file);
+  if (file == nullptr) file = fd_path.c_str();
+
   int mode_flags;
   int flags = __sflags(mode, &mode_flags);
   if (flags == 0) {
@@ -312,6 +326,8 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
   }
 
   ScopedFileLock sfl(fp);
+
+  // TODO: rewrite this mess completely.
 
   // There are actually programs that depend on being able to "freopen"
   // descriptors that weren't originally open.  Keep this from breaking.
@@ -382,24 +398,12 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
     }
   }
 
-  // _file is only a short.
-  if (fd > SHRT_MAX) {
-      fp->_flags = 0; // Release.
-      errno = EMFILE;
-      return nullptr;
-  }
+  fp = __finit(fp, fd, flags);
 
-  fp->_flags = flags;
-  fp->_file = fd;
-  android_fdsan_exchange_owner_tag(fd, 0, __get_file_tag(fp));
-  fp->_cookie = fp;
-  fp->_read = __sread;
-  fp->_write = __swrite;
-  fp->_close = __sclose;
-  _EXT(fp)->_seek64 = __sseek64;
+  // For append mode, O_APPEND sets the write position for free, but we need to
+  // set the read position manually.
+  if (fp && (mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
 
-  // For append mode, even though we use O_APPEND, we need to seek to the end now.
-  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
   return fp;
 }
 __strong_alias(freopen64, freopen);

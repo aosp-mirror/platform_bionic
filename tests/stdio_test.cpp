@@ -1956,34 +1956,64 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
 #endif
 }
 
-TEST(STDIO_TEST, fdopen_CLOEXEC) {
-  int fd = open("/proc/version", O_RDONLY);
-  ASSERT_TRUE(fd != -1);
-
+TEST(STDIO_TEST, fdopen_add_CLOEXEC) {
   // This fd doesn't have O_CLOEXEC...
-  AssertCloseOnExec(fd, false);
-
-  FILE* fp = fdopen(fd, "re");
-  ASSERT_TRUE(fp != nullptr);
-
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_FALSE(CloseOnExec(fd));
   // ...but the new one does.
-  AssertCloseOnExec(fileno(fp), true);
+  FILE* fp = fdopen(fd, "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, fdopen_remove_CLOEXEC) {
+  // This fd has O_CLOEXEC...
+  int fd = open("/proc/version", O_RDONLY | O_CLOEXEC);
+  ASSERT_TRUE(CloseOnExec(fd));
+  // ...but the new one doesn't.
+  FILE* fp = fdopen(fd, "r");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, freopen_add_CLOEXEC) {
+  // This FILE* doesn't have O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
+  // ...but the new one does.
+  fp = freopen("/proc/version", "re", fp);
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
 
   fclose(fp);
 }
 
-TEST(STDIO_TEST, freopen_CLOEXEC) {
-  FILE* fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(fp != nullptr);
+TEST(STDIO_TEST, freopen_remove_CLOEXEC) {
+  // This FILE* has O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  // ...but the new one doesn't.
+  fp = freopen("/proc/version", "r", fp);
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
 
+TEST(STDIO_TEST, freopen_null_filename_add_CLOEXEC) {
   // This FILE* doesn't have O_CLOEXEC...
-  AssertCloseOnExec(fileno(fp), false);
-
-  fp = freopen("/proc/version", "re", fp);
-
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
   // ...but the new one does.
-  AssertCloseOnExec(fileno(fp), true);
+  fp = freopen(nullptr, "re", fp);
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
 
+TEST(STDIO_TEST, freopen_null_filename_remove_CLOEXEC) {
+  // This FILE* has O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  // ...but the new one doesn't.
+  fp = freopen(nullptr, "r", fp);
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
   fclose(fp);
 }
 
@@ -2882,4 +2912,25 @@ TEST(STDIO_TEST, tmpnam) {
 TEST(STDIO_TEST, tmpnam_buf) {
   char buf[L_tmpnam];
   tmpnam_test(buf);
+}
+
+TEST(STDIO_TEST, freopen_null_filename_mode) {
+  TemporaryFile tf;
+  FILE* fp = fopen(tf.path, "r");
+  ASSERT_TRUE(fp != nullptr);
+
+  // "r" = O_RDONLY
+  char buf[1];
+  ASSERT_EQ(0, read(fileno(fp), buf, 1));
+  ASSERT_EQ(-1, write(fileno(fp), "hello", 1));
+  // "r+" = O_RDWR
+  fp = freopen(nullptr, "r+", fp);
+  ASSERT_EQ(0, read(fileno(fp), buf, 1));
+  ASSERT_EQ(1, write(fileno(fp), "hello", 1));
+  // "w" = O_WRONLY
+  fp = freopen(nullptr, "w", fp);
+  ASSERT_EQ(-1, read(fileno(fp), buf, 1));
+  ASSERT_EQ(1, write(fileno(fp), "hello", 1));
+
+  fclose(fp);
 }
