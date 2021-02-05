@@ -475,6 +475,7 @@ cc_library {
         "-fno-math-errno",
         "-Wall",
         "-Werror",
+        "-Wno-ignored-pragmas",
         "-Wno-missing-braces",
         "-Wno-parentheses",
         "-Wno-sign-compare",
