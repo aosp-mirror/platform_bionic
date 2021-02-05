@@ -22,6 +22,30 @@
       },
       "revId": "82e73954d25531a523ac5f1b15dbcd1b7e2b300d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f52b0f58_d92ef7a7",
+        "filename": "libc/bionic/faccessat.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-05T01:14:32Z",
+      "side": 1,
+      "message": "yeah, not a regression, but i think you\u0027re right.\n\nthe actual issue seems to be that we have seccomp filters that allow faccessat that need to be change to allow faccessat2. unfortunately, that\u0027s a *lot*: https://source.corp.google.com/search?q\u003dfaccessat%20file:seccomp\u0026sq\u003dpackage:%5Eandroid$\n\n(plus i didn\u0027t update the tests that explicitly check that we _don\u0027t_ support AT_EACCESS or AT_SYMLINK_NOFOLLOW!)",
+      "parentUuid": "dfbf16c2_ff7568ed",
+      "range": {
+        "startLine": 61,
+        "startChar": 24,
+        "endLine": 62,
+        "endChar": 42
+      },
+      "revId": "82e73954d25531a523ac5f1b15dbcd1b7e2b300d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
