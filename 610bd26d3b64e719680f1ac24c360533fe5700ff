@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a459ca12_6d7c6e9c",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-05T16:57:35Z",
+      "side": 1,
+      "message": "bionic is so complicated in that regard that we actually have our own python script that generates NOTICE files. they are checked in though, so this seems odd?\n\noh, isn\u0027t this whole Android.bp bogus? the Android.bp files that actually include anything all _do_ refer to NOTICE.\n\nwhat\u0027s this one for?",
+      "revId": "610bd26d3b64e719680f1ac24c360533fe5700ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "503b09fb_3f8652b7",
+        "filename": "apex/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-05T16:57:35Z",
+      "side": 1,
+      "message": "oh, weird.\n\ndoes this make sense? shouldn\u0027t the individual packages list what they actually use rather than just pretend everything uses everything?\n\n(also: this seems like your script is confused by apexes? the com.android.runtime apex *does* contain everything, not just whatever this \"legacy_notice\" is meant to refer to...)",
+      "range": {
+        "startLine": 8,
+        "startChar": 4,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "610bd26d3b64e719680f1ac24c360533fe5700ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
