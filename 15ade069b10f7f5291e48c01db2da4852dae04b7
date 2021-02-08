@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9d35df3_f743351a",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-02-08T17:56:17Z",
+      "side": 0,
+      "message": "Even though this check is wrong for 64 bit, it\u0027s still a short on 32 bit. Should this check be in __finit for 32 bit code?",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 3
+      },
+      "revId": "15ade069b10f7f5291e48c01db2da4852dae04b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
