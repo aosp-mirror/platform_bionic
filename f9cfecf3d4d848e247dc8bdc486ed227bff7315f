@@ -16,6 +16,40 @@
       "message": "(don\u0027t worry, i won\u0027t submit this over the weekend, so reviews can wait too!)",
       "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d40186c_5fd3f6e8",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-02-08T23:45:01Z",
+      "side": 1,
+      "message": "fd would be truncated trying to fit it in the \"short _file\" field. I think fclose(fp) is going to try to close the wrong fd.\n\n(Also: I think fclose() may overwrite errno -- the previous code used ErrnoRestorer to ignore an error set by close().)\n\nPreviously: if fdopen returns nullptr, the fd hasn\u0027t been closed. The new behavior leaves the fd open on OOM, but would try to close it on fd-too-big.",
+      "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a4ea5b9_9aa74447",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-02-08T23:45:01Z",
+      "side": 1,
+      "message": "I think this close(fd) duplicates the new fclose(fp) on 32-bit when the fd is too big? This line can\u0027t just be removed, though, because __finit() won\u0027t close the fd if __sfp() is nullptr for OOM.",
+      "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
