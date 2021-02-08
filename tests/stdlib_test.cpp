@@ -456,12 +456,12 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
 
 TEST(stdlib, mkostemp64) {
   MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
-  AssertCloseOnExec(tf.fd, true);
+  ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
 TEST(stdlib, mkostemp) {
   MyTemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
-  AssertCloseOnExec(tf.fd, true);
+  ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
 TEST(stdlib, mkstemp64) {
