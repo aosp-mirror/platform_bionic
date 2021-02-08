@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e21d930_8356fd45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-08T15:10:17Z",
+      "side": 1,
+      "message": "Elliot: this change allowlists certain modules to be converted by the bp2build converter into Bazel targets.",
+      "revId": "d6a3b780de6e108227a793c2757a4ad9fabb5006",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
