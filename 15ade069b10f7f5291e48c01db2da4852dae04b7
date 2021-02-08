@@ -46,6 +46,30 @@
       },
       "revId": "15ade069b10f7f5291e48c01db2da4852dae04b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb497e8e_b2b983d3",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-02-08T18:54:29Z",
+      "side": 0,
+      "message": "Oops, I should have gone back and verified. I thought I did.",
+      "parentUuid": "10c98dea_5cb5d3d6",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 3
+      },
+      "revId": "15ade069b10f7f5291e48c01db2da4852dae04b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
