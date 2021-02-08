@@ -185,10 +185,14 @@ static inline void AssertChildExited(int pid, int expected_exit_status,
   }
 }
 
-static inline void AssertCloseOnExec(int fd, bool close_on_exec) {
+static inline bool CloseOnExec(int fd) {
   int flags = fcntl(fd, F_GETFD);
-  ASSERT_NE(flags, -1);
-  ASSERT_EQ(close_on_exec ? FD_CLOEXEC : 0, flags & FD_CLOEXEC);
+  // This isn't ideal, but the alternatives are worse:
+  // * If we return void and use ASSERT_NE here, we get failures at utils.h:191
+  //   rather than in the relevant test.
+  // * If we ignore failures of fcntl(), well, that's obviously a bad idea.
+  if (flags == -1) abort();
+  return flags & FD_CLOEXEC;
 }
 
 // The absolute path to the executable
