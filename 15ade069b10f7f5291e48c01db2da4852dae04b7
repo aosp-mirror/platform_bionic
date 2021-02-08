@@ -22,6 +22,30 @@
       },
       "revId": "15ade069b10f7f5291e48c01db2da4852dae04b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10c98dea_5cb5d3d6",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 390,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-08T18:01:35Z",
+      "side": 0,
+      "message": "it is. L241 and following.\n\ntoo early on monday morning for code review :-)",
+      "parentUuid": "e9d35df3_f743351a",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 390,
+        "endChar": 3
+      },
+      "revId": "15ade069b10f7f5291e48c01db2da4852dae04b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
