@@ -1579,6 +1579,7 @@ filegroup {
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1589,6 +1590,7 @@ filegroup {
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1597,6 +1599,7 @@ filegroup {
         "arch-arm/bionic/exidx_dynamic.c",
         "arch-arm/bionic/atexit_legacy.c",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1754,6 +1757,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1762,6 +1766,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1770,6 +1775,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1778,6 +1784,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 // Headers that only other parts of the platform can include.
