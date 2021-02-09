@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1650fc1d_2311be68",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-09T18:35:46Z",
+      "side": 1,
+      "message": "the more i think about this, the more i wonder whether we shouldn\u0027t just abort? this literally can\u0027t happen because the ulimit is 32Ki, and if we ever bump that up, it would be _helpful_ to have nice clear failures to remind us that, no, we shouldn\u0027t go over 64Ki for LP32 at least.",
+      "revId": "e91bca52aebcf13af4388b7b398ae83142e42e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff84d9e_b5ab2456",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
@@ -48,6 +65,24 @@
       "writtenOn": "2021-02-09T05:41:43Z",
       "side": 1,
       "message": "The fd is leaked now if __FILE_init fails... I think the leak was there before Ia2e53bf2664a4f782581042054ecd492830e2aed.",
+      "revId": "e91bca52aebcf13af4388b7b398ae83142e42e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40716b63_798eb202",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-09T18:35:46Z",
+      "side": 1,
+      "message": "yeah, i had been trying to preserve behavior here, though that\u0027s probably a bad idea.\n\nagain, aborting would make this question go away...",
+      "parentUuid": "4b6ebfac_d80a4058",
       "revId": "e91bca52aebcf13af4388b7b398ae83142e42e6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
