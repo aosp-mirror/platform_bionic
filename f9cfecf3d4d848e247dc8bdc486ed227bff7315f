@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bed3c11b_851689db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-09T00:42:26Z",
+      "side": 1,
+      "message": "(if i ever find who used a `short` to store an fd...)",
+      "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4d40186c_5fd3f6e8",
@@ -31,6 +48,24 @@
       "writtenOn": "2021-02-08T23:45:01Z",
       "side": 1,
       "message": "fd would be truncated trying to fit it in the \"short _file\" field. I think fclose(fp) is going to try to close the wrong fd.\n\n(Also: I think fclose() may overwrite errno -- the previous code used ErrnoRestorer to ignore an error set by close().)\n\nPreviously: if fdopen returns nullptr, the fd hasn\u0027t been closed. The new behavior leaves the fd open on OOM, but would try to close it on fd-too-big.",
+      "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "543d66f9_c5f2e40b",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-09T00:42:26Z",
+      "side": 1,
+      "message": "good catch! i think https://android-review.googlesource.com/c/platform/bionic/+/1581065 addresses this cleanly without hitting the L265 issue...",
+      "parentUuid": "4d40186c_5fd3f6e8",
       "revId": "f9cfecf3d4d848e247dc8bdc486ed227bff7315f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
