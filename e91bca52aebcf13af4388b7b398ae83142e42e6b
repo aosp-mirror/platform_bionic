@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28e35460_2b3c2247",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-02-10T00:49:32Z",
+      "side": 1,
+      "message": "Aborting seems OK to me, I suppose?\n\nTo bump the limit to 64Ki, I think we\u0027d need to change the field\u0027s type from short to unsigned short.",
+      "parentUuid": "1650fc1d_2311be68",
+      "revId": "e91bca52aebcf13af4388b7b398ae83142e42e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff84d9e_b5ab2456",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
