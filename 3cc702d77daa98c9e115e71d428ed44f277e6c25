@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "052784a1_1ee3b92c",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-02-10T01:10:13Z",
+      "side": 1,
+      "message": "This check is redundant now -- fp is never nullptr.",
+      "range": {
+        "startLine": 400,
+        "startChar": 6,
+        "endLine": 400,
+        "endChar": 12
+      },
+      "revId": "3cc702d77daa98c9e115e71d428ed44f277e6c25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
