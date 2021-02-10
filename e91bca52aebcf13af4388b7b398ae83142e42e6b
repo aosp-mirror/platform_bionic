@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e3933933_c16cae6c",
+        "filename": "libc/stdio/stdio.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-10T00:53:06Z",
+      "side": 1,
+      "message": "\u003e Aborting seems OK to me, I suppose?\n\ndone in the next patch set. i can\u0027t justify making things more complex for a case that\u0027s currently unreachable, and that we\u0027re never going to make reachable because LP32 will be dead first.\n\n\u003e To bump the limit to 64Ki, I think we\u0027d need to change the field\u0027s type from short to unsigned short.\n\noh, yeah, good point!",
+      "parentUuid": "28e35460_2b3c2247",
+      "revId": "e91bca52aebcf13af4388b7b398ae83142e42e6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6ff84d9e_b5ab2456",
         "filename": "libc/stdio/stdio.cpp",
         "patchSetId": 1
