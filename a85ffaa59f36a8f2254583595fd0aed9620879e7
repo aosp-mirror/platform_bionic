@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f24956dd_25be7847",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-10T04:32:11Z",
+      "side": 1,
+      "message": "crtbegin_so.c depends on headers (__dso_handle.h for example) in the same directory. Without adding arch-common/bionic in local_include_dirs, which bp2build converts to deps on header cc_library targets, Bazel\u0027s per-action sandboxing fails with header not found errors.",
+      "range": {
+        "startLine": 2078,
+        "startChar": 12,
+        "endLine": 2078,
+        "endChar": 44
+      },
+      "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
