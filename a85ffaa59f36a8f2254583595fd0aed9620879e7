@@ -22,6 +22,30 @@
       },
       "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "527169e5_790e5297",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1066075
+      },
+      "writtenOn": "2021-02-10T07:21:11Z",
+      "side": 1,
+      "message": "Bazel\u0027s starting to pay dividends then!",
+      "parentUuid": "f24956dd_25be7847",
+      "range": {
+        "startLine": 2078,
+        "startChar": 12,
+        "endLine": 2078,
+        "endChar": 44
+      },
+      "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
