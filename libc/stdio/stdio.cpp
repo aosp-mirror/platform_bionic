@@ -226,8 +226,12 @@ extern "C" __LIBC_HIDDEN__ void __libc_stdio_cleanup(void) {
   _fwalk(__sflush);
 }
 
-static FILE* __finit(FILE* fp, int fd, int flags) {
+static FILE* __FILE_init(FILE* fp, int fd, int flags) {
   if (fp == nullptr) return nullptr;
+
+#if !defined(__LP64__)
+  if (fd > SHRT_MAX) __fortify_fatal("stdio: fd %d > SHRT_MAX", fd);
+#endif
 
   fp->_file = fd;
   android_fdsan_exchange_owner_tag(fd, 0, __get_file_tag(fp));
@@ -237,15 +241,6 @@ static FILE* __finit(FILE* fp, int fd, int flags) {
   fp->_write = __swrite;
   fp->_close = __sclose;
   _EXT(fp)->_seek64 = __sseek64;
-
-#if !defined(__LP64__)
-  if (fd > SHRT_MAX) {
-    errno = EMFILE;
-    fclose(fp);
-    return nullptr;
-  }
-#endif
-
   return fp;
 }
 
@@ -259,7 +254,7 @@ FILE* fopen(const char* file, const char* mode) {
     return nullptr;
   }
 
-  FILE* fp = __finit(__sfp(), fd, flags);
+  FILE* fp = __FILE_init(__sfp(), fd, flags);
   if (fp == nullptr) {
     ErrnoRestorer errno_restorer;
     close(fd);
@@ -298,7 +293,7 @@ FILE* fdopen(int fd, const char* mode) {
     fcntl(fd, F_SETFD, tmp | FD_CLOEXEC);
   }
 
-  return __finit(__sfp(), fd, flags);
+  return __FILE_init(__sfp(), fd, flags);
 }
 
 FILE* freopen(const char* file, const char* mode, FILE* fp) {
@@ -398,11 +393,11 @@ FILE* freopen(const char* file, const char* mode, FILE* fp) {
     }
   }
 
-  fp = __finit(fp, fd, flags);
+  __FILE_init(fp, fd, flags);
 
   // For append mode, O_APPEND sets the write position for free, but we need to
   // set the read position manually.
-  if (fp && (mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
+  if ((mode_flags & O_APPEND) != 0) __sseek64(fp, 0, SEEK_END);
 
   return fp;
 }
