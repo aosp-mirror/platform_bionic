@@ -82,7 +82,7 @@ struct UnwindData {
 
 static UnwindData g_unwind_data;
 
-__attribute__((unused)) static void noinline UnwindSignalHandler(int) {
+static void noinline UnwindSignalHandler(int) {
   _Unwind_Backtrace(FrameCounter, &g_unwind_data.handler_frame_count);
 
   g_unwind_data.handler_one_deeper_frame_count = unwind_one_frame_deeper();
@@ -98,7 +98,7 @@ static void verify_unwind_data(const UnwindData& unwind_data) {
   EXPECT_EQ(unwind_data.handler_frame_count + 1, unwind_data.handler_one_deeper_frame_count);
 }
 
-__attribute__((unused)) static void noinline UnwindTest() {
+static void noinline UnwindTest() {
   g_unwind_data = {};
 
   _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
@@ -112,24 +112,14 @@ __attribute__((unused)) static void noinline UnwindTest() {
 }
 
 TEST(stack_unwinding, unwind_through_signal_frame) {
-#if defined(__aarch64__)
-  // A newer libunwind.a update should restore signal frame unwinding on arm64.
-  GTEST_SKIP() << "signal frame unwinding temporarily broken on arm64 -- b/153025717";
-#else
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
   UnwindTest();
-#endif
 }
 
 // On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
 TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
-#if defined(__aarch64__)
-  // A newer libunwind.a update should restore signal frame unwinding on arm64.
-  GTEST_SKIP() << "signal frame unwinding temporarily broken on arm64 -- b/153025717";
-#else
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
   UnwindTest();
-#endif
 }
