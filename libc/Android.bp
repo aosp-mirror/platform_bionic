@@ -170,6 +170,7 @@ cc_library_static {
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/bionic/__libc_int0x80.S",
                 "arch-x86/bionic/__set_tls.cpp",
             ],
         },
