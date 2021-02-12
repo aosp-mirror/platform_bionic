@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79a93afb_7d0c3242",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-12T17:40:21Z",
+      "side": 1,
+      "message": "similar complaint as with system/core. this doesn\u0027t help us keep the subprojects\u0027 licenses separate.",
+      "revId": "d054f9878cfba4b84d59c06134b8ed0a48176e70",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
