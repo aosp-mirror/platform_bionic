@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5467d1fa_53d5af6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-12T23:22:13Z",
+      "side": 1,
+      "message": "yeah, i was surprised that the zygote couldn\u0027t use @LIBC_PLATFORM symbols, but this was what i did locally rather than work out why not too.",
+      "revId": "259cd39718dddffedb6005b03483797a41038922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a753276b_479d3d0a",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1562,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-12T23:22:13Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "259cd39718dddffedb6005b03483797a41038922",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
