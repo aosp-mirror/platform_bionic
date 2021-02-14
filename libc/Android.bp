@@ -1060,6 +1060,7 @@ cc_library_static {
         "bionic/get_device_api_level.cpp",
         "bionic/grp_pwd.cpp",
         "bionic/grp_pwd_file.cpp",
+        "bionic/heap_zero_init.cpp",
         "bionic/iconv.cpp",
         "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
@@ -1078,7 +1079,6 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
-        "bionic/memory_mitigation_state.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
@@ -1579,6 +1579,7 @@ filegroup {
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1589,6 +1590,7 @@ filegroup {
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1597,6 +1599,7 @@ filegroup {
         "arch-arm/bionic/exidx_dynamic.c",
         "arch-arm/bionic/atexit_legacy.c",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1668,11 +1671,14 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             version_script: ":libc.arm.map",
+            no_libcrt: true,
 
             shared: {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
+                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1698,6 +1704,12 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             version_script: ":libc.x86.map",
+            no_libcrt: true,
+
+            shared: {
+                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-i686-android-exported"],
+            },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.
@@ -1745,6 +1757,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1753,6 +1766,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1761,6 +1775,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1769,6 +1784,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 // Headers that only other parts of the platform can include.
@@ -2347,53 +2363,11 @@ cc_object {
     ],
 }
 
-// Generate the C++ policy sources for app and system seccomp-bpf filters.
-python_binary_host {
-    name: "genseccomp",
-    main: "tools/genseccomp.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
+filegroup {
+    name: "all_kernel_uapi_headers",
+    srcs: ["kernel/uapi/**/*.h"],
 }
 
-python_binary_host {
-    name: "genfunctosyscallnrs",
-    main: "tools/genfunctosyscallnrs.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/genfunctosyscallnrs.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
-}
 
 cc_genrule {
     name: "func_to_syscall_nrs",

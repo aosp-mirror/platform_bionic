@@ -3,4 +3,5 @@ subdirs = ["*"]
 filegroup {
     name: "bionic-generate-version-script",
     srcs: ["generate-version-script.py"],
+    bazel_module: { bp2build_available: true },
 }

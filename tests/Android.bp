@@ -17,7 +17,6 @@
 cc_defaults {
     name: "bionic_tests_defaults",
     host_supported: true,
-    cpp_std: "experimental",
     target: {
         darwin: {
             enabled: false,
@@ -559,6 +558,7 @@ cc_defaults {
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["fortify_test_main.cpp"],
+    tidy: false,
     target: {
         host: {
             clang_cflags: ["-D__clang__"],
@@ -597,6 +597,7 @@ cc_test_library {
         "-D__clang_analyzer__",
     ],
     srcs: ["clang_fortify_tests.cpp"],
+    tidy: false,
 }
 
 cc_test_library {
@@ -638,6 +639,7 @@ cc_defaults {
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["clang_fortify_tests.cpp"],
+    tidy: false,
     target: {
         host: {
             clang_cflags: ["-D__clang__"],
@@ -1014,6 +1016,10 @@ cc_test {
 
     // For now, these tests run forever, so do not use the isolation framework.
     isolated: false,
+    // Running forever, do not consider unit test.
+    test_options: {
+        unit_test: false,
+    },
 
     srcs: [
         "malloc_stress_test.cpp",
