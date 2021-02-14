@@ -1,0 +1,8 @@
+[MESSAGES CONTROL]
+disable=
+    eval-used,
+    design,
+    fixme,
+    invalid-name,
+    logging-fstring-interpolation,
+    missing-docstring

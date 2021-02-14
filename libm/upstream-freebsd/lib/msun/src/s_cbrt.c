@@ -13,7 +13,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_cbrt.c 342563 2018-12-28 01:34:08Z jhibbits $");
+__FBSDID("$FreeBSD$");
 
 #include <float.h>
 #include "math.h"

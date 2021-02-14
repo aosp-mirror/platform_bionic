@@ -25,7 +25,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $FreeBSD: head/lib/msun/ld128/s_nanl.c 326219 2017-11-26 02:00:33Z pfg $
+ * $FreeBSD$
  */
 
 #include <math.h>
