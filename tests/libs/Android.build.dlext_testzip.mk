@@ -24,6 +24,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_zip_zipaligned
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
@@ -49,6 +51,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE_CLASS := NATIVE_TESTS
 LOCAL_MODULE := libdlext_test_runpath_zip_zipaligned
+LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD
+LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_MODULE_SUFFIX := .zip
 LOCAL_MODULE_PATH := $($(bionic_2nd_arch_prefix)TARGET_OUT_DATA_NATIVE_TESTS)/bionic-loader-test-libs/libdlext_test_runpath_zip
 LOCAL_2ND_ARCH_VAR_PREFIX := $(bionic_2nd_arch_prefix)
@@ -94,4 +98,3 @@ $(LOCAL_BUILT_MODULE) : $(lib_d) $(lib_a) $(lib_b) $(lib_c) $(lib_x) $(lib_y) $(
 	$(hide) touch $(dir $@)/zipdir/empty_file.txt
 	$(hide) (cd $(dir $@)/zipdir && zip -qrD0 ../$(notdir $@).unaligned .)
 	$(hide) $(BIONIC_TESTS_ZIPALIGN) 4096 $@.unaligned $@
-

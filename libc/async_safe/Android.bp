@@ -1,6 +1,15 @@
 // ========================================================
 // libasync_safe.a
 // ========================================================
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "bionic_libc_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
