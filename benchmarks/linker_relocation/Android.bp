@@ -24,6 +24,15 @@
 // OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 // SUCH DAMAGE.
 
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "bionic_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_license"],
+}
+
 cc_library_headers {
     name: "linker_reloc_bench_headers",
     defaults: ["bionic_spawn_benchmark_targets"],
