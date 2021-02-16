@@ -34,6 +34,24 @@
       "parentUuid": "46f916d4_a2fec8d8",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08023121_7fc0c3ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T20:26:53Z",
+      "side": 1,
+      "message": "depends whether you mean on the host or on the device? this is https://man7.org/linux/man-pages/man1/ldd.1.html so it needs to be called ldd on the device. but the module name and name on the host filesystem don\u0027t really matter.",
+      "parentUuid": "8e5fa359_43651544",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
