@@ -70,6 +70,30 @@
       },
       "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9b36181_4d0b9954",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-16T11:51:53Z",
+      "side": 1,
+      "message": "I disagree; explicitly listing dependencies is something that we should have more of, moving forward. It not only helps per-action hermeticity in Bazel, it would also help RBE by not having any implicit dependencies.\n\nThe alternative to listing header inputs in the definition is to list them directly in srcs, but it is disallowed in Soong today:\n\n  error: bionic/libc/Android.bp:2112:9: module \"crtbegin_so1\" variant \"android_arm_armv7-a-neon\": srcs: Header file bionic/libc/arch-common/bionic/__dso_handle.h is not supported, instead use export_include_dirs or local_include_dirs.",
+      "parentUuid": "d4d521b7_113efbcf",
+      "range": {
+        "startLine": 2078,
+        "startChar": 12,
+        "endLine": 2078,
+        "endChar": 44
+      },
+      "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
