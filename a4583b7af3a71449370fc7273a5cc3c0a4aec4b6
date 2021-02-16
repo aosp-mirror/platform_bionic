@@ -52,6 +52,24 @@
       "parentUuid": "8e5fa359_43651544",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0f83d05_3283caf2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-16T23:29:27Z",
+      "side": 1,
+      "message": "Thanks!\n\nIn the Soong case, I am not 100% sure how ldd makes it to a device. In https://cs.android.com/android/platform/superproject/+/master:bionic/linker/Android.bp, the sh_binary target for ldd doesn\u0027t seem to be referenced anywhere else\n\nWhat I would like to do is change\n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd\",\n}\n\nto\n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd.sh\",\n}\n\nWhich would allow us to auto generate this Bazel equivalent (where the name and src need to be distinct, unlike in Soong?)\n\nsh_binary (\n    name \u003d \"ldd\",\n    srcs \u003d [\"ldd.sh\"],\n)\n\n+ Dan\n\nWould this break anything for Soong builds Dan? Am I missing something?",
+      "parentUuid": "08023121_7fc0c3ef",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
