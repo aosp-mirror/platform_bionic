@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18360a96_93b3515c",
+        "filename": "libstdc++/include/new",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:46:31Z",
+      "side": 1,
+      "message": "based on `git log` showing that this was in the initial commit, 2008 sounds right to me.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "aa8db1b9d1e8bba7eba26238e44713f02a3dd533",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fd521d1_9de01c88",
+        "filename": "libstdc++/include/new",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:46:31Z",
+      "side": 1,
+      "message": "this is an actual change, but seems harmless?",
+      "revId": "aa8db1b9d1e8bba7eba26238e44713f02a3dd533",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "485f6d8d_219cf5c0",
+        "filename": "libfdtrack/.clang-format",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:46:31Z",
+      "side": 0,
+      "message": "(this file no longer exists, but ../.clang-format is 2-space anyway.)",
+      "revId": "ef0ec82684ea52ee3a13db8df9103ca314ea17aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fa18ee4_0e02bf56",
+        "filename": "linker/MODULE_LICENSE_BSD",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:46:31Z",
+      "side": 0,
+      "message": "(as you can see from the now-generated NOTICE file, this was actually BSD, not APL2.)",
+      "revId": "ef0ec82684ea52ee3a13db8df9103ca314ea17aa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
