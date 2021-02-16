@@ -51,6 +51,7 @@ apex {
     prebuilts: [
         "bionic-linker-config",
     ],
+    updatable: false,
 }
 
 sdk {
