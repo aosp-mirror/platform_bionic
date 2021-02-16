@@ -94,6 +94,30 @@
       },
       "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b1fd22a_4ac7eeb1",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T20:30:00Z",
+      "side": 1,
+      "message": "\u003e depends whether you mean on the host or on the device? this is https://man7.org/linux/man-pages/man1/ldd.1.html so it needs to be called ldd on the device. but the module name and name on the host filesystem don\u0027t really matter.\n\nin general, sure.\n\nfor the specific case of \".\" when talking about how #include works? not so much.",
+      "parentUuid": "a9b36181_4d0b9954",
+      "range": {
+        "startLine": 2078,
+        "startChar": 12,
+        "endLine": 2078,
+        "endChar": 44
+      },
+      "revId": "a85ffaa59f36a8f2254583595fd0aed9620879e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
