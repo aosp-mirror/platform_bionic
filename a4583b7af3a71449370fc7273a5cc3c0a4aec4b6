@@ -16,6 +16,24 @@
       "message": "Side note: would there be any objection to also renaming ldd to ldd.sh? ",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e5fa359_43651544",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-16T15:53:41Z",
+      "side": 1,
+      "message": "(Then we could avoid https://android-review.googlesource.com/c/platform/build/soong/+/1590252)",
+      "parentUuid": "46f916d4_a2fec8d8",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
