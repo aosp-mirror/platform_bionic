@@ -88,6 +88,24 @@
       "parentUuid": "a0f83d05_3283caf2",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e77ba7a_59b79587",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:52:08Z",
+      "side": 1,
+      "message": "(to clarify: it\u0027s not even clear to me from reading the bazel docs: https://docs.bazel.build/versions/master/be/shell.html )",
+      "parentUuid": "5d00cc4d_6cdb9a97",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
