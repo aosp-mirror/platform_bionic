@@ -70,6 +70,24 @@
       "parentUuid": "08023121_7fc0c3ef",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d00cc4d_6cdb9a97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-16T23:51:14Z",
+      "side": 1,
+      "message": "i can answer the \"where?\" question:\n```\nphony {\n    name: \"shell_and_utilities_system\",\n    required: [\n        \"auditctl\",\n        \"awk\",\n        \"bc\",\n        \"bzip2\",\n!       \"ldd\",\n        \"logwrapper\",\n        \"mini-keyctl\",\n        \"mkshrc\",\n        \"newfs_msdos\",\n        \"reboot\",\n        \"sh\",\n        \"simpleperf\",\n        \"simpleperf_app_runner\",\n        \"tcpdump\",\n        \"toolbox\",\n        \"toybox\",\n        \"ziptool\",\n    ],\n}\n```\nin system/core/shell_and_utilities.\n\nbut like i said, the _module_ name doesn\u0027t matter much --- it\u0027s \"will this still be called `ldd` on the target file system?\" that\u0027s the important question (and it\u0027s not clear to me whether that\u0027s what the bazel sh_binary means).",
+      "parentUuid": "a0f83d05_3283caf2",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
