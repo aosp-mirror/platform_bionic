@@ -3,6 +3,15 @@
 // In Q this contained Bionic, ART and Libcore.
 // It keeps the name /apex/com.android.runtime for app compat reasons.
 
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "bionic_license"
+    // to get the below license kinds:
+    //   legacy_notice
+    default_applicable_licenses: ["bionic_license"],
+}
+
 android_app_certificate {
     name: "com.android.runtime.certificate",
     certificate: "com.android.runtime",
