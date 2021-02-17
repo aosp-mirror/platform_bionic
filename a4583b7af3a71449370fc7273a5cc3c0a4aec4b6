@@ -356,6 +356,24 @@
       "parentUuid": "815e567c_914f1d74",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2108473d_712af4ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T01:00:52Z",
+      "side": 1,
+      "message": "(We could also change how the sh_binary rule works in Bazel, to support renaming outputs to be something other than the target name, but that feature currently doesn\u0027t exist)",
+      "parentUuid": "f0edddf0_d7e354e8",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
