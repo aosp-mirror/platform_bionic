@@ -34,6 +34,24 @@
       "parentUuid": "99cfbe7e_4bed9118",
       "revId": "f11ce9a1759202a3189d15ad5a79b8eb94be82dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6934973_d7e3827a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-17T23:17:10Z",
+      "side": 1,
+      "message": "yeah, that just seems like a much safer default than \"oh crap, i shipped a module!\".",
+      "parentUuid": "af393a2e_a229dc51",
+      "revId": "f11ce9a1759202a3189d15ad5a79b8eb94be82dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
