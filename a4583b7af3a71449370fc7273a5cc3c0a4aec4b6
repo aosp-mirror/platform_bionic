@@ -196,6 +196,41 @@
       "parentUuid": "e16c6c5a_186cd799",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b73e43cc_25fcf3f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-17T00:29:08Z",
+      "side": 1,
+      "message": "Part of the sh_binary contract is that the files should be installed as executable, regardless of what they are in the source tree (there\u0027s really no need for them to be executable in the source tree if they can only be executed on-device). Is this behavioral breakage being well-documented?",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c557a704_93a3f05f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-17T00:29:08Z",
+      "side": 1,
+      "message": "\u003e that seems less confusing. (though i\u0027d probably go with \"ldd_module\" since it\u0027s the _module_ that bazel requires a bogus name for, not the binary.)\n\nYou\u0027ll need to specify `filename_from_src: true` or `filename: \u0027ldd\u0027` in the Android.bp then. I don\u0027t know what the equivalent would be for Bazel.\n\n\u003e I was assuming we only cared about dist files, but we could build more machinery to address other symlink problems if necessary.\n\nDist files are only a small piece of the puzzle -- this module will never directly show up in the dist files for example. The staging directory ($ANDROID_PRODUCT_OUT/... used for `adb sync`) and device images are arguably more important (but you don\u0027t get anything out of CI without dist).\n\nAnd actually, for the device installation use-cases, the executable bit doesn\u0027t matter at all, since that\u0027s controlled based on a series of rules based on install location. But using a symlink when we expect a file would be bad. (The executable bit still matters for tests and host tools)\n\n---\n\nAre all of these limitations and workarounds being documented for future conversions? Part of the sh_binary contract is that the files should be installed as executable, regardless of what they are in the source tree (there\u0027s really no need for them to be executable in the source tree if they can only be executed on-device or post-build, having one can lead to confusion).",
+      "parentUuid": "67083f74_ff6dba2b",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
