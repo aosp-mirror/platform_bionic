@@ -28,6 +28,7 @@ cc_library_headers {
     name: "linker_reloc_bench_headers",
     defaults: ["bionic_spawn_benchmark_targets"],
     export_include_dirs: ["include"],
+    bazel_module: { bp2build_available: true },
 }
 
 // TODO: This benchmark doesn't work with TradeFed/atest because it doesn't copy its test libraries
