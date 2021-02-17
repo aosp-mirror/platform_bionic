@@ -160,6 +160,24 @@
       "parentUuid": "02c55513_51989fe0",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e16c6c5a_186cd799",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T00:14:26Z",
+      "side": 1,
+      "message": "I was assuming we only cared about dist files, but we could build more machinery to address other symlink problems if necessary.\n\nThe current problem is that Bazel refuses to build a target where the name and src are the same. \n\nThe general pattern we use in Bazel for sh_binary is to add .sh to the src name, so I think we should take that path, as long as this won\u0027t break Soong builds?\n\n(an alternate would be to not rename the src, but to pick a different module name, like name: \"ldd_sh_binary\")",
+      "parentUuid": "57f2fead_4c2be2b9",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
