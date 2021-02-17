@@ -178,6 +178,24 @@
       "parentUuid": "57f2fead_4c2be2b9",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67083f74_ff6dba2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-17T00:17:45Z",
+      "side": 1,
+      "message": "\u003e (an alternate would be to not rename the src, but to pick a different module name, like name: \"ldd_sh_binary\")\n\nthat seems less confusing. (though i\u0027d probably go with \"ldd_module\" since it\u0027s the _module_ that bazel requires a bogus name for, not the binary.)",
+      "parentUuid": "e16c6c5a_186cd799",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
