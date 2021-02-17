@@ -106,6 +106,24 @@
       "parentUuid": "5d00cc4d_6cdb9a97",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c367222a_aba97dc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-17T00:01:03Z",
+      "side": 1,
+      "message": "Soong, unlike bazel, very strictly separates the source filesystem with the defined modules/intermediates/outputs. So there is no conflict here (or in any of the other places I expect this to show up).\n\nI think what Rupert is asking for is whether we can rename the source file, and keep the module name the same. Soong defaults the sh_binary\u0027s installed name as the module name (though that\u0027s overridable via `filename` and `filename_from_src`): https://cs.android.com/android/platform/superproject/+/master:build/soong/sh/sh_binary.go;drc\u003da1a56e8f82ec154a6856e2485d63fb1d74d3a2ca;l\u003d214\n\nI assume that with Bazel, what happens is going to entirely depend on the implementation of the packaging/installation rules and what it gets from the sh_binary rule. (Or whatever intermediate steps we end up taking)",
+      "parentUuid": "1e77ba7a_59b79587",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
