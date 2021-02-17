@@ -142,6 +142,24 @@
       "parentUuid": "c367222a_aba97dc2",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57f2fead_4c2be2b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2021-02-17T00:07:04Z",
+      "side": 1,
+      "message": "\u003e And we have some other machinery in Soong to take Bazel symlinks and replace them with copies of the file they point to\n\nIsn\u0027t that just for dist files? What about the actual installation into the images? It very strongly matter whether they\u0027re symlinks or not in those directories (unlike dist where you can kinda just copy everything)",
+      "parentUuid": "02c55513_51989fe0",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
