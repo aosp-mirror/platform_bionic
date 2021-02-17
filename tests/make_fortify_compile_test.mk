@@ -9,8 +9,6 @@ LOCAL_CXX := $(LOCAL_PATH)/touch-obj-on-success \
 
 LOCAL_CLANG := true
 LOCAL_MODULE := bionic-compile-time-tests$(FORTIFY_LEVEL)-clang++
-LOCAL_LICENSE_KINDS := SPDX-license-identifier-Apache-2.0 SPDX-license-identifier-BSD
-LOCAL_LICENSE_CONDITIONS := notice
 LOCAL_TIDY := false
 LOCAL_CPPFLAGS := -Wall -Wno-error
 LOCAL_CPPFLAGS += -fno-color-diagnostics -ferror-limit=10000 -Xclang -verify
