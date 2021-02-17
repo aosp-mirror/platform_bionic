@@ -249,6 +249,24 @@
       "parentUuid": "b73e43cc_25fcf3f1",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c302fdf_c103d974",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T00:34:50Z",
+      "side": 1,
+      "message": "Elliot - so you prefer something like this in the Android.bp?\n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd\",\n}\n\nto\n\nsh_binary {\n    name: \"ldd_module\",\n    src: \"ldd\",\n    filename_from_src: true,\n}\n\nFor the BUILD file conversion, this would then (currently) be converted to\n\nsh_binary (\n    name \u003d \"ldd_module\",\n    src \u003d [\"ldd\"],\n)\n\nIn particular the Bazel output would be called \"ldd_module\" instead of \"ldd\", which sounds bad. To fix this on the Bazel side we would probably need to undo the _module suffix in the converter, i.e. back to\n\nsh_binary (\n    name \u003d \"ldd\",\n    src \u003d [\"ldd\"],\n)\n\nBut then Bazel would complain again about the name collision, so the converter would also need to rename ldd to ldd.sh etc. \n\nIt seems a bit messy. I think renaming ldd to ldd.sh to start with is better, assuming this doesn\u0027t break Soong builds (it sounds like it wouldn\u0027t?)",
+      "parentUuid": "67083f74_ff6dba2b",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
