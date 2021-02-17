@@ -392,6 +392,24 @@
       "parentUuid": "2108473d_712af4ea",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48615f21_6cf88bad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-17T01:12:57Z",
+      "side": 1,
+      "message": "Is there a technical reason why renaming ldd to ldd.sh doesn\u0027t work? That seems to be the one approach that satisfies all build system constraints here.",
+      "parentUuid": "5fc9a3c2_49038b90",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
