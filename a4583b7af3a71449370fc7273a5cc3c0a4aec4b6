@@ -124,6 +124,24 @@
       "parentUuid": "1e77ba7a_59b79587",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02c55513_51989fe0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T00:03:31Z",
+      "side": 1,
+      "message": "On the Bazel side, \n\nsh_binary (\n    name \u003d \"ldd\",\n    srcs \u003d [\"ldd.sh\"],\n)\n\nWill output a symlink called ldd which points to ldd.sh\n\nAnd we have some other machinery in Soong to take Bazel symlinks and replace them with copies of the file they point to\n\nSo I think that should be OK\n\n--------\n\nOn the Soong side, it sounds like these will create equivalent outputs?\n\nsh_binary {\n\n    name: \"ldd\",\n    src: \"ldd\",\n}\n\nto\n\nsh_binary {\n\n    name: \"ldd\",\n    src: \"ldd.sh\",\n}\n\nSo I\u0027ll update this CL to also rename ldd to ldd.sh etc?",
+      "parentUuid": "c367222a_aba97dc2",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
