@@ -1823,6 +1823,7 @@ cc_library_headers {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1880,6 +1881,7 @@ cc_library_headers {
             export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1929,7 +1931,8 @@ cc_library_headers {
             header_libs: ["libc_headers_arch"],
             export_header_lib_headers: ["libc_headers_arch"],
         },
-    }
+    },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
