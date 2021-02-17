@@ -50,7 +50,7 @@ static __inline int __ndk_legacy___libc_current_sigrtmax() {
    * can't use __builtin_available, but the platform builds with -Werror=unguarded-availability so
    * it requires __builtin_available.
    */
-#if defined(__ANDROID_UNGUARDED_AVAILABILITY__)
+#if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
   if (__builtin_available(android 21, *)) {
 #else
   if (__libc_current_sigrtmax) {
@@ -66,7 +66,7 @@ static __inline int __ndk_legacy___libc_current_sigrtmin() {
    * can't use __builtin_available, but the platform builds with -Werror=unguarded-availability so
    * it requires __builtin_available.
    */
-#if defined(__ANDROID_UNGUARDED_AVAILABILITY__)
+#if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
   if (__builtin_available(android 21, *)) {
 #else
   if (__libc_current_sigrtmin) {
