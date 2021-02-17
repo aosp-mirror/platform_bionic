@@ -209,7 +209,8 @@ typedef struct siginfo {
 #define POLL_HUP 6
 #define NSIGPOLL 6
 #define SYS_SECCOMP 1
-#define NSIGSYS 1
+#define SYS_USER_DISPATCH 2
+#define NSIGSYS 2
 #define EMT_TAGOVF 1
 #define NSIGEMT 1
 #define SIGEV_SIGNAL 0
