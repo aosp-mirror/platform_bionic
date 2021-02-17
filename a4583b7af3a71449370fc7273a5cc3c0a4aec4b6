@@ -410,6 +410,24 @@
       "parentUuid": "5fc9a3c2_49038b90",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adad3b24_8cae5d21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T01:15:38Z",
+      "side": 1,
+      "message": "Dan:\n\nYep eventually we would need to address filename and filename_from_src (I\u0027m not sure what the right path would be to take), but at the moment we are focusing on getting Bionic to be buildable, and ldd seems to be the only sh_binary\n\nJin: \n\nAFAICT Soong should work fine with ldd.sh (i.e. it will create ldd if that is the module name)",
+      "parentUuid": "48615f21_6cf88bad",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
