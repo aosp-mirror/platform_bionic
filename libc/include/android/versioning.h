@@ -49,22 +49,19 @@
 // allows libc++ to refer to these functions in inlines without needing to guard them, needed since
 // libc++ doesn't currently guard these calls. There's no risk to the apps though because using
 // those APIs will still cause a link error.
-#if defined(__ANDROID_UNGUARDED_AVAILABILITY__)
-#define __MAYBE_STRICT
+#if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
+#define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,__what)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
 #define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
 #else
-#define __MAYBE_STRICT ,strict
+#define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,strict,__what)))
 #define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level)
 #define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level)
 #endif
 
-#define __INTRODUCED_IN(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
-#define __DEPRECATED_IN(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,deprecated=api_level)))
-#define __REMOVED_IN(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,obsoleted=api_level)))
+#define __INTRODUCED_IN(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
+#define __DEPRECATED_IN(api_level) __BIONIC_AVAILABILITY(deprecated=api_level)
+#define __REMOVED_IN(api_level) __BIONIC_AVAILABILITY(obsoleted=api_level)
 
 // The same availability attribute can't be annotated multiple times. Therefore, the macros are
 // defined for the configuration that it is valid for so that declarations like the below doesn't
@@ -79,23 +76,19 @@
 //
 // hasn't been supported and won't be.
 #if !defined(__LP64__)
-#define __INTRODUCED_IN_32(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __INTRODUCED_IN_32(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #define __INTRODUCED_IN_64(api_level)
 #else
 #define __INTRODUCED_IN_32(api_level)
-#define __INTRODUCED_IN_64(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __INTRODUCED_IN_64(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #endif
 
 #if defined(__arm__) || defined(__aarch64__)
-#define __INTRODUCED_IN_ARM(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __INTRODUCED_IN_ARM(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #define __INTRODUCED_IN_X86(api_level)
 #elif defined(__i386__) || defined(__x86_64__)
 #define __INTRODUCED_IN_ARM(api_level)
-#define __INTRODUCED_IN_X86(api_level) \
-    __attribute__((availability(android __MAYBE_STRICT,introduced=api_level)))
+#define __INTRODUCED_IN_X86(api_level) __BIONIC_AVAILABILITY(introduced=api_level)
 #else
 #define __INTRODUCED_IN_ARM(api_level)
 #define __INTRODUCED_IN_X86(api_level)
