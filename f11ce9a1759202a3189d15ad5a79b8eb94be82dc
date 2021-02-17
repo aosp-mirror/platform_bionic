@@ -16,6 +16,24 @@
       "message": "it\u0027s your foot you\u0027re shooting, but... doesn\u0027t that seem like a dangerous default?",
       "revId": "f11ce9a1759202a3189d15ad5a79b8eb94be82dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af393a2e_a229dc51",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010681
+      },
+      "writtenOn": "2021-02-17T09:55:00Z",
+      "side": 1,
+      "message": "you mean true or false?\n\nWe want to change it to true, because many people forget to set to set it explicitly (assuming it is true by default), and only discover late in the day when it\u0027s hard to fix.\n\nSee also: b/180399951",
+      "parentUuid": "99cfbe7e_4bed9118",
+      "revId": "f11ce9a1759202a3189d15ad5a79b8eb94be82dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
