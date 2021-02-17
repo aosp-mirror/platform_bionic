@@ -338,6 +338,24 @@
       "parentUuid": "721b4f5f_0882405d",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0edddf0_d7e354e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T00:53:42Z",
+      "side": 1,
+      "message": "To avoid weird special cases/cleanup code, we want the Bazel BUILD file to eventually look like\n\nsh_binary (\n    name \u003d \"ldd\",\n    srcs \u003d [\"ldd.sh\"],\n}\n\nIt\u0027s much easier to get to that point if we start with\n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd.sh\",\n}\n\nIf we start with this instead, it doesn\u0027t really help\n\nsh_binary {\n    name: \"ldd_module\",\n    src: \"ldd\",\n    filename_from_src: true,\n}\n\nBecause we are going to have to remove _module anyway, to create an output with the right name\n\nSo let\u0027s just assume we start with \n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd\",\n}\n\ni.e. no changes\n\nThen the converter logic is going to be something like\n\n- Rename \"ldd\" to \"ldd.sh\" (on the filesystem!)\n- Change \"ldd\" src to \"ldd.sh\"\n\nI think asking the converter to do a filesystem rename is a bad idea, so my preference is still\n\nsh_binary {\n    name: \"ldd\",\n    src: \"ldd.sh\",\n}\n\nUnless that breaks Soong builds?",
+      "parentUuid": "815e567c_914f1d74",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
