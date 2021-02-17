@@ -428,6 +428,24 @@
       "parentUuid": "48615f21_6cf88bad",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9846b009_3132cdc0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T01:34:04Z",
+      "side": 1,
+      "message": "I\u0027m going to submit this for now (since we know that either way we need to mark the file as executable) and post another CL to discuss changing the Android.bp file",
+      "parentUuid": "adad3b24_8cae5d21",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
