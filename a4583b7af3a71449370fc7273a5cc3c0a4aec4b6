@@ -302,6 +302,24 @@
       "message": "Forking this question from Dan\n\n\u003e Are all of these limitations and workarounds being documented for future conversions? Part of the sh_binary contract is that the files should be installed as executable, regardless of what they are in the source tree (there\u0027s really no need for them to be executable in the source tree if they can only be executed on-device or post-build, having one can lead to confusion).\n\nIt is a bit annoying that the script needs to be executable in the source tree, but this will be very obvious to anyone who tries to do a build (Bazel will complain with \"foo is not executable\"), so I don\u0027t think we need any extra documentation for that?",
       "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "721b4f5f_0882405d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-17T00:40:18Z",
+      "side": 1,
+      "message": "\u003e Elliot - so you prefer something like this in the Android.bp?\n\nyes. that says exactly what i mean: there\u0027s a checked in file with name \"ldd\" that i\u0027d like on the device with name \"ldd\".\n\n\u003e In particular the Bazel output would be called \"ldd_module\" instead of \"ldd\", which sounds bad.\n\ni don\u0027t much like that module name, but all the alternatives suggested (such as the one below) seem worse.\n\n\u003e I think renaming ldd to ldd.sh to start with is better\n\nnot to me --- that just seems wrong. what i \"like\" (for small values of \"like\") about the ldd_module hack is that it says is what it is on the tin: \"this is a build-system specific hack to get a checked-in file \"ldd\" to be on the device with the name \"ldd\" because for internal reasons that doesn\u0027t \"just work\" like it should\".\n\nthat\u0027s what i was trying to say earlier about it being the least confusing option. the others are all harder for the reader because they look like we\u0027re trying to do something fancy, when we\u0027re actually trying to do the plain boring thing (but an implementation detail of the build system is getting in the way of that).",
+      "parentUuid": "2c302fdf_c103d974",
+      "revId": "a4583b7af3a71449370fc7273a5cc3c0a4aec4b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
