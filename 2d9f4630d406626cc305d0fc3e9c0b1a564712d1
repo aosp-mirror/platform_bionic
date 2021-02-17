@@ -16,6 +16,24 @@
       "message": "Stated a new CL to discuss this",
       "revId": "2d9f4630d406626cc305d0fc3e9c0b1a564712d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4a0c3d9_0dc43746",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-17T13:20:42Z",
+      "side": 1,
+      "message": "My impression is that Elliott does not like ldd being renamed to ldd.sh, so maybe a compromise we could make in order to unblock Bazel builds would be to move the ldd file to a subdirectory (/tools or /scripts or something) but keep the ldd sh_binary target here?\n\nFrom the Bazel perspective, ldd doesn\u0027t need to be renamed to ldd.sh, but the sh_binary name needs to be named ldd and there can\u0027t also be a file called ldd in the same directory",
+      "parentUuid": "e316b0d9_93ca660c",
+      "revId": "2d9f4630d406626cc305d0fc3e9c0b1a564712d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
