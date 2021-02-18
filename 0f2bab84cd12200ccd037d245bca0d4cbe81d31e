@@ -87,6 +87,24 @@
       "parentUuid": "778f1d53_4630a076",
       "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83d039c4_45de0efa",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-02-18T17:55:24Z",
+      "side": 1,
+      "message": "I\u0027ve changed it to a single `extern \"C\"`.\n\nI\u0027m not sure how soon I\u0027ll be able to fix this in Clang.  (The fix should be small but the review + update cycle may make it longer).",
+      "parentUuid": "19539ea2_05bed4ca",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
