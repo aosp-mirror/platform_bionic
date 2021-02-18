@@ -16,6 +16,24 @@
       "message": "this is still unfortunate because tools/ is usually a directory of stuff that runs on the host.\n\nbefore we make up a new precedent...\n\ni tried to look for precedent for dealing with situations like this in google3 but couldn\u0027t find any? does google3 require that shell scripts are all named `foo.sh` in the resulting blaze output? the examples i found were either unclear or their only caller was a genrule so that they were referred to as //some/path:foo anyway.",
       "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cc9f998_d514fe59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-18T21:55:58Z",
+      "side": 1,
+      "message": "Bazel will use the target name to name the output\n\ni.e. assuming we generate this BUILD target\n\nsh_binary(\n    name \u003d \"ldd\",\n    srcs \u003d [\n        \"tools/ldd\",\n    ],\n)\n\nthen the Bazel output will be named ldd\n\nIt is just that Bazel doesn\u0027t like it when target names and input srcs have the same name. We could use any subdirectory name for the input if tools is bad. (Or rename the ldd input file to ldd.sh if a subdirectory is bad)\n\nSome Google3 examples:\n\nhttps://source.corp.google.com/search?q\u003dsh_binary%20srcs.*%5C.sh\u0026sq\u003dpackage:piper",
+      "parentUuid": "8cf030b6_b276636f",
+      "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
