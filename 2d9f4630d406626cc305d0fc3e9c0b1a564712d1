@@ -34,6 +34,24 @@
       "parentUuid": "e316b0d9_93ca660c",
       "revId": "2d9f4630d406626cc305d0fc3e9c0b1a564712d1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ce4d3c9_25f9185e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-18T14:28:13Z",
+      "side": 1,
+      "message": "Well, I\u0027ve made that change (i.e. kept the ldd filename instead of ldd.sh, but moved it into a tools subdirectory to avoid a clash with the target name)\n\nSoong builds still seem to work\n\nAnd bp2build write; bazel build ... now works\n\nSo can we go with this compromise? What do you think?",
+      "parentUuid": "b4a0c3d9_0dc43746",
+      "revId": "2d9f4630d406626cc305d0fc3e9c0b1a564712d1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
