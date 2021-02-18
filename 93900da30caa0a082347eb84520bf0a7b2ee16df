@@ -52,6 +52,24 @@
       "parentUuid": "8cc9f998_d514fe59",
       "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3898f5d_c66811dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-02-18T23:43:25Z",
+      "side": 1,
+      "message": "Apologies if I contributed to any confusion here. Agree that the docs should be clearer, I\u0027ve sent http://cl/358280963 about that.\n\nI\u0027ve also updated this CL to switch back to the ldd.sh plan.",
+      "parentUuid": "be77ae1f_26eda144",
+      "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
