@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "819c5a58_a488b382",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-02-18T17:40:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32ac4560_0ffe8e80",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7db20db2_0a6352f7",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-18T16:54:11Z",
       "side": 1,
       "message": "why? this is only referenced from C++ files, and none of the rest is extern \"C\"...",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "778f1d53_4630a076",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-02-18T17:40:50Z",
+      "side": 1,
+      "message": "Without the `extern \"C\"`, references to this function use the mangled name.  We could also use define the function in assembly with the mangled name.  If you prefer that, I can do that as well.",
+      "parentUuid": "7db20db2_0a6352f7",
       "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

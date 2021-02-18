@@ -16,6 +16,24 @@
       "message": "this is just because of the __naked__, and doesn\u0027t affect inline assembler in general? or is it just because you don\u0027t want coverage in code that\u0027s called as part of the coverage implementation? or code that\u0027s called too early?\n\nwhichever, add the \"why\" to the checkin comment rather than just the \"what\" of \"avoids coverage instrumentation\".",
       "revId": "332065d57e734b65f56474d136d22d767e36cbcd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a27ab14_81a5496a",
+        "filename": "libc/arch-x86/bionic/__libc_init_sysinfo.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1058860
+      },
+      "writtenOn": "2021-02-18T17:40:50Z",
+      "side": 0,
+      "message": "The issue is that Clang adds coverage instrumentation for this function despite this being marked __naked__.  I\u0027ve added this to the commit message.",
+      "parentUuid": "721efdd5_91a6eba6",
+      "revId": "332065d57e734b65f56474d136d22d767e36cbcd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
