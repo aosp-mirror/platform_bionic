@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32ac4560_0ffe8e80",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-18T16:54:11Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7db20db2_0a6352f7",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-18T16:54:11Z",
+      "side": 1,
+      "message": "why? this is only referenced from C++ files, and none of the rest is extern \"C\"...",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
