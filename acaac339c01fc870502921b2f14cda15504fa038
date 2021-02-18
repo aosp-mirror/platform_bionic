@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4665af32_a5cc7180",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-18T13:46:30Z",
+      "side": 1,
+      "message": "Argh, tried to rebase and lost the CR+2 votes, not sure why, since there was no change to the files. PTAL again!",
+      "revId": "acaac339c01fc870502921b2f14cda15504fa038",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
