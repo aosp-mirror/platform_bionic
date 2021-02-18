@@ -34,6 +34,24 @@
       "parentUuid": "8cf030b6_b276636f",
       "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be77ae1f_26eda144",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-18T22:42:25Z",
+      "side": 1,
+      "message": "...and that\u0027s the same for public bazel too, judging by https://docs.bazel.build/versions/master/be/shell.html\n\n(i still think that that documentation could be *greatly* improved --- \"We recommend that you name your sh_binary() rules after the name of the script minus the extension (e.g. .sh); do not give the rule and the file the same name.\" has a non-obvious consequence. it also seems backwards. the rule is really \"you\u0027ll need to name your checked in copy of the script with a `.sh` suffix and rely on sh_binary to rename it to the name of the module (which can\u0027t be the same because [link to explanation of leaky abstraction that prevents the names from matching])\". it\u0027s taken me until now to understand, and i\u0027m still not 100% certain [otherwise wouldn\u0027t it have been said more clearly already?].)\n\nanyway, assuming i\u0027ve understood finally, i think your original CL (where we rename the checked-in file to `ldd.sh` and leave the module name as `ldd`) makes the most sense, if that\u0027s the default idiom that everyone will be using eventually (and, more importantly -- otherwise i\u0027d just say \"can\u0027t we make this behave like it used to\" -- will expect if they\u0027ve used blaze/bazel elsewhere).",
+      "parentUuid": "8cc9f998_d514fe59",
+      "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
