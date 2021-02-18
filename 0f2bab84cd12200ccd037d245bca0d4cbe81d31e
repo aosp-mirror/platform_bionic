@@ -69,6 +69,24 @@
       "parentUuid": "7db20db2_0a6352f7",
       "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19539ea2_05bed4ca",
+        "filename": "libc/private/bionic_globals.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-18T17:43:42Z",
+      "side": 1,
+      "message": "ah, duh. yeah, that sounds worse. just write this as a single `extern \"C\"` rather than as a block though? (and maybe add the code comment \"defined in assembler\"? unless you think this will be fixed in clang soon and we\u0027ll just revert this on the next update?)",
+      "parentUuid": "778f1d53_4630a076",
+      "revId": "0f2bab84cd12200ccd037d245bca0d4cbe81d31e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
