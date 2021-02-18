@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cf030b6_b276636f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-18T20:12:06Z",
+      "side": 1,
+      "message": "this is still unfortunate because tools/ is usually a directory of stuff that runs on the host.\n\nbefore we make up a new precedent...\n\ni tried to look for precedent for dealing with situations like this in google3 but couldn\u0027t find any? does google3 require that shell scripts are all named `foo.sh` in the resulting blaze output? the examples i found were either unclear or their only caller was a genrule so that they were referred to as //some/path:foo anyway.",
+      "revId": "93900da30caa0a082347eb84520bf0a7b2ee16df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
