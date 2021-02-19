@@ -391,7 +391,7 @@ cc_binary {
 
 sh_binary {
     name: "ldd",
-    src: "ldd",
+    src: "ldd.sh",
     bazel_module: { bp2build_available: true },
 }
 
