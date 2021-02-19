@@ -1,5 +1,25 @@
 // Define the common source files for all the libc instances
 // =========================================================
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
+license {
+    name: "bionic_libc_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-ISC",
+        "SPDX-license-identifier-MIT",
+        "legacy_notice",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 libc_common_src_files = [
     "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
