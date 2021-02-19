@@ -239,11 +239,15 @@ struct tcp_diag_md5sig {
   __be32 tcpm_addr[4];
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
+#define TCP_RECEIVE_ZEROCOPY_FLAG_TLB_CLEAN_HINT 0x1
 struct tcp_zerocopy_receive {
   __u64 address;
   __u32 length;
   __u32 recv_skip_hint;
   __u32 inq;
   __s32 err;
+  __u64 copybuf_address;
+  __s32 copybuf_len;
+  __u32 flags;
 };
 #endif
