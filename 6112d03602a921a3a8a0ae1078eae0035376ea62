@@ -22,6 +22,30 @@
       },
       "revId": "6112d03602a921a3a8a0ae1078eae0035376ea62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30ef29eb_da48f6eb",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-19T23:52:03Z",
+      "side": 1,
+      "message": "my point was more \"they\u0027re all defined in a file we don\u0027t control\". except for this one. so documenting this least important one but _not_ the real ones seems like worse than just ignoring the problem for now. but something for the to-do list for any non-doxygen system...",
+      "parentUuid": "89cb03f0_93b8f4f8",
+      "range": {
+        "startLine": 44,
+        "startChar": 22,
+        "endLine": 45,
+        "endChar": 11
+      },
+      "revId": "6112d03602a921a3a8a0ae1078eae0035376ea62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
