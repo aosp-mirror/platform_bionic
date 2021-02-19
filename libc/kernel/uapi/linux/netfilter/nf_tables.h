@@ -176,6 +176,7 @@ enum nft_set_flags {
   NFT_SET_EVAL = 0x20,
   NFT_SET_OBJECT = 0x40,
   NFT_SET_CONCAT = 0x80,
+  NFT_SET_EXPR = 0x100,
 };
 enum nft_set_policies {
   NFT_SET_POL_PERFORMANCE,
@@ -213,6 +214,7 @@ enum nft_set_attributes {
   NFTA_SET_OBJ_TYPE,
   NFTA_SET_HANDLE,
   NFTA_SET_EXPR,
+  NFTA_SET_EXPRESSIONS,
   __NFTA_SET_MAX
 };
 #define NFTA_SET_MAX (__NFTA_SET_MAX - 1)
@@ -231,6 +233,7 @@ enum nft_set_elem_attributes {
   NFTA_SET_ELEM_PAD,
   NFTA_SET_ELEM_OBJREF,
   NFTA_SET_ELEM_KEY_END,
+  NFTA_SET_ELEM_EXPRESSIONS,
   __NFTA_SET_ELEM_MAX
 };
 #define NFTA_SET_ELEM_MAX (__NFTA_SET_ELEM_MAX - 1)
@@ -358,6 +361,7 @@ enum nft_dynset_ops {
 };
 enum nft_dynset_flags {
   NFT_DYNSET_F_INV = (1 << 0),
+  NFT_DYNSET_F_EXPR = (1 << 1),
 };
 enum nft_dynset_attributes {
   NFTA_DYNSET_UNSPEC,
@@ -370,6 +374,7 @@ enum nft_dynset_attributes {
   NFTA_DYNSET_EXPR,
   NFTA_DYNSET_PAD,
   NFTA_DYNSET_FLAGS,
+  NFTA_DYNSET_EXPRESSIONS,
   __NFTA_DYNSET_MAX,
 };
 #define NFTA_DYNSET_MAX (__NFTA_DYNSET_MAX - 1)
