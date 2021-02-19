@@ -90,7 +90,7 @@ struct v4l2_subdev_capability {
   __u32 capabilities;
   __u32 reserved[14];
 };
-#define V4L2_SUBDEV_CAP_RO_SUBDEV BIT(0)
+#define V4L2_SUBDEV_CAP_RO_SUBDEV 0x00000001
 #define v4l2_subdev_edid v4l2_edid
 #define VIDIOC_SUBDEV_QUERYCAP _IOR('V', 0, struct v4l2_subdev_capability)
 #define VIDIOC_SUBDEV_G_FMT _IOWR('V', 4, struct v4l2_subdev_format)
