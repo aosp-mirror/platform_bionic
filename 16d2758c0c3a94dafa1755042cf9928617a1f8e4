@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "197e4a3e_583e0b1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-19T23:42:15Z",
+      "side": 1,
+      "message": "so we don\u0027t clobber the stuff that\u0027s about to be added in https://android-review.googlesource.com/c/platform/bionic/+/1596926",
+      "revId": "16d2758c0c3a94dafa1755042cf9928617a1f8e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
