@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc99bc13_3f97dd86",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2021-02-19T01:44:36Z",
+      "side": 1,
+      "message": "mostly copy-paste from cros; if stdin was a terminal, our `gets` tests would hang indefinitely if FORTIFY wasn\u0027t functioning properly",
+      "range": {
+        "startLine": 11,
+        "startChar": 21,
+        "endLine": 12,
+        "endChar": 20
+      },
+      "revId": "61d070650780e13f2e9326d1b8f40f6968ea5de3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84f26b91_009d36a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2021-02-19T01:44:36Z",
+      "side": 1,
+      "message": "sgtm :)",
+      "range": {
+        "startLine": 12,
+        "startChar": 49,
+        "endLine": 13,
+        "endChar": 15
+      },
+      "revId": "61d070650780e13f2e9326d1b8f40f6968ea5de3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3ce695c_d0641f9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2021-02-19T01:44:36Z",
+      "side": 1,
+      "message": "if the tests pass, lgtm.\n\nthanks!",
+      "revId": "61d070650780e13f2e9326d1b8f40f6968ea5de3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
