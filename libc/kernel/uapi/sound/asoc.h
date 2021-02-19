@@ -113,10 +113,14 @@
 #define SND_SOC_TPLG_LNK_FLGBIT_SYMMETRIC_CHANNELS (1 << 1)
 #define SND_SOC_TPLG_LNK_FLGBIT_SYMMETRIC_SAMPLEBITS (1 << 2)
 #define SND_SOC_TPLG_LNK_FLGBIT_VOICE_WAKEUP (1 << 3)
-#define SND_SOC_TPLG_BCLK_CM 0
-#define SND_SOC_TPLG_BCLK_CS 1
-#define SND_SOC_TPLG_FSYNC_CM 0
-#define SND_SOC_TPLG_FSYNC_CS 1
+#define SND_SOC_TPLG_BCLK_CP 0
+#define SND_SOC_TPLG_BCLK_CC 1
+#define SND_SOC_TPLG_BCLK_CM SND_SOC_TPLG_BCLK_CP
+#define SND_SOC_TPLG_BCLK_CS SND_SOC_TPLG_BCLK_CC
+#define SND_SOC_TPLG_FSYNC_CP 0
+#define SND_SOC_TPLG_FSYNC_CC 1
+#define SND_SOC_TPLG_FSYNC_CM SND_SOC_TPLG_FSYNC_CP
+#define SND_SOC_TPLG_FSYNC_CS SND_SOC_TPLG_FSYNC_CC
 struct snd_soc_tplg_hdr {
   __le32 magic;
   __le32 abi;
@@ -222,8 +226,8 @@ struct snd_soc_tplg_hw_config {
   __u8 clock_gated;
   __u8 invert_bclk;
   __u8 invert_fsync;
-  __u8 bclk_master;
-  __u8 fsync_master;
+  __u8 bclk_provider;
+  __u8 fsync_provider;
   __u8 mclk_direction;
   __le16 reserved;
   __le32 mclk_rate;
