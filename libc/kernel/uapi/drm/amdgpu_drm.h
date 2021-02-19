@@ -437,6 +437,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_DMCU 0x12
 #define AMDGPU_INFO_FW_TA 0x13
 #define AMDGPU_INFO_FW_DMCUB 0x14
+#define AMDGPU_INFO_FW_TOC 0x15
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -558,6 +559,7 @@ struct drm_amdgpu_info_firmware {
 #define AMDGPU_VRAM_TYPE_DDR3 7
 #define AMDGPU_VRAM_TYPE_DDR4 8
 #define AMDGPU_VRAM_TYPE_GDDR6 9
+#define AMDGPU_VRAM_TYPE_DDR5 10
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -643,6 +645,7 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_AI 141
 #define AMDGPU_FAMILY_RV 142
 #define AMDGPU_FAMILY_NV 143
+#define AMDGPU_FAMILY_VGH 144
 #ifdef __cplusplus
 }
 #endif
