@@ -32,10 +32,6 @@
 // This file is compiled without stack protection, because it runs before TLS
 // has been set up.
 
-__LIBC_HIDDEN__ __attribute__((__naked__)) void __libc_int0x80() {
-  __asm__ volatile("int $0x80; ret");
-}
-
 __LIBC_HIDDEN__ void __libc_init_sysinfo() {
   bool unused;
   __libc_sysinfo = reinterpret_cast<void*>(__bionic_getauxval(AT_SYSINFO, &unused));
