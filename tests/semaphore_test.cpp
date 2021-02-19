@@ -23,8 +23,11 @@
 #include <time.h>
 #include <unistd.h>
 
-#include "private/bionic_constants.h"
+#include "BionicDeathTest.h"
 #include "SignalUtils.h"
+#include "private/bionic_constants.h"
+
+using semaphore_DeathTest = BionicDeathTest;
 
 TEST(semaphore, sem_init) {
   sem_t s;
@@ -158,7 +161,7 @@ TEST(semaphore, sem_clockwait) {
 #endif  // __BIONIC__
 }
 
-TEST(semaphore_DeathTest, sem_timedwait_null_timeout) {
+TEST_F(semaphore_DeathTest, sem_timedwait_null_timeout) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));
 
