@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9ad01f0_7bf0cc70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-19T23:41:38Z",
+      "side": 1,
+      "message": "looks close enough. i\u0027ll do some further cleanup once this is in, and https://android-review.googlesource.com/c/platform/bionic/+/1596941 updates the script that generates the generated file you\u0027ve edited in this change so the next run won\u0027t clobber the license info :-)",
+      "revId": "aa7d835fdd739881a907ac5c8a89a5dae01f6089",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
