@@ -100,7 +100,7 @@ struct cache_sb_disk {
     __le16 keys;
   };
   __le64 d[SB_JOURNAL_BUCKETS];
-  __le16 bucket_size_hi;
+  __le16 obso_bucket_size_hi;
 };
 struct cache_sb {
   __u64 offset;
