@@ -18,7 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI__LINUX_NETLINK_H
 #define _UAPI__LINUX_NETLINK_H
-#include <linux/kernel.h>
+#include <linux/const.h>
 #include <linux/socket.h>
 #include <linux/types.h>
 #define NETLINK_ROUTE 0
