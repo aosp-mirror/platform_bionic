@@ -2079,6 +2079,7 @@ cc_object {
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
+
     bazel_module: { bp2build_available: true },
 }
 
@@ -2098,15 +2099,22 @@ cc_object {
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_static1",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
     srcs: ["arch-common/bionic/crtbegin.c"],
     defaults: ["crt_defaults"],
     // When using libc.a, we're using the latest library regardless of target API level.
     min_sdk_version: "current",
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2123,9 +2131,14 @@ cc_object {
 
 cc_object {
     name: "crtbegin_dynamic1",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
     srcs: ["arch-common/bionic/crtbegin.c"],
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2154,6 +2167,8 @@ cc_object {
     srcs: ["arch-common/bionic/crtend.S"],
 
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
