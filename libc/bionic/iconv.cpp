@@ -356,6 +356,10 @@ size_t iconv(iconv_t __converter,
     errno = EBADF;
     return -1;
   }
+
+  // Since none of our encodings are stateful, state flushing is a no-op.
+  if (!__src_buf) return 0;
+
   return __converter->Convert(__src_buf, __src_bytes_left, __dst_buf, __dst_bytes_left);
 }
 

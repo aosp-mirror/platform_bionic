@@ -197,6 +197,8 @@ struct kvm_hyperv_exit {
 #define KVM_EXIT_ARM_NISV 28
 #define KVM_EXIT_X86_RDMSR 29
 #define KVM_EXIT_X86_WRMSR 30
+#define KVM_EXIT_DIRTY_RING_FULL 31
+#define KVM_EXIT_AP_RESET_HOLD 32
 #define KVM_INTERNAL_ERROR_EMULATION 1
 #define KVM_INTERNAL_ERROR_SIMUL_EX 2
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
@@ -433,6 +435,7 @@ struct kvm_vapic_addr {
 #define KVM_MP_STATE_CHECK_STOP 6
 #define KVM_MP_STATE_OPERATING 7
 #define KVM_MP_STATE_LOAD 8
+#define KVM_MP_STATE_AP_RESET_HOLD 9
 struct kvm_mp_state {
   __u32 mp_state;
 };
@@ -831,6 +834,8 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_X86_USER_SPACE_MSR 188
 #define KVM_CAP_X86_MSR_FILTER 189
 #define KVM_CAP_ENFORCE_PV_FEATURE_CPUID 190
+#define KVM_CAP_SYS_HYPERV_CPUID 191
+#define KVM_CAP_DIRTY_LOG_RING 192
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1183,6 +1188,7 @@ struct kvm_pv_cmd {
 };
 #define KVM_S390_PV_COMMAND _IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
 #define KVM_X86_SET_MSR_FILTER _IOW(KVMIO, 0xc6, struct kvm_msr_filter)
+#define KVM_RESET_DIRTY_RINGS _IO(KVMIO, 0xc7)
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,
@@ -1303,4 +1309,15 @@ struct kvm_hyperv_eventfd {
 #define KVM_HYPERV_EVENTFD_DEASSIGN (1 << 0)
 #define KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (1 << 0)
 #define KVM_DIRTY_LOG_INITIALLY_SET (1 << 1)
+#ifndef KVM_DIRTY_LOG_PAGE_OFFSET
+#define KVM_DIRTY_LOG_PAGE_OFFSET 0
+#endif
+#define KVM_DIRTY_GFN_F_DIRTY BIT(0)
+#define KVM_DIRTY_GFN_F_RESET BIT(1)
+#define KVM_DIRTY_GFN_F_MASK 0x3
+struct kvm_dirty_gfn {
+  __u32 flags;
+  __u32 slot;
+  __u64 offset;
+};
 #endif
