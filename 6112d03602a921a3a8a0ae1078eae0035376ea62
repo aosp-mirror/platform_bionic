@@ -46,6 +46,30 @@
       },
       "revId": "6112d03602a921a3a8a0ae1078eae0035376ea62",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d13fe24_a2e9f2c8",
+        "filename": "libc/include/sched.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-02-20T00:15:43Z",
+      "side": 1,
+      "message": "Right, @def is non-local. You can do things like:\n\n    /**\n     * @def SCHED_FIFO\n     * Does FIFO scheduling.\n     */\n\nin this file and it\u0027ll document SCHED_FIFO even though it\u0027s in linux/sched.h. I have no idea if Android Studio or vscode are actually smart enough to follow that, but doxygen itself at least is 😊",
+      "parentUuid": "30ef29eb_da48f6eb",
+      "range": {
+        "startLine": 44,
+        "startChar": 22,
+        "endLine": 45,
+        "endChar": 11
+      },
+      "revId": "6112d03602a921a3a8a0ae1078eae0035376ea62",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
