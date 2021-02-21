@@ -14,6 +14,22 @@
 // limitations under the License.
 //
 
+package {
+    default_applicable_licenses: ["bionic_tests_license"],
+}
+
+license {
+    name: "bionic_tests_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 cc_defaults {
     name: "bionic_tests_defaults",
     host_supported: true,
