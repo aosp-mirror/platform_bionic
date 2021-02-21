@@ -62,7 +62,6 @@ std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
 
   android_fdtrack_hook_t previous = nullptr;
   android_fdtrack_hook_t hook = [](android_fdtrack_event* event) {
-    raise(BIONIC_SIGNAL_DEBUGGER);
     events.push_back(*event);
   };
 
