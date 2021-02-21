@@ -1,6 +1,24 @@
 //
 // libm.so and libm.a for target.
 //
+package {
+    default_applicable_licenses: ["bionic_libm_license"],
+}
+
+license {
+    name: "bionic_libm_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-MIT",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 cc_library {
     name: "libm",
     defaults: ["linux_bionic_supported"],
