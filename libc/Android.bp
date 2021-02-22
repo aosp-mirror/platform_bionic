@@ -2345,6 +2345,7 @@ filegroup {
         "kernel/uapi/linux/input.h",
         "kernel/uapi/linux/input-event-codes.h",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // Generate a syscall name / number mapping. These objects are text files
@@ -2406,6 +2407,7 @@ cc_object {
 filegroup {
     name: "all_kernel_uapi_headers",
     srcs: ["kernel/uapi/**/*.h"],
+    bazel_module: { bp2build_available: true },
 }
 
 
