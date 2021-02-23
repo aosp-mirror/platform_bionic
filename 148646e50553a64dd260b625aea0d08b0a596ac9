@@ -16,6 +16,206 @@
       "message": "blueline\u0027s kernel is missing pidfd_getfd and P_PIDFD, so hopefully presubmit will run this on a sufficiently new device.\n\nFor which headers to put the declaration: pidfd_send_signal obviously belongs in \u003csignal.h\u003e; the other two are less clear for me. pidfd_getfd is basically a remote dup, so \u003cfcntl.h\u003e makes sense for that, and open\u0027s there as well, so I just put pidfd_open next to pidfd_getfd.",
       "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "520724f6_b4426da5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "i was assuming we\u0027d add a \u003csys/pidfd.h\u003e instead? (that\u0027s what happened with \u003csys/random.h\u003e for getrandom(2) for example.)\n\nthat also avoids the \"should there be something like __USE_GNU around these?\" questions by virtue of being a non-POSIX header, so of course everything\u0027s non-POSIX. (this case being especially awkward because these aren\u0027t in glibc [yet] either.)",
+      "parentUuid": "bf278e92_4dc89d4f",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed3a16d0_e32a1f3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "otherwise lgtm",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b8cce04_bad42d7a",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 1
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "you should be able to remove these from the seccomp allowlists now.",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b97dda72_9b4fa6db",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "Available since API level 31.",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2088b41f_babbcc07",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "Available since API level 31.",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be3e9118_299b1fbb",
+        "filename": "libc/include/fcntl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "__pid, __target_fd, __flags",
+      "range": {
+        "startLine": 158,
+        "startChar": 20,
+        "endLine": 158,
+        "endChar": 25
+      },
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3819c58f_f1a3659a",
+        "filename": "libc/include/signal.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "no doc comment for this one?\n\nalso __pid_fd, __signal, __info, __flags",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebc51a28_f4f5d83e",
+        "filename": "libc/libc.map.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 1561,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "|sort",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb13f769_d3478950",
+        "filename": "tests/fdtrack_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "ws",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09a4f5f9_05f79063",
+        "filename": "tests/pidfd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "use the new recommended \"using\" style (and stick this at the top of the file for other users)",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "627c567a_88588a2c",
+        "filename": "tests/pidfd_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-23T17:49:44Z",
+      "side": 1,
+      "message": "ASSERT_EXIT\n\n(ikwym, but i think this is clearer for anyone who doesn\u0027t)",
+      "range": {
+        "startLine": 98,
+        "startChar": 51,
+        "endLine": 98,
+        "endChar": 62
+      },
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
