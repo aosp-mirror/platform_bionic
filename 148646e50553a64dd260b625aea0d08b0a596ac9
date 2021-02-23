@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf278e92_4dc89d4f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2021-02-23T04:02:52Z",
+      "side": 1,
+      "message": "blueline\u0027s kernel is missing pidfd_getfd and P_PIDFD, so hopefully presubmit will run this on a sufficiently new device.\n\nFor which headers to put the declaration: pidfd_send_signal obviously belongs in \u003csignal.h\u003e; the other two are less clear for me. pidfd_getfd is basically a remote dup, so \u003cfcntl.h\u003e makes sense for that, and open\u0027s there as well, so I just put pidfd_open next to pidfd_getfd.",
+      "revId": "148646e50553a64dd260b625aea0d08b0a596ac9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
