@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a116dc4_878443f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-02-23T23:26:03Z",
+      "side": 1,
+      "message": "The following sequence of commands should work, so no need to check in the BUILD.bazel file:\n\nbuild/bazel/scripts/milestone-2/demo.sh generate\nbuild/bazel/scripts/milestone-2/demo.sh sync\n\n\u003cmixed builds commands\u003e\n\nbuild/bazel/scripts/milestone-2/demo.sh cleanup",
+      "parentUuid": "e04fe3ba_f24ce025",
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b716fc52_1553fc54",
