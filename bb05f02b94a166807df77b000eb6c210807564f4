@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e04fe3ba_f24ce025",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-23T21:09:58Z",
+      "side": 1,
+      "message": "Oof. You\u0027re right, because bp2build is not running as part of these builds. \nWe need to copy over and check in all generated targets (and their dependencies) in order to keep this CI green.\n\nThanks for catching this :)",
+      "parentUuid": "8036d594_ed9ec2fa",
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b716fc52_1553fc54",
@@ -41,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fefe9109_f12b7357",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1329,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-23T21:09:58Z",
+      "side": 1,
+      "message": "These are absolutely necessary to work with mixed builds for now, as mixed builds only currently looks to bazel_module.label \n\nI believe b/179203766 tracks this.",
+      "parentUuid": "b716fc52_1553fc54",
+      "range": {
+        "startLine": 1329,
+        "startChar": 0,
+        "endLine": 1329,
+        "endChar": 48
+      },
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "42369de4_e3ca5387",
@@ -54,6 +96,30 @@
       "writtenOn": "2021-02-23T20:42:20Z",
       "side": 1,
       "message": "nit: spaces instead of tabs --  bpfmt should fix.",
+      "range": {
+        "startLine": 2117,
+        "startChar": 0,
+        "endLine": 2117,
+        "endChar": 1
+      },
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11e998f6_3b54e375",
+        "filename": "libc/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2117,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-23T21:09:58Z",
+      "side": 1,
+      "message": "Actually, I think it might be best to revert this line, given that this would have us remain blocked on the cc_object changes.",
+      "parentUuid": "42369de4_e3ca5387",
       "range": {
         "startLine": 2117,
         "startChar": 0,
