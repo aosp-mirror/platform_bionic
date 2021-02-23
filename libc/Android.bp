@@ -1113,6 +1113,7 @@ cc_library_static {
         "bionic/open.cpp",
         "bionic/pathconf.cpp",
         "bionic/pause.cpp",
+        "bionic/pidfd.cpp",
         "bionic/pipe.cpp",
         "bionic/poll.cpp",
         "bionic/posix_fadvise.cpp",
