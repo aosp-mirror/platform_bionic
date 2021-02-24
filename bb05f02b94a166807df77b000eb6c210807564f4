@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "206bbc8c_03dc0457",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-24T00:30:32Z",
+      "side": 1,
+      "message": "Liz: Jin and I talked about this offline. WDYT about us changing our CI to incorporate these commands?\nThe ramifications are:\n\n- We won\u0027t need to check in / maintain these targets in BUILD files\n- Once we have a single location (that roboleaf team owns) containing bp2build_available module names, we won\u0027t need to distribute reviews across repositories\n- We\u0027ll be unable to attach CI to mixed builds for handcrafted targets without devising a further solution.",
+      "parentUuid": "7a116dc4_878443f9",
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b716fc52_1553fc54",
         "filename": "libc/Android.bp",
         "patchSetId": 3
