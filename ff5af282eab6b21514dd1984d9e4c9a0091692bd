@@ -70,6 +70,30 @@
       },
       "revId": "ff5af282eab6b21514dd1984d9e4c9a0091692bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28137842_d8ac98cc",
+        "filename": "tests/increase_timeout.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-02-24T21:57:20Z",
+      "side": 1,
+      "message": "\u003e the hwasan part already has a #define doesn\u0027t it?\n\nNegative - https://cs.android.com/android/platform/superproject/+/master:art/test/common/gtest_main.cc;l\u003d29\n\n\n\u003e will this do the right thing for folks trying to run S on actual MTE hardware?\n\nI mean I\u0027m hoping that MTE HW won\u0027t decrease performance enough to hit the timeout threshold... This should be an emulator-only change.",
+      "parentUuid": "31b89c1b_9fff020e",
+      "range": {
+        "startLine": 19,
+        "startChar": 26,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "ff5af282eab6b21514dd1984d9e4c9a0091692bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
