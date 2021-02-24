@@ -14,10 +14,25 @@
 // limitations under the License.
 //
 
+package {
+    default_applicable_licenses: ["bionic_tests_license"],
+}
+
+license {
+    name: "bionic_tests_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 cc_defaults {
     name: "bionic_tests_defaults",
     host_supported: true,
-    cpp_std: "experimental",
     target: {
         darwin: {
             enabled: false,
@@ -1017,6 +1032,10 @@ cc_test {
 
     // For now, these tests run forever, so do not use the isolation framework.
     isolated: false,
+    // Running forever, do not consider unit test.
+    test_options: {
+        unit_test: false,
+    },
 
     srcs: [
         "malloc_stress_test.cpp",

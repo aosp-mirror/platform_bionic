@@ -80,6 +80,7 @@
 #define ETH_P_1588 0x88F7
 #define ETH_P_NCSI 0x88F8
 #define ETH_P_PRP 0x88FB
+#define ETH_P_CFM 0x8902
 #define ETH_P_FCOE 0x8906
 #define ETH_P_IBOE 0x8915
 #define ETH_P_TDLS 0x890D

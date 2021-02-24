@@ -1,1 +1,5 @@
+package {
+    default_applicable_licenses: ["bionic_tests_license"],
+}
+
 subdirs = ["*"]
