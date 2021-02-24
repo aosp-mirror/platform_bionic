@@ -46,6 +46,30 @@
       },
       "revId": "ff5af282eab6b21514dd1984d9e4c9a0091692bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31b89c1b_9fff020e",
+        "filename": "tests/increase_timeout.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-24T21:50:32Z",
+      "side": 1,
+      "message": "the hwasan part already has a #define doesn\u0027t it? and since right now MTE is qemu-only... oh, you\u0027re thinking ahead to \"will this do the right thing for folks trying to run S on actual MTE hardware?\". okay, iswym.",
+      "parentUuid": "d23b6094_28d246f5",
+      "range": {
+        "startLine": 19,
+        "startChar": 26,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "ff5af282eab6b21514dd1984d9e4c9a0091692bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
