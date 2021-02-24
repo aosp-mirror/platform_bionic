@@ -86,6 +86,7 @@ static void arc4random_fork_handler() {
   _thread_arc4_lock();
 }
 
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_init_scudo() {
   // Heap tagging level *must* be set before interacting with Scudo, otherwise
   // the primary will be mapped with PROT_MTE even if MTE is is not enabled in
