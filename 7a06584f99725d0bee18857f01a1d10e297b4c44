@@ -16,6 +16,29 @@
       "message": "(just a couple of nits, so i fixed them directly.)",
       "revId": "7a06584f99725d0bee18857f01a1d10e297b4c44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3454d6a3_2fa77bfc",
+        "filename": "tests/fdtrack_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-02-24T19:47:50Z",
+      "side": 1,
+      "message": "Doing it this way will break the cts list of tests since you always need an empty test. You might need to ifdef it out below if it\u0027s not completely nop\u0027d out.\n\nWe really should come up with a way to fix the cts list issue at some point.",
+      "range": {
+        "startLine": 214,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 23
+      },
+      "revId": "7a06584f99725d0bee18857f01a1d10e297b4c44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
