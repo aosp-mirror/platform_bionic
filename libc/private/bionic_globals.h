@@ -123,7 +123,7 @@ __LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals);
 
 #if defined(__i386__)
 __LIBC_HIDDEN__ extern void* __libc_sysinfo;
-__LIBC_HIDDEN__ void __libc_int0x80();
+extern "C" __LIBC_HIDDEN__ void __libc_int0x80();
 __LIBC_HIDDEN__ void __libc_init_sysinfo();
 #endif
 
