@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "546f9c80_108bae65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-02-24T16:04:46Z",
+      "side": 1,
+      "message": "(just a couple of nits, so i fixed them directly.)",
+      "revId": "7a06584f99725d0bee18857f01a1d10e297b4c44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
