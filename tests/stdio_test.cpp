@@ -56,8 +56,8 @@
 
 using namespace std::string_literals;
 
-class stdio_DeathTest : public BionicDeathTest {};
-class stdio_nofortify_DeathTest : public BionicDeathTest {};
+using stdio_DeathTest = BionicDeathTest;
+using stdio_nofortify_DeathTest = BionicDeathTest;
 
 static void SetFileTo(const char* path, const char* content) {
   FILE* fp;
@@ -361,7 +361,7 @@ TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
   EXPECT_STREQ("<hi>", buf);
 }
 
-TEST(STDIO_TEST, snprintf_n) {
+TEST_F(STDIO_DEATHTEST, snprintf_n) {
 #if defined(__BIONIC__)
   // http://b/14492135 and http://b/31832608.
   char buf[32];
@@ -2425,7 +2425,7 @@ TEST(STDIO_TEST, remove) {
   ASSERT_EQ(ENOENT, errno);
 }
 
-TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
+TEST_F(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
   char buf[16];
   ASSERT_EXIT(snprintf(buf, atol("-1"), "hello"),
               testing::KilledBySignal(SIGABRT),
@@ -2437,7 +2437,7 @@ TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
               );
 }
 
-TEST(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
+TEST_F(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
   std::string buf = "world";
   ASSERT_EXIT(snprintf(&buf[0], atol("-1"), "hello"),
               testing::KilledBySignal(SIGABRT),

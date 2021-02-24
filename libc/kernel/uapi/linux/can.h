@@ -31,15 +31,19 @@ typedef __u32 canid_t;
 #define CAN_EFF_ID_BITS 29
 typedef __u32 can_err_mask_t;
 #define CAN_MAX_DLC 8
+#define CAN_MAX_RAW_DLC 15
 #define CAN_MAX_DLEN 8
 #define CANFD_MAX_DLC 15
 #define CANFD_MAX_DLEN 64
 struct can_frame {
   canid_t can_id;
-  __u8 can_dlc;
+  union {
+    __u8 len;
+    __u8 can_dlc;
+  };
   __u8 __pad;
   __u8 __res0;
-  __u8 __res1;
+  __u8 len8_dlc;
   __u8 data[CAN_MAX_DLEN] __attribute__((aligned(8)));
 };
 #define CANFD_BRS 0x01

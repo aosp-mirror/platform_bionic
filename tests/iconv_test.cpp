@@ -451,5 +451,13 @@ TEST(iconv, iconv_initial_shift_state) {
   EXPECT_EQ(0, errno);
   EXPECT_EQ(sizeof(out_buf), out_bytes);
 
+  // Is a null pointer and so is in_bytes. This isn't specified by POSIX, but
+  // glibc and macOS both allow that, where Android historically didn't.
+  // https://issuetracker.google.com/180598400
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(0), iconv(c, nullptr, nullptr, &out, &out_bytes));
+  EXPECT_EQ(0, errno);
+  EXPECT_EQ(sizeof(out_buf), out_bytes);
+
   EXPECT_EQ(0, iconv_close(c));
 }
