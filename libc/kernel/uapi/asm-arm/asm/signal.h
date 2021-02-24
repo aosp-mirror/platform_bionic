@@ -59,17 +59,8 @@ typedef unsigned long sigset_t;
 #define __SIGRTMIN 32
 #define __SIGRTMAX _KERNEL__NSIG
 #define SIGSWI 32
-#define SA_NOCLDSTOP 0x00000001
-#define SA_NOCLDWAIT 0x00000002
-#define SA_SIGINFO 0x00000004
 #define SA_THIRTYTWO 0x02000000
 #define SA_RESTORER 0x04000000
-#define SA_ONSTACK 0x08000000
-#define SA_RESTART 0x10000000
-#define SA_NODEFER 0x40000000
-#define SA_RESETHAND 0x80000000
-#define SA_NOMASK SA_NODEFER
-#define SA_ONESHOT SA_RESETHAND
 #define MINSIGSTKSZ 2048
 #define SIGSTKSZ 8192
 #include <asm-generic/signal-defs.h>

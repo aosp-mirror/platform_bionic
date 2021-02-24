@@ -19,7 +19,10 @@
 #include <setjmp.h>
 #include <stdlib.h>
 
+#include "BionicDeathTest.h"
 #include "SignalUtils.h"
+
+using setjmp_DeathTest = BionicDeathTest;
 
 TEST(setjmp, setjmp_smoke) {
   int value;
@@ -226,7 +229,7 @@ TEST(setjmp, setjmp_fp_registers) {
 #define __JB_SIGFLAG 8
 #endif
 
-TEST(setjmp, setjmp_cookie) {
+TEST_F(setjmp_DeathTest, setjmp_cookie) {
   jmp_buf jb;
   int value = setjmp(jb);
   ASSERT_EQ(0, value);
@@ -241,7 +244,7 @@ TEST(setjmp, setjmp_cookie) {
   EXPECT_DEATH(longjmp(jb, 0), "");
 }
 
-TEST(setjmp, setjmp_cookie_checksum) {
+TEST_F(setjmp_DeathTest, setjmp_cookie_checksum) {
   jmp_buf jb;
   int value = setjmp(jb);
 
