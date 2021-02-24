@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e03c77a1_e93cd4d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-02-24T17:51:53Z",
+      "side": 1,
+      "message": "Seems reasonable to me.\n\nFor the third bulletpoint, I think we\u0027re on a path to resolve that and as far as I know, that won\u0027t block anything in the short term.\n\nI don\u0027t know how well we need to time the two cls -- or just accept that CI may be red for a little bit.",
+      "parentUuid": "206bbc8c_03dc0457",
+      "revId": "bb05f02b94a166807df77b000eb6c210807564f4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b716fc52_1553fc54",
         "filename": "libc/Android.bp",
         "patchSetId": 3
