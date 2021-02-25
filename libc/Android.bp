@@ -1288,7 +1288,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-arm" }
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-arm.S"
+    }
 }
 
 genrule {
@@ -1297,7 +1300,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-arm64" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-arm64.S"
+    },
 }
 
 genrule {
@@ -1306,7 +1312,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-x86" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-x86.S"
+    },
 }
 
 genrule {
@@ -1315,7 +1324,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-x86_64" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-x86_64.S"
+    },
 }
 
 cc_library_static {
@@ -2105,7 +2117,9 @@ cc_object {
 
     defaults: ["crt_so_defaults"],
 
-    bazel_module: { bp2build_available: true },
+    bazel_module: {
+        bp2build_available: true,
+    },
 }
 
 cc_object {
