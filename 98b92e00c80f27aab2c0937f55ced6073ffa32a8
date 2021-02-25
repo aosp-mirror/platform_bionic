@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09dd88c6_d1a0153e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-02-25T16:08:32Z",
+      "side": 1,
+      "message": "Hello, \n\nCan I get a reapproval, please? :)",
+      "revId": "98b92e00c80f27aab2c0937f55ced6073ffa32a8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
