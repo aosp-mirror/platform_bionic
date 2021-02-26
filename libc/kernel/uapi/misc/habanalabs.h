@@ -22,8 +22,8 @@
 #include <linux/ioctl.h>
 #define GOYA_KMD_SRAM_RESERVED_SIZE_FROM_START 0x8000
 #define GAUDI_DRIVER_SRAM_RESERVED_SIZE_FROM_START 0x80
-#define GAUDI_FIRST_AVAILABLE_W_S_SYNC_OBJECT 48
-#define GAUDI_FIRST_AVAILABLE_W_S_MONITOR 24
+#define GAUDI_FIRST_AVAILABLE_W_S_SYNC_OBJECT 144
+#define GAUDI_FIRST_AVAILABLE_W_S_MONITOR 72
 enum goya_queue_id {
   GOYA_QUEUE_ID_DMA_0 = 0,
   GOYA_QUEUE_ID_DMA_1 = 1,
@@ -211,7 +211,8 @@ enum gaudi_engine_id {
 enum hl_device_status {
   HL_DEVICE_STATUS_OPERATIONAL,
   HL_DEVICE_STATUS_IN_RESET,
-  HL_DEVICE_STATUS_MALFUNCTION
+  HL_DEVICE_STATUS_MALFUNCTION,
+  HL_DEVICE_STATUS_NEEDS_RESET
 };
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
@@ -228,6 +229,7 @@ enum hl_device_status {
 #define HL_INFO_CLK_THROTTLE_REASON 13
 #define HL_INFO_SYNC_MANAGER 14
 #define HL_INFO_TOTAL_ENERGY 15
+#define HL_INFO_PLL_FREQUENCY 16
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -292,20 +294,27 @@ struct hl_info_clk_throttle {
 struct hl_info_energy {
   __u64 total_energy_consumption;
 };
+#define HL_PLL_NUM_OUTPUTS 4
+struct hl_pll_frequency_info {
+  __u16 output[HL_PLL_NUM_OUTPUTS];
+};
 struct hl_info_sync_manager {
   __u32 first_available_sync_object;
   __u32 first_available_monitor;
 };
-struct hl_cs_counters {
-  __u64 out_of_mem_drop_cnt;
-  __u64 parsing_drop_cnt;
-  __u64 queue_full_drop_cnt;
-  __u64 device_in_reset_drop_cnt;
-  __u64 max_cs_in_flight_drop_cnt;
-};
 struct hl_info_cs_counters {
-  struct hl_cs_counters cs_counters;
-  struct hl_cs_counters ctx_cs_counters;
+  __u64 total_out_of_mem_drop_cnt;
+  __u64 ctx_out_of_mem_drop_cnt;
+  __u64 total_parsing_drop_cnt;
+  __u64 ctx_parsing_drop_cnt;
+  __u64 total_queue_full_drop_cnt;
+  __u64 ctx_queue_full_drop_cnt;
+  __u64 total_device_in_reset_drop_cnt;
+  __u64 ctx_device_in_reset_drop_cnt;
+  __u64 total_max_cs_in_flight_drop_cnt;
+  __u64 ctx_max_cs_in_flight_drop_cnt;
+  __u64 total_validation_drop_cnt;
+  __u64 ctx_validation_drop_cnt;
 };
 enum gaudi_dcores {
   HL_GAUDI_WS_DCORE,
@@ -321,11 +330,13 @@ struct hl_info_args {
     __u32 dcore_id;
     __u32 ctx_id;
     __u32 period_ms;
+    __u32 pll_index;
   };
   __u32 pad;
 };
 #define HL_CB_OP_CREATE 0
 #define HL_CB_OP_DESTROY 1
+#define HL_CB_OP_INFO 2
 #define HL_MAX_CB_SIZE (0x200000 - 32)
 #define HL_CB_FLAGS_MAP 0x1
 struct hl_cb_in {
@@ -336,12 +347,19 @@ struct hl_cb_in {
   __u32 flags;
 };
 struct hl_cb_out {
-  __u64 cb_handle;
+  union {
+    __u64 cb_handle;
+    struct {
+      __u32 usage_cnt;
+      __u32 pad;
+    };
+  };
 };
 union hl_cb_args {
   struct hl_cb_in in;
   struct hl_cb_out out;
 };
+#define HL_CS_CHUNK_FLAGS_USER_ALLOC_CB 0x1
 struct hl_cs_chunk {
   union {
     __u64 cb_handle;
@@ -353,11 +371,14 @@ struct hl_cs_chunk {
     __u32 num_signal_seq_arr;
   };
   __u32 cs_chunk_flags;
-  __u32 pad[11];
+  __u32 collective_engine_id;
+  __u32 pad[10];
 };
 #define HL_CS_FLAGS_FORCE_RESTORE 0x1
 #define HL_CS_FLAGS_SIGNAL 0x2
 #define HL_CS_FLAGS_WAIT 0x4
+#define HL_CS_FLAGS_COLLECTIVE_WAIT 0x8
+#define HL_CS_FLAGS_TIMESTAMP 0x20
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
@@ -390,9 +411,12 @@ struct hl_wait_cs_in {
 #define HL_WAIT_CS_STATUS_TIMEDOUT 2
 #define HL_WAIT_CS_STATUS_ABORTED 3
 #define HL_WAIT_CS_STATUS_INTERRUPTED 4
+#define HL_WAIT_CS_STATUS_FLAG_GONE 0x1
+#define HL_WAIT_CS_STATUS_FLAG_TIMESTAMP_VLD 0x2
 struct hl_wait_cs_out {
   __u32 status;
-  __u32 pad;
+  __u32 flags;
+  __s64 timestamp_nsec;
 };
 union hl_wait_cs_args {
   struct hl_wait_cs_in in;
