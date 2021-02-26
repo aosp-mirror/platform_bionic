@@ -162,6 +162,9 @@
 #if defined(__NR_epoll_pwait)
   #define SYS_epoll_pwait __NR_epoll_pwait
 #endif
+#if defined(__NR_epoll_pwait2)
+  #define SYS_epoll_pwait2 __NR_epoll_pwait2
+#endif
 #if defined(__NR_epoll_wait)
   #define SYS_epoll_wait __NR_epoll_wait
 #endif

@@ -45,6 +45,8 @@
 #include "SignalUtils.h"
 #include "utils.h"
 
+using pthread_DeathTest = BionicDeathTest;
+
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;
   ASSERT_EQ(0, pthread_key_create(&key, nullptr));
@@ -352,9 +354,6 @@ struct TestBug37410 {
 
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
-
-class pthread_DeathTest : public BionicDeathTest {};
-
 TEST_F(pthread_DeathTest, pthread_bug_37410) {
   // http://code.google.com/p/android/issues/detail?id=37410
   ASSERT_EXIT(TestBug37410::main(), ::testing::ExitedWithCode(0), "");
@@ -2468,7 +2467,7 @@ TEST(pthread, pthread_mutex_clocklock_invalid) {
 #endif  // __BIONIC__
 }
 
-TEST(pthread, pthread_mutex_using_destroyed_mutex) {
+TEST_F(pthread_DeathTest, pthread_mutex_using_destroyed_mutex) {
 #if defined(__BIONIC__)
   pthread_mutex_t m;
   ASSERT_EQ(0, pthread_mutex_init(&m, nullptr));

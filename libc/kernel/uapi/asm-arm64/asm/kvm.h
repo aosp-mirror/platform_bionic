@@ -97,8 +97,6 @@ struct kvm_debug_exit_arch {
 struct kvm_sync_regs {
   __u64 device_irq_level;
 };
-struct kvm_arch_memory_slot {
-};
 struct kvm_pmu_event_filter {
   __u16 base_event;
   __u16 nevents;
