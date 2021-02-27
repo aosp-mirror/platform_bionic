@@ -1,5 +1,25 @@
 // Define the common source files for all the libc instances
 // =========================================================
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
+license {
+    name: "bionic_libc_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-ISC",
+        "SPDX-license-identifier-MIT",
+        "legacy_notice",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 libc_common_src_files = [
     "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
@@ -170,6 +190,7 @@ cc_library_static {
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/bionic/__libc_int0x80.S",
                 "arch-x86/bionic/__set_tls.cpp",
             ],
         },
@@ -1267,7 +1288,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-arm" }
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-arm.S"
+    }
 }
 
 genrule {
@@ -1276,7 +1300,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-arm64" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-arm64.S"
+    },
 }
 
 genrule {
@@ -1285,7 +1312,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-x86" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-x86.S"
+    },
 }
 
 genrule {
@@ -1294,7 +1324,10 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
-    bazel_module: { label: "//bionic/libc:syscalls-x86_64" },
+    bazel_module: {
+        bp2build_available: true,
+        label: "//bionic/libc:syscalls-x86_64.S"
+    },
 }
 
 cc_library_static {
@@ -1823,6 +1856,7 @@ cc_library_headers {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1880,6 +1914,7 @@ cc_library_headers {
             export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1929,7 +1964,8 @@ cc_library_headers {
             header_libs: ["libc_headers_arch"],
             export_header_lib_headers: ["libc_headers_arch"],
         },
-    }
+    },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -2058,7 +2094,10 @@ cc_defaults {
 cc_object {
     name: "crtbrand",
     // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private", // crtbrand.S depends on private/bionic_asm_note.h
+    ],
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -2067,6 +2106,8 @@ cc_object {
     srcs: ["arch-common/bionic/crtbrand.S"],
 
     defaults: ["crt_so_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2075,6 +2116,10 @@ cc_object {
     srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
+
+    bazel_module: {
+        bp2build_available: true,
+    },
 }
 
 cc_object {
@@ -2085,6 +2130,8 @@ cc_object {
         "crtbegin_so1",
         "crtbrand",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2093,15 +2140,22 @@ cc_object {
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_static1",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
     srcs: ["arch-common/bionic/crtbegin.c"],
     defaults: ["crt_defaults"],
     // When using libc.a, we're using the latest library regardless of target API level.
     min_sdk_version: "current",
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2114,13 +2168,20 @@ cc_object {
     defaults: ["crt_defaults"],
     // When using libc.a, we're using the latest library regardless of target API level.
     min_sdk_version: "current",
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_dynamic1",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
     srcs: ["arch-common/bionic/crtbegin.c"],
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2139,6 +2200,8 @@ cc_object {
         },
     },
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2149,6 +2212,8 @@ cc_object {
     srcs: ["arch-common/bionic/crtend.S"],
 
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -2305,6 +2370,7 @@ filegroup {
         "kernel/uapi/linux/input.h",
         "kernel/uapi/linux/input-event-codes.h",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // Generate a syscall name / number mapping. These objects are text files
@@ -2330,6 +2396,8 @@ cc_object {
         "kernel/uapi/asm-arm",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2339,6 +2407,8 @@ cc_object {
         "kernel/uapi/asm-arm64",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2350,6 +2420,8 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2361,11 +2433,14 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
     name: "all_kernel_uapi_headers",
     srcs: ["kernel/uapi/**/*.h"],
+    bazel_module: { bp2build_available: true },
 }
 
 

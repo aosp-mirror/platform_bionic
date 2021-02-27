@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#ifndef BIONIC_TESTS_BIONIC_DEATH_TEST_H_
-#define BIONIC_TESTS_BIONIC_DEATH_TEST_H_
+#pragma once
 
 #include <signal.h>
 
@@ -44,5 +43,3 @@ class BionicDeathTest : public testing::Test {
  private:
   struct sigaction64 previous_;
 };
-
-#endif // BIONIC_TESTS_BIONIC_DEATH_TEST_H_

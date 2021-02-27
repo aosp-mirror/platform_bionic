@@ -26,6 +26,10 @@
 // SUCH DAMAGE.
 //
 
+package {
+    default_applicable_licenses: ["bionic_benchmarks_license"],
+}
+
 cc_defaults {
     name: "bionic_spawn_benchmark_targets",
     host_supported: true,
