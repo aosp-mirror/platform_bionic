@@ -35,7 +35,6 @@
 #define MAX_NR_OF_USER_KEYMAPS 256
 #define MAX_NR_FUNC 256
 #define KT_LATIN 0
-#define KT_LETTER 11
 #define KT_FN 1
 #define KT_SPEC 2
 #define KT_PAD 3
@@ -46,6 +45,7 @@
 #define KT_META 8
 #define KT_ASCII 9
 #define KT_LOCK 10
+#define KT_LETTER 11
 #define KT_SLOCK 12
 #define KT_DEAD2 13
 #define KT_BRL 14
