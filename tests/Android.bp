@@ -375,6 +375,7 @@ cc_test_library {
         "netinet_ip_icmp_test.cpp",
         "netinet_udp_test.cpp",
         "nl_types_test.cpp",
+        "pidfd_test.cpp",
         "poll_test.cpp",
         "prio_ctor_test.cpp",
         "pthread_test.cpp",
