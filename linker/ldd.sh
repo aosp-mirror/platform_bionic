@@ -10,7 +10,7 @@ function error() {
 
 [ $# -eq 1 ] || error "usage: ldd FILE"
 
-what=$(file -L "$1")
+what=$(LD_LIBRARY_PATH= file -L "$1")
 case "$what" in
   *32-bit*)
     linker --list "$1"
