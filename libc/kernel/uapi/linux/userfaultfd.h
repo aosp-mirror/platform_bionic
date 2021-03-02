@@ -124,4 +124,5 @@ struct uffdio_writeprotect {
 #define UFFDIO_WRITEPROTECT_MODE_DONTWAKE ((__u64) 1 << 1)
   __u64 mode;
 };
+#define UFFD_USER_MODE_ONLY 1
 #endif
