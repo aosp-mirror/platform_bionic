@@ -2198,6 +2198,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
       }
     },
+    sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
 }
@@ -2209,6 +2210,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
       }
     },
+    sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
 }
