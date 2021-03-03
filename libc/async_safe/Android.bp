@@ -37,6 +37,7 @@ cc_library_static {
         "com.android.media",
         "com.android.media.swcodec",
     ],
+    min_sdk_version: "apex_inherit",
 }
 
 cc_library_headers {
