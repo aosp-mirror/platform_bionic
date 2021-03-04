@@ -5,7 +5,6 @@
 # makefiles used to build all the stubs.
 
 import atexit
-import commands
 import filecmp
 import glob
 import re
@@ -315,7 +314,7 @@ class SysCallsTxtParser:
         self.lineno   = 0
 
     def E(self, msg):
-        print "%d: %s" % (self.lineno, msg)
+        print("%d: %s" % (self.lineno, msg))
 
     def parse_line(self, line):
         """ parse a syscall spec line.
@@ -340,7 +339,7 @@ class SysCallsTxtParser:
             return
 
         syscall_func = return_type[-1]
-        return_type  = string.join(return_type[:-1],' ')
+        return_type  = ' '.join(return_type[:-1])
         socketcall_id = -1
 
         pos_colon = syscall_func.find(':')
@@ -372,13 +371,13 @@ class SysCallsTxtParser:
             alias_delim = syscall_name.find('|')
             if alias_delim > 0:
                 syscall_name = syscall_name[:alias_delim]
-            syscall_aliases = string.split(alias_list, ',')
+            syscall_aliases = alias_list.split(',')
         else:
             syscall_aliases = []
 
         if pos_rparen > pos_lparen+1:
             syscall_params = line[pos_lparen+1:pos_rparen].split(',')
-            params         = string.join(syscall_params,',')
+            params         = ','.join(syscall_params)
         else:
             syscall_params = []
             params         = "void"
@@ -398,7 +397,7 @@ class SysCallsTxtParser:
             for arch in SupportedArchitectures:
                 t[arch] = True
         else:
-            for arch in string.split(arch_list, ','):
+            for arch in arch_list.split(','):
                 if arch == "lp32":
                     for arch in SupportedArchitectures:
                         if "64" not in arch:
@@ -464,7 +463,7 @@ def main(arch, syscall_file):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-      print "Usage: gensyscalls.py ARCH SOURCE_FILE"
+      print("Usage: gensyscalls.py ARCH SOURCE_FILE")
       sys.exit(1)
 
     arch = sys.argv[1]

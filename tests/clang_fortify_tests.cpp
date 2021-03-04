@@ -99,37 +99,9 @@
 
 #define CONCAT2(x, y) x##y
 #define CONCAT(x, y) CONCAT2(x, y)
-#define FORTIFY_TEST_NAME CONCAT(clang_fortify_test_, _FORTIFY_SOURCE)
+#define FORTIFY_TEST_NAME CONCAT(CONCAT(clang_fortify_test_, _FORTIFY_SOURCE), _DeathTest)
 
-namespace {
-struct FORTIFY_TEST_NAME : BionicDeathTest {
- protected:
-  void SetUp() override {
-    stdin_saved = dup(STDIN_FILENO);
-    if (stdin_saved < 0) err(1, "failed to dup stdin");
-
-    int devnull = open("/dev/null", O_RDONLY);
-    if (devnull < 0) err(1, "failed to open /dev/null");
-
-    if (!dup2(devnull, STDIN_FILENO)) err(1, "failed to overwrite stdin");
-    static_cast<void>(close(devnull));
-
-    BionicDeathTest::SetUp();
-  }
-
-  void TearDown() override {
-    if (stdin_saved == -1) return;
-    if (!dup2(stdin_saved, STDIN_FILENO)) warn("failed to restore stdin");
-
-    static_cast<void>(close(stdin_saved));
-
-    BionicDeathTest::TearDown();
-  }
-
- private:
-  int stdin_saved = -1;
-};
-}  // namespace
+using FORTIFY_TEST_NAME = BionicDeathTest;
 
 template <typename Fn>
 __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
@@ -153,7 +125,7 @@ __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
 #define EXPECT_FORTIFY_DEATH_STRUCT EXPECT_NO_DEATH
 #endif
 
-#define FORTIFY_TEST(test_name) TEST(FORTIFY_TEST_NAME, test_name)
+#define FORTIFY_TEST(test_name) TEST_F(FORTIFY_TEST_NAME, test_name)
 
 #else  // defined(COMPILATION_TESTS)
 

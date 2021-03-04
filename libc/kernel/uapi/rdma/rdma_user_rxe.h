@@ -147,4 +147,14 @@ struct rxe_create_srq_resp {
 struct rxe_modify_srq_cmd {
   __aligned_u64 mmap_info_addr;
 };
+struct rxe_queue_buf {
+  __u32 log2_elem_size;
+  __u32 index_mask;
+  __u32 pad_1[30];
+  __u32 producer_index;
+  __u32 pad_2[31];
+  __u32 consumer_index;
+  __u32 pad_3[31];
+  __u8 data[];
+};
 #endif

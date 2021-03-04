@@ -1,6 +1,22 @@
+package {
+    default_applicable_licenses: ["bionic_tools_license"],
+}
+
+license {
+    name: "bionic_tools_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 subdirs = ["*"]
 
 filegroup {
     name: "bionic-generate-version-script",
     srcs: ["generate-version-script.py"],
+    bazel_module: { bp2build_available: true },
 }
