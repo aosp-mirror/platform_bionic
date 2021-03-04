@@ -1,6 +1,24 @@
 //
 // libm.so and libm.a for target.
 //
+package {
+    default_applicable_licenses: ["bionic_libm_license"],
+}
+
+license {
+    name: "bionic_libm_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-MIT",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 cc_library {
     name: "libm",
     defaults: ["linux_bionic_supported"],
@@ -287,6 +305,11 @@ cc_library {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.arm.map",
+            no_libcrt: true,
+            shared: {
+                // For backwards-compatibility, some arm32 builtins are exported from libm.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+            },
         },
 
         arm64: {
@@ -470,6 +493,7 @@ cc_library {
         "-fno-math-errno",
         "-Wall",
         "-Werror",
+        "-Wno-ignored-pragmas",
         "-Wno-missing-braces",
         "-Wno-parentheses",
         "-Wno-sign-compare",

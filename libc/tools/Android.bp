@@ -1,4 +1,45 @@
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "bionic_libc_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-Apache-2.0
+    //   legacy_unencumbered
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 filegroup {
     name: "bionic-gensyscalls",
-    srcs: ["gensyscalls.py"]
+    srcs: ["gensyscalls.py"],
+    bazel_module: { bp2build_available: true },
+}
+
+// Generate the C++ policy sources for app and system seccomp-bpf filters.
+python_binary_host {
+    name: "genseccomp",
+    main: "genseccomp.py",
+
+    srcs: [
+        "genseccomp.py",
+        "gensyscalls.py",
+    ],
+
+    data: [
+        ":all_kernel_uapi_headers",
+    ],
+}
+
+python_binary_host {
+    name: "genfunctosyscallnrs",
+    main: "genfunctosyscallnrs.py",
+
+    srcs: [
+        "genseccomp.py",
+        "genfunctosyscallnrs.py",
+        "gensyscalls.py",
+    ],
+
+    data: [
+        ":all_kernel_uapi_headers",
+    ],
 }
