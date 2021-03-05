@@ -31,11 +31,13 @@
 constexpr int MAX_PACKAGE_NAME_LENGTH = 230;
 
 static inline const char* const soft_mac_bind_allowlist[] = {
+    "com.cisco.anyconnect.vpn.android.avf:nchs",
     "com.skype.raider",
     nullptr,
 };
 
 static inline const char* const soft_mac_getlink_allowlist[] = {
+    "com.cisco.anyconnect.vpn.android.avf:nchs",
     nullptr,
 };
 
