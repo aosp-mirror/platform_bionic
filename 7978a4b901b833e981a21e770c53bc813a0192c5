@@ -85,6 +85,24 @@
       "message": "+eaeltsin as a heads up. I think you will need to make __libc_set_target_sdk_version an empty function in the native bridge.",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b0a4146_1b4bc81a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-03-05T22:03:49Z",
+      "side": 1,
+      "message": "It\u0027s because we need to make a call from the linker to libc (similar to the hwasan cases above). I\u0027ll mention that in the commit message.",
+      "parentUuid": "a35b6845_80e0bc27",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
