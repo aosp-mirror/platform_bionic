@@ -68,6 +68,23 @@
       "message": "explain the indirection in the checkin comment (and maybe code too)? is this necessary _because_ of native bridge?",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ad3985a_f6bf10e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-03-05T22:02:43Z",
+      "side": 1,
+      "message": "+eaeltsin as a heads up. I think you will need to make __libc_set_target_sdk_version an empty function in the native bridge.",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
