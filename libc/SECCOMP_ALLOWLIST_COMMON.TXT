@@ -72,5 +72,3 @@ int semtimedop_time64(int, sembuf*, size_t, const timespec64*) lp32
 int rt_sigtimedwait_time64(const sigset64_t*, siginfo_t*, const timespec64*, size_t) lp32
 int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
 int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
-# Since Linux 5.3, not in glibc.
-int pidfd_open(pid_t pid, unsigned int flags) all
