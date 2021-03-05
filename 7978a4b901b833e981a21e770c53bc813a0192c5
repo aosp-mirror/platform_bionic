@@ -51,6 +51,23 @@
       "parentUuid": "6efd3400_c275c45e",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a35b6845_80e0bc27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-05T22:00:28Z",
+      "side": 1,
+      "message": "explain the indirection in the checkin comment (and maybe code too)? is this necessary _because_ of native bridge?",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
