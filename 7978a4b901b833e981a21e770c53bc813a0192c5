@@ -33,6 +33,24 @@
       "message": "How did you determine that the applications are reading past the end of the allocation? Or are they assuming that large allocations are aligned to some size?\n\nHave we contacted the app developers asking them what they are doing?",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e18b841_af0411ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-03-05T21:54:31Z",
+      "side": 1,
+      "message": "This was the result of investigating one of our 1P apps; see the bug.",
+      "parentUuid": "6efd3400_c275c45e",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
