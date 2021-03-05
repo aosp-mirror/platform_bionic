@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34eed3b0_3e4cf163",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-03-05T23:31:03Z",
+      "side": 1,
+      "message": "This is very much not in a submittable state, but I wanted to present you with something for Monday.\n\nPlease note libdl/BUILD and its dependencies. Also aosp/1620720",
+      "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
