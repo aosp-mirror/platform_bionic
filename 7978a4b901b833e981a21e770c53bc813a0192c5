@@ -16,6 +16,23 @@
       "message": "(this won\u0027t compile until https://reviews.llvm.org/D93731 lands; I intend to land the changes simultaneously)",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6efd3400_c275c45e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-03-05T21:52:45Z",
+      "side": 1,
+      "message": "How did you determine that the applications are reading past the end of the allocation? Or are they assuming that large allocations are aligned to some size?\n\nHave we contacted the app developers asking them what they are doing?",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
