@@ -131,6 +131,14 @@ void __libc_init_fork_handler() {
   pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
 }
 
+extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
+#if defined(USE_SCUDO)
+  scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
+#endif
+}
+
 __noreturn static void __early_abort(int line) {
   // We can't write to stdout or stderr because we're aborting before we've checked that
   // it's safe for us to use those file descriptors. We probably can't strace either, so
