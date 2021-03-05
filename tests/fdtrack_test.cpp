@@ -28,6 +28,8 @@
 #include <unistd.h>
 
 #if defined(__BIONIC__)
+#include <sys/pidfd.h>
+
 #include "platform/bionic/fdtrack.h"
 #include "platform/bionic/reserved_signals.h"
 #endif
@@ -61,9 +63,7 @@ std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
   events.clear();
 
   android_fdtrack_hook_t previous = nullptr;
-  android_fdtrack_hook_t hook = [](android_fdtrack_event* event) {
-    events.push_back(*event);
-  };
+  android_fdtrack_hook_t hook = [](android_fdtrack_event* event) { events.push_back(*event); };
 
   if (!android_fdtrack_compare_exchange_hook(&previous, hook)) {
     errx(1, "failed to exchange hook: previous hook was %p", previous);
@@ -178,7 +178,7 @@ void SetFdResult(std::vector<int>* output, std::vector<int> fds) {
     static std::vector<int> expected_fds;                                                        \
     auto events = FdtrackRun([]() { SetFdResult(&expected_fds, expression); });                  \
     for (auto& fd : expected_fds) {                                                              \
-      ASSERT_NE(-1, fd);                                                                         \
+      ASSERT_NE(-1, fd) << strerror(errno);                                                      \
     }                                                                                            \
     if (events.size() != expected_fds.size()) {                                                  \
       fprintf(stderr, "too many events received: expected %zu, got %zu:\n", expected_fds.size(), \
@@ -210,6 +210,37 @@ void SetFdResult(std::vector<int>* output, std::vector<int> fds) {
 FDTRACK_TEST(open, open("/dev/null", O_WRONLY | O_CLOEXEC));
 FDTRACK_TEST(openat, openat(AT_EMPTY_PATH, "/dev/null", O_WRONLY | O_CLOEXEC));
 FDTRACK_TEST(socket, socket(AF_UNIX, SOCK_STREAM, 0));
+
+FDTRACK_TEST(pidfd_open, ({
+  int rc = pidfd_open(getpid(), 0);
+  if (rc == -1) {
+    ASSERT_EQ(ENOSYS, errno);
+    GTEST_SKIP() << "pidfd_open not available";
+  }
+  rc;
+}));
+
+FDTRACK_TEST(pidfd_getfd, ({
+  android_fdtrack_set_enabled(false);
+  int pidfd_self = pidfd_open(getpid(), 0);
+  if (pidfd_self == -1) {
+    ASSERT_EQ(ENOSYS, errno);
+    GTEST_SKIP() << "pidfd_open not available";
+  }
+  android_fdtrack_set_enabled(true);
+
+  int rc = pidfd_getfd(pidfd_self, STDIN_FILENO, 0);
+  if (rc == -1) {
+    ASSERT_EQ(ENOSYS, errno);
+    GTEST_SKIP() << "pidfd_getfd not available";
+  }
+
+  android_fdtrack_set_enabled(false);
+  close(pidfd_self);
+  android_fdtrack_set_enabled(true);
+
+  rc;
+}));
 
 FDTRACK_TEST(dup, dup(STDOUT_FILENO));
 FDTRACK_TEST(dup2, dup2(STDOUT_FILENO, STDERR_FILENO));
