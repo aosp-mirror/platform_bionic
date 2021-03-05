@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e834d23_7e66d768",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-03-05T22:43:33Z",
+      "side": 1,
+      "message": "Is it possible that the zygote malloc()\u0027s some memory before this libc call happens, and that memory is later passed to the app and the app does something buggy with it?\n\nIf so - we might need to enable this option globally for app_process and disable it post-fork.",
+      "revId": "2659d7b6c221402b9fc58709fdab4d0790c47b4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
