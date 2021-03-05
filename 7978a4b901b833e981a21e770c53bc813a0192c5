@@ -120,6 +120,24 @@
       "message": "Could this logic be implemented entirely in bionic malloc wrappers, w/o introducing a new interface?\n",
       "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e7de288_cbd8e3a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-03-05T22:34:00Z",
+      "side": 1,
+      "message": "That would mean that bionic would need to know the exact boundary for secondary allocations. It seems more maintainable to let scudo worry about that.",
+      "parentUuid": "9a330e72_67876621",
+      "revId": "7978a4b901b833e981a21e770c53bc813a0192c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
