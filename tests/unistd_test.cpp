@@ -1166,10 +1166,10 @@ TEST(UNISTD_TEST, dup2_same) {
 TEST(UNISTD_TEST, dup3) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_EQ(666, dup3(fd, 666, 0));
-  AssertCloseOnExec(666, false);
+  ASSERT_FALSE(CloseOnExec(666));
   close(666);
   ASSERT_EQ(667, dup3(fd, 667, O_CLOEXEC));
-  AssertCloseOnExec(667, true);
+  ASSERT_TRUE(CloseOnExec(667));
   close(667);
   close(fd);
 }

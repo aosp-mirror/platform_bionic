@@ -35,6 +35,8 @@ void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData);
 size_t __cfi_shadow_size();
 }
 
+using cfi_test_DeathTest = BionicDeathTest;
+
 static void f() {}
 
 static void test_cfi_slowpath_with_alloc() {
@@ -45,7 +47,7 @@ static void test_cfi_slowpath_with_alloc() {
   }
 }
 
-TEST(cfi_test, basic) {
+TEST_F(cfi_test_DeathTest, basic) {
 #if defined(__BIONIC__)
   void* handle;
   handle = dlopen("libcfi-test.so", RTLD_NOW | RTLD_LOCAL);

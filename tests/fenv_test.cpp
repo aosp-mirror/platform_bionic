@@ -202,6 +202,7 @@ TEST(fenv, feenableexcept_fegetexcept) {
   ASSERT_NE(-1, pid) << strerror(errno);
 
   if (pid == 0) {
+    signal(SIGFPE, SIG_DFL);  // Disable debuggerd.
     feclearexcept(FE_ALL_EXCEPT);
     ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
     ASSERT_EQ(0, feenableexcept(FE_INVALID));
