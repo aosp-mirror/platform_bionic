@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95959038_92ef7963",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1038443
+      },
+      "writtenOn": "2021-03-06T11:28:29Z",
+      "side": 1,
+      "message": "Elliott, do you prefer apex_inherit here?",
+      "revId": "3a7e7aaa82d8bc5db82d626a121ef2481221699c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
