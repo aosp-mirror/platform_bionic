@@ -109,6 +109,30 @@
       },
       "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "390b7e89_4f10d224",
+        "filename": "libdl/BUILD.bazel",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-03-08T16:25:12Z",
+      "side": 1,
+      "message": "I\u0027m not sure this is true anymore, to be honest. It was true at some point in time, but HEAD has shifted quite a bit now...\n\nI should delete this comment until I can reverify. Sorry ;)",
+      "parentUuid": "83bebc2e_ceb87ab1",
+      "range": {
+        "startLine": 54,
+        "startChar": 27,
+        "endLine": 54,
+        "endChar": 84
+      },
+      "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
