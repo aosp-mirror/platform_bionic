@@ -16,6 +16,75 @@
       "message": "This is very much not in a submittable state, but I wanted to present you with something for Monday.\n\nPlease note libdl/BUILD and its dependencies. Also aosp/1620720",
       "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bb1d7c8_7c8b02b6",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-03-08T12:20:14Z",
+      "side": 1,
+      "message": "Looks like we need python_binary_host support for bp2build.",
+      "range": {
+        "startLine": 19,
+        "startChar": 9,
+        "endLine": 19,
+        "endChar": 28
+      },
+      "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60bdba3d_3dae8241",
+        "filename": "libc/BUILD.bazel",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-03-08T12:20:14Z",
+      "side": 1,
+      "message": "(also python_binary_host support)",
+      "range": {
+        "startLine": 172,
+        "startChar": 9,
+        "endLine": 172,
+        "endChar": 20
+      },
+      "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83bebc2e_ceb87ab1",
+        "filename": "libdl/BUILD.bazel",
+        "patchSetId": 2
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-03-08T12:20:14Z",
+      "side": 1,
+      "message": "\\o/",
+      "range": {
+        "startLine": 54,
+        "startChar": 27,
+        "endLine": 54,
+        "endChar": 84
+      },
+      "revId": "c88f2fbe80fb325dca329807f0d9c9a64a7ffa54",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
