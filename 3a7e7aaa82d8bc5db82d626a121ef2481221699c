@@ -16,6 +16,24 @@
       "message": "Elliott, do you prefer apex_inherit here?",
       "revId": "3a7e7aaa82d8bc5db82d626a121ef2481221699c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d4b8d69_914d9047",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-08T16:43:28Z",
+      "side": 1,
+      "message": "always. (see libziparchive for details.)",
+      "parentUuid": "95959038_92ef7963",
+      "revId": "3a7e7aaa82d8bc5db82d626a121ef2481221699c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
