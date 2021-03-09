@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a3625ae_e47d4982",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1081223
+      },
+      "writtenOn": "2021-03-09T16:16:22Z",
+      "side": 1,
+      "message": "\u003e Patch Set 2: Code-Review+2\n\u003e \n\u003e (1 comment)\n\u003e \n\u003e iirc, the reason i did it like this was so that you only pay to find the main thread\u0027s stack bounds if you actually ask for them. but i can\u0027t think of any reason why you\u0027d be calling pthread_getattr_np in a hotspot, and if this helps kill the global thread list lock, that\u0027s worth something...\n\n6 years later, genshin impact chokes on this...\nNot entirely sure why it does that, but it happens to have 10k maps, and the stack entry comes last. The fscanf is now a hotspot at least for this usecase.",
+      "revId": "9d0c79304d2413028aa5c213f7a567f00feccde5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
