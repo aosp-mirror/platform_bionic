@@ -66,4 +66,6 @@ __LIBC_HIDDEN__ void __libc_init_AT_SECURE(char** envp);
 // pthread_atfork may call malloc() during its once-init.
 __LIBC_HIDDEN__ void __libc_init_fork_handler();
 
+__LIBC_HIDDEN__ void __libc_set_target_sdk_version(int target);
+
 #endif
