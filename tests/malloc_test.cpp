@@ -46,6 +46,7 @@
 #if defined(__BIONIC__)
 
 #include "SignalUtils.h"
+#include "dlext_private.h"
 
 #include "platform/bionic/malloc.h"
 #include "platform/bionic/mte.h"
@@ -1347,6 +1348,25 @@ TEST(malloc, disable_mte) {
   ASSERT_EQ(0, pthread_join(thread, &retval));
   int thread_tagged_addr_ctrl = reinterpret_cast<uintptr_t>(retval);
   ASSERT_EQ(my_tagged_addr_ctrl, thread_tagged_addr_ctrl);
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(malloc, allocation_slack) {
+#if defined(__BIONIC__)
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+
+  // Test that older target SDK levels let you access a few bytes off the end of
+  // a large allocation.
+  android_set_application_target_sdk_version(29);
+  auto p = std::make_unique<char[]>(131072);
+  volatile char *vp = p.get();
+  volatile char oob ATTRIBUTE_UNUSED = vp[131072];
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
