@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c63ab34_00f04ec1",
+        "filename": "TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-10T20:03:58Z",
+      "side": 1,
+      "message": "i know it wasn\u0027t right _before_ this CL, but while you\u0027re here, can you sort these so the file is back in alphabetical order?",
+      "range": {
+        "startLine": 22,
+        "startChar": 14,
+        "endLine": 25,
+        "endChar": 30
+      },
+      "revId": "feed8b5aaf787d922f741bf4a01953e5f682fd01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
