@@ -489,6 +489,12 @@ TEST(stdlib, system) {
   ASSERT_EQ(1, WEXITSTATUS(status));
 }
 
+TEST(stdlib, system_NULL) {
+  // "The system() function shall always return non-zero when command is NULL."
+  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
+  ASSERT_NE(0, system(nullptr));
+}
+
 TEST(stdlib, atof) {
   ASSERT_DOUBLE_EQ(1.23, atof("1.23"));
 }
