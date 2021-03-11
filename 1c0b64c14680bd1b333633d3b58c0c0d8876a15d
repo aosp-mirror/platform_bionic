@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31272835_44c619c6",
+        "filename": "libc/SYSCALLS.TXT",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-11T16:08:16Z",
+      "side": 1,
+      "message": "this generates a function. if we do this, we don\u0027t need to change the allowlist. but we would want to add a header file and a test.\n\nif your plan is just to use `syscall(__NR_userfaultfd, ...)`, you only need to change the allowlist. (but in that case, please add a comment more like the one that\u0027s already on L50 of that file.)",
+      "revId": "1c0b64c14680bd1b333633d3b58c0c0d8876a15d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
