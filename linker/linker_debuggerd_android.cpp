@@ -42,6 +42,7 @@ static debugger_process_info get_process_info() {
       .gwp_asan_metadata = __libc_shared_globals()->gwp_asan_metadata,
       .scudo_stack_depot = __libc_shared_globals()->scudo_stack_depot,
       .scudo_region_info = __libc_shared_globals()->scudo_region_info,
+      .scudo_ring_buffer = __libc_shared_globals()->scudo_ring_buffer,
   };
 }
 #endif
