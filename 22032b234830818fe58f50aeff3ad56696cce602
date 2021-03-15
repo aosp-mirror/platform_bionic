@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "824815c0_5e3343e3",
+        "filename": "libfdtrack/fdtrack.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1043845
+      },
+      "writtenOn": "2021-03-15T22:44:43Z",
+      "side": 1,
+      "message": "Add a comment along the lines of:\n\n    // To future maintainers: if a libc++ update ever makes this invalid, just replace it with xor.\n\nand fine by me.",
+      "parentUuid": "ee8f064f_7fba3c6f",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 81
+      },
+      "revId": "22032b234830818fe58f50aeff3ad56696cce602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fd3c404e_7b2de750",
         "filename": "libfdtrack/fdtrack.cpp",
         "patchSetId": 1
