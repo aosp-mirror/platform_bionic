@@ -2137,7 +2137,10 @@ cc_object {
 
 cc_object {
     name: "crtend_so",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend_so.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
@@ -2209,7 +2212,10 @@ cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
     name: "crtend_android",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend.S"],
 
     defaults: ["crt_defaults"],
