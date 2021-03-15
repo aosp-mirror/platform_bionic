@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "def3ee5e_5bc8e144",
+        "filename": "libfdtrack/fdtrack.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1079148
+      },
+      "writtenOn": "2021-03-15T22:55:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "824815c0_5e3343e3",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 81
+      },
+      "revId": "22032b234830818fe58f50aeff3ad56696cce602",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd3c404e_7b2de750",
