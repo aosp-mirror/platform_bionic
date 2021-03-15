@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,6 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/eventfd.h>
-#include <unistd.h>
+#include <sys/pidfd.h>
 
+#include "private/bionic_fdtrack.h"
+
+extern "C" int __pidfd_open(pid_t pid, unsigned int flags);
+extern "C" int __pidfd_getfd(int pidfd, int targetfd, unsigned int flags);
+
+int pidfd_open(pid_t pid, unsigned int flags) {
+  return FDTRACK_CREATE(__pidfd_open(pid, flags));
+}
+
+int pidfd_getfd(int pidfd, int targetfd, unsigned int flags) {
+  return FDTRACK_CREATE(__pidfd_getfd(pidfd, targetfd, flags));
+}
