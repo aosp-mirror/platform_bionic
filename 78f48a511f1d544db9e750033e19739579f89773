@@ -34,6 +34,24 @@
       "parentUuid": "50ec146f_a0ceb82d",
       "revId": "78f48a511f1d544db9e750033e19739579f89773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0936c463_0fc03649",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-16T08:15:20Z",
+      "side": 1,
+      "message": "Failed here, I guess I am missing some undocumented prerequisites?\n\n$ mma   \n### build completed successfully\n\n$ adb root \u0026\u0026 adb remount \u0026\u0026 adb sync\n* daemon not running; starting now at tcp:5037\n* daemon started successfully\nadb: unable to connect for root: no devices/emulators found",
+      "parentUuid": "cb5ad8ad_f4e859d3",
+      "revId": "78f48a511f1d544db9e750033e19739579f89773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
