@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "411eb017_f7641e12",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-03-16T21:09:48Z",
+      "side": 1,
+      "message": "Is this only if we\u0027re building for x86 ? (Looks surrounded by #ifdef __i386__)\n\nShould we make this an arch-specific includes?",
+      "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
