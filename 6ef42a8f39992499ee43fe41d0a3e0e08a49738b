@@ -16,6 +16,24 @@
       "message": "Is this only if we\u0027re building for x86 ? (Looks surrounded by #ifdef __i386__)\n\nShould we make this an arch-specific includes?",
       "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cfc2a45_c78b6e2c",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-16T21:26:02Z",
+      "side": 1,
+      "message": "alternatively, we could move __stack_chk_fail_local.h into this directory. it might be cleanest and simplest to move it here, rename it to .cpp and add it to the x86 builds\u0027 `srcs:` and lose the #include?\n\nactually, there\u0027s so little to it (and much of the comment that makes up most of the file is out of date) that i might just inline the 4 lines of active ingredient and rewrite the comment. i don\u0027t think we\u0027re really gaining anything here (especially not as long as we still have the #if in the \"portable\" code anyway!).",
+      "parentUuid": "411eb017_f7641e12",
+      "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
