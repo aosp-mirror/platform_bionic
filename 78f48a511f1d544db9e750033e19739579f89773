@@ -52,6 +52,24 @@
       "parentUuid": "cb5ad8ad_f4e859d3",
       "revId": "78f48a511f1d544db9e750033e19739579f89773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bda1c260_4ac7b73e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-16T08:36:14Z",
+      "side": 1,
+      "message": "I\u0027m guessing I need to create a local device/emulator first, but I can\u0027t find any docs about how to do that or what exactly to create. Can I pick anything? Do I need to use Android Studio?",
+      "parentUuid": "0936c463_0fc03649",
+      "revId": "78f48a511f1d544db9e750033e19739579f89773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
