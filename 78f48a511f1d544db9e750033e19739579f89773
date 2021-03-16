@@ -106,6 +106,24 @@
       "parentUuid": "d8a8bfaa_8c81a845",
       "revId": "78f48a511f1d544db9e750033e19739579f89773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb71536e_22ee6896",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-16T10:27:29Z",
+      "side": 1,
+      "message": "Alright, did this\n\nhttp://go/acloud-googler-setup\n\n$ source build/envsetup.sh\n$ lunch aosp_cf_x86_64_phone-userdebug\n$ /google/src/head/depot/google3/wireless/android/test_tools/asuite/acloud/aosp_setup.sh\n\nAnd then\n\n$ acloud create\n\n(Had to do the manual setup - I guess aosp_setup.sh silently failed in some way earlier?)\n\nAnd then back to\n\nhttps://android.googlesource.com/platform/bionic/+/master#running-the-tests\n\n$ mma # In $ANDROID_ROOT/bionic.\n$ adb root \u0026\u0026 adb remount \u0026\u0026 adb sync\n$ adb shell /data/nativetest/bionic-unit-tests/bionic-unit-tests\n$ adb shell data/nativetest/bionic-unit-tests-static/bionic-unit-tests-static\n$ adb shell /data/nativetest64/bionic-unit-tests/bionic-unit-tests\n$ adb shell data/nativetest64/bionic-unit-tests-static/bionic-unit-tests-static\n\nSeemed okay \n\n(a few disabled and slow tests, but couldn\u0027t see any failures)",
+      "parentUuid": "2e856abf_fd18fb07",
+      "revId": "78f48a511f1d544db9e750033e19739579f89773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
