@@ -34,6 +34,24 @@
       "parentUuid": "411eb017_f7641e12",
       "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa048b22_2ad2455a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-16T23:42:47Z",
+      "side": 1,
+      "message": "https://android-review.googlesource.com/c/platform/bionic/+/1641340 should make your immediate problem go away, but i have a funny feeling i might be able to delete __stack_chk_fail_local entirely now we haven\u0027t supported GCC for several years.",
+      "parentUuid": "5cfc2a45_c78b6e2c",
+      "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
