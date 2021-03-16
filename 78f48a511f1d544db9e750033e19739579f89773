@@ -178,6 +178,24 @@
       "parentUuid": "e7cd2a7f_66049014",
       "revId": "78f48a511f1d544db9e750033e19739579f89773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b83340bc_5411ad63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-16T17:00:58Z",
+      "side": 1,
+      "message": "we run the bionic tests in *presubmit*. so if your question here is \"have i broken the regular _soong_ build?\", presubmit will answer that. (and obviously neither pre- nor postsubmit will help answer bazel questions.)",
+      "parentUuid": "31cd6582_ca612fef",
+      "revId": "78f48a511f1d544db9e750033e19739579f89773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
