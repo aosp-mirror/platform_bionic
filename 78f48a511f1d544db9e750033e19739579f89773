@@ -70,6 +70,24 @@
       "parentUuid": "0936c463_0fc03649",
       "revId": "78f48a511f1d544db9e750033e19739579f89773",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8a8bfaa_8c81a845",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1514900
+      },
+      "writtenOn": "2021-03-16T08:49:10Z",
+      "side": 1,
+      "message": "acloud should work: https://android.googlesource.com/platform/tools/acloud/+/refs/heads/master/README.md\n\nNo need for Android Studio. This uses Cuttlefish (Android on GCE) to spin up a device that you can flash with a local image.",
+      "parentUuid": "bda1c260_4ac7b73e",
+      "revId": "78f48a511f1d544db9e750033e19739579f89773",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
