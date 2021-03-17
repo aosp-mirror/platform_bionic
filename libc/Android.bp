@@ -21,7 +21,6 @@ license {
 }
 
 libc_common_src_files = [
-    "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/exit.cpp",
@@ -1420,6 +1419,7 @@ cc_library_static {
     whole_static_libs: [
         "gwp_asan",
         "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1451,6 +1451,7 @@ cc_library_static {
 
     whole_static_libs: [
         "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_bootstrap",
