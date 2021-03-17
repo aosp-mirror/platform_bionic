@@ -52,6 +52,24 @@
       "parentUuid": "5cfc2a45_c78b6e2c",
       "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11378630_f95b7d20",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-03-17T13:26:30Z",
+      "side": 1,
+      "message": "thanks, that looks like a good solution, I\u0027ll abandon this one.",
+      "parentUuid": "aa048b22_2ad2455a",
+      "revId": "6ef42a8f39992499ee43fe41d0a3e0e08a49738b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
