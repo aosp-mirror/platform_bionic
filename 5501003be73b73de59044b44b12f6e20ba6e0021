@@ -16,6 +16,23 @@
       "message": "ndesaulniers: does this sound right to you? (seems like something you might have come across with the kernel.)",
       "revId": "5501003be73b73de59044b44b12f6e20ba6e0021",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71468317_7117ee0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114194
+      },
+      "writtenOn": "2021-03-17T16:45:33Z",
+      "side": 1,
+      "message": "The only reference to __stack_chk_fail_local in llvm-project/ is a single allowlist for the Data Flow Sanitizer (DFSAN) for a very specific version of Ubuntu.  Since I don\u0027t see anywhere LLVM could produce such libcalls, I assume this runtime requirement is indeed GCC specific.",
+      "revId": "5501003be73b73de59044b44b12f6e20ba6e0021",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
