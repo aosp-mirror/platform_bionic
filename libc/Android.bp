@@ -1290,7 +1290,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-arm.S"
     }
 }
 
@@ -1302,7 +1301,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-arm64.S"
     },
 }
 
@@ -1314,7 +1312,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-x86.S"
     },
 }
 
@@ -1326,7 +1323,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-x86_64.S"
     },
 }
 
