@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ef63520_64a7e699",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-17T16:05:57Z",
+      "side": 1,
+      "message": "ndesaulniers: does this sound right to you? (seems like something you might have come across with the kernel.)",
+      "revId": "5501003be73b73de59044b44b12f6e20ba6e0021",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
