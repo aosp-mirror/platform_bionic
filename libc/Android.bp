@@ -21,7 +21,6 @@ license {
 }
 
 libc_common_src_files = [
-    "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/exit.cpp",
@@ -1291,7 +1290,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-arm.S"
     }
 }
 
@@ -1303,7 +1301,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-arm64.S"
     },
 }
 
@@ -1315,7 +1312,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-x86.S"
     },
 }
 
@@ -1327,7 +1323,6 @@ genrule {
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
-        label: "//bionic/libc:syscalls-x86_64.S"
     },
 }
 
@@ -1420,6 +1415,7 @@ cc_library_static {
     whole_static_libs: [
         "gwp_asan",
         "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1451,6 +1447,7 @@ cc_library_static {
 
     whole_static_libs: [
         "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_bootstrap",
@@ -2126,7 +2123,10 @@ cc_object {
 
 cc_object {
     name: "crtend_so",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend_so.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
@@ -2181,7 +2181,10 @@ cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
     name: "crtend_android",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend.S"],
 
     defaults: ["crt_defaults"],
@@ -2196,6 +2199,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
       }
     },
+    sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
 }
@@ -2207,6 +2211,7 @@ cc_library_static {
         srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
       }
     },
+    sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
 }
