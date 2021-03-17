@@ -72,7 +72,5 @@ static void __on_dlclose_late(void) {
 # include "__dso_handle_so.h"
 # include "atexit.h"
 #endif
+#include "__stack_chk_fail_local.h"
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif
