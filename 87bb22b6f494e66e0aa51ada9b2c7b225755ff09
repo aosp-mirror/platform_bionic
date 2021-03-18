@@ -16,6 +16,23 @@
       "message": "Be consistent with binder.h file in kernel driver.",
       "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5601820_25208369",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-03-18T06:27:53Z",
+      "side": 1,
+      "message": "This file is not meant to be modifiable like this, it is auto-generated from kernel header files. If you want a change like this, you need to make it in the upstream kernel or the android kernel. When a kernel is released with the change, we\u0027ll pick it up automatically.",
+      "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
