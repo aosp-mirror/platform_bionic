@@ -69,6 +69,24 @@
       "parentUuid": "5f0f839f_6380f62b",
       "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "698a9bc4_c7f04eb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1858445
+      },
+      "writtenOn": "2021-03-18T07:19:05Z",
+      "side": 1,
+      "message": "Thanks a lot, abandon this CL.",
+      "parentUuid": "b5445876_efa9c91a",
+      "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
