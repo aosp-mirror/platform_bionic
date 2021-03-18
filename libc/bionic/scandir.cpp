@@ -16,9 +16,8 @@
 
 #include <dirent.h>
 
-#include <assert.h>
-#include <errno.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -33,8 +32,10 @@ class ScandirResult {
   }
 
   ~ScandirResult() {
-    // We always call release(), so this can't happen.
-    if (names_ != nullptr) __assert(__FILE__, __LINE__, "missing call to release()");
+    while (size_ > 0) {
+      free(names_[--size_]);
+    }
+    free(names_);
   }
 
   size_t size() {
