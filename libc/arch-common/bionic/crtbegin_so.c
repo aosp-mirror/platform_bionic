@@ -72,5 +72,4 @@ static void __on_dlclose_late(void) {
 # include "__dso_handle_so.h"
 # include "atexit.h"
 #endif
-#include "__stack_chk_fail_local.h"
 #include "pthread_atfork.h"
