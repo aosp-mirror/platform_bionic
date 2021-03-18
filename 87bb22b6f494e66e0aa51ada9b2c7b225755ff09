@@ -33,6 +33,24 @@
       "message": "This file is not meant to be modifiable like this, it is auto-generated from kernel header files. If you want a change like this, you need to make it in the upstream kernel or the android kernel. When a kernel is released with the change, we\u0027ll pick it up automatically.",
       "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f0f839f_6380f62b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1858445
+      },
+      "writtenOn": "2021-03-18T06:54:32Z",
+      "side": 1,
+      "message": "Thanks Christopher!\nSo file external/kernel-headers/original/uapi/linux/android/binder.h will also be auto generated, right?",
+      "parentUuid": "f5601820_25208369",
+      "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
