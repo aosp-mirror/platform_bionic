@@ -51,6 +51,24 @@
       "parentUuid": "f5601820_25208369",
       "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5445876_efa9c91a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-03-18T07:07:45Z",
+      "side": 1,
+      "message": "Yes. Basically, the original files are copied into external/kernel-headers, then the headers are processed and copied into bionic.\n\nFor details about this process see:\n\nhttps://android.googlesource.com/platform/bionic/+/master/libc/kernel/README.md",
+      "parentUuid": "5f0f839f_6380f62b",
+      "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
