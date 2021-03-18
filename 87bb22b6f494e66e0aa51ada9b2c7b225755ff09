@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68ddd3de_fbe11f7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1858445
+      },
+      "writtenOn": "2021-03-18T06:14:10Z",
+      "side": 1,
+      "message": "Be consistent with binder.h file in kernel driver.",
+      "revId": "87bb22b6f494e66e0aa51ada9b2c7b225755ff09",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
