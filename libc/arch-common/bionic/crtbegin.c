@@ -87,6 +87,5 @@ asm("  .section .tdata,\"awT\",@progbits\n"
 #endif
 
 #include "__dso_handle.h"
-#include "__stack_chk_fail_local.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
