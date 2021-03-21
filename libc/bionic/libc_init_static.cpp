@@ -400,6 +400,7 @@ extern "C" int android_get_application_target_sdk_version() {
 
 extern "C" void android_set_application_target_sdk_version(int target) {
   g_target_sdk_version = target;
+  __libc_set_target_sdk_version(target);
 }
 
 // This function is called in the dynamic linker before ifunc resolvers have run, so this file is

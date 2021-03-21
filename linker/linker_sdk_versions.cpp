@@ -31,6 +31,8 @@
 #include <android/api-level.h>
 #include <android/fdsan.h>
 
+#include "private/bionic_globals.h"
+
 #include "linker.h"
 
 static std::atomic<int> g_target_sdk_version(__ANDROID_API__);
@@ -44,6 +46,9 @@ void set_application_target_sdk_version(int target) {
 
   if (target < 30) {
     android_fdsan_set_error_level_from_property(ANDROID_FDSAN_ERROR_LEVEL_WARN_ONCE);
+  }
+  if (__libc_shared_globals()->set_target_sdk_version_hook) {
+    __libc_shared_globals()->set_target_sdk_version_hook(target);
   }
 }
 
