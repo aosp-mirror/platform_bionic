@@ -34,6 +34,24 @@
       "parentUuid": "7570a1ad_4b1be983",
       "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b33fe8ec_be031bda",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-22T17:43:03Z",
+      "side": 1,
+      "message": "Thanks! I guess I will add this?\n\nlocal_include_dirs: [\".\"]\n\n(replied also on https://android-review.googlesource.com/c/platform/bionic/+/1648387)",
+      "parentUuid": "6328d5a9_5eb4d4b3",
+      "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
