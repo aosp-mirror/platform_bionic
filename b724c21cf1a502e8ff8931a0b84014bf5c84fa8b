@@ -70,6 +70,24 @@
       "parentUuid": "b33fe8ec_be031bda",
       "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76335a9a_d75703b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-22T17:53:15Z",
+      "side": 1,
+      "message": "Aha, good timing! I\u0027ll wait for your CL to get submitted then and see if we can abandon this",
+      "parentUuid": "026fe511_85b11957",
+      "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
