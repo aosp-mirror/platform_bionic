@@ -34,6 +34,24 @@
       "parentUuid": "188387ed_d4865683",
       "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c392e06a_dce1abef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-22T17:53:22Z",
+      "side": 1,
+      "message": "Aha, good timing! I\u0027ll wait for your CL to get submitted then and see if we can abandon this",
+      "parentUuid": "523839d9_30d439cb",
+      "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
