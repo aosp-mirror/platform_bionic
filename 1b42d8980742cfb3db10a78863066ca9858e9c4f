@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "18f5239a_cf39e783",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-03-22T15:31:54Z",
+      "side": 1,
+      "message": "Right, given that we don\u0027t want to expose the strcut just for fixing this problem, directly fixing res_mkquery might be an option.\n\nOr adding mutex to prevent NE might be another.",
+      "parentUuid": "93436e8c_dfaf6b8f",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "47515c4c_6bbd2e90",
         "filename": "libc/dns/resolv/res_data.c",
         "patchSetId": 1
@@ -103,6 +121,24 @@
       "writtenOn": "2020-12-23T06:17:50Z",
       "side": 1,
       "message": "If we decide that switching res_mkquery() to the thread-local state is safe, then we should also update the other calls for consistency.\n\nThese non-thread safe functions are considered legacy by other OSes, but since Bionic didn\u0027t even have a prototype res_nmkquery(), code compiled for Android is likely to be still using them.",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0273c7d7_9d330c92",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-03-22T15:31:54Z",
+      "side": 1,
+      "message": "I think it might be better to only take the minimum step to fix this problem.\nAlso if we change others, then one of the current exposed method(res_init) will be meaningless.",
+      "parentUuid": "47515c4c_6bbd2e90",
       "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
