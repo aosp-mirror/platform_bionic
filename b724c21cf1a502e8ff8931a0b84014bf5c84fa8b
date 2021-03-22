@@ -52,6 +52,24 @@
       "parentUuid": "6328d5a9_5eb4d4b3",
       "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "026fe511_85b11957",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-03-22T17:49:45Z",
+      "side": 1,
+      "message": "Also commented on other cl, but that\u0027s implied by include_build_directory, which defaults to true https://cs.android.com/android/platform/superproject/+/master:build/soong/cc/compiler.go;l\u003d81-83. This likely should be handled on the bp2build side similar to https://r.android.com/1646268.",
+      "parentUuid": "b33fe8ec_be031bda",
+      "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
