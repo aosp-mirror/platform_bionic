@@ -16,6 +16,24 @@
       "message": "The presubmit is rejecting this change and suggesting:\n\nHeader file bionic/benchmarks/util.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nBut I wonder if there is an alternative? It seems odd to have to specify a directory when I just want to include a single file.",
       "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6328d5a9_5eb4d4b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-03-22T17:37:16Z",
+      "side": 1,
+      "message": "Soong has historically not allowed header files within srcs, we could consider changing that or adding a separate property that supports specifying individual .h files; however, for other cases where we\u0027ve run into this issue in the conversion process, we\u0027ve specified the directory in local_include_dirs.",
+      "parentUuid": "7570a1ad_4b1be983",
+      "revId": "b724c21cf1a502e8ff8931a0b84014bf5c84fa8b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
