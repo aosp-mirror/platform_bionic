@@ -16,6 +16,24 @@
       "message": "The presubmit is rejecting this change and suggesting:\n\nHeader file bionic/tests/headers/posix/header_checks.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nHeader file bionic/tests/headers/posix/sys_stat_h_file_type_test_macros.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nHeader file bionic/tests/headers/posix/sys_stat_h_mode_constants.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nSo maybe adding this would make Soong happy?\n\nlocal_include_dirs: [\".\"]\n\nBut it would be nice if we could just add these to srcs, or if there was a corresponding hdrs attribute.",
       "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "523839d9_30d439cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-03-22T17:44:36Z",
+      "side": 1,
+      "message": "Soong adds the build directory implicitly due to include_build_directory property -- https://r.android.com/1646268 may be useful to you",
+      "parentUuid": "188387ed_d4865683",
+      "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
