@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "188387ed_d4865683",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-03-22T17:41:52Z",
+      "side": 1,
+      "message": "The presubmit is rejecting this change and suggesting:\n\nHeader file bionic/tests/headers/posix/header_checks.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nHeader file bionic/tests/headers/posix/sys_stat_h_file_type_test_macros.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nHeader file bionic/tests/headers/posix/sys_stat_h_mode_constants.h is not supported, instead use export_include_dirs or local_include_dirs.\n\nSo maybe adding this would make Soong happy?\n\nlocal_include_dirs: [\".\"]\n\nBut it would be nice if we could just add these to srcs, or if there was a corresponding hdrs attribute.",
+      "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
