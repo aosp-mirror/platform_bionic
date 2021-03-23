@@ -34,6 +34,23 @@
       "parentUuid": "cfbb9ac4_5d93dba5",
       "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "904b9430_152c722d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003247
+      },
+      "writtenOn": "2021-03-23T12:40:43Z",
+      "side": 1,
+      "message": "Seems better for the init function to do nothing, then for there to be concurrency bugs...\n\nThat said, luckily I\u0027m not an owner here anyway ;-)",
+      "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
