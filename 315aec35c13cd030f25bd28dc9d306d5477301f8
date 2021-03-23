@@ -16,6 +16,24 @@
       "message": "It does feel to me that if we\u0027re making such a change to one function then we should change other similar functions for consistency...",
       "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1016eceb_433328cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-03-23T09:48:27Z",
+      "side": 1,
+      "message": "Well, I think it might be better to only take the minimum step to fix this problem.\nAlso if we change others, then one of the current exposed method(res_init) will be meaningless.\nThoughts?",
+      "parentUuid": "cfbb9ac4_5d93dba5",
+      "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
