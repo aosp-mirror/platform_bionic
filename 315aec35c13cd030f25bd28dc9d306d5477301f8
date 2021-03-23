@@ -51,6 +51,24 @@
       "message": "Seems better for the init function to do nothing, then for there to be concurrency bugs...\n\nThat said, luckily I\u0027m not an owner here anyway ;-)",
       "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "798f1709_1cacd7a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-03-23T15:38:25Z",
+      "side": 1,
+      "message": "I see, fair enough. It might result in something wrong(possibly the res_state incorrect) for the callers. but they won\u0027t crash after that. \n\nenh@, any thoughts?",
+      "parentUuid": "904b9430_152c722d",
+      "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
