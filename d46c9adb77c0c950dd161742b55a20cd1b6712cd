@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18a4a3ab_4dfe5c80",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T22:58:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7fa44c3_c765fdab",
+      "range": {
+        "startLine": 141,
+        "startChar": 17,
+        "endLine": 141,
+        "endChar": 26
+      },
+      "revId": "d46c9adb77c0c950dd161742b55a20cd1b6712cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "891b7383_89e85b68",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-24T22:33:30Z",
       "side": 1,
       "message": "this probably makes more sense with the constant than here?\n\nrelated: this comment tells me what i can already see from the next line, but doesn\u0027t tell me _why_. we could move that comment from the function header down here, but i wonder whether this limit should be in the caller instead, and this function should just do what its name claims to do?",
+      "range": {
+        "startLine": 554,
+        "startChar": 28,
+        "endLine": 554,
+        "endChar": 87
+      },
+      "revId": "d46c9adb77c0c950dd161742b55a20cd1b6712cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96e239bf_bf1727b0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T22:58:28Z",
+      "side": 1,
+      "message": "Agreed, moved the specification of kPmdSize to the constant, and moved the commentary on limiting the alignment to the caller.",
+      "parentUuid": "891b7383_89e85b68",
       "range": {
         "startLine": 554,
         "startChar": 28,

@@ -230,6 +230,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "585d64f7_de0dad26",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T22:58:28Z",
+      "side": 1,
+      "message": "Filed b/183651285",
+      "parentUuid": "8d64a865_0ab19e85",
+      "range": {
+        "startLine": 547,
+        "startChar": 7,
+        "endLine": 547,
+        "endChar": 34
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a84e943_54e9059e",
@@ -267,6 +291,30 @@
       "side": 1,
       "message": "It is determined by both. 2MB is the most common size. arm64 can get 512MB pages with ARM64_64K_Pages, and x86_64 can get 1GB pages with the hugepagesz parameter.",
       "parentUuid": "6a84e943_54e9059e",
+      "range": {
+        "startLine": 554,
+        "startChar": 28,
+        "endLine": 554,
+        "endChar": 66
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0251cd50_307ab3ca",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T22:58:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de2ada5e_4375db05",
       "range": {
         "startLine": 554,
         "startChar": 28,
