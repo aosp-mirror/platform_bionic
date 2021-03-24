@@ -208,6 +208,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8d64a865_0ab19e85",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T22:33:30Z",
+      "side": 1,
+      "message": "not now (while changes are still flowing to S), but we could experiment with rejecting such ELF files for T. but if the kernel ignores them, that makes me worry that they do occur (or at least have occurred) in practice...",
+      "parentUuid": "418bdc4d_e18bd757",
+      "range": {
+        "startLine": 547,
+        "startChar": 7,
+        "endLine": 547,
+        "endChar": 34
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6a84e943_54e9059e",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
