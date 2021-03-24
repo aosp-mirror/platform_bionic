@@ -70,8 +70,9 @@ static int GetTargetElfMachine() {
     p_memsz   -> segment memory size (always >= p_filesz)
     p_vaddr   -> segment's virtual address
     p_flags   -> segment flags (e.g. readable, writable, executable)
+    p_align   -> segment's in-memory and in-file alignment
 
-  We will ignore the p_paddr and p_align fields of ElfW(Phdr) for now.
+  We will ignore the p_paddr field of ElfW(Phdr) for now.
 
   The loadable segments can be seen as a list of [p_vaddr ... p_vaddr+p_memsz)
   ranges of virtual addresses. A few rules apply:
@@ -136,6 +137,9 @@ static int GetTargetElfMachine() {
 #define PFLAGS_TO_PROT(x)            (MAYBE_MAP_FLAG((x), PF_X, PROT_EXEC) | \
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
+
+// Default PMD size for x86_64 and aarch64 (2MB).
+static constexpr size_t kPmdSize = (1UL << 21);
 
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
@@ -526,12 +530,40 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
+// Returns the maximum p_align associated with a loadable segment in the ELF
+// program header table. Used to determine whether the file should be loaded at
+// a specific virtual address alignment for use with huge pages.
+size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
+  size_t maximum_alignment = PAGE_SIZE;
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    // p_align must be 0, 1, or a positive, integral power of two.
+    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
+      continue;
+    }
+
+    if (phdr->p_align > maximum_alignment) {
+      maximum_alignment = phdr->p_align;
+    }
+  }
+
+#if defined(__LP64__)
+  return maximum_alignment;
+#else
+  return PAGE_SIZE;
+#endif
+}
+
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
-static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_gap_start,
-                                         size_t* out_gap_size) {
+static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size_t start_align,
+                                         void** out_gap_start, size_t* out_gap_size) {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-  if (align == PAGE_SIZE) {
+  // Reserve enough space to properly align the library's start address.
+  mapping_align = std::max(mapping_align, start_align);
+  if (mapping_align == PAGE_SIZE) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -550,24 +582,24 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_g
   constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, align) + align - PAGE_SIZE;
+  size_t mmap_size = align_up(size, mapping_align) + mapping_align - PAGE_SIZE;
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
   size_t gap_size = 0;
-  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, align));
-  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, align) - 1);
+  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, mapping_align));
+  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, mapping_align) - 1);
   if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
     // This library crosses a 2MB boundary and will fragment a new huge page.
     // Lets take advantage of that and insert a random number of inaccessible huge pages before that
     // to improve address randomization and make it harder to locate this library code by probing.
     munmap(mmap_ptr, mmap_size);
-    align = std::max(align, kGapAlignment);
+    mapping_align = std::max(mapping_align, kGapAlignment);
     gap_size =
         kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
-    mmap_size = align_up(size + gap_size, align) + align - PAGE_SIZE;
+    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - PAGE_SIZE;
     mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -582,13 +614,13 @@ static void* ReserveWithAlignmentPadding(size_t size, size_t align, void** out_g
     gap_start = gap_end = mmap_ptr + mmap_size;
   }
 
-  uint8_t* first = align_up(mmap_ptr, align);
-  uint8_t* last = align_down(gap_start, align) - size;
+  uint8_t* first = align_up(mmap_ptr, mapping_align);
+  uint8_t* last = align_down(gap_start, mapping_align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
-  size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
-  uint8_t* start = first + n * PAGE_SIZE;
+  size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / start_align + 1);
+  uint8_t* start = first + n * start_align;
   // Unmap the extra space around the allocation.
   // Keep it mapped PROT_NONE on 64-bit targets where address space is plentiful to make it harder
   // to defeat ASLR by probing for readable memory mappings.
@@ -622,7 +654,15 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, &gap_start_, &gap_size_);
+    size_t start_alignment = PAGE_SIZE;
+    if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
+      size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
+      // Limit alignment to PMD size as other alignments reduce the number of
+      // bits available for ASLR for no benefit.
+      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : PAGE_SIZE;
+    }
+    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
+                                        &gap_size_);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
@@ -705,6 +745,13 @@ bool ElfReader::LoadSegments() {
       if (seg_addr == MAP_FAILED) {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
+      }
+
+      // Mark segments as huge page eligible if they meet the requirements
+      // (executable and PMD aligned).
+      if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
+          get_transparent_hugepages_supported()) {
+        madvise(seg_addr, file_length, MADV_HUGEPAGE);
       }
     }
 
