@@ -64,6 +64,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4dcad89_870dd4a5",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cb2d7d74_56a02111",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 2
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11187faf_8225d24f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e72210d7_af6ed1d0",
+      "range": {
+        "startLine": 530,
+        "startChar": 66,
+        "endLine": 530,
+        "endChar": 69
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f530a94c_4f3beca4",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-03-24T19:09:18Z",
       "side": 1,
       "message": "nit: type* here and elsewhere",
+      "range": {
+        "startLine": 536,
+        "startChar": 46,
+        "endLine": 536,
+        "endChar": 58
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60489527_9fd96deb",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f530a94c_4f3beca4",
       "range": {
         "startLine": 536,
         "startChar": 46,
@@ -112,6 +184,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "418bdc4d_e18bd757",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "https://man7.org/linux/man-pages/man5/elf.5.html \n\n\"Values of zero and one mean no alignment is required.  Otherwise, p_align should be a positive, integral power of two\"\n\nI\u0027m unsure how strict \"should be\" is in this case, the maximum_alignment function in fs/binfmt_elf.c also simply skips segments instead of rejecting the file.",
+      "parentUuid": "1ab8bfec_8e0caa1a",
+      "range": {
+        "startLine": 547,
+        "startChar": 7,
+        "endLine": 547,
+        "endChar": 34
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6a84e943_54e9059e",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 1
@@ -123,6 +219,30 @@
       "writtenOn": "2021-03-24T19:09:18Z",
       "side": 1,
       "message": "is this determined by hardware or Linux or both? is it 2MiB for both x86-64 and arm64?",
+      "range": {
+        "startLine": 554,
+        "startChar": 28,
+        "endLine": 554,
+        "endChar": 66
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de2ada5e_4375db05",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "It is determined by both. 2MB is the most common size. arm64 can get 512MB pages with ARM64_64K_Pages, and x86_64 can get 1GB pages with the hugepagesz parameter.",
+      "parentUuid": "6a84e943_54e9059e",
       "range": {
         "startLine": 554,
         "startChar": 28,
@@ -156,6 +276,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff4fc3f0_fd2e346c",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 743,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adb64134_f7662a53",
+      "range": {
+        "startLine": 743,
+        "startChar": 73,
+        "endLine": 743,
+        "endChar": 74
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3bf13720_998db05b",
@@ -169,6 +313,30 @@
       "writtenOn": "2021-03-24T19:09:18Z",
       "side": 1,
       "message": "nit: 1UL\n\nshould we name this alignment, since this is the third time it\u0027s appeared, and the second file already?",
+      "range": {
+        "startLine": 745,
+        "startChar": 53,
+        "endLine": 745,
+        "endChar": 56
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eeeb4a00_c1e18ebb",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-03-24T21:47:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bf13720_998db05b",
       "range": {
         "startLine": 745,
         "startChar": 53,
