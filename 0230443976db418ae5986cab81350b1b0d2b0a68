@@ -16,6 +16,167 @@
       "message": "How does this look as an approach to doing hugepage-enabling loading based on p_align?",
       "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e72210d7_af6ed1d0",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "in the",
+      "range": {
+        "startLine": 530,
+        "startChar": 66,
+        "endLine": 530,
+        "endChar": 69
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb2d7d74_56a02111",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "nit: // comments",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 2
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f530a94c_4f3beca4",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 536,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "nit: type* here and elsewhere",
+      "range": {
+        "startLine": 536,
+        "startChar": 46,
+        "endLine": 536,
+        "endChar": 58
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ab8bfec_8e0caa1a",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "move this condition up with the PT_LOAD condition?\n\ndo they occur in practice? (i.e. are they truly \"invalid\" and we should be rejecting the ELF file, or are they just \"invalid for this optimization\"?)",
+      "range": {
+        "startLine": 547,
+        "startChar": 7,
+        "endLine": 547,
+        "endChar": 34
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a84e943_54e9059e",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "is this determined by hardware or Linux or both? is it 2MiB for both x86-64 and arm64?",
+      "range": {
+        "startLine": 554,
+        "startChar": 28,
+        "endLine": 554,
+        "endChar": 66
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adb64134_f7662a53",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 743,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "nit: \"and\", plus the comment is the opposite way round from the code",
+      "range": {
+        "startLine": 743,
+        "startChar": 73,
+        "endLine": 743,
+        "endChar": 74
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bf13720_998db05b",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-24T19:09:18Z",
+      "side": 1,
+      "message": "nit: 1UL\n\nshould we name this alignment, since this is the third time it\u0027s appeared, and the second file already?",
+      "range": {
+        "startLine": 745,
+        "startChar": 53,
+        "endLine": 745,
+        "endChar": 56
+      },
+      "revId": "0230443976db418ae5986cab81350b1b0d2b0a68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
