@@ -16,6 +16,24 @@
       "message": "so the main thread keeps the zygote key? does that matter?",
       "revId": "811d180e892f757d052cf9d6c6b7494a8c4a8c2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0066057c_20d12846",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2021-03-25T23:39:36Z",
+      "side": 1,
+      "message": "It could matter if a malicious app uses a stack buffer overflow in the zygote, or another app\u0027s main thread, to overwrite a return address with a signed pointer that it manufactured (e.g. by ptracing its main thread for the key, or somehow running code on the main thread).\n\nWith reset on thread creation we are at least defending against such attacks on non-main threads (either in the current process or a different one). As far as I know, the attack surface for the main thread is typically smaller because less code runs there.\n\nA couple of ways to defend against attacks on the main thread would be to either terminate the main thread in zygote children or make it sleep forever (after having reset the keys). But this would require a radical redesign of how the zygote works, I would imagine.",
+      "parentUuid": "9be2732c_1328376d",
+      "revId": "811d180e892f757d052cf9d6c6b7494a8c4a8c2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
