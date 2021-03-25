@@ -86,6 +86,23 @@
       "message": "enh@, any suggestions? If not, I\u0027ll take the suggestion from maze@ and codewiz@.\n",
       "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fdfd3fb_c7b59303",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-25T21:22:01Z",
+      "side": 1,
+      "message": "(sorry for the delay. i struggled to follow this, dug deep yesterday after with a very long review comment ... and my machine rebooted and lost it. hopefully today\u0027s shorter version is actually clearer because it contains less of my workings-out :-) )",
+      "revId": "315aec35c13cd030f25bd28dc9d306d5477301f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

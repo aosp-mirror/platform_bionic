@@ -141,6 +141,24 @@
       "parentUuid": "47515c4c_6bbd2e90",
       "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34945bbd_a76fc74d",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-25T21:22:01Z",
+      "side": 1,
+      "message": "okay, so it looks like there are three suggestions:\n\n#1 - make this function/these functions use the thread-local state instead.\n\nwe certainly have precedent for changing functions that are not thread-safe on other systems to being thread-safe on bionic...\n\n...but that\u0027s usually when it:\n1. makes ignorant call sites less likely to have problems\n2. and isn\u0027t likely to affect other call sites at all.\n\nhere i was struggling to understand, so i actually went and tried the \"let\u0027s just make all these thread local\" (because, yes, like someone said --- it\u0027s pretty weird to just change one of these functions). but that convinced me that i wasn\u0027t convinced about this. i may just not know enough about these APIs, but i couldn\u0027t convince myself that we\u0027d be meeting condition 2 above. if i\u0027m a caller that calls these from multiple threads (but with my own lock), it seems like us switching these to use thread-local state would break that caller?\n\n#2 - expose res_nmkquery()\n\ni\u0027m conflicted on this one. it does make sense, but oh my, what an awful struct. and on the assumption you\u0027re talking about S, we\u0027re really late in the release to be doing something like that.\n\n#3 - add missing locking\n\nthis one seems like the safest?\n\ni\u0027ve struggled to really understand res_init() and _res.\n\ni\u0027m assuming\n```\n        if ((statp-\u003eoptions \u0026 RES_INIT) !\u003d 0U)\n                res_ndestroy(statp);\n```\nis really meant for non-globals, so you can \"reset\" a res_state? so maybe the res_need_init() cruft should actually have been a pthread_once() for _res? is that the best way to add the missing locking?",
+      "parentUuid": "0273c7d7_9d330c92",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
