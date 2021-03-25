@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55113c8d_2c283b65",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-25T23:33:06Z",
+      "side": 1,
+      "message": "makes sense to me, but defer to rprichard for +2.\n\n(i\u0027d also prefer to wait until we\u0027re no longer auto-merging into sc-dev, since this is for T.)",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
