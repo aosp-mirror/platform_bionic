@@ -57,5 +57,4 @@ cc_library_headers {
         "//apex_available:platform",
         "com.android.runtime",
     ],
-    bazel_module: { bp2build_available: true },
 }
