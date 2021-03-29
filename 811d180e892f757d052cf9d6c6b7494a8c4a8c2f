@@ -34,6 +34,41 @@
       "parentUuid": "9be2732c_1328376d",
       "revId": "811d180e892f757d052cf9d6c6b7494a8c4a8c2f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f1b79a0_e125609f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-29T18:19:18Z",
+      "side": 1,
+      "message": "\u003e As far as I know, the attack surface for the main thread is typically smaller because less code runs there.\n\ndefer to chriswailes, but i don\u0027t think that\u0027s true?\n\n\u003e A couple of ways to defend against attacks on the main thread would be to either terminate the main thread in zygote children or make it sleep forever (after having reset the keys). But this would require a radical redesign of how the zygote works, I would imagine.\n\n+chriswailes,hboehm?",
+      "parentUuid": "0066057c_20d12846",
+      "revId": "811d180e892f757d052cf9d6c6b7494a8c4a8c2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33cdab1c_2dea1efa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-29T18:19:18Z",
+      "side": 1,
+      "message": "(this might still be better than nothing, and we can worry about the main thread in T, but +zygote experts...)",
+      "revId": "811d180e892f757d052cf9d6c6b7494a8c4a8c2f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
