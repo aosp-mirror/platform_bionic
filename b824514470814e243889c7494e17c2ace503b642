@@ -33,6 +33,23 @@
       "message": "huh -- looks like i didn\u0027t get emails about any of the +CR votes. maybe that\u0027s because of the WIP bit?\n\nin any case, thanks all! i\u0027m happy to land this as-is once chriswailes@ verifies this does what he hopes",
       "revId": "b824514470814e243889c7494e17c2ace503b642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6405d268_a841fa61",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-03-29T21:56:28Z",
+      "side": 1,
+      "message": "This appears to have solved the issues I was having with the stack protectors.",
+      "revId": "b824514470814e243889c7494e17c2ace503b642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
