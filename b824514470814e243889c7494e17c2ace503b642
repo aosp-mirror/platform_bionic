@@ -50,6 +50,23 @@
       "message": "This appears to have solved the issues I was having with the stack protectors.",
       "revId": "b824514470814e243889c7494e17c2ace503b642",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1b26843_c205d17a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096946
+      },
+      "writtenOn": "2021-03-29T22:06:26Z",
+      "side": 1,
+      "message": "awesome -- thanks all!",
+      "revId": "b824514470814e243889c7494e17c2ace503b642",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
