@@ -159,6 +159,24 @@
       "parentUuid": "0273c7d7_9d330c92",
       "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08f44a4d_5acbe1e1",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-03-30T17:35:12Z",
+      "side": 1,
+      "message": "|#1 - make this function/these functions use the thread-local state instead.\nRight, it seems to me that if we only changed res_mkquery, it would meet the condition you listed.\nBut if we changed all res_* APIs, then not the cases.\n\n|#2 - expose res_nmkquery()\nHmm, also we probably don\u0027t want to support the struct forever. 😎\n\n|#3 - add missing locking\nYeah, in order to avoid doing the weird thing (which is only changing res_mkquery()), this seems the only feasible and the safest way.\nSo let\u0027s move towards this option.\nAs for the lock, I think you are probably right. Given that we should protect the _nres, res_need_init() might be a good place to add the missing lock.\nLet me investigate it more before updating the CL.",
+      "parentUuid": "34945bbd_a76fc74d",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
