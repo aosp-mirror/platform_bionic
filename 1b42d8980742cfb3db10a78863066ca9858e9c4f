@@ -177,6 +177,24 @@
       "parentUuid": "34945bbd_a76fc74d",
       "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13d45725_9f089199",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-03-30T17:45:46Z",
+      "side": 1,
+      "message": "either pthread_once_t or the usual C++\n```\nT* GetT() {\n  static T t \u003d InitT();\n  return \u0026t;\n}\n```\nthread-safe initialization idiom seems like a good way to remove the res_need_init() cruft entirely, and fix the bug at the same time. (by s/\u0026_nres/GetStaticResState()/g or whatever, and just deleting the res_need_init()/res_init() cruft.)\n\nah, but res_init() is public, and actually does reset the state. does that matter though? do any of these calls *mutate* `_nres`? it\u0027s not obvious to me that they do, so i don\u0027t think a caller should be able to tell if we made res_init() a no-op?",
+      "parentUuid": "08f44a4d_5acbe1e1",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
