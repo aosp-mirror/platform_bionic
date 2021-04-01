@@ -89,6 +89,3 @@ asm("  .section .tdata,\"awT\",@progbits\n"
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif

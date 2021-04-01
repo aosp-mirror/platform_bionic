@@ -11,7 +11,6 @@ package {
 filegroup {
     name: "bionic-gensyscalls",
     srcs: ["gensyscalls.py"],
-    bazel_module: { bp2build_available: true },
 }
 
 // Generate the C++ policy sources for app and system seccomp-bpf filters.
