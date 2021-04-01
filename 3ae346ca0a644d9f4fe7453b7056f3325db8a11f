@@ -52,6 +52,24 @@
       "parentUuid": "60d80e4d_1aae491b",
       "revId": "3ae346ca0a644d9f4fe7453b7056f3325db8a11f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e65086c1_56b5e115",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2021-04-01T23:32:49Z",
+      "side": 1,
+      "message": "Unfortunately the trix only has the log messages without any context like the calling process:\n\nAccess denied finding property \"drm.service.enabled\"\nAccess denied finding property \"ro.boot.hardware.platform\"\n...\n\nI agree with you that we should fix these, but in the spirit of the fixit, it seems the \u0027W\u0027 actually is the right log level.  For example, the associated SELinux is \u0027W\u0027, as are other SELinux audits.  Those are in the same category of \"possibly, but likely not user-visibly an error\", which unfortunately isn\u0027t exactly covered in https://source.android.com/setup/contribute/code-style#log-sparingly but seems to align to \u0027W\u0027 ?\n\n```\n04-01 21:24:45.407  4325  4325 W getprop : type\u003d1400 audit(0.0:77): avc: denied { read } for name\u003d\"u:object_r:netd_stable_secret_prop:s0\" dev\u003d\"tmpfs\" ino\u003d229 scontext\u003du:r:shell:s0 tcontext\u003du:object_r:netd_stable_secret_prop:s0 tclass\u003dfile permissive\u003d0\n04-01 21:24:45.415  4325  4325 E libc    : Access denied finding property \"persist.netd.stable_secret\"\n04-01 21:25:01.572  4335  4335 E libc    : Access denied finding property \"persist.netd.stable_secret\"\n04-01 21:25:01.567  4335  4335 W getprop : type\u003d1400 audit(0.0:78): avc: denied { read } for name\u003d\"u:object_r:netd_stable_secret_prop:s0\" dev\u003d\"tmpfs\" ino\u003d229 scontext\u003du:r:shell:s0 tcontext\u003du:object_r:netd_stable_secret_prop:s0 tclass\u003dfile permissive\u003d0\n04-01 21:25:57.823  4365  4365 W ls      : type\u003d1400 audit(0.0:79): avc: denied { getattr } for path\u003d\"/dev/event-log-tags\" dev\u003d\"tmpfs\" ino\u003d676 scontext\u003du:r:shell:s0 tcontext\u003du:object_r:runtime_event_log_tags_file:s0 tclass\u003dfile permissive\u003d0\n```",
+      "parentUuid": "e13f8812_d3838a64",
+      "revId": "3ae346ca0a644d9f4fe7453b7056f3325db8a11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
