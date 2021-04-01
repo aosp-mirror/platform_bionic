@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b82fc32_11c576c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-01T23:06:08Z",
+      "side": 1,
+      "message": "isn\u0027t this the opposite of the intent of the log cleanup fixit? :-)\n\nif you have good motivating examples for why this logging is a mistake, and the callers can\u0027t/shouldn\u0027t be fixed, include them in the commit message?\n\n(this comes on a day when a bug was resolved _thanks_ to a log message about a system property, so this still smells like an ERROR to me... note that it was never FATAL, despite the wording in the commit message.)",
+      "revId": "3ae346ca0a644d9f4fe7453b7056f3325db8a11f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
