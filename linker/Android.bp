@@ -68,6 +68,9 @@ cc_object {
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
+
+    // b/182338959
+    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
