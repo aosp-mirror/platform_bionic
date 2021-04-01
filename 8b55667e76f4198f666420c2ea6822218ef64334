@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "061f606e_60cfbcf2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-01T23:37:16Z",
+      "side": 1,
+      "message": "yeah, fair enough --- i\u0027ll buy the \"this matches SELinux\" argument. can you just add that to the commit message?\n\nmaybe something along the lines of s/Reduce/Match SELinux/ :-)",
+      "revId": "8b55667e76f4198f666420c2ea6822218ef64334",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
