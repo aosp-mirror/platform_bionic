@@ -133,7 +133,7 @@ const prop_info* SystemProperties::Find(const char* name) {
 
   prop_area* pa = contexts_->GetPropAreaForName(name);
   if (!pa) {
-    async_safe_format_log(ANDROID_LOG_ERROR, "libc", "Access denied finding property \"%s\"", name);
+    async_safe_format_log(ANDROID_LOG_WARN, "libc", "Access denied finding property \"%s\"", name);
     return nullptr;
   }
 
