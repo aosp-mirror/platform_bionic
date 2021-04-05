@@ -4,6 +4,12 @@
       "name": "CtsBionicTestCases"
     },
     {
+      "name": "CtsTaggingHostTestCases"
+    },
+    {
+      "name": "debuggerd_test"
+    },
+    {
       "name": "fdtrack_test"
     },
     {
@@ -17,9 +23,6 @@
     },
     {
       "name": "memunreachable_unit_test"
-    },
-    {
-      "name": "CtsTaggingHostTestCases"
     }
   ]
 }

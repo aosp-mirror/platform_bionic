@@ -37,7 +37,7 @@
 
 extern "C" ssize_t __flistxattr(int, char*, size_t);
 
-ssize_t flistxattr(int fd, char *list, size_t size) {
+ssize_t flistxattr(int fd, char* list, size_t size) {
   int saved_errno = errno;
   ssize_t result = __flistxattr(fd, list, size);
   if (result != -1 || errno != EBADF) {
@@ -45,7 +45,7 @@ ssize_t flistxattr(int fd, char *list, size_t size) {
   }
 
   // fd could be an O_PATH file descriptor, and the kernel
-  // may not directly support fgetxattr() on such a file descriptor.
+  // may not directly support flistxattr() on such a file descriptor.
   // Use /proc/self/fd instead to emulate this support.
   int fd_flag = fcntl(fd, F_GETFL);
   if (fd_flag == -1 || (fd_flag & O_PATH) == 0) {

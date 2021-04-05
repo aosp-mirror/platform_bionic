@@ -120,6 +120,11 @@ TEST(sys_stat, statx) {
 #endif
 }
 
+TEST(sys_stat, fchmod_EBADF) {
+  ASSERT_EQ(-1, fchmod(-1, 0751));
+  ASSERT_EQ(EBADF, errno);
+}
+
 TEST(sys_stat, fchmodat_EFAULT_file) {
   ASSERT_EQ(-1, fchmodat(AT_FDCWD, (char *) 0x1, 0751, 0));
   ASSERT_EQ(EFAULT, errno);

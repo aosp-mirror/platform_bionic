@@ -95,9 +95,10 @@ struct libc_shared_globals {
   TlsModules tls_modules;
   BionicAllocator tls_allocator;
 
-  // Values passed from the HWASan runtime (via libc.so) to the loader.
+  // Values passed from libc.so to the loader.
   void (*load_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
   void (*unload_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
+  void (*set_target_sdk_version_hook)(int target) = nullptr;
 
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
@@ -108,6 +109,7 @@ struct libc_shared_globals {
 
   const char* scudo_stack_depot = nullptr;
   const char* scudo_region_info = nullptr;
+  const char* scudo_ring_buffer = nullptr;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 };
