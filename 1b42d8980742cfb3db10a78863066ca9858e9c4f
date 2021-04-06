@@ -195,6 +195,24 @@
       "parentUuid": "08f44a4d_5acbe1e1",
       "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89094d43_a8c0ba2f",
+        "filename": "libc/dns/resolv/res_data.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-04-06T18:07:38Z",
+      "side": 1,
+      "message": "I guess we can\u0027t rely on the C++11 characteristic as here is the pure C code.\nSo probably pthread_* is the only way we can do.",
+      "parentUuid": "13d45725_9f089199",
+      "revId": "1b42d8980742cfb3db10a78863066ca9858e9c4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
