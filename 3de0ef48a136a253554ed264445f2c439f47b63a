@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14c10193_fcf394eb",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-06T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f0dcc6a_b6830333",
+      "range": {
+        "startLine": 167,
+        "startChar": 13,
+        "endLine": 167,
+        "endChar": 18
+      },
+      "revId": "3de0ef48a136a253554ed264445f2c439f47b63a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2a37e01c_e90e394c",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdd7f286_14891fba",
+        "filename": "libc/arch-arm/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-06T00:43:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a37e01c_e90e394c",
+      "range": {
+        "startLine": 249,
+        "startChar": 13,
+        "endLine": 249,
+        "endChar": 18
+      },
+      "revId": "3de0ef48a136a253554ed264445f2c439f47b63a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6fcb3fb7_cee22f29",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-04-03T01:22:09Z",
       "side": 1,
       "message": "We\u0027re adding an extra instruction for non-rsp registers here as well: maybe it\u0027s worth just special casing that one? (Then again, this probably isn\u0027t measurable on anything that isn\u0027t a useless microbenchmark)",
+      "range": {
+        "startLine": 177,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 0
+      },
+      "revId": "3de0ef48a136a253554ed264445f2c439f47b63a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f4b26a0_89a5b823",
+        "filename": "libc/arch-x86_64/bionic/setjmp.S",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-06T00:43:05Z",
+      "side": 1,
+      "message": "yeah, that [plus \"who knows what microinstructions this actually gets translated to?\"] was basically my thinking.\n\nplus \"like arm64, i suspect we\u0027ll be back to make this even more complicated when CET is widely available\".",
+      "parentUuid": "6fcb3fb7_cee22f29",
       "range": {
         "startLine": 177,
         "startChar": 0,
