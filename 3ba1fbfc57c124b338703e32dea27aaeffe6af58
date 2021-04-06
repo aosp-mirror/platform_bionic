@@ -34,6 +34,24 @@
       "parentUuid": "55113c8d_2c283b65",
       "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed6556ab_88115e47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-06T23:58:41Z",
+      "side": 1,
+      "message": "what would your sales pitch for getting a feature exception for this in S sound like? it\u0027s _really_ late to be taking a new feature in S. do you have customers signed up to actually _use_ this in S?",
+      "parentUuid": "56703614_420d9e8c",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
