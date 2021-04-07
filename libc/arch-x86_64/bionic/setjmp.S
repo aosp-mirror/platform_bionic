@@ -64,25 +64,6 @@
 #define _JB_SIGMASK 9
 #define _JB_CHECKSUM 10
 
-#define MANGLE_REGISTERS 1
-
-.macro m_mangle_registers reg
-#if MANGLE_REGISTERS
-  xorq \reg,%rbx
-  xorq \reg,%rbp
-  xorq \reg,%r12
-  xorq \reg,%r13
-  xorq \reg,%r14
-  xorq \reg,%r15
-  xorq \reg,%rsp
-  xorq \reg,%r11
-#endif
-.endm
-
-.macro m_unmangle_registers reg
-  m_mangle_registers \reg
-.endm
-
 .macro m_calculate_checksum dst, src
   movq $0, \dst
   .irp i,0,1,2,3,4,5,6,7
@@ -127,20 +108,26 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   popq %rdi // Pop 'env'.
 
 2:
-  // Save the callee-save registers.
+  // Fetch the setjmp cookie and clear the signal flag bit.
   popq %rax
   andq $-2,%rax
   movq (%rsp),%r11
-  m_mangle_registers %rax
-  movq %rbx,(_JB_RBX * 8)(%rdi)
-  movq %rbp,(_JB_RBP * 8)(%rdi)
-  movq %r12,(_JB_R12 * 8)(%rdi)
-  movq %r13,(_JB_R13 * 8)(%rdi)
-  movq %r14,(_JB_R14 * 8)(%rdi)
-  movq %r15,(_JB_R15 * 8)(%rdi)
-  movq %rsp,(_JB_RSP * 8)(%rdi)
-  movq %r11,(_JB_PC  * 8)(%rdi)
-  m_unmangle_registers %rax
+
+  // Save the callee-save registers.
+
+.macro m_mangle_register reg, offset
+  movq \reg, (\offset * 8)(%rdi)
+  xorq %rax, (\offset * 8)(%rdi)  // %rax contains the cookie.
+.endm
+
+  m_mangle_register %rbx, _JB_RBX
+  m_mangle_register %rbp, _JB_RBP
+  m_mangle_register %r12, _JB_R12
+  m_mangle_register %r13, _JB_R13
+  m_mangle_register %r14, _JB_R14
+  m_mangle_register %r15, _JB_R15
+  m_mangle_register %rsp, _JB_RSP
+  m_mangle_register %r11, _JB_PC
 
   m_calculate_checksum %rax, %rdi
   movq %rax, (_JB_CHECKSUM * 8)(%rdi)
@@ -179,15 +166,22 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   popq %rax // Pop 'value'.
 
   // Restore the callee-save registers.
-  movq (_JB_RBX * 8)(%r12),%rbx
-  movq (_JB_RBP * 8)(%r12),%rbp
-  movq (_JB_R13 * 8)(%r12),%r13
-  movq (_JB_R14 * 8)(%r12),%r14
-  movq (_JB_R15 * 8)(%r12),%r15
-  movq (_JB_RSP * 8)(%r12),%rsp
-  movq (_JB_PC  * 8)(%r12),%r11
-  movq (_JB_R12 * 8)(%r12),%r12
-  m_unmangle_registers %rcx
+
+.macro m_unmangle_register reg, offset
+  movq (\offset * 8)(%r12), %rdx  // Clobbers rdx.
+  xorq %rcx, %rdx                 // %rcx contains the cookie.
+  // Now it's safe to overwrite the register (http://b/152210274).
+  movq %rdx, \reg
+.endm
+
+  m_unmangle_register %rbx, _JB_RBX
+  m_unmangle_register %rbp, _JB_RBP
+  m_unmangle_register %r13, _JB_R13
+  m_unmangle_register %r14, _JB_R14
+  m_unmangle_register %r15, _JB_R15
+  m_unmangle_register %rsp, _JB_RSP
+  m_unmangle_register %r11, _JB_PC
+  m_unmangle_register %r12, _JB_R12
 
   // Check the cookie.
   pushq %rax
