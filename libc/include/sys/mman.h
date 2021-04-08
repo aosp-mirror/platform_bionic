@@ -167,9 +167,9 @@ int madvise(void* __addr, size_t __size, int __advice);
  * works just like madvise(2) but applies to the process specified by the given
  * PID file descriptor.
  *
- * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ * Returns the number of bytes advised on success, and returns -1 and sets `errno` on failure.
  */
-int process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned int __flags);
+ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags);
 
 #if defined(__USE_GNU)
 
