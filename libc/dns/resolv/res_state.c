@@ -68,7 +68,7 @@ _res_thread_alloc(void)
 }
 
 static void
-_res_static_done( res_static  rs )
+_res_static_done(struct res_static* rs)
 {
     /* fortunately, there is nothing to do here, since the
      * points in h_addr_ptrs and host_aliases should all
@@ -135,25 +135,6 @@ _res_thread_get(void)
     return rt;
 }
 
-__LIBC_HIDDEN__
-struct __res_state _nres;
-
-#if 0
-struct resolv_cache*
-__get_res_cache(void)
-{
-    _res_thread*  rt = _res_thread_get();
-
-    if (!rt)
-        return NULL;
-
-    if (!rt->_cache) {
-        rt->_cache = _resolv_cache_create();
-    }
-    return rt->_cache;
-}
-#endif
-
 int*
 __get_h_errno(void)
 {
@@ -177,9 +158,7 @@ __res_put_state(res_state res __unused)
     /* nothing to do */
 }
 
-res_static
-__res_get_static(void)
-{
+struct res_static* __res_get_static(void) {
     _res_thread*  rt = _res_thread_get();
 
     return rt ? rt->_rstatic : NULL;

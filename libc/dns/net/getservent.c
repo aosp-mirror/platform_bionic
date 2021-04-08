@@ -35,7 +35,7 @@
 #include "resolv_static.h"
 #include "services.h"
 
-struct servent* getservent_r(res_static rs) {
+struct servent* getservent_r(struct res_static* rs) {
     const char*  p;
     const char*  q;
     int          namelen;
@@ -109,17 +109,17 @@ void setservent(int stayopen) {
 }
 
 void endservent(void) {
-  res_static rs = __res_get_static();
+  struct res_static* rs = __res_get_static();
   if (rs) rs->servent_ptr = NULL;
 }
 
 struct servent* getservent(void) {
-  res_static rs = __res_get_static();
+  struct res_static* rs = __res_get_static();
   return rs ? getservent_r(rs) : NULL;
 }
 
 struct servent* getservbyname(const char* name, const char* proto) {
-  res_static rs = __res_get_static();
+  struct res_static* rs = __res_get_static();
   if (rs == NULL) return NULL;
 
   const char* old_servent_ptr = rs->servent_ptr;
@@ -135,7 +135,7 @@ struct servent* getservbyname(const char* name, const char* proto) {
 }
 
 struct servent* getservbyport(int port, const char* proto) {
-  res_static rs = __res_get_static();
+  struct res_static* rs = __res_get_static();
   if (rs == NULL) return NULL;
 
   const char* old_servent_ptr = rs->servent_ptr;
