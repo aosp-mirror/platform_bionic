@@ -52,6 +52,24 @@
       "parentUuid": "523839d9_30d439cb",
       "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a45184d7_19ad06c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-08T16:32:05Z",
+      "side": 1,
+      "message": "This CL should be unnecessary now that https://android-review.googlesource.com/c/platform/build/soong/+/1664504 has been submitted",
+      "parentUuid": "c392e06a_dce1abef",
+      "revId": "0d6e4fe42a947a7ecf9214529317637fd5396b71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
