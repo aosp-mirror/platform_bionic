@@ -245,7 +245,7 @@ int     __signalfd4:signalfd4(int, const sigset64_t*, size_t, int)  all
 # sockets
 int           __socket:socket(int, int, int)              arm,lp64
 int           __socketpair:socketpair(int, int, int, int*)    arm,lp64
-int           __bind:bind(int, struct sockaddr*, socklen_t)  arm,lp64
+int           bind(int, struct sockaddr*, socklen_t)  arm,lp64
 int           __connect:connect(int, struct sockaddr*, socklen_t)   arm,lp64
 int           listen(int, int)                   arm,lp64
 int           __accept4:accept4(int, struct sockaddr*, socklen_t*, int)  arm,lp64
@@ -263,7 +263,7 @@ int           __sendmmsg:sendmmsg(int, struct mmsghdr*, unsigned int, int)   arm
 
 # sockets for x86. These are done as an "indexed" call to socketcall syscall.
 int           __socket:socketcall:1(int, int, int) x86
-int           __bind:socketcall:2(int, struct sockaddr*, int)  x86
+int           bind:socketcall:2(int, struct sockaddr*, int)  x86
 int           __connect:socketcall:3(int, struct sockaddr*, socklen_t)   x86
 int           listen:socketcall:4(int, int)                   x86
 int           getsockname:socketcall:6(int, struct sockaddr*, socklen_t*)  x86
