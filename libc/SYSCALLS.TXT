@@ -113,7 +113,7 @@ void*       __mremap:mremap(void*, size_t, size_t, int, void*)  all
 int         msync(const void*, size_t, int)    all
 int         mprotect(const void*, size_t, int)  all
 int         madvise(void*, size_t, int)  all
-int         process_madvise(int, const struct iovec*, size_t, int, unsigned int)     all
+ssize_t     process_madvise(int, const struct iovec*, size_t, int, unsigned int)     all
 int mlock(const void* addr, size_t len)    all
 int mlock2(const void* addr, size_t len, int flags)    all
 int         munlock(const void* addr, size_t len)   all
