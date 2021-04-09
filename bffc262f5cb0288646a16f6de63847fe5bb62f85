@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fc33707_e25963c2",
+        "filename": "tests/arpa_inet_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-04-09T22:23:52Z",
+      "side": 1,
+      "message": "Should you be checking that dst is also equal to \"0x01.0002.0EF0.20\"?",
+      "range": {
+        "startLine": 245,
+        "startChar": 61,
+        "endLine": 245,
+        "endChar": 64
+      },
+      "revId": "bffc262f5cb0288646a16f6de63847fe5bb62f85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
