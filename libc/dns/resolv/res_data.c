@@ -40,6 +40,7 @@ __RCSID("$NetBSD: res_data.c,v 1.8 2004/06/09 18:07:03 christos Exp $");
 #include <ctype.h>
 #include <netdb.h>
 #include "resolv_private.h"
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -82,11 +83,9 @@ extern struct __res_state _nres;
 
 int  res_ourserver_p(const res_state, const struct sockaddr *);
 
-#define res_need_init()   ((_nres.options & RES_INIT) == 0U)
+static pthread_once_t once_control = PTHREAD_ONCE_INIT;
 
-int
-res_init(void) {
-	int rv;
+static void init_once(void) {
 	extern int __res_vinit(res_state, int);
 #ifdef COMPAT__RES
 	/*
@@ -140,11 +139,21 @@ res_init(void) {
 	if (!_nres.id)
 		_nres.id = res_randomid();
 
-	rv = __res_vinit(&_nres, 1);
+	__res_vinit(&_nres, 1);
 #ifdef COMPAT__RES
 	__res_put_old_state(&_nres);
 #endif
-	return rv;
+}
+
+int
+res_init(void) {
+    pthread_once(&once_control, init_once);
+    return 0;
+}
+
+static res_state get_static_res_state() {
+    pthread_once(&once_control, init_once);
+    return &_nres;
 }
 
 void
@@ -159,10 +168,7 @@ fp_query(const u_char *msg, FILE *file) {
 
 void
 fp_nquery(const u_char *msg, int len, FILE *file) {
-	if (res_need_init() && res_init() == -1)
-		return;
-
-	res_pquery(&_nres, msg, len, file);
+	res_pquery(get_static_res_state(), msg, len, file);
 }
 
 int
@@ -175,11 +181,7 @@ res_mkquery(int op,			/* opcode of query */
 	    u_char *buf,		/* buffer to put query */
 	    int buflen)			/* size of buffer */
 {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-	return (res_nmkquery(&_nres, op, dname, class, type,
+	return (res_nmkquery(get_static_res_state(), op, dname, class, type,
 			     data, datalen,
 			     newrr_in, buf, buflen));
 }
@@ -187,12 +189,7 @@ res_mkquery(int op,			/* opcode of query */
 #ifdef _LIBRESOLV
 int
 res_mkupdate(ns_updrec *rrecp_in, u_char *buf, int buflen) {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nmkupdate(&_nres, rrecp_in, buf, buflen));
+	return (res_nmkupdate(get_static_res_state(), rrecp_in, buf, buflen));
 }
 #endif
 
@@ -202,11 +199,7 @@ res_query(const char *name,	/* domain name */
 	  u_char *answer,	/* buffer to put answer */
 	  int anslen)		/* size of answer buffer */
 {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-	return (res_nquery(&_nres, name, class, type, answer, anslen));
+	return (res_nquery(get_static_res_state(), name, class, type, answer, anslen));
 }
 
 void
@@ -226,12 +219,7 @@ res_isourserver(const struct sockaddr_in *inp) {
 
 int
 res_send(const u_char *buf, int buflen, u_char *ans, int anssiz) {
-	if (res_need_init() && res_init() == -1) {
-		/* errno should have been set by res_init() in this case. */
-		return (-1);
-	}
-
-	return (res_nsend(&_nres, buf, buflen, ans, anssiz));
+	return (res_nsend(get_static_res_state(), buf, buflen, ans, anssiz));
 }
 
 #ifdef _LIBRESOLV
@@ -239,12 +227,7 @@ int
 res_sendsigned(const u_char *buf, int buflen, ns_tsig_key *key,
 	       u_char *ans, int anssiz)
 {
-	if (res_need_init() && res_init() == -1) {
-		/* errno should have been set by res_init() in this case. */
-		return (-1);
-	}
-
-	return (res_nsendsigned(&_nres, buf, buflen, key, ans, anssiz));
+	return (res_nsendsigned(get_static_res_state(), buf, buflen, key, ans, anssiz));
 }
 #endif
 
@@ -256,12 +239,7 @@ res_close(void) {
 #ifdef _LIBRESOLV
 int
 res_update(ns_updrec *rrecp_in) {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nupdate(&_nres, rrecp_in, NULL));
+	return (res_nupdate(get_static_res_state(), rrecp_in, NULL));
 }
 #endif
 
@@ -271,12 +249,7 @@ res_search(const char *name,	/* domain name */
 	   u_char *answer,	/* buffer to put answer */
 	   int anslen)		/* size of answer */
 {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nsearch(&_nres, name, class, type, answer, anslen));
+	return (res_nsearch(get_static_res_state(), name, class, type, answer, anslen));
 }
 
 int
@@ -286,12 +259,7 @@ res_querydomain(const char *name,
 		u_char *answer,		/* buffer to put answer */
 		int anslen)		/* size of answer */
 {
-	if (res_need_init() && res_init() == -1) {
-		RES_SET_H_ERRNO(&_nres, NETDB_INTERNAL);
-		return (-1);
-	}
-
-	return (res_nquerydomain(&_nres, name, domain,
+	return (res_nquerydomain(get_static_res_state(), name, domain,
 				 class, type,
 				 answer, anslen));
 }
