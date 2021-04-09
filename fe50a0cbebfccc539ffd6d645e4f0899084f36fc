@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e509f66e_18e7ca71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-09T16:12:20Z",
+      "side": 1,
+      "message": "ps2 adds some wchar_t casts to deal with the different sign of wchar_t on different architectures :-(",
+      "revId": "fe50a0cbebfccc539ffd6d645e4f0899084f36fc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
