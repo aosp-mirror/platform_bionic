@@ -93,6 +93,8 @@ __attribute__((constructor)) static void ctor() {
     android_fdtrack_hook_t expected = nullptr;
     installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
   }
+
+  android_fdtrack_set_globally_enabled(true);
 }
 
 __attribute__((destructor)) static void dtor() {
