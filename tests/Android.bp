@@ -567,6 +567,9 @@ cc_defaults {
         "-Wno-strlcpy-strlcat-size",
         "-Wno-strncat-size",
     ],
+    static_libs: [
+        "libbase",
+    ],
 }
 
 cc_defaults {
@@ -575,6 +578,9 @@ cc_defaults {
         "-U_FORTIFY_SOURCE",
     ],
     srcs: ["fortify_test_main.cpp"],
+    static_libs: [
+        "libbase",
+    ],
     tidy: false,
     target: {
         host: {
@@ -839,7 +845,6 @@ cc_defaults {
             ],
             static_libs: [
                 // The order of these libraries matters, do not shuffle them.
-                "libbase",
                 "libmeminfo",
                 "libziparchive",
                 "libz",

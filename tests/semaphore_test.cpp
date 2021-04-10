@@ -17,17 +17,18 @@
 #include <semaphore.h>
 
 #include <errno.h>
-#include <gtest/gtest.h>
 #include <limits.h>
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
 
-#include "BionicDeathTest.h"
+#include <android-base/silent_death_test.h>
+#include <gtest/gtest.h>
+
 #include "SignalUtils.h"
 #include "private/bionic_constants.h"
 
-using semaphore_DeathTest = BionicDeathTest;
+using semaphore_DeathTest = SilentDeathTest;
 
 TEST(semaphore, sem_init) {
   sem_t s;
