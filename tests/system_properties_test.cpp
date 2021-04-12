@@ -15,7 +15,6 @@
  */
 
 #include <gtest/gtest.h>
-#include "BionicDeathTest.h"
 
 #include <errno.h>
 #include <sys/wait.h>
@@ -25,6 +24,7 @@
 #include <thread>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 
 using namespace std::literals;
 
@@ -425,7 +425,7 @@ bool KilledByFault::operator()(int exit_status) const {
          WTERMSIG(exit_status) == SIGABRT);
 }
 
-class properties_DeathTest : public BionicDeathTest {};
+using properties_DeathTest = SilentDeathTest;
 
 TEST_F(properties_DeathTest, read_only) {
 #if defined(__BIONIC__)
