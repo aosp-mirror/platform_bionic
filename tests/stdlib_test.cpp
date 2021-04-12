@@ -31,9 +31,9 @@
 
 #include <android-base/file.h>
 #include <android-base/macros.h>
+#include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
 #include "math_data_test.h"
 #include "utils.h"
 
@@ -447,7 +447,7 @@ static void TestBug57421_main() {
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
 
-class stdlib_DeathTest : public BionicDeathTest {};
+using stdlib_DeathTest = SilentDeathTest;
 
 TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   // https://code.google.com/p/android/issues/detail?id=57421
