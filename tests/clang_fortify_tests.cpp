@@ -94,14 +94,14 @@
 #include <wchar.h>
 
 #ifndef COMPILATION_TESTS
+#include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
-#include "BionicDeathTest.h"
 
 #define CONCAT2(x, y) x##y
 #define CONCAT(x, y) CONCAT2(x, y)
 #define FORTIFY_TEST_NAME CONCAT(CONCAT(clang_fortify_test_, _FORTIFY_SOURCE), _DeathTest)
 
-using FORTIFY_TEST_NAME = BionicDeathTest;
+using FORTIFY_TEST_NAME = SilentDeathTest;
 
 template <typename Fn>
 __attribute__((noreturn)) static void ExitAfter(Fn&& f) {
