@@ -34,6 +34,24 @@
       "parentUuid": "f45caf14_2600f18b",
       "revId": "d0bbfa8327f2cc08ae5d2e5b13aa8e2641e523e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc44708f_0d6ea9d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-12T17:42:17Z",
+      "side": 1,
+      "message": "\u003e other required APIs(e.g. _resolv_set_nameservers_for_net) are not put at public header file,\n\nthis we are protected against, because we use a linker map to ensure that the symbols aren\u0027t exported at all (so apps can\u0027t just sneakily `extern \"C\"` them)...\n\n\u003e also the relevant structures have\u0027n been exported.\n\n...but there\u0027s nothing we can do to stop them from copy \u0026 pasting a struct definition into their own code if the struct is accessible somehow.\n\nthis is interesting though... if there are functions that just aren\u0027t usable at all, i\u0027d be interested in making them true no-ops. but not this late in a release cycle! that\u0027s definitely something to do as early as possible in a release cycle to maximize our chances of app compat testing finding any issues...",
+      "parentUuid": "9375da78_015110f1",
+      "revId": "d0bbfa8327f2cc08ae5d2e5b13aa8e2641e523e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
