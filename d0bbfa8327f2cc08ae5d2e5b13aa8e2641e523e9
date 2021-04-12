@@ -16,6 +16,24 @@
       "message": "yeah, the alternative fix was indeed a PITA. but i realized too late that we probably need this if we want to (a) ensure _all_ the functions in this file access the global state under a lock and (b) keep res_init() working.\n\n(_do_ we actually want property (a)? if so, will we need a recursive lock? since none of this lossage is a regression in S, and no-one\u0027s noticed any of these issues in the last decade, we might want to wait for T before submitting this, so we have a full year to notice any fallout... assuming we don\u0027t think it matters that we\u0027ve made res_init() a no-op in S, which might be a regression for someone?)",
       "revId": "d0bbfa8327f2cc08ae5d2e5b13aa8e2641e523e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9375da78_015110f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1337176
+      },
+      "writtenOn": "2021-04-12T17:35:51Z",
+      "side": 1,
+      "message": "\u003e _do_ we actually want property (a)?\nSpeaking of the functionalities, (a) is required, because the race might happen between res_{query, search}.\nHowever, I think it probably doesn\u0027t matter. And it would be better to encourage the callers stop using them.\nGiven that res_{init,query,search} are networking relevant APIs but has no multi-network ability, I doubt if there are real users.\n\nActually, it\u0027s pretty hard for users(if any) to use the APIs, because some other required APIs(e.g. _resolv_set_nameservers_for_net) are not put at public header file, also the relevant structures have\u0027n been exported.",
+      "parentUuid": "f45caf14_2600f18b",
+      "revId": "d0bbfa8327f2cc08ae5d2e5b13aa8e2641e523e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
