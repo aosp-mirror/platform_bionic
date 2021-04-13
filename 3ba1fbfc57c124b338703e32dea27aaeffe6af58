@@ -70,6 +70,24 @@
       "parentUuid": "ed6556ab_88115e47",
       "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7b2d947_760d15f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-13T22:45:10Z",
+      "side": 1,
+      "message": "yeah, i think rprichard had some specific app compat concerns (and i always have the general concern, especially since it\u0027s so late), so something like a property (or just the /sys file that was mentioned on the bug?) seems like it would make this less likely to cause trouble.\n\ni was thinking that -- since your goal here is to enable this for libart -- that we can\u0027t help but inflict this on all apps, but that\u0027s not entirely true --- some libraries in their address space (libart) will get this, but that doesn\u0027t mean that we can\u0027t check the app\u0027s target api level for app library loads (like we do for some other libc features [grep for `target_sdk_` in bionic/linker for  linker examples]).",
+      "parentUuid": "aab7c231_10e2920f",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
