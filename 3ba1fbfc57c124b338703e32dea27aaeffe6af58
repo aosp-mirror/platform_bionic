@@ -52,6 +52,24 @@
       "parentUuid": "56703614_420d9e8c",
       "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aab7c231_10e2920f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-04-13T21:36:12Z",
+      "side": 1,
+      "message": "Feature was approved for exception in b/158135888 for memory improvements to P21, provided we limit scope to P21 only. Do you have any thoughts on how best to adapt this patch assuming we move forward? We were considering gating this feature behind a property as a possible solution.",
+      "parentUuid": "ed6556ab_88115e47",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
