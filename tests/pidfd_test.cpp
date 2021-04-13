@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <gtest/gtest.h>
+
 #include <errno.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -24,16 +26,13 @@
 #include <sys/pidfd.h>
 #endif
 
+#include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
-
-#include <gtest/gtest.h>
-
-#include "BionicDeathTest.h"
 
 using android::base::unique_fd;
 using namespace std::chrono_literals;
 
-using pidfd_DeathTest = BionicDeathTest;
+using pidfd_DeathTest = SilentDeathTest;
 
 TEST(pidfd, pidfd_open) {
 #if defined(__BIONIC__)
