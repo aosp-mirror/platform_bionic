@@ -126,8 +126,26 @@ __RCSID("$NetBSD: res_debug.c,v 1.13 2012/06/25 22:32:45 abs Exp $");
 #include <strings.h>
 #include <time.h>
 
-extern const char * const _res_opcodes[];
 extern const char * const _res_sectioncodes[];
+
+__LIBC_HIDDEN__ const char* const _res_opcodes[] = {
+  "QUERY",
+  "IQUERY",
+  "CQUERYM",
+  "CQUERYU",  /* experimental */
+  "NOTIFY",  /* experimental */
+  "UPDATE",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "ZONEINIT",
+  "ZONEREF",
+};
 
 #ifndef _LIBC
 /*

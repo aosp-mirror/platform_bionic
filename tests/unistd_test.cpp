@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
 #include "SignalUtils.h"
 #include "utils.h"
 
@@ -37,6 +36,7 @@
 #include <chrono>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
 
 #include "private/get_cpu_count_from_string.h"
@@ -52,6 +52,8 @@
 #define UNISTD_TEST unistd
 #define UNISTD_DEATHTEST unistd_DeathTest
 #endif
+
+using UNISTD_DEATHTEST = SilentDeathTest;
 
 using namespace std::chrono_literals;
 
@@ -710,8 +712,6 @@ TEST(UNISTD_TEST, hwasan_vfork) {
     HwasanVforkTestChild();
   }
 }
-
-class UNISTD_DEATHTEST : public BionicDeathTest {};
 
 TEST_F(UNISTD_DEATHTEST, abort) {
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
