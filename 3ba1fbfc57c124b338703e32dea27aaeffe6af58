@@ -88,6 +88,46 @@
       "parentUuid": "aab7c231_10e2920f",
       "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3176c893_012f4a9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-04-14T00:37:28Z",
+      "side": 1,
+      "message": "If the loader respects p_align larger than 4KiB, then I would expect it to also ensure that (p_vaddr % p_align) \u003d\u003d (mapped_address % p_align). That\u0027s currently the case but only if we pretend p_align is 4KiB.\n\nIIUC, it wouldn\u0027t be the case if the first PT_LOAD\u0027s p_vaddr wasn\u0027t a multiple of the maximum p_align.\n",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bcc0ea0_200a021f",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-04-14T00:37:28Z",
+      "side": 1,
+      "message": "I think(?) this new align_down call is going to weaken or disable the randomization (arc4random_uniform) that the previous line is doing, at least in the case where the library doesn\u0027t cross a 2MiB boundary and only needs 4KiB alignment.\n\nIn that case, align is 256KiB, which is necessary for the CFI security feature, but after mapping an exclusive span of 256KiB chunks, the loader picks a random 4KiB-aligned span within the larger span.",
+      "range": {
+        "startLine": 621,
+        "startChar": 11,
+        "endLine": 621,
+        "endChar": 16
+      },
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
