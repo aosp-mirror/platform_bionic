@@ -34,6 +34,24 @@
       "parentUuid": "ca224b21_4e76e398",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ac93517_f83acdbf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T14:37:08Z",
+      "side": 1,
+      "message": "Most of the existing \u0027private\u0027 includes were added (e.g. by Dan and Elliott) prior to our Bazel adventures though? I\u0027m just not sure why they weren\u0027t added consistently. \n\nHappy to solve this another way though, my main goal was just to unblock more cc_library_static targets (https://android-review.googlesource.com/c/platform/build/soong/+/1677125)",
+      "parentUuid": "2fc24d24_f7f39464",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
