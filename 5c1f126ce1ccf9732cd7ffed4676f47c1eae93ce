@@ -159,6 +159,24 @@
       "parentUuid": "1f7efceb_bc2d840f",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "165ba917_b4f910e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-04-15T18:33:21Z",
+      "side": 1,
+      "message": "\u003e How is bp2build supposed to know that bionic/libc/private/* should be Bazel srcs? \n\n\".\" is an implicit include directory of libc_fortify, because `include_build_directory: false` is not set on the module. That means any header under bionic/libc can be included, provided it is using a path relative to bionic/libc.\n\n\u003e Are you suggesting that we make every header under the bionic/libc/ subtree available as Bazel srcs?\n\nYes.",
+      "parentUuid": "2dd1dc47_6729fcf8",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
