@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c555ae16_d078dfc7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T10:16:45Z",
+      "side": 1,
+      "message": "(Added parentheses because the Python 3 order of operations was making me uneasy)",
+      "revId": "e99df59d1ebb7c9a362343bea8233438da06265c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
