@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca224b21_4e76e398",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T14:28:26Z",
+      "side": 1,
+      "message": "Note that the Android.bp file already does a similar thing for libc_dns, libc_openbsd_ndk, libc_openbsd_large_stack, libc_openbsd, libc_gdtoa, crtbrand, crtend_so and crtend_android. \n\nSo I\u0027m not sure why this change wasn\u0027t already done for all modules that depended on private includes.\n\ncc-ing Dan and Colin",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
