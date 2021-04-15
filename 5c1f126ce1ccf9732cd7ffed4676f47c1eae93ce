@@ -177,6 +177,24 @@
       "parentUuid": "2dd1dc47_6729fcf8",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af632995_26d0bec5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T18:45:33Z",
+      "side": 1,
+      "message": "Right, so bp2build already handles the implicit \u0027.\u0027, but it doesn\u0027t search recursively\n\nhttps://cs.android.com/android/platform/superproject/+/master:build/soong/cc/library.go;l\u003d2178\n\nhttps://cs.android.com/android/platform/superproject/+/master:build/soong/cc/bp2build.go;l\u003d165\n\nhttps://cs.android.com/android/platform/superproject/+/master:build/soong/bazel/properties.go;l\u003d53\n\nWe can change that to be recursive and see if anything else breaks",
+      "parentUuid": "165ba917_b4f910e4",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
