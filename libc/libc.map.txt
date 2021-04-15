@@ -1772,6 +1772,7 @@ LIBC_PLATFORM {
     android_fdtrack_compare_exchange_hook; # llndk
     android_fdtrack_get_enabled; # llndk
     android_fdtrack_set_enabled; # llndk
+    android_fdtrack_set_globally_enabled; # llndk
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;

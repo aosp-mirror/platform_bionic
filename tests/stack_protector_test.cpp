@@ -19,13 +19,14 @@
  */
 
 #include <gtest/gtest.h>
-#include "BionicDeathTest.h"
 
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <set>
+
+#include <android-base/silent_death_test.h>
 
 #include "private/bionic_tls.h"
 
@@ -99,7 +100,7 @@ TEST(stack_protector, global_guard) {
 #endif
 }
 
-class stack_protector_DeathTest : public BionicDeathTest {};
+using stack_protector_DeathTest = SilentDeathTest;
 
 TEST_F(stack_protector_DeathTest, modify_stack_protector) {
   // In another file to prevent inlining, which removes stack protection.
