@@ -70,6 +70,24 @@
       "parentUuid": "3ac93517_f83acdbf",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "784e78e8_1de25bd2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T15:02:07Z",
+      "side": 1,
+      "message": "Ahh maybe I\u0027ll work on getting more BUILD files generated tomorrow then?\n\nFor this CL though - if the argument is that this isn\u0027t a scalable approach, well, in this case I have already done it :-) So I would be in favor of submitting this, and then considering alternate approaches if we run into this problem again?",
+      "parentUuid": "57f0fba5_b165f002",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
