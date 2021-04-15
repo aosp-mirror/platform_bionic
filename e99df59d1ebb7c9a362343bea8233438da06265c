@@ -16,6 +16,23 @@
       "message": "(Added parentheses because the Python 3 order of operations was making me uneasy)",
       "revId": "e99df59d1ebb7c9a362343bea8233438da06265c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcb25cc3_56a76f13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-15T17:46:25Z",
+      "side": 1,
+      "message": "thanks! i thought we\u0027d already forced all our python scripts to run with python3 always :-(",
+      "revId": "e99df59d1ebb7c9a362343bea8233438da06265c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
