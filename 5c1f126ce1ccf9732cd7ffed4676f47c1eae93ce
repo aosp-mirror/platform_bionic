@@ -213,6 +213,24 @@
       "parentUuid": "af632995_26d0bec5",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "834dd2a4_39827ace",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T19:38:47Z",
+      "side": 1,
+      "message": "Sorry, I was still hoping we could be more specific/restrictive about srcs, but it sounds like we can\u0027t...\n\nHere is one way to make sure that all BUILD files are generated. It breaks some tests though, and generates an obnoxiously large number of BUILD files. Probably need a way to toggle this behavior, e.g. would be useful to disable it for tests.\n\nhttps://android-review.googlesource.com/c/platform/build/soong/+/1677620",
+      "parentUuid": "92f8cc24_8f198ebb",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
