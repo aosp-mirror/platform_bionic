@@ -195,6 +195,24 @@
       "parentUuid": "165ba917_b4f910e4",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92f8cc24_8f198ebb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-04-15T18:52:37Z",
+      "side": 1,
+      "message": "That\u0027s what I proposed in http://b/185119636 and implemented in https://r.android.com/1673685 -- as stated above, it fails in cases where there is an Android.bp but no BUILD file.",
+      "parentUuid": "af632995_26d0bec5",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
