@@ -123,6 +123,24 @@
       "parentUuid": "657b9069_6d8d9f4a",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f7efceb_bc2d840f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-04-15T18:09:34Z",
+      "side": 1,
+      "message": "\u003e Do you think we should take a different approach?\n\nYes, because local_include_dirs adds an include path to the options for these modules which is not used. We\u0027re essentially adding incorrect (superfluous at best, buggy at worst) properties to these modules to serve as metadata to bp2build. bp2build should handle hdr globbing correctly with the correctly defined module properties.\n\n\nI\u0027d consider dealing with hdr globbing as I suggest in go/roboleaf-cc-headers, namely:\n\n1. bp2build derives the appropriate include paths based on include_dirs, local_include_dirs, etc\n2. bp2build derives the appropriate hdr globs based on the result of (1).\n\nAs a corolllary, if you\u0027re able to build a bazel target by turning off sandboxing via `--spawn_strategy\u003dstandalone`, that\u0027s indication that the include paths (1) are correct. If, with sandboxing on, the build fails due to missing headers, that\u0027s indication that (2) was implemented incorrectly.",
+      "parentUuid": "c7d4b4c8_4472f686",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
