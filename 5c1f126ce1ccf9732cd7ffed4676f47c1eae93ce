@@ -141,6 +141,24 @@
       "parentUuid": "c7d4b4c8_4472f686",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dd1dc47_6729fcf8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T18:25:07Z",
+      "side": 1,
+      "message": "Given the original bionic/libc/Android.bp\n\ncc_library_static {\n    name: \"libc_fortify\",\n    srcs: [\"bionic/fortify.cpp\"],   # secretly depends on private/...\n    ...\n}\n\nHow is bp2build supposed to know that bionic/libc/private/* should be Bazel srcs? \n\nAre you suggesting that we make every header under the bionic/libc/ subtree available as Bazel srcs?",
+      "parentUuid": "1f7efceb_bc2d840f",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
