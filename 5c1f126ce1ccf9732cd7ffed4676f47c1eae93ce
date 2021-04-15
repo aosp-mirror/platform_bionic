@@ -52,6 +52,24 @@
       "parentUuid": "2fc24d24_f7f39464",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57f0fba5_b165f002",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1687194
+      },
+      "writtenOn": "2021-04-15T14:38:44Z",
+      "side": 1,
+      "message": "https://r.android.com/1673685, but bazel build //bionic/...  fails due to the issue we discussed yesterday, where there is an Android.bp file but no BUILD file.",
+      "parentUuid": "3ac93517_f83acdbf",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
