@@ -105,6 +105,24 @@
       "message": "I don\u0027t understand how adding `private` to local_include_dirs is correct for these modules -- so I\u0027m more than a little confused how this fixes builds for these targets.\n\nLets take bionic/fortify.cpp. It depends on \"private/bionic_fortify.h\", so its include directory should globally be \"bionic/libc\", thus a \".\" relative local include directory, *not* `private`.\n\nWhat am I missing?",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7d4b4c8_4472f686",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-15T18:01:34Z",
+      "side": 1,
+      "message": "Currently, bp2build uses the Soong include_dirs, local_include_dirs, etc for two purposes:\n\n1) it translates these to corresponding Bazel includes\n\n2) it lists any headers found in these directories as explicit Bazel srcs\n\nIn particular, the libc_fortify BUILD target ends up with private/*.h files as srcs, which resolves a Bazel compile error\n\nDo you think we should take a different approach?",
+      "parentUuid": "657b9069_6d8d9f4a",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
