@@ -344,6 +344,12 @@ static int __pthread_start(void* arg) {
   __set_stack_and_tls_vma_name(false);
   __init_additional_stacks(thread);
   __rt_sigprocmask(SIG_SETMASK, &thread->start_mask, nullptr, sizeof(thread->start_mask));
+#ifdef __aarch64__
+  // Chrome's sandbox prevents this prctl, so only reset IA if the target SDK level is high enough.
+  if (android_get_application_target_sdk_version() >= __ANDROID_API_S__) {
+    prctl(PR_PAC_RESET_KEYS, PR_PAC_APIAKEY, 0, 0, 0);
+  }
+#endif
 
   void* result = thread->start_routine(thread->start_routine_arg);
   pthread_exit(result);
