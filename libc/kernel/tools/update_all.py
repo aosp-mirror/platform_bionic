@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 import sys, cpp, kernel, glob, os, re, getopt, clean_header, subprocess, shutil
 from defaults import *
