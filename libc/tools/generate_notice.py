@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Run with directory arguments from any directory, with no special setup
 # required.
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This tool is used to generate the assembler system call stubs,
 # the header files listing all available system calls, and the
