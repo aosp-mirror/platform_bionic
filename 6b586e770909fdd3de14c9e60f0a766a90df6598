@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ceb9dab_262932a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1010672
+      },
+      "writtenOn": "2021-04-19T22:11:41Z",
+      "side": 1,
+      "message": "FWIW, this makes the scripts consistently not work, instead of allowing them to work for people that have python-is-python2. Python3-compatibility problems I ran into:\n\nclean_header.py: two python2-style print statements\ncpp.py: eight python2-style print statements\nutils.py: uses \"commands\" module, deprecated in 2.6 in favor of \"subprocess\" and removed from python3\n\nI gave up at that point and just ran `python2 bionic/libc/kernel/tools/clean_header.py ...`.",
+      "revId": "6b586e770909fdd3de14c9e60f0a766a90df6598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
