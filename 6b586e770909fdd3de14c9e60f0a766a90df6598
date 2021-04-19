@@ -16,6 +16,24 @@
       "message": "FWIW, this makes the scripts consistently not work, instead of allowing them to work for people that have python-is-python2. Python3-compatibility problems I ran into:\n\nclean_header.py: two python2-style print statements\ncpp.py: eight python2-style print statements\nutils.py: uses \"commands\" module, deprecated in 2.6 in favor of \"subprocess\" and removed from python3\n\nI gave up at that point and just ran `python2 bionic/libc/kernel/tools/clean_header.py ...`.",
       "revId": "6b586e770909fdd3de14c9e60f0a766a90df6598",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f48726c1_9911be99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-04-19T22:18:01Z",
+      "side": 1,
+      "message": "Unfortunately, there is some clang python bindings used by this code that is not python3 so it really is best to runs as python2 right now. I\u0027m trying to make everything python3 now, and it is definitely difficult.",
+      "parentUuid": "6ceb9dab_262932a0",
+      "revId": "6b586e770909fdd3de14c9e60f0a766a90df6598",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
