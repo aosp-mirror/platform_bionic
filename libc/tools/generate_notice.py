@@ -38,6 +38,9 @@ def is_interesting(path_str: str) -> bool:
         return False
     if path.name in {"notice", "readme", "pylintrc"}:
         return False
+    # Backup files for some editors.
+    if path.match("*~"):
+        return False
     return True
 
 
