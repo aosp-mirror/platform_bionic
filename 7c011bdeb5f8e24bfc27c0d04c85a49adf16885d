@@ -16,6 +16,23 @@
       "message": "I think this fixes most or the issues here, but there is still something going wrong with external/clang/bindings/python/clang/cindex.py. I modified it so it would run, but I\u0027m getting all kinds of errors while trying to execute.",
       "revId": "7c011bdeb5f8e24bfc27c0d04c85a49adf16885d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03d86a32_1df5e63b",
+        "filename": "libc/kernel/tools/update_all.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-19T23:20:59Z",
+      "side": 1,
+      "message": "i\u0027m definitely saving a time machine token to convince dmr to go with 0o rather than just 0...",
+      "revId": "7c011bdeb5f8e24bfc27c0d04c85a49adf16885d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
