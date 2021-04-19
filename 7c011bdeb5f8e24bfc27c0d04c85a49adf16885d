@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b8c1a55_f7f56a32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-04-19T23:12:41Z",
+      "side": 1,
+      "message": "I think this fixes most or the issues here, but there is still something going wrong with external/clang/bindings/python/clang/cindex.py. I modified it so it would run, but I\u0027m getting all kinds of errors while trying to execute.",
+      "revId": "7c011bdeb5f8e24bfc27c0d04c85a49adf16885d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
