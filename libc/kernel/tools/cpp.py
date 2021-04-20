@@ -394,10 +394,10 @@ class CppExpr(object):
         self._index = 0
 
         if debugCppExpr:
-            print "CppExpr: trying to parse %s" % repr(tokens)
+            print("CppExpr: trying to parse %s" % repr(tokens))
         self.expr = self.parseExpression(0)
         if debugCppExpr:
-            print "CppExpr: got " + repr(self.expr)
+            print("CppExpr: got " + repr(self.expr))
         if self._index != self._num_tokens:
             self.throw(BadExpectedToken, "crap at end of input (%d != %d): %s"
                        % (self._index, self._num_tokens, repr(tokens)))
@@ -405,9 +405,9 @@ class CppExpr(object):
     def throw(self, exception, msg):
         if self._index < self._num_tokens:
             tok = self.tokens[self._index]
-            print "%d:%d: %s" % (tok.location.line, tok.location.column, msg)
+            print("%d:%d: %s" % (tok.location.line, tok.location.column, msg))
         else:
-            print "EOF: %s" % msg
+            print("EOF: %s" % msg)
         raise exception(msg)
 
     def expectId(self, id):
@@ -1179,11 +1179,11 @@ class BlockList(object):
 
     def dump(self):
         """Dump all the blocks in current BlockList."""
-        print '##### BEGIN #####'
+        print('##### BEGIN #####')
         for i, b in enumerate(self.blocks):
-            print '### BLOCK %d ###' % i
-            print b
-        print '##### END #####'
+            print('### BLOCK %d ###' % i)
+            print(b)
+        print('##### END #####')
 
     def optimizeIf01(self):
         """Remove the code between #if 0 .. #endif in a BlockList."""
@@ -1510,7 +1510,7 @@ class BlockParser(object):
             while i < len(tokens) and tokens[i].location in extent:
                 t = tokens[i]
                 if debugBlockParser:
-                    print ' ' * 2, t.id, t.kind, t.cursor.kind
+                    print(' ' * 2, t.id, t.kind, t.cursor.kind)
                 if (detect_change and t.cursor.extent != extent and
                     t.cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE):
                     break
