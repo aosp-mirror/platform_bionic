@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1d45be4_e01678b7",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1960,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-04-20T00:34:17Z",
+      "side": 1,
+      "message": "Submitting this is blocked by b/185826808",
+      "revId": "13117fe1a26a21c736e1395d73d8cb814a28532e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
