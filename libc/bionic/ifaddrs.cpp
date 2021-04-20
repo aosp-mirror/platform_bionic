@@ -42,7 +42,6 @@
 
 #include "private/ErrnoRestorer.h"
 
-#include "bionic_appcompat.h"
 #include "bionic_netlink.h"
 
 // The public ifaddrs struct is full of pointers. Rather than track several
@@ -311,12 +310,9 @@ int getifaddrs(ifaddrs** out) {
   // - System apps
   // - Apps with a target SDK version lower than R
   bool getlink_success = false;
-  if (!should_apply_soft_mac_getlink_restrictions()) {
+  if (getuid() < FIRST_APPLICATION_UID ||
+      android_get_application_target_sdk_version() < __ANDROID_API_R__) {
     getlink_success = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
-  } else if (android_get_application_target_sdk_version() < __ANDROID_API_R__) {
-    async_safe_format_log(ANDROID_LOG_WARN, "mac-restrictions",
-                          "ifaddr no longer returns link info. Please follow instructions at "
-                          "go/netlink-bug if this app behaves incorrectly.");
   }
   bool getaddr_success =
     nc.SendRequest(RTM_GETADDR) && nc.ReadResponses(__getifaddrs_callback, out);

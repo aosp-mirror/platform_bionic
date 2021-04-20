@@ -46,6 +46,7 @@
 #include <elf.h>
 #include "libc_init_common.h"
 
+#include "private/bionic_defs.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_globals.h"
 #include "platform/bionic/macros.h"
@@ -106,6 +107,8 @@ static void __libc_preinit_impl() {
   __libc_shared_globals()->load_hook = __hwasan_library_loaded;
   __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
 #endif
+
+  __libc_shared_globals()->set_target_sdk_version_hook = __libc_set_target_sdk_version;
 
   netdClientInit();
 }
