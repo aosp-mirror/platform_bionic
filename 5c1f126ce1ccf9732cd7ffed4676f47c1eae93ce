@@ -254,6 +254,30 @@
       },
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a82429a_17863bcb",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-20T18:05:35Z",
+      "side": 1,
+      "message": "(yeah, that makes sense to me. this one seems legit.)",
+      "parentUuid": "5a1a67ef_f562b337",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 70
+      },
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
