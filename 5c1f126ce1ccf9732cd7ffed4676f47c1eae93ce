@@ -231,6 +231,29 @@
       "parentUuid": "92f8cc24_8f198ebb",
       "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a1a67ef_f562b337",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-20T10:22:55Z",
+      "side": 1,
+      "message": "I think we are in agreement that the \u0027private\u0027 changes will be handled in a different way (e.g. recursive globbing)\n\nBut we might want to keep this liblog_headers part\n\nWill revisit once a few other CLs have landed",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 70
+      },
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
