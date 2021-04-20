@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0af707_b5a9e866",
+        "filename": "libc/kernel/tools/kernel.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-04-20T23:03:44Z",
+      "side": 1,
+      "message": "Can you avoid this for now? This still doesn\u0027t work in python3, so doing this causes that to fail. I\u0027m working on getting python3 to work using the python3 bindings, but it\u0027s not working yet.",
+      "range": {
+        "startLine": 302,
+        "startChar": 30,
+        "endLine": 302,
+        "endChar": 43
+      },
+      "revId": "43e6788c2fe333c83690056ceef0f92cb1f25307",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
