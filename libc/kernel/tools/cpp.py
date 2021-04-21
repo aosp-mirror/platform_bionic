@@ -14,7 +14,7 @@ if top is None:
     utils.panic('ANDROID_BUILD_TOP not set.\n')
 
 # Set up the env vars for libclang.
-site.addsitedir(os.path.join(top, 'external/clang/bindings/python'))
+site.addsitedir(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/python3/site-packages/'))
 
 import clang.cindex
 from clang.cindex import conf
@@ -28,7 +28,7 @@ from clang.cindex import TranslationUnit
 
 # Set up LD_LIBRARY_PATH to include libclang.so, libLLVM.so, and etc.
 # Note that setting LD_LIBRARY_PATH with os.putenv() sometimes doesn't help.
-clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/sdk/tools/linux/lib64/libclang_android.so'))
+clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/libclang.so'))
 
 from defaults import *
 
@@ -254,7 +254,7 @@ class CppTokenizer(object):
         token_group = TokenGroup(self._tu, tokens_memory, tokens_count)
 
         tokens = []
-        for i in xrange(0, count):
+        for i in range(0, count):
             token = Token(self._tu, token_group,
                           int_data=tokens_array[i].int_data,
                           ptr_data=tokens_array[i].ptr_data,
@@ -722,7 +722,7 @@ class CppExpr(object):
 
         if op == "defined":
             op, name = e
-            if macros.has_key(name):
+            if name in macros:
                 if macros[name] == kCppUndefinedMacro:
                     return ("int", 0)
                 else:
@@ -739,7 +739,7 @@ class CppExpr(object):
 
         elif op == "ident":
             op, name = e
-            if macros.has_key(name):
+            if name in macros:
                 try:
                     value = int(macros[name])
                     expanded = ("int", value)
