@@ -299,8 +299,8 @@ class ConfigParser:
         self.items = {}
         self.duplicates = False
 
-    def parseLine(self,line):
-        line = line.strip(line)
+    def parseLine(self, line):
+        line = line.strip()
 
         # skip empty and comment lines
         if len(line) == 0 or line[0] == "#":
