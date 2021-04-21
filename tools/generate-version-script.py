@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # This tool is used to generate the version scripts for libc, libm, libdl,
 # and libstdc++ for every architecture.

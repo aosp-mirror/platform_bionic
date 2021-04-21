@@ -38,14 +38,14 @@
 #include <android-base/macros.h>
 #include <android-base/parseint.h>
 #include <android-base/scopeguard.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
 
 #include "private/bionic_constants.h"
-#include "BionicDeathTest.h"
 #include "SignalUtils.h"
 #include "utils.h"
 
-using pthread_DeathTest = BionicDeathTest;
+using pthread_DeathTest = SilentDeathTest;
 
 TEST(pthread, pthread_key_create) {
   pthread_key_t key;

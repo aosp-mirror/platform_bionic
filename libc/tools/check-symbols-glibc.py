@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 #
 # Copyright (C) 2015 The Android Open Source Project
 #
@@ -231,33 +231,33 @@ posix = posix - in_posix_and_glibc_but_dead_or_useless
 glibc = glibc - in_posix_and_glibc_but_dead_or_useless
 
 if not only_unwanted:
-  #print 'glibc:'
+  #print('glibc:')
   #for symbol in sorted(glibc):
-  #  print symbol
-  #print
+  #  print(symbol)
+  #print()
 
-  #print 'bionic:'
+  #print('bionic:')
   #for symbol in sorted(bionic):
-  #  print symbol
-  #print
+  #  print(symbol)
+  #print()
 
-  print 'in glibc (but not posix) but not bionic:'
+  print('in glibc (but not posix) but not bionic:')
   for symbol in sorted((glibc - posix).difference(bionic)):
-    print symbol
-  print
+    print(symbol)
+  print()
 
-  print 'in posix (and implemented in glibc) but not bionic:'
+  print('in posix (and implemented in glibc) but not bionic:')
   for symbol in sorted((posix.intersection(glibc)).difference(bionic)):
-    print symbol
-  print
+    print(symbol)
+  print()
 
-  print 'in bionic but not glibc:'
+  print('in bionic but not glibc:')
 
 allowed_stuff = (bsd_stuff | FORTIFY_stuff | linux_stuff | macro_stuff |
                  std_stuff | weird_stuff | libresolv_stuff | known)
 for symbol in sorted((bionic - allowed_stuff).difference(glibc)):
   if symbol in ndk_ignored:
     symbol += '*'
-  print symbol
+  print(symbol)
 
 sys.exit(0)

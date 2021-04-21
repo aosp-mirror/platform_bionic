@@ -21,10 +21,11 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-#include "BionicDeathTest.h"
+#include <android-base/silent_death_test.h>
+
 #include "SignalUtils.h"
 
-using setjmp_DeathTest = BionicDeathTest;
+using setjmp_DeathTest = SilentDeathTest;
 
 TEST(setjmp, setjmp_smoke) {
   int value;
@@ -321,6 +322,6 @@ TEST(setjmp, bug_152210274) {
   ASSERT_EQ(0, pthread_create(&t, nullptr, interrupter, tids));
   pthread_join(t, nullptr);
 #else
-  GTEST_LOG_(INFO) << "tests uses functions not in glibc";
+  GTEST_SKIP() << "tests uses functions not in glibc";
 #endif
 }
