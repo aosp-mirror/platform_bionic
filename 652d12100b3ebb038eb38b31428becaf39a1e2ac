@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea39e243_6219ea48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-04-21T00:35:39Z",
+      "side": 1,
+      "message": "I missed a few python3 changes, but with these and the clang change, the scripts are truly python3 compatible.",
+      "revId": "652d12100b3ebb038eb38b31428becaf39a1e2ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
