@@ -233,6 +233,42 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e06e34a2_4cdd80df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-22T05:56:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "834dd2a4_39827ace",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad9eb3d3_bc937617",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-22T05:56:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "784e78e8_1de25bd2",
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a1a67ef_f562b337",
@@ -270,6 +306,30 @@
       "side": 1,
       "message": "(yeah, that makes sense to me. this one seems legit.)",
       "parentUuid": "5a1a67ef_f562b337",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 70
+      },
+      "revId": "5c1f126ce1ccf9732cd7ffed4676f47c1eae93ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61dff794_2f3b25b9",
+        "filename": "libc/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-22T05:56:01Z",
+      "side": 1,
+      "message": "Done\n\nAlso updated https://android-review.googlesource.com/c/platform/build/soong/+/1677125",
+      "parentUuid": "1a82429a_17863bcb",
       "range": {
         "startLine": 92,
         "startChar": 0,
