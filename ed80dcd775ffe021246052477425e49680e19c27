@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63da3e15_f8d9d139",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-22T05:56:23Z",
+      "side": 1,
+      "message": "This unblocks https://android-review.googlesource.com/c/platform/build/soong/+/1677125",
+      "revId": "ed80dcd775ffe021246052477425e49680e19c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
