@@ -34,6 +34,23 @@
       "parentUuid": "63da3e15_f8d9d139",
       "revId": "ed80dcd775ffe021246052477425e49680e19c27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f70ad15f_0114fedd",
+        "filename": "libc/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1605027
+      },
+      "writtenOn": "2021-04-22T16:00:08Z",
+      "side": 1,
+      "message": "As remarked in b/186035856, I think liblog_headers is effectively an implicit dependency of every single library in AOSP (of course, it\u0027s not always important)\n\nSo, while this is fine for a workaround, we need to support these global includes in bp2build",
+      "revId": "ed80dcd775ffe021246052477425e49680e19c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
