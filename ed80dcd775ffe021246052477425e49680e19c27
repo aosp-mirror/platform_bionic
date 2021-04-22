@@ -16,6 +16,24 @@
       "message": "This unblocks https://android-review.googlesource.com/c/platform/build/soong/+/1677125",
       "revId": "ed80dcd775ffe021246052477425e49680e19c27",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18645f8a_219c0ae2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1726181
+      },
+      "writtenOn": "2021-04-22T08:40:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63da3e15_f8d9d139",
+      "revId": "ed80dcd775ffe021246052477425e49680e19c27",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
