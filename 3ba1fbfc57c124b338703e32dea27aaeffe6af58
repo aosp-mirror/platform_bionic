@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "93943eda_2636d72d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-04-22T21:36:44Z",
+      "side": 1,
+      "message": "I added a check for the existence of \"/sys/kernel/mm/transparent_hugepage/enabled\" and an application sdk level check. Do you think it makes sense to go further and disable this when enabled is set to \"never\"?",
+      "parentUuid": "d7b2d947_760d15f7",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7bcc0ea0_200a021f",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
@@ -120,6 +138,30 @@
       "writtenOn": "2021-04-14T00:37:28Z",
       "side": 1,
       "message": "I think(?) this new align_down call is going to weaken or disable the randomization (arc4random_uniform) that the previous line is doing, at least in the case where the library doesn\u0027t cross a 2MiB boundary and only needs 4KiB alignment.\n\nIn that case, align is 256KiB, which is necessary for the CFI security feature, but after mapping an exclusive span of 256KiB chunks, the loader picks a random 4KiB-aligned span within the larger span.",
+      "range": {
+        "startLine": 621,
+        "startChar": 11,
+        "endLine": 621,
+        "endChar": 16
+      },
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ab367ed_63e548f9",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-04-22T21:36:44Z",
+      "side": 1,
+      "message": "How does this look? I separated the concept of the starting address alignment from the mapping alignment. The logic outside of starting address selection is now unaffected unless the start_alignment exceeds kLibraryAlignment in which case we round up.",
+      "parentUuid": "7bcc0ea0_200a021f",
       "range": {
         "startLine": 621,
         "startChar": 11,
