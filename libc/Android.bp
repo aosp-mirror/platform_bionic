@@ -89,6 +89,7 @@ cc_defaults {
     header_libs: [
         "libc_headers",
         "gwp_asan_headers",
+        "liblog_headers",  // needed by bionic/libc/async_safe/include
     ],
     export_header_lib_headers: [
         "libc_headers",
