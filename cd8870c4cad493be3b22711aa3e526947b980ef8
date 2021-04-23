@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4924d8b8_bc710038",
+        "filename": "linker/linker_transparent_hugepage_support.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-23T02:16:47Z",
+      "side": 1,
+      "message": "inline single-use constants.",
+      "range": {
+        "startLine": 39,
+        "startChar": 4,
+        "endLine": 39,
+        "endChar": 49
+      },
+      "revId": "cd8870c4cad493be3b22711aa3e526947b980ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "156a29b7_6934b964",
+        "filename": "linker/linker_transparent_hugepage_support.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-23T02:16:47Z",
+      "side": 1,
+      "message": "is there a reason not to use the usual C++ idiom?\n```\nbool get_foo() {\n  static bool foo \u003d init_foo();\n  return foo;\n}\n```",
+      "revId": "cd8870c4cad493be3b22711aa3e526947b980ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c39e8eb5_25195763",
+        "filename": "linker/linker_transparent_hugepage_support.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-23T02:16:47Z",
+      "side": 1,
+      "message": "don\u0027t return at end of void functions",
+      "revId": "cd8870c4cad493be3b22711aa3e526947b980ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
