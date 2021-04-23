@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a6c3a20_102c6996",
+        "filename": "linker/linker_transparent_hugepage_support.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-23T21:12:54Z",
+      "side": 1,
+      "message": "unused",
+      "revId": "97feaf8cf64136b00d474326c3b2b2f80f6efbbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c02282ec_2f6084c9",
+        "filename": "linker/linker_transparent_hugepage_support.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-23T21:12:54Z",
+      "side": 1,
+      "message": "make this static and remove the declaration from the header?\n\n(you can even remove this completely if you prefer, using a lambda :-) )",
+      "revId": "97feaf8cf64136b00d474326c3b2b2f80f6efbbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
