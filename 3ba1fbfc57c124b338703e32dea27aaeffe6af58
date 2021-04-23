@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e768bc0d_8b213a34",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-04-23T21:06:56Z",
+      "side": 1,
+      "message": "Got it, thanks for the guidance. Since OEMs can set \"never\" on the kernel command line, it seems like a good fit for the device-level toggle. Will follow up with the memory team on whether it\u0027s worthwhile to use a sysprop to flag file-backed THP functionality independently.",
+      "parentUuid": "819e3f37_18a9d963",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7bcc0ea0_200a021f",
         "filename": "linker/linker_phdr.cpp",
         "patchSetId": 3
