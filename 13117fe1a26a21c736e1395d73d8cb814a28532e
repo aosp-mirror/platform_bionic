@@ -34,6 +34,24 @@
       "parentUuid": "e1d45be4_e01678b7",
       "revId": "13117fe1a26a21c736e1395d73d8cb814a28532e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70edd2e6_486a850a",
+        "filename": "libc/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1960,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-04-27T22:52:06Z",
+      "side": 1,
+      "message": "Unblocked, thanks!",
+      "parentUuid": "c7db2d51_e129fd2f",
+      "revId": "13117fe1a26a21c736e1395d73d8cb814a28532e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
