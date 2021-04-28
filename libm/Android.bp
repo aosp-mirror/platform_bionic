@@ -26,7 +26,6 @@ cc_library {
     vendor_ramdisk_available: true,
     recovery_available: true,
     static_ndk_lib: true,
-    llndk_stubs: "libm.llndk",
 
     whole_static_libs: ["libarm-optimized-routines-math"],
 
@@ -528,6 +527,10 @@ cc_library {
         ],
     },
 
+    llndk: {
+        symbol_file: "libm.map.txt",
+    },
+
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -542,12 +545,6 @@ ndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
-}
-
-llndk_library {
-    name: "libm.llndk",
-    native_bridge_supported: true,
-    symbol_file: "libm.map.txt",
 }
 
 genrule {
