@@ -413,6 +413,19 @@ sh_binary {
     bazel_module: { bp2build_available: true },
 }
 
+// Used to generate binaries that can be backed by transparent hugepages.
+cc_defaults {
+    name: "linker_hugepage_aligned",
+    arch: {
+        arm64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+        x86_64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+    },
+}
+
 cc_library {
     // NOTE: --exclude-libs=libgcc.a makes sure that any symbols ld-android.so pulls from
     // libgcc.a are made static to ld-android.so.  This in turn ensures that libraries that
