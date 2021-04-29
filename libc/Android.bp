@@ -1642,7 +1642,6 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
-    llndk_stubs: "libc.llndk",
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1766,7 +1765,12 @@ cc_library {
             "current",
         ],
     },
-
+    llndk: {
+        symbol_file: "libc.map.txt",
+        export_headers_as_system: true,
+        export_preprocessed_headers: ["include"],
+        export_llndk_headers: ["libc_llndk_headers"],
+    },
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -1857,13 +1861,11 @@ cc_library_headers {
 }
 
 cc_library_headers {
-    // Internal lib for use in libc_headers. Since we cannot intersect arch{}
-    // and target{} in the same module, this one specifies the arch-dependent
-    // include paths, and then libc_headers filters by target so that the
-    // headers only are included for Bionic targets.
-    name: "libc_headers_arch",
+    name: "libc_llndk_headers",
     visibility: ["//visibility:private"],
-
+    llndk: {
+        llndk_headers: true,
+    },
     host_supported: true,
     vendor_available: true,
     product_available: true,
@@ -1891,7 +1893,6 @@ cc_library_headers {
     sdk_version: "1",
 
     export_system_include_dirs: [
-        "include",
         "kernel/uapi",
         "kernel/android/scsi",
         "kernel/android/uapi",
@@ -1954,12 +1955,14 @@ cc_library_headers {
 
     target: {
         android: {
-            header_libs: ["libc_headers_arch"],
-            export_header_lib_headers: ["libc_headers_arch"],
+            export_system_include_dirs: ["include"],
+            header_libs: ["libc_llndk_headers"],
+            export_header_lib_headers: ["libc_llndk_headers"],
         },
         linux_bionic: {
-            header_libs: ["libc_headers_arch"],
-            export_header_lib_headers: ["libc_headers_arch"],
+            export_system_include_dirs: ["include"],
+            header_libs: ["libc_llndk_headers"],
+            export_header_lib_headers: ["libc_llndk_headers"],
         },
     },
     bazel_module: { bp2build_available: true },
@@ -2297,41 +2300,6 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
-}
-
-llndk_library {
-    name: "libc.llndk",
-    symbol_file: "libc.map.txt",
-    export_headers_as_system: true,
-    export_preprocessed_headers: ["include"],
-    native_bridge_supported: true,
-    export_include_dirs: [
-        "kernel/uapi",
-        "kernel/android/scsi",
-        "kernel/android/uapi",
-    ],
-    arch: {
-        arm: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm",
-            ],
-        },
-        arm64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm64",
-            ],
-        },
-        x86: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
-        },
-        x86_64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
-        },
-    },
 }
 
 ndk_library {
