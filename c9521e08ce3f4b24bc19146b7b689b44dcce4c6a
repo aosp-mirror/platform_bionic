@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3e865f6_f5735128",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-04-29T20:39:38Z",
+      "side": 1,
+      "message": "It looks like we\u0027re running into issues with the stripped down art builds not having the linker-defined cc_defaults. Should we do an art-specific cc_defaults option, or could system/core mitigate this?",
+      "revId": "c9521e08ce3f4b24bc19146b7b689b44dcce4c6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
