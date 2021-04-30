@@ -16,6 +16,24 @@
       "message": "It looks like we\u0027re running into issues with the stripped down art builds not having the linker-defined cc_defaults. Should we do an art-specific cc_defaults option, or could system/core mitigate this?",
       "revId": "c9521e08ce3f4b24bc19146b7b689b44dcce4c6a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d81f204e_5274b045",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-04-30T01:16:40Z",
+      "side": 1,
+      "message": "\u003e Should we do an art-specific cc_defaults option\n\nyeah, i think ART needs to come up with a better solution to the mess that they\u0027re causing, but that\u0027s a worry for another day.\n\n(though i don\u0027t get why this doesn\u0027t belong in the build system. this seems similar to existing things like the stripping or relocation packing options to me.)",
+      "parentUuid": "e3e865f6_f5735128",
+      "revId": "c9521e08ce3f4b24bc19146b7b689b44dcce4c6a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
