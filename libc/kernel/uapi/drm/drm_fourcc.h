@@ -153,6 +153,7 @@ extern "C" {
 #define I915_FORMAT_MOD_Yf_TILED_CCS fourcc_mod_code(INTEL, 5)
 #define I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS fourcc_mod_code(INTEL, 6)
 #define I915_FORMAT_MOD_Y_TILED_GEN12_MC_CCS fourcc_mod_code(INTEL, 7)
+#define I915_FORMAT_MOD_Y_TILED_GEN12_RC_CCS_CC fourcc_mod_code(INTEL, 8)
 #define DRM_FORMAT_MOD_SAMSUNG_64_32_TILE fourcc_mod_code(SAMSUNG, 1)
 #define DRM_FORMAT_MOD_SAMSUNG_16_16_TILE fourcc_mod_code(SAMSUNG, 2)
 #define DRM_FORMAT_MOD_QCOM_COMPRESSED fourcc_mod_code(QCOM, 1)
@@ -204,9 +205,9 @@ extern "C" {
 #define AFBC_FORMAT_MOD_USM (1ULL << 12)
 #define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
 #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
-#define __fourcc_mod_amlogic_layout_mask 0xf
+#define __fourcc_mod_amlogic_layout_mask 0xff
 #define __fourcc_mod_amlogic_options_shift 8
-#define __fourcc_mod_amlogic_options_mask 0xf
+#define __fourcc_mod_amlogic_options_mask 0xff
 #define DRM_FORMAT_MOD_AMLOGIC_FBC(__layout,__options) fourcc_mod_code(AMLOGIC, ((__layout) & __fourcc_mod_amlogic_layout_mask) | (((__options) & __fourcc_mod_amlogic_options_mask) << __fourcc_mod_amlogic_options_shift))
 #define AMLOGIC_FBC_LAYOUT_BASIC (1ULL)
 #define AMLOGIC_FBC_LAYOUT_SCATTER (2ULL)

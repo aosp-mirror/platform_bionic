@@ -413,4 +413,5 @@
 #define __NR_faccessat2 (__NR_SYSCALL_BASE + 439)
 #define __NR_process_madvise (__NR_SYSCALL_BASE + 440)
 #define __NR_epoll_pwait2 (__NR_SYSCALL_BASE + 441)
+#define __NR_mount_setattr (__NR_SYSCALL_BASE + 442)
 #endif
