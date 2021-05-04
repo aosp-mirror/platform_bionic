@@ -16,8 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
-
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -32,6 +30,7 @@
 
 #include <unordered_map>
 
+#include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
 
 #define FDSAN_TEST(test_name) TEST_F(FdsanTest, test_name)
@@ -49,12 +48,12 @@ struct fdsan : public ::testing::Test {
   }
 };
 
-struct fdsan_DeathTest : public BionicDeathTest {
+struct fdsan_DeathTest : public SilentDeathTest {
 #if defined(__BIONIC__)
   void SetUp() override {
     android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
     signal(BIONIC_SIGNAL_DEBUGGER, SIG_DFL);  // Disable debuggerd.
-    BionicDeathTest::SetUp();
+    SilentDeathTest::SetUp();
   }
 #endif
 };

@@ -1,5 +1,9 @@
 ## fdtrack
 
+[TOC]
+
+fdtrack is a file descriptor leak checker added to Android in API level 30.
+
 fdtrack consists of two parts: a set of hooks in bionic to register a callback
 that's invoked on file descriptor operations, and a library that implements a
 hook to perform and store backtraces for file descriptor creation.

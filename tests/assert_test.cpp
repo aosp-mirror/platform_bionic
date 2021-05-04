@@ -19,9 +19,9 @@
 #undef NDEBUG
 #include <assert.h>
 
-#include "BionicDeathTest.h"
+#include <android-base/silent_death_test.h>
 
-using assert_DeathTest = BionicDeathTest;
+using assert_DeathTest = SilentDeathTest;
 
 TEST(assert, assert_true) {
   assert(true);
