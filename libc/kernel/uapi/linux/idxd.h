@@ -231,8 +231,8 @@ struct dsa_completion_record {
       uint32_t invalid_flags : 24;
       uint32_t rsvd2 : 8;
     };
-    uint16_t delta_rec_size;
-    uint16_t crc_val;
+    uint32_t delta_rec_size;
+    uint32_t crc_val;
     struct {
       uint32_t dif_chk_ref_tag;
       uint16_t dif_chk_app_tag_mask;
