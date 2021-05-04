@@ -1,6 +1,5 @@
 # common python utility routines for the Bionic tool scripts
 
-import commands
 import logging
 import os
 import string
@@ -146,19 +145,3 @@ class BatchFileUpdater:
 
         for dst in sorted(deletes):
             os.remove(dst)
-
-    def updateGitFiles(self):
-        adds, deletes, edits = self.getChanges()
-
-        if adds:
-            for dst in sorted(adds):
-                self._writeFile(dst)
-            commands.getoutput("git add " + " ".join(adds))
-
-        if deletes:
-            commands.getoutput("git rm " + " ".join(deletes))
-
-        if edits:
-            for dst in sorted(edits):
-                self._writeFile(dst)
-            commands.getoutput("git add " + " ".join(edits))
