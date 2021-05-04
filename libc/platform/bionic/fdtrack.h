@@ -70,4 +70,8 @@ bool android_fdtrack_compare_exchange_hook(android_fdtrack_hook_t* expected, and
 bool android_fdtrack_get_enabled() __INTRODUCED_IN(30);
 bool android_fdtrack_set_enabled(bool new_value) __INTRODUCED_IN(30);
 
+// Globally enable/disable fdtrack.
+// This is primaryily useful to reenable fdtrack after it's been automatically disabled post-fork.
+void android_fdtrack_set_globally_enabled(bool new_value) __INTRODUCED_IN(31);
+
 __END_DECLS
