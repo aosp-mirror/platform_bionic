@@ -40,7 +40,7 @@ struct can_frame {
   union {
     __u8 len;
     __u8 can_dlc;
-  };
+  } __attribute__((packed));
   __u8 __pad;
   __u8 __res0;
   __u8 len8_dlc;

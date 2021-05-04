@@ -57,6 +57,7 @@ struct ccs_modesel_head {
 #define CLEAR_TASK_SET 0x0e
 #define INITIATE_RECOVERY 0x0f
 #define RELEASE_RECOVERY 0x10
+#define TERMINATE_IO_PROC 0x11
 #define CLEAR_ACA 0x16
 #define LOGICAL_UNIT_RESET 0x17
 #define SIMPLE_QUEUE_TAG 0x20
