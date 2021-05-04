@@ -16,13 +16,15 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_BINFMTS_H
-#define _UAPI_LINUX_BINFMTS_H
-#include <linux/capability.h>
-struct pt_regs;
-#define MAX_ARG_STRLEN (PAGE_SIZE * 32)
-#define MAX_ARG_STRINGS 0x7FFFFFFF
-#define BINPRM_BUF_SIZE 256
-#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
+#ifndef __UAPI_CCS_H__
+#define __UAPI_CCS_H__
+#include <linux/v4l2-controls.h>
+#define V4L2_CID_CCS_ANALOGUE_GAIN_M0 (V4L2_CID_USER_CCS_BASE + 1)
+#define V4L2_CID_CCS_ANALOGUE_GAIN_C0 (V4L2_CID_USER_CCS_BASE + 2)
+#define V4L2_CID_CCS_ANALOGUE_GAIN_M1 (V4L2_CID_USER_CCS_BASE + 3)
+#define V4L2_CID_CCS_ANALOGUE_GAIN_C1 (V4L2_CID_USER_CCS_BASE + 4)
+#define V4L2_CID_CCS_ANALOGUE_LINEAR_GAIN (V4L2_CID_USER_CCS_BASE + 5)
+#define V4L2_CID_CCS_ANALOGUE_EXPONENTIAL_GAIN (V4L2_CID_USER_CCS_BASE + 6)
+#define V4L2_CID_CCS_SHADING_CORRECTION (V4L2_CID_USER_CCS_BASE + 8)
+#define V4L2_CID_CCS_LUMINANCE_CORRECTION_LEVEL (V4L2_CID_USER_CCS_BASE + 9)
 #endif
