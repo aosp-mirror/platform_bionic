@@ -45,7 +45,7 @@
 #define GFS2_FORMAT_RI 1100
 #define GFS2_FORMAT_DE 1200
 #define GFS2_FORMAT_QU 1500
-#define GFS2_FORMAT_FS 1801
+#define GFS2_FORMAT_FS 1802
 #define GFS2_FORMAT_MULTI 1900
 struct gfs2_inum {
   __be64 no_formal_ino;
@@ -260,7 +260,8 @@ struct gfs2_leaf {
 #define GFS2_EATYPE_USR 1
 #define GFS2_EATYPE_SYS 2
 #define GFS2_EATYPE_SECURITY 3
-#define GFS2_EATYPE_LAST 3
+#define GFS2_EATYPE_TRUSTED 4
+#define GFS2_EATYPE_LAST 4
 #define GFS2_EATYPE_VALID(x) ((x) <= GFS2_EATYPE_LAST)
 #define GFS2_EAFLAG_LAST 0x01
 struct gfs2_ea_header {

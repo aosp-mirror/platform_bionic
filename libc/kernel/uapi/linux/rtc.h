@@ -76,5 +76,9 @@ struct rtc_pll_info {
 #define RTC_PF 0x40
 #define RTC_AF 0x20
 #define RTC_UF 0x10
+#define RTC_FEATURE_ALARM 0
+#define RTC_FEATURE_ALARM_RES_MINUTE 1
+#define RTC_FEATURE_NEED_WEEK_DAY 2
+#define RTC_FEATURE_CNT 3
 #define RTC_MAX_FREQ 8192
 #endif
