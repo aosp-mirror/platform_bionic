@@ -29,4 +29,5 @@ struct open_how {
 #define RESOLVE_NO_SYMLINKS 0x04
 #define RESOLVE_BENEATH 0x08
 #define RESOLVE_IN_ROOT 0x10
+#define RESOLVE_CACHED 0x20
 #endif

@@ -606,6 +606,9 @@
 #if defined(__NR_mount)
   #define SYS_mount __NR_mount
 #endif
+#if defined(__NR_mount_setattr)
+  #define SYS_mount_setattr __NR_mount_setattr
+#endif
 #if defined(__NR_move_mount)
   #define SYS_move_mount __NR_move_mount
 #endif
