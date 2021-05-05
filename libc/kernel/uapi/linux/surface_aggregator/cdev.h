@@ -16,13 +16,31 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_BINFMTS_H
-#define _UAPI_LINUX_BINFMTS_H
-#include <linux/capability.h>
-struct pt_regs;
-#define MAX_ARG_STRLEN (PAGE_SIZE * 32)
-#define MAX_ARG_STRINGS 0x7FFFFFFF
-#define BINPRM_BUF_SIZE 256
-#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
+#ifndef _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H
+#define _UAPI_LINUX_SURFACE_AGGREGATOR_CDEV_H
+#include <linux/ioctl.h>
+#include <linux/types.h>
+enum ssam_cdev_request_flags {
+  SSAM_CDEV_REQUEST_HAS_RESPONSE = 0x01,
+  SSAM_CDEV_REQUEST_UNSEQUENCED = 0x02,
+};
+struct ssam_cdev_request {
+  __u8 target_category;
+  __u8 target_id;
+  __u8 command_id;
+  __u8 instance_id;
+  __u16 flags;
+  __s16 status;
+  struct {
+    __u64 data;
+    __u16 length;
+    __u8 __pad[6];
+  } payload;
+  struct {
+    __u64 data;
+    __u16 length;
+    __u8 __pad[6];
+  } response;
+} __attribute__((__packed__));
+#define SSAM_CDEV_REQUEST _IOWR(0xA5, 1, struct ssam_cdev_request)
 #endif

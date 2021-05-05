@@ -105,7 +105,9 @@ enum nft_hook_attributes {
 #define NFTA_HOOK_MAX (__NFTA_HOOK_MAX - 1)
 enum nft_table_flags {
   NFT_TABLE_F_DORMANT = 0x1,
+  NFT_TABLE_F_OWNER = 0x2,
 };
+#define NFT_TABLE_F_MASK (NFT_TABLE_F_DORMANT | NFT_TABLE_F_OWNER)
 enum nft_table_attributes {
   NFTA_TABLE_UNSPEC,
   NFTA_TABLE_NAME,
@@ -114,6 +116,7 @@ enum nft_table_attributes {
   NFTA_TABLE_HANDLE,
   NFTA_TABLE_PAD,
   NFTA_TABLE_USERDATA,
+  NFTA_TABLE_OWNER,
   __NFTA_TABLE_MAX
 };
 #define NFTA_TABLE_MAX (__NFTA_TABLE_MAX - 1)
