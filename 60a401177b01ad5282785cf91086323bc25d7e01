@@ -68,6 +68,24 @@
       "parentUuid": "b82d0c1f_e1738edc",
       "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e0790d4_bd96f510",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-05-06T21:40:23Z",
+      "side": 1,
+      "message": "For 1:\n\nYes, you could do lr too, but I don\u0027t think it\u0027s very useful. There is already the BIONIC_STOP_UNWIND macro used to stop unwinding in libc_init. That only uses cfi data though.\n\nFor 3:\n\n3a and 3b:\nI don\u0027t think modifying the begin.S does anything. I forget why, but I remember when I tried it this does not stop the unwinds properly.\n\n3c:\nThere is already the cfi stop unwinding information in libc_init, so probably not worth doing it again here. Or probably not worth moving it here.\n\n\nI think there is only one place in bionic where an unwinder uses the frame pointer (android_unsafe_frame_pointer_chase), so I think it\u0027s fine to zero out the frame pointer. But this really only affects the main thread, all other threads should end in a different function.",
+      "parentUuid": "cfc5e247_66b357b6",
+      "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
