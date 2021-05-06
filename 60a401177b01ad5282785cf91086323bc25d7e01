@@ -50,6 +50,24 @@
       "message": "This CL is no longer needed for the stack protector stuff.  Would you like to commit it for compatibility/standards reasons?",
       "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfc5e247_66b357b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-05-06T17:10:10Z",
+      "side": 1,
+      "message": "i do have a bunch of questions/nits that hopefully cferris can weigh in on, because although i have plenty of _questions_ i don\u0027t have any of the answers --- these are genuine questions rather than rhetorical ones :-)\n\n1. do both fp and lr for the two arms?\n2. move the arm64 BTI hint back to being the first instruction, since that\u0027s the branch target :-)\n3. either:\n3a. make the CFI information in the linker begin.S files match\n3b. only change the linker begin.S --- i\u0027m not sure why we\u0027d need/want to do it here if it\u0027s done in begin.S?\n3c. decide whether we want CFI *and* register clearing, or just CFI (and assume we only need to worry about good unwinders [specifically -- our own libunwindstack])\n4. nit: either consistently use whitespace or not (`mov fp, #0` vs `mov r0,sp`)\n5. nit: line breaking at an instruction boundary, not half way through (the x86-64 `call`)",
+      "parentUuid": "b82d0c1f_e1738edc",
+      "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
