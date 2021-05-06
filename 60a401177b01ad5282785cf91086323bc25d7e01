@@ -33,6 +33,23 @@
       "message": "i have various nits, but +cferris because this might make sense anyway even if it doesn\u0027t help you :-)\n\ni actually thought we already did this. oh, looks like (a) we\u0027re using CFI in the dynamic linker startup instead and (b) not for the frame pointer anyway: https://android-review.googlesource.com/c/platform/bionic/+/512522",
       "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b82d0c1f_e1738edc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-06T01:11:35Z",
+      "side": 1,
+      "message": "This CL is no longer needed for the stack protector stuff.  Would you like to commit it for compatibility/standards reasons?",
+      "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
