@@ -145,6 +145,24 @@
       "parentUuid": "5ff08fe5_d075b4d4",
       "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85090bc3_726aa701",
+        "filename": "libc/arch-arm/bionic/__bionic_clone.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-05-07T21:42:38Z",
+      "side": 1,
+      "message": "fp, lr makes sense to me since that\u0027s the numerical order of those registers.\n\n(i have no idea what order [if any] people think x64 registers go in, so i have no opinion about them :-) )",
+      "parentUuid": "32bd7c12_e48f9a2e",
+      "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
