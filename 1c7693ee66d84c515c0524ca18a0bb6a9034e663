@@ -49,6 +49,54 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d979c5cf_2995e74f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T21:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34612055_1985c8df",
+      "range": {
+        "startLine": 13,
+        "startChar": 49,
+        "endLine": 13,
+        "endChar": 50
+      },
+      "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e839e220_d470d75c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T21:33:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e147d5ad_07dee97b",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 18
+      },
+      "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "7502f2d5_ced92098",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -77,6 +125,24 @@
       "writtenOn": "2021-05-07T20:24:40Z",
       "side": 1,
       "message": "move this one line up and just make it the same comment as x86? (\"We don\u0027t want anyone to unwind past this point.\")",
+      "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32bd7c12_e48f9a2e",
+        "filename": "libc/arch-arm/bionic/__bionic_clone.S",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T21:33:57Z",
+      "side": 1,
+      "message": "The AArch64 code clears FP then LR in that order.  The x64 code marks %rip then %rbp as undefined.  Do you prefer that the FP get cleared first or second?\n\nFor now I\u0027ve left the order alone and copied the comments from the AArch64 code.",
+      "parentUuid": "5ff08fe5_d075b4d4",
       "revId": "1c7693ee66d84c515c0524ca18a0bb6a9034e663",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
