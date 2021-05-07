@@ -16,13 +16,15 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_BINFMTS_H
-#define _UAPI_LINUX_BINFMTS_H
-#include <linux/capability.h>
-struct pt_regs;
-#define MAX_ARG_STRLEN (PAGE_SIZE * 32)
-#define MAX_ARG_STRINGS 0x7FFFFFFF
-#define BINPRM_BUF_SIZE 256
-#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
+#ifndef _UAPI_FSL_MC_H_
+#define _UAPI_FSL_MC_H_
+#include <linux/types.h>
+#define MC_CMD_NUM_OF_PARAMS 7
+struct fsl_mc_command {
+  __le64 header;
+  __le64 params[MC_CMD_NUM_OF_PARAMS];
+};
+#define FSL_MC_SEND_CMD_IOCTL_TYPE 'R'
+#define FSL_MC_SEND_CMD_IOCTL_SEQ 0xE0
+#define FSL_MC_SEND_MC_COMMAND _IOWR(FSL_MC_SEND_CMD_IOCTL_TYPE, FSL_MC_SEND_CMD_IOCTL_SEQ, struct fsl_mc_command)
 #endif
