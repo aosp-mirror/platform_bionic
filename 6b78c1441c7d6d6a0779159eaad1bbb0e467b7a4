@@ -22,6 +22,30 @@
       },
       "revId": "6b78c1441c7d6d6a0779159eaad1bbb0e467b7a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f75bc41_443b1159",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-05-07T21:50:00Z",
+      "side": 1,
+      "message": "yeah, probably --- a quick grep suggests we\u0027ve consistently used x29/x30 instead of fp/lr in arm64 code.",
+      "parentUuid": "94539865_14d7cfb1",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "6b78c1441c7d6d6a0779159eaad1bbb0e467b7a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
