@@ -46,6 +46,30 @@
       },
       "revId": "6b78c1441c7d6d6a0779159eaad1bbb0e467b7a4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e28d4fe8_7e204f9c",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T23:45:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f75bc41_443b1159",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "6b78c1441c7d6d6a0779159eaad1bbb0e467b7a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
