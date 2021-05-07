@@ -86,6 +86,24 @@
       "parentUuid": "cfc5e247_66b357b6",
       "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3a52f87_9a9434f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-05-07T00:14:55Z",
+      "side": 1,
+      "message": "i\u0027m assuming you mean \"we should also zero the fp in __bionic_clone if we do it here\", given that (a) you\u0027re right that this doesn\u0027t affect non-main threads and (b) __bionic_clone doesn\u0027t currently zero the frame pointer:\n```\n.L_bc_child:\n    # Setting lr to 0 will make the unwinder stop at __start_thread.\n    mov    lr, #0\n```\n\n+pcc for thoughts on whether we should make these changes to help android_unsafe_frame_pointer_chase().\n\n(but don\u0027t worry chriswailes --- don\u0027t feel that i\u0027m signing you to make the changes if/when we decide what they should look like :-) )",
+      "parentUuid": "3e0790d4_bd96f510",
+      "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
