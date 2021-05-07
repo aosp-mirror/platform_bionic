@@ -27,9 +27,10 @@
 #include <stdint.h>
 #include <sys/stat.h>
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <regex>
+#include <string>
 
 #include "gtest_globals.h"
 #include <android-base/file.h>
@@ -382,7 +383,8 @@ static void RelocationsTest(const char* lib, const char* expectation) {
   ExecTestHelper eth;
   eth.SetArgs({ "readelf", "-SW", path.c_str(), nullptr });
   eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
-  ASSERT_TRUE(eth.GetOutput().find(expectation) != std::string::npos) << eth.GetOutput();
+
+  ASSERT_TRUE(std::regex_search(eth.GetOutput(), std::regex(expectation))) << eth.GetOutput();
 
   // Can we load it?
   void* handle = dlopen(lib, RTLD_NOW);
@@ -395,31 +397,29 @@ static void RelocationsTest(const char* lib, const char* expectation) {
 }
 
 TEST(dl, relocations_RELR) {
-  RelocationsTest("librelocations-RELR.so",
-      ".relr.dyn            RELR");
+  RelocationsTest("librelocations-RELR.so", "\\.relr\\.dyn * RELR");
 }
 
 TEST(dl, relocations_ANDROID_RELR) {
-  RelocationsTest("librelocations-ANDROID_RELR.so",
-      ".relr.dyn            ANDROID_RELR");
+  RelocationsTest("librelocations-ANDROID_RELR.so", "\\.relr\\.dyn * ANDROID_RELR");
 }
 
 TEST(dl, relocations_ANDROID_REL) {
   RelocationsTest("librelocations-ANDROID_REL.so",
 #if __LP64__
-      ".rela.dyn            ANDROID_RELA"
+                  "\\.rela\\.dyn * ANDROID_RELA"
 #else
-      ".rel.dyn             ANDROID_REL"
+                  "\\.rel\\.dyn * ANDROID_REL"
 #endif
-      );
+  );
 }
 
 TEST(dl, relocations_fat) {
   RelocationsTest("librelocations-fat.so",
 #if __LP64__
-      ".rela.dyn            RELA"
+                  "\\.rela\\.dyn * RELA"
 #else
-      ".rel.dyn             REL"
+                  "\\.rel\\.dyn * REL"
 #endif
-      );
+  );
 }

@@ -31,8 +31,6 @@
 #include "SignalUtils.h"
 #include "utils.h"
 
-#include "private/bionic_constants.h"
-
 using namespace std::chrono_literals;
 
 TEST(time, time) {
@@ -760,22 +758,22 @@ TEST(time, timer_delete_from_timer_thread) {
 
 TEST(time, clock_gettime) {
   // Try to ensure that our vdso clock_gettime is working.
+  timespec ts0;
   timespec ts1;
-  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts1));
   timespec ts2;
-  ASSERT_EQ(0, syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts2));
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts0));
+  ASSERT_EQ(0, syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts1));
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts2));
 
-  // What's the difference between the two?
-  ts2.tv_sec -= ts1.tv_sec;
-  ts2.tv_nsec -= ts1.tv_nsec;
-  if (ts2.tv_nsec < 0) {
-    --ts2.tv_sec;
-    ts2.tv_nsec += NS_PER_S;
+  // Check we have a nice monotonic timestamp sandwich.
+  ASSERT_LE(ts0.tv_sec, ts1.tv_sec);
+  if (ts0.tv_sec == ts1.tv_sec) {
+    ASSERT_LE(ts0.tv_nsec, ts1.tv_nsec);
   }
-
-  // To try to avoid flakiness we'll accept answers within 10,000,000ns (0.01s).
-  ASSERT_EQ(0, ts2.tv_sec);
-  ASSERT_LT(ts2.tv_nsec, 10'000'000);
+  ASSERT_LE(ts1.tv_sec, ts2.tv_sec);
+  if (ts1.tv_sec == ts2.tv_sec) {
+    ASSERT_LE(ts1.tv_nsec, ts2.tv_nsec);
+  }
 }
 
 TEST(time, clock_gettime_CLOCK_REALTIME) {
@@ -851,11 +849,15 @@ TEST(time, clock_getres_unknown) {
 }
 
 TEST(time, clock) {
-  // clock(3) is hard to test, but a 1s sleep should cost less than 20ms.
+  // clock(3) is hard to test, but a 1s sleep should cost less than 10ms on average.
+  static const clock_t N = 5;
+  static const clock_t mean_limit_ms = 10;
   clock_t t0 = clock();
-  sleep(1);
+  for (size_t i = 0; i < N; ++i) {
+    sleep(1);
+  }
   clock_t t1 = clock();
-  ASSERT_LT(t1 - t0, 20 * (CLOCKS_PER_SEC / 1000));
+  ASSERT_LT(t1 - t0, N * mean_limit_ms * (CLOCKS_PER_SEC / 1000));
 }
 
 static pid_t GetInvalidPid() {

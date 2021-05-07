@@ -69,11 +69,8 @@
 #define _JB_CHECKSUM    (_JB_D8_D9 + 2)
 
 #define SCS_MASK (SCS_SIZE - 1)
-#define MANGLE_REGISTERS 1
-#define USE_CHECKSUM 1
 
 .macro m_mangle_registers reg, sp_reg
-#if MANGLE_REGISTERS
   eor x3, x3, \reg
   eor x19, x19, \reg
   eor x20, x20, \reg
@@ -88,7 +85,6 @@
   eor x29, x29, \reg
   eor x30, x30, \reg
   eor \sp_reg, \sp_reg, \reg
-#endif
 .endm
 
 .macro m_calculate_checksum dst, src, scratch
@@ -179,11 +175,9 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   stp d10, d11, [x0, #(_JB_D10_D11 * 8)]
   stp d8,  d9,  [x0, #(_JB_D8_D9   * 8)]
 
-#if USE_CHECKSUM
   // Calculate the checksum.
   m_calculate_checksum x12, x0, x2
   str x12, [x0, #(_JB_CHECKSUM * 8)]
-#endif
 
   mov w0, #0
   autiasp
@@ -194,14 +188,11 @@ END(sigsetjmp)
 // void siglongjmp(sigjmp_buf env, int value);
 ENTRY(siglongjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
-#if USE_CHECKSUM
   // Check the checksum before doing anything.
   m_calculate_checksum x12, x0, x2
   ldr x2, [x0, #(_JB_CHECKSUM * 8)]
-
   cmp x2, x12
   bne __bionic_setjmp_checksum_mismatch
-#endif
 
 #if __has_feature(hwaddress_sanitizer)
   stp x0, x30, [sp, #-16]!

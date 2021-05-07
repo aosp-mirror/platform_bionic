@@ -33,10 +33,10 @@
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/test_utils.h>
 #include <android-base/unique_fd.h>
 
-#include "BionicDeathTest.h"
 #include "utils.h"
 
 // This #include is actually a test too. We have to duplicate the
@@ -56,8 +56,8 @@
 
 using namespace std::string_literals;
 
-using stdio_DeathTest = BionicDeathTest;
-using stdio_nofortify_DeathTest = BionicDeathTest;
+using stdio_DeathTest = SilentDeathTest;
+using stdio_nofortify_DeathTest = SilentDeathTest;
 
 static void SetFileTo(const char* path, const char* content) {
   FILE* fp;
