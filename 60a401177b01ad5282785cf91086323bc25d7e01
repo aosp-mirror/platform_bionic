@@ -104,6 +104,24 @@
       "parentUuid": "3e0790d4_bd96f510",
       "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "085df6d8_9c3e0639",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T19:12:25Z",
+      "side": 1,
+      "message": "The x86_64 code for __bionic_clone uses an .cfi_undefined directive to invalidate the %rbp and %rip registers.  The x86 code, however, only invalidates the %eip reigsters.  It seems this is similar but not quite the same as setting the value to zero?\n\nDo we want to add only the CFI directive to the x86 code, or do we also want to zero the registers for both versions?",
+      "parentUuid": "f3a52f87_9a9434f2",
+      "revId": "60a401177b01ad5282785cf91086323bc25d7e01",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
