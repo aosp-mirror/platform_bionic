@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94539865_14d7cfb1",
+        "filename": "libc/arch-common/bionic/crtbegin.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1047255
+      },
+      "writtenOn": "2021-05-07T21:44:42Z",
+      "side": 1,
+      "message": "Should we use numerical registers here to be consistent with the code in the __bionic_clone.S files?",
+      "range": {
+        "startLine": 52,
+        "startChar": 24,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "6b78c1441c7d6d6a0779159eaad1bbb0e467b7a4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
