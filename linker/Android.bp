@@ -193,6 +193,7 @@ filegroup {
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_transparent_hugepage_support.cpp",
         "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
