@@ -31,9 +31,10 @@
 #include <link.h>
 #include <sys/auxv.h>
 
+#include "linker.h"
+#include "linker_cfi.h"
 #include "linker_debug.h"
 #include "linker_debuggerd.h"
-#include "linker_cfi.h"
 #include "linker_gdb_support.h"
 #include "linker_globals.h"
 #include "linker_phdr.h"
