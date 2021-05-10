@@ -161,6 +161,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1145d503_4a763fa7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-05-10T16:11:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e768bc0d_8b213a34",
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7bcc0ea0_200a021f",
@@ -198,6 +216,30 @@
       "side": 1,
       "message": "How does this look? I separated the concept of the starting address alignment from the mapping alignment. The logic outside of starting address selection is now unaffected unless the start_alignment exceeds kLibraryAlignment in which case we round up.",
       "parentUuid": "7bcc0ea0_200a021f",
+      "range": {
+        "startLine": 621,
+        "startChar": 11,
+        "endLine": 621,
+        "endChar": 16
+      },
+      "revId": "3ba1fbfc57c124b338703e32dea27aaeffe6af58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6adad36e_3dafe52d",
+        "filename": "linker/linker_phdr.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1558410
+      },
+      "writtenOn": "2021-05-10T16:11:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ab367ed_63e548f9",
       "range": {
         "startLine": 621,
         "startChar": 11,
