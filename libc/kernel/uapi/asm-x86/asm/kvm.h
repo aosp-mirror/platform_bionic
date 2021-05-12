@@ -111,6 +111,7 @@ struct kvm_ioapic_state {
 #define KVM_IRQCHIP_IOAPIC 2
 #define KVM_NR_IRQCHIPS 3
 #define KVM_RUN_X86_SMM (1 << 0)
+#define KVM_RUN_X86_BUS_LOCK (1 << 1)
 struct kvm_regs {
   __u64 rax, rbx, rcx, rdx;
   __u64 rsi, rdi, rsp, rbp;

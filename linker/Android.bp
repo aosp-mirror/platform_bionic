@@ -193,6 +193,7 @@ filegroup {
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_transparent_hugepage_support.cpp",
         "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
@@ -411,6 +412,19 @@ sh_binary {
     name: "ldd",
     src: "ldd.sh",
     bazel_module: { bp2build_available: true },
+}
+
+// Used to generate binaries that can be backed by transparent hugepages.
+cc_defaults {
+    name: "linker_hugepage_aligned",
+    arch: {
+        arm64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+        x86_64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+    },
 }
 
 cc_library {
