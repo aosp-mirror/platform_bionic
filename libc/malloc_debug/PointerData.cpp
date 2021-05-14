@@ -588,8 +588,8 @@ void PointerData::DumpLiveToFile(int fd) {
       dprintf(fd, "  bt_info");
       for (const auto& frame : *info.backtrace_info) {
         dprintf(fd, " {");
-        if (frame.map_info != nullptr && !frame.map_info->name.empty()) {
-          dprintf(fd, "\"%s\"", frame.map_info->name.c_str());
+        if (frame.map_info != nullptr && !frame.map_info->name().empty()) {
+          dprintf(fd, "\"%s\"", frame.map_info->name().c_str());
         } else {
           dprintf(fd, "\"\"");
         }
