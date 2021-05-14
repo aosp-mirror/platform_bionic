@@ -90,14 +90,14 @@ void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info) {
     unwindstack::MapInfo* map_info = info->map_info;
 
     std::string line = android::base::StringPrintf("          #%0zd  pc %" PAD_PTR "  ", i, info->rel_pc);
-    if (map_info->offset != 0) {
-      line += android::base::StringPrintf("(offset 0x%" PRIx64 ") ", map_info->offset);
+    if (map_info->offset() != 0) {
+      line += android::base::StringPrintf("(offset 0x%" PRIx64 ") ", map_info->offset());
     }
 
-    if (map_info->name.empty()) {
-      line += android::base::StringPrintf("<anonymous:%" PRIx64 ">", map_info->start);
+    if (map_info->name().empty()) {
+      line += android::base::StringPrintf("<anonymous:%" PRIx64 ">", map_info->start());
     } else {
-      line += map_info->name;
+      line += map_info->name();
     }
 
     if (!info->function_name.empty()) {
