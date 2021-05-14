@@ -49,13 +49,15 @@ __used static void _start_main(void* raw_args) {
 #define POST "; .size _start, .-_start"
 
 #if defined(__aarch64__)
-__asm__(PRE "bti j; mov x0,sp; b _start_main" POST);
+__asm__(PRE "bti j; mov x29,#0; mov x30,#0; mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
-__asm__(PRE "mov r0,sp; b _start_main" POST);
+__asm__(PRE "mov fp,#0; mov lr,#0; mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)
-__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax; calll _start_main" POST);
+__asm__(PRE
+        "xorl %ebp,%ebp; movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax;"
+        "calll _start_main" POST);
 #elif defined(__x86_64__)
-__asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
+__asm__(PRE "xorl %ebp, %ebp; movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #else
 #error unsupported architecture
 #endif
