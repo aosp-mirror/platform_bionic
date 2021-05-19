@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "362c35db_99a29c69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-05-19T16:16:48Z",
+      "side": 1,
+      "message": "rprichard pointed this out yesterday on https://android-review.googlesource.com/c/platform/ndk/+/1711729...",
+      "revId": "ef76860f22e14b088189a01f6096dffddb5de185",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
