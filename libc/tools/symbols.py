@@ -41,7 +41,8 @@ def GetFromElf(elf_file, sym_type='--dyn-syms'):
 
     symbols = set()
 
-    output = subprocess.check_output(['readelf', sym_type, '-W', elf_file])
+    output = subprocess.check_output(['readelf', sym_type, '-W', elf_file],
+            text=True)
     for line in output.split('\n'):
         if ' HIDDEN ' in line or ' UND ' in line:
             continue
@@ -75,6 +76,10 @@ def GetFromAndroidSo(files):
     lib_dir = os.path.join(out_dir, 'system/lib64')
     if not os.path.isdir(lib_dir):
         lib_dir = os.path.join(out_dir, 'system/lib')
+
+    lib_dir = os.path.join(out_dir, 'apex/com.android.runtime/lib64/bionic/')
+    if not os.path.isdir(lib_dir):
+        lib_dir = os.path.join(out_dir, 'apex/com.android.runtime/lib/bionic/')
 
     results = set()
     for f in files:
