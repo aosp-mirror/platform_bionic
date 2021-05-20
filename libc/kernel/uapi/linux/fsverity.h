@@ -55,6 +55,17 @@ struct fsverity_formatted_digest {
   __le16 digest_size;
   __u8 digest[];
 };
+#define FS_VERITY_METADATA_TYPE_MERKLE_TREE 1
+#define FS_VERITY_METADATA_TYPE_DESCRIPTOR 2
+#define FS_VERITY_METADATA_TYPE_SIGNATURE 3
+struct fsverity_read_metadata_arg {
+  __u64 metadata_type;
+  __u64 offset;
+  __u64 length;
+  __u64 buf_ptr;
+  __u64 __reserved;
+};
 #define FS_IOC_ENABLE_VERITY _IOW('f', 133, struct fsverity_enable_arg)
 #define FS_IOC_MEASURE_VERITY _IOWR('f', 134, struct fsverity_digest)
+#define FS_IOC_READ_VERITY_METADATA _IOWR('f', 135, struct fsverity_read_metadata_arg)
 #endif

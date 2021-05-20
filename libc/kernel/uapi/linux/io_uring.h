@@ -191,6 +191,7 @@ struct io_uring_params {
 #define IORING_FEAT_POLL_32BITS (1U << 6)
 #define IORING_FEAT_SQPOLL_NONFIXED (1U << 7)
 #define IORING_FEAT_EXT_ARG (1U << 8)
+#define IORING_FEAT_NATIVE_WORKERS (1U << 9)
 enum {
   IORING_REGISTER_BUFFERS = 0,
   IORING_UNREGISTER_BUFFERS = 1,
@@ -212,6 +213,12 @@ struct io_uring_files_update {
   __u32 resv;
   __aligned_u64 fds;
 };
+struct io_uring_rsrc_update {
+  __u32 offset;
+  __u32 resv;
+  __aligned_u64 data;
+};
+#define IORING_REGISTER_FILES_SKIP (- 2)
 #define IO_URING_OP_SUPPORTED (1U << 0)
 struct io_uring_probe_op {
   __u8 op;
