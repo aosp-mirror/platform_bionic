@@ -16,13 +16,28 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_BINFMTS_H
-#define _UAPI_LINUX_BINFMTS_H
-#include <linux/capability.h>
-struct pt_regs;
-#define MAX_ARG_STRLEN (PAGE_SIZE * 32)
-#define MAX_ARG_STRINGS 0x7FFFFFFF
-#define BINPRM_BUF_SIZE 256
-#define AT_FLAGS_PRESERVE_ARGV0_BIT 0
-#define AT_FLAGS_PRESERVE_ARGV0 (1 << AT_FLAGS_PRESERVE_ARGV0_BIT)
+#ifndef _UAPI_LINUX_VDPA_H_
+#define _UAPI_LINUX_VDPA_H_
+#define VDPA_GENL_NAME "vdpa"
+#define VDPA_GENL_VERSION 0x1
+enum vdpa_command {
+  VDPA_CMD_UNSPEC,
+  VDPA_CMD_MGMTDEV_NEW,
+  VDPA_CMD_MGMTDEV_GET,
+  VDPA_CMD_DEV_NEW,
+  VDPA_CMD_DEV_DEL,
+  VDPA_CMD_DEV_GET,
+};
+enum vdpa_attr {
+  VDPA_ATTR_UNSPEC,
+  VDPA_ATTR_MGMTDEV_BUS_NAME,
+  VDPA_ATTR_MGMTDEV_DEV_NAME,
+  VDPA_ATTR_MGMTDEV_SUPPORTED_CLASSES,
+  VDPA_ATTR_DEV_NAME,
+  VDPA_ATTR_DEV_ID,
+  VDPA_ATTR_DEV_VENDOR_ID,
+  VDPA_ATTR_DEV_MAX_VQS,
+  VDPA_ATTR_DEV_MAX_VQ_SIZE,
+  VDPA_ATTR_MAX,
+};
 #endif
