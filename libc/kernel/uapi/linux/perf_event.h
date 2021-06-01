@@ -103,9 +103,11 @@ enum perf_event_sample_format {
   PERF_SAMPLE_CGROUP = 1U << 21,
   PERF_SAMPLE_DATA_PAGE_SIZE = 1U << 22,
   PERF_SAMPLE_CODE_PAGE_SIZE = 1U << 23,
-  PERF_SAMPLE_MAX = 1U << 24,
+  PERF_SAMPLE_WEIGHT_STRUCT = 1U << 24,
+  PERF_SAMPLE_MAX = 1U << 25,
   __PERF_SAMPLE_CALLCHAIN_EARLY = 1ULL << 63,
 };
+#define PERF_SAMPLE_WEIGHT_TYPE (PERF_SAMPLE_WEIGHT | PERF_SAMPLE_WEIGHT_STRUCT)
 enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_USER_SHIFT = 0,
   PERF_SAMPLE_BRANCH_KERNEL_SHIFT = 1,
@@ -205,7 +207,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, text_poke : 1, __reserved_1 : 30;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, text_poke : 1, build_id : 1, __reserved_1 : 29;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -301,6 +303,7 @@ struct perf_event_mmap_page {
 #define PERF_RECORD_MISC_SWITCH_OUT (1 << 13)
 #define PERF_RECORD_MISC_EXACT_IP (1 << 14)
 #define PERF_RECORD_MISC_SWITCH_OUT_PREEMPT (1 << 14)
+#define PERF_RECORD_MISC_MMAP_BUILD_ID (1 << 14)
 #define PERF_RECORD_MISC_EXT_RESERVED (1 << 15)
 struct perf_event_header {
   __u32 type;
@@ -380,14 +383,14 @@ enum perf_callchain_context {
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_rsvd : 24;
+    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_blk : 3, mem_rsvd : 21;
   };
 };
 #elif defined(__BIG_ENDIAN_BITFIELD)
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_rsvd : 24, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
+    __u64 mem_rsvd : 21, mem_blk : 3, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
   };
 };
 #else
@@ -445,10 +448,32 @@ union perf_mem_data_src {
 #define PERF_MEM_TLB_WK 0x20
 #define PERF_MEM_TLB_OS 0x40
 #define PERF_MEM_TLB_SHIFT 26
+#define PERF_MEM_BLK_NA 0x01
+#define PERF_MEM_BLK_DATA 0x02
+#define PERF_MEM_BLK_ADDR 0x04
+#define PERF_MEM_BLK_SHIFT 40
 #define PERF_MEM_S(a,s) (((__u64) PERF_MEM_ ##a ##_ ##s) << PERF_MEM_ ##a ##_SHIFT)
 struct perf_branch_entry {
   __u64 from;
   __u64 to;
   __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, reserved : 40;
+};
+union perf_sample_weight {
+  __u64 full;
+#ifdef __LITTLE_ENDIAN_BITFIELD
+  struct {
+    __u32 var1_dw;
+    __u16 var2_w;
+    __u16 var3_w;
+  };
+#elif defined(__BIG_ENDIAN_BITFIELD)
+  struct {
+    __u16 var3_w;
+    __u16 var2_w;
+    __u32 var1_dw;
+  };
+#else
+#error "Unknown endianness"
+#endif
 };
 #endif

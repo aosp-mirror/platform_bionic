@@ -240,7 +240,9 @@ struct hl_info_hw_ip_info {
   __u32 num_of_events;
   __u32 device_id;
   __u32 module_id;
-  __u32 reserved[2];
+  __u32 reserved;
+  __u16 first_available_interrupt_id;
+  __u16 reserved2;
   __u32 cpld_version;
   __u32 psoc_pci_pll_nr;
   __u32 psoc_pci_pll_nf;
@@ -251,15 +253,18 @@ struct hl_info_hw_ip_info {
   __u8 pad[2];
   __u8 cpucp_version[HL_INFO_VERSION_MAX_LEN];
   __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
+  __u64 reserved3;
+  __u64 dram_page_size;
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
   __u64 ctx_dram_mem;
 };
+#define HL_BUSY_ENGINES_MASK_EXT_SIZE 2
 struct hl_info_hw_idle {
   __u32 is_idle;
   __u32 busy_engines_mask;
-  __u64 busy_engines_mask_ext;
+  __u64 busy_engines_mask_ext[HL_BUSY_ENGINES_MASK_EXT_SIZE];
 };
 struct hl_info_device_status {
   __u32 status;
@@ -301,6 +306,8 @@ struct hl_pll_frequency_info {
 struct hl_info_sync_manager {
   __u32 first_available_sync_object;
   __u32 first_available_monitor;
+  __u32 first_available_cq;
+  __u32 reserved;
 };
 struct hl_info_cs_counters {
   __u64 total_out_of_mem_drop_cnt;
@@ -379,12 +386,18 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_WAIT 0x4
 #define HL_CS_FLAGS_COLLECTIVE_WAIT 0x8
 #define HL_CS_FLAGS_TIMESTAMP 0x20
+#define HL_CS_FLAGS_STAGED_SUBMISSION 0x40
+#define HL_CS_FLAGS_STAGED_SUBMISSION_FIRST 0x80
+#define HL_CS_FLAGS_STAGED_SUBMISSION_LAST 0x100
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
   __u64 chunks_restore;
   __u64 chunks_execute;
-  __u64 chunks_store;
+  union {
+    __u64 chunks_store;
+    __u64 seq;
+  };
   __u32 num_chunks_restore;
   __u32 num_chunks_execute;
   __u32 num_chunks_store;
@@ -426,6 +439,7 @@ union hl_wait_cs_args {
 #define HL_MEM_OP_FREE 1
 #define HL_MEM_OP_MAP 2
 #define HL_MEM_OP_UNMAP 3
+#define HL_MEM_OP_MAP_BLOCK 4
 #define HL_MEM_CONTIGUOUS 0x1
 #define HL_MEM_SHARED 0x2
 #define HL_MEM_USERPTR 0x4
@@ -447,6 +461,9 @@ struct hl_mem_in {
       __u64 mem_size;
     } map_host;
     struct {
+      __u64 block_addr;
+    } map_block;
+    struct {
       __u64 device_virt_addr;
     } unmap;
   };
@@ -459,6 +476,11 @@ struct hl_mem_out {
   union {
     __u64 device_virt_addr;
     __u64 handle;
+    struct {
+      __u64 block_handle;
+      __u32 block_size;
+      __u32 pad;
+    };
   };
 };
 union hl_mem_args {

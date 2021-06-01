@@ -50,9 +50,16 @@ struct rfkill_event {
   __u8 op;
   __u8 soft;
   __u8 hard;
+} __attribute__((packed));
+struct rfkill_event_ext {
+  __u32 idx;
+  __u8 type;
+  __u8 op;
+  __u8 soft;
+  __u8 hard;
   __u8 hard_block_reasons;
 } __attribute__((packed));
-#define RFKILL_EVENT_SIZE_V1 8
+#define RFKILL_EVENT_SIZE_V1 sizeof(struct rfkill_event)
 #define RFKILL_IOC_MAGIC 'R'
 #define RFKILL_IOC_NOINPUT 1
 #define RFKILL_IOCTL_NOINPUT _IO(RFKILL_IOC_MAGIC, RFKILL_IOC_NOINPUT)
