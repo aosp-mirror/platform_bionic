@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c978e70_9b52ee59",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1229339
+      },
+      "writtenOn": "2021-06-05T00:51:15Z",
+      "side": 1,
+      "message": "I suppose an alternate approach is to change the interface to the linker, e.g.:\n\n1. Add some way of querying, \"do you support LD_CONFIG_FILE\". Add an argument --has-ld-config-file, embed a magic string in the linker binary...\n\n2. Change the test to use LD_CONFIG_FILE unconditionally, and detect when the feature didn\u0027t work because it wasn\u0027t supported. (Add a linker warning?)\n\nThis is easier, though. It basically just reverts this CL:\n\nhttps://android-review.googlesource.com/c/platform/bionic/+/514418/\n\nI don\u0027t know for sure that this CL would fix b/189422994, but it would fix b/140324381. It seems plausible that it would also fix the new issue.\n",
+      "revId": "546723b2b804d8e12c2774c7338073184cf90075",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
