@@ -263,8 +263,11 @@ static void create_ld_config_file(const char* config_file) {
 #endif
 
 #if defined(__BIONIC__)
-static bool is_debuggable_build() {
-  return android::base::GetBoolProperty("ro.debuggable", false);
+// This test can't rely on ro.debuggable, because it might have been forced on
+// in a user build ("Force Debuggable"). In that configuration, ro.debuggable is
+// true, but Bionic's LD_CONFIG_FILE testing support is still disabled.
+static bool is_user_build() {
+  return android::base::GetProperty("ro.build.type", "user") == std::string("user");
 }
 #endif
 
@@ -281,7 +284,7 @@ static bool is_debuggable_build() {
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
-  if (!is_debuggable_build()) {
+  if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
@@ -318,7 +321,7 @@ TEST(dl, exec_with_ld_config_file) {
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
-  if (!is_debuggable_build()) {
+  if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
@@ -355,8 +358,8 @@ TEST(dl, disable_ld_config_file) {
     // This test is only for CTS.
     GTEST_SKIP() << "test is not supported with root uid";
   }
-  if (is_debuggable_build()) {
-    GTEST_SKIP() << "test is not supported on debuggable build";
+  if (!is_user_build()) {
+    GTEST_SKIP() << "test requires user build";
   }
 
   std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
