@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a522886b_f8ed02e8",
+        "filename": "tests/stack_unwinding_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-07T22:28:26Z",
+      "side": 1,
+      "message": "type*",
+      "range": {
+        "startLine": 82,
+        "startChar": 51,
+        "endLine": 82,
+        "endChar": 57
+      },
+      "revId": "756b83b3ebb2bd3352fc4ce33447aefcc3d69572",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
