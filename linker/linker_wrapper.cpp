@@ -28,11 +28,11 @@
 
 #include "private/KernelArgumentBlock.h"
 
-extern const char linker_offset;
+extern const char __dlwrap_linker_offset;
 
 // This will be replaced by host_bionic_inject, but must be non-zero
 // here so that it's placed in the data section.
-uintptr_t original_start = 42;
+uintptr_t __dlwrap_original_start = 42;
 
 /* Find the load bias and base address of an executable or shared object loaded
  * by the kernel. The ELF file's PHDR table must have a PT_PHDR entry.
@@ -63,7 +63,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     reinterpret_cast<ElfW(Phdr)*>(args.getauxval(AT_PHDR)), args.getauxval(AT_PHNUM),
     &base_addr, &load_bias);
 
-  ElfW(Addr) linker_addr = base_addr + reinterpret_cast<uintptr_t>(&linker_offset);
+  ElfW(Addr) linker_addr = base_addr + reinterpret_cast<uintptr_t>(&__dlwrap_linker_offset);
   ElfW(Addr) linker_entry_offset = reinterpret_cast<ElfW(Ehdr)*>(linker_addr)->e_entry;
 
   for (ElfW(auxv_t)* v = args.auxv; v->a_type != AT_NULL; ++v) {
@@ -73,7 +73,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     }
     if (v->a_type == AT_ENTRY) {
       // Set AT_ENTRY to the proper entry point
-      v->a_un.a_val = base_addr + original_start;
+      v->a_un.a_val = base_addr + __dlwrap_original_start;
     }
   }
 
