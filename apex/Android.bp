@@ -58,6 +58,7 @@ apex {
         "bionic-linker-config",
     ],
     updatable: false,
+    generate_hashtree: false,
 }
 
 sdk {
