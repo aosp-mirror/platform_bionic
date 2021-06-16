@@ -28,11 +28,13 @@
 
 #include "private/KernelArgumentBlock.h"
 
+// The offset from the linker's original program header load addresses to
+// the load addresses when embedded into a binary.  Set by the extract_linker
+// tool.
 extern const char __dlwrap_linker_offset;
 
-// This will be replaced by host_bionic_inject, but must be non-zero
-// here so that it's placed in the data section.
-uintptr_t __dlwrap_original_start = 42;
+// The real entry point of the binary to use after linker bootstrapping.
+__LIBC_HIDDEN__ extern "C" void _start();
 
 /* Find the load bias and base address of an executable or shared object loaded
  * by the kernel. The ELF file's PHDR table must have a PT_PHDR entry.
@@ -73,7 +75,7 @@ extern "C" ElfW(Addr) __linker_init(void* raw_args) {
     }
     if (v->a_type == AT_ENTRY) {
       // Set AT_ENTRY to the proper entry point
-      v->a_un.a_val = base_addr + __dlwrap_original_start;
+      v->a_un.a_val = reinterpret_cast<ElfW(Addr)>(&_start);
     }
   }
 
