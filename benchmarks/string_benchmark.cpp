@@ -31,9 +31,8 @@ static void BM_string_memcmp(benchmark::State& state) {
   char* src_aligned = GetAlignedPtrFilled(&src, src_alignment, nbytes, 'x');
   char* dst_aligned = GetAlignedPtrFilled(&dst, dst_alignment, nbytes, 'x');
 
-  volatile int c __attribute__((unused)) = 0;
   while (state.KeepRunning()) {
-    c += memcmp(dst_aligned, src_aligned, nbytes);
+    benchmark::DoNotOptimize(memcmp(dst_aligned, src_aligned, nbytes));
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
@@ -129,9 +128,8 @@ static void BM_string_strlen(benchmark::State& state) {
   char* buf_aligned = GetAlignedPtrFilled(&buf, alignment, nbytes + 1, 'x');
   buf_aligned[nbytes - 1] = '\0';
 
-  volatile int c __attribute__((unused)) = 0;
   while (state.KeepRunning()) {
-    c += strlen(buf_aligned);
+    benchmark::DoNotOptimize(strlen(buf_aligned));
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
@@ -239,9 +237,8 @@ static void BM_string_strcmp(benchmark::State& state) {
   s1_aligned[nbytes - 1] = '\0';
   s2_aligned[nbytes - 1] = '\0';
 
-  volatile int c __attribute__((unused));
   while (state.KeepRunning()) {
-    c = strcmp(s1_aligned, s2_aligned);
+    benchmark::DoNotOptimize(strcmp(s1_aligned, s2_aligned));
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));
@@ -258,9 +255,8 @@ static void BM_string_strncmp(benchmark::State& state) {
   char* s1_aligned = GetAlignedPtrFilled(&s1, s1_alignment, nbytes, 'x');
   char* s2_aligned = GetAlignedPtrFilled(&s2, s2_alignment, nbytes, 'x');
 
-  volatile int c __attribute__((unused));
   for (auto _ : state) {
-    c = strncmp(s1_aligned, s2_aligned, nbytes);
+    benchmark::DoNotOptimize(strncmp(s1_aligned, s2_aligned, nbytes));
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(nbytes));

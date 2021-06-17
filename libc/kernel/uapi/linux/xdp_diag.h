@@ -38,6 +38,7 @@ struct xdp_diag_msg {
 #define XDP_SHOW_RING_CFG (1 << 1)
 #define XDP_SHOW_UMEM (1 << 2)
 #define XDP_SHOW_MEMINFO (1 << 3)
+#define XDP_SHOW_STATS (1 << 4)
 enum {
   XDP_DIAG_NONE,
   XDP_DIAG_INFO,
@@ -48,6 +49,7 @@ enum {
   XDP_DIAG_UMEM_FILL_RING,
   XDP_DIAG_UMEM_COMPLETION_RING,
   XDP_DIAG_MEMINFO,
+  XDP_DIAG_STATS,
   __XDP_DIAG_MAX,
 };
 #define XDP_DIAG_MAX (__XDP_DIAG_MAX - 1)
@@ -69,5 +71,13 @@ struct xdp_diag_umem {
   __u32 queue_id;
   __u32 flags;
   __u32 refs;
+};
+struct xdp_diag_stats {
+  __u64 n_rx_dropped;
+  __u64 n_rx_invalid;
+  __u64 n_rx_full;
+  __u64 n_fill_ring_empty;
+  __u64 n_tx_invalid;
+  __u64 n_tx_ring_empty;
 };
 #endif

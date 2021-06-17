@@ -30,7 +30,9 @@
 
 #include <error.h>
 
-#include "BionicDeathTest.h"
+#include <android-base/silent_death_test.h>
+
+using error_DeathTest = SilentDeathTest;
 
 static size_t g_test_error_print_progname_invocation_count;
 
