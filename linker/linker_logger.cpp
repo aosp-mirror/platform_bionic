@@ -41,7 +41,6 @@
 #include "private/CachedProperty.h"
 
 LinkerLogger g_linker_logger;
-bool g_greylist_disabled = false;
 
 static uint32_t ParseProperty(const std::string& value) {
   if (value.empty()) {
@@ -89,15 +88,6 @@ void LinkerLogger::ResetState() {
   // is running on a user build, in which case logging is disabled.
   if (prctl(PR_GET_DUMPABLE, 0, 0, 0, 0) == 0) {
     return;
-  }
-
-  // This is a convenient place to check whether the greylist should be disabled for testing.
-  static CachedProperty greylist_disabled("debug.ld.greylist_disabled");
-  bool old_value = g_greylist_disabled;
-  g_greylist_disabled = (strcmp(greylist_disabled.Get(), "true") == 0);
-  if (g_greylist_disabled != old_value) {
-    async_safe_format_log(ANDROID_LOG_INFO, "linker", "%s greylist",
-                          g_greylist_disabled ? "Disabling" : "Enabling");
   }
 
   flags_ = 0;

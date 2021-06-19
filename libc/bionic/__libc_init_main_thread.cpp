@@ -101,6 +101,19 @@ void __init_tcb_dtv(bionic_tcb* tcb) {
   __set_tcb_dtv(tcb, const_cast<TlsDtv*>(&zero_dtv));
 }
 
+// This is public so that the zygote can call it too. It is not expected
+// to be useful otherwise.
+//
+// Note in particular that it is not possible to return from any existing
+// stack frame with stack protector enabled after this function is called.
+extern "C" void android_reset_stack_guards() {
+  // The TLS stack guard is set from the global, so ensure that we've initialized the global
+  // before we initialize the TLS. Dynamic executables will initialize their copy of the global
+  // stack protector from the one in the main thread's TLS.
+  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
+  __init_tcb_stack_guard(__get_bionic_tcb());
+}
+
 // Finish initializing the main thread.
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
 extern "C" void __libc_init_main_thread_late() {
@@ -119,11 +132,7 @@ extern "C" void __libc_init_main_thread_late() {
   // User code should never see this; we'll compute it when asked.
   pthread_attr_setstacksize(&main_thread.attr, 0);
 
-  // The TLS stack guard is set from the global, so ensure that we've initialized the global
-  // before we initialize the TLS. Dynamic executables will initialize their copy of the global
-  // stack protector from the one in the main thread's TLS.
-  __libc_safe_arc4random_buf(&__stack_chk_guard, sizeof(__stack_chk_guard));
-  __init_tcb_stack_guard(__get_bionic_tcb());
+  android_reset_stack_guards();
 
   __init_thread(&main_thread);
 

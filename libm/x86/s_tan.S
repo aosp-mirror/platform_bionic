@@ -1762,5 +1762,5 @@ static_const_table:
 	.size	static_const_table,5872
 	.data
 	.hidden __libm_tancot_huge
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End

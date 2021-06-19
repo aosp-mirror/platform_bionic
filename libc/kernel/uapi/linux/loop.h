@@ -26,6 +26,9 @@ enum {
   LO_FLAGS_PARTSCAN = 8,
   LO_FLAGS_DIRECT_IO = 16,
 };
+#define LOOP_SET_STATUS_SETTABLE_FLAGS (LO_FLAGS_AUTOCLEAR | LO_FLAGS_PARTSCAN)
+#define LOOP_SET_STATUS_CLEARABLE_FLAGS (LO_FLAGS_AUTOCLEAR)
+#define LOOP_CONFIGURE_SETTABLE_FLAGS (LO_FLAGS_READ_ONLY | LO_FLAGS_AUTOCLEAR | LO_FLAGS_PARTSCAN | LO_FLAGS_DIRECT_IO)
 #include <asm/posix_types.h>
 #include <linux/types.h>
 struct loop_info {
@@ -57,6 +60,12 @@ struct loop_info64 {
   __u8 lo_encrypt_key[LO_KEY_SIZE];
   __u64 lo_init[2];
 };
+struct loop_config {
+  __u32 fd;
+  __u32 block_size;
+  struct loop_info64 info;
+  __u64 __reserved[8];
+};
 #define LO_CRYPT_NONE 0
 #define LO_CRYPT_XOR 1
 #define LO_CRYPT_DES 2
@@ -78,6 +87,7 @@ struct loop_info64 {
 #define LOOP_SET_CAPACITY 0x4C07
 #define LOOP_SET_DIRECT_IO 0x4C08
 #define LOOP_SET_BLOCK_SIZE 0x4C09
+#define LOOP_CONFIGURE 0x4C0A
 #define LOOP_CTL_ADD 0x4C80
 #define LOOP_CTL_REMOVE 0x4C81
 #define LOOP_CTL_GET_FREE 0x4C82
