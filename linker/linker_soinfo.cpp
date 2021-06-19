@@ -485,11 +485,8 @@ static void call_function(const char* function_name __unused,
 }
 
 template <typename F>
-static void call_array(const char* array_name __unused,
-                       F* functions,
-                       size_t count,
-                       bool reverse,
-                       const char* realpath) {
+static inline void call_array(const char* array_name __unused, F* functions, size_t count,
+                              bool reverse, const char* realpath) {
   if (functions == nullptr) {
     return;
   }
@@ -695,7 +692,7 @@ void soinfo::set_soname(const char* soname) {
   if (has_min_version(2)) {
     soname_ = soname;
   }
-  strlcpy(old_name_, soname_, sizeof(old_name_));
+  strlcpy(old_name_, soname_.c_str(), sizeof(old_name_));
 #else
   soname_ = soname;
 #endif
@@ -704,12 +701,12 @@ void soinfo::set_soname(const char* soname) {
 const char* soinfo::get_soname() const {
 #if defined(__work_around_b_24465209__)
   if (has_min_version(2)) {
-    return soname_;
+    return soname_.c_str();
   } else {
     return old_name_;
   }
 #else
-  return soname_;
+  return soname_.c_str();
 #endif
 }
 
@@ -898,6 +895,24 @@ void soinfo::generate_handle() {
            g_soinfo_handles_map.find(handle_) != g_soinfo_handles_map.end());
 
   g_soinfo_handles_map[handle_] = this;
+}
+
+void soinfo::set_gap_start(ElfW(Addr) gap_start) {
+  CHECK(has_min_version(6));
+  gap_start_ = gap_start;
+}
+ElfW(Addr) soinfo::get_gap_start() const {
+  CHECK(has_min_version(6));
+  return gap_start_;
+}
+
+void soinfo::set_gap_size(size_t gap_size) {
+  CHECK(has_min_version(6));
+  gap_size_ = gap_size;
+}
+size_t soinfo::get_gap_size() const {
+  CHECK(has_min_version(6));
+  return gap_size_;
 }
 
 // TODO(dimitry): Move SymbolName methods to a separate file.

@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 31
+#define FUSE_KERNEL_MINOR_VERSION 33
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -38,7 +38,7 @@ struct fuse_attr {
   uint32_t gid;
   uint32_t rdev;
   uint32_t blksize;
-  uint32_t padding;
+  uint32_t flags;
 };
 struct fuse_kstatfs {
   uint64_t blocks;
@@ -69,6 +69,7 @@ struct fuse_file_lock {
 #define FATTR_MTIME_NOW (1 << 8)
 #define FATTR_LOCKOWNER (1 << 9)
 #define FATTR_CTIME (1 << 10)
+#define FATTR_KILL_SUIDGID (1 << 11)
 #define FOPEN_DIRECT_IO (1 << 0)
 #define FOPEN_KEEP_CACHE (1 << 1)
 #define FOPEN_NONSEEKABLE (1 << 2)
@@ -101,6 +102,9 @@ struct fuse_file_lock {
 #define FUSE_NO_OPENDIR_SUPPORT (1 << 24)
 #define FUSE_EXPLICIT_INVAL_DATA (1 << 25)
 #define FUSE_MAP_ALIGNMENT (1 << 26)
+#define FUSE_SUBMOUNTS (1 << 27)
+#define FUSE_HANDLE_KILLPRIV_V2 (1 << 28)
+#define FUSE_PASSTHROUGH (1 << 31)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -108,7 +112,8 @@ struct fuse_file_lock {
 #define FUSE_LK_FLOCK (1 << 0)
 #define FUSE_WRITE_CACHE (1 << 0)
 #define FUSE_WRITE_LOCKOWNER (1 << 1)
-#define FUSE_WRITE_KILL_PRIV (1 << 2)
+#define FUSE_WRITE_KILL_SUIDGID (1 << 2)
+#define FUSE_WRITE_KILL_PRIV FUSE_WRITE_KILL_SUIDGID
 #define FUSE_READ_LOCKOWNER (1 << 1)
 #define FUSE_IOCTL_COMPAT (1 << 0)
 #define FUSE_IOCTL_UNRESTRICTED (1 << 1)
@@ -119,6 +124,8 @@ struct fuse_file_lock {
 #define FUSE_IOCTL_MAX_IOV 256
 #define FUSE_POLL_SCHEDULE_NOTIFY (1 << 0)
 #define FUSE_FSYNC_FDATASYNC (1 << 0)
+#define FUSE_ATTR_SUBMOUNT (1 << 0)
+#define FUSE_OPEN_KILL_SUIDGID (1 << 0)
 enum fuse_opcode {
   FUSE_LOOKUP = 1,
   FUSE_FORGET = 2,
@@ -167,6 +174,7 @@ enum fuse_opcode {
   FUSE_COPY_FILE_RANGE = 47,
   FUSE_SETUPMAPPING = 48,
   FUSE_REMOVEMAPPING = 49,
+  FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
   FUSE_INIT_BSWAP_RESERVED = 436207616,
@@ -256,18 +264,18 @@ struct fuse_setattr_in {
 };
 struct fuse_open_in {
   uint32_t flags;
-  uint32_t unused;
+  uint32_t open_flags;
 };
 struct fuse_create_in {
   uint32_t flags;
   uint32_t mode;
   uint32_t umask;
-  uint32_t padding;
+  uint32_t open_flags;
 };
 struct fuse_open_out {
   uint64_t fh;
   uint32_t open_flags;
-  uint32_t padding;
+  uint32_t passthrough_fh;
 };
 struct fuse_release_in {
   uint64_t fh;
@@ -437,6 +445,11 @@ struct fuse_in_header {
   uint32_t pid;
   uint32_t padding;
 };
+struct fuse_passthrough_out {
+  uint32_t fd;
+  uint32_t len;
+  void * vec;
+};
 struct fuse_out_header {
   uint32_t len;
   int32_t error;
@@ -495,7 +508,9 @@ struct fuse_notify_retrieve_in {
   uint64_t dummy3;
   uint64_t dummy4;
 };
-#define FUSE_DEV_IOC_CLONE _IOR(229, 0, uint32_t)
+#define FUSE_DEV_IOC_MAGIC 229
+#define FUSE_DEV_IOC_CLONE _IOR(FUSE_DEV_IOC_MAGIC, 0, uint32_t)
+#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 127, struct fuse_passthrough_out)
 struct fuse_lseek_in {
   uint64_t fh;
   uint64_t offset;
@@ -514,4 +529,21 @@ struct fuse_copy_file_range_in {
   uint64_t len;
   uint64_t flags;
 };
+#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
+#define FUSE_SETUPMAPPING_FLAG_READ (1ull << 1)
+struct fuse_setupmapping_in {
+  uint64_t fh;
+  uint64_t foffset;
+  uint64_t len;
+  uint64_t flags;
+  uint64_t moffset;
+};
+struct fuse_removemapping_in {
+  uint32_t count;
+};
+struct fuse_removemapping_one {
+  uint64_t moffset;
+  uint64_t len;
+};
+#define FUSE_REMOVEMAPPING_MAX_ENTRY (PAGE_SIZE / sizeof(struct fuse_removemapping_one))
 #endif
