@@ -249,3 +249,5 @@ L(zva_other):
 	b	L(tail64)
 
 END(memset)
+
+NOTE_GNU_PROPERTY()

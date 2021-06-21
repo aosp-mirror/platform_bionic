@@ -4,6 +4,12 @@
       "name": "CtsBionicTestCases"
     },
     {
+      "name": "CtsTaggingHostTestCases"
+    },
+    {
+      "name": "debuggerd_test"
+    },
+    {
       "name": "fdtrack_test"
     },
     {

@@ -64,7 +64,7 @@ std::vector<std::string> collectHeaders(const std::string& directory,
 
     if (ent->fts_info & FTS_D) {
       if (ignored_directories.count(ent->fts_path) != 0) {
-        // fts_read guarantees that `ent` is valid and sane to hold on to until
+        // fts_read guarantees that `ent` is valid and okay to hold on to until
         // after it's returned with FTS_DP set.
         skipping = ent;
       }

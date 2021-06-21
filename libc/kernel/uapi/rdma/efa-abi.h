@@ -20,6 +20,14 @@
 #define EFA_ABI_USER_H
 #include <linux/types.h>
 #define EFA_UVERBS_ABI_VERSION 1
+enum {
+  EFA_ALLOC_UCONTEXT_CMD_COMP_TX_BATCH = 1 << 0,
+  EFA_ALLOC_UCONTEXT_CMD_COMP_MIN_SQ_WR = 1 << 1,
+};
+struct efa_ibv_alloc_ucontext_cmd {
+  __u32 comp_mask;
+  __u8 reserved_20[4];
+};
 enum efa_ibv_user_cmds_supp_udata {
   EFA_USER_CMDS_SUPP_UDATA_QUERY_DEVICE = 1 << 0,
   EFA_USER_CMDS_SUPP_UDATA_CREATE_AH = 1 << 1,
@@ -30,6 +38,9 @@ struct efa_ibv_alloc_ucontext_resp {
   __u16 sub_cqs_per_cq;
   __u16 inline_buf_size;
   __u32 max_llq_size;
+  __u16 max_tx_batch;
+  __u16 min_sq_wr;
+  __u8 reserved_a0[4];
 };
 struct efa_ibv_alloc_pd_resp {
   __u32 comp_mask;
@@ -80,6 +91,7 @@ struct efa_ibv_create_ah_resp {
 };
 enum {
   EFA_QUERY_DEVICE_CAPS_RDMA_READ = 1 << 0,
+  EFA_QUERY_DEVICE_CAPS_RNR_RETRY = 1 << 1,
 };
 struct efa_ibv_ex_query_device_resp {
   __u32 comp_mask;

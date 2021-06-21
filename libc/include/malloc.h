@@ -170,6 +170,93 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * Available since API level 28.
  */
 #define M_PURGE (-101)
+/*
+ * mallopt() option for per-thread memory initialization tuning.
+ * The value argument should be one of:
+ * 1: Disable automatic heap initialization and, where possible, memory tagging,
+ *    on this thread.
+ * 0: Normal behavior.
+ *
+ * Available since API level 31.
+ */
+#define M_THREAD_DISABLE_MEM_INIT (-103)
+/**
+ * mallopt() option to set the maximum number of items in the secondary
+ * cache of the scudo allocator.
+ *
+ * Available since API level 31.
+ */
+#define M_CACHE_COUNT_MAX (-200)
+/**
+ * mallopt() option to set the maximum size in bytes of a cacheable item in
+ * the secondary cache of the scudo allocator.
+ *
+ * Available since API level 31.
+ */
+#define M_CACHE_SIZE_MAX (-201)
+/**
+ * mallopt() option to increase the maximum number of shared thread-specific
+ * data structures that can be created. This number cannot be decreased,
+ * only increased and only applies to the scudo allocator.
+ *
+ * Available since API level 31.
+ */
+#define M_TSDS_COUNT_MAX (-202)
+
+/**
+ * mallopt() option to decide whether heap memory is zero-initialized on
+ * allocation across the whole process. May be called at any time, including
+ * when multiple threads are running. An argument of zero indicates memory
+ * should not be zero-initialized, any other value indicates to initialize heap
+ * memory to zero.
+ *
+ * Note that this memory mitigations is only implemented in scudo and therefore
+ * this will have no effect when using another allocator (such as jemalloc on
+ * Android Go devices).
+ *
+ * Available since API level 31.
+ */
+#define M_BIONIC_ZERO_INIT (-203)
+
+/**
+ * mallopt() option to change the heap tagging state. May be called at any
+ * time, including when multiple threads are running.
+ * The value must be one of the M_HEAP_TAGGING_LEVEL_ constants.
+ *
+ * Available since API level 31.
+ */
+#define M_BIONIC_SET_HEAP_TAGGING_LEVEL (-204)
+
+/**
+ * Constants for use with the M_BIONIC_SET_HEAP_TAGGING_LEVEL mallopt() option.
+ */
+enum HeapTaggingLevel {
+  /**
+   * Disable heap tagging and memory tag checks (if supported).
+   * Heap tagging may not be re-enabled after being disabled.
+   */
+  M_HEAP_TAGGING_LEVEL_NONE = 0,
+#define M_HEAP_TAGGING_LEVEL_NONE M_HEAP_TAGGING_LEVEL_NONE
+  /**
+   * Address-only tagging. Heap pointers have a non-zero tag in the
+   * most significant ("top") byte which is checked in free(). Memory
+   * accesses ignore the tag using arm64's Top Byte Ignore (TBI) feature.
+   */
+  M_HEAP_TAGGING_LEVEL_TBI = 1,
+#define M_HEAP_TAGGING_LEVEL_TBI M_HEAP_TAGGING_LEVEL_TBI
+  /**
+   * Enable heap tagging and asynchronous memory tag checks (if supported).
+   * Disable stack trace collection.
+   */
+  M_HEAP_TAGGING_LEVEL_ASYNC = 2,
+#define M_HEAP_TAGGING_LEVEL_ASYNC M_HEAP_TAGGING_LEVEL_ASYNC
+  /**
+   * Enable heap tagging and synchronous memory tag checks (if supported).
+   * Enable stack trace collection.
+   */
+  M_HEAP_TAGGING_LEVEL_SYNC = 3,
+#define M_HEAP_TAGGING_LEVEL_SYNC M_HEAP_TAGGING_LEVEL_SYNC
+};
 
 /**
  * [mallopt(3)](http://man7.org/linux/man-pages/man3/mallopt.3.html) modifies
