@@ -204,6 +204,9 @@ enum rdma_nldev_command {
   RDMA_NLDEV_CMD_STAT_SET,
   RDMA_NLDEV_CMD_STAT_GET,
   RDMA_NLDEV_CMD_STAT_DEL,
+  RDMA_NLDEV_CMD_RES_QP_GET_RAW,
+  RDMA_NLDEV_CMD_RES_CQ_GET_RAW,
+  RDMA_NLDEV_CMD_RES_MR_GET_RAW,
   RDMA_NLDEV_NUM_OPS
 };
 enum rdma_nldev_print_type {
@@ -297,6 +300,7 @@ enum rdma_nldev_attr {
   RDMA_NLDEV_ATTR_STAT_HWCOUNTER_ENTRY_NAME,
   RDMA_NLDEV_ATTR_STAT_HWCOUNTER_ENTRY_VALUE,
   RDMA_NLDEV_ATTR_DEV_DIM,
+  RDMA_NLDEV_ATTR_RES_RAW,
   RDMA_NLDEV_ATTR_MAX
 };
 enum rdma_nl_counter_mode {
@@ -307,5 +311,6 @@ enum rdma_nl_counter_mode {
 };
 enum rdma_nl_counter_mask {
   RDMA_COUNTER_MASK_QP_TYPE = 1,
+  RDMA_COUNTER_MASK_PID = 1 << 1,
 };
 #endif

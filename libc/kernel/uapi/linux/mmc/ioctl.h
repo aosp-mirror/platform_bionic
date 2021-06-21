@@ -19,6 +19,7 @@
 #ifndef LINUX_MMC_IOCTL_H
 #define LINUX_MMC_IOCTL_H
 #include <linux/types.h>
+#include <linux/major.h>
 struct mmc_ioc_cmd {
   int write_flag;
   int is_acmd;

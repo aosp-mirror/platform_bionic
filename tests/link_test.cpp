@@ -258,7 +258,7 @@ TEST(link, dl_unwind_find_exidx) {
   ASSERT_TRUE(entries != nullptr);
   ASSERT_GT(count, 0);
 
-  // Sanity checks
+  // Validity checks.
   uintptr_t func = reinterpret_cast<uintptr_t>(read_exidx_func);
   bool found = false;
   for (int i = 0; i < count; ++i) {

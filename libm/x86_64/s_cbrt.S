@@ -731,7 +731,7 @@ NEG_INF:
 	.type	NEG_INF,@object
 	.size	NEG_INF,8
 	.data
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 // -- Begin DWARF2 SEGMENT .eh_frame
 	.section .eh_frame,"a",@progbits
 .eh_frame_seg:

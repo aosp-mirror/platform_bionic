@@ -41,6 +41,8 @@
 #include "private/bionic_vdso.h"
 #include "private/WriteProtected.h"
 
+#include <platform/bionic/malloc.h>
+
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
@@ -93,16 +95,23 @@ struct libc_shared_globals {
   TlsModules tls_modules;
   BionicAllocator tls_allocator;
 
-  // Values passed from the HWASan runtime (via libc.so) to the loader.
+  // Values passed from libc.so to the loader.
   void (*load_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
   void (*unload_hook)(ElfW(Addr) base, const ElfW(Phdr)* phdr, ElfW(Half) phnum) = nullptr;
+  void (*set_target_sdk_version_hook)(int target) = nullptr;
 
   // Values passed from the linker to libc.so.
   const char* init_progname = nullptr;
   char** init_environ = nullptr;
 
-  const gwp_asan::AllocatorState *gwp_asan_state = nullptr;
-  const gwp_asan::AllocationMetadata *gwp_asan_metadata = nullptr;
+  const gwp_asan::AllocatorState* gwp_asan_state = nullptr;
+  const gwp_asan::AllocationMetadata* gwp_asan_metadata = nullptr;
+
+  const char* scudo_stack_depot = nullptr;
+  const char* scudo_region_info = nullptr;
+  const char* scudo_ring_buffer = nullptr;
+
+  HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
@@ -116,7 +125,7 @@ __LIBC_HIDDEN__ void __libc_init_vdso(libc_globals* globals);
 
 #if defined(__i386__)
 __LIBC_HIDDEN__ extern void* __libc_sysinfo;
-__LIBC_HIDDEN__ void __libc_int0x80();
+extern "C" __LIBC_HIDDEN__ void __libc_int0x80();
 __LIBC_HIDDEN__ void __libc_init_sysinfo();
 #endif
 
