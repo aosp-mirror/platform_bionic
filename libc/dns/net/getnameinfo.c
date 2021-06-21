@@ -68,6 +68,8 @@ __RCSID("$NetBSD: getnameinfo.c,v 1.53 2012/09/26 23:13:00 christos Exp $");
 #include <stddef.h>
 #include <string.h>
 
+#include "private/bionic_defs.h"
+
 /* This macro is modelled after the ones in <netinet/in6.h>. */
 /* RFC 6052, section 2.1 */
 #define IN6_IS_ADDR_WKP(a) \
@@ -110,6 +112,7 @@ static int getnameinfo_local(const struct sockaddr *, socklen_t, char *,
  * Top-level getnameinfo() code.  Look at the address family, and pick an
  * appropriate function to call.
  */
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int getnameinfo(const struct sockaddr* sa, socklen_t salen, char* host, size_t hostlen,
 		char* serv, size_t servlen, int flags)
 {

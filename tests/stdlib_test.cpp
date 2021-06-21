@@ -31,9 +31,9 @@
 
 #include <android-base/file.h>
 #include <android-base/macros.h>
+#include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
 #include "math_data_test.h"
 #include "utils.h"
 
@@ -447,7 +447,7 @@ static void TestBug57421_main() {
 // Even though this isn't really a death test, we have to say "DeathTest" here so gtest knows to
 // run this test (which exits normally) in its own process.
 
-class stdlib_DeathTest : public BionicDeathTest {};
+using stdlib_DeathTest = SilentDeathTest;
 
 TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   // https://code.google.com/p/android/issues/detail?id=57421
@@ -456,12 +456,12 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
 
 TEST(stdlib, mkostemp64) {
   MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
-  AssertCloseOnExec(tf.fd, true);
+  ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
 TEST(stdlib, mkostemp) {
   MyTemporaryFile tf([](char* path) { return mkostemp(path, O_CLOEXEC); });
-  AssertCloseOnExec(tf.fd, true);
+  ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
 TEST(stdlib, mkstemp64) {
@@ -487,6 +487,12 @@ TEST(stdlib, system) {
   status = system("exit 1");
   ASSERT_TRUE(WIFEXITED(status));
   ASSERT_EQ(1, WEXITSTATUS(status));
+}
+
+TEST(stdlib, system_NULL) {
+  // "The system() function shall always return non-zero when command is NULL."
+  // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
+  ASSERT_NE(0, system(nullptr));
 }
 
 TEST(stdlib, atof) {
@@ -800,9 +806,24 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   ASSERT_EQ(T(0), fn("123", &end_p, 37));
   ASSERT_EQ(EINVAL, errno);
 
+  // Both leading + or - are always allowed (even for the strtou* family).
+  ASSERT_EQ(T(-123), fn("-123", &end_p, 10));
+  ASSERT_EQ(T(123), fn("+123", &end_p, 10));
+
   // If we see "0x" *not* followed by a hex digit, we shouldn't swallow the 'x'.
   ASSERT_EQ(T(0), fn("0xy", &end_p, 16));
   ASSERT_EQ('x', *end_p);
+
+  // Hexadecimal (both the 0x and the digits) is case-insensitive.
+  ASSERT_EQ(T(0xab), fn("0xab", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0Xab", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0xAB", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0XAB", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0xAb", &end_p, 0));
+  ASSERT_EQ(T(0xab), fn("0XAb", &end_p, 0));
+
+  // Octal lives! (Sadly.)
+  ASSERT_EQ(T(0666), fn("0666", &end_p, 0));
 
   if (std::numeric_limits<T>::is_signed) {
     // Minimum (such as -128).
@@ -876,6 +897,18 @@ TEST(stdlib, strtoimax_smoke) {
 
 TEST(stdlib, strtoumax_smoke) {
   CheckStrToInt(strtoumax);
+}
+
+TEST(stdlib, atoi) {
+  // Implemented using strtol in bionic, so extensive testing unnecessary.
+  ASSERT_EQ(123, atoi("123four"));
+  ASSERT_EQ(0, atoi("hello"));
+}
+
+TEST(stdlib, atol) {
+  // Implemented using strtol in bionic, so extensive testing unnecessary.
+  ASSERT_EQ(123L, atol("123four"));
+  ASSERT_EQ(0L, atol("hello"));
 }
 
 TEST(stdlib, abs) {

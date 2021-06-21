@@ -1473,16 +1473,40 @@ TEST(MATH_TEST, lgammal_r_17471883) {
   ASSERT_EQ(-1, sign);
 }
 
+TEST(MATH_TEST, tgamma_NaN) {
+  ASSERT_TRUE(isnan(tgamma(nan(""))));
+  ASSERT_TRUE(isnanf(tgammaf(nanf(""))));
+  ASSERT_TRUE(isnanl(tgammal(nanl(""))));
+}
+
+TEST(MATH_TEST, tgamma_inf) {
+  ASSERT_TRUE(isinf(tgamma(HUGE_VAL)));
+  ASSERT_TRUE(isinff(tgammaf(HUGE_VALF)));
+  ASSERT_TRUE(isinfl(tgammal(HUGE_VALL)));
+}
+
+TEST(MATH_TEST, tgamma_negative) {
+  ASSERT_TRUE(isnan(tgamma(-1.0)));
+  ASSERT_TRUE(isnanf(tgammaf(-1.0f)));
+  ASSERT_TRUE(isnanl(tgammal(-1.0L)));
+}
+
 TEST(MATH_TEST, tgamma) {
   ASSERT_DOUBLE_EQ(24.0, tgamma(5.0));
+  ASSERT_DOUBLE_EQ(120.0, tgamma(6.0));
+  ASSERT_TRUE(isinf(tgamma(172.0)));
 }
 
 TEST(MATH_TEST, tgammaf) {
   ASSERT_FLOAT_EQ(24.0f, tgammaf(5.0f));
+  ASSERT_FLOAT_EQ(120.0f, tgammaf(6.0f));
+  ASSERT_TRUE(isinff(tgammaf(172.0f)));
 }
 
 TEST(MATH_TEST, tgammal) {
   ASSERT_DOUBLE_EQ(24.0L, tgammal(5.0L));
+  ASSERT_DOUBLE_EQ(120.0L, tgammal(6.0L));
+  ASSERT_TRUE(isinf(tgammal(172.0L)));
 }
 
 TEST(MATH_TEST, j0) {

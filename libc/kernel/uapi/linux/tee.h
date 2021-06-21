@@ -28,7 +28,10 @@
 #define TEE_GEN_CAP_GP (1 << 0)
 #define TEE_GEN_CAP_PRIVILEGED (1 << 1)
 #define TEE_GEN_CAP_REG_MEM (1 << 2)
+#define TEE_GEN_CAP_MEMREF_NULL (1 << 3)
+#define TEE_MEMREF_NULL (__u64) (- 1)
 #define TEE_IMPL_ID_OPTEE 1
+#define TEE_IMPL_ID_AMDTEE 2
 #define TEE_OPTEE_CAP_TZ (1 << 0)
 struct tee_ioctl_version_data {
   __u32 impl_id;
@@ -62,6 +65,9 @@ struct tee_ioctl_buf_data {
 #define TEE_IOCTL_LOGIN_APPLICATION 4
 #define TEE_IOCTL_LOGIN_USER_APPLICATION 5
 #define TEE_IOCTL_LOGIN_GROUP_APPLICATION 6
+#define TEE_IOCTL_LOGIN_REE_KERNEL_MIN 0x80000000
+#define TEE_IOCTL_LOGIN_REE_KERNEL_MAX 0xBFFFFFFF
+#define TEE_IOCTL_LOGIN_REE_KERNEL 0x80000000
 struct tee_ioctl_param {
   __u64 attr;
   __u64 a;

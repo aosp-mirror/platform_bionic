@@ -237,7 +237,7 @@ static std::string generateGuardCondition(const DeclarationAvailability& avail) 
   return "("s + Join(expressions, ") || (") + ")";
 }
 
-// Assumes that nothing crazy is happening (e.g. having the semicolon be in a macro)
+// Assumes that nothing weird is happening (e.g. having the semicolon be in a macro).
 static FileLocation findNextSemicolon(const std::deque<std::string>& lines, FileLocation start) {
   unsigned current_line = start.line;
   unsigned current_column = start.column;
@@ -373,8 +373,8 @@ static void mergeGuards(std::deque<std::string>& file_lines, GuardMap& guard_map
 
     guard_map.erase(current);
     guard_map.erase(next);
-    bool dummy;
-    std::tie(current, dummy) = guard_map.insert(std::make_pair(merged, avail));
+    bool unused;
+    std::tie(current, unused) = guard_map.insert(std::make_pair(merged, avail));
     next = current;
     ++next;
   }
@@ -446,7 +446,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
       continue;
     }
 
-    std::string rel_path = path.substr(src_dir.length() + 1);
+    std::string rel_path = path.substr(src_dir.length() + 1).str();
     std::string dst_path = dst_dir + "/" + rel_path;
     llvm::StringRef parent_path = llvm::sys::path::parent_path(dst_path);
     if (llvm::sys::fs::create_directories(parent_path)) {
@@ -471,13 +471,13 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     GuardMap guard_map;
     for (const auto& it : orig_guard_map) {
       Location loc = it.first;
-      loc.end = findNextSemicolon(file_lines[file_path], loc.end);
+      loc.end = findNextSemicolon(file_lines[file_path.str()], loc.end);
       guard_map[loc] = it.second;
     }
 
     // TODO: Make sure that the Locations don't overlap.
     // TODO: Merge adjacent non-identical guards.
-    mergeGuards(file_lines[file_path], guard_map);
+    mergeGuards(file_lines[file_path.str()], guard_map);
 
     if (!file_path.startswith(src_dir)) {
       errx(1, "input file %s is not in %s\n", file_path.str().c_str(), src_dir.c_str());
@@ -487,7 +487,7 @@ bool preprocessHeaders(const std::string& dst_dir, const std::string& src_dir,
     llvm::StringRef rel_path = file_path.substr(src_dir.size(), file_path.size() - src_dir.size());
     std::string output_path = (llvm::Twine(dst_dir) + rel_path).str();
 
-    rewriteFile(output_path, file_lines[file_path], guard_map);
+    rewriteFile(output_path, file_lines[file_path.str()], guard_map);
   }
 
   return true;

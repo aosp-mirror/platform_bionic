@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #------------------------------------------------------------------------------
 # Description of the header clean process
@@ -112,6 +112,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
     if arch and arch in kernel_arch_token_replacements:
         blocks.replaceTokens(kernel_arch_token_replacements[arch])
 
+    blocks.removeStructs(kernel_structs_to_remove)
     blocks.optimizeMacros(macros)
     blocks.optimizeIf01()
     blocks.removeVarsAndFuncs(kernel_known_generic_statics)
@@ -126,7 +127,7 @@ def cleanupFile(dst_file, src_file, rel_path, no_update = True):
 if __name__ == "__main__":
 
     def usage():
-        print """\
+        print("""\
     usage:  %s [options] <header_path>
 
         options:
@@ -141,7 +142,7 @@ if __name__ == "__main__":
             -d<path>  specify path of cleaned kernel headers
 
         <header_path> must be in a subdirectory of 'original'
-    """ % os.path.basename(sys.argv[0])
+    """ % os.path.basename(sys.argv[0]))
         sys.exit(1)
 
     try:
@@ -210,9 +211,8 @@ if __name__ == "__main__":
         else:
             r = "added"
 
-        print "cleaning: %-*s -> %-*s (%s)" % (35, path, 35, path, r)
+        print("cleaning: %-*s -> %-*s (%s)" % (35, path, 35, path, r))
 
-
-    b.updateGitFiles()
+    b.updateFiles()
 
     sys.exit(0)

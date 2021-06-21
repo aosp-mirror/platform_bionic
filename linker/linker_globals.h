@@ -79,10 +79,13 @@ extern char** g_envp;
 
 struct soinfo;
 struct android_namespace_t;
+struct platform_properties;
 
 extern android_namespace_t g_default_namespace;
 
 extern std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
+
+extern platform_properties g_platform_properties;
 
 // Error buffer "variable"
 char* linker_get_error_buffer();

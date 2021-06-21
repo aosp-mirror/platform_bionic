@@ -36,6 +36,10 @@
 #define VENDOR_PREFIX "/vendor/"
 
 static const char* init_sh_path() {
+#if !defined(__ANDROID__)
+  // For the host Bionic, use the standard /bin/sh
+  return "/bin/sh";
+#else
   /* If the device is not treble enabled, return the path to the system shell.
    * Vendor code, on non-treble enabled devices could use system() / popen()
    * with relative paths for executables on /system. Since /system will not be
@@ -51,6 +55,7 @@ static const char* init_sh_path() {
   }
 #endif
   return "/system/bin/sh";
+#endif  // if !defined(__ANDROID__)
 }
 
 const char* __bionic_get_shell_path() {

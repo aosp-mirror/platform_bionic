@@ -273,19 +273,19 @@ struct virtio_crypto_op_data_req {
 #define VIRTIO_CRYPTO_INVSESS 4
 #define VIRTIO_CRYPTO_S_HW_READY (1 << 0)
 struct virtio_crypto_config {
-  __u32 status;
-  __u32 max_dataqueues;
-  __u32 crypto_services;
-  __u32 cipher_algo_l;
-  __u32 cipher_algo_h;
-  __u32 hash_algo;
-  __u32 mac_algo_l;
-  __u32 mac_algo_h;
-  __u32 aead_algo;
-  __u32 max_cipher_key_len;
-  __u32 max_auth_key_len;
-  __u32 reserve;
-  __u64 max_size;
+  __le32 status;
+  __le32 max_dataqueues;
+  __le32 crypto_services;
+  __le32 cipher_algo_l;
+  __le32 cipher_algo_h;
+  __le32 hash_algo;
+  __le32 mac_algo_l;
+  __le32 mac_algo_h;
+  __le32 aead_algo;
+  __le32 max_cipher_key_len;
+  __le32 max_auth_key_len;
+  __le32 reserve;
+  __le64 max_size;
 };
 struct virtio_crypto_inhdr {
   __u8 status;
