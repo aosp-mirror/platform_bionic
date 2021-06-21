@@ -21,16 +21,21 @@
 #include <linux/media-bus-format.h>
 #include <linux/types.h>
 #include <linux/videodev2.h>
+#define V4L2_MBUS_FRAMEFMT_SET_CSC 0x0001
 struct v4l2_mbus_framefmt {
   __u32 width;
   __u32 height;
   __u32 code;
   __u32 field;
   __u32 colorspace;
-  __u16 ycbcr_enc;
+  union {
+    __u16 ycbcr_enc;
+    __u16 hsv_enc;
+  };
   __u16 quantization;
   __u16 xfer_func;
-  __u16 reserved[11];
+  __u16 flags;
+  __u16 reserved[10];
 };
 #define V4L2_MBUS_FROM_MEDIA_BUS_FMT(name) V4L2_MBUS_FMT_ ##name = MEDIA_BUS_FMT_ ##name
 enum v4l2_mbus_pixelcode {

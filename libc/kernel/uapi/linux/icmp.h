@@ -19,6 +19,7 @@
 #ifndef _UAPI_LINUX_ICMP_H
 #define _UAPI_LINUX_ICMP_H
 #include <linux/types.h>
+#include <asm/byteorder.h>
 #define ICMP_ECHOREPLY 0
 #define ICMP_DEST_UNREACH 3
 #define ICMP_SOURCE_QUENCH 4
@@ -76,5 +77,21 @@ struct icmphdr {
 #define ICMP_FILTER 1
 struct icmp_filter {
   __u32 data;
+};
+struct icmp_ext_hdr {
+#ifdef __LITTLE_ENDIAN_BITFIELD
+  __u8 reserved1 : 4, version : 4;
+#elif defined(__BIG_ENDIAN_BITFIELD)
+  __u8 version : 4, reserved1 : 4;
+#else
+#error "Please fix <asm/byteorder.h>"
+#endif
+  __u8 reserved2;
+  __sum16 checksum;
+};
+struct icmp_extobj_hdr {
+  __be16 length;
+  __u8 class_num;
+  __u8 class_type;
 };
 #endif

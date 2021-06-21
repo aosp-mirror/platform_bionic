@@ -16,8 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
-
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -27,10 +25,12 @@
 
 #if defined(__BIONIC__)
 #include <android/fdsan.h>
+#include <bionic/reserved_signals.h>
 #endif
 
 #include <unordered_map>
 
+#include <android-base/silent_death_test.h>
 #include <android-base/unique_fd.h>
 
 #define FDSAN_TEST(test_name) TEST_F(FdsanTest, test_name)
@@ -38,7 +38,7 @@
   EXPECT_DEATH((android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL), expression), \
                (regex))
 
-struct FdsanTest : public ::testing::Test {
+struct fdsan : public ::testing::Test {
   void SetUp() override {
 #if defined(__BIONIC__)
     // The bionic unit test running forks for each test by default, which turns
@@ -48,28 +48,38 @@ struct FdsanTest : public ::testing::Test {
   }
 };
 
-TEST_F(FdsanTest, unowned_untagged_close) {
+struct fdsan_DeathTest : public SilentDeathTest {
+#if defined(__BIONIC__)
+  void SetUp() override {
+    android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
+    signal(BIONIC_SIGNAL_DEBUGGER, SIG_DFL);  // Disable debuggerd.
+    SilentDeathTest::SetUp();
+  }
+#endif
+};
+
+TEST_F(fdsan, unowned_untagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_EQ(0, close(fd));
 #endif
 }
 
-TEST_F(FdsanTest, unowned_tagged_close) {
+TEST_F(fdsan, unowned_tagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   ASSERT_EQ(0, android_fdsan_close_with_tag(fd, 0));
 #endif
 }
 
-TEST_F(FdsanTest, unowned_improperly_tagged_close) {
+TEST_F(fdsan_DeathTest, unowned_improperly_tagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   EXPECT_FDSAN_DEATH(android_fdsan_close_with_tag(fd, 0xdeadbeef), "actually unowned");
 #endif
 }
 
-TEST_F(FdsanTest, unowned_incorrect_exchange) {
+TEST_F(fdsan_DeathTest, unowned_incorrect_exchange) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   EXPECT_FDSAN_DEATH(android_fdsan_exchange_owner_tag(fd, 0xbadc0de, 0xdeadbeef),
@@ -77,7 +87,7 @@ TEST_F(FdsanTest, unowned_incorrect_exchange) {
 #endif
 }
 
-TEST_F(FdsanTest, owned_untagged_close) {
+TEST_F(fdsan_DeathTest, owned_untagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   android_fdsan_exchange_owner_tag(fd, 0, 0xdeadbeef);
@@ -85,7 +95,7 @@ TEST_F(FdsanTest, owned_untagged_close) {
 #endif
 }
 
-TEST_F(FdsanTest, owned_tagged_close) {
+TEST_F(fdsan, owned_tagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   android_fdsan_exchange_owner_tag(fd, 0, 0xdeadbeef);
@@ -93,7 +103,7 @@ TEST_F(FdsanTest, owned_tagged_close) {
 #endif
 }
 
-TEST_F(FdsanTest, owned_improperly_tagged_close) {
+TEST_F(fdsan_DeathTest, owned_improperly_tagged_close) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   android_fdsan_exchange_owner_tag(fd, 0, 0xdeadbeef);
@@ -101,7 +111,7 @@ TEST_F(FdsanTest, owned_improperly_tagged_close) {
 #endif
 }
 
-TEST_F(FdsanTest, owned_incorrect_exchange) {
+TEST_F(fdsan_DeathTest, owned_incorrect_exchange) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   android_fdsan_exchange_owner_tag(fd, 0, 0xdeadbeef);
@@ -110,7 +120,7 @@ TEST_F(FdsanTest, owned_incorrect_exchange) {
 #endif
 }
 
-TEST_F(FdsanTest, fopen) {
+TEST_F(fdsan_DeathTest, fopen) {
 #if defined(__BIONIC__)
   FILE* f = fopen("/dev/null", "r");
   ASSERT_TRUE(f);
@@ -118,7 +128,7 @@ TEST_F(FdsanTest, fopen) {
 #endif
 }
 
-TEST_F(FdsanTest, closedir) {
+TEST_F(fdsan_DeathTest, closedir) {
 #if defined(__BIONIC__)
   DIR* dir = opendir("/dev/");
   ASSERT_TRUE(dir);
@@ -126,7 +136,7 @@ TEST_F(FdsanTest, closedir) {
 #endif
 }
 
-TEST_F(FdsanTest, overflow) {
+TEST_F(fdsan, overflow) {
 #if defined(__BIONIC__)
   std::unordered_map<int, uint64_t> fds;
   for (int i = 0; i < 4096; ++i) {
@@ -142,7 +152,7 @@ TEST_F(FdsanTest, overflow) {
 #endif
 }
 
-TEST_F(FdsanTest, owner_value_high) {
+TEST_F(fdsan_DeathTest, owner_value_high) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, ~0ULL);
@@ -152,7 +162,7 @@ TEST_F(FdsanTest, owner_value_high) {
 #endif
 }
 
-TEST_F(FdsanTest, owner_value_low) {
+TEST_F(fdsan_DeathTest, owner_value_low) {
 #if defined(__BIONIC__)
   int fd = open("/dev/null", O_RDONLY);
   uint64_t tag = android_fdsan_create_owner_tag(ANDROID_FDSAN_OWNER_TYPE_UNIQUE_FD, 1);
@@ -162,7 +172,7 @@ TEST_F(FdsanTest, owner_value_low) {
 #endif
 }
 
-TEST_F(FdsanTest, unique_fd_unowned_close) {
+TEST_F(fdsan_DeathTest, unique_fd_unowned_close) {
 #if defined(__BIONIC__)
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
   android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_FATAL);
@@ -170,19 +180,19 @@ TEST_F(FdsanTest, unique_fd_unowned_close) {
 #endif
 }
 
-TEST_F(FdsanTest, unique_fd_untag_on_release) {
+TEST_F(fdsan, unique_fd_untag_on_release) {
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
   close(fd.release());
 }
 
-TEST_F(FdsanTest, unique_fd_move) {
+TEST_F(fdsan, unique_fd_move) {
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
   android::base::unique_fd fd_moved = std::move(fd);
   ASSERT_EQ(-1, fd.get());
   ASSERT_GT(fd_moved.get(), -1);
 }
 
-TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
+TEST_F(fdsan_DeathTest, unique_fd_unowned_close_after_move) {
 #if defined(__BIONIC__)
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
   android::base::unique_fd fd_moved = std::move(fd);
@@ -194,7 +204,7 @@ TEST_F(FdsanTest, unique_fd_unowned_close_after_move) {
 #endif
 }
 
-TEST_F(FdsanTest, vfork) {
+TEST_F(fdsan, vfork) {
   android::base::unique_fd fd(open("/dev/null", O_RDONLY));
 
   pid_t rc = vfork();

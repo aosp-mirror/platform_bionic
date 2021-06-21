@@ -45,6 +45,7 @@ ENTRY_PRIVATE(__bionic_clone)
 .L_bc_child:
         # We don't want anyone to unwind past this point.
         .cfi_undefined %eip
+        .cfi_undefined %ebp
         call    __start_thread
         hlt
 

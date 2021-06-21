@@ -73,12 +73,14 @@
 #define ETH_P_PREAUTH 0x88C7
 #define ETH_P_TIPC 0x88CA
 #define ETH_P_LLDP 0x88CC
+#define ETH_P_MRP 0x88E3
 #define ETH_P_MACSEC 0x88E5
 #define ETH_P_8021AH 0x88E7
 #define ETH_P_MVRP 0x88F5
 #define ETH_P_1588 0x88F7
 #define ETH_P_NCSI 0x88F8
 #define ETH_P_PRP 0x88FB
+#define ETH_P_CFM 0x8902
 #define ETH_P_FCOE 0x8906
 #define ETH_P_IBOE 0x8915
 #define ETH_P_TDLS 0x890D

@@ -73,50 +73,42 @@ class AtexitArray {
   // restart concurrent __cxa_finalize passes.
   uint64_t total_appends_;
 
-  static size_t round_up_to_page_bytes(size_t capacity) {
-    return PAGE_END(capacity * sizeof(AtexitEntry));
-  }
-
-  static size_t next_capacity(size_t capacity) {
-    // Double the capacity each time.
-    size_t result = round_up_to_page_bytes(MAX(1, capacity * 2)) / sizeof(AtexitEntry);
-    CHECK(result > capacity);
-    return result;
-  }
+  static size_t page_start_of_index(size_t idx) { return PAGE_START(idx * sizeof(AtexitEntry)); }
+  static size_t page_end_of_index(size_t idx) { return PAGE_END(idx * sizeof(AtexitEntry)); }
 
   // Recompact the array if it will save at least one page of memory at the end.
-  bool needs_recompaction() {
-    return round_up_to_page_bytes(size_ - extracted_count_) < round_up_to_page_bytes(size_);
+  bool needs_recompaction() const {
+    return page_end_of_index(size_ - extracted_count_) < page_end_of_index(size_);
   }
 
-  void set_writable(bool writable);
+  void set_writable(bool writable, size_t start_idx, size_t num_entries);
+  static bool next_capacity(size_t capacity, size_t* result);
   bool expand_capacity();
 };
 
 }  // anonymous namespace
 
 bool AtexitArray::append_entry(const AtexitEntry& entry) {
-  bool result = false;
+  if (size_ >= capacity_ && !expand_capacity()) return false;
 
-  set_writable(true);
-  if (size_ < capacity_ || expand_capacity()) {
-    array_[size_++] = entry;
-    ++total_appends_;
-    result = true;
-  }
-  set_writable(false);
+  size_t idx = size_++;
 
-  return result;
+  set_writable(true, idx, 1);
+  array_[idx] = entry;
+  ++total_appends_;
+  set_writable(false, idx, 1);
+
+  return true;
 }
 
 // Extract an entry and return it.
 AtexitEntry AtexitArray::extract_entry(size_t idx) {
   AtexitEntry result = array_[idx];
 
-  set_writable(true);
+  set_writable(true, idx, 1);
   array_[idx] = {};
   ++extracted_count_;
-  set_writable(false);
+  set_writable(false, idx, 1);
 
   return result;
 }
@@ -124,7 +116,7 @@ AtexitEntry AtexitArray::extract_entry(size_t idx) {
 void AtexitArray::recompact() {
   if (!needs_recompaction()) return;
 
-  set_writable(true);
+  set_writable(true, 0, size_);
 
   // Optimization: quickly skip over the initial non-null entries.
   size_t src = 0, dst = 0;
@@ -143,51 +135,79 @@ void AtexitArray::recompact() {
   }
 
   // If the table uses fewer pages, clean the pages at the end.
-  size_t old_bytes = round_up_to_page_bytes(size_);
-  size_t new_bytes = round_up_to_page_bytes(dst);
+  size_t old_bytes = page_end_of_index(size_);
+  size_t new_bytes = page_end_of_index(dst);
   if (new_bytes < old_bytes) {
     madvise(reinterpret_cast<char*>(array_) + new_bytes, old_bytes - new_bytes, MADV_DONTNEED);
   }
 
+  set_writable(false, 0, size_);
+
   size_ = dst;
   extracted_count_ = 0;
-
-  set_writable(false);
 }
 
 // Use mprotect to make the array writable or read-only. Returns true on success. Making the array
 // read-only could protect against either unintentional or malicious corruption of the array.
-void AtexitArray::set_writable(bool writable) {
+void AtexitArray::set_writable(bool writable, size_t start_idx, size_t num_entries) {
   if (array_ == nullptr) return;
+
+  const size_t start_byte = page_start_of_index(start_idx);
+  const size_t stop_byte = page_end_of_index(start_idx + num_entries);
+  const size_t byte_len = stop_byte - start_byte;
+
   const int prot = PROT_READ | (writable ? PROT_WRITE : 0);
-  if (mprotect(array_, round_up_to_page_bytes(capacity_), prot) != 0) {
+  if (mprotect(reinterpret_cast<char*>(array_) + start_byte, byte_len, prot) != 0) {
     async_safe_fatal("mprotect failed on atexit array: %s", strerror(errno));
   }
 }
 
-bool AtexitArray::expand_capacity() {
-  const size_t new_capacity = next_capacity(capacity_);
-  const size_t new_capacity_bytes = round_up_to_page_bytes(new_capacity);
+// Approximately double the capacity. Returns true if successful (no overflow). AtexitEntry is
+// smaller than a page, but this function should still be correct even if AtexitEntry were larger
+// than one.
+bool AtexitArray::next_capacity(size_t capacity, size_t* result) {
+  if (capacity == 0) {
+    *result = PAGE_END(sizeof(AtexitEntry)) / sizeof(AtexitEntry);
+    return true;
+  }
+  size_t num_bytes;
+  if (__builtin_mul_overflow(page_end_of_index(capacity), 2, &num_bytes)) {
+    async_safe_format_log(ANDROID_LOG_WARN, "libc", "__cxa_atexit: capacity calculation overflow");
+    return false;
+  }
+  *result = num_bytes / sizeof(AtexitEntry);
+  return true;
+}
 
+bool AtexitArray::expand_capacity() {
+  size_t new_capacity;
+  if (!next_capacity(capacity_, &new_capacity)) return false;
+  const size_t new_capacity_bytes = page_end_of_index(new_capacity);
+
+  set_writable(true, 0, capacity_);
+
+  bool result = false;
   void* new_pages;
   if (array_ == nullptr) {
     new_pages = mmap(nullptr, new_capacity_bytes, PROT_READ | PROT_WRITE,
                      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
   } else {
-    new_pages =
-        mremap(array_, round_up_to_page_bytes(capacity_), new_capacity_bytes, MREMAP_MAYMOVE);
+    // mremap fails if the source buffer crosses a boundary between two VMAs. When a single array
+    // element is modified, the kernel should split then rejoin the buffer's VMA.
+    new_pages = mremap(array_, page_end_of_index(capacity_), new_capacity_bytes, MREMAP_MAYMOVE);
   }
   if (new_pages == MAP_FAILED) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc",
                           "__cxa_atexit: mmap/mremap failed to allocate %zu bytes: %s",
                           new_capacity_bytes, strerror(errno));
-    return false;
+  } else {
+    result = true;
+    prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, new_pages, new_capacity_bytes, "atexit handlers");
+    array_ = static_cast<AtexitEntry*>(new_pages);
+    capacity_ = new_capacity;
   }
-
-  prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, new_pages, new_capacity_bytes, "atexit handlers");
-  array_ = static_cast<AtexitEntry*>(new_pages);
-  capacity_ = new_capacity;
-  return true;
+  set_writable(false, 0, capacity_);
+  return result;
 }
 
 static AtexitArray g_array;

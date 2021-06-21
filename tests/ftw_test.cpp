@@ -49,7 +49,7 @@ static void MakeTree(const char* root) {
   ASSERT_EQ(0, close(fd));
 }
 
-void sanity_check_ftw(const char* fpath, const struct stat* sb, int tflag) {
+void smoke_test_ftw(const char* fpath, const struct stat* sb, int tflag) {
   ASSERT_TRUE(fpath != nullptr);
   ASSERT_TRUE(sb != nullptr);
 
@@ -75,28 +75,28 @@ void sanity_check_ftw(const char* fpath, const struct stat* sb, int tflag) {
   }
 }
 
-void sanity_check_nftw(const char* fpath, const struct stat* sb, int tflag, FTW* ftwbuf) {
-  sanity_check_ftw(fpath, sb, tflag);
+void smoke_test_nftw(const char* fpath, const struct stat* sb, int tflag, FTW* ftwbuf) {
+  smoke_test_ftw(fpath, sb, tflag);
   ASSERT_EQ('/', fpath[ftwbuf->base - 1]) << fpath;
 }
 
 int check_ftw(const char* fpath, const struct stat* sb, int tflag) {
-  sanity_check_ftw(fpath, sb, tflag);
+  smoke_test_ftw(fpath, sb, tflag);
   return 0;
 }
 
 int check_ftw64(const char* fpath, const struct stat64* sb, int tflag) {
-  sanity_check_ftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag);
+  smoke_test_ftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag);
   return 0;
 }
 
 int check_nftw(const char* fpath, const struct stat* sb, int tflag, FTW* ftwbuf) {
-  sanity_check_nftw(fpath, sb, tflag, ftwbuf);
+  smoke_test_nftw(fpath, sb, tflag, ftwbuf);
   return 0;
 }
 
 int check_nftw64(const char* fpath, const struct stat64* sb, int tflag, FTW* ftwbuf) {
-  sanity_check_nftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag, ftwbuf);
+  smoke_test_nftw(fpath, reinterpret_cast<const struct stat*>(sb), tflag, ftwbuf);
   return 0;
 }
 

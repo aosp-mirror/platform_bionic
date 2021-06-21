@@ -47,6 +47,7 @@
 #define ARCH_SUFFIX ""
 #endif
 
+// clang-format off
 static const char* config_str =
   "# comment \n"
   "dir.test = /data/local/tmp\n"
@@ -88,8 +89,12 @@ static const char* config_str =
   "namespace.vndk_in_system.visible = true\n"
   "namespace.vndk_in_system.search.paths = /system/${LIB}\n"
   "namespace.vndk_in_system.permitted.paths = /system/${LIB}\n"
-  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so:libtinyxml2.so\n"
+  "namespace.vndk_in_system.whitelisted = libz.so:libyuv.so\n"
+  "namespace.vndk_in_system.whitelisted += libtinyxml2.so\n"
+  "namespace.vndk_in_system.allowed_libs = libfoo.so:libbar.so\n"
+  "namespace.vndk_in_system.allowed_libs += libtinyxml3.so\n"
   "\n";
+// clang-format on
 
 static bool write_version(const std::string& path, uint32_t version) {
   std::string content = android::base::StringPrintf("%d", version);
@@ -212,9 +217,9 @@ static void run_linker_config_smoke_test(bool is_asan) {
   ASSERT_TRUE(ns_vndk_links[0].allow_all_shared_libs());
 
   ASSERT_TRUE(ns_vndk_in_system != nullptr) << "vndk_in_system namespace was not found";
-  ASSERT_EQ(
-      std::vector<std::string>({"libz.so", "libyuv.so", "libtinyxml2.so"}),
-      ns_vndk_in_system->whitelisted_libs());
+  ASSERT_EQ(std::vector<std::string>({"libz.so", "libyuv.so", "libtinyxml2.so", "libfoo.so",
+                                      "libbar.so", "libtinyxml3.so"}),
+            ns_vndk_in_system->allowed_libs());
 }
 
 TEST(linker_config, smoke) {
