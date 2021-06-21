@@ -5,4 +5,4 @@ versioner: failed to calculate symbol availability
       introduced = 9
     extern declaration @ headers/foo.h:8:1
       introduced = 10
-versioner: sanity check failed
+versioner: validity check failed

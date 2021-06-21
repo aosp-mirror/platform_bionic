@@ -61,6 +61,8 @@ ENTRY_PRIVATE(__bionic_clone)
     b       __set_errno_internal
 
 .L_bc_child:
+    # We're in the child now. Set the end of the frame record chain.
+    mov    fp, #0
     # Setting lr to 0 will make the unwinder stop at __start_thread.
     mov    lr, #0
     # Call __start_thread with the 'fn' and 'arg' we stored on the child stack.

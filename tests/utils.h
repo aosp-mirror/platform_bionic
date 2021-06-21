@@ -25,6 +25,16 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#if defined(__BIONIC__)
+#include <sys/system_properties.h>
+#endif
+
+#if defined(__BIONIC__)
+#include <bionic/macros.h>
+#else
+#define untag_address(p) p
+#endif
+
 #include <atomic>
 #include <string>
 #include <regex>
@@ -66,13 +76,15 @@ static inline bool running_with_hwasan() {
 
 #define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
 
-static inline void* untag_address(void* addr) {
-#if defined(__LP64__)
-  constexpr uintptr_t mask = (static_cast<uintptr_t>(1) << 56) - 1;
-  addr = reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(addr) & mask);
+static inline bool running_with_native_bridge() {
+#if defined(__BIONIC__)
+  static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
+  return pi != nullptr;
 #endif
-  return addr;
+  return false;
 }
+
+#define SKIP_WITH_NATIVE_BRIDGE if (running_with_native_bridge()) GTEST_SKIP()
 
 #if defined(__linux__)
 
@@ -173,10 +185,14 @@ static inline void AssertChildExited(int pid, int expected_exit_status,
   }
 }
 
-static inline void AssertCloseOnExec(int fd, bool close_on_exec) {
+static inline bool CloseOnExec(int fd) {
   int flags = fcntl(fd, F_GETFD);
-  ASSERT_NE(flags, -1);
-  ASSERT_EQ(close_on_exec ? FD_CLOEXEC : 0, flags & FD_CLOEXEC);
+  // This isn't ideal, but the alternatives are worse:
+  // * If we return void and use ASSERT_NE here, we get failures at utils.h:191
+  //   rather than in the relevant test.
+  // * If we ignore failures of fcntl(), well, that's obviously a bad idea.
+  if (flags == -1) abort();
+  return flags & FD_CLOEXEC;
 }
 
 // The absolute path to the executable
@@ -278,3 +294,13 @@ class FdLeakChecker {
 
   size_t start_count_ = CountOpenFds();
 };
+
+// From <benchmark/benchmark.h>.
+template <class Tp>
+static inline void DoNotOptimize(Tp const& value) {
+  asm volatile("" : : "r,m"(value) : "memory");
+}
+template <class Tp>
+static inline void DoNotOptimize(Tp& value) {
+  asm volatile("" : "+r,m"(value) : : "memory");
+}

@@ -20,6 +20,7 @@
 #include <limits.h>
 #include <malloc.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -31,8 +32,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <atomic>
 #include <thread>
+#include <vector>
 
 #include <tinyxml2.h>
 
@@ -43,9 +46,10 @@
 #if defined(__BIONIC__)
 
 #include "SignalUtils.h"
+#include "dlext_private.h"
 
 #include "platform/bionic/malloc.h"
-#include "platform/bionic/mte_kernel.h"
+#include "platform/bionic/mte.h"
 #include "platform/bionic/reserved_signals.h"
 #include "private/bionic_config.h"
 
@@ -82,6 +86,24 @@ TEST(malloc, calloc_std) {
     ASSERT_EQ(0, ptr[i]);
   }
   free(ptr);
+}
+
+TEST(malloc, calloc_mem_init_disabled) {
+#if defined(__BIONIC__)
+  // calloc should still zero memory if mem-init is disabled.
+  // With jemalloc the mallopts will fail but that shouldn't affect the
+  // execution of the test.
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 1);
+  size_t alloc_len = 100;
+  char *ptr = reinterpret_cast<char*>(calloc(1, alloc_len));
+  for (size_t i = 0; i < alloc_len; i++) {
+    ASSERT_EQ(0, ptr[i]);
+  }
+  free(ptr);
+  mallopt(M_THREAD_DISABLE_MEM_INIT, 0);
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
 }
 
 TEST(malloc, calloc_illegal) {
@@ -662,6 +684,46 @@ TEST(malloc, mallopt_purge) {
 #endif
 }
 
+#if defined(__BIONIC__)
+static void GetAllocatorVersion(bool* allocator_scudo) {
+  TemporaryFile tf;
+  ASSERT_TRUE(tf.fd != -1);
+  FILE* fp = fdopen(tf.fd, "w+");
+  tf.release();
+  ASSERT_TRUE(fp != nullptr);
+  ASSERT_EQ(0, malloc_info(0, fp));
+  ASSERT_EQ(0, fclose(fp));
+
+  std::string contents;
+  ASSERT_TRUE(android::base::ReadFileToString(tf.path, &contents));
+
+  tinyxml2::XMLDocument doc;
+  ASSERT_EQ(tinyxml2::XML_SUCCESS, doc.Parse(contents.c_str()));
+
+  auto root = doc.FirstChildElement();
+  ASSERT_NE(nullptr, root);
+  ASSERT_STREQ("malloc", root->Name());
+  std::string version(root->Attribute("version"));
+  *allocator_scudo = (version == "scudo-1");
+}
+#endif
+
+TEST(malloc, mallopt_scudo_only_options) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+  ASSERT_EQ(1, mallopt(M_CACHE_COUNT_MAX, 100));
+  ASSERT_EQ(1, mallopt(M_CACHE_SIZE_MAX, 1024 * 1024 * 2));
+  ASSERT_EQ(1, mallopt(M_TSDS_COUNT_MAX, 8));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
 TEST(malloc, reallocarray_overflow) {
 #if HAVE_REALLOCARRAY
   // Values that cause overflow to a result small enough (8 on LP64) that malloc would "succeed".
@@ -865,12 +927,8 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     std::thread* t = new std::thread([&stop] {
       while (!stop) {
         for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-          void* ptr = malloc(size);
-          if (ptr == nullptr) {
-            return;
-          }
-          // Make sure this value is not optimized away.
-          asm volatile("" : : "r,m"(ptr) : "memory");
+          void* ptr;
+          DoNotOptimize(ptr = malloc(size));
           free(ptr);
         }
       }
@@ -883,10 +941,9 @@ TEST(malloc, DISABLED_alloc_after_fork) {
     pid_t pid;
     if ((pid = fork()) == 0) {
       for (size_t size = kMinAllocationSize; size <= kMaxAllocationSize; size <<= 1) {
-        void* ptr = malloc(size);
+        void* ptr;
+        DoNotOptimize(ptr = malloc(size));
         ASSERT_TRUE(ptr != nullptr);
-        // Make sure this value is not optimized away.
-        asm volatile("" : : "r,m"(ptr) : "memory");
         // Make sure we can touch all of the allocation.
         memset(ptr, 0x1, size);
         ASSERT_LE(size, malloc_usable_size(ptr));
@@ -1202,69 +1259,115 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-template <int SiCode> void CheckSiCode(int, siginfo_t* info, void*) {
-  if (info->si_code != SiCode) {
-    _exit(2);
+void TestHeapZeroing(int num_iterations, int (*get_alloc_size)(int iteration)) {
+  std::vector<void*> allocs;
+  constexpr int kMaxBytesToCheckZero = 64;
+  const char kBlankMemory[kMaxBytesToCheckZero] = {};
+
+  for (int i = 0; i < num_iterations; ++i) {
+    int size = get_alloc_size(i);
+    allocs.push_back(malloc(size));
+    memset(allocs.back(), 'X', std::min(size, kMaxBytesToCheckZero));
   }
-  _exit(1);
+
+  for (void* alloc : allocs) {
+    free(alloc);
+  }
+  allocs.clear();
+
+  for (int i = 0; i < num_iterations; ++i) {
+    int size = get_alloc_size(i);
+    allocs.push_back(malloc(size));
+    ASSERT_EQ(0, memcmp(allocs.back(), kBlankMemory, std::min(size, kMaxBytesToCheckZero)));
+  }
+
+  for (void* alloc : allocs) {
+    free(alloc);
+  }
 }
 
-static bool SetTagCheckingLevel(int level) {
-  int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-  if (tagged_addr_ctrl < 0) {
-    return false;
+TEST(malloc, zero_init) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
   }
 
-  tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | level;
-  return prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) == 0;
-}
-#endif
+  mallopt(M_BIONIC_ZERO_INIT, 1);
 
-TEST(android_mallopt, tag_level) {
-#if defined(__BIONIC__) && defined(__aarch64__) && defined(ANDROID_EXPERIMENTAL_MTE)
-  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
-    GTEST_SKIP() << "requires MTE support";
-    return;
-  }
+  // Test using a block of 4K small (1-32 byte) allocations.
+  TestHeapZeroing(/* num_iterations */ 0x1000, [](int iteration) -> int {
+    return 1 + iteration % 32;
+  });
 
-  std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+  // Also test large allocations that land in the scudo secondary, as this is
+  // the only part of Scudo that's changed by enabling zero initialization with
+  // MTE. Uses 32 allocations, totalling 60MiB memory. Decay time (time to
+  // release secondary allocations back to the OS) was modified to 0ms/1ms by
+  // mallopt_decay. Ensure that we delay for at least a second before releasing
+  // pages to the OS in order to avoid implicit zeroing by the kernel.
+  mallopt(M_DECAY_TIME, 1000);
+  TestHeapZeroing(/* num_iterations */ 32, [](int iteration) -> int {
+    return 1 << (19 + iteration % 4);
+  });
 
-  // First, check that memory tagging is enabled and the default tag checking level is async.
-  // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
-  // mismatching tag before each allocation.
-  EXPECT_EXIT(
-      {
-        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTEAERR>, SA_SIGINFO);
-        p[-1] = 42;
-      },
-      testing::ExitedWithCode(1), "");
-
-  EXPECT_TRUE(SetTagCheckingLevel(PR_MTE_TCF_SYNC));
-  EXPECT_EXIT(
-      {
-        ScopedSignalHandler ssh(SIGSEGV, CheckSiCode<SEGV_MTESERR>, SA_SIGINFO);
-        p[-1] = 42;
-      },
-      testing::ExitedWithCode(1), "");
-
-  EXPECT_TRUE(SetTagCheckingLevel(PR_MTE_TCF_NONE));
-  volatile int oob ATTRIBUTE_UNUSED = p[-1];
-
-  HeapTaggingLevel tag_level = M_HEAP_TAGGING_LEVEL_TBI;
-  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
-
-  tag_level = M_HEAP_TAGGING_LEVEL_NONE;
-  EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
-  std::unique_ptr<int[]> p2 = std::make_unique<int[]>(4);
-  EXPECT_EQ(0u, reinterpret_cast<uintptr_t>(p2.get()) >> 56);
-
-  tag_level = M_HEAP_TAGGING_LEVEL_ASYNC;
-  EXPECT_FALSE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
-
-  tag_level = M_HEAP_TAGGING_LEVEL_NONE;
-  EXPECT_TRUE(android_mallopt(M_SET_HEAP_TAGGING_LEVEL, &tag_level, sizeof(tag_level)));
 #else
-  GTEST_SKIP() << "arm64 only";
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Note that MTE is enabled on cc_tests on devices that support MTE.
+TEST(malloc, disable_mte) {
+#if defined(__BIONIC__)
+  if (!mte_supported()) {
+    GTEST_SKIP() << "This function can only be tested with MTE";
+  }
+
+  sem_t sem;
+  ASSERT_EQ(0, sem_init(&sem, 0, 0));
+
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(
+                   &thread, nullptr,
+                   [](void* ptr) -> void* {
+                     auto* sem = reinterpret_cast<sem_t*>(ptr);
+                     sem_wait(sem);
+                     return reinterpret_cast<void*>(prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0));
+                   },
+                   &sem));
+
+  ASSERT_EQ(1, mallopt(M_BIONIC_SET_HEAP_TAGGING_LEVEL, M_HEAP_TAGGING_LEVEL_NONE));
+  ASSERT_EQ(0, sem_post(&sem));
+
+  int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  ASSERT_EQ(PR_MTE_TCF_NONE, my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
+
+  void* retval;
+  ASSERT_EQ(0, pthread_join(thread, &retval));
+  int thread_tagged_addr_ctrl = reinterpret_cast<uintptr_t>(retval);
+  ASSERT_EQ(my_tagged_addr_ctrl, thread_tagged_addr_ctrl);
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
+TEST(malloc, allocation_slack) {
+#if defined(__BIONIC__)
+  bool allocator_scudo;
+  GetAllocatorVersion(&allocator_scudo);
+  if (!allocator_scudo) {
+    GTEST_SKIP() << "scudo allocator only test";
+  }
+
+  // Test that older target SDK levels let you access a few bytes off the end of
+  // a large allocation.
+  android_set_application_target_sdk_version(29);
+  auto p = std::make_unique<char[]>(131072);
+  volatile char *vp = p.get();
+  volatile char oob ATTRIBUTE_UNUSED = vp[131072];
+#else
+  GTEST_SKIP() << "bionic extension";
 #endif
 }
