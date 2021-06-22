@@ -2046,7 +2046,7 @@ genrule {
 // ========================================================
 
 cc_defaults {
-    name: "crt_defaults",
+    name: "crt_and_memtag_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     product_available: true,
@@ -2070,6 +2070,12 @@ cc_defaults {
     sanitize: {
         never: true,
     },
+}
+
+cc_defaults {
+    name: "crt_defaults",
+    defaults: ["crt_and_memtag_defaults"],
+    default_shared_libs: [],
 }
 
 cc_defaults {
@@ -2199,7 +2205,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_defaults"],
+    defaults: ["crt_and_memtag_defaults"],
 }
 
 cc_library_static {
@@ -2211,7 +2217,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_defaults"],
+    defaults: ["crt_and_memtag_defaults"],
 }
 
 // ========================================================
