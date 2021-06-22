@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fbfe074_1a456d34",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:06:54Z",
+      "side": 1,
+      "message": "(i realize this still misses the swap-related fields, but i couldn\u0027t think of any valid assertion for them :-( this seemed like a step in the right direction anyway...)",
+      "revId": "40c8a8b1ba7f6890709526cb2463fe19f3139b31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
