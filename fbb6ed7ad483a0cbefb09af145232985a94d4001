@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3b43448f_2382d99a",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "excellent question...\n\ncferris: do we have any precedent for mallopt() options that only work on one allocator or another, and how we document that for NDK developers? looks like the answer is \"no\" from a quick search (that found a typo near the only reference to specific allocators).\n\ni\u0027m guessing if anything we should just add a note in the docs for mallopt() itself saying something like \"all of these are hints, and may be either silently ignored or actually rejected as errors by whatever allocator implementation you happen to be running on\". but the lack of text about that isn\u0027t a regression, so this is fine by me as-is unless cferris has thought of something i\u0027ve missed?",
+      "parentUuid": "414d5506_b176098d",
+      "range": {
+        "startLine": 178,
+        "startChar": 11,
+        "endLine": 178,
+        "endChar": 12
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9e8d816_961609bb",
         "filename": "libc/include/malloc.h",
         "patchSetId": 2
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "nope. Extended the comment with an explanation.",
       "parentUuid": "f9e8d816_961609bb",
+      "range": {
+        "startLine": 179,
+        "startChar": 36,
+        "endLine": 179,
+        "endChar": 46
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b092c59_f4b29f70",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b1cf7b99_d5bcee05",
       "range": {
         "startLine": 179,
         "startChar": 36,
@@ -226,6 +274,30 @@
       "side": 1,
       "message": "that\u0027s the mode you choose when you want the most chance of detecting UAF. We can not really do the same deterministic thing as we do for the overflow, so 93% is the highest we can go. We do exclude the previous tag when recoloring during free, so *immediate* UAF is always caught, in all modes, unless other threads interfere somehow.",
       "parentUuid": "41c0c49b_aae2a270",
+      "range": {
+        "startLine": 184,
+        "startChar": 25,
+        "endLine": 184,
+        "endChar": 45
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f7e5d72_880db737",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "(yeah, the new docs are much better. thanks!)",
+      "parentUuid": "a8755505_085fc27e",
       "range": {
         "startLine": 184,
         "startChar": 25,

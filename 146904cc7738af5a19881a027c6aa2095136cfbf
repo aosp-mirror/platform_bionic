@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d629673e_9a4c778a",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "(these are like javadoc --- you need /** to start.)",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 2
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27a74bc0_a81c850b",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "detection of",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 26
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebd96ea3_29b07475",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-22T23:04:23Z",
+      "side": 1,
+      "message": "(while you\u0027re here, could you remove the bogus \u0027s\u0027 on the end here?)",
+      "range": {
+        "startLine": 248,
+        "startChar": 25,
+        "endLine": 248,
+        "endChar": 36
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
