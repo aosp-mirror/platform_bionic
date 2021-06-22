@@ -49,6 +49,54 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "414d5506_b176098d",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T19:25:36Z",
+      "side": 1,
+      "message": "Ignored in scudo, but I assume it\u0027s an error in jemalloc. Should we mention that? Should we ignore it in the je mallopt wrapper?",
+      "parentUuid": "13c1a077_ead44365",
+      "range": {
+        "startLine": 178,
+        "startChar": 11,
+        "endLine": 178,
+        "endChar": 12
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1cf1dcf_34e2a16e",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T19:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ee014d9_20d8b88f",
+      "range": {
+        "startLine": 178,
+        "startChar": 48,
+        "endLine": 178,
+        "endChar": 49
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9e8d816_961609bb",
         "filename": "libc/include/malloc.h",
         "patchSetId": 2
@@ -60,6 +108,30 @@
       "writtenOn": "2021-06-22T17:34:51Z",
       "side": 1,
       "message": "really? this causes scudo to right-align?",
+      "range": {
+        "startLine": 179,
+        "startChar": 36,
+        "endLine": 179,
+        "endChar": 46
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1cf7b99_d5bcee05",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T19:25:36Z",
+      "side": 1,
+      "message": "nope. Extended the comment with an explanation.",
+      "parentUuid": "f9e8d816_961609bb",
       "range": {
         "startLine": 179,
         "startChar": 36,
@@ -93,6 +165,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "867ee84d_408fb5f0",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T19:25:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d91a725_4d2d97ed",
+      "range": {
+        "startLine": 181,
+        "startChar": 37,
+        "endLine": 181,
+        "endChar": 51
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "41c0c49b_aae2a270",
@@ -106,6 +202,30 @@
       "writtenOn": "2021-06-22T17:34:51Z",
       "side": 1,
       "message": "so why is it called \"UAF\"? shouldn\u0027t this be BOTH, and there\u0027s a missing UAF?",
+      "range": {
+        "startLine": 184,
+        "startChar": 25,
+        "endLine": 184,
+        "endChar": 45
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8755505_085fc27e",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T19:25:36Z",
+      "side": 1,
+      "message": "that\u0027s the mode you choose when you want the most chance of detecting UAF. We can not really do the same deterministic thing as we do for the overflow, so 93% is the highest we can go. We do exclude the previous tag when recoloring during free, so *immediate* UAF is always caught, in all modes, unless other threads interfere somehow.",
+      "parentUuid": "41c0c49b_aae2a270",
       "range": {
         "startLine": 184,
         "startChar": 25,
