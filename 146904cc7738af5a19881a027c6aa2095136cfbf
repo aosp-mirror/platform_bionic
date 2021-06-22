@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bed28e6_91cde564",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T23:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d629673e_9a4c778a",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 2
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27a74bc0_a81c850b",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "821eac86_73f97c77",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T23:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27a74bc0_a81c850b",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 26
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebd96ea3_29b07475",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-06-22T23:04:23Z",
       "side": 1,
       "message": "(while you\u0027re here, could you remove the bogus \u0027s\u0027 on the end here?)",
+      "range": {
+        "startLine": 248,
+        "startChar": 25,
+        "endLine": 248,
+        "endChar": 36
+      },
+      "revId": "146904cc7738af5a19881a027c6aa2095136cfbf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "944f2b65_ae6c4fd3",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T23:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebd96ea3_29b07475",
       "range": {
         "startLine": 248,
         "startChar": 25,

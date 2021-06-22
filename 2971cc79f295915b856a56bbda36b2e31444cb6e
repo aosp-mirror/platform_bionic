@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdc09bb6_69174557",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-22T23:49:55Z",
+      "side": 1,
+      "message": "It turns out we will need a trivial scudo change for this to work.\n",
+      "revId": "2971cc79f295915b856a56bbda36b2e31444cb6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
