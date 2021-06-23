@@ -45,6 +45,7 @@ struct mce {
   __u64 ipid;
   __u64 ppin;
   __u32 microcode;
+  __u64 kflags;
 };
 #define MCE_GET_RECORD_LEN _IOR('M', 1, int)
 #define MCE_GET_LOG_LEN _IOR('M', 2, int)

@@ -67,6 +67,7 @@ struct sev_user_data_status {
   __u8 build;
   __u32 guest_count;
 } __packed;
+#define SEV_STATUS_FLAGS_CONFIG_ES 0x0100
 struct sev_user_data_pek_csr {
   __u64 address;
   __u32 length;

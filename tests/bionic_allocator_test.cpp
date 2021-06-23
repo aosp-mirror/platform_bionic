@@ -42,19 +42,19 @@ namespace {
  * this one has size below allocator cap which is 2*sizeof(void*)
  */
 struct test_struct_small {
-  char dummy_str[5];
+  char str[5];
 };
 
 struct test_struct_large {
-  char dummy_str[1009];
+  char str[1009];
 };
 
 struct test_struct_huge {
-  char dummy_str[73939];
+  char str[73939];
 };
 
 struct test_struct_512 {
-  char dummy_str[503];
+  char str[503];
 };
 
 };

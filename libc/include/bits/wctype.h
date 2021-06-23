@@ -58,8 +58,8 @@ wctype_t wctype(const char* __name);
 int iswctype(wint_t __wc, wctype_t __type);
 
 typedef const void* wctrans_t;
-wint_t towctrans(wint_t __wc, wctrans_t __transform) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
-wctrans_t wctrans(const char* __name) __INTRODUCED_IN(26) __VERSIONER_NO_GUARD;
+wint_t towctrans(wint_t __wc, wctrans_t __transform) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
+wctrans_t wctrans(const char* __name) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
 
 __END_DECLS
 

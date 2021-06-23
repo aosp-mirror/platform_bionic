@@ -746,5 +746,5 @@ _GP:
 	.size	_GP,144
 	.data
 	.hidden __libm_reduce_pi04l
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End

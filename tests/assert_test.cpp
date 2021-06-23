@@ -19,14 +19,18 @@
 #undef NDEBUG
 #include <assert.h>
 
+#include <android-base/silent_death_test.h>
+
+using assert_DeathTest = SilentDeathTest;
+
 TEST(assert, assert_true) {
   assert(true);
 }
 
-TEST(assert, assert_false) {
+TEST_F(assert_DeathTest, assert_false) {
   EXPECT_DEATH(assert(false),
                "bionic/tests/assert_test.cpp:.*: "
-               "virtual void assert_assert_false_Test::TestBody\\(\\): "
+               "virtual void assert_DeathTest_assert_false_Test::TestBody\\(\\): "
                "assertion \"false\" failed");
 }
 

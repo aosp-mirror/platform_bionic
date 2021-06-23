@@ -22,19 +22,20 @@
 #include <stdint.h>
 
 static void TestRounding(float expectation1, float expectation2) {
-  // volatile to prevent compiler optimizations.
+  // Volatile to prevent compile-time evaluation.
   volatile float f = 1.968750f;
   volatile float m = 0x1.0p23f;
-  volatile float x = f + m;
+  float x;
+  DoNotOptimize(x = f + m);
   ASSERT_FLOAT_EQ(expectation1, x);
-  x = x - m;
+  DoNotOptimize(x = x - m);
   ASSERT_EQ(expectation2, x);
 }
 
 static void DivideByZero() {
-  // volatile to prevent compiler optimizations.
+  // Volatile to prevent compile-time evaluation.
   volatile float zero = 0.0f;
-  volatile float result __attribute__((unused)) = 123.0f / zero;
+  DoNotOptimize(123.0f / zero);
 }
 
 TEST(fenv, fesetround_fegetround_FE_TONEAREST) {
@@ -201,6 +202,7 @@ TEST(fenv, feenableexcept_fegetexcept) {
   ASSERT_NE(-1, pid) << strerror(errno);
 
   if (pid == 0) {
+    signal(SIGFPE, SIG_DFL);  // Disable debuggerd.
     feclearexcept(FE_ALL_EXCEPT);
     ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
     ASSERT_EQ(0, feenableexcept(FE_INVALID));

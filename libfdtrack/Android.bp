@@ -1,3 +1,18 @@
+package {
+    default_applicable_licenses: ["bionic_libfdtrack_license"],
+}
+
+license {
+    name: "bionic_libfdtrack_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-BSD",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 cc_library_shared {
     name: "libfdtrack",
     srcs: ["fdtrack.cpp"],
