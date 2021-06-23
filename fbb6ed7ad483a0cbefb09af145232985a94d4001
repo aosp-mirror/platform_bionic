@@ -119,6 +119,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d11d5d1_7440f55a",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-06-23T00:45:21Z",
+      "side": 1,
+      "message": "Yes, there are already option only available in scudo, and the way we document them is usually in the malloc.h header file itself.\n\nFor example, the M_BIONIC_ZERO_INIT is one that\u0027s scudo only.",
+      "parentUuid": "3b43448f_2382d99a",
+      "range": {
+        "startLine": 178,
+        "startChar": 11,
+        "endLine": 178,
+        "endChar": 12
+      },
+      "revId": "fbb6ed7ad483a0cbefb09af145232985a94d4001",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9e8d816_961609bb",

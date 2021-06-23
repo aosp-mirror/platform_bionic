@@ -33,6 +33,29 @@
       "message": "(will let cferris +2...)",
       "revId": "2971cc79f295915b856a56bbda36b2e31444cb6e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99c2f12e_4625d8c7",
+        "filename": "libc/include/malloc.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1019050
+      },
+      "writtenOn": "2021-06-23T00:45:21Z",
+      "side": 1,
+      "message": "As with the other M_ targets, it should mention the Available since API level XX. Also, you should say this is scudo only, maybe something like in the M_BIONIC_ZERO_INIT, such as \"NOTE: This is only available in scudo.\".",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 23
+      },
+      "revId": "2971cc79f295915b856a56bbda36b2e31444cb6e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
