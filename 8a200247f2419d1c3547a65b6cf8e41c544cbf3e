@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d6f5442_ed9b8bce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-06-23T20:09:24Z",
+      "side": 1,
+      "message": "FYI a fix for the presubmit build failure is in https://android-review.googlesource.com/c/platform/build/soong/+/1744757",
+      "revId": "8a200247f2419d1c3547a65b6cf8e41c544cbf3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
