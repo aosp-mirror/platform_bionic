@@ -55,14 +55,12 @@ cc_object {
     ],
     arch: {
         arm64: {
-            srcs: ["arch/arm64/begin.S"],
+            srcs: ["arch/arm64/linker_wrapper_begin.S"],
         },
         x86_64: {
-            srcs: ["arch/x86_64/begin.S"],
+            srcs: ["arch/x86_64/linker_wrapper_begin.S"],
         },
     },
-
-    prefix_symbols: "__dlwrap_",
 
     header_libs: ["libc_headers"],
 
