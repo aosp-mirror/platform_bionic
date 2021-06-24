@@ -239,6 +239,7 @@ enum rt_scope_t {
 #define RTM_F_FIB_MATCH 0x2000
 #define RTM_F_OFFLOAD 0x4000
 #define RTM_F_TRAP 0x8000
+#define RTM_F_OFFLOAD_FAILED 0x20000000
 enum rt_class_t {
   RT_TABLE_UNSPEC = 0,
   RT_TABLE_COMPAT = 252,

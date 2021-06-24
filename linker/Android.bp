@@ -55,14 +55,12 @@ cc_object {
     ],
     arch: {
         arm64: {
-            srcs: ["arch/arm64/begin.S"],
+            srcs: ["arch/arm64/linker_wrapper_begin.S"],
         },
         x86_64: {
-            srcs: ["arch/x86_64/begin.S"],
+            srcs: ["arch/x86_64/linker_wrapper_begin.S"],
         },
     },
-
-    prefix_symbols: "__dlwrap_",
 
     header_libs: ["libc_headers"],
 
@@ -193,6 +191,7 @@ filegroup {
         "linker_relocate.cpp",
         "linker_sdk_versions.cpp",
         "linker_soinfo.cpp",
+        "linker_transparent_hugepage_support.cpp",
         "linker_tls.cpp",
         "linker_utils.cpp",
         "rt.cpp",
@@ -411,6 +410,19 @@ sh_binary {
     name: "ldd",
     src: "ldd.sh",
     bazel_module: { bp2build_available: true },
+}
+
+// Used to generate binaries that can be backed by transparent hugepages.
+cc_defaults {
+    name: "linker_hugepage_aligned",
+    arch: {
+        arm64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+        x86_64: {
+            ldflags: ["-z max-page-size=0x200000"],
+        },
+    },
 }
 
 cc_library {

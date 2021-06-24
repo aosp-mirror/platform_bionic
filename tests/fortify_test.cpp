@@ -15,7 +15,6 @@
  */
 
 #include <gtest/gtest.h>
-#include "BionicDeathTest.h"
 
 #include <fcntl.h>
 #include <malloc.h>
@@ -27,6 +26,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+
+#include <android-base/silent_death_test.h>
 
 #if __BIONIC__
 #define ASSERT_FORTIFY(expr) ASSERT_EXIT(expr, testing::KilledBySignal(SIGABRT), "FORTIFY")
@@ -40,7 +41,7 @@
 #define DEATHTEST_EVALUATOR(name) DEATHTEST_PASTER(name)
 #define DEATHTEST DEATHTEST_EVALUATOR(TEST_NAME)
 
-class DEATHTEST : public BionicDeathTest {};
+using DEATHTEST = SilentDeathTest;
 
 #if defined(_FORTIFY_SOURCE) && _FORTIFY_SOURCE == 2
 struct foo {

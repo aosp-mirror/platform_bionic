@@ -158,3 +158,95 @@ TEST(arpa_inet, inet_ntop_overflow) {
   ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, INET6_ADDRSTRLEN));
   ASSERT_STREQ("::1", inet_ntop(AF_INET6, &ss6, s6, 2*INET6_ADDRSTRLEN));
 }
+
+TEST(arpa_inet, inet_nsap_addr) {
+  // inet_nsap_addr() doesn't seem to be documented anywhere, but it's basically
+  // text to binary for arbitrarily-long strings like "0xdeadbeef". Any
+  // '.', '+', or '/' characters are ignored as punctuation. The return value is
+  // the length in bytes, or 0 for all errors.
+  u_char buf[32];
+
+  // Missing "0x" prefix.
+  ASSERT_EQ(0U, inet_nsap_addr("123", buf, sizeof(buf)));
+  ASSERT_EQ(0U, inet_nsap_addr("012", buf, sizeof(buf)));
+
+  // 1 byte.
+  ASSERT_EQ(1U, inet_nsap_addr("0x12", buf, sizeof(buf)));
+  ASSERT_EQ(0x12, buf[0]);
+
+  // 10 bytes.
+  ASSERT_EQ(10U, inet_nsap_addr("0x1234567890abcdef0011", buf, sizeof(buf)));
+  ASSERT_EQ(0x12, buf[0]);
+  ASSERT_EQ(0x34, buf[1]);
+  ASSERT_EQ(0x56, buf[2]);
+  ASSERT_EQ(0x78, buf[3]);
+  ASSERT_EQ(0x90, buf[4]);
+  ASSERT_EQ(0xab, buf[5]);
+  ASSERT_EQ(0xcd, buf[6]);
+  ASSERT_EQ(0xef, buf[7]);
+  ASSERT_EQ(0x00, buf[8]);
+  ASSERT_EQ(0x11, buf[9]);
+
+  // Ignored punctuation.
+  ASSERT_EQ(10U, inet_nsap_addr("0x1122.3344+5566/7788/99aa", buf, sizeof(buf)));
+  ASSERT_EQ(0x11, buf[0]);
+  ASSERT_EQ(0x22, buf[1]);
+  ASSERT_EQ(0x33, buf[2]);
+  ASSERT_EQ(0x44, buf[3]);
+  ASSERT_EQ(0x55, buf[4]);
+  ASSERT_EQ(0x66, buf[5]);
+  ASSERT_EQ(0x77, buf[6]);
+  ASSERT_EQ(0x88, buf[7]);
+  ASSERT_EQ(0x99, buf[8]);
+  ASSERT_EQ(0xaa, buf[9]);
+
+  // Truncated.
+  ASSERT_EQ(4U, inet_nsap_addr("0xdeadbeef666666666666", buf, 4));
+  // Overwritten...
+  ASSERT_EQ(0xde, buf[0]);
+  ASSERT_EQ(0xad, buf[1]);
+  ASSERT_EQ(0xbe, buf[2]);
+  ASSERT_EQ(0xef, buf[3]);
+  // Same as before...
+  ASSERT_EQ(0x55, buf[4]);
+  ASSERT_EQ(0x66, buf[5]);
+  ASSERT_EQ(0x77, buf[6]);
+  ASSERT_EQ(0x88, buf[7]);
+  ASSERT_EQ(0x99, buf[8]);
+  ASSERT_EQ(0xaa, buf[9]);
+
+  // Case insensitivity.
+  ASSERT_EQ(6U, inet_nsap_addr("0xaAbBcCdDeEfF", buf, 6));
+  ASSERT_EQ(0xaa, buf[0]);
+  ASSERT_EQ(0xbb, buf[1]);
+  ASSERT_EQ(0xcc, buf[2]);
+  ASSERT_EQ(0xdd, buf[3]);
+  ASSERT_EQ(0xee, buf[4]);
+  ASSERT_EQ(0xff, buf[5]);
+
+  // Punctuation isn't allowed within a byte.
+  ASSERT_EQ(0U, inet_nsap_addr("0x1.122", buf, sizeof(buf)));
+  // Invalid punctuation.
+  ASSERT_EQ(0U, inet_nsap_addr("0x11,22", buf, sizeof(buf)));
+  // Invalid hex digit.
+  ASSERT_EQ(0U, inet_nsap_addr("0x11.g2", buf, sizeof(buf)));
+  ASSERT_EQ(0U, inet_nsap_addr("0x11.2g", buf, sizeof(buf)));
+  // Invalid half-byte.
+  ASSERT_EQ(0U, inet_nsap_addr("0x11.2", buf, sizeof(buf)));
+}
+
+TEST(arpa_inet, inet_nsap_ntoa) {
+  // inet_nsap_ntoa() doesn't seem to be documented anywhere, but it's basically
+  // binary to text for arbitrarily-long byte buffers.
+  // The return value is a pointer to the buffer. No errors are possible.
+  const unsigned char bytes[] = {0x01, 0x00, 0x02, 0x0e, 0xf0, 0x20};
+  char dst[32];
+  ASSERT_EQ(dst, inet_nsap_ntoa(6, bytes, dst));
+  ASSERT_STREQ(dst, "0x01.0002.0EF0.20");
+}
+
+TEST(arpa_inet, inet_nsap_ntoa__nullptr) {
+  // If you don't provide a destination, a static buffer is provided for you.
+  const unsigned char bytes[] = {0x01, 0x00, 0x02, 0x0e, 0xf0, 0x20};
+  ASSERT_STREQ("0x01.0002.0EF0.20", inet_nsap_ntoa(6, bytes, nullptr));
+}

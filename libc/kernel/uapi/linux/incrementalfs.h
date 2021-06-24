@@ -23,7 +23,7 @@
 #include <linux/types.h>
 #include <linux/xattr.h>
 #define INCFS_NAME "incremental-fs"
-#define INCFS_MAGIC_NUMBER (unsigned long) (0x5346434e49ul)
+#define INCFS_MAGIC_NUMBER (0x5346434e49ul & ULONG_MAX)
 #define INCFS_DATA_FILE_BLOCK_SIZE 4096
 #define INCFS_HEADER_VER 1
 #define INCFS_MAX_HASH_SIZE 32
@@ -50,6 +50,7 @@
 #define INCFS_IOC_GET_BLOCK_COUNT _IOR(INCFS_IOCTL_BASE_CODE, 36, struct incfs_get_block_count_args)
 #define INCFS_IOC_GET_READ_TIMEOUTS _IOR(INCFS_IOCTL_BASE_CODE, 37, struct incfs_get_read_timeouts_args)
 #define INCFS_IOC_SET_READ_TIMEOUTS _IOW(INCFS_IOCTL_BASE_CODE, 38, struct incfs_set_read_timeouts_args)
+#define INCFS_IOC_GET_LAST_READ_ERROR _IOW(INCFS_IOCTL_BASE_CODE, 39, struct incfs_get_last_read_error_args)
 #define INCFS_FEATURE_FLAG_COREFS "corefs"
 #define INCFS_FEATURE_FLAG_ZSTD "zstd"
 #define INCFS_FEATURE_FLAG_V2 "v2"
@@ -164,5 +165,12 @@ struct incfs_get_read_timeouts_args {
 struct incfs_set_read_timeouts_args {
   __aligned_u64 timeouts_array;
   __u32 timeouts_array_size;
+};
+struct incfs_get_last_read_error_args {
+  incfs_uuid_t file_id_out;
+  __u64 time_us_out;
+  __u32 page_out;
+  __u32 errno_out;
+  __u64 reserved;
 };
 #endif
