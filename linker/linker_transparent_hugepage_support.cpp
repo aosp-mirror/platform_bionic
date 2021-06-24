@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,21 +26,19 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <string>
 
-constexpr int MAX_PACKAGE_NAME_LENGTH = 230;
+#include <android-base/file.h>
 
-static inline const char* const soft_mac_bind_allowlist[] = {
-    "com.cisco.anyconnect.vpn.android.avf:nchs",
-    "com.skype.raider",
-    nullptr,
-};
+#include "linker.h"
 
-static inline const char* const soft_mac_getlink_allowlist[] = {
-    "com.cisco.anyconnect.vpn.android.avf:nchs",
-    nullptr,
-};
-
-int get_package_name(char* buffer, const int bufferlen);
-bool should_apply_soft_mac_bind_restrictions();
-bool should_apply_soft_mac_getlink_restrictions();
+bool get_transparent_hugepages_supported() {
+  static bool transparent_hugepages_supported = []() {
+    std::string enabled;
+    if (!android::base::ReadFileToString("/sys/kernel/mm/transparent_hugepage/enabled", &enabled)) {
+      return false;
+    }
+    return enabled.find("[never]") == std::string::npos;
+  };
+  return transparent_hugepages_supported;
+}

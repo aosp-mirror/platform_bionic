@@ -27,9 +27,10 @@
 #include <stdint.h>
 #include <sys/stat.h>
 
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <regex>
+#include <string>
 
 #include "gtest_globals.h"
 #include <android-base/file.h>
@@ -263,8 +264,11 @@ static void create_ld_config_file(const char* config_file) {
 #endif
 
 #if defined(__BIONIC__)
-static bool is_debuggable_build() {
-  return android::base::GetBoolProperty("ro.debuggable", false);
+// This test can't rely on ro.debuggable, because it might have been forced on
+// in a user build ("Force Debuggable"). In that configuration, ro.debuggable is
+// true, but Bionic's LD_CONFIG_FILE testing support is still disabled.
+static bool is_user_build() {
+  return android::base::GetProperty("ro.build.type", "user") == std::string("user");
 }
 #endif
 
@@ -281,7 +285,7 @@ static bool is_debuggable_build() {
 TEST(dl, exec_with_ld_config_file) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
-  if (!is_debuggable_build()) {
+  if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
@@ -318,7 +322,7 @@ TEST(dl, exec_with_ld_config_file) {
 TEST(dl, exec_with_ld_config_file_with_ld_preload) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "libclang_rt.hwasan is not found with custom ld config";
-  if (!is_debuggable_build()) {
+  if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
   std::string helper = GetTestlibRoot() +
@@ -355,8 +359,8 @@ TEST(dl, disable_ld_config_file) {
     // This test is only for CTS.
     GTEST_SKIP() << "test is not supported with root uid";
   }
-  if (is_debuggable_build()) {
-    GTEST_SKIP() << "test is not supported on debuggable build";
+  if (!is_user_build()) {
+    GTEST_SKIP() << "test requires user build";
   }
 
   std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
@@ -382,7 +386,8 @@ static void RelocationsTest(const char* lib, const char* expectation) {
   ExecTestHelper eth;
   eth.SetArgs({ "readelf", "-SW", path.c_str(), nullptr });
   eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
-  ASSERT_TRUE(eth.GetOutput().find(expectation) != std::string::npos) << eth.GetOutput();
+
+  ASSERT_TRUE(std::regex_search(eth.GetOutput(), std::regex(expectation))) << eth.GetOutput();
 
   // Can we load it?
   void* handle = dlopen(lib, RTLD_NOW);
@@ -395,31 +400,29 @@ static void RelocationsTest(const char* lib, const char* expectation) {
 }
 
 TEST(dl, relocations_RELR) {
-  RelocationsTest("librelocations-RELR.so",
-      ".relr.dyn            RELR");
+  RelocationsTest("librelocations-RELR.so", "\\.relr\\.dyn * RELR");
 }
 
 TEST(dl, relocations_ANDROID_RELR) {
-  RelocationsTest("librelocations-ANDROID_RELR.so",
-      ".relr.dyn            ANDROID_RELR");
+  RelocationsTest("librelocations-ANDROID_RELR.so", "\\.relr\\.dyn * ANDROID_RELR");
 }
 
 TEST(dl, relocations_ANDROID_REL) {
   RelocationsTest("librelocations-ANDROID_REL.so",
 #if __LP64__
-      ".rela.dyn            ANDROID_RELA"
+                  "\\.rela\\.dyn * ANDROID_RELA"
 #else
-      ".rel.dyn             ANDROID_REL"
+                  "\\.rel\\.dyn * ANDROID_REL"
 #endif
-      );
+  );
 }
 
 TEST(dl, relocations_fat) {
   RelocationsTest("librelocations-fat.so",
 #if __LP64__
-      ".rela.dyn            RELA"
+                  "\\.rela\\.dyn * RELA"
 #else
-      ".rel.dyn             REL"
+                  "\\.rel\\.dyn * REL"
 #endif
-      );
+  );
 }
