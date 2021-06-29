@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bfcc576f_e8641fe5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-29T18:34:34Z",
+      "side": 1,
+      "message": "what libc are you building against? glibc?\n\n+ccross since we probably just want to switch you over to musl instead?",
+      "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
