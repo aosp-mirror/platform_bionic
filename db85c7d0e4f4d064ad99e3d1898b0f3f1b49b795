@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46dc2364_cfad80e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-06-29T22:02:04Z",
+      "side": 1,
+      "message": "This doesn\u0027t work very well either, having the kernel headers like linux/in.h reference the sockaddr_storage that is now in sys/socket.h (to avoid copying all the headers to netinet/*) means that including linux/in.h requires including sys/socket.h beforehand, otherwise you get errors.\n\nI could use more hackery like http://cs/android/bionic/libc/include/netinet/tcp.h?l\u003d35-37\u0026rcl\u003d8be5321f1abd7e1b672dd4edc0ca79b81d5c3888 to make netinet/in.h include linux/in.h while redefining __kernel_sockaddr_storage to sockaddr_storage, but that hack seems dangerous if linux/in.h was included first, triggering its #ifdef guard.",
+      "revId": "db85c7d0e4f4d064ad99e3d1898b0f3f1b49b795",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
