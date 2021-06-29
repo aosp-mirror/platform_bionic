@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93318fd2_ffdc5546",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-29T20:39:07Z",
+      "side": 1,
+      "message": "(i think you actually want to move __kernel_sockaddr_storage here instead. though _that_ won\u0027t work with musl either, without a musl change to add \u003cbits/sockaddr_storage.h\u003e there.)",
+      "revId": "809bf8ff3043578cb84eafc288d0bd55c1e0b7ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
