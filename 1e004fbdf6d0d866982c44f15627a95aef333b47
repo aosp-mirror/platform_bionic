@@ -16,6 +16,24 @@
       "message": "what libc are you building against? glibc?\n\n+ccross since we probably just want to switch you over to musl instead?",
       "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7756db92_57ba316a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-06-29T18:52:41Z",
+      "side": 1,
+      "message": "Mixing bionic\u0027s kernel headers with the ones from the glibc sysroot seems likely to cause problems.\n\nMusl isn\u0027t particularly close to ready yet, I haven\u0027t tried compiling any rust against it, and it has minimal runtime testing.",
+      "parentUuid": "bfcc576f_e8641fe5",
+      "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
