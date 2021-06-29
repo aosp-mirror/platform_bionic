@@ -16,6 +16,24 @@
       "message": "(i think you actually want to move __kernel_sockaddr_storage here instead. though _that_ won\u0027t work with musl either, without a musl change to add \u003cbits/sockaddr_storage.h\u003e there.)",
       "revId": "809bf8ff3043578cb84eafc288d0bd55c1e0b7ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe177549_f074de5b",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-06-29T20:49:21Z",
+      "side": 1,
+      "message": "Musl doesn\u0027t use the kernel definition at all, it just has issues if somebody does #include \u003clinux/socket.h\u003e #include \u003csys/socket.h\u003e, because both define struct sockaddr_storage.\n\nWhat\u0027s the purpose of defining the kernel version in bits/sockaddr_storage.h?",
+      "parentUuid": "93318fd2_ffdc5546",
+      "revId": "809bf8ff3043578cb84eafc288d0bd55c1e0b7ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
