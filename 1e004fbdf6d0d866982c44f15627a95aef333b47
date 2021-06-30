@@ -52,6 +52,24 @@
       "parentUuid": "7756db92_57ba316a",
       "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1346e05_6f6d4748",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-06-30T23:35:26Z",
+      "side": 1,
+      "message": "\u003e So, IIUC, it would be bionic\u0027s libc for on device and glibc for on host?\n\nat the moment yes. the plan for T is to have bionic on device and musl [with bionic\u0027s linux/ headers] on host.\n\n(so at least we have a path out of this mess if you can\u0027t wait for musl to be ready and need a workaround in the meantime...)",
+      "parentUuid": "092a0e94_6e3a9ad7",
+      "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
