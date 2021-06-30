@@ -34,6 +34,24 @@
       "parentUuid": "bfcc576f_e8641fe5",
       "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "092a0e94_6e3a9ad7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1561731
+      },
+      "writtenOn": "2021-06-30T14:59:55Z",
+      "side": 1,
+      "message": "\u003e what libc are you building against? glibc?\n\nBear with me, hacking along without really knowing what I am doing and guidance is appreciated :) \n\nI am trying to update Crosvm (external/crosvm) for Cuttlefish with the merge in the attached topic (see aosp/1752440). The merge pulls in crrev.com/c/2688439 which adds `#include \u003clinux/input-event-codes.h\u003e` to external/crosvm/gpu_display/src/display_wl.c . Crosvm is built for both on device and on host. So, IIUC, it would be bionic\u0027s libc for on device and glibc for on host?",
+      "parentUuid": "7756db92_57ba316a",
+      "revId": "1e004fbdf6d0d866982c44f15627a95aef333b47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
