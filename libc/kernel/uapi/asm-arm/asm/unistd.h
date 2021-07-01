@@ -21,7 +21,6 @@
 #define __NR_OABI_SYSCALL_BASE 0x900000
 #define __NR_SYSCALL_BASE 0
 #include <asm/unistd-eabi.h>
-#include <asm/unistd-common.h>
 #define __NR_sync_file_range2 __NR_arm_sync_file_range
 #define __ARM_NR_BASE (__NR_SYSCALL_BASE + 0x0f0000)
 #define __ARM_NR_breakpoint (__ARM_NR_BASE + 1)
