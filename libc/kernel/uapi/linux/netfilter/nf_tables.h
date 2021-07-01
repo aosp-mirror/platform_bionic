@@ -223,6 +223,7 @@ enum nft_set_attributes {
 #define NFTA_SET_MAX (__NFTA_SET_MAX - 1)
 enum nft_set_elem_flags {
   NFT_SET_ELEM_INTERVAL_END = 0x1,
+  NFT_SET_ELEM_CATCHALL = 0x2,
 };
 enum nft_set_elem_attributes {
   NFTA_SET_ELEM_UNSPEC,
@@ -512,6 +513,7 @@ enum nft_socket_attributes {
   NFTA_SOCKET_UNSPEC,
   NFTA_SOCKET_KEY,
   NFTA_SOCKET_DREG,
+  NFTA_SOCKET_LEVEL,
   __NFTA_SOCKET_MAX
 };
 #define NFTA_SOCKET_MAX (__NFTA_SOCKET_MAX - 1)
@@ -519,6 +521,7 @@ enum nft_socket_keys {
   NFT_SOCKET_TRANSPARENT,
   NFT_SOCKET_MARK,
   NFT_SOCKET_WILDCARD,
+  NFT_SOCKET_CGROUPV2,
   __NFT_SOCKET_MAX
 };
 #define NFT_SOCKET_MAX (__NFT_SOCKET_MAX - 1)
