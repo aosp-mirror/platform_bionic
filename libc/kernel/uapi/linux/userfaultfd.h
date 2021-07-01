@@ -20,16 +20,18 @@
 #define _LINUX_USERFAULTFD_H
 #include <linux/types.h>
 #define UFFD_API ((__u64) 0xAA)
-#define UFFD_API_FEATURES (UFFD_FEATURE_PAGEFAULT_FLAG_WP | UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM | UFFD_FEATURE_SIGBUS | UFFD_FEATURE_THREAD_ID)
+#define UFFD_API_REGISTER_MODES (UFFDIO_REGISTER_MODE_MISSING | UFFDIO_REGISTER_MODE_WP | UFFDIO_REGISTER_MODE_MINOR)
+#define UFFD_API_FEATURES (UFFD_FEATURE_PAGEFAULT_FLAG_WP | UFFD_FEATURE_EVENT_FORK | UFFD_FEATURE_EVENT_REMAP | UFFD_FEATURE_EVENT_REMOVE | UFFD_FEATURE_EVENT_UNMAP | UFFD_FEATURE_MISSING_HUGETLBFS | UFFD_FEATURE_MISSING_SHMEM | UFFD_FEATURE_SIGBUS | UFFD_FEATURE_THREAD_ID | UFFD_FEATURE_MINOR_HUGETLBFS)
 #define UFFD_API_IOCTLS ((__u64) 1 << _UFFDIO_REGISTER | (__u64) 1 << _UFFDIO_UNREGISTER | (__u64) 1 << _UFFDIO_API)
-#define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE | (__u64) 1 << _UFFDIO_WRITEPROTECT)
-#define UFFD_API_RANGE_IOCTLS_BASIC ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY)
+#define UFFD_API_RANGE_IOCTLS ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_ZEROPAGE | (__u64) 1 << _UFFDIO_WRITEPROTECT | (__u64) 1 << _UFFDIO_CONTINUE)
+#define UFFD_API_RANGE_IOCTLS_BASIC ((__u64) 1 << _UFFDIO_WAKE | (__u64) 1 << _UFFDIO_COPY | (__u64) 1 << _UFFDIO_CONTINUE)
 #define _UFFDIO_REGISTER (0x00)
 #define _UFFDIO_UNREGISTER (0x01)
 #define _UFFDIO_WAKE (0x02)
 #define _UFFDIO_COPY (0x03)
 #define _UFFDIO_ZEROPAGE (0x04)
 #define _UFFDIO_WRITEPROTECT (0x06)
+#define _UFFDIO_CONTINUE (0x07)
 #define _UFFDIO_API (0x3F)
 #define UFFDIO 0xAA
 #define UFFDIO_API _IOWR(UFFDIO, _UFFDIO_API, struct uffdio_api)
@@ -39,6 +41,7 @@
 #define UFFDIO_COPY _IOWR(UFFDIO, _UFFDIO_COPY, struct uffdio_copy)
 #define UFFDIO_ZEROPAGE _IOWR(UFFDIO, _UFFDIO_ZEROPAGE, struct uffdio_zeropage)
 #define UFFDIO_WRITEPROTECT _IOWR(UFFDIO, _UFFDIO_WRITEPROTECT, struct uffdio_writeprotect)
+#define UFFDIO_CONTINUE _IOWR(UFFDIO, _UFFDIO_CONTINUE, struct uffdio_continue)
 struct uffd_msg {
   __u8 event;
   __u8 reserved1;
@@ -78,6 +81,7 @@ struct uffd_msg {
 #define UFFD_EVENT_UNMAP 0x16
 #define UFFD_PAGEFAULT_FLAG_WRITE (1 << 0)
 #define UFFD_PAGEFAULT_FLAG_WP (1 << 1)
+#define UFFD_PAGEFAULT_FLAG_MINOR (1 << 2)
 struct uffdio_api {
   __u64 api;
 #define UFFD_FEATURE_PAGEFAULT_FLAG_WP (1 << 0)
@@ -89,6 +93,7 @@ struct uffdio_api {
 #define UFFD_FEATURE_EVENT_UNMAP (1 << 6)
 #define UFFD_FEATURE_SIGBUS (1 << 7)
 #define UFFD_FEATURE_THREAD_ID (1 << 8)
+#define UFFD_FEATURE_MINOR_HUGETLBFS (1 << 9)
   __u64 features;
   __u64 ioctls;
 };
@@ -100,6 +105,7 @@ struct uffdio_register {
   struct uffdio_range range;
 #define UFFDIO_REGISTER_MODE_MISSING ((__u64) 1 << 0)
 #define UFFDIO_REGISTER_MODE_WP ((__u64) 1 << 1)
+#define UFFDIO_REGISTER_MODE_MINOR ((__u64) 1 << 2)
   __u64 mode;
   __u64 ioctls;
 };
@@ -123,6 +129,12 @@ struct uffdio_writeprotect {
 #define UFFDIO_WRITEPROTECT_MODE_WP ((__u64) 1 << 0)
 #define UFFDIO_WRITEPROTECT_MODE_DONTWAKE ((__u64) 1 << 1)
   __u64 mode;
+};
+struct uffdio_continue {
+  struct uffdio_range range;
+#define UFFDIO_CONTINUE_MODE_DONTWAKE ((__u64) 1 << 0)
+  __u64 mode;
+  __s64 mapped;
 };
 #define UFFD_USER_MODE_ONLY 1
 #endif

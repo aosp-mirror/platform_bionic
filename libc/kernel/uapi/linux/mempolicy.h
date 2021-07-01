@@ -44,4 +44,7 @@ enum {
 #define MPOL_F_LOCAL (1 << 1)
 #define MPOL_F_MOF (1 << 3)
 #define MPOL_F_MORON (1 << 4)
+#define RECLAIM_ZONE (1 << 0)
+#define RECLAIM_WRITE (1 << 1)
+#define RECLAIM_UNMAP (1 << 2)
 #endif
