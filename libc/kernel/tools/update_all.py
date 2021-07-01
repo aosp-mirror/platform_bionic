@@ -84,7 +84,6 @@ def GenerateGlibcSyscallsHeader(updater):
     pattern = re.compile(r'^\s*#\s*define\s*__NR_([a-z_]\S+)')
     for unistd_h in ['kernel/uapi/asm-generic/unistd.h',
                      'kernel/uapi/asm-arm/asm/unistd.h',
-                     'kernel/uapi/asm-arm/asm/unistd-common.h',
                      'kernel/uapi/asm-arm/asm/unistd-eabi.h',
                      'kernel/uapi/asm-arm/asm/unistd-oabi.h',
                      'kernel/uapi/asm-x86/asm/unistd_32.h',

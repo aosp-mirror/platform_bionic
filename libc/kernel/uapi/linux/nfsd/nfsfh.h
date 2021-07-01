@@ -33,11 +33,22 @@ struct nfs_fhbase_old {
   __u32 fb_generation;
 };
 struct nfs_fhbase_new {
-  __u8 fb_version;
-  __u8 fb_auth_type;
-  __u8 fb_fsid_type;
-  __u8 fb_fileid_type;
-  __u32 fb_auth[1];
+  union {
+    struct {
+      __u8 fb_version_aux;
+      __u8 fb_auth_type_aux;
+      __u8 fb_fsid_type_aux;
+      __u8 fb_fileid_type_aux;
+      __u32 fb_auth[1];
+    };
+    struct {
+      __u8 fb_version;
+      __u8 fb_auth_type;
+      __u8 fb_fsid_type;
+      __u8 fb_fileid_type;
+      __u32 fb_auth_flex[];
+    };
+  };
 };
 struct knfsd_fh {
   unsigned int fh_size;
@@ -58,6 +69,6 @@ struct knfsd_fh {
 #define fh_fsid_type fh_base.fh_new.fb_fsid_type
 #define fh_auth_type fh_base.fh_new.fb_auth_type
 #define fh_fileid_type fh_base.fh_new.fb_fileid_type
-#define fh_fsid fh_base.fh_new.fb_auth
+#define fh_fsid fh_base.fh_new.fb_auth_flex
 #define fh_auth fh_base.fh_new.fb_auth
 #endif
