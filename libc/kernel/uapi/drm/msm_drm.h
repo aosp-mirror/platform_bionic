@@ -42,6 +42,7 @@ struct drm_msm_timespec {
 #define MSM_PARAM_NR_RINGS 0x07
 #define MSM_PARAM_PP_PGTABLE 0x08
 #define MSM_PARAM_FAULTS 0x09
+#define MSM_PARAM_SUSPENDS 0x0a
 struct drm_msm_param {
   __u32 pipe;
   __u32 param;

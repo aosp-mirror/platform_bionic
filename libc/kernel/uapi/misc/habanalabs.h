@@ -208,6 +208,29 @@ enum gaudi_engine_id {
   GAUDI_ENGINE_ID_NIC_9,
   GAUDI_ENGINE_ID_SIZE
 };
+enum hl_goya_pll_index {
+  HL_GOYA_CPU_PLL = 0,
+  HL_GOYA_IC_PLL,
+  HL_GOYA_MC_PLL,
+  HL_GOYA_MME_PLL,
+  HL_GOYA_PCI_PLL,
+  HL_GOYA_EMMC_PLL,
+  HL_GOYA_TPC_PLL,
+  HL_GOYA_PLL_MAX
+};
+enum hl_gaudi_pll_index {
+  HL_GAUDI_CPU_PLL = 0,
+  HL_GAUDI_PCI_PLL,
+  HL_GAUDI_SRAM_PLL,
+  HL_GAUDI_HBM_PLL,
+  HL_GAUDI_NIC_PLL,
+  HL_GAUDI_DMA_PLL,
+  HL_GAUDI_MESH_PLL,
+  HL_GAUDI_MME_PLL,
+  HL_GAUDI_TPC_PLL,
+  HL_GAUDI_IF_PLL,
+  HL_GAUDI_PLL_MAX
+};
 enum hl_device_status {
   HL_DEVICE_STATUS_OPERATIONAL,
   HL_DEVICE_STATUS_IN_RESET,
@@ -230,6 +253,7 @@ enum hl_device_status {
 #define HL_INFO_SYNC_MANAGER 14
 #define HL_INFO_TOTAL_ENERGY 15
 #define HL_INFO_PLL_FREQUENCY 16
+#define HL_INFO_POWER 17
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -302,6 +326,9 @@ struct hl_info_energy {
 #define HL_PLL_NUM_OUTPUTS 4
 struct hl_pll_frequency_info {
   __u16 output[HL_PLL_NUM_OUTPUTS];
+};
+struct hl_power_info {
+  __u64 power;
 };
 struct hl_info_sync_manager {
   __u32 first_available_sync_object;
@@ -389,18 +416,16 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_STAGED_SUBMISSION 0x40
 #define HL_CS_FLAGS_STAGED_SUBMISSION_FIRST 0x80
 #define HL_CS_FLAGS_STAGED_SUBMISSION_LAST 0x100
+#define HL_CS_FLAGS_CUSTOM_TIMEOUT 0x200
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
   __u64 chunks_restore;
   __u64 chunks_execute;
-  union {
-    __u64 chunks_store;
-    __u64 seq;
-  };
+  __u64 seq;
   __u32 num_chunks_restore;
   __u32 num_chunks_execute;
-  __u32 num_chunks_store;
+  __u32 timeout;
   __u32 cs_flags;
   __u32 ctx_id;
 };
@@ -413,11 +438,22 @@ union hl_cs_args {
   struct hl_cs_in in;
   struct hl_cs_out out;
 };
+#define HL_WAIT_CS_FLAGS_INTERRUPT 0x2
+#define HL_WAIT_CS_FLAGS_INTERRUPT_MASK 0xFFF00000
 struct hl_wait_cs_in {
-  __u64 seq;
-  __u64 timeout_us;
+  union {
+    struct {
+      __u64 seq;
+      __u64 timeout_us;
+    };
+    struct {
+      __u64 addr;
+      __u32 target;
+      __u32 interrupt_timeout_us;
+    };
+  };
   __u32 ctx_id;
-  __u32 pad;
+  __u32 flags;
 };
 #define HL_WAIT_CS_STATUS_COMPLETED 0
 #define HL_WAIT_CS_STATUS_BUSY 1
