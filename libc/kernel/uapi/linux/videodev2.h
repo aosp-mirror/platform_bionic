@@ -266,6 +266,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_YUV444 v4l2_fourcc('Y', '4', '4', '4')
 #define V4L2_PIX_FMT_YUV555 v4l2_fourcc('Y', 'U', 'V', 'O')
 #define V4L2_PIX_FMT_YUV565 v4l2_fourcc('Y', 'U', 'V', 'P')
+#define V4L2_PIX_FMT_YUV24 v4l2_fourcc('Y', 'U', 'V', '3')
 #define V4L2_PIX_FMT_YUV32 v4l2_fourcc('Y', 'U', 'V', '4')
 #define V4L2_PIX_FMT_AYUV32 v4l2_fourcc('A', 'Y', 'U', 'V')
 #define V4L2_PIX_FMT_XYUV32 v4l2_fourcc('X', 'Y', 'U', 'V')
@@ -355,6 +356,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_VC1_ANNEX_G v4l2_fourcc('V', 'C', '1', 'G')
 #define V4L2_PIX_FMT_VC1_ANNEX_L v4l2_fourcc('V', 'C', '1', 'L')
 #define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')
+#define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F')
 #define V4L2_PIX_FMT_VP9 v4l2_fourcc('V', 'P', '9', '0')
 #define V4L2_PIX_FMT_HEVC v4l2_fourcc('H', 'E', 'V', 'C')
 #define V4L2_PIX_FMT_FWHT v4l2_fourcc('F', 'W', 'H', 'T')
@@ -888,6 +890,7 @@ struct v4l2_ext_control {
     struct v4l2_ctrl_h264_slice_params __user * p_h264_slice_params;
     struct v4l2_ctrl_h264_decode_params __user * p_h264_decode_params;
     struct v4l2_ctrl_fwht_params __user * p_fwht_params;
+    struct v4l2_ctrl_vp8_frame __user * p_vp8_frame;
     void __user * ptr;
   };
 } __attribute__((packed));
@@ -925,6 +928,8 @@ enum v4l2_ctrl_type {
   V4L2_CTRL_TYPE_U16 = 0x0101,
   V4L2_CTRL_TYPE_U32 = 0x0102,
   V4L2_CTRL_TYPE_AREA = 0x0106,
+  V4L2_CTRL_TYPE_HDR10_CLL_INFO = 0x0110,
+  V4L2_CTRL_TYPE_HDR10_MASTERING_DISPLAY = 0x0111,
   V4L2_CTRL_TYPE_H264_SPS = 0x0200,
   V4L2_CTRL_TYPE_H264_PPS = 0x0201,
   V4L2_CTRL_TYPE_H264_SCALING_MATRIX = 0x0202,
@@ -932,6 +937,7 @@ enum v4l2_ctrl_type {
   V4L2_CTRL_TYPE_H264_DECODE_PARAMS = 0x0204,
   V4L2_CTRL_TYPE_H264_PRED_WEIGHTS = 0x0205,
   V4L2_CTRL_TYPE_FWHT_PARAMS = 0x0220,
+  V4L2_CTRL_TYPE_VP8_FRAME = 0x0240,
 };
 struct v4l2_queryctrl {
   __u32 id;
