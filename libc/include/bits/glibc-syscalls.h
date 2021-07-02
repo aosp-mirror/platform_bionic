@@ -507,6 +507,15 @@
 #if defined(__NR_kill)
   #define SYS_kill __NR_kill
 #endif
+#if defined(__NR_landlock_add_rule)
+  #define SYS_landlock_add_rule __NR_landlock_add_rule
+#endif
+#if defined(__NR_landlock_create_ruleset)
+  #define SYS_landlock_create_ruleset __NR_landlock_create_ruleset
+#endif
+#if defined(__NR_landlock_restrict_self)
+  #define SYS_landlock_restrict_self __NR_landlock_restrict_self
+#endif
 #if defined(__NR_lchown)
   #define SYS_lchown __NR_lchown
 #endif

@@ -354,6 +354,7 @@ enum macvlan_macaddr_mode {
   MACVLAN_MACADDR_SET,
 };
 #define MACVLAN_FLAG_NOPROMISC 1
+#define MACVLAN_FLAG_NODST 2
 enum {
   IFLA_VRF_UNSPEC,
   IFLA_VRF_TABLE,

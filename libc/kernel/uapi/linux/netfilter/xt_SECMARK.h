@@ -26,4 +26,9 @@ struct xt_secmark_target_info {
   __u32 secid;
   char secctx[SECMARK_SECCTX_MAX];
 };
+struct xt_secmark_target_info_v1 {
+  __u8 mode;
+  char secctx[SECMARK_SECCTX_MAX];
+  __u32 secid;
+};
 #endif

@@ -59,9 +59,6 @@ union __sifields {
   } _sigchld;
   struct {
     void __user * _addr;
-#ifdef __ARCH_SI_TRAPNO
-    int _trapno;
-#endif
 #ifdef __ia64__
     int _imm;
     unsigned int _flags;
@@ -69,6 +66,7 @@ union __sifields {
 #endif
 #define __ADDR_BND_PKEY_PAD (__alignof__(void *) < sizeof(short) ? sizeof(short) : __alignof__(void *))
     union {
+      int _trapno;
       short _addr_lsb;
       struct {
         char _dummy_bnd[__ADDR_BND_PKEY_PAD];
@@ -79,6 +77,10 @@ union __sifields {
         char _dummy_pkey[__ADDR_BND_PKEY_PAD];
         __u32 _pkey;
       } _addr_pkey;
+      struct {
+        unsigned long _data;
+        __u32 _type;
+      } _perf;
     };
   } _sigfault;
   struct {
@@ -116,13 +118,13 @@ typedef struct siginfo {
 #define si_int _sifields._rt._sigval.sival_int
 #define si_ptr _sifields._rt._sigval.sival_ptr
 #define si_addr _sifields._sigfault._addr
-#ifdef __ARCH_SI_TRAPNO
 #define si_trapno _sifields._sigfault._trapno
-#endif
 #define si_addr_lsb _sifields._sigfault._addr_lsb
 #define si_lower _sifields._sigfault._addr_bnd._lower
 #define si_upper _sifields._sigfault._addr_bnd._upper
 #define si_pkey _sifields._sigfault._addr_pkey._pkey
+#define si_perf_data _sifields._sigfault._perf._data
+#define si_perf_type _sifields._sigfault._perf._type
 #define si_band _sifields._sigpoll._band
 #define si_fd _sifields._sigpoll._fd
 #define si_call_addr _sifields._sigsys._call_addr
@@ -193,7 +195,8 @@ typedef struct siginfo {
 #define TRAP_BRANCH 3
 #define TRAP_HWBKPT 4
 #define TRAP_UNK 5
-#define NSIGTRAP 5
+#define TRAP_PERF 6
+#define NSIGTRAP 6
 #define CLD_EXITED 1
 #define CLD_KILLED 2
 #define CLD_DUMPED 3

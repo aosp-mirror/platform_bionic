@@ -129,12 +129,16 @@ enum {
 #define IORING_TIMEOUT_ABS (1U << 0)
 #define IORING_TIMEOUT_UPDATE (1U << 1)
 #define SPLICE_F_FD_IN_FIXED (1U << 31)
+#define IORING_POLL_ADD_MULTI (1U << 0)
+#define IORING_POLL_UPDATE_EVENTS (1U << 1)
+#define IORING_POLL_UPDATE_USER_DATA (1U << 2)
 struct io_uring_cqe {
   __u64 user_data;
   __s32 res;
   __u32 flags;
 };
 #define IORING_CQE_F_BUFFER (1U << 0)
+#define IORING_CQE_F_MORE (1U << 1)
 enum {
   IORING_CQE_BUFFER_SHIFT = 16,
 };
@@ -192,6 +196,7 @@ struct io_uring_params {
 #define IORING_FEAT_SQPOLL_NONFIXED (1U << 7)
 #define IORING_FEAT_EXT_ARG (1U << 8)
 #define IORING_FEAT_NATIVE_WORKERS (1U << 9)
+#define IORING_FEAT_RSRC_TAGS (1U << 10)
 enum {
   IORING_REGISTER_BUFFERS = 0,
   IORING_UNREGISTER_BUFFERS = 1,
@@ -206,6 +211,10 @@ enum {
   IORING_UNREGISTER_PERSONALITY = 10,
   IORING_REGISTER_RESTRICTIONS = 11,
   IORING_REGISTER_ENABLE_RINGS = 12,
+  IORING_REGISTER_FILES2 = 13,
+  IORING_REGISTER_FILES_UPDATE2 = 14,
+  IORING_REGISTER_BUFFERS2 = 15,
+  IORING_REGISTER_BUFFERS_UPDATE = 16,
   IORING_REGISTER_LAST
 };
 struct io_uring_files_update {
@@ -213,10 +222,25 @@ struct io_uring_files_update {
   __u32 resv;
   __aligned_u64 fds;
 };
+struct io_uring_rsrc_register {
+  __u32 nr;
+  __u32 resv;
+  __u64 resv2;
+  __aligned_u64 data;
+  __aligned_u64 tags;
+};
 struct io_uring_rsrc_update {
   __u32 offset;
   __u32 resv;
   __aligned_u64 data;
+};
+struct io_uring_rsrc_update2 {
+  __u32 offset;
+  __u32 resv;
+  __aligned_u64 data;
+  __aligned_u64 tags;
+  __u32 nr;
+  __u32 resv2;
 };
 #define IORING_REGISTER_FILES_SKIP (- 2)
 #define IO_URING_OP_SUPPORTED (1U << 0)
