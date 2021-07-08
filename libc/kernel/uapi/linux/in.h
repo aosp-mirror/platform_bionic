@@ -214,6 +214,7 @@ struct sockaddr_in {
 #define INADDR_ANY ((unsigned long int) 0x00000000)
 #define INADDR_BROADCAST ((unsigned long int) 0xffffffff)
 #define INADDR_NONE ((unsigned long int) 0xffffffff)
+#define INADDR_DUMMY ((unsigned long int) 0xc0000008)
 #define IN_LOOPBACKNET 127
 #define INADDR_LOOPBACK 0x7f000001
 #define IN_LOOPBACK(a) ((((long int) (a)) & 0xff000000) == 0x7f000000)
