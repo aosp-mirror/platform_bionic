@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41f4db78_600effb4",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-07-12T23:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5303317d_f01ca3ec",
+      "range": {
+        "startLine": 90,
+        "startChar": 34,
+        "endLine": 90,
+        "endChar": 41
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "77298949_7ff75041",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ca3fd54_f92df931",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-07-12T23:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77298949_7ff75041",
+      "range": {
+        "startLine": 173,
+        "startChar": 34,
+        "endLine": 173,
+        "endChar": 41
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b138f8fc_8f027a88",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-07-12T22:45:18Z",
       "side": 1,
       "message": "nit: enclose in parentheses just to make it clearer to the reader",
+      "range": {
+        "startLine": 312,
+        "startChar": 23,
+        "endLine": 312,
+        "endChar": 52
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72b21ac8_a33e8af1",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1005967
+      },
+      "writtenOn": "2021-07-12T23:34:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b138f8fc_8f027a88",
       "range": {
         "startLine": 312,
         "startChar": 23,
