@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2129361_17d2fae4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-12T22:45:18Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5303317d_f01ca3ec",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-12T22:45:18Z",
+      "side": 1,
+      "message": "nit: remove \"support\" from message to reflect new semantics",
+      "range": {
+        "startLine": 90,
+        "startChar": 34,
+        "endLine": 90,
+        "endChar": 41
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77298949_7ff75041",
+        "filename": "tests/heap_tagging_level_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-12T22:45:18Z",
+      "side": 1,
+      "message": "nit: remove \"support\" from message to reflect new semantics",
+      "range": {
+        "startLine": 173,
+        "startChar": 34,
+        "endLine": 173,
+        "endChar": 41
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b138f8fc_8f027a88",
+        "filename": "tests/utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-12T22:45:18Z",
+      "side": 1,
+      "message": "nit: enclose in parentheses just to make it clearer to the reader",
+      "range": {
+        "startLine": 312,
+        "startChar": 23,
+        "endLine": 312,
+        "endChar": 52
+      },
+      "revId": "3069b0d27376dc66821bd6275bf422110b992701",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
