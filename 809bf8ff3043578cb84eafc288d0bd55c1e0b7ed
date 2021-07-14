@@ -34,6 +34,24 @@
       "parentUuid": "93318fd2_ffdc5546",
       "revId": "809bf8ff3043578cb84eafc288d0bd55c1e0b7ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c27220d_e76eeba2",
+        "filename": "libc/kernel/tools/defaults.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-07-14T21:21:20Z",
+      "side": 1,
+      "message": "Resolving.",
+      "parentUuid": "fe177549_f074de5b",
+      "revId": "809bf8ff3043578cb84eafc288d0bd55c1e0b7ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
