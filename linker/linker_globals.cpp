@@ -40,6 +40,8 @@ android_namespace_t g_default_namespace;
 
 std::unordered_map<uintptr_t, soinfo*> g_soinfo_handles_map;
 
+platform_properties g_platform_properties;
+
 static char __linker_dl_err_buf[768];
 
 char* linker_get_error_buffer() {
@@ -50,7 +52,7 @@ size_t linker_get_error_buffer_size() {
   return sizeof(__linker_dl_err_buf);
 }
 
-void DL_WARN_documented_change(int api_level, const char* doc_link, const char* fmt, ...) {
+void DL_WARN_documented_change(int api_level, const char* doc_fragment, const char* fmt, ...) {
   std::string result{"Warning: "};
 
   va_list ap;
@@ -60,8 +62,9 @@ void DL_WARN_documented_change(int api_level, const char* doc_link, const char* 
 
   android::base::StringAppendF(&result,
                                " and will not work when the app moves to API level %d or later "
-                               "(https://android.googlesource.com/platform/bionic/+/master/%s) "
-                               "(allowing for now because this app's target API level is still %d)",
-                               api_level, doc_link, get_application_target_sdk_version());
+                               "(%s#%s) (allowing for now because this app's target API level is "
+                               "still %d)",
+                               api_level, kBionicChangesUrl, doc_fragment,
+                               get_application_target_sdk_version());
   DL_WARN("%s", result.c_str());
 }

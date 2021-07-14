@@ -53,7 +53,7 @@ struct vbg_ioctl_driver_version_info {
 };
 #define VBG_IOCTL_DRIVER_VERSION_INFO _IOWR('V', 0, struct vbg_ioctl_driver_version_info)
 #define VBG_IOCTL_VMMDEV_REQUEST(s) _IOC(_IOC_READ | _IOC_WRITE, 'V', 2, s)
-#define VBG_IOCTL_VMMDEV_REQUEST_BIG _IOC(_IOC_READ | _IOC_WRITE, 'V', 3, 0)
+#define VBG_IOCTL_VMMDEV_REQUEST_BIG _IO('V', 3)
 struct vbg_ioctl_hgcm_connect {
   struct vbg_ioctl_hdr hdr;
   union {
@@ -99,7 +99,7 @@ struct vbg_ioctl_log {
     } in;
   } u;
 };
-#define VBG_IOCTL_LOG(s) _IOC(_IOC_READ | _IOC_WRITE, 'V', 9, s)
+#define VBG_IOCTL_LOG(s) _IO('V', 9)
 struct vbg_ioctl_wait_for_events {
   struct vbg_ioctl_hdr hdr;
   union {
@@ -124,6 +124,19 @@ struct vbg_ioctl_change_filter {
   } u;
 };
 #define VBG_IOCTL_CHANGE_FILTER_MASK _IOWR('V', 12, struct vbg_ioctl_change_filter)
+struct vbg_ioctl_acquire_guest_caps {
+  struct vbg_ioctl_hdr hdr;
+  union {
+    struct {
+      __u32 flags;
+      __u32 or_mask;
+      __u32 not_mask;
+    } in;
+  } u;
+};
+#define VBGL_IOC_AGC_FLAGS_CONFIG_ACQUIRE_MODE 0x00000001
+#define VBGL_IOC_AGC_FLAGS_VALID_MASK 0x00000001
+#define VBG_IOCTL_ACQUIRE_GUEST_CAPABILITIES _IOWR('V', 13, struct vbg_ioctl_acquire_guest_caps)
 struct vbg_ioctl_set_guest_caps {
   struct vbg_ioctl_hdr hdr;
   union {

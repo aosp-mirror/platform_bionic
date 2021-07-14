@@ -29,18 +29,22 @@
 #pragma once
 
 #include <sys/auxv.h>
-#include <bionic/mte_kernel.h>
+#include <sys/prctl.h>
 
-#ifdef __aarch64__
+// Note: Most PR_MTE_* constants come from the upstream kernel. This tag mask
+// allows for the hardware to provision any nonzero tag. Zero tags are reserved
+// for scudo to use for the chunk headers in order to prevent linear heap
+// overflow/underflow.
+#define PR_MTE_TAG_SET_NONZERO (0xfffeUL << PR_MTE_TAG_SHIFT)
+
 inline bool mte_supported() {
-#ifdef ANDROID_EXPERIMENTAL_MTE
+#if defined(__aarch64__)
   static bool supported = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 #else
   static bool supported = false;
 #endif
   return supported;
 }
-#endif
 
 #ifdef __aarch64__
 class ScopedDisableMTE {

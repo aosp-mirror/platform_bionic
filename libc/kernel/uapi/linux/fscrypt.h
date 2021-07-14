@@ -18,6 +18,7 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_FSCRYPT_H
 #define _UAPI_LINUX_FSCRYPT_H
+#include <linux/ioctl.h>
 #include <linux/types.h>
 #define FSCRYPT_POLICY_FLAGS_PAD_4 0x00
 #define FSCRYPT_POLICY_FLAGS_PAD_8 0x01
@@ -26,13 +27,12 @@
 #define FSCRYPT_POLICY_FLAGS_PAD_MASK 0x03
 #define FSCRYPT_POLICY_FLAG_DIRECT_KEY 0x04
 #define FSCRYPT_POLICY_FLAG_IV_INO_LBLK_64 0x08
-#define FSCRYPT_POLICY_FLAGS_VALID 0x0F
+#define FSCRYPT_POLICY_FLAG_IV_INO_LBLK_32 0x10
 #define FSCRYPT_MODE_AES_256_XTS 1
 #define FSCRYPT_MODE_AES_256_CTS 4
 #define FSCRYPT_MODE_AES_128_CBC 5
 #define FSCRYPT_MODE_AES_128_CTS 6
 #define FSCRYPT_MODE_ADIANTUM 9
-#define __FSCRYPT_MODE_MAX 9
 #define FSCRYPT_POLICY_V1 0
 #define FSCRYPT_KEY_DESCRIPTOR_SIZE 8
 struct fscrypt_policy_v1 {
@@ -42,7 +42,6 @@ struct fscrypt_policy_v1 {
   __u8 flags;
   __u8 master_key_descriptor[FSCRYPT_KEY_DESCRIPTOR_SIZE];
 };
-#define fscrypt_policy fscrypt_policy_v1
 #define FSCRYPT_KEY_DESC_PREFIX "fscrypt:"
 #define FSCRYPT_KEY_DESC_PREFIX_SIZE 8
 #define FSCRYPT_MAX_KEY_SIZE 64
@@ -80,10 +79,16 @@ struct fscrypt_key_specifier {
     __u8 identifier[FSCRYPT_KEY_IDENTIFIER_SIZE];
   } u;
 };
+struct fscrypt_provisioning_key_payload {
+  __u32 type;
+  __u32 __reserved;
+  __u8 raw[];
+};
 struct fscrypt_add_key_arg {
   struct fscrypt_key_specifier key_spec;
   __u32 raw_size;
-  __u32 __reserved[8];
+  __u32 key_id;
+  __u32 __reserved[7];
 #define __FSCRYPT_ADD_KEY_FLAG_HW_WRAPPED 0x00000001
   __u32 __flags;
   __u8 raw[];
@@ -107,14 +112,16 @@ struct fscrypt_get_key_status_arg {
   __u32 user_count;
   __u32 __out_reserved[13];
 };
-#define FS_IOC_SET_ENCRYPTION_POLICY _IOR('f', 19, struct fscrypt_policy)
+#define FS_IOC_SET_ENCRYPTION_POLICY _IOR('f', 19, struct fscrypt_policy_v1)
 #define FS_IOC_GET_ENCRYPTION_PWSALT _IOW('f', 20, __u8[16])
-#define FS_IOC_GET_ENCRYPTION_POLICY _IOW('f', 21, struct fscrypt_policy)
+#define FS_IOC_GET_ENCRYPTION_POLICY _IOW('f', 21, struct fscrypt_policy_v1)
 #define FS_IOC_GET_ENCRYPTION_POLICY_EX _IOWR('f', 22, __u8[9])
 #define FS_IOC_ADD_ENCRYPTION_KEY _IOWR('f', 23, struct fscrypt_add_key_arg)
 #define FS_IOC_REMOVE_ENCRYPTION_KEY _IOWR('f', 24, struct fscrypt_remove_key_arg)
 #define FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS _IOWR('f', 25, struct fscrypt_remove_key_arg)
 #define FS_IOC_GET_ENCRYPTION_KEY_STATUS _IOWR('f', 26, struct fscrypt_get_key_status_arg)
+#define FS_IOC_GET_ENCRYPTION_NONCE _IOR('f', 27, __u8[16])
+#define fscrypt_policy fscrypt_policy_v1
 #define FS_KEY_DESCRIPTOR_SIZE FSCRYPT_KEY_DESCRIPTOR_SIZE
 #define FS_POLICY_FLAGS_PAD_4 FSCRYPT_POLICY_FLAGS_PAD_4
 #define FS_POLICY_FLAGS_PAD_8 FSCRYPT_POLICY_FLAGS_PAD_8
@@ -122,7 +129,7 @@ struct fscrypt_get_key_status_arg {
 #define FS_POLICY_FLAGS_PAD_32 FSCRYPT_POLICY_FLAGS_PAD_32
 #define FS_POLICY_FLAGS_PAD_MASK FSCRYPT_POLICY_FLAGS_PAD_MASK
 #define FS_POLICY_FLAG_DIRECT_KEY FSCRYPT_POLICY_FLAG_DIRECT_KEY
-#define FS_POLICY_FLAGS_VALID FSCRYPT_POLICY_FLAGS_VALID
+#define FS_POLICY_FLAGS_VALID 0x07
 #define FS_ENCRYPTION_MODE_INVALID 0
 #define FS_ENCRYPTION_MODE_AES_256_XTS FSCRYPT_MODE_AES_256_XTS
 #define FS_ENCRYPTION_MODE_AES_256_GCM 2

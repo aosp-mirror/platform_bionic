@@ -2,6 +2,8 @@
 
 [TOC]
 
+fdsan is a file descriptor sanitizer added to Android in API level 29.
+
 ### Background
 *What problem is fdsan trying to solve? Why should I care?*
 
