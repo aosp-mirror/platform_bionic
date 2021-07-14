@@ -39,6 +39,30 @@
       },
       "revId": "88d7bf9cedca8959c61fbe6fc1c304e46fb48a6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3faacdfd_2d999b3b",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1002751
+      },
+      "writtenOn": "2021-07-14T21:20:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec42700d_38d964e3",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 10
+      },
+      "revId": "88d7bf9cedca8959c61fbe6fc1c304e46fb48a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
