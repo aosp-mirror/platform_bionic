@@ -1938,11 +1938,6 @@ cc_library_headers {
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
-        // TODO(b/153662223): Clean up these users that needed visibility when
-        // the implicit addition of system Bionic paths was removed.
-        "//art/tools/cpp-define-generator",
-        "//external/boringssl",
-        "//external/minijail",
     ],
 
     stl: "none",
