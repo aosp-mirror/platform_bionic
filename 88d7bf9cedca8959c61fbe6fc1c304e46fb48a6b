@@ -16,6 +16,29 @@
       "message": "This works now.  It uses a very similar hack to the __kernel_tcphdr one in netinet/tcp.h.  I slightly prefer it over the musl change.",
       "revId": "88d7bf9cedca8959c61fbe6fc1c304e46fb48a6b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec42700d_38d964e3",
+        "filename": "libc/include/sys/socket.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-14T20:45:15Z",
+      "side": 1,
+      "message": "void*",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 10
+      },
+      "revId": "88d7bf9cedca8959c61fbe6fc1c304e46fb48a6b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
