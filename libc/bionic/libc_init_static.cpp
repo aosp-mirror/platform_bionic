@@ -311,7 +311,11 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
     prctl_arg |= (level == M_HEAP_TAGGING_LEVEL_SYNC) ? PR_MTE_TCF_SYNC : PR_MTE_TCF_ASYNC;
 
-    if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
+    // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in the
+    // SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back to
+    // specifying a single mode.
+    if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
+        prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
       __libc_shared_globals()->initial_heap_tagging_level = level;
       return;
     }
