@@ -38,9 +38,10 @@
 
 static bool __matches_cpuN(const char* s) {
   // The %c trick is to ensure that we have the anchored match "^cpu[0-9]+$".
+  // We can't use %*c because the return value is how many were *assigned*.
   unsigned cpu;
-  char dummy;
-  return (sscanf(s, "cpu%u%c", &cpu, &dummy) == 1);
+  char unused;
+  return (sscanf(s, "cpu%u%c", &cpu, &unused) == 1);
 }
 
 int get_nprocs_conf() {

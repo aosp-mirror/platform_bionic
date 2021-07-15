@@ -44,7 +44,8 @@ TEST(ifunc, function) {
 static uint64_t g_hwcap;
 static __ifunc_arg_t g_arg;
 
-extern "C" fn_ptr_t hwcap_resolver(uint64_t hwcap, __ifunc_arg_t* arg) {
+extern "C" fn_ptr_t hwcap_resolver(uint64_t hwcap, __ifunc_arg_t* arg)
+    __attribute__((no_sanitize("hwaddress"))) {
   g_hwcap = hwcap;
   g_arg = *arg;
   return ret42;

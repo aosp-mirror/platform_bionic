@@ -463,7 +463,6 @@ extern double rnd_prod(double, double), rnd_quot(double, double);
 #define FREE_DTOA_LOCK(n)	/*nothing*/
 #else
 #include "thread_private.h"
-extern void *__dtoa_locks[];
 #define ACQUIRE_DTOA_LOCK(n)	_MUTEX_LOCK(&__dtoa_locks[n])
 #define FREE_DTOA_LOCK(n)	_MUTEX_UNLOCK(&__dtoa_locks[n])
 #endif
@@ -567,6 +566,7 @@ extern void memcpy_D2A ANSI((void*, const void*, size_t));
 #define trailz __trailz_D2A
 #define ulp __ulp_D2A
 
+__BEGIN_HIDDEN_DECLS
  extern char *dtoa_result;
  extern CONST double bigtens[], tens[], tinytens[];
  extern unsigned char hexdig[];
@@ -586,8 +586,6 @@ extern void memcpy_D2A ANSI((void*, const void*, size_t));
  extern Bigint *d2b ANSI((double, int*, int*));
  extern void decrement ANSI((Bigint*));
  extern Bigint *diff ANSI((Bigint*, Bigint*));
- extern char *dtoa ANSI((double d, int mode, int ndigits,
-			int *decpt, int *sign, char **rve));
  extern char *g__fmt ANSI((char*, char*, char*, int, ULong, size_t));
  extern int gethex ANSI((CONST char**, FPI*, Long*, Bigint**, int));
  extern void __hexdig_init_D2A(Void);
@@ -610,10 +608,10 @@ extern void memcpy_D2A ANSI((void*, const void*, size_t));
  extern Bigint *set_ones ANSI((Bigint*, int));
  extern char *strcp ANSI((char*, const char*));
  extern int strtoIg ANSI((CONST char*, char**, FPI*, Long*, Bigint**, int*));
- extern double strtod ANSI((const char *s00, char **se));
  extern Bigint *sum ANSI((Bigint*, Bigint*));
  extern int trailz ANSI((Bigint*));
  extern double ulp ANSI((U*));
+__END_HIDDEN_DECLS
 
 #ifdef __cplusplus
 }

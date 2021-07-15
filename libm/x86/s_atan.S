@@ -930,5 +930,5 @@ static_const_table:
 	.type	static_const_table,@object
 	.size	static_const_table,2704
 	.data
-	.section .note.GNU-stack, ""
+	.section .note.GNU-stack, "",@progbits
 # End

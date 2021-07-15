@@ -463,6 +463,9 @@
 #define KEY_10CHANNELSUP 0x1b8
 #define KEY_10CHANNELSDOWN 0x1b9
 #define KEY_IMAGES 0x1ba
+#define KEY_NOTIFICATION_CENTER 0x1bc
+#define KEY_PICKUP_PHONE 0x1bd
+#define KEY_HANGUP_PHONE 0x1be
 #define KEY_DEL_EOL 0x1c0
 #define KEY_DEL_EOS 0x1c1
 #define KEY_INS_LINE 0x1c2
@@ -488,6 +491,7 @@
 #define KEY_FN_F 0x1e2
 #define KEY_FN_S 0x1e3
 #define KEY_FN_B 0x1e4
+#define KEY_FN_RIGHT_SHIFT 0x1e5
 #define KEY_BRL_DOT1 0x1f1
 #define KEY_BRL_DOT2 0x1f2
 #define KEY_BRL_DOT3 0x1f3
@@ -572,6 +576,7 @@
 #define KEY_DATA 0x277
 #define KEY_ONSCREEN_KEYBOARD 0x278
 #define KEY_PRIVACY_SCREEN_TOGGLE 0x279
+#define KEY_SELECTIVE_SCREENSHOT 0x27a
 #define KEY_MACRO1 0x290
 #define KEY_MACRO2 0x291
 #define KEY_MACRO3 0x292
@@ -733,10 +738,8 @@
 #define SW_LINEIN_INSERT 0x0d
 #define SW_MUTE_DEVICE 0x0e
 #define SW_PEN_INSERTED 0x0f
-#define SW_HPHL_OVERCURRENT 0x10
-#define SW_HPHR_OVERCURRENT 0x11
-#define SW_UNSUPPORT_INSERT 0x12
-#define SW_MAX 0x20
+#define SW_MACHINE_COVER 0x10
+#define SW_MAX 0x10
 #define SW_CNT (SW_MAX + 1)
 #define MSC_SERIAL 0x00
 #define MSC_PULSELED 0x01
