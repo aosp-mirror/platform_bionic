@@ -511,7 +511,7 @@ TEST(MallocTests, DISABLED_exit_while_threads_freeing_allocs_with_header) {
 
   for (size_t i = 0; i < kMaxThreads; i++) {
     std::thread malloc_thread([&thread_mask, &run, &allocs, i] {
-      thread_mask.fetch_or(1 << i);
+      thread_mask.fetch_or(1U << i);
       while (!run)
         ;
       for (auto ptr : allocs[i]) {
