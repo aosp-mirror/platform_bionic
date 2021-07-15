@@ -16,6 +16,23 @@
       "message": "I had to update a test that seems to fail for a completely unrelated information. I verified that when the unwind failed, lldb also could not unwind through the function.",
       "revId": "33d73379aad3ed7dcbb9b10f945d3bc6264b79bd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9eec3b1c_5be922a0",
+        "filename": "libc/malloc_debug/tests/malloc_debug_system_tests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 514,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2021-07-15T15:38:13Z",
+      "side": 1,
+      "message": "Since i can be 31, this results in technically undefined behavior on platforms where \u0027int\u0027 is 32-bits.\n\nWhile the toolchain probably does what we\u0027d expect here, it seems like this would be a super hard thing to debug if this ever did something else, as this test would just run infinitely, and presumably no one would think to look at this undefined shifting behavior for the reason why.\n\nSo I\u0027ve put up a follow-up fix with https://android-review.googlesource.com/c/platform/bionic/+/1768285",
+      "revId": "33d73379aad3ed7dcbb9b10f945d3bc6264b79bd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
