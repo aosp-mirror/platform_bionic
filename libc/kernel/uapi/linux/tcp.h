@@ -226,7 +226,7 @@ enum {
 #define TCP_MD5SIG_FLAG_PREFIX 0x1
 #define TCP_MD5SIG_FLAG_IFINDEX 0x2
 struct tcp_md5sig {
-  struct sockaddr_storage tcpm_addr;
+  struct __kernel_sockaddr_storage tcpm_addr;
   __u8 tcpm_flags;
   __u8 tcpm_prefixlen;
   __u16 tcpm_keylen;
