@@ -16,6 +16,23 @@
       "message": "should we just revert these changes instead? it seems like there\u0027s an inherent problem here with no obvious good solution. what was the use case for tracing system property activity in the first place?",
       "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "216d02fa_d73b4b7b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-15T16:08:21Z",
+      "side": 1,
+      "message": "from the original bug:\n\n\u003e This will be useful for us to figure out the system property dependencies on CTS tests.\n\u003e And our attempt is to allow OEMs skip CTS re-runs if:\n\u003e   1) system.img is provided by Google (core system.img, a.k.a. CSI).\n\u003e   2) The values of dependent system properties aren\u0027t changed\n\u003e \n\u003e We may need to investigate more \u0027affecting factors\u0027 that would change CSI behavior at runtime, such as RRO.\n\u003e But the initial focus will be on system property.\n\nit seems like adding this to *systrace* was never really a good idea --- there should probably have been some *logging* mechanism instead?",
+      "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
