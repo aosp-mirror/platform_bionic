@@ -120,6 +120,9 @@
 #if defined(__NR_close)
   #define SYS_close __NR_close
 #endif
+#if defined(__NR_close_range)
+  #define SYS_close_range __NR_close_range
+#endif
 #if defined(__NR_connect)
   #define SYS_connect __NR_connect
 #endif
@@ -159,6 +162,9 @@
 #if defined(__NR_epoll_pwait)
   #define SYS_epoll_pwait __NR_epoll_pwait
 #endif
+#if defined(__NR_epoll_pwait2)
+  #define SYS_epoll_pwait2 __NR_epoll_pwait2
+#endif
 #if defined(__NR_epoll_wait)
   #define SYS_epoll_wait __NR_epoll_wait
 #endif
@@ -185,6 +191,9 @@
 #endif
 #if defined(__NR_faccessat)
   #define SYS_faccessat __NR_faccessat
+#endif
+#if defined(__NR_faccessat2)
+  #define SYS_faccessat2 __NR_faccessat2
 #endif
 #if defined(__NR_fadvise64)
   #define SYS_fadvise64 __NR_fadvise64
@@ -597,6 +606,9 @@
 #if defined(__NR_mount)
   #define SYS_mount __NR_mount
 #endif
+#if defined(__NR_mount_setattr)
+  #define SYS_mount_setattr __NR_mount_setattr
+#endif
 #if defined(__NR_move_mount)
   #define SYS_move_mount __NR_move_mount
 #endif
@@ -702,6 +714,9 @@
 #if defined(__NR_openat)
   #define SYS_openat __NR_openat
 #endif
+#if defined(__NR_openat2)
+  #define SYS_openat2 __NR_openat2
+#endif
 #if defined(__NR_pause)
   #define SYS_pause __NR_pause
 #endif
@@ -719,6 +734,9 @@
 #endif
 #if defined(__NR_personality)
   #define SYS_personality __NR_personality
+#endif
+#if defined(__NR_pidfd_getfd)
+  #define SYS_pidfd_getfd __NR_pidfd_getfd
 #endif
 #if defined(__NR_pidfd_open)
   #define SYS_pidfd_open __NR_pidfd_open
@@ -767,6 +785,9 @@
 #endif
 #if defined(__NR_prlimit64)
   #define SYS_prlimit64 __NR_prlimit64
+#endif
+#if defined(__NR_process_madvise)
+  #define SYS_process_madvise __NR_process_madvise
 #endif
 #if defined(__NR_process_vm_readv)
   #define SYS_process_vm_readv __NR_process_vm_readv

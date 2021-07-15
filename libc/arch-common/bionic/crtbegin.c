@@ -31,9 +31,9 @@
 #include <stdint.h>
 
 #define SECTION(name) __attribute__((__section__(name)))
-SECTION(".preinit_array") void (*__PREINIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".init_array") void (*__INIT_ARRAY__)(void) = (void (*)(void)) -1;
-SECTION(".fini_array") void (*__FINI_ARRAY__)(void) = (void (*)(void)) -1;
+SECTION(".preinit_array") init_func_t* __PREINIT_ARRAY__ = (init_func_t*)-1;
+SECTION(".init_array.0") init_func_t* __INIT_ARRAY__ = (init_func_t*)-1;
+SECTION(".fini_array.0") fini_func_t* __FINI_ARRAY__ = (fini_func_t*)-1;
 #undef SECTION
 
 __used static void _start_main(void* raw_args) {
@@ -49,13 +49,15 @@ __used static void _start_main(void* raw_args) {
 #define POST "; .size _start, .-_start"
 
 #if defined(__aarch64__)
-__asm__(PRE "mov x0,sp; b _start_main" POST);
+__asm__(PRE "bti j; mov x29,#0; mov x30,#0; mov x0,sp; b _start_main" POST);
 #elif defined(__arm__)
-__asm__(PRE "mov r0,sp; b _start_main" POST);
+__asm__(PRE "mov fp,#0; mov lr,#0; mov r0,sp; b _start_main" POST);
 #elif defined(__i386__)
-__asm__(PRE "movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax; calll _start_main" POST);
+__asm__(PRE
+        "xorl %ebp,%ebp; movl %esp,%eax; andl $~0xf,%esp; subl $12,%esp; pushl %eax;"
+        "calll _start_main" POST);
 #elif defined(__x86_64__)
-__asm__(PRE "movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
+__asm__(PRE "xorl %ebp, %ebp; movq %rsp,%rdi; andq $~0xf,%rsp; callq _start_main" POST);
 #else
 #error unsupported architecture
 #endif
@@ -89,6 +91,3 @@ asm("  .section .tdata,\"awT\",@progbits\n"
 #include "__dso_handle.h"
 #include "atexit.h"
 #include "pthread_atfork.h"
-#ifdef __i386__
-# include "../../arch-x86/bionic/__stack_chk_fail_local.h"
-#endif

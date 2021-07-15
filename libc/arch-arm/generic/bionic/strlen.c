@@ -116,8 +116,8 @@ size_t strlen_generic(const char *s)
         "beq     2f                         \n"
         "add     %[l], %[l], #1             \n"
         "tst     %[v], #0xFF0000            \n"
-        "it      ne                         \n"
-        "addne   %[l], %[l], #1             \n"
+        "beq     2f                         \n"
+        "add     %[l], %[l], #1             \n"
         "2:                                 \n"
         : [l]"=&r"(l), [v]"=&r"(v), [t]"=&r"(t), [s]"=&r"(u.b)
         : "%[l]"(l), "%[s]"(u.b), [mask]"r"(0x80808080UL)

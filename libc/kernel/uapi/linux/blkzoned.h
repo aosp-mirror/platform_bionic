@@ -35,6 +35,9 @@ enum blk_zone_cond {
   BLK_ZONE_COND_FULL = 0xE,
   BLK_ZONE_COND_OFFLINE = 0xF,
 };
+enum blk_zone_report_flags {
+  BLK_ZONE_REP_CAPACITY = (1 << 0),
+};
 struct blk_zone {
   __u64 start;
   __u64 len;
@@ -43,12 +46,14 @@ struct blk_zone {
   __u8 cond;
   __u8 non_seq;
   __u8 reset;
-  __u8 reserved[36];
+  __u8 resv[4];
+  __u64 capacity;
+  __u8 reserved[24];
 };
 struct blk_zone_report {
   __u64 sector;
   __u32 nr_zones;
-  __u8 reserved[4];
+  __u32 flags;
   struct blk_zone zones[0];
 };
 struct blk_zone_range {

@@ -26,8 +26,10 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PRIVATE_BIONIC_ASM_H_
-#define _PRIVATE_BIONIC_ASM_H_
+#pragma once
+
+/* https://github.com/android/ndk/issues/1422 */
+#include <features.h>
 
 #include <asm/unistd.h> /* For system call numbers. */
 #define MAX_ERRNO 4095  /* For recognizing system call error returns. */
@@ -35,6 +37,7 @@
 #define __bionic_asm_custom_entry(f)
 #define __bionic_asm_custom_end(f)
 #define __bionic_asm_function_type @function
+#define __bionic_asm_custom_note_gnu_section()
 
 #if defined(__aarch64__)
 #include <private/bionic_asm_arm64.h>
@@ -83,4 +86,5 @@
     .globl alias; \
     .equ alias, original
 
-#endif
+#define NOTE_GNU_PROPERTY() \
+    __bionic_asm_custom_note_gnu_section()

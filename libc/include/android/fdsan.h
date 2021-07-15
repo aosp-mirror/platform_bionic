@@ -186,7 +186,8 @@ enum android_fdsan_error_level android_fdsan_get_error_level() __INTRODUCED_IN(2
  * Set the error level and return the previous state.
  *
  * Error checking is automatically disabled in the child of a fork, to maintain
- * compatibility with code that forks, blindly closes FDs, and then execs.
+ * compatibility with code that forks, closes all file descriptors, and then
+ * execs.
  *
  * In cases such as the zygote, where the child has no intention of calling
  * exec, call this function to reenable fdsan checks.

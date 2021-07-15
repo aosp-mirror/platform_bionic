@@ -24,8 +24,10 @@ TEST(utmp, login_tty) {
   ASSERT_EQ(-1, login_tty(-1));
 }
 
-TEST(utmp, setutent_getutent_endutent) {
+TEST(utmp, smoke) {
+  ASSERT_EQ(-1, utmpname("hello"));
   setutent();
-  getutent();
+  ASSERT_EQ(NULL, getutent());
   endutent();
+  ASSERT_EQ(NULL, pututline(NULL));
 }

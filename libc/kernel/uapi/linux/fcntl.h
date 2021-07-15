@@ -19,6 +19,7 @@
 #ifndef _UAPI_LINUX_FCNTL_H
 #define _UAPI_LINUX_FCNTL_H
 #include <asm/fcntl.h>
+#include <linux/openat2.h>
 #define F_SETLEASE (F_LINUX_SPECIFIC_BASE + 0)
 #define F_GETLEASE (F_LINUX_SPECIFIC_BASE + 1)
 #define F_CANCELLK (F_LINUX_SPECIFIC_BASE + 5)
@@ -53,6 +54,7 @@
 #define DN_MULTISHOT 0x80000000
 #define AT_FDCWD - 100
 #define AT_SYMLINK_NOFOLLOW 0x100
+#define AT_EACCESS 0x200
 #define AT_REMOVEDIR 0x200
 #define AT_SYMLINK_FOLLOW 0x400
 #define AT_NO_AUTOMOUNT 0x800

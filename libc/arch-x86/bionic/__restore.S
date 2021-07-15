@@ -27,14 +27,7 @@
  */
 
 #include <private/bionic_asm.h>
-
-// DWARF constants.
-#define DW_CFA_def_cfa_expression 0x0f
-#define DW_CFA_expression 0x10
-#define DW_EH_PE_pcrel 0x10
-#define DW_EH_PE_sdata4 0x0b
-#define DW_OP_breg4 0x74
-#define DW_OP_deref 0x06
+#include <private/bionic_asm_dwarf_exprs.h>
 
 // Offsets into struct sigcontext.
 #define OFFSET_EDI 16
@@ -52,84 +45,47 @@
 #define DW_x86_REG_ECX 1
 #define DW_x86_REG_EDX 2
 #define DW_x86_REG_EBX 3
+#define DW_x86_REG_ESP 4
 #define DW_x86_REG_EBP 5
 #define DW_x86_REG_ESI 6
 #define DW_x86_REG_EDI 7
 #define DW_x86_REG_EIP 8
 
-#define cfi_signal_frame_start(f) \
-.section .eh_frame,"a",@progbits; \
-.L ## f ## _START_EH_FRAME: \
-  .long 2f - 1f; /* CIE length. */ \
-1:.long 0;       /* CIE ID. */ \
-  .byte 1;       /* Version. */ \
-  .string "zRS"; /* Augmentation string. */ \
-  .uleb128 1;    /* Code alignment factor. */ \
-  .sleb128 -4;   /* Data alignment factor. */ \
-  .uleb128 DW_x86_REG_EIP;    /* Return address register. */ \
-  .uleb128 1;    /* 1 byte of augmentation data. */ \
-  .byte (DW_EH_PE_pcrel|DW_EH_PE_sdata4); /* FDE encoding. */ \
-  .align 8; \
-2: \
-  .long .L ## f ## _END_FDE - .L ## f ## _START_FDE;   /* FDE length. */ \
-.L ## f ## _START_FDE: \
-  .long .L ## f ## _START_FDE - .L ## f ## _START_EH_FRAME; /* CIE location. */ \
-  .long (.L ## f ## _START - 1) - .;                   /* pcrel start address (see FDE encoding above). */ \
-  .long .L ## f ## _END - (.L ## f ## _START - 1);     /* Function this FDE applies to. */ \
-  .uleb128 0;                                          /* FDE augmentation length. */ \
+#define RESTORE_GPR(reg, extra_offset)                    \
+    m_cfi_breg_offset DW_x86_REG_ ## reg,                 \
+                      DW_x86_REG_ESP,                     \
+                      (OFFSET_ ## reg + (extra_offset));
 
-#define cfi_signal_frame_end(f) \
-.L ## f ## _END_FDE: \
+// Restoring ESP is unnecessary as the unwinder simply uses the CFA value.
+#define RESTORE_GPRS(extra_offset)                                      \
+    m_cfi_def_cfa_deref DW_x86_REG_ESP, (OFFSET_ESP + (extra_offset));  \
+    RESTORE_GPR(EDI, extra_offset)                                      \
+    RESTORE_GPR(ESI, extra_offset)                                      \
+    RESTORE_GPR(EBP, extra_offset)                                      \
+    RESTORE_GPR(EBX, extra_offset)                                      \
+    RESTORE_GPR(EDX, extra_offset)                                      \
+    RESTORE_GPR(ECX, extra_offset)                                      \
+    RESTORE_GPR(EAX, extra_offset)                                      \
+    RESTORE_GPR(EIP, extra_offset)                                      \
 
-#define cfi_def_cfa(offset) \
-  .byte DW_CFA_def_cfa_expression; \
-  .uleb128 2f-1f; \
-1:.byte DW_OP_breg4; \
-  .sleb128 offset; \
-  .byte DW_OP_deref; \
-2: \
+  .text
 
-#define cfi_offset(reg_number,offset) \
-  .byte DW_CFA_expression; \
-  .uleb128 reg_number; \
-  .uleb128 2f-1f; \
-1:.byte DW_OP_breg4; \
-  .sleb128 offset; \
-2: \
-
-ENTRY_PRIVATE(__restore)
-.L__restore_START:
+  .cfi_startproc
+  .cfi_signal_frame
+  RESTORE_GPRS(4)
+  nop   // See comment in libc/arch-x86_64/bionic/__restore_rt.S about this nop.
+ENTRY_PRIVATE_NO_DWARF(__restore)
   popl %eax
+  RESTORE_GPRS(0)
   movl $__NR_sigreturn, %eax
   int $0x80
-.L__restore_END:
 END(__restore)
-cfi_signal_frame_start(__restore)
-  cfi_def_cfa(OFFSET_ESP + 4)
-  cfi_offset(DW_x86_REG_EDI, OFFSET_EDI + 4)
-  cfi_offset(DW_x86_REG_ESI, OFFSET_ESI + 4)
-  cfi_offset(DW_x86_REG_EBP, OFFSET_EBP + 4)
-  cfi_offset(DW_x86_REG_EBX, OFFSET_EBX + 4)
-  cfi_offset(DW_x86_REG_EDX, OFFSET_EDX + 4)
-  cfi_offset(DW_x86_REG_ECX, OFFSET_ECX + 4)
-  cfi_offset(DW_x86_REG_EAX, OFFSET_EAX + 4)
-  cfi_offset(DW_x86_REG_EIP, OFFSET_EIP + 4)
-cfi_signal_frame_end(__restore)
 
-ENTRY_PRIVATE(__restore_rt)
-.L__restore_rt_START:
+  .cfi_startproc
+  .cfi_signal_frame
+  RESTORE_GPRS(160)
+  nop   // See comment in libc/arch-x86_64/bionic/__restore_rt.S about this nop.
+ENTRY_PRIVATE_NO_DWARF(__restore_rt)
   movl $__NR_rt_sigreturn, %eax
   int $0x80
-.L__restore_rt_END:
 END(__restore_rt)
-cfi_signal_frame_start(__restore_rt)
-  cfi_def_cfa(OFFSET_ESP + 160)
-  cfi_offset(DW_x86_REG_EDI, OFFSET_EDI + 160)
-  cfi_offset(DW_x86_REG_ESI, OFFSET_ESI + 160)
-  cfi_offset(DW_x86_REG_EBP, OFFSET_EBP + 160)
-  cfi_offset(DW_x86_REG_EBX, OFFSET_EBX + 160)
-  cfi_offset(DW_x86_REG_EDX, OFFSET_EDX + 160)
-  cfi_offset(DW_x86_REG_ECX, OFFSET_ECX + 160)
-  cfi_offset(DW_x86_REG_EAX, OFFSET_EAX + 160)
-  cfi_offset(DW_x86_REG_EIP, OFFSET_EIP + 160)
-cfi_signal_frame_end(__restore_rt)

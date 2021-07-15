@@ -89,4 +89,9 @@
 #define R_AARCH64_TLSDESC               1031    /* 16-byte descriptor: resolver func + arg. */
 #define R_AARCH64_IRELATIVE             1032
 
+/* Dynamic array tags */
+#define DT_AARCH64_BTI_PLT              0x70000001
+#define DT_AARCH64_PAC_PLT              0x70000003
+#define DT_AARCH64_VARIANT_PCS          0x70000005
+
 #endif /* _AARCH64_ELF_MACHDEP_H_ */
