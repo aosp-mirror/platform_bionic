@@ -34,7 +34,8 @@ struct btrfs_ioctl_vol_args {
 #define BTRFS_SUBVOL_RDONLY (1ULL << 1)
 #define BTRFS_SUBVOL_QGROUP_INHERIT (1ULL << 2)
 #define BTRFS_DEVICE_SPEC_BY_ID (1ULL << 3)
-#define BTRFS_VOL_ARG_V2_FLAGS_SUPPORTED (BTRFS_SUBVOL_CREATE_ASYNC | BTRFS_SUBVOL_RDONLY | BTRFS_SUBVOL_QGROUP_INHERIT | BTRFS_DEVICE_SPEC_BY_ID)
+#define BTRFS_SUBVOL_SPEC_BY_ID (1ULL << 4)
+#define BTRFS_VOL_ARG_V2_FLAGS_SUPPORTED (BTRFS_SUBVOL_RDONLY | BTRFS_SUBVOL_QGROUP_INHERIT | BTRFS_DEVICE_SPEC_BY_ID | BTRFS_SUBVOL_SPEC_BY_ID)
 #define BTRFS_FSID_SIZE 16
 #define BTRFS_UUID_SIZE 16
 #define BTRFS_UUID_UNPARSED_SIZE 37
@@ -64,6 +65,9 @@ struct btrfs_ioctl_qgroup_limit_args {
   __u64 qgroupid;
   struct btrfs_qgroup_limit lim;
 };
+#define BTRFS_DEVICE_REMOVE_ARGS_MASK (BTRFS_DEVICE_SPEC_BY_ID)
+#define BTRFS_SUBVOL_CREATE_ARGS_MASK (BTRFS_SUBVOL_RDONLY | BTRFS_SUBVOL_QGROUP_INHERIT)
+#define BTRFS_SUBVOL_DELETE_ARGS_MASK (BTRFS_SUBVOL_SPEC_BY_ID)
 struct btrfs_ioctl_vol_args_v2 {
   __s64 fd;
   __u64 transid;
@@ -78,6 +82,7 @@ struct btrfs_ioctl_vol_args_v2 {
   union {
     char name[BTRFS_SUBVOL_NAME_MAX + 1];
     __u64 devid;
+    __u64 subvolid;
   };
 };
 struct btrfs_scrub_progress {
@@ -151,6 +156,9 @@ struct btrfs_ioctl_dev_info_args {
   __u64 unused[379];
   __u8 path[BTRFS_DEVICE_PATH_NAME_MAX];
 };
+#define BTRFS_FS_INFO_FLAG_CSUM_INFO (1 << 0)
+#define BTRFS_FS_INFO_FLAG_GENERATION (1 << 1)
+#define BTRFS_FS_INFO_FLAG_METADATA_UUID (1 << 2)
 struct btrfs_ioctl_fs_info_args {
   __u64 max_id;
   __u64 num_devices;
@@ -158,8 +166,12 @@ struct btrfs_ioctl_fs_info_args {
   __u32 nodesize;
   __u32 sectorsize;
   __u32 clone_alignment;
-  __u32 reserved32;
-  __u64 reserved[122];
+  __u16 csum_type;
+  __u16 csum_size;
+  __u64 flags;
+  __u64 generation;
+  __u8 metadata_uuid[BTRFS_FSID_SIZE];
+  __u8 reserved[944];
 };
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE (1ULL << 0)
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE_VALID (1ULL << 1)
@@ -175,6 +187,7 @@ struct btrfs_ioctl_fs_info_args {
 #define BTRFS_FEATURE_INCOMPAT_NO_HOLES (1ULL << 9)
 #define BTRFS_FEATURE_INCOMPAT_METADATA_UUID (1ULL << 10)
 #define BTRFS_FEATURE_INCOMPAT_RAID1C34 (1ULL << 11)
+#define BTRFS_FEATURE_INCOMPAT_ZONED (1ULL << 12)
 struct btrfs_ioctl_feature_flags {
   __u64 compat_flags;
   __u64 compat_ro_flags;
@@ -517,4 +530,5 @@ enum btrfs_err_code {
 #define BTRFS_IOC_GET_SUBVOL_INFO _IOR(BTRFS_IOCTL_MAGIC, 60, struct btrfs_ioctl_get_subvol_info_args)
 #define BTRFS_IOC_GET_SUBVOL_ROOTREF _IOWR(BTRFS_IOCTL_MAGIC, 61, struct btrfs_ioctl_get_subvol_rootref_args)
 #define BTRFS_IOC_INO_LOOKUP_USER _IOWR(BTRFS_IOCTL_MAGIC, 62, struct btrfs_ioctl_ino_lookup_user_args)
+#define BTRFS_IOC_SNAP_DESTROY_V2 _IOW(BTRFS_IOCTL_MAGIC, 63, struct btrfs_ioctl_vol_args_v2)
 #endif

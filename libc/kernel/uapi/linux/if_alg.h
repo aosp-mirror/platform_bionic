@@ -26,6 +26,13 @@ struct sockaddr_alg {
   __u32 salg_mask;
   __u8 salg_name[64];
 };
+struct sockaddr_alg_new {
+  __u16 salg_family;
+  __u8 salg_type[14];
+  __u32 salg_feat;
+  __u32 salg_mask;
+  __u8 salg_name[];
+};
 struct af_alg_iv {
   __u32 ivlen;
   __u8 iv[0];
@@ -35,6 +42,7 @@ struct af_alg_iv {
 #define ALG_SET_OP 3
 #define ALG_SET_AEAD_ASSOCLEN 4
 #define ALG_SET_AEAD_AUTHSIZE 5
+#define ALG_SET_DRBG_ENTROPY 6
 #define ALG_OP_DECRYPT 0
 #define ALG_OP_ENCRYPT 1
 #endif

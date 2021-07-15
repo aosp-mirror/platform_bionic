@@ -1,4 +1,4 @@
-/*	$OpenBSD: fvwrite.c,v 1.17 2009/11/09 00:18:27 kurt Exp $ */
+/*	$OpenBSD: fvwrite.c,v 1.20 2017/03/17 16:06:33 millert Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 #include "local.h"
 #include "fvwrite.h"
 
@@ -63,7 +64,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 	}
 
 #define	MIN(a, b) ((a) < (b) ? (a) : (b))
-#define	COPY(n)	  (void)memcpy((void *)fp->_p, (void *)p, (size_t)(n))
+#define	COPY(n)	  (void)memcpy(fp->_p, p, n)
 
 	iov = uio->uio_iov;
 	p = iov->iov_base;
@@ -105,15 +106,14 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 			if ((fp->_flags & (__SALC | __SSTR)) ==
 			    (__SALC | __SSTR) && fp->_w < len) {
 				size_t blen = fp->_p - fp->_bf._base;
+				int pgmsk = getpagesize() - 1;
 				unsigned char *_base;
 				int _size;
 
-				/* Allocate space exponentially. */
-				_size = fp->_bf._size;
-				do {
-					_size = (_size << 1) + 1;
-				} while (_size < blen + len);
-				_base = realloc(fp->_bf._base, _size + 1);
+				/* Round up to nearest page. */
+				_size = ((blen + len + 1 + pgmsk) & ~pgmsk) - 1;
+				_base = recallocarray(fp->_bf._base,
+				    fp->_bf._size + 1, _size + 1, 1);
 				if (_base == NULL)
 					goto err;
 				fp->_w += _size - fp->_bf._size;
@@ -164,7 +164,7 @@ __sfvwrite(FILE *fp, struct __suio *uio)
 		do {
 			GETIOV(nlknown = 0);
 			if (!nlknown) {
-				nl = memchr((void *)p, '\n', len);
+				nl = memchr(p, '\n', len);
 				nldist = nl ? nl + 1 - p : len + 1;
 				nlknown = 1;
 			}

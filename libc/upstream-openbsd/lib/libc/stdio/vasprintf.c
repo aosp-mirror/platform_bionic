@@ -1,7 +1,7 @@
-/*	$OpenBSD: vasprintf.c,v 1.19 2015/12/28 22:08:18 mmcc Exp $	*/
+/*	$OpenBSD: vasprintf.c,v 1.23 2019/01/25 00:19:25 millert Exp $	*/
 
 /*
- * Copyright (c) 1997 Todd C. Miller <Todd.Miller@courtesan.com>
+ * Copyright (c) 1997 Todd C. Miller <millert@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -20,7 +20,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 #include "local.h"
+
+#define	INITIAL_SIZE	128
 
 int
 vasprintf(char **str, const char *fmt, __va_list ap)
@@ -28,23 +31,29 @@ vasprintf(char **str, const char *fmt, __va_list ap)
 	int ret;
 	FILE f;
 	struct __sfileext fext;
-	unsigned char *_base;
+	const int pgsz = getpagesize();
 
 	_FILEEXT_SETUP(&f, &fext);
 	f._file = -1;
 	f._flags = __SWR | __SSTR | __SALC;
-	f._bf._base = f._p = malloc(128);
+	f._bf._base = f._p = malloc(INITIAL_SIZE);
 	if (f._bf._base == NULL)
 		goto err;
-	f._bf._size = f._w = 127;		/* Leave room for the NUL */
+	f._bf._size = f._w = INITIAL_SIZE - 1;	/* leave room for the NUL */
 	ret = __vfprintf(&f, fmt, ap);
 	if (ret == -1)
 		goto err;
 	*f._p = '\0';
-	_base = realloc(f._bf._base, ret + 1);
-	if (_base == NULL)
-		goto err;
-	*str = (char *)_base;
+	if (ret + 1 > INITIAL_SIZE && ret + 1 < pgsz / 2) {
+		/* midsize allocations can try to conserve memory */
+		unsigned char *_base = recallocarray(f._bf._base,
+		    f._bf._size + 1, ret + 1, 1);
+
+		if (_base == NULL)
+			goto err;
+		*str = (char *)_base;
+	} else
+		*str = (char *)f._bf._base;
 	return (ret);
 
 err:

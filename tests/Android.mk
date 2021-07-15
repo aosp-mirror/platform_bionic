@@ -16,43 +16,6 @@
 
 LOCAL_PATH := $(call my-dir)
 
-# TODO(dimitry): replace with define once https://android-review.googlesource.com/247466 is reverted
-# https://github.com/google/kati/issues/83 is currently blocking it.
-
-# Move prebuilt test elf-files to $(TARGET_OUT_NATIVE_TESTS)
-bionic_tests_module := libtest_invalid-rw_load_segment.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-unaligned_shdr_offset.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-zero_shentsize.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-zero_shstrndx.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-empty_shdr_table.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-zero_shdr_table_offset.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-zero_shdr_table_content.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-textrels.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-bionic_tests_module := libtest_invalid-textrels2.so
-include $(LOCAL_PATH)/Android.build.prebuilt.mk
-
-ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
-build_host := true
-else
-build_host := false
-endif
-
 ifeq ($(HOST_OS)-$(HOST_ARCH),$(filter $(HOST_OS)-$(HOST_ARCH),linux-x86 linux-x86_64))
 
 # -----------------------------------------------------------------------------

@@ -14,6 +14,10 @@
 // limitations under the License.
 //
 
+package {
+    default_applicable_licenses: ["bionic_tests_license"],
+}
+
 cc_library_static {
     name: "libbionic_tests_headers_posix",
     srcs: ["*.c"],

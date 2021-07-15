@@ -132,6 +132,7 @@ enum transaction_flags {
   TF_ROOT_OBJECT = 0x04,
   TF_STATUS_CODE = 0x08,
   TF_ACCEPT_FDS = 0x10,
+  TF_CLEAR_BUF = 0x20,
 };
 struct binder_transaction_data {
   union {
