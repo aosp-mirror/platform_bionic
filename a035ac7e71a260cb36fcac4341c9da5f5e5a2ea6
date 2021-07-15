@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08511562_c11bf80b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-15T17:05:34Z",
+      "side": 1,
+      "message": "Wow, I forgot how complicated this initialization sequence is. In hindsight, I think that we should transition to some different state like `kWaitingForInstall` when the thread is spawning to call `InitHeapprofd`. At least then the mental model is more simplified, a Heapprofd signal during this time would just be dropped rather than end up in such a complicated state.",
+      "revId": "a035ac7e71a260cb36fcac4341c9da5f5e5a2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68eef84e_81be2857",
+        "filename": "libc/bionic/malloc_heapprofd.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1453063
+      },
+      "writtenOn": "2021-07-15T17:05:34Z",
+      "side": 1,
+      "message": "I think we can fix this bug and actually make this codepath faster by not loading gPreviousDefaultDispatchTable twice.\n\nIf you declare `const MallocDispatch* previous_dispatch` at the start of the function, load it under the lock, and then re-use it down here, then there\u0027s no need to hold off on making the transition to `kInitialState`.",
+      "range": {
+        "startLine": 405,
+        "startChar": 57,
+        "endLine": 405,
+        "endChar": 86
+      },
+      "revId": "a035ac7e71a260cb36fcac4341c9da5f5e5a2ea6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
