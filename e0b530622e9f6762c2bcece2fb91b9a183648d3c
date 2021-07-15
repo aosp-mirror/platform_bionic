@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07666a76_0387482a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2021-07-15T16:05:48Z",
+      "side": 1,
+      "message": "should we just revert these changes instead? it seems like there\u0027s an inherent problem here with no obvious good solution. what was the use case for tracing system property activity in the first place?",
+      "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
