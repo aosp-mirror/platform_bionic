@@ -114,7 +114,16 @@ struct drm_msm_gem_submit_bo {
 #define MSM_SUBMIT_FENCE_FD_IN 0x40000000
 #define MSM_SUBMIT_FENCE_FD_OUT 0x20000000
 #define MSM_SUBMIT_SUDO 0x10000000
-#define MSM_SUBMIT_FLAGS (MSM_SUBMIT_NO_IMPLICIT | MSM_SUBMIT_FENCE_FD_IN | MSM_SUBMIT_FENCE_FD_OUT | MSM_SUBMIT_SUDO | 0)
+#define MSM_SUBMIT_SYNCOBJ_IN 0x08000000
+#define MSM_SUBMIT_SYNCOBJ_OUT 0x04000000
+#define MSM_SUBMIT_FLAGS (MSM_SUBMIT_NO_IMPLICIT | MSM_SUBMIT_FENCE_FD_IN | MSM_SUBMIT_FENCE_FD_OUT | MSM_SUBMIT_SUDO | MSM_SUBMIT_SYNCOBJ_IN | MSM_SUBMIT_SYNCOBJ_OUT | 0)
+#define MSM_SUBMIT_SYNCOBJ_RESET 0x00000001
+#define MSM_SUBMIT_SYNCOBJ_FLAGS (MSM_SUBMIT_SYNCOBJ_RESET | 0)
+struct drm_msm_gem_submit_syncobj {
+  __u32 handle;
+  __u32 flags;
+  __u64 point;
+};
 struct drm_msm_gem_submit {
   __u32 flags;
   __u32 fence;
@@ -124,6 +133,12 @@ struct drm_msm_gem_submit {
   __u64 cmds;
   __s32 fence_fd;
   __u32 queueid;
+  __u64 in_syncobjs;
+  __u64 out_syncobjs;
+  __u32 nr_in_syncobjs;
+  __u32 nr_out_syncobjs;
+  __u32 syncobj_stride;
+  __u32 pad;
 };
 struct drm_msm_wait_fence {
   __u32 fence;

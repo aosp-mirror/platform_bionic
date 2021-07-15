@@ -31,8 +31,6 @@
 #include "SignalUtils.h"
 #include "utils.h"
 
-#include "private/bionic_constants.h"
-
 using namespace std::chrono_literals;
 
 TEST(time, time) {
@@ -142,7 +140,7 @@ TEST(time, mktime_10310929) {
   t.tm_mday = 10;
 
 #if !defined(__LP64__)
-  // 32-bit bionic stupidly had a signed 32-bit time_t.
+  // 32-bit bionic has a signed 32-bit time_t.
   ASSERT_EQ(-1, mktime(&t));
   ASSERT_EQ(EOVERFLOW, errno);
 #else
@@ -361,6 +359,105 @@ TEST(time, strptime_V_G_g) {
   ASSERT_EQ('\0', *strptime("1 2 3", "%V %G %g", &tm));
   struct tm zero = {};
   EXPECT_TRUE(memcmp(&tm, &zero, sizeof(tm)) == 0);
+}
+
+TEST(time, strptime_Z) {
+#if defined(__BIONIC__)
+  // glibc doesn't handle %Z at all.
+  // The BSDs only handle hard-coded "GMT" and "UTC", plus whatever two strings
+  // are in the global `tzname` (which correspond to the current $TZ).
+  struct tm tm;
+  setenv("TZ", "Europe/Berlin", 1);
+
+  // "GMT" always works.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("GMT", "%Z", &tm));
+  EXPECT_STREQ("GMT", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // As does "UTC".
+  tm = {};
+  ASSERT_EQ('\0', *strptime("UTC", "%Z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // Europe/Berlin is known as "CET" when there's no DST.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("CET", "%Z", &tm));
+  EXPECT_STREQ("CET", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+
+  // Europe/Berlin is known as "CEST" when there's no DST.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("CEST", "%Z", &tm));
+  EXPECT_STREQ("CEST", tm.tm_zone);
+  EXPECT_EQ(1, tm.tm_isdst);
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+
+  // And as long as we're in Europe/Berlin, those are the only time zone
+  // abbreviations that are recognized.
+  tm = {};
+  ASSERT_TRUE(strptime("PDT", "%Z", &tm) == nullptr);
+#endif
+}
+
+TEST(time, strptime_z) {
+  struct tm tm;
+  setenv("TZ", "Europe/Berlin", 1);
+
+  // "UT" is what RFC822 called UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("UT", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+  // "GMT" is RFC822's other name for UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("GMT", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // "Z" ("Zulu") is a synonym for UTC.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("Z", "%z", &tm));
+  EXPECT_STREQ("UTC", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(0, tm.tm_gmtoff);
+
+  // "PST"/"PDT" and the other common US zone abbreviations are all supported.
+  tm = {};
+  ASSERT_EQ('\0', *strptime("PST", "%z", &tm));
+  EXPECT_STREQ("PST", tm.tm_zone);
+  EXPECT_EQ(0, tm.tm_isdst);
+  EXPECT_EQ(-28800, tm.tm_gmtoff);
+  tm = {};
+  ASSERT_EQ('\0', *strptime("PDT", "%z", &tm));
+  EXPECT_STREQ("PDT", tm.tm_zone);
+  EXPECT_EQ(1, tm.tm_isdst);
+  EXPECT_EQ(-25200, tm.tm_gmtoff);
+
+  // +-hh
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+01", "%z", &tm));
+  EXPECT_EQ(3600, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
+  // +-hhmm
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+0130", "%z", &tm));
+  EXPECT_EQ(5400, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
+  // +-hh:mm
+  tm = {};
+  ASSERT_EQ('\0', *strptime("+01:30", "%z", &tm));
+  EXPECT_EQ(5400, tm.tm_gmtoff);
+  EXPECT_TRUE(tm.tm_zone == nullptr);
+  EXPECT_EQ(0, tm.tm_isdst);
 }
 
 void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time_t interval_ns) {
@@ -661,22 +758,22 @@ TEST(time, timer_delete_from_timer_thread) {
 
 TEST(time, clock_gettime) {
   // Try to ensure that our vdso clock_gettime is working.
+  timespec ts0;
   timespec ts1;
-  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts1));
   timespec ts2;
-  ASSERT_EQ(0, syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts2));
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts0));
+  ASSERT_EQ(0, syscall(__NR_clock_gettime, CLOCK_MONOTONIC, &ts1));
+  ASSERT_EQ(0, clock_gettime(CLOCK_MONOTONIC, &ts2));
 
-  // What's the difference between the two?
-  ts2.tv_sec -= ts1.tv_sec;
-  ts2.tv_nsec -= ts1.tv_nsec;
-  if (ts2.tv_nsec < 0) {
-    --ts2.tv_sec;
-    ts2.tv_nsec += NS_PER_S;
+  // Check we have a nice monotonic timestamp sandwich.
+  ASSERT_LE(ts0.tv_sec, ts1.tv_sec);
+  if (ts0.tv_sec == ts1.tv_sec) {
+    ASSERT_LE(ts0.tv_nsec, ts1.tv_nsec);
   }
-
-  // To try to avoid flakiness we'll accept answers within 10,000,000ns (0.01s).
-  ASSERT_EQ(0, ts2.tv_sec);
-  ASSERT_LT(ts2.tv_nsec, 10'000'000);
+  ASSERT_LE(ts1.tv_sec, ts2.tv_sec);
+  if (ts1.tv_sec == ts2.tv_sec) {
+    ASSERT_LE(ts1.tv_nsec, ts2.tv_nsec);
+  }
 }
 
 TEST(time, clock_gettime_CLOCK_REALTIME) {
@@ -752,11 +849,15 @@ TEST(time, clock_getres_unknown) {
 }
 
 TEST(time, clock) {
-  // clock(3) is hard to test, but a 1s sleep should cost less than 5ms.
+  // clock(3) is hard to test, but a 1s sleep should cost less than 10ms on average.
+  static const clock_t N = 5;
+  static const clock_t mean_limit_ms = 10;
   clock_t t0 = clock();
-  sleep(1);
+  for (size_t i = 0; i < N; ++i) {
+    sleep(1);
+  }
   clock_t t1 = clock();
-  ASSERT_LT(t1 - t0, 5 * (CLOCKS_PER_SEC / 1000));
+  ASSERT_LT(t1 - t0, N * mean_limit_ms * (CLOCKS_PER_SEC / 1000));
 }
 
 static pid_t GetInvalidPid() {
@@ -1004,4 +1105,9 @@ TEST(time, timespec_get) {
 #else
   GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
+}
+
+TEST(time, difftime) {
+  ASSERT_EQ(1.0, difftime(1, 0));
+  ASSERT_EQ(-1.0, difftime(0, 1));
 }

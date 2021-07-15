@@ -144,4 +144,10 @@ enum batadv_tp_meter_reason {
   BATADV_TP_REASON_CANT_SEND = 132,
   BATADV_TP_REASON_TOO_MANY = 133,
 };
+enum batadv_ifla_attrs {
+  IFLA_BATADV_UNSPEC,
+  IFLA_BATADV_ALGO_NAME,
+  __IFLA_BATADV_MAX,
+};
+#define IFLA_BATADV_MAX (__IFLA_BATADV_MAX - 1)
 #endif

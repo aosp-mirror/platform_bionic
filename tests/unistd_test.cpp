@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include "BionicDeathTest.h"
 #include "SignalUtils.h"
 #include "utils.h"
 
@@ -37,6 +36,7 @@
 #include <chrono>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
 #include <android-base/strings.h>
 
 #include "private/get_cpu_count_from_string.h"
@@ -52,6 +52,8 @@
 #define UNISTD_TEST unistd
 #define UNISTD_DEATHTEST unistd_DeathTest
 #endif
+
+using UNISTD_DEATHTEST = SilentDeathTest;
 
 using namespace std::chrono_literals;
 
@@ -676,14 +678,10 @@ TEST(UNISTD_TEST, gettid_caching_and_pthread_create) {
   ASSERT_NE(static_cast<uint64_t>(parent_tid), reinterpret_cast<uint64_t>(result));
 }
 
-static void optimization_barrier(void* arg) {
-  asm volatile("" : : "r"(arg) : "memory");
-}
-
 __attribute__((noinline)) static void HwasanVforkTestChild() {
   // Allocate a tagged region on stack and leave it there.
   char x[10000];
-  optimization_barrier(x);
+  DoNotOptimize(x);
   _exit(0);
 }
 
@@ -700,7 +698,7 @@ __attribute__((noinline, no_sanitize("hwaddress"))) static void HwasanVforkTestP
   // Allocate a region on stack, but don't tag it (see the function attribute).
   // This depends on unallocated stack space at current function entry being untagged.
   char x[10000];
-  optimization_barrier(x);
+  DoNotOptimize(x);
   // Verify that contents of x[] are untagged.
   HwasanReadMemory(x, sizeof(x));
 }
@@ -714,8 +712,6 @@ TEST(UNISTD_TEST, hwasan_vfork) {
     HwasanVforkTestChild();
   }
 }
-
-class UNISTD_DEATHTEST : public BionicDeathTest {};
 
 TEST_F(UNISTD_DEATHTEST, abort) {
   ASSERT_EXIT(abort(), testing::KilledBySignal(SIGABRT), "");
@@ -1170,10 +1166,10 @@ TEST(UNISTD_TEST, dup2_same) {
 TEST(UNISTD_TEST, dup3) {
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_EQ(666, dup3(fd, 666, 0));
-  AssertCloseOnExec(666, false);
+  ASSERT_FALSE(CloseOnExec(666));
   close(666);
   ASSERT_EQ(667, dup3(fd, 667, O_CLOEXEC));
-  AssertCloseOnExec(667, true);
+  ASSERT_TRUE(CloseOnExec(667));
   close(667);
   close(fd);
 }
@@ -1350,6 +1346,11 @@ TEST(UNISTD_TEST, execve_failure) {
   ASSERT_EQ(EACCES, errno);
 }
 
+static void append_llvm_cov_env_var(std::string& env_str) {
+  if (getenv("LLVM_PROFILE_FILE") != nullptr)
+    env_str.append("__LLVM_PROFILE_RT_INIT_ONCE=__LLVM_PROFILE_RT_INIT_ONCE\n");
+}
+
 TEST(UNISTD_TEST, execve_args) {
   // int execve(const char* path, char* argv[], char* envp[]);
 
@@ -1361,7 +1362,12 @@ TEST(UNISTD_TEST, execve_args) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execve(BIN_DIR "printenv", eth.GetArgs(), eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execl_failure) {
@@ -1386,8 +1392,13 @@ TEST(UNISTD_TEST, execle_failure) {
 TEST(UNISTD_TEST, execle) {
   ExecTestHelper eth;
   eth.SetEnv({"A=B", nullptr});
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
   // int execle(const char* path, const char* arg, ..., char* envp[]);
-  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0, "A=B\n");
+  eth.Run([&]() { execle(BIN_DIR "printenv", "printenv", nullptr, eth.GetEnv()); }, 0,
+          expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execv_failure) {
@@ -1450,7 +1461,11 @@ TEST(UNISTD_TEST, execvpe) {
   // Test environment variable setting too.
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { execvpe("printenv", eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
 }
 
 TEST(UNISTD_TEST, execvpe_ENOEXEC) {
@@ -1538,7 +1553,11 @@ TEST(UNISTD_TEST, fexecve_args) {
   ASSERT_NE(-1, printenv_fd);
   eth.SetArgs({"printenv", nullptr});
   eth.SetEnv({"A=B", nullptr});
-  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, "A=B\n");
+
+  std::string expected_output("A=B\n");
+  append_llvm_cov_env_var(expected_output);
+
+  eth.Run([&]() { fexecve(printenv_fd, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
   close(printenv_fd);
 }
 

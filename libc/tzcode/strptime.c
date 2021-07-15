@@ -95,9 +95,22 @@ struct century_relyear {
     int century;
     int relyear;
 };
+
+static char gmt[] = { "GMT" };
+static char utc[] = { "UTC" };
+/* RFC-822/RFC-2822 */
+static const char * const nast[5] = {
+       "EST",    "CST",    "MST",    "PST",    "\0\0\0"
+};
+static const char * const nadt[5] = {
+       "EDT",    "CDT",    "MDT",    "PDT",    "\0\0\0"
+};
+
 static  int _conv_num(const unsigned char **, int *, int, int);
 static  unsigned char *_strptime(const unsigned char *, const char *, struct tm *,
         struct century_relyear *);
+static	const u_char *_find_string(const u_char *, int *, const char * const *,
+	    const char * const *, int);
 
 
 char *
@@ -113,9 +126,10 @@ static unsigned char *
 _strptime(const unsigned char *buf, const char *fmt, struct tm *tm, struct century_relyear *cr)
 {
     unsigned char c;
-    const unsigned char *bp;
+    const unsigned char *bp, *ep;
     size_t len = 0;
-    int alt_format, i;
+    int alt_format, i, offs;
+    int neg = 0;
 
     bp = (unsigned char *)buf;
     while ((c = *fmt) != '\0') {
@@ -432,6 +446,108 @@ literal:
                 return (NULL);
             break;
 
+		case 'Z':
+			tzset();
+			if (strncmp((const char *)bp, gmt, 3) == 0) {
+				tm->tm_isdst = 0;
+				tm->tm_gmtoff = 0;
+				tm->tm_zone = gmt;
+				bp += 3;
+			} else if (strncmp((const char *)bp, utc, 3) == 0) {
+				tm->tm_isdst = 0;
+				tm->tm_gmtoff = 0;
+				tm->tm_zone = utc;
+				bp += 3;
+			} else {
+				ep = _find_string(bp, &i,
+						 (const char * const *)tzname,
+						  NULL, 2);
+				if (ep == NULL)
+					return (NULL);
+
+				tm->tm_isdst = i;
+				tm->tm_gmtoff = -(timezone);
+				tm->tm_zone = tzname[i];
+				bp = ep;
+			}
+			continue;
+
+		case 'z':
+			/*
+			 * We recognize all ISO 8601 formats:
+			 * Z	= Zulu time/UTC
+			 * [+-]hhmm
+			 * [+-]hh:mm
+			 * [+-]hh
+			 * We recognize all RFC-822/RFC-2822 formats:
+			 * UT|GMT
+			 *          North American : UTC offsets
+			 * E[DS]T = Eastern : -4 | -5
+			 * C[DS]T = Central : -5 | -6
+			 * M[DS]T = Mountain: -6 | -7
+			 * P[DS]T = Pacific : -7 | -8
+			 */
+			while (isspace(*bp))
+				bp++;
+
+			switch (*bp++) {
+			case 'G':
+				if (*bp++ != 'M')
+					return NULL;
+				/*FALLTHROUGH*/
+			case 'U':
+				if (*bp++ != 'T')
+					return NULL;
+				/*FALLTHROUGH*/
+			case 'Z':
+				tm->tm_isdst = 0;
+				tm->tm_gmtoff = 0;
+				tm->tm_zone = utc;
+				continue;
+			case '+':
+				neg = 0;
+				break;
+			case '-':
+				neg = 1;
+				break;
+			default:
+				--bp;
+				ep = _find_string(bp, &i, nast, NULL, 4);
+				if (ep != NULL) {
+					tm->tm_gmtoff = (-5 - i) * SECSPERHOUR;
+					tm->tm_zone = (char *)nast[i];
+					bp = ep;
+					continue;
+				}
+				ep = _find_string(bp, &i, nadt, NULL, 4);
+				if (ep != NULL) {
+					tm->tm_isdst = 1;
+					tm->tm_gmtoff = (-4 - i) * SECSPERHOUR;
+					tm->tm_zone = (char *)nadt[i];
+					bp = ep;
+					continue;
+				}
+				return NULL;
+			}
+			if (!isdigit(bp[0]) || !isdigit(bp[1]))
+				return NULL;
+			offs = ((bp[0]-'0') * 10 + (bp[1]-'0')) * SECSPERHOUR;
+			bp += 2;
+			if (*bp == ':')
+				bp++;
+			if (isdigit(*bp)) {
+				offs += (*bp++ - '0') * 10 * SECSPERMIN;
+				if (!isdigit(*bp))
+					return NULL;
+				offs += (*bp++ - '0') * SECSPERMIN;
+			}
+			if (neg)
+				offs = -offs;
+			tm->tm_isdst = 0;	/* XXX */
+			tm->tm_gmtoff = offs;
+			tm->tm_zone = NULL;	/* XXX */
+			continue;
+
         /*
          * Miscellaneous conversions.
          */
@@ -468,28 +584,49 @@ literal:
     return (unsigned char*)bp;
 }
 
-
 static int
 _conv_num(const unsigned char **buf, int *dest, int llim, int ulim)
 {
-    int result = 0;
-    int rulim = ulim;
+	int result = 0;
+	int rulim = ulim;
 
-    if (**buf < '0' || **buf > '9')
-        return (0);
+	if (**buf < '0' || **buf > '9')
+		return (0);
 
-    /* we use rulim to break out of the loop when we run out of digits */
-    do {
-        result *= 10;
-        result += *(*buf)++ - '0';
-        rulim /= 10;
-    } while ((result * 10 <= ulim) && rulim && **buf >= '0' && **buf <= '9');
+	/* we use rulim to break out of the loop when we run out of digits */
+	do {
+		result *= 10;
+		result += *(*buf)++ - '0';
+		rulim /= 10;
+	} while ((result * 10 <= ulim) && rulim && **buf >= '0' && **buf <= '9');
 
-    if (result < llim || result > ulim)
-        return (0);
+	if (result < llim || result > ulim)
+		return (0);
 
-    *dest = result;
-    return (1);
+	*dest = result;
+	return (1);
+}
+
+static const u_char *
+_find_string(const u_char *bp, int *tgt, const char * const *n1,
+		const char * const *n2, int c)
+{
+	int i;
+	unsigned int len;
+
+	/* check full name - then abbreviated ones */
+	for (; n1 != NULL; n1 = n2, n2 = NULL) {
+		for (i = 0; i < c; i++, n1++) {
+			len = strlen(*n1);
+			if (strncasecmp(*n1, (const char *)bp, len) == 0) {
+				*tgt = i;
+				return bp + len;
+			}
+		}
+	}
+
+	/* Nothing matched */
+	return NULL;
 }
 
 char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t l) {
