@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3328a700_99e169f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1096713
+      },
+      "writtenOn": "2021-07-15T15:39:57Z",
+      "side": 1,
+      "message": "Follow-up to https://android-review.googlesource.com/c/platform/bionic/+/1755319\n\nI know this is one of Elliott\u0027s \"favorite\" issues, so I know maybe we won\u0027t take this CL.  But I figured I\u0027d \"make\" Elliott\u0027s day at the very least.  :) ",
+      "revId": "5358cc40ab4288ed00c223f00cf898b7dc1a9484",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
