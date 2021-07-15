@@ -268,6 +268,7 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
 
   while (line_beginning < end) {
     line_beginning = ParseLine(line_beginning, end, line->fields, line->kNumFields);
+#if defined(__ANDROID__)
     // To comply with Treble, users/groups from each partition need to be prefixed with
     // the partition name.
     if (required_prefix_ != nullptr) {
@@ -280,6 +281,7 @@ bool MmapFile::Find(Line* line, Predicate predicate) {
         continue;
       }
     }
+#endif
     if (predicate(line)) return true;
   }
 

@@ -21,6 +21,9 @@
 #include <linux/can.h>
 #define SOL_CAN_RAW (SOL_CAN_BASE + CAN_RAW)
 enum {
+  SCM_CAN_RAW_ERRQUEUE = 1,
+};
+enum {
   CAN_RAW_FILTER = 1,
   CAN_RAW_ERR_FILTER,
   CAN_RAW_LOOPBACK,

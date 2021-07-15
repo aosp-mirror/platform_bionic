@@ -33,9 +33,10 @@
 #include <vector>
 
 #include <android-base/file.h>
+#include <android-base/silent_death_test.h>
+#include <android-base/test_utils.h>
 #include <android-base/unique_fd.h>
 
-#include "BionicDeathTest.h"
 #include "utils.h"
 
 // This #include is actually a test too. We have to duplicate the
@@ -55,8 +56,8 @@
 
 using namespace std::string_literals;
 
-class stdio_DeathTest : public BionicDeathTest {};
-class stdio_nofortify_DeathTest : public BionicDeathTest {};
+using stdio_DeathTest = SilentDeathTest;
+using stdio_nofortify_DeathTest = SilentDeathTest;
 
 static void SetFileTo(const char* path, const char* content) {
   FILE* fp;
@@ -294,6 +295,34 @@ TEST(STDIO_TEST, snprintf_a) {
   EXPECT_STREQ("<0x1.3831e147ae148p+13>", buf);
 }
 
+// http://b/152588929
+TEST(STDIO_TEST, snprintf_La) {
+#if defined(__LP64__)
+  char buf[BUFSIZ];
+  union {
+    uint64_t a[2];
+    long double v;
+  } u;
+
+  u.a[0] = UINT64_C(0x9b9b9b9b9b9b9b9b);
+  u.a[1] = UINT64_C(0xdfdfdfdfdfdfdfdf);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<-0x1.dfdfdfdfdfdf9b9b9b9b9b9b9b9bp+8160>", buf);
+
+  u.a[0] = UINT64_C(0xffffffffffffffff);
+  u.a[1] = UINT64_C(0x7ffeffffffffffff);
+  EXPECT_EQ(41, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x1.ffffffffffffffffffffffffffffp+16383>", buf);
+
+  u.a[0] = UINT64_C(0x0000000000000000);
+  u.a[1] = UINT64_C(0x0000000000000000);
+  EXPECT_EQ(8, snprintf(buf, sizeof(buf), "<%La>", u.v));
+  EXPECT_STREQ("<0x0p+0>", buf);
+#else
+  GTEST_SKIP() << "no ld128";
+#endif
+}
+
 TEST(STDIO_TEST, snprintf_lc) {
   char buf[BUFSIZ];
   wint_t wc = L'a';
@@ -332,7 +361,7 @@ TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
   EXPECT_STREQ("<hi>", buf);
 }
 
-TEST(STDIO_TEST, snprintf_n) {
+TEST_F(STDIO_DEATHTEST, snprintf_n) {
 #if defined(__BIONIC__)
   // http://b/14492135 and http://b/31832608.
   char buf[32];
@@ -341,6 +370,11 @@ TEST(STDIO_TEST, snprintf_n) {
 #else
   GTEST_SKIP() << "glibc does allow %n";
 #endif
+}
+
+TEST(STDIO_TEST, snprintf_measure) {
+  char buf[16];
+  ASSERT_EQ(11, snprintf(buf, 0, "Hello %s", "world"));
 }
 
 TEST(STDIO_TEST, snprintf_smoke) {
@@ -1127,7 +1161,6 @@ TEST(STDIO_TEST, sscanf_mc) {
   free(p1);
 }
 
-
 TEST(STDIO_TEST, sscanf_mlc) {
   // This is so useless that clang doesn't even believe it exists...
 #pragma clang diagnostic push
@@ -1160,7 +1193,6 @@ TEST(STDIO_TEST, sscanf_mlc) {
   free(p1);
 #pragma clang diagnostic pop
 }
-
 
 TEST(STDIO_TEST, sscanf_ms) {
   CheckScanfM(sscanf, "hello", "%ms", 1, "hello");
@@ -1924,34 +1956,64 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
 #endif
 }
 
-TEST(STDIO_TEST, fdopen_CLOEXEC) {
-  int fd = open("/proc/version", O_RDONLY);
-  ASSERT_TRUE(fd != -1);
-
+TEST(STDIO_TEST, fdopen_add_CLOEXEC) {
   // This fd doesn't have O_CLOEXEC...
-  AssertCloseOnExec(fd, false);
-
-  FILE* fp = fdopen(fd, "re");
-  ASSERT_TRUE(fp != nullptr);
-
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_FALSE(CloseOnExec(fd));
   // ...but the new one does.
-  AssertCloseOnExec(fileno(fp), true);
+  FILE* fp = fdopen(fd, "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, fdopen_remove_CLOEXEC) {
+  // This fd has O_CLOEXEC...
+  int fd = open("/proc/version", O_RDONLY | O_CLOEXEC);
+  ASSERT_TRUE(CloseOnExec(fd));
+  // ...but the new one doesn't.
+  FILE* fp = fdopen(fd, "r");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
+
+TEST(STDIO_TEST, freopen_add_CLOEXEC) {
+  // This FILE* doesn't have O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
+  // ...but the new one does.
+  fp = freopen("/proc/version", "re", fp);
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
 
   fclose(fp);
 }
 
-TEST(STDIO_TEST, freopen_CLOEXEC) {
-  FILE* fp = fopen("/proc/version", "r");
-  ASSERT_TRUE(fp != nullptr);
+TEST(STDIO_TEST, freopen_remove_CLOEXEC) {
+  // This FILE* has O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  // ...but the new one doesn't.
+  fp = freopen("/proc/version", "r", fp);
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
 
+TEST(STDIO_TEST, freopen_null_filename_add_CLOEXEC) {
   // This FILE* doesn't have O_CLOEXEC...
-  AssertCloseOnExec(fileno(fp), false);
-
-  fp = freopen("/proc/version", "re", fp);
-
+  FILE* fp = fopen("/proc/version", "r");
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
   // ...but the new one does.
-  AssertCloseOnExec(fileno(fp), true);
+  fp = freopen(nullptr, "re", fp);
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  fclose(fp);
+}
 
+TEST(STDIO_TEST, freopen_null_filename_remove_CLOEXEC) {
+  // This FILE* has O_CLOEXEC...
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(CloseOnExec(fileno(fp)));
+  // ...but the new one doesn't.
+  fp = freopen(nullptr, "r", fp);
+  ASSERT_FALSE(CloseOnExec(fileno(fp)));
   fclose(fp);
 }
 
@@ -2363,7 +2425,7 @@ TEST(STDIO_TEST, remove) {
   ASSERT_EQ(ENOENT, errno);
 }
 
-TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
+TEST_F(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
   char buf[16];
   ASSERT_EXIT(snprintf(buf, atol("-1"), "hello"),
               testing::KilledBySignal(SIGABRT),
@@ -2375,7 +2437,7 @@ TEST(STDIO_DEATHTEST, snprintf_30445072_known_buffer_size) {
               );
 }
 
-TEST(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
+TEST_F(STDIO_DEATHTEST, snprintf_30445072_unknown_buffer_size) {
   std::string buf = "world";
   ASSERT_EXIT(snprintf(&buf[0], atol("-1"), "hello"),
               testing::KilledBySignal(SIGABRT),
@@ -2503,6 +2565,16 @@ TEST(STDIO_TEST, perror) {
 TEST(STDIO_TEST, puts) {
   ExecTestHelper eth;
   eth.Run([&]() { exit(puts("a b c")); }, 0, "a b c\n");
+}
+
+TEST(STDIO_TEST, putchar) {
+  ExecTestHelper eth;
+  eth.Run([&]() { exit(putchar('A')); }, 65, "A");
+}
+
+TEST(STDIO_TEST, putchar_unlocked) {
+  ExecTestHelper eth;
+  eth.Run([&]() { exit(putchar('B')); }, 66, "B");
 }
 
 TEST(STDIO_TEST, unlocked) {
@@ -2704,4 +2776,161 @@ TEST(STDIO_TEST, renameat2_flags) {
  ASSERT_NE(0, RENAME_NOREPLACE);
  ASSERT_NE(0, RENAME_WHITEOUT);
 #endif
+}
+
+TEST(STDIO_TEST, fdopen_failures) {
+  FILE* fp;
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_TRUE(fd != -1);
+
+  // Nonsense mode.
+  errno = 0;
+  fp = fdopen(fd, "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Mode that isn't a subset of the fd's actual mode.
+  errno = 0;
+  fp = fdopen(fd, "w");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Can't set append on the underlying fd.
+  errno = 0;
+  fp = fdopen(fd, "a");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+
+  // Bad fd.
+  errno = 0;
+  fp = fdopen(-1, "re");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EBADF, errno);
+
+  close(fd);
+}
+
+TEST(STDIO_TEST, fmemopen_invalid_mode) {
+  errno = 0;
+  FILE* fp = fmemopen(nullptr, 16, "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, fopen_invalid_mode) {
+  errno = 0;
+  FILE* fp = fopen("/proc/version", "nonsense");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, freopen_invalid_mode) {
+  FILE* fp = fopen("/proc/version", "re");
+  ASSERT_TRUE(fp != nullptr);
+
+  errno = 0;
+  fp = freopen("/proc/version", "nonsense", fp);
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(EINVAL, errno);
+}
+
+TEST(STDIO_TEST, asprintf_smoke) {
+  char* p = nullptr;
+  ASSERT_EQ(11, asprintf(&p, "hello %s", "world"));
+  ASSERT_STREQ("hello world", p);
+  free(p);
+}
+
+TEST(STDIO_TEST, fopen_ENOENT) {
+  errno = 0;
+  FILE* fp = fopen("/proc/does-not-exist", "re");
+  ASSERT_TRUE(fp == nullptr);
+  ASSERT_EQ(ENOENT, errno);
+}
+
+static void tempnam_test(bool has_TMPDIR, const char* dir, const char* prefix, const char* re) {
+  if (has_TMPDIR) {
+    setenv("TMPDIR", "/my/tmp/dir", 1);
+  } else {
+    unsetenv("TMPDIR");
+  }
+  char* s1 = tempnam(dir, prefix);
+  char* s2 = tempnam(dir, prefix);
+  ASSERT_MATCH(s1, re);
+  ASSERT_MATCH(s2, re);
+  ASSERT_STRNE(s1, s2);
+  free(s1);
+  free(s2);
+}
+
+TEST(STDIO_TEST, tempnam__system_directory_system_prefix_with_TMPDIR) {
+  tempnam_test(true, nullptr, nullptr, "^/my/tmp/dir/.*");
+}
+
+TEST(STDIO_TEST, tempnam__system_directory_system_prefix_without_TMPDIR) {
+  tempnam_test(false, nullptr, nullptr, "^/data/local/tmp/.*");
+}
+
+TEST(STDIO_TEST, tempnam__system_directory_user_prefix_with_TMPDIR) {
+  tempnam_test(true, nullptr, "prefix", "^/my/tmp/dir/prefix.*");
+}
+
+TEST(STDIO_TEST, tempnam__system_directory_user_prefix_without_TMPDIR) {
+  tempnam_test(false, nullptr, "prefix", "^/data/local/tmp/prefix.*");
+}
+
+TEST(STDIO_TEST, tempnam__user_directory_system_prefix_with_TMPDIR) {
+  tempnam_test(true, "/a/b/c", nullptr, "^/my/tmp/dir/.*");
+}
+
+TEST(STDIO_TEST, tempnam__user_directory_system_prefix_without_TMPDIR) {
+  tempnam_test(false, "/a/b/c", nullptr, "^/a/b/c/.*");
+}
+
+TEST(STDIO_TEST, tempnam__user_directory_user_prefix_with_TMPDIR) {
+  tempnam_test(true, "/a/b/c", "prefix", "^/my/tmp/dir/prefix.*");
+}
+
+TEST(STDIO_TEST, tempnam__user_directory_user_prefix_without_TMPDIR) {
+  tempnam_test(false, "/a/b/c", "prefix", "^/a/b/c/prefix.*");
+}
+
+static void tmpnam_test(char* s) {
+  char s1[L_tmpnam], s2[L_tmpnam];
+
+  strcpy(s1, tmpnam(s));
+  strcpy(s2, tmpnam(s));
+  ASSERT_MATCH(s1, "/tmp/.*");
+  ASSERT_MATCH(s2, "/tmp/.*");
+  ASSERT_STRNE(s1, s2);
+}
+
+TEST(STDIO_TEST, tmpnam) {
+  tmpnam_test(nullptr);
+}
+
+TEST(STDIO_TEST, tmpnam_buf) {
+  char buf[L_tmpnam];
+  tmpnam_test(buf);
+}
+
+TEST(STDIO_TEST, freopen_null_filename_mode) {
+  TemporaryFile tf;
+  FILE* fp = fopen(tf.path, "r");
+  ASSERT_TRUE(fp != nullptr);
+
+  // "r" = O_RDONLY
+  char buf[1];
+  ASSERT_EQ(0, read(fileno(fp), buf, 1));
+  ASSERT_EQ(-1, write(fileno(fp), "hello", 1));
+  // "r+" = O_RDWR
+  fp = freopen(nullptr, "r+", fp);
+  ASSERT_EQ(0, read(fileno(fp), buf, 1));
+  ASSERT_EQ(1, write(fileno(fp), "hello", 1));
+  // "w" = O_WRONLY
+  fp = freopen(nullptr, "w", fp);
+  ASSERT_EQ(-1, read(fileno(fp), buf, 1));
+  ASSERT_EQ(1, write(fileno(fp), "hello", 1));
+
+  fclose(fp);
 }

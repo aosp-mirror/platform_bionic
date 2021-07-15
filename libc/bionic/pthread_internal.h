@@ -132,6 +132,11 @@ class pthread_internal_t {
   // top of the stack quickly, which would otherwise require special logic for the main thread.
   uintptr_t stack_top;
 
+  // Whether the thread is in the process of terminating (has blocked signals), or has already
+  // terminated. This is used by android_run_on_all_threads() to avoid sending a signal to a thread
+  // that will never receive it.
+  _Atomic(bool) terminating;
+
   Lock startup_handshake_lock;
 
   void* mmap_base;
@@ -242,3 +247,7 @@ __LIBC_HIDDEN__ void pthread_key_clean_all(void);
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_prepare();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_child();
 __LIBC_HIDDEN__ extern void __bionic_atfork_run_parent();
+
+extern "C" bool android_run_on_all_threads(bool (*func)(void*), void* arg);
+
+extern pthread_rwlock_t g_thread_creation_lock;
