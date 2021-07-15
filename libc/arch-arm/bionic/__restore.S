@@ -28,13 +28,14 @@
 
 #include <private/bionic_asm.h>
 
-// gdb is smart enough to unwind through signal frames with just the regular
+// gdb is able to unwind through signal frames with just the regular
 // CFI information but libgcc and libunwind both need extra help. We do this
 // by using .fnstart/.fnend and inserting a nop before both __restore and
 // __restore_rt (but covered by the .fnstart/.fnend) so that although they're
 // not inside the functions from objdump's point of view, an unwinder that
-// blindly looks at the previous instruction (but is then smart enough to check
-// the unwind information to find out where it landed) gets the right answer.
+// just assumes it should look at the previous instruction (but is then smart
+// enough to check the unwind information to find out where it landed) gets
+// the right answer.
 // Make sure not to have both DWARF and ARM unwind information, so only
 // use the ARM unwind information.
 

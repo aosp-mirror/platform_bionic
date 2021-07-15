@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_remquol.c 336665 2018-07-24 11:50:05Z bde $");
+__FBSDID("$FreeBSD$");
 
 #include <float.h>
 #include <stdint.h>

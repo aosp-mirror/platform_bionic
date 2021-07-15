@@ -31,7 +31,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD: head/lib/msun/src/s_csinhf.c 336362 2018-07-17 07:42:14Z bde $");
+__FBSDID("$FreeBSD$");
 
 #include <complex.h>
 #include <math.h>

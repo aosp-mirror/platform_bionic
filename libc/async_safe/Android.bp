@@ -1,6 +1,15 @@
 // ========================================================
 // libasync_safe.a
 // ========================================================
+package {
+    // See: http://go/android-license-faq
+    // A large-scale-change added 'default_applicable_licenses' to import
+    // all of the 'license_kinds' from "bionic_libc_license"
+    // to get the below license kinds:
+    //   SPDX-license-identifier-BSD
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
 cc_library_static {
     defaults: ["libc_defaults"],
     srcs: [
@@ -9,6 +18,7 @@ cc_library_static {
 
     name: "libasync_safe",
     vendor_available: true,
+    product_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -22,16 +32,18 @@ cc_library_static {
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
+        "com.android.art",
         "com.android.art.debug",
-        "com.android.art.release",
         "com.android.media",
         "com.android.media.swcodec",
     ],
+    min_sdk_version: "apex_inherit",
 }
 
 cc_library_headers {
     name: "libasync_safe_headers",
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     defaults: ["linux_bionic_supported"],
