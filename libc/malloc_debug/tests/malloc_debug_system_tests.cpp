@@ -40,7 +40,7 @@
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
 #include <gtest/gtest.h>
-#include <log/log.h>
+#include <log/log_read.h>
 
 #include <atomic>
 #include <string>
@@ -158,7 +158,7 @@ static void GetLogStr(pid_t pid, std::string* log_str, log_id log = LOG_ID_MAIN)
   log_str->clear();
 
   logger_list* list;
-  list = android_logger_list_open(log, ANDROID_LOG_RDONLY | ANDROID_LOG_NONBLOCK, 1000, pid);
+  list = android_logger_list_open(log, ANDROID_LOG_NONBLOCK, 1000, pid);
   ASSERT_TRUE(list != nullptr);
 
   while (true) {

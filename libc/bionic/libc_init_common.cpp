@@ -52,10 +52,13 @@
 #include "pthread_internal.h"
 
 extern "C" int __system_properties_init(void);
+extern "C" void scudo_malloc_set_zero_contents(int);
+extern "C" void scudo_malloc_set_pattern_fill_contents(int);
 
 __LIBC_HIDDEN__ WriteProtected<libc_globals> __libc_globals;
 
 // Not public, but well-known in the BSDs.
+__BIONIC_WEAK_VARIABLE_FOR_NATIVE_BRIDGE
 const char* __progname;
 
 void __libc_init_globals() {
@@ -84,6 +87,23 @@ static void arc4random_fork_handler() {
 }
 
 __BIONIC_WEAK_FOR_NATIVE_BRIDGE
+void __libc_init_scudo() {
+  // Heap tagging level *must* be set before interacting with Scudo, otherwise
+  // the primary will be mapped with PROT_MTE even if MTE is is not enabled in
+  // this process.
+  SetDefaultHeapTaggingLevel();
+
+// TODO(b/158870657) make this unconditional when all devices support SCUDO.
+#if defined(USE_SCUDO)
+#if defined(SCUDO_PATTERN_FILL_CONTENTS)
+  scudo_malloc_set_pattern_fill_contents(1);
+#elif defined(SCUDO_ZERO_CONTENTS)
+  scudo_malloc_set_zero_contents(1);
+#endif
+#endif
+}
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 void __libc_add_main_thread() {
   // Get the main thread from TLS and add it to the thread list.
   pthread_internal_t* main_thread = __get_thread();
@@ -105,13 +125,19 @@ void __libc_init_common() {
   __system_properties_init(); // Requires 'environ'.
   __libc_init_fdsan(); // Requires system properties (for debug.fdsan).
   __libc_init_fdtrack();
-
-  SetDefaultHeapTaggingLevel();
 }
 
 void __libc_init_fork_handler() {
   // Register atfork handlers to take and release the arc4random lock.
   pthread_atfork(arc4random_fork_handler, _thread_arc4_unlock, _thread_arc4_unlock);
+}
+
+extern "C" void scudo_malloc_set_add_large_allocation_slack(int add_slack);
+
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE void __libc_set_target_sdk_version(int target __unused) {
+#if defined(USE_SCUDO)
+  scudo_malloc_set_add_large_allocation_slack(target < __ANDROID_API_S__);
+#endif
 }
 
 __noreturn static void __early_abort(int line) {
@@ -348,10 +374,8 @@ void __libc_fini(void* array) {
   Dtor* fini_array = reinterpret_cast<Dtor*>(array);
   const Dtor minus1 = reinterpret_cast<Dtor>(static_cast<uintptr_t>(-1));
 
-  // Sanity check - first entry must be -1.
-  if (array == nullptr || fini_array[0] != minus1) {
-    return;
-  }
+  // Validity check: the first entry must be -1.
+  if (array == nullptr || fini_array[0] != minus1) return;
 
   // Skip over it.
   fini_array += 1;
@@ -362,15 +386,9 @@ void __libc_fini(void* array) {
     ++count;
   }
 
-  // Now call each destructor in reverse order.
+  // Now call each destructor in reverse order, ignoring any -1s.
   while (count > 0) {
     Dtor dtor = fini_array[--count];
-
-    // Sanity check, any -1 in the list is ignored.
-    if (dtor == minus1) {
-      continue;
-    }
-
-    dtor();
+    if (dtor != minus1) dtor();
   }
 }

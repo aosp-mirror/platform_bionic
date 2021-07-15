@@ -47,14 +47,14 @@ struct test_struct_nominal {
  * this one has size below allocator cap which is 2*sizeof(void*)
  */
 struct test_struct_small {
-  char dummy_str[5];
+  char str[5];
 };
 
 /*
  * 1009 byte struct (1009 is prime)
  */
 struct test_struct_larger {
-  char dummy_str[1009];
+  char str[1009];
 };
 
 static size_t kPageSize = sysconf(_SC_PAGE_SIZE);
@@ -131,14 +131,14 @@ static void protect_all() {
   allocator.protect_all(PROT_READ);
   allocator.protect_all(PROT_READ | PROT_WRITE);
   // check access
-  page2_ptr->dummy_str[23] = 27;
-  page1_ptr->dummy_str[13] = 11;
+  page2_ptr->str[23] = 27;
+  page1_ptr->str[13] = 11;
 
   allocator.protect_all(PROT_READ);
   fprintf(stderr, "trying to access protected page");
 
   // this should result in segmentation fault
-  page1_ptr->dummy_str[11] = 7;
+  page1_ptr->str[11] = 7;
 }
 
 TEST(linker_allocator, test_protect) {

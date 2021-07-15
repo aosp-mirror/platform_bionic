@@ -68,6 +68,7 @@ struct can_ctrlmode {
 #define CAN_CTRLMODE_FD 0x20
 #define CAN_CTRLMODE_PRESUME_ACK 0x40
 #define CAN_CTRLMODE_FD_NON_ISO 0x80
+#define CAN_CTRLMODE_CC_LEN8_DLC 0x100
 struct can_device_stats {
   __u32 bus_error;
   __u32 error_warning;

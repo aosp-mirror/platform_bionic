@@ -70,8 +70,9 @@ static int GetTargetElfMachine() {
     p_memsz   -> segment memory size (always >= p_filesz)
     p_vaddr   -> segment's virtual address
     p_flags   -> segment flags (e.g. readable, writable, executable)
+    p_align   -> segment's in-memory and in-file alignment
 
-  We will ignore the p_paddr and p_align fields of ElfW(Phdr) for now.
+  We will ignore the p_paddr field of ElfW(Phdr) for now.
 
   The loadable segments can be seen as a list of [p_vaddr ... p_vaddr+p_memsz)
   ranges of virtual addresses. A few rules apply:
@@ -137,6 +138,9 @@ static int GetTargetElfMachine() {
                                       MAYBE_MAP_FLAG((x), PF_R, PROT_READ) | \
                                       MAYBE_MAP_FLAG((x), PF_W, PROT_WRITE))
 
+// Default PMD size for x86_64 and aarch64 (2MB).
+static constexpr size_t kPmdSize = (1UL << 21);
+
 ElfReader::ElfReader()
     : did_read_(false), did_load_(false), fd_(-1), file_offset_(0), file_size_(0), phdr_num_(0),
       phdr_table_(nullptr), shdr_table_(nullptr), shdr_num_(0), dynamic_(nullptr), strtab_(nullptr),
@@ -169,8 +173,16 @@ bool ElfReader::Load(address_space_params* address_space) {
   if (did_load_) {
     return true;
   }
-  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr()) {
+  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr() &&
+      FindGnuPropertySection()) {
     did_load_ = true;
+#if defined(__aarch64__)
+    // For Armv8.5-A loaded executable segments may require PROT_BTI.
+    if (note_gnu_property_.IsBTICompatible()) {
+      did_load_ = (phdr_table_protect_segments(phdr_table_, phdr_num_, load_bias_,
+                                               &note_gnu_property_) == 0);
+    }
+#endif
   }
 
   return did_load_;
@@ -518,11 +530,40 @@ size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
   return max_vaddr - min_vaddr;
 }
 
+// Returns the maximum p_align associated with a loadable segment in the ELF
+// program header table. Used to determine whether the file should be loaded at
+// a specific virtual address alignment for use with huge pages.
+size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count) {
+  size_t maximum_alignment = PAGE_SIZE;
+
+  for (size_t i = 0; i < phdr_count; ++i) {
+    const ElfW(Phdr)* phdr = &phdr_table[i];
+
+    // p_align must be 0, 1, or a positive, integral power of two.
+    if (phdr->p_type != PT_LOAD || ((phdr->p_align & (phdr->p_align - 1)) != 0)) {
+      continue;
+    }
+
+    if (phdr->p_align > maximum_alignment) {
+      maximum_alignment = phdr->p_align;
+    }
+  }
+
+#if defined(__LP64__)
+  return maximum_alignment;
+#else
+  return PAGE_SIZE;
+#endif
+}
+
 // Reserve a virtual address range such that if it's limits were extended to the next 2**align
 // boundary, it would not overlap with any existing mappings.
-static void* ReserveAligned(size_t size, size_t align) {
+static void* ReserveWithAlignmentPadding(size_t size, size_t mapping_align, size_t start_align,
+                                         void** out_gap_start, size_t* out_gap_size) {
   int mmap_flags = MAP_PRIVATE | MAP_ANONYMOUS;
-  if (align == PAGE_SIZE) {
+  // Reserve enough space to properly align the library's start address.
+  mapping_align = std::max(mapping_align, start_align);
+  if (mapping_align == PAGE_SIZE) {
     void* mmap_ptr = mmap(nullptr, size, PROT_NONE, mmap_flags, -1, 0);
     if (mmap_ptr == MAP_FAILED) {
       return nullptr;
@@ -530,24 +571,66 @@ static void* ReserveAligned(size_t size, size_t align) {
     return mmap_ptr;
   }
 
+  // Minimum alignment of shared library gap. For efficiency, this should match the second level
+  // page size of the platform.
+#if defined(__LP64__)
+  constexpr size_t kGapAlignment = 1ul << 21;  // 2MB
+#else
+  constexpr size_t kGapAlignment = 0;
+#endif
+  // Maximum gap size, in the units of kGapAlignment.
+  constexpr size_t kMaxGapUnits = 32;
   // Allocate enough space so that the end of the desired region aligned up is still inside the
   // mapping.
-  size_t mmap_size = align_up(size, align) + align - PAGE_SIZE;
+  size_t mmap_size = align_up(size, mapping_align) + mapping_align - PAGE_SIZE;
   uint8_t* mmap_ptr =
       reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
   if (mmap_ptr == MAP_FAILED) {
     return nullptr;
   }
+  size_t gap_size = 0;
+  size_t first_byte = reinterpret_cast<size_t>(align_up(mmap_ptr, mapping_align));
+  size_t last_byte = reinterpret_cast<size_t>(align_down(mmap_ptr + mmap_size, mapping_align) - 1);
+  if (kGapAlignment && first_byte / kGapAlignment != last_byte / kGapAlignment) {
+    // This library crosses a 2MB boundary and will fragment a new huge page.
+    // Lets take advantage of that and insert a random number of inaccessible huge pages before that
+    // to improve address randomization and make it harder to locate this library code by probing.
+    munmap(mmap_ptr, mmap_size);
+    mapping_align = std::max(mapping_align, kGapAlignment);
+    gap_size =
+        kGapAlignment * (is_first_stage_init() ? 1 : arc4random_uniform(kMaxGapUnits - 1) + 1);
+    mmap_size = align_up(size + gap_size, mapping_align) + mapping_align - PAGE_SIZE;
+    mmap_ptr = reinterpret_cast<uint8_t*>(mmap(nullptr, mmap_size, PROT_NONE, mmap_flags, -1, 0));
+    if (mmap_ptr == MAP_FAILED) {
+      return nullptr;
+    }
+  }
 
-  uint8_t* first = align_up(mmap_ptr, align);
-  uint8_t* last = align_down(mmap_ptr + mmap_size, align) - size;
+  uint8_t *gap_end, *gap_start;
+  if (gap_size) {
+    gap_end = align_down(mmap_ptr + mmap_size, kGapAlignment);
+    gap_start = gap_end - gap_size;
+  } else {
+    gap_start = gap_end = mmap_ptr + mmap_size;
+  }
+
+  uint8_t* first = align_up(mmap_ptr, mapping_align);
+  uint8_t* last = align_down(gap_start, mapping_align) - size;
 
   // arc4random* is not available in first stage init because /dev/urandom hasn't yet been
   // created. Don't randomize then.
-  size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / PAGE_SIZE + 1);
-  uint8_t* start = first + n * PAGE_SIZE;
+  size_t n = is_first_stage_init() ? 0 : arc4random_uniform((last - first) / start_align + 1);
+  uint8_t* start = first + n * start_align;
+  // Unmap the extra space around the allocation.
+  // Keep it mapped PROT_NONE on 64-bit targets where address space is plentiful to make it harder
+  // to defeat ASLR by probing for readable memory mappings.
   munmap(mmap_ptr, start - mmap_ptr);
-  munmap(start + size, mmap_ptr + mmap_size - (start + size));
+  munmap(start + size, gap_start - (start + size));
+  if (gap_end != mmap_ptr + mmap_size) {
+    munmap(gap_end, mmap_ptr + mmap_size - gap_end);
+  }
+  *out_gap_start = gap_start;
+  *out_gap_size = gap_size;
   return start;
 }
 
@@ -571,13 +654,23 @@ bool ElfReader::ReserveAddressSpace(address_space_params* address_space) {
              load_size_ - address_space->reserved_size, load_size_, name_.c_str());
       return false;
     }
-    start = ReserveAligned(load_size_, kLibraryAlignment);
+    size_t start_alignment = PAGE_SIZE;
+    if (get_transparent_hugepages_supported() && get_application_target_sdk_version() >= 31) {
+      size_t maximum_alignment = phdr_table_get_maximum_alignment(phdr_table_, phdr_num_);
+      // Limit alignment to PMD size as other alignments reduce the number of
+      // bits available for ASLR for no benefit.
+      start_alignment = maximum_alignment == kPmdSize ? kPmdSize : PAGE_SIZE;
+    }
+    start = ReserveWithAlignmentPadding(load_size_, kLibraryAlignment, start_alignment, &gap_start_,
+                                        &gap_size_);
     if (start == nullptr) {
       DL_ERR("couldn't reserve %zd bytes of address space for \"%s\"", load_size_, name_.c_str());
       return false;
     }
   } else {
     start = address_space->start_addr;
+    gap_start_ = nullptr;
+    gap_size_ = 0;
     mapped_by_caller_ = true;
 
     // Update the reserved address space to subtract the space used by this library.
@@ -653,6 +746,13 @@ bool ElfReader::LoadSegments() {
         DL_ERR("couldn't map \"%s\" segment %zd: %s", name_.c_str(), i, strerror(errno));
         return false;
       }
+
+      // Mark segments as huge page eligible if they meet the requirements
+      // (executable and PMD aligned).
+      if ((phdr->p_flags & PF_X) && phdr->p_align == kPmdSize &&
+          get_transparent_hugepages_supported()) {
+        madvise(seg_addr, file_length, MADV_HUGEPAGE);
+      }
     }
 
     // if the segment is writable, and does not end on a page boundary,
@@ -703,15 +803,21 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
     ElfW(Addr) seg_page_start = PAGE_START(phdr->p_vaddr) + load_bias;
     ElfW(Addr) seg_page_end   = PAGE_END(phdr->p_vaddr + phdr->p_memsz) + load_bias;
 
-    int prot = PFLAGS_TO_PROT(phdr->p_flags);
-    if ((extra_prot_flags & PROT_WRITE) != 0) {
+    int prot = PFLAGS_TO_PROT(phdr->p_flags) | extra_prot_flags;
+    if ((prot & PROT_WRITE) != 0) {
       // make sure we're never simultaneously writable / executable
       prot &= ~PROT_EXEC;
     }
+#if defined(__aarch64__)
+    if ((prot & PROT_EXEC) == 0) {
+      // Though it is not specified don't add PROT_BTI if segment is not
+      // executable.
+      prot &= ~PROT_BTI;
+    }
+#endif
 
-    int ret = mprotect(reinterpret_cast<void*>(seg_page_start),
-                       seg_page_end - seg_page_start,
-                       prot | extra_prot_flags);
+    int ret =
+        mprotect(reinterpret_cast<void*>(seg_page_start), seg_page_end - seg_page_start, prot);
     if (ret < 0) {
       return -1;
     }
@@ -723,16 +829,26 @@ static int _phdr_table_set_load_prot(const ElfW(Phdr)* phdr_table, size_t phdr_c
  * You should only call this after phdr_table_unprotect_segments and
  * applying all relocations.
  *
+ * AArch64: also called from linker_main and ElfReader::Load to apply
+ *     PROT_BTI for loaded main so and other so-s.
+ *
  * Input:
  *   phdr_table  -> program header table
  *   phdr_count  -> number of entries in tables
  *   load_bias   -> load bias
+ *   prop        -> GnuPropertySection or nullptr
  * Return:
  *   0 on error, -1 on failure (error code in errno).
  */
-int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
-                                size_t phdr_count, ElfW(Addr) load_bias) {
-  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, 0);
+int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+                                ElfW(Addr) load_bias, const GnuPropertySection* prop __unused) {
+  int prot = 0;
+#if defined(__aarch64__)
+  if ((prop != nullptr) && prop->IsBTICompatible()) {
+    prot |= PROT_BTI;
+  }
+#endif
+  return _phdr_table_set_load_prot(phdr_table, phdr_count, load_bias, prot);
 }
 
 /* Change the protection of all loaded segments in memory to writable.
@@ -1036,7 +1152,7 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
  * Return:
  *   pointer to the program interpreter string.
  */
-const char* phdr_table_get_interpreter_name(const ElfW(Phdr) * phdr_table, size_t phdr_count,
+const char* phdr_table_get_interpreter_name(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                             ElfW(Addr) load_bias) {
   for (size_t i = 0; i<phdr_count; ++i) {
     const ElfW(Phdr)& phdr = phdr_table[i];
@@ -1077,6 +1193,15 @@ bool ElfReader::FindPhdr() {
 
   DL_ERR("can't find loaded phdr for \"%s\"", name_.c_str());
   return false;
+}
+
+// Tries to find .note.gnu.property section.
+// It is not considered an error if such section is missing.
+bool ElfReader::FindGnuPropertySection() {
+#if defined(__aarch64__)
+  note_gnu_property_ = GnuPropertySection(phdr_table_, phdr_num_, load_start(), name_.c_str());
+#endif
+  return true;
 }
 
 // Ensures that our program header is actually within a loadable

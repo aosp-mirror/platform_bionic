@@ -160,7 +160,7 @@ int sprintf(char* __s, const char* __fmt, ...)
 int vsprintf(char* __s, const char* __fmt, va_list __args)
     __printflike(2, 0) __warnattr_strict("vsprintf is often misused; please use vsnprintf");
 char* tmpnam(char* __s)
-    __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");
+    __warnattr("tmpnam is unsafe, use mkstemp or tmpfile instead");
 #define P_tmpdir "/tmp/" /* deprecated */
 char* tempnam(const char* __dir, const char* __prefix)
     __warnattr("tempnam is unsafe, use mkstemp or tmpfile instead");

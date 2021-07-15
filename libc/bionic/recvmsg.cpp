@@ -39,7 +39,7 @@ extern "C" int __recvmmsg(int __fd, struct mmsghdr* __msgs, unsigned int __msg_c
 
 static inline __attribute__((artificial)) __attribute__((always_inline)) void track_fds(
     struct msghdr* msg, const char* function_name) {
-  if (!__android_fdtrack_hook) {
+  if (!atomic_load(&__android_fdtrack_hook)) {
     return;
   }
 

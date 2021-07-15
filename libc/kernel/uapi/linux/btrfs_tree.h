@@ -20,6 +20,7 @@
 #define _BTRFS_CTREE_H_
 #include <linux/btrfs.h>
 #include <linux/types.h>
+#include <stddef.h>
 #define BTRFS_ROOT_TREE_OBJECTID 1ULL
 #define BTRFS_EXTENT_TREE_OBJECTID 2ULL
 #define BTRFS_CHUNK_TREE_OBJECTID 3ULL
@@ -91,6 +92,7 @@
 #define BTRFS_UUID_KEY_SUBVOL 251
 #define BTRFS_UUID_KEY_RECEIVED_SUBVOL 252
 #define BTRFS_STRING_ITEM_KEY 253
+#define BTRFS_MAX_METADATA_BLOCKSIZE 65536
 #define BTRFS_CSUM_SIZE 32
 enum btrfs_csum_type {
   BTRFS_CSUM_TYPE_CRC32 = 0,
@@ -200,12 +202,6 @@ struct btrfs_shared_data_ref {
 struct btrfs_extent_inline_ref {
   __u8 type;
   __le64 offset;
-} __attribute__((__packed__));
-struct btrfs_extent_ref_v0 {
-  __le64 root;
-  __le64 generation;
-  __le64 objectid;
-  __le32 count;
 } __attribute__((__packed__));
 struct btrfs_dev_extent {
   __le64 chunk_tree;
