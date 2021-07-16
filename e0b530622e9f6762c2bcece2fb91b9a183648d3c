@@ -33,6 +33,42 @@
       "message": "from the original bug:\n\n\u003e This will be useful for us to figure out the system property dependencies on CTS tests.\n\u003e And our attempt is to allow OEMs skip CTS re-runs if:\n\u003e   1) system.img is provided by Google (core system.img, a.k.a. CSI).\n\u003e   2) The values of dependent system properties aren\u0027t changed\n\u003e \n\u003e We may need to investigate more \u0027affecting factors\u0027 that would change CSI behavior at runtime, such as RRO.\n\u003e But the initial focus will be on system property.\n\nit seems like adding this to *systrace* was never really a good idea --- there should probably have been some *logging* mechanism instead?",
       "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "571ae5ab_ec13365f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-07-16T02:12:14Z",
+      "side": 1,
+      "message": "After a second thought, let\u0027s do a clean revert first.\n\n\u003e what was the use case for tracing system property activity in the first place?\n\nWe wanted to trace all property activities in a CTS run.\nBut it turns out the use case is not frequently used, let\u0027s do a clean revert.",
+      "parentUuid": "07666a76_0387482a",
+      "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bee25c7c_12ef5ba8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-07-16T02:12:14Z",
+      "side": 1,
+      "message": "\u003e adding this to *systrace* was never really a good idea \n\nRight, in retrospect, this is not a good idea.\n\n\u003e *logging* mechanism instead?\n\nLogging all property get/set events will be too spamming.\nAnyway, I think not much clients need the property tracing now, let\u0027s do a clean revert for it.",
+      "parentUuid": "216d02fa_d73b4b7b",
+      "revId": "e0b530622e9f6762c2bcece2fb91b9a183648d3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
