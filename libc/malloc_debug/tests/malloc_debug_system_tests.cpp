@@ -463,7 +463,7 @@ TEST(MallocTests, DISABLED_exit_while_threads_allocating) {
           exit(1000);
         }
         free(ptr);
-        thread_mask.fetch_or(1 << i);
+        thread_mask.fetch_or(1U << i);
       }
     });
     malloc_thread.detach();
