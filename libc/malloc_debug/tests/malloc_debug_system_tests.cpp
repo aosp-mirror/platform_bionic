@@ -30,6 +30,7 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -449,12 +450,12 @@ TEST(MallocDebugSystemTest, verify_leak_allocation_limit) {
 }
 
 static constexpr int kExpectedExitCode = 30;
+static constexpr size_t kMaxThreads = sizeof(uint32_t) * 8;
 
 TEST(MallocTests, DISABLED_exit_while_threads_allocating) {
-  std::atomic_uint32_t thread_mask;
-  thread_mask = 0;
+  std::atomic_uint32_t thread_mask = {};
 
-  for (size_t i = 0; i < 32; i++) {
+  for (size_t i = 0; i < kMaxThreads; i++) {
     std::thread malloc_thread([&thread_mask, i] {
       while (true) {
         void* ptr = malloc(100);
@@ -469,7 +470,7 @@ TEST(MallocTests, DISABLED_exit_while_threads_allocating) {
   }
 
   // Wait until each thread has done at least one allocation.
-  while (thread_mask.load() != 0xffffffff)
+  while (thread_mask.load() != UINT32_MAX)
     ;
   exit(kExpectedExitCode);
 }
@@ -482,6 +483,59 @@ TEST(MallocDebugSystemTest, exit_while_threads_allocating) {
     pid_t pid;
     ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_exit_while_threads_allocating",
                                  "verbose backtrace", &pid, kExpectedExitCode));
+
+    ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"}));
+
+    std::string log_str;
+    GetLogStr(pid, &log_str, LOG_ID_CRASH);
+    ASSERT_TRUE(log_str.find("Fatal signal") == std::string::npos)
+        << "Found crash in log.\nLog message: " << log_str;
+  }
+}
+
+TEST(MallocTests, DISABLED_exit_while_threads_freeing_allocs_with_header) {
+  static constexpr size_t kMaxAllocsPerThread = 1000;
+  std::atomic_uint32_t thread_mask = {};
+  std::atomic_bool run;
+
+  std::vector<std::vector<void*>> allocs(kMaxThreads);
+  // Pre-allocate a bunch of memory so that we can try to trigger
+  // the frees after the main thread finishes.
+  for (size_t i = 0; i < kMaxThreads; i++) {
+    for (size_t j = 0; j < kMaxAllocsPerThread; j++) {
+      void* ptr = malloc(8);
+      ASSERT_TRUE(ptr != nullptr);
+      allocs[i].push_back(ptr);
+    }
+  }
+
+  for (size_t i = 0; i < kMaxThreads; i++) {
+    std::thread malloc_thread([&thread_mask, &run, &allocs, i] {
+      thread_mask.fetch_or(1 << i);
+      while (!run)
+        ;
+      for (auto ptr : allocs[i]) {
+        free(ptr);
+      }
+    });
+    malloc_thread.detach();
+  }
+
+  // Wait until all threads are running.
+  while (thread_mask.load() != UINT32_MAX)
+    ;
+  run = true;
+  exit(kExpectedExitCode);
+}
+
+TEST(MallocDebugSystemTest, exit_while_threads_freeing_allocs_with_header) {
+  for (size_t i = 0; i < 50; i++) {
+    SCOPED_TRACE(::testing::Message() << "Run " << i);
+    pid_t pid;
+    // Enable guard to force the use of a header.
+    ASSERT_NO_FATAL_FAILURE(
+        Exec("MallocTests.DISABLED_exit_while_threads_freeing_allocs_with_header", "verbose guard",
+             &pid, kExpectedExitCode));
 
     ASSERT_NO_FATAL_FAILURE(FindStrings(pid, std::vector<const char*>{"malloc debug enabled"}));
 
@@ -555,8 +609,11 @@ TEST(MallocTests, DISABLED_malloc_and_backtrace_deadlock) {
   static constexpr size_t kNumUnwinds = 1000;
   for (size_t i = 0; i < kNumUnwinds; i++) {
     std::unique_ptr<Backtrace> backtrace(Backtrace::Create(getpid(), tid));
+    // Only verify that there is at least one frame in the unwind.
+    // This is not a test of the unwinder and clang for arm seems to
+    // produces an increasing number of code that does not have unwind
+    // information.
     ASSERT_TRUE(backtrace->Unwind(0)) << "Failed on unwind " << i;
-    ASSERT_LT(1, backtrace->NumFrames()) << "Failed on unwind " << i;
   }
   running = false;
   thread.join();
