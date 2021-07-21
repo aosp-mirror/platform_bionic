@@ -32,7 +32,7 @@
  * @file nl_types.h
  * @brief Message catalogs.
  *
- * Android offers a dummy implementation of these functions to ease porting of historical software.
+ * Android offers a no-op implementation of these functions to ease porting of historical software.
  */
 
 #include <sys/cdefs.h>

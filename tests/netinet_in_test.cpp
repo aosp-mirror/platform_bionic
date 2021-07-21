@@ -31,8 +31,15 @@ static constexpr uint32_t be32 = 0x78563412;
 static constexpr uint64_t be64 = 0xf0debc9a78563412;
 
 TEST(netinet_in, bindresvport) {
-  // This isn't something we can usually test, so just check the symbol's there.
+  // This isn't something we can usually test (because you need to be root),
+  // so just check the symbol's there.
   ASSERT_EQ(-1, bindresvport(-1, nullptr));
+
+  // Only AF_INET is supported.
+  sockaddr_in sin = {.sin_family = AF_INET6};
+  errno = 0;
+  ASSERT_EQ(-1, bindresvport(-1, &sin));
+  ASSERT_EQ(EPFNOSUPPORT, errno);
 }
 
 TEST(netinet_in, in6addr_any) {

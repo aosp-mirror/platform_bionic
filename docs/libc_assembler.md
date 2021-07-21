@@ -10,7 +10,8 @@ verify that the routine is being properly tested.
 * Rerun the benchmarks using the updated image that uses the code for
 the new routine. See the [Performance](#Performance) section for details about
 benchmarking.
-* Verify that unwind information for new routine looks sane. See the [Unwind Info](#unwind-info) section for details about how to verify this.
+* Verify that unwind information for new routine looks correct. See
+the [Unwind Info](#unwind-info) section for details about how to verify this.
 
 When benchmarking, it's best to verify on the latest Pixel device supported.
 Make sure that you benchmark both the big and little cores to verify that

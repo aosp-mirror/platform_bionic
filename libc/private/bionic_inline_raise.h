@@ -60,8 +60,18 @@ static inline __always_inline void inline_raise(int sig, void* value = nullptr) 
   register long x3 __asm__("x3") = reinterpret_cast<long>(&info);
   register long x8 __asm__("x8") = __NR_rt_tgsigqueueinfo;
   __asm__("svc #0" : "=r"(x0) : "r"(x0), "r"(x1), "r"(x2), "r"(x3), "r"(x8) : "memory");
+#elif defined(__x86_64__)
+  register long rax __asm__("rax") = __NR_rt_tgsigqueueinfo;
+  register long rdi __asm__("rdi") = pid;
+  register long rsi __asm__("rsi") = tid;
+  register long rdx __asm__("rdx") = sig;
+  register long r10 __asm__("r10") = reinterpret_cast<long>(&info);
+  __asm__("syscall"
+          : "+r"(rax)
+          : "r"(rdi), "r"(rsi), "r"(rdx), "r"(r10)
+          : "memory", "cc", "r11", "rcx");
 #else
+  // 32-bit x86 is a huge mess, so don't even bother...
   syscall(__NR_rt_tgsigqueueinfo, pid, tid, sig, &info);
 #endif
 }
-

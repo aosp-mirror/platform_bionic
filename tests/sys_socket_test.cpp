@@ -109,7 +109,7 @@ static void TestAccept4(struct sockaddr_un* addr, int fd) {
   ASSERT_NE(fd_acc, -1) << strerror(errno);
 
   // Check that SOCK_CLOEXEC was set properly.
-  AssertCloseOnExec(fd_acc, true);
+  ASSERT_TRUE(CloseOnExec(fd_acc));
 
   close(fd_acc);
 }

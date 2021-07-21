@@ -228,14 +228,22 @@ TEST(wchar, limits) {
 }
 
 TEST(wchar, wcsstr) {
-  const wchar_t* haystack = L"matches hello world, not the second hello world";
-  const wchar_t* empty_needle = L"";
-  const wchar_t* good_needle = L"ll";
-  const wchar_t* bad_needle = L"wort";
+  const wchar_t* haystack = L"big daddy/giant haystacks!";
+  const wchar_t* empty_haystack = L"";
 
-  ASSERT_EQ(haystack, wcsstr(haystack, empty_needle));
-  ASSERT_EQ(&haystack[10], wcsstr(haystack, good_needle));
-  ASSERT_EQ(nullptr, wcsstr(haystack, bad_needle));
+  // The empty needle is a special case.
+  ASSERT_EQ(haystack, wcsstr(haystack, L""));
+  ASSERT_EQ(empty_haystack, wcsstr(empty_haystack, L""));
+
+  ASSERT_EQ(haystack, wcsstr(haystack, L"b"));
+  ASSERT_EQ(haystack, wcsstr(haystack, L"big"));
+  ASSERT_EQ(haystack + 9, wcsstr(haystack, L"/"));
+  ASSERT_EQ(haystack + 9, wcsstr(haystack, L"/giant"));
+  ASSERT_EQ(haystack + 25, wcsstr(haystack, L"!"));
+  ASSERT_EQ(haystack + 19, wcsstr(haystack, L"stacks!"));
+
+  ASSERT_EQ(nullptr, wcsstr(haystack, L"monkey"));
+  ASSERT_EQ(nullptr, wcsstr(empty_haystack, L"monkey"));
 }
 
 TEST(wchar, wcsstr_80199) {
@@ -646,6 +654,8 @@ TEST(wchar, wcsncpy_smoke) {
   EXPECT_EQ(dst, wcsncpy(dst, src, 6));
   dst[6] = L'\0';
   EXPECT_STREQ(dst, L"Source");
+  EXPECT_EQ(dst, wcsncpy(dst, L"clobber", 0));
+  EXPECT_STREQ(dst, L"Source");
 
   wmemset(dst, L'x', NUM_WCHARS(sizeof(dst)));
   EXPECT_EQ(dst, wcsncpy(dst, src, src_len + 4));
@@ -1023,4 +1033,170 @@ TEST(wchar, wcwidth_korean_common_non_syllables) {
 
   EXPECT_EQ(2, wcwidth(L'ㅜ')); // Korean "crying" emoticon.
   EXPECT_EQ(2, wcwidth(L'ㅋ')); // Korean "laughing" emoticon.
+}
+
+TEST(wchar, wcswidth) {
+  EXPECT_EQ(2, wcswidth(L"abc", 2));
+  EXPECT_EQ(2, wcswidth(L"ab\t", 2));
+  EXPECT_EQ(-1, wcswidth(L"a\tb", 2));
+}
+
+TEST(wchar, wcslcpy) {
+#if defined(__BIONIC__)
+  wchar_t dst[32];
+  ASSERT_EQ(11U, wcslcpy(dst, L"hello world", 3));
+  ASSERT_STREQ(L"he", dst);
+  ASSERT_EQ(11U, wcslcpy(dst, L"hello world", 32));
+  ASSERT_STREQ(L"hello world", dst);
+#else
+  GTEST_SKIP() << "no wcslcpy in glibc";
+#endif
+}
+
+TEST(wchar, wcscat) {
+  wchar_t dst[32];
+  ASSERT_EQ(dst, wcscat(dst, L"hello"));
+  ASSERT_STREQ(dst, L"hello");
+  ASSERT_EQ(dst, wcscat(dst, L" world"));
+  ASSERT_STREQ(dst, L"hello world");
+}
+
+TEST(wchar, wcscpy) {
+  wchar_t dst[32];
+  ASSERT_EQ(dst, wcscpy(dst, L"hello"));
+  ASSERT_STREQ(dst, L"hello");
+  ASSERT_EQ(dst, wcscpy(dst, L"world"));
+  ASSERT_STREQ(dst, L"world");
+}
+
+TEST(wchar, wcscasecmp) {
+  ASSERT_EQ(0, wcscasecmp(L"hello", L"HELLO"));
+  ASSERT_TRUE(wcscasecmp(L"hello1", L"HELLO2") < 0);
+  ASSERT_TRUE(wcscasecmp(L"hello2", L"HELLO1") > 0);
+  ASSERT_TRUE(wcscasecmp(L"hello", L"HELL") > 0);
+  ASSERT_TRUE(wcscasecmp(L"hell", L"HELLO") < 0);
+}
+
+TEST(wchar, wcscspn) {
+  ASSERT_EQ(0U, wcscspn(L"hello world", L"abcdefghijklmnopqrstuvwxyz"));
+  ASSERT_EQ(5U, wcscspn(L"hello world", L" "));
+  ASSERT_EQ(11U, wcscspn(L"hello world", L"!"));
+}
+
+TEST(wchar, wcsspn) {
+  ASSERT_EQ(0U, wcsspn(L"hello world", L"!"));
+  ASSERT_EQ(5U, wcsspn(L"hello world", L"abcdefghijklmnopqrstuvwxyz"));
+  ASSERT_EQ(11U, wcsspn(L"hello world", L"abcdefghijklmnopqrstuvwxyz "));
+}
+
+TEST(wchar, wcsdup) {
+  wchar_t* s = wcsdup(L"hello");
+  ASSERT_STREQ(s, L"hello");
+  free(s);
+}
+
+TEST(wchar, wcslcat) {
+#if defined(__BIONIC__)
+  wchar_t dst[4] = {};
+  ASSERT_EQ(1U, wcslcat(dst, L"a", 4));
+  ASSERT_EQ(7U, wcslcat(dst, L"bcdefg", 4));
+  ASSERT_STREQ(dst, L"abc");
+#else
+  GTEST_SKIP() << "no wcslcpy in glibc";
+#endif
+}
+
+TEST(wchar, wcsncasecmp) {
+  ASSERT_EQ(0, wcsncasecmp(L"foo", L"bar", 0));
+
+  ASSERT_EQ(0, wcsncasecmp(L"hello1", L"HELLO2", 5));
+  ASSERT_TRUE(wcsncasecmp(L"hello1", L"HELLO2", 6) < 0);
+  ASSERT_TRUE(wcsncasecmp(L"hello2", L"HELLO1", 6) > 0);
+  ASSERT_TRUE(wcsncasecmp(L"hello", L"HELL", 5) > 0);
+  ASSERT_TRUE(wcsncasecmp(L"hell", L"HELLO", 5) < 0);
+}
+
+TEST(wchar, wcsncat) {
+  wchar_t dst[32];
+  ASSERT_EQ(dst, wcsncat(dst, L"hello, world!", 5));
+  ASSERT_STREQ(dst, L"hello");
+  ASSERT_EQ(dst, wcsncat(dst, L"hello, world!", 0));
+  ASSERT_STREQ(dst, L"hello");
+  ASSERT_EQ(dst, wcsncat(dst, L", world!", 8));
+  ASSERT_STREQ(dst, L"hello, world!");
+}
+
+TEST(wchar, wcsncmp) {
+  ASSERT_EQ(0, wcsncmp(L"foo", L"bar", 0));
+  ASSERT_EQ(0, wcsncmp(L"aaaa", L"aaab", 3));
+  ASSERT_TRUE(wcsncmp(L"aaaa", L"aaab", 4) < 0);
+  ASSERT_TRUE(wcsncmp(L"aaab", L"aaaa", 4) > 0);
+}
+
+TEST(wchar, wcsnlen) {
+  ASSERT_EQ(2U, wcsnlen(L"hello", 2));
+  ASSERT_EQ(5U, wcsnlen(L"hello", 5));
+  ASSERT_EQ(5U, wcsnlen(L"hello", 666));
+}
+
+TEST(wchar, wcspbrk) {
+  const wchar_t* s = L"hello, world!";
+  ASSERT_EQ(nullptr, wcspbrk(s, L"-"));
+  ASSERT_EQ(s, wcspbrk(s, L"abch"));
+  ASSERT_EQ(s + 2, wcspbrk(s, L"l"));
+  ASSERT_EQ(s + 5, wcspbrk(s, L",. !"));
+}
+
+TEST(wchar, wcstok) {
+  wchar_t s[] = L"this is\ta\nstring";
+  wchar_t* p;
+  ASSERT_EQ(s, wcstok(s, L"\t\n ", &p));
+  ASSERT_STREQ(s, L"this");
+  ASSERT_STREQ(p, L"is\ta\nstring");
+  ASSERT_EQ(s + 5, wcstok(nullptr, L"\t\n ", &p));
+  ASSERT_STREQ(s + 5, L"is");
+  ASSERT_STREQ(p, L"a\nstring");
+  ASSERT_EQ(s + 8, wcstok(nullptr, L"\t\n ", &p));
+  ASSERT_STREQ(s + 8, L"a");
+  ASSERT_STREQ(p, L"string");
+  ASSERT_EQ(s + 10, wcstok(nullptr, L"\t\n ", &p));
+  ASSERT_STREQ(s + 10, L"string");
+  ASSERT_EQ(nullptr, p);
+}
+
+TEST(wchar, wmemchr) {
+  const wchar_t* s = L"hello, world!";
+  ASSERT_EQ(s, wmemchr(s, L'h', 13));
+  ASSERT_EQ(s + 5, wmemchr(s, L',', 13));
+  ASSERT_EQ(s + 12, wmemchr(s, L'!', 13));
+  ASSERT_EQ(nullptr, wmemchr(s, L'a', 13));
+}
+
+TEST(wchar, wmemcmp) {
+  ASSERT_EQ(0, wmemcmp(L"aaaa", L"aaab", 3));
+  ASSERT_TRUE(wmemcmp(L"aaaa", L"aaab", 4) < 0);
+  ASSERT_TRUE(wmemcmp(L"aaab", L"aaaa", 4) > 0);
+}
+
+TEST(wchar, wmemcpy) {
+  wchar_t dst[32] = {};
+  ASSERT_EQ(dst, wmemcpy(dst, L"hello", 5));
+  ASSERT_STREQ(dst, L"hello");
+}
+
+TEST(wchar, wmemmove) {
+  wchar_t dst[32] = {};
+  ASSERT_EQ(dst, wmemmove(dst, L"hello", 5));
+  ASSERT_STREQ(dst, L"hello");
+}
+
+TEST(wchar, wmemset) {
+  wchar_t dst[4] = {};
+  ASSERT_EQ(dst, wmemset(dst, 0x12345678, 3));
+  ASSERT_EQ(dst[0], wchar_t(0x12345678));
+  ASSERT_EQ(dst[1], wchar_t(0x12345678));
+  ASSERT_EQ(dst[2], wchar_t(0x12345678));
+  ASSERT_EQ(dst[3], wchar_t(0));
+  ASSERT_EQ(dst, wmemset(dst, L'y', 0));
+  ASSERT_EQ(dst[0], wchar_t(0x12345678));
 }

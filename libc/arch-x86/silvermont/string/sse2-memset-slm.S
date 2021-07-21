@@ -77,15 +77,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     /* We loaded the jump table and adjusted EDX. Go.  */	\
     jmp		*%ebx
 
-	.section	.gnu.linkonce.t.__x86.get_pc_thunk.bx,"ax",@progbits
-	.globl	__x86.get_pc_thunk.bx
-	.hidden	__x86.get_pc_thunk.bx
-	ALIGN(4)
-	.type	__x86.get_pc_thunk.bx,@function
-__x86.get_pc_thunk.bx:
-	movl	(%esp), %ebx
-	ret
-
 ENTRY(__memset_chk_generic)
   ENTRANCE
 

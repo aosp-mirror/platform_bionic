@@ -4,7 +4,7 @@
 # list here the macros that you know are always defined/undefined when including
 # the kernel headers
 #
-import sys, cpp, re, os.path, string, time
+import sys, cpp, re, os.path, time
 from defaults import *
 
 verboseSearch = 0
@@ -56,7 +56,7 @@ class HeaderScanner:
     #    <mtd/*>
     #
     re_combined_str=\
-       r"^.*<((%s)/[\d\w_\+\.\-/]*)>.*$" % string.join(kernel_dirs,"|")
+       r"^.*<((%s)/[\d\w_\+\.\-/]*)>.*$" % "|".join(kernel_dirs)
 
     re_combined = re.compile(re_combined_str)
 
@@ -100,7 +100,7 @@ class HeaderScanner:
 
         if from_file:
             if verboseFind:
-                print "=== %s uses %s" % (from_file, header)
+                print("=== %s uses %s" % (from_file, header))
             self.headers[header].add(from_file)
 
     def parseFile(self, path, arch=None, kernel_root=None):
@@ -114,7 +114,7 @@ class HeaderScanner:
         try:
             f = open(path, "rt")
         except:
-            print "!!! can't read '%s'" % path
+            print("!!! can't read '%s'" % path)
             return
 
         hasIncludes = False
@@ -125,10 +125,10 @@ class HeaderScanner:
                 break
 
         if not hasIncludes:
-            if verboseSearch: print "::: " + path
+            if verboseSearch: print("::: " + path)
             return
 
-        if verboseSearch: print "*** " + path
+        if verboseSearch: print("*** " + path)
 
         list = cpp.BlockParser().parseFile(path)
         if list:
@@ -205,7 +205,6 @@ class KernelHeaderFinder:
 
         if len(kernel_root) > 0 and kernel_root[-1] != "/":
             kernel_root += "/"
-        #print "using kernel_root %s" % kernel_root
         self.archs         = archs
         self.searched      = set(headers)
         self.kernel_root   = kernel_root
@@ -300,8 +299,8 @@ class ConfigParser:
         self.items = {}
         self.duplicates = False
 
-    def parseLine(self,line):
-        line = string.strip(line)
+    def parseLine(self, line):
+        line = line.strip()
 
         # skip empty and comment lines
         if len(line) == 0 or line[0] == "#":

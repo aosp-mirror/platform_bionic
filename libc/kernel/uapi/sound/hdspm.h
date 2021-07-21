@@ -18,7 +18,9 @@
  ****************************************************************************/
 #ifndef __SOUND_HDSPM_H
 #define __SOUND_HDSPM_H
+#ifdef __linux__
 #include <linux/types.h>
+#endif
 #define HDSPM_MAX_CHANNELS 64
 enum hdspm_io_type {
   MADI,
@@ -144,9 +146,4 @@ struct hdspm_mixer_ioctl {
   struct hdspm_mixer * mixer;
 };
 #define SNDRV_HDSPM_IOCTL_GET_MIXER _IOR('H', 0x44, struct hdspm_mixer_ioctl)
-typedef struct hdspm_peak_rms hdspm_peak_rms_t;
-typedef struct hdspm_config_info hdspm_config_info_t;
-typedef struct hdspm_version hdspm_version_t;
-typedef struct hdspm_channelfader snd_hdspm_channelfader_t;
-typedef struct hdspm_mixer hdspm_mixer_t;
 #endif
