@@ -196,6 +196,14 @@ impl PropertyWatcher {
     }
 }
 
+/// Reads a system property.
+pub fn read(name: &str) -> AnyhowResult<String> {
+    PropertyWatcher::new(name)
+        .context("Failed to create a PropertyWatcher.")?
+        .read(|_name, value| Ok(value.to_owned()))
+        .with_context(|| format!("Failed to read the system property {}.", name))
+}
+
 /// Writes a system property.
 pub fn write(name: &str, value: &str) -> AnyhowResult<()> {
     if
@@ -204,10 +212,10 @@ pub fn write(name: &str, value: &str) -> AnyhowResult<()> {
         // If successful, __system_property_set returns 0, otherwise, returns -1.
         system_properties_bindgen::__system_property_set(
             CString::new(name)
-                .context("In keystore2::system_property::write: Construction CString from name.")?
+                .context("Failed to construct CString from name.")?
                 .as_ptr(),
             CString::new(value)
-                .context("In keystore2::system_property::write: Constructing CString from value.")?
+                .context("Failed to construct CString from value.")?
                 .as_ptr(),
         )
     } == 0
