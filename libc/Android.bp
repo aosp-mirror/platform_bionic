@@ -2075,7 +2075,7 @@ cc_defaults {
 cc_defaults {
     name: "crt_defaults",
     defaults: ["crt_and_memtag_defaults"],
-    default_shared_libs: [],
+    system_shared_libs: [],
 }
 
 cc_defaults {
