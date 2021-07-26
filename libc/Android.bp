@@ -1859,7 +1859,9 @@ cc_library_headers {
 
 cc_library_headers {
     name: "libc_llndk_headers",
-    visibility: ["//visibility:private"],
+    visibility: [
+        "//external/musl",
+    ],
     llndk: {
         llndk_headers: true,
     },
