@@ -237,8 +237,6 @@ void HandleHeapprofdSignal() {
     // heapprofd client initialization.
     MallocHeapprofdState expected2 = kHookInstalled;
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected,
-          kInstallingEphemeralHook) ||
-        atomic_compare_exchange_strong(&gHeapprofdState, &expected2,
           kInstallingEphemeralHook)) {
       const MallocDispatch* default_dispatch = GetDefaultDispatchTable();
 
@@ -264,7 +262,8 @@ void HandleHeapprofdSignal() {
         gEphemeralDispatch = *default_dispatch;
       } else {
         // 3. It may be possible at this point in time that heapprofd is
-        // *already* the default dispatch, and as such we don't want to use
+        // *already* the default dispatch, and when it was initialized there
+        // was no default dispatch installed. As such we don't want to use
         // heapprofd as the backing store for itself (otherwise infinite
         // recursion occurs). We will use the system allocator functions. Note:
         // We've checked that no other malloc interceptors are being used by
@@ -273,23 +272,41 @@ void HandleHeapprofdSignal() {
         atomic_store(&gPreviousDefaultDispatchTable, nullptr);
         gEphemeralDispatch = *NativeAllocatorDispatch();
       }
-
-      // Now, replace the malloc function so that the next call to malloc() will
-      // initialize heapprofd.
-      gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
-
-      // And finally, install these new malloc-family interceptors.
-      __libc_globals.mutate([](libc_globals* globals) {
-        atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
-        if (!MallocLimitInstalled()) {
-          atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
-        }
-      });
-      atomic_store(&gHeapprofdState, kEphemeralHookInstalled);
+    } else if (atomic_compare_exchange_strong(&gHeapprofdState, &expected2,
+                                              kInstallingEphemeralHook)) {
+      // if we still have hook installed, we can reuse the previous
+      // decision. THIS IS REQUIRED FOR CORRECTNESS, because otherwise the
+      // following can happen
+      // 1. Assume DispatchIsGwpAsan(default_dispatch)
+      // 2. This function is ran, sets gPreviousDefaultDispatchTable to
+      //    GWP ASan.
+      // 3. The sessions ends, DispatchReset FAILS due to a race. Now
+      //    heapprofd hooks are default dispatch.
+      // 4. We re-enter this function later. If we did NOT look at the
+      //    previously recorded gPreviousDefaultDispatchTable, we would
+      //    incorrectly reach case 3. below.
+      // 5. The session ends, DispatchReset now resets the hooks to the
+      //    system allocator. This is incorrect.
+      const MallocDispatch* prev_dispatch =
+        atomic_load(&gPreviousDefaultDispatchTable);
+      gEphemeralDispatch = *prev_dispatch;
     } else {
       error_log("%s: heapprofd: failed to transition kInitialState -> kInstallingEphemeralHook. "
           "current state (possible race): %d", getprogname(), expected2);
+      return;
     }
+    // Now, replace the malloc function so that the next call to malloc() will
+    // initialize heapprofd.
+    gEphemeralDispatch.malloc = MallocInitHeapprofdHook;
+
+    // And finally, install these new malloc-family interceptors.
+    __libc_globals.mutate([](libc_globals* globals) {
+      atomic_store(&globals->default_dispatch_table, &gEphemeralDispatch);
+      if (!MallocLimitInstalled()) {
+        atomic_store(&globals->current_dispatch_table, &gEphemeralDispatch);
+      }
+    });
+    atomic_store(&gHeapprofdState, kEphemeralHookInstalled);
   });
   // Otherwise, we're racing against malloc_limit's enable logic (at most once
   // per process, and a niche feature). This is highly unlikely, so simply give
@@ -335,16 +352,15 @@ static void CommonInstallHooks(libc_globals* globals) {
     return;
   }
 
+  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
+}
+
+void HeapprofdInstallHooksAtInit(libc_globals *globals) {
   // Before we set the new default_dispatch_table in FinishInstallHooks, save
   // the previous dispatch table. If DispatchReset() gets called later, we want
   // to be able to restore the dispatch. We're still under
   // MaybeModifyGlobals locks at this point.
   atomic_store(&gPreviousDefaultDispatchTable, GetDefaultDispatchTable());
-
-  FinishInstallHooks(globals, nullptr, kHeapprofdPrefix);
-}
-
-void HeapprofdInstallHooksAtInit(libc_globals* globals) {
   MaybeModifyGlobals(kWithoutLock, [globals] {
     MallocHeapprofdState expected = kInitialState;
     if (atomic_compare_exchange_strong(&gHeapprofdState, &expected, kInstallingHook)) {
