@@ -59,8 +59,6 @@
 // is enabled. These tests don't run be default, and are executed
 // by wrappers that will enable various malloc debug features.
 
-static constexpr time_t kTimeoutSeconds = 10;
-
 extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
   static const char* initial_args[] = {"--slow_threshold_ms=30000",
                                        "--deadline_threshold_ms=1200000"};
@@ -145,21 +143,36 @@ class LogReader {
           // Nothing left to read.
           break;
         }
-        // Lock while appending to the data.
-        std::lock_guard<std::mutex> guard(data_lock_);
-        char* msg_str = msg.msg();
-        // Make sure the message is not empty and recent.
-        if (msg_str != nullptr && (msg.entry.sec > log_start_time_.tv_sec ||
-                                   (msg.entry.sec == log_start_time_.tv_sec &&
-                                    msg.entry.nsec > log_start_time_.tv_nsec))) {
-          // Skip the tag part of the message.
-          char* tag = msg_str + 1;
-          msg_str = tag + strlen(tag) + 1;
-          log_data_ += msg_str;
-          if (log_data_.back() != '\n') {
-            log_data_ += '\n';
+        // Do not allow SIGUSR1 while processing the log message.
+        // This avoids a deadlock if the thread is being terminated
+        // at this moment.
+        sigset64_t mask_set;
+        sigprocmask64(SIG_SETMASK, nullptr, &mask_set);
+        sigaddset64(&mask_set, SIGUSR1);
+        sigprocmask64(SIG_SETMASK, &mask_set, nullptr);
+
+        {
+          // Lock while appending to the data.
+          std::lock_guard<std::mutex> guard(data_lock_);
+          char* msg_str = msg.msg();
+          // Make sure the message is not empty and recent.
+          if (msg_str != nullptr && (msg.entry.sec > log_start_time_.tv_sec ||
+                                     (msg.entry.sec == log_start_time_.tv_sec &&
+                                      msg.entry.nsec > log_start_time_.tv_nsec))) {
+            // Skip the tag part of the message.
+            char* tag = msg_str + 1;
+            msg_str = tag + strlen(tag) + 1;
+            log_data_ += msg_str;
+            if (log_data_.back() != '\n') {
+              log_data_ += '\n';
+            }
           }
         }
+
+        // Re-enable SIGUSR1
+        sigprocmask64(SIG_SETMASK, nullptr, &mask_set);
+        sigdelset64(&mask_set, SIGUSR1);
+        sigprocmask64(SIG_SETMASK, &mask_set, nullptr);
       }
       android_logger_list_free(list);
     }));
@@ -196,8 +209,33 @@ log_time LogReader::log_start_time_;
 
 class MallocDebugSystemTest : public ::testing::Test {
  protected:
-  void Exec(const char* test_name, const char* debug_options, int expected_exit_code = 0,
-            time_t timeout_seconds = kTimeoutSeconds) {
+  void SetUp() override {
+    expected_log_strings_.clear();
+    unexpected_log_strings_.clear();
+
+    // All tests expect this message to be present.
+    expected_log_strings_.push_back("malloc debug enabled");
+  }
+
+  void Exec(const char* test_name, const char* debug_options, int expected_exit_code = 0) {
+    for (size_t i = 0; i < kMaxRetries; i++) {
+      ASSERT_NO_FATAL_FAILURE(InternalExec(test_name, debug_options, expected_exit_code));
+
+      // Due to log messages sometimes getting lost, if a log message
+      // is not present, allow retrying the test.
+      std::string error_msg;
+      if (!CheckExpectedLogStrings(&error_msg)) {
+        ASSERT_NE(i, kMaxRetries - 1) << error_msg;
+        usleep(1000);
+      }
+
+      // This doesn't need to be retried since if the log message is
+      // present, that is an immediate fail.
+      ASSERT_NO_FATAL_FAILURE(VerifyUnexpectedLogStrings());
+    }
+  }
+
+  void InternalExec(const char* test_name, const char* debug_options, int expected_exit_code) {
     int fds[2];
     ASSERT_NE(-1, pipe(fds));
     ASSERT_NE(-1, fcntl(fds[0], F_SETFL, O_NONBLOCK));
@@ -235,7 +273,7 @@ class MallocDebugSystemTest : public ::testing::Test {
     output_.clear();
     std::vector<char> buffer(4096);
     time_t start_time = time(nullptr);
-    bool done = false;
+    bool read_done = false;
     while (true) {
       struct pollfd read_fd = {.fd = fds[0], .events = POLLIN};
       if (TEMP_FAILURE_RETRY(poll(&read_fd, 1, 1)) > 0) {
@@ -245,20 +283,19 @@ class MallocDebugSystemTest : public ::testing::Test {
         }
         ASSERT_NE(-1, bytes);
         if (bytes == 0) {
-          done = true;
+          read_done = true;
           break;
         }
         output_.append(buffer.data(), bytes);
       }
 
-      if ((time(nullptr) - start_time) > timeout_seconds) {
+      if ((time(nullptr) - start_time) > kReadOutputTimeoutSeconds) {
         kill(pid_, SIGINT);
         break;
       }
     }
-    EXPECT_TRUE(done) << "Timed out while reading data, output:\n" << output_;
 
-    done = false;
+    bool done = false;
     int status;
     start_time = time(nullptr);
     while (true) {
@@ -267,7 +304,7 @@ class MallocDebugSystemTest : public ::testing::Test {
         done = true;
         break;
       }
-      if ((time(nullptr) - start_time) > timeout_seconds) {
+      if ((time(nullptr) - start_time) > kWaitpidTimeoutSeconds) {
         break;
       }
     }
@@ -277,21 +314,22 @@ class MallocDebugSystemTest : public ::testing::Test {
       while (true) {
         int kill_status;
         int wait_pid = waitpid(pid_, &kill_status, WNOHANG);
-        if (wait_pid == pid_ || (time(nullptr) - start_time) > timeout_seconds) {
+        if (wait_pid == pid_ || (time(nullptr) - start_time) > kWaitpidTimeoutSeconds) {
           break;
         }
       }
     }
 
+    // Check timeout conditions first.
+    ASSERT_TRUE(read_done) << "Timed out while reading data, output:\n" << output_;
     ASSERT_TRUE(done) << "Timed out waiting for waitpid, output:\n" << output_;
+
     ASSERT_FALSE(WIFSIGNALED(status)) << "Failed with signal " << WTERMSIG(status) << "\nOutput:\n"
                                       << output_;
     ASSERT_EQ(expected_exit_code, WEXITSTATUS(status)) << "Output:\n" << output_;
   }
 
-  void FindStrings(std::vector<const char*> match_strings,
-                   std::vector<const char*> no_match_strings = std::vector<const char*>{},
-                   time_t timeout_seconds = kTimeoutSeconds) {
+  bool CheckExpectedLogStrings(std::string* error_msg) {
     time_t start = time(nullptr);
     std::string missing_match;
     std::string log_str;
@@ -299,27 +337,32 @@ class MallocDebugSystemTest : public ::testing::Test {
       log_str = log_main_->GetLog();
       missing_match.clear();
       // Look for the expected strings.
-      for (auto str : match_strings) {
+      for (auto str : expected_log_strings_) {
         if (log_str.find(str) == std::string::npos) {
           missing_match = str;
           break;
         }
       }
-
-      // Verify the unexpected strings are not present.
-      for (auto str : no_match_strings) {
-        ASSERT_TRUE(log_str.find(str) == std::string::npos)
-            << "Unexpectedly found '" << str << "' in log output:\n"
-            << log_str;
-      }
       if (missing_match.empty()) {
-        return;
+        return true;
       }
-      if ((time(nullptr) - start) > timeout_seconds) {
+      if ((time(nullptr) - start) > kLogTimeoutSeconds) {
         break;
       }
     }
-    ASSERT_EQ("", missing_match) << "Didn't find expected log output:\n" << log_str;
+
+    *error_msg = android::base::StringPrintf("Didn't find string '%s' in log output:\n%s",
+                                             missing_match.c_str(), log_str.c_str());
+    return false;
+  }
+
+  void VerifyUnexpectedLogStrings() {
+    std::string log_str = log_main_->GetLog();
+    for (auto str : unexpected_log_strings_) {
+      ASSERT_TRUE(log_str.find(str) == std::string::npos)
+          << "Unexpectedly found string '" << str << "' in log output:\n"
+          << log_str;
+    }
   }
 
   void VerifyLeak(const char* test_prefix) {
@@ -368,16 +411,17 @@ class MallocDebugSystemTest : public ::testing::Test {
 #endif
     };
 
+    size_t match_len = expected_log_strings_.size() + 1;
+    expected_log_strings_.resize(match_len);
     for (size_t i = 0; i < sizeof(functions) / sizeof(FunctionInfo); i++) {
       SCOPED_TRACE(testing::Message()
                    << functions[i].name << " expected size " << functions[i].size);
+
+      expected_log_strings_[match_len - 1] =
+          android::base::StringPrintf("leaked block of size %zu at", functions[i].size);
+
       std::string test = std::string("MallocTests.DISABLED_") + test_prefix + functions[i].name;
       ASSERT_NO_FATAL_FAILURE(Exec(test.c_str(), "verbose backtrace leak_track"));
-
-      std::string expected_leak =
-          android::base::StringPrintf("leaked block of size %zu at", functions[i].size);
-      EXPECT_NO_FATAL_FAILURE(
-          FindStrings(std::vector<const char*>{"malloc debug enabled", expected_leak.c_str()}));
     }
   }
 
@@ -385,14 +429,19 @@ class MallocDebugSystemTest : public ::testing::Test {
   std::unique_ptr<LogReader> log_crash_;
   pid_t pid_;
   std::string output_;
+  std::vector<std::string> expected_log_strings_;
+  std::vector<std::string> unexpected_log_strings_;
+
+  static constexpr size_t kReadOutputTimeoutSeconds = 180;
+  static constexpr size_t kWaitpidTimeoutSeconds = 10;
+  static constexpr size_t kLogTimeoutSeconds = 5;
+  static constexpr size_t kMaxRetries = 3;
 };
 
 TEST(MallocTests, DISABLED_smoke) {}
 
 TEST_F(MallocDebugSystemTest, smoke) {
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_smoke", "verbose backtrace"));
-
-  ASSERT_NO_FATAL_FAILURE(FindStrings(std::vector<const char*>{"malloc debug enabled"}));
+  Exec("MallocTests.DISABLED_smoke", "verbose backtrace");
 }
 
 static void SetAllocationLimit() {
@@ -586,8 +635,6 @@ TEST_F(MallocDebugSystemTest, exit_while_threads_allocating) {
     ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_exit_while_threads_allocating",
                                  "verbose backtrace", kExpectedExitCode));
 
-    ASSERT_NO_FATAL_FAILURE(FindStrings(std::vector<const char*>{"malloc debug enabled"}));
-
     std::string log_str = log_crash_->GetLog();
     ASSERT_TRUE(log_str.find("Fatal signal") == std::string::npos)
         << "Found crash in log.\nLog message: " << log_str << " pid: " << pid_;
@@ -637,8 +684,6 @@ TEST_F(MallocDebugSystemTest, exit_while_threads_freeing_allocs_with_header) {
         Exec("MallocTests.DISABLED_exit_while_threads_freeing_allocs_with_header", "verbose guard",
              kExpectedExitCode));
 
-    ASSERT_NO_FATAL_FAILURE(FindStrings(std::vector<const char*>{"malloc debug enabled"}));
-
     std::string log_str = log_crash_->GetLog();
     ASSERT_TRUE(log_str.find("Fatal signal") == std::string::npos)
         << "Found crash in log.\nLog message: " << log_str << " pid: " << pid_;
@@ -671,20 +716,17 @@ TEST(MallocTests, DISABLED_write_leak_info) {
 }
 
 TEST_F(MallocDebugSystemTest, write_leak_info_no_header) {
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace"));
-
-  ASSERT_NO_FATAL_FAILURE(FindStrings(
-      std::vector<const char*>{"malloc debug enabled"},
-
-      std::vector<const char*>{" HAS INVALID TAG ", "USED AFTER FREE ", "UNKNOWN POINTER "}));
+  unexpected_log_strings_.push_back(" HAS INVALID TAG ");
+  unexpected_log_strings_.push_back("USED AFTER FREE ");
+  unexpected_log_strings_.push_back("UNKNOWN POINTER ");
+  Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace");
 }
 
 TEST_F(MallocDebugSystemTest, write_leak_info_header) {
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace guard"));
-
-  ASSERT_NO_FATAL_FAILURE(FindStrings(
-      std::vector<const char*>{"malloc debug enabled"},
-      std::vector<const char*>{" HAS INVALID TAG ", "USED AFTER FREE ", "UNKNOWN POINTER "}));
+  unexpected_log_strings_.push_back(" HAS INVALID TAG ");
+  unexpected_log_strings_.push_back("USED AFTER FREE ");
+  unexpected_log_strings_.push_back("UNKNOWN POINTER ");
+  Exec("MallocTests.DISABLED_write_leak_info", "verbose backtrace guard");
 }
 
 TEST(MallocTests, DISABLED_malloc_and_backtrace_deadlock) {
@@ -719,11 +761,8 @@ TEST(MallocTests, DISABLED_malloc_and_backtrace_deadlock) {
 }
 
 TEST_F(MallocDebugSystemTest, malloc_and_backtrace_deadlock) {
-  ASSERT_NO_FATAL_FAILURE(Exec("MallocTests.DISABLED_malloc_and_backtrace_deadlock",
-                               "verbose verify_pointers", 0, 180));
-
   // Make sure that malloc debug is enabled and that no timeouts occur during
   // unwinds.
-  ASSERT_NO_FATAL_FAILURE(FindStrings(std::vector<const char*>{"malloc debug enabled"},
-                                      std::vector<const char*>{"Timed out waiting for "}));
+  unexpected_log_strings_.push_back("Timed out waiting for ");
+  Exec("MallocTests.DISABLED_malloc_and_backtrace_deadlock", "verbose verify_pointers", 0);
 }
