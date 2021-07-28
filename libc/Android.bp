@@ -1202,6 +1202,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
@@ -1776,10 +1777,6 @@ cc_library {
         "com.android.runtime",
     ],
 
-    // Sorting bss symbols by size usually results in less dirty pages at run
-    // time, because small symbols are grouped together.
-    sort_bss_symbols_by_size: true,
-
     lto: {
         never: true,
     },
@@ -1862,7 +1859,9 @@ cc_library_headers {
 
 cc_library_headers {
     name: "libc_llndk_headers",
-    visibility: ["//visibility:private"],
+    visibility: [
+        "//external/musl",
+    ],
     llndk: {
         llndk_headers: true,
     },
@@ -1942,11 +1941,6 @@ cc_library_headers {
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
-        // TODO(b/153662223): Clean up these users that needed visibility when
-        // the implicit addition of system Bionic paths was removed.
-        "//art/tools/cpp-define-generator",
-        "//external/boringssl",
-        "//external/minijail",
     ],
 
     stl: "none",
@@ -1987,8 +1981,12 @@ cc_library {
     static: {
         system_shared_libs: [],
     },
-    shared: {
-        system_shared_libs: ["libc"],
+    target: {
+        bionic: {
+            shared: {
+                system_shared_libs: ["libc"],
+            },
+        },
     },
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
@@ -2050,7 +2048,7 @@ genrule {
 // ========================================================
 
 cc_defaults {
-    name: "crt_defaults",
+    name: "crt_and_memtag_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     product_available: true,
@@ -2074,6 +2072,12 @@ cc_defaults {
     sanitize: {
         never: true,
     },
+}
+
+cc_defaults {
+    name: "crt_defaults",
+    defaults: ["crt_and_memtag_defaults"],
+    system_shared_libs: [],
 }
 
 cc_defaults {
@@ -2203,7 +2207,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_defaults"],
+    defaults: ["crt_and_memtag_defaults"],
 }
 
 cc_library_static {
@@ -2215,7 +2219,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_defaults"],
+    defaults: ["crt_and_memtag_defaults"],
 }
 
 // ========================================================

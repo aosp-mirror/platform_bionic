@@ -331,6 +331,11 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
 __attribute__((no_sanitize("hwaddress")))
+#ifdef __aarch64__
+// This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
+// function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
+__attribute__((target("branch-protection=bti")))
+#endif
 static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
 
