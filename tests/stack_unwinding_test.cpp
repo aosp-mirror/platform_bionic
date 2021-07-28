@@ -66,11 +66,26 @@ static int noinline unwind_one_frame_deeper() {
   return count;
 }
 
-TEST(stack_unwinding, easy) {
+static void UnwindTest() {
   int count = 0;
   _Unwind_Backtrace(FrameCounter, &count);
   int deeper_count = unwind_one_frame_deeper();
   ASSERT_EQ(count + 1, deeper_count);
+}
+
+TEST(stack_unwinding, easy) {
+  UnwindTest();
+}
+
+TEST(stack_unwinding, thread) {
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* {
+    UnwindTest();
+    return nullptr;
+  }, nullptr));
+  void *retval;
+  ASSERT_EQ(0, pthread_join(thread, &retval));
+  EXPECT_EQ(nullptr, retval);
 }
 
 struct UnwindData {
@@ -98,7 +113,7 @@ static void verify_unwind_data(const UnwindData& unwind_data) {
   EXPECT_EQ(unwind_data.handler_frame_count + 1, unwind_data.handler_one_deeper_frame_count);
 }
 
-static void noinline UnwindTest() {
+static void noinline SignalUnwindTest() {
   g_unwind_data = {};
 
   _Unwind_Backtrace(FrameCounter, &g_unwind_data.expected_frame_count);
@@ -114,12 +129,12 @@ static void noinline UnwindTest() {
 TEST(stack_unwinding, unwind_through_signal_frame) {
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler);
 
-  UnwindTest();
+  SignalUnwindTest();
 }
 
 // On LP32, the SA_SIGINFO flag gets you __restore_rt instead of __restore.
 TEST(stack_unwinding, unwind_through_signal_frame_SA_SIGINFO) {
   ScopedSignalHandler ssh(SIGUSR1, UnwindSignalHandler, SA_SIGINFO);
 
-  UnwindTest();
+  SignalUnwindTest();
 }

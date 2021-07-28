@@ -16,11 +16,7 @@
 
 #pragma once
 
-#include <cutils/trace.h>  // For ATRACE_TAG_BIONIC.
-
 #include "platform/bionic/macros.h"
-
-static constexpr char kTraceTagsProp[] = "debug.atrace.tags.enableflags";
 
 // Tracing class for bionic. To begin a trace at a specified point:
 //   ScopedTrace("Trace message");
@@ -36,10 +32,6 @@ class __LIBC_HIDDEN__ ScopedTrace {
   bool called_end_;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(ScopedTrace);
 };
-
-int get_trace_marker_fd();
-bool should_trace(const uint64_t enable_tags = ATRACE_TAG_BIONIC);
-void output_trace(const char* message, const char event = 'B');
 
 void bionic_trace_begin(const char* message);
 void bionic_trace_end();
