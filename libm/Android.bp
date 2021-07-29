@@ -509,7 +509,11 @@ cc_library {
     tidy_checks: ["-cert-dcl16-c"],
 
     include_dirs: ["bionic/libc"],
-    system_shared_libs: ["libc"],
+    target: {
+        bionic: {
+            system_shared_libs: ["libc"],
+        },
+    },
 
     sanitize: {
         address: false,
