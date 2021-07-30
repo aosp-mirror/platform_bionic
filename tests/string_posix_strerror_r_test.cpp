@@ -55,10 +55,10 @@ TEST(string, posix_strerror_r) {
   // Buffer too small.
   errno = 0;
   memset(buf, 0, sizeof(buf));
-  ASSERT_EQ(-1, strerror_r(4567, buf, 2));
-  ASSERT_STREQ("U", buf);
-  // The POSIX strerror_r sets errno to ERANGE (the GNU one doesn't).
-  ASSERT_EQ(ERANGE, errno);
+  ASSERT_EQ(ERANGE, strerror_r(EPERM, buf, 2));
+  ASSERT_STREQ("O", buf);
+  // POSIX strerror_r returns an error without updating errno.
+  ASSERT_EQ(0, errno);
 }
 
 #endif
