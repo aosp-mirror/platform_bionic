@@ -406,6 +406,7 @@ cc_test_library {
         "string_nofortify_test.cpp",
         "string_test.cpp",
         "string_posix_strerror_r_test.cpp",
+        "string_posix_strerror_r_wrapper.cpp",
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
         "struct_layout_test.cpp",
