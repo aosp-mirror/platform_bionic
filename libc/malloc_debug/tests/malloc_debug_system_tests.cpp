@@ -46,6 +46,7 @@
 
 #include <atomic>
 #include <mutex>
+#include <random>
 #include <string>
 #include <thread>
 #include <vector>
@@ -218,20 +219,31 @@ class MallocDebugSystemTest : public ::testing::Test {
   }
 
   void Exec(const char* test_name, const char* debug_options, int expected_exit_code = 0) {
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<> rand_usleep_time(1, 10);
+    std::srand(std::time(nullptr));
+
     for (size_t i = 0; i < kMaxRetries; i++) {
       ASSERT_NO_FATAL_FAILURE(InternalExec(test_name, debug_options, expected_exit_code));
 
       // Due to log messages sometimes getting lost, if a log message
       // is not present, allow retrying the test.
       std::string error_msg;
-      if (!CheckExpectedLogStrings(&error_msg)) {
+      bool found_expected = CheckExpectedLogStrings(&error_msg);
+      if (!found_expected) {
         ASSERT_NE(i, kMaxRetries - 1) << error_msg;
-        usleep(1000);
+        // Sleep a random amount of time to attempt to avoid tests syncing
+        // up and sending the log messages at the same time.
+        usleep(1000 * rand_usleep_time(generator));
       }
 
       // This doesn't need to be retried since if the log message is
       // present, that is an immediate fail.
       ASSERT_NO_FATAL_FAILURE(VerifyUnexpectedLogStrings());
+      if (found_expected) {
+        break;
+      }
     }
   }
 
