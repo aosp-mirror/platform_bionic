@@ -246,14 +246,8 @@ void HandleHeapprofdSignal() {
       // initialized, allocations may need to be serviced. There are three
       // possible configurations:
 
-      if (default_dispatch == nullptr) {
-        //  1. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
-        //  this case, everything but malloc() should come from the system
-        //  allocator.
-        atomic_store(&gPreviousDefaultDispatchTable, nullptr);
-        gEphemeralDispatch = *NativeAllocatorDispatch();
-      } else if (DispatchIsGwpAsan(default_dispatch)) {
-        //  2. GWP-ASan was installed. We should use GWP-ASan for everything but
+      if (DispatchIsGwpAsan(default_dispatch)) {
+        //  1. GWP-ASan was installed. We should use GWP-ASan for everything but
         //  malloc() in the interim period before heapprofd is properly
         //  installed. After heapprofd is finished installing, we will use
         //  GWP-ASan as heapprofd's backing allocator to allow heapprofd and
@@ -261,6 +255,13 @@ void HandleHeapprofdSignal() {
         atomic_store(&gPreviousDefaultDispatchTable, default_dispatch);
         gEphemeralDispatch = *default_dispatch;
       } else {
+        // Either,
+        // 2. No malloc hooking has been done (heapprofd, GWP-ASan, etc.). In
+        // this case, everything but malloc() should come from the system
+        // allocator.
+        //
+        // or,
+        //
         // 3. It may be possible at this point in time that heapprofd is
         // *already* the default dispatch, and when it was initialized there
         // was no default dispatch installed. As such we don't want to use
@@ -289,7 +290,7 @@ void HandleHeapprofdSignal() {
       //    system allocator. This is incorrect.
       const MallocDispatch* prev_dispatch =
         atomic_load(&gPreviousDefaultDispatchTable);
-      gEphemeralDispatch = *prev_dispatch;
+      gEphemeralDispatch = prev_dispatch ? *prev_dispatch : *NativeAllocatorDispatch();
     } else {
       error_log("%s: heapprofd: failed to transition kInitialState -> kInstallingEphemeralHook. "
           "current state (possible race): %d", getprogname(), expected2);
