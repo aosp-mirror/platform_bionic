@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <sys/mman.h>
+#include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -303,4 +304,14 @@ static inline void DoNotOptimize(Tp const& value) {
 template <class Tp>
 static inline void DoNotOptimize(Tp& value) {
   asm volatile("" : "+r,m"(value) : : "memory");
+}
+
+static inline bool running_with_mte() {
+#ifdef __aarch64__
+  int level = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
+  return level >= 0 && (level & PR_TAGGED_ADDR_ENABLE) &&
+         (level & PR_MTE_TCF_MASK) != PR_MTE_TCF_NONE;
+#else
+  return false;
+#endif
 }
