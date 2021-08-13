@@ -454,7 +454,7 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
-TEST(stdlib, mkostemp64) {
+TEST(stdlib, mkostemp64_smoke) {
   MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
@@ -464,7 +464,7 @@ TEST(stdlib, mkostemp) {
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
-TEST(stdlib, mkstemp64) {
+TEST(stdlib, mkstemp64_smoke) {
   MyTemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
@@ -631,6 +631,13 @@ TEST(unistd, _Exit) {
 
   AssertChildExited(pid, 99);
 }
+
+#if defined(MUSL)
+// musl doesn't have getpt
+int getpt() {
+  return posix_openpt(O_RDWR|O_NOCTTY);
+}
+#endif
 
 TEST(stdlib, pty_smoke) {
   // getpt returns a pty with O_RDWR|O_NOCTTY.
@@ -961,8 +968,8 @@ TEST(stdlib, getloadavg) {
 }
 
 TEST(stdlib, getprogname) {
-#if defined(__GLIBC__)
-  GTEST_SKIP() << "glibc doesn't have getprogname()";
+#if defined(__GLIBC__) || defined(MUSL)
+  GTEST_SKIP() << "glibc and musl don't have getprogname()";
 #else
   // You should always have a name.
   ASSERT_TRUE(getprogname() != nullptr);
@@ -972,8 +979,8 @@ TEST(stdlib, getprogname) {
 }
 
 TEST(stdlib, setprogname) {
-#if defined(__GLIBC__)
-  GTEST_SKIP() << "glibc doesn't have setprogname()";
+#if defined(__GLIBC__) || defined(MUSL)
+  GTEST_SKIP() << "glibc and musl don't have setprogname()";
 #else
   // setprogname() only takes the basename of what you give it.
   setprogname("/usr/bin/muppet");
