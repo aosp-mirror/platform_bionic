@@ -82,6 +82,7 @@ TEST(dirent, scandir_scandir64) {
 }
 
 TEST(dirent, scandirat_scandirat64) {
+#if !defined(MUSL)
   // Get everything from /proc/self...
   dirent** entries;
   int entry_count = scandir("/proc/self", &entries, nullptr, alphasort);
@@ -111,6 +112,9 @@ TEST(dirent, scandirat_scandirat64) {
   ASSERT_EQ(name_set, name_set_at64);
   ASSERT_EQ(unsorted_name_list, unsorted_name_list_at);
   ASSERT_EQ(unsorted_name_list, unsorted_name_list_at64);
+#else
+  GTEST_SKIP() << "musl doesn't have scandirat or scandirat64";
+#endif
 }
 
 static int is_version_filter(const dirent* de) {
@@ -140,6 +144,7 @@ TEST(dirent, scandir64_ENOENT) {
 }
 
 TEST(dirent, scandirat_ENOENT) {
+#if !defined(MUSL)
   int root_fd = open("/", O_DIRECTORY | O_RDONLY);
   ASSERT_NE(-1, root_fd);
   dirent** entries;
@@ -147,9 +152,13 @@ TEST(dirent, scandirat_ENOENT) {
   ASSERT_EQ(-1, scandirat(root_fd, "does-not-exist", &entries, nullptr, nullptr));
   ASSERT_EQ(ENOENT, errno);
   close(root_fd);
+#else
+  GTEST_SKIP() << "musl doesn't have scandirat or scandirat64";
+#endif
 }
 
 TEST(dirent, scandirat64_ENOENT) {
+#if !defined(MUSL)
   int root_fd = open("/", O_DIRECTORY | O_RDONLY);
   ASSERT_NE(-1, root_fd);
   dirent64** entries;
@@ -157,6 +166,9 @@ TEST(dirent, scandirat64_ENOENT) {
   ASSERT_EQ(-1, scandirat64(root_fd, "does-not-exist", &entries, nullptr, nullptr));
   ASSERT_EQ(ENOENT, errno);
   close(root_fd);
+#else
+  GTEST_SKIP() << "musl doesn't have scandirat or scandirat64";
+#endif
 }
 
 TEST(dirent, fdopendir_invalid) {
@@ -228,7 +240,7 @@ TEST(dirent, readdir) {
   CheckProcSelf(name_set);
 }
 
-TEST(dirent, readdir64) {
+TEST(dirent, readdir64_smoke) {
   DIR* d = opendir("/proc/self");
   ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;
@@ -263,7 +275,7 @@ TEST(dirent, readdir_r) {
   CheckProcSelf(name_set);
 }
 
-TEST(dirent, readdir64_r) {
+TEST(dirent, readdir64_r_smoke) {
   DIR* d = opendir("/proc/self");
   ASSERT_TRUE(d != nullptr);
   std::set<std::string> name_set;

@@ -800,8 +800,12 @@ TEST(wchar, wcstoull_l_EINVAL) {
 }
 
 TEST(wchar, wmempcpy) {
+#if !defined(MUSL)
   wchar_t dst[6];
   ASSERT_EQ(&dst[4], wmempcpy(dst, L"hello", 4));
+#else
+  GTEST_SKIP() << "musl doesn't have wmempcpy";
+#endif
 }
 
 template <typename T>
@@ -913,15 +917,27 @@ TEST(wchar, wcstold_hex_inf_nan) {
 }
 
 TEST(wchar, wcstod_l) {
+#if !defined(MUSL)
   EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+#else
+  GTEST_SKIP() << "musl doesn't have wcstod_l";
+#endif
 }
 
 TEST(wchar, wcstof_l) {
+#if !defined(MUSL)
   EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
+#else
+  GTEST_SKIP() << "musl doesn't have wcstof_l";
+#endif
 }
 
 TEST(wchar, wcstol_l) {
+#if !defined(MUSL)
   EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+#else
+  GTEST_SKIP() << "musl doesn't have wcstol_l";
+#endif
 }
 
 TEST(wchar, wcstold_l) {
@@ -933,11 +949,15 @@ TEST(wchar, wcstoll_l) {
 }
 
 TEST(wchar, wcstoul_l) {
+#if !defined(MUSL)
   EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+#else
+  GTEST_SKIP() << "musl doesn't have wcstoul_l";
+#endif
 }
 
 TEST(wchar, wcstoull_l) {
-  EXPECT_EQ(123ULL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
+  EXPECT_EQ(123ULL, wcstoull_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
 }
 
 static void AssertWcwidthRange(wchar_t begin, wchar_t end, int expected) {

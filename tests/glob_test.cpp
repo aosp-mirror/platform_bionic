@@ -34,6 +34,7 @@
 // Helper for use with GLOB_ALTDIRFUNC to iterate over the elements of `fake_dir`.
 //
 
+#if !defined(MUSL)
 static std::vector<std::string> fake_dir;
 static size_t fake_dir_offset;
 static void fake_closedir(void*) {
@@ -65,6 +66,7 @@ static void InstallFake(glob_t* g) {
   g->gl_lstat = fake_lstat;
   g->gl_stat = fake_stat;
 }
+#endif
 
 TEST(glob, glob_result_GLOB_NOMATCH) {
   glob_t g = {};
@@ -102,6 +104,7 @@ TEST(glob, glob_GLOB_DOOFFS) {
   globfree(&g);
 }
 
+#if !defined(MUSL)
 static std::string g_failure_path;
 static int g_failure_errno;
 static int test_error_callback_result;
@@ -110,8 +113,10 @@ static int test_error_callback(const char* failure_path, int failure_errno) {
   g_failure_errno = failure_errno;
   return test_error_callback_result;
 }
+#endif
 
 TEST(glob, glob_gl_errfunc) {
+#if !defined(MUSL)
   glob_t g = {};
   InstallFake(&g);
 
@@ -126,15 +131,22 @@ TEST(glob, glob_gl_errfunc) {
   ASSERT_EQ(GLOB_ABORTED, glob("/opendir-fail/x*", GLOB_ALTDIRFUNC, test_error_callback, &g));
   ASSERT_EQ("/opendir-fail/", g_failure_path);
   ASSERT_EQ(EINVAL, g_failure_errno);
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_ALTDIRFUNC";
+#endif
 }
 
 TEST(glob, glob_GLOB_ERR) {
+#if !defined(MUSL)
   glob_t g = {};
   InstallFake(&g);
 
   ASSERT_EQ(GLOB_NOMATCH, glob("/opendir-fail/x*", GLOB_ALTDIRFUNC, nullptr, &g));
 
   ASSERT_EQ(GLOB_ABORTED, glob("/opendir-fail/x*", GLOB_ALTDIRFUNC | GLOB_ERR, nullptr, &g));
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_ALTDIRFUNC";
+#endif
 }
 
 TEST(glob, glob_GLOB_MARK) {
@@ -172,6 +184,7 @@ TEST(glob, glob_GLOB_NOCHECK) {
 }
 
 TEST(glob, glob_GLOB_NOSORT) {
+#if !defined(MUSL)
   fake_dir = { "c", "a", "d", "b" };
 
   glob_t g = {};
@@ -194,9 +207,13 @@ TEST(glob, glob_GLOB_NOSORT) {
   ASSERT_STREQ("d", g.gl_pathv[2]);
   ASSERT_STREQ("b", g.gl_pathv[3]);
   ASSERT_EQ(nullptr, g.gl_pathv[4]);
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_ALTDIRFUNC";
+#endif
 }
 
 TEST(glob, glob_GLOB_MAGCHAR) {
+#if !defined(MUSL)
   glob_t g = {};
   ASSERT_EQ(GLOB_NOMATCH, glob("/does-not-exist", 0, nullptr, &g));
   ASSERT_TRUE((g.gl_flags & GLOB_MAGCHAR) == 0);
@@ -206,8 +223,12 @@ TEST(glob, glob_GLOB_MAGCHAR) {
   // We can lie, but glob(3) will turn that into truth...
   ASSERT_EQ(GLOB_NOMATCH, glob("/does-not-exist", GLOB_MAGCHAR, nullptr, &g));
   ASSERT_TRUE((g.gl_flags & GLOB_MAGCHAR) == 0);
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_MAGCHAR";
+#endif
 }
 
+#if !defined(MUSL)
 static void CheckGlob(const char* pattern, const std::vector<std::string>& expected_matches) {
   glob_t g = {};
   InstallFake(&g);
@@ -224,16 +245,22 @@ static void CheckGlob(const char* pattern, const std::vector<std::string>& expec
   }
   globfree(&g);
 }
+#endif
 
 TEST(glob, glob_globbing) {
+#if !defined(MUSL)
   fake_dir = { "f1", "f2", "f30", "f40" };
 
   CheckGlob("f?", { "f1", "f2" });
   CheckGlob("f??", { "f30", "f40" });
   CheckGlob("f*", { "f1", "f2", "f30", "f40" });
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_ALTDIRFUNC";
+#endif
 }
 
 TEST(glob, glob_globbing_rsc) {
+#if !defined(MUSL)
   // https://research.swtch.com/glob
   fake_dir = { "axbxcxdxe" };
   CheckGlob("a*b*c*d*e*", { "axbxcxdxe" });
@@ -246,4 +273,7 @@ TEST(glob, glob_globbing_rsc) {
 
   fake_dir = { std::string(100, 'a') };
   CheckGlob("a*a*a*a*b", {});
+#else
+  GTEST_SKIP() << "musl doesn't support GLOB_ALTDIRFUNC";
+#endif
 }
