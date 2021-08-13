@@ -282,6 +282,7 @@ TEST(time, strptime) {
 }
 
 TEST(time, strptime_l) {
+#if !defined(MUSL)
   setenv("TZ", "UTC", 1);
 
   struct tm t;
@@ -296,6 +297,9 @@ TEST(time, strptime_l) {
   strptime_l("09:41:53", "%T", &t, LC_GLOBAL_LOCALE);
   strftime_l(buf, sizeof(buf), "%H:%M:%S", &t, LC_GLOBAL_LOCALE);
   EXPECT_STREQ("09:41:53", buf);
+#else
+  GTEST_SKIP() << "musl doesn't support strptime_l";
+#endif
 }
 
 TEST(time, strptime_F) {
@@ -469,11 +473,11 @@ void SetTime(timer_t t, time_t value_s, time_t value_ns, time_t interval_s, time
   ASSERT_EQ(0, timer_settime(t, 0, &ts, nullptr));
 }
 
-static void NoOpNotifyFunction(sigval_t) {
+static void NoOpNotifyFunction(sigval) {
 }
 
 TEST(time, timer_create) {
-  sigevent_t se;
+  sigevent se;
   memset(&se, 0, sizeof(se));
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = NoOpNotifyFunction;
@@ -502,7 +506,7 @@ static void timer_create_SIGEV_SIGNAL_signal_handler(int signal_number) {
 }
 
 TEST(time, timer_create_SIGEV_SIGNAL) {
-  sigevent_t se;
+  sigevent se;
   memset(&se, 0, sizeof(se));
   se.sigev_notify = SIGEV_SIGNAL;
   se.sigev_signo = SIGUSR1;
@@ -530,7 +534,7 @@ struct Counter {
  private:
   std::atomic<int> value;
   timer_t timer_id;
-  sigevent_t se;
+  sigevent se;
   bool timer_valid;
 
   void Create() {
@@ -540,7 +544,7 @@ struct Counter {
   }
 
  public:
-  explicit Counter(void (*fn)(sigval_t)) : value(0), timer_valid(false) {
+  explicit Counter(void (*fn)(sigval)) : value(0), timer_valid(false) {
     memset(&se, 0, sizeof(se));
     se.sigev_notify = SIGEV_THREAD;
     se.sigev_notify_function = fn;
@@ -575,12 +579,12 @@ struct Counter {
     return current_value != value;
   }
 
-  static void CountNotifyFunction(sigval_t value) {
+  static void CountNotifyFunction(sigval value) {
     Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
     ++cd->value;
   }
 
-  static void CountAndDisarmNotifyFunction(sigval_t value) {
+  static void CountAndDisarmNotifyFunction(sigval value) {
     Counter* cd = reinterpret_cast<Counter*>(value.sival_ptr);
     ++cd->value;
 
@@ -644,7 +648,7 @@ TEST(time, timer_create_EINVAL) {
   ASSERT_EQ(EINVAL, errno);
 
   // A SIGEV_THREAD timer is more interesting because we have stuff to clean up.
-  sigevent_t se;
+  sigevent se;
   memset(&se, 0, sizeof(se));
   se.sigev_notify = SIGEV_THREAD;
   se.sigev_notify_function = NoOpNotifyFunction;
@@ -715,7 +719,7 @@ struct TimerDeleteData {
   volatile bool complete;
 };
 
-static void TimerDeleteCallback(sigval_t value) {
+static void TimerDeleteCallback(sigval value) {
   TimerDeleteData* tdd = reinterpret_cast<TimerDeleteData*>(value.sival_ptr);
 
   tdd->tid = gettid();
@@ -725,7 +729,7 @@ static void TimerDeleteCallback(sigval_t value) {
 
 TEST(time, timer_delete_from_timer_thread) {
   TimerDeleteData tdd;
-  sigevent_t se;
+  sigevent se;
 
   memset(&se, 0, sizeof(se));
   se.sigev_notify = SIGEV_THREAD;
