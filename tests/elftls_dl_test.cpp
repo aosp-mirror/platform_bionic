@@ -27,8 +27,10 @@
  */
 
 #include <dlfcn.h>
-#include <gtest/gtest.h>
 #include <link.h>
+
+#include <android-base/file.h>
+#include <gtest/gtest.h>
 
 #include <thread>
 
@@ -356,7 +358,7 @@ TEST(elftls_dl, dl_iterate_phdr) {
 
       // This test is also run with glibc, where dlpi_name may have relative path components, so
       // examine just the basename when searching for the library.
-      if (strcmp(basename(info->dlpi_name), "libtest_elftls_dynamic.so") != 0) return 0;
+      if (strcmp(android::base::Basename(info->dlpi_name).c_str(), "libtest_elftls_dynamic.so") != 0) return 0;
 
       tls_info.found = true;
       tls_info.modid = info->dlpi_tls_modid;

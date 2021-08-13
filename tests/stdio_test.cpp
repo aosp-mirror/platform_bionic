@@ -2740,8 +2740,8 @@ TEST(STDIO_TEST, renameat) {
 }
 
 TEST(STDIO_TEST, renameat2) {
-#if defined(__GLIBC__)
-  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28";
+#if defined(__GLIBC__) || defined(MUSL)
+  GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28 and musl doesn't have renameat2";
 #else
   TemporaryDir td;
   android::base::unique_fd dirfd{open(td.path, O_PATH)};
