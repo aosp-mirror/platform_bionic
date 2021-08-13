@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <sys/user.h>
 #include <unistd.h>
 
@@ -44,7 +45,7 @@ static void WaitUntilAllThreadsExited(pid_t* tids, size_t tid_count) {
     alive = false;
     for (size_t i = 0; i < tid_count; ++i) {
       if (tids[i] != 0) {
-        if (tgkill(getpid(), tids[i], 0) == 0) {
+        if (syscall(__NR_tgkill, getpid(), tids[i], 0) == 0) {
           alive = true;
         } else {
           EXPECT_EQ(errno, ESRCH);

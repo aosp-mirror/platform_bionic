@@ -160,6 +160,7 @@ TEST(arpa_inet, inet_ntop_overflow) {
 }
 
 TEST(arpa_inet, inet_nsap_addr) {
+#if !defined(MUSL)
   // inet_nsap_addr() doesn't seem to be documented anywhere, but it's basically
   // text to binary for arbitrarily-long strings like "0xdeadbeef". Any
   // '.', '+', or '/' characters are ignored as punctuation. The return value is
@@ -233,9 +234,13 @@ TEST(arpa_inet, inet_nsap_addr) {
   ASSERT_EQ(0U, inet_nsap_addr("0x11.2g", buf, sizeof(buf)));
   // Invalid half-byte.
   ASSERT_EQ(0U, inet_nsap_addr("0x11.2", buf, sizeof(buf)));
+#else
+  GTEST_SKIP() << "musl doesn't have inet_nsap_addr";
+#endif
 }
 
 TEST(arpa_inet, inet_nsap_ntoa) {
+#if !defined(MUSL)
   // inet_nsap_ntoa() doesn't seem to be documented anywhere, but it's basically
   // binary to text for arbitrarily-long byte buffers.
   // The return value is a pointer to the buffer. No errors are possible.
@@ -243,10 +248,17 @@ TEST(arpa_inet, inet_nsap_ntoa) {
   char dst[32];
   ASSERT_EQ(dst, inet_nsap_ntoa(6, bytes, dst));
   ASSERT_STREQ(dst, "0x01.0002.0EF0.20");
+#else
+  GTEST_SKIP() << "musl doesn't have inet_nsap_ntoa";
+#endif
 }
 
 TEST(arpa_inet, inet_nsap_ntoa__nullptr) {
+#if !defined(MUSL)
   // If you don't provide a destination, a static buffer is provided for you.
   const unsigned char bytes[] = {0x01, 0x00, 0x02, 0x0e, 0xf0, 0x20};
   ASSERT_STREQ("0x01.0002.0EF0.20", inet_nsap_ntoa(6, bytes, nullptr));
+#else
+  GTEST_SKIP() << "musl doesn't have inet_nsap_ntoa";
+#endif
 }
