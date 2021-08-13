@@ -31,6 +31,7 @@
 #include <gtest/gtest.h>
 
 TEST(resolv, b64_pton_28035006) {
+#if !defined(MUSL)
   // Test data from https://groups.google.com/forum/#!topic/mailing.openbsd.tech/w3ACIlklJkI.
   const char* data =
       "p1v3+nehH3N3n+/OokzXpsyGF2VVpxIxkjSn3Mv/Sq74OE1iFuVU+K4bQImuVj"
@@ -41,32 +42,51 @@ TEST(resolv, b64_pton_28035006) {
   // incorrectly required an extra byte. http://b/28035006.
   uint8_t buf[128];
   ASSERT_EQ(128, b64_pton(data, buf, sizeof(buf)));
+#else
+  GTEST_SKIP() << "musl doesn't have b64_pton";
+#endif
 }
 
 TEST(resolv, b64_ntop) {
+#if !defined(MUSL)
   char buf[128];
   memset(buf, 'x', sizeof(buf));
   ASSERT_EQ(static_cast<int>(strlen("aGVsbG8=")),
             b64_ntop(reinterpret_cast<u_char const*>("hello"), strlen("hello"),
                      buf, sizeof(buf)));
   ASSERT_STREQ(buf, "aGVsbG8=");
+#else
+  GTEST_SKIP() << "musl doesn't have b64_ntop";
+#endif
 }
 
 TEST(resolv, b64_pton) {
+#if !defined(MUSL)
   u_char buf[128];
   memset(buf, 'x', sizeof(buf));
   ASSERT_EQ(static_cast<int>(strlen("hello")), b64_pton("aGVsbG8=", buf, sizeof(buf)));
   ASSERT_STREQ(reinterpret_cast<char*>(buf), "hello");
+#else
+  GTEST_SKIP() << "musl doesn't have b64_pton";
+#endif
 }
 
 TEST(resolv, p_class) {
+#if !defined(MUSL)
   ASSERT_STREQ("IN", p_class(ns_c_in));
   ASSERT_STREQ("BADCLASS", p_class(-1));
+#else
+  GTEST_SKIP() << "musl doesn't have p_class";
+#endif
 }
 
 TEST(resolv, p_type) {
+#if !defined(MUSL)
   ASSERT_STREQ("AAAA", p_type(ns_t_aaaa));
   ASSERT_STREQ("BADTYPE", p_type(-1));
+#else
+  GTEST_SKIP() << "musl doesn't have p_type";
+#endif
 }
 
 TEST(resolv, res_init) {
@@ -74,5 +94,9 @@ TEST(resolv, res_init) {
 }
 
 TEST(resolv, res_randomid) {
+#if !defined(MUSL)
   res_randomid();
+#else
+  GTEST_SKIP() << "musl doesn't have res_randomid";
+#endif
 }

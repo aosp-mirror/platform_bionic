@@ -95,6 +95,7 @@ TEST(STRING_TEST, strerror_concurrent) {
 }
 
 TEST(STRING_TEST, gnu_strerror_r) {
+#if !defined(MUSL)
   char buf[256];
 
   // Note that glibc doesn't necessarily write into the buffer.
@@ -122,6 +123,9 @@ TEST(STRING_TEST, gnu_strerror_r) {
   ASSERT_STREQ("U", buf);
   // The GNU strerror_r doesn't set errno (the POSIX one sets it to ERANGE).
   ASSERT_EQ(0, errno);
+#else
+  GTEST_SKIP() << "musl doesn't have GNU strerror_r";
+#endif
 }
 
 TEST(STRING_TEST, strsignal) {
@@ -1473,14 +1477,17 @@ TEST(STRING_TEST, strrchr_overread) {
   RunSingleBufferOverreadTest(DoStrrchrTest);
 }
 
+#if !defined(MUSL)
 static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;
   const char* out = basename(in);
   ASSERT_STREQ(expected_out, out) << in;
   ASSERT_EQ(0, errno) << in;
 }
+#endif
 
 TEST(STRING_TEST, __gnu_basename) {
+#if !defined(MUSL)
   TestBasename("", "");
   TestBasename("/usr/lib", "lib");
   TestBasename("/usr/", "");
@@ -1490,6 +1497,9 @@ TEST(STRING_TEST, __gnu_basename) {
   TestBasename("..", "..");
   TestBasename("///", "");
   TestBasename("//usr//lib//", "");
+#else
+  GTEST_SKIP() << "musl doesn't have GNU basename";
+#endif
 }
 
 TEST(STRING_TEST, strnlen_147048) {

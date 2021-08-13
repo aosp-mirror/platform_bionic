@@ -27,16 +27,28 @@ TEST(string, posix_strerror_r) {
 
   // Valid.
   ASSERT_EQ(0, posix_strerror_r(0, buf, sizeof(buf)));
+#if defined(MUSL)
+  ASSERT_STREQ("No error information", buf);
+#else
   ASSERT_STREQ("Success", buf);
+#endif
   ASSERT_EQ(0, posix_strerror_r(1, buf, sizeof(buf)));
   ASSERT_STREQ("Operation not permitted", buf);
 
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) || defined(MUSL)
   // Invalid.
   ASSERT_EQ(0, posix_strerror_r(-1, buf, sizeof(buf)));
+# if defined(__BIONIC__)
   ASSERT_STREQ("Unknown error -1", buf);
+# else
+  ASSERT_STREQ("No error information", buf);
+# endif
   ASSERT_EQ(0, posix_strerror_r(1234, buf, sizeof(buf)));
+# if defined(__BIONIC__)
   ASSERT_STREQ("Unknown error 1234", buf);
+# else
+  ASSERT_STREQ("No error information", buf);
+# endif
 #else
   // glibc returns EINVAL for unknown errors
   ASSERT_EQ(EINVAL, posix_strerror_r(-1, buf, sizeof(buf)));

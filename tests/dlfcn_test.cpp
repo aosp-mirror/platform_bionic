@@ -1156,7 +1156,7 @@ TEST(dlfcn, dlopen_undefined_weak_func) {
 
 TEST(dlfcn, dlopen_symlink) {
   DlfcnSymlink symlink("dlopen_symlink");
-  const std::string symlink_name = basename(symlink.get_symlink_path().c_str());
+  const std::string symlink_name = android::base::Basename(symlink.get_symlink_path());
   void* handle1 = dlopen("libdlext_test.so", RTLD_NOW);
   void* handle2 = dlopen(symlink_name.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle1 != nullptr);
@@ -1259,6 +1259,7 @@ TEST(dlfcn, symbol_versioning_default_via_dlsym) {
 }
 
 TEST(dlfcn, dlvsym_smoke) {
+#if !defined(MUSL)
   void* handle = dlopen("libtest_versioned_lib.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   typedef int (*fn_t)();
@@ -1276,6 +1277,9 @@ TEST(dlfcn, dlvsym_smoke) {
   }
 
   dlclose(handle);
+#else
+  GTEST_SKIP() << "musl doesn't have dlvsym";
+#endif
 }
 
 // This preempts the implementation from libtest_versioned_lib.so
