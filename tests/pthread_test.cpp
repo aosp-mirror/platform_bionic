@@ -844,6 +844,8 @@ TEST(pthread, pthread_rwlockattr_smoke) {
     ASSERT_EQ(pshared_value_array[i], pshared);
   }
 
+#if !defined(MUSL)
+  // musl doesn't have pthread_rwlockattr_setkind_np
   int kind_array[] = {PTHREAD_RWLOCK_PREFER_READER_NP,
                       PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP};
   for (size_t i = 0; i < sizeof(kind_array) / sizeof(kind_array[0]); ++i) {
@@ -852,6 +854,7 @@ TEST(pthread, pthread_rwlockattr_smoke) {
     ASSERT_EQ(0, pthread_rwlockattr_getkind_np(&attr, &kind));
     ASSERT_EQ(kind_array[i], kind);
   }
+#endif
 
   ASSERT_EQ(0, pthread_rwlockattr_destroy(&attr));
 }
@@ -1235,6 +1238,8 @@ TEST(pthread, pthread_rwlock_clockwrlock_invalid) {
 #endif  // __BIONIC__
 }
 
+#if !defined(MUSL)
+// musl doesn't have pthread_rwlockattr_setkind_np
 class RwlockKindTestHelper {
  private:
   struct ThreadArg {
@@ -1302,8 +1307,10 @@ class RwlockKindTestHelper {
     delete arg;
   }
 };
+#endif
 
 TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_READER_NP) {
+#if !defined(MUSL)
   RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_READER_NP);
   ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
 
@@ -1319,9 +1326,13 @@ TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_READER_NP) {
 
   ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
   ASSERT_EQ(0, pthread_join(writer_thread, nullptr));
+#else
+  GTEST_SKIP() << "musl doesn't have pthread_rwlockattr_setkind_np";
+#endif
 }
 
 TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) {
+#if !defined(MUSL)
   RwlockKindTestHelper helper(PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP);
   ASSERT_EQ(0, pthread_rwlock_rdlock(&helper.lock));
 
@@ -1338,6 +1349,9 @@ TEST(pthread, pthread_rwlock_kind_PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP) 
   ASSERT_EQ(0, pthread_rwlock_unlock(&helper.lock));
   ASSERT_EQ(0, pthread_join(writer_thread, nullptr));
   ASSERT_EQ(0, pthread_join(reader_thread, nullptr));
+#else
+  GTEST_SKIP() << "musl doesn't have pthread_rwlockattr_setkind_np";
+#endif
 }
 
 static int g_once_fn_call_count = 0;
@@ -2152,6 +2166,9 @@ TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
   ASSERT_EQ(0, memcmp(&lock_normal, &m1.lock, sizeof(pthread_mutex_t)));
   pthread_mutex_destroy(&lock_normal);
 
+#if !defined(MUSL)
+  // musl doesn't support PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP or
+  // PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP.
   pthread_mutex_t lock_errorcheck = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
   PthreadMutex m2(PTHREAD_MUTEX_ERRORCHECK);
   ASSERT_EQ(0, memcmp(&lock_errorcheck, &m2.lock, sizeof(pthread_mutex_t)));
@@ -2161,6 +2178,7 @@ TEST(pthread, pthread_mutex_init_same_as_static_initializers) {
   PthreadMutex m3(PTHREAD_MUTEX_RECURSIVE);
   ASSERT_EQ(0, memcmp(&lock_recursive, &m3.lock, sizeof(pthread_mutex_t)));
   ASSERT_EQ(0, pthread_mutex_destroy(&lock_recursive));
+#endif
 }
 
 class MutexWakeupHelper {
