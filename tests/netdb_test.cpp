@@ -21,6 +21,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
+#include <sys/cdefs.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 
@@ -265,7 +266,7 @@ TEST(netdb, gethostbyaddr_r) {
   ASSERT_EQ(0, hp->h_addr[0]);
 }
 
-#if defined(MUSL)
+#if defined(ANDROID_HOST_MUSL)
 // musl doesn't define NETDB_INTERNAL.  It also never sets *err to -1, but
 // since gethostbyname_r is a glibc extension, the difference in behavior
 // between musl and  glibc should probably be considered a bug in musl.

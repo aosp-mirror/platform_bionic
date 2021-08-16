@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+#include <sys/cdefs.h>
+
 #ifndef _GNU_SOURCE
   #define _GNU_SOURCE 1
 #endif
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 #include <string.h>
 
 #if defined(basename)
@@ -33,7 +35,7 @@ static const char* gnu_basename(const char* in) {
 
 #include <libgen.h>
 
-#if !defined(basename) && !defined(MUSL)
+#if !defined(basename) && !defined(ANDROID_HOST_MUSL)
 #error basename should be defined at this point
 #endif
 
@@ -44,7 +46,7 @@ static char* posix_basename(char* in) {
 #include <errno.h>
 #include <gtest/gtest.h>
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 static void __TestGnuBasename(const char* in, const char* expected_out, int line) {
   errno = 0;
   const char* out = gnu_basename(in);
@@ -66,7 +68,7 @@ static void __TestPosixBasename(const char* in, const char* expected_out, int li
 #define TestPosixBasename(in, expected) __TestPosixBasename(in, expected, __LINE__)
 
 TEST(libgen_basename, gnu_basename) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // GNU's basename doesn't accept NULL
   // TestGnuBasename(NULL, ".");
   TestGnuBasename("", "");

@@ -20,6 +20,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <sys/cdefs.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -82,7 +83,7 @@ TEST(dirent, scandir_scandir64) {
 }
 
 TEST(dirent, scandirat_scandirat64) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // Get everything from /proc/self...
   dirent** entries;
   int entry_count = scandir("/proc/self", &entries, nullptr, alphasort);
@@ -144,7 +145,7 @@ TEST(dirent, scandir64_ENOENT) {
 }
 
 TEST(dirent, scandirat_ENOENT) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   int root_fd = open("/", O_DIRECTORY | O_RDONLY);
   ASSERT_NE(-1, root_fd);
   dirent** entries;
@@ -158,7 +159,7 @@ TEST(dirent, scandirat_ENOENT) {
 }
 
 TEST(dirent, scandirat64_ENOENT) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   int root_fd = open("/", O_DIRECTORY | O_RDONLY);
   ASSERT_NE(-1, root_fd);
   dirent64** entries;

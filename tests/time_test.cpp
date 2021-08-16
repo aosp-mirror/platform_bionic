@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/cdefs.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -282,7 +283,7 @@ TEST(time, strptime) {
 }
 
 TEST(time, strptime_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   setenv("TZ", "UTC", 1);
 
   struct tm t;

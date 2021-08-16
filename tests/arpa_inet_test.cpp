@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <sys/cdefs.h>
+
 #include <gtest/gtest.h>
 
 #include <arpa/inet.h>
@@ -160,7 +162,7 @@ TEST(arpa_inet, inet_ntop_overflow) {
 }
 
 TEST(arpa_inet, inet_nsap_addr) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // inet_nsap_addr() doesn't seem to be documented anywhere, but it's basically
   // text to binary for arbitrarily-long strings like "0xdeadbeef". Any
   // '.', '+', or '/' characters are ignored as punctuation. The return value is
@@ -240,7 +242,7 @@ TEST(arpa_inet, inet_nsap_addr) {
 }
 
 TEST(arpa_inet, inet_nsap_ntoa) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // inet_nsap_ntoa() doesn't seem to be documented anywhere, but it's basically
   // binary to text for arbitrarily-long byte buffers.
   // The return value is a pointer to the buffer. No errors are possible.
@@ -254,7 +256,7 @@ TEST(arpa_inet, inet_nsap_ntoa) {
 }
 
 TEST(arpa_inet, inet_nsap_ntoa__nullptr) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // If you don't provide a destination, a static buffer is provided for you.
   const unsigned char bytes[] = {0x01, 0x00, 0x02, 0x0e, 0xf0, 0x20};
   ASSERT_STREQ("0x01.0002.0EF0.20", inet_nsap_ntoa(6, bytes, nullptr));

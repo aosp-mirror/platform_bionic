@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/cdefs.h>
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>
 #endif
@@ -1259,7 +1260,7 @@ TEST(dlfcn, symbol_versioning_default_via_dlsym) {
 }
 
 TEST(dlfcn, dlvsym_smoke) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   void* handle = dlopen("libtest_versioned_lib.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
   typedef int (*fn_t)();
