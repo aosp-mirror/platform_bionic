@@ -18,8 +18,8 @@
 
 #include <dlfcn.h>
 #include <limits.h>
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #if __has_include(<sys/auxv.h>)
 #include <sys/auxv.h>

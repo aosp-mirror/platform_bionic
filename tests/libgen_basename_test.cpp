@@ -34,7 +34,7 @@ static const char* gnu_basename(const char* in) {
 #include <libgen.h>
 
 #if !defined(basename) && !defined(MUSL)
-  #error basename should be defined at this point
+#error basename should be defined at this point
 #endif
 
 static char* posix_basename(char* in) {

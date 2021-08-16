@@ -19,10 +19,10 @@
 #include <gtest/gtest.h>
 
 #include <arpa/inet.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 // https://code.google.com/p/android/issues/detail?id=13228
 TEST(netdb, freeaddrinfo_NULL) {
