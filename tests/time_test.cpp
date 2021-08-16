@@ -760,6 +760,11 @@ TEST(time, timer_delete_from_timer_thread) {
 #endif
 }
 
+// Musl doesn't define __NR_clock_gettime on 32-bit architectures.
+#if !defined(__NR_clock_gettime)
+#define __NR_clock_gettime __NR_clock_gettime32
+#endif
+
 TEST(time, clock_gettime) {
   // Try to ensure that our vdso clock_gettime is working.
   timespec ts0;
