@@ -19,14 +19,15 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <limits.h>
+#include <locale.h>
 #include <math.h>
 #include <stdio.h>
-#include <sys/types.h>
+#include <sys/cdefs.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 #include <unistd.h>
 #include <wchar.h>
-#include <locale.h>
 
 #include <string>
 #include <thread>
@@ -2740,7 +2741,7 @@ TEST(STDIO_TEST, renameat) {
 }
 
 TEST(STDIO_TEST, renameat2) {
-#if defined(__GLIBC__) || defined(MUSL)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc doesn't have renameat2 until 2.28 and musl doesn't have renameat2";
 #else
   TemporaryDir td;
