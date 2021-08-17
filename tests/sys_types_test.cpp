@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 
+#include <fcntl.h> // for loff_t on musl
 #include <sys/types.h>
 
 TEST(sys_types, type_sizes) {

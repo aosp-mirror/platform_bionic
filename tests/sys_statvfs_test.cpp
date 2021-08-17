@@ -43,7 +43,7 @@ TEST(sys_statvfs, statvfs) {
   Check(sb);
 }
 
-TEST(sys_statvfs, statvfs64) {
+TEST(sys_statvfs, statvfs64_smoke) {
   struct statvfs64 sb;
   ASSERT_EQ(0, statvfs64("/proc", &sb));
   Check(sb);
@@ -57,7 +57,7 @@ TEST(sys_statvfs, fstatvfs) {
   Check(sb);
 }
 
-TEST(sys_statvfs, fstatvfs64) {
+TEST(sys_statvfs, fstatvfs64_smoke) {
   struct statvfs64 sb;
   int fd = open("/proc", O_RDONLY);
   ASSERT_EQ(0, fstatvfs64(fd, &sb));
