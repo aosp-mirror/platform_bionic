@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <sys/cdefs.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -554,7 +555,7 @@ TEST(signal, sys_signame) {
 }
 
 TEST(signal, sys_siglist) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_TRUE(sys_siglist[0] == nullptr);
   ASSERT_STREQ("Hangup", sys_siglist[SIGHUP]);
 #else
@@ -594,7 +595,7 @@ TEST(signal, sigqueue) {
 }
 
 TEST(signal, pthread_sigqueue_self) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
   sigval sigval = {.sival_int = 1};
   errno = 0;
@@ -607,7 +608,7 @@ TEST(signal, pthread_sigqueue_self) {
 }
 
 TEST(signal, pthread_sigqueue_other) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
   sigval sigval = {.sival_int = 1};
 

@@ -23,6 +23,7 @@
 #include <malloc.h>
 #include <math.h>
 #include <stdint.h>
+#include <sys/cdefs.h>
 
 #include <algorithm>
 #include <vector>
@@ -95,7 +96,7 @@ TEST(STRING_TEST, strerror_concurrent) {
 }
 
 TEST(STRING_TEST, gnu_strerror_r) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   char buf[256];
 
   // Note that glibc doesn't necessarily write into the buffer.
@@ -1477,7 +1478,7 @@ TEST(STRING_TEST, strrchr_overread) {
   RunSingleBufferOverreadTest(DoStrrchrTest);
 }
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 static void TestBasename(const char* in, const char* expected_out) {
   errno = 0;
   const char* out = basename(in);
@@ -1487,7 +1488,7 @@ static void TestBasename(const char* in, const char* expected_out) {
 #endif
 
 TEST(STRING_TEST, __gnu_basename) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   TestBasename("", "");
   TestBasename("/usr/lib", "lib");
   TestBasename("/usr/", "");
