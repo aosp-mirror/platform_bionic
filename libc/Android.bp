@@ -1202,6 +1202,7 @@ cc_library_static {
         },
     },
     whole_static_libs: [
+        "libc_bionic_systrace",
         "libsystemproperties",
     ],
     cppflags: ["-Wold-style-cast"],
@@ -1858,7 +1859,9 @@ cc_library_headers {
 
 cc_library_headers {
     name: "libc_llndk_headers",
-    visibility: ["//visibility:private"],
+    visibility: [
+        "//external/musl",
+    ],
     llndk: {
         llndk_headers: true,
     },
@@ -1978,8 +1981,12 @@ cc_library {
     static: {
         system_shared_libs: [],
     },
-    shared: {
-        system_shared_libs: ["libc"],
+    target: {
+        bionic: {
+            shared: {
+                system_shared_libs: ["libc"],
+            },
+        },
     },
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
@@ -2070,7 +2077,7 @@ cc_defaults {
 cc_defaults {
     name: "crt_defaults",
     defaults: ["crt_and_memtag_defaults"],
-    default_shared_libs: [],
+    system_shared_libs: [],
 }
 
 cc_defaults {
