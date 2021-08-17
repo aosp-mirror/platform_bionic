@@ -22,6 +22,7 @@
 #include <locale.h>
 #include <math.h>
 #include <stdint.h>
+#include <sys/cdefs.h>
 #include <wchar.h>
 
 #include "utils.h"
@@ -800,7 +801,7 @@ TEST(wchar, wcstoull_l_EINVAL) {
 }
 
 TEST(wchar, wmempcpy) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   wchar_t dst[6];
   ASSERT_EQ(&dst[4], wmempcpy(dst, L"hello", 4));
 #else
@@ -917,7 +918,7 @@ TEST(wchar, wcstold_hex_inf_nan) {
 }
 
 TEST(wchar, wcstod_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   EXPECT_EQ(1.23, wcstod_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstod_l";
@@ -925,7 +926,7 @@ TEST(wchar, wcstod_l) {
 }
 
 TEST(wchar, wcstof_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   EXPECT_EQ(1.23f, wcstof_l(L"1.23", nullptr, LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstof_l";
@@ -933,7 +934,7 @@ TEST(wchar, wcstof_l) {
 }
 
 TEST(wchar, wcstol_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   EXPECT_EQ(123L, wcstol_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstol_l";
@@ -949,7 +950,7 @@ TEST(wchar, wcstoll_l) {
 }
 
 TEST(wchar, wcstoul_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   EXPECT_EQ(123UL, wcstoul_l(L"123", nullptr, 10, LC_GLOBAL_LOCALE));
 #else
   GTEST_SKIP() << "musl doesn't have wcstoul_l";

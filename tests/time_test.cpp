@@ -20,6 +20,7 @@
 #include <gtest/gtest.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/cdefs.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -282,7 +283,7 @@ TEST(time, strptime) {
 }
 
 TEST(time, strptime_l) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   setenv("TZ", "UTC", 1);
 
   struct tm t;
@@ -759,6 +760,11 @@ TEST(time, timer_delete_from_timer_thread) {
   ASSERT_EQ(ESRCH, errno);
 #endif
 }
+
+// Musl doesn't define __NR_clock_gettime on 32-bit architectures.
+#if !defined(__NR_clock_gettime)
+#define __NR_clock_gettime __NR_clock_gettime32
+#endif
 
 TEST(time, clock_gettime) {
   // Try to ensure that our vdso clock_gettime is working.
