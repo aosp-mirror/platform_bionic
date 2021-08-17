@@ -22,6 +22,7 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -632,7 +633,7 @@ TEST(unistd, _Exit) {
   AssertChildExited(pid, 99);
 }
 
-#if defined(MUSL)
+#if defined(ANDROID_HOST_MUSL)
 // musl doesn't have getpt
 int getpt() {
   return posix_openpt(O_RDWR|O_NOCTTY);
@@ -968,7 +969,7 @@ TEST(stdlib, getloadavg) {
 }
 
 TEST(stdlib, getprogname) {
-#if defined(__GLIBC__) || defined(MUSL)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc and musl don't have getprogname()";
 #else
   // You should always have a name.
@@ -979,7 +980,7 @@ TEST(stdlib, getprogname) {
 }
 
 TEST(stdlib, setprogname) {
-#if defined(__GLIBC__) || defined(MUSL)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc and musl don't have setprogname()";
 #else
   // setprogname() only takes the basename of what you give it.

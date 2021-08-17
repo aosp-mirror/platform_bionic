@@ -17,6 +17,8 @@
 #include <glob.h>
 
 #include <dirent.h>
+#include <sys/cdefs.h>
+
 #include <gtest/gtest.h>
 
 #include <string>
@@ -34,7 +36,7 @@
 // Helper for use with GLOB_ALTDIRFUNC to iterate over the elements of `fake_dir`.
 //
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 static std::vector<std::string> fake_dir;
 static size_t fake_dir_offset;
 static void fake_closedir(void*) {
@@ -104,7 +106,7 @@ TEST(glob, glob_GLOB_DOOFFS) {
   globfree(&g);
 }
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 static std::string g_failure_path;
 static int g_failure_errno;
 static int test_error_callback_result;
@@ -116,7 +118,7 @@ static int test_error_callback(const char* failure_path, int failure_errno) {
 #endif
 
 TEST(glob, glob_gl_errfunc) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   glob_t g = {};
   InstallFake(&g);
 
@@ -137,7 +139,7 @@ TEST(glob, glob_gl_errfunc) {
 }
 
 TEST(glob, glob_GLOB_ERR) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   glob_t g = {};
   InstallFake(&g);
 
@@ -184,7 +186,7 @@ TEST(glob, glob_GLOB_NOCHECK) {
 }
 
 TEST(glob, glob_GLOB_NOSORT) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   fake_dir = { "c", "a", "d", "b" };
 
   glob_t g = {};
@@ -213,7 +215,7 @@ TEST(glob, glob_GLOB_NOSORT) {
 }
 
 TEST(glob, glob_GLOB_MAGCHAR) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   glob_t g = {};
   ASSERT_EQ(GLOB_NOMATCH, glob("/does-not-exist", 0, nullptr, &g));
   ASSERT_TRUE((g.gl_flags & GLOB_MAGCHAR) == 0);
@@ -228,7 +230,7 @@ TEST(glob, glob_GLOB_MAGCHAR) {
 #endif
 }
 
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
 static void CheckGlob(const char* pattern, const std::vector<std::string>& expected_matches) {
   glob_t g = {};
   InstallFake(&g);
@@ -248,7 +250,7 @@ static void CheckGlob(const char* pattern, const std::vector<std::string>& expec
 #endif
 
 TEST(glob, glob_globbing) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   fake_dir = { "f1", "f2", "f30", "f40" };
 
   CheckGlob("f?", { "f1", "f2" });
@@ -260,7 +262,7 @@ TEST(glob, glob_globbing) {
 }
 
 TEST(glob, glob_globbing_rsc) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // https://research.swtch.com/glob
   fake_dir = { "axbxcxdxe" };
   CheckGlob("a*b*c*d*e*", { "axbxcxdxe" });

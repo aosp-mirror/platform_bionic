@@ -27,7 +27,7 @@ TEST(string, posix_strerror_r) {
 
   // Valid.
   ASSERT_EQ(0, posix_strerror_r(0, buf, sizeof(buf)));
-#if defined(MUSL)
+#if defined(ANDROID_HOST_MUSL)
   ASSERT_STREQ("No error information", buf);
 #else
   ASSERT_STREQ("Success", buf);
@@ -35,7 +35,7 @@ TEST(string, posix_strerror_r) {
   ASSERT_EQ(0, posix_strerror_r(1, buf, sizeof(buf)));
   ASSERT_STREQ("Operation not permitted", buf);
 
-#if defined(__BIONIC__) || defined(MUSL)
+#if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
   // Invalid.
   ASSERT_EQ(0, posix_strerror_r(-1, buf, sizeof(buf)));
 # if defined(__BIONIC__)

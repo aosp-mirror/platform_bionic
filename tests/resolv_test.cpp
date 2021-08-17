@@ -28,10 +28,12 @@
 
 #include <resolv.h>
 
+#include <sys/cdefs.h>
+
 #include <gtest/gtest.h>
 
 TEST(resolv, b64_pton_28035006) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   // Test data from https://groups.google.com/forum/#!topic/mailing.openbsd.tech/w3ACIlklJkI.
   const char* data =
       "p1v3+nehH3N3n+/OokzXpsyGF2VVpxIxkjSn3Mv/Sq74OE1iFuVU+K4bQImuVj"
@@ -48,7 +50,7 @@ TEST(resolv, b64_pton_28035006) {
 }
 
 TEST(resolv, b64_ntop) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   char buf[128];
   memset(buf, 'x', sizeof(buf));
   ASSERT_EQ(static_cast<int>(strlen("aGVsbG8=")),
@@ -61,7 +63,7 @@ TEST(resolv, b64_ntop) {
 }
 
 TEST(resolv, b64_pton) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   u_char buf[128];
   memset(buf, 'x', sizeof(buf));
   ASSERT_EQ(static_cast<int>(strlen("hello")), b64_pton("aGVsbG8=", buf, sizeof(buf)));
@@ -72,7 +74,7 @@ TEST(resolv, b64_pton) {
 }
 
 TEST(resolv, p_class) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_STREQ("IN", p_class(ns_c_in));
   ASSERT_STREQ("BADCLASS", p_class(-1));
 #else
@@ -81,7 +83,7 @@ TEST(resolv, p_class) {
 }
 
 TEST(resolv, p_type) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_STREQ("AAAA", p_type(ns_t_aaaa));
   ASSERT_STREQ("BADTYPE", p_type(-1));
 #else
@@ -94,7 +96,7 @@ TEST(resolv, res_init) {
 }
 
 TEST(resolv, res_randomid) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   res_randomid();
 #else
   GTEST_SKIP() << "musl doesn't have res_randomid";
