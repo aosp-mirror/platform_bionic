@@ -43,9 +43,6 @@ cc_defaults {
         linux_bionic: {
             header_libs: ["bionic_libc_platform_headers"],
         },
-        musl: {
-            cflags: ["-DMUSL"],
-        },
     },
     cflags: [
         "-fstack-protector-all",
