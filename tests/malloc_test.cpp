@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/auxv.h>
+#include <sys/cdefs.h>
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -59,7 +60,7 @@
 
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
 
-#elif defined(MUSL)
+#elif defined(ANDROID_HOST_MUSL)
 
 #define HAVE_REALLOCARRAY 1
 
@@ -659,7 +660,7 @@ TEST(malloc, verify_alignment) {
 }
 
 TEST(malloc, mallopt_smoke) {
-#if !defined(MUSL)
+#if !defined(ANDROID_HOST_MUSL)
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.

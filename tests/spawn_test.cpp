@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/cdefs.h>
+
 #include <gtest/gtest.h>
 
 #include "SignalUtils.h"
@@ -379,7 +381,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETPGROUP_set) {
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
-#if defined(__GLIBC__) || defined(MUSL)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc doesn't ignore the same signals.";
 #else
   // Block SIGBUS in the parent...
@@ -417,7 +419,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
-#if defined(__GLIBC__) || defined(MUSL)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc doesn't ignore the same signals.";
 #else
   // Ignore SIGALRM and SIGCONT in the parent...
