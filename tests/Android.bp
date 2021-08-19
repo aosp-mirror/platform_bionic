@@ -469,6 +469,18 @@ cc_test_library {
                 "libsystemproperties",
             ],
         },
+        musl: {
+            exclude_srcs: [
+                // musl doesn't have error.h
+                "error_test.cpp",
+
+                // musl doesn't define noreturn for C++
+                "stdnoreturn_test.cpp",
+
+                // unsupported relocation type 37
+                "ifunc_test.cpp",
+            ],
+        },
     },
 
     static_libs: [
@@ -1170,6 +1182,13 @@ cc_test_host {
     target: {
         linux_bionic: {
             enabled: false,
+        },
+        musl: {
+            exclude_static_libs: [
+                // Musl doesn't have fortify
+                "libfortify1-tests-clang",
+                "libfortify2-tests-clang",
+            ],
         },
     },
 }
