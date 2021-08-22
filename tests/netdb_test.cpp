@@ -19,10 +19,11 @@
 #include <gtest/gtest.h>
 
 #include <arpa/inet.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
+#include <string.h>
+#include <sys/cdefs.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 // https://code.google.com/p/android/issues/detail?id=13228
 TEST(netdb, freeaddrinfo_NULL) {
@@ -265,11 +266,18 @@ TEST(netdb, gethostbyaddr_r) {
   ASSERT_EQ(0, hp->h_addr[0]);
 }
 
+#if defined(ANDROID_HOST_MUSL)
+// musl doesn't define NETDB_INTERNAL.  It also never sets *err to -1, but
+// since gethostbyname_r is a glibc extension, the difference in behavior
+// between musl and  glibc should probably be considered a bug in musl.
+#define NETDB_INTERNAL -1
+#endif
+
 TEST(netdb, gethostbyname_r_ERANGE) {
   hostent hent;
   hostent *hp;
   char buf[4]; // Use too small buffer.
-  int err;
+  int err = 0;
   int result = gethostbyname_r("localhost", &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);
@@ -280,7 +288,7 @@ TEST(netdb, gethostbyname2_r_ERANGE) {
   hostent hent;
   hostent *hp;
   char buf[4]; // Use too small buffer.
-  int err;
+  int err = 0;
   int result = gethostbyname2_r("localhost", AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);
@@ -292,7 +300,7 @@ TEST(netdb, gethostbyaddr_r_ERANGE) {
   hostent hent;
   hostent *hp;
   char buf[4]; // Use too small buffer.
-  int err;
+  int err = 0;
   int result = gethostbyaddr_r(&addr, sizeof(addr), AF_INET, &hent, buf, sizeof(buf), &hp, &err);
   EXPECT_EQ(NETDB_INTERNAL, err);
   EXPECT_EQ(ERANGE, result);

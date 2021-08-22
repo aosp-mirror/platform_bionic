@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/auxv.h>
+#include <sys/cdefs.h>
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -55,9 +56,13 @@
 
 #define HAVE_REALLOCARRAY 1
 
-#else
+#elif defined(__GLIBC__)
 
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
+
+#elif defined(ANDROID_HOST_MUSL)
+
+#define HAVE_REALLOCARRAY 1
 
 #endif
 
@@ -655,10 +660,14 @@ TEST(malloc, verify_alignment) {
 }
 
 TEST(malloc, mallopt_smoke) {
+#if !defined(ANDROID_HOST_MUSL)
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
+#else
+  GTEST_SKIP() << "musl doesn't have mallopt";
+#endif
 }
 
 TEST(malloc, mallopt_decay) {
@@ -1355,6 +1364,8 @@ TEST(malloc, disable_mte) {
 
 TEST(malloc, allocation_slack) {
 #if defined(__BIONIC__)
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/189606147
+
   bool allocator_scudo;
   GetAllocatorVersion(&allocator_scudo);
   if (!allocator_scudo) {

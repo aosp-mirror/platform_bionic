@@ -41,7 +41,7 @@ __BEGIN_DECLS
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
-__noreturn void abort(void);
+__noreturn void abort(void) __attribute__((__nomerge__));
 __noreturn void exit(int __status);
 #if __ANDROID_API__ >= 21
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
