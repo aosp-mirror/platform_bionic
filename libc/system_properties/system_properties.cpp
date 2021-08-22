@@ -46,7 +46,6 @@
 #include "system_properties/context_node.h"
 #include "system_properties/prop_area.h"
 #include "system_properties/prop_info.h"
-#include "system_properties/prop_trace.h"
 
 #define SERIAL_DIRTY(serial) ((serial)&1)
 #define SERIAL_VALUE_LEN(serial) ((serial) >> 24)
@@ -128,9 +127,6 @@ const prop_info* SystemProperties::Find(const char* name) {
     return nullptr;
   }
 
-  SyspropTrace trace(name, nullptr /* prop_value */, nullptr /* prop_info */,
-                     PropertyAction::kPropertyFind);
-
   prop_area* pa = contexts_->GetPropAreaForName(name);
   if (!pa) {
     async_safe_format_log(ANDROID_LOG_WARN, "libc", "Access denied finding property \"%s\"", name);
@@ -205,10 +201,6 @@ void SystemProperties::ReadCallback(const prop_info* pi,
   // Read only properties don't need to copy the value to a temporary buffer, since it can never
   // change.  We use relaxed memory order on the serial load for the same reason.
   if (is_read_only(pi->name)) {
-    // The 2nd argument is not required for read-only property tracing, as the
-    // value can be obtained via pi->value or pi->long_value().
-    SyspropTrace trace(pi->name, nullptr /* prop_value */, pi /* prop_info */,
-                       PropertyAction::kPropertyGetReadOnly);
     uint32_t serial = load_const_atomic(&pi->serial, memory_order_relaxed);
     if (pi->is_long()) {
       callback(cookie, pi->name, pi->long_value(), serial);
@@ -219,8 +211,6 @@ void SystemProperties::ReadCallback(const prop_info* pi,
   }
 
   char value_buf[PROP_VALUE_MAX];
-  SyspropTrace trace(pi->name, value_buf, pi /* prop_info */,
-                     PropertyAction::kPropertyGetReadWrite);
   uint32_t serial = ReadMutablePropertyValue(pi, value_buf);
   callback(cookie, pi->name, value_buf, serial);
 }

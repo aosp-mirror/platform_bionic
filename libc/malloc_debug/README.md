@@ -573,9 +573,6 @@ The second backtrace frame has a pc of 0xb510 and is in the map named
 /system/libutils.so which starts at 0xb000. The relative pc is 0x510 and
 it is in an unknown function.
 
-There is a tool to visualize this data,
-[native\_heapdump\_viewer.py](https://android.googlesource.com/platform/development/+/master/scripts/native_heapdump_viewer.py).
-
 Examples
 ========
 
@@ -692,24 +689,3 @@ For backtraces from your app to be useful, you'll want to keep the
 symbols in your app's shared libraries rather than stripping them. That
 way you'll see the location of the leak directly without having to use
 something like the <code>ndk-stack</code> tool.
-
-### Analyzing heap dumps
-
-To analyze the data produced by the dumpheap command, run
-[development/scripts/native\_heapdump\_viewer.py](https://android.googlesource.com/platform/development/+/master/scripts/native_heapdump_viewer.py)
-
-In order for the script to properly symbolize the stacks in the file,
-make sure the script is executed from the tree that built the image.
-
-To collect, transfer, and analyze a dump:
-
-    adb shell am dumpheap -n <PID_TO_DUMP> /data/local/tmp/heap.txt
-    adb shell pull /data/local/tmp/heap.txt .
-    python development/scripts/native_heapdump_viewer.py --symbols /some/path/to/symbols/ heap.txt > heap_info.txt
-
-At the moment, the script will look for symbols in the given directory,
-using the path the .so file would have on the device. So if your .so file
-is at `/data/app/.../lib/arm/libx.so` on the device, it will need to be at
-`/some/path/to/symbols/data/app/.../lib/arm/libx.so` locally given the
-command line above. That is: you need to mirror the directory structure
-for the app in the symbols directory.
