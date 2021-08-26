@@ -489,6 +489,7 @@ cc_library {
         "-D_BSD_SOURCE",
         "-DFLT_EVAL_METHOD=0",
         "-include freebsd-compat.h",
+        "-include fenv-access.h",
         "-fno-math-errno",
         "-Wall",
         "-Werror",
