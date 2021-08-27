@@ -409,8 +409,8 @@ static void expect_ids(T ids, bool is_group) {
   }
   expect_range(AID_ISOLATED_START, AID_ISOLATED_END);
 
-  // TODO(73062966): We still don't have a good way to create vendor AIDs in the system or other
-  // non-vendor partitions, therefore we keep this check disabled.
+  // Prior to R, we didn't have a mechanism to create vendor AIDs in the system or other non-vendor
+  // partitions, therefore we disabled the rest of these checks for older API levels.
   if (android::base::GetIntProperty("ro.product.first_api_level", 0) <= 29) {
     return;
   }
@@ -466,14 +466,7 @@ TEST(pwd, getpwent_iterate) {
       EXPECT_STREQ("/data", pwd->pw_dir) << "pwd->pw_uid: " << pwd->pw_uid;
     }
 
-    // TODO(b/27999086): fix this check with the OEM range
-    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-    // yet, so therefore we do not check for uid's in the OEM range.
-    if (!(pwd->pw_uid >= 2900 && pwd->pw_uid <= 2999) &&
-        !(pwd->pw_uid >= 5000 && pwd->pw_uid <= 5999)) {
-      EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
-    }
+    EXPECT_EQ(0U, uids.count(pwd->pw_uid)) << "pwd->pw_uid: " << pwd->pw_uid;
     uids.emplace(pwd->pw_uid);
   }
   endpwent();
@@ -816,14 +809,7 @@ TEST(grp, getgrent_iterate) {
     EXPECT_STREQ(grp->gr_name, grp->gr_mem[0]) << "grp->gr_gid: " << grp->gr_gid;
     EXPECT_TRUE(grp->gr_mem[1] == nullptr) << "grp->gr_gid: " << grp->gr_gid;
 
-    // TODO(b/27999086): fix this check with the OEM range
-    // If OEMs add their own AIDs to private/android_filesystem_config.h, this check will fail.
-    // Long term we want to create a better solution for OEMs adding AIDs, but we're not there
-    // yet, so therefore we do not check for gid's in the OEM range.
-    if (!(grp->gr_gid >= 2900 && grp->gr_gid <= 2999) &&
-        !(grp->gr_gid >= 5000 && grp->gr_gid <= 5999)) {
-      EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
-    }
+    EXPECT_EQ(0U, gids.count(grp->gr_gid)) << "grp->gr_gid: " << grp->gr_gid;
     gids.emplace(grp->gr_gid);
   }
   endgrent();
@@ -831,6 +817,24 @@ TEST(grp, getgrent_iterate) {
   expect_ids(gids, true);
 #else
   GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(grp, getgrouplist) {
+#if defined(__BIONIC__)
+  // Query the number of groups.
+  int ngroups = 0;
+  ASSERT_EQ(-1, getgrouplist("root", 123, nullptr, &ngroups));
+  ASSERT_EQ(1, ngroups);
+
+  // Query the specific groups (just the one you pass in on Android).
+  ngroups = 8;
+  gid_t groups[ngroups];
+  ASSERT_EQ(1, getgrouplist("root", 123, groups, &ngroups));
+  ASSERT_EQ(1, ngroups);
+  ASSERT_EQ(123u, groups[0]);
+#else
+  GTEST_SKIP() << "bionic-only test (groups too unpredictable)";
 #endif
 }
 

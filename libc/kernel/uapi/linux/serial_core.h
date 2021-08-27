@@ -19,20 +19,6 @@
 #ifndef _UAPILINUX_SERIAL_CORE_H
 #define _UAPILINUX_SERIAL_CORE_H
 #include <linux/serial.h>
-#define PORT_UNKNOWN 0
-#define PORT_8250 1
-#define PORT_16450 2
-#define PORT_16550 3
-#define PORT_16550A 4
-#define PORT_CIRRUS 5
-#define PORT_16650 6
-#define PORT_16650V2 7
-#define PORT_16750 8
-#define PORT_STARTECH 9
-#define PORT_16C950 10
-#define PORT_16654 11
-#define PORT_16850 12
-#define PORT_RSA 13
 #define PORT_NS16550A 14
 #define PORT_XSCALE 15
 #define PORT_RM9000 16
@@ -87,7 +73,6 @@
 #define PORT_S3C2400 67
 #define PORT_M32R_SIO 68
 #define PORT_JSM 69
-#define PORT_PNX8XXX 70
 #define PORT_SUNHV 72
 #define PORT_S3C2412 73
 #define PORT_UARTLITE 74
@@ -115,7 +100,6 @@
 #define PORT_VT8500 97
 #define PORT_XUARTPS 98
 #define PORT_AR933X 99
-#define PORT_EFMUART 100
 #define PORT_ARC 101
 #define PORT_RP2 102
 #define PORT_LPUART 103

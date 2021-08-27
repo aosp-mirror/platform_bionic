@@ -37,4 +37,5 @@ struct __kernel_udphdr {
 #define UDP_ENCAP_GTP0 4
 #define UDP_ENCAP_GTP1U 5
 #define UDP_ENCAP_RXRPC 6
+#define TCP_ENCAP_ESPINTCP 7
 #endif

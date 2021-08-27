@@ -1,13 +1,32 @@
 // Define the common source files for all the libc instances
 // =========================================================
+package {
+    default_applicable_licenses: ["bionic_libc_license"],
+}
+
+license {
+    name: "bionic_libc_license",
+    visibility: [":__subpackages__"],
+    license_kinds: [
+        "SPDX-license-identifier-Apache-2.0",
+        "SPDX-license-identifier-BSD",
+        "SPDX-license-identifier-ISC",
+        "SPDX-license-identifier-MIT",
+        "legacy_notice",
+        "legacy_unencumbered",
+    ],
+    license_text: [
+        "NOTICE",
+    ],
+}
+
 libc_common_src_files = [
-    "async_safe/async_safe_log.cpp",
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
+    "bionic/exit.cpp",
     "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
-    "bionic/pututline.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
     "stdio/fmemopen.cpp",
@@ -17,7 +36,6 @@ libc_common_src_files = [
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.cpp",
     "stdio/vfwscanf.c",
-    "stdlib/exit.c",
 ]
 
 // off64_t/time64_t support on LP32.
@@ -63,9 +81,19 @@ cc_defaults {
     cppflags: [],
     include_dirs: [
         "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
+        // For android_filesystem_config.h.
+        "system/core/libcutils/include",
     ],
 
-    header_libs: ["gwp_asan_headers"],
+    header_libs: [
+        "libc_headers",
+        "gwp_asan_headers",
+        "liblog_headers",  // needed by bionic/libc/async_safe/include
+    ],
+    export_header_lib_headers: [
+        "libc_headers",
+    ],
 
     stl: "none",
     system_shared_libs: [],
@@ -75,8 +103,8 @@ cc_defaults {
         // TODO(b/132640749): Fix broken fuzzer support.
         fuzzer: false,
     },
-    native_coverage: false,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -85,8 +113,14 @@ cc_defaults {
     ldflags: ["-Wl,-z,muldefs"],
 
     product_variables: {
-        experimental_mte: {
-            cflags: ["-DANDROID_EXPERIMENTAL_MTE"],
+        malloc_zero_contents: {
+            cflags: ["-DSCUDO_ZERO_CONTENTS"],
+        },
+        malloc_pattern_fill_contents: {
+            cflags: ["-DSCUDO_PATTERN_FILL_CONTENTS"],
+        },
+        malloc_not_svelte: {
+            cflags: ["-DUSE_SCUDO"],
         },
     },
 }
@@ -156,6 +190,7 @@ cc_library_static {
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
+                "arch-x86/bionic/__libc_int0x80.S",
                 "arch-x86/bionic/__set_tls.cpp",
             ],
         },
@@ -240,7 +275,7 @@ cc_library_static {
 
     defaults: ["libc_defaults"],
     srcs: [
-        "dns/**/*.c",
+        "dns/**/*.c*",
 
         "upstream-netbsd/lib/libc/isc/ev_streams.c",
         "upstream-netbsd/lib/libc/isc/ev_timers.c",
@@ -252,6 +287,7 @@ cc_library_static {
         "-Wno-unused-parameter",
         "-include netbsd-compat.h",
         "-Wframe-larger-than=66000",
+        "-include private/bsd_sys_param.h",
     ],
 
     local_include_dirs: [
@@ -377,7 +413,6 @@ cc_library_static {
         "upstream-netbsd/lib/libc/gen/nice.c",
         "upstream-netbsd/lib/libc/gen/psignal.c",
         "upstream-netbsd/lib/libc/gen/utime.c",
-        "upstream-netbsd/lib/libc/gen/utmp.c",
         "upstream-netbsd/lib/libc/inet/nsap_addr.c",
         "upstream-netbsd/lib/libc/regex/regcomp.c",
         "upstream-netbsd/lib/libc/regex/regerror.c",
@@ -490,8 +525,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdio/open_wmemstream.c",
         "upstream-openbsd/lib/libc/stdio/rget.c",
         "upstream-openbsd/lib/libc/stdio/setvbuf.c",
-        "upstream-openbsd/lib/libc/stdio/tempnam.c",
-        "upstream-openbsd/lib/libc/stdio/tmpnam.c",
         "upstream-openbsd/lib/libc/stdio/ungetc.c",
         "upstream-openbsd/lib/libc/stdio/ungetwc.c",
         "upstream-openbsd/lib/libc/stdio/vasprintf.c",
@@ -513,6 +546,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/stdlib/llabs.c",
         "upstream-openbsd/lib/libc/stdlib/lldiv.c",
         "upstream-openbsd/lib/libc/stdlib/lsearch.c",
+        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
         "upstream-openbsd/lib/libc/stdlib/remque.c",
         "upstream-openbsd/lib/libc/stdlib/setenv.c",
         "upstream-openbsd/lib/libc/stdlib/tfind.c",
@@ -554,6 +588,7 @@ cc_library_static {
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
+        "upstream-openbsd/lib/libc/string/memmem.c",
         "upstream-openbsd/lib/libc/string/strstr.c",
     ],
     cflags: [
@@ -563,6 +598,7 @@ cc_library_static {
     ],
 
     local_include_dirs: [
+        "private",
         "upstream-openbsd/android/include/",
         "upstream-openbsd/lib/libc/include/",
         "upstream-openbsd/lib/libc/gdtoa/",
@@ -608,6 +644,7 @@ cc_library_static {
         arm64: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
+                "upstream-openbsd/lib/libc/string/memrchr.c",
                 "upstream-openbsd/lib/libc/string/stpcpy.c",
                 "upstream-openbsd/lib/libc/string/strcpy.c",
                 "upstream-openbsd/lib/libc/string/strncmp.c",
@@ -777,6 +814,7 @@ cc_library_static {
         "bionic/android_set_abort_message.cpp",
 
         "bionic/strchr.cpp",
+        "bionic/strchrnul.cpp",
         "bionic/strnlen.c",
         "bionic/strrchr.cpp",
     ],
@@ -837,27 +875,10 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memcmp.S",
                 "arch-arm64/generic/bionic/memcpy.S",
                 "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
-                "arch-arm64/generic/bionic/stpcpy.S",
-                "arch-arm64/generic/bionic/strcpy.S",
                 "arch-arm64/generic/bionic/wmemmove.S",
-
-                "arch-arm64/default/bionic/memchr.S",
-                "arch-arm64/default/bionic/strchr.S",
-                "arch-arm64/default/bionic/strcmp.S",
-                "arch-arm64/default/bionic/strlen.S",
-                "arch-arm64/default/bionic/strncmp.S",
-                "arch-arm64/default/bionic/strnlen.S",
-
-                "arch-arm64/mte/bionic/memchr.c",
-                "arch-arm64/mte/bionic/strchr.cpp",
-                "arch-arm64/mte/bionic/strcmp.c",
-                "arch-arm64/mte/bionic/strlen.c",
-                "arch-arm64/mte/bionic/strncmp.c",
-                "arch-arm64/mte/bionic/strnlen.c",
 
                 "arch-arm64/bionic/__bionic_clone.S",
                 "arch-arm64/bionic/_exit_with_stack_teardown.S",
@@ -868,7 +889,9 @@ cc_library_static {
             exclude_srcs: [
                 "bionic/__memcpy_chk.cpp",
                 "bionic/strchr.cpp",
+                "bionic/strchrnul.cpp",
                 "bionic/strnlen.c",
+                "bionic/strrchr.cpp",
             ],
         },
 
@@ -911,6 +934,7 @@ cc_library_static {
                 "arch-x86/bionic/setjmp.S",
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
+                "arch-x86/bionic/__x86.get_pc_thunk.S",
 
                 // ssse3 functions
                 "arch-x86/atom/string/ssse3-strcat-atom.S",
@@ -1009,7 +1033,6 @@ cc_library_static {
         "bionic/bionic_arc4random.cpp",
         "bionic/bionic_futex.cpp",
         "bionic/bionic_netlink.cpp",
-        "bionic/bionic_systrace.cpp",
         "bionic/bionic_time_conversions.cpp",
         "bionic/brk.cpp",
         "bionic/c16rtomb.cpp",
@@ -1056,6 +1079,7 @@ cc_library_static {
         "bionic/get_device_api_level.cpp",
         "bionic/grp_pwd.cpp",
         "bionic/grp_pwd_file.cpp",
+        "bionic/heap_zero_init.cpp",
         "bionic/iconv.cpp",
         "bionic/icu_wrappers.cpp",
         "bionic/ifaddrs.cpp",
@@ -1074,7 +1098,6 @@ cc_library_static {
         "bionic/mblen.cpp",
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
-        "bionic/memmem.cpp",
         "bionic/mempcpy.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
@@ -1088,6 +1111,7 @@ cc_library_static {
         "bionic/open.cpp",
         "bionic/pathconf.cpp",
         "bionic/pause.cpp",
+        "bionic/pidfd.cpp",
         "bionic/pipe.cpp",
         "bionic/poll.cpp",
         "bionic/posix_fadvise.cpp",
@@ -1121,7 +1145,6 @@ cc_library_static {
         "bionic/spawn.cpp",
         "bionic/stat.cpp",
         "bionic/stdlib_l.cpp",
-        "bionic/strchrnul.cpp",
         "bionic/strerror.cpp",
         "bionic/string_l.cpp",
         "bionic/strings_l.cpp",
@@ -1153,6 +1176,7 @@ cc_library_static {
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
         "bionic/usleep.cpp",
+        "bionic/utmp.cpp",
         "bionic/wait.cpp",
         "bionic/wchar.cpp",
         "bionic/wchar_l.cpp",
@@ -1177,12 +1201,30 @@ cc_library_static {
             cflags: ["-DTREBLE_LINKER_NAMESPACES"],
         },
     },
-    whole_static_libs: ["libsystemproperties"],
+    whole_static_libs: [
+        "libc_bionic_systrace",
+        "libsystemproperties",
+    ],
     cppflags: ["-Wold-style-cast"],
     local_include_dirs: ["stdio"],
     include_dirs: ["bionic/libstdc++/include"],
     name: "libc_bionic_ndk",
     generated_headers: ["generated_android_ids"],
+}
+
+// ========================================================
+// libc_bionic_systrace.a
+// ========================================================
+
+cc_library_static {
+    name: "libc_bionic_systrace",
+    defaults: ["libc_defaults"],
+    srcs: [
+        "bionic/bionic_systrace.cpp",
+    ],
+    apex_available: [
+        "com.android.runtime",
+    ],
 }
 
 // ========================================================
@@ -1220,6 +1262,7 @@ cc_library_static {
         "bionic/pthread_setname_np.cpp",
         "bionic/pthread_setschedparam.cpp",
         "bionic/pthread_spinlock.cpp",
+        "bionic/sys_thread_properties.cpp",
 
         // The following implementations depend on pthread data or implementation,
         // so we can't include them in libc_ndk.a.
@@ -1245,6 +1288,9 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
+    bazel_module: {
+        bp2build_available: true,
+    }
 }
 
 genrule {
@@ -1253,6 +1299,9 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
+    bazel_module: {
+        bp2build_available: true,
+    },
 }
 
 genrule {
@@ -1261,6 +1310,9 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
+    bazel_module: {
+        bp2build_available: true,
+    },
 }
 
 genrule {
@@ -1269,6 +1321,9 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tool_files: [":bionic-gensyscalls"],
     cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
+    bazel_module: {
+        bp2build_available: true,
+    },
 }
 
 cc_library_static {
@@ -1328,6 +1383,7 @@ cc_library_static {
         "libc_native_allocator_defaults",
     ],
     ramdisk_available: false,
+    vendor_ramdisk_available: false,
     srcs: libc_common_src_files + [
         "bionic/gwp_asan_wrappers.cpp",
         "bionic/heap_tagging.cpp",
@@ -1358,6 +1414,8 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic_ndk",
         "libc_bootstrap",
         "libc_fortify",
@@ -1388,6 +1446,8 @@ cc_library_static {
     name: "libc_nopthread",
 
     whole_static_libs: [
+        "libarm-optimized-routines-string",
+        "libasync_safe",
         "libc_bionic",
         "libc_bionic_ndk",
         "libc_bootstrap",
@@ -1550,6 +1610,7 @@ filegroup {
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1560,6 +1621,7 @@ filegroup {
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1568,6 +1630,7 @@ filegroup {
         "arch-arm/bionic/exidx_dynamic.c",
         "arch-arm/bionic/atexit_legacy.c",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1580,7 +1643,6 @@ cc_library {
     ],
     name: "libc",
     static_ndk_lib: true,
-    export_include_dirs: ["include"],
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1602,6 +1664,7 @@ cc_library {
             "gwp_asan",
             "libc_init_dynamic",
             "libc_common_shared",
+            "libunwind-exported",
         ],
     },
 
@@ -1638,11 +1701,14 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             version_script: ":libc.arm.map",
+            no_libcrt: true,
 
             shared: {
                 srcs: [":libc_sources_shared_arm"],
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
+                // For backwards-compatibility, some arm32 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1652,8 +1718,6 @@ cc_library {
             strip: {
                 keep_symbols_and_debug_frame: true,
             },
-
-            whole_static_libs: [ "libunwind_llvm" ],
         },
         arm64: {
             version_script: ":libc.arm64.map",
@@ -1663,8 +1727,6 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
-
-            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
@@ -1672,14 +1734,18 @@ cc_library {
             ldflags: ["-Wl,--hash-style=both"],
 
             version_script: ":libc.x86.map",
+            no_libcrt: true,
+
+            shared: {
+                // For backwards-compatibility, some x86 builtins are exported from libc.so.
+                static_libs: ["libclang_rt.builtins-i686-android-exported"],
+            },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.
             strip: {
                 keep_symbols: true,
             },
-
-            whole_static_libs: [ "libgcc_stripped" ],
         },
         x86_64: {
             version_script: ":libc.x86_64.map",
@@ -1689,8 +1755,6 @@ cc_library {
             strip: {
                 keep_symbols: true,
             },
-
-            whole_static_libs: [ "libgcc_stripped" ],
         },
     },
 
@@ -1699,10 +1763,15 @@ cc_library {
         versions: [
             "29",
             "R",
-            "10000",
+            "current",
         ],
     },
-
+    llndk: {
+        symbol_file: "libc.map.txt",
+        export_headers_as_system: true,
+        export_preprocessed_headers: ["include"],
+        export_llndk_headers: ["libc_llndk_headers"],
+    },
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -1711,6 +1780,10 @@ cc_library {
     // Sorting bss symbols by size usually results in less dirty pages at run
     // time, because small symbols are grouped together.
     sort_bss_symbols_by_size: true,
+
+    lto: {
+        never: true,
+    },
 }
 
 genrule {
@@ -1719,6 +1792,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1727,6 +1801,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1735,6 +1810,7 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1743,11 +1819,13 @@ genrule {
     srcs: ["libc.map.txt"],
     tool_files: [":bionic-generate-version-script"],
     cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+    bazel_module: { bp2build_available: true },
 }
 
 // Headers that only other parts of the platform can include.
 cc_library_headers {
     name: "bionic_libc_platform_headers",
+    defaults: ["linux_bionic_supported"],
     visibility: [
         "//art:__subpackages__",
         "//bionic:__subpackages__",
@@ -1757,11 +1835,15 @@ cc_library_headers {
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
+        "//system/core/libcutils:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
+        "//system/unwinding/libunwindstack:__subpackages__",
+        "//tools/security/sanitizer-status:__subpackages__",
     ],
-    host_supported: true,
     vendor_available: true,
+    product_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     export_include_dirs: [
@@ -1771,21 +1853,25 @@ cc_library_headers {
     stl: "none",
     sdk_version: "current",
 
+    min_sdk_version: "29",
     apex_available: [
         "//apex_available:platform",
-        "com.android.runtime",
-        "com.android.art.release", // from libdexfile_external
-        "com.android.art.debug", // from libdexfile_external
+        "//apex_available:anyapex",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
-// libc_headers for libasync_safe and libpropertyinfoparser
 cc_library_headers {
-    name: "libc_headers",
-
+    name: "libc_llndk_headers",
+    visibility: ["//visibility:private"],
+    llndk: {
+        llndk_headers: true,
+    },
     host_supported: true,
     vendor_available: true,
+    product_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     apex_available: [
@@ -1794,14 +1880,6 @@ cc_library_headers {
     ],
     // used by most APEXes indirectly via libunwind_llvm
     min_sdk_version: "apex_inherit",
-    visibility: [
-        ":__subpackages__", // visible to bionic
-        // ... and only to these places (b/152668052)
-        "//external/gwp_asan",
-        "//external/libunwind_llvm",
-        "//system/core/property_service/libpropertyinfoparser",
-        "//system/extras/toolchain-extras",
-    ],
 
     no_libcrt: true,
     stl: "none",
@@ -1815,34 +1893,80 @@ cc_library_headers {
     // is correct because the headers can support any sdk_version.
     sdk_version: "1",
 
-    export_include_dirs: [
-        "include",
+    export_system_include_dirs: [
         "kernel/uapi",
+        "kernel/android/scsi",
         "kernel/android/uapi",
     ],
 
     arch: {
         arm: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm"],
         },
         arm64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm64",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-arm64"],
         },
         x86: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
         x86_64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
+            export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
+    bazel_module: { bp2build_available: true },
+}
+
+cc_library_headers {
+    name: "libc_headers",
+    host_supported: true,
+    native_bridge_supported: true,
+    vendor_available: true,
+    product_available: true,
+    ramdisk_available: true,
+    vendor_ramdisk_available: true,
+    recovery_available: true,
+    sdk_version: "1",
+
+    apex_available: [
+        "//apex_available:platform",
+        "//apex_available:anyapex",
+    ],
+    // used by most APEXes indirectly via libunwind_llvm
+    min_sdk_version: "apex_inherit",
+    visibility: [
+        "//bionic:__subpackages__", // visible to bionic
+        // ... and only to these places (b/152668052)
+        "//external/arm-optimized-routines",
+        "//external/gwp_asan",
+        "//external/jemalloc_new",
+        "//external/libunwind_llvm",
+        "//external/scudo",
+        "//system/core/property_service/libpropertyinfoparser",
+        "//system/extras/toolchain-extras",
+        // TODO(b/153662223): Clean up these users that needed visibility when
+        // the implicit addition of system Bionic paths was removed.
+        "//art/tools/cpp-define-generator",
+        "//external/boringssl",
+        "//external/minijail",
+    ],
+
+    stl: "none",
+    no_libcrt: true,
+    system_shared_libs: [],
+
+    target: {
+        android: {
+            export_system_include_dirs: ["include"],
+            header_libs: ["libc_llndk_headers"],
+            export_header_lib_headers: ["libc_llndk_headers"],
+        },
+        linux_bionic: {
+            export_system_include_dirs: ["include"],
+            header_libs: ["libc_llndk_headers"],
+            export_header_lib_headers: ["libc_llndk_headers"],
+        },
+    },
+    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1930,15 +2054,19 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
+    product_available: true,
     ramdisk_available: true,
+    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     apex_available: [
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    // crt* objects are used by most cc_binary/cc_library in "anyapex"
-    min_sdk_version: "apex_inherit",
+    // Generate NDK variants of the CRT objects for every supported API level.
+    min_sdk_version: "16",
+    stl: "none",
+    crt: true,
     cflags: [
         "-Wno-gcc-compat",
         "-Wall",
@@ -1967,7 +2095,10 @@ cc_defaults {
 cc_object {
     name: "crtbrand",
     // crtbrand.c needs <stdint.h> and a #define for the platform SDK version.
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private", // crtbrand.S depends on private/bionic_asm_note.h
+    ],
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1976,63 +2107,64 @@ cc_object {
     srcs: ["arch-common/bionic/crtbrand.S"],
 
     defaults: ["crt_so_defaults"],
-}
 
-cc_object {
-    name: "crtbegin_so1",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin_so.c"],
-
-    defaults: ["crt_so_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_so",
+    local_include_dirs: ["include"],
+    srcs: ["arch-common/bionic/crtbegin_so.c"],
 
     defaults: ["crt_so_defaults"],
     objs: [
-        "crtbegin_so1",
         "crtbrand",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtend_so",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend_so.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
-}
 
-cc_object {
-    name: "crtbegin_static1",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin.c"],
-    defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_static",
 
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
+
+    srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
-        "crtbegin_static1",
         "crtbrand",
     ],
     defaults: ["crt_defaults"],
-}
+    // When using libc.a, we're using the latest library regardless of target API level.
+    min_sdk_version: "current",
 
-cc_object {
-    name: "crtbegin_dynamic1",
-    local_include_dirs: ["include"],
-    srcs: ["arch-common/bionic/crtbegin.c"],
-    defaults: ["crt_defaults"],
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     name: "crtbegin_dynamic",
 
+    local_include_dirs: [
+        "include",
+        "bionic", // crtbegin.c includes bionic/libc_init_common.h
+    ],
+    srcs: ["arch-common/bionic/crtbegin.c"],
     objs: [
-        "crtbegin_dynamic1",
         "crtbrand",
     ],
     target: {
@@ -2044,14 +2176,45 @@ cc_object {
         },
     },
     defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
     // We rename crtend.o to crtend_android.o to avoid a
     // name clash between gcc and bionic.
     name: "crtend_android",
-    local_include_dirs: ["include"],
+    local_include_dirs: [
+        "include",
+        "private",  // crtend.S depends on private/bionic_asm_arm64.h
+    ],
     srcs: ["arch-common/bionic/crtend.S"],
+
+    defaults: ["crt_defaults"],
+
+    bazel_module: { bp2build_available: true },
+}
+
+cc_library_static {
+    name: "note_memtag_heap_async",
+    arch: {
+      arm64: {
+        srcs: ["arch-arm64/bionic/note_memtag_heap_async.S"],
+      }
+    },
+    sdk_version: "minimum",
+
+    defaults: ["crt_defaults"],
+}
+
+cc_library_static {
+    name: "note_memtag_heap_sync",
+    arch: {
+      arm64: {
+        srcs: ["arch-arm64/bionic/note_memtag_heap_sync.S"],
+      }
+    },
+    sdk_version: "minimum",
 
     defaults: ["crt_defaults"],
 }
@@ -2136,44 +2299,8 @@ ndk_headers {
 
 ndk_library {
     name: "libc",
-    native_bridge_supported: true,
     symbol_file: "libc.map.txt",
     first_version: "9",
-}
-
-llndk_library {
-    name: "libc",
-    symbol_file: "libc.map.txt",
-    export_headers_as_system: true,
-    export_preprocessed_headers: ["include"],
-    native_bridge_supported: true,
-    export_include_dirs: [
-        "kernel/android/scsi",
-        "kernel/android/uapi",
-        "kernel/uapi",
-    ],
-    arch: {
-        arm: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm",
-            ],
-        },
-        arm64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-arm64",
-            ],
-        },
-        x86: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
-        },
-        x86_64: {
-            export_include_dirs: [
-                "kernel/uapi/asm-x86",
-            ],
-        },
-    },
 }
 
 ndk_library {
@@ -2189,6 +2316,7 @@ filegroup {
         "kernel/uapi/linux/input.h",
         "kernel/uapi/linux/input-event-codes.h",
     ],
+    bazel_module: { bp2build_available: true },
 }
 
 // Generate a syscall name / number mapping. These objects are text files
@@ -2214,6 +2342,8 @@ cc_object {
         "kernel/uapi/asm-arm",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2223,6 +2353,8 @@ cc_object {
         "kernel/uapi/asm-arm64",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2234,6 +2366,8 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2245,55 +2379,16 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
+
+    bazel_module: { bp2build_available: true },
 }
 
-// Generate the C++ policy sources for app and system seccomp-bpf filters.
-python_binary_host {
-    name: "genseccomp",
-    main: "tools/genseccomp.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
+filegroup {
+    name: "all_kernel_uapi_headers",
+    srcs: ["kernel/uapi/**/*.h"],
+    bazel_module: { bp2build_available: true },
 }
 
-python_binary_host {
-    name: "genfunctosyscallnrs",
-    main: "tools/genfunctosyscallnrs.py",
-
-    srcs: [
-        "tools/genseccomp.py",
-        "tools/genfunctosyscallnrs.py",
-        "tools/gensyscalls.py",
-    ],
-
-    data: [
-        "kernel/uapi/**/*.h",
-    ],
-
-    version: {
-        py2: {
-            enabled: true,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
-}
 
 cc_genrule {
     name: "func_to_syscall_nrs",
@@ -2315,11 +2410,11 @@ cc_genrule {
     ],
 }
 
-// SECCOMP_BLACKLIST_APP_ZYGOTE.TXT = SECCOMP_BLACKLIST_APP.txt - setresgid*
+// SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT = SECCOMP_BLOCKLIST_APP.txt - setresgid*
 genrule {
-    name: "generate_app_zygote_blacklist",
-    out: ["SECCOMP_BLACKLIST_APP_ZYGOTE.TXT"],
-    srcs: ["SECCOMP_BLACKLIST_APP.TXT"],
+    name: "generate_app_zygote_blocklist",
+    out: ["SECCOMP_BLOCKLIST_APP_ZYGOTE.TXT"],
+    srcs: ["SECCOMP_BLOCKLIST_APP.TXT"],
     cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
 }
 
@@ -2332,11 +2427,11 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
-        ":generate_app_zygote_blacklist",
+        ":generate_app_zygote_blocklist",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
         ":libseccomp_gen_syscall_nrs_x86",
@@ -2360,10 +2455,10 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_APP.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
-        "SECCOMP_BLACKLIST_APP.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_APP.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
+        "SECCOMP_BLOCKLIST_APP.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
@@ -2388,9 +2483,9 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        "SECCOMP_WHITELIST_COMMON.TXT",
-        "SECCOMP_WHITELIST_SYSTEM.TXT",
-        "SECCOMP_BLACKLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_COMMON.TXT",
+        "SECCOMP_ALLOWLIST_SYSTEM.TXT",
+        "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":libseccomp_gen_syscall_nrs_arm",
         ":libseccomp_gen_syscall_nrs_arm64",
@@ -2431,75 +2526,6 @@ cc_library {
     static: {
         static_libs: ["libbase"],
     },
-}
-
-// This is a temporary library that will use scudo as the native memory
-// allocator. To use it, add it as the first shared library.
-cc_defaults {
-    name: "libc_scudo_wrapper_defaults",
-    srcs: [
-        "bionic/gwp_asan_wrappers.cpp",
-        "bionic/heap_tagging.cpp",
-        "bionic/malloc_common.cpp",
-        "bionic/malloc_common_dynamic.cpp",
-        "bionic/malloc_heapprofd.cpp",
-        "bionic/malloc_limit.cpp",
-        "bionic/scudo_wrapper.cpp",
-        "bionic/__set_errno.cpp",
-    ],
-    cflags: [
-        "-DUSE_SCUDO",
-        "-fno-emulated-tls", // Required for GWP-ASan.
-    ],
-    shared_libs: ["libscudo_wrapper"],
-
-    header_libs: [
-        "libc_headers",
-        "gwp_asan_headers",
-    ],
-
-    static_libs: [
-        "libasync_safe",
-        "gwp_asan",
-    ],
-
-    arch: {
-        arm: {
-            srcs: [":syscalls-arm.S"],
-        },
-        arm64: {
-            srcs: [":syscalls-arm64.S"],
-        },
-        x86: {
-            srcs: [
-                "arch-x86/bionic/__libc_init_sysinfo.cpp",
-                ":syscalls-x86.S",
-            ],
-        },
-        x86_64: {
-            srcs: [":syscalls-x86_64.S"],
-        },
-    },
-
-    // Mark this library as global so it overrides all the allocation
-    // definitions properly.
-    ldflags: ["-Wl,-z,global"],
-}
-
-cc_library_shared {
-    name: "libc_scudo",
-    vendor_available: true,
-    stl: "none",
-    system_shared_libs: [],
-
-    allow_undefined_symbols: true,
-    // Like libc, disable native coverage for libc_scudo.
-    native_coverage: false,
-    apex_available: [
-        "//apex_available:platform",
-        "com.android.media.swcodec",
-    ],
-    min_sdk_version: "apex_inherit",
 }
 
 subdirs = [

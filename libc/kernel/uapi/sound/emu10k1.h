@@ -18,8 +18,9 @@
  ****************************************************************************/
 #ifndef _UAPI__SOUND_EMU10K1_H
 #define _UAPI__SOUND_EMU10K1_H
+#ifdef __linux__
 #include <linux/types.h>
-#include <sound/asound.h>
+#endif
 #define EMU10K1_CARD_CREATIVE 0x00000000
 #define EMU10K1_CARD_EMUAPS 0x00000001
 #define EMU10K1_FX8010_PCM_COUNT 8
@@ -233,8 +234,20 @@ struct snd_emu10k1_fx8010_info {
 #define EMU10K1_GPR_TRANSLATION_BASS 2
 #define EMU10K1_GPR_TRANSLATION_TREBLE 3
 #define EMU10K1_GPR_TRANSLATION_ONOFF 4
+enum emu10k1_ctl_elem_iface {
+  EMU10K1_CTL_ELEM_IFACE_MIXER = 2,
+  EMU10K1_CTL_ELEM_IFACE_PCM = 3,
+};
+struct emu10k1_ctl_elem_id {
+  unsigned int pad;
+  int iface;
+  unsigned int device;
+  unsigned int subdevice;
+  unsigned char name[44];
+  unsigned int index;
+};
 struct snd_emu10k1_fx8010_control_gpr {
-  struct snd_ctl_elem_id id;
+  struct emu10k1_ctl_elem_id id;
   unsigned int vcount;
   unsigned int count;
   unsigned short gpr[32];
@@ -245,7 +258,7 @@ struct snd_emu10k1_fx8010_control_gpr {
   const unsigned int * tlv;
 };
 struct snd_emu10k1_fx8010_control_old_gpr {
-  struct snd_ctl_elem_id id;
+  struct emu10k1_ctl_elem_id id;
   unsigned int vcount;
   unsigned int count;
   unsigned short gpr[32];
@@ -257,19 +270,19 @@ struct snd_emu10k1_fx8010_control_old_gpr {
 struct snd_emu10k1_fx8010_code {
   char name[128];
   __EMU10K1_DECLARE_BITMAP(gpr_valid, 0x200);
-  __u32 __user * gpr_map;
+  __u32 * gpr_map;
   unsigned int gpr_add_control_count;
-  struct snd_emu10k1_fx8010_control_gpr __user * gpr_add_controls;
+  struct snd_emu10k1_fx8010_control_gpr * gpr_add_controls;
   unsigned int gpr_del_control_count;
-  struct snd_ctl_elem_id __user * gpr_del_controls;
+  struct emu10k1_ctl_elem_id * gpr_del_controls;
   unsigned int gpr_list_control_count;
   unsigned int gpr_list_control_total;
-  struct snd_emu10k1_fx8010_control_gpr __user * gpr_list_controls;
+  struct snd_emu10k1_fx8010_control_gpr * gpr_list_controls;
   __EMU10K1_DECLARE_BITMAP(tram_valid, 0x100);
-  __u32 __user * tram_data_map;
-  __u32 __user * tram_addr_map;
+  __u32 * tram_data_map;
+  __u32 * tram_addr_map;
   __EMU10K1_DECLARE_BITMAP(code_valid, 1024);
-  __u32 __user * code;
+  __u32 * code;
 };
 struct snd_emu10k1_fx8010_tram {
   unsigned int address;
@@ -307,9 +320,4 @@ struct snd_emu10k1_fx8010_pcm_rec {
 #define SNDRV_EMU10K1_IOCTL_ZERO_TRAM_COUNTER _IO('H', 0x82)
 #define SNDRV_EMU10K1_IOCTL_SINGLE_STEP _IOW('H', 0x83, int)
 #define SNDRV_EMU10K1_IOCTL_DBG_READ _IOR('H', 0x84, int)
-typedef struct snd_emu10k1_fx8010_info emu10k1_fx8010_info_t;
-typedef struct snd_emu10k1_fx8010_control_gpr emu10k1_fx8010_control_gpr_t;
-typedef struct snd_emu10k1_fx8010_code emu10k1_fx8010_code_t;
-typedef struct snd_emu10k1_fx8010_tram emu10k1_fx8010_tram_t;
-typedef struct snd_emu10k1_fx8010_pcm_rec emu10k1_fx8010_pcm_t;
 #endif

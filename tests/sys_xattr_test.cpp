@@ -55,13 +55,13 @@ TEST(sys_xattr, fsetxattr_toosmallbuf) {
   ASSERT_EQ(ERANGE, errno);
 }
 
-TEST(sys_xattr, fsetxattr_invalidfd) {
+TEST(sys_xattr, fsetxattr_invalid_fd) {
   char buf[10];
   errno = 0;
-  ASSERT_EQ(-1, fsetxattr(65535, "user.foo", "0123", 5, 0));
+  ASSERT_EQ(-1, fsetxattr(-1, "user.foo", "0123", 5, 0));
   ASSERT_EQ(EBADF, errno);
   errno = 0;
-  ASSERT_EQ(-1, fgetxattr(65535, "user.foo", buf, sizeof(buf)));
+  ASSERT_EQ(-1, fgetxattr(-1, "user.foo", buf, sizeof(buf)));
   ASSERT_EQ(EBADF, errno);
 }
 
@@ -126,4 +126,11 @@ TEST(sys_xattr, flistattr_opath) {
   ASSERT_EQ(EBADF, errno);
 #endif
   close(fd);
+}
+
+TEST(sys_xattr, flistattr_invalid_fd) {
+  char buf[65536];  // 64kB is max possible xattr list size. See "man 7 xattr".
+  errno = 0;
+  ASSERT_EQ(-1, flistxattr(-1, buf, sizeof(buf)));
+  ASSERT_EQ(EBADF, errno);
 }

@@ -182,6 +182,7 @@ struct fb_bitfield {
 #define FB_ACTIVATE_ALL 64
 #define FB_ACTIVATE_FORCE 128
 #define FB_ACTIVATE_INV_MODE 256
+#define FB_ACTIVATE_KD_TEXT 512
 #define FB_ACCELF_TEXT 1
 #define FB_SYNC_HOR_HIGH_ACT 1
 #define FB_SYNC_VERT_HIGH_ACT 2

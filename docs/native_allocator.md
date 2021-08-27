@@ -329,7 +329,7 @@ the option [record\_allocs](https://android.googlesource.com/platform/bionic/+/m
 To run these benchmarks, first copy the trace files to the target using
 these commands:
 
-    adb shell push system/extras/traces /data/local/tmp
+    adb push system/extras/memory_replay/traces /data/local/tmp
 
 Since all of the traces come from applications, the `memory_replay` program
 will always call `mallopt(M_DECAY_TIME, 1)' before running the trace.

@@ -40,7 +40,7 @@
 __BEGIN_DECLS
 
 /**
- * [getauxval(3)](http://man7.org/linux/man-pages/man2/personality.2.html) returns values from
+ * [getauxval(3)](http://man7.org/linux/man-pages/man3/getauxval.3.html) returns values from
  * the ELF auxiliary vector passed by the kernel.
  *
  * Returns the corresponding value on success,
