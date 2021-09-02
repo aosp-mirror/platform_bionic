@@ -447,7 +447,7 @@ DEF_WEAK(fts_read);
  * reasons.
  */
 int
-fts_set(FTS *sp __unused, FTSENT *p, int instr)
+fts_set(FTS *sp, FTSENT *p, int instr)
 {
 	if (instr && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {

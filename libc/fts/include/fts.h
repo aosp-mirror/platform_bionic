@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,10 @@
 
 #pragma once
 
-#include <inttypes.h>
-
-/* OpenBSD has these in <sys/param.h>, but "ALIGN" isn't something we want to reserve. */
-#define ALIGNBYTES (sizeof(uintptr_t) - 1)
-#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) & ~ALIGNBYTES)
+/*
+ * This file is exported as part of libfts for use with musl, which doesn't
+ * define __INTRODUCED_IN.  Stub it out.
+ */
+#define __INTRODUCED_IN(x)
+#include <bionic/fts.h>
+#undef __INTRODUCED_IN
