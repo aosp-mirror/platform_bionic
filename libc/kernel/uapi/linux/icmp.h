@@ -20,7 +20,6 @@
 #define _UAPI_LINUX_ICMP_H
 #include <linux/types.h>
 #include <asm/byteorder.h>
-#include <linux/in.h>
 #include <linux/if.h>
 #include <linux/in6.h>
 #define ICMP_ECHOREPLY 0
@@ -124,7 +123,7 @@ struct icmp_ext_echo_iio {
     struct {
       struct icmp_ext_echo_ctype3_hdr ctype3_hdr;
       union {
-        struct in_addr ipv4_addr;
+        __be32 ipv4_addr;
         struct in6_addr ipv6_addr;
       } ip_addr;
     } addr;
