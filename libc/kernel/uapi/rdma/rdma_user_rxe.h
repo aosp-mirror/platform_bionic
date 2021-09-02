@@ -78,13 +78,13 @@ struct rxe_send_wr {
       __u16 pkey_index;
     } ud;
     struct {
-      union {
-        struct ib_mr * mr;
-        __aligned_u64 reserved;
-      };
-      __u32 key;
+      __aligned_u64 addr;
+      __aligned_u64 length;
+      __u32 mr_lkey;
+      __u32 mw_rkey;
+      __u32 rkey;
       __u32 access;
-    } reg;
+    } mw;
   } wr;
 };
 struct rxe_sge {
