@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 33
+#define FUSE_KERNEL_MINOR_VERSION 34
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -176,6 +176,7 @@ enum fuse_opcode {
   FUSE_COPY_FILE_RANGE = 47,
   FUSE_SETUPMAPPING = 48,
   FUSE_REMOVEMAPPING = 49,
+  FUSE_SYNCFS = 50,
   FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
@@ -546,4 +547,7 @@ struct fuse_removemapping_one {
   uint64_t len;
 };
 #define FUSE_REMOVEMAPPING_MAX_ENTRY (PAGE_SIZE / sizeof(struct fuse_removemapping_one))
+struct fuse_syncfs_in {
+  uint64_t padding;
+};
 #endif
