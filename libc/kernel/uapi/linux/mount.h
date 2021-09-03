@@ -89,6 +89,7 @@ enum fsconfig_command {
 #define MOUNT_ATTR_STRICTATIME 0x00000020
 #define MOUNT_ATTR_NODIRATIME 0x00000080
 #define MOUNT_ATTR_IDMAP 0x00100000
+#define MOUNT_ATTR_NOSYMFOLLOW 0x00200000
 struct mount_attr {
   __u64 attr_set;
   __u64 attr_clr;

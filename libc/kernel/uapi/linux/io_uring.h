@@ -53,16 +53,12 @@ struct io_uring_sqe {
   };
   __u64 user_data;
   union {
-    struct {
-      union {
-        __u16 buf_index;
-        __u16 buf_group;
-      } __attribute__((packed));
-      __u16 personality;
-      __s32 splice_fd_in;
-    };
-    __u64 __pad2[3];
-  };
+    __u16 buf_index;
+    __u16 buf_group;
+  } __attribute__((packed));
+  __u16 personality;
+  __s32 splice_fd_in;
+  __u64 __pad2[2];
 };
 enum {
   IOSQE_FIXED_FILE_BIT,
@@ -215,6 +211,8 @@ enum {
   IORING_REGISTER_FILES_UPDATE2 = 14,
   IORING_REGISTER_BUFFERS2 = 15,
   IORING_REGISTER_BUFFERS_UPDATE = 16,
+  IORING_REGISTER_IOWQ_AFF = 17,
+  IORING_UNREGISTER_IOWQ_AFF = 18,
   IORING_REGISTER_LAST
 };
 struct io_uring_files_update {
