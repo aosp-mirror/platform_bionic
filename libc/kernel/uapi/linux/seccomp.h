@@ -69,6 +69,7 @@ struct seccomp_notif_resp {
   __u32 flags;
 };
 #define SECCOMP_ADDFD_FLAG_SETFD (1UL << 0)
+#define SECCOMP_ADDFD_FLAG_SEND (1UL << 1)
 struct seccomp_notif_addfd {
   __u64 id;
   __u32 flags;

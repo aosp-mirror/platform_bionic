@@ -20,6 +20,7 @@
 #define _SCSI_SCSI_H
 #include <linux/types.h>
 #include <scsi/scsi_proto.h>
+#include <scsi/scsi_status.h>
 struct ccs_modesel_head {
   __u8 _r1;
   __u8 medium;
@@ -66,8 +67,6 @@ struct ccs_modesel_head {
 #define IGNORE_WIDE_RESIDUE 0x23
 #define ACA 0x24
 #define QAS_REQUEST 0x55
-#define BUS_DEVICE_RESET TARGET_RESET
-#define ABORT ABORT_TASK_SET
 #define SCSI_IOCTL_GET_IDLUN 0x5382
 #define SCSI_IOCTL_PROBE_HOST 0x5385
 #define SCSI_IOCTL_GET_BUS_NUMBER 0x5386

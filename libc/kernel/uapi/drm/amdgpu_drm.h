@@ -65,13 +65,13 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_NO_CPU_ACCESS (1 << 1)
 #define AMDGPU_GEM_CREATE_CPU_GTT_USWC (1 << 2)
 #define AMDGPU_GEM_CREATE_VRAM_CLEARED (1 << 3)
-#define AMDGPU_GEM_CREATE_SHADOW (1 << 4)
 #define AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS (1 << 5)
 #define AMDGPU_GEM_CREATE_VM_ALWAYS_VALID (1 << 6)
 #define AMDGPU_GEM_CREATE_EXPLICIT_SYNC (1 << 7)
 #define AMDGPU_GEM_CREATE_CP_MQD_GFX9 (1 << 8)
 #define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
 #define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
+#define AMDGPU_GEM_CREATE_PREEMPTIBLE (1 << 11)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -452,6 +452,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_VBIOS 0x1B
 #define AMDGPU_INFO_VBIOS_SIZE 0x1
 #define AMDGPU_INFO_VBIOS_IMAGE 0x2
+#define AMDGPU_INFO_VBIOS_INFO 0x3
 #define AMDGPU_INFO_NUM_HANDLES 0x1C
 #define AMDGPU_INFO_SENSOR 0x1D
 #define AMDGPU_INFO_SENSOR_GFX_SCLK 0x1
@@ -554,6 +555,14 @@ struct drm_amdgpu_memory_info {
 struct drm_amdgpu_info_firmware {
   __u32 ver;
   __u32 feature;
+};
+struct drm_amdgpu_info_vbios {
+  __u8 name[64];
+  __u8 vbios_pn[64];
+  __u32 version;
+  __u32 pad;
+  __u8 vbios_ver_str[32];
+  __u8 date[32];
 };
 #define AMDGPU_VRAM_TYPE_UNKNOWN 0
 #define AMDGPU_VRAM_TYPE_GDDR1 1
@@ -672,6 +681,7 @@ struct drm_amdgpu_info_video_caps {
 #define AMDGPU_FAMILY_RV 142
 #define AMDGPU_FAMILY_NV 143
 #define AMDGPU_FAMILY_VGH 144
+#define AMDGPU_FAMILY_YC 146
 #ifdef __cplusplus
 }
 #endif
