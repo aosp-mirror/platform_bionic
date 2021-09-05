@@ -16,8 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _ASM_X86_UNISTD_X32_H
-#define _ASM_X86_UNISTD_X32_H 1
+#ifndef _UAPI_ASM_UNISTD_X32_H
+#define _UAPI_ASM_UNISTD_X32_H
 #define __NR_read (__X32_SYSCALL_BIT + 0)
 #define __NR_write (__X32_SYSCALL_BIT + 1)
 #define __NR_open (__X32_SYSCALL_BIT + 2)
@@ -325,9 +325,11 @@
 #define __NR_process_madvise (__X32_SYSCALL_BIT + 440)
 #define __NR_epoll_pwait2 (__X32_SYSCALL_BIT + 441)
 #define __NR_mount_setattr (__X32_SYSCALL_BIT + 442)
+#define __NR_quotactl_fd (__X32_SYSCALL_BIT + 443)
 #define __NR_landlock_create_ruleset (__X32_SYSCALL_BIT + 444)
 #define __NR_landlock_add_rule (__X32_SYSCALL_BIT + 445)
 #define __NR_landlock_restrict_self (__X32_SYSCALL_BIT + 446)
+#define __NR_memfd_secret (__X32_SYSCALL_BIT + 447)
 #define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)

@@ -576,6 +576,9 @@
 #if defined(__NR_memfd_create)
   #define SYS_memfd_create __NR_memfd_create
 #endif
+#if defined(__NR_memfd_secret)
+  #define SYS_memfd_secret __NR_memfd_secret
+#endif
 #if defined(__NR_migrate_pages)
   #define SYS_migrate_pages __NR_migrate_pages
 #endif
@@ -836,6 +839,9 @@
 #endif
 #if defined(__NR_quotactl)
   #define SYS_quotactl __NR_quotactl
+#endif
+#if defined(__NR_quotactl_fd)
+  #define SYS_quotactl_fd __NR_quotactl_fd
 #endif
 #if defined(__NR_read)
   #define SYS_read __NR_read
