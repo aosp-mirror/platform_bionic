@@ -16,10 +16,12 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#define __ARCH_WANT_RENAMEAT
-#define __ARCH_WANT_NEW_STAT
-#define __ARCH_WANT_SET_GET_RLIMIT
-#define __ARCH_WANT_TIME32_SYSCALLS
-#define __ARCH_WANT_SYS_CLONE3
-#define __ARCH_WANT_MEMFD_SECRET
-#include <asm-generic/unistd.h>
+#ifndef _UAPI_WWAN_H_
+#define _UAPI_WWAN_H_
+enum {
+  IFLA_WWAN_UNSPEC,
+  IFLA_WWAN_LINK_ID,
+  __IFLA_WWAN_MAX
+};
+#define IFLA_WWAN_MAX (__IFLA_WWAN_MAX - 1)
+#endif

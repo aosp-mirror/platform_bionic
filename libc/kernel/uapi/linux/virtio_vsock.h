@@ -21,6 +21,7 @@
 #include <linux/types.h>
 #include <linux/virtio_ids.h>
 #include <linux/virtio_config.h>
+#define VIRTIO_VSOCK_F_SEQPACKET 1
 struct virtio_vsock_config {
   __le64 guest_cid;
 } __attribute__((packed));
@@ -44,6 +45,7 @@ struct virtio_vsock_hdr {
 } __attribute__((packed));
 enum virtio_vsock_type {
   VIRTIO_VSOCK_TYPE_STREAM = 1,
+  VIRTIO_VSOCK_TYPE_SEQPACKET = 2,
 };
 enum virtio_vsock_op {
   VIRTIO_VSOCK_OP_INVALID = 0,
@@ -58,5 +60,8 @@ enum virtio_vsock_op {
 enum virtio_vsock_shutdown {
   VIRTIO_VSOCK_SHUTDOWN_RCV = 1,
   VIRTIO_VSOCK_SHUTDOWN_SEND = 2,
+};
+enum virtio_vsock_rw {
+  VIRTIO_VSOCK_SEQ_EOR = 1,
 };
 #endif

@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 4
+#define KFD_IOCTL_MINOR_VERSION 5
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -304,6 +304,44 @@ enum kfd_mmio_remap {
   KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL = 0,
   KFD_MMIO_REMAP_HDP_REG_FLUSH_CNTL = 4,
 };
+#define KFD_IOCTL_SVM_FLAG_HOST_ACCESS 0x00000001
+#define KFD_IOCTL_SVM_FLAG_COHERENT 0x00000002
+#define KFD_IOCTL_SVM_FLAG_HIVE_LOCAL 0x00000004
+#define KFD_IOCTL_SVM_FLAG_GPU_RO 0x00000008
+#define KFD_IOCTL_SVM_FLAG_GPU_EXEC 0x00000010
+#define KFD_IOCTL_SVM_FLAG_GPU_READ_MOSTLY 0x00000020
+enum kfd_ioctl_svm_op {
+  KFD_IOCTL_SVM_OP_SET_ATTR,
+  KFD_IOCTL_SVM_OP_GET_ATTR
+};
+enum kfd_ioctl_svm_location {
+  KFD_IOCTL_SVM_LOCATION_SYSMEM = 0,
+  KFD_IOCTL_SVM_LOCATION_UNDEFINED = 0xffffffff
+};
+enum kfd_ioctl_svm_attr_type {
+  KFD_IOCTL_SVM_ATTR_PREFERRED_LOC,
+  KFD_IOCTL_SVM_ATTR_PREFETCH_LOC,
+  KFD_IOCTL_SVM_ATTR_ACCESS,
+  KFD_IOCTL_SVM_ATTR_ACCESS_IN_PLACE,
+  KFD_IOCTL_SVM_ATTR_NO_ACCESS,
+  KFD_IOCTL_SVM_ATTR_SET_FLAGS,
+  KFD_IOCTL_SVM_ATTR_CLR_FLAGS,
+  KFD_IOCTL_SVM_ATTR_GRANULARITY
+};
+struct kfd_ioctl_svm_attribute {
+  __u32 type;
+  __u32 value;
+};
+struct kfd_ioctl_svm_args {
+  __u64 start_addr;
+  __u64 size;
+  __u32 op;
+  __u32 nattr;
+  struct kfd_ioctl_svm_attribute attrs[0];
+};
+struct kfd_ioctl_set_xnack_mode_args {
+  __s32 xnack_enabled;
+};
 #define AMDKFD_IOCTL_BASE 'K'
 #define AMDKFD_IO(nr) _IO(AMDKFD_IOCTL_BASE, nr)
 #define AMDKFD_IOR(nr,type) _IOR(AMDKFD_IOCTL_BASE, nr, type)
@@ -340,6 +378,8 @@ enum kfd_mmio_remap {
 #define AMDKFD_IOC_IMPORT_DMABUF AMDKFD_IOWR(0x1D, struct kfd_ioctl_import_dmabuf_args)
 #define AMDKFD_IOC_ALLOC_QUEUE_GWS AMDKFD_IOWR(0x1E, struct kfd_ioctl_alloc_queue_gws_args)
 #define AMDKFD_IOC_SMI_EVENTS AMDKFD_IOWR(0x1F, struct kfd_ioctl_smi_events_args)
+#define AMDKFD_IOC_SVM AMDKFD_IOWR(0x20, struct kfd_ioctl_svm_args)
+#define AMDKFD_IOC_SET_XNACK_MODE AMDKFD_IOWR(0x21, struct kfd_ioctl_set_xnack_mode_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x20
+#define AMDKFD_COMMAND_END 0x22
 #endif
