@@ -24,7 +24,6 @@ libc_common_src_files = [
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/exit.cpp",
-    "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
@@ -565,6 +564,10 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strxfrm.c",
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
         "upstream-openbsd/lib/libc/string/wcswidth.c",
+
+        // This file is originally from OpenBSD, and benefits from
+        // being compiled with openbsd-compat.h.
+        "bionic/fts.c",
     ],
 
     cflags: [
