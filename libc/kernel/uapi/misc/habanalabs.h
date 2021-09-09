@@ -254,6 +254,7 @@ enum hl_device_status {
 #define HL_INFO_TOTAL_ENERGY 15
 #define HL_INFO_PLL_FREQUENCY 16
 #define HL_INFO_POWER 17
+#define HL_INFO_OPEN_STATS 18
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -326,6 +327,10 @@ struct hl_info_energy {
 #define HL_PLL_NUM_OUTPUTS 4
 struct hl_pll_frequency_info {
   __u16 output[HL_PLL_NUM_OUTPUTS];
+};
+struct hl_open_stats_info {
+  __u64 open_counter;
+  __u64 last_open_period_ms;
 };
 struct hl_power_info {
   __u64 power;
@@ -417,6 +422,7 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_STAGED_SUBMISSION_FIRST 0x80
 #define HL_CS_FLAGS_STAGED_SUBMISSION_LAST 0x100
 #define HL_CS_FLAGS_CUSTOM_TIMEOUT 0x200
+#define HL_CS_FLAGS_SKIP_RESET_ON_TIMEOUT 0x400
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {

@@ -415,6 +415,7 @@ enum nft_exthdr_op {
   NFT_EXTHDR_OP_IPV6,
   NFT_EXTHDR_OP_TCPOPT,
   NFT_EXTHDR_OP_IPV4,
+  NFT_EXTHDR_OP_SCTP,
   __NFT_EXTHDR_OP_MAX
 };
 #define NFT_EXTHDR_OP_MAX (__NFT_EXTHDR_OP_MAX - 1)
@@ -604,6 +605,14 @@ enum nft_counter_attributes {
   __NFTA_COUNTER_MAX
 };
 #define NFTA_COUNTER_MAX (__NFTA_COUNTER_MAX - 1)
+enum nft_last_attributes {
+  NFTA_LAST_UNSPEC,
+  NFTA_LAST_SET,
+  NFTA_LAST_MSECS,
+  NFTA_LAST_PAD,
+  __NFTA_LAST_MAX
+};
+#define NFTA_LAST_MAX (__NFTA_LAST_MAX - 1)
 enum nft_log_attributes {
   NFTA_LOG_UNSPEC,
   NFTA_LOG_GROUP,
