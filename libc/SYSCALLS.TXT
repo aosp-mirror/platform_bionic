@@ -148,7 +148,7 @@ int __faccessat:faccessat(int, const char*, int)  all
 int __fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
-int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64
+int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
@@ -192,8 +192,8 @@ int __fstatfs:fstatfs(int, struct statfs*)  lp64
 int __statfs64:statfs64(const char*, size_t, struct statfs*)  lp32
 int __statfs:statfs(const char*, struct statfs*)  lp64
 
-int     fstat64|fstat:fstat64(int, struct stat*)    lp32
-int     fstat64|fstat:fstat(int, struct stat*)    arm64,x86_64
+int fstat64|fstat:fstat64(int, struct stat*) lp32
+int fstat64|fstat:fstat(int, struct stat*) lp64
 
 # file system
 int     chdir(const char*)              all
@@ -338,7 +338,7 @@ int setfsuid(uid_t)  all
 int setdomainname(const char*, size_t)  all
 int sethostname(const char*, size_t)  all
 
-int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) arm64,x86,x86_64
+int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
 int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 
 pid_t wait4(pid_t, int*, int, struct rusage*)  all
