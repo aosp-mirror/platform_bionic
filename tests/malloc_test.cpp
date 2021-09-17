@@ -700,7 +700,10 @@ static void GetAllocatorVersion(bool* allocator_scudo) {
   FILE* fp = fdopen(tf.fd, "w+");
   tf.release();
   ASSERT_TRUE(fp != nullptr);
-  ASSERT_EQ(0, malloc_info(0, fp));
+  if (malloc_info(0, fp) != 0) {
+    *allocator_scudo = false;
+    return;
+  }
   ASSERT_EQ(0, fclose(fp));
 
   std::string contents;
