@@ -32,6 +32,9 @@
 #include <private/bionic_malloc_dispatch.h>
 #include <stddef.h>
 
+// Enable GWP-ASan, used by android_mallopt.
+bool EnableGwpAsan(bool force_init);
+
 // Hooks for libc to possibly install GWP-ASan.
 bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
 
