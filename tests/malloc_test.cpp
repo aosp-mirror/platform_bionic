@@ -872,7 +872,7 @@ static void __attribute__((optnone)) AndroidVerifyAlignment(size_t alloc_size, s
 }
 #endif
 
-TEST(malloc, align_check) {
+void AlignCheck() {
   // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_445
   // for a discussion of type alignment.
   ASSERT_NO_FATAL_FAILURE(TestAllocateType<float>());
@@ -896,26 +896,55 @@ TEST(malloc, align_check) {
 
 #if defined(__ANDROID__)
   // On Android, there is a lot of code that expects certain alignments:
-  // - Allocations of a size that rounds up to a multiple of 16 bytes
-  //   must have at least 16 byte alignment.
-  // - Allocations of a size that rounds up to a multiple of 8 bytes and
-  //   not 16 bytes, are only required to have at least 8 byte alignment.
-  // This is regardless of whether it is in a 32 bit or 64 bit environment.
+  //  1. Allocations of a size that rounds up to a multiple of 16 bytes
+  //     must have at least 16 byte alignment.
+  //  2. Allocations of a size that rounds up to a multiple of 8 bytes and
+  //     not 16 bytes, are only required to have at least 8 byte alignment.
+  // In addition, on Android clang has been configured for 64 bit such that:
+  //  3. Allocations <= 8 bytes must be aligned to at least 8 bytes.
+  //  4. Allocations > 8 bytes must be aligned to at least 16 bytes.
+  // For 32 bit environments, only the first two requirements must be met.
 
   // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2293.htm for
   // a discussion of this alignment mess. The code below is enforcing
   // strong-alignment, since who knows what code depends on this behavior now.
+  // As mentioned before, for 64 bit this will enforce the higher
+  // requirement since clang expects this behavior on Android now.
   for (size_t i = 1; i <= 128; i++) {
+#if defined(__LP64__)
+    if (i <= 8) {
+      AndroidVerifyAlignment(i, 8);
+    } else {
+      AndroidVerifyAlignment(i, 16);
+    }
+#else
     size_t rounded = (i + 7) & ~7;
     if ((rounded % 16) == 0) {
       AndroidVerifyAlignment(i, 16);
     } else {
       AndroidVerifyAlignment(i, 8);
     }
+#endif
     if (::testing::Test::HasFatalFailure()) {
       return;
     }
   }
+#endif
+}
+
+TEST(malloc, align_check) {
+  AlignCheck();
+}
+
+// Force GWP-ASan on and verify all alignment checks still pass.
+TEST(malloc, align_check_gwp_asan) {
+#if defined(__BIONIC__)
+  bool force_init = true;
+  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
+
+  AlignCheck();
+#else
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
