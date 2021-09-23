@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,20 +28,10 @@
 
 #pragma once
 
-#include <private/bionic_globals.h>
-#include <private/bionic_malloc_dispatch.h>
-#include <stddef.h>
-
-// Enable GWP-ASan, used by android_mallopt.
-bool EnableGwpAsan(bool force_init);
-
-// Hooks for libc to possibly install GWP-ASan.
-bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
-
-// Maybe initialize GWP-ASan. Set force_init to true to bypass process sampling.
-bool MaybeInitGwpAsan(libc_globals* globals, bool force_init = false);
-
-// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
-// heapprofd's signal-initialization sequence to determine the intermediate
-// dispatch pointer to use when initing.
-bool DispatchIsGwpAsan(const MallocDispatch* dispatch);
+/*
+ * This file is exported as part of libfts for use with musl, which doesn't
+ * define __INTRODUCED_IN.  Stub it out.
+ */
+#define __INTRODUCED_IN(x)
+#include <bionic/fts.h>
+#undef __INTRODUCED_IN
