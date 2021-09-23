@@ -562,7 +562,7 @@ enum {
 #define SNDRV_PCM_IOCTL_READN_FRAMES _IOR('A', 0x53, struct snd_xfern)
 #define SNDRV_PCM_IOCTL_LINK _IOW('A', 0x60, int)
 #define SNDRV_PCM_IOCTL_UNLINK _IO('A', 0x61)
-#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 1)
+#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 2)
 enum {
   SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
   SNDRV_RAWMIDI_STREAM_INPUT,
@@ -584,12 +584,32 @@ struct snd_rawmidi_info {
   unsigned int subdevices_avail;
   unsigned char reserved[64];
 };
+#define SNDRV_RAWMIDI_MODE_FRAMING_MASK (7 << 0)
+#define SNDRV_RAWMIDI_MODE_FRAMING_SHIFT 0
+#define SNDRV_RAWMIDI_MODE_FRAMING_NONE (0 << 0)
+#define SNDRV_RAWMIDI_MODE_FRAMING_TSTAMP (1 << 0)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MASK (7 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_SHIFT 3
+#define SNDRV_RAWMIDI_MODE_CLOCK_NONE (0 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_REALTIME (1 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MONOTONIC (2 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MONOTONIC_RAW (3 << 3)
+#define SNDRV_RAWMIDI_FRAMING_DATA_LENGTH 16
+struct snd_rawmidi_framing_tstamp {
+  __u8 frame_type;
+  __u8 length;
+  __u8 reserved[2];
+  __u32 tv_nsec;
+  __u64 tv_sec;
+  __u8 data[SNDRV_RAWMIDI_FRAMING_DATA_LENGTH];
+} __packed;
 struct snd_rawmidi_params {
   int stream;
   size_t buffer_size;
   size_t avail_min;
   unsigned int no_active_sensing : 1;
-  unsigned char reserved[16];
+  unsigned int mode;
+  unsigned char reserved[12];
 };
 struct snd_rawmidi_status {
   int stream;
