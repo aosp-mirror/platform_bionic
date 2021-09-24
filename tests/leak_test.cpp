@@ -112,11 +112,17 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
 TEST(pthread_leak, join) {
   SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
 
+  // Warm up. HWASan allocates an extra page on the first iteration, but never after.
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(
+                   &thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+
   LeakChecker lc;
 
   for (int i = 0; i < 100; ++i) {
-    pthread_t thread;
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+    ASSERT_EQ(0, pthread_create(
+                     &thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
     ASSERT_EQ(0, pthread_join(thread, nullptr));
   }
 }
