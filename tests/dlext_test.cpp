@@ -714,7 +714,7 @@ void DlExtRelroSharingTest::SpawnChildrenAndMeasurePss(const char* lib, const ch
 }
 
 std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
-  uint64_t addr = reinterpret_cast<uint64_t>(ptr);
+  uint64_t addr = reinterpret_cast<uint64_t>(untag_address(ptr));
   std::string found_name = "<not found>";
 
   EXPECT_TRUE(android::procinfo::ReadMapFile("/proc/self/maps",
