@@ -125,8 +125,7 @@ TEST(dl, exec_linker) {
 TEST(dl, exec_linker_load_file) {
 #if defined(__BIONIC__)
   const char* path_to_linker = PathToLinker();
-  std::string helper = GetTestlibRoot() +
-      "/exec_linker_helper/exec_linker_helper";
+  std::string helper = GetTestlibRoot() + "/exec_linker_helper";
   std::string expected_output =
       "ctor: argc=1 argv[0]=" + helper + "\n" +
       "main: argc=1 argv[0]=" + helper + "\n" +
@@ -167,8 +166,7 @@ TEST(dl, exec_linker_load_self) {
 TEST(dl, preinit_system_calls) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
-  std::string helper = GetTestlibRoot() +
-      "/preinit_syscall_test_helper/preinit_syscall_test_helper";
+  std::string helper = GetTestlibRoot() + "/preinit_syscall_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -179,8 +177,7 @@ TEST(dl, preinit_system_calls) {
 TEST(dl, preinit_getauxval) {
 #if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan not initialized in preinit_array, b/124007027";
-  std::string helper = GetTestlibRoot() +
-      "/preinit_getauxval_test_helper/preinit_getauxval_test_helper";
+  std::string helper = GetTestlibRoot() + "/preinit_getauxval_test_helper";
   chmod(helper.c_str(), 0755); // TODO: "x" lost in CTS, b/34945607
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -194,8 +191,7 @@ TEST(dl, preinit_getauxval) {
 
 TEST(dl, exec_without_ld_preload) {
 #if defined(__BIONIC__)
-  std::string helper = GetTestlibRoot() +
-      "/ld_preload_test_helper/ld_preload_test_helper";
+  std::string helper = GetTestlibRoot() + "/ld_preload_test_helper";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -205,8 +201,7 @@ TEST(dl, exec_without_ld_preload) {
 
 TEST(dl, exec_with_ld_preload) {
 #if defined(__BIONIC__)
-  std::string helper = GetTestlibRoot() +
-      "/ld_preload_test_helper/ld_preload_test_helper";
+  std::string helper = GetTestlibRoot() + "/ld_preload_test_helper";
   std::string env = std::string("LD_PRELOAD=") + GetTestlibRoot() + "/ld_preload_test_helper_lib2.so";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
@@ -232,12 +227,10 @@ TEST(dl, exec_with_ld_preload) {
 // The two libs are in ns2/ subdir.
 TEST(dl, exec_without_ld_config_file) {
 #if defined(__BIONIC__)
-  std::string error_message =
-      "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() +
-      "/ld_config_test_helper/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" "
-      "not found: needed by main executable\n";
-  std::string helper = GetTestlibRoot() +
-      "/ld_config_test_helper/ld_config_test_helper";
+  std::string error_message = "CANNOT LINK EXECUTABLE \"" + GetTestlibRoot() +
+                              "/ld_config_test_helper\": library \"ld_config_test_helper_lib1.so\" "
+                              "not found: needed by main executable\n";
+  std::string helper = GetTestlibRoot() + "/ld_config_test_helper";
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({ helper.c_str(), nullptr });
@@ -252,13 +245,16 @@ static void create_ld_config_file(const char* config_file) {
   android_get_LD_LIBRARY_PATH(default_search_paths, sizeof(default_search_paths));
 
   std::ofstream fout(config_file, std::ios::out);
-  fout << "dir.test = " << GetTestlibRoot() << "/ld_config_test_helper/" << std::endl
+  fout << "dir.test = " << GetTestlibRoot() << "/" << std::endl
        << "[test]" << std::endl
        << "additional.namespaces = ns2" << std::endl
        << "namespace.default.search.paths = " << GetTestlibRoot() << std::endl
        << "namespace.default.links = ns2" << std::endl
-       << "namespace.default.link.ns2.shared_libs = libc.so:libm.so:libdl.so:ld_config_test_helper_lib1.so" << std::endl
-       << "namespace.ns2.search.paths = " << default_search_paths << ":" << GetTestlibRoot() << "/ns2" << std::endl;
+       << "namespace.default.link.ns2.shared_libs = "
+          "libc.so:libm.so:libdl.so:ld_config_test_helper_lib1.so"
+       << std::endl
+       << "namespace.ns2.search.paths = " << default_search_paths << ":" << GetTestlibRoot()
+       << "/ns2" << std::endl;
   fout.close();
 }
 #endif
@@ -288,8 +284,7 @@ TEST(dl, exec_with_ld_config_file) {
   if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
-  std::string helper = GetTestlibRoot() +
-      "/ld_config_test_helper/ld_config_test_helper";
+  std::string helper = GetTestlibRoot() + "/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
@@ -325,8 +320,7 @@ TEST(dl, exec_with_ld_config_file_with_ld_preload) {
   if (is_user_build()) {
     GTEST_SKIP() << "LD_CONFIG_FILE is not supported on user build";
   }
-  std::string helper = GetTestlibRoot() +
-      "/ld_config_test_helper/ld_config_test_helper";
+  std::string helper = GetTestlibRoot() + "/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
@@ -363,11 +357,11 @@ TEST(dl, disable_ld_config_file) {
     GTEST_SKIP() << "test requires user build";
   }
 
-  std::string error_message = std::string("CANNOT LINK EXECUTABLE ") +
-      "\"" + GetTestlibRoot() + "/ld_config_test_helper/ld_config_test_helper\": " +
+  std::string error_message =
+      std::string("CANNOT LINK EXECUTABLE ") + "\"" + GetTestlibRoot() +
+      "/ld_config_test_helper\": " +
       "library \"ld_config_test_helper_lib1.so\" not found: needed by main executable\n";
-  std::string helper = GetTestlibRoot() +
-      "/ld_config_test_helper/ld_config_test_helper";
+  std::string helper = GetTestlibRoot() + "/ld_config_test_helper";
   TemporaryFile config_file;
   create_ld_config_file(config_file.path);
   std::string env = std::string("LD_CONFIG_FILE=") + config_file.path;
