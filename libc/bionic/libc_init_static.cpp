@@ -42,6 +42,7 @@
 #include "platform/bionic/macros.h"
 #include "platform/bionic/mte.h"
 #include "platform/bionic/page.h"
+#include "platform/bionic/reserved_signals.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_asm.h"
 #include "private/bionic_asm_note.h"
@@ -331,6 +332,15 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
 void __libc_init_mte(const void*, size_t, uintptr_t) {}
 #endif  // __aarch64__
 
+void __libc_init_profiling_handlers() {
+  // The dynamic variant of this function is more interesting, but this
+  // at least ensures that static binaries aren't killed by the kernel's
+  // default disposition for these two real-time signals that would have
+  // handlers installed if this was a dynamic binary.
+  signal(BIONIC_SIGNAL_PROFILER, SIG_IGN);
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
+}
+
 __noreturn static void __real_libc_init(void *raw_args,
                                         void (*onexit)(void) __unused,
                                         int (*slingshot)(int, char**, char**),
@@ -351,6 +361,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0);
   __libc_init_scudo();
+  __libc_init_profiling_handlers();
   __libc_init_fork_handler();
 
   call_ifunc_resolvers();
