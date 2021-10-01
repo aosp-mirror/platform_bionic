@@ -1043,6 +1043,7 @@ cc_test {
     defaults: [
         "bionic_unit_tests_defaults",
     ],
+    test_suites: ["device-tests"],
     data: [
         ":libdlext_test_runpath_zip_zipaligned",
         ":libdlext_test_zip_zipaligned",
@@ -1089,6 +1090,7 @@ cc_test {
     name: "bionic-unit-tests-static",
     gtest: false,
     defaults: ["bionic_tests_defaults"],
+    test_suites: ["device-tests"],
     host_supported: false,
 
     srcs: [
