@@ -787,13 +787,14 @@ cc_test_library {
     name: "libBionicCtsGtestMain",
     defaults: ["bionic_tests_defaults"],
     srcs: [
-        "gtest_globals_cts.cpp",
+        "gtest_globals.cpp",
         "gtest_main.cpp",
     ],
     shared: {
         enabled: false,
     },
     whole_static_libs: [
+        "libbase",
         "libgtest_isolated",
     ],
 }
@@ -870,13 +871,13 @@ cc_defaults {
                 "libLLVMSupport",
             ],
             ldflags: [
-                "-Wl,--rpath,${ORIGIN}/../bionic-loader-test-libs",
+                "-Wl,--rpath,${ORIGIN}/bionic-loader-test-libs",
                 "-Wl,--enable-new-dtags",
             ],
         },
     },
 
-    required: [
+    data_bins: [
         "cfi_test_helper",
         "cfi_test_helper2",
         "elftls_dlopen_ie_error_helper",
@@ -895,6 +896,14 @@ cc_defaults {
         "ld_preload_test_helper",
         "ld_preload_test_helper_lib1",
         "ld_preload_test_helper_lib2",
+        "ns_hidden_child_helper",
+        "preinit_getauxval_test_helper",
+        "preinit_syscall_test_helper",
+        "thread_exit_cb_helper",
+        "tls_properties_helper",
+    ],
+
+    data_libs: [
         "libatest_simple_zip",
         "libcfi-test",
         "libcfi-test-bad",
@@ -906,9 +915,7 @@ cc_defaults {
         "libdlext_test_fd",
         "libdlext_test_norelro",
         "libdlext_test_recursive",
-        "libdlext_test_runpath_zip_zipaligned",
         "libdlext_test_zip",
-        "libdlext_test_zip_zipaligned",
         "libgnu-hash-table-library",
         "libns_hidden_child_app",
         "libns_hidden_child_global",
@@ -1028,11 +1035,6 @@ cc_defaults {
         "libtest_with_dependency_loop_b",
         "libtest_with_dependency_loop_c",
         "libtestshared",
-        "ns_hidden_child_helper",
-        "preinit_getauxval_test_helper",
-        "preinit_syscall_test_helper",
-        "thread_exit_cb_helper",
-        "tls_properties_helper",
     ],
 }
 
@@ -1040,6 +1042,10 @@ cc_test {
     name: "bionic-unit-tests",
     defaults: [
         "bionic_unit_tests_defaults",
+    ],
+    data: [
+        ":libdlext_test_runpath_zip_zipaligned",
+        ":libdlext_test_zip_zipaligned",
     ],
 }
 
