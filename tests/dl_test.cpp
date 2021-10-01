@@ -134,7 +134,8 @@ TEST(dl, exec_linker_load_file) {
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_EQ(expected_output, eth.GetOutput());
 #endif
 }
 
@@ -150,7 +151,8 @@ TEST(dl, exec_linker_load_from_zip) {
       "helper_func called\n";
   ExecTestHelper eth;
   eth.SetArgs({ path_to_linker, helper.c_str(), nullptr });
-  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, expected_output.c_str());
+  eth.Run([&]() { execve(path_to_linker, eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  ASSERT_EQ(expected_output, eth.GetOutput());
 #endif
 }
 
