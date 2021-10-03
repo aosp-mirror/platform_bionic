@@ -68,8 +68,6 @@ __LIBC_HIDDEN__ void __libc_init_profiling_handlers() {
   // does not get loaded for a) non-apps, b) non-profilable apps on user. The default signal
   // disposition is to crash. We do not want the target to crash if we accidentally target a
   // non-app or non-profilable process.
-  //
-  // This does *not* get run for processes that statically link libc, and those will still crash.
   signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
 }
 
