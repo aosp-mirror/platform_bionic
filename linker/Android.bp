@@ -66,9 +66,6 @@ cc_object {
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
-
-    // b/182338959
-    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -409,7 +406,6 @@ cc_binary {
 sh_binary {
     name: "ldd",
     src: "ldd.sh",
-    bazel_module: { bp2build_available: true },
 }
 
 // Used to generate binaries that can be backed by transparent hugepages.
@@ -493,6 +489,7 @@ cc_library {
 
 cc_test {
     name: "linker-unit-tests",
+    test_suites: ["device-tests"],
 
     cflags: [
         "-g",
