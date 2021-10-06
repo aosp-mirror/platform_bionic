@@ -103,7 +103,7 @@ TEST_F(MallocDebugConfigTest, overflow) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string log_msg(
       "6 malloc_debug malloc_testing: bad value for option 'backtrace': "
-      "Math result not representable\n");
+      "Math result not representable (ERANGE)\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
 
