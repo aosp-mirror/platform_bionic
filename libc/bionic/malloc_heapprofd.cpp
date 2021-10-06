@@ -273,6 +273,11 @@ void HandleHeapprofdSignal() {
         atomic_store(&gPreviousDefaultDispatchTable, nullptr);
         gEphemeralDispatch = *NativeAllocatorDispatch();
       }
+    } else if (expected == kEphemeralHookInstalled) {
+      // Nothing to do here. The ephemeral hook was installed, but
+      // MallocInitHeapprofdHook() was never called. Since the ephemeral hook
+      // is already there, no need to reinstall it.
+      return;
     } else if (atomic_compare_exchange_strong(&gHeapprofdState, &expected2,
                                               kInstallingEphemeralHook)) {
       // if we still have hook installed, we can reuse the previous
