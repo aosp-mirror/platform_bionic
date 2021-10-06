@@ -44,6 +44,7 @@
 #include <android-base/macros.h>
 #include <android-base/scopeguard.h>
 #include <android-base/stringprintf.h>
+#include <android-base/test_utils.h>
 
 #if defined(__LP64__)
 #define PATH_TO_SYSTEM_LIB "/system/lib64/"
@@ -259,9 +260,7 @@ class ExecTestHelper {
     std::string error_msg("Test output:\n" + output_);
     AssertChildExited(pid, expected_exit_status, &error_msg);
     if (expected_output_regex != nullptr) {
-      if (!std::regex_search(output_, std::regex(expected_output_regex))) {
-        FAIL() << "regex " << expected_output_regex << " didn't match " << output_;
-      }
+      ASSERT_MATCH(output_, expected_output_regex);
     }
   }
 
