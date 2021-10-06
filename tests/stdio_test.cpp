@@ -2461,7 +2461,7 @@ TEST(STDIO_TEST, printf_m) {
   ASSERT_STREQ("<Unknown error -1>", buf);
   errno = EINVAL;
   snprintf(buf, sizeof(buf), "<%m>");
-  ASSERT_STREQ("<Invalid argument>", buf);
+  ASSERT_MATCH(buf, "<Invalid argument.*>");
 }
 
 TEST(STDIO_TEST, printf_m_does_not_clobber_strerror) {
@@ -2484,7 +2484,7 @@ TEST(STDIO_TEST, wprintf_m) {
   ASSERT_EQ(std::wstring(L"<Unknown error -1>"), buf);
   errno = EINVAL;
   swprintf(buf, sizeof(buf), L"<%m>");
-  ASSERT_EQ(std::wstring(L"<Invalid argument>"), buf);
+  ASSERT_MATCH(buf, L"Invalid argument.*>");
 }
 
 TEST(STDIO_TEST, wprintf_m_does_not_clobber_strerror) {
@@ -2558,9 +2558,9 @@ TEST(STDIO_TEST, constants) {
 
 TEST(STDIO_TEST, perror) {
   ExecTestHelper eth;
-  eth.Run([&]() { errno = EINVAL; perror("a b c"); exit(0); }, 0, "a b c: Invalid argument\n");
-  eth.Run([&]() { errno = EINVAL; perror(nullptr); exit(0); }, 0, "Invalid argument\n");
-  eth.Run([&]() { errno = EINVAL; perror(""); exit(0); }, 0, "Invalid argument\n");
+  eth.Run([&]() { errno = EINVAL; perror("a b c"); exit(0); }, 0, "a b c: Invalid argument.*\n");
+  eth.Run([&]() { errno = EINVAL; perror(nullptr); exit(0); }, 0, "Invalid argument.*\n");
+  eth.Run([&]() { errno = EINVAL; perror(""); exit(0); }, 0, "Invalid argument.*\n");
 }
 
 TEST(STDIO_TEST, puts) {
