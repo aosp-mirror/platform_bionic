@@ -15,6 +15,8 @@
  */
 
 #include <errno.h>
+
+#include <android-base/test_utils.h>
 #include <gtest/gtest.h>
 
 // Defined in string_posix_strerror_r_wrapper.cpp as a wrapper around the posix
@@ -33,7 +35,7 @@ TEST(string, posix_strerror_r) {
   ASSERT_STREQ("Success", buf);
 #endif
   ASSERT_EQ(0, posix_strerror_r(1, buf, sizeof(buf)));
-  ASSERT_STREQ("Operation not permitted", buf);
+  ASSERT_MATCH(buf, "Operation not permitted.*");
 
 #if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
   // Invalid.

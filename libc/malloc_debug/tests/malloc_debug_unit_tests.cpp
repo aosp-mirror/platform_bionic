@@ -2351,7 +2351,8 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
-      "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered\n",
+      "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered "
+      "(ELOOP)\n",
       RECORD_ALLOCS_FILE);
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
