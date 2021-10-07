@@ -28,6 +28,8 @@
 #include <algorithm>
 #include <vector>
 
+#include <android-base/test_utils.h>
+
 #include "buffer_tests.h"
 
 #if defined(NOFORTIFY)
@@ -58,7 +60,7 @@ static int signum(int i) {
 TEST(STRING_TEST, strerror) {
   // Valid.
   ASSERT_STREQ("Success", strerror(0));
-  ASSERT_STREQ("Operation not permitted", strerror(1));
+  ASSERT_MATCH(strerror(1), "Operation not permitted.*");
 
   // Invalid.
   ASSERT_STREQ("Unknown error -1", strerror(-1));
@@ -106,9 +108,9 @@ TEST(STRING_TEST, gnu_strerror_r) {
 #if defined(__BIONIC__)
   ASSERT_STREQ("Success", buf);
 #endif
-  ASSERT_STREQ("Operation not permitted", strerror_r(1, buf, sizeof(buf)));
+  ASSERT_MATCH(strerror_r(1, buf, sizeof(buf)), "Operation not permitted.*");
 #if defined(__BIONIC__)
-  ASSERT_STREQ("Operation not permitted", buf);
+  ASSERT_MATCH(buf, "Operation not permitted.*");
 #endif
 
   // Invalid.
