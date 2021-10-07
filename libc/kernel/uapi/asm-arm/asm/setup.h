@@ -19,7 +19,7 @@
 #ifndef _UAPI__ASMARM_SETUP_H
 #define _UAPI__ASMARM_SETUP_H
 #include <linux/types.h>
-#define COMMAND_LINE_SIZE 1024
+#define COMMAND_LINE_SIZE 2048
 #define ATAG_NONE 0x00000000
 struct tag_header {
   __u32 size;

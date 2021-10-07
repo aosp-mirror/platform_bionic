@@ -29,6 +29,8 @@
 #define VFIO_TYPE1_NESTING_IOMMU 6
 #define VFIO_SPAPR_TCE_v2_IOMMU 7
 #define VFIO_NOIOMMU_IOMMU 8
+#define VFIO_UNMAP_ALL 9
+#define VFIO_UPDATE_VADDR 10
 #define VFIO_TYPE (';')
 #define VFIO_BASE 100
 struct vfio_info_cap_header {
@@ -58,8 +60,11 @@ struct vfio_device_info {
 #define VFIO_DEVICE_FLAGS_AMBA (1 << 3)
 #define VFIO_DEVICE_FLAGS_CCW (1 << 4)
 #define VFIO_DEVICE_FLAGS_AP (1 << 5)
+#define VFIO_DEVICE_FLAGS_FSL_MC (1 << 6)
+#define VFIO_DEVICE_FLAGS_CAPS (1 << 7)
   __u32 num_regions;
   __u32 num_irqs;
+  __u32 cap_offset;
 };
 #define VFIO_DEVICE_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 7)
 #define VFIO_DEVICE_API_PCI_STRING "vfio-pci"
@@ -67,6 +72,10 @@ struct vfio_device_info {
 #define VFIO_DEVICE_API_AMBA_STRING "vfio-amba"
 #define VFIO_DEVICE_API_CCW_STRING "vfio-ccw"
 #define VFIO_DEVICE_API_AP_STRING "vfio-ap"
+#define VFIO_DEVICE_INFO_CAP_ZPCI_BASE 1
+#define VFIO_DEVICE_INFO_CAP_ZPCI_GROUP 2
+#define VFIO_DEVICE_INFO_CAP_ZPCI_UTIL 3
+#define VFIO_DEVICE_INFO_CAP_ZPCI_PFIP 4
 struct vfio_region_info {
   __u32 argsz;
   __u32 flags;
@@ -101,6 +110,7 @@ struct vfio_region_info_cap_type {
 #define VFIO_REGION_TYPE_PCI_VENDOR_MASK (0xffff)
 #define VFIO_REGION_TYPE_GFX (1)
 #define VFIO_REGION_TYPE_CCW (2)
+#define VFIO_REGION_TYPE_MIGRATION (3)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_OPREGION (1)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_HOST_CFG (2)
 #define VFIO_REGION_SUBTYPE_INTEL_IGD_LPC_CFG (3)
@@ -118,6 +128,24 @@ struct vfio_region_gfx_edid {
 #define VFIO_DEVICE_GFX_LINK_STATE_DOWN 2
 };
 #define VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD (1)
+#define VFIO_REGION_SUBTYPE_CCW_SCHIB (2)
+#define VFIO_REGION_SUBTYPE_CCW_CRW (3)
+#define VFIO_REGION_SUBTYPE_MIGRATION (1)
+struct vfio_device_migration_info {
+  __u32 device_state;
+#define VFIO_DEVICE_STATE_STOP (0)
+#define VFIO_DEVICE_STATE_RUNNING (1 << 0)
+#define VFIO_DEVICE_STATE_SAVING (1 << 1)
+#define VFIO_DEVICE_STATE_RESUMING (1 << 2)
+#define VFIO_DEVICE_STATE_MASK (VFIO_DEVICE_STATE_RUNNING | VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
+#define VFIO_DEVICE_STATE_VALID(state) (state & VFIO_DEVICE_STATE_RESUMING ? (state & VFIO_DEVICE_STATE_MASK) == VFIO_DEVICE_STATE_RESUMING : 1)
+#define VFIO_DEVICE_STATE_IS_ERROR(state) ((state & VFIO_DEVICE_STATE_MASK) == (VFIO_DEVICE_STATE_SAVING | VFIO_DEVICE_STATE_RESUMING))
+#define VFIO_DEVICE_STATE_SET_ERROR(state) ((state & ~VFIO_DEVICE_STATE_MASK) | VFIO_DEVICE_SATE_SAVING | VFIO_DEVICE_STATE_RESUMING)
+  __u32 reserved;
+  __u64 pending_bytes;
+  __u64 data_offset;
+  __u64 data_size;
+};
 #define VFIO_REGION_INFO_CAP_MSIX_MAPPABLE 3
 #define VFIO_REGION_INFO_CAP_NVLINK2_SSATGT 4
 struct vfio_region_info_cap_nvlink2_ssatgt {
@@ -185,6 +213,8 @@ enum {
 };
 enum {
   VFIO_CCW_IO_IRQ_INDEX,
+  VFIO_CCW_CRW_IRQ_INDEX,
+  VFIO_CCW_REQ_IRQ_INDEX,
   VFIO_CCW_NUM_IRQS
 };
 struct vfio_pci_dependent_device {
@@ -244,6 +274,17 @@ struct vfio_device_ioeventfd {
   __s32 fd;
 };
 #define VFIO_DEVICE_IOEVENTFD _IO(VFIO_TYPE, VFIO_BASE + 16)
+struct vfio_device_feature {
+  __u32 argsz;
+  __u32 flags;
+#define VFIO_DEVICE_FEATURE_MASK (0xffff)
+#define VFIO_DEVICE_FEATURE_GET (1 << 16)
+#define VFIO_DEVICE_FEATURE_SET (1 << 17)
+#define VFIO_DEVICE_FEATURE_PROBE (1 << 18)
+  __u8 data[];
+};
+#define VFIO_DEVICE_FEATURE _IO(VFIO_TYPE, VFIO_BASE + 17)
+#define VFIO_DEVICE_FEATURE_PCI_VF_TOKEN (0)
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
@@ -263,26 +304,62 @@ struct vfio_iommu_type1_info_cap_iova_range {
   __u32 reserved;
   struct vfio_iova_range iova_ranges[];
 };
+#define VFIO_IOMMU_TYPE1_INFO_CAP_MIGRATION 2
+struct vfio_iommu_type1_info_cap_migration {
+  struct vfio_info_cap_header header;
+  __u32 flags;
+  __u64 pgsize_bitmap;
+  __u64 max_dirty_bitmap_size;
+};
+#define VFIO_IOMMU_TYPE1_INFO_DMA_AVAIL 3
+struct vfio_iommu_type1_info_dma_avail {
+  struct vfio_info_cap_header header;
+  __u32 avail;
+};
 #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
 struct vfio_iommu_type1_dma_map {
   __u32 argsz;
   __u32 flags;
 #define VFIO_DMA_MAP_FLAG_READ (1 << 0)
 #define VFIO_DMA_MAP_FLAG_WRITE (1 << 1)
+#define VFIO_DMA_MAP_FLAG_VADDR (1 << 2)
   __u64 vaddr;
   __u64 iova;
   __u64 size;
 };
 #define VFIO_IOMMU_MAP_DMA _IO(VFIO_TYPE, VFIO_BASE + 13)
+struct vfio_bitmap {
+  __u64 pgsize;
+  __u64 size;
+  __u64 __user * data;
+};
 struct vfio_iommu_type1_dma_unmap {
   __u32 argsz;
   __u32 flags;
+#define VFIO_DMA_UNMAP_FLAG_GET_DIRTY_BITMAP (1 << 0)
+#define VFIO_DMA_UNMAP_FLAG_ALL (1 << 1)
+#define VFIO_DMA_UNMAP_FLAG_VADDR (1 << 2)
   __u64 iova;
   __u64 size;
+  __u8 data[];
 };
 #define VFIO_IOMMU_UNMAP_DMA _IO(VFIO_TYPE, VFIO_BASE + 14)
 #define VFIO_IOMMU_ENABLE _IO(VFIO_TYPE, VFIO_BASE + 15)
 #define VFIO_IOMMU_DISABLE _IO(VFIO_TYPE, VFIO_BASE + 16)
+struct vfio_iommu_type1_dirty_bitmap {
+  __u32 argsz;
+  __u32 flags;
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_START (1 << 0)
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_STOP (1 << 1)
+#define VFIO_IOMMU_DIRTY_PAGES_FLAG_GET_BITMAP (1 << 2)
+  __u8 data[];
+};
+struct vfio_iommu_type1_dirty_bitmap_get {
+  __u64 iova;
+  __u64 size;
+  struct vfio_bitmap bitmap;
+};
+#define VFIO_IOMMU_DIRTY_PAGES _IO(VFIO_TYPE, VFIO_BASE + 17)
 struct vfio_iommu_spapr_tce_ddw_info {
   __u64 pgsizes;
   __u32 max_dynamic_windows_supported;

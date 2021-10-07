@@ -31,6 +31,8 @@
 SPAWN_BENCHMARK(noop, test_program("bench_noop").c_str());
 SPAWN_BENCHMARK(noop_nostl, test_program("bench_noop_nostl").c_str());
 SPAWN_BENCHMARK(noop_static, test_program("bench_noop_static").c_str());
+SPAWN_BENCHMARK(bench_cxa_atexit, test_program("bench_cxa_atexit").c_str(), "100000", "_Exit");
+SPAWN_BENCHMARK(bench_cxa_atexit_full, test_program("bench_cxa_atexit").c_str(), "100000", "exit");
 
 // Android has a /bin -> /system/bin symlink, but use /system/bin explicitly so we can more easily
 // compare Bionic-vs-glibc on a Linux desktop machine.

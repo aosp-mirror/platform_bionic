@@ -97,7 +97,7 @@ struct igmpmsg {
   unsigned char im_msgtype;
   unsigned char im_mbz;
   unsigned char im_vif;
-  unsigned char unused3;
+  unsigned char im_vif_hi;
   struct in_addr im_src, im_dst;
 };
 enum {
@@ -140,6 +140,7 @@ enum {
   IPMRA_CREPORT_SRC_ADDR,
   IPMRA_CREPORT_DST_ADDR,
   IPMRA_CREPORT_PKT,
+  IPMRA_CREPORT_TABLE,
   __IPMRA_CREPORT_MAX
 };
 #define IPMRA_CREPORT_MAX (__IPMRA_CREPORT_MAX - 1)

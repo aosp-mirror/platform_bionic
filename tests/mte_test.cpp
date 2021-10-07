@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
+#include <sys/cdefs.h>
+
+#if defined(__BIONIC__)
+
 #include <gtest/gtest.h>
 
 #include <android-base/macros.h>
 #include <bionic/mte.h>
+#include "utils.h"
 
 __attribute__((no_sanitize("hwaddress")))
 static void test_tag_mismatch() {
@@ -33,7 +38,7 @@ static void test_tag_mismatch() {
 #endif
   }
 #if defined(__aarch64__)
-  if (mte_supported()) {
+  if (mte_supported() && running_with_mte()) {
     EXPECT_DEATH(
         {
           volatile int load ATTRIBUTE_UNUSED = *mistagged_p;
@@ -44,5 +49,12 @@ static void test_tag_mismatch() {
 }
 
 TEST(mte_test, ScopedDisableMTE) {
+  // With native_bridge, native and emulated parts exchange data, including pointers.
+  // This implies tagging on native and emulated architectures should match, which is
+  // not the case at the moment.
+  SKIP_WITH_NATIVE_BRIDGE;
+
   test_tag_mismatch();
 }
+
+#endif  // __BIONIC__
