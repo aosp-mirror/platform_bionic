@@ -86,7 +86,21 @@ void bionic_trace_end() {
     return;
   }
 
-  TEMP_FAILURE_RETRY(write(trace_marker_fd, "E|", 2));
+  // This code is intentionally "sub-optimal"; do not optimize this by inlining
+  // the E| string into the write.
+  //
+  // This is because if the const char* string passed to write(trace_marker) is not
+  // in resident memory (e.g. the page of the .rodata section that contains it has
+  // been paged out, or the anonymous page that contained a heap-based string is
+  // swapped in zram), the ftrace code will NOT page it in and instead report
+  // <faulted>.
+  //
+  // We "fix" this by putting the string on the stack, which is more unlikely
+  // to be paged out and pass the pointer to that instead.
+  //
+  // See b/197620214 for more context on this.
+  volatile char buf[2]{'E', '|'};
+  TEMP_FAILURE_RETRY(write(trace_marker_fd, const_cast<const char*>(buf), 2));
 }
 
 ScopedTrace::ScopedTrace(const char* message) : called_end_(false) {
