@@ -37,12 +37,6 @@ cc_library_static {
     },
     native_coverage: false,
 
-    target: {
-        android: {
-            static_libs: ["libc++demangle"],
-        },
-    },
-
     // -Wno-error=format-zero-length needed for gcc to compile.
     cflags: [
         "-Wall",
