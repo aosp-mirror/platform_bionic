@@ -1124,6 +1124,11 @@ cc_test {
 
     static_executable: true,
     stl: "libc++_static",
+    // Clang cannot build ifunc with LTO.
+    // http://b/203737712
+    lto: {
+        never: true,
+    },
 }
 
 // -----------------------------------------------------------------------------
