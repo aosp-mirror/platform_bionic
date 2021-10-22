@@ -1054,6 +1054,7 @@ cc_library_static {
         "bionic/error.cpp",
         "bionic/eventfd.cpp",
         "bionic/exec.cpp",
+        "bionic/execinfo.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
