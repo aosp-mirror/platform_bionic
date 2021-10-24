@@ -271,39 +271,11 @@ the host's glibc.
 
     $ ./tests/run-on-host.sh glibc
 
-
 ## Gathering test coverage
 
-For either host or target coverage, you must first:
-
- * `$ export NATIVE_COVERAGE=true`
-     * Note that the build system is ignorant to this flag being toggled, i.e. if
-       you change this flag, you will have to manually rebuild bionic.
- * Set `bionic_coverage=true` in `libc/Android.mk` and `libm/Android.mk`.
-
-### Coverage from device tests
-
-    $ mma
-    $ adb sync
-    $ adb shell \
-        GCOV_PREFIX=/data/local/tmp/gcov \
-        GCOV_PREFIX_STRIP=`echo $ANDROID_BUILD_TOP | grep -o / | wc -l` \
-        /data/nativetest/bionic-unit-tests/bionic-unit-tests
-    $ acov
-
-`acov` will pull all coverage information from the device, push it to the right
-directories, run `lcov`, and open the coverage report in your browser.
-
-### Coverage from host tests
-
-First, build and run the host tests as usual (see above).
-
-    $ croot
-    $ lcov -c -d $ANDROID_PRODUCT_OUT -o coverage.info
-    $ genhtml -o covreport coverage.info # or lcov --list coverage.info
-
-The coverage report is now available at `covreport/index.html`.
-
+To get test coverage for bionic, use `//bionic/build/coverage.sh`. Before
+running, follow the instructions at the top of the file to rebuild bionic with
+coverage instrumentation.
 
 ## Attaching GDB to the tests
 
