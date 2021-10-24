@@ -1565,6 +1565,17 @@ LIBC_S { # introduced=S
     process_madvise;
 } LIBC_R;
 
+LIBC_T { # introduced=Tiramisu
+  global:
+    backtrace;
+    backtrace_symbols;
+    backtrace_symbols_fd;
+    preadv2;
+    preadv64v2;
+    pwritev2;
+    pwritev64v2;
+} LIBC_S;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86
