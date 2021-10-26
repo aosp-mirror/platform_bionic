@@ -68,8 +68,7 @@ TEST(elftls_dl, dlopen_shared_var_ie) {
 }
 
 TEST(elftls_dl, dlopen_ie_error) {
-  std::string helper = GetTestlibRoot() +
-      "/elftls_dlopen_ie_error_helper/elftls_dlopen_ie_error_helper";
+  std::string helper = GetTestlibRoot() + "/elftls_dlopen_ie_error_helper";
   std::string src_path = GetTestlibRoot() + "/libtest_elftls_shared_var_ie.so";
   std::string dst_path = GetTestlibRoot() + "/libtest_elftls_shared_var.so";
 #if defined(__BIONIC__)

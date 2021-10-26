@@ -24,7 +24,6 @@ libc_common_src_files = [
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/exit.cpp",
-    "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
@@ -565,6 +564,10 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strxfrm.c",
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
         "upstream-openbsd/lib/libc/string/wcswidth.c",
+
+        // This file is originally from OpenBSD, and benefits from
+        // being compiled with openbsd-compat.h.
+        "bionic/fts.c",
     ],
 
     cflags: [
@@ -1051,6 +1054,7 @@ cc_library_static {
         "bionic/error.cpp",
         "bionic/eventfd.cpp",
         "bionic/exec.cpp",
+        "bionic/execinfo.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
@@ -1118,6 +1122,7 @@ cc_library_static {
         "bionic/posix_fallocate.cpp",
         "bionic/posix_madvise.cpp",
         "bionic/posix_timers.cpp",
+        "bionic/preadv_pwritev.cpp",
         "bionic/ptrace.cpp",
         "bionic/pty.cpp",
         "bionic/raise.cpp",
@@ -2528,6 +2533,29 @@ cc_library {
     },
     static: {
         static_libs: ["libbase"],
+    },
+}
+
+cc_library_host_static {
+    name: "libfts",
+    srcs: [
+        "bionic/fts.c",
+        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
+    ],
+    export_include_dirs: ["fts/include"],
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+        "-Wno-unused-parameter",
+    ],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
     },
 }
 
