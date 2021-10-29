@@ -1785,11 +1785,6 @@ cc_library {
     lto: {
         never: true,
     },
-    target: {
-        native_bridge: {
-            installable: false,
-        },
-    },
 }
 
 genrule {
