@@ -613,6 +613,7 @@ struct tc_codel_xstats {
   __u32 dropping;
   __u32 ce_mark;
 };
+#define FQ_CODEL_QUANTUM_MAX (1 << 20)
 enum {
   TCA_FQ_CODEL_UNSPEC,
   TCA_FQ_CODEL_TARGET,

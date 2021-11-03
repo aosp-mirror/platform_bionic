@@ -49,6 +49,7 @@
 #define FAN_UNLIMITED_QUEUE 0x00000010
 #define FAN_UNLIMITED_MARKS 0x00000020
 #define FAN_ENABLE_AUDIT 0x00000040
+#define FAN_REPORT_PIDFD 0x00000080
 #define FAN_REPORT_TID 0x00000100
 #define FAN_REPORT_FID 0x00000200
 #define FAN_REPORT_DIR_FID 0x00000400
@@ -82,6 +83,7 @@ struct fanotify_event_metadata {
 #define FAN_EVENT_INFO_TYPE_FID 1
 #define FAN_EVENT_INFO_TYPE_DFID_NAME 2
 #define FAN_EVENT_INFO_TYPE_DFID 3
+#define FAN_EVENT_INFO_TYPE_PIDFD 4
 struct fanotify_event_info_header {
   __u8 info_type;
   __u8 pad;
@@ -92,6 +94,10 @@ struct fanotify_event_info_fid {
   __kernel_fsid_t fsid;
   unsigned char handle[0];
 };
+struct fanotify_event_info_pidfd {
+  struct fanotify_event_info_header hdr;
+  __s32 pidfd;
+};
 struct fanotify_response {
   __s32 fd;
   __u32 response;
@@ -100,6 +106,8 @@ struct fanotify_response {
 #define FAN_DENY 0x02
 #define FAN_AUDIT 0x10
 #define FAN_NOFD - 1
+#define FAN_NOPIDFD FAN_NOFD
+#define FAN_EPIDFD - 2
 #define FAN_EVENT_METADATA_LEN (sizeof(struct fanotify_event_metadata))
 #define FAN_EVENT_NEXT(meta,len) ((len) -= (meta)->event_len, (struct fanotify_event_metadata *) (((char *) (meta)) + (meta)->event_len))
 #define FAN_EVENT_OK(meta,len) ((long) (len) >= (long) FAN_EVENT_METADATA_LEN && (long) (meta)->event_len >= (long) FAN_EVENT_METADATA_LEN && (long) (meta)->event_len <= (long) (len))

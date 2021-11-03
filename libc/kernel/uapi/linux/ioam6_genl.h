@@ -16,33 +16,33 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _SCSI_SCSI_H
-#define _SCSI_SCSI_H
-#include <linux/types.h>
-#include <scsi/scsi_proto.h>
-#include <scsi/scsi_status.h>
-struct ccs_modesel_head {
-  __u8 _r1;
-  __u8 medium;
-  __u8 _r2;
-  __u8 block_desc_length;
-  __u8 density;
-  __u8 number_blocks_hi;
-  __u8 number_blocks_med;
-  __u8 number_blocks_lo;
-  __u8 _r3;
-  __u8 block_length_hi;
-  __u8 block_length_med;
-  __u8 block_length_lo;
+#ifndef _UAPI_LINUX_IOAM6_GENL_H
+#define _UAPI_LINUX_IOAM6_GENL_H
+#define IOAM6_GENL_NAME "IOAM6"
+#define IOAM6_GENL_VERSION 0x1
+enum {
+  IOAM6_ATTR_UNSPEC,
+  IOAM6_ATTR_NS_ID,
+  IOAM6_ATTR_NS_DATA,
+  IOAM6_ATTR_NS_DATA_WIDE,
+#define IOAM6_MAX_SCHEMA_DATA_LEN (255 * 4)
+  IOAM6_ATTR_SC_ID,
+  IOAM6_ATTR_SC_DATA,
+  IOAM6_ATTR_SC_NONE,
+  IOAM6_ATTR_PAD,
+  __IOAM6_ATTR_MAX,
 };
-#define EXTENDED_MODIFY_DATA_POINTER 0x00
-#define EXTENDED_SDTR 0x01
-#define EXTENDED_EXTENDED_IDENTIFY 0x02
-#define EXTENDED_WDTR 0x03
-#define EXTENDED_PPR 0x04
-#define EXTENDED_MODIFY_BIDI_DATA_PTR 0x05
-#define SCSI_IOCTL_GET_IDLUN 0x5382
-#define SCSI_IOCTL_PROBE_HOST 0x5385
-#define SCSI_IOCTL_GET_BUS_NUMBER 0x5386
-#define SCSI_IOCTL_GET_PCI 0x5387
+#define IOAM6_ATTR_MAX (__IOAM6_ATTR_MAX - 1)
+enum {
+  IOAM6_CMD_UNSPEC,
+  IOAM6_CMD_ADD_NAMESPACE,
+  IOAM6_CMD_DEL_NAMESPACE,
+  IOAM6_CMD_DUMP_NAMESPACES,
+  IOAM6_CMD_ADD_SCHEMA,
+  IOAM6_CMD_DEL_SCHEMA,
+  IOAM6_CMD_DUMP_SCHEMAS,
+  IOAM6_CMD_NS_SET_SCHEMA,
+  __IOAM6_CMD_MAX,
+};
+#define IOAM6_CMD_MAX (__IOAM6_CMD_MAX - 1)
 #endif
