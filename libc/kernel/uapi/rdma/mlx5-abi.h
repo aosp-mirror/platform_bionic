@@ -33,6 +33,7 @@ enum {
   MLX5_QP_FLAG_ALLOW_SCATTER_CQE = 1 << 8,
   MLX5_QP_FLAG_PACKET_BASED_CREDIT_MODE = 1 << 9,
   MLX5_QP_FLAG_UAR_PAGE_INDEX = 1 << 10,
+  MLX5_QP_FLAG_DCI_STREAM = 1 << 11,
 };
 enum {
   MLX5_SRQ_FLAG_SIGNATURE = 1 << 0,
@@ -165,6 +166,10 @@ struct mlx5_ib_striding_rq_caps {
   __u32 supported_qpts;
   __u32 reserved;
 };
+struct mlx5_ib_dci_streams_caps {
+  __u8 max_log_num_concurent;
+  __u8 max_log_num_errored;
+};
 enum mlx5_ib_query_dev_resp_flags {
   MLX5_IB_QUERY_DEV_RESP_FLAGS_CQE_128B_COMP = 1 << 0,
   MLX5_IB_QUERY_DEV_RESP_FLAGS_CQE_128B_PAD = 1 << 1,
@@ -190,7 +195,8 @@ struct mlx5_ib_query_device_resp {
   struct mlx5_ib_sw_parsing_caps sw_parsing_caps;
   struct mlx5_ib_striding_rq_caps striding_rq_caps;
   __u32 tunnel_offloads_caps;
-  __u32 reserved;
+  struct mlx5_ib_dci_streams_caps dci_streams_caps;
+  __u16 reserved;
 };
 enum mlx5_ib_create_cq_flags {
   MLX5_IB_CREATE_CQ_FLAGS_CQE_128B_PAD = 1 << 0,
@@ -230,6 +236,10 @@ struct mlx5_ib_create_srq_resp {
   __u32 srqn;
   __u32 reserved;
 };
+struct mlx5_ib_create_qp_dci_streams {
+  __u8 log_num_concurent;
+  __u8 log_num_errored;
+};
 struct mlx5_ib_create_qp {
   __aligned_u64 buf_addr;
   __aligned_u64 db_addr;
@@ -244,7 +254,8 @@ struct mlx5_ib_create_qp {
     __aligned_u64 access_key;
   };
   __u32 ece_options;
-  __u32 reserved;
+  struct mlx5_ib_create_qp_dci_streams dci_streams;
+  __u16 reserved;
 };
 enum mlx5_rx_hash_function_flags {
   MLX5_RX_HASH_FUNC_TOEPLITZ = 1 << 0,

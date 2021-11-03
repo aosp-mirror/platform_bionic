@@ -330,6 +330,7 @@
 #define __NR_landlock_add_rule (__X32_SYSCALL_BIT + 445)
 #define __NR_landlock_restrict_self (__X32_SYSCALL_BIT + 446)
 #define __NR_memfd_secret (__X32_SYSCALL_BIT + 447)
+#define __NR_process_mrelease (__X32_SYSCALL_BIT + 448)
 #define __NR_rt_sigaction (__X32_SYSCALL_BIT + 512)
 #define __NR_rt_sigreturn (__X32_SYSCALL_BIT + 513)
 #define __NR_ioctl (__X32_SYSCALL_BIT + 514)
