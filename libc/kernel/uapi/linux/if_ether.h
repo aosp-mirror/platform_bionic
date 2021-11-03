@@ -123,6 +123,7 @@
 #define ETH_P_CAIF 0x00F7
 #define ETH_P_XDSA 0x00F8
 #define ETH_P_MAP 0x00F9
+#define ETH_P_MCTP 0x00FA
 #ifndef __UAPI_DEF_ETHHDR
 #define __UAPI_DEF_ETHHDR 1
 #endif

@@ -430,4 +430,5 @@
 #define __NR_landlock_create_ruleset (__NR_SYSCALL_BASE + 444)
 #define __NR_landlock_add_rule (__NR_SYSCALL_BASE + 445)
 #define __NR_landlock_restrict_self (__NR_SYSCALL_BASE + 446)
+#define __NR_process_mrelease (__NR_SYSCALL_BASE + 448)
 #endif
