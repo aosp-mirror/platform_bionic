@@ -163,11 +163,22 @@ struct group_source_req {
   struct __kernel_sockaddr_storage gsr_source;
 };
 struct group_filter {
-  __u32 gf_interface;
-  struct __kernel_sockaddr_storage gf_group;
-  __u32 gf_fmode;
-  __u32 gf_numsrc;
-  struct __kernel_sockaddr_storage gf_slist[1];
+  union {
+    struct {
+      __u32 gf_interface_aux;
+      struct __kernel_sockaddr_storage gf_group_aux;
+      __u32 gf_fmode_aux;
+      __u32 gf_numsrc_aux;
+      struct __kernel_sockaddr_storage gf_slist[1];
+    };
+    struct {
+      __u32 gf_interface;
+      struct __kernel_sockaddr_storage gf_group;
+      __u32 gf_fmode;
+      __u32 gf_numsrc;
+      struct __kernel_sockaddr_storage gf_slist_flex[];
+    };
+  };
 };
 #define GROUP_FILTER_SIZE(numsrc) (sizeof(struct group_filter) - sizeof(struct __kernel_sockaddr_storage) + (numsrc) * sizeof(struct __kernel_sockaddr_storage))
 #endif
