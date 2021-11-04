@@ -235,7 +235,16 @@ enum hl_device_status {
   HL_DEVICE_STATUS_OPERATIONAL,
   HL_DEVICE_STATUS_IN_RESET,
   HL_DEVICE_STATUS_MALFUNCTION,
-  HL_DEVICE_STATUS_NEEDS_RESET
+  HL_DEVICE_STATUS_NEEDS_RESET,
+  HL_DEVICE_STATUS_IN_DEVICE_CREATION,
+  HL_DEVICE_STATUS_LAST = HL_DEVICE_STATUS_IN_DEVICE_CREATION
+};
+enum hl_server_type {
+  HL_SERVER_TYPE_UNKNOWN = 0,
+  HL_SERVER_GAUDI_HLS1 = 1,
+  HL_SERVER_GAUDI_HLS1H = 2,
+  HL_SERVER_GAUDI_TYPE1 = 3,
+  HL_SERVER_GAUDI_TYPE2 = 4
 };
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
@@ -267,7 +276,7 @@ struct hl_info_hw_ip_info {
   __u32 module_id;
   __u32 reserved;
   __u16 first_available_interrupt_id;
-  __u16 reserved2;
+  __u16 server_type;
   __u32 cpld_version;
   __u32 psoc_pci_pll_nr;
   __u32 psoc_pci_pll_nf;
@@ -278,7 +287,7 @@ struct hl_info_hw_ip_info {
   __u8 pad[2];
   __u8 cpucp_version[HL_INFO_VERSION_MAX_LEN];
   __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
-  __u64 reserved3;
+  __u64 reserved2;
   __u64 dram_page_size;
 };
 struct hl_info_dram_usage {
@@ -403,11 +412,13 @@ struct hl_cs_chunk {
   union {
     __u64 cb_handle;
     __u64 signal_seq_arr;
+    __u64 encaps_signal_seq;
   };
   __u32 queue_index;
   union {
     __u32 cb_size;
     __u32 num_signal_seq_arr;
+    __u32 encaps_signal_offset;
   };
   __u32 cs_chunk_flags;
   __u32 collective_engine_id;
@@ -423,12 +434,22 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_STAGED_SUBMISSION_LAST 0x100
 #define HL_CS_FLAGS_CUSTOM_TIMEOUT 0x200
 #define HL_CS_FLAGS_SKIP_RESET_ON_TIMEOUT 0x400
+#define HL_CS_FLAGS_ENCAP_SIGNALS 0x800
+#define HL_CS_FLAGS_RESERVE_SIGNALS_ONLY 0x1000
+#define HL_CS_FLAGS_UNRESERVE_SIGNALS_ONLY 0x2000
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
 struct hl_cs_in {
   __u64 chunks_restore;
   __u64 chunks_execute;
-  __u64 seq;
+  union {
+    __u64 seq;
+    __u32 encaps_sig_handle_id;
+    struct {
+      __u32 encaps_signals_count;
+      __u32 encaps_signals_q_idx;
+    };
+  };
   __u32 num_chunks_restore;
   __u32 num_chunks_execute;
   __u32 timeout;
@@ -436,9 +457,15 @@ struct hl_cs_in {
   __u32 ctx_id;
 };
 struct hl_cs_out {
-  __u64 seq;
+  union {
+    __u64 seq;
+    struct {
+      __u32 handle_id;
+      __u32 count;
+    };
+  };
   __u32 status;
-  __u32 pad;
+  __u32 sob_base_addr_offset;
 };
 union hl_cs_args {
   struct hl_cs_in in;
@@ -446,6 +473,8 @@ union hl_cs_args {
 };
 #define HL_WAIT_CS_FLAGS_INTERRUPT 0x2
 #define HL_WAIT_CS_FLAGS_INTERRUPT_MASK 0xFFF00000
+#define HL_WAIT_CS_FLAGS_MULTI_CS 0x4
+#define HL_WAIT_MULTI_CS_LIST_MAX_LEN 32
 struct hl_wait_cs_in {
   union {
     struct {
@@ -460,18 +489,21 @@ struct hl_wait_cs_in {
   };
   __u32 ctx_id;
   __u32 flags;
+  __u8 seq_arr_len;
+  __u8 pad[7];
 };
 #define HL_WAIT_CS_STATUS_COMPLETED 0
 #define HL_WAIT_CS_STATUS_BUSY 1
 #define HL_WAIT_CS_STATUS_TIMEDOUT 2
 #define HL_WAIT_CS_STATUS_ABORTED 3
-#define HL_WAIT_CS_STATUS_INTERRUPTED 4
 #define HL_WAIT_CS_STATUS_FLAG_GONE 0x1
 #define HL_WAIT_CS_STATUS_FLAG_TIMESTAMP_VLD 0x2
 struct hl_wait_cs_out {
   __u32 status;
   __u32 flags;
   __s64 timestamp_nsec;
+  __u32 cs_completion_map;
+  __u32 pad;
 };
 union hl_wait_cs_args {
   struct hl_wait_cs_in in;
@@ -485,6 +517,7 @@ union hl_wait_cs_args {
 #define HL_MEM_CONTIGUOUS 0x1
 #define HL_MEM_SHARED 0x2
 #define HL_MEM_USERPTR 0x4
+#define HL_MEM_FORCE_HINT 0x8
 struct hl_mem_in {
   union {
     struct {
