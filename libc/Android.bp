@@ -122,6 +122,10 @@ cc_defaults {
             cflags: ["-DUSE_SCUDO"],
         },
     },
+
+    lto: {
+        never: true,
+    },
 }
 
 libc_scudo_product_variables = {
@@ -1782,9 +1786,6 @@ cc_library {
         "com.android.runtime",
     ],
 
-    lto: {
-        never: true,
-    },
     target: {
         native_bridge: {
             shared: {
