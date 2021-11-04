@@ -207,6 +207,15 @@ extern "C" {
 #define AFBC_FORMAT_MOD_DB (1ULL << 10)
 #define AFBC_FORMAT_MOD_BCH (1ULL << 11)
 #define AFBC_FORMAT_MOD_USM (1ULL << 12)
+#define DRM_FORMAT_MOD_ARM_TYPE_AFRC 0x02
+#define DRM_FORMAT_MOD_ARM_AFRC(__afrc_mode) DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_AFRC, __afrc_mode)
+#define AFRC_FORMAT_MOD_CU_SIZE_MASK 0xf
+#define AFRC_FORMAT_MOD_CU_SIZE_16 (1ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_24 (2ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_32 (3ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_P0(__afrc_cu_size) (__afrc_cu_size)
+#define AFRC_FORMAT_MOD_CU_SIZE_P12(__afrc_cu_size) ((__afrc_cu_size) << 4)
+#define AFRC_FORMAT_MOD_LAYOUT_SCAN (1ULL << 8)
 #define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
 #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
 #define __fourcc_mod_amlogic_layout_mask 0xff
