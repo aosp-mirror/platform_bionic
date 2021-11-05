@@ -29,4 +29,7 @@ struct __kernel_sockaddr_storage {
     void * __align;
   };
 };
+#define SOCK_SNDBUF_LOCK 1
+#define SOCK_RCVBUF_LOCK 2
+#define SOCK_BUF_LOCK_MASK (SOCK_SNDBUF_LOCK | SOCK_RCVBUF_LOCK)
 #endif
