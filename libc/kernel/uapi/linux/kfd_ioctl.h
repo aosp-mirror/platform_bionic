@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 5
+#define KFD_IOCTL_MINOR_VERSION 6
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;

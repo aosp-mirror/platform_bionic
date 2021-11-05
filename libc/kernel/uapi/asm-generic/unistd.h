@@ -410,8 +410,9 @@
 #ifdef __ARCH_WANT_MEMFD_SECRET
 #define __NR_memfd_secret 447
 #endif
+#define __NR_process_mrelease 448
 #undef __NR_syscalls
-#define __NR_syscalls 448
+#define __NR_syscalls 449
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs
