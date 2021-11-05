@@ -496,6 +496,30 @@ TEST(stdlib, system_NULL) {
   ASSERT_NE(0, system(nullptr));
 }
 
+// https://austingroupbugs.net/view.php?id=1440
+TEST(stdlib, system_minus) {
+  // Create a script with a name that starts with a '-'.
+  TemporaryDir td;
+  std::string script = std::string(td.path) + "/-minus";
+  ASSERT_TRUE(android::base::WriteStringToFile("#!" BIN_DIR "sh\nexit 66\n", script));
+
+  // Set $PATH so we can find it.
+  setenv("PATH", td.path, 1);
+  // Make it executable so we can run it.
+  ASSERT_EQ(0, chmod(script.c_str(), 0555));
+
+  int status = system("-minus");
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(66, WEXITSTATUS(status));
+
+  // While we're here and have all the setup, let's test popen(3) too...
+  FILE* fp = popen("-minus", "r");
+  ASSERT_TRUE(fp != nullptr);
+  status = pclose(fp);
+  EXPECT_TRUE(WIFEXITED(status));
+  EXPECT_EQ(66, WEXITSTATUS(status));
+}
+
 TEST(stdlib, atof) {
   ASSERT_DOUBLE_EQ(1.23, atof("1.23"));
 }
