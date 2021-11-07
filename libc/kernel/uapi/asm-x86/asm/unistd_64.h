@@ -377,4 +377,5 @@
 #define __NR_landlock_add_rule 445
 #define __NR_landlock_restrict_self 446
 #define __NR_memfd_secret 447
+#define __NR_process_mrelease 448
 #endif
