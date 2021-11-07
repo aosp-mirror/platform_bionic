@@ -56,7 +56,7 @@ int system(const char* command) {
   if ((errno = posix_spawnattr_setsigmask64(&attributes, &sigchld_blocker.old_set_))) return -1;
   if ((errno = posix_spawnattr_setflags(&attributes, flags))) return -1;
 
-  const char* argv[] = { "sh", "-c", command, nullptr };
+  const char* argv[] = {"sh", "-c", "--", command, nullptr};
   pid_t child;
   if ((errno = posix_spawn(&child, __bionic_get_shell_path(), nullptr, &attributes,
                            const_cast<char**>(argv), environ)) != 0) {

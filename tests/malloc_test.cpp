@@ -1399,7 +1399,7 @@ TEST(malloc, disable_mte) {
   ASSERT_EQ(0, sem_post(&sem));
 
   int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-  ASSERT_EQ(PR_MTE_TCF_NONE, my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
+  ASSERT_EQ(static_cast<unsigned long>(PR_MTE_TCF_NONE), my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
 
   void* retval;
   ASSERT_EQ(0, pthread_join(thread, &retval));
