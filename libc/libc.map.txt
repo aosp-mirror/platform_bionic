@@ -631,7 +631,7 @@ LIBC {
     mbsinit;
     mbsnrtowcs; # introduced=21
     mbsrtowcs;
-    mbstowcs;
+    mbstowcs; # introduced=21
     mbtowc; # introduced=21
     memalign;
     memccpy;
@@ -1194,7 +1194,7 @@ LIBC {
     wcstold_l; # introduced=21
     wcstoll; # introduced=21
     wcstoll_l; # introduced=21
-    wcstombs;
+    wcstombs; # introduced=21
     wcstoul;
     wcstoull; # introduced=21
     wcstoull_l; # introduced=21
