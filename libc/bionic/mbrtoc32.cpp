@@ -55,7 +55,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   }
 
   uint8_t ch;
-  if (mbsinit(state) && (((ch = static_cast<uint8_t>(*s)) & ~0x7f) == 0)) {
+  if (mbstate_is_initial(state) && (((ch = static_cast<uint8_t>(*s)) & ~0x7f) == 0)) {
     // Fast path for plain ASCII characters.
     if (pc32 != nullptr) {
       *pc32 = ch;
@@ -105,7 +105,7 @@ size_t mbrtoc32(char32_t* pc32, const char* s, size_t n, mbstate_t* ps) {
   size_t bytes_wanted = length - bytes_so_far;
   size_t i;
   for (i = 0; i < MIN(bytes_wanted, n); i++) {
-    if (!mbsinit(state) && ((*s & 0xc0) != 0x80)) {
+    if (!mbstate_is_initial(state) && ((*s & 0xc0) != 0x80)) {
       // Malformed input; bad characters in the middle of a character.
       return mbstate_reset_and_return_illegal(EILSEQ, state);
     }
