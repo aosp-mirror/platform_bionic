@@ -86,16 +86,15 @@ void ExitWithSiCode(int, siginfo_t* info, void*) {
 
 TEST(heap_tagging_level, sync_async_bad_accesses_die) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
-    GTEST_SKIP() << "requires MTE support";
+  if (!mte_supported() || !running_with_mte()) {
+    GTEST_SKIP() << "requires MTE to be enabled";
   }
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
 
-  // First, check that memory tagging is enabled and the default tag checking level is sync.
-  // cc_test targets get sync MTE by default.
   // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
   // mismatching tag before each allocation.
+  EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
   EXPECT_EXIT(
       {
         ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
@@ -136,7 +135,7 @@ TEST(heap_tagging_level, tagging_level_transitions) {
 
   EXPECT_FALSE(SetHeapTaggingLevel(static_cast<HeapTaggingLevel>(12345)));
 
-  if (mte_supported()) {
+  if (mte_supported() && running_with_mte()) {
     // ASYNC -> ...
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
@@ -146,14 +145,14 @@ TEST(heap_tagging_level, tagging_level_transitions) {
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
-  } else {
+  } else if (!mte_supported()) {
     // TBI -> ...
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
   }
 
-  // TBI -> NONE on non-MTE, ASYNC -> NONE on MTE.
+  // TBI -> NONE on non-MTE, ASYNC|SYNC|NONE -> NONE on MTE.
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
 
   // NONE -> ...
@@ -170,8 +169,8 @@ TEST(heap_tagging_level, tagging_level_transition_sync_none) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   // We can't test SYNC -> NONE in tagging_level_transitions because we can only make one transition
   // to NONE (which we use to test ASYNC -> NONE), so we test it here separately.
-  if (!mte_supported()) {
-    GTEST_SKIP() << "requires MTE support";
+  if (!mte_supported() || !running_with_mte()) {
+    GTEST_SKIP() << "requires MTE to be enabled";
   }
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
