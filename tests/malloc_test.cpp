@@ -1371,3 +1371,25 @@ TEST(malloc, allocation_slack) {
   GTEST_SKIP() << "bionic extension";
 #endif
 }
+
+// Regression test for b/206701345 -- scudo bug, MTE only.
+// Fix: https://reviews.llvm.org/D105261
+// Fix: https://android-review.googlesource.com/c/platform/external/scudo/+/1763655
+TEST(malloc, realloc_mte_crash_b206701345) {
+  // We want to hit in-place realloc at the very end of an mmap-ed region.  Not
+  // all size classes allow such placement - mmap size has to be divisible by
+  // the block size. At the time of writing this could only be reproduced with
+  // 64 byte size class (i.e. 48 byte allocations), but that may change in the
+  // future. Try several different classes at the lower end.
+  std::vector<void*> ptrs(10000);
+  for (int i = 1; i < 32; ++i) {
+    size_t sz = 16 * i - 1;
+    for (void*& p : ptrs) {
+      p = realloc(malloc(sz), sz + 1);
+    }
+
+    for (void* p : ptrs) {
+      free(p);
+    }
+  }
+}
