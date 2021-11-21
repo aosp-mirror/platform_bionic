@@ -155,88 +155,71 @@ void BM_stdlib_malloc_multiple_8192_allocs_decay1(benchmark::State& state) {
 BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_malloc_multiple_8192_allocs_decay1, "AT_SMALL_SIZES");
 #endif
 
-static void BM_stdlib_mbstowcs(benchmark::State& state) {
-  const size_t buf_alignment = state.range(0);
-  const size_t widebuf_alignment = state.range(1);
-
-  std::vector<char> buf;
-  std::vector<wchar_t> widebuf;
-
-  setlocale(LC_CTYPE, "C.UTF-8")
-  || setlocale(LC_CTYPE, "en_US.UTF-8")
-  || setlocale(LC_CTYPE, "en_GB.UTF-8")
-  || setlocale(LC_CTYPE, "en.UTF-8")
-  || setlocale(LC_CTYPE, "de_DE-8")
-  || setlocale(LC_CTYPE, "fr_FR-8");
-  if (strcmp(nl_langinfo(CODESET), "UTF-8")) {
-    errx(1, "ERROR: unable to set locale in BM_stdlib_mbstowcs");
-  }
-
-  char* buf_aligned = GetAlignedPtr(&buf, buf_alignment, 500000);
-  wchar_t* widebuf_aligned = GetAlignedPtr(&widebuf, widebuf_alignment, 500000);
-  size_t i, j, k, l;
-  l = 0;
-  for (i=0xc3; i<0xe0; i++)
-    for (j=0x80; j<0xc0; j++)
-      buf[l++] = i, buf[l++] = j;
-  for (i=0xe1; i<0xed; i++)
-    for (j=0x80; j<0xc0; j++)
-      for (k=0x80; k<0xc0; k++)
-        buf[l++] = i, buf[l++] = j, buf[l++] = k;
-  for (i=0xf1; i<0xf4; i++)
-    for (j=0x80; j<0xc0; j++)
-      for (k=0x80; k<0xc0; k++)
-        buf[l++] = i, buf[l++] = j, buf[l++] = 0x80, buf[l++] = k;
-  buf[l++] = 0;
+static void BM_stdlib_mbstowcs_ascii(benchmark::State& state) {
+  // It doesn't really matter what ASCII character we pick.
+  // The flow through the fast path is the same regardless.
+  const size_t count = 500000;
+  std::vector<char> mbs(count, 'e');
+  std::vector<wchar_t> wcs(count);
 
   for (auto _ : state) {
-    benchmark::DoNotOptimize(mbstowcs(widebuf_aligned, buf_aligned, 500000));
+    benchmark::DoNotOptimize(mbstowcs(&wcs[0], &mbs[0], wcs.size()));
   }
 
-  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(wcs.size()));
 }
-BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbstowcs, "0 0");
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbstowcs_ascii, "");
 
-static void BM_stdlib_mbrtowc(benchmark::State& state) {
-  const size_t buf_alignment = state.range(0);
-
-  std::vector<char> buf;
-
-  setlocale(LC_CTYPE, "C.UTF-8")
-  || setlocale(LC_CTYPE, "en_US.UTF-8")
-  || setlocale(LC_CTYPE, "en_GB.UTF-8")
-  || setlocale(LC_CTYPE, "en.UTF-8")
-  || setlocale(LC_CTYPE, "de_DE-8")
-  || setlocale(LC_CTYPE, "fr_FR-8");
-  if (strcmp(nl_langinfo(CODESET), "UTF-8")) {
-    errx(1, "ERROR: unable to set locale in BM_stdlib_mbrtowc");
+static void BM_stdlib_mbstowcs_wide(benchmark::State& state) {
+  // It doesn't matter much what wide character we pick.
+  // A three-byte character seems pretty representative, and all three byte
+  // characters are the same from the code's perspective.
+  const size_t count = 500000;
+  std::string mbs;
+  for (size_t i = 0; i < count; i++) {
+    mbs += "\xe5\xb1\xb1";
   }
+  std::vector<wchar_t> wcs(count);
 
-  char* buf_aligned = GetAlignedPtr(&buf, buf_alignment, 500000);
-  size_t i, j, k, l;
-  l = 0;
-  for (i=0xc3; i<0xe0; i++)
-    for (j=0x80; j<0xc0; j++)
-      buf[l++] = i, buf[l++] = j;
-  for (i=0xe1; i<0xed; i++)
-    for (j=0x80; j<0xc0; j++)
-      for (k=0x80; k<0xc0; k++)
-        buf[l++] = i, buf[l++] = j, buf[l++] = k;
-  for (i=0xf1; i<0xf4; i++)
-    for (j=0x80; j<0xc0; j++)
-      for (k=0x80; k<0xc0; k++)
-        buf[l++] = i, buf[l++] = j, buf[l++] = 0x80, buf[l++] = k;
-  buf[l++] = 0;
-
-  wchar_t wc = 0;
   for (auto _ : state) {
-    for (j = 0; buf_aligned[j]; j+=mbrtowc(&wc, buf_aligned + j, 4, nullptr)) {
-    }
+    benchmark::DoNotOptimize(mbstowcs(&wcs[0], &mbs[0], wcs.size()));
   }
 
-  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));
+  state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(wcs.size()));
 }
-BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc, "0");
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbstowcs_wide, "");
+
+static void BM_stdlib_mbrtowc_1(benchmark::State& state) {
+  wchar_t wc;
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(mbrtowc(&wc, "e", 1, nullptr));
+  }
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc_1, "");
+
+static void BM_stdlib_mbrtowc_2(benchmark::State& state) {
+  wchar_t wc;
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(mbrtowc(&wc, "\xc3\x9f", 3, nullptr));
+  }
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc_2, "");
+
+static void BM_stdlib_mbrtowc_3(benchmark::State& state) {
+  wchar_t wc;
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(mbrtowc(&wc, "\xe5\xb1\xb1", 3, nullptr));
+  }
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc_3, "");
+
+static void BM_stdlib_mbrtowc_4(benchmark::State& state) {
+  wchar_t wc;
+  for (auto _ : state) {
+    benchmark::DoNotOptimize(mbrtowc(&wc, "\xf0\xa4\xad\xa2", 4, nullptr));
+  }
+}
+BIONIC_BENCHMARK_WITH_ARG(BM_stdlib_mbrtowc_4, "");
 
 BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_atoi, atoi(" -123"));
 BIONIC_TRIVIAL_BENCHMARK(BM_stdlib_atol, atol(" -123"));
