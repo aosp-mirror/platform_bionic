@@ -122,6 +122,10 @@ cc_defaults {
             cflags: ["-DUSE_SCUDO"],
         },
     },
+
+    lto: {
+        never: true,
+    },
 }
 
 libc_scudo_product_variables = {
@@ -1054,6 +1058,7 @@ cc_library_static {
         "bionic/error.cpp",
         "bionic/eventfd.cpp",
         "bionic/exec.cpp",
+        "bionic/execinfo.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
@@ -1121,6 +1126,7 @@ cc_library_static {
         "bionic/posix_fallocate.cpp",
         "bionic/posix_madvise.cpp",
         "bionic/posix_timers.cpp",
+        "bionic/preadv_pwritev.cpp",
         "bionic/ptrace.cpp",
         "bionic/pty.cpp",
         "bionic/raise.cpp",
@@ -1780,8 +1786,12 @@ cc_library {
         "com.android.runtime",
     ],
 
-    lto: {
-        never: true,
+    target: {
+        native_bridge: {
+            shared: {
+                installable: false,
+            },
+        },
     },
 }
 
