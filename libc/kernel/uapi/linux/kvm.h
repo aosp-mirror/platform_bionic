@@ -1463,7 +1463,9 @@ struct kvm_stats_header {
 #define KVM_STATS_TYPE_CUMULATIVE (0x0 << KVM_STATS_TYPE_SHIFT)
 #define KVM_STATS_TYPE_INSTANT (0x1 << KVM_STATS_TYPE_SHIFT)
 #define KVM_STATS_TYPE_PEAK (0x2 << KVM_STATS_TYPE_SHIFT)
-#define KVM_STATS_TYPE_MAX KVM_STATS_TYPE_PEAK
+#define KVM_STATS_TYPE_LINEAR_HIST (0x3 << KVM_STATS_TYPE_SHIFT)
+#define KVM_STATS_TYPE_LOG_HIST (0x4 << KVM_STATS_TYPE_SHIFT)
+#define KVM_STATS_TYPE_MAX KVM_STATS_TYPE_LOG_HIST
 #define KVM_STATS_UNIT_SHIFT 4
 #define KVM_STATS_UNIT_MASK (0xF << KVM_STATS_UNIT_SHIFT)
 #define KVM_STATS_UNIT_NONE (0x0 << KVM_STATS_UNIT_SHIFT)
@@ -1481,7 +1483,7 @@ struct kvm_stats_desc {
   __s16 exponent;
   __u16 size;
   __u32 offset;
-  __u32 unused;
+  __u32 bucket_size;
   char name[];
 };
 #define KVM_GET_STATS_FD _IO(KVMIO, 0xce)
