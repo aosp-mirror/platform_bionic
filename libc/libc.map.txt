@@ -631,7 +631,7 @@ LIBC {
     mbsinit;
     mbsnrtowcs; # introduced=21
     mbsrtowcs;
-    mbstowcs;
+    mbstowcs; # introduced=21
     mbtowc; # introduced=21
     memalign;
     memccpy;
@@ -1194,7 +1194,7 @@ LIBC {
     wcstold_l; # introduced=21
     wcstoll; # introduced=21
     wcstoll_l; # introduced=21
-    wcstombs;
+    wcstombs; # introduced=21
     wcstoul;
     wcstoull; # introduced=21
     wcstoull_l; # introduced=21
@@ -1564,6 +1564,17 @@ LIBC_S { # introduced=S
     pidfd_send_signal;
     process_madvise;
 } LIBC_R;
+
+LIBC_T { # introduced=Tiramisu
+  global:
+    backtrace;
+    backtrace_symbols;
+    backtrace_symbols_fd;
+    preadv2;
+    preadv64v2;
+    pwritev2;
+    pwritev64v2;
+} LIBC_S;
 
 LIBC_PRIVATE {
   global:

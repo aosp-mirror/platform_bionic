@@ -126,4 +126,5 @@ enum {
 #define DM_DATA_OUT_FLAG (1 << 16)
 #define DM_DEFERRED_REMOVE (1 << 17)
 #define DM_INTERNAL_SUSPEND_FLAG (1 << 18)
+#define DM_IMA_MEASUREMENT_FLAG (1 << 19)
 #endif
