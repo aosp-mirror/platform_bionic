@@ -67,6 +67,13 @@ libc_common_flags = [
 
     // GWP-ASan requires platform TLS.
     "-fno-emulated-tls",
+
+    // We know clang does a lot of harm by rewriting what we've said, and sadly
+    // never see any good it does, so let's just ask it to do what we say...
+    // (The specific motivating example was clang turning a loop that would only
+    // ever touch 0, 1, or 2 bytes into a call to memset, which was never going
+    // to amortize.)
+    "-fno-builtin",
 ]
 
 // Define some common cflags
