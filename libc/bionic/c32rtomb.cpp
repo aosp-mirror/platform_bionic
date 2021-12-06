@@ -50,7 +50,7 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
     return mbstate_reset_and_return(1, state);
   }
 
-  if (!mbsinit(state)) {
+  if (!mbstate_is_initial(state)) {
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 

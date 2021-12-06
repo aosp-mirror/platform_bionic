@@ -306,6 +306,8 @@ int     klogctl:syslog(int, char*, int)   all
 int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
 
+int     bpf(int, union bpf_attr *, unsigned int) all
+
 ssize_t tee(int, int, size_t, unsigned int)  all
 ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
 ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
