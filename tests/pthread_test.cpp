@@ -1493,6 +1493,7 @@ class pthread_CondWakeupTest : public ::testing::Test {
   };
   std::atomic<Progress> progress;
   pthread_t thread;
+  timespec ts;
   std::function<int (pthread_cond_t* cond, pthread_mutex_t* mutex)> wait_function;
 
  protected:
@@ -1524,11 +1525,10 @@ class pthread_CondWakeupTest : public ::testing::Test {
       clockid_t clock,
       std::function<int(pthread_cond_t* cond, pthread_mutex_t* mutex, const timespec* timeout)>
           wait_function) {
-    timespec ts;
     ASSERT_EQ(0, clock_gettime(clock, &ts));
     ts.tv_sec += 1;
 
-    StartWaitingThread([&wait_function, &ts](pthread_cond_t* cond, pthread_mutex_t* mutex) {
+    StartWaitingThread([&wait_function, this](pthread_cond_t* cond, pthread_mutex_t* mutex) {
       return wait_function(cond, mutex, &ts);
     });
 
