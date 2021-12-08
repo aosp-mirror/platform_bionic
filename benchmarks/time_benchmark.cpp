@@ -187,3 +187,13 @@ void BM_time_localtime_r(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_time_localtime_r);
+
+void BM_time_strftime(benchmark::State& state) {
+  char buf[128];
+  time_t t = 0;
+  struct tm* tm = gmtime(&t);
+  while (state.KeepRunning()) {
+    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", tm);
+  }
+}
+BIONIC_BENCHMARK(BM_time_strftime);
