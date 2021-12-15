@@ -20,7 +20,7 @@
 #include <termios.h>
 
 TEST(sys_ttydefaults, flags) {
-  int i;
+  [[maybe_unused]] int i;
   i = TTYDEF_IFLAG;
   i = TTYDEF_OFLAG;
   i = TTYDEF_LFLAG;
