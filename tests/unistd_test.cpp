@@ -688,9 +688,9 @@ __attribute__((noinline)) static void HwasanVforkTestChild() {
 __attribute__((noinline)) static void HwasanReadMemory(const char* p, size_t size) {
   // Read memory byte-by-byte. This will blow up if the pointer tag in p does not match any memory
   // tag in [p, p+size).
-  volatile char z;
+  char z;
   for (size_t i = 0; i < size; ++i) {
-    z = p[i];
+    DoNotOptimize(z = p[i]);
   }
 }
 
