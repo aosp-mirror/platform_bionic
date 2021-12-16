@@ -809,6 +809,77 @@ TEST(malloc, mallinfo) {
 #endif
 }
 
+TEST(malloc, mallinfo2) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallinfo2";
+  static size_t sizes[] = {8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000};
+
+  constexpr static size_t kMaxAllocs = 50;
+
+  for (size_t size : sizes) {
+    // If some of these allocations are stuck in a thread cache, then keep
+    // looping until we make an allocation that changes the total size of the
+    // memory allocated.
+    // jemalloc implementations counts the thread cache allocations against
+    // total memory allocated.
+    void* ptrs[kMaxAllocs] = {};
+    bool pass = false;
+    for (size_t i = 0; i < kMaxAllocs; i++) {
+      struct mallinfo info = mallinfo();
+      struct mallinfo2 info2 = mallinfo2();
+      // Verify that mallinfo and mallinfo2 are exactly the same.
+      ASSERT_EQ(info.arena, info2.arena);
+      ASSERT_EQ(info.ordblks, info2.ordblks);
+      ASSERT_EQ(info.smblks, info2.smblks);
+      ASSERT_EQ(info.hblks, info2.hblks);
+      ASSERT_EQ(info.hblkhd, info2.hblkhd);
+      ASSERT_EQ(info.usmblks, info2.usmblks);
+      ASSERT_EQ(info.fsmblks, info2.fsmblks);
+      ASSERT_EQ(info.uordblks, info2.uordblks);
+      ASSERT_EQ(info.fordblks, info2.fordblks);
+      ASSERT_EQ(info.keepcost, info2.keepcost);
+
+      size_t allocated = info2.uordblks;
+      ptrs[i] = malloc(size);
+      ASSERT_TRUE(ptrs[i] != nullptr);
+
+      info = mallinfo();
+      info2 = mallinfo2();
+      // Verify that mallinfo and mallinfo2 are exactly the same.
+      ASSERT_EQ(info.arena, info2.arena);
+      ASSERT_EQ(info.ordblks, info2.ordblks);
+      ASSERT_EQ(info.smblks, info2.smblks);
+      ASSERT_EQ(info.hblks, info2.hblks);
+      ASSERT_EQ(info.hblkhd, info2.hblkhd);
+      ASSERT_EQ(info.usmblks, info2.usmblks);
+      ASSERT_EQ(info.fsmblks, info2.fsmblks);
+      ASSERT_EQ(info.uordblks, info2.uordblks);
+      ASSERT_EQ(info.fordblks, info2.fordblks);
+      ASSERT_EQ(info.keepcost, info2.keepcost);
+
+      size_t new_allocated = info2.uordblks;
+      if (allocated != new_allocated) {
+        size_t usable_size = malloc_usable_size(ptrs[i]);
+        // Only check if the total got bigger by at least allocation size.
+        // Sometimes the mallinfo2 numbers can go backwards due to compaction
+        // and/or freeing of cached data.
+        if (new_allocated >= allocated + usable_size) {
+          pass = true;
+          break;
+        }
+      }
+    }
+    for (void* ptr : ptrs) {
+      free(ptr);
+    }
+    ASSERT_TRUE(pass) << "For size " << size << " allocated bytes did not increase after "
+                      << kMaxAllocs << " allocations.";
+  }
+#else
+  GTEST_SKIP() << "glibc is broken";
+#endif
+}
+
 template <typename Type>
 void __attribute__((optnone)) VerifyAlignment(Type* floating) {
   size_t expected_alignment = alignof(Type);
