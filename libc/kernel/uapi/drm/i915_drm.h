@@ -741,6 +741,7 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_ENGINES 0xa
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
 #define I915_CONTEXT_PARAM_RINGSIZE 0xc
+#define I915_CONTEXT_PARAM_PROTECTED_CONTENT 0xd
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -774,10 +775,23 @@ struct i915_context_engines_bond {
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_ENGINES_BOND(name__,N__) struct { struct i915_user_extension base; struct i915_engine_class_instance master; __u16 virtual_index; __u16 num_bonds; __u64 flags; __u64 mbz64[4]; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
+struct i915_context_engines_parallel_submit {
+  struct i915_user_extension base;
+  __u16 engine_index;
+  __u16 width;
+  __u16 num_siblings;
+  __u16 mbz16;
+  __u64 flags;
+  __u64 mbz64[3];
+  struct i915_engine_class_instance engines[0];
+} __packed;
+#define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__,N__) struct { struct i915_user_extension base; __u16 engine_index; __u16 width; __u16 num_siblings; __u16 mbz16; __u64 flags; __u64 mbz64[3]; struct i915_engine_class_instance engines[N__]; \
+} __attribute__((packed)) name__
 struct i915_context_param_engines {
   __u64 extensions;
 #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0
 #define I915_CONTEXT_ENGINES_EXT_BOND 1
+#define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2
   struct i915_engine_class_instance engines[0];
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__,N__) struct { __u64 extensions; struct i915_engine_class_instance engines[N__]; \
@@ -907,10 +921,13 @@ struct drm_i915_engine_info {
   struct i915_engine_class_instance engine;
   __u32 rsvd0;
   __u64 flags;
+#define I915_ENGINE_INFO_HAS_LOGICAL_INSTANCE (1 << 0)
   __u64 capabilities;
 #define I915_VIDEO_CLASS_CAPABILITY_HEVC (1 << 0)
 #define I915_VIDEO_AND_ENHANCE_CLASS_CAPABILITY_SFC (1 << 1)
-  __u64 rsvd1[4];
+  __u16 logical_instance;
+  __u16 rsvd1[3];
+  __u64 rsvd2[3];
 };
 struct drm_i915_query_engine_info {
   __u32 num_engines;
@@ -951,6 +968,7 @@ struct drm_i915_gem_create_ext {
   __u32 handle;
   __u32 flags;
 #define I915_GEM_CREATE_EXT_MEMORY_REGIONS 0
+#define I915_GEM_CREATE_EXT_PROTECTED_CONTENT 1
   __u64 extensions;
 };
 struct drm_i915_gem_create_ext_memory_regions {
@@ -959,6 +977,11 @@ struct drm_i915_gem_create_ext_memory_regions {
   __u32 num_regions;
   __u64 regions;
 };
+struct drm_i915_gem_create_ext_protected_content {
+  struct i915_user_extension base;
+  __u32 flags;
+};
+#define I915_PROTECTED_CONTENT_DEFAULT_SESSION 0xf
 #ifdef __cplusplus
 }
 #endif
