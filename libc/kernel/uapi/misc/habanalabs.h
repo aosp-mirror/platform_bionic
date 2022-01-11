@@ -483,14 +483,14 @@ struct hl_wait_cs_in {
     };
     struct {
       __u64 addr;
-      __u32 target;
-      __u32 interrupt_timeout_us;
+      __u64 target;
     };
   };
   __u32 ctx_id;
   __u32 flags;
   __u8 seq_arr_len;
-  __u8 pad[7];
+  __u8 pad[3];
+  __u32 interrupt_timeout_us;
 };
 #define HL_WAIT_CS_STATUS_COMPLETED 0
 #define HL_WAIT_CS_STATUS_BUSY 1
@@ -514,6 +514,7 @@ union hl_wait_cs_args {
 #define HL_MEM_OP_MAP 2
 #define HL_MEM_OP_UNMAP 3
 #define HL_MEM_OP_MAP_BLOCK 4
+#define HL_MEM_OP_EXPORT_DMABUF_FD 5
 #define HL_MEM_CONTIGUOUS 0x1
 #define HL_MEM_SHARED 0x2
 #define HL_MEM_USERPTR 0x4
@@ -541,6 +542,10 @@ struct hl_mem_in {
     struct {
       __u64 device_virt_addr;
     } unmap;
+    struct {
+      __u64 handle;
+      __u64 mem_size;
+    } export_dmabuf_fd;
   };
   __u32 op;
   __u32 flags;
@@ -556,6 +561,7 @@ struct hl_mem_out {
       __u32 block_size;
       __u32 pad;
     };
+    __s32 fd;
   };
 };
 union hl_mem_args {
