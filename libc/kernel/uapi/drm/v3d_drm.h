@@ -45,6 +45,35 @@ extern "C" {
 #define DRM_IOCTL_V3D_PERFMON_DESTROY DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_DESTROY, struct drm_v3d_perfmon_destroy)
 #define DRM_IOCTL_V3D_PERFMON_GET_VALUES DRM_IOWR(DRM_COMMAND_BASE + DRM_V3D_PERFMON_GET_VALUES, struct drm_v3d_perfmon_get_values)
 #define DRM_V3D_SUBMIT_CL_FLUSH_CACHE 0x01
+#define DRM_V3D_SUBMIT_EXTENSION 0x02
+struct drm_v3d_extension {
+  __u64 next;
+  __u32 id;
+#define DRM_V3D_EXT_ID_MULTI_SYNC 0x01
+  __u32 flags;
+};
+struct drm_v3d_sem {
+  __u32 handle;
+  __u32 flags;
+  __u64 point;
+  __u64 mbz[2];
+};
+enum v3d_queue {
+  V3D_BIN,
+  V3D_RENDER,
+  V3D_TFU,
+  V3D_CSD,
+  V3D_CACHE_CLEAN,
+};
+struct drm_v3d_multi_sync {
+  struct drm_v3d_extension base;
+  __u64 in_syncs;
+  __u64 out_syncs;
+  __u32 in_sync_count;
+  __u32 out_sync_count;
+  __u32 wait_stage;
+  __u32 pad;
+};
 struct drm_v3d_submit_cl {
   __u32 bcl_start;
   __u32 bcl_end;
@@ -61,6 +90,7 @@ struct drm_v3d_submit_cl {
   __u32 flags;
   __u32 perfmon_id;
   __u32 pad;
+  __u64 extensions;
 };
 struct drm_v3d_wait_bo {
   __u32 handle;
@@ -90,6 +120,7 @@ enum drm_v3d_param {
   DRM_V3D_PARAM_SUPPORTS_CSD,
   DRM_V3D_PARAM_SUPPORTS_CACHE_FLUSH,
   DRM_V3D_PARAM_SUPPORTS_PERFMON,
+  DRM_V3D_PARAM_SUPPORTS_MULTISYNC_EXT,
 };
 struct drm_v3d_get_param {
   __u32 param;
@@ -112,6 +143,8 @@ struct drm_v3d_submit_tfu {
   __u32 bo_handles[4];
   __u32 in_sync;
   __u32 out_sync;
+  __u32 flags;
+  __u64 extensions;
 };
 struct drm_v3d_submit_csd {
   __u32 cfg[7];
@@ -121,6 +154,9 @@ struct drm_v3d_submit_csd {
   __u32 in_sync;
   __u32 out_sync;
   __u32 perfmon_id;
+  __u64 extensions;
+  __u32 flags;
+  __u32 pad;
 };
 enum {
   V3D_PERFCNT_FEP_VALID_PRIMTS_NO_PIXELS,
