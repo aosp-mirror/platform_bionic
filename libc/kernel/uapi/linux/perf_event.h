@@ -350,6 +350,7 @@ enum perf_event_type {
   PERF_RECORD_BPF_EVENT = 18,
   PERF_RECORD_CGROUP = 19,
   PERF_RECORD_TEXT_POKE = 20,
+  PERF_RECORD_AUX_OUTPUT_HW_ID = 21,
   PERF_RECORD_MAX,
 };
 enum perf_record_ksymbol_type {
@@ -391,14 +392,14 @@ enum perf_callchain_context {
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_blk : 3, mem_rsvd : 21;
+    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_blk : 3, mem_hops : 3, mem_rsvd : 18;
   };
 };
 #elif defined(__BIG_ENDIAN_BITFIELD)
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_rsvd : 21, mem_blk : 3, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
+    __u64 mem_rsvd : 18, mem_hops : 3, mem_blk : 3, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
   };
 };
 #else
@@ -460,6 +461,8 @@ union perf_mem_data_src {
 #define PERF_MEM_BLK_DATA 0x02
 #define PERF_MEM_BLK_ADDR 0x04
 #define PERF_MEM_BLK_SHIFT 40
+#define PERF_MEM_HOPS_0 0x01
+#define PERF_MEM_HOPS_SHIFT 43
 #define PERF_MEM_S(a,s) (((__u64) PERF_MEM_ ##a ##_ ##s) << PERF_MEM_ ##a ##_SHIFT)
 struct perf_branch_entry {
   __u64 from;
