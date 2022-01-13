@@ -33,6 +33,7 @@
 #define FAN_MOVE_SELF 0x00000800
 #define FAN_OPEN_EXEC 0x00001000
 #define FAN_Q_OVERFLOW 0x00004000
+#define FAN_FS_ERROR 0x00008000
 #define FAN_OPEN_PERM 0x00010000
 #define FAN_ACCESS_PERM 0x00020000
 #define FAN_OPEN_EXEC_PERM 0x00040000
@@ -84,6 +85,7 @@ struct fanotify_event_metadata {
 #define FAN_EVENT_INFO_TYPE_DFID_NAME 2
 #define FAN_EVENT_INFO_TYPE_DFID 3
 #define FAN_EVENT_INFO_TYPE_PIDFD 4
+#define FAN_EVENT_INFO_TYPE_ERROR 5
 struct fanotify_event_info_header {
   __u8 info_type;
   __u8 pad;
@@ -97,6 +99,11 @@ struct fanotify_event_info_fid {
 struct fanotify_event_info_pidfd {
   struct fanotify_event_info_header hdr;
   __s32 pidfd;
+};
+struct fanotify_event_info_error {
+  struct fanotify_event_info_header hdr;
+  __s32 error;
+  __u32 error_count;
 };
 struct fanotify_response {
   __s32 fd;

@@ -215,6 +215,7 @@ struct kvm_xen_exit {
 #define KVM_EXIT_AP_RESET_HOLD 32
 #define KVM_EXIT_X86_BUS_LOCK 33
 #define KVM_EXIT_XEN 34
+#define KVM_EXIT_RISCV_SBI 35
 #define KVM_INTERNAL_ERROR_EMULATION 1
 #define KVM_INTERNAL_ERROR_SIMUL_EX 2
 #define KVM_INTERNAL_ERROR_DELIVERY_EV 3
@@ -305,8 +306,12 @@ struct kvm_run {
       __u32 suberror;
       __u32 ndata;
       __u64 flags;
-      __u8 insn_size;
-      __u8 insn_bytes[15];
+      union {
+        struct {
+          __u8 insn_size;
+          __u8 insn_bytes[15];
+        };
+      };
     } emulation_failure;
     struct {
       __u64 gprs[32];
@@ -361,6 +366,12 @@ struct kvm_run {
       __u64 data;
     } msr;
     struct kvm_xen_exit xen;
+    struct {
+      unsigned long extension_id;
+      unsigned long function_id;
+      unsigned long args[6];
+      unsigned long ret[2];
+    } riscv_sbi;
     char padding[256];
   };
 #define SYNC_REGS_SIZE_BYTES 2048
@@ -874,6 +885,7 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_BINARY_STATS_FD 203
 #define KVM_CAP_EXIT_ON_EMULATION_FAILURE 204
 #define KVM_CAP_ARM_MTE 205
+#define KVM_CAP_VM_MOVE_ENC_CONTEXT_FROM 206
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -958,10 +970,15 @@ struct kvm_irqfd {
   __u8 pad[16];
 };
 #define KVM_CLOCK_TSC_STABLE 2
+#define KVM_CLOCK_REALTIME (1 << 2)
+#define KVM_CLOCK_HOST_TSC (1 << 3)
 struct kvm_clock_data {
   __u64 clock;
   __u32 flags;
-  __u32 pad[9];
+  __u32 pad0;
+  __u64 realtime;
+  __u64 host_tsc;
+  __u32 pad[4];
 };
 #define KVM_MMU_FSL_BOOKE_NOHV 0
 #define KVM_MMU_FSL_BOOKE_HV 1
