@@ -474,9 +474,6 @@ cc_test_library {
                 // musl doesn't have error.h
                 "error_test.cpp",
 
-                // musl doesn't have execinfo.h
-                "execinfo_test.cpp",
-
                 // musl doesn't define noreturn for C++
                 "stdnoreturn_test.cpp",
 

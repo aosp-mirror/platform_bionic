@@ -2572,6 +2572,24 @@ cc_library_host_static {
             enabled: true,
         },
     },
+    stl: "none",
+}
+
+cc_library_host_static {
+    name: "libexecinfo",
+    visibility: ["//external/musl"],
+    srcs: ["bionic/execinfo.cpp"],
+    export_include_dirs: ["execinfo/include"],
+    local_include_dirs: ["private"],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
 }
 
 subdirs = [
