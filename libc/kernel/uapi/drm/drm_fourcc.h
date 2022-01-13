@@ -27,6 +27,8 @@ extern "C" {
 #define DRM_FORMAT_INVALID 0
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
 #define DRM_FORMAT_R8 fourcc_code('R', '8', ' ', ' ')
+#define DRM_FORMAT_R10 fourcc_code('R', '1', '0', ' ')
+#define DRM_FORMAT_R12 fourcc_code('R', '1', '2', ' ')
 #define DRM_FORMAT_R16 fourcc_code('R', '1', '6', ' ')
 #define DRM_FORMAT_RG88 fourcc_code('R', 'G', '8', '8')
 #define DRM_FORMAT_GR88 fourcc_code('G', 'R', '8', '8')
@@ -145,6 +147,8 @@ extern "C" {
 #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
 #define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
 #define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
+#define fourcc_mod_get_vendor(modifier) (((modifier) >> 56) & 0xff)
+#define fourcc_mod_is_vendor(modifier,vendor) (fourcc_mod_get_vendor(modifier) == DRM_FORMAT_MOD_VENDOR_ ##vendor)
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | ((val) & 0x00ffffffffffffffULL))
 #define DRM_FORMAT_MOD_GENERIC_16_16_TILE DRM_FORMAT_MOD_SAMSUNG_16_16_TILE
 #define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
