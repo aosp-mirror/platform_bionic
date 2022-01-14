@@ -741,7 +741,6 @@ cc_test_library {
     name: "libBionicLoaderTests",
     defaults: [
         "bionic_tests_defaults",
-        "llvm-defaults",
     ],
     srcs: [
         "atexit_test.cpp",
