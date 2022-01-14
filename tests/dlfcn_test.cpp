@@ -17,7 +17,9 @@
 #include <gtest/gtest.h>
 
 #include <dlfcn.h>
+#include <elf.h>
 #include <limits.h>
+#include <link.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,24 +39,6 @@
 #include "gtest_utils.h"
 #include "dlfcn_symlink_support.h"
 #include "utils.h"
-
-#if defined(__BIONIC__) && (defined(__arm__) || defined(__i386__))
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-parameter"
-
-#include <llvm/ADT/StringRef.h>
-#include <llvm/Object/Binary.h>
-#include <llvm/Object/ELFObjectFile.h>
-#include <llvm/Object/ObjectFile.h>
-
-#pragma clang diagnostic pop
-#endif //  defined(__ANDROID__) && (defined(__arm__) || defined(__i386__))
-
-// Declared manually because the macro definitions in <elf.h> conflict with LLVM headers.
-#ifdef __arm__
-typedef uintptr_t _Unwind_Ptr;
-extern "C" _Unwind_Ptr dl_unwind_find_exidx(_Unwind_Ptr, int*);
-#endif
 
 #define ASSERT_SUBSTR(needle, haystack) \
     ASSERT_PRED_FORMAT2(::testing::IsSubstring, needle, haystack)
@@ -1542,75 +1526,35 @@ TEST(dlfcn, RTLD_macros) {
 #if defined(__BIONIC__)
 
 #if defined(__arm__)
-const llvm::ELF::Elf32_Dyn* to_dynamic_table(const char* p) {
-  return reinterpret_cast<const llvm::ELF::Elf32_Dyn*>(p);
-}
 
-// Duplicate these definitions here because they are android specific
-//  - note that we cannot include <elf.h> because #defines conflict with
-//    enum names provided by LLVM.
-//  - we also don't use llvm::ELF::DT_LOOS because its value is 0x60000000
-//    rather than the 0x6000000d we expect
-#define DT_LOOS 0x6000000d
-#define DT_ANDROID_REL (DT_LOOS + 2)
-#define DT_ANDROID_RELA (DT_LOOS + 4)
+void validate_compatibility_of_native_library(const std::string& soname, const std::string& path) {
+  // Grab the dynamic section in text form...
+  ExecTestHelper eth;
+  eth.SetArgs({"readelf", "-dW", path.c_str(), nullptr});
+  eth.Run([&]() { execvpe("readelf", eth.GetArgs(), eth.GetEnv()); }, 0, nullptr);
+  std::string output = eth.GetOutput();
 
-template<typename ELFT>
-void validate_compatibility_of_native_library(const std::string& soname,
-                                              const std::string& path, ELFT* elf) {
-  bool has_elf_hash = false;
-  bool has_android_rel = false;
-  bool has_rel = false;
-  // Find dynamic section and check that DT_HASH and there is no DT_ANDROID_REL
-  for (auto it = elf->section_begin(); it != elf->section_end(); ++it) {
-    const llvm::object::ELFSectionRef& section_ref = *it;
-    if (section_ref.getType() == llvm::ELF::SHT_DYNAMIC) {
-      llvm::StringRef data;
-      ASSERT_TRUE(!it->getContents(data)) << "unable to get SHT_DYNAMIC section data";
-      for (auto d = to_dynamic_table(data.data()); d->d_tag != llvm::ELF::DT_NULL; ++d) {
-        if (d->d_tag == llvm::ELF::DT_HASH) {
-          has_elf_hash = true;
-        } else if (d->d_tag == DT_ANDROID_REL || d->d_tag == DT_ANDROID_RELA) {
-          has_android_rel = true;
-        } else if (d->d_tag == llvm::ELF::DT_REL || d->d_tag == llvm::ELF::DT_RELA) {
-          has_rel = true;
-        }
-      }
+  // Check that there *is* a legacy DT_HASH (not just a GNU hash)...
+  ASSERT_TRUE(std::regex_search(output, std::regex("\\(HASH\\)"))) << output;
+  // Check that there is no DT_ANDROID_REL or DT_ANDROID_RELA...
+  ASSERT_FALSE(std::regex_search(output, std::regex("\\(ANDROID_REL\\)"))) << output;
+  ASSERT_FALSE(std::regex_search(output, std::regex("\\(ANDROID_RELA\\)"))) << output;
 
-      break;
-    }
-  }
-
-  ASSERT_TRUE(has_elf_hash) << path.c_str() << ": missing elf hash (DT_HASH)";
-  ASSERT_TRUE(!has_android_rel) << path.c_str() << ": has packed relocations";
-  // libdl.so is simple enough that it might not have any relocations, so
-  // exempt it from the DT_REL/DT_RELA check.
-  if (soname != "libdl.so") {
-    ASSERT_TRUE(has_rel) << path.c_str() << ": missing DT_REL/DT_RELA";
-  }
+  // Check that we have regular non-packed relocations.
+  // libdl.so is simple enough that it doesn't have any relocations.
+  ASSERT_TRUE(std::regex_search(output, std::regex("\\(RELA?\\)")) || soname == "libdl.so")
+      << output;
 }
 
 void validate_compatibility_of_native_library(const std::string& soname) {
   // On the systems with emulation system libraries would be of different
   // architecture.  Try to use alternate paths first.
   std::string path = std::string(ALTERNATE_PATH_TO_SYSTEM_LIB) + soname;
-  auto binary_or_error = llvm::object::createBinary(path);
-  if (!binary_or_error) {
+  if (access(path.c_str(), R_OK) != 0) {
     path = std::string(PATH_TO_SYSTEM_LIB) + soname;
-    binary_or_error = llvm::object::createBinary(path);
+    ASSERT_EQ(0, access(path.c_str(), R_OK));
   }
-  ASSERT_FALSE(!binary_or_error);
-
-  llvm::object::Binary* binary = binary_or_error.get().getBinary();
-
-  auto obj = llvm::dyn_cast<llvm::object::ObjectFile>(binary);
-  ASSERT_TRUE(obj != nullptr);
-
-  auto elf = llvm::dyn_cast<llvm::object::ELF32LEObjectFile>(obj);
-
-  ASSERT_TRUE(elf != nullptr);
-
-  validate_compatibility_of_native_library(soname, path, elf);
+  validate_compatibility_of_native_library(soname, path);
 }
 
 // This is a test for app compatibility workaround for arm apps
