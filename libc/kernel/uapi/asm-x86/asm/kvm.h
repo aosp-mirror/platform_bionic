@@ -405,4 +405,6 @@ struct kvm_pmu_event_filter {
 };
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1
+#define KVM_VCPU_TSC_CTRL 0
+#define KVM_VCPU_TSC_OFFSET 0
 #endif

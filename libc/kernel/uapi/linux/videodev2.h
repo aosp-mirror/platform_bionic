@@ -24,7 +24,7 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-#define VIDEO_MAX_FRAME 64
+#define VIDEO_MAX_FRAME 32
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
@@ -279,13 +279,10 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV61 v4l2_fourcc('N', 'V', '6', '1')
 #define V4L2_PIX_FMT_NV24 v4l2_fourcc('N', 'V', '2', '4')
 #define V4L2_PIX_FMT_NV42 v4l2_fourcc('N', 'V', '4', '2')
-#define V4L2_PIX_FMT_HM12 v4l2_fourcc('H', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12M v4l2_fourcc('N', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV21M v4l2_fourcc('N', 'M', '2', '1')
 #define V4L2_PIX_FMT_NV16M v4l2_fourcc('N', 'M', '1', '6')
 #define V4L2_PIX_FMT_NV61M v4l2_fourcc('N', 'M', '6', '1')
-#define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
-#define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
 #define V4L2_PIX_FMT_YUV410 v4l2_fourcc('Y', 'U', 'V', '9')
 #define V4L2_PIX_FMT_YVU410 v4l2_fourcc('Y', 'V', 'U', '9')
 #define V4L2_PIX_FMT_YUV411P v4l2_fourcc('4', '1', '1', 'P')
@@ -298,6 +295,11 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_YVU422M v4l2_fourcc('Y', 'M', '6', '1')
 #define V4L2_PIX_FMT_YUV444M v4l2_fourcc('Y', 'M', '2', '4')
 #define V4L2_PIX_FMT_YVU444M v4l2_fourcc('Y', 'M', '4', '2')
+#define V4L2_PIX_FMT_NV12_4L4 v4l2_fourcc('V', 'T', '1', '2')
+#define V4L2_PIX_FMT_NV12_16L16 v4l2_fourcc('H', 'M', '1', '2')
+#define V4L2_PIX_FMT_NV12_32L32 v4l2_fourcc('S', 'T', '1', '2')
+#define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
+#define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
 #define V4L2_PIX_FMT_SBGGR8 v4l2_fourcc('B', 'A', '8', '1')
 #define V4L2_PIX_FMT_SGBRG8 v4l2_fourcc('G', 'B', 'R', 'G')
 #define V4L2_PIX_FMT_SGRBG8 v4l2_fourcc('G', 'R', 'B', 'G')
@@ -392,8 +394,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Y12I v4l2_fourcc('Y', '1', '2', 'I')
 #define V4L2_PIX_FMT_Z16 v4l2_fourcc('Z', '1', '6', ' ')
 #define V4L2_PIX_FMT_MT21C v4l2_fourcc('M', 'T', '2', '1')
+#define V4L2_PIX_FMT_MM21 v4l2_fourcc('M', 'M', '2', '1')
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
-#define V4L2_PIX_FMT_SUNXI_TILED_NV12 v4l2_fourcc('S', 'T', '1', '2')
 #define V4L2_PIX_FMT_CNF4 v4l2_fourcc('C', 'N', 'F', '4')
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')
 #define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
@@ -528,8 +530,10 @@ struct v4l2_requestbuffers {
   __u32 type;
   __u32 memory;
   __u32 capabilities;
-  __u32 reserved[1];
+  __u8 flags;
+  __u8 reserved[3];
 };
+#define V4L2_MEMORY_FLAG_NON_COHERENT (1 << 0)
 #define V4L2_BUF_CAP_SUPPORTS_MMAP (1 << 0)
 #define V4L2_BUF_CAP_SUPPORTS_USERPTR (1 << 1)
 #define V4L2_BUF_CAP_SUPPORTS_DMABUF (1 << 2)
@@ -1377,7 +1381,8 @@ struct v4l2_create_buffers {
   __u32 memory;
   struct v4l2_format format;
   __u32 capabilities;
-  __u32 reserved[7];
+  __u32 flags;
+  __u32 reserved[6];
 };
 #define VIDIOC_QUERYCAP _IOR('V', 0, struct v4l2_capability)
 #define VIDIOC_ENUM_FMT _IOWR('V', 2, struct v4l2_fmtdesc)
@@ -1462,4 +1467,6 @@ struct v4l2_create_buffers {
 #define VIDIOC_DBG_G_CHIP_INFO _IOWR('V', 102, struct v4l2_dbg_chip_info)
 #define VIDIOC_QUERY_EXT_CTRL _IOWR('V', 103, struct v4l2_query_ext_ctrl)
 #define BASE_VIDIOC_PRIVATE 192
+#define V4L2_PIX_FMT_HM12 V4L2_PIX_FMT_NV12_16L16
+#define V4L2_PIX_FMT_SUNXI_TILED_NV12 V4L2_PIX_FMT_NV12_32L32
 #endif
