@@ -303,6 +303,9 @@
 #if defined(__NR_futex_time64)
   #define SYS_futex_time64 __NR_futex_time64
 #endif
+#if defined(__NR_futex_waitv)
+  #define SYS_futex_waitv __NR_futex_waitv
+#endif
 #if defined(__NR_futimesat)
   #define SYS_futimesat __NR_futimesat
 #endif
