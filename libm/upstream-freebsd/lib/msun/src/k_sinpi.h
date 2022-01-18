@@ -1,7 +1,5 @@
 /*-
- * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
- *
- * Copyright (c) 2011 David Schultz
+ * Copyright (c) 2017 Steven G. Kargl
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,61 +25,19 @@
  */
 
 /*
- * Hyperbolic tangent of a complex argument z.  See s_ctanh.c for details.
+ * The basic kernel for x in [0,0.25].  To use the kernel for sin(x), the
+ * argument to __kernel_sinpi() must be multiplied by pi.
  */
 
-#include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
-
-#include <complex.h>
-#include <math.h>
-
-#include "math_private.h"
-
-float complex
-ctanhf(float complex z)
+static inline double
+__kernel_sinpi(double x)
 {
-	float x, y;
-	float t, beta, s, rho, denom;
-	uint32_t hx, ix;
+	double_t hi, lo;
 
-	x = crealf(z);
-	y = cimagf(z);
-
-	GET_FLOAT_WORD(hx, x);
-	ix = hx & 0x7fffffff;
-
-	if (ix >= 0x7f800000) {
-		if (ix & 0x7fffff)
-			return (CMPLXF(nan_mix(x, y),
-			    y == 0 ? y : nan_mix(x, y)));
-		SET_FLOAT_WORD(x, hx - 0x40000000);
-		return (CMPLXF(x,
-		    copysignf(0, isinf(y) ? y : sinf(y) * cosf(y))));
-	}
-
-	if (!isfinite(y))
-		return (CMPLXF(ix ? y - y : x, y - y));
-
-	if (ix >= 0x41300000) {	/* |x| >= 11 */
-		float exp_mx = expf(-fabsf(x));
-		return (CMPLXF(copysignf(1, x),
-		    4 * sinf(y) * cosf(y) * exp_mx * exp_mx));
-	}
-
-	t = tanf(y);
-	beta = 1.0 + t * t;
-	s = sinhf(x);
-	rho = sqrtf(1 + s * s);
-	denom = 1 + beta * s * s;
-	return (CMPLXF((beta * rho * s) / denom, t / denom));
+	hi = (float)x;
+	lo = x - hi;
+	lo = lo * (pi_lo + pi_hi) + hi * pi_lo;
+	hi *= pi_hi;
+	_2sumF(hi, lo);
+	return (__kernel_sin(hi, lo, 1));
 }
-
-float complex
-ctanf(float complex z)
-{
-
-	z = ctanhf(CMPLXF(cimagf(z), crealf(z)));
-	return (CMPLXF(cimagf(z), crealf(z)));
-}
-
