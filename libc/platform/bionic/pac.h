@@ -29,6 +29,7 @@
 #pragma once
 
 #include <stddef.h>
+#include <sys/prctl.h>
 
 inline uintptr_t __bionic_clear_pac_bits(uintptr_t ptr) {
 #if defined(__aarch64__)
@@ -40,3 +41,48 @@ inline uintptr_t __bionic_clear_pac_bits(uintptr_t ptr) {
   return ptr;
 #endif
 }
+
+#ifdef __aarch64__
+// The default setting for branch-protection enables both PAC and BTI, so by
+// overriding it to only enable BTI we disable PAC.
+#define __BIONIC_DISABLE_PAUTH __attribute__((target("branch-protection=bti")))
+#else
+#define __BIONIC_DISABLE_PAUTH
+#endif
+
+#ifdef __aarch64__
+
+#ifndef PR_PAC_SET_ENABLED_KEYS
+#define PR_PAC_SET_ENABLED_KEYS 60
+#endif
+
+#ifndef PR_PAC_GET_ENABLED_KEYS
+#define PR_PAC_GET_ENABLED_KEYS 61
+#endif
+
+// Disable PAC (i.e. make the signing and authentication instructions into no-ops) for the lifetime
+// of this object.
+class ScopedDisablePAC {
+  int prev_enabled_keys_;
+
+ public:
+  // Disabling IA will invalidate the return address in this function if it is signed, so we need to
+  // make sure that this function does not sign its return address. Likewise for the destructor.
+  __BIONIC_DISABLE_PAUTH
+  ScopedDisablePAC() {
+    // These prctls will fail (resulting in a no-op, the intended behavior) if PAC is not supported.
+    prev_enabled_keys_ = prctl(PR_PAC_GET_ENABLED_KEYS, 0, 0, 0, 0);
+    prctl(PR_PAC_SET_ENABLED_KEYS, prev_enabled_keys_, 0, 0, 0);
+  }
+
+  __BIONIC_DISABLE_PAUTH
+  ~ScopedDisablePAC() {
+    prctl(PR_PAC_SET_ENABLED_KEYS, prev_enabled_keys_, prev_enabled_keys_, 0, 0);
+  }
+};
+#else
+struct ScopedDisablePAC {
+  // Silence unused variable warnings in non-aarch64 builds.
+  ScopedDisablePAC() {}
+};
+#endif
