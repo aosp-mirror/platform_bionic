@@ -30,8 +30,6 @@ cc_library {
     whole_static_libs: ["libarm-optimized-routines-math"],
 
     srcs: [
-        "upstream-freebsd/lib/msun/bsdsrc/b_exp.c",
-        "upstream-freebsd/lib/msun/bsdsrc/b_log.c",
         "upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c",
         "upstream-freebsd/lib/msun/src/catrig.c",
         "upstream-freebsd/lib/msun/src/catrigf.c",
@@ -112,6 +110,7 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_copysign.c",
         "upstream-freebsd/lib/msun/src/s_copysignf.c",
         "upstream-freebsd/lib/msun/src/s_cos.c",
+        "upstream-freebsd/lib/msun/src/s_cospi.c",
         "upstream-freebsd/lib/msun/src/s_cpow.c",
         "upstream-freebsd/lib/msun/src/s_cpowf.c",
         "upstream-freebsd/lib/msun/src/s_cpowl.c",
@@ -177,6 +176,7 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_significand.c",
         "upstream-freebsd/lib/msun/src/s_significandf.c",
         "upstream-freebsd/lib/msun/src/s_sin.c",
+        "upstream-freebsd/lib/msun/src/s_sinpi.c",
         "upstream-freebsd/lib/msun/src/s_sincos.c",
         "upstream-freebsd/lib/msun/src/s_tan.c",
         "upstream-freebsd/lib/msun/src/s_tanf.c",
