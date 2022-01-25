@@ -2592,6 +2592,29 @@ cc_library_host_static {
     stl: "none",
 }
 
+cc_library_host_static {
+    name: "libb64",
+    visibility: ["//external/musl"],
+    srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
+    export_include_dirs: ["b64/include"],
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+    ],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
+}
+
 subdirs = [
     "bionic/scudo",
 ]
