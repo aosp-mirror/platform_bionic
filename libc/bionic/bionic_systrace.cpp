@@ -20,8 +20,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "bionic/pthread_internal.h"
 #include "private/bionic_lock.h"
 #include "private/bionic_systrace.h"
+#include "private/bionic_tls.h"
 #include "private/CachedProperty.h"
 
 #include <async_safe/log.h>
@@ -55,7 +57,7 @@ static int get_trace_marker_fd() {
   return g_trace_marker_fd;
 }
 
-void bionic_trace_begin(const char* message) {
+static void trace_begin_internal(const char* message) {
   if (!should_trace()) {
     return;
   }
@@ -76,7 +78,22 @@ void bionic_trace_begin(const char* message) {
   TEMP_FAILURE_RETRY(write(trace_marker_fd, buf, len));
 }
 
-void bionic_trace_end() {
+void bionic_trace_begin(const char* message) {
+  // Some functions called by trace_begin_internal() can call
+  // bionic_trace_begin(). Prevent infinite recursion and non-recursive mutex
+  // deadlock by using a flag in the thread local storage.
+  bionic_tls& tls = __get_bionic_tls();
+  if (tls.bionic_systrace_disabled) {
+    return;
+  }
+  tls.bionic_systrace_disabled = true;
+
+  trace_begin_internal(message);
+
+  tls.bionic_systrace_disabled = false;
+}
+
+static void trace_end_internal() {
   if (!should_trace()) {
     return;
   }
@@ -101,6 +118,21 @@ void bionic_trace_end() {
   // See b/197620214 for more context on this.
   volatile char buf[2]{'E', '|'};
   TEMP_FAILURE_RETRY(write(trace_marker_fd, const_cast<const char*>(buf), 2));
+}
+
+void bionic_trace_end() {
+  // Some functions called by trace_end_internal() can call
+  // bionic_trace_begin(). Prevent infinite recursion and non-recursive mutex
+  // deadlock by using a flag in the thread local storage.
+  bionic_tls& tls = __get_bionic_tls();
+  if (tls.bionic_systrace_disabled) {
+    return;
+  }
+  tls.bionic_systrace_disabled = true;
+
+  trace_end_internal();
+
+  tls.bionic_systrace_disabled = false;
 }
 
 ScopedTrace::ScopedTrace(const char* message) : called_end_(false) {
