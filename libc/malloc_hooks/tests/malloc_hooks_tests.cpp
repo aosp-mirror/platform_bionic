@@ -350,6 +350,9 @@ TEST_F(MallocHooksTest, aligned_alloc_hook_error) {
   RunTest("*.DISABLED_aligned_alloc_hook_error");
 }
 
+// Allow deliberate call with non-power-of-two alignment in test code.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnon-power-of-two-alignment"
 TEST_F(MallocHooksTest, DISABLED_aligned_alloc_hook_error) {
   Init();
   ASSERT_TRUE(__memalign_hook != nullptr);
@@ -365,6 +368,7 @@ TEST_F(MallocHooksTest, DISABLED_aligned_alloc_hook_error) {
   EXPECT_FALSE(void_arg_ != nullptr)
       << "The memalign hook was called with a nullptr with an error.";
 }
+#pragma clang diagnostic pop
 
 #if !defined(__LP64__)
 TEST_F(MallocHooksTest, pvalloc_hook) {
