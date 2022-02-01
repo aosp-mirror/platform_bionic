@@ -93,6 +93,15 @@ static void __libc_preinit_impl() {
   __libc_init_common();
   __libc_init_scudo();
 
+#if __has_feature(hwaddress_sanitizer)
+  // Notify the HWASan runtime library whenever a library is loaded or unloaded
+  // so that it can update its shadow memory.
+  // This has to happen before _libc_init_malloc which might dlopen to load
+  // profiler libraries.
+  __libc_shared_globals()->load_hook = __hwasan_library_loaded;
+  __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
+#endif
+
   // Hooks for various libraries to let them know that we're starting up.
   __libc_globals.mutate(__libc_init_malloc);
 
@@ -100,13 +109,6 @@ static void __libc_preinit_impl() {
   __libc_init_profiling_handlers();
 
   __libc_init_fork_handler();
-
-#if __has_feature(hwaddress_sanitizer)
-  // Notify the HWASan runtime library whenever a library is loaded or unloaded
-  // so that it can update its shadow memory.
-  __libc_shared_globals()->load_hook = __hwasan_library_loaded;
-  __libc_shared_globals()->unload_hook = __hwasan_library_unloaded;
-#endif
 
   __libc_shared_globals()->set_target_sdk_version_hook = __libc_set_target_sdk_version;
 
