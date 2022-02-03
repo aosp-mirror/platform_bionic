@@ -599,6 +599,10 @@ cc_defaults {
         host: {
             clang_cflags: ["-D__clang__"],
         },
+        musl: {
+            // Musl doesn't have fortify
+            enabled: false,
+        },
     },
 }
 
@@ -720,6 +724,7 @@ cc_test_library {
 cc_test_library {
     name: "libBionicTests",
     defaults: ["bionic_tests_defaults"],
+    host_supported: false,
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
