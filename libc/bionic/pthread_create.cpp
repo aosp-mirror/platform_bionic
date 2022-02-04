@@ -45,6 +45,7 @@
 #include "private/bionic_defs.h"
 #include "private/bionic_globals.h"
 #include "platform/bionic/macros.h"
+#include "platform/bionic/pac.h"
 #include "private/bionic_ssp.h"
 #include "private/bionic_systrace.h"
 #include "private/bionic_tls.h"
@@ -331,11 +332,9 @@ void __set_stack_and_tls_vma_name(bool is_main_thread) {
 extern "C" int __rt_sigprocmask(int, const sigset64_t*, sigset64_t*, size_t);
 
 __attribute__((no_sanitize("hwaddress")))
-#ifdef __aarch64__
 // This function doesn't return, but it does appear in stack traces. Avoid using return PAC in this
 // function because we may end up resetting IA, which may confuse unwinders due to mismatching keys.
-__attribute__((target("branch-protection=bti")))
-#endif
+__BIONIC_DISABLE_PAUTH
 static int __pthread_start(void* arg) {
   pthread_internal_t* thread = reinterpret_cast<pthread_internal_t*>(arg);
 

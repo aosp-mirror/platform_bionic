@@ -50,6 +50,14 @@
 #define FUTEX_WAKE_BITSET_PRIVATE (FUTEX_WAKE_BITSET | FUTEX_PRIVATE_FLAG)
 #define FUTEX_WAIT_REQUEUE_PI_PRIVATE (FUTEX_WAIT_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
 #define FUTEX_CMP_REQUEUE_PI_PRIVATE (FUTEX_CMP_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
+#define FUTEX_32 2
+#define FUTEX_WAITV_MAX 128
+struct futex_waitv {
+  __u64 val;
+  __u64 uaddr;
+  __u32 flags;
+  __u32 __reserved;
+};
 struct robust_list {
   struct robust_list __user * next;
 };

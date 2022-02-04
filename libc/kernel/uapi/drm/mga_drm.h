@@ -175,7 +175,7 @@ typedef struct drm_mga_init {
     MGA_CLEANUP_DMA = 0x02
   } func;
   unsigned long sarea_priv_offset;
-  int chipset;
+  __struct_group(, always32bit,, int chipset;
   int sgram;
   unsigned int maccess;
   unsigned int fb_cpp;
@@ -185,6 +185,7 @@ typedef struct drm_mga_init {
   unsigned int depth_offset, depth_pitch;
   unsigned int texture_offset[MGA_NR_TEX_HEAPS];
   unsigned int texture_size[MGA_NR_TEX_HEAPS];
+ );
   unsigned long fb_offset;
   unsigned long mmio_offset;
   unsigned long status_offset;
