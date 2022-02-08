@@ -33,11 +33,11 @@ __bionic_asm_custom_note_gnu_section()
 
   .section ".note.android.memtag", "a", %note
   .p2align 2
-  .long 1f - 0f         // int32_t namesz
-  .long 3f - 2f         // int32_t descsz
-  .long NT_TYPE_MEMTAG  // int32_t type
+  .long 1f - 0f                 // int32_t namesz
+  .long 3f - 2f                 // int32_t descsz
+  .long NT_ANDROID_TYPE_MEMTAG  // int32_t type
 0:
-  .asciz "Android"      // char name[]
+  .asciz "Android"              // char name[]
 1:
   .p2align 2
 2:
