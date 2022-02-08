@@ -1122,6 +1122,14 @@ cc_test {
     lto: {
         never: true,
     },
+    data_bins: [
+        "heap_tagging_async_helper",
+        "heap_tagging_disabled_helper",
+        "heap_tagging_static_async_helper",
+        "heap_tagging_static_disabled_helper",
+        "heap_tagging_static_sync_helper",
+        "heap_tagging_sync_helper",
+    ],
 }
 
 // -----------------------------------------------------------------------------
