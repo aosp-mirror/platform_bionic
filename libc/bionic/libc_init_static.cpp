@@ -237,6 +237,7 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
 // level into *level.
 static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
+  static const char kMemtagGlobalSysprop[] = "persist.arm64.memtag.default";
 
   const char* progname = __libc_shared_globals()->init_progname;
   if (progname == nullptr) return false;
@@ -250,9 +251,10 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 
   async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagPrognameSyspropPrefix,
                            basename);
+  const char* sys_prop_names[] = {sysprop_name, kMemtagGlobalSysprop};
 
-  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", &sysprop_name,
-                                       /* sys_prop_names_size */ 1, options_str, kOptionsSize)) {
+  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
+                                       options_str, kOptionsSize)) {
     return false;
   }
 
