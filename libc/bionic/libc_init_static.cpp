@@ -194,7 +194,7 @@ static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const c
   if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
     return false;
   }
-  if (note->n_type != NT_TYPE_MEMTAG) {
+  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
     return false;
   }
   if (note->n_descsz != 4) {
