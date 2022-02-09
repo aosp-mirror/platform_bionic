@@ -2572,8 +2572,136 @@ cc_library_host_static {
             enabled: true,
         },
     },
+    stl: "none",
+}
+
+cc_library_host_static {
+    name: "libexecinfo",
+    visibility: ["//external/musl"],
+    srcs: ["bionic/execinfo.cpp"],
+    export_include_dirs: ["execinfo/include"],
+    local_include_dirs: ["private"],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
+}
+
+cc_library_host_static {
+    name: "libb64",
+    visibility: ["//external/musl"],
+    srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
+    export_include_dirs: ["b64/include"],
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+    ],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
 }
 
 subdirs = [
     "bionic/scudo",
 ]
+
+// Export kernel uapi headers to be used in the musl sysroot.
+// Also include the execinfo headers for the libexecinfo and the
+// b64 headers for libb64 embedded in musl libc.
+cc_genrule {
+    name: "libc_musl_sysroot_bionic_headers",
+    visibility: ["//external/musl"],
+    host_supported: true,
+    device_supported: false,
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
+    },
+    srcs: [
+        "kernel/uapi/**/*.h",
+        "kernel/android/**/*.h",
+
+        "kernel/uapi/linux/capability.h",
+        "kernel/android/scsi/scsi/scsi.h",
+        "kernel/android/uapi/linux/compiler.h",
+
+        "execinfo/include/**/*.h",
+        "execinfo/include/execinfo.h",
+
+        "b64/include/**/*.h",
+        "b64/include/bionic/b64.h",
+
+        ":libc_musl_sysroot_bionic_arch_headers",
+    ],
+    out: ["libc_musl_sysroot_bionic_headers.zip"],
+    tools: [
+        "soong_zip",
+        "merge_zips",
+        "zip2zip",
+    ],
+    cmd: "$(location soong_zip) -o $(genDir)/sysroot.zip -symlinks=false" +
+        // headers
+        " -P include " +
+        "  -C $$(dirname $(location kernel/uapi/linux/capability.h))/.. " +
+        "  -D $$(dirname $(location kernel/uapi/linux/capability.h))/.. " +
+        "  -C $$(dirname $(location kernel/android/scsi/scsi/scsi.h))/.. " +
+        "  -D $$(dirname $(location kernel/android/scsi/scsi/scsi.h))/.. " +
+        "  -C $$(dirname $(location kernel/android/uapi/linux/compiler.h))/.. " +
+        "  -D $$(dirname $(location kernel/android/uapi/linux/compiler.h))/.. " +
+        "  -C $$(dirname $(location execinfo/include/execinfo.h)) " +
+        "  -D $$(dirname $(location execinfo/include/execinfo.h)) " +
+        "  -C $$(dirname $(location b64/include/bionic/b64.h))/.. " +
+        "  -D $$(dirname $(location b64/include/bionic/b64.h))/.. " +
+        " && " +
+        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot.zip",
+}
+
+// The architecture-specific bits have to be handled separately because the label varies based
+// on architecture, which prevents using $(locations) to find them and requires using $(in)
+// instead, which would mix in all the other files if this were part of the main libc_musl_sysroot
+// genrule.
+cc_genrule {
+    name: "libc_musl_sysroot_bionic_arch_headers",
+    visibility: ["//visibility:private"],
+    host_supported: true,
+    device_supported: false,
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
+    },
+    arch: {
+        arm: {
+            srcs: ["kernel/uapi/asm-arm/**/*.h"],
+        },
+        arm64: {
+            srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+        },
+        x86: {
+            srcs: ["kernel/uapi/asm-x86/**/*.h"],
+        },
+        x86_64: {
+            srcs: ["kernel/uapi/asm-x86/**/*.h"],
+        },
+    },
+    out: ["libc_musl_sysroot_bionic_arch_headers.zip"],
+    tools: ["soong_zip"],
+    cmd: "includes=($(in)) && $(location soong_zip) -o $(out) -P include/asm -j -D $$(dirname $${includes[0]})",
+}
