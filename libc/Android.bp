@@ -1724,7 +1724,7 @@ cc_library {
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
                 // For backwards-compatibility, some arm32 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1754,7 +1754,7 @@ cc_library {
 
             shared: {
                 // For backwards-compatibility, some x86 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-i686-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
