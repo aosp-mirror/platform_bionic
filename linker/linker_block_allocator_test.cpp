@@ -29,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 
 #include <gtest/gtest.h>
 
@@ -44,11 +45,15 @@ struct test_struct_nominal {
 };
 
 /*
- * this one has size below allocator cap which is 2*sizeof(void*)
+ * this one has size below kBlockSizeAlign
  */
 struct test_struct_small {
-  char str[5];
+  char str[3];
 };
+
+struct test_struct_max_align {
+  char str[16];
+} __attribute__((aligned(16)));
 
 /*
  * 1009 byte struct (1009 is prime)
@@ -58,54 +63,49 @@ struct test_struct_larger {
 };
 
 static size_t kPageSize = sysconf(_SC_PAGE_SIZE);
-};
 
-TEST(linker_allocator, test_nominal) {
-  LinkerTypeAllocator<test_struct_nominal> allocator;
+template <typename Element>
+void linker_allocator_test_helper() {
+  LinkerTypeAllocator<Element> allocator;
 
-  test_struct_nominal* ptr1 = allocator.alloc();
+  Element* ptr1 = allocator.alloc();
   ASSERT_TRUE(ptr1 != nullptr);
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
-  test_struct_nominal* ptr2 = allocator.alloc();
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % kBlockSizeAlign);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % alignof(Element));
+  Element* ptr2 = allocator.alloc();
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % kBlockSizeAlign);
+  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % alignof(Element));
   ASSERT_TRUE(ptr2 != nullptr);
-  // they should be next to each other.
-  ASSERT_EQ(reinterpret_cast<uint8_t*>(ptr1)+16, reinterpret_cast<uint8_t*>(ptr2));
 
-  ptr1->value = 42;
+  // they should be next to each other.
+  size_t dist = __BIONIC_ALIGN(MAX(sizeof(Element), kBlockSizeMin), kBlockSizeAlign);
+  ASSERT_EQ(reinterpret_cast<uint8_t*>(ptr1) + dist, reinterpret_cast<uint8_t*>(ptr2));
 
   allocator.free(ptr1);
   allocator.free(ptr2);
 }
 
+};  // anonymous namespace
+
+TEST(linker_allocator, test_nominal) {
+  linker_allocator_test_helper<test_struct_nominal>();
+}
+
 TEST(linker_allocator, test_small) {
-  LinkerTypeAllocator<test_struct_small> allocator;
+  linker_allocator_test_helper<test_struct_small>();
+}
 
-  char* ptr1 = reinterpret_cast<char*>(allocator.alloc());
-  char* ptr2 = reinterpret_cast<char*>(allocator.alloc());
-
-  ASSERT_TRUE(ptr1 != nullptr);
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
-  ASSERT_TRUE(ptr2 != nullptr);
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
-  ASSERT_EQ(ptr1+16, ptr2); // aligned to 16
+TEST(linker_allocator, test_max_align) {
+  linker_allocator_test_helper<test_struct_max_align>();
 }
 
 TEST(linker_allocator, test_larger) {
+  linker_allocator_test_helper<test_struct_larger>();
+
   LinkerTypeAllocator<test_struct_larger> allocator;
 
-  test_struct_larger* ptr1 = allocator.alloc();
-  test_struct_larger* ptr2 = allocator.alloc();
-
-  ASSERT_TRUE(ptr1 != nullptr);
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr1) % 16);
-  ASSERT_TRUE(ptr2 != nullptr);
-  ASSERT_EQ(0U, reinterpret_cast<uintptr_t>(ptr2) % 16);
-
-  ASSERT_EQ(reinterpret_cast<uint8_t*>(ptr1) + 1024, reinterpret_cast<uint8_t*>(ptr2));
-
   // lets allocate until we reach next page.
-  size_t n = kPageSize/sizeof(test_struct_larger) + 1 - 2;
+  size_t n = kPageSize / sizeof(test_struct_larger) + 1;
 
   for (size_t i=0; i<n; ++i) {
     ASSERT_TRUE(allocator.alloc() != nullptr);
@@ -113,7 +113,6 @@ TEST(linker_allocator, test_larger) {
 
   test_struct_larger* ptr_to_free = allocator.alloc();
   ASSERT_TRUE(ptr_to_free != nullptr);
-  allocator.free(ptr1);
 }
 
 static void protect_all() {
