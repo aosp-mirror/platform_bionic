@@ -40,7 +40,7 @@ __bionic_asm_custom_note_gnu_section()
 abitag:
   .long 2f-1f                 // int32_t namesz
   .long 3f-2f                 // int32_t descsz
-  .long NT_TYPE_IDENT         // int32_t type
+  .long NT_ANDROID_TYPE_IDENT // int32_t type
 #ifdef __ANDROID__
 1:.ascii "Android\0"          // char name[]
 2:.long PLATFORM_SDK_VERSION  // int32_t android_api
