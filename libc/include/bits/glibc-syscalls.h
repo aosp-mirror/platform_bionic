@@ -303,9 +303,6 @@
 #if defined(__NR_futex_time64)
   #define SYS_futex_time64 __NR_futex_time64
 #endif
-#if defined(__NR_futex_waitv)
-  #define SYS_futex_waitv __NR_futex_waitv
-#endif
 #if defined(__NR_futimesat)
   #define SYS_futimesat __NR_futimesat
 #endif
@@ -510,15 +507,6 @@
 #if defined(__NR_kill)
   #define SYS_kill __NR_kill
 #endif
-#if defined(__NR_landlock_add_rule)
-  #define SYS_landlock_add_rule __NR_landlock_add_rule
-#endif
-#if defined(__NR_landlock_create_ruleset)
-  #define SYS_landlock_create_ruleset __NR_landlock_create_ruleset
-#endif
-#if defined(__NR_landlock_restrict_self)
-  #define SYS_landlock_restrict_self __NR_landlock_restrict_self
-#endif
 #if defined(__NR_lchown)
   #define SYS_lchown __NR_lchown
 #endif
@@ -578,9 +566,6 @@
 #endif
 #if defined(__NR_memfd_create)
   #define SYS_memfd_create __NR_memfd_create
-#endif
-#if defined(__NR_memfd_secret)
-  #define SYS_memfd_secret __NR_memfd_secret
 #endif
 #if defined(__NR_migrate_pages)
   #define SYS_migrate_pages __NR_migrate_pages
@@ -804,9 +789,6 @@
 #if defined(__NR_process_madvise)
   #define SYS_process_madvise __NR_process_madvise
 #endif
-#if defined(__NR_process_mrelease)
-  #define SYS_process_mrelease __NR_process_mrelease
-#endif
 #if defined(__NR_process_vm_readv)
   #define SYS_process_vm_readv __NR_process_vm_readv
 #endif
@@ -845,9 +827,6 @@
 #endif
 #if defined(__NR_quotactl)
   #define SYS_quotactl __NR_quotactl
-#endif
-#if defined(__NR_quotactl_fd)
-  #define SYS_quotactl_fd __NR_quotactl_fd
 #endif
 #if defined(__NR_read)
   #define SYS_read __NR_read
