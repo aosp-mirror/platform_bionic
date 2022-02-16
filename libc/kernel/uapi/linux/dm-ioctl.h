@@ -55,8 +55,6 @@ struct dm_name_list {
   __u32 next;
   char name[0];
 };
-#define DM_NAME_LIST_FLAG_HAS_UUID 1
-#define DM_NAME_LIST_FLAG_DOESNT_HAVE_UUID 2
 struct dm_target_versions {
   __u32 next;
   __u32 version[3];
@@ -106,9 +104,9 @@ enum {
 #define DM_TARGET_MSG _IOWR(DM_IOCTL, DM_TARGET_MSG_CMD, struct dm_ioctl)
 #define DM_DEV_SET_GEOMETRY _IOWR(DM_IOCTL, DM_DEV_SET_GEOMETRY_CMD, struct dm_ioctl)
 #define DM_VERSION_MAJOR 4
-#define DM_VERSION_MINOR 45
+#define DM_VERSION_MINOR 44
 #define DM_VERSION_PATCHLEVEL 0
-#define DM_VERSION_EXTRA "-ioctl(2021-03-22)"
+#define DM_VERSION_EXTRA "-ioctl(2021-02-01)"
 #define DM_READONLY_FLAG (1 << 0)
 #define DM_SUSPEND_FLAG (1 << 1)
 #define DM_PERSISTENT_DEV_FLAG (1 << 3)
@@ -126,5 +124,4 @@ enum {
 #define DM_DATA_OUT_FLAG (1 << 16)
 #define DM_DEFERRED_REMOVE (1 << 17)
 #define DM_INTERNAL_SUSPEND_FLAG (1 << 18)
-#define DM_IMA_MEASUREMENT_FLAG (1 << 19)
 #endif
