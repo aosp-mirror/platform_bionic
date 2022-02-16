@@ -43,26 +43,36 @@ size_t __cfi_shadow_size();
 // death tests shouldn't ever hit. (It's possible that a design where a
 // deathtest always declares its expected signals up front is a better one,
 // and maybe that's an interesting future direction for libbase.)
+//
+// We include SIGSEGV because there's a test that passes heap addresses to
+// __cfi_slowpath and we only map the executable code shadow as readable.
+// We don't always get SIGSEGV there though: if the heap allocation happens
+// to be close enough to an executable mapping that its shadow is in the
+// same page as the executable shadow, we'll get SIGILL/SIGTRAP.
 class cfi_test_DeathTest : public testing::Test {
  protected:
   void SetUp() override {
     struct sigaction64 action = {.sa_handler = SIG_DFL};
-    sigaction64(SIGSEGV, &action, &previous_sigsegv_);
     sigaction64(SIGILL, &action, &previous_sigill_);
+    sigaction64(SIGSEGV, &action, &previous_sigsegv_);
+    sigaction64(SIGTRAP, &action, &previous_sigtrap_);
   }
 
   void TearDown() override {
-    sigaction64(SIGILL, &previous_sigill_, nullptr);
+    sigaction64(SIGTRAP, &previous_sigtrap_, nullptr);
     sigaction64(SIGSEGV, &previous_sigsegv_, nullptr);
+    sigaction64(SIGILL, &previous_sigill_, nullptr);
   }
 
  private:
-  struct sigaction64 previous_sigsegv_;
   struct sigaction64 previous_sigill_;
+  struct sigaction64 previous_sigsegv_;
+  struct sigaction64 previous_sigtrap_;
 };
 
 static bool KilledByCfi(int status) {
-  return WIFSIGNALED(status) && (WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
+  return WIFSIGNALED(status) &&
+         (WTERMSIG(status) == SIGTRAP || WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
 }
 
 static void f() {}
