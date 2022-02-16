@@ -27,10 +27,8 @@
  */
 
 #include <dlfcn.h>
-#include <link.h>
-
-#include <android-base/file.h>
 #include <gtest/gtest.h>
+#include <link.h>
 
 #include <thread>
 
@@ -68,7 +66,8 @@ TEST(elftls_dl, dlopen_shared_var_ie) {
 }
 
 TEST(elftls_dl, dlopen_ie_error) {
-  std::string helper = GetTestlibRoot() + "/elftls_dlopen_ie_error_helper";
+  std::string helper = GetTestlibRoot() +
+      "/elftls_dlopen_ie_error_helper/elftls_dlopen_ie_error_helper";
   std::string src_path = GetTestlibRoot() + "/libtest_elftls_shared_var_ie.so";
   std::string dst_path = GetTestlibRoot() + "/libtest_elftls_shared_var.so";
 #if defined(__BIONIC__)
@@ -357,7 +356,7 @@ TEST(elftls_dl, dl_iterate_phdr) {
 
       // This test is also run with glibc, where dlpi_name may have relative path components, so
       // examine just the basename when searching for the library.
-      if (strcmp(android::base::Basename(info->dlpi_name).c_str(), "libtest_elftls_dynamic.so") != 0) return 0;
+      if (strcmp(basename(info->dlpi_name), "libtest_elftls_dynamic.so") != 0) return 0;
 
       tls_info.found = true;
       tls_info.modid = info->dlpi_tls_modid;
