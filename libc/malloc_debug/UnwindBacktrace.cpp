@@ -87,16 +87,14 @@ bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameD
 void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info) {
   for (size_t i = 0; i < frame_info.size(); i++) {
     const unwindstack::LocalFrameData* info = &frame_info[i];
-    std::shared_ptr<unwindstack::MapInfo> map_info = info->map_info;
+    unwindstack::MapInfo* map_info = info->map_info;
 
     std::string line = android::base::StringPrintf("          #%0zd  pc %" PAD_PTR "  ", i, info->rel_pc);
-    if (map_info != nullptr && map_info->offset() != 0) {
+    if (map_info->offset() != 0) {
       line += android::base::StringPrintf("(offset 0x%" PRIx64 ") ", map_info->offset());
     }
 
-    if (map_info == nullptr) {
-      line += "<unknown>";
-    } else if (map_info->name().empty()) {
+    if (map_info->name().empty()) {
       line += android::base::StringPrintf("<anonymous:%" PRIx64 ">", map_info->start());
     } else {
       line += map_info->name();
