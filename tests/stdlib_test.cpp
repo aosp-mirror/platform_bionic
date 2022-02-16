@@ -22,7 +22,6 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -455,7 +454,7 @@ TEST_F(stdlib_DeathTest, getenv_after_main_thread_exits) {
   ASSERT_EXIT(TestBug57421_main(), ::testing::ExitedWithCode(0), "");
 }
 
-TEST(stdlib, mkostemp64_smoke) {
+TEST(stdlib, mkostemp64) {
   MyTemporaryFile tf([](char* path) { return mkostemp64(path, O_CLOEXEC); });
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
@@ -465,7 +464,7 @@ TEST(stdlib, mkostemp) {
   ASSERT_TRUE(CloseOnExec(tf.fd));
 }
 
-TEST(stdlib, mkstemp64_smoke) {
+TEST(stdlib, mkstemp64) {
   MyTemporaryFile tf(mkstemp64);
   struct stat64 sb;
   ASSERT_EQ(0, fstat64(tf.fd, &sb));
@@ -494,30 +493,6 @@ TEST(stdlib, system_NULL) {
   // "The system() function shall always return non-zero when command is NULL."
   // http://pubs.opengroup.org/onlinepubs/9699919799/functions/system.html
   ASSERT_NE(0, system(nullptr));
-}
-
-// https://austingroupbugs.net/view.php?id=1440
-TEST(stdlib, system_minus) {
-  // Create a script with a name that starts with a '-'.
-  TemporaryDir td;
-  std::string script = std::string(td.path) + "/-minus";
-  ASSERT_TRUE(android::base::WriteStringToFile("#!" BIN_DIR "sh\nexit 66\n", script));
-
-  // Set $PATH so we can find it.
-  setenv("PATH", td.path, 1);
-  // Make it executable so we can run it.
-  ASSERT_EQ(0, chmod(script.c_str(), 0555));
-
-  int status = system("-minus");
-  EXPECT_TRUE(WIFEXITED(status));
-  EXPECT_EQ(66, WEXITSTATUS(status));
-
-  // While we're here and have all the setup, let's test popen(3) too...
-  FILE* fp = popen("-minus", "r");
-  ASSERT_TRUE(fp != nullptr);
-  status = pclose(fp);
-  EXPECT_TRUE(WIFEXITED(status));
-  EXPECT_EQ(66, WEXITSTATUS(status));
 }
 
 TEST(stdlib, atof) {
@@ -656,13 +631,6 @@ TEST(unistd, _Exit) {
 
   AssertChildExited(pid, 99);
 }
-
-#if defined(ANDROID_HOST_MUSL)
-// musl doesn't have getpt
-int getpt() {
-  return posix_openpt(O_RDWR|O_NOCTTY);
-}
-#endif
 
 TEST(stdlib, pty_smoke) {
   // getpt returns a pty with O_RDWR|O_NOCTTY.
@@ -993,8 +961,8 @@ TEST(stdlib, getloadavg) {
 }
 
 TEST(stdlib, getprogname) {
-#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
-  GTEST_SKIP() << "glibc and musl don't have getprogname()";
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have getprogname()";
 #else
   // You should always have a name.
   ASSERT_TRUE(getprogname() != nullptr);
@@ -1004,8 +972,8 @@ TEST(stdlib, getprogname) {
 }
 
 TEST(stdlib, setprogname) {
-#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
-  GTEST_SKIP() << "glibc and musl don't have setprogname()";
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have setprogname()";
 #else
   // setprogname() only takes the basename of what you give it.
   setprogname("/usr/bin/muppet");

@@ -16,8 +16,6 @@
 
 #pragma once
 
-#include <inttypes.h>
-
 /* OpenBSD has these in <sys/param.h>, but "ALIGN" isn't something we want to reserve. */
 #define ALIGNBYTES (sizeof(uintptr_t) - 1)
 #define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) & ~ALIGNBYTES)

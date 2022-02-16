@@ -16,7 +16,6 @@
 
 #include <gtest/gtest.h>
 
-#include <ucontext.h> // for NGREG on musl
 #include <sys/procfs.h>
 
 TEST(sys_procfs, types) {
