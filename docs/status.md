@@ -50,21 +50,6 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
-New libc functions in T (API level 32):
-  * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).
-  * New system call wrappers: `preadv2`, `preadv64v2`, `pwritev2`,
-    `pwritev64v2`.
-
-New libc functions in S (API level 31):
-  * New hooks for sanitizers for TLS access: `__libc_get_static_tls_bounds`,
-    `__libc_register_thread_exit_callback`, `__libc_iterate_dynamic_tls`,
-    `__libc_register_dynamic_tls_listeners`.
-  * New helper to allow the zygote to give each zygote child its own stack
-    cookie (currently unused): `android_reset_stack_guards`.
-  * Non-inline symbols for `ffsl`, `ffsll`.
-  * New system call wrappers: `pidfd_getfd`, `pidfd_open`, `pidfd_send_signal`,
-    `process_madvise`.
-
 New libc functions in R (API level 30):
   * Full C11 `<threads.h>` (available as inlines for older API levels).
   * `memfd_create` and `mlock2` (Linux-specific GNU extensions).
