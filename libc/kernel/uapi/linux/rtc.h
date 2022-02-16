@@ -20,7 +20,6 @@
 #define _UAPI_LINUX_RTC_H_
 #include <linux/const.h>
 #include <linux/ioctl.h>
-#include <linux/types.h>
 struct rtc_time {
   int tm_sec;
   int tm_min;
@@ -46,16 +45,6 @@ struct rtc_pll_info {
   int pll_negmult;
   long pll_clock;
 };
-struct rtc_param {
-  __u64 param;
-  union {
-    __u64 uvalue;
-    __s64 svalue;
-    __u64 ptr;
-  };
-  __u32 index;
-  __u32 __pad;
-};
 #define RTC_AIE_ON _IO('p', 0x01)
 #define RTC_AIE_OFF _IO('p', 0x02)
 #define RTC_UIE_ON _IO('p', 0x03)
@@ -76,8 +65,6 @@ struct rtc_param {
 #define RTC_WKALM_RD _IOR('p', 0x10, struct rtc_wkalrm)
 #define RTC_PLL_GET _IOR('p', 0x11, struct rtc_pll_info)
 #define RTC_PLL_SET _IOW('p', 0x12, struct rtc_pll_info)
-#define RTC_PARAM_GET _IOW('p', 0x13, struct rtc_param)
-#define RTC_PARAM_SET _IOW('p', 0x14, struct rtc_param)
 #define RTC_VL_DATA_INVALID _BITUL(0)
 #define RTC_VL_BACKUP_LOW _BITUL(1)
 #define RTC_VL_BACKUP_EMPTY _BITUL(2)
@@ -92,17 +79,6 @@ struct rtc_param {
 #define RTC_FEATURE_ALARM 0
 #define RTC_FEATURE_ALARM_RES_MINUTE 1
 #define RTC_FEATURE_NEED_WEEK_DAY 2
-#define RTC_FEATURE_ALARM_RES_2S 3
-#define RTC_FEATURE_UPDATE_INTERRUPT 4
-#define RTC_FEATURE_CORRECTION 5
-#define RTC_FEATURE_BACKUP_SWITCH_MODE 6
-#define RTC_FEATURE_CNT 7
-#define RTC_PARAM_FEATURES 0
-#define RTC_PARAM_CORRECTION 1
-#define RTC_PARAM_BACKUP_SWITCH_MODE 2
-#define RTC_BSM_DISABLED 0
-#define RTC_BSM_DIRECT 1
-#define RTC_BSM_LEVEL 2
-#define RTC_BSM_STANDBY 3
+#define RTC_FEATURE_CNT 3
 #define RTC_MAX_FREQ 8192
 #endif

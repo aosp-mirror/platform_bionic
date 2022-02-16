@@ -40,14 +40,6 @@ struct ipmi_ipmb_addr {
   unsigned char slave_addr;
   unsigned char lun;
 };
-#define IPMI_IPMB_DIRECT_ADDR_TYPE 0x81
-struct ipmi_ipmb_direct_addr {
-  int addr_type;
-  short channel;
-  unsigned char slave_addr;
-  unsigned char rs_lun;
-  unsigned char rq_lun;
-};
 #define IPMI_LAN_ADDR_TYPE 0x04
 struct ipmi_lan_addr {
   int addr_type;
