@@ -45,6 +45,8 @@
 
 // System calls we need.
 extern "C" int __llseek(int, unsigned long, unsigned long, off64_t*, int);
+extern "C" int __preadv64(int, const struct iovec*, int, long, long);
+extern "C" int __pwritev64(int, const struct iovec*, int, long, long);
 
 // For lseek64 we need to use the llseek system call which splits the off64_t in two and
 // returns the off64_t result via a pointer because 32-bit kernels can't return 64-bit results.
@@ -66,6 +68,23 @@ ssize_t pread(int fd, void* buf, size_t byte_count, off_t offset) {
 // There is no pwrite for 32-bit off_t, so we need to widen and call pwrite64.
 ssize_t pwrite(int fd, const void* buf, size_t byte_count, off_t offset) {
   return pwrite64(fd, buf, byte_count, static_cast<off64_t>(offset));
+}
+
+// On LP32, there is no off_t preadv/pwritev, and even the 64-bit preadv/pwritev
+// don't use off64_t (see SYSCALLS.TXT for more). Here, this means that we need
+// to implement all four functions because the two system calls don't match any
+// of the userspace functions. Unlike llseek, the pair is split lo-hi, not hi-lo.
+ssize_t preadv(int fd, const struct iovec* ios, int count, off_t offset) {
+  return preadv64(fd, ios, count, offset);
+}
+ssize_t preadv64(int fd, const struct iovec* ios, int count, off64_t offset) {
+  return __preadv64(fd, ios, count, offset, offset >> 32);
+}
+ssize_t pwritev(int fd, const struct iovec* ios, int count, off_t offset) {
+  return pwritev64(fd, ios, count, offset);
+}
+ssize_t pwritev64(int fd, const struct iovec* ios, int count, off64_t offset) {
+  return __pwritev64(fd, ios, count, offset, offset >> 32);
 }
 
 // There is no fallocate for 32-bit off_t, so we need to widen and call fallocate64.
