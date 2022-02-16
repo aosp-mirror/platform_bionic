@@ -19,7 +19,6 @@
 
 #include <vector>
 
-#include <android-base/silent_death_test.h>
 #include <gtest/gtest.h>
 
 #include "gtest_globals.h"
@@ -36,7 +35,35 @@ void __cfi_slowpath_diag(uint64_t CallSiteTypeId, void* Ptr, void* DiagData);
 size_t __cfi_shadow_size();
 }
 
-using cfi_test_DeathTest = SilentDeathTest;
+// Disables debuggerd stack traces to speed up death tests, make them less
+// noisy in logcat, and avoid expected deaths from showing up in stability
+// metrics.
+// We don't use the usual libbase class because (a) we don't care about most
+// of the signals it blocks but (b) we do need to block SIGILL, which normal
+// death tests shouldn't ever hit. (It's possible that a design where a
+// deathtest always declares its expected signals up front is a better one,
+// and maybe that's an interesting future direction for libbase.)
+class cfi_test_DeathTest : public testing::Test {
+ protected:
+  void SetUp() override {
+    struct sigaction64 action = {.sa_handler = SIG_DFL};
+    sigaction64(SIGSEGV, &action, &previous_sigsegv_);
+    sigaction64(SIGILL, &action, &previous_sigill_);
+  }
+
+  void TearDown() override {
+    sigaction64(SIGILL, &previous_sigill_, nullptr);
+    sigaction64(SIGSEGV, &previous_sigsegv_, nullptr);
+  }
+
+ private:
+  struct sigaction64 previous_sigsegv_;
+  struct sigaction64 previous_sigill_;
+};
+
+static bool KilledByCfi(int status) {
+  return WIFSIGNALED(status) && (WTERMSIG(status) == SIGILL || WTERMSIG(status) == SIGSEGV);
+}
 
 static void f() {}
 
@@ -102,7 +129,7 @@ TEST_F(cfi_test_DeathTest, basic) {
   // It's possible that this allocation could wind up in the same CFI granule as
   // an unchecked library, which means the below might not crash. To force a
   // crash keep allocating up to a max until there is a crash.
-  EXPECT_DEATH(test_cfi_slowpath_with_alloc(), "");
+  EXPECT_EXIT(test_cfi_slowpath_with_alloc(), KilledByCfi, "");
 
   // Check all the addresses.
   const size_t bss_size = 1024 * 1024;
@@ -128,7 +155,7 @@ TEST_F(cfi_test_DeathTest, basic) {
 
   // CFI check for a function inside the unloaded DSO. This is always invalid and gets the process
   // killed.
-  EXPECT_DEATH(__cfi_slowpath(45, reinterpret_cast<void*>(code_ptr)), "");
+  EXPECT_EXIT(__cfi_slowpath(45, reinterpret_cast<void*>(code_ptr)), KilledByCfi, "");
 #endif
 }
 
