@@ -43,7 +43,7 @@ TEST(sys_sendfile, sendfile) {
   ASSERT_STREQ("ll", buf);
 }
 
-TEST(sys_sendfile, sendfile64) {
+TEST(sys_sendfile, sendfile64_smoke) {
   TemporaryFile src_file;
   ASSERT_EQ(5, TEMP_FAILURE_RETRY(write(src_file.fd, "hello", 5)));
 

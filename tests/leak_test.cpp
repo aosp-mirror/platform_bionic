@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <sys/syscall.h>
 #include <sys/user.h>
 #include <unistd.h>
 
@@ -44,7 +45,7 @@ static void WaitUntilAllThreadsExited(pid_t* tids, size_t tid_count) {
     alive = false;
     for (size_t i = 0; i < tid_count; ++i) {
       if (tids[i] != 0) {
-        if (tgkill(getpid(), tids[i], 0) == 0) {
+        if (syscall(__NR_tgkill, getpid(), tids[i], 0) == 0) {
           alive = true;
         } else {
           EXPECT_EQ(errno, ESRCH);
@@ -111,11 +112,17 @@ std::ostream& operator<<(std::ostream& os, const LeakChecker& lc) {
 TEST(pthread_leak, join) {
   SKIP_WITH_NATIVE_BRIDGE;  // http://b/37920774
 
+  // Warm up. HWASan allocates an extra page on the first iteration, but never after.
+  pthread_t thread;
+  ASSERT_EQ(0, pthread_create(
+                   &thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+  ASSERT_EQ(0, pthread_join(thread, nullptr));
+
   LeakChecker lc;
 
   for (int i = 0; i < 100; ++i) {
-    pthread_t thread;
-    ASSERT_EQ(0, pthread_create(&thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
+    ASSERT_EQ(0, pthread_create(
+                     &thread, nullptr, [](void*) -> void* { return nullptr; }, nullptr));
     ASSERT_EQ(0, pthread_join(thread, nullptr));
   }
 }
