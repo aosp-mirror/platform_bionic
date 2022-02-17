@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 33
+#define FUSE_KERNEL_MINOR_VERSION 35
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -75,6 +75,7 @@ struct fuse_file_lock {
 #define FOPEN_NONSEEKABLE (1 << 2)
 #define FOPEN_CACHE_DIR (1 << 3)
 #define FOPEN_STREAM (1 << 4)
+#define FOPEN_NOFLUSH (1 << 5)
 #define FUSE_ASYNC_READ (1 << 0)
 #define FUSE_POSIX_LOCKS (1 << 1)
 #define FUSE_FILE_OPS (1 << 2)
@@ -104,6 +105,7 @@ struct fuse_file_lock {
 #define FUSE_MAP_ALIGNMENT (1 << 26)
 #define FUSE_SUBMOUNTS (1 << 27)
 #define FUSE_HANDLE_KILLPRIV_V2 (1 << 28)
+#define FUSE_SETXATTR_EXT (1 << 29)
 #define FUSE_PASSTHROUGH (1 << 31)
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
@@ -126,6 +128,7 @@ struct fuse_file_lock {
 #define FUSE_FSYNC_FDATASYNC (1 << 0)
 #define FUSE_ATTR_SUBMOUNT (1 << 0)
 #define FUSE_OPEN_KILL_SUIDGID (1 << 0)
+#define FUSE_SETXATTR_ACL_KILL_SGID (1 << 0)
 enum fuse_opcode {
   FUSE_LOOKUP = 1,
   FUSE_FORGET = 2,
@@ -174,6 +177,7 @@ enum fuse_opcode {
   FUSE_COPY_FILE_RANGE = 47,
   FUSE_SETUPMAPPING = 48,
   FUSE_REMOVEMAPPING = 49,
+  FUSE_SYNCFS = 50,
   FUSE_CANONICAL_PATH = 2016,
   CUSE_INIT = 4096,
   CUSE_INIT_BSWAP_RESERVED = 1048576,
@@ -321,9 +325,12 @@ struct fuse_fsync_in {
   uint32_t fsync_flags;
   uint32_t padding;
 };
+#define FUSE_COMPAT_SETXATTR_IN_SIZE 8
 struct fuse_setxattr_in {
   uint32_t size;
   uint32_t flags;
+  uint32_t setxattr_flags;
+  uint32_t padding;
 };
 struct fuse_getxattr_in {
   uint32_t size;
@@ -445,11 +452,6 @@ struct fuse_in_header {
   uint32_t pid;
   uint32_t padding;
 };
-struct fuse_passthrough_out {
-  uint32_t fd;
-  uint32_t len;
-  void * vec;
-};
 struct fuse_out_header {
   uint32_t len;
   int32_t error;
@@ -510,7 +512,7 @@ struct fuse_notify_retrieve_in {
 };
 #define FUSE_DEV_IOC_MAGIC 229
 #define FUSE_DEV_IOC_CLONE _IOR(FUSE_DEV_IOC_MAGIC, 0, uint32_t)
-#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 127, struct fuse_passthrough_out)
+#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 126, __u32)
 struct fuse_lseek_in {
   uint64_t fh;
   uint64_t offset;
@@ -546,4 +548,7 @@ struct fuse_removemapping_one {
   uint64_t len;
 };
 #define FUSE_REMOVEMAPPING_MAX_ENTRY (PAGE_SIZE / sizeof(struct fuse_removemapping_one))
+struct fuse_syncfs_in {
+  uint64_t padding;
+};
 #endif

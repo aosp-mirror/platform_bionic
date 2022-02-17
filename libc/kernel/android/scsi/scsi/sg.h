@@ -66,6 +66,20 @@ typedef struct sg_io_hdr {
 #define SG_INFO_INDIRECT_IO 0x0
 #define SG_INFO_DIRECT_IO 0x2
 #define SG_INFO_MIXED_IO 0x4
+#define DRIVER_SENSE 0x08
+#define driver_byte(result) (((result) >> 24) & 0xff)
+#define GOOD 0x00
+#define CHECK_CONDITION 0x01
+#define CONDITION_GOOD 0x02
+#define BUSY 0x04
+#define INTERMEDIATE_GOOD 0x08
+#define INTERMEDIATE_C_GOOD 0x0a
+#define RESERVATION_CONFLICT 0x0c
+#define COMMAND_TERMINATED 0x11
+#define QUEUE_FULL 0x14
+#define ACA_ACTIVE 0x18
+#define TASK_ABORTED 0x20
+#define status_byte(result) (((result) >> 1) & 0x7f)
 typedef struct sg_scsi_id {
   int host_no;
   int channel;

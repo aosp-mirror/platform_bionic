@@ -89,8 +89,6 @@ kernel_token_replacements = {
     "udphdr": "__kernel_udphdr",
     # This causes problems when trying to export the headers for the ndk.
     "__attribute_const__": "__attribute__((__const__))",
-    # In this case the kernel tries to keep out of our way, but we're happy to use its definition.
-    "__kernel_sockaddr_storage": "sockaddr_storage",
     # The kernel started using struct __kernel_old_timeval in some places,
     # which is the exact same as struct timeval. Replace that name with
     # timeval so that kernel structures all use the same named structure.
