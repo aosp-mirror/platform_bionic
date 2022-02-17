@@ -48,6 +48,7 @@ struct can_frame {
 };
 #define CANFD_BRS 0x01
 #define CANFD_ESI 0x02
+#define CANFD_FDF 0x04
 struct canfd_frame {
   canid_t can_id;
   __u8 len;

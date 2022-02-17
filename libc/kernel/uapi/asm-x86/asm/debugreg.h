@@ -28,6 +28,7 @@
 #define DR_TRAP2 (0x4)
 #define DR_TRAP3 (0x8)
 #define DR_TRAP_BITS (DR_TRAP0 | DR_TRAP1 | DR_TRAP2 | DR_TRAP3)
+#define DR_BUS_LOCK (0x800)
 #define DR_STEP (0x4000)
 #define DR_SWITCH (0x8000)
 #define DR_CONTROL_SHIFT 16
