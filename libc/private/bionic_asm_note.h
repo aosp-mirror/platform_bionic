@@ -28,6 +28,6 @@
 
 #pragma once
 
-#define NT_TYPE_IDENT 1
-#define NT_TYPE_KUSER 3
-#define NT_TYPE_MEMTAG 4
+#define NT_ANDROID_TYPE_IDENT 1
+#define NT_ANDROID_TYPE_KUSER 3
+#define NT_ANDROID_TYPE_MEMTAG 4
