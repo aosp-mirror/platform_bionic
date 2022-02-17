@@ -207,6 +207,7 @@ enum ethtool_link_ext_state {
   ETHTOOL_LINK_EXT_STATE_CALIBRATION_FAILURE,
   ETHTOOL_LINK_EXT_STATE_POWER_BUDGET_EXCEEDED,
   ETHTOOL_LINK_EXT_STATE_OVERHEAT,
+  ETHTOOL_LINK_EXT_STATE_MODULE,
 };
 enum ethtool_link_ext_substate_autoneg {
   ETHTOOL_LINK_EXT_SUBSTATE_AN_NO_PARTNER_DETECTED = 1,
@@ -232,10 +233,15 @@ enum ethtool_link_ext_substate_link_logical_mismatch {
 enum ethtool_link_ext_substate_bad_signal_integrity {
   ETHTOOL_LINK_EXT_SUBSTATE_BSI_LARGE_NUMBER_OF_PHYSICAL_ERRORS = 1,
   ETHTOOL_LINK_EXT_SUBSTATE_BSI_UNSUPPORTED_RATE,
+  ETHTOOL_LINK_EXT_SUBSTATE_BSI_SERDES_REFERENCE_CLOCK_LOST,
+  ETHTOOL_LINK_EXT_SUBSTATE_BSI_SERDES_ALOS,
 };
 enum ethtool_link_ext_substate_cable_issue {
   ETHTOOL_LINK_EXT_SUBSTATE_CI_UNSUPPORTED_CABLE = 1,
   ETHTOOL_LINK_EXT_SUBSTATE_CI_CABLE_TEST_FAILURE,
+};
+enum ethtool_link_ext_substate_module {
+  ETHTOOL_LINK_EXT_SUBSTATE_MODULE_CMIS_NOT_READY = 1,
 };
 #define ETH_GSTRING_LEN 32
 enum ethtool_stringset {
@@ -255,7 +261,20 @@ enum ethtool_stringset {
   ETH_SS_TS_TX_TYPES,
   ETH_SS_TS_RX_FILTERS,
   ETH_SS_UDP_TUNNEL_TYPES,
+  ETH_SS_STATS_STD,
+  ETH_SS_STATS_ETH_PHY,
+  ETH_SS_STATS_ETH_MAC,
+  ETH_SS_STATS_ETH_CTRL,
+  ETH_SS_STATS_RMON,
   ETH_SS_COUNT
+};
+enum ethtool_module_power_mode_policy {
+  ETHTOOL_MODULE_POWER_MODE_POLICY_HIGH = 1,
+  ETHTOOL_MODULE_POWER_MODE_POLICY_AUTO,
+};
+enum ethtool_module_power_mode {
+  ETHTOOL_MODULE_POWER_MODE_LOW = 1,
+  ETHTOOL_MODULE_POWER_MODE_HIGH,
 };
 struct ethtool_gstrings {
   __u32 cmd;
