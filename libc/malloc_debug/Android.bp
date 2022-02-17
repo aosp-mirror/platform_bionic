@@ -37,12 +37,6 @@ cc_library_static {
     },
     native_coverage: false,
 
-    target: {
-        android: {
-            static_libs: ["libc++demangle"],
-        },
-    },
-
     // -Wno-error=format-zero-length needed for gcc to compile.
     cflags: [
         "-Wall",
@@ -125,6 +119,7 @@ cc_library {
 // ==============================================================
 cc_test {
     name: "malloc_debug_unit_tests",
+    test_suites: ["device-tests"],
 
     srcs: [
         "tests/backtrace_fake.cpp",

@@ -22,6 +22,21 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
+// Musl doesn't define __NR_gettimeofday, __NR_clock_gettime32, __NR_gettimeofday_time32 or
+// __NR_clock_getres on 32-bit architectures.
+#if !defined(__NR_gettimeofday)
+#define __NR_gettimeofday __NR_gettimeofday_time32
+#endif
+#if !defined(__NR_clock_gettime)
+#define __NR_clock_gettime __NR_clock_gettime32
+#endif
+#if !defined(__NR_gettimeofday)
+#define __NR_gettimeofday __NR_gettimeofday_time32
+#endif
+#if !defined(__NR_clock_getres)
+#define __NR_clock_getres __NR_clock_getres_time32
+#endif
+
 static void BM_time_clock_gettime(benchmark::State& state) {
   // CLOCK_MONOTONIC is required supported in vdso
   timespec t;
@@ -187,3 +202,13 @@ void BM_time_localtime_r(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_time_localtime_r);
+
+void BM_time_strftime(benchmark::State& state) {
+  char buf[128];
+  time_t t = 0;
+  struct tm* tm = gmtime(&t);
+  while (state.KeepRunning()) {
+    strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", tm);
+  }
+}
+BIONIC_BENCHMARK(BM_time_strftime);
