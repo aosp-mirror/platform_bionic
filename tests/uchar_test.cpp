@@ -36,6 +36,7 @@ TEST(uchar, start_state) {
   // Any non-initial state is invalid when calling c32rtomb.
   memset(&ps, 0, sizeof(ps));
   EXPECT_EQ(static_cast<size_t>(-2), mbrtoc32(nullptr, "\xc2", 1, &ps));
+  errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(out, 0x00a2, &ps));
   EXPECT_EQ(EILSEQ, errno);
 
@@ -87,11 +88,7 @@ TEST(uchar, c16rtomb) {
   EXPECT_EQ('\xe2', bytes[0]);
   EXPECT_EQ('\x82', bytes[1]);
   EXPECT_EQ('\xac', bytes[2]);
-}
-
-TEST(uchar, c16rtomb_surrogate) {
-  char bytes[MB_LEN_MAX];
-
+  // 4-byte UTF-8 from a surrogate pair...
   memset(bytes, 0, sizeof(bytes));
   EXPECT_EQ(0U, c16rtomb(bytes, 0xdbea, nullptr));
   EXPECT_EQ(4U, c16rtomb(bytes, 0xdfcd, nullptr));
@@ -143,16 +140,16 @@ TEST(uchar, mbrtoc16) {
   // 3-byte UTF-8.
   ASSERT_EQ(3U, mbrtoc16(&out, "\xe2\x82\xac" "def", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0x20ac), out);
-}
-
-TEST(uchar, mbrtoc16_surrogate) {
-  char16_t out;
-
+  // 4-byte UTF-8 will be returned as a surrogate pair...
   ASSERT_EQ(static_cast<size_t>(-3),
             mbrtoc16(&out, "\xf4\x8a\xaf\x8d", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdbea), out);
   ASSERT_EQ(4U, mbrtoc16(&out, "\xf4\x8a\xaf\x8d" "ef", 6, nullptr));
   ASSERT_EQ(static_cast<char16_t>(0xdfcd), out);
+  // Illegal 5-byte UTF-8.
+  errno = 0;
+  ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\xf8\xa1\xa2\xa3\xa4", 5, nullptr));
+  ASSERT_EQ(EILSEQ, errno);
 }
 
 TEST(uchar, mbrtoc16_reserved_range) {
@@ -194,6 +191,7 @@ void test_mbrtoc16_incomplete(mbstate_t* ps) {
 
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc16(&out, "\xc2", 1, ps));
+  errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc16(&out, "\x20" "cdef", 5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }
@@ -247,6 +245,7 @@ TEST(uchar, c32rtomb) {
   EXPECT_EQ('\xad', bytes[2]);
   EXPECT_EQ('\xa2', bytes[3]);
   // Invalid code point.
+  errno = 0;
   EXPECT_EQ(static_cast<size_t>(-1), c32rtomb(bytes, 0xffffffff, nullptr));
   EXPECT_EQ(EILSEQ, errno);
 }
@@ -307,10 +306,12 @@ TEST(uchar, mbrtoc32) {
   ASSERT_EQ(static_cast<char32_t>(0x24b62), out[0]);
 #if defined(__BIONIC__) // glibc allows this.
   // Illegal 5-byte UTF-8.
+  errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf8\xa1\xa2\xa3\xa4" "f", 6, nullptr));
   ASSERT_EQ(EILSEQ, errno);
 #endif
   // Illegal over-long sequence.
+  errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(out, "\xf0\x82\x82\xac" "ef", 6, nullptr));
   ASSERT_EQ(EILSEQ, errno);
 }
@@ -340,6 +341,7 @@ void test_mbrtoc32_incomplete(mbstate_t* ps) {
 
   // Invalid 2-byte
   ASSERT_EQ(static_cast<size_t>(-2), mbrtoc32(&out, "\xc2", 1, ps));
+  errno = 0;
   ASSERT_EQ(static_cast<size_t>(-1), mbrtoc32(&out, "\x20" "cdef", 5, ps));
   ASSERT_EQ(EILSEQ, errno);
 }

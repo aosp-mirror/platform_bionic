@@ -51,7 +51,7 @@
 // those APIs will still cause a link error.
 #if defined(__ANDROID_UNAVAILABLE_SYMBOLS_ARE_WEAK__)
 #define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,__what)))
-#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
+#define __INTRODUCED_IN_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN(api_level)
 #define __INTRODUCED_IN_X86_NO_GUARD_FOR_NDK(api_level) __INTRODUCED_IN_X86(api_level)
 #else
 #define __BIONIC_AVAILABILITY(__what) __attribute__((__availability__(android,strict,__what)))
