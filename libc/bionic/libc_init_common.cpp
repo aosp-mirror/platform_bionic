@@ -149,50 +149,25 @@ __noreturn static void __early_abort(int line) {
   _exit(EXIT_FAILURE);
 }
 
-// Force any of the closed stdin, stdout and stderr to be associated with /dev/null.
+// Force any of the stdin/stdout/stderr file descriptors that aren't
+// open to be associated with /dev/null.
 static void __nullify_closed_stdio() {
-  int dev_null = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
-  if (dev_null == -1) {
-    // init won't have /dev/null available, but SELinux provides an equivalent.
-    dev_null = TEMP_FAILURE_RETRY(open("/sys/fs/selinux/null", O_RDWR));
-  }
-  if (dev_null == -1) {
-    __early_abort(__LINE__);
-  }
-
-  // If any of the stdio file descriptors is valid and not associated
-  // with /dev/null, dup /dev/null to it.
   for (int i = 0; i < 3; i++) {
-    // If it is /dev/null already, we are done.
-    if (i == dev_null) {
-      continue;
-    }
+    if (TEMP_FAILURE_RETRY(fcntl(i, F_GETFL)) == -1) {
+      // The only error we allow is that the file descriptor does not exist.
+      if (errno != EBADF) __early_abort(__LINE__);
 
-    // Is this fd already open?
-    int status = TEMP_FAILURE_RETRY(fcntl(i, F_GETFL));
-    if (status != -1) {
-      continue;
-    }
-
-    // The only error we allow is that the file descriptor does not
-    // exist, in which case we dup /dev/null to it.
-    if (errno == EBADF) {
-      // Try dupping /dev/null to this stdio file descriptor and
-      // repeat if there is a signal. Note that any errors in closing
-      // the stdio descriptor are lost.
-      status = TEMP_FAILURE_RETRY(dup2(dev_null, i));
-      if (status == -1) {
+      // This file descriptor wasn't open, so open /dev/null.
+      // init won't have /dev/null available, but SELinux provides an equivalent.
+      // This takes advantage of the fact that open() will take the lowest free
+      // file descriptor, and we're iterating in order from 0, but we'll
+      // double-check we got the right fd anyway...
+      int fd;
+      if (((fd = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR))) == -1 &&
+           (fd = TEMP_FAILURE_RETRY(open("/sys/fs/selinux/null", O_RDWR))) == -1) ||
+          fd != i) {
         __early_abort(__LINE__);
       }
-    } else {
-      __early_abort(__LINE__);
-    }
-  }
-
-  // If /dev/null is not one of the stdio file descriptors, close it.
-  if (dev_null > 2) {
-    if (close(dev_null) == -1) {
-      __early_abort(__LINE__);
     }
   }
 }

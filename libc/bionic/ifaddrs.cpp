@@ -306,12 +306,9 @@ int getifaddrs(ifaddrs** out) {
 
   // Open the netlink socket and ask for all the links and addresses.
   NetlinkConnection nc;
-  // SELinux policy only allows RTM_GETLINK messages to be sent by:
-  // - System apps
-  // - Apps with a target SDK version lower than R
+  // SELinux policy only allows RTM_GETLINK messages to be sent by system apps.
   bool getlink_success = false;
-  if (getuid() < FIRST_APPLICATION_UID ||
-      android_get_application_target_sdk_version() < __ANDROID_API_R__) {
+  if (getuid() < FIRST_APPLICATION_UID) {
     getlink_success = nc.SendRequest(RTM_GETLINK) && nc.ReadResponses(__getifaddrs_callback, out);
   }
   bool getaddr_success =
