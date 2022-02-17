@@ -55,22 +55,17 @@ cc_object {
     ],
     arch: {
         arm64: {
-            srcs: ["arch/arm64/begin.S"],
+            srcs: ["arch/arm64/linker_wrapper_begin.S"],
         },
         x86_64: {
-            srcs: ["arch/x86_64/begin.S"],
+            srcs: ["arch/x86_64/linker_wrapper_begin.S"],
         },
     },
-
-    prefix_symbols: "__dlwrap_",
 
     header_libs: ["libc_headers"],
 
     // We need to access Bionic private headers in the linker.
     include_dirs: ["bionic/libc"],
-
-    // b/182338959
-    bazel_module: { bp2build_available: false },
 }
 
 // ========================================================
@@ -374,34 +369,9 @@ cc_binary {
                 "liblinker_debuggerd_stub",
             ],
         },
-        android_arm64: {
-            pgo: {
-                profile_file: "bionic/linker_arm_arm64.profdata",
-            },
-        },
-        android_arm: {
-            pgo: {
-                profile_file: "bionic/linker_arm_arm64.profdata",
-            },
-        },
-        android_x86_64: {
-            pgo: {
-                profile_file: "bionic/linker_x86_x86_64.profdata",
-            },
-        },
-        android_x86: {
-            pgo: {
-                profile_file: "bionic/linker_x86_x86_64.profdata",
-            },
-        },
     },
 
-    lto: {
-        never: true,
-    },
-    pgo: {
-        sampling: true,
-    },
+    afdo: true,
 }
 
 // ========================================================
@@ -411,7 +381,6 @@ cc_binary {
 sh_binary {
     name: "ldd",
     src: "ldd.sh",
-    bazel_module: { bp2build_available: true },
 }
 
 // Used to generate binaries that can be backed by transparent hugepages.
@@ -495,6 +464,7 @@ cc_library {
 
 cc_test {
     name: "linker-unit-tests",
+    test_suites: ["device-tests"],
 
     cflags: [
         "-g",

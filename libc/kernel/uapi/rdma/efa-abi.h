@@ -47,11 +47,18 @@ struct efa_ibv_alloc_pd_resp {
   __u16 pdn;
   __u8 reserved_30[2];
 };
+enum {
+  EFA_CREATE_CQ_WITH_COMPLETION_CHANNEL = 1 << 0,
+};
 struct efa_ibv_create_cq {
   __u32 comp_mask;
   __u32 cq_entry_size;
   __u16 num_sub_cqs;
-  __u8 reserved_50[6];
+  __u8 flags;
+  __u8 reserved_58[5];
+};
+enum {
+  EFA_CREATE_CQ_RESP_DB_OFF = 1 << 0,
 };
 struct efa_ibv_create_cq_resp {
   __u32 comp_mask;
@@ -59,7 +66,9 @@ struct efa_ibv_create_cq_resp {
   __aligned_u64 q_mmap_key;
   __aligned_u64 q_mmap_size;
   __u16 cq_idx;
-  __u8 reserved_d0[6];
+  __u8 reserved_d0[2];
+  __u32 db_off;
+  __aligned_u64 db_mmap_key;
 };
 enum {
   EFA_QP_DRIVER_TYPE_SRD = 0,
@@ -92,6 +101,7 @@ struct efa_ibv_create_ah_resp {
 enum {
   EFA_QUERY_DEVICE_CAPS_RDMA_READ = 1 << 0,
   EFA_QUERY_DEVICE_CAPS_RNR_RETRY = 1 << 1,
+  EFA_QUERY_DEVICE_CAPS_CQ_NOTIFICATIONS = 1 << 2,
 };
 struct efa_ibv_ex_query_device_resp {
   __u32 comp_mask;
