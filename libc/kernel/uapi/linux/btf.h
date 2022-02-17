@@ -42,27 +42,31 @@ struct btf_type {
     __u32 type;
   };
 };
-#define BTF_INFO_KIND(info) (((info) >> 24) & 0x0f)
+#define BTF_INFO_KIND(info) (((info) >> 24) & 0x1f)
 #define BTF_INFO_VLEN(info) ((info) & 0xffff)
 #define BTF_INFO_KFLAG(info) ((info) >> 31)
-#define BTF_KIND_UNKN 0
-#define BTF_KIND_INT 1
-#define BTF_KIND_PTR 2
-#define BTF_KIND_ARRAY 3
-#define BTF_KIND_STRUCT 4
-#define BTF_KIND_UNION 5
-#define BTF_KIND_ENUM 6
-#define BTF_KIND_FWD 7
-#define BTF_KIND_TYPEDEF 8
-#define BTF_KIND_VOLATILE 9
-#define BTF_KIND_CONST 10
-#define BTF_KIND_RESTRICT 11
-#define BTF_KIND_FUNC 12
-#define BTF_KIND_FUNC_PROTO 13
-#define BTF_KIND_VAR 14
-#define BTF_KIND_DATASEC 15
-#define BTF_KIND_MAX BTF_KIND_DATASEC
-#define NR_BTF_KINDS (BTF_KIND_MAX + 1)
+enum {
+  BTF_KIND_UNKN = 0,
+  BTF_KIND_INT = 1,
+  BTF_KIND_PTR = 2,
+  BTF_KIND_ARRAY = 3,
+  BTF_KIND_STRUCT = 4,
+  BTF_KIND_UNION = 5,
+  BTF_KIND_ENUM = 6,
+  BTF_KIND_FWD = 7,
+  BTF_KIND_TYPEDEF = 8,
+  BTF_KIND_VOLATILE = 9,
+  BTF_KIND_CONST = 10,
+  BTF_KIND_RESTRICT = 11,
+  BTF_KIND_FUNC = 12,
+  BTF_KIND_FUNC_PROTO = 13,
+  BTF_KIND_VAR = 14,
+  BTF_KIND_DATASEC = 15,
+  BTF_KIND_FLOAT = 16,
+  BTF_KIND_DECL_TAG = 17,
+  NR_BTF_KINDS,
+  BTF_KIND_MAX = NR_BTF_KINDS - 1,
+};
 #define BTF_INT_ENCODING(VAL) (((VAL) & 0x0f000000) >> 24)
 #define BTF_INT_OFFSET(VAL) (((VAL) & 0x00ff0000) >> 16)
 #define BTF_INT_BITS(VAL) ((VAL) & 0x000000ff)
@@ -106,5 +110,8 @@ struct btf_var_secinfo {
   __u32 type;
   __u32 offset;
   __u32 size;
+};
+struct btf_decl_tag {
+  __s32 component_idx;
 };
 #endif

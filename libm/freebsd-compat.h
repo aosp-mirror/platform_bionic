@@ -39,3 +39,7 @@ int digittoint(char ch);
 
 // Similarly rename _scan_nan.
 #define _scan_nan __libm_scan_nan
+
+// FreeBSD exports these in <math.h> but we don't.
+double cospi(double);
+double sinpi(double);
