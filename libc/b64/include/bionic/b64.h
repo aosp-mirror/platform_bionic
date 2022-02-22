@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,16 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm_note.h>
+#pragma once
 
-  .section .note.android.kuser_helper_on,"a",%note
-  .balign 4
-  .type kuser_helper_on, %object
-kuser_helper_on:
-  .long 2f-1f                 // int32_t namesz
-  .long 3f-2f                 // int32_t descsz
-  .long NT_ANDROID_TYPE_KUSER // int32_t type
-1:.ascii "Android\0"          // char name[]
-2:.long 1                     // int32_t on
-3:
-  .size kuser_helper_on, .-kuser_helper_on
+#include <sys/cdefs.h>
+#include <sys/types.h>
+
+__BEGIN_DECLS
+
+int b64_ntop(unsigned char const* __src, size_t __src_size, char* __dst, size_t __dst_size);
+int b64_pton(char const* __src, u_char* __dst, size_t __dst_size);
+
+__END_DECLS
