@@ -50,7 +50,7 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
-New libc functions in T (API level 32):
+New libc functions in T (API level 33):
   * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).
   * New system call wrappers: `preadv2`, `preadv64v2`, `pwritev2`,
     `pwritev64v2`.
