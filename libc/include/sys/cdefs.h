@@ -327,12 +327,7 @@
 
 #define __overloadable __attribute__((overloadable))
 
-// TODO(pirama) Remove this version check after switching to clang-r445002
-#if __clang_major__ == 14 && __clang_patchlevel__ >= 2
 #define __diagnose_as_builtin(...) __attribute__((diagnose_as_builtin(__VA_ARGS__)))
-#else
-#define __diagnose_as_builtin(...)
-#endif
 
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
