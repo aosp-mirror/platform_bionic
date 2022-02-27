@@ -493,6 +493,12 @@ cc_test_library {
     },
 
     generated_headers: ["generated_android_ids"],
+
+    // Bug: http://b/218788252 IR verifier too strict for ifunc resolver that
+    // accept parameters.
+    lto: {
+        never: true,
+    },
 }
 
 cc_test_library {
