@@ -307,7 +307,7 @@ cc_library {
             no_libcrt: true,
             shared: {
                 // For backwards-compatibility, some arm32 builtins are exported from libm.so.
-                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
         },
 
