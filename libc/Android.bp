@@ -2615,10 +2615,6 @@ cc_library_host_static {
     stl: "none",
 }
 
-subdirs = [
-    "bionic/scudo",
-]
-
 // Export kernel uapi headers to be used in the musl sysroot.
 // Also include the execinfo headers for the libexecinfo and the
 // b64 headers for libb64 embedded in musl libc.
