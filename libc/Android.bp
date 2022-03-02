@@ -2639,8 +2639,6 @@ cc_genrule {
         "execinfo/include/**/*.h",
         "b64/include/**/*.h",
 
-        // This file is used to identify the location of the bionic/libc directory
-        // to simplify accessing the rest of the files.
         "NOTICE",
 
         ":libc_musl_sysroot_bionic_arch_headers",
@@ -2653,6 +2651,8 @@ cc_genrule {
     ],
     cmd: "BIONIC_LIBC_DIR=$$(dirname $(location NOTICE)) && " +
         "$(location soong_zip) -o $(genDir)/sysroot.zip -symlinks=false" +
+        // NOTICE
+        " -j -f $(location NOTICE) " +
         // headers
         " -P include " +
         "  -C $${BIONIC_LIBC_DIR}/kernel/uapi " +
@@ -2666,7 +2666,11 @@ cc_genrule {
         "  -C $${BIONIC_LIBC_DIR}/b64/include " +
         "  -D $${BIONIC_LIBC_DIR}/b64/include " +
         " && " +
-        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot.zip",
+        "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
+        " include/**/*:include/ " +
+        " NOTICE:NOTICE.bionic " +
+        " && " +
+        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot-renamed.zip",
 }
 
 // The architecture-specific bits have to be handled separately because the label varies based
