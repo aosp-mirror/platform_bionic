@@ -44,6 +44,8 @@
 #include <platform/bionic/macros.h>
 #include <private/bionic_malloc_dispatch.h>
 
+#include <unwindstack/Unwinder.h>
+
 #include "Config.h"
 #include "malloc_debug.h"
 
@@ -1530,16 +1532,18 @@ TEST_F(MallocDebugTest, backtrace_full_dump_on_exit) {
   if ((pid = fork()) == 0) {
     std::shared_ptr<unwindstack::MapInfo> empty_map;
     Init("backtrace=4 backtrace_full backtrace_dump_on_exit");
-    BacktraceUnwindFake(std::vector<unwindstack::LocalFrameData>{
-        {empty_map, 0x1100, 0x100, "fake1", 10}, {empty_map, 0x1200, 0x200, "fake2", 20}});
+    BacktraceUnwindFake(
+        std::vector<unwindstack::FrameData>{{0, 0x100, 0x1100, 0, "fake1", 10, empty_map},
+                                            {1, 0x200, 0x1200, 0, "fake2", 20, empty_map}});
     std::shared_ptr<unwindstack::MapInfo> map_info =
         unwindstack::MapInfo::Create(0x10000, 0x20000, 0, PROT_READ | PROT_EXEC, "/data/fake.so");
-    BacktraceUnwindFake(std::vector<unwindstack::LocalFrameData>{
-        {map_info, 0x1a000, 0xa000, "level1", 0}, {map_info, 0x1b000, 0xb000, "level2", 10}});
     BacktraceUnwindFake(
-        std::vector<unwindstack::LocalFrameData>{{empty_map, 0x1a000, 0xa000, "func1", 0},
-                                                 {empty_map, 0x1b000, 0xb000, "func2", 10},
-                                                 {empty_map, 0x1c000, 0xc000, "", 30}});
+        std::vector<unwindstack::FrameData>{{0, 0xa000, 0x1a000, 0, "level1", 0, map_info},
+                                            {1, 0xb000, 0x1b000, 0, "level2", 10, map_info}});
+    BacktraceUnwindFake(
+        std::vector<unwindstack::FrameData>{{0, 0xa000, 0x1a000, 0, "func1", 0, empty_map},
+                                            {1, 0xb000, 0x1b000, 0, "func2", 10, empty_map},
+                                            {2, 0xc000, 0x1c000, 0, "", 30, empty_map}});
 
     std::vector<void*> pointers;
     pointers.push_back(debug_malloc(300));
