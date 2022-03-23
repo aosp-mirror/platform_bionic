@@ -69,17 +69,7 @@ struct __posix_spawn_file_action {
       // Failure to close is ignored.
       close(fd);
     } else {
-      // It's a dup2.
-      if (fd == new_fd) {
-        // dup2(2) is a no-op if fd == new_fd, but POSIX suggests that we should
-        // manually remove the O_CLOEXEC flag in that case (because otherwise
-        // what use is the dup?).
-        // See https://www.austingroupbugs.net/view.php?id=411 for details.
-        int flags = fcntl(fd, F_GETFD, 0);
-        if (flags == -1 || fcntl(fd, F_SETFD, flags & ~FD_CLOEXEC) == -1) _exit(127);
-      } else {
-        if (dup2(fd, new_fd) == -1) _exit(127);
-      }
+      if (dup2(fd, new_fd) == -1) _exit(127);
     }
   }
 };

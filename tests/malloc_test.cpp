@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/auxv.h>
-#include <sys/cdefs.h>
 #include <sys/prctl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -56,13 +55,9 @@
 
 #define HAVE_REALLOCARRAY 1
 
-#elif defined(__GLIBC__)
+#else
 
 #define HAVE_REALLOCARRAY __GLIBC_PREREQ(2, 26)
-
-#elif defined(ANDROID_HOST_MUSL)
-
-#define HAVE_REALLOCARRAY 1
 
 #endif
 
@@ -660,14 +655,10 @@ TEST(malloc, verify_alignment) {
 }
 
 TEST(malloc, mallopt_smoke) {
-#if !defined(ANDROID_HOST_MUSL)
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
-#else
-  GTEST_SKIP() << "musl doesn't have mallopt";
-#endif
 }
 
 TEST(malloc, mallopt_decay) {
@@ -700,10 +691,7 @@ static void GetAllocatorVersion(bool* allocator_scudo) {
   FILE* fp = fdopen(tf.fd, "w+");
   tf.release();
   ASSERT_TRUE(fp != nullptr);
-  if (malloc_info(0, fp) != 0) {
-    *allocator_scudo = false;
-    return;
-  }
+  ASSERT_EQ(0, malloc_info(0, fp));
   ASSERT_EQ(0, fclose(fp));
 
   std::string contents;
@@ -765,7 +753,7 @@ TEST(malloc, reallocarray) {
 }
 
 TEST(malloc, mallinfo) {
-#if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
+#if defined(__BIONIC__)
   SKIP_WITH_HWASAN << "hwasan does not implement mallinfo";
   static size_t sizes[] = {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
@@ -803,77 +791,6 @@ TEST(malloc, mallinfo) {
     ASSERT_TRUE(pass)
         << "For size " << size << " allocated bytes did not increase after "
         << kMaxAllocs << " allocations.";
-  }
-#else
-  GTEST_SKIP() << "glibc is broken";
-#endif
-}
-
-TEST(malloc, mallinfo2) {
-#if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
-  SKIP_WITH_HWASAN << "hwasan does not implement mallinfo2";
-  static size_t sizes[] = {8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000};
-
-  constexpr static size_t kMaxAllocs = 50;
-
-  for (size_t size : sizes) {
-    // If some of these allocations are stuck in a thread cache, then keep
-    // looping until we make an allocation that changes the total size of the
-    // memory allocated.
-    // jemalloc implementations counts the thread cache allocations against
-    // total memory allocated.
-    void* ptrs[kMaxAllocs] = {};
-    bool pass = false;
-    for (size_t i = 0; i < kMaxAllocs; i++) {
-      struct mallinfo info = mallinfo();
-      struct mallinfo2 info2 = mallinfo2();
-      // Verify that mallinfo and mallinfo2 are exactly the same.
-      ASSERT_EQ(static_cast<size_t>(info.arena), info2.arena);
-      ASSERT_EQ(static_cast<size_t>(info.ordblks), info2.ordblks);
-      ASSERT_EQ(static_cast<size_t>(info.smblks), info2.smblks);
-      ASSERT_EQ(static_cast<size_t>(info.hblks), info2.hblks);
-      ASSERT_EQ(static_cast<size_t>(info.hblkhd), info2.hblkhd);
-      ASSERT_EQ(static_cast<size_t>(info.usmblks), info2.usmblks);
-      ASSERT_EQ(static_cast<size_t>(info.fsmblks), info2.fsmblks);
-      ASSERT_EQ(static_cast<size_t>(info.uordblks), info2.uordblks);
-      ASSERT_EQ(static_cast<size_t>(info.fordblks), info2.fordblks);
-      ASSERT_EQ(static_cast<size_t>(info.keepcost), info2.keepcost);
-
-      size_t allocated = info2.uordblks;
-      ptrs[i] = malloc(size);
-      ASSERT_TRUE(ptrs[i] != nullptr);
-
-      info = mallinfo();
-      info2 = mallinfo2();
-      // Verify that mallinfo and mallinfo2 are exactly the same.
-      ASSERT_EQ(static_cast<size_t>(info.arena), info2.arena);
-      ASSERT_EQ(static_cast<size_t>(info.ordblks), info2.ordblks);
-      ASSERT_EQ(static_cast<size_t>(info.smblks), info2.smblks);
-      ASSERT_EQ(static_cast<size_t>(info.hblks), info2.hblks);
-      ASSERT_EQ(static_cast<size_t>(info.hblkhd), info2.hblkhd);
-      ASSERT_EQ(static_cast<size_t>(info.usmblks), info2.usmblks);
-      ASSERT_EQ(static_cast<size_t>(info.fsmblks), info2.fsmblks);
-      ASSERT_EQ(static_cast<size_t>(info.uordblks), info2.uordblks);
-      ASSERT_EQ(static_cast<size_t>(info.fordblks), info2.fordblks);
-      ASSERT_EQ(static_cast<size_t>(info.keepcost), info2.keepcost);
-
-      size_t new_allocated = info2.uordblks;
-      if (allocated != new_allocated) {
-        size_t usable_size = malloc_usable_size(ptrs[i]);
-        // Only check if the total got bigger by at least allocation size.
-        // Sometimes the mallinfo2 numbers can go backwards due to compaction
-        // and/or freeing of cached data.
-        if (new_allocated >= allocated + usable_size) {
-          pass = true;
-          break;
-        }
-      }
-    }
-    for (void* ptr : ptrs) {
-      free(ptr);
-    }
-    ASSERT_TRUE(pass) << "For size " << size << " allocated bytes did not increase after "
-                      << kMaxAllocs << " allocations.";
   }
 #else
   GTEST_SKIP() << "glibc is broken";
@@ -946,7 +863,7 @@ static void __attribute__((optnone)) AndroidVerifyAlignment(size_t alloc_size, s
 }
 #endif
 
-void AlignCheck() {
+TEST(malloc, align_check) {
   // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/summary.htm#dr_445
   // for a discussion of type alignment.
   ASSERT_NO_FATAL_FAILURE(TestAllocateType<float>());
@@ -970,55 +887,26 @@ void AlignCheck() {
 
 #if defined(__ANDROID__)
   // On Android, there is a lot of code that expects certain alignments:
-  //  1. Allocations of a size that rounds up to a multiple of 16 bytes
-  //     must have at least 16 byte alignment.
-  //  2. Allocations of a size that rounds up to a multiple of 8 bytes and
-  //     not 16 bytes, are only required to have at least 8 byte alignment.
-  // In addition, on Android clang has been configured for 64 bit such that:
-  //  3. Allocations <= 8 bytes must be aligned to at least 8 bytes.
-  //  4. Allocations > 8 bytes must be aligned to at least 16 bytes.
-  // For 32 bit environments, only the first two requirements must be met.
+  // - Allocations of a size that rounds up to a multiple of 16 bytes
+  //   must have at least 16 byte alignment.
+  // - Allocations of a size that rounds up to a multiple of 8 bytes and
+  //   not 16 bytes, are only required to have at least 8 byte alignment.
+  // This is regardless of whether it is in a 32 bit or 64 bit environment.
 
   // See http://www.open-std.org/jtc1/sc22/wg14/www/docs/n2293.htm for
   // a discussion of this alignment mess. The code below is enforcing
   // strong-alignment, since who knows what code depends on this behavior now.
-  // As mentioned before, for 64 bit this will enforce the higher
-  // requirement since clang expects this behavior on Android now.
   for (size_t i = 1; i <= 128; i++) {
-#if defined(__LP64__)
-    if (i <= 8) {
-      AndroidVerifyAlignment(i, 8);
-    } else {
-      AndroidVerifyAlignment(i, 16);
-    }
-#else
     size_t rounded = (i + 7) & ~7;
     if ((rounded % 16) == 0) {
       AndroidVerifyAlignment(i, 16);
     } else {
       AndroidVerifyAlignment(i, 8);
     }
-#endif
     if (::testing::Test::HasFatalFailure()) {
       return;
     }
   }
-#endif
-}
-
-TEST(malloc, align_check) {
-  AlignCheck();
-}
-
-// Force GWP-ASan on and verify all alignment checks still pass.
-TEST(malloc, align_check_gwp_asan) {
-#if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-
-  AlignCheck();
-#else
-  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
@@ -1371,22 +1259,6 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(android_mallopt, force_init_gwp_asan) {
-#if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-
-  // Verify that trying to do the call again also passes no matter the
-  // value of force_init.
-  force_init = false;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-  force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-#else
-  GTEST_SKIP() << "bionic extension";
-#endif
-}
-
 void TestHeapZeroing(int num_iterations, int (*get_alloc_size)(int iteration)) {
   std::vector<void*> allocs;
   constexpr int kMaxBytesToCheckZero = 64;
@@ -1470,7 +1342,7 @@ TEST(malloc, disable_mte) {
   ASSERT_EQ(0, sem_post(&sem));
 
   int my_tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-  ASSERT_EQ(static_cast<unsigned long>(PR_MTE_TCF_NONE), my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
+  ASSERT_EQ(PR_MTE_TCF_NONE, my_tagged_addr_ctrl & PR_MTE_TCF_MASK);
 
   void* retval;
   ASSERT_EQ(0, pthread_join(thread, &retval));
@@ -1483,8 +1355,6 @@ TEST(malloc, disable_mte) {
 
 TEST(malloc, allocation_slack) {
 #if defined(__BIONIC__)
-  SKIP_WITH_NATIVE_BRIDGE;  // http://b/189606147
-
   bool allocator_scudo;
   GetAllocatorVersion(&allocator_scudo);
   if (!allocator_scudo) {
@@ -1500,26 +1370,4 @@ TEST(malloc, allocation_slack) {
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
-}
-
-// Regression test for b/206701345 -- scudo bug, MTE only.
-// Fix: https://reviews.llvm.org/D105261
-// Fix: https://android-review.googlesource.com/c/platform/external/scudo/+/1763655
-TEST(malloc, realloc_mte_crash_b206701345) {
-  // We want to hit in-place realloc at the very end of an mmap-ed region.  Not
-  // all size classes allow such placement - mmap size has to be divisible by
-  // the block size. At the time of writing this could only be reproduced with
-  // 64 byte size class (i.e. 48 byte allocations), but that may change in the
-  // future. Try several different classes at the lower end.
-  std::vector<void*> ptrs(10000);
-  for (int i = 1; i < 32; ++i) {
-    size_t sz = 16 * i - 1;
-    for (void*& p : ptrs) {
-      p = realloc(malloc(sz), sz + 1);
-    }
-
-    for (void* p : ptrs) {
-      free(p);
-    }
-  }
 }
