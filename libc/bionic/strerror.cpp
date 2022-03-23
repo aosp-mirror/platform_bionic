@@ -196,7 +196,8 @@ int strerror_r(int error_number, char* buf, size_t buf_len) {
     length = async_safe_format_buffer(buf, buf_len, "Unknown error %d", error_number);
   }
   if (length >= buf_len) {
-    return ERANGE;
+    errno_restorer.override(ERANGE);
+    return -1;
   }
 
   return 0;
