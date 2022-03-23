@@ -1724,7 +1724,7 @@ cc_library {
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
                 // For backwards-compatibility, some arm32 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1754,7 +1754,7 @@ cc_library {
 
             shared: {
                 // For backwards-compatibility, some x86 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-i686-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
@@ -2572,8 +2572,133 @@ cc_library_host_static {
             enabled: true,
         },
     },
+    stl: "none",
 }
 
-subdirs = [
-    "bionic/scudo",
-]
+cc_library_host_static {
+    name: "libexecinfo",
+    visibility: ["//external/musl"],
+    srcs: ["bionic/execinfo.cpp"],
+    export_include_dirs: ["execinfo/include"],
+    local_include_dirs: ["private"],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
+}
+
+cc_library_host_static {
+    name: "libb64",
+    visibility: ["//external/musl"],
+    srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
+    export_include_dirs: ["b64/include"],
+    local_include_dirs: [
+        "private",
+        "upstream-openbsd/android/include",
+    ],
+    cflags: [
+        "-include openbsd-compat.h",
+    ],
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+            system_shared_libs: [],
+            header_libs: ["libc_musl_headers"],
+        },
+    },
+    stl: "none",
+}
+
+// Export kernel uapi headers to be used in the musl sysroot.
+// Also include the execinfo headers for the libexecinfo and the
+// b64 headers for libb64 embedded in musl libc.
+cc_genrule {
+    name: "libc_musl_sysroot_bionic_headers",
+    visibility: ["//external/musl"],
+    host_supported: true,
+    device_supported: false,
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
+    },
+    srcs: [
+        "kernel/uapi/**/*.h",
+        "kernel/android/**/*.h",
+        "execinfo/include/**/*.h",
+        "b64/include/**/*.h",
+
+        "NOTICE",
+
+        ":libc_musl_sysroot_bionic_arch_headers",
+    ],
+    out: ["libc_musl_sysroot_bionic_headers.zip"],
+    tools: [
+        "soong_zip",
+        "merge_zips",
+        "zip2zip",
+    ],
+    cmd: "BIONIC_LIBC_DIR=$$(dirname $(location NOTICE)) && " +
+        "$(location soong_zip) -o $(genDir)/sysroot.zip -symlinks=false" +
+        // NOTICE
+        " -j -f $(location NOTICE) " +
+        // headers
+        " -P include " +
+        "  -C $${BIONIC_LIBC_DIR}/kernel/uapi " +
+        "  -D $${BIONIC_LIBC_DIR}/kernel/uapi " +
+        "  -C $${BIONIC_LIBC_DIR}/kernel/android/scsi " +
+        "  -D $${BIONIC_LIBC_DIR}/kernel/android/scsi " +
+        "  -C $${BIONIC_LIBC_DIR}/kernel/android/uapi " +
+        "  -D $${BIONIC_LIBC_DIR}/kernel/android/uapi " +
+        "  -C $${BIONIC_LIBC_DIR}/execinfo/include " +
+        "  -D $${BIONIC_LIBC_DIR}/execinfo/include " +
+        "  -C $${BIONIC_LIBC_DIR}/b64/include " +
+        "  -D $${BIONIC_LIBC_DIR}/b64/include " +
+        " && " +
+        "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
+        " include/**/*:include/ " +
+        " NOTICE:NOTICE.bionic " +
+        " && " +
+        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot-renamed.zip",
+}
+
+// The architecture-specific bits have to be handled separately because the label varies based
+// on architecture, which prevents using $(locations) to find them and requires using $(in)
+// instead, which would mix in all the other files if this were part of the main libc_musl_sysroot
+// genrule.
+cc_genrule {
+    name: "libc_musl_sysroot_bionic_arch_headers",
+    visibility: ["//visibility:private"],
+    host_supported: true,
+    device_supported: false,
+    enabled: false,
+    target: {
+        musl: {
+            enabled: true,
+        },
+    },
+    arch: {
+        arm: {
+            srcs: ["kernel/uapi/asm-arm/**/*.h"],
+        },
+        arm64: {
+            srcs: ["kernel/uapi/asm-arm64/**/*.h"],
+        },
+        x86: {
+            srcs: ["kernel/uapi/asm-x86/**/*.h"],
+        },
+        x86_64: {
+            srcs: ["kernel/uapi/asm-x86/**/*.h"],
+        },
+    },
+    out: ["libc_musl_sysroot_bionic_arch_headers.zip"],
+    tools: ["soong_zip"],
+    cmd: "includes=($(in)) && $(location soong_zip) -o $(out) -P include/asm -j -D $$(dirname $${includes[0]})",
+}
