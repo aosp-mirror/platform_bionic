@@ -258,6 +258,9 @@ TEST(dlfcn, dlopen_vdso) {
   dlclose(handle);
 }
 
+// HWASan uses an ifunc to describe the location of its shadow memory,
+// so even though it's an unusual case, Android needs to support
+// "ifunc variables".
 TEST(dlfcn, ifunc_variable) {
   typedef const char* (*fn_ptr)();
 

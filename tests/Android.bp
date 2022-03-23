@@ -474,9 +474,6 @@ cc_test_library {
                 // musl doesn't have error.h
                 "error_test.cpp",
 
-                // musl doesn't have execinfo.h
-                "execinfo_test.cpp",
-
                 // musl doesn't define noreturn for C++
                 "stdnoreturn_test.cpp",
 
@@ -496,6 +493,12 @@ cc_test_library {
     },
 
     generated_headers: ["generated_android_ids"],
+
+    // Bug: http://b/218788252 IR verifier too strict for ifunc resolver that
+    // accept parameters.
+    lto: {
+        never: true,
+    },
 }
 
 cc_test_library {
@@ -601,6 +604,10 @@ cc_defaults {
     target: {
         host: {
             clang_cflags: ["-D__clang__"],
+        },
+        musl: {
+            // Musl doesn't have fortify
+            enabled: false,
         },
     },
 }
@@ -723,6 +730,7 @@ cc_test_library {
 cc_test_library {
     name: "libBionicTests",
     defaults: ["bionic_tests_defaults"],
+    host_supported: false,
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
@@ -1120,6 +1128,14 @@ cc_test {
     lto: {
         never: true,
     },
+    data_bins: [
+        "heap_tagging_async_helper",
+        "heap_tagging_disabled_helper",
+        "heap_tagging_static_async_helper",
+        "heap_tagging_static_disabled_helper",
+        "heap_tagging_static_sync_helper",
+        "heap_tagging_sync_helper",
+    ],
 }
 
 // -----------------------------------------------------------------------------
