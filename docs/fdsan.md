@@ -3,8 +3,6 @@
 [TOC]
 
 fdsan is a file descriptor sanitizer added to Android in API level 29.
-In API level 29, fdsan warns when it finds a bug.
-In API level 30, fdsan aborts when it finds a bug.
 
 ### Background
 *What problem is fdsan trying to solve? Why should I care?*

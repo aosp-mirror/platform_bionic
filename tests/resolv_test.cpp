@@ -28,8 +28,6 @@
 
 #include <resolv.h>
 
-#include <sys/cdefs.h>
-
 #include <gtest/gtest.h>
 
 TEST(resolv, b64_pton_28035006) {
@@ -62,21 +60,13 @@ TEST(resolv, b64_pton) {
 }
 
 TEST(resolv, p_class) {
-#if !defined(ANDROID_HOST_MUSL)
   ASSERT_STREQ("IN", p_class(ns_c_in));
   ASSERT_STREQ("BADCLASS", p_class(-1));
-#else
-  GTEST_SKIP() << "musl doesn't have p_class";
-#endif
 }
 
 TEST(resolv, p_type) {
-#if !defined(ANDROID_HOST_MUSL)
   ASSERT_STREQ("AAAA", p_type(ns_t_aaaa));
   ASSERT_STREQ("BADTYPE", p_type(-1));
-#else
-  GTEST_SKIP() << "musl doesn't have p_type";
-#endif
 }
 
 TEST(resolv, res_init) {
@@ -84,9 +74,5 @@ TEST(resolv, res_init) {
 }
 
 TEST(resolv, res_randomid) {
-#if !defined(ANDROID_HOST_MUSL)
   res_randomid();
-#else
-  GTEST_SKIP() << "musl doesn't have res_randomid";
-#endif
 }

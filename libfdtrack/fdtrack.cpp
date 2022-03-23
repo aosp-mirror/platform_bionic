@@ -31,8 +31,6 @@
 
 #include <array>
 #include <mutex>
-#include <string>
-#include <string_view>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -45,14 +43,11 @@
 #include <android-base/thread_annotations.h>
 #include <async_safe/log.h>
 #include <bionic/reserved_signals.h>
-#include <unwindstack/Maps.h>
-#include <unwindstack/Regs.h>
-#include <unwindstack/RegsGetLocal.h>
-#include <unwindstack/Unwinder.h>
+#include <unwindstack/LocalUnwinder.h>
 
 struct FdEntry {
   std::mutex mutex;
-  std::vector<unwindstack::FrameData> backtrace GUARDED_BY(mutex);
+  std::vector<unwindstack::LocalFrameData> backtrace GUARDED_BY(mutex);
 };
 
 extern "C" void fdtrack_dump();
@@ -67,21 +62,15 @@ static void fd_hook(android_fdtrack_event* event);
 // Backtraces for the first 4k file descriptors ought to be enough to diagnose an fd leak.
 static constexpr size_t kFdTableSize = 4096;
 
-// Only unwind up to 32 frames outside of libfdtrack.so.
-static constexpr size_t kStackDepth = 32;
-
-// Skip any initial frames from libfdtrack.so.
-static std::vector<std::string> kSkipFdtrackLib [[clang::no_destroy]] = {"libfdtrack.so"};
+// 32 frames, plus two to skip from fdtrack itself.
+static constexpr size_t kStackDepth = 34;
+static constexpr size_t kStackFrameSkip = 2;
 
 static bool installed = false;
 static std::array<FdEntry, kFdTableSize> stack_traces [[clang::no_destroy]];
-static unwindstack::LocalUpdatableMaps& Maps() {
-  static android::base::NoDestructor<unwindstack::LocalUpdatableMaps> maps;
-  return *maps.get();
-}
-static std::shared_ptr<unwindstack::Memory>& ProcessMemory() {
-  static android::base::NoDestructor<std::shared_ptr<unwindstack::Memory>> process_memory;
-  return *process_memory.get();
+static unwindstack::LocalUnwinder& Unwinder() {
+  static android::base::NoDestructor<unwindstack::LocalUnwinder> unwinder;
+  return *unwinder.get();
 }
 
 __attribute__((constructor)) static void ctor() {
@@ -100,8 +89,7 @@ __attribute__((constructor)) static void ctor() {
   sa.sa_flags = SA_SIGINFO | SA_ONSTACK;
   sigaction(BIONIC_SIGNAL_FDTRACK, &sa, nullptr);
 
-  if (Maps().Parse()) {
-    ProcessMemory() = unwindstack::Memory::CreateProcessMemoryThreadCached(getpid());
+  if (Unwinder().Init()) {
     android_fdtrack_hook_t expected = nullptr;
     installed = android_fdtrack_compare_exchange_hook(&expected, &fd_hook);
   }
@@ -128,12 +116,7 @@ static void fd_hook(android_fdtrack_event* event) {
     if (FdEntry* entry = GetFdEntry(event->fd); entry) {
       std::lock_guard<std::mutex> lock(entry->mutex);
       entry->backtrace.clear();
-
-      std::unique_ptr<unwindstack::Regs> regs(unwindstack::Regs::CreateFromLocal());
-      unwindstack::RegsGetLocal(regs.get());
-      unwindstack::Unwinder unwinder(kStackDepth, &Maps(), regs.get(), ProcessMemory());
-      unwinder.Unwind(&kSkipFdtrackLib);
-      entry->backtrace = unwinder.ConsumeFrames();
+      Unwinder().Unwind(&entry->backtrace, kStackDepth);
     }
   } else if (event->type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {
     if (FdEntry* entry = GetFdEntry(event->fd); entry) {
@@ -170,13 +153,14 @@ void fdtrack_iterate(fdtrack_callback_t callback, void* arg) {
       continue;
     }
 
-    for (size_t i = 0; i < entry->backtrace.size(); ++i) {
-      function_names[i] = entry->backtrace[i].function_name.c_str();
-      function_offsets[i] = entry->backtrace[i].function_offset;
+    for (size_t i = kStackFrameSkip; i < entry->backtrace.size(); ++i) {
+      size_t j = i - kStackFrameSkip;
+      function_names[j] = entry->backtrace[i].function_name.c_str();
+      function_offsets[j] = entry->backtrace[i].function_offset;
     }
 
-    bool should_continue =
-        callback(fd, function_names, function_offsets, entry->backtrace.size(), arg);
+    bool should_continue = callback(fd, function_names, function_offsets,
+                                    entry->backtrace.size() - kStackFrameSkip, arg);
 
     entry->mutex.unlock();
 
@@ -216,8 +200,8 @@ static void fdtrack_dump_impl(bool fatal) {
     size_t count = 0;
 
     size_t stack_depth = 0;
-    const char* function_names[kStackDepth];
-    uint64_t function_offsets[kStackDepth];
+    const char* function_names[kStackDepth - kStackFrameSkip];
+    uint64_t function_offsets[kStackDepth - kStackFrameSkip];
   };
   struct StackList {
     size_t count = 0;
