@@ -43,7 +43,6 @@ enum ovs_datapath_attr {
   OVS_DP_ATTR_USER_FEATURES,
   OVS_DP_ATTR_PAD,
   OVS_DP_ATTR_MASKS_CACHE_SIZE,
-  OVS_DP_ATTR_PER_CPU_PIDS,
   __OVS_DP_ATTR_MAX
 };
 #define OVS_DP_ATTR_MAX (__OVS_DP_ATTR_MAX - 1)
@@ -73,7 +72,6 @@ struct ovs_vport_stats {
 #define OVS_DP_F_UNALIGNED (1 << 0)
 #define OVS_DP_F_VPORT_PIDS (1 << 1)
 #define OVS_DP_F_TC_RECIRC_SHARING (1 << 2)
-#define OVS_DP_F_DISPATCH_UPCALL_PER_CPU (1 << 3)
 #define OVSP_LOCAL ((__u32) 0)
 #define OVS_PACKET_FAMILY "ovs_packet"
 #define OVS_PACKET_VERSION 0x1
