@@ -36,11 +36,7 @@
 #include <vector>
 
 #include <android-base/stringprintf.h>
-#include <unwindstack/MapInfo.h>
-#include <unwindstack/Maps.h>
-#include <unwindstack/Memory.h>
-#include <unwindstack/Regs.h>
-#include <unwindstack/RegsGetLocal.h>
+#include <unwindstack/AndroidUnwinder.h>
 #include <unwindstack/Unwinder.h>
 
 #include "UnwindBacktrace.h"
@@ -54,51 +50,22 @@
 
 extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
-static pthread_once_t g_setup_once = PTHREAD_ONCE_INIT;
-
-static unwindstack::LocalUpdatableMaps* g_maps;
-static std::shared_ptr<unwindstack::Memory> g_process_memory;
-#if defined(__LP64__)
-static std::vector<std::string> g_skip_libraries{"/system/lib64/libunwindstack.so",
-                                                 "/system/lib64/libc_malloc_debug.so"};
-#else
-static std::vector<std::string> g_skip_libraries{"/system/lib/libunwindstack.so",
-                                                 "/system/lib/libc_malloc_debug.so"};
-#endif
-
-static void Setup() {
-  g_maps = new unwindstack::LocalUpdatableMaps;
-  if (!g_maps->Parse()) {
-    delete g_maps;
-    g_maps = nullptr;
-  }
-
-  g_process_memory = unwindstack::Memory::CreateProcessMemoryThreadCached(getpid());
-}
-
 bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::FrameData>* frame_info,
             size_t max_frames) {
-  pthread_once(&g_setup_once, Setup);
-
-  if (g_maps == nullptr) {
-    return false;
-  }
-
-  std::unique_ptr<unwindstack::Regs> regs(unwindstack::Regs::CreateFromLocal());
-  unwindstack::RegsGetLocal(regs.get());
-  unwindstack::Unwinder unwinder(max_frames, g_maps, regs.get(), g_process_memory);
-  unwinder.Unwind(&g_skip_libraries);
-  if (unwinder.NumFrames() == 0) {
+  [[clang::no_destroy]] static unwindstack::AndroidLocalUnwinder unwinder(
+      std::vector<std::string>{"libc_malloc_debug.so"});
+  unwindstack::AndroidUnwinderData data(max_frames);
+  if (!unwinder.Unwind(data)) {
     frames->clear();
     frame_info->clear();
     return false;
   }
-  *frame_info = unwinder.ConsumeFrames();
 
-  frames->resize(frame_info->size());
-  for (size_t i = 0; i < frame_info->size(); i++) {
-    frames->at(i) = frame_info->at(i).pc;
+  frames->resize(data.frames.size());
+  for (const auto& frame : data.frames) {
+    frames->at(frame.num) = frame.pc;
   }
+  *frame_info = std::move(data.frames);
   return true;
 }
 
