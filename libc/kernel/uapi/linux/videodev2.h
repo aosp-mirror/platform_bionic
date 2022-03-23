@@ -360,6 +360,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')
 #define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F')
 #define V4L2_PIX_FMT_VP9 v4l2_fourcc('V', 'P', '9', '0')
+#define V4L2_PIX_FMT_VP9_FRAME v4l2_fourcc('V', 'P', '9', 'F')
 #define V4L2_PIX_FMT_HEVC v4l2_fourcc('H', 'E', 'V', 'C')
 #define V4L2_PIX_FMT_FWHT v4l2_fourcc('F', 'W', 'H', 'T')
 #define V4L2_PIX_FMT_FWHT_STATELESS v4l2_fourcc('S', 'F', 'W', 'H')
@@ -898,6 +899,8 @@ struct v4l2_ext_control {
     struct v4l2_ctrl_mpeg2_sequence __user * p_mpeg2_sequence;
     struct v4l2_ctrl_mpeg2_picture __user * p_mpeg2_picture;
     struct v4l2_ctrl_mpeg2_quantisation __user * p_mpeg2_quantisation;
+    struct v4l2_ctrl_vp9_compressed_hdr __user * p_vp9_compressed_hdr_probs;
+    struct v4l2_ctrl_vp9_frame __user * p_vp9_frame;
     void __user * ptr;
   };
 } __attribute__((packed));
@@ -948,6 +951,8 @@ enum v4l2_ctrl_type {
   V4L2_CTRL_TYPE_MPEG2_QUANTISATION = 0x0250,
   V4L2_CTRL_TYPE_MPEG2_SEQUENCE = 0x0251,
   V4L2_CTRL_TYPE_MPEG2_PICTURE = 0x0252,
+  V4L2_CTRL_TYPE_VP9_COMPRESSED_HDR = 0x0260,
+  V4L2_CTRL_TYPE_VP9_FRAME = 0x0261,
 };
 struct v4l2_queryctrl {
   __u32 id;
