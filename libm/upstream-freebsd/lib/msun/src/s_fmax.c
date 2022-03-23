@@ -34,13 +34,6 @@ __FBSDID("$FreeBSD$");
 
 #include "fpmath.h"
 
-#ifdef USE_BUILTIN_FMAX
-double
-fmax(double x, double y)
-{
-	return (__builtin_fmax(x, y));
-}
-#else
 double
 fmax(double x, double y)
 {
@@ -61,7 +54,6 @@ fmax(double x, double y)
 
 	return (x > y ? x : y);
 }
-#endif
 
 #if (LDBL_MANT_DIG == 53)
 __weak_reference(fmax, fmaxl);
