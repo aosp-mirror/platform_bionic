@@ -64,10 +64,6 @@ TEST(async_safe_log, smoke) {
   async_safe_format_buffer(buf, sizeof(buf), "a%ldb", 70000L);
   EXPECT_STREQ("a70000b", buf);
 
-  errno = EINVAL;
-  async_safe_format_buffer(buf, sizeof(buf), "a%mZ");
-  EXPECT_STREQ("aInvalid argumentZ", buf);
-
   async_safe_format_buffer(buf, sizeof(buf), "a%pb", reinterpret_cast<void*>(0xb0001234));
   EXPECT_STREQ("a0xb0001234b", buf);
 
@@ -100,30 +96,6 @@ TEST(async_safe_log, smoke) {
 
   async_safe_format_buffer(buf, sizeof(buf), "a%03d:%d:%02dz", 5, 5, 5);
   EXPECT_STREQ("a005:5:05z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#xZ", 34);
-  EXPECT_STREQ("a0x22Z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#xZ", 0);
-  EXPECT_STREQ("a0Z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#5xZ", 20);
-  EXPECT_STREQ("a 0x14Z", buf);
-
-  snprintf(buf, sizeof(buf), "a%#08.8xZ", 1);
-  EXPECT_STREQ("a0x00000001Z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#oZ", 777);
-  EXPECT_STREQ("a01411Z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#oZ", 0);
-  EXPECT_STREQ("a0Z", buf);
-
-  async_safe_format_buffer(buf, sizeof(buf), "a%#6oZ", 15);
-  EXPECT_STREQ("a   017Z", buf);
-
-  snprintf(buf, sizeof(buf), "a%#08.8oZ", 11);
-  EXPECT_STREQ("a00000013Z", buf);
 
   void* p = nullptr;
   async_safe_format_buffer(buf, sizeof(buf), "a%d,%pz", 5, p);

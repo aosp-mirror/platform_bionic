@@ -24,6 +24,7 @@ libc_common_src_files = [
     "bionic/ether_aton.c",
     "bionic/ether_ntoa.c",
     "bionic/exit.cpp",
+    "bionic/fts.c",
     "bionic/initgroups.c",
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
@@ -67,13 +68,6 @@ libc_common_flags = [
 
     // GWP-ASan requires platform TLS.
     "-fno-emulated-tls",
-
-    // We know clang does a lot of harm by rewriting what we've said, and sadly
-    // never see any good it does, so let's just ask it to do what we say...
-    // (The specific motivating example was clang turning a loop that would only
-    // ever touch 0, 1, or 2 bytes into a call to memset, which was never going
-    // to amortize.)
-    "-fno-builtin",
 ]
 
 // Define some common cflags
@@ -128,10 +122,6 @@ cc_defaults {
         malloc_not_svelte: {
             cflags: ["-DUSE_SCUDO"],
         },
-    },
-
-    lto: {
-        never: true,
     },
 }
 
@@ -575,10 +565,6 @@ cc_library_static {
         "upstream-openbsd/lib/libc/string/strxfrm.c",
         "upstream-openbsd/lib/libc/string/wcslcpy.c",
         "upstream-openbsd/lib/libc/string/wcswidth.c",
-
-        // This file is originally from OpenBSD, and benefits from
-        // being compiled with openbsd-compat.h.
-        "bionic/fts.c",
     ],
 
     cflags: [
@@ -1065,7 +1051,6 @@ cc_library_static {
         "bionic/error.cpp",
         "bionic/eventfd.cpp",
         "bionic/exec.cpp",
-        "bionic/execinfo.cpp",
         "bionic/faccessat.cpp",
         "bionic/fchmod.cpp",
         "bionic/fchmodat.cpp",
@@ -1133,7 +1118,6 @@ cc_library_static {
         "bionic/posix_fallocate.cpp",
         "bionic/posix_madvise.cpp",
         "bionic/posix_timers.cpp",
-        "bionic/preadv_pwritev.cpp",
         "bionic/ptrace.cpp",
         "bionic/pty.cpp",
         "bionic/raise.cpp",
@@ -1724,7 +1708,7 @@ cc_library {
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
                 // For backwards-compatibility, some arm32 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-exported"],
+                static_libs: ["libclang_rt.builtins-arm-android-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1754,7 +1738,7 @@ cc_library {
 
             shared: {
                 // For backwards-compatibility, some x86 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-exported"],
+                static_libs: ["libclang_rt.builtins-i686-android-exported"],
             },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
@@ -1793,12 +1777,12 @@ cc_library {
         "com.android.runtime",
     ],
 
-    target: {
-        native_bridge: {
-            shared: {
-                installable: false,
-            },
-        },
+    // Sorting bss symbols by size usually results in less dirty pages at run
+    // time, because small symbols are grouped together.
+    sort_bss_symbols_by_size: true,
+
+    lto: {
+        never: true,
     },
 }
 
@@ -1879,9 +1863,7 @@ cc_library_headers {
 
 cc_library_headers {
     name: "libc_llndk_headers",
-    visibility: [
-        "//external/musl",
-    ],
+    visibility: ["//visibility:private"],
     llndk: {
         llndk_headers: true,
     },
@@ -1961,6 +1943,11 @@ cc_library_headers {
         "//external/scudo",
         "//system/core/property_service/libpropertyinfoparser",
         "//system/extras/toolchain-extras",
+        // TODO(b/153662223): Clean up these users that needed visibility when
+        // the implicit addition of system Bionic paths was removed.
+        "//art/tools/cpp-define-generator",
+        "//external/boringssl",
+        "//external/minijail",
     ],
 
     stl: "none",
@@ -2001,12 +1988,8 @@ cc_library {
     static: {
         system_shared_libs: [],
     },
-    target: {
-        bionic: {
-            shared: {
-                system_shared_libs: ["libc"],
-            },
-        },
+    shared: {
+        system_shared_libs: ["libc"],
     },
 
     //TODO (dimitry): This is to work around b/24465209. Remove after root cause is fixed
@@ -2068,7 +2051,7 @@ genrule {
 // ========================================================
 
 cc_defaults {
-    name: "crt_and_memtag_defaults",
+    name: "crt_defaults",
     defaults: ["linux_bionic_supported"],
     vendor_available: true,
     product_available: true,
@@ -2092,12 +2075,6 @@ cc_defaults {
     sanitize: {
         never: true,
     },
-}
-
-cc_defaults {
-    name: "crt_defaults",
-    defaults: ["crt_and_memtag_defaults"],
-    system_shared_libs: [],
 }
 
 cc_defaults {
@@ -2227,7 +2204,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_and_memtag_defaults"],
+    defaults: ["crt_defaults"],
 }
 
 cc_library_static {
@@ -2239,7 +2216,7 @@ cc_library_static {
     },
     sdk_version: "minimum",
 
-    defaults: ["crt_and_memtag_defaults"],
+    defaults: ["crt_defaults"],
 }
 
 // ========================================================
@@ -2551,154 +2528,6 @@ cc_library {
     },
 }
 
-cc_library_host_static {
-    name: "libfts",
-    srcs: [
-        "bionic/fts.c",
-        "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
-    ],
-    export_include_dirs: ["fts/include"],
-    local_include_dirs: [
-        "private",
-        "upstream-openbsd/android/include",
-    ],
-    cflags: [
-        "-include openbsd-compat.h",
-        "-Wno-unused-parameter",
-    ],
-    enabled: false,
-    target: {
-        musl: {
-            enabled: true,
-        },
-    },
-    stl: "none",
-}
-
-cc_library_host_static {
-    name: "libexecinfo",
-    visibility: ["//external/musl"],
-    srcs: ["bionic/execinfo.cpp"],
-    export_include_dirs: ["execinfo/include"],
-    local_include_dirs: ["private"],
-    enabled: false,
-    target: {
-        musl: {
-            enabled: true,
-            system_shared_libs: [],
-            header_libs: ["libc_musl_headers"],
-        },
-    },
-    stl: "none",
-}
-
-cc_library_host_static {
-    name: "libb64",
-    visibility: ["//external/musl"],
-    srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
-    export_include_dirs: ["b64/include"],
-    local_include_dirs: [
-        "private",
-        "upstream-openbsd/android/include",
-    ],
-    cflags: [
-        "-include openbsd-compat.h",
-    ],
-    enabled: false,
-    target: {
-        musl: {
-            enabled: true,
-            system_shared_libs: [],
-            header_libs: ["libc_musl_headers"],
-        },
-    },
-    stl: "none",
-}
-
-// Export kernel uapi headers to be used in the musl sysroot.
-// Also include the execinfo headers for the libexecinfo and the
-// b64 headers for libb64 embedded in musl libc.
-cc_genrule {
-    name: "libc_musl_sysroot_bionic_headers",
-    visibility: ["//external/musl"],
-    host_supported: true,
-    device_supported: false,
-    enabled: false,
-    target: {
-        musl: {
-            enabled: true,
-        },
-    },
-    srcs: [
-        "kernel/uapi/**/*.h",
-        "kernel/android/**/*.h",
-        "execinfo/include/**/*.h",
-        "b64/include/**/*.h",
-
-        "NOTICE",
-
-        ":libc_musl_sysroot_bionic_arch_headers",
-    ],
-    out: ["libc_musl_sysroot_bionic_headers.zip"],
-    tools: [
-        "soong_zip",
-        "merge_zips",
-        "zip2zip",
-    ],
-    cmd: "BIONIC_LIBC_DIR=$$(dirname $(location NOTICE)) && " +
-        "$(location soong_zip) -o $(genDir)/sysroot.zip -symlinks=false" +
-        // NOTICE
-        " -j -f $(location NOTICE) " +
-        // headers
-        " -P include " +
-        "  -C $${BIONIC_LIBC_DIR}/kernel/uapi " +
-        "  -D $${BIONIC_LIBC_DIR}/kernel/uapi " +
-        "  -C $${BIONIC_LIBC_DIR}/kernel/android/scsi " +
-        "  -D $${BIONIC_LIBC_DIR}/kernel/android/scsi " +
-        "  -C $${BIONIC_LIBC_DIR}/kernel/android/uapi " +
-        "  -D $${BIONIC_LIBC_DIR}/kernel/android/uapi " +
-        "  -C $${BIONIC_LIBC_DIR}/execinfo/include " +
-        "  -D $${BIONIC_LIBC_DIR}/execinfo/include " +
-        "  -C $${BIONIC_LIBC_DIR}/b64/include " +
-        "  -D $${BIONIC_LIBC_DIR}/b64/include " +
-        " && " +
-        "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
-        " include/**/*:include/ " +
-        " NOTICE:NOTICE.bionic " +
-        " && " +
-        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot-renamed.zip",
-}
-
-// The architecture-specific bits have to be handled separately because the label varies based
-// on architecture, which prevents using $(locations) to find them and requires using $(in)
-// instead, which would mix in all the other files if this were part of the main libc_musl_sysroot
-// genrule.
-cc_genrule {
-    name: "libc_musl_sysroot_bionic_arch_headers",
-    visibility: ["//visibility:private"],
-    host_supported: true,
-    device_supported: false,
-    enabled: false,
-    target: {
-        musl: {
-            enabled: true,
-        },
-    },
-    arch: {
-        arm: {
-            srcs: ["kernel/uapi/asm-arm/**/*.h"],
-        },
-        arm64: {
-            srcs: ["kernel/uapi/asm-arm64/**/*.h"],
-        },
-        x86: {
-            srcs: ["kernel/uapi/asm-x86/**/*.h"],
-        },
-        x86_64: {
-            srcs: ["kernel/uapi/asm-x86/**/*.h"],
-        },
-    },
-    out: ["libc_musl_sysroot_bionic_arch_headers.zip"],
-    tools: ["soong_zip"],
-    cmd: "includes=($(in)) && $(location soong_zip) -o $(out) -P include/asm -j -D $$(dirname $${includes[0]})",
-}
+subdirs = [
+    "bionic/scudo",
+]
