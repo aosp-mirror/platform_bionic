@@ -42,7 +42,6 @@ enum fc_els_cmd {
   ELS_REC = 0x13,
   ELS_SRR = 0x14,
   ELS_FPIN = 0x16,
-  ELS_EDC = 0x17,
   ELS_RDP = 0x18,
   ELS_RDF = 0x19,
   ELS_PRLI = 0x20,
@@ -86,7 +85,7 @@ enum fc_els_cmd {
   ELS_LKA = 0x80,
   ELS_AUTH_ELS = 0x90,
 };
-#define FC_ELS_CMDS_INIT {[ELS_LS_RJT] = "LS_RJT",[ELS_LS_ACC] = "LS_ACC",[ELS_PLOGI] = "PLOGI",[ELS_FLOGI] = "FLOGI",[ELS_LOGO] = "LOGO",[ELS_ABTX] = "ABTX",[ELS_RCS] = "RCS",[ELS_RES] = "RES",[ELS_RSS] = "RSS",[ELS_RSI] = "RSI",[ELS_ESTS] = "ESTS",[ELS_ESTC] = "ESTC",[ELS_ADVC] = "ADVC",[ELS_RTV] = "RTV",[ELS_RLS] = "RLS",[ELS_ECHO] = "ECHO",[ELS_TEST] = "TEST",[ELS_RRQ] = "RRQ",[ELS_REC] = "REC",[ELS_SRR] = "SRR",[ELS_FPIN] = "FPIN",[ELS_EDC] = "EDC",[ELS_RDP] = "RDP",[ELS_RDF] = "RDF",[ELS_PRLI] = "PRLI",[ELS_PRLO] = "PRLO",[ELS_SCN] = "SCN",[ELS_TPLS] = "TPLS",[ELS_TPRLO] = "TPRLO",[ELS_LCLM] = "LCLM",[ELS_GAID] = "GAID",[ELS_FACT] = "FACT",[ELS_FDACDT] = "FDACDT",[ELS_NACT] = "NACT",[ELS_NDACT] = "NDACT",[ELS_QOSR] = "QOSR",[ELS_RVCS] = "RVCS",[ELS_PDISC] = "PDISC",[ELS_FDISC] = "FDISC",[ELS_ADISC] = "ADISC",[ELS_RNC] = "RNC",[ELS_FARP_REQ] = "FARP_REQ",[ELS_FARP_REPL] = "FARP_REPL",[ELS_RPS] = "RPS",[ELS_RPL] = "RPL",[ELS_RPBC] = "RPBC",[ELS_FAN] = "FAN",[ELS_RSCN] = "RSCN",[ELS_SCR] = "SCR",[ELS_RNFT] = "RNFT",[ELS_CSR] = "CSR",[ELS_CSU] = "CSU",[ELS_LINIT] = "LINIT",[ELS_LSTS] = "LSTS",[ELS_RNID] = "RNID",[ELS_RLIR] = "RLIR",[ELS_LIRR] = "LIRR",[ELS_SRL] = "SRL",[ELS_SBRP] = "SBRP",[ELS_RPSC] = "RPSC",[ELS_QSA] = "QSA",[ELS_EVFP] = "EVFP",[ELS_LKA] = "LKA",[ELS_AUTH_ELS] = "AUTH_ELS", \
+#define FC_ELS_CMDS_INIT {[ELS_LS_RJT] = "LS_RJT",[ELS_LS_ACC] = "LS_ACC",[ELS_PLOGI] = "PLOGI",[ELS_FLOGI] = "FLOGI",[ELS_LOGO] = "LOGO",[ELS_ABTX] = "ABTX",[ELS_RCS] = "RCS",[ELS_RES] = "RES",[ELS_RSS] = "RSS",[ELS_RSI] = "RSI",[ELS_ESTS] = "ESTS",[ELS_ESTC] = "ESTC",[ELS_ADVC] = "ADVC",[ELS_RTV] = "RTV",[ELS_RLS] = "RLS",[ELS_ECHO] = "ECHO",[ELS_TEST] = "TEST",[ELS_RRQ] = "RRQ",[ELS_REC] = "REC",[ELS_SRR] = "SRR",[ELS_FPIN] = "FPIN",[ELS_RDP] = "RDP",[ELS_RDF] = "RDF",[ELS_PRLI] = "PRLI",[ELS_PRLO] = "PRLO",[ELS_SCN] = "SCN",[ELS_TPLS] = "TPLS",[ELS_TPRLO] = "TPRLO",[ELS_LCLM] = "LCLM",[ELS_GAID] = "GAID",[ELS_FACT] = "FACT",[ELS_FDACDT] = "FDACDT",[ELS_NACT] = "NACT",[ELS_NDACT] = "NDACT",[ELS_QOSR] = "QOSR",[ELS_RVCS] = "RVCS",[ELS_PDISC] = "PDISC",[ELS_FDISC] = "FDISC",[ELS_ADISC] = "ADISC",[ELS_RNC] = "RNC",[ELS_FARP_REQ] = "FARP_REQ",[ELS_FARP_REPL] = "FARP_REPL",[ELS_RPS] = "RPS",[ELS_RPL] = "RPL",[ELS_RPBC] = "RPBC",[ELS_FAN] = "FAN",[ELS_RSCN] = "RSCN",[ELS_SCR] = "SCR",[ELS_RNFT] = "RNFT",[ELS_CSR] = "CSR",[ELS_CSU] = "CSU",[ELS_LINIT] = "LINIT",[ELS_LSTS] = "LSTS",[ELS_RNID] = "RNID",[ELS_RLIR] = "RLIR",[ELS_LIRR] = "LIRR",[ELS_SRL] = "SRL",[ELS_SBRP] = "SBRP",[ELS_RPSC] = "RPSC",[ELS_QSA] = "QSA",[ELS_EVFP] = "EVFP",[ELS_LKA] = "LKA",[ELS_AUTH_ELS] = "AUTH_ELS", \
 }
 struct fc_els_ls_acc {
   __u8 la_cmd;
@@ -129,15 +128,13 @@ enum fc_els_rjt_explan {
 };
 enum fc_ls_tlv_dtag {
   ELS_DTAG_LS_REQ_INFO = 0x00000001,
-  ELS_DTAG_LNK_FAULT_CAP = 0x0001000D,
-  ELS_DTAG_CG_SIGNAL_CAP = 0x0001000F,
   ELS_DTAG_LNK_INTEGRITY = 0x00020001,
   ELS_DTAG_DELIVERY = 0x00020002,
   ELS_DTAG_PEER_CONGEST = 0x00020003,
   ELS_DTAG_CONGESTION = 0x00020004,
   ELS_DTAG_FPIN_REGISTER = 0x00030001,
 };
-#define FC_LS_TLV_DTAG_INIT { { ELS_DTAG_LS_REQ_INFO, "Link Service Request Information" }, { ELS_DTAG_LNK_FAULT_CAP, "Link Fault Capability" }, { ELS_DTAG_CG_SIGNAL_CAP, "Congestion Signaling Capability" }, { ELS_DTAG_LNK_INTEGRITY, "Link Integrity Notification" }, { ELS_DTAG_DELIVERY, "Delivery Notification Present" }, { ELS_DTAG_PEER_CONGEST, "Peer Congestion Notification" }, { ELS_DTAG_CONGESTION, "Congestion Notification" }, { ELS_DTAG_FPIN_REGISTER, "FPIN Registration" }, \
+#define FC_LS_TLV_DTAG_INIT { { ELS_DTAG_LS_REQ_INFO, "Link Service Request Information" }, { ELS_DTAG_LNK_INTEGRITY, "Link Integrity Notification" }, { ELS_DTAG_DELIVERY, "Delivery Notification Present" }, { ELS_DTAG_PEER_CONGEST, "Peer Congestion Notification" }, { ELS_DTAG_CONGESTION, "Congestion Notification" }, { ELS_DTAG_FPIN_REGISTER, "FPIN Registration" }, \
 }
 struct fc_tlv_desc {
   __be32 desc_tag;
@@ -666,50 +663,6 @@ struct fc_els_rdf {
   struct fc_tlv_desc desc[0];
 };
 struct fc_els_rdf_resp {
-  struct fc_els_ls_acc acc_hdr;
-  __be32 desc_list_len;
-  struct fc_els_lsri_desc lsri;
-  struct fc_tlv_desc desc[0];
-};
-struct fc_diag_lnkflt_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be32 degrade_activate_threshold;
-  __be32 degrade_deactivate_threshold;
-  __be32 fec_degrade_interval;
-};
-enum fc_edc_cg_signal_cap_types {
-  EDC_CG_SIG_NOTSUPPORTED = 0x00,
-  EDC_CG_SIG_WARN_ONLY = 0x01,
-  EDC_CG_SIG_WARN_ALARM = 0x02,
-};
-#define FC_EDC_CG_SIGNAL_CAP_TYPES_INIT { { EDC_CG_SIG_NOTSUPPORTED, "Signaling Not Supported" }, { EDC_CG_SIG_WARN_ONLY, "Warning Signal" }, { EDC_CG_SIG_WARN_ALARM, "Warning and Alarm Signals" }, \
-}
-enum fc_diag_cg_sig_freq_types {
-  EDC_CG_SIGFREQ_CNT_MIN = 1,
-  EDC_CG_SIGFREQ_CNT_MAX = 999,
-  EDC_CG_SIGFREQ_SEC = 0x1,
-  EDC_CG_SIGFREQ_MSEC = 0x2,
-};
-struct fc_diag_cg_sig_freq {
-  __be16 count;
-  __be16 units;
-};
-struct fc_diag_cg_sig_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be32 xmt_signal_capability;
-  struct fc_diag_cg_sig_freq xmt_signal_frequency;
-  __be32 rcv_signal_capability;
-  struct fc_diag_cg_sig_freq rcv_signal_frequency;
-};
-struct fc_els_edc {
-  __u8 edc_cmd;
-  __u8 edc_zero[3];
-  __be32 desc_len;
-  struct fc_tlv_desc desc[0];
-};
-struct fc_els_edc_resp {
   struct fc_els_ls_acc acc_hdr;
   __be32 desc_list_len;
   struct fc_els_lsri_desc lsri;
