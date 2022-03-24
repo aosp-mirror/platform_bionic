@@ -1724,7 +1724,7 @@ cc_library {
                 // special for arm
                 cflags: ["-DCRT_LEGACY_WORKAROUND"],
                 // For backwards-compatibility, some arm32 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Arm 32 bit does not produce complete exidx unwind information
@@ -1754,7 +1754,7 @@ cc_library {
 
             shared: {
                 // For backwards-compatibility, some x86 builtins are exported from libc.so.
-                static_libs: ["libclang_rt.builtins-i686-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
 
             // Leave the symbols in the shared library so that stack unwinders can produce
@@ -2615,10 +2615,6 @@ cc_library_host_static {
     stl: "none",
 }
 
-subdirs = [
-    "bionic/scudo",
-]
-
 // Export kernel uapi headers to be used in the musl sysroot.
 // Also include the execinfo headers for the libexecinfo and the
 // b64 headers for libb64 embedded in musl libc.
@@ -2639,8 +2635,6 @@ cc_genrule {
         "execinfo/include/**/*.h",
         "b64/include/**/*.h",
 
-        // This file is used to identify the location of the bionic/libc directory
-        // to simplify accessing the rest of the files.
         "NOTICE",
 
         ":libc_musl_sysroot_bionic_arch_headers",
@@ -2653,6 +2647,8 @@ cc_genrule {
     ],
     cmd: "BIONIC_LIBC_DIR=$$(dirname $(location NOTICE)) && " +
         "$(location soong_zip) -o $(genDir)/sysroot.zip -symlinks=false" +
+        // NOTICE
+        " -j -f $(location NOTICE) " +
         // headers
         " -P include " +
         "  -C $${BIONIC_LIBC_DIR}/kernel/uapi " +
@@ -2666,7 +2662,11 @@ cc_genrule {
         "  -C $${BIONIC_LIBC_DIR}/b64/include " +
         "  -D $${BIONIC_LIBC_DIR}/b64/include " +
         " && " +
-        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot.zip",
+        "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
+        " include/**/*:include/ " +
+        " NOTICE:NOTICE.bionic " +
+        " && " +
+        "$(location merge_zips) $(out) $(location :libc_musl_sysroot_bionic_arch_headers) $(genDir)/sysroot-renamed.zip",
 }
 
 // The architecture-specific bits have to be handled separately because the label varies based
