@@ -79,76 +79,89 @@ class LinkedList {
   typedef LinkedListIterator<T> iterator;
   typedef T* value_type;
 
-  LinkedList() : head_(nullptr), tail_(nullptr) {}
+  // Allocating the head/tail fields separately from the LinkedList struct saves memory in the
+  // Zygote (e.g. because adding an soinfo to a namespace doesn't dirty the page containing the
+  // soinfo).
+  struct LinkedListHeader {
+    LinkedListEntry<T>* head;
+    LinkedListEntry<T>* tail;
+  };
+
+  // The allocator returns a LinkedListEntry<T>* but we want to treat it as a LinkedListHeader
+  // struct instead.
+  static_assert(sizeof(LinkedListHeader) == sizeof(LinkedListEntry<T>));
+  static_assert(alignof(LinkedListHeader) == alignof(LinkedListEntry<T>));
+
+  constexpr LinkedList() : header_(nullptr) {}
   ~LinkedList() {
     clear();
+    if (header_ != nullptr) {
+      Allocator::free(reinterpret_cast<LinkedListEntry<T>*>(header_));
+    }
   }
 
   LinkedList(LinkedList&& that) noexcept {
-    this->head_ = that.head_;
-    this->tail_ = that.tail_;
-    that.head_ = that.tail_ = nullptr;
+    this->header_ = that.header_;
+    that.header_ = nullptr;
+  }
+
+  bool empty() const {
+    return header_ == nullptr || header_->head == nullptr;
   }
 
   void push_front(T* const element) {
+    alloc_header();
     LinkedListEntry<T>* new_entry = Allocator::alloc();
-    new_entry->next = head_;
+    new_entry->next = header_->head;
     new_entry->element = element;
-    head_ = new_entry;
-    if (tail_ == nullptr) {
-      tail_ = new_entry;
+    header_->head = new_entry;
+    if (header_->tail == nullptr) {
+      header_->tail = new_entry;
     }
   }
 
   void push_back(T* const element) {
+    alloc_header();
     LinkedListEntry<T>* new_entry = Allocator::alloc();
     new_entry->next = nullptr;
     new_entry->element = element;
-    if (tail_ == nullptr) {
-      tail_ = head_ = new_entry;
+    if (header_->tail == nullptr) {
+      header_->tail = header_->head = new_entry;
     } else {
-      tail_->next = new_entry;
-      tail_ = new_entry;
+      header_->tail->next = new_entry;
+      header_->tail = new_entry;
     }
   }
 
   T* pop_front() {
-    if (head_ == nullptr) {
-      return nullptr;
-    }
+    if (empty()) return nullptr;
 
-    LinkedListEntry<T>* entry = head_;
+    LinkedListEntry<T>* entry = header_->head;
     T* element = entry->element;
-    head_ = entry->next;
+    header_->head = entry->next;
     Allocator::free(entry);
 
-    if (head_ == nullptr) {
-      tail_ = nullptr;
+    if (header_->head == nullptr) {
+      header_->tail = nullptr;
     }
 
     return element;
   }
 
   T* front() const {
-    if (head_ == nullptr) {
-      return nullptr;
-    }
-
-    return head_->element;
+    return empty() ? nullptr : header_->head->element;
   }
 
   void clear() {
-    while (head_ != nullptr) {
-      LinkedListEntry<T>* p = head_;
-      head_ = head_->next;
+    if (empty()) return;
+
+    while (header_->head != nullptr) {
+      LinkedListEntry<T>* p = header_->head;
+      header_->head = header_->head->next;
       Allocator::free(p);
     }
 
-    tail_ = nullptr;
-  }
-
-  bool empty() {
-    return (head_ == nullptr);
+    header_->tail = nullptr;
   }
 
   template<typename F>
@@ -161,7 +174,7 @@ class LinkedList {
 
   template<typename F>
   bool visit(F action) const {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+    for (LinkedListEntry<T>* e = head(); e != nullptr; e = e->next) {
       if (!action(e->element)) {
         return false;
       }
@@ -171,17 +184,18 @@ class LinkedList {
 
   template<typename F>
   void remove_if(F predicate) {
-    for (LinkedListEntry<T>* e = head_, *p = nullptr; e != nullptr;) {
+    if (empty()) return;
+    for (LinkedListEntry<T>* e = header_->head, *p = nullptr; e != nullptr;) {
       if (predicate(e->element)) {
         LinkedListEntry<T>* next = e->next;
         if (p == nullptr) {
-          head_ = next;
+          header_->head = next;
         } else {
           p->next = next;
         }
 
-        if (tail_ == e) {
-          tail_ = p;
+        if (header_->tail == e) {
+          header_->tail = p;
         }
 
         Allocator::free(e);
@@ -202,7 +216,7 @@ class LinkedList {
 
   template<typename F>
   T* find_if(F predicate) const {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+    for (LinkedListEntry<T>* e = head(); e != nullptr; e = e->next) {
       if (predicate(e->element)) {
         return e->element;
       }
@@ -212,7 +226,7 @@ class LinkedList {
   }
 
   iterator begin() const {
-    return iterator(head_);
+    return iterator(head());
   }
 
   iterator end() const {
@@ -220,7 +234,7 @@ class LinkedList {
   }
 
   iterator find(T* value) const {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+    for (LinkedListEntry<T>* e = head(); e != nullptr; e = e->next) {
       if (e->element == value) {
         return iterator(e);
       }
@@ -231,7 +245,7 @@ class LinkedList {
 
   size_t copy_to_array(T* array[], size_t array_length) const {
     size_t sz = 0;
-    for (LinkedListEntry<T>* e = head_; sz < array_length && e != nullptr; e = e->next) {
+    for (LinkedListEntry<T>* e = head(); sz < array_length && e != nullptr; e = e->next) {
       array[sz++] = e->element;
     }
 
@@ -239,7 +253,7 @@ class LinkedList {
   }
 
   bool contains(const T* el) const {
-    for (LinkedListEntry<T>* e = head_; e != nullptr; e = e->next) {
+    for (LinkedListEntry<T>* e = head(); e != nullptr; e = e->next) {
       if (e->element == el) {
         return true;
       }
@@ -260,7 +274,17 @@ class LinkedList {
   }
 
  private:
-  LinkedListEntry<T>* head_;
-  LinkedListEntry<T>* tail_;
+  void alloc_header() {
+    if (header_ == nullptr) {
+      header_ = reinterpret_cast<LinkedListHeader*>(Allocator::alloc());
+      header_->head = header_->tail = nullptr;
+    }
+  }
+
+  LinkedListEntry<T>* head() const {
+    return header_ != nullptr ? header_->head : nullptr;
+  }
+
+  LinkedListHeader* header_;
   DISALLOW_COPY_AND_ASSIGN(LinkedList);
 };

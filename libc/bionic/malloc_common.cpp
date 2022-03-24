@@ -330,9 +330,8 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       errno = EINVAL;
       return false;
     }
-    __libc_globals.mutate([&](libc_globals* globals) {
-      return MaybeInitGwpAsan(globals, *reinterpret_cast<bool*>(arg));
-    });
+
+    return EnableGwpAsan(*reinterpret_cast<bool*>(arg));
   }
   errno = ENOTSUP;
   return false;
