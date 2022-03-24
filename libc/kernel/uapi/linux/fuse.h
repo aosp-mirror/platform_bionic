@@ -20,7 +20,7 @@
 #define _LINUX_FUSE_H
 #include <stdint.h>
 #define FUSE_KERNEL_VERSION 7
-#define FUSE_KERNEL_MINOR_VERSION 35
+#define FUSE_KERNEL_MINOR_VERSION 36
 #define FUSE_ROOT_ID 1
 struct fuse_attr {
   uint64_t ino;
@@ -106,7 +106,15 @@ struct fuse_file_lock {
 #define FUSE_SUBMOUNTS (1 << 27)
 #define FUSE_HANDLE_KILLPRIV_V2 (1 << 28)
 #define FUSE_SETXATTR_EXT (1 << 29)
+#define FUSE_INIT_EXT (1 << 30)
+#define FUSE_INIT_RESERVED (1 << 31)
+#define FUSE_SECURITY_CTX (1ULL << 32)
+#define FUSE_HAS_INODE_DAX (1ULL << 33)
+#if FUSE_KERNEL_VERSION > 7 || FUSE_KERNEL_VERSION == 7 && FUSE_KERNEL_MINOR_VERSION >= 36
+#define FUSE_PASSTHROUGH (1ULL << 63)
+#else
 #define FUSE_PASSTHROUGH (1 << 31)
+#endif
 #define CUSE_UNRESTRICTED_IOCTL (1 << 0)
 #define FUSE_RELEASE_FLUSH (1 << 0)
 #define FUSE_RELEASE_FLOCK_UNLOCK (1 << 1)
@@ -127,6 +135,7 @@ struct fuse_file_lock {
 #define FUSE_POLL_SCHEDULE_NOTIFY (1 << 0)
 #define FUSE_FSYNC_FDATASYNC (1 << 0)
 #define FUSE_ATTR_SUBMOUNT (1 << 0)
+#define FUSE_ATTR_DAX (1 << 1)
 #define FUSE_OPEN_KILL_SUIDGID (1 << 0)
 #define FUSE_SETXATTR_ACL_KILL_SGID (1 << 0)
 enum fuse_opcode {
@@ -359,6 +368,8 @@ struct fuse_init_in {
   uint32_t minor;
   uint32_t max_readahead;
   uint32_t flags;
+  uint32_t flags2;
+  uint32_t unused[11];
 };
 #define FUSE_COMPAT_INIT_OUT_SIZE 8
 #define FUSE_COMPAT_22_INIT_OUT_SIZE 24
@@ -373,7 +384,8 @@ struct fuse_init_out {
   uint32_t time_gran;
   uint16_t max_pages;
   uint16_t map_alignment;
-  uint32_t unused[8];
+  uint32_t flags2;
+  uint32_t unused[7];
 };
 #define CUSE_INIT_INFO_MAX 4096
 struct cuse_init_in {
@@ -464,8 +476,9 @@ struct fuse_dirent {
   uint32_t type;
   char name[];
 };
+#define FUSE_REC_ALIGN(x) (((x) + sizeof(uint64_t) - 1) & ~(sizeof(uint64_t) - 1))
 #define FUSE_NAME_OFFSET offsetof(struct fuse_dirent, name)
-#define FUSE_DIRENT_ALIGN(x) (((x) + sizeof(uint64_t) - 1) & ~(sizeof(uint64_t) - 1))
+#define FUSE_DIRENT_ALIGN(x) FUSE_REC_ALIGN(x)
 #define FUSE_DIRENT_SIZE(d) FUSE_DIRENT_ALIGN(FUSE_NAME_OFFSET + (d)->namelen)
 struct fuse_direntplus {
   struct fuse_entry_out entry_out;
@@ -512,7 +525,7 @@ struct fuse_notify_retrieve_in {
 };
 #define FUSE_DEV_IOC_MAGIC 229
 #define FUSE_DEV_IOC_CLONE _IOR(FUSE_DEV_IOC_MAGIC, 0, uint32_t)
-#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 126, __u32)
+#define FUSE_DEV_IOC_PASSTHROUGH_OPEN _IOW(FUSE_DEV_IOC_MAGIC, 126, uint32_t)
 struct fuse_lseek_in {
   uint64_t fh;
   uint64_t offset;
@@ -550,5 +563,13 @@ struct fuse_removemapping_one {
 #define FUSE_REMOVEMAPPING_MAX_ENTRY (PAGE_SIZE / sizeof(struct fuse_removemapping_one))
 struct fuse_syncfs_in {
   uint64_t padding;
+};
+struct fuse_secctx {
+  uint32_t size;
+  uint32_t padding;
+};
+struct fuse_secctx_header {
+  uint32_t size;
+  uint32_t nr_secctx;
 };
 #endif
