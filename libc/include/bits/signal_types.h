@@ -61,7 +61,7 @@ typedef __sighandler_t sighandler_t; /* glibc compatibility. */
 #if defined(__LP64__)
 typedef sigset_t sigset64_t;
 #else
-typedef struct { unsigned long __bits[_KERNEL__NSIG/LONG_BIT]; } sigset64_t;
+typedef struct { unsigned long __bits[_KERNEL__NSIG/(8*sizeof(long))]; } sigset64_t;
 #endif
 
 #if defined(__LP64__)
