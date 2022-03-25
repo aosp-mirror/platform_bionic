@@ -52,6 +52,9 @@ TEST(heap_tagging_level, tagged_pointer_dies) {
   if (mte_supported()) {
     GTEST_SKIP() << "Tagged pointers are not used on MTE hardware.";
   }
+  if (running_with_hwasan()) {
+    GTEST_SKIP() << "Tagged heap pointers feature is disabled under HWASan.";
+  }
 
   void *x = malloc(1);
 
@@ -78,10 +81,20 @@ TEST(heap_tagging_level, tagged_pointer_dies) {
 #endif // defined(__BIONIC__)
 }
 
+namespace {
 #if defined(__BIONIC__) && defined(__aarch64__)
 void ExitWithSiCode(int, siginfo_t* info, void*) {
   _exit(info->si_code);
 }
+
+template <typename Pred>
+class Or {
+  Pred A, B;
+
+ public:
+  Or(Pred A, Pred B) : A(A), B(B) {}
+  bool operator()(int exit_status) { return A(exit_status) || B(exit_status); }
+};
 #endif
 
 TEST(heap_tagging_level, sync_async_bad_accesses_die) {
@@ -91,6 +104,7 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
   }
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
+  volatile int sink ATTRIBUTE_UNUSED;
 
   // We assume that scudo is used on all MTE enabled hardware; scudo inserts a header with a
   // mismatching tag before each allocation.
@@ -101,6 +115,12 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
         p[-1] = 42;
       },
       testing::ExitedWithCode(SEGV_MTESERR), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      testing::ExitedWithCode(SEGV_MTESERR), "");
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
   EXPECT_EXIT(
@@ -108,17 +128,27 @@ TEST(heap_tagging_level, sync_async_bad_accesses_die) {
         ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
         p[-1] = 42;
       },
-      testing::ExitedWithCode(SEGV_MTEAERR), "");
+      Or(testing::ExitedWithCode(SEGV_MTESERR), testing::ExitedWithCode(SEGV_MTEAERR)), "");
+  EXPECT_EXIT(
+      {
+        ScopedSignalHandler ssh(SIGSEGV, ExitWithSiCode, SA_SIGINFO);
+        sink = p[-1];
+      },
+      Or(testing::ExitedWithCode(SEGV_MTESERR), testing::ExitedWithCode(SEGV_MTEAERR)), "");
 
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
-  volatile int oob ATTRIBUTE_UNUSED = p[-1];
+  sink = p[-1];
 #else
   GTEST_SKIP() << "bionic/arm64 only";
 #endif
 }
+}  // namespace
 
 TEST(heap_tagging_level, none_pointers_untagged) {
 #if defined(__BIONIC__)
+  if (running_with_hwasan()) {
+    GTEST_SKIP() << "HWASan is unaffected by heap tagging level.";
+  }
   EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
   EXPECT_EQ(untag_address(p.get()), p.get());
@@ -135,7 +165,13 @@ TEST(heap_tagging_level, tagging_level_transitions) {
 
   EXPECT_FALSE(SetHeapTaggingLevel(static_cast<HeapTaggingLevel>(12345)));
 
-  if (mte_supported() && running_with_mte()) {
+  if (running_with_hwasan()) {
+    // NONE -> ...
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
+    EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_SYNC));
+    EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_NONE));
+  } else if (mte_supported() && running_with_mte()) {
     // ASYNC -> ...
     EXPECT_FALSE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_TBI));
     EXPECT_TRUE(SetHeapTaggingLevel(M_HEAP_TAGGING_LEVEL_ASYNC));
@@ -185,24 +221,34 @@ class MemtagNoteTest : public testing::TestWithParam<std::tuple<MemtagNote, bool
 
 TEST_P(MemtagNoteTest, SEGV) {
 #if defined(__BIONIC__) && defined(__aarch64__)
-  if (!(getauxval(AT_HWCAP2) & HWCAP2_MTE)) {
-    GTEST_SKIP() << "requires MTE support";
-  }
+  // Note that we do not check running_with_hwasan() - what matters here is whether the test binary
+  // itself is built with HWASan.
+  bool withHWASAN = __has_feature(hwaddress_sanitizer);
+  bool withMTE = getauxval(AT_HWCAP2) & HWCAP2_MTE;
 
   const char* kNoteSuffix[] = {"disabled", "async", "sync"};
-  const char* kExpectedOutput[] = {"normal exit\n", "SEGV_MTEAERR\n", "SEGV_MTESERR\n"};
+  const char* kExpectedOutputHWASAN[] = {".*tag-mismatch.*", ".*tag-mismatch.*",
+                                         ".*tag-mismatch.*"};
+  // Note that we do not check the exact si_code of the "async" variant, as it may be auto-upgraded
+  // to asymm or even sync.
+  const char* kExpectedOutputMTE[] = {"normal exit\n", "SEGV_MTE[AS]ERR\n", "SEGV_MTESERR\n"};
+  const char* kExpectedOutputNonMTE[] = {"normal exit\n", "normal exit\n", "normal exit\n"};
+  const char** kExpectedOutput =
+      withHWASAN ? kExpectedOutputHWASAN : (withMTE ? kExpectedOutputMTE : kExpectedOutputNonMTE);
+  const int kExpectedExitStatus = withHWASAN ? -SIGABRT : 0;
 
   MemtagNote note = std::get<0>(GetParam());
   bool isStatic = std::get<1>(GetParam());
   std::string helper_base = std::string("heap_tagging_") + (isStatic ? "static_" : "") +
                             kNoteSuffix[static_cast<int>(note)] + "_helper";
-  fprintf(stderr, "=== %s\n", helper_base.c_str());
-  std::string helper = GetTestlibRoot() + "/" + helper_base + "/" + helper_base;
+  std::string helper = GetTestlibRoot() + "/" + helper_base;
   chmod(helper.c_str(), 0755);
   ExecTestHelper eth;
   eth.SetArgs({helper.c_str(), nullptr});
-  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, 0,
+  eth.Run([&]() { execve(helper.c_str(), eth.GetArgs(), eth.GetEnv()); }, kExpectedExitStatus,
           kExpectedOutput[static_cast<int>(note)]);
+#else
+  GTEST_SKIP() << "bionic/arm64 only";
 #endif
 }
 

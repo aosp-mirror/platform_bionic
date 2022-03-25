@@ -94,6 +94,7 @@ typedef __s32 sctp_assoc_t;
 #define SCTP_EXPOSE_POTENTIALLY_FAILED_STATE 131
 #define SCTP_EXPOSE_PF_STATE SCTP_EXPOSE_POTENTIALLY_FAILED_STATE
 #define SCTP_REMOTE_UDP_ENCAPS_PORT 132
+#define SCTP_PLPMTUD_PROBE_INTERVAL 133
 #define SCTP_PR_SCTP_NONE 0x0000
 #define SCTP_PR_SCTP_TTL 0x0010
 #define SCTP_PR_SCTP_RTX 0x0020
@@ -709,5 +710,10 @@ enum sctp_sched_type {
   SCTP_SS_PRIO,
   SCTP_SS_RR,
   SCTP_SS_MAX = SCTP_SS_RR
+};
+struct sctp_probeinterval {
+  sctp_assoc_t spi_assoc_id;
+  struct sockaddr_storage spi_address;
+  __u32 spi_interval;
 };
 #endif
