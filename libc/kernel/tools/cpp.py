@@ -1417,9 +1417,14 @@ class BlockList(object):
                         if struct_name in kernel_struct_replacements:
                             extra_includes.append("<bits/%s.h>" % struct_name)
                             end = i + 2
-                            while end < len(b.tokens) and b.tokens[end].id != '}':
+                            depth = 1
+                            while end < len(b.tokens) and depth > 0:
+                                if b.tokens[end].id == '}':
+                                    depth -= 1
+                                elif b.tokens[end].id == '{':
+                                    depth += 1
                                 end += 1
-                            end += 1 # Swallow '}'
+                            end += 1 # Swallow last '}'
                             while end < len(b.tokens) and b.tokens[end].id != ';':
                                 end += 1
                             end += 1 # Swallow ';'

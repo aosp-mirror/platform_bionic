@@ -30,6 +30,8 @@ enum perf_type_id {
   PERF_TYPE_BREAKPOINT = 5,
   PERF_TYPE_MAX,
 };
+#define PERF_PMU_TYPE_SHIFT 32
+#define PERF_HW_EVENT_MASK 0xffffffff
 enum perf_hw_id {
   PERF_COUNT_HW_CPU_CYCLES = 0,
   PERF_COUNT_HW_INSTRUCTIONS = 1,
@@ -76,6 +78,7 @@ enum perf_sw_ids {
   PERF_COUNT_SW_EMULATION_FAULTS = 8,
   PERF_COUNT_SW_DUMMY = 9,
   PERF_COUNT_SW_BPF_OUTPUT = 10,
+  PERF_COUNT_SW_CGROUP_SWITCHES = 11,
   PERF_COUNT_SW_MAX,
 };
 enum perf_event_sample_format {
@@ -197,6 +200,7 @@ enum perf_event_read_format {
 #define PERF_ATTR_SIZE_VER4 104
 #define PERF_ATTR_SIZE_VER5 112
 #define PERF_ATTR_SIZE_VER6 120
+#define PERF_ATTR_SIZE_VER7 128
 struct perf_event_attr {
   __u32 type;
   __u32 size;
@@ -207,7 +211,7 @@ struct perf_event_attr {
   };
   __u64 sample_type;
   __u64 read_format;
-  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, text_poke : 1, build_id : 1, __reserved_1 : 29;
+  __u64 disabled : 1, inherit : 1, pinned : 1, exclusive : 1, exclude_user : 1, exclude_kernel : 1, exclude_hv : 1, exclude_idle : 1, mmap : 1, comm : 1, freq : 1, inherit_stat : 1, enable_on_exec : 1, task : 1, watermark : 1, precise_ip : 2, mmap_data : 1, sample_id_all : 1, exclude_host : 1, exclude_guest : 1, exclude_callchain_kernel : 1, exclude_callchain_user : 1, mmap2 : 1, comm_exec : 1, use_clockid : 1, context_switch : 1, write_backward : 1, namespaces : 1, ksymbol : 1, bpf_event : 1, aux_output : 1, cgroup : 1, text_poke : 1, build_id : 1, inherit_thread : 1, remove_on_exec : 1, sigtrap : 1, __reserved_1 : 26;
   union {
     __u32 wakeup_events;
     __u32 wakeup_watermark;
@@ -235,6 +239,7 @@ struct perf_event_attr {
   __u16 __reserved_2;
   __u32 aux_sample_size;
   __u32 __reserved_3;
+  __u64 sig_data;
 };
 struct perf_event_query_bpf {
   __u32 ids_len;
@@ -345,6 +350,7 @@ enum perf_event_type {
   PERF_RECORD_BPF_EVENT = 18,
   PERF_RECORD_CGROUP = 19,
   PERF_RECORD_TEXT_POKE = 20,
+  PERF_RECORD_AUX_OUTPUT_HW_ID = 21,
   PERF_RECORD_MAX,
 };
 enum perf_record_ksymbol_type {
@@ -375,6 +381,9 @@ enum perf_callchain_context {
 #define PERF_AUX_FLAG_OVERWRITE 0x02
 #define PERF_AUX_FLAG_PARTIAL 0x04
 #define PERF_AUX_FLAG_COLLISION 0x08
+#define PERF_AUX_FLAG_PMU_FORMAT_TYPE_MASK 0xff00
+#define PERF_AUX_FLAG_CORESIGHT_FORMAT_CORESIGHT 0x0000
+#define PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW 0x0100
 #define PERF_FLAG_FD_NO_GROUP (1UL << 0)
 #define PERF_FLAG_FD_OUTPUT (1UL << 1)
 #define PERF_FLAG_PID_CGROUP (1UL << 2)
@@ -383,14 +392,14 @@ enum perf_callchain_context {
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_blk : 3, mem_rsvd : 21;
+    __u64 mem_op : 5, mem_lvl : 14, mem_snoop : 5, mem_lock : 2, mem_dtlb : 7, mem_lvl_num : 4, mem_remote : 1, mem_snoopx : 2, mem_blk : 3, mem_hops : 3, mem_rsvd : 18;
   };
 };
 #elif defined(__BIG_ENDIAN_BITFIELD)
 union perf_mem_data_src {
   __u64 val;
   struct {
-    __u64 mem_rsvd : 21, mem_blk : 3, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
+    __u64 mem_rsvd : 18, mem_hops : 3, mem_blk : 3, mem_snoopx : 2, mem_remote : 1, mem_lvl_num : 4, mem_dtlb : 7, mem_lock : 2, mem_snoop : 5, mem_lvl : 14, mem_op : 5;
   };
 };
 #else
@@ -452,6 +461,11 @@ union perf_mem_data_src {
 #define PERF_MEM_BLK_DATA 0x02
 #define PERF_MEM_BLK_ADDR 0x04
 #define PERF_MEM_BLK_SHIFT 40
+#define PERF_MEM_HOPS_0 0x01
+#define PERF_MEM_HOPS_1 0x02
+#define PERF_MEM_HOPS_2 0x03
+#define PERF_MEM_HOPS_3 0x04
+#define PERF_MEM_HOPS_SHIFT 43
 #define PERF_MEM_S(a,s) (((__u64) PERF_MEM_ ##a ##_ ##s) << PERF_MEM_ ##a ##_SHIFT)
 struct perf_branch_entry {
   __u64 from;

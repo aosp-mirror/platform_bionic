@@ -28,6 +28,7 @@ enum sgx_page_flags {
 #define SGX_IOC_ENCLAVE_ADD_PAGES _IOWR(SGX_MAGIC, 0x01, struct sgx_enclave_add_pages)
 #define SGX_IOC_ENCLAVE_INIT _IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
 #define SGX_IOC_ENCLAVE_PROVISION _IOW(SGX_MAGIC, 0x03, struct sgx_enclave_provision)
+#define SGX_IOC_VEPC_REMOVE_ALL _IO(SGX_MAGIC, 0x04)
 struct sgx_enclave_create {
   __u64 src;
 };
