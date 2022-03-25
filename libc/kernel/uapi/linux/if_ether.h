@@ -67,6 +67,7 @@
 #define ETH_P_LINK_CTL 0x886c
 #define ETH_P_ATMFATE 0x8884
 #define ETH_P_PAE 0x888E
+#define ETH_P_REALTEK 0x8899
 #define ETH_P_AOE 0x88A2
 #define ETH_P_8021AD 0x88A8
 #define ETH_P_802_EX1 0x88B5
@@ -123,6 +124,7 @@
 #define ETH_P_CAIF 0x00F7
 #define ETH_P_XDSA 0x00F8
 #define ETH_P_MAP 0x00F9
+#define ETH_P_MCTP 0x00FA
 #ifndef __UAPI_DEF_ETHHDR
 #define __UAPI_DEF_ETHHDR 1
 #endif

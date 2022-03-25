@@ -25,6 +25,7 @@ enum {
   MPOL_BIND,
   MPOL_INTERLEAVE,
   MPOL_LOCAL,
+  MPOL_PREFERRED_MANY,
   MPOL_MAX,
 };
 #define MPOL_F_STATIC_NODES (1 << 15)
@@ -41,7 +42,9 @@ enum {
 #define MPOL_MF_INTERNAL (1 << 4)
 #define MPOL_MF_VALID (MPOL_MF_STRICT | MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)
 #define MPOL_F_SHARED (1 << 0)
-#define MPOL_F_LOCAL (1 << 1)
 #define MPOL_F_MOF (1 << 3)
 #define MPOL_F_MORON (1 << 4)
+#define RECLAIM_ZONE (1 << 0)
+#define RECLAIM_WRITE (1 << 1)
+#define RECLAIM_UNMAP (1 << 2)
 #endif

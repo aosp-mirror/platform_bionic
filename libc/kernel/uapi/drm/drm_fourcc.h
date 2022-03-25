@@ -27,6 +27,8 @@ extern "C" {
 #define DRM_FORMAT_INVALID 0
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
 #define DRM_FORMAT_R8 fourcc_code('R', '8', ' ', ' ')
+#define DRM_FORMAT_R10 fourcc_code('R', '1', '0', ' ')
+#define DRM_FORMAT_R12 fourcc_code('R', '1', '2', ' ')
 #define DRM_FORMAT_R16 fourcc_code('R', '1', '6', ' ')
 #define DRM_FORMAT_RG88 fourcc_code('R', 'G', '8', '8')
 #define DRM_FORMAT_GR88 fourcc_code('G', 'R', '8', '8')
@@ -70,6 +72,10 @@ extern "C" {
 #define DRM_FORMAT_ABGR2101010 fourcc_code('A', 'B', '3', '0')
 #define DRM_FORMAT_RGBA1010102 fourcc_code('R', 'A', '3', '0')
 #define DRM_FORMAT_BGRA1010102 fourcc_code('B', 'A', '3', '0')
+#define DRM_FORMAT_XRGB16161616 fourcc_code('X', 'R', '4', '8')
+#define DRM_FORMAT_XBGR16161616 fourcc_code('X', 'B', '4', '8')
+#define DRM_FORMAT_ARGB16161616 fourcc_code('A', 'R', '4', '8')
+#define DRM_FORMAT_ABGR16161616 fourcc_code('A', 'B', '4', '8')
 #define DRM_FORMAT_XRGB16161616F fourcc_code('X', 'R', '4', 'H')
 #define DRM_FORMAT_XBGR16161616F fourcc_code('X', 'B', '4', 'H')
 #define DRM_FORMAT_ARGB16161616F fourcc_code('A', 'R', '4', 'H')
@@ -117,6 +123,7 @@ extern "C" {
 #define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
 #define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')
 #define DRM_FORMAT_P016 fourcc_code('P', '0', '1', '6')
+#define DRM_FORMAT_P030 fourcc_code('P', '0', '3', '0')
 #define DRM_FORMAT_Q410 fourcc_code('Q', '4', '1', '0')
 #define DRM_FORMAT_Q401 fourcc_code('Q', '4', '0', '1')
 #define DRM_FORMAT_YUV410 fourcc_code('Y', 'U', 'V', '9')
@@ -141,6 +148,8 @@ extern "C" {
 #define DRM_FORMAT_MOD_VENDOR_ALLWINNER 0x09
 #define DRM_FORMAT_MOD_VENDOR_AMLOGIC 0x0a
 #define DRM_FORMAT_RESERVED ((1ULL << 56) - 1)
+#define fourcc_mod_get_vendor(modifier) (((modifier) >> 56) & 0xff)
+#define fourcc_mod_is_vendor(modifier,vendor) (fourcc_mod_get_vendor(modifier) == DRM_FORMAT_MOD_VENDOR_ ##vendor)
 #define fourcc_mod_code(vendor,val) ((((__u64) DRM_FORMAT_MOD_VENDOR_ ##vendor) << 56) | ((val) & 0x00ffffffffffffffULL))
 #define DRM_FORMAT_MOD_GENERIC_16_16_TILE DRM_FORMAT_MOD_SAMSUNG_16_16_TILE
 #define DRM_FORMAT_MOD_INVALID fourcc_mod_code(NONE, DRM_FORMAT_RESERVED)
@@ -203,6 +212,15 @@ extern "C" {
 #define AFBC_FORMAT_MOD_DB (1ULL << 10)
 #define AFBC_FORMAT_MOD_BCH (1ULL << 11)
 #define AFBC_FORMAT_MOD_USM (1ULL << 12)
+#define DRM_FORMAT_MOD_ARM_TYPE_AFRC 0x02
+#define DRM_FORMAT_MOD_ARM_AFRC(__afrc_mode) DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_AFRC, __afrc_mode)
+#define AFRC_FORMAT_MOD_CU_SIZE_MASK 0xf
+#define AFRC_FORMAT_MOD_CU_SIZE_16 (1ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_24 (2ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_32 (3ULL)
+#define AFRC_FORMAT_MOD_CU_SIZE_P0(__afrc_cu_size) (__afrc_cu_size)
+#define AFRC_FORMAT_MOD_CU_SIZE_P12(__afrc_cu_size) ((__afrc_cu_size) << 4)
+#define AFRC_FORMAT_MOD_LAYOUT_SCAN (1ULL << 8)
 #define DRM_FORMAT_MOD_ARM_16X16_BLOCK_U_INTERLEAVED DRM_FORMAT_MOD_ARM_CODE(DRM_FORMAT_MOD_ARM_TYPE_MISC, 1ULL)
 #define DRM_FORMAT_MOD_ALLWINNER_TILED fourcc_mod_code(ALLWINNER, 1)
 #define __fourcc_mod_amlogic_layout_mask 0xff

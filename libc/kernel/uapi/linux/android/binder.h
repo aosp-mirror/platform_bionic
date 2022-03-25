@@ -117,6 +117,16 @@ struct binder_node_info_for_ref {
   __u32 reserved2;
   __u32 reserved3;
 };
+struct binder_freeze_info {
+  __u32 pid;
+  __u32 enable;
+  __u32 timeout_ms;
+};
+struct binder_frozen_status_info {
+  __u32 pid;
+  __u32 sync_recv;
+  __u32 async_recv;
+};
 #define BINDER_WRITE_READ _IOWR('b', 1, struct binder_write_read)
 #define BINDER_SET_IDLE_TIMEOUT _IOW('b', 3, __s64)
 #define BINDER_SET_MAX_THREADS _IOW('b', 5, __u32)
@@ -127,6 +137,9 @@ struct binder_node_info_for_ref {
 #define BINDER_GET_NODE_DEBUG_INFO _IOWR('b', 11, struct binder_node_debug_info)
 #define BINDER_GET_NODE_INFO_FOR_REF _IOWR('b', 12, struct binder_node_info_for_ref)
 #define BINDER_SET_CONTEXT_MGR_EXT _IOW('b', 13, struct flat_binder_object)
+#define BINDER_FREEZE _IOW('b', 14, struct binder_freeze_info)
+#define BINDER_GET_FROZEN_INFO _IOWR('b', 15, struct binder_frozen_status_info)
+#define BINDER_ENABLE_ONEWAY_SPAM_DETECTION _IOW('b', 16, __u32)
 enum transaction_flags {
   TF_ONE_WAY = 0x01,
   TF_ROOT_OBJECT = 0x04,
@@ -199,6 +212,8 @@ enum binder_driver_return_protocol {
   BR_DEAD_BINDER = _IOR('r', 15, binder_uintptr_t),
   BR_CLEAR_DEATH_NOTIFICATION_DONE = _IOR('r', 16, binder_uintptr_t),
   BR_FAILED_REPLY = _IO('r', 17),
+  BR_FROZEN_REPLY = _IO('r', 18),
+  BR_ONEWAY_SPAM_SUSPECT = _IO('r', 19),
 };
 enum binder_driver_command_protocol {
   BC_TRANSACTION = _IOW('c', 0, struct binder_transaction_data),
