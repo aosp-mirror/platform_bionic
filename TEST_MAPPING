@@ -13,6 +13,9 @@
       "name": "CtsBionicTestCases"
     },
     {
+      "name": "CtsGwpAsanTestCases"
+    },
+    {
       "name": "CtsTaggingHostTestCases"
     },
     {
