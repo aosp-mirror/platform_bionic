@@ -132,6 +132,11 @@ TEST(sys_time, lutimes_EINVAL) {
   ASSERT_EQ(EINVAL, errno);
 }
 
+// Musl doesn't define __NR_gettimeofday on 32-bit architectures.
+#if !defined(__NR_gettimeofday)
+#define __NR_gettimeofday __NR_gettimeofday_time32
+#endif
+
 TEST(sys_time, gettimeofday) {
   // Try to ensure that our vdso gettimeofday is working.
   timeval tv1;

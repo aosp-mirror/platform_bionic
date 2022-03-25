@@ -18,6 +18,8 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <sys/cdefs.h>
+
 #include <gtest/gtest.h>
 
 #include "SignalUtils.h"
@@ -31,7 +33,7 @@
 # if !defined(POSIX_SPAWN_SETSID)
 #  define POSIX_SPAWN_SETSID 0
 # endif
-#else
+#elif defined(__BIONIC__)
 #include <platform/bionic/reserved_signals.h>
 #endif
 
@@ -379,7 +381,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETPGROUP_set) {
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
-#if defined(__GLIBC__)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc doesn't ignore the same signals.";
 #else
   // Block SIGBUS in the parent...
@@ -417,7 +419,7 @@ TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGMASK) {
 }
 
 TEST(spawn, posix_spawn_POSIX_SPAWN_SETSIGDEF) {
-#if defined(__GLIBC__)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
   GTEST_SKIP() << "glibc doesn't ignore the same signals.";
 #else
   // Ignore SIGALRM and SIGCONT in the parent...
@@ -505,4 +507,43 @@ TEST(spawn, signal_stress) {
   }
 
   AssertChildExited(pid, 99);
+}
+
+TEST(spawn, posix_spawn_dup2_CLOEXEC) {
+  int fds[2];
+  ASSERT_NE(-1, pipe(fds));
+
+  posix_spawn_file_actions_t fa;
+  ASSERT_EQ(0, posix_spawn_file_actions_init(&fa));
+
+  int fd = open("/proc/version", O_RDONLY | O_CLOEXEC);
+  ASSERT_NE(-1, fd);
+
+  ASSERT_EQ(0, posix_spawn_file_actions_addclose(&fa, fds[0]));
+  ASSERT_EQ(0, posix_spawn_file_actions_adddup2(&fa, fds[1], 1));
+  // dup2() is a no-op when the two fds are the same, so this won't clear
+  // O_CLOEXEC unless we're doing extra work to make that happen.
+  ASSERT_EQ(0, posix_spawn_file_actions_adddup2(&fa, fd, fd));
+
+  // Read /proc/self/fd/<fd> in the child...
+  std::string fdinfo_path = android::base::StringPrintf("/proc/self/fd/%d", fd);
+  ExecTestHelper eth;
+  eth.SetArgs({"cat", fdinfo_path.c_str(), nullptr});
+  pid_t pid;
+  ASSERT_EQ(0, posix_spawnp(&pid, eth.GetArg0(), &fa, nullptr, eth.GetArgs(), eth.GetEnv()));
+  ASSERT_EQ(0, posix_spawn_file_actions_destroy(&fa));
+  ASSERT_EQ(0, close(fds[1]));
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFdToString(fds[0], &content));
+  ASSERT_EQ(0, close(fds[0]));
+
+  // ...and compare that to the parent. This is overkill really, since the very
+  // fact that the child had a valid file descriptor strongly implies that we
+  // removed O_CLOEXEC, but we may as well check that the child ended up with
+  // the *right* file descriptor :-)
+  std::string expected;
+  ASSERT_TRUE(android::base::ReadFdToString(fd, &expected));
+  ASSERT_EQ(expected, content);
+
+  AssertChildExited(pid, 0);
 }
