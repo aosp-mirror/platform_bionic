@@ -50,6 +50,12 @@ struct hwtstamp_config {
   int tx_type;
   int rx_filter;
 };
+enum hwtstamp_flags {
+  HWTSTAMP_FLAG_BONDED_PHC_INDEX = (1 << 0),
+#define HWTSTAMP_FLAG_BONDED_PHC_INDEX HWTSTAMP_FLAG_BONDED_PHC_INDEX
+  HWTSTAMP_FLAG_LAST = HWTSTAMP_FLAG_BONDED_PHC_INDEX,
+  HWTSTAMP_FLAG_MASK = (HWTSTAMP_FLAG_LAST - 1) | HWTSTAMP_FLAG_LAST
+};
 enum hwtstamp_tx_types {
   HWTSTAMP_TX_OFF,
   HWTSTAMP_TX_ON,
