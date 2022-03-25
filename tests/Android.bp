@@ -406,6 +406,7 @@ cc_test_library {
         "string_nofortify_test.cpp",
         "string_test.cpp",
         "string_posix_strerror_r_test.cpp",
+        "string_posix_strerror_r_wrapper.cpp",
         "strings_nofortify_test.cpp",
         "strings_test.cpp",
         "struct_layout_test.cpp",
@@ -468,6 +469,18 @@ cc_test_library {
                 "libsystemproperties",
             ],
         },
+        musl: {
+            exclude_srcs: [
+                // musl doesn't have error.h
+                "error_test.cpp",
+
+                // musl doesn't define noreturn for C++
+                "stdnoreturn_test.cpp",
+
+                // unsupported relocation type 37
+                "ifunc_test.cpp",
+            ],
+        },
     },
 
     static_libs: [
@@ -480,6 +493,12 @@ cc_test_library {
     },
 
     generated_headers: ["generated_android_ids"],
+
+    // Bug: http://b/218788252 IR verifier too strict for ifunc resolver that
+    // accept parameters.
+    lto: {
+        never: true,
+    },
 }
 
 cc_test_library {
@@ -585,6 +604,10 @@ cc_defaults {
     target: {
         host: {
             clang_cflags: ["-D__clang__"],
+        },
+        musl: {
+            // Musl doesn't have fortify
+            enabled: false,
         },
     },
 }
@@ -707,6 +730,7 @@ cc_test_library {
 cc_test_library {
     name: "libBionicTests",
     defaults: ["bionic_tests_defaults"],
+    host_supported: false,
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
@@ -725,13 +749,13 @@ cc_test_library {
     name: "libBionicLoaderTests",
     defaults: [
         "bionic_tests_defaults",
-        "llvm-defaults",
     ],
     srcs: [
         "atexit_test.cpp",
         "dl_test.cpp",
         "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
+        "execinfo_test.cpp",
         "link_test.cpp",
         "pthread_dlfcn_test.cpp",
     ],
@@ -755,12 +779,6 @@ cc_test_library {
                 "libmeminfo",
                 "libprocinfo",
                 "libziparchive",
-                "libLLVMObject",
-                "libLLVMBitReader",
-                "libLLVMMC",
-                "libLLVMMCParser",
-                "libLLVMCore",
-                "libLLVMSupport",
             ],
         },
     },
@@ -774,13 +792,14 @@ cc_test_library {
     name: "libBionicCtsGtestMain",
     defaults: ["bionic_tests_defaults"],
     srcs: [
-        "gtest_globals_cts.cpp",
+        "gtest_globals.cpp",
         "gtest_main.cpp",
     ],
     shared: {
         enabled: false,
     },
     whole_static_libs: [
+        "libbase",
         "libgtest_isolated",
     ],
 }
@@ -849,21 +868,15 @@ cc_defaults {
                 "libziparchive",
                 "libz",
                 "libutils",
-                "libLLVMObject",
-                "libLLVMBitReader",
-                "libLLVMMC",
-                "libLLVMMCParser",
-                "libLLVMCore",
-                "libLLVMSupport",
             ],
             ldflags: [
-                "-Wl,--rpath,${ORIGIN}/../bionic-loader-test-libs",
+                "-Wl,--rpath,${ORIGIN}/bionic-loader-test-libs",
                 "-Wl,--enable-new-dtags",
             ],
         },
     },
 
-    required: [
+    data_bins: [
         "cfi_test_helper",
         "cfi_test_helper2",
         "elftls_dlopen_ie_error_helper",
@@ -882,6 +895,14 @@ cc_defaults {
         "ld_preload_test_helper",
         "ld_preload_test_helper_lib1",
         "ld_preload_test_helper_lib2",
+        "ns_hidden_child_helper",
+        "preinit_getauxval_test_helper",
+        "preinit_syscall_test_helper",
+        "thread_exit_cb_helper",
+        "tls_properties_helper",
+    ],
+
+    data_libs: [
         "libatest_simple_zip",
         "libcfi-test",
         "libcfi-test-bad",
@@ -893,9 +914,7 @@ cc_defaults {
         "libdlext_test_fd",
         "libdlext_test_norelro",
         "libdlext_test_recursive",
-        "libdlext_test_runpath_zip_zipaligned",
         "libdlext_test_zip",
-        "libdlext_test_zip_zipaligned",
         "libgnu-hash-table-library",
         "libns_hidden_child_app",
         "libns_hidden_child_global",
@@ -1015,11 +1034,6 @@ cc_defaults {
         "libtest_with_dependency_loop_b",
         "libtest_with_dependency_loop_c",
         "libtestshared",
-        "ns_hidden_child_helper",
-        "preinit_getauxval_test_helper",
-        "preinit_syscall_test_helper",
-        "thread_exit_cb_helper",
-        "tls_properties_helper",
     ],
 }
 
@@ -1027,6 +1041,11 @@ cc_test {
     name: "bionic-unit-tests",
     defaults: [
         "bionic_unit_tests_defaults",
+    ],
+    test_suites: ["device-tests"],
+    data: [
+        ":libdlext_test_runpath_zip_zipaligned",
+        ":libdlext_test_zip_zipaligned",
     ],
 }
 
@@ -1070,6 +1089,7 @@ cc_test {
     name: "bionic-unit-tests-static",
     gtest: false,
     defaults: ["bionic_tests_defaults"],
+    test_suites: ["device-tests"],
     host_supported: false,
 
     srcs: [
@@ -1103,6 +1123,19 @@ cc_test {
 
     static_executable: true,
     stl: "libc++_static",
+    // Clang cannot build ifunc with LTO.
+    // http://b/203737712
+    lto: {
+        never: true,
+    },
+    data_bins: [
+        "heap_tagging_async_helper",
+        "heap_tagging_disabled_helper",
+        "heap_tagging_static_async_helper",
+        "heap_tagging_static_disabled_helper",
+        "heap_tagging_static_sync_helper",
+        "heap_tagging_sync_helper",
+    ],
 }
 
 // -----------------------------------------------------------------------------
@@ -1120,6 +1153,7 @@ cc_test_host {
         "dlfcn_symlink_support.cpp",
         "dlfcn_test.cpp",
         "dl_test.cpp",
+        "execinfo_test.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
         "pthread_dlfcn_test.cpp",
@@ -1169,6 +1203,13 @@ cc_test_host {
     target: {
         linux_bionic: {
             enabled: false,
+        },
+        musl: {
+            exclude_static_libs: [
+                // Musl doesn't have fortify
+                "libfortify1-tests-clang",
+                "libfortify2-tests-clang",
+            ],
         },
     },
 }

@@ -45,17 +45,19 @@ enum {
   NDA_PROTOCOL,
   NDA_NH_ID,
   NDA_FDB_EXT_ATTRS,
+  NDA_FLAGS_EXT,
   __NDA_MAX
 };
 #define NDA_MAX (__NDA_MAX - 1)
-#define NTF_USE 0x01
-#define NTF_SELF 0x02
-#define NTF_MASTER 0x04
-#define NTF_PROXY 0x08
-#define NTF_EXT_LEARNED 0x10
-#define NTF_OFFLOADED 0x20
-#define NTF_STICKY 0x40
-#define NTF_ROUTER 0x80
+#define NTF_USE (1 << 0)
+#define NTF_SELF (1 << 1)
+#define NTF_MASTER (1 << 2)
+#define NTF_PROXY (1 << 3)
+#define NTF_EXT_LEARNED (1 << 4)
+#define NTF_OFFLOADED (1 << 5)
+#define NTF_STICKY (1 << 6)
+#define NTF_ROUTER (1 << 7)
+#define NTF_EXT_MANAGED (1 << 0)
 #define NUD_INCOMPLETE 0x01
 #define NUD_REACHABLE 0x02
 #define NUD_STALE 0x04

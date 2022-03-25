@@ -53,6 +53,8 @@
 #define BTRFS_INODE_REF_KEY 12
 #define BTRFS_INODE_EXTREF_KEY 13
 #define BTRFS_XATTR_ITEM_KEY 24
+#define BTRFS_VERITY_DESC_ITEM_KEY 36
+#define BTRFS_VERITY_MERKLE_ITEM_KEY 37
 #define BTRFS_ORPHAN_ITEM_KEY 48
 #define BTRFS_DIR_LOG_ITEM_KEY 60
 #define BTRFS_DIR_LOG_INDEX_KEY 72
@@ -423,5 +425,10 @@ struct btrfs_qgroup_limit_item {
   __le64 max_excl;
   __le64 rsv_rfer;
   __le64 rsv_excl;
+} __attribute__((__packed__));
+struct btrfs_verity_descriptor_item {
+  __le64 size;
+  __le64 reserved[2];
+  __u8 encryption;
 } __attribute__((__packed__));
 #endif
