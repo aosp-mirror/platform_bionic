@@ -33,6 +33,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/prctl.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -68,8 +69,6 @@ __LIBC_HIDDEN__ void __libc_init_profiling_handlers() {
   // does not get loaded for a) non-apps, b) non-profilable apps on user. The default signal
   // disposition is to crash. We do not want the target to crash if we accidentally target a
   // non-app or non-profilable process.
-  //
-  // This does *not* get run for processes that statically link libc, and those will still crash.
   signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
 }
 
@@ -139,13 +138,25 @@ static void HandleTracedPerfSignal() {
     return;
   }
 
+  // If the process is undumpable, /proc/self/mem will be owned by root:root, and therefore
+  // inaccessible to the process itself (see man 5 proc). We temporarily mark the process as
+  // dumpable to allow for the open. Note: prctl is not async signal safe per posix, but bionic's
+  // implementation is. Error checking on prctls is omitted due to them being trivial.
+  int orig_dumpable = prctl(PR_GET_DUMPABLE, 0, 0, 0, 0);
+  if (!orig_dumpable) {
+    prctl(PR_SET_DUMPABLE, 1, 0, 0, 0);
+  }
   ScopedFd maps_fd{ open("/proc/self/maps", O_RDONLY | O_CLOEXEC) };
+  ScopedFd mem_fd{ open("/proc/self/mem", O_RDONLY | O_CLOEXEC) };
+  if (!orig_dumpable) {
+    prctl(PR_SET_DUMPABLE, orig_dumpable, 0, 0, 0);
+  }
+
   if (maps_fd.get() == -1) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/maps: %s",
                           strerror(errno));
     return;
   }
-  ScopedFd mem_fd{ open("/proc/self/mem", O_RDONLY | O_CLOEXEC) };
   if (mem_fd.get() == -1) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "failed to open /proc/self/mem: %s",
                           strerror(errno));

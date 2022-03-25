@@ -42,6 +42,7 @@
 #include "platform/bionic/macros.h"
 #include "platform/bionic/mte.h"
 #include "platform/bionic/page.h"
+#include "platform/bionic/reserved_signals.h"
 #include "private/KernelArgumentBlock.h"
 #include "private/bionic_asm.h"
 #include "private/bionic_asm_note.h"
@@ -190,14 +191,17 @@ bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const
 #ifdef __aarch64__
 static bool __read_memtag_note(const ElfW(Nhdr)* note, const char* name, const char* desc,
                                unsigned* result) {
+  if (note->n_type != NT_ANDROID_TYPE_MEMTAG) {
+    return false;
+  }
   if (note->n_namesz != 8 || strncmp(name, "Android", 8) != 0) {
     return false;
   }
-  if (note->n_type != NT_TYPE_MEMTAG) {
-    return false;
-  }
-  if (note->n_descsz != 4) {
-    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected 4", note->n_descsz);
+  // Previously (in Android 12), if the note was != 4 bytes, we check-failed
+  // here. Let's be more permissive to allow future expansion.
+  if (note->n_descsz < 4) {
+    async_safe_fatal("unrecognized android.memtag note: n_descsz = %d, expected >= 4",
+                     note->n_descsz);
   }
   *result = *reinterpret_cast<const ElfW(Word)*>(desc);
   return true;
@@ -236,6 +240,7 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
 // level into *level.
 static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
+  static const char kMemtagGlobalSysprop[] = "persist.arm64.memtag.default";
 
   const char* progname = __libc_shared_globals()->init_progname;
   if (progname == nullptr) return false;
@@ -249,9 +254,10 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 
   async_safe_format_buffer(sysprop_name, sysprop_size, "%s%s", kMemtagPrognameSyspropPrefix,
                            basename);
+  const char* sys_prop_names[] = {sysprop_name, kMemtagGlobalSysprop};
 
-  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", &sysprop_name,
-                                       /* sys_prop_names_size */ 1, options_str, kOptionsSize)) {
+  if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
+                                       options_str, kOptionsSize)) {
     return false;
   }
 
@@ -282,21 +288,29 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
 
   unsigned note_val =
       __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-  if (note_val & ~(NT_MEMTAG_LEVEL_MASK | NT_MEMTAG_HEAP)) {
-    async_safe_fatal("unrecognized android.memtag note: desc = %d", note_val);
-  }
 
+  // Note, previously (in Android 12), any value outside of bits [0..3] resulted
+  // in a check-fail. In order to be permissive of further extensions, we
+  // relaxed this restriction. For now, we still only support MTE heap.
   if (!(note_val & NT_MEMTAG_HEAP)) return M_HEAP_TAGGING_LEVEL_TBI;
 
-  unsigned memtag_level = note_val & NT_MEMTAG_LEVEL_MASK;
-  switch (memtag_level) {
+  unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
+  switch (mode) {
+    case NT_MEMTAG_LEVEL_NONE:
+      // Note, previously (in Android 12), NT_MEMTAG_LEVEL_NONE was
+      // NT_MEMTAG_LEVEL_DEFAULT, which implied SYNC mode. This was never used
+      // by anyone, but we note it (heh) here for posterity, in case the zero
+      // level becomes meaningful, and binaries with this note can be executed
+      // on Android 12 devices.
+      return M_HEAP_TAGGING_LEVEL_TBI;
     case NT_MEMTAG_LEVEL_ASYNC:
       return M_HEAP_TAGGING_LEVEL_ASYNC;
-    case NT_MEMTAG_LEVEL_DEFAULT:
     case NT_MEMTAG_LEVEL_SYNC:
-      return M_HEAP_TAGGING_LEVEL_SYNC;
     default:
-      async_safe_fatal("unrecognized android.memtag note: level = %d", memtag_level);
+      // We allow future extensions to specify mode 3 (currently unused), with
+      // the idea that it might be used for ASYMM mode or something else. On
+      // this version of Android, it falls back to SYNC mode.
+      return M_HEAP_TAGGING_LEVEL_SYNC;
   }
 }
 
@@ -331,6 +345,15 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
 void __libc_init_mte(const void*, size_t, uintptr_t) {}
 #endif  // __aarch64__
 
+void __libc_init_profiling_handlers() {
+  // The dynamic variant of this function is more interesting, but this
+  // at least ensures that static binaries aren't killed by the kernel's
+  // default disposition for these two real-time signals that would have
+  // handlers installed if this was a dynamic binary.
+  signal(BIONIC_SIGNAL_PROFILER, SIG_IGN);
+  signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
+}
+
 __noreturn static void __real_libc_init(void *raw_args,
                                         void (*onexit)(void) __unused,
                                         int (*slingshot)(int, char**, char**),
@@ -351,6 +374,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
                   /*load_bias = */ 0);
   __libc_init_scudo();
+  __libc_init_profiling_handlers();
   __libc_init_fork_handler();
 
   call_ifunc_resolvers();
