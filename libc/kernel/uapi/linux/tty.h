@@ -47,4 +47,5 @@
 #define N_NCI 25
 #define N_SPEAKUP 26
 #define N_NULL 27
+#define N_MCTP 28
 #endif
