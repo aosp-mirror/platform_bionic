@@ -295,6 +295,29 @@ cc_prebuilt_test_library_shared {
     },
 }
 
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-local-tls",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-local-tls.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-local-tls.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-local-tls.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-local-tls.so"],
+        },
+    },
+}
+
 // -----------------------------------------------------------------------------
 // All standard tests.
 // -----------------------------------------------------------------------------
@@ -994,6 +1017,7 @@ cc_defaults {
         "libtest_init_fini_order_root",
         "libtest_init_fini_order_root2",
         "libtest_invalid-empty_shdr_table",
+        "libtest_invalid-local-tls",
         "libtest_invalid-rw_load_segment",
         "libtest_invalid-textrels",
         "libtest_invalid-textrels2",
