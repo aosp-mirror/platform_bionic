@@ -1654,6 +1654,21 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
+TEST(dlfcn, dlopen_invalid_local_tls) {
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-local-tls.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+#if defined(__arm__)
+  const char* referent = "local section";
+#else
+  const char* referent = "local symbol \"tls_var_2\"";
+#endif
+  std::string expected_dlerror = std::string("dlopen failed: unexpected TLS reference to ") +
+                                 referent + " in \"" + libpath + "\"";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
 TEST(dlfcn, dlopen_df_1_global) {
   void* handle = dlopen("libtest_dlopen_df_1_global.so", RTLD_NOW);
   ASSERT_TRUE(handle != nullptr) << dlerror();
