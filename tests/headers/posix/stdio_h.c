@@ -110,7 +110,8 @@ static void stdio_h() {
   FUNCTION(getchar_unlocked, int (*f)(void));
   FUNCTION(getdelim, ssize_t (*f)(char**, size_t*, int, FILE*));
   FUNCTION(getline, ssize_t (*f)(char**, size_t*, FILE*));
-  FUNCTION(gets, char* (*f)(char*));
+  // gets() was removed in C11.
+  // FUNCTION(gets, char* (*f)(char*));
   FUNCTION(open_memstream, FILE* (*f)(char**, size_t*));
   FUNCTION(pclose, int (*f)(FILE*));
   FUNCTION(perror, void (*f)(const char*));
