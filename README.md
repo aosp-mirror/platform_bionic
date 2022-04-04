@@ -147,11 +147,11 @@ this system call?". The answer is usually "no".
 The answer is "yes" if the system call is part of the POSIX standard.
 
 The answer is probably "yes" if the system call has a wrapper in at
-least one other C library.
+least one other C library (typically glibc/musl or Apple's libc).
 
 The answer may be "yes" if the system call has three/four distinct
-users in different projects, and there isn't a more specific library
-that would make more sense as the place to add the wrapper.
+users in different projects, and there isn't a more specific higher-level
+library that would make more sense as the place to add the wrapper.
 
 In all other cases, you should use
 [syscall(3)](http://man7.org/linux/man-pages/man2/syscall.2.html) instead.
@@ -166,14 +166,38 @@ Adding a system call usually involves:
      the appropriate POSIX header file in libc/include/ includes the
      relevant file or files.
   3. Add function declarations to the appropriate header file. Don't forget
-     to include the appropriate `__INTRODUCED_IN()`.
-  4. Add the function name to the correct section in libc/libc.map.txt.
-  5. Add at least basic tests. Even a test that deliberately supplies
+     to include the appropriate `__INTRODUCED_IN()`. If you need to create a new
+     header file, libc/include/sys/sysinfo.h is a good short example to copy and
+     paste from.
+  4. Add basic documentation to the header file. libc/include/sys/sysinfo.h is a
+     good short example that shows the expected style. Most of the detail
+     should actually be left to the man7.org page, with only a brief
+     one-sentence explanation in our documentation. Alway include the return
+     value/error reporting details. Explicitly say which version of Android the
+     function was added to. Explicitly call out any Android-specific
+     changes/additions/limitations because they won't be on the man7.org page.
+  5. Add the function name to the correct section in libc/libc.map.txt.
+  6. Add at least basic tests. Even a test that deliberately supplies
      an invalid argument helps check that we're generating the right symbol
      and have the right declaration in the header file, and that you correctly
      updated the maps in step 5. (You can use strace(1) to confirm that the
-     correct system call is being made.)
+     correct system call is being made.) Don't try to test everything;
+     concentrate on just testing the *bionic* code, not the kernel. We should
+     prefer to rely on https://github.com/linux-test-project/ltp for kernel
+     testing, but you'll want to check that external/ltp contains tests for the
+     syscall you're adding. Also check that external/ltp is using the libc
+     wrapper for the syscall rather than calling it "directly" via syscall(3)!
 
+Some system calls are harder than others. The most common problem is a 64-bit
+argument such as `off64_t` (a *pointer* to a 64-bit argument is fine, since
+pointers are always the "natural" size for the architecture regardless of the
+size of the thing they point to). Whenever you have a function that takes
+`off_t` or `off64_t`, you'll need to consider whether you actually need a foo()
+and a foo64(), and whether they will use the same underlying system call or are
+implemented as two different system calls. It's usually easiest to find a
+similar system call and copy and paste from that. You'll definitely need to test
+both on 32-bit and 64-bit. (These special cases usually warrant more testing
+than the easy cases, even if only manual testing with strace.)
 
 ## Updating kernel header files
 
