@@ -133,6 +133,7 @@ cc_test {
     include_dirs: [
         "bionic/libc",
         "bionic/libc/async_safe/include",
+        "bionic", // For SKIP_WITH_HWASAN.
     ],
 
     header_libs: [
