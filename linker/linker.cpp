@@ -3351,18 +3351,15 @@ static std::vector<android_namespace_t*> init_default_namespace_no_config(bool i
 }
 
 // Given an `executable_path` starting with "/apex/<name>/bin/, return
-// "/linkerconfig/<name>/ld.config.txt" (or "/apex/<name>/etc/ld.config.txt", if
-// the former does not exist).
+// "/linkerconfig/<name>/ld.config.txt", which is the auto-generated config file for the APEX by the
+// linkerconfig tool.
 static std::string get_ld_config_file_apex_path(const char* executable_path) {
   std::vector<std::string> paths = android::base::Split(executable_path, "/");
   if (paths.size() >= 5 && paths[1] == "apex" && paths[3] == "bin") {
-    // Check auto-generated ld.config.txt first
     std::string generated_apex_config = "/linkerconfig/" + paths[2] + "/ld.config.txt";
     if (file_exists(generated_apex_config.c_str())) {
       return generated_apex_config;
     }
-
-    return std::string("/apex/") + paths[2] + "/etc/ld.config.txt";
   }
   return "";
 }
