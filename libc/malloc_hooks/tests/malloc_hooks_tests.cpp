@@ -178,6 +178,7 @@ void MallocHooksTest::test_free_hook(void* ptr, const void* arg) {
 }
 
 TEST_F(MallocHooksTest, other_malloc_functions) {
+  SKIP_WITH_HWASAN; // HWASan does not implement mallinfo.
   RunTest("*.DISABLED_other_malloc_functions");
 }
 
