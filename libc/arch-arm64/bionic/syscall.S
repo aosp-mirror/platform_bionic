@@ -47,5 +47,3 @@ ENTRY(syscall)
 
     ret
 END(syscall)
-
-NOTE_GNU_PROPERTY()

@@ -55,6 +55,9 @@ __RCSID("$NetBSD: sethostent.c,v 1.20 2014/03/17 13:24:23 christos Exp $");
 #include "hostent.h"
 #include "resolv_private.h"
 
+#define ALIGNBYTES (sizeof(uintptr_t) - 1)
+#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+
 #ifndef _REENTRANT
 void	res_close(void);
 #endif
@@ -65,14 +68,14 @@ void
 /*ARGSUSED*/
 sethostent(int stayopen)
 {
-	struct res_static* rs = __res_get_static();
+	res_static rs = __res_get_static();
 	if (rs) sethostent_r(&rs->hostf);
 }
 
 void
 endhostent(void)
 {
-	struct res_static* rs = __res_get_static();
+	res_static rs = __res_get_static();
 	if (rs) endhostent_r(&rs->hostf);
 }
 

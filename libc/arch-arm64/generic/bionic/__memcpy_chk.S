@@ -43,5 +43,3 @@ ENTRY(__memcpy_chk)
 
   bl __memcpy_chk_fail
 END(__memcpy_chk)
-
-NOTE_GNU_PROPERTY()

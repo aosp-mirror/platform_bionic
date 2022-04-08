@@ -85,28 +85,6 @@ __strong_alias(sigaction64, sigaction);
 
 extern "C" int __rt_sigaction(int, const struct sigaction64*, struct sigaction64*, size_t);
 
-// sigaction and sigaction64 get interposed in ART: ensure that we don't end up calling
-//     sigchain sigaction -> bionic sigaction -> sigchain sigaction64 -> bionic sigaction64
-// by extracting the implementation of sigaction64 to a static function.
-static int __sigaction64(int signal, const struct sigaction64* bionic_new,
-                         struct sigaction64* bionic_old) {
-  struct sigaction64 kernel_new;
-  if (bionic_new) {
-    kernel_new = *bionic_new;
-#if defined(SA_RESTORER)
-    if (!(kernel_new.sa_flags & SA_RESTORER)) {
-      kernel_new.sa_flags |= SA_RESTORER;
-      kernel_new.sa_restorer = (kernel_new.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
-    }
-#endif
-    // Don't filter signals here; if the caller asked for everything to be blocked, we should obey.
-    kernel_new.sa_mask = kernel_new.sa_mask;
-  }
-
-  return __rt_sigaction(signal, bionic_new ? &kernel_new : nullptr, bionic_old,
-                        sizeof(kernel_new.sa_mask));
-}
-
 int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* bionic_old) {
   // The 32-bit ABI is broken. struct sigaction includes a too-small sigset_t,
   // so we have to translate to struct sigaction64 first.
@@ -123,7 +101,7 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
   }
 
   struct sigaction64 kernel_old;
-  int result = __sigaction64(signal, bionic_new ? &kernel_new : nullptr, &kernel_old);
+  int result = sigaction64(signal, bionic_new ? &kernel_new : nullptr, &kernel_old);
   if (bionic_old) {
     *bionic_old = {};
     bionic_old->sa_flags = kernel_old.sa_flags;
@@ -137,7 +115,23 @@ int sigaction(int signal, const struct sigaction* bionic_new, struct sigaction* 
 }
 
 int sigaction64(int signal, const struct sigaction64* bionic_new, struct sigaction64* bionic_old) {
-  return __sigaction64(signal, bionic_new, bionic_old);
+  struct sigaction64 kernel_new;
+  if (bionic_new) {
+    kernel_new = *bionic_new;
+#if defined(SA_RESTORER)
+    if (!(kernel_new.sa_flags & SA_RESTORER)) {
+      kernel_new.sa_flags |= SA_RESTORER;
+      kernel_new.sa_restorer = (kernel_new.sa_flags & SA_SIGINFO) ? &__restore_rt : &__restore;
+    }
+#endif
+    // Don't filter signals here; if the caller asked for everything to be blocked, we should obey.
+    kernel_new.sa_mask = kernel_new.sa_mask;
+  }
+
+  return __rt_sigaction(signal,
+                        bionic_new ? &kernel_new : nullptr,
+                        bionic_old,
+                        sizeof(kernel_new.sa_mask));
 }
 
 #endif

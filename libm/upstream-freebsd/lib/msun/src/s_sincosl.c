@@ -27,7 +27,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_sincosl.c 319047 2017-05-28 06:13:38Z mmel $");
 
 #include <float.h>
 #ifdef __i386__

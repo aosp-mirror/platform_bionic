@@ -37,7 +37,6 @@
 
 #include "linker.h"
 #include "linker_mapped_file_fragment.h"
-#include "linker_note_gnu_property.h"
 
 class ElfReader {
  public:
@@ -50,8 +49,6 @@ class ElfReader {
   size_t phdr_count() const { return phdr_num_; }
   ElfW(Addr) load_start() const { return reinterpret_cast<ElfW(Addr)>(load_start_); }
   size_t load_size() const { return load_size_; }
-  ElfW(Addr) gap_start() const { return reinterpret_cast<ElfW(Addr)>(gap_start_); }
-  size_t gap_size() const { return gap_size_; }
   ElfW(Addr) load_bias() const { return load_bias_; }
   const ElfW(Phdr)* loaded_phdr() const { return loaded_phdr_; }
   const ElfW(Dyn)* dynamic() const { return dynamic_; }
@@ -68,7 +65,6 @@ class ElfReader {
   bool ReserveAddressSpace(address_space_params* address_space);
   bool LoadSegments();
   bool FindPhdr();
-  bool FindGnuPropertySection();
   bool CheckPhdr(ElfW(Addr));
   bool CheckFileRange(ElfW(Addr) offset, size_t size, size_t alignment);
 
@@ -100,10 +96,6 @@ class ElfReader {
   void* load_start_;
   // Size in bytes of reserved address space.
   size_t load_size_;
-  // First page of inaccessible gap mapping reserved for this DSO.
-  void* gap_start_;
-  // Size in bytes of the gap mapping.
-  size_t gap_size_;
   // Load bias.
   ElfW(Addr) load_bias_;
 
@@ -112,18 +104,13 @@ class ElfReader {
 
   // Is map owned by the caller
   bool mapped_by_caller_;
-
-  // Only used by AArch64 at the moment.
-  GnuPropertySection note_gnu_property_ __unused;
 };
 
 size_t phdr_table_get_load_size(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                 ElfW(Addr)* min_vaddr = nullptr, ElfW(Addr)* max_vaddr = nullptr);
 
-size_t phdr_table_get_maximum_alignment(const ElfW(Phdr)* phdr_table, size_t phdr_count);
-
-int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
-                                ElfW(Addr) load_bias, const GnuPropertySection* prop = nullptr);
+int phdr_table_protect_segments(const ElfW(Phdr)* phdr_table,
+                                size_t phdr_count, ElfW(Addr) load_bias);
 
 int phdr_table_unprotect_segments(const ElfW(Phdr)* phdr_table, size_t phdr_count,
                                   ElfW(Addr) load_bias);
@@ -146,5 +133,5 @@ void phdr_table_get_dynamic_section(const ElfW(Phdr)* phdr_table, size_t phdr_co
                                     ElfW(Addr) load_bias, ElfW(Dyn)** dynamic,
                                     ElfW(Word)* dynamic_flags);
 
-const char* phdr_table_get_interpreter_name(const ElfW(Phdr)* phdr_table, size_t phdr_count,
+const char* phdr_table_get_interpreter_name(const ElfW(Phdr) * phdr_table, size_t phdr_count,
                                             ElfW(Addr) load_bias);

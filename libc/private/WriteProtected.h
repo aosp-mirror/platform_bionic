@@ -40,11 +40,23 @@ union WriteProtectedContents {
 // explicitly.
 template <typename T>
 class WriteProtected {
- public:
   static_assert(sizeof(T) < PAGE_SIZE,
                 "WriteProtected only supports contents up to PAGE_SIZE");
   static_assert(__is_pod(T), "WriteProtected only supports POD contents");
 
+  WriteProtectedContents<T> contents;
+
+  int set_protection(int prot) {
+    auto addr = &contents;
+#if __has_feature(hwaddress_sanitizer)
+    // The mprotect system call does not currently untag pointers, so do it
+    // ourselves.
+    addr = untag_address(addr);
+#endif
+    return mprotect(reinterpret_cast<void*>(addr), PAGE_SIZE, prot);
+  }
+
+ public:
   WriteProtected() = default;
   BIONIC_DISALLOW_COPY_AND_ASSIGN(WriteProtected);
 
@@ -52,7 +64,10 @@ class WriteProtected {
     // Not strictly necessary, but this will hopefully segfault if we initialize
     // multiple times by accident.
     memset(&contents, 0, sizeof(contents));
-    set_protection(PROT_READ);
+
+    if (set_protection(PROT_READ)) {
+      async_safe_fatal("failed to make WriteProtected nonwritable in initialize");
+    }
   }
 
   const T* operator->() {
@@ -65,23 +80,14 @@ class WriteProtected {
 
   template <typename Mutator>
   void mutate(Mutator mutator) {
-    set_protection(PROT_READ | PROT_WRITE);
+    if (set_protection(PROT_READ | PROT_WRITE) != 0) {
+      async_safe_fatal("failed to make WriteProtected writable in mutate: %s",
+                       strerror(errno));
+    }
     mutator(&contents.value);
-    set_protection(PROT_READ);
-  }
-
- private:
-  WriteProtectedContents<T> contents;
-
-  void set_protection(int prot) {
-    auto addr = &contents;
-#if __has_feature(hwaddress_sanitizer)
-    // The mprotect system call does not currently untag pointers, so do it
-    // ourselves.
-    addr = untag_address(addr);
-#endif
-    if (mprotect(reinterpret_cast<void*>(addr), PAGE_SIZE, prot) == -1) {
-      async_safe_fatal("WriteProtected mprotect %x failed: %s", prot, strerror(errno));
+    if (set_protection(PROT_READ) != 0) {
+      async_safe_fatal("failed to make WriteProtected nonwritable in mutate: %s",
+                       strerror(errno));
     }
   }
 };

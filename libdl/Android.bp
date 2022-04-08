@@ -1,26 +1,10 @@
 //
 // libdl
 //
-package {
-    default_applicable_licenses: ["bionic_libdl_license"],
-}
-
-license {
-    name: "bionic_libdl_license",
-    visibility: [":__subpackages__"],
-    license_kinds: [
-        "SPDX-license-identifier-Apache-2.0",
-    ],
-    license_text: [
-        "NOTICE",
-    ],
-}
-
 cc_library_static {
     name: "libdl_static",
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
-    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -41,8 +25,6 @@ cc_library_static {
 
     stl: "none",
     system_shared_libs: [],
-    header_libs: ["libc_headers"],
-    export_header_lib_headers: ["libc_headers"],
 
     sanitize: {
         never: true,
@@ -52,7 +34,6 @@ cc_library_static {
 cc_library {
     name: "libdl",
     ramdisk_available: true,
-    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
     static_ndk_lib: true,
@@ -73,7 +54,7 @@ cc_library {
         "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
     ],
 
@@ -116,7 +97,6 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
-    header_libs: ["libc_headers"],
 
     // Opt out of native_coverage when opting out of system_shared_libs
     native_coverage: false,
@@ -133,21 +113,14 @@ cc_library {
         symbol_file: "libdl.map.txt",
         versions: [
             "29",
-            "current",
+            "10000",
         ],
-    },
-    llndk: {
-        symbol_file: "libdl.map.txt",
     },
 
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
     ],
-
-    lto: {
-        never: true,
-    },
 }
 
 cc_library {
@@ -155,7 +128,6 @@ cc_library {
 
     defaults: ["linux_bionic_supported"],
     ramdisk_available: true,
-    vendor_ramdisk_available: true,
     recovery_available: true,
     native_bridge_supported: true,
 
@@ -173,7 +145,7 @@ cc_library {
         "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
-        "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-x86-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
     ],
 
@@ -203,7 +175,6 @@ cc_library {
 
     nocrt: true,
     system_shared_libs: [],
-    header_libs: ["libc_headers"],
 
     // Opt out of native_coverage when opting out of system_shared_libs
     native_coverage: false,
@@ -218,23 +189,26 @@ cc_library {
 
     stubs: {
         symbol_file: "libdl_android.map.txt",
-        versions: ["current"],
+        versions: ["10000"],
     },
 
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
     ],
-
-    lto: {
-        never: true,
-    },
 }
 
 ndk_library {
     name: "libdl",
+    native_bridge_supported: true,
     symbol_file: "libdl.map.txt",
     first_version: "9",
+}
+
+llndk_library {
+    name: "libdl",
+    native_bridge_supported: true,
+    symbol_file: "libdl.map.txt",
 }
 
 genrule {

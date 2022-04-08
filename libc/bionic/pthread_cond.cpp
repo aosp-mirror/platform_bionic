@@ -116,8 +116,7 @@ struct pthread_cond_internal_t {
   }
 
 #if defined(__LP64__)
-  atomic_uint waiters;
-  char __reserved[40];
+  char __reserved[44];
 #endif
 };
 
@@ -142,10 +141,6 @@ int pthread_cond_init(pthread_cond_t* cond_interface, const pthread_condattr_t* 
   }
   atomic_init(&cond->state, init_state);
 
-#if defined(__LP64__)
-  atomic_init(&cond->waiters, 0);
-#endif
-
   return 0;
 }
 
@@ -168,12 +163,6 @@ static int __pthread_cond_pulse(pthread_cond_internal_t* cond, int thread_count)
   // not be called. That's why pthread_wait/signal pair can't be used as a method for memory
   // synchronization. And it doesn't help even if we use any fence here.
 
-#if defined(__LP64__)
-  if (atomic_load_explicit(&cond->waiters, memory_order_relaxed) == 0) {
-    return 0;
-  }
-#endif
-
   // The increase of value should leave flags alone, even if the value can overflows.
   atomic_fetch_add_explicit(&cond->state, COND_COUNTER_STEP, memory_order_relaxed);
 
@@ -189,19 +178,9 @@ static int __pthread_cond_timedwait(pthread_cond_internal_t* cond, pthread_mutex
   }
 
   unsigned int old_state = atomic_load_explicit(&cond->state, memory_order_relaxed);
-
-#if defined(__LP64__)
-  atomic_fetch_add_explicit(&cond->waiters, 1, memory_order_relaxed);
-#endif
-
   pthread_mutex_unlock(mutex);
   int status = __futex_wait_ex(&cond->state, cond->process_shared(), old_state,
                                use_realtime_clock, abs_timeout_or_null);
-
-#if defined(__LP64__)
-  atomic_fetch_sub_explicit(&cond->waiters, 1, memory_order_relaxed);
-#endif
-
   pthread_mutex_lock(mutex);
 
   if (status == -ETIMEDOUT) {

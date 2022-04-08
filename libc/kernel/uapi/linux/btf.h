@@ -91,13 +91,7 @@ struct btf_param {
 };
 enum {
   BTF_VAR_STATIC = 0,
-  BTF_VAR_GLOBAL_ALLOCATED = 1,
-  BTF_VAR_GLOBAL_EXTERN = 2,
-};
-enum btf_func_linkage {
-  BTF_FUNC_STATIC = 0,
-  BTF_FUNC_GLOBAL = 1,
-  BTF_FUNC_EXTERN = 2,
+  BTF_VAR_GLOBAL_ALLOCATED,
 };
 struct btf_var {
   __u32 linkage;

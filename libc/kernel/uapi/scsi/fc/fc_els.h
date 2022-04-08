@@ -19,7 +19,6 @@
 #ifndef _FC_ELS_H_
 #define _FC_ELS_H_
 #include <linux/types.h>
-#include <asm/byteorder.h>
 enum fc_els_cmd {
   ELS_LS_RJT = 0x01,
   ELS_LS_ACC = 0x02,
@@ -42,8 +41,6 @@ enum fc_els_cmd {
   ELS_REC = 0x13,
   ELS_SRR = 0x14,
   ELS_FPIN = 0x16,
-  ELS_RDP = 0x18,
-  ELS_RDF = 0x19,
   ELS_PRLI = 0x20,
   ELS_PRLO = 0x21,
   ELS_SCN = 0x22,
@@ -85,7 +82,7 @@ enum fc_els_cmd {
   ELS_LKA = 0x80,
   ELS_AUTH_ELS = 0x90,
 };
-#define FC_ELS_CMDS_INIT {[ELS_LS_RJT] = "LS_RJT",[ELS_LS_ACC] = "LS_ACC",[ELS_PLOGI] = "PLOGI",[ELS_FLOGI] = "FLOGI",[ELS_LOGO] = "LOGO",[ELS_ABTX] = "ABTX",[ELS_RCS] = "RCS",[ELS_RES] = "RES",[ELS_RSS] = "RSS",[ELS_RSI] = "RSI",[ELS_ESTS] = "ESTS",[ELS_ESTC] = "ESTC",[ELS_ADVC] = "ADVC",[ELS_RTV] = "RTV",[ELS_RLS] = "RLS",[ELS_ECHO] = "ECHO",[ELS_TEST] = "TEST",[ELS_RRQ] = "RRQ",[ELS_REC] = "REC",[ELS_SRR] = "SRR",[ELS_FPIN] = "FPIN",[ELS_RDP] = "RDP",[ELS_RDF] = "RDF",[ELS_PRLI] = "PRLI",[ELS_PRLO] = "PRLO",[ELS_SCN] = "SCN",[ELS_TPLS] = "TPLS",[ELS_TPRLO] = "TPRLO",[ELS_LCLM] = "LCLM",[ELS_GAID] = "GAID",[ELS_FACT] = "FACT",[ELS_FDACDT] = "FDACDT",[ELS_NACT] = "NACT",[ELS_NDACT] = "NDACT",[ELS_QOSR] = "QOSR",[ELS_RVCS] = "RVCS",[ELS_PDISC] = "PDISC",[ELS_FDISC] = "FDISC",[ELS_ADISC] = "ADISC",[ELS_RNC] = "RNC",[ELS_FARP_REQ] = "FARP_REQ",[ELS_FARP_REPL] = "FARP_REPL",[ELS_RPS] = "RPS",[ELS_RPL] = "RPL",[ELS_RPBC] = "RPBC",[ELS_FAN] = "FAN",[ELS_RSCN] = "RSCN",[ELS_SCR] = "SCR",[ELS_RNFT] = "RNFT",[ELS_CSR] = "CSR",[ELS_CSU] = "CSU",[ELS_LINIT] = "LINIT",[ELS_LSTS] = "LSTS",[ELS_RNID] = "RNID",[ELS_RLIR] = "RLIR",[ELS_LIRR] = "LIRR",[ELS_SRL] = "SRL",[ELS_SBRP] = "SBRP",[ELS_RPSC] = "RPSC",[ELS_QSA] = "QSA",[ELS_EVFP] = "EVFP",[ELS_LKA] = "LKA",[ELS_AUTH_ELS] = "AUTH_ELS", \
+#define FC_ELS_CMDS_INIT {[ELS_LS_RJT] = "LS_RJT",[ELS_LS_ACC] = "LS_ACC",[ELS_PLOGI] = "PLOGI",[ELS_FLOGI] = "FLOGI",[ELS_LOGO] = "LOGO",[ELS_ABTX] = "ABTX",[ELS_RCS] = "RCS",[ELS_RES] = "RES",[ELS_RSS] = "RSS",[ELS_RSI] = "RSI",[ELS_ESTS] = "ESTS",[ELS_ESTC] = "ESTC",[ELS_ADVC] = "ADVC",[ELS_RTV] = "RTV",[ELS_RLS] = "RLS",[ELS_ECHO] = "ECHO",[ELS_TEST] = "TEST",[ELS_RRQ] = "RRQ",[ELS_REC] = "REC",[ELS_SRR] = "SRR",[ELS_FPIN] = "FPIN",[ELS_PRLI] = "PRLI",[ELS_PRLO] = "PRLO",[ELS_SCN] = "SCN",[ELS_TPLS] = "TPLS",[ELS_TPRLO] = "TPRLO",[ELS_LCLM] = "LCLM",[ELS_GAID] = "GAID",[ELS_FACT] = "FACT",[ELS_FDACDT] = "FDACDT",[ELS_NACT] = "NACT",[ELS_NDACT] = "NDACT",[ELS_QOSR] = "QOSR",[ELS_RVCS] = "RVCS",[ELS_PDISC] = "PDISC",[ELS_FDISC] = "FDISC",[ELS_ADISC] = "ADISC",[ELS_RNC] = "RNC",[ELS_FARP_REQ] = "FARP_REQ",[ELS_FARP_REPL] = "FARP_REPL",[ELS_RPS] = "RPS",[ELS_RPL] = "RPL",[ELS_RPBC] = "RPBC",[ELS_FAN] = "FAN",[ELS_RSCN] = "RSCN",[ELS_SCR] = "SCR",[ELS_RNFT] = "RNFT",[ELS_CSR] = "CSR",[ELS_CSU] = "CSU",[ELS_LINIT] = "LINIT",[ELS_LSTS] = "LSTS",[ELS_RNID] = "RNID",[ELS_RLIR] = "RLIR",[ELS_LIRR] = "LIRR",[ELS_SRL] = "SRL",[ELS_SBRP] = "SBRP",[ELS_RPSC] = "RPSC",[ELS_QSA] = "QSA",[ELS_EVFP] = "EVFP",[ELS_LKA] = "LKA",[ELS_AUTH_ELS] = "AUTH_ELS", \
 }
 struct fc_els_ls_acc {
   __u8 la_cmd;
@@ -125,32 +122,6 @@ enum fc_els_rjt_explan {
   ELS_EXPL_UNSUPR = 0x2c,
   ELS_EXPL_INV_LEN = 0x2d,
   ELS_EXPL_NOT_NEIGHBOR = 0x62,
-};
-enum fc_ls_tlv_dtag {
-  ELS_DTAG_LS_REQ_INFO = 0x00000001,
-  ELS_DTAG_LNK_INTEGRITY = 0x00020001,
-  ELS_DTAG_DELIVERY = 0x00020002,
-  ELS_DTAG_PEER_CONGEST = 0x00020003,
-  ELS_DTAG_CONGESTION = 0x00020004,
-  ELS_DTAG_FPIN_REGISTER = 0x00030001,
-};
-#define FC_LS_TLV_DTAG_INIT { { ELS_DTAG_LS_REQ_INFO, "Link Service Request Information" }, { ELS_DTAG_LNK_INTEGRITY, "Link Integrity Notification" }, { ELS_DTAG_DELIVERY, "Delivery Notification Present" }, { ELS_DTAG_PEER_CONGEST, "Peer Congestion Notification" }, { ELS_DTAG_CONGESTION, "Congestion Notification" }, { ELS_DTAG_FPIN_REGISTER, "FPIN Registration" }, \
-}
-struct fc_tlv_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __u8 desc_value[0];
-};
-#define FC_TLV_DESC_HDR_SZ sizeof(struct fc_tlv_desc)
-#define FC_TLV_DESC_LENGTH_FROM_SZ(desc) (sizeof(desc) - FC_TLV_DESC_HDR_SZ)
-#define FC_TLV_DESC_SZ_FROM_LENGTH(tlv) (__be32_to_cpu((tlv)->desc_len) + FC_TLV_DESC_HDR_SZ)
-struct fc_els_lsri_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  struct {
-    __u8 cmd;
-    __u8 bytes[3];
-  } rqst_w0;
 };
 struct fc_els_csp {
   __u8 sp_hi_ver;
@@ -572,100 +543,20 @@ enum fc_els_clid_ic {
   ELS_CLID_IC_LOOP_TO = 7,
   ELS_CLID_IC_LIP = 8,
 };
-enum fc_fpin_li_event_types {
-  FPIN_LI_UNKNOWN = 0x0,
-  FPIN_LI_LINK_FAILURE = 0x1,
-  FPIN_LI_LOSS_OF_SYNC = 0x2,
-  FPIN_LI_LOSS_OF_SIG = 0x3,
-  FPIN_LI_PRIM_SEQ_ERR = 0x4,
-  FPIN_LI_INVALID_TX_WD = 0x5,
-  FPIN_LI_INVALID_CRC = 0x6,
-  FPIN_LI_DEVICE_SPEC = 0xF,
+enum fc_fn_dtag {
+  ELS_FN_DTAG_LNK_INTEGRITY = 0x00020001,
+  ELS_FN_DTAG_PEER_CONGEST = 0x00020003,
+  ELS_FN_DTAG_CONGESTION = 0x00020004,
 };
-#define FC_FPIN_LI_EVT_TYPES_INIT { { FPIN_LI_UNKNOWN, "Unknown" }, { FPIN_LI_LINK_FAILURE, "Link Failure" }, { FPIN_LI_LOSS_OF_SYNC, "Loss of Synchronization" }, { FPIN_LI_LOSS_OF_SIG, "Loss of Signal" }, { FPIN_LI_PRIM_SEQ_ERR, "Primitive Sequence Protocol Error" }, { FPIN_LI_INVALID_TX_WD, "Invalid Transmission Word" }, { FPIN_LI_INVALID_CRC, "Invalid CRC" }, { FPIN_LI_DEVICE_SPEC, "Device Specific" }, \
-}
-enum fc_fpin_deli_event_types {
-  FPIN_DELI_UNKNOWN = 0x0,
-  FPIN_DELI_TIMEOUT = 0x1,
-  FPIN_DELI_UNABLE_TO_ROUTE = 0x2,
-  FPIN_DELI_DEVICE_SPEC = 0xF,
-};
-#define FC_FPIN_DELI_EVT_TYPES_INIT { { FPIN_DELI_UNKNOWN, "Unknown" }, { FPIN_DELI_TIMEOUT, "Timeout" }, { FPIN_DELI_UNABLE_TO_ROUTE, "Unable to Route" }, { FPIN_DELI_DEVICE_SPEC, "Device Specific" }, \
-}
-enum fc_fpin_congn_event_types {
-  FPIN_CONGN_CLEAR = 0x0,
-  FPIN_CONGN_LOST_CREDIT = 0x1,
-  FPIN_CONGN_CREDIT_STALL = 0x2,
-  FPIN_CONGN_OVERSUBSCRIPTION = 0x3,
-  FPIN_CONGN_DEVICE_SPEC = 0xF,
-};
-#define FC_FPIN_CONGN_EVT_TYPES_INIT { { FPIN_CONGN_CLEAR, "Clear" }, { FPIN_CONGN_LOST_CREDIT, "Lost Credit" }, { FPIN_CONGN_CREDIT_STALL, "Credit Stall" }, { FPIN_CONGN_OVERSUBSCRIPTION, "Oversubscription" }, { FPIN_CONGN_DEVICE_SPEC, "Device Specific" }, \
-}
-enum fc_fpin_congn_severity_types {
-  FPIN_CONGN_SEVERITY_WARNING = 0xF1,
-  FPIN_CONGN_SEVERITY_ERROR = 0xF7,
-};
-struct fc_fn_li_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be64 detecting_wwpn;
-  __be64 attached_wwpn;
-  __be16 event_type;
-  __be16 event_modifier;
-  __be32 event_threshold;
-  __be32 event_count;
-  __be32 pname_count;
-  __be64 pname_list[0];
-};
-struct fc_fn_deli_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be64 detecting_wwpn;
-  __be64 attached_wwpn;
-  __be32 deli_reason_code;
-};
-struct fc_fn_peer_congn_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be64 detecting_wwpn;
-  __be64 attached_wwpn;
-  __be16 event_type;
-  __be16 event_modifier;
-  __be32 event_period;
-  __be32 pname_count;
-  __be64 pname_list[0];
-};
-struct fc_fn_congn_desc {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be16 event_type;
-  __be16 event_modifier;
-  __be32 event_period;
-  __u8 severity;
-  __u8 resv[3];
+struct fc_fn_desc {
+  __be32 fn_desc_tag;
+  __be32 fn_desc_value_len;
+  __u8 fn_desc_value[0];
 };
 struct fc_els_fpin {
   __u8 fpin_cmd;
   __u8 fpin_zero[3];
-  __be32 desc_len;
-  struct fc_tlv_desc fpin_desc[0];
-};
-struct fc_df_desc_fpin_reg {
-  __be32 desc_tag;
-  __be32 desc_len;
-  __be32 count;
-  __be32 desc_tags[0];
-};
-struct fc_els_rdf {
-  __u8 fpin_cmd;
-  __u8 fpin_zero[3];
-  __be32 desc_len;
-  struct fc_tlv_desc desc[0];
-};
-struct fc_els_rdf_resp {
-  struct fc_els_ls_acc acc_hdr;
-  __be32 desc_list_len;
-  struct fc_els_lsri_desc lsri;
-  struct fc_tlv_desc desc[0];
+  __be32 fpin_desc_cnt;
+  struct fc_fn_desc fpin_desc[0];
 };
 #endif

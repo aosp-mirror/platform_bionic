@@ -12,7 +12,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/e_hypot.c 336362 2018-07-17 07:42:14Z bde $");
 
 /* __ieee754_hypot(x,y)
  *
@@ -118,8 +118,10 @@ __ieee754_hypot(double x, double y)
 	    w  = sqrt(t1*y1-(w*(-w)-(t1*y2+t2*b)));
 	}
 	if(k!=0) {
-	    t1 = 0.0;
-	    SET_HIGH_WORD(t1,(1023+k)<<20);
+	    u_int32_t high;
+	    t1 = 1.0;
+	    GET_HIGH_WORD(high,t1);
+	    SET_HIGH_WORD(t1,high+(k<<20));
 	    return t1*w;
 	} else return w;
 }

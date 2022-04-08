@@ -83,14 +83,14 @@ TEST(sys_epoll, epoll_event_data) {
 TEST(sys_epoll, epoll_create1) {
   int fd;
   fd = epoll_create(1);
-  ASSERT_FALSE(CloseOnExec(fd));
+  AssertCloseOnExec(fd, false);
   close(fd);
 
   fd = epoll_create1(0);
-  ASSERT_FALSE(CloseOnExec(fd));
+  AssertCloseOnExec(fd, false);
   close(fd);
 
   fd = epoll_create1(EPOLL_CLOEXEC);
-  ASSERT_TRUE(CloseOnExec(fd));
+  AssertCloseOnExec(fd, true);
   close(fd);
 }

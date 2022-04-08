@@ -112,14 +112,14 @@ int unlockpt(int fd) {
   return ioctl(fd, TIOCSPTLCK, &unlock);
 }
 
-int openpty(int* pty, int* tty, char* name, const termios* t, const winsize* ws) {
-  *pty = getpt();
-  if (*pty == -1) {
+int openpty(int* master, int* slave, char* name, const termios* t, const winsize* ws) {
+  *master = getpt();
+  if (*master == -1) {
     return -1;
   }
 
-  if (grantpt(*pty) == -1 || unlockpt(*pty) == -1) {
-    close(*pty);
+  if (grantpt(*master) == -1 || unlockpt(*master) == -1) {
+    close(*master);
     return -1;
   }
 
@@ -127,54 +127,54 @@ int openpty(int* pty, int* tty, char* name, const termios* t, const winsize* ws)
   if (name == nullptr) {
     name = buf;
   }
-  if (ptsname_r(*pty, name, sizeof(buf)) != 0) {
-    close(*pty);
+  if (ptsname_r(*master, name, sizeof(buf)) != 0) {
+    close(*master);
     return -1;
   }
 
-  *tty = open(name, O_RDWR | O_NOCTTY);
-  if (*tty == -1) {
-    close(*pty);
+  *slave = open(name, O_RDWR|O_NOCTTY);
+  if (*slave == -1) {
+    close(*master);
     return -1;
   }
 
   if (t != nullptr) {
-    tcsetattr(*tty, TCSAFLUSH, t);
+    tcsetattr(*slave, TCSAFLUSH, t);
   }
   if (ws != nullptr) {
-    ioctl(*tty, TIOCSWINSZ, ws);
+    ioctl(*slave, TIOCSWINSZ, ws);
   }
 
   return 0;
 }
 
-int forkpty(int* parent_pty, char* child_tty_name, const termios* t, const winsize* ws) {
-  int pty;
-  int tty;
-  if (openpty(&pty, &tty, child_tty_name, t, ws) == -1) {
+int forkpty(int* amaster, char* name, const termios* t, const winsize* ws) {
+  int master;
+  int slave;
+  if (openpty(&master, &slave, name, t, ws) == -1) {
     return -1;
   }
 
   pid_t pid = fork();
   if (pid == -1) {
-    close(pty);
-    close(tty);
+    close(master);
+    close(slave);
     return -1;
   }
 
   if (pid == 0) {
     // Child.
-    *parent_pty = -1;
-    close(pty);
-    if (login_tty(tty) == -1) {
+    *amaster = -1;
+    close(master);
+    if (login_tty(slave) == -1) {
       _exit(1);
     }
     return 0;
   }
 
   // Parent.
-  *parent_pty = pty;
-  close(tty);
+  *amaster = master;
+  close(slave);
   return pid;
 }
 

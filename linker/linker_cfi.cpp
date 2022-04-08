@@ -133,7 +133,8 @@ void CFIShadowWriter::Add(uintptr_t begin, uintptr_t end, uintptr_t cfi_check) {
 
 static soinfo* find_libdl(soinfo* solist) {
   for (soinfo* si = solist; si != nullptr; si = si->next) {
-    if (strcmp(si->get_soname(), "libdl.so") == 0) {
+    const char* soname = si->get_soname();
+    if (soname && strcmp(soname, "libdl.so") == 0) {
       return si;
     }
   }

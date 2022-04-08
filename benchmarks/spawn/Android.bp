@@ -26,10 +26,6 @@
 // SUCH DAMAGE.
 //
 
-package {
-    default_applicable_licenses: ["bionic_benchmarks_license"],
-}
-
 cc_defaults {
     name: "bionic_spawn_benchmark_targets",
     host_supported: true,
@@ -72,7 +68,6 @@ cc_benchmark {
 
     // Install these binaries in the same directory as the main benchmark binary.
     data: [
-        ":bench_cxa_atexit",
         ":bench_noop",
         ":bench_noop_nostl",
         ":bench_noop_static",
@@ -80,7 +75,7 @@ cc_benchmark {
 }
 
 cc_defaults {
-    name: "bionic_spawn_benchmark_binary",
+    name: "noop_binary_defaults",
     defaults: ["bionic_spawn_benchmark_targets"],
 
     compile_multilib: "both",
@@ -92,11 +87,16 @@ cc_defaults {
             suffix: "64",
         },
     },
+}
+
+cc_binary {
+    defaults: ["noop_binary_defaults"],
+    name: "bench_noop",
+    srcs: ["noop.cpp"],
 
     // When this binary is installed to host/linux-x86/bin, its runpath is ${ORIGIN}/../lib64, which
     // is fine for finding host/linux-x86/lib64/libc++.so. When it's installed to
-    // host/linux-x86/benchmarktest64/bionic-spawn-benchmarks, the runpath needs an extra "..". This
-    // argument has no effect when a static executable is produced.
+    // host/linux-x86/benchmarktest64/bionic-spawn-benchmarks, the runpath needs an extra "..".
     target: {
         linux_glibc_x86_64: {
             ldflags: [
@@ -107,26 +107,14 @@ cc_defaults {
 }
 
 cc_binary {
-    defaults: ["bionic_spawn_benchmark_binary"],
-    name: "bench_cxa_atexit",
-    srcs: ["bench_cxa_atexit.cpp"],
-}
-
-cc_binary {
-    defaults: ["bionic_spawn_benchmark_binary"],
-    name: "bench_noop",
-    srcs: ["noop.cpp"],
-}
-
-cc_binary {
-    defaults: ["bionic_spawn_benchmark_binary"],
+    defaults: ["noop_binary_defaults"],
     name: "bench_noop_nostl",
     srcs: ["noop.cpp"],
     stl: "none",
 }
 
 cc_binary {
-    defaults: ["bionic_spawn_benchmark_binary"],
+    defaults: ["noop_binary_defaults"],
     name: "bench_noop_static",
     srcs: ["noop.cpp"],
     static_executable: true,

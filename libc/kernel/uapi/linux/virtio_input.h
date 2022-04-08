@@ -29,17 +29,17 @@ enum virtio_input_config_select {
   VIRTIO_INPUT_CFG_ABS_INFO = 0x12,
 };
 struct virtio_input_absinfo {
-  __le32 min;
-  __le32 max;
-  __le32 fuzz;
-  __le32 flat;
-  __le32 res;
+  __u32 min;
+  __u32 max;
+  __u32 fuzz;
+  __u32 flat;
+  __u32 res;
 };
 struct virtio_input_devids {
-  __le16 bustype;
-  __le16 vendor;
-  __le16 product;
-  __le16 version;
+  __u16 bustype;
+  __u16 vendor;
+  __u16 product;
+  __u16 version;
 };
 struct virtio_input_config {
   __u8 select;

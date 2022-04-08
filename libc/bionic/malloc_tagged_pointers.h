@@ -99,10 +99,9 @@ static inline void* MaybeUntagAndCheckPointer(const volatile void* ptr) {
   // check below allows us to turn *off* pointer tagging (by setting PointerCheckMask() and
   // FixedPointerTag() to zero) and still allow tagged heap allocations to be freed.
   if ((ptr_int & PointerCheckMask()) != FixedPointerTag()) {
-    async_safe_fatal(
-        "Pointer tag for %p was truncated, see "
-        "'https://source.android.com/devices/tech/debug/tagged-pointers'.",
-        ptr);
+    // TODO(b/145604058) - Upstream tagged pointers documentation and provide
+    // a link to it in the abort message here.
+    async_safe_fatal("Pointer tag for %p was truncated.", ptr);
   }
   return reinterpret_cast<void*>(ptr_int & PointerUntagMask());
 }

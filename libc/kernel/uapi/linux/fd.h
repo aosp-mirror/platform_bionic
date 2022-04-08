@@ -84,8 +84,7 @@ struct floppy_drive_params {
 #define FD_SILENT_DCL_CLEAR 0x4
 #define FD_INVERTED_DCL 0x80
   char read_track;
-#define FD_AUTODETECT_SIZE 8
-  short autodetect[FD_AUTODETECT_SIZE];
+  short autodetect[8];
   int checkfreq;
   int native_format;
 };
@@ -182,18 +181,10 @@ struct floppy_raw_cmd {
   long phys_length;
   int buffer_length;
   unsigned char rate;
-#define FD_RAW_CMD_SIZE 16
-#define FD_RAW_REPLY_SIZE 16
-#define FD_RAW_CMD_FULLSIZE (FD_RAW_CMD_SIZE + 1 + FD_RAW_REPLY_SIZE)
   unsigned char cmd_count;
-  union {
-    struct {
-      unsigned char cmd[FD_RAW_CMD_SIZE];
-      unsigned char reply_count;
-      unsigned char reply[FD_RAW_REPLY_SIZE];
-    };
-    unsigned char fullcmd[FD_RAW_CMD_FULLSIZE];
-  };
+  unsigned char cmd[16];
+  unsigned char reply_count;
+  unsigned char reply[16];
   int track;
   int resultcode;
   int reserved1;

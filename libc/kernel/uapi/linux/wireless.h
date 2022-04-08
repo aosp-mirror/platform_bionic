@@ -21,7 +21,6 @@
 #include <linux/types.h>
 #include <linux/socket.h>
 #include <linux/if.h>
-#include <stddef.h>
 #define WIRELESS_EXT 22
 #define SIOCSIWCOMMIT 0x8B00
 #define SIOCGIWNAME 0x8B01
@@ -436,7 +435,7 @@ struct iw_event {
 #define IW_EV_PARAM_LEN (IW_EV_LCP_LEN + sizeof(struct iw_param))
 #define IW_EV_ADDR_LEN (IW_EV_LCP_LEN + sizeof(struct sockaddr))
 #define IW_EV_QUAL_LEN (IW_EV_LCP_LEN + sizeof(struct iw_quality))
-#define IW_EV_POINT_OFF offsetof(struct iw_point, length)
+#define IW_EV_POINT_OFF (((char *) & (((struct iw_point *) NULL)->length)) - (char *) NULL)
 #define IW_EV_POINT_LEN (IW_EV_LCP_LEN + sizeof(struct iw_point) - IW_EV_POINT_OFF)
 #define IW_EV_LCP_PK_LEN (4)
 #define IW_EV_CHAR_PK_LEN (IW_EV_LCP_PK_LEN + IFNAMSIZ)

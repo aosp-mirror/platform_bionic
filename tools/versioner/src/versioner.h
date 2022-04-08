@@ -33,11 +33,15 @@ extern bool add_include;
     }                      \
   } while (0)
 
-static const std::unordered_map<std::string, std::set<Arch>> ignored_headers = {
+static const std::unordered_map<std::string, std::set<Arch>> header_blacklist = {
   // Internal header.
-  // TODO: we should probably just admit we're never getting rid of this.
   { "sys/_system_properties.h", supported_archs },
 
   // time64.h #errors when included on LP64 archs.
   { "time64.h", { Arch::arm64, Arch::x86_64 } },
+};
+
+static const std::unordered_set<std::string> missing_symbol_whitelist = {
+  // atexit comes from crtbegin.
+  "atexit",
 };

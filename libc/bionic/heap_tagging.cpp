@@ -30,138 +30,84 @@
 #include "malloc_common.h"
 #include "malloc_tagged_pointers.h"
 
-#include <bionic/pthread_internal.h>
 #include <platform/bionic/malloc.h>
+#include <platform/bionic/mte_kernel.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
-extern "C" void scudo_malloc_set_track_allocation_stacks(int);
 
-// Protected by `g_heap_tagging_lock`.
 static HeapTaggingLevel heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
 
 void SetDefaultHeapTaggingLevel() {
 #if defined(__aarch64__)
-#if !__has_feature(hwaddress_sanitizer)
-  heap_tagging_level = __libc_shared_globals()->initial_heap_tagging_level;
-#endif
-  switch (heap_tagging_level) {
-    case M_HEAP_TAGGING_LEVEL_TBI:
-      __libc_globals.mutate([](libc_globals* globals) {
-        // Arrange for us to set pointer tags to POINTER_TAG, check tags on
-        // deallocation and untag when passing pointers to the allocator.
-        globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
-                                    (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
-      });
-#if defined(USE_SCUDO)
-      scudo_malloc_disable_memory_tagging();
-#endif  // USE_SCUDO
-      break;
-#if defined(USE_SCUDO)
-    case M_HEAP_TAGGING_LEVEL_SYNC:
-      scudo_malloc_set_track_allocation_stacks(1);
-      break;
+#define PR_SET_TAGGED_ADDR_CTRL 55
+#define PR_TAGGED_ADDR_ENABLE (1UL << 0)
+#ifdef ANDROID_EXPERIMENTAL_MTE
+  // First, try enabling MTE in asynchronous mode, with tag 0 excluded. This will fail if the kernel
+  // or hardware doesn't support MTE, and we will fall back to just enabling tagged pointers in
+  // syscall arguments.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL,
+            PR_TAGGED_ADDR_ENABLE | PR_MTE_TCF_ASYNC | (1 << PR_MTE_EXCL_SHIFT), 0, 0, 0) == 0) {
+    heap_tagging_level = M_HEAP_TAGGING_LEVEL_ASYNC;
+    return;
+  }
+#endif // ANDROID_EXPERIMENTAL_MTE
 
-    case M_HEAP_TAGGING_LEVEL_NONE:
-      scudo_malloc_disable_memory_tagging();
-      break;
-#endif  // USE_SCUDO
-    default:
-      break;
+  // Allow the kernel to accept tagged pointers in syscall arguments. This is a no-op (kernel
+  // returns -EINVAL) if the kernel doesn't understand the prctl.
+  if (prctl(PR_SET_TAGGED_ADDR_CTRL, PR_TAGGED_ADDR_ENABLE, 0, 0, 0) == 0) {
+#if !__has_feature(hwaddress_sanitizer)
+    heap_tagging_level = M_HEAP_TAGGING_LEVEL_TBI;
+    __libc_globals.mutate([](libc_globals* globals) {
+      // Arrange for us to set pointer tags to POINTER_TAG, check tags on
+      // deallocation and untag when passing pointers to the allocator.
+      globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
+                                  (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
+    });
+#endif  // hwaddress_sanitizer
   }
 #endif  // aarch64
 }
 
-static bool set_tcf_on_all_threads(int tcf) {
-  static int g_tcf;
-  g_tcf = tcf;
+bool SetHeapTaggingLevel(void* arg, size_t arg_size) {
+  if (arg_size != sizeof(HeapTaggingLevel)) {
+    return false;
+  }
 
-  return android_run_on_all_threads(
-      [](void*) {
-        int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
-        if (tagged_addr_ctrl < 0) {
-          return false;
-        }
-
-        tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | g_tcf;
-        if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
-          return false;
-        }
-        return true;
-      },
-      nullptr);
-}
-
-pthread_mutex_t g_heap_tagging_lock = PTHREAD_MUTEX_INITIALIZER;
-
-// Requires `g_heap_tagging_lock` to be held.
-HeapTaggingLevel GetHeapTaggingLevel() {
-  return heap_tagging_level;
-}
-
-// Requires `g_heap_tagging_lock` to be held.
-bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
+  auto tag_level = *reinterpret_cast<HeapTaggingLevel*>(arg);
   if (tag_level == heap_tagging_level) {
     return true;
   }
 
   switch (tag_level) {
     case M_HEAP_TAGGING_LEVEL_NONE:
-      if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
-        __libc_globals.mutate([](libc_globals* globals) {
-          // Preserve the untag mask (we still want to untag pointers when passing them to the
-          // allocator), but clear the fixed tag and the check mask, so that pointers are no longer
-          // tagged and checks no longer happen.
-          globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
-        });
-      } else if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
-        error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
-        return false;
-      }
-#if defined(USE_SCUDO)
-      scudo_malloc_disable_memory_tagging();
-#endif
       break;
     case M_HEAP_TAGGING_LEVEL_TBI:
     case M_HEAP_TAGGING_LEVEL_ASYNC:
-    case M_HEAP_TAGGING_LEVEL_SYNC:
       if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
-#if !__has_feature(hwaddress_sanitizer)
-        // Suppress the error message in HWASan builds. Apps can try to enable TBI (or even MTE
-        // modes) being unaware of HWASan, fail them silently.
         error_log(
             "SetHeapTaggingLevel: re-enabling tagging after it was disabled is not supported");
-#endif
-        return false;
-      } else if (tag_level == M_HEAP_TAGGING_LEVEL_TBI ||
-                 heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
-        error_log("SetHeapTaggingLevel: switching between TBI and ASYNC/SYNC is not supported");
-        return false;
+      } else {
+        error_log("SetHeapTaggingLevel: switching between TBI and ASYNC is not supported");
       }
-
-      if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
-        // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in
-        // the SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back
-        // to specifying a single mode.
-        if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_SYNC)) {
-          set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
-        }
-#if defined(USE_SCUDO)
-        scudo_malloc_set_track_allocation_stacks(0);
-#endif
-      } else if (tag_level == M_HEAP_TAGGING_LEVEL_SYNC) {
-        set_tcf_on_all_threads(PR_MTE_TCF_SYNC);
-#if defined(USE_SCUDO)
-        scudo_malloc_set_track_allocation_stacks(1);
-#endif
-      }
-      break;
+      return false;
     default:
       error_log("SetHeapTaggingLevel: unknown tagging level");
       return false;
   }
-
   heap_tagging_level = tag_level;
   info_log("SetHeapTaggingLevel: tag level set to %d", tag_level);
+
+  if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_NONE) {
+#if defined(USE_SCUDO)
+    scudo_malloc_disable_memory_tagging();
+#endif
+    __libc_globals.mutate([](libc_globals* globals) {
+      // Preserve the untag mask (we still want to untag pointers when passing them to the
+      // allocator if we were doing so before), but clear the fixed tag and the check mask,
+      // so that pointers are no longer tagged and checks no longer happen.
+      globals->heap_pointer_tag &= 0xffull << UNTAG_SHIFT;
+    });
+  }
 
   return true;
 }

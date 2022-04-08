@@ -34,8 +34,6 @@
 #include <vector>
 #include <unordered_set>
 
-std::vector<std::string> fix_lib_paths(std::vector<std::string> paths);
-
 struct android_namespace_t;
 
 struct android_namespace_link_t {
@@ -56,6 +54,9 @@ struct android_namespace_link_t {
   }
 
   bool is_accessible(const char* soname) const {
+    if (soname == nullptr) {
+      return false;
+    }
     return allow_all_shared_libs_ || shared_lib_sonames_.find(soname) != shared_lib_sonames_.end();
   }
 
@@ -73,7 +74,7 @@ struct android_namespace_t {
  public:
   android_namespace_t() :
     is_isolated_(false),
-    is_exempt_list_enabled_(false),
+    is_greylist_enabled_(false),
     is_also_used_as_anonymous_(false) {}
 
   const char* get_name() const { return name_.c_str(); }
@@ -82,8 +83,8 @@ struct android_namespace_t {
   bool is_isolated() const { return is_isolated_; }
   void set_isolated(bool isolated) { is_isolated_ = isolated; }
 
-  bool is_exempt_list_enabled() const { return is_exempt_list_enabled_; }
-  void set_exempt_list_enabled(bool enabled) { is_exempt_list_enabled_ = enabled; }
+  bool is_greylist_enabled() const { return is_greylist_enabled_; }
+  void set_greylist_enabled(bool enabled) { is_greylist_enabled_ = enabled; }
 
   bool is_also_used_as_anonymous() const { return is_also_used_as_anonymous_; }
   void set_also_used_as_anonymous(bool yes) { is_also_used_as_anonymous_ = yes; }
@@ -99,10 +100,10 @@ struct android_namespace_t {
     return default_library_paths_;
   }
   void set_default_library_paths(std::vector<std::string>&& library_paths) {
-    default_library_paths_ = fix_lib_paths(std::move(library_paths));
+    default_library_paths_ = std::move(library_paths);
   }
   void set_default_library_paths(const std::vector<std::string>& library_paths) {
-    default_library_paths_ = fix_lib_paths(library_paths);
+    default_library_paths_ = library_paths;
   }
 
   const std::vector<std::string>& get_permitted_paths() const {
@@ -115,12 +116,14 @@ struct android_namespace_t {
     permitted_paths_ = permitted_paths;
   }
 
-  const std::vector<std::string>& get_allowed_libs() const { return allowed_libs_; }
-  void set_allowed_libs(std::vector<std::string>&& allowed_libs) {
-    allowed_libs_ = std::move(allowed_libs);
+  const std::vector<std::string>& get_whitelisted_libs() const {
+    return whitelisted_libs_;
   }
-  void set_allowed_libs(const std::vector<std::string>& allowed_libs) {
-    allowed_libs_ = allowed_libs;
+  void set_whitelisted_libs(std::vector<std::string>&& whitelisted_libs) {
+    whitelisted_libs_ = std::move(whitelisted_libs);
+  }
+  void set_whitelisted_libs(const std::vector<std::string>& whitelisted_libs) {
+    whitelisted_libs_ = whitelisted_libs;
   }
 
   const std::vector<android_namespace_link_t>& linked_namespaces() const {
@@ -166,12 +169,12 @@ struct android_namespace_t {
  private:
   std::string name_;
   bool is_isolated_;
-  bool is_exempt_list_enabled_;
+  bool is_greylist_enabled_;
   bool is_also_used_as_anonymous_;
   std::vector<std::string> ld_library_paths_;
   std::vector<std::string> default_library_paths_;
   std::vector<std::string> permitted_paths_;
-  std::vector<std::string> allowed_libs_;
+  std::vector<std::string> whitelisted_libs_;
   // Loader looks into linked namespace if it was not able
   // to find a library in this namespace. Note that library
   // lookup in linked namespaces are limited by the list of

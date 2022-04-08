@@ -18,7 +18,7 @@
 
 #include <sys/procfs.h>
 
-TEST(sys_procfs, types) {
+TEST(sys_procfs, smoke) {
   elf_greg_t reg;
   memset(&reg, 0, sizeof(reg));
 
@@ -36,17 +36,4 @@ TEST(sys_procfs, types) {
 
   static_assert(sizeof(prgregset_t) == sizeof(elf_gregset_t), "");
   static_assert(sizeof(prfpregset_t) == sizeof(elf_fpregset_t), "");
-}
-
-TEST(sys_procfs, constants) {
-  // NGREG != ELF_NGREG (https://github.com/android/ndk/issues/1347)
-  static_assert(sizeof(gregset_t) / sizeof(greg_t) == NGREG);
-
-#if defined(__arm__)
-  static_assert(sizeof(user_regs) / sizeof(elf_greg_t) == ELF_NGREG);
-#elif defined(__aarch64__)
-  static_assert(sizeof(user_pt_regs) / sizeof(elf_greg_t) == ELF_NGREG);
-#else
-  static_assert(sizeof(user_regs_struct) / sizeof(elf_greg_t) == ELF_NGREG);
-#endif
 }

@@ -51,7 +51,8 @@
  *	Id: resolv.h,v 1.7.2.11.4.2 2004/06/25 00:41:05 marka Exp
  */
 
-#pragma once
+#ifndef _RESOLV_PRIVATE_H_
+#define	_RESOLV_PRIVATE_H_
 
 #include <sys/cdefs.h>
 
@@ -61,8 +62,6 @@
 #include "resolv_stats.h"
 #include <net/if.h>
 #include <time.h>
-
-__BEGIN_DECLS
 
 // Linux defines MAXHOSTNAMELEN as 64, while the domain name limit in
 // RFC 1034 and RFC 1035 is 255 octets.
@@ -294,6 +293,8 @@ union res_sockaddr_union {
 /*			0x00010000	*/
 
 /* Things involving an internal (static) resolver context. */
+__BEGIN_DECLS
+
 __LIBC_HIDDEN__ extern struct __res_state *__res_get_state(void);
 __LIBC_HIDDEN__ extern void __res_put_state(struct __res_state *);
 
@@ -306,6 +307,8 @@ extern struct __res_state *__res_state(void);
 #define _res (*__res_state())
 #endif
 
+__END_DECLS
+
 #ifndef __BIND_NOSTATIC
 #define fp_nquery		__fp_nquery
 #define fp_query		__fp_query
@@ -316,6 +319,7 @@ extern struct __res_state *__res_state(void);
 #define res_isourserver		__res_isourserver
 #define	res_querydomain		__res_querydomain
 #define res_send		__res_send
+#define res_sendsigned		__res_sendsigned
 
 #ifdef BIND_RES_POSIX3
 #define	dn_expand	__dn_expand
@@ -325,6 +329,7 @@ extern struct __res_state *__res_state(void);
 #define	res_mkquery	__res_mkquery
 #endif
 
+__BEGIN_DECLS
 void		fp_nquery(const u_char *, int, FILE *);
 void		fp_query(const u_char *, FILE *);
 const char *	hostalias(const char *);
@@ -338,6 +343,8 @@ int		res_query(const char *, int, int, u_char *, int);
 int		res_querydomain(const char *, const char *, int, int, u_char *, int);
 int		res_search(const char *, int, int, u_char *, int);
 int		res_send(const u_char *, int, u_char *, int);
+int		res_sendsigned(const u_char *, int, ns_tsig_key *, u_char *, int);
+__END_DECLS
 #endif
 
 #if !defined(SHARED_LIBBIND) || defined(LIB)
@@ -417,6 +424,7 @@ __LIBC_HIDDEN__ extern const struct res_sym __p_rcode_syms[];
 #define	res_send_setrhook	__res_send_setrhook
 #define	res_servicename		__res_servicename
 #define	res_servicenumber	__res_servicenumber
+__BEGIN_DECLS
 int		res_hnok(const char *);
 int		res_ownok(const char *);
 int		res_mailok(const char *);
@@ -524,3 +532,5 @@ int ns_name_map(ns_nname_ct, size_t, ns_namemap_t, int);
 int ns_name_labels(ns_nname_ct, size_t);
 
 __END_DECLS
+
+#endif /* !_RESOLV_PRIVATE_H_ */

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """A glorified C pre-processor parser."""
 
 import ctypes
@@ -14,7 +14,7 @@ if top is None:
     utils.panic('ANDROID_BUILD_TOP not set.\n')
 
 # Set up the env vars for libclang.
-site.addsitedir(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/python3/site-packages/'))
+site.addsitedir(os.path.join(top, 'external/clang/bindings/python'))
 
 import clang.cindex
 from clang.cindex import conf
@@ -28,9 +28,12 @@ from clang.cindex import TranslationUnit
 
 # Set up LD_LIBRARY_PATH to include libclang.so, libLLVM.so, and etc.
 # Note that setting LD_LIBRARY_PATH with os.putenv() sometimes doesn't help.
-clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/libclang.so'))
+clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/sdk/tools/linux/lib64/libclang_android.so'))
 
-from defaults import *
+from defaults import kCppUndefinedMacro
+from defaults import kernel_remove_config_macros
+from defaults import kernel_struct_replacements
+from defaults import kernel_token_replacements
 
 
 debugBlockParser = False
@@ -254,7 +257,7 @@ class CppTokenizer(object):
         token_group = TokenGroup(self._tu, tokens_memory, tokens_count)
 
         tokens = []
-        for i in range(0, count):
+        for i in xrange(0, count):
             token = Token(self._tu, token_group,
                           int_data=tokens_array[i].int_data,
                           ptr_data=tokens_array[i].ptr_data,
@@ -267,7 +270,7 @@ class CppTokenizer(object):
 
     def parseString(self, lines):
         """Parse a list of text lines into a BlockList object."""
-        file_ = 'no-filename-available.c'
+        file_ = 'dummy.c'
         self._tu = self._indexer.parse(file_, self.clang_flags,
                                        unsaved_files=[(file_, lines)],
                                        options=self.options)
@@ -394,10 +397,10 @@ class CppExpr(object):
         self._index = 0
 
         if debugCppExpr:
-            print("CppExpr: trying to parse %s" % repr(tokens))
+            print "CppExpr: trying to parse %s" % repr(tokens)
         self.expr = self.parseExpression(0)
         if debugCppExpr:
-            print("CppExpr: got " + repr(self.expr))
+            print "CppExpr: got " + repr(self.expr)
         if self._index != self._num_tokens:
             self.throw(BadExpectedToken, "crap at end of input (%d != %d): %s"
                        % (self._index, self._num_tokens, repr(tokens)))
@@ -405,9 +408,9 @@ class CppExpr(object):
     def throw(self, exception, msg):
         if self._index < self._num_tokens:
             tok = self.tokens[self._index]
-            print("%d:%d: %s" % (tok.location.line, tok.location.column, msg))
+            print "%d:%d: %s" % (tok.location.line, tok.location.column, msg)
         else:
-            print("EOF: %s" % msg)
+            print "EOF: %s" % msg
         raise exception(msg)
 
     def expectId(self, id):
@@ -722,7 +725,7 @@ class CppExpr(object):
 
         if op == "defined":
             op, name = e
-            if name in macros:
+            if macros.has_key(name):
                 if macros[name] == kCppUndefinedMacro:
                     return ("int", 0)
                 else:
@@ -739,7 +742,7 @@ class CppExpr(object):
 
         elif op == "ident":
             op, name = e
-            if name in macros:
+            if macros.has_key(name):
                 try:
                     value = int(macros[name])
                     expanded = ("int", value)
@@ -1179,11 +1182,11 @@ class BlockList(object):
 
     def dump(self):
         """Dump all the blocks in current BlockList."""
-        print('##### BEGIN #####')
+        print '##### BEGIN #####'
         for i, b in enumerate(self.blocks):
-            print('### BLOCK %d ###' % i)
-            print(b)
-        print('##### END #####')
+            print '### BLOCK %d ###' % i
+            print b
+        print '##### END #####'
 
     def optimizeIf01(self):
         """Remove the code between #if 0 .. #endif in a BlockList."""
@@ -1194,52 +1197,6 @@ class BlockList(object):
         for b in self.blocks:
             if b.isIf():
                 b.expr.optimize(macros)
-
-    def removeStructs(self, structs):
-        """Remove structs."""
-        for b in self.blocks:
-            # Have to look in each block for a top-level struct definition.
-            if b.directive:
-                continue
-            num_tokens = len(b.tokens)
-            # A struct definition has at least 5 tokens:
-            #   struct
-            #   ident
-            #   {
-            #   }
-            #   ;
-            if num_tokens < 5:
-                continue
-            # This is a simple struct finder, it might fail if a top-level
-            # structure has an #if type directives that confuses the algorithm
-            # for finding th end of the structure. Or if there is another
-            # structure definition embedded in the structure.
-            i = 0
-            while i < num_tokens - 2:
-                if (b.tokens[i].kind != TokenKind.KEYWORD or
-                    b.tokens[i].id != "struct"):
-                    i += 1
-                    continue
-                if (b.tokens[i + 1].kind == TokenKind.IDENTIFIER and
-                    b.tokens[i + 2].kind == TokenKind.PUNCTUATION and
-                    b.tokens[i + 2].id == "{" and b.tokens[i + 1].id in structs):
-                    # Search forward for the end of the structure.
-                    # Very simple search, look for } and ; tokens. If something
-                    # more complicated is needed we can add it later.
-                    j = i + 3
-                    while j < num_tokens - 1:
-                        if (b.tokens[j].kind == TokenKind.PUNCTUATION and
-                            b.tokens[j].id == "}" and
-                            b.tokens[j + 1].kind == TokenKind.PUNCTUATION and
-                            b.tokens[j + 1].id == ";"):
-                            b.tokens = b.tokens[0:i] + b.tokens[j + 2:num_tokens]
-                            num_tokens = len(b.tokens)
-                            j = i
-                            break
-                        j += 1
-                    i = j
-                    continue
-                i += 1
 
     def optimizeAll(self, macros):
         self.optimizeMacros(macros)
@@ -1510,7 +1467,7 @@ class BlockParser(object):
             while i < len(tokens) and tokens[i].location in extent:
                 t = tokens[i]
                 if debugBlockParser:
-                    print(' ' * 2, t.id, t.kind, t.cursor.kind)
+                    print ' ' * 2, t.id, t.kind, t.cursor.kind
                 if (detect_change and t.cursor.extent != extent and
                     t.cursor.kind == CursorKind.PREPROCESSING_DIRECTIVE):
                     break
@@ -1798,6 +1755,7 @@ class OptimizerTests(unittest.TestCase):
     def parse(self, text, macros=None):
         out = utils.StringOutput()
         blocks = BlockParser().parse(CppStringTokenizer(text))
+        blocks.replaceTokens(kernel_token_replacements)
         blocks.optimizeAll(macros)
         blocks.write(out)
         return out.get()
@@ -1973,8 +1931,8 @@ class OptimizerTests(unittest.TestCase):
 #endif /* SIGRTMAX */
 """
         expected = """\
-#ifndef SIGRTMAX
-#define SIGRTMAX 123
+#ifndef __SIGRTMAX
+#define __SIGRTMAX 123
 #endif
 """
         self.assertEqual(self.parse(text), expected)
@@ -1990,146 +1948,6 @@ class OptimizerTests(unittest.TestCase):
         expected = ""
         self.assertEqual(self.parse(text), expected)
 
-class RemoveStructsTests(unittest.TestCase):
-    def parse(self, text, structs):
-        out = utils.StringOutput()
-        blocks = BlockParser().parse(CppStringTokenizer(text))
-        blocks.removeStructs(structs)
-        blocks.write(out)
-        return out.get()
-
-    def test_remove_struct_from_start(self):
-        text = """\
-struct remove {
-  int val1;
-  int val2;
-};
-struct something {
-  struct timeval val1;
-  struct timeval val2;
-};
-"""
-        expected = """\
-struct something {
-  struct timeval val1;
-  struct timeval val2;
-};
-"""
-        self.assertEqual(self.parse(text, set(["remove"])), expected)
-
-    def test_remove_struct_from_end(self):
-        text = """\
-struct something {
-  struct timeval val1;
-  struct timeval val2;
-};
-struct remove {
-  int val1;
-  int val2;
-};
-"""
-        expected = """\
-struct something {
-  struct timeval val1;
-  struct timeval val2;
-};
-"""
-        self.assertEqual(self.parse(text, set(["remove"])), expected)
-
-    def test_remove_minimal_struct(self):
-        text = """\
-struct remove {
-};
-"""
-        expected = "";
-        self.assertEqual(self.parse(text, set(["remove"])), expected)
-
-    def test_remove_struct_with_struct_fields(self):
-        text = """\
-struct something {
-  struct remove val1;
-  struct remove val2;
-};
-struct remove {
-  int val1;
-  struct something val3;
-  int val2;
-};
-"""
-        expected = """\
-struct something {
-  struct remove val1;
-  struct remove val2;
-};
-"""
-        self.assertEqual(self.parse(text, set(["remove"])), expected)
-
-    def test_remove_consecutive_structs(self):
-        text = """\
-struct keep1 {
-  struct timeval val1;
-  struct timeval val2;
-};
-struct remove1 {
-  int val1;
-  int val2;
-};
-struct remove2 {
-  int val1;
-  int val2;
-  int val3;
-};
-struct keep2 {
-  struct timeval val1;
-  struct timeval val2;
-};
-"""
-        expected = """\
-struct keep1 {
-  struct timeval val1;
-  struct timeval val2;
-};
-struct keep2 {
-  struct timeval val1;
-  struct timeval val2;
-};
-"""
-        self.assertEqual(self.parse(text, set(["remove1", "remove2"])), expected)
-
-    def test_remove_multiple_structs(self):
-        text = """\
-struct keep1 {
-  int val;
-};
-struct remove1 {
-  int val1;
-  int val2;
-};
-struct keep2 {
-  int val;
-};
-struct remove2 {
-  struct timeval val1;
-  struct timeval val2;
-};
-struct keep3 {
-  int val;
-};
-"""
-        expected = """\
-struct keep1 {
-  int val;
-};
-struct keep2 {
-  int val;
-};
-struct keep3 {
-  int val;
-};
-"""
-        self.assertEqual(self.parse(text, set(["remove1", "remove2"])), expected)
-
-
 class FullPathTest(unittest.TestCase):
     """Test of the full path parsing."""
 
@@ -2138,12 +1956,9 @@ class FullPathTest(unittest.TestCase):
             keep = set()
         out = utils.StringOutput()
         blocks = BlockParser().parse(CppStringTokenizer(text))
-
-        blocks.removeStructs(kernel_structs_to_remove)
         blocks.removeVarsAndFuncs(keep)
         blocks.replaceTokens(kernel_token_replacements)
         blocks.optimizeAll(None)
-
         blocks.write(out)
         return out.get()
 
@@ -2423,38 +2238,6 @@ MACRO_FUNCTION_PARAMS(b)
 #define MACRO_FUNCTION_NO_PARAMS static inline some_func() { }
 #define MACRO_FUNCTION_PARAMS(a) static inline some_func() { a; }
 something that should still be kept
-"""
-        self.assertEqual(self.parse(text), expected)
-
-    def test_verify_timeval_itemerval(self):
-        text = """\
-struct __kernel_old_timeval {
-  struct something val;
-};
-struct __kernel_old_itimerval {
-  struct __kernel_old_timeval val;
-};
-struct fields {
-  struct __kernel_old_timeval timeval;
-  struct __kernel_old_itimerval itimerval;
-};
-"""
-        expected = """\
-struct fields {
-  struct timeval timeval;
-  struct itimerval itimerval;
-};
-"""
-        self.assertEqual(self.parse(text), expected)
-
-    def test_token_replacement(self):
-        text = """\
-#define SIGRTMIN 32
-#define SIGRTMAX _NSIG
-"""
-        expected = """\
-#define __SIGRTMIN 32
-#define __SIGRTMAX _KERNEL__NSIG
 """
         self.assertEqual(self.parse(text), expected)
 

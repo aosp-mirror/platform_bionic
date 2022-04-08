@@ -11,7 +11,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_erf.c 342563 2018-12-28 01:34:08Z jhibbits $");
 
 /* double erf(double x)
  * double erfc(double x)

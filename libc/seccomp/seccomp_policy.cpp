@@ -140,12 +140,12 @@ static void ValidateSyscallArgInRange(filter& f, __u32 arg_num, __u32 range_min,
     Disallow(f);
 }
 
-// This filter is meant to be installed in addition to a regular allowlist filter.
+// This filter is meant to be installed in addition to a regular whitelist filter.
 // Therefore, it's default action has to be Allow, except when the evaluated
 // system call matches setresuid/setresgid and the arguments don't fall within the
 // passed in range.
 //
-// The regular allowlist only allows setresuid/setresgid for UID/GID changes, so
+// The regular whitelist only allows setresuid/setresgid for UID/GID changes, so
 // that's the only system call we need to check here. A CTS test ensures the other
 // calls will remain blocked.
 static void ValidateSetUidGid(filter& f, uint32_t uid_gid_min, uint32_t uid_gid_max, bool primary) {

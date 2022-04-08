@@ -24,13 +24,12 @@
 #include <string>
 
 std::string GetTestlibRoot() {
-  // Typically the executable is /data/nativetest[64]/bionic-unit-tests/bionic-unit-tests, and the
-  // test libraries are in /data/nativetest[64]/bionic-loader-test-libs.
-  std::string path = android::base::GetExecutableDirectory() + "/..";
+  // Calculate ANDROID_DATA assuming the binary is in "$ANDROID_DATA/somedir/binary-dir/binary"
+  std::string path = android::base::Dirname(android::base::GetExecutablePath()) + "/..";
 
   std::string out_path;
   if (!android::base::Realpath(path.c_str(), &out_path)) {
-    printf("Failed to get realpath for \"%s\"\n", path.c_str());
+    printf("Failed to get realpath for \"%s\"", path.c_str());
     abort();
   }
 
@@ -38,7 +37,7 @@ std::string GetTestlibRoot() {
 
   std::string real_path;
   if (!android::base::Realpath(out_path, &real_path)) {
-    printf("\"%s\": does not exists\n", out_path.c_str());
+    printf("\"%s\": does not exists", out_path.c_str());
     abort();
   }
 

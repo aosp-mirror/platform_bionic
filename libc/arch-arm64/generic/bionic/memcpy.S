@@ -33,5 +33,3 @@
 ENTRY(__memcpy)
   #include "memcpy_base.S"
 END(__memcpy)
-
-NOTE_GNU_PROPERTY()

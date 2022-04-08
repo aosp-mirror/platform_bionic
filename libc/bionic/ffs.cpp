@@ -26,5 +26,8 @@
  * SUCH DAMAGE.
  */
 
-#define __BIONIC_STRINGS_INLINE /* Out of line. */
 #include <strings.h>
+
+int ffs(int x) {
+  return __builtin_ffs(x);
+}

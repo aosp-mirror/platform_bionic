@@ -19,10 +19,8 @@
 
 #include <string>
 
-std::string GetTestlibRoot();
+constexpr const char* kPrebuiltElfDir = "prebuilt-elf-files";
 
-inline std::string GetPrebuiltElfDir() {
-  return GetTestlibRoot() + "/prebuilt-elf-files";
-}
+std::string GetTestlibRoot();
 
 #endif  // _BIONIC_TESTS_GTEST_GLOBALS_H

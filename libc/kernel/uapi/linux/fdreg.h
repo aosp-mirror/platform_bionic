@@ -18,15 +18,16 @@
  ****************************************************************************/
 #ifndef _LINUX_FDREG_H
 #define _LINUX_FDREG_H
-#define FD_SRA 0
-#define FD_SRB 1
-#define FD_DOR 2
-#define FD_TDR 3
-#define FD_DSR 4
-#define FD_STATUS 4
-#define FD_DATA 5
-#define FD_DIR 7
-#define FD_DCR 7
+#ifdef FDPATCHES
+#define FD_IOPORT fdc_state[fdc].address
+#else
+#define FD_IOPORT 0x3f0
+#endif
+#define FD_STATUS (4 + FD_IOPORT)
+#define FD_DATA (5 + FD_IOPORT)
+#define FD_DOR (2 + FD_IOPORT)
+#define FD_DIR (7 + FD_IOPORT)
+#define FD_DCR (7 + FD_IOPORT)
 #define STATUS_BUSYMASK 0x0F
 #define STATUS_BUSY 0x10
 #define STATUS_DMA 0x20

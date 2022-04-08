@@ -44,10 +44,9 @@
 
 extern "C" char** environ;
 
-enum { ExecL, ExecLE, ExecLP };
+enum ExecVariant { kIsExecL, kIsExecLE, kIsExecLP };
 
-template <int variant>
-static int __execl(const char* name, const char* argv0, va_list ap) {
+static int __execl(const char* name, const char* argv0, ExecVariant variant, va_list ap) {
   // Count the arguments.
   va_list count_ap;
   va_copy(count_ap, ap);
@@ -66,17 +65,17 @@ static int __execl(const char* name, const char* argv0, va_list ap) {
   }
 
   // Collect the argp too.
-  char** argp = (variant == ExecLE) ? va_arg(ap, char**) : environ;
+  char** argp = (variant == kIsExecLE) ? va_arg(ap, char**) : environ;
 
   va_end(ap);
 
-  return (variant == ExecLP) ? execvp(name, argv) : execve(name, argv, argp);
+  return (variant == kIsExecLP) ? execvp(name, argv) : execve(name, argv, argp);
 }
 
 int execl(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  int result = __execl<ExecL>(name, arg, ap);
+  int result = __execl(name, arg, kIsExecL, ap);
   va_end(ap);
   return result;
 }
@@ -84,7 +83,7 @@ int execl(const char* name, const char* arg, ...) {
 int execle(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  int result = __execl<ExecLE>(name, arg, ap);
+  int result = __execl(name, arg, kIsExecLE, ap);
   va_end(ap);
   return result;
 }
@@ -92,7 +91,7 @@ int execle(const char* name, const char* arg, ...) {
 int execlp(const char* name, const char* arg, ...) {
   va_list ap;
   va_start(ap, arg);
-  int result = __execl<ExecLP>(name, arg, ap);
+  int result = __execl(name, arg, kIsExecLP, ap);
   va_end(ap);
   return result;
 }

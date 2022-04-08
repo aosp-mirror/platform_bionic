@@ -151,12 +151,6 @@ enum {
 #define RTM_DELLINKPROP RTM_DELLINKPROP
   RTM_GETLINKPROP,
 #define RTM_GETLINKPROP RTM_GETLINKPROP
-  RTM_NEWVLAN = 112,
-#define RTM_NEWNVLAN RTM_NEWVLAN
-  RTM_DELVLAN,
-#define RTM_DELVLAN RTM_DELVLAN
-  RTM_GETVLAN,
-#define RTM_GETVLAN RTM_GETVLAN
   __RTM_MAX,
 #define RTM_MAX (((__RTM_MAX + 3) & ~3) - 1)
 };
@@ -217,7 +211,6 @@ enum {
 #define RTPROT_NTK 15
 #define RTPROT_DHCP 16
 #define RTPROT_MROUTED 17
-#define RTPROT_KEEPALIVED 18
 #define RTPROT_BABEL 42
 #define RTPROT_BGP 186
 #define RTPROT_ISIS 187
@@ -237,9 +230,6 @@ enum rt_scope_t {
 #define RTM_F_PREFIX 0x800
 #define RTM_F_LOOKUP_TABLE 0x1000
 #define RTM_F_FIB_MATCH 0x2000
-#define RTM_F_OFFLOAD 0x4000
-#define RTM_F_TRAP 0x8000
-#define RTM_F_OFFLOAD_FAILED 0x20000000
 enum rt_class_t {
   RT_TABLE_UNSPEC = 0,
   RT_TABLE_COMPAT = 252,
@@ -297,8 +287,7 @@ struct rtnexthop {
 #define RTNH_F_OFFLOAD 8
 #define RTNH_F_LINKDOWN 16
 #define RTNH_F_UNRESOLVED 32
-#define RTNH_F_TRAP 64
-#define RTNH_COMPARE_MASK (RTNH_F_DEAD | RTNH_F_LINKDOWN | RTNH_F_OFFLOAD | RTNH_F_TRAP)
+#define RTNH_COMPARE_MASK (RTNH_F_DEAD | RTNH_F_LINKDOWN | RTNH_F_OFFLOAD)
 #define RTNH_ALIGNTO 4
 #define RTNH_ALIGN(len) (((len) + RTNH_ALIGNTO - 1) & ~(RTNH_ALIGNTO - 1))
 #define RTNH_OK(rtnh,len) ((rtnh)->rtnh_len >= sizeof(struct rtnexthop) && ((int) (rtnh)->rtnh_len) <= (len))
@@ -447,11 +436,9 @@ enum {
   TCA_HW_OFFLOAD,
   TCA_INGRESS_BLOCK,
   TCA_EGRESS_BLOCK,
-  TCA_DUMP_FLAGS,
   __TCA_MAX
 };
 #define TCA_MAX (__TCA_MAX - 1)
-#define TCA_DUMP_FLAGS_TERSE (1 << 0)
 #define TCA_RTA(r) ((struct rtattr *) (((char *) (r)) + NLMSG_ALIGN(sizeof(struct tcmsg))))
 #define TCA_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct tcmsg))
 struct nduseroptmsg {
@@ -550,8 +537,6 @@ enum rtnetlink_groups {
 #define RTNLGRP_IPV6_MROUTE_R RTNLGRP_IPV6_MROUTE_R
   RTNLGRP_NEXTHOP,
 #define RTNLGRP_NEXTHOP RTNLGRP_NEXTHOP
-  RTNLGRP_BRVLAN,
-#define RTNLGRP_BRVLAN RTNLGRP_BRVLAN
   __RTNLGRP_MAX
 };
 #define RTNLGRP_MAX (__RTNLGRP_MAX - 1)
@@ -574,13 +559,8 @@ enum {
 #define TA_RTA(r) ((struct rtattr *) (((char *) (r)) + NLMSG_ALIGN(sizeof(struct tcamsg))))
 #define TA_PAYLOAD(n) NLMSG_PAYLOAD(n, sizeof(struct tcamsg))
 #define TCA_FLAG_LARGE_DUMP_ON (1 << 0)
-#define TCA_ACT_FLAG_LARGE_DUMP_ON TCA_FLAG_LARGE_DUMP_ON
-#define TCA_ACT_FLAG_TERSE_DUMP (1 << 1)
 #define RTEXT_FILTER_VF (1 << 0)
 #define RTEXT_FILTER_BRVLAN (1 << 1)
 #define RTEXT_FILTER_BRVLAN_COMPRESSED (1 << 2)
 #define RTEXT_FILTER_SKIP_STATS (1 << 3)
-#define RTEXT_FILTER_MRP (1 << 4)
-#define RTEXT_FILTER_CFM_CONFIG (1 << 5)
-#define RTEXT_FILTER_CFM_STATUS (1 << 6)
 #endif

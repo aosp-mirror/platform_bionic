@@ -396,15 +396,8 @@
 #ifdef __ARCH_WANT_SYS_CLONE3
 #define __NR_clone3 435
 #endif
-#define __NR_close_range 436
-#define __NR_openat2 437
-#define __NR_pidfd_getfd 438
-#define __NR_faccessat2 439
-#define __NR_process_madvise 440
-#define __NR_epoll_pwait2 441
-#define __NR_mount_setattr 442
 #undef __NR_syscalls
-#define __NR_syscalls 443
+#define __NR_syscalls 436
 #if __BITS_PER_LONG == 64 && !defined(__SYSCALL_COMPAT)
 #define __NR_fcntl __NR3264_fcntl
 #define __NR_statfs __NR3264_statfs

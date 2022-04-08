@@ -35,7 +35,7 @@
  * is preserved.
  * ====================================================
  *
- * $FreeBSD$
+ * $FreeBSD: head/lib/msun/src/s_modfl.c 326219 2017-11-26 02:00:33Z pfg $
  */
 
 #include <float.h>

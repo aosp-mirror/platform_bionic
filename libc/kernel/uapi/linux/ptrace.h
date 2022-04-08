@@ -62,8 +62,7 @@ struct seccomp_metadata {
 #define PTRACE_SYSCALL_INFO_SECCOMP 3
 struct ptrace_syscall_info {
   __u8 op;
-  __u8 pad[3];
-  __u32 arch;
+  __u32 arch __attribute__((__aligned__(sizeof(__u32))));
   __u64 instruction_pointer;
   __u64 stack_pointer;
   union {

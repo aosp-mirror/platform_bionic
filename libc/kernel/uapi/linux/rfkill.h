@@ -40,26 +40,13 @@ enum rfkill_operation {
   RFKILL_OP_CHANGE,
   RFKILL_OP_CHANGE_ALL,
 };
-enum rfkill_hard_block_reasons {
-  RFKILL_HARD_BLOCK_SIGNAL = 1 << 0,
-  RFKILL_HARD_BLOCK_NOT_OWNER = 1 << 1,
-};
 struct rfkill_event {
   __u32 idx;
   __u8 type;
   __u8 op;
-  __u8 soft;
-  __u8 hard;
+  __u8 soft, hard;
 } __attribute__((packed));
-struct rfkill_event_ext {
-  __u32 idx;
-  __u8 type;
-  __u8 op;
-  __u8 soft;
-  __u8 hard;
-  __u8 hard_block_reasons;
-} __attribute__((packed));
-#define RFKILL_EVENT_SIZE_V1 sizeof(struct rfkill_event)
+#define RFKILL_EVENT_SIZE_V1 8
 #define RFKILL_IOC_MAGIC 'R'
 #define RFKILL_IOC_NOINPUT 1
 #define RFKILL_IOCTL_NOINPUT _IO(RFKILL_IOC_MAGIC, RFKILL_IOC_NOINPUT)

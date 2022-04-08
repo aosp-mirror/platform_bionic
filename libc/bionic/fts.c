@@ -1,4 +1,4 @@
-/*	$OpenBSD: fts.c,v 1.60 2021/01/08 16:06:30 tb Exp $	*/
+/*	$OpenBSD: fts.c,v 1.48 2014/11/20 04:14:15 guenther Exp $	*/
 
 /*-
  * Copyright (c) 1990, 1993, 1994
@@ -29,9 +29,10 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/param.h>	/* ALIGN */
+#include <sys/param.h>
 #include <sys/stat.h>
 
+#include <assert.h>
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -41,9 +42,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define MAXIMUM(a, b)	(((a) > (b)) ? (a) : (b))
-
-static FTSENT	*fts_alloc(FTS *, const char *, size_t);
+static FTSENT	*fts_alloc(FTS *, char *, size_t);
 static FTSENT	*fts_build(FTS *, int);
 static void	 fts_lfree(FTSENT *);
 static void	 fts_load(FTS *, FTSENT *);
@@ -52,12 +51,11 @@ static void	 fts_padjust(FTS *, FTSENT *);
 static int	 fts_palloc(FTS *, size_t);
 static FTSENT	*fts_sort(FTS *, FTSENT *, int);
 static u_short	 fts_stat(FTS *, FTSENT *, int, int);
-static int	 fts_safe_changedir(FTS *, FTSENT *, int, const char *);
+static int	 fts_safe_changedir(FTS *, FTSENT *, int, char *);
 
-/* Android: OpenBSD source compatibility workarounds. */
-#include "private/bsd_sys_param.h"
-#define DEF_WEAK(s) /* nothing */
-void* recallocarray(void*, size_t, size_t, size_t);
+#define ALIGNBYTES (sizeof(uintptr_t) - 1)
+#define ALIGN(p) (((uintptr_t)(p) + ALIGNBYTES) &~ ALIGNBYTES)
+void* reallocarray(void*, size_t, size_t);
 
 #define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
 
@@ -72,22 +70,12 @@ void* recallocarray(void*, size_t, size_t, size_t);
 #define	BNAMES		2		/* fts_children, names only */
 #define	BREAD		3		/* fts_read */
 
-FTS *
-__fts_open(char * const *argv, int options,
-    int (*compar)(const FTSENT **, const FTSENT **))
-{
+FTS* __fts_open(char* const* argv, int options, int (*compar)(const FTSENT**, const FTSENT**)) {
 	FTS *sp;
 	FTSENT *p, *root;
 	int nitems;
-	FTSENT *parent, *prev;
-
-	/* Android: options check moved to __fts_open() for ftw(). */
-
-	/* At least one path must be specified. */
-	if (*argv == NULL) {
-		errno = EINVAL;
-		return (NULL);
-	}
+	FTSENT *parent, *tmp;
+	size_t len;
 
 	/* Allocate/initialize the stream */
 	if ((sp = calloc(1, sizeof(FTS))) == NULL)
@@ -103,7 +91,7 @@ __fts_open(char * const *argv, int options,
 	 * Start out with 1K of path space, and enough, in any case,
 	 * to hold the user's paths.
 	 */
-	if (fts_palloc(sp, MAXIMUM(fts_maxarglen(argv), PATH_MAX)))
+	if (fts_palloc(sp, MAX(fts_maxarglen(argv), PATH_MAX)))
 		goto mem1;
 
 	/* Allocate/initialize root's parent. */
@@ -112,15 +100,21 @@ __fts_open(char * const *argv, int options,
 	parent->fts_level = FTS_ROOTPARENTLEVEL;
 
 	/* Allocate/initialize root(s). */
-	for (root = prev = NULL, nitems = 0; *argv; ++argv, ++nitems) {
-		if ((p = fts_alloc(sp, *argv, strlen(*argv))) == NULL)
+	for (root = NULL, nitems = 0; *argv; ++argv, ++nitems) {
+		/* Don't allow zero-length paths. */
+		if ((len = strlen(*argv)) == 0) {
+			errno = ENOENT;
+			goto mem3;
+		}
+
+		if ((p = fts_alloc(sp, *argv, len)) == NULL)
 			goto mem3;
 		p->fts_level = FTS_ROOTLEVEL;
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
 		p->fts_info = fts_stat(sp, p, ISSET(FTS_COMFOLLOW), -1);
 
-		// Android: for ftw/nftw we need to fail early: http://b/31152735
+		// For ftw/nftw we need to fail early: http://b/31152735
 		if ((options & FTS_FOR_FTW) != 0 && p->fts_info == FTS_NS) goto mem3;
 
 		/* Command-line "." and ".." are real directories. */
@@ -137,10 +131,11 @@ __fts_open(char * const *argv, int options,
 		} else {
 			p->fts_link = NULL;
 			if (root == NULL)
-				root = p;
-			else
-				prev->fts_link = p;
-			prev = p;
+				tmp = root = p;
+			else {
+				tmp->fts_link = p;
+				tmp = p;
+			}
 		}
 	}
 	if (compar && nitems > 1)
@@ -163,8 +158,7 @@ __fts_open(char * const *argv, int options,
 	 * and ".." are all fairly nasty problems.  Note, if we can't get the
 	 * descriptor we run anyway, just more slowly.
 	 */
-	if (!ISSET(FTS_NOCHDIR) &&
-	    (sp->fts_rfd = open(".", O_RDONLY | O_CLOEXEC)) == -1)
+	if (!ISSET(FTS_NOCHDIR) && (sp->fts_rfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0)
 		SET(FTS_NOCHDIR);
 
 	if (nitems == 0)
@@ -178,7 +172,6 @@ mem2:	free(sp->fts_path);
 mem1:	free(sp);
 	return (NULL);
 }
-DEF_WEAK(fts_open);
 
 static void
 fts_load(FTS *sp, FTSENT *p)
@@ -228,8 +221,7 @@ fts_close(FTS *sp)
 	rfd = ISSET(FTS_NOCHDIR) ? -1 : sp->fts_rfd;
 
 	/* Free up child linked list, sort array, path buffer, stream ptr.*/
-	if (sp->fts_child)
-		fts_lfree(sp->fts_child);
+	fts_lfree(sp->fts_child);
 	free(sp->fts_array);
 	free(sp->fts_path);
 	free(sp);
@@ -245,7 +237,6 @@ fts_close(FTS *sp)
 
 	return (error);
 }
-DEF_WEAK(fts_close);
 
 /*
  * Special case of "/" at the end of the path so that slashes aren't
@@ -290,8 +281,7 @@ fts_read(FTS *sp)
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
 		p->fts_info = fts_stat(sp, p, 1, -1);
 		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-			if ((p->fts_symfd =
-			    open(".", O_RDONLY | O_CLOEXEC)) == -1) {
+			if ((p->fts_symfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0) {
 				p->fts_errno = errno;
 				p->fts_info = FTS_ERR;
 			} else
@@ -380,8 +370,7 @@ next:	tmp = p;
 		if (p->fts_instr == FTS_FOLLOW) {
 			p->fts_info = fts_stat(sp, p, 1, -1);
 			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
-				if ((p->fts_symfd =
-				    open(".", O_RDONLY | O_CLOEXEC)) == -1) {
+				if ((p->fts_symfd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0) {
 					p->fts_errno = errno;
 					p->fts_info = FTS_ERR;
 				} else
@@ -443,7 +432,6 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 	p->fts_info = p->fts_errno ? FTS_ERR : FTS_DP;
 	return (sp->fts_cur = p);
 }
-DEF_WEAK(fts_read);
 
 /*
  * Fts_set takes the stream as an argument although it's not used in this
@@ -451,6 +439,7 @@ DEF_WEAK(fts_read);
  * semantics to fts using fts_set.  An error return is allowed for similar
  * reasons.
  */
+/* ARGSUSED */
 int
 fts_set(FTS *sp __unused, FTSENT *p, int instr)
 {
@@ -462,7 +451,6 @@ fts_set(FTS *sp __unused, FTSENT *p, int instr)
 	p->fts_instr = instr;
 	return (0);
 }
-DEF_WEAK(fts_set);
 
 FTSENT *
 fts_children(FTS *sp, int instr)
@@ -501,8 +489,7 @@ fts_children(FTS *sp, int instr)
 		return (NULL);
 
 	/* Free up any previous child list. */
-	if (sp->fts_child)
-		fts_lfree(sp->fts_child);
+	fts_lfree(sp->fts_child);
 
 	if (instr == FTS_NAMEONLY) {
 		SET(FTS_NAMEONLY);
@@ -521,7 +508,7 @@ fts_children(FTS *sp, int instr)
 	    ISSET(FTS_NOCHDIR))
 		return (sp->fts_child = fts_build(sp, instr));
 
-	if ((fd = open(".", O_RDONLY | O_CLOEXEC)) == -1)
+	if ((fd = open(".", O_RDONLY|O_CLOEXEC, 0)) < 0)
 		return (NULL);
 	sp->fts_child = fts_build(sp, instr);
 	if (fchdir(fd)) {
@@ -531,7 +518,6 @@ fts_children(FTS *sp, int instr)
 	(void)close(fd);
 	return (sp->fts_child);
 }
-DEF_WEAK(fts_children);
 
 /*
  * This is the tricky part -- do not casually change *anything* in here.  The
@@ -556,9 +542,9 @@ fts_build(FTS *sp, int type)
 	DIR *dirp;
 	void *oldaddr;
 	size_t len, maxlen;
-	int nitems, cderrno, descend, level, nlinks, nostat, doadjust;
+	int nitems, cderrno, descend, level, nlinks, nostat = 0, doadjust;
 	int saved_errno;
-	char *cp;
+	char *cp = NULL;
 
 	/* Set current node pointer. */
 	cur = sp->fts_cur;
@@ -723,7 +709,8 @@ mem1:				saved_errno = errno;
 			/* Build a file name for fts_stat to stat. */
 			if (ISSET(FTS_NOCHDIR)) {
 				p->fts_accpath = p->fts_path;
-				memmove(cp, p->fts_name, p->fts_namelen + 1);
+				assert(cp && "cp should be non-null if FTS_NOCHDIR is set");
+				memmove(cp, p->fts_name, p->fts_namelen + 1); // NOLINT
 				p->fts_info = fts_stat(sp, p, 0, dirfd(dirp));
 			} else {
 				p->fts_accpath = p->fts_name;
@@ -819,9 +806,9 @@ fts_stat(FTS *sp, FTSENT *p, int follow, int dfd)
 	 * fail, set the errno from the stat call.
 	 */
 	if (ISSET(FTS_LOGICAL) || follow) {
-		if (fstatat(dfd, path, sbp, 0)) {
+		if (fstatat(dfd, path, sbp, 0) == -1) {
 			saved_errno = errno;
-			if (!fstatat(dfd, path, sbp, AT_SYMLINK_NOFOLLOW)) {
+			if (fstatat(dfd, path, sbp, AT_SYMLINK_NOFOLLOW) == 0) {
 				errno = 0;
 				return (FTS_SLNONE);
 			}
@@ -885,19 +872,19 @@ fts_sort(FTS *sp, FTSENT *head, int nitems)
 	if (nitems > sp->fts_nitems) {
 		struct _ftsent **a;
 
+		sp->fts_nitems = nitems + 40;
 		if ((a = reallocarray(sp->fts_array,
-		    nitems + 40, sizeof(FTSENT *))) == NULL) {
+		    sp->fts_nitems, sizeof(FTSENT *))) == NULL) {
 			free(sp->fts_array);
 			sp->fts_array = NULL;
 			sp->fts_nitems = 0;
 			return (head);
 		}
-		sp->fts_nitems = nitems + 40;
 		sp->fts_array = a;
 	}
 	for (ap = sp->fts_array, p = head; p; p = p->fts_link)
 		*ap++ = p;
-	qsort(sp->fts_array, nitems, sizeof(FTSENT *), sp->fts_compar);
+	qsort((void *)sp->fts_array, nitems, sizeof(FTSENT *), sp->fts_compar);
 	for (head = *(ap = sp->fts_array); --nitems; ++ap)
 		ap[0]->fts_link = ap[1];
 	ap[0]->fts_link = NULL;
@@ -905,7 +892,7 @@ fts_sort(FTS *sp, FTSENT *head, int nitems)
 }
 
 static FTSENT *
-fts_alloc(FTS *sp, const char *name, size_t namelen)
+fts_alloc(FTS *sp, char *name, size_t namelen)
 {
 	FTSENT *p;
 	size_t len;
@@ -967,14 +954,13 @@ fts_palloc(FTS *sp, size_t more)
 		errno = ENAMETOOLONG;
 		return (1);
 	}
-	p = recallocarray(sp->fts_path, sp->fts_pathlen,
-	    sp->fts_pathlen + more, 1);
+	sp->fts_pathlen += more;
+	p = realloc(sp->fts_path, sp->fts_pathlen);
 	if (p == NULL) {
 		free(sp->fts_path);
 		sp->fts_path = NULL;
 		return (1);
 	}
-	sp->fts_pathlen += more;
 	sp->fts_path = p;
 	return (0);
 }
@@ -1024,7 +1010,7 @@ fts_maxarglen(char * const *argv)
  * Assumes p->fts_dev and p->fts_ino are filled in.
  */
 static int
-fts_safe_changedir(FTS *sp, FTSENT *p, int fd, const char *path)
+fts_safe_changedir(FTS *sp, FTSENT *p, int fd, char *path)
 {
 	int ret, oerrno, newfd;
 	struct stat sb;
@@ -1032,9 +1018,9 @@ fts_safe_changedir(FTS *sp, FTSENT *p, int fd, const char *path)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd == -1 && (newfd = open(path, O_RDONLY|O_DIRECTORY|O_CLOEXEC)) == -1)
+	if (fd < 0 && (newfd = open(path, O_RDONLY|O_DIRECTORY|O_CLOEXEC, 0)) < 0)
 		return (-1);
-	if (fstat(newfd, &sb) == -1) {
+	if (fstat(newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}
@@ -1046,21 +1032,17 @@ fts_safe_changedir(FTS *sp, FTSENT *p, int fd, const char *path)
 	ret = fchdir(newfd);
 bail:
 	oerrno = errno;
-	if (fd == -1)
+	if (fd < 0)
 		(void)close(newfd);
 	errno = oerrno;
 	return (ret);
 }
 
-FTS *
-fts_open(char * const *argv, int options,
-    int (*compar)(const FTSENT **, const FTSENT **))
-{
-	// Android needs to an __fts_open() that doesn't make this check
-	// so that FTS_FOR_FTW works.
-	if (options & ~FTS_OPTIONMASK) {
-		errno = EINVAL;
-		return (NULL);
-	}
-	return __fts_open(argv, options, compar);
+FTS* fts_open(char* const* argv, int options, int (*compar)(const FTSENT**, const FTSENT**)) {
+    // Options check.
+    if ((options & ~FTS_OPTIONMASK) != 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+    return __fts_open(argv, options, compar);
 }

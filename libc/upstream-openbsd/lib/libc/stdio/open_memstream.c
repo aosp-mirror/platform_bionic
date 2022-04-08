@@ -1,4 +1,4 @@
-/*	$OpenBSD: open_memstream.c,v 1.8 2019/05/02 08:30:10 yasuoka Exp $	*/
+/*	$OpenBSD: open_memstream.c,v 1.6 2015/08/31 02:53:57 guenther Exp $	*/
 
 /*
  * Copyright (c) 2011 Martin Pieuchot <mpi@openbsd.org>
@@ -50,7 +50,7 @@ memstream_write(void *v, const char *b, int l)
 
 		if (sz < end + 1)
 			sz = end + 1;
-		p = recallocarray(st->string, st->size, sz, 1);
+		p = realloc(st->string, sz);
 		if (!p)
 			return (-1);
 		bzero(p + st->size, sz - st->size);
@@ -76,7 +76,7 @@ static fpos_t
 memstream_seek(void *v, fpos_t off, int whence)
 {
 	struct state	*st = v;
-	size_t		 base = 0;
+	ssize_t		 base = 0;
 
 	switch (whence) {
 	case SEEK_SET:
@@ -89,7 +89,7 @@ memstream_seek(void *v, fpos_t off, int whence)
 		break;
 	}
 
-	if ((off > 0 && off > SIZE_MAX - base) || (off < 0 && base < -off)) {
+	if (off > SIZE_MAX - base || off < -base) {
 		errno = EOVERFLOW;
 		return (-1);
 	}

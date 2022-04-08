@@ -27,14 +27,11 @@
  */
 
 #include "linker_block_allocator.h"
-
 #include <inttypes.h>
 #include <string.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
 #include <unistd.h>
-
-#include "linker_debug.h"
 
 static constexpr size_t kAllocateSize = PAGE_SIZE * 100;
 static_assert(kAllocateSize % PAGE_SIZE == 0, "Invalid kAllocateSize.");
@@ -91,10 +88,16 @@ void LinkerBlockAllocator::free(void* block) {
   }
 
   LinkerBlockAllocatorPage* page = find_page(block);
-  CHECK(page != nullptr);
+
+  if (page == nullptr) {
+    abort();
+  }
 
   ssize_t offset = reinterpret_cast<uint8_t*>(block) - page->bytes;
-  CHECK((offset % block_size_) == 0);
+
+  if (offset % block_size_ != 0) {
+    abort();
+  }
 
   memset(block, 0, block_size_);
 
@@ -111,7 +114,7 @@ void LinkerBlockAllocator::free(void* block) {
 void LinkerBlockAllocator::protect_all(int prot) {
   for (LinkerBlockAllocatorPage* page = page_list_; page != nullptr; page = page->next) {
     if (mprotect(page, kAllocateSize, prot) == -1) {
-      async_safe_fatal("mprotect(%p, %zu, %d) failed: %m", page, kAllocateSize, prot);
+      abort();
     }
   }
 }
@@ -122,7 +125,10 @@ void LinkerBlockAllocator::create_new_page() {
 
   LinkerBlockAllocatorPage* page = reinterpret_cast<LinkerBlockAllocatorPage*>(
       mmap(nullptr, kAllocateSize, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0));
-  CHECK(page != MAP_FAILED);
+
+  if (page == MAP_FAILED) {
+    abort(); // oom
+  }
 
   prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME, page, kAllocateSize, "linker_alloc");
 
@@ -137,7 +143,9 @@ void LinkerBlockAllocator::create_new_page() {
 }
 
 LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
-  CHECK(block != nullptr);
+  if (block == nullptr) {
+    abort();
+  }
 
   LinkerBlockAllocatorPage* page = page_list_;
   while (page != nullptr) {
@@ -149,7 +157,7 @@ LinkerBlockAllocatorPage* LinkerBlockAllocator::find_page(void* block) {
     page = page->next;
   }
 
-  async_safe_fatal("couldn't find page for %p", block);
+  abort();
 }
 
 void LinkerBlockAllocator::purge() {

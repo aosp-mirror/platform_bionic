@@ -58,7 +58,6 @@
 #include <android/dlext.h>
 
 #include <platform/bionic/malloc.h>
-#include <private/ScopedPthreadMutexLocker.h>
 #include <private/bionic_config.h>
 #include <private/bionic_defs.h>
 #include <private/bionic_malloc_dispatch.h>
@@ -67,7 +66,6 @@
 
 #include "gwp_asan_wrappers.h"
 #include "heap_tagging.h"
-#include "heap_zero_init.h"
 #include "malloc_common.h"
 #include "malloc_common_dynamic.h"
 #include "malloc_heapprofd.h"
@@ -368,22 +366,12 @@ static bool InstallHooks(libc_globals* globals, const char* options, const char*
   return true;
 }
 
-extern "C" const char* __scudo_get_stack_depot_addr();
-extern "C" const char* __scudo_get_region_info_addr();
-extern "C" const char* __scudo_get_ring_buffer_addr();
-
 // Initializes memory allocation framework once per process.
 static void MallocInitImpl(libc_globals* globals) {
   char prop[PROP_VALUE_MAX];
   char* options = prop;
 
   MaybeInitGwpAsanFromLibc(globals);
-
-#if defined(USE_SCUDO)
-  __libc_shared_globals()->scudo_stack_depot = __scudo_get_stack_depot_addr();
-  __libc_shared_globals()->scudo_region_info = __scudo_get_region_info_addr();
-  __libc_shared_globals()->scudo_ring_buffer = __scudo_get_ring_buffer_addr();
-#endif
 
   // Prefer malloc debug since it existed first and is a more complete
   // malloc interceptor than the hooks.
@@ -524,6 +512,9 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
       return false;
     }
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
+  }
+  if (opcode == M_SET_HEAP_TAGGING_LEVEL) {
+    return SetHeapTaggingLevel(arg, arg_size);
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {
     if (arg == nullptr || arg_size != sizeof(bool)) {

@@ -28,9 +28,7 @@
 #define PTP_EXTTS_VALID_FLAGS (PTP_ENABLE_FEATURE | PTP_RISING_EDGE | PTP_FALLING_EDGE | PTP_STRICT_FLAGS)
 #define PTP_EXTTS_V1_VALID_FLAGS (PTP_ENABLE_FEATURE | PTP_RISING_EDGE | PTP_FALLING_EDGE)
 #define PTP_PEROUT_ONE_SHOT (1 << 0)
-#define PTP_PEROUT_DUTY_CYCLE (1 << 1)
-#define PTP_PEROUT_PHASE (1 << 2)
-#define PTP_PEROUT_VALID_FLAGS (PTP_PEROUT_ONE_SHOT | PTP_PEROUT_DUTY_CYCLE | PTP_PEROUT_PHASE)
+#define PTP_PEROUT_VALID_FLAGS (PTP_PEROUT_ONE_SHOT)
 #define PTP_PEROUT_V1_VALID_FLAGS (0)
 struct ptp_clock_time {
   __s64 sec;
@@ -45,8 +43,7 @@ struct ptp_clock_caps {
   int pps;
   int n_pins;
   int cross_timestamping;
-  int adjust_phase;
-  int rsv[12];
+  int rsv[13];
 };
 struct ptp_extts_request {
   unsigned int index;
@@ -54,17 +51,11 @@ struct ptp_extts_request {
   unsigned int rsv[2];
 };
 struct ptp_perout_request {
-  union {
-    struct ptp_clock_time start;
-    struct ptp_clock_time phase;
-  };
+  struct ptp_clock_time start;
   struct ptp_clock_time period;
   unsigned int index;
   unsigned int flags;
-  union {
-    struct ptp_clock_time on;
-    unsigned int rsv[4];
-  };
+  unsigned int rsv[4];
 };
 #define PTP_MAX_SAMPLES 25
 struct ptp_sys_offset {

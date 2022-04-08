@@ -42,7 +42,6 @@ enum ovs_datapath_attr {
   OVS_DP_ATTR_MEGAFLOW_STATS,
   OVS_DP_ATTR_USER_FEATURES,
   OVS_DP_ATTR_PAD,
-  OVS_DP_ATTR_MASKS_CACHE_SIZE,
   __OVS_DP_ATTR_MAX
 };
 #define OVS_DP_ATTR_MAX (__OVS_DP_ATTR_MAX - 1)
@@ -56,8 +55,8 @@ struct ovs_dp_megaflow_stats {
   __u64 n_mask_hit;
   __u32 n_masks;
   __u32 pad0;
-  __u64 n_cache_hit;
   __u64 pad1;
+  __u64 pad2;
 };
 struct ovs_vport_stats {
   __u64 rx_packets;
@@ -367,12 +366,6 @@ struct ovs_action_push_mpls {
   __be32 mpls_lse;
   __be16 mpls_ethertype;
 };
-struct ovs_action_add_mpls {
-  __be32 mpls_lse;
-  __be16 mpls_ethertype;
-  __u16 tun_flags;
-};
-#define OVS_MPLS_L3_TUNNEL_FLAG_MASK (1 << 0)
 struct ovs_action_push_vlan {
   __be16 vlan_tpid;
   __be16 vlan_tci;
@@ -446,8 +439,6 @@ enum ovs_action_attr {
   OVS_ACTION_ATTR_METER,
   OVS_ACTION_ATTR_CLONE,
   OVS_ACTION_ATTR_CHECK_PKT_LEN,
-  OVS_ACTION_ATTR_ADD_MPLS,
-  OVS_ACTION_ATTR_DEC_TTL,
   __OVS_ACTION_ATTR_MAX,
 };
 #define OVS_ACTION_ATTR_MAX (__OVS_ACTION_ATTR_MAX - 1)
@@ -511,10 +502,4 @@ struct ovs_zone_limit {
   __u32 limit;
   __u32 count;
 };
-enum ovs_dec_ttl_attr {
-  OVS_DEC_TTL_ATTR_UNSPEC,
-  OVS_DEC_TTL_ATTR_ACTION,
-  __OVS_DEC_TTL_ATTR_MAX
-};
-#define OVS_DEC_TTL_ATTR_MAX (__OVS_DEC_TTL_ATTR_MAX - 1)
 #endif

@@ -35,6 +35,8 @@
 // http://pubs.opengroup.org/onlinepubs/9699919799/functions/clock.html
 clock_t clock() {
   timespec ts;
-  clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts);
+  if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == -1) {
+    return -1;
+  }
   return (ts.tv_sec * CLOCKS_PER_SEC) + (ts.tv_nsec / (NS_PER_S / CLOCKS_PER_SEC));
 }

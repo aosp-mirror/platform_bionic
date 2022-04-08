@@ -60,8 +60,7 @@ static int exit_arg(void* arg) {
 
 #include <thread>
 
-#include <android-base/silent_death_test.h>
-
+#include "BionicDeathTest.h"
 #include "SignalUtils.h"
 
 TEST(threads, call_once) {
@@ -362,7 +361,7 @@ TEST(threads, thrd_create__thrd_exit) {
 #endif
 }
 
-using threads_DeathTest = SilentDeathTest;
+class threads_DeathTest : public BionicDeathTest {};
 
 TEST(threads_DeathTest, thrd_exit_main_thread) {
 #if !defined(HAVE_THREADS_H)

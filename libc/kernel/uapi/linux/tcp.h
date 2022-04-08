@@ -217,20 +217,15 @@ enum {
   TCP_NLA_DSACK_DUPS,
   TCP_NLA_REORD_SEEN,
   TCP_NLA_SRTT,
-  TCP_NLA_TIMEOUT_REHASH,
-  TCP_NLA_BYTES_NOTSENT,
-  TCP_NLA_EDT,
-  TCP_NLA_TTL,
 };
 #define TCP_MD5SIG_MAXKEYLEN 80
-#define TCP_MD5SIG_FLAG_PREFIX 0x1
-#define TCP_MD5SIG_FLAG_IFINDEX 0x2
+#define TCP_MD5SIG_FLAG_PREFIX 1
 struct tcp_md5sig {
   struct sockaddr_storage tcpm_addr;
   __u8 tcpm_flags;
   __u8 tcpm_prefixlen;
   __u16 tcpm_keylen;
-  int tcpm_ifindex;
+  __u32 __tcpm_pad;
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
 struct tcp_diag_md5sig {
@@ -240,19 +235,9 @@ struct tcp_diag_md5sig {
   __be32 tcpm_addr[4];
   __u8 tcpm_key[TCP_MD5SIG_MAXKEYLEN];
 };
-#define TCP_RECEIVE_ZEROCOPY_FLAG_TLB_CLEAN_HINT 0x1
 struct tcp_zerocopy_receive {
   __u64 address;
   __u32 length;
   __u32 recv_skip_hint;
-  __u32 inq;
-  __s32 err;
-  __u64 copybuf_address;
-  __s32 copybuf_len;
-  __u32 flags;
-  __u64 msg_control;
-  __u64 msg_controllen;
-  __u32 msg_flags;
-  __u32 reserved;
 };
 #endif

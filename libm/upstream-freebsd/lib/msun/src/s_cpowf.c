@@ -44,7 +44,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/src/s_cpowf.c 336563 2018-07-20 18:27:30Z dim $");
 
 #include <complex.h>
 #include <math.h>

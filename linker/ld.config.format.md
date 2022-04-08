@@ -80,9 +80,7 @@ namespace.ns1.asan.permitted.paths = /data/vendor/${LIB}
 namespace.ns.links = default
 namespace.ns.link.default.shared_libs = libc.so:libdl.so:libm.so:libstdc++.so
 
-# [Deprecated] This defines what libraries are allowed to be loaded from ns1
-namespace.ns1.whitelisted = libsomething.so
 # This defines what libraries are allowed to be loaded from ns1
-namespace.ns1.allowed_libs = libsomething2.so
+namespace.ns1.whitelisted = libsomething.so
 ```
 

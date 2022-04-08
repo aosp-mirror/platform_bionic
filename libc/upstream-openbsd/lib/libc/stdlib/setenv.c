@@ -1,4 +1,4 @@
-/*	$OpenBSD: setenv.c,v 1.19 2016/09/21 04:38:56 guenther Exp $ */
+/*	$OpenBSD: setenv.c,v 1.16 2015/09/13 08:31:47 guenther Exp $ */
 /*
  * Copyright (c) 1987 Regents of the University of California.
  * All rights reserved.
@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+extern char **environ;
 static char **lastenv;				/* last value of environ */
 
 /*
@@ -43,7 +44,7 @@ int
 putenv(char *str)
 {
 	char **P, *cp;
-	size_t cnt = 0;
+	size_t cnt;
 	int offset = 0;
 
 	for (cp = str; *cp && *cp != '='; ++cp)
@@ -65,15 +66,13 @@ putenv(char *str)
 	}
 
 	/* create new slot for string */
-	if (environ != NULL) {
-		for (P = environ; *P != NULL; P++)
-			;
-		cnt = P - environ;
-	}
+	for (P = environ; *P != NULL; P++)
+		;
+	cnt = P - environ;
 	P = reallocarray(lastenv, cnt + 2, sizeof(char *));
 	if (!P)
 		return (-1);
-	if (lastenv != environ && environ != NULL)
+	if (lastenv != environ)
 		memcpy(P, environ, cnt * sizeof(char *));
 	lastenv = environ = P;
 	environ[cnt] = str;
@@ -124,24 +123,22 @@ setenv(const char *name, const char *value, int rewrite)
 					break;
 		}
 	} else {					/* create new slot */
-		size_t cnt = 0;
+		size_t cnt;
 
-		if (environ != NULL) {
-			for (P = environ; *P != NULL; P++)
-				;
-			cnt = P - environ;
-		}
+		for (P = environ; *P != NULL; P++)
+			;
+		cnt = P - environ;
 		P = reallocarray(lastenv, cnt + 2, sizeof(char *));
 		if (!P)
 			return (-1);
-		if (lastenv != environ && environ != NULL)
+		if (lastenv != environ)
 			memcpy(P, environ, cnt * sizeof(char *));
 		lastenv = environ = P;
 		offset = cnt;
 		environ[cnt + 1] = NULL;
 	}
 	if (!(environ[offset] =			/* name + `=' + value */
-	    malloc((int)(np - name) + l_value + 2)))
+	    malloc((size_t)((int)(np - name) + l_value + 2))))
 		return (-1);
 	for (C = environ[offset]; (*C = *name++) && *C != '='; ++C)
 		;

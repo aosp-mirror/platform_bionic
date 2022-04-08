@@ -33,28 +33,18 @@
 
 #include "linker_gdb_support.h"
 
-#if defined(__ANDROID_APEX__)
-static debugger_process_info get_process_info() {
-  return {
-      .abort_msg = __libc_shared_globals()->abort_msg,
-      .fdsan_table = &__libc_shared_globals()->fd_table,
-      .gwp_asan_state = __libc_shared_globals()->gwp_asan_state,
-      .gwp_asan_metadata = __libc_shared_globals()->gwp_asan_metadata,
-      .scudo_stack_depot = __libc_shared_globals()->scudo_stack_depot,
-      .scudo_region_info = __libc_shared_globals()->scudo_region_info,
-      .scudo_ring_buffer = __libc_shared_globals()->scudo_ring_buffer,
-  };
-}
-#endif
-
 void linker_debuggerd_init() {
-  // There may be a version mismatch between the bootstrap linker and the crash_dump in the APEX,
-  // so don't pass in any process info from the bootstrap linker.
   debuggerd_callbacks_t callbacks = {
-#if defined(__ANDROID_APEX__)
-      .get_process_info = get_process_info,
-#endif
-      .post_dump = notify_gdb_of_libraries,
+    .get_abort_message = []() {
+      return __libc_shared_globals()->abort_msg;
+    },
+    .post_dump = &notify_gdb_of_libraries,
+    .get_gwp_asan_state = []() {
+      return __libc_shared_globals()->gwp_asan_state;
+    },
+    .get_gwp_asan_metadata = []() {
+      return __libc_shared_globals()->gwp_asan_metadata;
+    },
   };
   debuggerd_init(&callbacks);
 }

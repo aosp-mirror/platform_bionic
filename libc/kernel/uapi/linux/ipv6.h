@@ -43,7 +43,6 @@ struct in6_ifreq {
 #define IPV6_SRCRT_STRICT 0x01
 #define IPV6_SRCRT_TYPE_0 0
 #define IPV6_SRCRT_TYPE_2 2
-#define IPV6_SRCRT_TYPE_3 3
 #define IPV6_SRCRT_TYPE_4 4
 struct ipv6_rt_hdr {
   __u8 nexthdr;
@@ -142,8 +141,6 @@ enum {
   DEVCONF_DISABLE_POLICY,
   DEVCONF_ACCEPT_RA_RT_INFO_MIN_PLEN,
   DEVCONF_NDISC_TCLASS,
-  DEVCONF_RPL_SEG_ENABLED,
-  DEVCONF_RA_DEFRTR_METRIC,
   DEVCONF_MAX
 };
 #endif

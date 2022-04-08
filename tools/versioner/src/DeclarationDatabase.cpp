@@ -72,7 +72,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
 
     // <math.h> maps fool onto foo on 32-bit, since long double is the same as double.
     if (auto asm_attr = decl->getAttr<AsmLabelAttr>()) {
-      return asm_attr->getLabel().str();
+      return asm_attr->getLabel();
     }
 
     // The decl might not have a name (e.g. bitfields).
@@ -84,7 +84,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
         return mangled;
       }
 
-      return identifier->getName().str();
+      return identifier->getName();
     }
 
     return "<unnamed>";
@@ -173,7 +173,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
               &arch_availability[Arch::x86_64].introduced } },
         };
 
-        if (auto it = prefix_map.find(fragments[0].str()); it != prefix_map.end()) {
+        if (auto it = prefix_map.find(fragments[0]); it != prefix_map.end()) {
           int value;
           if (fragments[1].getAsInteger(10, value)) {
             errx(1, "invalid __ANDROID_AVAILABILITY_DUMP__ annotation: '%s'",
@@ -190,8 +190,8 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     auto symbol_it = database.symbols.find(declaration_name);
     if (symbol_it == database.symbols.end()) {
       Symbol symbol = {.name = declaration_name };
-      bool unused;
-      std::tie(symbol_it, unused) = database.symbols.insert({declaration_name, symbol});
+      bool dummy;
+      std::tie(symbol_it, dummy) = database.symbols.insert({ declaration_name, symbol });
     }
 
     auto expansion_range = src_manager.getExpansionRange(range);
@@ -201,7 +201,7 @@ class Visitor : public RecursiveASTVisitor<Visitor> {
     }
 
     Location location = {
-      .filename = filename.str(),
+      .filename = filename,
       .start = {
         .line = src_manager.getExpansionLineNumber(expansion_range.getBegin()),
         .column = src_manager.getExpansionColumnNumber(expansion_range.getBegin()),

@@ -26,18 +26,14 @@
  * SUCH DAMAGE.
  */
 
-#if defined(__aarch64__)
-#include <private/bionic_asm_arm64.h>
-
-__bionic_asm_custom_note_gnu_section()
-#endif
-
 #if defined(__linux__) && defined(__ELF__)
 	.section .note.GNU-stack,"",%progbits
 #endif
-#if !defined(__arm__)
+#if defined(__i386__) || defined(__x86_64__)
 	.section	.eh_frame,"a",@progbits
+#if defined(__i386__)
 	.balign 4
+#endif
 	.type	__FRAME_END__, @object
 	.size	__FRAME_END__, 4
 __FRAME_END__:

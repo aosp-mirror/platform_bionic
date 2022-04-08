@@ -209,6 +209,7 @@ static int send_prop_msg(const prop_msg* msg) {
       // mostly for ctl.* properties, but we do try and wait 250
       // ms so callers who do read-after-write can reliably see
       // what they've written.  Most of the time.
+      // TODO: fix the system properties design.
       async_safe_format_log(ANDROID_LOG_WARN, "libc",
                             "Property service has timed out while trying to set \"%s\" to \"%s\"",
                             msg->name, msg->value);

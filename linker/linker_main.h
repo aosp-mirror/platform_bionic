@@ -63,6 +63,7 @@ bool find_libraries(android_namespace_t* ns,
                     int rtld_flags,
                     const android_dlextinfo* extinfo,
                     bool add_as_children,
+                    bool search_linked_namespaces,
                     std::vector<android_namespace_t*>* namespaces = nullptr);
 
 void solist_add_soinfo(soinfo* si);

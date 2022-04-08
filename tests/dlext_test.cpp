@@ -237,24 +237,6 @@ TEST(dlfcn, dlopen_from_nullptr_android_api_level_28) {
   ASSERT_TRUE(dlopen(nullptr, RTLD_NOW) != nullptr);
 }
 
-// Test system path translation for backward compatibility. http://b/130219528
-TEST(dlfcn, dlopen_system_libicuuc_android_api_level_28) {
-  android_set_application_target_sdk_version(28);
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicuuc.so", RTLD_NOW) != nullptr);
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicui18n.so", RTLD_NOW) != nullptr);
-}
-
-TEST(dlfcn, dlopen_system_libicuuc_android_api_level_29) {
-  android_set_application_target_sdk_version(29);
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicuuc.so", RTLD_NOW) == nullptr);
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicui18n.so", RTLD_NOW) == nullptr);
-}
-
-TEST(dlfcn, dlopen_system_libicuuc_android_api_level_current) {
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicuuc.so", RTLD_NOW) == nullptr);
-  ASSERT_TRUE(dlopen(PATH_TO_SYSTEM_LIB "libicui18n.so", RTLD_NOW) == nullptr);
-}
-
 TEST(dlfcn, dlopen_from_zip_absolute_path) {
   const std::string lib_zip_path = "/libdlext_test_zip/libdlext_test_zip_zipaligned.zip";
   const std::string lib_path = GetTestlibRoot() + lib_zip_path;
@@ -717,12 +699,13 @@ std::string DlExtRelroSharingTest::FindMappingName(void* ptr) {
   uint64_t addr = reinterpret_cast<uint64_t>(ptr);
   std::string found_name = "<not found>";
 
-  EXPECT_TRUE(android::procinfo::ReadMapFile("/proc/self/maps",
-                                             [&](const android::procinfo::MapInfo& mapinfo) {
-                                               if (addr >= mapinfo.start && addr < mapinfo.end) {
-                                                 found_name = mapinfo.name;
-                                               }
-                                             }));
+  EXPECT_TRUE(android::procinfo::ReadMapFile(
+      "/proc/self/maps",
+      [&](uint64_t start, uint64_t end, uint16_t, uint16_t, ino_t, const char* name) {
+        if (addr >= start && addr < end) {
+          found_name = name;
+        }
+      }));
 
   return found_name;
 }
@@ -1227,7 +1210,7 @@ TEST(dlext, ns_unload_between_namespaces_missing_symbol_indirect) {
             dlerror());
 }
 
-TEST(dlext, ns_exempt_list_enabled) {
+TEST(dlext, ns_greylist_enabled) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
   const std::string ns_search_path = GetTestlibRoot() + "/private_namespace_libs";
@@ -1236,7 +1219,7 @@ TEST(dlext, ns_exempt_list_enabled) {
           android_create_namespace("namespace",
                                    nullptr,
                                    ns_search_path.c_str(),
-                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED,
+                                   ANDROID_NAMESPACE_TYPE_ISOLATED | ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED,
                                    nullptr,
                                    nullptr);
 
@@ -1246,26 +1229,26 @@ TEST(dlext, ns_exempt_list_enabled) {
   extinfo.flags = ANDROID_DLEXT_USE_NAMESPACE;
   extinfo.library_namespace = ns;
 
-  // An app targeting M can open libnativehelper.so because it's on the exempt-list.
+  // An app targeting M can open libnativehelper.so because it's on the greylist.
   android_set_application_target_sdk_version(23);
   void* handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle != nullptr) << dlerror();
 
-  // Check that loader did not load another copy of libdl.so while loading exempted library.
+  // Check that loader did not load another copy of libdl.so while loading greylisted library.
   void* dlsym_ptr = dlsym(handle, "dlsym");
   ASSERT_TRUE(dlsym_ptr != nullptr) << dlerror();
   ASSERT_EQ(&dlsym, dlsym_ptr);
 
   dlclose(handle);
 
-  // An app targeting N no longer has the exempt-list.
+  // An app targeting N no longer has the greylist.
   android_set_application_target_sdk_version(24);
   handle = android_dlopen_ext("libnativehelper.so", RTLD_NOW, &extinfo);
   ASSERT_TRUE(handle == nullptr);
   ASSERT_STREQ("dlopen failed: library \"libnativehelper.so\" not found", dlerror());
 }
 
-TEST(dlext, ns_exempt_list_disabled_by_default) {
+TEST(dlext, ns_greylist_disabled_by_default) {
   ASSERT_TRUE(android_init_anonymous_namespace(g_core_shared_libs.c_str(), nullptr));
 
   const std::string ns_search_path = GetTestlibRoot() + "/private_namespace_libs";
@@ -2021,7 +2004,7 @@ TEST(dlext, ns_anonymous) {
     }
   }
 
-  // Some validity checks.
+  // some sanity checks..
   ASSERT_TRUE(addr_start > 0);
   ASSERT_TRUE(addr_end > 0);
   ASSERT_TRUE(maps_to_copy.size() > 0);

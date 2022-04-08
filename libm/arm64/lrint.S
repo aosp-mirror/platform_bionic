@@ -32,5 +32,3 @@ END(lrintf)
 ALIAS_SYMBOL(llrint, lrint);
 
 ALIAS_SYMBOL(llrintf, lrintf);
-
-NOTE_GNU_PROPERTY()

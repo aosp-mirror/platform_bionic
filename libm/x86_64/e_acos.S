@@ -1934,7 +1934,7 @@ ONE_BY_2:
 	.type	ONE_BY_2,@object
 	.size	ONE_BY_2,8
 	.data
-	.section .note.GNU-stack, "",@progbits
+	.section .note.GNU-stack, ""
 // -- Begin DWARF2 SEGMENT .eh_frame
 	.section .eh_frame,"a",@progbits
 .eh_frame_seg:

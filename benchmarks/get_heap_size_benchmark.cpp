@@ -30,6 +30,8 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
+static volatile size_t sink;
+
 static constexpr int NTHREADS = 5;
 
 static std::atomic<int> thread_count;
@@ -55,7 +57,7 @@ static void BM_mallinfo(benchmark::State& state) {
     sched_yield();
   }
   for (auto _ : state) {
-    benchmark::DoNotOptimize(mallinfo().uordblks);
+    sink = mallinfo().uordblks;
   }
   for (int i = 0; i < 5; i++) {
     int res = pthread_join(t[i], NULL);

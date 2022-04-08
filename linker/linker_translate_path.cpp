@@ -31,13 +31,12 @@
 #include "linker_utils.h"
 
 #if defined(__LP64__)
-#define APEX_LIB(apex, name) \
-  { "/system/lib64/" name, "/apex/" apex "/lib64/" name }
+static const char* const kSystemLibDir        = "/system/lib64";
+static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib64";
 #else
-#define APEX_LIB(apex, name) \
-  { "/system/lib/" name, "/apex/" apex "/lib/" name }
+static const char* const kSystemLibDir        = "/system/lib";
+static const char* const kI18nApexLibDir      = "/apex/com.android.i18n/lib";
 #endif
-
 
 // Workaround for dlopen(/system/lib(64)/<soname>) when .so is in /apex. http://b/121248172
 /**
@@ -48,22 +47,27 @@
  * return true if translation is needed
  */
 bool translateSystemPathToApexPath(const char* name, std::string* out_name_to_apex) {
-  static constexpr const char* kPathTranslationQ[][2] = {
-      APEX_LIB("com.android.i18n", "libicui18n.so"),
-      APEX_LIB("com.android.i18n", "libicuuc.so")
+  static const char* const kSystemToArtApexLibs[] = {
+      "libicuuc.so",
+      "libicui18n.so",
   };
+  // New mapping for new apex should be added below
 
-  if (name == nullptr) {
+  // Nothing to do if target sdk version is Q or above
+  if (get_application_target_sdk_version() >= 29) {
     return false;
   }
 
-  auto comparator = [name](auto p) { return strcmp(name, p[0]) == 0; };
+  // If the path isn't /system/lib, there's nothing to do.
+  if (name == nullptr || dirname(name) != kSystemLibDir) {
+    return false;
+  }
 
-  if (get_application_target_sdk_version() < __ANDROID_API_Q__) {
-    if (auto it =
-            std::find_if(std::begin(kPathTranslationQ), std::end(kPathTranslationQ), comparator);
-        it != std::end(kPathTranslationQ)) {
-      *out_name_to_apex = (*it)[1];
+  const char* base_name = basename(name);
+
+  for (const char* soname : kSystemToArtApexLibs) {
+    if (strcmp(base_name, soname) == 0) {
+      *out_name_to_apex = std::string(kI18nApexLibDir) + "/" + base_name;
       return true;
     }
   }

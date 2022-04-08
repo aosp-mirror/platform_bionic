@@ -109,6 +109,7 @@ TEST(sys_stat, statx) {
   int rc = statx(AT_FDCWD, "/proc/version", AT_STATX_SYNC_AS_STAT, STATX_ALL, &sx);
   if (rc == -1 && errno == ENOSYS) {
     GTEST_SKIP() << "statx returned ENOSYS";
+    return;
   }
   ASSERT_EQ(0, rc);
   struct stat64 sb;
@@ -118,11 +119,6 @@ TEST(sys_stat, statx) {
 #else
   GTEST_SKIP() << "statx not available";
 #endif
-}
-
-TEST(sys_stat, fchmod_EBADF) {
-  ASSERT_EQ(-1, fchmod(-1, 0751));
-  ASSERT_EQ(EBADF, errno);
 }
 
 TEST(sys_stat, fchmodat_EFAULT_file) {

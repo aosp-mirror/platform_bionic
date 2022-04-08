@@ -1476,8 +1476,8 @@ LIBC_Q { # introduced=Q
     # Used by libandroid_net
     android_getaddrinfofornet; # apex
 
-    # Used by libandroid_runtime, libcutils, libmedia, and libmediautils
-    android_mallopt; # apex llndk
+    # Used by libandroid_runtime, libmedia and libmediautils
+    android_mallopt; # apex
 } LIBC_P;
 
 LIBC_R { # introduced=R
@@ -1549,20 +1549,6 @@ LIBC_R { # introduced=R
     _Unwind_VRS_Pop; # apex llndk arm
     _Unwind_VRS_Set; # apex llndk arm
 } LIBC_Q;
-
-LIBC_S { # introduced=S
-  global:
-    __libc_get_static_tls_bounds;
-    __libc_register_thread_exit_callback;
-    __libc_iterate_dynamic_tls;
-    __libc_register_dynamic_tls_listeners;
-    ffsl;
-    ffsll;
-    pidfd_getfd;
-    pidfd_open;
-    pidfd_send_signal;
-    process_madvise;
-} LIBC_R;
 
 LIBC_PRIVATE {
   global:
@@ -1722,7 +1708,6 @@ LIBC_PRIVATE {
     android_gethostbyaddrfornetcontext;
     android_gethostbynamefornet;
     android_gethostbynamefornetcontext;
-    android_run_on_all_threads;
     android_unsafe_frame_pointer_chase;
     arc4random_addrandom; # arm x86
     arc4random_stir; # arm x86
@@ -1772,9 +1757,7 @@ LIBC_PLATFORM {
     android_fdtrack_compare_exchange_hook; # llndk
     android_fdtrack_get_enabled; # llndk
     android_fdtrack_set_enabled; # llndk
-    android_fdtrack_set_globally_enabled; # llndk
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
-    android_reset_stack_guards;
 } LIBC_Q;

@@ -1,9 +1,10 @@
 #include <android/dlext.h>
 #include <dlfcn.h>
+#include <jni.h>
 #include <stdlib.h>
 
-extern "C" void __attribute__((section(".custom_text"))) text_before_start_of_gap() {}
-char __attribute__((section(".custom_bss"))) end_of_gap[0x1000];
+extern "C" void text_before_start_of_gap() {}
+char end_of_gap[0x1000];
 
 extern "C" void* get_inner() {
   android_dlextinfo info = {};

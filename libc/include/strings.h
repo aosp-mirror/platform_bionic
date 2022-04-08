@@ -49,14 +49,6 @@
 
 #include <bits/strcasecmp.h>
 
-#if !defined(__BIONIC_STRINGS_INLINE)
-#define __BIONIC_STRINGS_INLINE static __inline
-#endif
-
-#undef ffs
-#undef ffsl
-#undef ffsll
-
 __BEGIN_DECLS
 
 /** Deprecated. Use memmove() instead. */
@@ -71,41 +63,19 @@ static __inline__ __always_inline void __bionic_bzero(void* b, size_t len) {
   __builtin_memset(b, 0, len);
 }
 
+#if !defined(__i386__) || __ANDROID_API__ >= 18
 /**
- * [ffs(3)](http://man7.org/linux/man-pages/man3/ffs.3.html) finds the
- * first set bit in `__n`.
+ * [ffs(3)](http://man7.org/linux/man-pages/man3/ffs.3.html) finds the first set bit in `__i`.
  *
- * Returns 0 if no bit is set, or the index of the lowest set bit (counting
- * from 1) otherwise.
+ * Returns 0 if no bit is set, or the index of the lowest set bit (counting from 1) otherwise.
  */
-__BIONIC_STRINGS_INLINE int ffs(int __n) {
-  return __builtin_ffs(__n);
-}
-
-/**
- * [ffsl(3)](http://man7.org/linux/man-pages/man3/ffsl.3.html) finds the
- * first set bit in `__n`.
- *
- * Returns 0 if no bit is set, or the index of the lowest set bit (counting
- * from 1) otherwise.
- */
-__BIONIC_STRINGS_INLINE int ffsl(long __n) {
-  return __builtin_ffsl(__n);
-}
-
-/**
- * [ffsll(3)](http://man7.org/linux/man-pages/man3/ffsll.3.html) finds the
- * first set bit in `__n`.
- *
- * Returns 0 if no bit is set, or the index of the lowest set bit (counting
- * from 1) otherwise.
- */
-__BIONIC_STRINGS_INLINE int ffsll(long long __n) {
-  return __builtin_ffsll(__n);
-}
+int ffs(int __i) __INTRODUCED_IN_X86(18);
+#endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/strings.h>
 #endif
 
 __END_DECLS
+
+#include <android/legacy_strings_inlines.h>

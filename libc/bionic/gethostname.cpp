@@ -32,8 +32,10 @@
 #include <unistd.h>
 
 int gethostname(char* buf, size_t n) {
-  utsname name = {};
-  uname(&name);
+  struct utsname name;
+  if (uname(&name) == -1) {
+    return -1;
+  }
 
   size_t name_length = static_cast<size_t>(strlen(name.nodename) + 1);
   if (name_length > n) {

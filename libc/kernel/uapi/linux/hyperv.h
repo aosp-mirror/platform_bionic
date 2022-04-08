@@ -70,8 +70,8 @@ enum hv_fcopy_op {
 };
 struct hv_fcopy_hdr {
   __u32 operation;
-  __u8 service_id0[16];
-  __u8 service_id1[16];
+  uuid_le service_id0;
+  uuid_le service_id1;
 } __attribute__((packed));
 #define OVER_WRITE 0x1
 #define CREATE_PATH 0x2

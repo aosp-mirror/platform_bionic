@@ -18,14 +18,8 @@
 
 #include <setjmp.h>
 #include <stdlib.h>
-#include <sys/syscall.h>
-#include <unistd.h>
-
-#include <android-base/silent_death_test.h>
 
 #include "SignalUtils.h"
-
-using setjmp_DeathTest = SilentDeathTest;
 
 TEST(setjmp, setjmp_smoke) {
   int value;
@@ -232,7 +226,7 @@ TEST(setjmp, setjmp_fp_registers) {
 #define __JB_SIGFLAG 8
 #endif
 
-TEST_F(setjmp_DeathTest, setjmp_cookie) {
+TEST(setjmp, setjmp_cookie) {
   jmp_buf jb;
   int value = setjmp(jb);
   ASSERT_EQ(0, value);
@@ -247,7 +241,7 @@ TEST_F(setjmp_DeathTest, setjmp_cookie) {
   EXPECT_DEATH(longjmp(jb, 0), "");
 }
 
-TEST_F(setjmp_DeathTest, setjmp_cookie_checksum) {
+TEST(setjmp, setjmp_cookie_checksum) {
   jmp_buf jb;
   int value = setjmp(jb);
 
@@ -270,58 +264,4 @@ TEST(setjmp, setjmp_stack) {
   int value = setjmp(buf);
   if (value == 0) call_longjmp(buf);
   EXPECT_EQ(123, value);
-}
-
-TEST(setjmp, bug_152210274) {
-  // Ensure that we never have a mangled value in the stack pointer.
-#if defined(__BIONIC__)
-  struct sigaction sa = {.sa_flags = SA_SIGINFO, .sa_sigaction = [](int, siginfo_t*, void*) {}};
-  ASSERT_EQ(0, sigaction(SIGPROF, &sa, 0));
-
-  constexpr size_t kNumThreads = 20;
-
-  // Start a bunch of threads calling setjmp/longjmp.
-  auto jumper = [](void* arg) -> void* {
-    sigset_t set;
-    sigemptyset(&set);
-    sigaddset(&set, SIGPROF);
-    pthread_sigmask(SIG_UNBLOCK, &set, nullptr);
-
-    jmp_buf buf;
-    for (size_t count = 0; count < 100000; ++count) {
-      if (setjmp(buf) != 0) {
-        perror("setjmp");
-        abort();
-      }
-      if (*static_cast<pid_t*>(arg) == 100) longjmp(buf, 1);
-    }
-    return nullptr;
-  };
-  pid_t tids[kNumThreads] = {};
-  for (size_t i = 0; i < kNumThreads; ++i) {
-    pthread_t t;
-    ASSERT_EQ(0, pthread_create(&t, nullptr, jumper, &tids[i]));
-    tids[i] = pthread_gettid_np(t);
-  }
-
-  // Start the interrupter thread.
-  auto interrupter = [](void* arg) -> void* {
-    pid_t* tids = static_cast<pid_t*>(arg);
-    for (size_t count = 0; count < 1000; ++count) {
-      for (size_t i = 0; i < kNumThreads; i++) {
-        if (tgkill(getpid(), tids[i], SIGPROF) == -1 && errno != ESRCH) {
-          perror("tgkill failed");
-          abort();
-        }
-      }
-      usleep(100);
-    }
-    return nullptr;
-  };
-  pthread_t t;
-  ASSERT_EQ(0, pthread_create(&t, nullptr, interrupter, tids));
-  pthread_join(t, nullptr);
-#else
-  GTEST_SKIP() << "tests uses functions not in glibc";
-#endif
 }

@@ -1,7 +1,3 @@
-package {
-    default_applicable_licenses: ["bionic_tools_license"],
-}
-
 cc_binary_host {
     name: "versioner",
 

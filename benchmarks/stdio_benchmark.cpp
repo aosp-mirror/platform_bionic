@@ -155,8 +155,9 @@ static void FopenFgetcFclose(benchmark::State& state, bool no_locking) {
   while (state.KeepRunning()) {
     FILE* fp = fopen("/dev/zero", "re");
     if (no_locking) __fsetlocking(fp, FSETLOCKING_BYCALLER);
+    volatile int c __attribute__((unused));
     for (size_t i = 0; i < nbytes; ++i) {
-      benchmark::DoNotOptimize(fgetc(fp));
+      c = fgetc(fp);
     }
     fclose(fp);
   }

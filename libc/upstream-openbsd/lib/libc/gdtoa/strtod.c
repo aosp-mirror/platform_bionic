@@ -114,7 +114,10 @@ strtod
 	static int dplen;
 	if (!(s0 = decimalpoint_cache)) {
 		s0 = localeconv()->decimal_point;
-		decimalpoint_cache = strdup(s0);
+		if ((decimalpoint_cache = (char*)MALLOC(strlen(s0) + 1))) {
+			strlcpy(decimalpoint_cache, s0, strlen(s0) + 1);
+			s0 = decimalpoint_cache;
+			}
 		dplen = strlen(s0);
 		}
 	decimalpoint = (char*)s0;

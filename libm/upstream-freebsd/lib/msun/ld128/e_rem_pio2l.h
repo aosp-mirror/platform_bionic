@@ -14,7 +14,7 @@
  */
 
 #include <sys/cdefs.h>
-__FBSDID("$FreeBSD$");
+__FBSDID("$FreeBSD: head/lib/msun/ld128/e_rem_pio2l.h 336545 2018-07-20 12:42:24Z bde $");
 
 /* ld128 version of __ieee754_rem_pio2l(x,y)
  * 

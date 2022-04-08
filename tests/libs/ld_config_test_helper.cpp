@@ -22,9 +22,7 @@
 #endif
 #include <unistd.h>
 
-extern "C" void foo();
-void lib1_call_funcs();
-__attribute__((weak)) void lib3_call_funcs();
+extern int get_value_from_lib();
 
 int main() {
   bool skip_vdso_check = false;
@@ -47,9 +45,6 @@ int main() {
     dlclose(handle);
   }
 
-  foo();
-  lib1_call_funcs();
-  if (lib3_call_funcs) lib3_call_funcs();
-
+  printf("%d", get_value_from_lib());
   return 0;
 }

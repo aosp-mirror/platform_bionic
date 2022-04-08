@@ -67,7 +67,6 @@ enum drm_i915_pmu_engine_sample {
 #define I915_PMU_REQUESTED_FREQUENCY __I915_PMU_OTHER(1)
 #define I915_PMU_INTERRUPTS __I915_PMU_OTHER(2)
 #define I915_PMU_RC6_RESIDENCY __I915_PMU_OTHER(3)
-#define I915_PMU_SOFTWARE_GT_AWAKE_TIME __I915_PMU_OTHER(4)
 #define I915_PMU_LAST I915_PMU_RC6_RESIDENCY
 #define I915_NR_TEX_REGIONS 255
 #define I915_LOG_MIN_TEX_REGION_SIZE 14
@@ -251,7 +250,6 @@ typedef struct _drm_i915_sarea {
 #define DRM_IOCTL_I915_GEM_PWRITE DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_PWRITE, struct drm_i915_gem_pwrite)
 #define DRM_IOCTL_I915_GEM_MMAP DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP, struct drm_i915_gem_mmap)
 #define DRM_IOCTL_I915_GEM_MMAP_GTT DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_gtt)
-#define DRM_IOCTL_I915_GEM_MMAP_OFFSET DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_MMAP_GTT, struct drm_i915_gem_mmap_offset)
 #define DRM_IOCTL_I915_GEM_SET_DOMAIN DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SET_DOMAIN, struct drm_i915_gem_set_domain)
 #define DRM_IOCTL_I915_GEM_SW_FINISH DRM_IOW(DRM_COMMAND_BASE + DRM_I915_GEM_SW_FINISH, struct drm_i915_gem_sw_finish)
 #define DRM_IOCTL_I915_GEM_SET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_I915_GEM_SET_TILING, struct drm_i915_gem_set_tiling)
@@ -362,7 +360,6 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_MMAP_GTT_COHERENT 52
 #define I915_PARAM_HAS_EXEC_SUBMIT_FENCE 53
 #define I915_PARAM_PERF_REVISION 54
-#define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 typedef struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -444,17 +441,6 @@ struct drm_i915_gem_mmap_gtt {
   __u32 pad;
   __u64 offset;
 };
-struct drm_i915_gem_mmap_offset {
-  __u32 handle;
-  __u32 pad;
-  __u64 offset;
-  __u64 flags;
-#define I915_MMAP_OFFSET_GTT 0
-#define I915_MMAP_OFFSET_WC 1
-#define I915_MMAP_OFFSET_WB 2
-#define I915_MMAP_OFFSET_UC 3
-  __u64 extensions;
-};
 struct drm_i915_gem_set_domain {
   __u32 handle;
   __u32 read_domains;
@@ -525,13 +511,6 @@ struct drm_i915_gem_exec_fence {
 #define __I915_EXEC_FENCE_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_SIGNAL << 1))
   __u32 flags;
 };
-#define DRM_I915_GEM_EXECBUFFER_EXT_TIMELINE_FENCES 0
-struct drm_i915_gem_execbuffer_ext_timeline_fences {
-  struct i915_user_extension base;
-  __u64 fence_count;
-  __u64 handles_ptr;
-  __u64 values_ptr;
-};
 struct drm_i915_gem_execbuffer2 {
   __u64 buffers_ptr;
   __u32 buffer_count;
@@ -571,8 +550,7 @@ struct drm_i915_gem_execbuffer2 {
 #define I915_EXEC_BATCH_FIRST (1 << 18)
 #define I915_EXEC_FENCE_ARRAY (1 << 19)
 #define I915_EXEC_FENCE_SUBMIT (1 << 20)
-#define I915_EXEC_USE_EXTENSIONS (1 << 21)
-#define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_USE_EXTENSIONS << 1))
+#define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_SUBMIT << 1))
 #define I915_EXEC_CONTEXT_ID_MASK (0xffffffff)
 #define i915_execbuffer2_set_context_id(eb2,context) (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
 #define i915_execbuffer2_get_context_id(eb2) ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
@@ -735,7 +713,6 @@ struct drm_i915_gem_context_param {
 #define I915_CONTEXT_PARAM_VM 0x9
 #define I915_CONTEXT_PARAM_ENGINES 0xa
 #define I915_CONTEXT_PARAM_PERSISTENCE 0xb
-#define I915_CONTEXT_PARAM_RINGSIZE 0xc
   __u64 value;
 };
 struct drm_i915_gem_context_param_sseu {
@@ -846,8 +823,6 @@ enum drm_i915_perf_property_id {
   DRM_I915_PERF_PROP_OA_FORMAT,
   DRM_I915_PERF_PROP_OA_EXPONENT,
   DRM_I915_PERF_PROP_HOLD_PREEMPTION,
-  DRM_I915_PERF_PROP_GLOBAL_SSEU,
-  DRM_I915_PERF_PROP_POLL_OA_PERIOD,
   DRM_I915_PERF_PROP_MAX
 };
 struct drm_i915_perf_open_param {

@@ -28,16 +28,12 @@
 #include <unistd.h>
 
 #if defined(__BIONIC__)
-#include <sys/pidfd.h>
-
 #include "platform/bionic/fdtrack.h"
-#include "platform/bionic/reserved_signals.h"
 #endif
 
 #include <vector>
 
 #include <android-base/cmsg.h>
-#include <android-base/logging.h>
 #include <android-base/unique_fd.h>
 
 using android::base::ReceiveFileDescriptors;
@@ -45,30 +41,15 @@ using android::base::SendFileDescriptors;
 using android::base::unique_fd;
 
 #if defined(__BIONIC__)
-void DumpEvent(std::vector<android_fdtrack_event>* events, size_t index) {
-  auto& event = (*events)[index];
-  if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {
-    fprintf(stderr, "  event %zu: fd %d created by %s\n", index, event.fd,
-            event.data.create.function_name);
-  } else if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {
-    fprintf(stderr, "  event %zu: fd %d closed\n", index, event.fd);
-  } else {
-    errx(1, "unexpected fdtrack event type: %d", event.type);
-  }
-}
-
-std::vector<android_fdtrack_event> FdtrackRun(void (*func)(), bool reenable = true) {
+std::vector<android_fdtrack_event> FdtrackRun(void (*func)()) {
   // Each bionic test is run in separate process, so we can safely use a static here.
-  // However, since they're all forked, we need to reenable fdtrack.
-  if (reenable) {
-    android_fdtrack_set_globally_enabled(true);
-  }
-
   static std::vector<android_fdtrack_event> events;
   events.clear();
 
   android_fdtrack_hook_t previous = nullptr;
-  android_fdtrack_hook_t hook = [](android_fdtrack_event* event) { events.push_back(*event); };
+  android_fdtrack_hook_t hook = [](android_fdtrack_event* event) {
+    events.push_back(*event);
+  };
 
   if (!android_fdtrack_compare_exchange_hook(&previous, hook)) {
     errx(1, "failed to exchange hook: previous hook was %p", previous);
@@ -83,30 +64,6 @@ std::vector<android_fdtrack_event> FdtrackRun(void (*func)(), bool reenable = tr
 
   if (!android_fdtrack_compare_exchange_hook(&hook, nullptr)) {
     errx(1, "failed to reset hook");
-  }
-
-  // Filter out temporary fds created and closed as a result of the call.
-  // (e.g. accept creating a socket to tell netd about the newly accepted socket)
-  size_t i = 0;
-  while (i + 1 < events.size()) {
-    auto& event = events[i];
-    if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {
-      for (size_t j = i + 1; j < events.size(); ++j) {
-        if (event.fd == events[j].fd) {
-          if (events[j].type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {
-            fprintf(stderr, "error: multiple create events for the same fd:\n");
-            DumpEvent(&events, i);
-            DumpEvent(&events, j);
-            exit(1);
-          }
-
-          events.erase(events.begin() + j);
-          events.erase(events.begin() + i);
-          continue;
-        }
-      }
-    }
-    ++i;
   }
 
   return std::move(events);
@@ -131,21 +88,6 @@ TEST(fdtrack, close) {
   ASSERT_EQ(1U, events.size());
   ASSERT_EQ(fd, events[0].fd);
   ASSERT_EQ(ANDROID_FDTRACK_EVENT_TYPE_CLOSE, events[0].type);
-#endif
-}
-
-TEST(fdtrack, fork) {
-#if defined(__BIONIC__)
-  ASSERT_EXIT(
-      []() {
-        static int fd = open("/dev/null", O_WRONLY | O_CLOEXEC);
-        ASSERT_NE(-1, fd);
-
-        auto events = FdtrackRun([]() { close(fd); }, false);
-        ASSERT_EQ(0U, events.size());
-        exit(0);
-      }(),
-      testing::ExitedWithCode(0), "");
 #endif
 }
 
@@ -198,13 +140,21 @@ void SetFdResult(std::vector<int>* output, std::vector<int> fds) {
     static std::vector<int> expected_fds;                                                        \
     auto events = FdtrackRun([]() { SetFdResult(&expected_fds, expression); });                  \
     for (auto& fd : expected_fds) {                                                              \
-      ASSERT_NE(-1, fd) << strerror(errno);                                                      \
+      ASSERT_NE(-1, fd);                                                                         \
     }                                                                                            \
     if (events.size() != expected_fds.size()) {                                                  \
       fprintf(stderr, "too many events received: expected %zu, got %zu:\n", expected_fds.size(), \
               events.size());                                                                    \
       for (size_t i = 0; i < events.size(); ++i) {                                               \
-        DumpEvent(&events, i);                                                                   \
+        auto& event = events[i];                                                                 \
+        if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CREATE) {                                   \
+          fprintf(stderr, "  event %zu: fd %d created by %s\n", i, event.fd,                     \
+                  event.data.create.function_name);                                              \
+        } else if (event.type == ANDROID_FDTRACK_EVENT_TYPE_CLOSE) {                             \
+          fprintf(stderr, "  event %zu: fd %d closed\n", i, event.fd);                           \
+        } else {                                                                                 \
+          errx(1, "unexpected fdtrack event type: %d", event.type);                              \
+        }                                                                                        \
       }                                                                                          \
       FAIL();                                                                                    \
       return;                                                                                    \
@@ -230,37 +180,6 @@ void SetFdResult(std::vector<int>* output, std::vector<int> fds) {
 FDTRACK_TEST(open, open("/dev/null", O_WRONLY | O_CLOEXEC));
 FDTRACK_TEST(openat, openat(AT_EMPTY_PATH, "/dev/null", O_WRONLY | O_CLOEXEC));
 FDTRACK_TEST(socket, socket(AF_UNIX, SOCK_STREAM, 0));
-
-FDTRACK_TEST(pidfd_open, ({
-  int rc = pidfd_open(getpid(), 0);
-  if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
-  rc;
-}));
-
-FDTRACK_TEST(pidfd_getfd, ({
-  android_fdtrack_set_enabled(false);
-  int pidfd_self = pidfd_open(getpid(), 0);
-  if (pidfd_self == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_open not available";
-  }
-  android_fdtrack_set_enabled(true);
-
-  int rc = pidfd_getfd(pidfd_self, STDIN_FILENO, 0);
-  if (rc == -1) {
-    ASSERT_EQ(ENOSYS, errno);
-    GTEST_SKIP() << "pidfd_getfd not available";
-  }
-
-  android_fdtrack_set_enabled(false);
-  close(pidfd_self);
-  android_fdtrack_set_enabled(true);
-
-  rc;
-}));
 
 FDTRACK_TEST(dup, dup(STDOUT_FILENO));
 FDTRACK_TEST(dup2, dup2(STDOUT_FILENO, STDERR_FILENO));
@@ -297,11 +216,12 @@ FDTRACK_TEST(epoll_create1, epoll_create1(0));
 
 FDTRACK_TEST(eventfd, eventfd(0, 0));
 
-#if defined(__BIONIC__)
-static int CreateListener() {
+#if 0
+// Why is this generating an extra socket/close event?
+FDTRACK_TEST(accept, ({
   android_fdtrack_set_enabled(false);
   int listener = socket(AF_INET, SOCK_STREAM, 0);
-  CHECK_NE(-1, listener);
+  ASSERT_NE(-1, listener);
 
   sockaddr_in addr = {
       .sin_family = AF_INET,
@@ -310,22 +230,20 @@ static int CreateListener() {
   };
   socklen_t addrlen = sizeof(addr);
 
-  CHECK_NE(-1, bind(listener, reinterpret_cast<sockaddr*>(&addr), addrlen)) << strerror(errno);
-  CHECK_NE(-1, getsockname(listener, reinterpret_cast<sockaddr*>(&addr), &addrlen));
-  CHECK_EQ(static_cast<size_t>(addrlen), sizeof(addr));
-  CHECK_NE(-1, listen(listener, 1));
+  ASSERT_NE(-1, bind(listener, reinterpret_cast<sockaddr*>(&addr), addrlen)) << strerror(errno);
+  ASSERT_NE(-1, getsockname(listener, reinterpret_cast<sockaddr*>(&addr), &addrlen));
+  ASSERT_EQ(static_cast<size_t>(addrlen), sizeof(addr));
+  ASSERT_NE(-1, listen(listener, 1));
 
   int connector = socket(AF_INET, SOCK_STREAM, 0);
-  CHECK_NE(-1, connector);
-  CHECK_NE(-1, connect(connector, reinterpret_cast<sockaddr*>(&addr), addrlen));
+  ASSERT_NE(-1, connector);
+  ASSERT_NE(-1, connect(connector, reinterpret_cast<sockaddr*>(&addr), addrlen));
+
   android_fdtrack_set_enabled(true);
-
-  return listener;
-}
+  int accepted = accept(listener, nullptr, nullptr);
+  accepted;
+}));
 #endif
-
-FDTRACK_TEST_NAME(accept, "accept4", accept(CreateListener(), nullptr, nullptr));
-FDTRACK_TEST(accept4, accept4(CreateListener(), nullptr, nullptr, 0));
 
 FDTRACK_TEST(recvmsg, ({
   android_fdtrack_set_enabled(false);

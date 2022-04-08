@@ -181,7 +181,7 @@ TEST(stdatomic, atomic_fetch_and) {
 
 // And a rudimentary test of acquire-release memory ordering:
 
-constexpr static uint_least32_t BIG = 30'000'000ul; // Assumed even below.
+constexpr static uint_least32_t BIG = 10000000ul; // Assumed even below.
 
 struct three_atomics {
   atomic_uint_least32_t x;
@@ -192,7 +192,7 @@ struct three_atomics {
   atomic_uint_least32_t z;
 };
 
-// Very simple acquire/release memory ordering smoke test.
+// Very simple acquire/release memory ordering sanity check.
 static void* writer(void* arg) {
   three_atomics* a = reinterpret_cast<three_atomics*>(arg);
   for (uint_least32_t i = 0; i <= BIG; i+=2) {
@@ -239,7 +239,7 @@ static void* reader(void* arg) {
 }
 
 TEST(stdatomic, ordering) {
-  // Run a memory ordering smoke test.
+  // Run a memory ordering sanity test.
   void* result;
   three_atomics a;
   atomic_init(&a.x, 0ul);

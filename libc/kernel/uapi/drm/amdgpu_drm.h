@@ -69,9 +69,8 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_VRAM_CONTIGUOUS (1 << 5)
 #define AMDGPU_GEM_CREATE_VM_ALWAYS_VALID (1 << 6)
 #define AMDGPU_GEM_CREATE_EXPLICIT_SYNC (1 << 7)
-#define AMDGPU_GEM_CREATE_CP_MQD_GFX9 (1 << 8)
+#define AMDGPU_GEM_CREATE_MQD_GFX9 (1 << 8)
 #define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
-#define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -206,10 +205,6 @@ struct drm_amdgpu_gem_userptr {
 #define AMDGPU_TILING_DCC_PITCH_MAX_MASK 0x3FFF
 #define AMDGPU_TILING_DCC_INDEPENDENT_64B_SHIFT 43
 #define AMDGPU_TILING_DCC_INDEPENDENT_64B_MASK 0x1
-#define AMDGPU_TILING_DCC_INDEPENDENT_128B_SHIFT 44
-#define AMDGPU_TILING_DCC_INDEPENDENT_128B_MASK 0x1
-#define AMDGPU_TILING_SCANOUT_SHIFT 63
-#define AMDGPU_TILING_SCANOUT_MASK 0x1
 #define AMDGPU_TILING_SET(field,value) (((__u64) (value) & AMDGPU_TILING_ ##field ##_MASK) << AMDGPU_TILING_ ##field ##_SHIFT)
 #define AMDGPU_TILING_GET(value,field) (((__u64) (value) >> AMDGPU_TILING_ ##field ##_SHIFT) & AMDGPU_TILING_ ##field ##_MASK)
 #define AMDGPU_GEM_METADATA_OP_SET_METADATA 1
@@ -345,7 +340,7 @@ struct drm_amdgpu_cs_in {
   __u32 ctx_id;
   __u32 bo_list_handle;
   __u32 num_chunks;
-  __u32 flags;
+  __u32 _pad;
   __u64 chunks;
 };
 struct drm_amdgpu_cs_out {
@@ -360,8 +355,6 @@ union drm_amdgpu_cs {
 #define AMDGPU_IB_FLAG_PREEMPT (1 << 2)
 #define AMDGPU_IB_FLAG_TC_WB_NOT_INVALIDATE (1 << 3)
 #define AMDGPU_IB_FLAG_RESET_GDS_MAX_WAVE_ID (1 << 4)
-#define AMDGPU_IB_FLAGS_SECURE (1 << 5)
-#define AMDGPU_IB_FLAG_EMIT_MEM_SYNC (1 << 6)
 struct drm_amdgpu_cs_chunk_ib {
   __u32 _pad;
   __u32 flags;
@@ -411,7 +404,6 @@ struct drm_amdgpu_cs_chunk_data {
 };
 #define AMDGPU_IDS_FLAGS_FUSION 0x1
 #define AMDGPU_IDS_FLAGS_PREEMPTION 0x2
-#define AMDGPU_IDS_FLAGS_TMZ 0x4
 #define AMDGPU_INFO_ACCEL_WORKING 0x00
 #define AMDGPU_INFO_CRTC_FROM_ID 0x01
 #define AMDGPU_INFO_HW_IP_INFO 0x02
@@ -436,8 +428,6 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_GFX_RLC_RESTORE_LIST_SRM_MEM 0x11
 #define AMDGPU_INFO_FW_DMCU 0x12
 #define AMDGPU_INFO_FW_TA 0x13
-#define AMDGPU_INFO_FW_DMCUB 0x14
-#define AMDGPU_INFO_FW_TOC 0x15
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -559,7 +549,6 @@ struct drm_amdgpu_info_firmware {
 #define AMDGPU_VRAM_TYPE_DDR3 7
 #define AMDGPU_VRAM_TYPE_DDR4 8
 #define AMDGPU_VRAM_TYPE_GDDR6 9
-#define AMDGPU_VRAM_TYPE_DDR5 10
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -645,7 +634,6 @@ struct drm_amdgpu_info_vce_clock_table {
 #define AMDGPU_FAMILY_AI 141
 #define AMDGPU_FAMILY_RV 142
 #define AMDGPU_FAMILY_NV 143
-#define AMDGPU_FAMILY_VGH 144
 #ifdef __cplusplus
 }
 #endif

@@ -202,18 +202,11 @@
  * Note that some functions have their __RENAME_LDBL commented out as a sign that although we could
  * use __RENAME_LDBL it would actually cause the function to be introduced later because the
  * `long double` variant appeared before the `double` variant.
- *
- * The _NO_GUARD_FOR_NDK variants keep the __VERSIONER_NO_GUARD behavior working for the NDK. This
- * allows libc++ to refer to these functions in inlines without needing to guard them, needed since
- * libc++ doesn't currently guard these calls. There's no risk to the apps though because using
- * those APIs will still cause a link error.
  */
 #if defined(__LP64__) || defined(__BIONIC_LP32_USE_LONG_DOUBLE)
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN(regular_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __INTRODUCED_IN_NO_GUARD_FOR_NDK(regular_api_level)
 #else
 #define __RENAME_LDBL(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN(rewrite_api_level)
-#define __RENAME_LDBL_NO_GUARD_FOR_NDK(rewrite,rewrite_api_level,regular_api_level) __RENAME(rewrite) __INTRODUCED_IN_NO_GUARD_FOR_NDK(rewrite_api_level)
 #endif
 
 /*
@@ -281,12 +274,10 @@
  */
 #  define __call_bypassing_fortify(fn) (&fn)
 /*
- * Because clang-FORTIFY uses overloads, we can't mark functions as `extern inline` without making
- * them available externally. FORTIFY'ed functions try to be as close to possible as 'invisible';
- * having stack protectors detracts from that (b/182948263).
+ * Because clang-FORTIFY uses overloads, we can't mark functions as `extern
+ * inline` without making them available externally.
  */
-#  define __BIONIC_FORTIFY_INLINE static __inline__ __attribute__((no_stack_protector)) \
-      __always_inline __VERSIONER_FORTIFY_INLINE
+#  define __BIONIC_FORTIFY_INLINE static __inline__ __always_inline __VERSIONER_FORTIFY_INLINE
 /*
  * We should use __BIONIC_FORTIFY_VARIADIC instead of __BIONIC_FORTIFY_INLINE
  * for variadic functions because compilers cannot inline them.

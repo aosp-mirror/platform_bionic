@@ -1,0 +1,49 @@
+# This file is used to populate seccomp's whitelist policy in combination with SYSCALLS.TXT.
+# Note that the resultant policy is applied only to zygote spawned processes.
+#
+# The final seccomp whitelist is SYSCALLS.TXT - SECCOMP_BLACKLIST.TXT + SECCOMP_WHITELIST.TXT
+# Any entry in the blacklist must be in the syscalls file and not be in the whitelist file
+#
+# This file is processed by a python script named genseccomp.py.
+
+# Note: Some privileged syscalls are still needed in app process after fork before uid change,
+# including capset and setresuid. This is because the seccomp filter must be installed while
+# the process still has CAP_SYS_ADMIN; changing the uid would remove that capability.
+
+# syscalls to modify IDs
+int     setgid:setgid32(gid_t)     lp32
+int     setgid:setgid(gid_t)       lp64
+int     setuid:setuid32(uid_t)    lp32
+int     setuid:setuid(uid_t)      lp64
+int     setregid:setregid32(gid_t, gid_t)  lp32
+int     setregid:setregid(gid_t, gid_t)    lp64
+int     setreuid:setreuid32(uid_t, uid_t)   lp32
+int     setreuid:setreuid(uid_t, uid_t)     lp64
+int     setresgid:setresgid32(gid_t, gid_t, gid_t)   lp32
+int     setresgid:setresgid(gid_t, gid_t, gid_t)     lp64
+# setresuid is explicitly allowed, see above.
+int     setfsgid(gid_t)  all
+int     setfsuid(uid_t)  all
+int     setgroups:setgroups32(int, const gid_t*)   lp32
+int     setgroups:setgroups(int, const gid_t*)     lp64
+
+# syscalls to modify times
+int     adjtimex(struct timex*)   all
+int     clock_adjtime(clockid_t, struct timex*)   all
+int     clock_settime(clockid_t, const struct timespec*)  all
+int     settimeofday(const struct timeval*, const struct timezone*)   all
+
+int     acct(const char*  filepath)  all
+int     klogctl:syslog(int, char*, int)   all
+int     chroot(const char*)  all
+
+# syscalls to change machine various configurations
+int     init_module(void*, unsigned long, const char*)  all
+int     delete_module(const char*, unsigned int)   all
+int     mount(const char*, const char*, const char*, unsigned long, const void*)  all
+int     umount2(const char*, int)  all
+int     swapon(const char*, int) all
+int     swapoff(const char*) all
+int     setdomainname(const char*, size_t)  all
+int     sethostname(const char*, size_t)  all
+int     __reboot:reboot(int, int, int, void*)  all

@@ -167,9 +167,6 @@ enum {
   TCA_RED_PARMS,
   TCA_RED_STAB,
   TCA_RED_MAX_P,
-  TCA_RED_FLAGS,
-  TCA_RED_EARLY_DROP_BLOCK,
-  TCA_RED_MARK_BLOCK,
   __TCA_RED_MAX,
 };
 #define TCA_RED_MAX (__TCA_RED_MAX - 1)
@@ -184,9 +181,7 @@ struct tc_red_qopt {
 #define TC_RED_ECN 1
 #define TC_RED_HARDDROP 2
 #define TC_RED_ADAPTATIVE 4
-#define TC_RED_NODROP 8
 };
-#define TC_RED_HISTORIC_FLAGS (TC_RED_ECN | TC_RED_HARDDROP | TC_RED_ADAPTATIVE)
 struct tc_red_xstats {
   __u32 early;
   __u32 pdrop;
@@ -306,7 +301,6 @@ enum {
   TCA_HTB_RATE64,
   TCA_HTB_CEIL64,
   TCA_HTB_PAD,
-  TCA_HTB_OFFLOAD,
   __TCA_HTB_MAX,
 };
 #define TCA_HTB_MAX (__TCA_HTB_MAX - 1)
@@ -671,9 +665,6 @@ enum {
   TCA_FQ_ORPHAN_MASK,
   TCA_FQ_LOW_RATE_THRESHOLD,
   TCA_FQ_CE_THRESHOLD,
-  TCA_FQ_TIMER_SLACK,
-  TCA_FQ_HORIZON,
-  TCA_FQ_HORIZON_DROP,
   __TCA_FQ_MAX
 };
 #define TCA_FQ_MAX (__TCA_FQ_MAX - 1)
@@ -691,8 +682,6 @@ struct tc_fq_qd_stats {
   __u32 throttled_flows;
   __u32 unthrottle_latency_ns;
   __u64 ce_mark;
-  __u64 horizon_drops;
-  __u64 horizon_caps;
 };
 enum {
   TCA_HHF_UNSPEC,
@@ -735,34 +724,6 @@ struct tc_pie_xstats {
   __u32 overlimit;
   __u32 maxq;
   __u32 ecn_mark;
-};
-enum {
-  TCA_FQ_PIE_UNSPEC,
-  TCA_FQ_PIE_LIMIT,
-  TCA_FQ_PIE_FLOWS,
-  TCA_FQ_PIE_TARGET,
-  TCA_FQ_PIE_TUPDATE,
-  TCA_FQ_PIE_ALPHA,
-  TCA_FQ_PIE_BETA,
-  TCA_FQ_PIE_QUANTUM,
-  TCA_FQ_PIE_MEMORY_LIMIT,
-  TCA_FQ_PIE_ECN_PROB,
-  TCA_FQ_PIE_ECN,
-  TCA_FQ_PIE_BYTEMODE,
-  TCA_FQ_PIE_DQ_RATE_ESTIMATOR,
-  __TCA_FQ_PIE_MAX
-};
-#define TCA_FQ_PIE_MAX (__TCA_FQ_PIE_MAX - 1)
-struct tc_fq_pie_xstats {
-  __u32 packets_in;
-  __u32 dropped;
-  __u32 overlimit;
-  __u32 overmemory;
-  __u32 ecn_mark;
-  __u32 new_flow_count;
-  __u32 new_flows_len;
-  __u32 old_flows_len;
-  __u32 memory_usage;
 };
 struct tc_cbs_qopt {
   __u8 offload;
@@ -918,8 +879,8 @@ enum {
   __TCA_TAPRIO_SCHED_MAX,
 };
 #define TCA_TAPRIO_SCHED_MAX (__TCA_TAPRIO_SCHED_MAX - 1)
-#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST _BITUL(0)
-#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD _BITUL(1)
+#define TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST BIT(0)
+#define TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD BIT(1)
 enum {
   TCA_TAPRIO_ATTR_UNSPEC,
   TCA_TAPRIO_ATTR_PRIOMAP,
@@ -936,16 +897,4 @@ enum {
   __TCA_TAPRIO_ATTR_MAX,
 };
 #define TCA_TAPRIO_ATTR_MAX (__TCA_TAPRIO_ATTR_MAX - 1)
-#define TCQ_ETS_MAX_BANDS 16
-enum {
-  TCA_ETS_UNSPEC,
-  TCA_ETS_NBANDS,
-  TCA_ETS_NSTRICT,
-  TCA_ETS_QUANTA,
-  TCA_ETS_QUANTA_BAND,
-  TCA_ETS_PRIOMAP,
-  TCA_ETS_PRIOMAP_BAND,
-  __TCA_ETS_MAX,
-};
-#define TCA_ETS_MAX (__TCA_ETS_MAX - 1)
 #endif

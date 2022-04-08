@@ -1,4 +1,4 @@
-/*	$OpenBSD: fgetln.c,v 1.17 2017/03/17 14:53:08 deraadt Exp $ */
+/*	$OpenBSD: fgetln.c,v 1.13 2015/01/05 21:58:52 millert Exp $ */
 /*-
  * Copyright (c) 1990, 1993
  *	The Regents of the University of California.  All rights reserved.
@@ -46,7 +46,7 @@ __slbexpand(FILE *fp, size_t newsize)
 
 	if (fp->_lb._size >= newsize)
 		return (0);
-	if ((p = recallocarray(fp->_lb._base, fp->_lb._size, newsize, 1)) == NULL)
+	if ((p = realloc(fp->_lb._base, newsize)) == NULL)
 		return (-1);
 	fp->_lb._base = p;
 	fp->_lb._size = newsize;
@@ -76,7 +76,7 @@ fgetln(FILE *fp, size_t *lenp)
 		goto error;
 
 	/* look for a newline in the input */
-	if ((p = memchr(fp->_p, '\n', fp->_r)) != NULL) {
+	if ((p = memchr((void *)fp->_p, '\n', fp->_r)) != NULL) {
 		/*
 		 * Found one.  Flag buffer as modified to keep fseek from
 		 * `optimising' a backward seek, in case the user stomps on
@@ -112,14 +112,12 @@ fgetln(FILE *fp, size_t *lenp)
 		 */
 		if (__slbexpand(fp, len + OPTIMISTIC))
 			goto error;
-		(void)memcpy(fp->_lb._base + off, fp->_p, len - off);
+		(void)memcpy((void *)(fp->_lb._base + off), (void *)fp->_p,
+		    len - off);
 		off = len;
-		if (__srefill(fp)) {
-			if (fp->_flags & __SEOF)
-				break;
-			goto error;
-		}
-		if ((p = memchr(fp->_p, '\n', fp->_r)) == NULL)
+		if (__srefill(fp))
+			break;	/* EOF or error: return partial line */
+		if ((p = memchr((void *)fp->_p, '\n', fp->_r)) == NULL)
 			continue;
 
 		/* got it: finish up the line (like code above) */
@@ -128,7 +126,8 @@ fgetln(FILE *fp, size_t *lenp)
 		len += diff;
 		if (__slbexpand(fp, len))
 			goto error;
-		(void)memcpy(fp->_lb._base + off, fp->_p, diff);
+		(void)memcpy((void *)(fp->_lb._base + off), (void *)fp->_p,
+		    diff);
 		fp->_r -= diff;
 		fp->_p = p;
 		break;
@@ -143,4 +142,3 @@ error:
 	*lenp = 0;
 	return (NULL);
 }
-DEF_WEAK(fgetln);

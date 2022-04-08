@@ -32,7 +32,6 @@
 #include <sys/types.h>
 #include <linux/memfd.h>
 #include <linux/mman.h>
-#include <linux/uio.h>
 
 __BEGIN_DECLS
 
@@ -161,15 +160,6 @@ int mincore(void* __addr, size_t __size, unsigned char* __vector);
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
 int madvise(void* __addr, size_t __size, int __advice);
-
-/**
- * [process_madvise(2)](http://man7.org/linux/man-pages/man2/process_madvise.2.html)
- * works just like madvise(2) but applies to the process specified by the given
- * PID file descriptor.
- *
- * Returns the number of bytes advised on success, and returns -1 and sets `errno` on failure.
- */
-ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags);
 
 #if defined(__USE_GNU)
 

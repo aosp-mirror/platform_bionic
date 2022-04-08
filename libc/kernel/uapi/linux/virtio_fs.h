@@ -24,7 +24,6 @@
 #include <linux/virtio_types.h>
 struct virtio_fs_config {
   __u8 tag[36];
-  __le32 num_request_queues;
+  __u32 num_request_queues;
 } __attribute__((packed));
-#define VIRTIO_FS_SHMCAP_ID_CACHE 0
 #endif

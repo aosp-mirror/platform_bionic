@@ -407,11 +407,4 @@
 #define __NR_fspick (__NR_SYSCALL_BASE + 433)
 #define __NR_pidfd_open (__NR_SYSCALL_BASE + 434)
 #define __NR_clone3 (__NR_SYSCALL_BASE + 435)
-#define __NR_close_range (__NR_SYSCALL_BASE + 436)
-#define __NR_openat2 (__NR_SYSCALL_BASE + 437)
-#define __NR_pidfd_getfd (__NR_SYSCALL_BASE + 438)
-#define __NR_faccessat2 (__NR_SYSCALL_BASE + 439)
-#define __NR_process_madvise (__NR_SYSCALL_BASE + 440)
-#define __NR_epoll_pwait2 (__NR_SYSCALL_BASE + 441)
-#define __NR_mount_setattr (__NR_SYSCALL_BASE + 442)
 #endif

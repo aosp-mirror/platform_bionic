@@ -51,7 +51,7 @@ TEST(eventfd, cloexec) {
   constexpr unsigned int kInitialValue = 2;
   int fd = eventfd(kInitialValue, EFD_CLOEXEC);
   ASSERT_NE(-1, fd);
-  ASSERT_TRUE(CloseOnExec(fd));
+  AssertCloseOnExec(fd, true);
 
   eventfd_t value = 123;
   ASSERT_EQ(0, eventfd_read(fd, &value));
@@ -61,7 +61,7 @@ TEST(eventfd, cloexec) {
 
   fd = eventfd(kInitialValue, EFD_NONBLOCK | EFD_CLOEXEC);
   ASSERT_NE(-1, fd);
-  ASSERT_TRUE(CloseOnExec(fd));
+  AssertCloseOnExec(fd, true);
 
   value = 123;
   ASSERT_EQ(0, eventfd_read(fd, &value));

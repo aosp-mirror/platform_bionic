@@ -26,24 +26,16 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#ifndef _SYS_PROCFS_H_
+#define _SYS_PROCFS_H_
 
 #include <sys/cdefs.h>
-#include <sys/ptrace.h>
 #include <sys/ucontext.h>
 
 __BEGIN_DECLS
 
-#if defined(__arm__)
-#define ELF_NGREG (sizeof(struct user_regs) / sizeof(elf_greg_t))
-#elif defined(__aarch64__)
-#define ELF_NGREG (sizeof(struct user_pt_regs) / sizeof(elf_greg_t))
-#else
-#define ELF_NGREG (sizeof(struct user_regs_struct) / sizeof(elf_greg_t))
-#endif
-
 typedef unsigned long elf_greg_t;
-typedef elf_greg_t elf_gregset_t[ELF_NGREG];
+typedef elf_greg_t elf_gregset_t[NGREG];
 
 typedef fpregset_t elf_fpregset_t;
 
@@ -66,3 +58,5 @@ struct elf_siginfo {
 #define ELF_PRARGSZ 80
 
 __END_DECLS
+
+#endif

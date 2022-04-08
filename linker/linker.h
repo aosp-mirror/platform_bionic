@@ -71,10 +71,6 @@ class VersionTracker {
   DISALLOW_COPY_AND_ASSIGN(VersionTracker);
 };
 
-static constexpr const char* kBionicChangesUrl =
-    "https://android.googlesource.com/platform/bionic/+/master/"
-    "android-changes-for-ndk-developers.md";
-
 soinfo* get_libdl_info(const soinfo& linker_si);
 
 soinfo* find_containing_library(const void* p);
@@ -110,8 +106,6 @@ void ___cfi_fail(uint64_t CallSiteTypeId, void* Ptr, void *DiagData, void *Ret);
 void set_application_target_sdk_version(int target);
 int get_application_target_sdk_version();
 
-bool get_transparent_hugepages_supported();
-
 enum {
   /* A regular namespace is the namespace with a custom search path that does
    * not impose any restrictions on the location of native libraries.
@@ -135,10 +129,10 @@ enum {
    */
   ANDROID_NAMESPACE_TYPE_SHARED = 2,
 
-  /* This flag instructs linker to enable exempt-list workaround for the namespace.
+  /* This flag instructs linker to enable grey-list workaround for the namespace.
    * See http://b/26394120 for details.
    */
-  ANDROID_NAMESPACE_TYPE_EXEMPT_LIST_ENABLED = 0x08000000,
+  ANDROID_NAMESPACE_TYPE_GREYLIST_ENABLED = 0x08000000,
 
   /* This flag instructs linker to use this namespace as the anonymous
    * namespace. There can be only one anonymous namespace in a process. If there
@@ -183,9 +177,3 @@ struct address_space_params {
 int get_application_target_sdk_version();
 ElfW(Versym) find_verdef_version_index(const soinfo* si, const version_info* vi);
 bool validate_verdef_section(const soinfo* si);
-
-struct platform_properties {
-#if defined(__aarch64__)
-  bool bti_supported = false;
-#endif
-};

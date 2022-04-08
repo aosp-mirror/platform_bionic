@@ -116,17 +116,14 @@ static void read_loadbias(MapEntry* entry) {
     if (!get_val<ElfW(Word)>(entry, addr + offsetof(ElfW(Phdr), p_type), &phdr.p_type)) {
       return;
     }
-    if (!get_val<ElfW(Word)>(entry, addr + offsetof(ElfW(Phdr), p_flags), &phdr.p_flags)) {
-      return;
-    }
     if (!get_val<ElfW(Off)>(entry, addr + offsetof(ElfW(Phdr), p_offset), &phdr.p_offset)) {
       return;
     }
-    if ((phdr.p_type == PT_LOAD) && (phdr.p_flags & PF_X) ) {
+    if (phdr.p_type == PT_LOAD && phdr.p_offset == entry->offset) {
       if (!get_val<ElfW(Addr)>(entry, addr + offsetof(ElfW(Phdr), p_vaddr), &phdr.p_vaddr)) {
         return;
       }
-      entry->load_bias = phdr.p_vaddr - phdr.p_offset;
+      entry->load_bias = phdr.p_vaddr;
       return;
     }
     addr += sizeof(phdr);

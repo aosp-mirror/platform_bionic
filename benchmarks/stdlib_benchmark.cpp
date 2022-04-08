@@ -189,8 +189,9 @@ static void BM_stdlib_mbstowcs(benchmark::State& state) {
         buf[l++] = i, buf[l++] = j, buf[l++] = 0x80, buf[l++] = k;
   buf[l++] = 0;
 
+  volatile size_t c __attribute__((unused)) = 0;
   for (auto _ : state) {
-    benchmark::DoNotOptimize(mbstowcs(widebuf_aligned, buf_aligned, 500000));
+    c = mbstowcs(widebuf_aligned, buf_aligned, 500000);
   }
 
   state.SetBytesProcessed(uint64_t(state.iterations()) * uint64_t(500000));

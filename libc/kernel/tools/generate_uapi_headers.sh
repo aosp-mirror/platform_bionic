@@ -218,11 +218,12 @@ if [[ ${VERIFY_HEADERS_ONLY} -eq 1 ]]; then
 fi
 
 if [[ ${SKIP_GENERATION} -eq 0 ]]; then
+  # Clean up any leftover headers.
+  make distclean
+
   # Build all of the generated headers.
   for arch in "${ARCH_LIST[@]}"; do
     echo "Generating headers for arch ${arch}"
-    # Clean up any leftover headers.
-    make ARCH=${arch} distclean
     make ARCH=${arch} headers_install
   done
 fi
@@ -263,17 +264,13 @@ for arch in "${ARCH_LIST[@]}"; do
                  "${ANDROID_KERNEL_DIR}/uapi/asm-${arch}/asm"
 done
 
+# The arm types.h uapi header is not properly being generated, so copy it
+# directly.
+cp "${KERNEL_DIR}/include/uapi/asm-generic/types.h" \
+   "${ANDROID_KERNEL_DIR}/uapi/asm-arm/asm"
+
 # Verify if modified headers have changed.
 verify_modified_hdrs "${KERNEL_DIR}/include/scsi" \
                      "${ANDROID_KERNEL_DIR}/scsi" \
                      "${KERNEL_DIR}"
 echo "Headers updated."
-
-if [[ ${SKIP_GENERATION} -eq 0 ]]; then
-  cd "${KERNEL_DIR}"
-  # Clean all of the generated headers.
-  for arch in "${ARCH_LIST[@]}"; do
-    echo "Cleaning kernel files for arch ${arch}"
-    make ARCH=${arch} distclean
-  done
-fi

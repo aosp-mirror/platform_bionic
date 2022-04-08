@@ -41,7 +41,7 @@
  */
 
 #include <stddef.h>  /* For ptrdiff_t. */
-#include <stdint.h>
+#include <stdint.h>  /* TODO: don't drag in all the macros, just the types. */
 // Include uchar.h only when available.  Bionic's stdatomic.h is also used for
 // the host (via a copy in prebuilts/clang) and uchar.h is not available in the
 // glibc used for the host.

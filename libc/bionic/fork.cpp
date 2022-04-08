@@ -31,10 +31,9 @@
 #include <android/fdsan.h>
 
 #include "private/bionic_defs.h"
-#include "private/bionic_fdtrack.h"
 #include "pthread_internal.h"
 
-__BIONIC_WEAK_FOR_NATIVE_BRIDGE_INLINE
+__BIONIC_WEAK_FOR_NATIVE_BRIDGE
 int __clone_for_fork() {
   pthread_internal_t* self = __get_thread();
 
@@ -56,10 +55,9 @@ int fork() {
   int result = __clone_for_fork();
 
   if (result == 0) {
-    // Disable fdsan and fdtrack post-fork, so we don't falsely trigger on processes that
-    // fork, close all of their fds, and then exec.
+    // Disable fdsan post-fork, so we don't falsely trigger on processes that
+    // fork, close all of their fds blindly, and then exec.
     android_fdsan_set_error_level(ANDROID_FDSAN_ERROR_LEVEL_DISABLED);
-    android_fdtrack_set_globally_enabled(false);
 
     // Reset the stack_and_tls VMA name so it doesn't end with a tid from the
     // parent process.

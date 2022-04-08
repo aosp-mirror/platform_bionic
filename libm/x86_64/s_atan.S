@@ -904,7 +904,7 @@ SGNMASK:
 	.type	SGNMASK,@object
 	.size	SGNMASK,8
 	.data
-	.section .note.GNU-stack, "",@progbits
+	.section .note.GNU-stack, ""
 // -- Begin DWARF2 SEGMENT .eh_frame
 	.section .eh_frame,"a",@progbits
 .eh_frame_seg:

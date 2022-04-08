@@ -51,8 +51,6 @@ struct vhost_iotlb_msg {
 #define VHOST_IOTLB_UPDATE 2
 #define VHOST_IOTLB_INVALIDATE 3
 #define VHOST_IOTLB_ACCESS_FAIL 4
-#define VHOST_IOTLB_BATCH_BEGIN 5
-#define VHOST_IOTLB_BATCH_END 6
   __u8 type;
 };
 #define VHOST_IOTLB_MSG 0x1
@@ -90,15 +88,6 @@ struct vhost_scsi_target {
   char vhost_wwpn[224];
   unsigned short vhost_tpgt;
   unsigned short reserved;
-};
-struct vhost_vdpa_config {
-  __u32 off;
-  __u32 len;
-  __u8 buf[0];
-};
-struct vhost_vdpa_iova_range {
-  __u64 first;
-  __u64 last;
 };
 #define VHOST_F_LOG_ALL 26
 #define VHOST_NET_F_VIRTIO_NET_HDR 27

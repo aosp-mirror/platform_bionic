@@ -153,5 +153,3 @@ END(memmove)
 
 ALIAS_SYMBOL(memcpy, memmove)
 #endif
-
-NOTE_GNU_PROPERTY()

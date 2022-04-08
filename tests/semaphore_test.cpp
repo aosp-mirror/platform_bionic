@@ -17,18 +17,14 @@
 #include <semaphore.h>
 
 #include <errno.h>
+#include <gtest/gtest.h>
 #include <limits.h>
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
 
-#include <android-base/silent_death_test.h>
-#include <gtest/gtest.h>
-
-#include "SignalUtils.h"
 #include "private/bionic_constants.h"
-
-using semaphore_DeathTest = SilentDeathTest;
+#include "SignalUtils.h"
 
 TEST(semaphore, sem_init) {
   sem_t s;
@@ -162,7 +158,7 @@ TEST(semaphore, sem_clockwait) {
 #endif  // __BIONIC__
 }
 
-TEST_F(semaphore_DeathTest, sem_timedwait_null_timeout) {
+TEST(semaphore_DeathTest, sem_timedwait_null_timeout) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));
 

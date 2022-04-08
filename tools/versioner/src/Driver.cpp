@@ -42,7 +42,6 @@
 #include <llvm/ADT/SmallVector.h>
 #include <llvm/ADT/StringRef.h>
 #include <llvm/Option/Option.h>
-#include <llvm/Support/Host.h>
 #include <llvm/Support/VirtualFileSystem.h>
 
 #include "Arch.h"
@@ -149,7 +148,7 @@ static void generateTargetCC1Flags(llvm::IntrusiveRefCntPtr<llvm::vfs::FileSyste
   cmd.push_back("-");
 
   auto diags = constructDiags();
-  driver::Driver driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags, "versioner", vfs);
+  driver::Driver driver("versioner", llvm::sys::getDefaultTargetTriple(), *diags, vfs);
   driver.setCheckInputsExist(false);
 
   llvm::SmallVector<const char*, 32> driver_args;
