@@ -36,6 +36,7 @@ cc_library_static {
         "com.android.art.debug",
         "com.android.media",
         "com.android.media.swcodec",
+        "com.android.virt",
     ],
     min_sdk_version: "apex_inherit",
 }
