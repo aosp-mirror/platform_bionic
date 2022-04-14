@@ -144,10 +144,21 @@ size_t gwp_asan_malloc_usable_size(const void* mem) {
 }
 
 void* gwp_asan_realloc(void* old_mem, size_t bytes) {
+  // GPA::pointerIsMine(p) always returns false where `p == nullptr` (and thus
+  // malloc(bytes) is requested). We always fall back to the backing allocator,
+  // technically missing some coverage, but reducing an extra conditional
+  // branch.
   if (__predict_false(GuardedAlloc.pointerIsMine(old_mem))) {
-    size_t old_size = GuardedAlloc.getSize(old_mem);
+    if (__predict_false(bytes == 0)) {
+      GuardedAlloc.deallocate(old_mem);
+      return nullptr;
+    }
     void* new_ptr = gwp_asan_malloc(bytes);
-    if (new_ptr) memcpy(new_ptr, old_mem, (bytes < old_size) ? bytes : old_size);
+    // If malloc() fails, then don't destroy the old memory.
+    if (__predict_false(new_ptr == nullptr)) return nullptr;
+
+    size_t old_size = GuardedAlloc.getSize(old_mem);
+    memcpy(new_ptr, old_mem, (bytes < old_size) ? bytes : old_size);
     GuardedAlloc.deallocate(old_mem);
     return new_ptr;
   }
