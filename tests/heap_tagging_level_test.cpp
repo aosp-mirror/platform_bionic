@@ -26,6 +26,7 @@
 
 #include "SignalUtils.h"
 
+#include <android-base/test_utils.h>
 #include <bionic/malloc_tagged_pointers.h>
 
 static bool KernelSupportsTaggedPointers() {
