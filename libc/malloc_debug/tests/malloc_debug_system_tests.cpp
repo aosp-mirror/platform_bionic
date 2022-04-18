@@ -41,6 +41,7 @@
 
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
+#include <android-base/test_utils.h>
 #include <gtest/gtest.h>
 #include <log/log_read.h>
 
@@ -55,6 +56,7 @@
 #include <backtrace/BacktraceMap.h>
 
 #include <bionic/malloc.h>
+#include <tests/utils.h>
 
 // All DISABLED_ tests are designed to be executed after malloc debug
 // is enabled. These tests don't run be default, and are executed
@@ -610,6 +612,7 @@ TEST_F(MallocDebugSystemTest, verify_leak) {
 }
 
 TEST_F(MallocDebugSystemTest, verify_leak_allocation_limit) {
+  SKIP_WITH_HWASAN;
   VerifyLeak("leak_memory_limit_");
 }
 
