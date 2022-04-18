@@ -33,6 +33,7 @@
 #include <android-base/file.h>
 #include <android-base/macros.h>
 #include <android-base/silent_death_test.h>
+#include <android-base/test_utils.h>
 #include <gtest/gtest.h>
 
 #include "math_data_test.h"

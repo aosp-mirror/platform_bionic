@@ -41,6 +41,7 @@
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
+#include <android-base/test_utils.h>
 
 #include "utils.h"
 

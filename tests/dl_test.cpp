@@ -34,6 +34,7 @@
 
 #include "gtest_globals.h"
 #include <android-base/file.h>
+#include <android-base/test_utils.h>
 #include "utils.h"
 
 extern "C" int main_global_default_serial() {
