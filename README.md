@@ -177,16 +177,22 @@ Adding a system call usually involves:
      function was added to. Explicitly call out any Android-specific
      changes/additions/limitations because they won't be on the man7.org page.
   5. Add the function name to the correct section in libc/libc.map.txt.
-  6. Add at least basic tests. Even a test that deliberately supplies
-     an invalid argument helps check that we're generating the right symbol
-     and have the right declaration in the header file, and that you correctly
-     updated the maps in step 5. (You can use strace(1) to confirm that the
-     correct system call is being made.) Don't try to test everything;
-     concentrate on just testing the *bionic* code, not the kernel. We should
-     prefer to rely on https://github.com/linux-test-project/ltp for kernel
-     testing, but you'll want to check that external/ltp contains tests for the
-     syscall you're adding. Also check that external/ltp is using the libc
-     wrapper for the syscall rather than calling it "directly" via syscall(3)!
+  6. Add a basic test. Don't try to test everything; concentrate on just testing
+     the code that's actually in *bionic*, not all the functionality that's
+     implemented in the kernel. For simple syscalls, that's just the
+     auto-generated argument and return value marshalling.
+
+     A trivial test that deliberately supplies an invalid argument helps check
+     that we're generating the right symbol and have the right declaration in
+     the header file, and that the change to libc.map.txt from step 5 is
+     correct. (You can use strace(1) manually to confirm that the correct
+     system call is being made.)
+
+     For testing the *kernel* side of things, we should prefer to rely on
+     https://github.com/linux-test-project/ltp for kernel testing, but you'll
+     want to check that external/ltp does contain tests for the syscall you're
+     adding. Also check that external/ltp is using the libc wrapper for the
+     syscall rather than calling it "directly" via syscall(3)!
 
 Some system calls are harder than others. The most common problem is a 64-bit
 argument such as `off64_t` (a *pointer* to a 64-bit argument is fine, since
@@ -196,8 +202,11 @@ size of the thing they point to). Whenever you have a function that takes
 and a foo64(), and whether they will use the same underlying system call or are
 implemented as two different system calls. It's usually easiest to find a
 similar system call and copy and paste from that. You'll definitely need to test
-both on 32-bit and 64-bit. (These special cases usually warrant more testing
-than the easy cases, even if only manual testing with strace.)
+both on 32-bit and 64-bit. (These special cases warrant more testing than the
+easy cases, even if only manual testing with strace. Sadly it isn't always
+feasible to write a working test for the interesting cases -- offsets larger
+than 2GiB, say -- so you may end up just writing a "meaningless" program whose
+only purpose is to give you patterns to look for when run under strace(1).)
 
 ## Updating kernel header files
 

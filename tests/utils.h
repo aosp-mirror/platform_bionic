@@ -69,14 +69,6 @@ static inline bool have_dl() {
   return (dlopen("libc.so", 0) != nullptr);
 }
 
-extern "C" void __hwasan_init() __attribute__((weak));
-
-static inline bool running_with_hwasan() {
-  return &__hwasan_init != 0;
-}
-
-#define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
-
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
   static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
