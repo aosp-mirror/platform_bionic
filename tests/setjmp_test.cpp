@@ -22,6 +22,7 @@
 #include <unistd.h>
 
 #include <android-base/silent_death_test.h>
+#include <android-base/test_utils.h>
 
 #include "SignalUtils.h"
 
@@ -273,6 +274,7 @@ TEST(setjmp, setjmp_stack) {
 }
 
 TEST(setjmp, bug_152210274) {
+  SKIP_WITH_HWASAN; // b/227390656
   // Ensure that we never have a mangled value in the stack pointer.
 #if defined(__BIONIC__)
   struct sigaction sa = {.sa_flags = SA_SIGINFO, .sa_sigaction = [](int, siginfo_t*, void*) {}};
