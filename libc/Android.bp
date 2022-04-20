@@ -2324,6 +2324,8 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
+    // APIs implemented in asm don't have debug info: http://b/190554910.
+    allow_untyped_symbols: true,
 }
 
 ndk_library {
