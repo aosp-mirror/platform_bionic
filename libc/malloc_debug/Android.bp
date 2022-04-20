@@ -166,6 +166,7 @@ cc_test {
 
     include_dirs: [
         "bionic/libc",
+        "bionic", // For SKIP_WITH_HWASAN.
     ],
 
     header_libs: [
