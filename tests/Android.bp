@@ -331,8 +331,8 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-      "-Xclang",
-      "-verify",
+        "-Xclang",
+        "-verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
@@ -642,7 +642,7 @@ cc_defaults {
     tidy: false,
     target: {
         host: {
-            clang_cflags: ["-D__clang__"],
+            cflags: ["-D__clang__"],
         },
         musl: {
             // Musl doesn't have fortify
@@ -727,7 +727,7 @@ cc_defaults {
     tidy: false,
     target: {
         host: {
-            clang_cflags: ["-D__clang__"],
+            cflags: ["-D__clang__"],
         },
     },
 }
@@ -761,7 +761,6 @@ cc_test_library {
         enabled: false,
     },
 }
-
 
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
