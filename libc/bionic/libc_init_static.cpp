@@ -38,6 +38,7 @@
 
 #include "libc_init_common.h"
 #include "pthread_internal.h"
+#include "sysprop_helpers.h"
 
 #include "platform/bionic/macros.h"
 #include "platform/bionic/mte.h"
@@ -162,30 +163,6 @@ static void layout_static_tls(KernelArgumentBlock& args) {
   __libc_tls_generation_copy = modules.generation;
 
   layout.finish_layout();
-}
-
-// Get the presiding config string, in the following order of priority:
-//   1. Environment variables.
-//   2. System properties, in the order they're specified in sys_prop_names.
-// If neither of these options are specified, this function returns false.
-// Otherwise, it returns true, and the presiding options string is written to
-// the `options` buffer of size `size`. If this function returns true, `options`
-// is guaranteed to be null-terminated. `options_size` should be at least
-// PROP_VALUE_MAX.
-bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const* sys_prop_names,
-                                     size_t sys_prop_names_size, char* options,
-                                     size_t options_size) {
-  const char* env = getenv(env_var_name);
-  if (env && *env != '\0') {
-    strncpy(options, env, options_size);
-    options[options_size - 1] = '\0'; // Ensure null-termination.
-    return true;
-  }
-
-  for (size_t i = 0; i < sys_prop_names_size; ++i) {
-    if (__system_property_get(sys_prop_names[i], options) && *options != '\0') return true;
-  }
-  return false;
 }
 
 #ifdef __aarch64__
