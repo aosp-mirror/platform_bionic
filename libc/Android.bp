@@ -28,6 +28,7 @@ libc_common_src_files = [
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
+    "bionic/sysprop_helpers.cpp",
     "stdio/fmemopen.cpp",
     "stdio/parsefloat.c",
     "stdio/refill.c",
