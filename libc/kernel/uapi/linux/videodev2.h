@@ -24,7 +24,12 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-#define VIDEO_MAX_FRAME 32
+/* ---------------------------------------------------
+ * This value manually changed due to b/228783882.
+ * Next kernel update should keep this value as is.
+ */
+#define VIDEO_MAX_FRAME 64
+/* --------------------------------------------------- */
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
