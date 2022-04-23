@@ -43,7 +43,7 @@ void RunGwpAsanTest(const char* test_name) {
   std::string filter_arg = "--gtest_filter=";
   filter_arg += test_name;
   std::string exec(testing::internal::GetArgvs()[0]);
-  eh.SetArgs({exec.c_str(), "--gtest_also_run_disabled_tests", filter_arg.c_str()});
+  eh.SetArgs({exec.c_str(), "--gtest_also_run_disabled_tests", filter_arg.c_str(), nullptr});
   eh.Run([&]() { execve(exec.c_str(), eh.GetArgs(), eh.GetEnv()); },
          /* expected_exit_status */ 0,
          // |expected_output_regex|, ensure at least one test ran:
