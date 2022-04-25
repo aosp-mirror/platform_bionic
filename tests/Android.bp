@@ -641,9 +641,6 @@ cc_defaults {
     ],
     tidy: false,
     target: {
-        host: {
-            cflags: ["-D__clang__"],
-        },
         musl: {
             // Musl doesn't have fortify
             enabled: false,
