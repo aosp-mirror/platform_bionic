@@ -57,6 +57,9 @@
       "name": "CtsGwpAsanTestCases"
     },
     {
+      "name": "debuggerd_test"
+    },
+    {
       "name": "fdtrack_test"
     },
     {
@@ -70,6 +73,9 @@
     },
     {
       "name": "malloc_hooks_system_tests"
+    },
+    {
+      "name": "memunreachable_unit_test"
     }
   ]
 }
