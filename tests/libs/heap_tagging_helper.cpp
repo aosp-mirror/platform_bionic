@@ -44,7 +44,7 @@ void action2(int signo, siginfo_t* info __unused, void*) {
   _exit(0);
 }
 
-__attribute__((optnone)) int main() {
+__attribute__((optnone)) __attribute__((no_sanitize("hwaddress"))) int main() {
   struct sigaction sa = {};
   sa.sa_sigaction = action;
   sa.sa_flags = SA_SIGINFO;
