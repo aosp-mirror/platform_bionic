@@ -1355,6 +1355,8 @@ TEST(malloc, disable_mte) {
 
 TEST(malloc, allocation_slack) {
 #if defined(__BIONIC__)
+  SKIP_WITH_NATIVE_BRIDGE;  // http://b/189606147
+
   bool allocator_scudo;
   GetAllocatorVersion(&allocator_scudo);
   if (!allocator_scudo) {
