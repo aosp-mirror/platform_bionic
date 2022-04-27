@@ -322,6 +322,7 @@ struct kvm_debugregs {
 };
 struct kvm_xsave {
   __u32 region[1024];
+  __u32 extra[0];
 };
 #define KVM_MAX_XCRS 16
 struct kvm_xcr {
@@ -361,6 +362,7 @@ struct kvm_sync_regs {
 #define KVM_STATE_NESTED_VMX_VMCS_SIZE 0x1000
 #define KVM_STATE_NESTED_SVM_VMCB_SIZE 0x1000
 #define KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE 0x00000001
+#define KVM_X86_XCOMP_GUEST_SUPP 0
 struct kvm_vmx_nested_state_data {
   __u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
   __u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
