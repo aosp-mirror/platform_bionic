@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,18 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <sys/cdefs.h>
 
-#include <stddef.h>
+#include <gtest/gtest.h>
 
-#include "gwp_asan/options.h"
-#include "platform/bionic/malloc.h"
-#include "private/bionic_globals.h"
-#include "private/bionic_malloc_dispatch.h"
+#if defined(__BIONIC__)
+extern "C" void android_set_abort_message(const char* msg);
+#endif
 
-// Enable GWP-ASan, used by android_mallopt. Should always be called in a
-// single-threaded context.
-bool EnableGwpAsan(const android_mallopt_gwp_asan_options_t& options);
-
-// Hooks for libc to possibly install GWP-ASan.
-bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
-
-// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
-// heapprofd's signal-initialization sequence to determine the intermediate
-// dispatch pointer to use when initing.
-bool DispatchIsGwpAsan(const MallocDispatch* dispatch);
+TEST(android_set_abort_message_test, nullptr_check) {
+#if defined(__BIONIC__)
+  android_set_abort_message(nullptr);
+#else
+  GTEST_SKIP() << "This test is only supported on bionic.";
+#endif
+}
