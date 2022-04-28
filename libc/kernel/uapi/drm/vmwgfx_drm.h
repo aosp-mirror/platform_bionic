@@ -75,6 +75,7 @@ extern "C" {
 #define DRM_VMW_PARAM_HW_CAPS2 13
 #define DRM_VMW_PARAM_SM4_1 14
 #define DRM_VMW_PARAM_SM5 15
+#define DRM_VMW_PARAM_GL43 16
 enum drm_vmw_handle_type {
   DRM_VMW_HANDLE_LEGACY = 0,
   DRM_VMW_HANDLE_PRIME = 1
