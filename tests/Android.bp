@@ -62,7 +62,10 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
-    header_libs: ["libcutils_headers"],
+    header_libs: [
+        "libcutils_headers",
+        "gwp_asan_headers"
+    ],
     // Ensure that the tests exercise shadow call stack support and
     // the hint space PAC/BTI instructions.
     arch: {
@@ -295,6 +298,29 @@ cc_prebuilt_test_library_shared {
     },
 }
 
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-local-tls",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-local-tls.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-local-tls.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-local-tls.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-local-tls.so"],
+        },
+    },
+}
+
 // -----------------------------------------------------------------------------
 // All standard tests.
 // -----------------------------------------------------------------------------
@@ -320,6 +346,7 @@ cc_test_library {
         "__cxa_demangle_test.cpp",
         "alloca_test.cpp",
         "android_get_device_api_level.cpp",
+        "android_set_abort_message_test.cpp",
         "arpa_inet_test.cpp",
         "async_safe_test.cpp",
         "assert_test.cpp",
@@ -474,9 +501,6 @@ cc_test_library {
                 // musl doesn't have error.h
                 "error_test.cpp",
 
-                // musl doesn't have execinfo.h
-                "execinfo_test.cpp",
-
                 // musl doesn't define noreturn for C++
                 "stdnoreturn_test.cpp",
 
@@ -496,6 +520,12 @@ cc_test_library {
     },
 
     generated_headers: ["generated_android_ids"],
+
+    // Bug: http://b/218788252 IR verifier too strict for ifunc resolver that
+    // accept parameters.
+    lto: {
+        never: true,
+    },
 }
 
 cc_test_library {
@@ -568,6 +598,18 @@ cc_test_library {
     ],
 }
 
+cc_test_library {
+    name: "libBionicGwpAsanTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "gwp_asan_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    static_libs: ["libbase"],
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -601,6 +643,10 @@ cc_defaults {
     target: {
         host: {
             clang_cflags: ["-D__clang__"],
+        },
+        musl: {
+            // Musl doesn't have fortify
+            enabled: false,
         },
     },
 }
@@ -723,10 +769,12 @@ cc_test_library {
 cc_test_library {
     name: "libBionicTests",
     defaults: ["bionic_tests_defaults"],
+    host_supported: false,
     whole_static_libs: [
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
+        "libBionicGwpAsanTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
@@ -986,6 +1034,7 @@ cc_defaults {
         "libtest_init_fini_order_root",
         "libtest_init_fini_order_root2",
         "libtest_invalid-empty_shdr_table",
+        "libtest_invalid-local-tls",
         "libtest_invalid-rw_load_segment",
         "libtest_invalid-textrels",
         "libtest_invalid-textrels2",
@@ -1120,6 +1169,14 @@ cc_test {
     lto: {
         never: true,
     },
+    data_bins: [
+        "heap_tagging_async_helper",
+        "heap_tagging_disabled_helper",
+        "heap_tagging_static_async_helper",
+        "heap_tagging_static_disabled_helper",
+        "heap_tagging_static_sync_helper",
+        "heap_tagging_sync_helper",
+    ],
 }
 
 // -----------------------------------------------------------------------------

@@ -22,6 +22,21 @@
 #include <benchmark/benchmark.h>
 #include "util.h"
 
+// Musl doesn't define __NR_gettimeofday, __NR_clock_gettime32, __NR_gettimeofday_time32 or
+// __NR_clock_getres on 32-bit architectures.
+#if !defined(__NR_gettimeofday)
+#define __NR_gettimeofday __NR_gettimeofday_time32
+#endif
+#if !defined(__NR_clock_gettime)
+#define __NR_clock_gettime __NR_clock_gettime32
+#endif
+#if !defined(__NR_gettimeofday)
+#define __NR_gettimeofday __NR_gettimeofday_time32
+#endif
+#if !defined(__NR_clock_getres)
+#define __NR_clock_getres __NR_clock_getres_time32
+#endif
+
 static void BM_time_clock_gettime(benchmark::State& state) {
   // CLOCK_MONOTONIC is required supported in vdso
   timespec t;

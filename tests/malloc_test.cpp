@@ -41,6 +41,7 @@
 #include <tinyxml2.h>
 
 #include <android-base/file.h>
+#include <android-base/test_utils.h>
 
 #include "utils.h"
 
@@ -765,7 +766,7 @@ TEST(malloc, reallocarray) {
 }
 
 TEST(malloc, mallinfo) {
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
   SKIP_WITH_HWASAN << "hwasan does not implement mallinfo";
   static size_t sizes[] = {
     8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000
@@ -810,7 +811,7 @@ TEST(malloc, mallinfo) {
 }
 
 TEST(malloc, mallinfo2) {
-#if defined(__BIONIC__)
+#if defined(__BIONIC__) || defined(ANDROID_HOST_MUSL)
   SKIP_WITH_HWASAN << "hwasan does not implement mallinfo2";
   static size_t sizes[] = {8, 32, 128, 4096, 32768, 131072, 1024000, 10240000, 20480000, 300000000};
 
@@ -828,16 +829,16 @@ TEST(malloc, mallinfo2) {
       struct mallinfo info = mallinfo();
       struct mallinfo2 info2 = mallinfo2();
       // Verify that mallinfo and mallinfo2 are exactly the same.
-      ASSERT_EQ(info.arena, info2.arena);
-      ASSERT_EQ(info.ordblks, info2.ordblks);
-      ASSERT_EQ(info.smblks, info2.smblks);
-      ASSERT_EQ(info.hblks, info2.hblks);
-      ASSERT_EQ(info.hblkhd, info2.hblkhd);
-      ASSERT_EQ(info.usmblks, info2.usmblks);
-      ASSERT_EQ(info.fsmblks, info2.fsmblks);
-      ASSERT_EQ(info.uordblks, info2.uordblks);
-      ASSERT_EQ(info.fordblks, info2.fordblks);
-      ASSERT_EQ(info.keepcost, info2.keepcost);
+      ASSERT_EQ(static_cast<size_t>(info.arena), info2.arena);
+      ASSERT_EQ(static_cast<size_t>(info.ordblks), info2.ordblks);
+      ASSERT_EQ(static_cast<size_t>(info.smblks), info2.smblks);
+      ASSERT_EQ(static_cast<size_t>(info.hblks), info2.hblks);
+      ASSERT_EQ(static_cast<size_t>(info.hblkhd), info2.hblkhd);
+      ASSERT_EQ(static_cast<size_t>(info.usmblks), info2.usmblks);
+      ASSERT_EQ(static_cast<size_t>(info.fsmblks), info2.fsmblks);
+      ASSERT_EQ(static_cast<size_t>(info.uordblks), info2.uordblks);
+      ASSERT_EQ(static_cast<size_t>(info.fordblks), info2.fordblks);
+      ASSERT_EQ(static_cast<size_t>(info.keepcost), info2.keepcost);
 
       size_t allocated = info2.uordblks;
       ptrs[i] = malloc(size);
@@ -846,16 +847,16 @@ TEST(malloc, mallinfo2) {
       info = mallinfo();
       info2 = mallinfo2();
       // Verify that mallinfo and mallinfo2 are exactly the same.
-      ASSERT_EQ(info.arena, info2.arena);
-      ASSERT_EQ(info.ordblks, info2.ordblks);
-      ASSERT_EQ(info.smblks, info2.smblks);
-      ASSERT_EQ(info.hblks, info2.hblks);
-      ASSERT_EQ(info.hblkhd, info2.hblkhd);
-      ASSERT_EQ(info.usmblks, info2.usmblks);
-      ASSERT_EQ(info.fsmblks, info2.fsmblks);
-      ASSERT_EQ(info.uordblks, info2.uordblks);
-      ASSERT_EQ(info.fordblks, info2.fordblks);
-      ASSERT_EQ(info.keepcost, info2.keepcost);
+      ASSERT_EQ(static_cast<size_t>(info.arena), info2.arena);
+      ASSERT_EQ(static_cast<size_t>(info.ordblks), info2.ordblks);
+      ASSERT_EQ(static_cast<size_t>(info.smblks), info2.smblks);
+      ASSERT_EQ(static_cast<size_t>(info.hblks), info2.hblks);
+      ASSERT_EQ(static_cast<size_t>(info.hblkhd), info2.hblkhd);
+      ASSERT_EQ(static_cast<size_t>(info.usmblks), info2.usmblks);
+      ASSERT_EQ(static_cast<size_t>(info.fsmblks), info2.fsmblks);
+      ASSERT_EQ(static_cast<size_t>(info.uordblks), info2.uordblks);
+      ASSERT_EQ(static_cast<size_t>(info.fordblks), info2.fordblks);
+      ASSERT_EQ(static_cast<size_t>(info.keepcost), info2.keepcost);
 
       size_t new_allocated = info2.uordblks;
       if (allocated != new_allocated) {
@@ -1008,18 +1009,6 @@ void AlignCheck() {
 
 TEST(malloc, align_check) {
   AlignCheck();
-}
-
-// Force GWP-ASan on and verify all alignment checks still pass.
-TEST(malloc, align_check_gwp_asan) {
-#if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-
-  AlignCheck();
-#else
-  GTEST_SKIP() << "bionic-only test";
-#endif
 }
 
 // Jemalloc doesn't pass this test right now, so leave it as disabled.
@@ -1371,17 +1360,24 @@ TEST(android_mallopt, set_allocation_limit_multiple_threads) {
 #endif
 }
 
-TEST(android_mallopt, force_init_gwp_asan) {
 #if defined(__BIONIC__)
-  bool force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
+using Action = android_mallopt_gwp_asan_options_t::Action;
+TEST(android_mallopt, DISABLED_multiple_enable_gwp_asan) {
+  android_mallopt_gwp_asan_options_t options;
+  options.program_name = "";  // Don't infer GWP-ASan options from sysprops.
+  options.desire = Action::DONT_TURN_ON_UNLESS_OVERRIDDEN;
+  // GWP-ASan should already be enabled. Trying to enable or disable it should
+  // always pass.
+  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
+  options.desire = Action::TURN_ON_WITH_SAMPLING;
+  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &options, sizeof(options)));
+}
+#endif  // defined(__BIONIC__)
 
-  // Verify that trying to do the call again also passes no matter the
-  // value of force_init.
-  force_init = false;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
-  force_init = true;
-  ASSERT_TRUE(android_mallopt(M_INITIALIZE_GWP_ASAN, &force_init, sizeof(force_init)));
+TEST(android_mallopt, multiple_enable_gwp_asan) {
+#if defined(__BIONIC__)
+  // Always enable GWP-Asan, with default options.
+  RunGwpAsanTest("*.DISABLED_multiple_enable_gwp_asan");
 #else
   GTEST_SKIP() << "bionic extension";
 #endif
