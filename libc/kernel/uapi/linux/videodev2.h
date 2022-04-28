@@ -24,7 +24,12 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-#define VIDEO_MAX_FRAME 32
+/* ---------------------------------------------------
+ * This value manually changed due to b/228783882.
+ * Next kernel update should keep this value as is.
+ */
+#define VIDEO_MAX_FRAME 64
+/* --------------------------------------------------- */
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
@@ -360,6 +365,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_VP8 v4l2_fourcc('V', 'P', '8', '0')
 #define V4L2_PIX_FMT_VP8_FRAME v4l2_fourcc('V', 'P', '8', 'F')
 #define V4L2_PIX_FMT_VP9 v4l2_fourcc('V', 'P', '9', '0')
+#define V4L2_PIX_FMT_VP9_FRAME v4l2_fourcc('V', 'P', '9', 'F')
 #define V4L2_PIX_FMT_HEVC v4l2_fourcc('H', 'E', 'V', 'C')
 #define V4L2_PIX_FMT_FWHT v4l2_fourcc('F', 'W', 'H', 'T')
 #define V4L2_PIX_FMT_FWHT_STATELESS v4l2_fourcc('S', 'F', 'W', 'H')
@@ -898,6 +904,8 @@ struct v4l2_ext_control {
     struct v4l2_ctrl_mpeg2_sequence __user * p_mpeg2_sequence;
     struct v4l2_ctrl_mpeg2_picture __user * p_mpeg2_picture;
     struct v4l2_ctrl_mpeg2_quantisation __user * p_mpeg2_quantisation;
+    struct v4l2_ctrl_vp9_compressed_hdr __user * p_vp9_compressed_hdr_probs;
+    struct v4l2_ctrl_vp9_frame __user * p_vp9_frame;
     void __user * ptr;
   };
 } __attribute__((packed));
@@ -948,6 +956,8 @@ enum v4l2_ctrl_type {
   V4L2_CTRL_TYPE_MPEG2_QUANTISATION = 0x0250,
   V4L2_CTRL_TYPE_MPEG2_SEQUENCE = 0x0251,
   V4L2_CTRL_TYPE_MPEG2_PICTURE = 0x0252,
+  V4L2_CTRL_TYPE_VP9_COMPRESSED_HDR = 0x0260,
+  V4L2_CTRL_TYPE_VP9_FRAME = 0x0261,
 };
 struct v4l2_queryctrl {
   __u32 id;
