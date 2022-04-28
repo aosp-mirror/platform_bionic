@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,21 +28,18 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <stdint.h>
+#include <sys/cdefs.h>
 
-#include "gwp_asan/options.h"
-#include "platform/bionic/malloc.h"
-#include "private/bionic_globals.h"
-#include "private/bionic_malloc_dispatch.h"
-
-// Enable GWP-ASan, used by android_mallopt. Should always be called in a
-// single-threaded context.
-bool EnableGwpAsan(const android_mallopt_gwp_asan_options_t& options);
-
-// Hooks for libc to possibly install GWP-ASan.
-bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
-
-// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
-// heapprofd's signal-initialization sequence to determine the intermediate
-// dispatch pointer to use when initing.
-bool DispatchIsGwpAsan(const MallocDispatch* dispatch);
+// Get the presiding config string, in the following order of priority:
+//   1. Environment variables.
+//   2. System properties, in the order they're specified in sys_prop_names.
+// If neither of these options are specified (or they're both an empty string),
+// this function returns false. Otherwise, it returns true, and the presiding
+// options string is written to the `options` buffer of size `size`. If this
+// function returns true, `options` is guaranteed to be null-terminated.
+// `options_size` should be at least PROP_VALUE_MAX.
+__LIBC_HIDDEN__ bool get_config_from_env_or_sysprops(const char* env_var_name,
+                                                     const char* const* sys_prop_names,
+                                                     size_t sys_prop_names_size, char* options,
+                                                     size_t options_size);
