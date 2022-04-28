@@ -307,7 +307,7 @@ cc_library {
             no_libcrt: true,
             shared: {
                 // For backwards-compatibility, some arm32 builtins are exported from libm.so.
-                static_libs: ["libclang_rt.builtins-arm-android-exported"],
+                static_libs: ["libclang_rt.builtins-exported"],
             },
         },
 
@@ -552,6 +552,8 @@ ndk_library {
     name: "libm",
     symbol_file: "libm.map.txt",
     first_version: "9",
+    // APIs implemented in asm don't have debug info: http://b/190554910.
+    allow_untyped_symbols: true,
 }
 
 genrule {

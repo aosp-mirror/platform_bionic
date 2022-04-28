@@ -229,6 +229,12 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
   auto get_addend_norel = [&]() -> ElfW(Addr) { return 0; };
 #endif
 
+  if (!IsGeneral && __predict_false(is_tls_reloc(r_type))) {
+    // Always process TLS relocations using the slow code path, so that STB_LOCAL symbols are
+    // diagnosed, and ifunc processing is skipped.
+    return process_relocation_general(relocator, reloc);
+  }
+
   if (IsGeneral && is_tls_reloc(r_type)) {
     if (r_sym == 0) {
       // By convention in ld.bfd and lld, an omitted symbol on a TLS relocation
@@ -242,8 +248,15 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
       //  - https://groups.google.com/d/topic/generic-abi/dJ4_Y78aQ2M/discussion
       //  - https://sourceware.org/bugzilla/show_bug.cgi?id=17699
       sym = &relocator.si_symtab[r_sym];
-      DL_ERR("unexpected TLS reference to local symbol \"%s\" in \"%s\": sym type %d, rel type %u",
-             sym_name, relocator.si->get_realpath(), ELF_ST_TYPE(sym->st_info), r_type);
+      auto sym_type = ELF_ST_TYPE(sym->st_info);
+      if (sym_type == STT_SECTION) {
+        DL_ERR("unexpected TLS reference to local section in \"%s\": sym type %d, rel type %u",
+               relocator.si->get_realpath(), sym_type, r_type);
+      } else {
+        DL_ERR(
+            "unexpected TLS reference to local symbol \"%s\" in \"%s\": sym type %d, rel type %u",
+            sym_name, relocator.si->get_realpath(), sym_type, r_type);
+      }
       return false;
     } else if (!lookup_symbol<IsGeneral>(relocator, r_sym, sym_name, &found_in, &sym)) {
       return false;
