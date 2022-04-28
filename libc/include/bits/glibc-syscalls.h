@@ -1023,6 +1023,9 @@
 #if defined(__NR_set_mempolicy)
   #define SYS_set_mempolicy __NR_set_mempolicy
 #endif
+#if defined(__NR_set_mempolicy_home_node)
+  #define SYS_set_mempolicy_home_node __NR_set_mempolicy_home_node
+#endif
 #if defined(__NR_set_robust_list)
   #define SYS_set_robust_list __NR_set_robust_list
 #endif
