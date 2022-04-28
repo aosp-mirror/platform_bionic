@@ -32,8 +32,9 @@
 #define SNDRV_PROTOCOL_MINOR(version) (((version) >> 8) & 0xff)
 #define SNDRV_PROTOCOL_MICRO(version) ((version) & 0xff)
 #define SNDRV_PROTOCOL_INCOMPATIBLE(kversion,uversion) (SNDRV_PROTOCOL_MAJOR(kversion) != SNDRV_PROTOCOL_MAJOR(uversion) || (SNDRV_PROTOCOL_MAJOR(kversion) == SNDRV_PROTOCOL_MAJOR(uversion) && SNDRV_PROTOCOL_MINOR(kversion) != SNDRV_PROTOCOL_MINOR(uversion)))
+#define AES_IEC958_STATUS_SIZE 24
 struct snd_aes_iec958 {
-  unsigned char status[24];
+  unsigned char status[AES_IEC958_STATUS_SIZE];
   unsigned char subcode[147];
   unsigned char pad;
   unsigned char dig_subframe[4];
@@ -235,6 +236,7 @@ typedef int __bitwise snd_pcm_subformat_t;
 #define SNDRV_PCM_INFO_HAS_LINK_ESTIMATED_ATIME 0x04000000
 #define SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME 0x08000000
 #define SNDRV_PCM_INFO_EXPLICIT_SYNC 0x10000000
+#define SNDRV_PCM_INFO_NO_REWINDS 0x20000000
 #define SNDRV_PCM_INFO_DRAIN_TRIGGER 0x40000000
 #define SNDRV_PCM_INFO_FIFO_IN_FRAMES 0x80000000
 #if __BITS_PER_LONG == 32 && defined(__USE_TIME_BITS64)
