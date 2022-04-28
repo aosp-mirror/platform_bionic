@@ -1515,11 +1515,21 @@ TEST(UNISTD_TEST, execvp_libcore_test_55017) {
 }
 
 TEST(UNISTD_TEST, exec_argv0_null) {
-  // http://b/33276926
+  // http://b/33276926 and http://b/227498625.
+  //
+  // With old kernels, bionic will see the null pointer and use "<unknown>" but
+  // with new (5.18+) kernels, the kernel will already have substituted the
+  // empty string, so we don't make any assertion here about what (if anything)
+  // comes before the first ':'.
+  //
+  // If this ever causes trouble, we could change bionic to replace _either_ the
+  // null pointer or the empty string. We could also use the actual name from
+  // readlink() on /proc/self/exe if we ever had reason to disallow programs
+  // from trying to hide like this.
   char* args[] = {nullptr};
   char* envs[] = {nullptr};
   ASSERT_EXIT(execve("/system/bin/run-as", args, envs), testing::ExitedWithCode(1),
-              "<unknown>: usage: run-as");
+              ": usage: run-as");
 }
 
 TEST(UNISTD_TEST, fexecve_failure) {
