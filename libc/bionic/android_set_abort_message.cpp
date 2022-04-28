@@ -77,6 +77,10 @@ void android_set_abort_message(const char* msg) {
     return;
   }
 
+  if (msg == nullptr) {
+    msg = "(null)";
+  }
+
   size_t size = sizeof(magic_abort_msg_t) + strlen(msg) + 1;
   void* map = mmap(nullptr, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (map == MAP_FAILED) {
