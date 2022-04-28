@@ -33,9 +33,10 @@
 #include <string>
 #include <vector>
 
-#include <unwindstack/LocalUnwinder.h>
 #include <unwindstack/MapInfo.h>
+#include <unwindstack/Unwinder.h>
 
-bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::LocalFrameData>* info, size_t max_frames);
+bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::FrameData>* info,
+            size_t max_frames);
 
-void UnwindLog(const std::vector<unwindstack::LocalFrameData>& frame_info);
+void UnwindLog(const std::vector<unwindstack::FrameData>& frame_info);
