@@ -33,12 +33,32 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/resource.h>
 #include <unistd.h>
 
 #include <android/fdsan.h>
 
 #include "private/ScopedSignalBlocker.h"
 #include "private/SigSetConverter.h"
+
+static int set_cloexec(int i) {
+  int v = fcntl(i, F_GETFD);
+  if (v == -1) return -1;  // almost certainly: errno == EBADF
+  return fcntl(i, F_SETFD, v | FD_CLOEXEC);
+}
+
+// mark all open fds except stdin/out/err as close-on-exec
+static int cloexec_except_stdioe() {
+  // unfortunately getrlimit can lie:
+  // - both soft and hard limits can be lowered to 0, with fds still open, so it can underestimate
+  // - in practice it usually is some really large value (like 32K or more)
+  //   even though only a handful of small fds are actually open (ie. < 500),
+  //   this results in poor performance when trying to act on all possibly open fds
+  struct rlimit m;
+  int max = getrlimit(RLIMIT_NOFILE, &m) ? 1000000 : m.rlim_max;
+  for (int i = 3; i < max; ++i) set_cloexec(i);
+  return 0;
+}
 
 enum Action {
   kOpen,
@@ -141,6 +161,10 @@ static void ApplyAttrs(short flags, const posix_spawnattr_t* attr) {
   if ((flags & POSIX_SPAWN_SETSIGMASK) != 0) {
     if (sigprocmask64(SIG_SETMASK, &(*attr)->sigmask.sigset64, nullptr)) _exit(127);
   }
+
+  if ((flags & POSIX_SPAWN_CLOEXEC_DEFAULT) != 0) {
+    if (cloexec_except_stdioe()) _exit(127);
+  }
 }
 
 static int posix_spawn(pid_t* pid_ptr,
@@ -199,7 +223,7 @@ int posix_spawnattr_destroy(posix_spawnattr_t* attr) {
 int posix_spawnattr_setflags(posix_spawnattr_t* attr, short flags) {
   if ((flags & ~(POSIX_SPAWN_RESETIDS | POSIX_SPAWN_SETPGROUP | POSIX_SPAWN_SETSIGDEF |
                  POSIX_SPAWN_SETSIGMASK | POSIX_SPAWN_SETSCHEDPARAM | POSIX_SPAWN_SETSCHEDULER |
-                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID)) != 0) {
+                 POSIX_SPAWN_USEVFORK | POSIX_SPAWN_SETSID | POSIX_SPAWN_CLOEXEC_DEFAULT)) != 0) {
     return EINVAL;
   }
   (*attr)->flags = flags;
