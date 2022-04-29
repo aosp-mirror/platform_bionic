@@ -526,12 +526,12 @@ extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size) {
     return FreeMallocLeakInfo(reinterpret_cast<android_mallopt_leak_info_t*>(arg));
   }
   if (opcode == M_INITIALIZE_GWP_ASAN) {
-    if (arg == nullptr || arg_size != sizeof(bool)) {
+    if (arg == nullptr || arg_size != sizeof(android_mallopt_gwp_asan_options_t)) {
       errno = EINVAL;
       return false;
     }
 
-    return EnableGwpAsan(*reinterpret_cast<bool*>(arg));
+    return EnableGwpAsan(*reinterpret_cast<android_mallopt_gwp_asan_options_t*>(arg));
   }
   // Try heapprofd's mallopt, as it handles options not covered here.
   return HeapprofdMallopt(opcode, arg, arg_size);
