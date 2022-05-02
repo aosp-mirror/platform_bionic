@@ -580,8 +580,8 @@ static void set_bss_vma_name(soinfo* si) {
     }
 
     ElfW(Addr) seg_start = phdr->p_vaddr + si->load_bias;
-    ElfW(Addr) seg_page_end = PAGE_END(seg_start + phdr->p_memsz);
-    ElfW(Addr) seg_file_end = PAGE_END(seg_start + phdr->p_filesz);
+    ElfW(Addr) seg_page_end = page_end(seg_start + phdr->p_memsz);
+    ElfW(Addr) seg_file_end = page_end(seg_start + phdr->p_filesz);
 
     if (seg_page_end > seg_file_end) {
       prctl(PR_SET_VMA, PR_SET_VMA_ANON_NAME,
