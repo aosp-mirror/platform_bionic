@@ -35,7 +35,21 @@
 
 __BEGIN_DECLS
 
+/*
+ * PAGE_SIZE defines the maximum page size that we expect to see on a particular
+ * target. For Android targets this is 4096 but for host builds we may be
+ * running on a non-Android kernel which can have a larger page size. On arm64
+ * the maximum page size supported by Linux is 65536 (see ARM64_PAGE_SHIFT in
+ * arch/arm64/Kconfig), while all other supported platforms have a fixed page
+ * size of 4096 (see PAGE_SHIFT in arch/arm/include/asm/page.h and
+ * arch/x86/include/asm/page_types.h).
+ */
+#if defined(__aarch64__) && !defined(__ANDROID__)
+#define PAGE_SIZE 65536
+#else
 #define PAGE_SIZE 4096
+#endif
+
 #define PAGE_MASK (~(PAGE_SIZE - 1))
 
 #if defined(__i386__)
