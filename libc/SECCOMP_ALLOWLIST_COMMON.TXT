@@ -31,6 +31,8 @@ int	seccomp:seccomp(unsigned int operation, unsigned int flags, void *args)	all
 int open:open(const char*, int, ...)  arm,x86,x86_64
 int stat64:stat64(const char*, struct stat64*)  arm,x86
 ssize_t readlink:readlink(const char*, char*, size_t)  arm,x86,x86_64
+# Needed by ubsan in T? (http://b/229989971)
+int stat(const char*, struct stat*)  arm,x86,x86_64
 
 #
 # Useful new syscalls which we don't yet use in bionic.
