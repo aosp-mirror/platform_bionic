@@ -40,10 +40,10 @@
 #include <android-base/file.h>
 #include <android-base/stringprintf.h>
 #include <android-base/strings.h>
+#include <android-base/test_utils.h>
 
 #include <platform/bionic/macros.h>
 #include <private/bionic_malloc_dispatch.h>
-#include <tests/utils.h>
 
 #include <unwindstack/Unwinder.h>
 
