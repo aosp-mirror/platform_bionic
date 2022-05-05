@@ -57,13 +57,11 @@ __END_DECLS
 __BEGIN_DECLS
 
 static __inline float strtof(const char* nptr, char** endptr) {
+  // N.B. Double-rounding makes this function incorrect for some inputs.
   double d = strtod(nptr, endptr);
-  if (d > FLT_MAX) {
+  if (__builtin_isfinite(d) && __builtin_fabs(d) > FLT_MAX) {
     errno = ERANGE;
-    return __builtin_huge_valf();
-  } else if (d < -FLT_MAX) {
-    errno = ERANGE;
-    return -__builtin_huge_valf();
+    return __builtin_copysign(__builtin_huge_valf(), d);
   }
   return __BIONIC_CAST(static_cast, float, d);
 }
