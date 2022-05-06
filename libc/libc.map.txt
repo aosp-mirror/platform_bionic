@@ -1576,6 +1576,11 @@ LIBC_T { # introduced=Tiramisu
     pwritev64v2;
 } LIBC_S;
 
+LIBC_U { # introduced=UpsideDownCake
+  global:
+    close_range;
+} LIBC_T;
+
 LIBC_PRIVATE {
   global:
     __accept4; # arm x86
