@@ -317,6 +317,22 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
 #endif
 
+/**
+ * [close_range(2)](https://man7.org/linux/man-pages/man2/close_range.2.html)
+ * performs an action (which depends on value of flags) on an inclusive range
+ * of file descriptors.
+ *
+ * Available since API level 34.
+ *
+ * Note: there is no emulation on too old kernels, hence this will fail with
+ * -1/ENOSYS on pre-5.9 kernels, -1/EINVAL for unsupported flags.  In particular
+ * CLOSE_RANGE_CLOEXEC requires 5.11, though support was backported to Android
+ * Common Kernel 5.10-T.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int close_range(unsigned int __min_fd, unsigned int __max_fd, int __flags) __INTRODUCED_IN(34);
+
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #define _UNISTD_H_
 #include <bits/fortify/unistd.h>
