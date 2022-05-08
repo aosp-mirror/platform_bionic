@@ -33,13 +33,14 @@
 
 #include <atomic>
 #include <deque>
+#include <functional>
 #include <mutex>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
 #include <platform/bionic/macros.h>
-#include <unwindstack/LocalUnwinder.h>
+#include <unwindstack/Unwinder.h>
 
 #include "OptionData.h"
 #include "UnwindBacktrace.h"
@@ -99,7 +100,7 @@ struct PointerInfoType {
 };
 
 struct FreePointerInfoType {
-  uintptr_t pointer;
+  uintptr_t mangled_ptr;
   size_t hash_index;
 };
 
@@ -109,7 +110,7 @@ struct ListInfoType {
   size_t size;
   bool zygote_child_alloc;
   FrameInfoType* frame_info;
-  std::vector<unwindstack::LocalFrameData>* backtrace_info;
+  std::vector<unwindstack::FrameData>* backtrace_info;
 };
 
 class PointerData : public OptionData {
@@ -134,15 +135,13 @@ class PointerData : public OptionData {
   void PostForkParent();
   void PostForkChild();
 
+  static void IteratePointers(std::function<void(uintptr_t pointer)> fn);
+
   static size_t AddBacktrace(size_t num_frames);
   static void RemoveBacktrace(size_t hash_index);
 
   static void Add(const void* pointer, size_t size);
   static void Remove(const void* pointer);
-
-  typedef std::unordered_map<uintptr_t, PointerInfoType>::iterator iterator;
-  static iterator begin() { return pointers_.begin(); }
-  static iterator end() { return pointers_.end(); }
 
   static void* AddFreed(const void* pointer);
   static void LogFreeError(const FreePointerInfoType& info, size_t usable_size);
@@ -162,6 +161,12 @@ class PointerData : public OptionData {
   static bool Exists(const void* pointer);
 
  private:
+  // Only keep mangled pointers in internal data structures. This avoids
+  // problems where libmemunreachable finds these pointers and thinks they
+  // are not unreachable.
+  static inline uintptr_t ManglePointer(uintptr_t pointer) { return pointer ^ UINTPTR_MAX; }
+  static inline uintptr_t DemanglePointer(uintptr_t pointer) { return pointer ^ UINTPTR_MAX; }
+
   static std::string GetHashString(uintptr_t* frames, size_t num_frames);
   static void LogBacktrace(size_t hash_index);
 
@@ -181,7 +186,7 @@ class PointerData : public OptionData {
   static std::mutex frame_mutex_;
   static std::unordered_map<FrameKeyType, size_t> key_to_index_;
   static std::unordered_map<size_t, FrameInfoType> frames_;
-  static std::unordered_map<size_t, std::vector<unwindstack::LocalFrameData>> backtraces_info_;
+  static std::unordered_map<size_t, std::vector<unwindstack::FrameData>> backtraces_info_;
   static size_t cur_hash_index_;
 
   static std::mutex free_pointer_mutex_;

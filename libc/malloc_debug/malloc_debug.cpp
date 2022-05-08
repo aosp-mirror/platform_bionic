@@ -49,6 +49,7 @@
 #include <platform/bionic/reserved_signals.h>
 #include <private/MallocXmlElem.h>
 #include <private/bionic_malloc_dispatch.h>
+#include <unwindstack/Unwinder.h>
 
 #include "Config.h"
 #include "DebugData.h"
@@ -193,7 +194,7 @@ static void InitAtfork() {
 void BacktraceAndLog() {
   if (g_debug->config().options() & BACKTRACE_FULL) {
     std::vector<uintptr_t> frames;
-    std::vector<unwindstack::LocalFrameData> frames_info;
+    std::vector<unwindstack::FrameData> frames_info;
     if (!Unwind(&frames, &frames_info, 256)) {
       error_log("  Backtrace failed to get any frames.");
     } else {
@@ -889,10 +890,9 @@ int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t
                   void* arg) {
   ScopedConcurrentLock lock;
   if (g_debug->TrackPointers()) {
-    // Since malloc is disabled, don't bother acquiring any locks.
-    for (auto it = PointerData::begin(); it != PointerData::end(); ++it) {
-      callback(it->first, InternalMallocUsableSize(reinterpret_cast<void*>(it->first)), arg);
-    }
+    PointerData::IteratePointers([&callback, &arg](uintptr_t pointer) {
+      callback(pointer, InternalMallocUsableSize(reinterpret_cast<void*>(pointer)), arg);
+    });
     return 0;
   }
 

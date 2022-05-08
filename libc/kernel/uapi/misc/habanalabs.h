@@ -264,6 +264,11 @@ enum hl_server_type {
 #define HL_INFO_PLL_FREQUENCY 16
 #define HL_INFO_POWER 17
 #define HL_INFO_OPEN_STATS 18
+#define HL_INFO_DRAM_REPLACED_ROWS 21
+#define HL_INFO_DRAM_PENDING_ROWS 22
+#define HL_INFO_LAST_ERR_OPEN_DEV_TIME 23
+#define HL_INFO_CS_TIMEOUT_EVENT 24
+#define HL_INFO_RAZWI_EVENT 25
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -325,10 +330,18 @@ struct hl_info_pci_counters {
   __u64 tx_throughput;
   __u64 replay_cnt;
 };
-#define HL_CLK_THROTTLE_POWER 0x1
-#define HL_CLK_THROTTLE_THERMAL 0x2
+enum hl_clk_throttling_type {
+  HL_CLK_THROTTLE_TYPE_POWER,
+  HL_CLK_THROTTLE_TYPE_THERMAL,
+  HL_CLK_THROTTLE_TYPE_MAX
+};
+#define HL_CLK_THROTTLE_POWER (1 << HL_CLK_THROTTLE_TYPE_POWER)
+#define HL_CLK_THROTTLE_THERMAL (1 << HL_CLK_THROTTLE_TYPE_THERMAL)
 struct hl_info_clk_throttle {
   __u32 clk_throttling_reason;
+  __u32 pad;
+  __u64 clk_throttling_timestamp_us[HL_CLK_THROTTLE_TYPE_MAX];
+  __u64 clk_throttling_duration_ns[HL_CLK_THROTTLE_TYPE_MAX];
 };
 struct hl_info_energy {
   __u64 total_energy_consumption;
@@ -364,6 +377,24 @@ struct hl_info_cs_counters {
   __u64 total_validation_drop_cnt;
   __u64 ctx_validation_drop_cnt;
 };
+struct hl_info_last_err_open_dev_time {
+  __s64 timestamp;
+};
+struct hl_info_cs_timeout_event {
+  __s64 timestamp;
+  __u64 seq;
+};
+#define HL_RAZWI_PAGE_FAULT 0
+#define HL_RAZWI_MMU_ACCESS_ERROR 1
+struct hl_info_razwi_event {
+  __s64 timestamp;
+  __u64 addr;
+  __u16 engine_id_1;
+  __u16 engine_id_2;
+  __u8 no_engine_id;
+  __u8 error_type;
+  __u8 pad[2];
+};
 enum gaudi_dcores {
   HL_GAUDI_WS_DCORE,
   HL_GAUDI_WN_DCORE,
@@ -387,6 +418,7 @@ struct hl_info_args {
 #define HL_CB_OP_INFO 2
 #define HL_MAX_CB_SIZE (0x200000 - 32)
 #define HL_CB_FLAGS_MAP 0x1
+#define HL_CB_FLAGS_GET_DEVICE_VA 0x2
 struct hl_cb_in {
   __u64 cb_handle;
   __u32 op;
@@ -397,9 +429,12 @@ struct hl_cb_in {
 struct hl_cb_out {
   union {
     __u64 cb_handle;
-    struct {
-      __u32 usage_cnt;
-      __u32 pad;
+    union {
+      struct {
+        __u32 usage_cnt;
+        __u32 pad;
+      };
+      __u64 device_va;
     };
   };
 };
@@ -466,6 +501,8 @@ struct hl_cs_out {
   };
   __u32 status;
   __u32 sob_base_addr_offset;
+  __u16 sob_count_before_submission;
+  __u16 pad[3];
 };
 union hl_cs_args {
   struct hl_cs_in in;
@@ -474,6 +511,7 @@ union hl_cs_args {
 #define HL_WAIT_CS_FLAGS_INTERRUPT 0x2
 #define HL_WAIT_CS_FLAGS_INTERRUPT_MASK 0xFFF00000
 #define HL_WAIT_CS_FLAGS_MULTI_CS 0x4
+#define HL_WAIT_CS_FLAGS_INTERRUPT_KERNEL_CQ 0x10
 #define HL_WAIT_MULTI_CS_LIST_MAX_LEN 32
 struct hl_wait_cs_in {
   union {
@@ -482,15 +520,23 @@ struct hl_wait_cs_in {
       __u64 timeout_us;
     };
     struct {
-      __u64 addr;
+      union {
+        __u64 addr;
+        __u64 cq_counters_handle;
+      };
       __u64 target;
     };
   };
   __u32 ctx_id;
   __u32 flags;
-  __u8 seq_arr_len;
-  __u8 pad[3];
-  __u32 interrupt_timeout_us;
+  union {
+    struct {
+      __u8 seq_arr_len;
+      __u8 pad[7];
+    };
+    __u64 interrupt_timeout_us;
+  };
+  __u64 cq_counters_offset;
 };
 #define HL_WAIT_CS_STATUS_COMPLETED 0
 #define HL_WAIT_CS_STATUS_BUSY 1
