@@ -76,5 +76,3 @@ int futex_time64(int*, int, int, const timespec64*, int*, int) lp32
 int sched_rr_get_interval_time64(pid_t, timespec64*) lp32
 # Since Linux 5.4, not in glibc. Probed for and conditionally used by ART.
 int userfaultfd(int) all
-# Since Linux 5.9, used by POSIX_SPAWN_CLOEXEC_DEFAULT
-int close_range(unsigned int, unsigned int, int) all

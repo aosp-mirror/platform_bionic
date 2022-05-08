@@ -107,6 +107,7 @@ ssize_t     __preadv64v2:preadv2(int, const struct iovec*, int, long, long, int)
 ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
 
 int         __close:close(int)  all
+int         close_range(unsigned int, unsigned int, int) all
 pid_t       __getpid:getpid()  all
 int memfd_create(const char*, unsigned) all
 int         munmap(void*, size_t)  all

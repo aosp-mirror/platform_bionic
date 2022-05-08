@@ -52,7 +52,7 @@ static int set_cloexec(int i) {
 // mark all open fds except stdin/out/err as close-on-exec
 static int cloexec_except_stdioe() {
   // requires 5.11+ or ACK 5.10-T kernel, otherwise returns ENOSYS or EINVAL
-  if (!syscall(SYS_close_range, 3, ~0U, CLOSE_RANGE_CLOEXEC)) return 0;
+  if (!close_range(3, ~0U, CLOSE_RANGE_CLOEXEC)) return 0;
 
   // unfortunately getrlimit can lie:
   // - both soft and hard limits can be lowered to 0, with fds still open, so it can underestimate
