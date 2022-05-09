@@ -227,6 +227,9 @@ void VerifyAllocCalls(bool all_options) {
     expected_log += android::base::StringPrintf(
         "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the allocation records.\n",
         SIGRTMAX - 18, getpid());
+    expected_log += android::base::StringPrintf(
+        "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to check for unreachable memory.\n",
+        SIGRTMAX - 16, getpid());
   }
   expected_log += "4 malloc_debug malloc_testing: malloc debug enabled\n";
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
@@ -296,6 +299,16 @@ TEST_F(MallocDebugTest, verbose_record_allocs) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, verbose_check_unreachable_on_signal) {
+  Init("verbose check_unreachable_on_signal");
+
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to check for unreachable memory.\n",
+      SIGRTMAX - 16, getpid());
+  expected_log += "4 malloc_debug malloc_testing: malloc debug enabled\n";
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, fill_on_free) {
   Init("fill_on_free free_track free_track_backtrace_num_frames=0");
 
@@ -359,7 +372,7 @@ TEST_F(MallocDebugTest, free_track_partial) {
 TEST_F(MallocDebugTest, all_options) {
   Init(
       "guard backtrace backtrace_enable_on_signal fill expand_alloc free_track leak_track "
-      "record_allocs verify_pointers abort_on_error verbose");
+      "record_allocs verify_pointers abort_on_error verbose check_unreachable_on_signal");
   VerifyAllocCalls(true);
 }
 
@@ -2694,4 +2707,35 @@ TEST_F(MallocDebugTest, dump_heap) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = std::string("6 malloc_debug Dumping to file: ") + tf.path + "\n\n";
   ASSERT_EQ(expected_log, getFakeLogPrint());
+}
+
+extern "C" bool LogUnreachableMemory(bool, size_t) {
+  static bool return_value = false;
+  return_value = !return_value;
+  return return_value;
+}
+
+TEST_F(MallocDebugTest, check_unreachable_on_signal) {
+  Init("check_unreachable_on_signal");
+
+  ASSERT_TRUE(kill(getpid(), SIGRTMAX - 16) == 0);
+  sleep(1);
+
+  // The first unreachable check will pass.
+  void* pointer = debug_malloc(110);
+  ASSERT_TRUE(pointer != nullptr);
+
+  ASSERT_TRUE(kill(getpid(), SIGRTMAX - 16) == 0);
+  sleep(1);
+
+  // The second unreachable check will fail.
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = "4 malloc_debug Starting to check for unreachable memory.\n";
+  ASSERT_STREQ(
+      "4 malloc_debug Starting to check for unreachable memory.\n"
+      "4 malloc_debug Starting to check for unreachable memory.\n"
+      "6 malloc_debug Unreachable check failed, run setenforce 0 and try again.\n",
+      getFakeLogPrint().c_str());
 }

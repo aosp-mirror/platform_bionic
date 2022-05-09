@@ -761,3 +761,21 @@ TEST_F(MallocDebugConfigTest, trigger_verbose_fail) {
       "which does not take a value\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugConfigTest, check_unreachable_on_signal) {
+  ASSERT_TRUE(InitConfig("check_unreachable_on_signal")) << getFakeLogPrint();
+  ASSERT_EQ(CHECK_UNREACHABLE_ON_SIGNAL, config->options());
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, trigger_check_unreachable_on_signal_fail) {
+  ASSERT_FALSE(InitConfig("check_unreachable_on_signal=200")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg(
+      "6 malloc_debug malloc_testing: value set for option 'check_unreachable_on_signal' "
+      "which does not take a value\n");
+  ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
+}
