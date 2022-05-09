@@ -123,6 +123,7 @@ extern "C" {
 #define DRM_FORMAT_P010 fourcc_code('P', '0', '1', '0')
 #define DRM_FORMAT_P012 fourcc_code('P', '0', '1', '2')
 #define DRM_FORMAT_P016 fourcc_code('P', '0', '1', '6')
+#define DRM_FORMAT_P030 fourcc_code('P', '0', '3', '0')
 #define DRM_FORMAT_Q410 fourcc_code('Q', '4', '1', '0')
 #define DRM_FORMAT_Q401 fourcc_code('Q', '4', '0', '1')
 #define DRM_FORMAT_YUV410 fourcc_code('Y', 'U', 'V', '9')
