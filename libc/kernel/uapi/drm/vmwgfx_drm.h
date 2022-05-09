@@ -56,6 +56,9 @@ extern "C" {
 #define DRM_VMW_GB_SURFACE_CREATE_EXT 27
 #define DRM_VMW_GB_SURFACE_REF_EXT 28
 #define DRM_VMW_MSG 29
+#define DRM_VMW_MKSSTAT_RESET 30
+#define DRM_VMW_MKSSTAT_ADD 31
+#define DRM_VMW_MKSSTAT_REMOVE 32
 #define DRM_VMW_PARAM_NUM_STREAMS 0
 #define DRM_VMW_PARAM_NUM_FREE_STREAMS 1
 #define DRM_VMW_PARAM_3D 2
@@ -72,6 +75,7 @@ extern "C" {
 #define DRM_VMW_PARAM_HW_CAPS2 13
 #define DRM_VMW_PARAM_SM4_1 14
 #define DRM_VMW_PARAM_SM5 15
+#define DRM_VMW_PARAM_GL43 16
 enum drm_vmw_handle_type {
   DRM_VMW_HANDLE_LEGACY = 0,
   DRM_VMW_HANDLE_PRIME = 1
@@ -359,6 +363,19 @@ struct drm_vmw_msg_arg {
   __u64 receive;
   __s32 send_only;
   __u32 receive_len;
+};
+struct drm_vmw_mksstat_add_arg {
+  __u64 stat;
+  __u64 info;
+  __u64 strs;
+  __u64 stat_len;
+  __u64 info_len;
+  __u64 strs_len;
+  __u64 description;
+  __u64 id;
+};
+struct drm_vmw_mksstat_remove_arg {
+  __u64 id;
 };
 #ifdef __cplusplus
 }

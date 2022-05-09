@@ -82,6 +82,14 @@ struct ptrace_syscall_info {
     } seccomp;
   };
 };
+#define PTRACE_GET_RSEQ_CONFIGURATION 0x420f
+struct ptrace_rseq_configuration {
+  __u64 rseq_abi_pointer;
+  __u32 rseq_abi_size;
+  __u32 signature;
+  __u32 flags;
+  __u32 pad;
+};
 #define PTRACE_EVENTMSG_SYSCALL_ENTRY 1
 #define PTRACE_EVENTMSG_SYSCALL_EXIT 2
 #define PTRACE_PEEKSIGINFO_SHARED (1 << 0)

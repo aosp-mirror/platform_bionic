@@ -51,7 +51,7 @@
 #define ELFW(what) ELF32_ ## what
 #endif
 
-#define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE | DF_1_PIE)
+#define SUPPORTED_DT_FLAGS_1 (DF_1_NOW | DF_1_GLOBAL | DF_1_NODELETE | DF_1_PIE | DF_1_ORIGIN)
 
 // Class used construct version dependency graph.
 class VersionTracker {

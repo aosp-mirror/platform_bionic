@@ -44,13 +44,16 @@ extern void* __memrchr_real(const void*, int, size_t) __RENAME(memrchr);
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 void* memcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
+        __diagnose_as_builtin(__builtin_memcpy, 1, 2, 3)
         __overloadable {
     return __builtin___memcpy_chk(dst, src, copy_amount, __bos0(dst));
 }
 
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
-void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) __overloadable {
+void* memmove(void* const dst __pass_object_size0, const void* src, size_t len)
+        __diagnose_as_builtin(__builtin_memmove, 1, 2, 3)
+        __overloadable {
     return __builtin___memmove_chk(dst, src, len, __bos0(dst));
 }
 #endif
@@ -59,6 +62,7 @@ void* memmove(void* const dst __pass_object_size0, const void* src, size_t len) 
 #if __ANDROID_API__ >= 30
 __BIONIC_FORTIFY_INLINE
 void* mempcpy(void* const dst __pass_object_size0, const void* src, size_t copy_amount)
+        __diagnose_as_builtin(__builtin_mempcpy, 1, 2, 3)
         __overloadable
         __clang_error_if(__bos_unevaluated_lt(__bos0(dst), copy_amount),
                          "'mempcpy' called with size bigger than buffer") {
@@ -87,6 +91,7 @@ char* stpcpy(char* const dst __pass_object_size, const char* src)
 
 __BIONIC_FORTIFY_INLINE
 char* strcpy(char* const dst __pass_object_size, const char* src)
+        __diagnose_as_builtin(__builtin_strcpy, 1, 2)
         __overloadable
         __clang_error_if(__bos_unevaluated_le(__bos(dst), __builtin_strlen(src)),
                          "'strcpy' called with string bigger than buffer") {
@@ -112,7 +117,9 @@ char* strcat(char* const dst __pass_object_size, const char* src)
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
-char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __overloadable {
+char* strncat(char* const dst __pass_object_size, const char* src, size_t n)
+       __diagnose_as_builtin(__builtin_strncat, 1, 2, 3)
+       __overloadable {
     return __builtin___strncat_chk(dst, src, n, __bos(dst));
 }
 #endif
@@ -120,6 +127,7 @@ char* strncat(char* const dst __pass_object_size, const char* src, size_t n) __o
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 void* memset(void* const s __pass_object_size0, int c, size_t n) __overloadable
+        __diagnose_as_builtin(__builtin_memset, 1, 2, 3)
         /* If you're a user who wants this warning to go away: use `(&memset)(foo, bar, baz)`. */
         __clang_warning_if(c && !n, "'memset' will set 0 bytes; maybe the arguments got flipped?") {
 #if __ANDROID_API__ >= 17 && __BIONIC_FORTIFY_RUNTIME_CHECKS_ENABLED
@@ -157,6 +165,7 @@ void* __memrchr_fortify(const void* const __pass_object_size s, int c, size_t n)
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
+        __diagnose_as_builtin(__builtin_stpncpy, 1, 2, 3)
         __overloadable {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);
@@ -172,6 +181,7 @@ char* stpncpy(char* const dst __pass_object_size, const char* const src __pass_o
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE
 char* strncpy(char* const dst __pass_object_size, const char* const src __pass_object_size, size_t n)
+        __diagnose_as_builtin(__builtin_strncpy, 1, 2, 3)
         __overloadable {
     size_t bos_dst = __bos(dst);
     size_t bos_src = __bos(src);

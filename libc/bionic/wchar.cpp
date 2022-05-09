@@ -54,7 +54,7 @@
 //
 
 int mbsinit(const mbstate_t* ps) {
-  return (ps == nullptr || (*(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0));
+  return ps == nullptr || mbstate_is_initial(ps);
 }
 
 size_t mbrtowc(wchar_t* pwc, const char* s, size_t n, mbstate_t* ps) {
@@ -148,7 +148,7 @@ size_t wcsnrtombs(char* dst, const wchar_t** src, size_t nwc, size_t len, mbstat
   static mbstate_t __private_state;
   mbstate_t* state = (ps == nullptr) ? &__private_state : ps;
 
-  if (!mbsinit(state)) {
+  if (!mbstate_is_initial(state)) {
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
