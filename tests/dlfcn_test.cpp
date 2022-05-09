@@ -258,6 +258,9 @@ TEST(dlfcn, dlopen_vdso) {
   dlclose(handle);
 }
 
+// HWASan uses an ifunc to describe the location of its shadow memory,
+// so even though it's an unusual case, Android needs to support
+// "ifunc variables".
 TEST(dlfcn, ifunc_variable) {
   typedef const char* (*fn_ptr)();
 
@@ -1648,6 +1651,21 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
   ASSERT_TRUE(handle == nullptr);
   std::string expected_dlerror = std::string("dlopen failed: \"") + libpath + "\" has text relocations";
+  ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+}
+
+TEST(dlfcn, dlopen_invalid_local_tls) {
+  const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-local-tls.so";
+
+  void* handle = dlopen(libpath.c_str(), RTLD_NOW);
+  ASSERT_TRUE(handle == nullptr);
+#if defined(__arm__)
+  const char* referent = "local section";
+#else
+  const char* referent = "local symbol \"tls_var_2\"";
+#endif
+  std::string expected_dlerror = std::string("dlopen failed: unexpected TLS reference to ") +
+                                 referent + " in \"" + libpath + "\"";
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
 }
 
