@@ -139,14 +139,14 @@ enum nfc_sdp_attr {
 #define NFC_SE_DISABLED 0x0
 #define NFC_SE_ENABLED 0x1
 struct sockaddr_nfc {
-  sa_family_t sa_family;
+  __kernel_sa_family_t sa_family;
   __u32 dev_idx;
   __u32 target_idx;
   __u32 nfc_protocol;
 };
 #define NFC_LLCP_MAX_SERVICE_NAME 63
 struct sockaddr_nfc_llcp {
-  sa_family_t sa_family;
+  __kernel_sa_family_t sa_family;
   __u32 dev_idx;
   __u32 target_idx;
   __u32 nfc_protocol;
@@ -154,7 +154,7 @@ struct sockaddr_nfc_llcp {
   __u8 ssap;
   char service_name[NFC_LLCP_MAX_SERVICE_NAME];
 ;
-  size_t service_name_len;
+  __kernel_size_t service_name_len;
 };
 #define NFC_SOCKPROTO_RAW 0
 #define NFC_SOCKPROTO_LLCP 1

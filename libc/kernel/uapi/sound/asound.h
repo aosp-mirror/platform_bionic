@@ -32,8 +32,9 @@
 #define SNDRV_PROTOCOL_MINOR(version) (((version) >> 8) & 0xff)
 #define SNDRV_PROTOCOL_MICRO(version) ((version) & 0xff)
 #define SNDRV_PROTOCOL_INCOMPATIBLE(kversion,uversion) (SNDRV_PROTOCOL_MAJOR(kversion) != SNDRV_PROTOCOL_MAJOR(uversion) || (SNDRV_PROTOCOL_MAJOR(kversion) == SNDRV_PROTOCOL_MAJOR(uversion) && SNDRV_PROTOCOL_MINOR(kversion) != SNDRV_PROTOCOL_MINOR(uversion)))
+#define AES_IEC958_STATUS_SIZE 24
 struct snd_aes_iec958 {
-  unsigned char status[24];
+  unsigned char status[AES_IEC958_STATUS_SIZE];
   unsigned char subcode[147];
   unsigned char pad;
   unsigned char dig_subframe[4];
@@ -234,6 +235,8 @@ typedef int __bitwise snd_pcm_subformat_t;
 #define SNDRV_PCM_INFO_HAS_LINK_ABSOLUTE_ATIME 0x02000000
 #define SNDRV_PCM_INFO_HAS_LINK_ESTIMATED_ATIME 0x04000000
 #define SNDRV_PCM_INFO_HAS_LINK_SYNCHRONIZED_ATIME 0x08000000
+#define SNDRV_PCM_INFO_EXPLICIT_SYNC 0x10000000
+#define SNDRV_PCM_INFO_NO_REWINDS 0x20000000
 #define SNDRV_PCM_INFO_DRAIN_TRIGGER 0x40000000
 #define SNDRV_PCM_INFO_FIFO_IN_FRAMES 0x80000000
 #if __BITS_PER_LONG == 32 && defined(__USE_TIME_BITS64)
@@ -562,7 +565,7 @@ enum {
 #define SNDRV_PCM_IOCTL_READN_FRAMES _IOR('A', 0x53, struct snd_xfern)
 #define SNDRV_PCM_IOCTL_LINK _IOW('A', 0x60, int)
 #define SNDRV_PCM_IOCTL_UNLINK _IO('A', 0x61)
-#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 1)
+#define SNDRV_RAWMIDI_VERSION SNDRV_PROTOCOL_VERSION(2, 0, 2)
 enum {
   SNDRV_RAWMIDI_STREAM_OUTPUT = 0,
   SNDRV_RAWMIDI_STREAM_INPUT,
@@ -584,12 +587,32 @@ struct snd_rawmidi_info {
   unsigned int subdevices_avail;
   unsigned char reserved[64];
 };
+#define SNDRV_RAWMIDI_MODE_FRAMING_MASK (7 << 0)
+#define SNDRV_RAWMIDI_MODE_FRAMING_SHIFT 0
+#define SNDRV_RAWMIDI_MODE_FRAMING_NONE (0 << 0)
+#define SNDRV_RAWMIDI_MODE_FRAMING_TSTAMP (1 << 0)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MASK (7 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_SHIFT 3
+#define SNDRV_RAWMIDI_MODE_CLOCK_NONE (0 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_REALTIME (1 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MONOTONIC (2 << 3)
+#define SNDRV_RAWMIDI_MODE_CLOCK_MONOTONIC_RAW (3 << 3)
+#define SNDRV_RAWMIDI_FRAMING_DATA_LENGTH 16
+struct snd_rawmidi_framing_tstamp {
+  __u8 frame_type;
+  __u8 length;
+  __u8 reserved[2];
+  __u32 tv_nsec;
+  __u64 tv_sec;
+  __u8 data[SNDRV_RAWMIDI_FRAMING_DATA_LENGTH];
+} __packed;
 struct snd_rawmidi_params {
   int stream;
   size_t buffer_size;
   size_t avail_min;
   unsigned int no_active_sensing : 1;
-  unsigned char reserved[16];
+  unsigned int mode;
+  unsigned char reserved[12];
 };
 struct snd_rawmidi_status {
   int stream;
@@ -601,6 +624,7 @@ struct snd_rawmidi_status {
 };
 #define SNDRV_RAWMIDI_IOCTL_PVERSION _IOR('W', 0x00, int)
 #define SNDRV_RAWMIDI_IOCTL_INFO _IOR('W', 0x01, struct snd_rawmidi_info)
+#define SNDRV_RAWMIDI_IOCTL_USER_PVERSION _IOW('W', 0x02, int)
 #define SNDRV_RAWMIDI_IOCTL_PARAMS _IOWR('W', 0x10, struct snd_rawmidi_params)
 #define SNDRV_RAWMIDI_IOCTL_STATUS _IOWR('W', 0x20, struct snd_rawmidi_status)
 #define SNDRV_RAWMIDI_IOCTL_DROP _IOW('W', 0x30, int)
