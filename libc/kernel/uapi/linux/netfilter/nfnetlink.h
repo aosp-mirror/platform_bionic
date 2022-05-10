@@ -64,7 +64,8 @@ struct nfgenmsg {
 #define NFNL_SUBSYS_CTHELPER 9
 #define NFNL_SUBSYS_NFTABLES 10
 #define NFNL_SUBSYS_NFT_COMPAT 11
-#define NFNL_SUBSYS_COUNT 12
+#define NFNL_SUBSYS_HOOK 12
+#define NFNL_SUBSYS_COUNT 13
 #define NFNL_MSG_BATCH_BEGIN NLMSG_MIN_TYPE
 #define NFNL_MSG_BATCH_END NLMSG_MIN_TYPE + 1
 enum nfnl_batch_attributes {

@@ -57,7 +57,13 @@ extern const char* __progname;
 /* OpenBSD has this, but we can't really implement it correctly on Linux. */
 #define issetugid() 0
 
+#if !defined(ANDROID_HOST_MUSL)
 #define explicit_bzero(p, s) memset(p, 0, s)
+#endif
+
+#if defined(ANDROID_HOST_MUSL)
+#define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
+#endif
 
 /* OpenBSD has this in paths.h. But this directory doesn't normally exist.
  * Even when it does exist, only the 'shell' user has permissions.
