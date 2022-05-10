@@ -327,6 +327,8 @@
 
 #define __overloadable __attribute__((overloadable))
 
+#define __diagnose_as_builtin(...) __attribute__((diagnose_as_builtin(__VA_ARGS__)))
+
 /* Used to tag non-static symbols that are private and never exposed by the shared library. */
 #define __LIBC_HIDDEN__ __attribute__((visibility("hidden")))
 

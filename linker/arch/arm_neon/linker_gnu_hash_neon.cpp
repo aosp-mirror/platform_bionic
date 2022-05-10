@@ -81,6 +81,8 @@ constexpr uint32_t kStepN7 = kStepN6 * 0x3e0f83e1;
 //      return h;
 //    }
 //
+// This does an within-alignment out-of-bounds read for performance reasons.
+__attribute__((no_sanitize("hwaddress")))
 std::pair<uint32_t, uint32_t> calculate_gnu_hash_neon(const char* name) {
 
   // The input string may be misaligned by 0-7 bytes (K). This function loads the first aligned

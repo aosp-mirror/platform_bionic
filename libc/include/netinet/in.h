@@ -33,7 +33,18 @@
 #include <sys/cdefs.h>
 #include <sys/socket.h>
 
+// Include linux/socket.h first to trigger the header guard without
+// the__kernel_sockaddr_storage define, so its definition uses the
+// kernel name.
+#include <linux/socket.h>
+
+// Redefine __kernel_sockaddr_storage to sockaddr_storage so that
+// the structs defined in linux/in.h use the sockaddr_storage defined
+// in sys/sockets.h.
+#define __kernel_sockaddr_storage sockaddr_storage
 #include <linux/in.h>
+#undef __kernel_sockaddr_storage
+
 #include <linux/in6.h>
 #include <linux/ipv6.h>
 

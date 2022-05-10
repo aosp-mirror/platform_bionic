@@ -25,8 +25,8 @@
 
 std::string GetTestlibRoot() {
   // Typically the executable is /data/nativetest[64]/bionic-unit-tests/bionic-unit-tests, and the
-  // test libraries are in /data/nativetest[64]/bionic-loader-test-libs.
-  std::string path = android::base::GetExecutableDirectory() + "/..";
+  // test libraries are in /data/nativetest[64]/bionic-unit-tests/bionic-loader-test-libs.
+  std::string path = android::base::GetExecutableDirectory();
 
   std::string out_path;
   if (!android::base::Realpath(path.c_str(), &out_path)) {
