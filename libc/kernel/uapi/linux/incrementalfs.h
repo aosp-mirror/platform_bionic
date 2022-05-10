@@ -171,6 +171,8 @@ struct incfs_get_last_read_error_args {
   __u64 time_us_out;
   __u32 page_out;
   __u32 errno_out;
-  __u64 reserved;
+  __u32 uid_out;
+  __u32 reserved1;
+  __u64 reserved2;
 };
 #endif

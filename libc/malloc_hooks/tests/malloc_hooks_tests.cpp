@@ -38,6 +38,7 @@
 
 #include <gtest/gtest.h>
 
+#include <android-base/test_utils.h>
 #include <bionic/malloc.h>
 #include <private/bionic_malloc_dispatch.h>
 #include <tests/utils.h>
@@ -178,6 +179,7 @@ void MallocHooksTest::test_free_hook(void* ptr, const void* arg) {
 }
 
 TEST_F(MallocHooksTest, other_malloc_functions) {
+  SKIP_WITH_HWASAN; // HWASan does not implement mallinfo.
   RunTest("*.DISABLED_other_malloc_functions");
 }
 
@@ -350,6 +352,9 @@ TEST_F(MallocHooksTest, aligned_alloc_hook_error) {
   RunTest("*.DISABLED_aligned_alloc_hook_error");
 }
 
+// Allow deliberate call with non-power-of-two alignment in test code.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnon-power-of-two-alignment"
 TEST_F(MallocHooksTest, DISABLED_aligned_alloc_hook_error) {
   Init();
   ASSERT_TRUE(__memalign_hook != nullptr);
@@ -365,6 +370,7 @@ TEST_F(MallocHooksTest, DISABLED_aligned_alloc_hook_error) {
   EXPECT_FALSE(void_arg_ != nullptr)
       << "The memalign hook was called with a nullptr with an error.";
 }
+#pragma clang diagnostic pop
 
 #if !defined(__LP64__)
 TEST_F(MallocHooksTest, pvalloc_hook) {
