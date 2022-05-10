@@ -48,10 +48,10 @@ int faccessat(int dirfd, const char* pathname, int mode, int flags) {
     // More details at http://permalink.gmane.org/gmane.linux.lib.musl.general/6952
     //
     // AT_EACCESS isn't supported either. Android doesn't have setuid
-    // programs, and never runs code with euid!=uid. It could be
-    // implemented in an expensive way, following the model at
-    // https://gitlab.com/bminor/musl/commit/0a05eace163cee9b08571d2ff9d90f5e82d9c228
-    // but not worth it.
+    // programs, and never runs code with euid!=uid.
+    //
+    // We could use faccessat2(2) from Linux 5.8, but since we don't want the
+    // first feature and don't need the second, we just reject such requests.
     errno = EINVAL;
     return -1;
   }

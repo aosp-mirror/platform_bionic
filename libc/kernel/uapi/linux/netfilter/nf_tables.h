@@ -223,6 +223,7 @@ enum nft_set_attributes {
 #define NFTA_SET_MAX (__NFTA_SET_MAX - 1)
 enum nft_set_elem_flags {
   NFT_SET_ELEM_INTERVAL_END = 0x1,
+  NFT_SET_ELEM_CATCHALL = 0x2,
 };
 enum nft_set_elem_attributes {
   NFTA_SET_ELEM_UNSPEC,
@@ -385,6 +386,7 @@ enum nft_payload_bases {
   NFT_PAYLOAD_LL_HEADER,
   NFT_PAYLOAD_NETWORK_HEADER,
   NFT_PAYLOAD_TRANSPORT_HEADER,
+  NFT_PAYLOAD_INNER_HEADER,
 };
 enum nft_payload_csum_types {
   NFT_PAYLOAD_CSUM_NONE,
@@ -414,6 +416,7 @@ enum nft_exthdr_op {
   NFT_EXTHDR_OP_IPV6,
   NFT_EXTHDR_OP_TCPOPT,
   NFT_EXTHDR_OP_IPV4,
+  NFT_EXTHDR_OP_SCTP,
   __NFT_EXTHDR_OP_MAX
 };
 #define NFT_EXTHDR_OP_MAX (__NFT_EXTHDR_OP_MAX - 1)
@@ -438,7 +441,8 @@ enum nft_meta_keys {
   NFT_META_OIF,
   NFT_META_IIFNAME,
   NFT_META_OIFNAME,
-  NFT_META_IIFTYPE,
+  NFT_META_IFTYPE,
+#define NFT_META_IIFTYPE NFT_META_IFTYPE
   NFT_META_OIFTYPE,
   NFT_META_SKUID,
   NFT_META_SKGID,
@@ -465,6 +469,7 @@ enum nft_meta_keys {
   NFT_META_TIME_HOUR,
   NFT_META_SDIF,
   NFT_META_SDIFNAME,
+  __NFT_META_IIFTYPE,
 };
 enum nft_rt_keys {
   NFT_RT_CLASSID,
@@ -512,6 +517,7 @@ enum nft_socket_attributes {
   NFTA_SOCKET_UNSPEC,
   NFTA_SOCKET_KEY,
   NFTA_SOCKET_DREG,
+  NFTA_SOCKET_LEVEL,
   __NFTA_SOCKET_MAX
 };
 #define NFTA_SOCKET_MAX (__NFTA_SOCKET_MAX - 1)
@@ -519,6 +525,7 @@ enum nft_socket_keys {
   NFT_SOCKET_TRANSPARENT,
   NFT_SOCKET_MARK,
   NFT_SOCKET_WILDCARD,
+  NFT_SOCKET_CGROUPV2,
   __NFT_SOCKET_MAX
 };
 #define NFT_SOCKET_MAX (__NFT_SOCKET_MAX - 1)
@@ -601,6 +608,14 @@ enum nft_counter_attributes {
   __NFTA_COUNTER_MAX
 };
 #define NFTA_COUNTER_MAX (__NFTA_COUNTER_MAX - 1)
+enum nft_last_attributes {
+  NFTA_LAST_UNSPEC,
+  NFTA_LAST_SET,
+  NFTA_LAST_MSECS,
+  NFTA_LAST_PAD,
+  __NFTA_LAST_MAX
+};
+#define NFTA_LAST_MAX (__NFTA_LAST_MAX - 1)
 enum nft_log_attributes {
   NFTA_LOG_UNSPEC,
   NFTA_LOG_GROUP,
