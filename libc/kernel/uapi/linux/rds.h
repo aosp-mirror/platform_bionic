@@ -217,7 +217,7 @@ struct rds_get_mr_args {
   __u64 flags;
 };
 struct rds_get_mr_for_dest_args {
-  struct sockaddr_storage dest_addr;
+  struct __kernel_sockaddr_storage dest_addr;
   struct rds_iovec vec;
   __u64 cookie_addr;
   __u64 flags;

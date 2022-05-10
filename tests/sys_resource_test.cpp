@@ -89,7 +89,7 @@ TEST_F(SysResourceTest, setrlimit) {
   ASSERT_EQ(123U, l32_.rlim_cur);
 }
 
-TEST_F(SysResourceTest, setrlimit64) {
+TEST_F(SysResourceTest, setrlimit64_smoke) {
   l64_.rlim_cur = 456U;
   ASSERT_EQ(0, setrlimit64(RLIMIT_CORE, &l64_));
   CheckResourceLimits();
@@ -103,7 +103,7 @@ TEST_F(SysResourceTest, prlimit) {
   ASSERT_EQ(pr_l32_.rlim_max, pr_l32_.rlim_cur);
 }
 
-TEST_F(SysResourceTest, prlimit64) {
+TEST_F(SysResourceTest, prlimit64_smoke) {
   pr_l64_.rlim_cur = pr_l64_.rlim_max;
   ASSERT_EQ(0, prlimit64(0, RLIMIT_CORE, &pr_l64_, nullptr));
   CheckResourceLimits();

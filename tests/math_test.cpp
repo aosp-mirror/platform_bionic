@@ -62,6 +62,7 @@ template<typename T> inline int test_capture_isinf(const T in) {
 #include <float.h>
 #include <limits.h>
 #include <stdint.h>
+#include <sys/cdefs.h>
 
 #include <android-base/scopeguard.h>
 
@@ -201,7 +202,7 @@ TEST(MATH_TEST, __fpclassify) {
 }
 
 TEST(MATH_TEST, __fpclassifyd) {
-#if defined(__GLIBC__)
+#if defined(__GLIBC__) || defined(ANDROID_HOST_MUSL)
 #define __fpclassifyd __fpclassify
 #endif
   ASSERT_EQ(FP_INFINITE, __fpclassifyd(HUGE_VAL));
@@ -246,6 +247,8 @@ extern "C" int isfinitel(long double);
 TEST(MATH_TEST, __isfinite) {
 #if defined(__GLIBC__)
 #define __isfinite __finite
+#elif defined(ANDROID_HOST_MUSL)
+#define __isfinite isfinite
 #endif
   ASSERT_TRUE(__isfinite(123.0));
   ASSERT_FALSE(__isfinite(HUGE_VAL));
@@ -255,6 +258,8 @@ TEST(MATH_TEST, __isfinite) {
 TEST(MATH_TEST, __isfinitef) {
 #if defined(__GLIBC__)
 #define __isfinitef __finitef
+#elif defined(ANDROID_HOST_MUSL)
+#define __isfinitef isfinite
 #endif
   ASSERT_TRUE(__isfinitef(123.0f));
   ASSERT_FALSE(__isfinitef(HUGE_VALF));
@@ -264,6 +269,8 @@ TEST(MATH_TEST, __isfinitef) {
 TEST(MATH_TEST, isfinitef) {
 #if defined(__GLIBC__)
 #define isfinitef __finitef
+#elif defined(ANDROID_HOST_MUSL)
+#define isfinitef isfinite
 #endif
   ASSERT_TRUE(isfinitef(123.0f));
   ASSERT_FALSE(isfinitef(HUGE_VALF));
@@ -273,6 +280,8 @@ TEST(MATH_TEST, isfinitef) {
 TEST(MATH_TEST, __isfinitel) {
 #if defined(__GLIBC__)
 #define __isfinitel __finitel
+#elif defined(ANDROID_HOST_MUSL)
+#define __isfinitel isfinite
 #endif
   ASSERT_TRUE(__isfinitel(123.0L));
   ASSERT_FALSE(__isfinitel(HUGE_VALL));
@@ -282,6 +291,8 @@ TEST(MATH_TEST, __isfinitel) {
 TEST(MATH_TEST, isfinitel) {
 #if defined(__GLIBC__)
 #define isfinitel __finitel
+#elif defined(ANDROID_HOST_MUSL)
+#define isfinitel isfinite
 #endif
   ASSERT_TRUE(isfinitel(123.0L));
   ASSERT_FALSE(isfinitel(HUGE_VALL));
@@ -309,30 +320,45 @@ extern "C" int __isinfl(long double);
 extern "C" int isinfl(long double);
 
 TEST(MATH_TEST, __isinf) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isinf isinf
+#endif
   ASSERT_FALSE(__isinf(123.0));
   ASSERT_TRUE(__isinf(HUGE_VAL));
   ASSERT_TRUE(__isinf(-HUGE_VAL));
 }
 
 TEST(MATH_TEST, __isinff) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isinff isinf
+#endif
   ASSERT_FALSE(__isinff(123.0f));
   ASSERT_TRUE(__isinff(HUGE_VALF));
   ASSERT_TRUE(__isinff(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, isinff) {
+#if defined(ANDROID_HOST_MUSL)
+#define isinff isinf
+#endif
   ASSERT_FALSE(isinff(123.0f));
   ASSERT_TRUE(isinff(HUGE_VALF));
   ASSERT_TRUE(isinff(-HUGE_VALF));
 }
 
 TEST(MATH_TEST, __isinfl) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isinfl isinf
+#endif
   ASSERT_FALSE(__isinfl(123.0L));
   ASSERT_TRUE(__isinfl(HUGE_VALL));
   ASSERT_TRUE(__isinfl(-HUGE_VALL));
 }
 
 TEST(MATH_TEST, isinfl) {
+#if defined(ANDROID_HOST_MUSL)
+#define isinfl isinf
+#endif
   ASSERT_FALSE(isinfl(123.0L));
   ASSERT_TRUE(isinfl(HUGE_VALL));
   ASSERT_TRUE(isinfl(-HUGE_VALL));
@@ -352,26 +378,41 @@ extern "C" int __isnanl(long double);
 extern "C" int isnanl(long double);
 
 TEST(MATH_TEST, __isnan) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isnan isnan
+#endif
   ASSERT_FALSE(__isnan(123.0));
   ASSERT_TRUE(__isnan(nan("")));
 }
 
 TEST(MATH_TEST, __isnanf) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isnanf isnan
+#endif
   ASSERT_FALSE(__isnanf(123.0f));
   ASSERT_TRUE(__isnanf(nanf("")));
 }
 
 TEST(MATH_TEST, isnanf) {
+#if defined(ANDROID_HOST_MUSL)
+#define isnanf isnan
+#endif
   ASSERT_FALSE(isnanf(123.0f));
   ASSERT_TRUE(isnanf(nanf("")));
 }
 
 TEST(MATH_TEST, __isnanl) {
+#if defined(ANDROID_HOST_MUSL)
+#define __isnanl isnan
+#endif
   ASSERT_FALSE(__isnanl(123.0L));
   ASSERT_TRUE(__isnanl(nanl("")));
 }
 
 TEST(MATH_TEST, isnanl) {
+#if defined(ANDROID_HOST_MUSL)
+#define isnanl isnan
+#endif
   ASSERT_FALSE(isnanl(123.0L));
   ASSERT_TRUE(isnanl(nanl("")));
 }
@@ -1345,10 +1386,15 @@ TEST(MATH_TEST, significandf) {
 }
 
 TEST(MATH_TEST, significandl) {
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_DOUBLE_EQ(0.0L, significandl(0.0L));
   ASSERT_DOUBLE_EQ(1.2L, significandl(1.2L));
   ASSERT_DOUBLE_EQ(1.53125L, significandl(12.25L));
+#else
+  GTEST_SKIP() << "musl doesn't have significandl";
+#endif
 }
+
 
 TEST(MATH_TEST, scalb) {
   ASSERT_DOUBLE_EQ(12.0, scalb(3.0, 2.0));
@@ -1383,11 +1429,19 @@ TEST(MATH_TEST, scalbnl) {
 }
 
 TEST(MATH_TEST, gamma) {
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_DOUBLE_EQ(log(24.0), gamma(5.0));
+#else
+  GTEST_SKIP() << "musl doesn't have gamma";
+#endif
 }
 
 TEST(MATH_TEST, gammaf) {
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_FLOAT_EQ(logf(24.0f), gammaf(5.0f));
+#else
+  GTEST_SKIP() << "musl doesn't have gammaf";
+#endif
 }
 
 TEST(MATH_TEST, gamma_r) {

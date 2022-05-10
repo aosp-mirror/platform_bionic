@@ -67,6 +67,7 @@ enum ctattr_type {
   CTA_LABELS_MASK,
   CTA_SYNPROXY,
   CTA_FILTER,
+  CTA_STATUS_MASK,
   __CTA_MAX
 };
 #define CTA_MAX (__CTA_MAX - 1)
@@ -249,6 +250,7 @@ enum ctattr_stats_cpu {
   CTA_STATS_ERROR,
   CTA_STATS_SEARCH_RESTART,
   CTA_STATS_CLASH_RESOLVE,
+  CTA_STATS_CHAIN_TOOLONG,
   __CTA_STATS_MAX,
 };
 #define CTA_STATS_MAX (__CTA_STATS_MAX - 1)
