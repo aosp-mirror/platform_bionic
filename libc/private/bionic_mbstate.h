@@ -44,6 +44,10 @@ __BEGIN_DECLS
 #define __MB_IS_ERR(rv) (rv == __MB_ERR_ILLEGAL_SEQUENCE || \
                          rv == __MB_ERR_INCOMPLETE_SEQUENCE)
 
+static inline __wur bool mbstate_is_initial(const mbstate_t* ps) {
+  return *(reinterpret_cast<const uint32_t*>(ps->__seq)) == 0;
+}
+
 static inline __wur size_t mbstate_bytes_so_far(const mbstate_t* ps) {
   return
       (ps->__seq[2] != 0) ? 3 :

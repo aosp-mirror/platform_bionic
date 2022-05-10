@@ -96,11 +96,41 @@ enum {
   // otherwise this mallopt() will internally decide whether to sample the
   // process. The program must be single threaded at the point when the
   // android_mallopt function is called.
-  //   arg = bool*
-  //   arg_size = sizeof(bool)
+  //   arg = android_mallopt_gwp_asan_options_t*
+  //   arg_size = sizeof(android_mallopt_gwp_asan_options_t)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
 };
+
+typedef struct {
+  // The null-terminated name that the zygote is spawning. Because native
+  // SpecializeCommon (where the GWP-ASan mallopt() is called from) happens
+  // before argv[0] is set, we need the zygote to tell us the new app name.
+  const char* program_name = nullptr;
+
+  // An android_mallopt(M_INITIALIZE_GWP_ASAN) is always issued on process
+  // startup and app startup, regardless of whether GWP-ASan is desired or not.
+  // This allows the process/app's desire to be overwritten by the
+  // "libc.debug.gwp_asan.*.app_default" or "libc.debug.gwp_asan.*.<name>"
+  // system properties, as well as the "GWP_ASAN_*" environment variables.
+  //
+  // Worth noting, the "libc.debug.gwp_asan.*.app_default" sysprops *do not*
+  // apply to system apps. They use the "libc.debug.gwp_asan.*.system_default"
+  // sysprops.
+  enum Action {
+    // The app has opted-in to GWP-ASan, and should always have it enabled. This
+    // should only be used by apps.
+    TURN_ON_FOR_APP,
+    // System processes apps have GWP-ASan enabled by default, but use the
+    // process sampling method.
+    TURN_ON_WITH_SAMPLING,
+    // Non-system apps don't have GWP-ASan by default.
+    DONT_TURN_ON_UNLESS_OVERRIDDEN,
+    // Note: GWP-ASan cannot be disabled once it's been enabled.
+  };
+
+  Action desire = DONT_TURN_ON_UNLESS_OVERRIDDEN;
+} android_mallopt_gwp_asan_options_t;
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
 // malloc. Only for use by the Android platform itself.

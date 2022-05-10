@@ -67,6 +67,7 @@
 #define CDROM_SEND_PACKET 0x5393
 #define CDROM_NEXT_WRITABLE 0x5394
 #define CDROM_LAST_WRITTEN 0x5395
+#define CDROM_TIMED_MEDIA_CHANGE 0x5396
 struct cdrom_msf0 {
   __u8 minute;
   __u8 second;
@@ -160,6 +161,11 @@ struct cdrom_generic_command {
     void __user * unused;
   };
 };
+struct cdrom_timed_media_change_info {
+  __s64 last_media_change;
+  __u64 media_flags;
+};
+#define MEDIA_CHANGED_FLAG 0x1
 #define CD_MINS 74
 #define CD_SECS 60
 #define CD_FRAMES 75

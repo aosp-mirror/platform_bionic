@@ -57,6 +57,6 @@ struct rlimit64 {
 #define PRIO_PGRP 1
 #define PRIO_USER 2
 #define _STK_LIM (8 * 1024 * 1024)
-#define MLOCK_LIMIT ((PAGE_SIZE > 64 * 1024) ? PAGE_SIZE : 64 * 1024)
+#define MLOCK_LIMIT (8 * 1024 * 1024)
 #include <asm/resource.h>
 #endif

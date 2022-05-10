@@ -163,6 +163,104 @@ struct drm_tegra_gem_get_flags {
 #define DRM_IOCTL_TEGRA_GEM_GET_TILING DRM_IOWR(DRM_COMMAND_BASE + DRM_TEGRA_GEM_GET_TILING, struct drm_tegra_gem_get_tiling)
 #define DRM_IOCTL_TEGRA_GEM_SET_FLAGS DRM_IOWR(DRM_COMMAND_BASE + DRM_TEGRA_GEM_SET_FLAGS, struct drm_tegra_gem_set_flags)
 #define DRM_IOCTL_TEGRA_GEM_GET_FLAGS DRM_IOWR(DRM_COMMAND_BASE + DRM_TEGRA_GEM_GET_FLAGS, struct drm_tegra_gem_get_flags)
+#define DRM_TEGRA_CHANNEL_CAP_CACHE_COHERENT (1 << 0)
+struct drm_tegra_channel_open {
+  __u32 host1x_class;
+  __u32 flags;
+  __u32 context;
+  __u32 version;
+  __u32 capabilities;
+  __u32 padding;
+};
+struct drm_tegra_channel_close {
+  __u32 context;
+  __u32 padding;
+};
+#define DRM_TEGRA_CHANNEL_MAP_READ (1 << 0)
+#define DRM_TEGRA_CHANNEL_MAP_WRITE (1 << 1)
+#define DRM_TEGRA_CHANNEL_MAP_READ_WRITE (DRM_TEGRA_CHANNEL_MAP_READ | DRM_TEGRA_CHANNEL_MAP_WRITE)
+struct drm_tegra_channel_map {
+  __u32 context;
+  __u32 handle;
+  __u32 flags;
+  __u32 mapping;
+};
+struct drm_tegra_channel_unmap {
+  __u32 context;
+  __u32 mapping;
+};
+#define DRM_TEGRA_SUBMIT_RELOC_SECTOR_LAYOUT (1 << 0)
+struct drm_tegra_submit_buf {
+  __u32 mapping;
+  __u32 flags;
+  struct {
+    __u64 target_offset;
+    __u32 gather_offset_words;
+    __u32 shift;
+  } reloc;
+};
+#define DRM_TEGRA_SUBMIT_CMD_GATHER_UPTR 0
+#define DRM_TEGRA_SUBMIT_CMD_WAIT_SYNCPT 1
+#define DRM_TEGRA_SUBMIT_CMD_WAIT_SYNCPT_RELATIVE 2
+struct drm_tegra_submit_cmd_gather_uptr {
+  __u32 words;
+  __u32 reserved[3];
+};
+struct drm_tegra_submit_cmd_wait_syncpt {
+  __u32 id;
+  __u32 value;
+  __u32 reserved[2];
+};
+struct drm_tegra_submit_cmd {
+  __u32 type;
+  __u32 flags;
+  union {
+    struct drm_tegra_submit_cmd_gather_uptr gather_uptr;
+    struct drm_tegra_submit_cmd_wait_syncpt wait_syncpt;
+    __u32 reserved[4];
+  };
+};
+struct drm_tegra_submit_syncpt {
+  __u32 id;
+  __u32 flags;
+  __u32 increments;
+  __u32 value;
+};
+struct drm_tegra_channel_submit {
+  __u32 context;
+  __u32 num_bufs;
+  __u32 num_cmds;
+  __u32 gather_data_words;
+  __u64 bufs_ptr;
+  __u64 cmds_ptr;
+  __u64 gather_data_ptr;
+  __u32 syncobj_in;
+  __u32 syncobj_out;
+  struct drm_tegra_submit_syncpt syncpt;
+};
+struct drm_tegra_syncpoint_allocate {
+  __u32 id;
+  __u32 padding;
+};
+struct drm_tegra_syncpoint_free {
+  __u32 id;
+  __u32 padding;
+};
+struct drm_tegra_syncpoint_wait {
+  __s64 timeout_ns;
+  __u32 id;
+  __u32 threshold;
+  __u32 value;
+  __u32 padding;
+};
+#define DRM_IOCTL_TEGRA_CHANNEL_OPEN DRM_IOWR(DRM_COMMAND_BASE + 0x10, struct drm_tegra_channel_open)
+#define DRM_IOCTL_TEGRA_CHANNEL_CLOSE DRM_IOWR(DRM_COMMAND_BASE + 0x11, struct drm_tegra_channel_close)
+#define DRM_IOCTL_TEGRA_CHANNEL_MAP DRM_IOWR(DRM_COMMAND_BASE + 0x12, struct drm_tegra_channel_map)
+#define DRM_IOCTL_TEGRA_CHANNEL_UNMAP DRM_IOWR(DRM_COMMAND_BASE + 0x13, struct drm_tegra_channel_unmap)
+#define DRM_IOCTL_TEGRA_CHANNEL_SUBMIT DRM_IOWR(DRM_COMMAND_BASE + 0x14, struct drm_tegra_channel_submit)
+#define DRM_IOCTL_TEGRA_SYNCPOINT_ALLOCATE DRM_IOWR(DRM_COMMAND_BASE + 0x20, struct drm_tegra_syncpoint_allocate)
+#define DRM_IOCTL_TEGRA_SYNCPOINT_FREE DRM_IOWR(DRM_COMMAND_BASE + 0x21, struct drm_tegra_syncpoint_free)
+#define DRM_IOCTL_TEGRA_SYNCPOINT_WAIT DRM_IOWR(DRM_COMMAND_BASE + 0x22, struct drm_tegra_syncpoint_wait)
 #ifdef __cplusplus
 }
 #endif
