@@ -14,50 +14,54 @@
  * limitations under the License.
  */
 
-#include "private/bionic_systrace.h"
-
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "bionic/pthread_internal.h"
+#include "private/bionic_lock.h"
+#include "private/bionic_systrace.h"
+#include "private/bionic_tls.h"
+#include "private/CachedProperty.h"
+
 #include <async_safe/log.h>
 #include <cutils/trace.h> // For ATRACE_TAG_BIONIC.
-
-#include "private/CachedProperty.h"
-#include "private/bionic_lock.h"
 
 #define WRITE_OFFSET   32
 
 static Lock g_lock;
+static CachedProperty g_debug_atrace_tags_enableflags("debug.atrace.tags.enableflags");
+static uint64_t g_tags;
+static int g_trace_marker_fd = -1;
 
-bool should_trace(const uint64_t enable_tags) {
-  static uint64_t tags_val;
-  static CachedProperty tags_prop(kTraceTagsProp);
+static bool should_trace() {
   g_lock.lock();
-  if (tags_prop.DidChange()) {
-    tags_val = strtoull(tags_prop.Get(), nullptr, 0);
+  if (g_debug_atrace_tags_enableflags.DidChange()) {
+    g_tags = strtoull(g_debug_atrace_tags_enableflags.Get(), nullptr, 0);
   }
   g_lock.unlock();
-  return tags_val & enable_tags;
+  return ((g_tags & ATRACE_TAG_BIONIC) != 0);
 }
 
-int get_trace_marker_fd() {
-  static int opened_trace_marker_fd = -1;
+static int get_trace_marker_fd() {
   g_lock.lock();
-  if (opened_trace_marker_fd == -1) {
-    opened_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
-    if (opened_trace_marker_fd == -1) {
-      opened_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
+  if (g_trace_marker_fd == -1) {
+    g_trace_marker_fd = open("/sys/kernel/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
+    if (g_trace_marker_fd == -1) {
+      g_trace_marker_fd = open("/sys/kernel/debug/tracing/trace_marker", O_CLOEXEC | O_WRONLY);
     }
   }
   g_lock.unlock();
-  return opened_trace_marker_fd;
+  return g_trace_marker_fd;
 }
 
-// event could be 'B' for begin or 'E' for end.
-void output_trace(const char* message, const char event) {
+static void trace_begin_internal(const char* message) {
+  if (!should_trace()) {
+    return;
+  }
+
   int trace_marker_fd = get_trace_marker_fd();
   if (trace_marker_fd == -1) {
     return;
@@ -67,8 +71,7 @@ void output_trace(const char* message, const char event) {
   // kernel trace_marker.
   int length = strlen(message);
   char buf[length + WRITE_OFFSET];
-  size_t len =
-      async_safe_format_buffer(buf, length + WRITE_OFFSET, "%c|%d|%s", event, getpid(), message);
+  size_t len = async_safe_format_buffer(buf, length + WRITE_OFFSET, "B|%d|%s", getpid(), message);
 
   // Tracing may stop just after checking property and before writing the message.
   // So the write is acceptable to fail. See b/20666100.
@@ -76,14 +79,21 @@ void output_trace(const char* message, const char event) {
 }
 
 void bionic_trace_begin(const char* message) {
-  if (!should_trace()) {
+  // Some functions called by trace_begin_internal() can call
+  // bionic_trace_begin(). Prevent infinite recursion and non-recursive mutex
+  // deadlock by using a flag in the thread local storage.
+  bionic_tls& tls = __get_bionic_tls();
+  if (tls.bionic_systrace_disabled) {
     return;
   }
+  tls.bionic_systrace_disabled = true;
 
-  output_trace(message);
+  trace_begin_internal(message);
+
+  tls.bionic_systrace_disabled = false;
 }
 
-void bionic_trace_end() {
+static void trace_end_internal() {
   if (!should_trace()) {
     return;
   }
@@ -93,7 +103,36 @@ void bionic_trace_end() {
     return;
   }
 
-  TEMP_FAILURE_RETRY(write(trace_marker_fd, "E|", 2));
+  // This code is intentionally "sub-optimal"; do not optimize this by inlining
+  // the E| string into the write.
+  //
+  // This is because if the const char* string passed to write(trace_marker) is not
+  // in resident memory (e.g. the page of the .rodata section that contains it has
+  // been paged out, or the anonymous page that contained a heap-based string is
+  // swapped in zram), the ftrace code will NOT page it in and instead report
+  // <faulted>.
+  //
+  // We "fix" this by putting the string on the stack, which is more unlikely
+  // to be paged out and pass the pointer to that instead.
+  //
+  // See b/197620214 for more context on this.
+  volatile char buf[2]{'E', '|'};
+  TEMP_FAILURE_RETRY(write(trace_marker_fd, const_cast<const char*>(buf), 2));
+}
+
+void bionic_trace_end() {
+  // Some functions called by trace_end_internal() can call
+  // bionic_trace_begin(). Prevent infinite recursion and non-recursive mutex
+  // deadlock by using a flag in the thread local storage.
+  bionic_tls& tls = __get_bionic_tls();
+  if (tls.bionic_systrace_disabled) {
+    return;
+  }
+  tls.bionic_systrace_disabled = true;
+
+  trace_end_internal();
+
+  tls.bionic_systrace_disabled = false;
 }
 
 ScopedTrace::ScopedTrace(const char* message) : called_end_(false) {

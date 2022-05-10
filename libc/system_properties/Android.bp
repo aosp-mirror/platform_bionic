@@ -18,11 +18,9 @@ cc_library_static {
         "contexts_serialized.cpp",
         "prop_area.cpp",
         "prop_info.cpp",
-        "prop_trace.cpp",
         "system_properties.cpp",
     ],
     whole_static_libs: [
-        "libc_bionic_systrace",
         "libpropertyinfoparser",
     ],
     header_libs: [

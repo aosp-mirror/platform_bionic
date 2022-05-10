@@ -61,7 +61,7 @@ struct ib_user_mad_hdr {
 };
 struct ib_user_mad {
   struct ib_user_mad_hdr hdr;
-  __aligned_u64 data[0];
+  __aligned_u64 data[];
 };
 typedef unsigned long __attribute__((aligned(4))) packed_ulong;
 #define IB_USER_MAD_LONGS_PER_METHOD_MASK (128 / (8 * sizeof(long)))

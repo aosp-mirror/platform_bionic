@@ -1219,7 +1219,7 @@ FILE* popen(const char* cmd, const char* mode) {
     if (dup2(fds[child], desired_child_fd) == -1) _exit(127);
     close(fds[child]);
     if (bidirectional) dup2(STDOUT_FILENO, STDIN_FILENO);
-    execl(__bionic_get_shell_path(), "sh", "-c", cmd, nullptr);
+    execl(__bionic_get_shell_path(), "sh", "-c", "--", cmd, nullptr);
     _exit(127);
   }
 
