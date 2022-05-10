@@ -16,6 +16,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <sys/cdefs.h>
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -554,8 +555,12 @@ TEST(signal, sys_signame) {
 }
 
 TEST(signal, sys_siglist) {
+#if !defined(ANDROID_HOST_MUSL)
   ASSERT_TRUE(sys_siglist[0] == nullptr);
   ASSERT_STREQ("Hangup", sys_siglist[SIGHUP]);
+#else
+  GTEST_SKIP() << "musl doesn't have sys_siglist";
+#endif
 }
 
 TEST(signal, limits) {
@@ -582,7 +587,7 @@ static void SigqueueSignalHandler(int signum, siginfo_t* info, void*) {
 
 TEST(signal, sigqueue) {
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
   ASSERT_EQ(0, errno);
@@ -590,17 +595,22 @@ TEST(signal, sigqueue) {
 }
 
 TEST(signal, pthread_sigqueue_self) {
+#if !defined(ANDROID_HOST_MUSL)
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   errno = 0;
   ASSERT_EQ(0, pthread_sigqueue(pthread_self(), SIGALRM, sigval));
   ASSERT_EQ(0, errno);
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
+#else
+  GTEST_SKIP() << "musl doesn't have pthread_sigqueue";
+#endif
 }
 
 TEST(signal, pthread_sigqueue_other) {
+#if !defined(ANDROID_HOST_MUSL)
   ScopedSignalHandler ssh(SIGALRM, SigqueueSignalHandler, SA_SIGINFO);
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
 
   sigset_t mask;
   sigfillset(&mask);
@@ -621,6 +631,9 @@ TEST(signal, pthread_sigqueue_other) {
   ASSERT_EQ(0, errno);
   pthread_join(thread, nullptr);
   ASSERT_EQ(1, g_sigqueue_signal_handler_call_count);
+#else
+  GTEST_SKIP() << "musl doesn't have pthread_sigqueue";
+#endif
 }
 
 TEST(signal, sigwait_SIGALRM) {
@@ -633,7 +646,7 @@ TEST(signal, sigwait_SIGALRM) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, nullptr));
 
   // Raise SIGALRM.
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
 
   // Get pending SIGALRM.
@@ -652,7 +665,7 @@ TEST(signal, sigwait64_SIGRTMIN) {
   ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, &just_SIGRTMIN, nullptr));
 
   // Raise SIGRTMIN.
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGRTMIN, sigval));
 
   // Get pending SIGRTMIN.
@@ -671,7 +684,7 @@ TEST(signal, sigwaitinfo) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, nullptr));
 
   // Raise SIGALRM.
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
 
   // Get pending SIGALRM.
@@ -693,7 +706,7 @@ TEST(signal, sigwaitinfo64_SIGRTMIN) {
   ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, &just_SIGRTMIN, nullptr));
 
   // Raise SIGRTMIN.
-  sigval_t sigval = {.sival_int = 1};
+  sigval sigval = {.sival_int = 1};
   ASSERT_EQ(0, sigqueue(getpid(), SIGRTMIN, sigval));
 
   // Get pending SIGRTMIN.
@@ -715,7 +728,7 @@ TEST(signal, sigtimedwait) {
   ASSERT_EQ(0, sigprocmask(SIG_BLOCK, &just_SIGALRM, nullptr));
 
   // Raise SIGALRM.
-  sigval_t sigval = { .sival_int = 1 };
+  sigval sigval = { .sival_int = 1 };
   ASSERT_EQ(0, sigqueue(getpid(), SIGALRM, sigval));
 
   // Get pending SIGALRM.
@@ -736,7 +749,7 @@ TEST(signal, sigtimedwait64_SIGRTMIN) {
   ASSERT_EQ(0, sigprocmask64(SIG_BLOCK, &just_SIGRTMIN, nullptr));
 
   // Raise SIGALRM.
-  sigval_t sigval = { .sival_int = 1 };
+  sigval sigval = { .sival_int = 1 };
   ASSERT_EQ(0, sigqueue(getpid(), SIGRTMIN, sigval));
 
   // Get pending SIGALRM.
