@@ -44,11 +44,15 @@ void action2(int signo, siginfo_t* info __unused, void*) {
   _exit(0);
 }
 
-__attribute__((optnone)) __attribute__((no_sanitize("hwaddress"))) int main() {
+__attribute__((optnone)) int main() {
   struct sigaction sa = {};
   sa.sa_sigaction = action;
   sa.sa_flags = SA_SIGINFO;
   sigaction(SIGSEGV, &sa, nullptr);
+  // suppress HWASan crash in logcat / tombstone.
+  struct sigaction dfl_sa = {};
+  dfl_sa.sa_handler = SIG_DFL;
+  sigaction(SIGABRT, &dfl_sa, nullptr);
 
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
   volatile int oob = p[-1];

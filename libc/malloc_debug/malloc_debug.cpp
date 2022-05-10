@@ -890,10 +890,9 @@ int debug_malloc_iterate(uintptr_t base, size_t size, void (*callback)(uintptr_t
                   void* arg) {
   ScopedConcurrentLock lock;
   if (g_debug->TrackPointers()) {
-    // Since malloc is disabled, don't bother acquiring any locks.
-    for (auto it = PointerData::begin(); it != PointerData::end(); ++it) {
-      callback(it->first, InternalMallocUsableSize(reinterpret_cast<void*>(it->first)), arg);
-    }
+    PointerData::IteratePointers([&callback, &arg](uintptr_t pointer) {
+      callback(pointer, InternalMallocUsableSize(reinterpret_cast<void*>(pointer)), arg);
+    });
     return 0;
   }
 
