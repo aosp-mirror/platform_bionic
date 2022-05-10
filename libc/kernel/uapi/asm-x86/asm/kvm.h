@@ -146,6 +146,17 @@ struct kvm_sregs {
   __u64 apic_base;
   __u64 interrupt_bitmap[(KVM_NR_INTERRUPTS + 63) / 64];
 };
+struct kvm_sregs2 {
+  struct kvm_segment cs, ds, es, fs, gs, ss;
+  struct kvm_segment tr, ldt;
+  struct kvm_dtable gdt, idt;
+  __u64 cr0, cr2, cr3, cr4, cr8;
+  __u64 efer;
+  __u64 apic_base;
+  __u64 flags;
+  __u64 pdptrs[4];
+};
+#define KVM_SREGS2_FLAGS_PDPTRS_VALID 1
 struct kvm_fpu {
   __u8 fpr[8][16];
   __u16 fcw;
@@ -246,6 +257,7 @@ struct kvm_debug_exit_arch {
 #define KVM_GUESTDBG_USE_HW_BP 0x00020000
 #define KVM_GUESTDBG_INJECT_DB 0x00040000
 #define KVM_GUESTDBG_INJECT_BP 0x00080000
+#define KVM_GUESTDBG_BLOCKIRQ 0x00100000
 struct kvm_guest_debug_arch {
   __u64 debugreg[8];
 };
@@ -310,6 +322,7 @@ struct kvm_debugregs {
 };
 struct kvm_xsave {
   __u32 region[1024];
+  __u32 extra[0];
 };
 #define KVM_MAX_XCRS 16
 struct kvm_xcr {
@@ -349,6 +362,7 @@ struct kvm_sync_regs {
 #define KVM_STATE_NESTED_VMX_VMCS_SIZE 0x1000
 #define KVM_STATE_NESTED_SVM_VMCB_SIZE 0x1000
 #define KVM_STATE_VMX_PREEMPTION_TIMER_DEADLINE 0x00000001
+#define KVM_X86_XCOMP_GUEST_SUPP 0
 struct kvm_vmx_nested_state_data {
   __u8 vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
   __u8 shadow_vmcs12[KVM_STATE_NESTED_VMX_VMCS_SIZE];
@@ -359,6 +373,7 @@ struct kvm_vmx_nested_state_hdr {
   struct {
     __u16 flags;
   } smm;
+  __u16 pad;
   __u32 flags;
   __u64 preemption_timer_deadline;
 };
@@ -392,4 +407,6 @@ struct kvm_pmu_event_filter {
 };
 #define KVM_PMU_EVENT_ALLOW 0
 #define KVM_PMU_EVENT_DENY 1
+#define KVM_VCPU_TSC_CTRL 0
+#define KVM_VCPU_TSC_OFFSET 0
 #endif
