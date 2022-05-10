@@ -31,7 +31,6 @@
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
-#include <linux/socket.h>
 
 #include <asm/fcntl.h>
 #include <asm/socket.h>
@@ -69,6 +68,16 @@ enum {
 struct sockaddr {
   sa_family_t sa_family;
   char sa_data[14];
+};
+
+struct sockaddr_storage {
+  union {
+    struct {
+      sa_family_t ss_family;
+      char __data[128 - sizeof(sa_family_t)];
+    };
+    void* __align;
+  };
 };
 
 struct linger {

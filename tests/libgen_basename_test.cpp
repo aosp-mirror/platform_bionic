@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+#include <sys/cdefs.h>
+
 #ifndef _GNU_SOURCE
   #define _GNU_SOURCE 1
 #endif
 
+#if !defined(ANDROID_HOST_MUSL)
 #include <string.h>
 
 #if defined(basename)
@@ -28,10 +31,12 @@ static const char* gnu_basename(const char* in) {
   return basename(in);
 }
 
+#endif
+
 #include <libgen.h>
 
-#if !defined(basename)
-  #error basename should be defined at this point
+#if !defined(basename) && !defined(ANDROID_HOST_MUSL)
+#error basename should be defined at this point
 #endif
 
 static char* posix_basename(char* in) {
@@ -41,12 +46,14 @@ static char* posix_basename(char* in) {
 #include <errno.h>
 #include <gtest/gtest.h>
 
+#if !defined(ANDROID_HOST_MUSL)
 static void __TestGnuBasename(const char* in, const char* expected_out, int line) {
   errno = 0;
   const char* out = gnu_basename(in);
   ASSERT_STREQ(expected_out, out) << "(" << line << "): " << in << std::endl;
   ASSERT_EQ(0, errno) << "(" << line << "): " << in << std::endl;
 }
+#endif
 
 static void __TestPosixBasename(const char* in, const char* expected_out, int line) {
   char* writable_in = (in != nullptr) ? strdup(in) : nullptr;
@@ -61,6 +68,7 @@ static void __TestPosixBasename(const char* in, const char* expected_out, int li
 #define TestPosixBasename(in, expected) __TestPosixBasename(in, expected, __LINE__)
 
 TEST(libgen_basename, gnu_basename) {
+#if !defined(ANDROID_HOST_MUSL)
   // GNU's basename doesn't accept NULL
   // TestGnuBasename(NULL, ".");
   TestGnuBasename("", "");
@@ -73,6 +81,9 @@ TEST(libgen_basename, gnu_basename) {
   TestGnuBasename("..", "..");
   TestGnuBasename("///", "");
   TestGnuBasename("//usr//lib//", "");
+#else
+  GTEST_SKIP() << "musl doesn't have GNU basename";
+  #endif
 }
 
 TEST(libgen_basename, posix_basename) {
