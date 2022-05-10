@@ -43,11 +43,13 @@ extern "C" const char* var_false = "false";
 extern "C" const char* v1 = "unset";
 extern "C" const char* v2 = "set";
 
-extern "C" void* is_ctor_called_ifun() {
-  return g_flag == 0 ? &var_false : &var_true;
+typedef const char* (*fn_ptr)();
+
+extern "C" fn_ptr is_ctor_called_ifun() {
+  return (fn_ptr)(g_flag == 0 ? &var_false : &var_true);
 }
 
-extern "C" void* foo_ifunc() {
-   char* choice = getenv("IFUNC_CHOICE");
-   return choice == nullptr ? &v1 : &v2;
+extern "C" fn_ptr foo_ifunc() {
+  char* choice = getenv("IFUNC_CHOICE");
+  return (fn_ptr)(choice == nullptr ? &v1 : &v2);
 }

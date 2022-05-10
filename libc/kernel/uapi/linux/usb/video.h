@@ -217,8 +217,9 @@ struct uvc_processing_unit_descriptor {
   __u8 bControlSize;
   __u8 bmControls[2];
   __u8 iProcessing;
+  __u8 bmVideoStandards;
 } __attribute__((__packed__));
-#define UVC_DT_PROCESSING_UNIT_SIZE(n) (9 + (n))
+#define UVC_DT_PROCESSING_UNIT_SIZE(n) (10 + (n))
 struct uvc_extension_unit_descriptor {
   __u8 bLength;
   __u8 bDescriptorType;
