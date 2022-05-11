@@ -121,6 +121,7 @@ struct otp_info {
 #define MEMREADOOB64 _IOWR('M', 22, struct mtd_oob_buf64)
 #define MEMISLOCKED _IOR('M', 23, struct erase_info_user)
 #define MEMWRITE _IOWR('M', 24, struct mtd_write_req)
+#define OTPERASE _IOW('M', 25, struct otp_info)
 struct nand_oobinfo {
   __u32 useecc;
   __u32 eccbytes;

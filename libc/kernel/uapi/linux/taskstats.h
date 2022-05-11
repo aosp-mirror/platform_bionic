@@ -19,7 +19,7 @@
 #ifndef _LINUX_TASKSTATS_H
 #define _LINUX_TASKSTATS_H
 #include <linux/types.h>
-#define TASKSTATS_VERSION 10
+#define TASKSTATS_VERSION 11
 #define TS_COMM_LEN 32
 struct taskstats {
   __u16 version;
@@ -69,6 +69,8 @@ struct taskstats {
   __u64 thrashing_count;
   __u64 thrashing_delay_total;
   __u64 ac_btime64;
+  __u64 compact_count;
+  __u64 compact_delay_total;
 };
 enum {
   TASKSTATS_CMD_UNSPEC = 0,

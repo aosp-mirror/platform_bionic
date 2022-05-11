@@ -23,6 +23,7 @@
 #define VIRTIO_GPU_F_EDID 1
 #define VIRTIO_GPU_F_RESOURCE_UUID 2
 #define VIRTIO_GPU_F_RESOURCE_BLOB 3
+#define VIRTIO_GPU_F_CONTEXT_INIT 4
 enum virtio_gpu_ctrl_type {
   VIRTIO_GPU_UNDEFINED = 0,
   VIRTIO_GPU_CMD_GET_DISPLAY_INFO = 0x0100,
@@ -70,12 +71,14 @@ enum virtio_gpu_shm_id {
   VIRTIO_GPU_SHM_ID_HOST_VISIBLE = 1
 };
 #define VIRTIO_GPU_FLAG_FENCE (1 << 0)
+#define VIRTIO_GPU_FLAG_INFO_RING_IDX (1 << 1)
 struct virtio_gpu_ctrl_hdr {
   __le32 type;
   __le32 flags;
   __le64 fence_id;
   __le32 ctx_id;
-  __le32 padding;
+  __u8 ring_idx;
+  __u8 padding[3];
 };
 struct virtio_gpu_cursor_pos {
   __le32 scanout_id;
@@ -181,10 +184,11 @@ struct virtio_gpu_resource_create_3d {
   __le32 flags;
   __le32 padding;
 };
+#define VIRTIO_GPU_CONTEXT_INIT_CAPSET_ID_MASK 0x000000ff
 struct virtio_gpu_ctx_create {
   struct virtio_gpu_ctrl_hdr hdr;
   __le32 nlen;
-  __le32 padding;
+  __le32 context_init;
   char debug_name[64];
 };
 struct virtio_gpu_ctx_destroy {

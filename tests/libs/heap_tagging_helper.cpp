@@ -16,7 +16,9 @@
 
 #include <signal.h>
 #include <stdio.h>
+#include <sys/auxv.h>
 #include <sys/cdefs.h>
+#include <sys/mman.h>
 #include <unistd.h>
 #include <memory>
 
@@ -37,6 +39,11 @@ void action(int signo, siginfo_t* info __unused, void*) {
   _exit(0);
 }
 
+void action2(int signo, siginfo_t* info __unused, void*) {
+  fprintf(stderr, "unexpected signal %d\n", signo);
+  _exit(0);
+}
+
 __attribute__((optnone)) int main() {
   struct sigaction sa = {};
   sa.sa_sigaction = action;
@@ -46,6 +53,37 @@ __attribute__((optnone)) int main() {
   std::unique_ptr<int[]> p = std::make_unique<int[]>(4);
   volatile int oob = p[-1];
   (void)oob;
+
+#if defined(__BIONIC__) && defined(__aarch64__)
+  // If we get here, bad access on system heap memory did not trigger a fault.
+  // This suggests that MTE is disabled. Make sure that explicitly tagged PROT_MTE memory does not
+  // trigger a fault either.
+  if (getauxval(AT_HWCAP2) & HWCAP2_MTE) {
+    sa.sa_sigaction = action2;
+    sigaction(SIGSEGV, &sa, nullptr);
+
+    size_t page_size = static_cast<size_t>(sysconf(_SC_PAGESIZE));
+    void* p = mmap(nullptr, page_size, PROT_READ | PROT_WRITE | PROT_MTE,
+                   MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
+    if (!p) {
+      fprintf(stderr, "mmap failed\n");
+      return 1;
+    }
+
+    void* q = p;
+    __asm__ __volatile__(
+        ".arch_extension memtag\n"
+        "irg %[Ptr], %[Ptr], xzr\n"
+        "stg %[Ptr], [%[Ptr]]\n"
+        "addg %[Ptr], %[Ptr], 0, 1\n"
+        "str xzr, [%[Ptr]]\n"
+        : [Ptr] "+&r"(q)
+        :
+        : "memory");
+
+    munmap(p, page_size);
+  }
+#endif  // __aarch64__
 
   fprintf(stderr, "normal exit\n");
   return 0;

@@ -20,6 +20,7 @@
 #define _UAPI_RPMSG_H_
 #include <linux/ioctl.h>
 #include <linux/types.h>
+#define RPMSG_ADDR_ANY 0xFFFFFFFF
 struct rpmsg_endpoint_info {
   char name[32];
   __u32 src;
