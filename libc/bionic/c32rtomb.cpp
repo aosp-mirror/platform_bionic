@@ -50,7 +50,7 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
     return mbstate_reset_and_return(1, state);
   }
 
-  if (!mbsinit(state)) {
+  if (!mbstate_is_initial(state)) {
     return mbstate_reset_and_return_illegal(EILSEQ, state);
   }
 
@@ -66,10 +66,8 @@ size_t c32rtomb(char* s, char32_t c32, mbstate_t* ps) {
   // about the sequence length.
   uint8_t lead;
   size_t length;
-  if ((c32 & ~0x7f) == 0) {
-    lead = 0;
-    length = 1;
-  } else if ((c32 & ~0x7ff) == 0) {
+  // We already handled the 1-byte case above, so we go straight to 2-bytes...
+  if ((c32 & ~0x7ff) == 0) {
     lead = 0xc0;
     length = 2;
   } else if ((c32 & ~0xffff) == 0) {

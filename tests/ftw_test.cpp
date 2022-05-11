@@ -106,7 +106,7 @@ TEST(ftw, ftw) {
   ASSERT_EQ(0, ftw(root.path, check_ftw, 128));
 }
 
-TEST(ftw, ftw64) {
+TEST(ftw, ftw64_smoke) {
   TemporaryDir root;
   MakeTree(root.path);
   ASSERT_EQ(0, ftw64(root.path, check_ftw64, 128));
@@ -118,7 +118,7 @@ TEST(ftw, nftw) {
   ASSERT_EQ(0, nftw(root.path, check_nftw, 128, 0));
 }
 
-TEST(ftw, nftw64) {
+TEST(ftw, nftw64_smoke) {
   TemporaryDir root;
   MakeTree(root.path);
   ASSERT_EQ(0, nftw64(root.path, check_nftw64, 128, 0));

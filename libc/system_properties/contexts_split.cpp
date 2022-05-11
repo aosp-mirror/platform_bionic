@@ -274,9 +274,6 @@ bool ContextsSplit::InitializeProperties() {
     // still need the system / platform properties to function.
     if (access("/vendor/etc/selinux/vendor_property_contexts", R_OK) != -1) {
       InitializePropertiesFromFile("/vendor/etc/selinux/vendor_property_contexts");
-    } else {
-      // Fallback to nonplat_* if vendor_* doesn't exist.
-      InitializePropertiesFromFile("/vendor/etc/selinux/nonplat_property_contexts");
     }
   } else {
     if (!InitializePropertiesFromFile("/plat_property_contexts")) {
@@ -284,9 +281,6 @@ bool ContextsSplit::InitializeProperties() {
     }
     if (access("/vendor_property_contexts", R_OK) != -1) {
       InitializePropertiesFromFile("/vendor_property_contexts");
-    } else {
-      // Fallback to nonplat_* if vendor_* doesn't exist.
-      InitializePropertiesFromFile("/nonplat_property_contexts");
     }
   }
 
