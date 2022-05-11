@@ -97,30 +97,31 @@ void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_AL
  */
 size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
 
+#define __MALLINFO_BODY \
+  /** Total number of non-mmapped bytes currently allocated from OS. */ \
+  size_t arena; \
+  /** Number of free chunks. */ \
+  size_t ordblks; \
+  /** (Unused.) */ \
+  size_t smblks; \
+  /** (Unused.) */ \
+  size_t hblks; \
+  /** Total number of bytes in mmapped regions. */ \
+  size_t hblkhd; \
+  /** Maximum total allocated space; greater than total if trimming has occurred. */ \
+  size_t usmblks; \
+  /** (Unused.) */ \
+  size_t fsmblks; \
+  /** Total allocated space (normal or mmapped.) */ \
+  size_t uordblks; \
+  /** Total free space. */ \
+  size_t fordblks; \
+  /** Upper bound on number of bytes releasable by a trim operation. */ \
+  size_t keepcost;
+
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
-struct mallinfo {
-  /** Total number of non-mmapped bytes currently allocated from OS. */
-  size_t arena;
-  /** Number of free chunks. */
-  size_t ordblks;
-  /** (Unused.) */
-  size_t smblks;
-  /** (Unused.) */
-  size_t hblks;
-  /** Total number of bytes in mmapped regions. */
-  size_t hblkhd;
-  /** Maximum total allocated space; greater than total if trimming has occurred. */
-  size_t usmblks;
-  /** (Unused.) */
-  size_t fsmblks;
-  /** Total allocated space (normal or mmapped.) */
-  size_t uordblks;
-  /** Total free space. */
-  size_t fordblks;
-  /** Upper bound on number of bytes releasable by a trim operation. */
-  size_t keepcost;
-};
+struct mallinfo { __MALLINFO_BODY };
 #endif
 
 /**
@@ -129,6 +130,18 @@ struct mallinfo {
  * inherently unreliable and consider using malloc_info() instead.
  */
 struct mallinfo mallinfo(void);
+
+/**
+ * On Android the struct mallinfo and struct mallinfo2 are the same.
+ */
+struct mallinfo2 { __MALLINFO_BODY };
+
+/**
+ * [mallinfo2(3)](http://man7.org/linux/man-pages/man3/mallinfo2.3.html) returns
+ * information about the current state of the heap. Note that mallinfo2() is
+ * inherently unreliable and consider using malloc_info() instead.
+ */
+struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
 
 /**
  * [malloc_info(3)](http://man7.org/linux/man-pages/man3/malloc_info.3.html)
@@ -170,7 +183,45 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * Available since API level 28.
  */
 #define M_PURGE (-101)
-/*
+
+
+/**
+ * mallopt() option to tune the allocator's choice of memory tags to
+ * make it more likely that a certain class of memory errors will be
+ * detected. This is only relevant if MTE is enabled in this process
+ * and ignored otherwise. The value argument should be one of the
+ * M_MEMTAG_TUNING_* flags.
+ * NOTE: This is only available in scudo.
+ *
+ * Available since API level 31.
+ */
+#define M_MEMTAG_TUNING (-102)
+
+/**
+ * When passed as a value of M_MEMTAG_TUNING mallopt() call, enables
+ * deterministic detection of linear buffer overflow and underflow
+ * bugs by assigning distinct tag values to adjacent allocations. This
+ * mode has a slightly reduced chance to detect use-after-free bugs
+ * because only half of the possible tag values are available for each
+ * memory location.
+ *
+ * Please keep in mind that MTE can not detect overflow within the
+ * same tag granule (16-byte aligned chunk), and can miss small
+ * overflows even in this mode. Such overflow can not be the cause of
+ * a memory corruption, because the memory within one granule is never
+ * used for multiple allocations.
+ */
+#define M_MEMTAG_TUNING_BUFFER_OVERFLOW 0
+
+/**
+ * When passed as a value of M_MEMTAG_TUNING mallopt() call, enables
+ * independently randomized tags for uniform ~93% probability of
+ * detecting both spatial (buffer overflow) and temporal (use after
+ * free) bugs.
+ */
+#define M_MEMTAG_TUNING_UAF 1
+
+/**
  * mallopt() option for per-thread memory initialization tuning.
  * The value argument should be one of:
  * 1: Disable automatic heap initialization and, where possible, memory tagging,
@@ -210,7 +261,7 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * should not be zero-initialized, any other value indicates to initialize heap
  * memory to zero.
  *
- * Note that this memory mitigations is only implemented in scudo and therefore
+ * Note that this memory mitigation is only implemented in scudo and therefore
  * this will have no effect when using another allocator (such as jemalloc on
  * Android Go devices).
  *
@@ -222,6 +273,7 @@ int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
  * mallopt() option to change the heap tagging state. May be called at any
  * time, including when multiple threads are running.
  * The value must be one of the M_HEAP_TAGGING_LEVEL_ constants.
+ * NOTE: This is only available in scudo.
  *
  * Available since API level 31.
  */

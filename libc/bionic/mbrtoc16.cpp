@@ -77,12 +77,15 @@ size_t mbrtoc16(char16_t* pc16, const char* s, size_t n, mbstate_t* ps) {
     return nconv;
   } else if (nconv == 0) {
     return mbstate_reset_and_return(nconv, state);
-  } else if (c32 > 0x10ffff) {
-    // Input cannot be encoded as UTF-16.
-    return mbstate_reset_and_return_illegal(EILSEQ, state);
   } else if (c32 < 0x10000) {
     *pc16 = static_cast<char16_t>(c32);
     return mbstate_reset_and_return(nconv, state);
+  } else if (c32 > 0x10ffff) {
+    // This case is currently handled by mbrtoc32() returning an error, but
+    // if that function is extended to cover 5-byte sequences (which are
+    // illegal at the moment), we'd need to explicitly handle the case of
+    // codepoints that can't be represented as a surrogate pair here.
+    return mbstate_reset_and_return_illegal(EILSEQ, state);
   } else {
     return begin_surrogate(c32, pc16, nconv, state);
   }

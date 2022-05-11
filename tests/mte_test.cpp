@@ -38,7 +38,7 @@ static void test_tag_mismatch() {
 #endif
   }
 #if defined(__aarch64__)
-  if (mte_supported()) {
+  if (mte_supported() && running_with_mte()) {
     EXPECT_DEATH(
         {
           volatile int load ATTRIBUTE_UNUSED = *mistagged_p;

@@ -139,7 +139,12 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
       }
 
       if (tag_level == M_HEAP_TAGGING_LEVEL_ASYNC) {
-        set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
+        // When entering ASYNC mode, specify that we want to allow upgrading to SYNC by OR'ing in
+        // the SYNC flag. But if the kernel doesn't support specifying multiple TCF modes, fall back
+        // to specifying a single mode.
+        if (!set_tcf_on_all_threads(PR_MTE_TCF_ASYNC | PR_MTE_TCF_SYNC)) {
+          set_tcf_on_all_threads(PR_MTE_TCF_ASYNC);
+        }
 #if defined(USE_SCUDO)
         scudo_malloc_set_track_allocation_stacks(0);
 #endif

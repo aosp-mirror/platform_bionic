@@ -252,8 +252,8 @@ label:
                                 pt = _fmt("%m/%d/%y", t, pt, ptlim, warnp);
                 continue;
             case 'd':
-                                pt = _conv(t->tm_mday, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_mday, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'E':
             case 'O':
                 /*
@@ -274,22 +274,21 @@ label:
                 modifier = *format;
                 goto label;
             case 'e':
-                pt = _conv(t->tm_mday, getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_mday, getformat(modifier, " 2", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'F':
                 pt = _fmt("%Y-%m-%d", t, pt, ptlim, warnp);
                 continue;
             case 'H':
-                pt = _conv(t->tm_hour, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_hour, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'I':
-                pt = _conv((t->tm_hour % 12) ?
-                    (t->tm_hour % 12) : 12,
-                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv((t->tm_hour % 12) ? (t->tm_hour % 12) : 12,
+                         getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'j':
-                pt = _conv(t->tm_yday + 1, getformat(modifier, "%03d", "%3d", "%d", "%03d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_yday + 1, getformat(modifier, "03", " 3", "  ", "03"), pt, ptlim);
+              continue;
             case 'k':
                 /*
                 ** This used to be...
@@ -301,7 +300,7 @@ label:
                 ** "%l" have been swapped.
                 ** (ado, 1993-05-24)
                 */
-                pt = _conv(t->tm_hour, getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
+                pt = _conv(t->tm_hour, getformat(modifier, " 2", " 2", "  ", "02"), pt, ptlim);
                 continue;
 #ifdef KITCHEN_SINK
             case 'K':
@@ -321,16 +320,15 @@ label:
                 ** "%l" have been swapped.
                 ** (ado, 1993-05-24)
                 */
-                pt = _conv((t->tm_hour % 12) ?
-                    (t->tm_hour % 12) : 12,
-                    getformat(modifier, "%2d", "%2d", "%d", "%02d"), pt, ptlim);
+                pt = _conv((t->tm_hour % 12) ? (t->tm_hour % 12) : 12,
+                           getformat(modifier, " 2", " 2", "  ", "02"), pt, ptlim);
                 continue;
             case 'M':
-                pt = _conv(t->tm_min, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_min, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'm':
-                pt = _conv(t->tm_mon + 1, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_mon + 1, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'n':
                 pt = _add("\n", pt, ptlim, modifier);
                 continue;
@@ -348,13 +346,12 @@ label:
                 pt = _fmt("%I:%M:%S %p", t, pt, ptlim, warnp);
                 continue;
             case 'S':
-                pt = _conv(t->tm_sec, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(t->tm_sec, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 's':
                 {
                     struct tm   tm;
-                    char        buf[INT_STRLEN_MAXIMUM(
-                                time64_t) + 1];
+                    char buf[INT_STRLEN_MAXIMUM(time64_t) + 1] __attribute__((__uninitialized__));
                     time64_t    mkt;
 
                     tm = *t;
@@ -374,10 +371,9 @@ label:
                 pt = _add("\t", pt, ptlim, modifier);
                 continue;
             case 'U':
-                pt = _conv((t->tm_yday + DAYSPERWEEK -
-                    t->tm_wday) / DAYSPERWEEK,
-                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv((t->tm_yday + DAYSPERWEEK - t->tm_wday) / DAYSPERWEEK,
+                         getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'u':
                 /*
                 ** From Arnold Robbins' strftime version 3.0:
@@ -385,9 +381,7 @@ label:
                 ** [1 (Monday) - 7]"
                 ** (ado, 1993-05-24)
                 */
-                pt = _conv((t->tm_wday == 0) ?
-                    DAYSPERWEEK : t->tm_wday,
-                    "%d", pt, ptlim);
+                pt = _conv((t->tm_wday == 0) ? DAYSPERWEEK : t->tm_wday, "  ", pt, ptlim);
                 continue;
             case 'V':   /* ISO 8601 week number */
             case 'G':   /* ISO 8601 year (four digits) */
@@ -467,8 +461,7 @@ label:
                             w = 53;
 #endif /* defined XPG4_1994_04_09 */
                     if (*format == 'V')
-                        pt = _conv(w, getformat(modifier, "%02d", "%2d", "%d", "%02d"),
-                               pt, ptlim);
+                      pt = _conv(w, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
                     else if (*format == 'g') {
                         *warnp = IN_ALL;
                         pt = _yconv(year, base,
@@ -488,15 +481,14 @@ label:
                 pt = _fmt("%e-%b-%Y", t, pt, ptlim, warnp);
                 continue;
             case 'W':
-                pt = _conv((t->tm_yday + DAYSPERWEEK -
-                    (t->tm_wday ?
-                    (t->tm_wday - 1) :
-                    (DAYSPERWEEK - 1))) / DAYSPERWEEK,
-                    getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
-                continue;
+              pt = _conv(
+                  (t->tm_yday + DAYSPERWEEK - (t->tm_wday ? (t->tm_wday - 1) : (DAYSPERWEEK - 1))) /
+                      DAYSPERWEEK,
+                  getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
+              continue;
             case 'w':
-                pt = _conv(t->tm_wday, "%d", pt, ptlim);
-                continue;
+              pt = _conv(t->tm_wday, "  ", pt, ptlim);
+              continue;
             case 'X':
                 pt = _fmt(Locale->X_fmt, t, pt, ptlim, warnp);
                 continue;
@@ -602,7 +594,7 @@ label:
                 diff /= SECSPERMIN;
                 diff = (diff / MINSPERHOUR) * 100 +
                     (diff % MINSPERHOUR);
-                pt = _conv(diff, getformat(modifier, "%04d", "%4d", "%d", "%04d"), pt, ptlim);
+                pt = _conv(diff, getformat(modifier, "04", " 4", "  ", "04"), pt, ptlim);
                 }
                 continue;
             case '+':
@@ -629,10 +621,40 @@ label:
 static char *
 _conv(int n, const char *format, char *pt, const char *ptlim)
 {
-	char	buf[INT_STRLEN_MAXIMUM(int) + 1];
+  // The original implementation used snprintf(3) here, but rolling our own is
+  // about 5x faster. Seems like a good trade-off for so little code, especially
+  // for users like logcat that have a habit of formatting 10k times all at
+  // once...
 
-	snprintf(buf, sizeof(buf), format, n);
-	return _add(buf, pt, ptlim, 0);
+  // Format is '0' or ' ' for the fill character, followed by a single-digit
+  // width or ' ' for "whatever".
+  //   %d -> "  "
+  //  %2d -> " 2"
+  // %02d -> "02"
+  char fill = format[0];
+  int width = format[1] == ' ' ? 0 : format[1] - '0';
+
+  char buf[32] __attribute__((__uninitialized__));
+
+  // Terminate first, so we can walk backwards from the least-significant digit
+  // without having to later reverse the result.
+  char* p = &buf[31];
+  *--p = '\0';
+  char* end = p;
+
+  // Output digits backwards, from least-significant to most.
+  while (n >= 10) {
+    *--p = '0' + (n % 10);
+    n /= 10;
+  }
+  *--p = '0' + n;
+
+  // Fill if more digits are required by the format.
+  while ((end - p) < width) {
+    *--p = fill;
+  }
+
+  return _add(p, pt, ptlim, 0);
 }
 
 static char *
@@ -704,9 +726,11 @@ _yconv(int a, int b, bool convert_top, bool convert_yy,
     if (convert_top) {
         if (lead == 0 && trail < 0)
             pt = _add("-0", pt, ptlim, modifier);
-        else    pt = _conv(lead, getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
+        else
+          pt = _conv(lead, getformat(modifier, "02", " 2", "  ", "02"), pt, ptlim);
     }
     if (convert_yy)
-        pt = _conv(((trail < 0) ? -trail : trail), getformat(modifier, "%02d", "%2d", "%d", "%02d"), pt, ptlim);
+      pt = _conv(((trail < 0) ? -trail : trail), getformat(modifier, "02", " 2", "  ", "02"), pt,
+                 ptlim);
     return pt;
 }
