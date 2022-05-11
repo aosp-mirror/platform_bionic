@@ -51,7 +51,7 @@ TEST(sys_vfs, statfs_failure) {
   ASSERT_EQ(ENOENT, errno);
 }
 
-TEST(sys_vfs, statfs64) {
+TEST(sys_vfs, statfs64_smoke) {
   struct statfs64 sb;
   ASSERT_EQ(0, statfs64("/proc", &sb));
   Check(sb);
@@ -79,7 +79,7 @@ TEST(sys_vfs, fstatfs_failure) {
   ASSERT_EQ(EBADF, errno);
 }
 
-TEST(sys_vfs, fstatfs64) {
+TEST(sys_vfs, fstatfs64_smoke) {
   struct statfs64 sb;
   int fd = open("/proc", O_RDONLY);
   ASSERT_EQ(0, fstatfs64(fd, &sb));
