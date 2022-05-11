@@ -130,6 +130,9 @@ struct fs_quota_statv {
   __s32 qs_rtbtimelimit;
   __u16 qs_bwarnlimit;
   __u16 qs_iwarnlimit;
-  __u64 qs_pad2[8];
+  __u16 qs_rtbwarnlimit;
+  __u16 qs_pad3;
+  __u32 qs_pad4;
+  __u64 qs_pad2[7];
 };
 #endif

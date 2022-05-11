@@ -41,7 +41,7 @@ __BEGIN_DECLS
 #define EXIT_FAILURE 1
 #define EXIT_SUCCESS 0
 
-__noreturn void abort(void);
+__noreturn void abort(void) __attribute__((__nomerge__));
 __noreturn void exit(int __status);
 #if __ANDROID_API__ >= 21
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
@@ -161,11 +161,11 @@ const char* getprogname(void) __INTRODUCED_IN(21);
 void setprogname(const char* __name) __INTRODUCED_IN(21);
 
 int mblen(const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
-size_t mbstowcs(wchar_t* __dst, const char* __src, size_t __n);
+size_t mbstowcs(wchar_t* __dst, const char* __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 int mbtowc(wchar_t* __wc_ptr, const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
-size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n);
+size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
 #if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);

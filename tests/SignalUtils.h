@@ -19,7 +19,7 @@
 #include <signal.h>
 #include <string.h>
 
-#if defined(__GLIBC__)
+#if !defined(__BIONIC__)
 #define posix_spawnattr_getsigdefault64 posix_spawnattr_getsigdefault
 #define posix_spawnattr_getsigmask64 posix_spawnattr_getsigmask
 #define posix_spawnattr_setsigdefault64 posix_spawnattr_setsigdefault

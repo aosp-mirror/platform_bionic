@@ -20,6 +20,10 @@
 #define _UAPI_MPTCP_H
 #include <linux/const.h>
 #include <linux/types.h>
+#include <linux/in.h>
+#include <linux/in6.h>
+#include <linux/socket.h>
+#include <sys/socket.h>
 #define MPTCP_SUBFLOW_FLAG_MCAP_REM _BITUL(0)
 #define MPTCP_SUBFLOW_FLAG_MCAP_LOC _BITUL(1)
 #define MPTCP_SUBFLOW_FLAG_JOIN_REM _BITUL(2)
@@ -72,6 +76,7 @@ enum {
 #define MPTCP_PM_ADDR_FLAG_SIGNAL (1 << 0)
 #define MPTCP_PM_ADDR_FLAG_SUBFLOW (1 << 1)
 #define MPTCP_PM_ADDR_FLAG_BACKUP (1 << 2)
+#define MPTCP_PM_ADDR_FLAG_FULLMESH (1 << 3)
 enum {
   MPTCP_PM_CMD_UNSPEC,
   MPTCP_PM_CMD_ADD_ADDR,
@@ -99,6 +104,7 @@ struct mptcp_info {
   __u64 mptcpi_rcv_nxt;
   __u8 mptcpi_local_addr_used;
   __u8 mptcpi_local_addr_max;
+  __u8 mptcpi_csum_enabled;
 };
 enum mptcp_event_type {
   MPTCP_EVENT_UNSPEC = 0,
@@ -128,7 +134,40 @@ enum mptcp_event_attr {
   MPTCP_ATTR_FLAGS,
   MPTCP_ATTR_TIMEOUT,
   MPTCP_ATTR_IF_IDX,
+  MPTCP_ATTR_RESET_REASON,
+  MPTCP_ATTR_RESET_FLAGS,
   __MPTCP_ATTR_AFTER_LAST
 };
 #define MPTCP_ATTR_MAX (__MPTCP_ATTR_AFTER_LAST - 1)
+#define MPTCP_RST_EUNSPEC 0
+#define MPTCP_RST_EMPTCP 1
+#define MPTCP_RST_ERESOURCE 2
+#define MPTCP_RST_EPROHIBIT 3
+#define MPTCP_RST_EWQ2BIG 4
+#define MPTCP_RST_EBADPERF 5
+#define MPTCP_RST_EMIDDLEBOX 6
+struct mptcp_subflow_data {
+  __u32 size_subflow_data;
+  __u32 num_subflows;
+  __u32 size_kernel;
+  __u32 size_user;
+} __attribute__((aligned(8)));
+struct mptcp_subflow_addrs {
+  union {
+    __kernel_sa_family_t sa_family;
+    struct sockaddr sa_local;
+    struct sockaddr_in sin_local;
+    struct sockaddr_in6 sin6_local;
+    struct __kernel_sockaddr_storage ss_local;
+  };
+  union {
+    struct sockaddr sa_remote;
+    struct sockaddr_in sin_remote;
+    struct sockaddr_in6 sin6_remote;
+    struct __kernel_sockaddr_storage ss_remote;
+  };
+};
+#define MPTCP_INFO 1
+#define MPTCP_TCPINFO 2
+#define MPTCP_SUBFLOW_ADDRS 3
 #endif

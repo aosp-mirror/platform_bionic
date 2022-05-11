@@ -24,6 +24,7 @@
 #ifndef __BIG_ENDIAN_BITFIELD
 #define __BIG_ENDIAN_BITFIELD
 #endif
+#include <linux/stddef.h>
 #include <linux/types.h>
 #include <linux/swab.h>
 #define __constant_htonl(x) ((__force __be32) (__u32) (x))
