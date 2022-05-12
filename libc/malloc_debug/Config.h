@@ -46,6 +46,7 @@ constexpr uint64_t RECORD_ALLOCS = 0x200;
 constexpr uint64_t BACKTRACE_FULL = 0x400;
 constexpr uint64_t ABORT_ON_ERROR = 0x800;
 constexpr uint64_t VERBOSE = 0x1000;
+constexpr uint64_t CHECK_UNREACHABLE_ON_SIGNAL = 0x2000;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
@@ -92,6 +93,8 @@ class Config {
   int record_allocs_signal() const { return record_allocs_signal_; }
   size_t record_allocs_num_entries() const { return record_allocs_num_entries_; }
   const std::string& record_allocs_file() const { return record_allocs_file_; }
+
+  int check_unreachable_signal() const { return check_unreachable_signal_; }
 
  private:
   struct OptionInfo {
@@ -160,4 +163,6 @@ class Config {
   uint8_t fill_free_value_;
   uint8_t front_guard_value_;
   uint8_t rear_guard_value_;
+
+  int check_unreachable_signal_ = 0;
 };
