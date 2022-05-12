@@ -1579,6 +1579,7 @@ LIBC_T { # introduced=Tiramisu
 LIBC_U { # introduced=UpsideDownCake
   global:
     close_range;
+    copy_file_range;
 } LIBC_T;
 
 LIBC_PRIVATE {
