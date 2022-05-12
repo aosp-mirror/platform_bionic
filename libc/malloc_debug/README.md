@@ -114,7 +114,7 @@ the backtrace and information about the original allocation. After that, this
 option will not add a special header.
 
 As of P, this option will also enable dumping backtrace heap data to a
-file when the process receives the signal SIGRTMAX - 17 ( which is 47 on most
+file when the process receives the signal SIGRTMAX - 17 ( which is 47 on
 Android devices). The format of this dumped data is the same format as
 that dumped when running am dumpheap -n. The default is to dump this data
 to the file /data/local/tmp/backtrace\_heap.**PID**.txt. This is useful when
@@ -127,7 +127,7 @@ malloc/free occurs.
 ### backtrace\_enable\_on\_signal[=MAX\_FRAMES]
 Enable capturing the backtrace of each allocation site. If the
 backtrace capture is toggled when the process receives the signal
-SIGRTMAX - 19 (which is 45 on most Android devices). When this
+SIGRTMAX - 19 (which is 45 on Android devices). When this
 option is used alone, backtrace capture starts out disabled until the signal
 is received. If both this option and the backtrace option are set, then
 backtrace capture is enabled until the signal is received.
@@ -164,6 +164,29 @@ when the program exits will be backtrace\_dump\_prefix.**PID**.exit.txt.
 As of Q, any time that a backtrace is gathered, a different algorithm is used
 that is extra thorough and can unwind through Java frames. This will run
 slower than the normal backtracing function.
+
+### check\_unreachable\_on\_signal
+As of Android U, this option will trigger a check for unreachable memory
+in a process. Specifically, if the signal SIGRTMAX - 16 (which is 48 on
+Android devices). The best way to see the exact signal being used is to
+enable the verbose option then look at the log for the message:
+
+    Run: 'kill -48 <PID>' to check for unreachable memory.
+
+When the signal is received, the actual unreachable check only triggers
+on the next allocation that happens in the process (malloc/free, etc).
+
+If a process is not doing any allocations, it can be forced to trigger when
+running:
+
+    debuggerd -b <PID>
+
+**NOTE**: The unreachable check can fail for protected processes, so it
+might be necessary to run:
+
+    setenforce 0
+
+To get the unreachable data.
 
 ### fill\_on\_alloc[=MAX\_FILLED\_BYTES]
 Any allocation routine, other than calloc, will result in the allocation being
@@ -270,7 +293,7 @@ Example leak error found in the log:
 
 ### record\_allocs[=TOTAL\_ENTRIES]
 Keep track of every allocation/free made on every thread and dump them
-to a file when the signal SIGRTMAX - 18 (which is 46 on most Android devices)
+to a file when the signal SIGRTMAX - 18 (which is 46 on Android devices)
 is received.
 
 If TOTAL\_ENTRIES is set, then it indicates the total number of
