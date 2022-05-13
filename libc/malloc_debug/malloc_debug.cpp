@@ -53,11 +53,12 @@
 
 #include "Config.h"
 #include "DebugData.h"
+#include "Unreachable.h"
+#include "UnwindBacktrace.h"
 #include "backtrace.h"
 #include "debug_disable.h"
 #include "debug_log.h"
 #include "malloc_debug.h"
-#include "UnwindBacktrace.h"
 
 // ------------------------------------------------------------------------
 // Global Data
@@ -315,7 +316,7 @@ bool debug_initialize(const MallocDispatch* malloc_dispatch, bool* zygote_child,
   }
 
   DebugData* debug = new DebugData();
-  if (!debug->Initialize(options)) {
+  if (!debug->Initialize(options) || !Unreachable::Initialize(debug->config())) {
     delete debug;
     DebugDisableFinalize();
     return false;
@@ -402,6 +403,8 @@ void debug_free_malloc_leak_info(uint8_t* info) {
 }
 
 size_t debug_malloc_usable_size(void* pointer) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled() || pointer == nullptr) {
     return g_dispatch->malloc_usable_size(pointer);
   }
@@ -467,6 +470,8 @@ static void* InternalMalloc(size_t size) {
 }
 
 void* debug_malloc(size_t size) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->malloc(size);
   }
@@ -544,6 +549,8 @@ static void InternalFree(void* pointer) {
 }
 
 void debug_free(void* pointer) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled() || pointer == nullptr) {
     return g_dispatch->free(pointer);
   }
@@ -563,6 +570,8 @@ void debug_free(void* pointer) {
 }
 
 void* debug_memalign(size_t alignment, size_t bytes) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->memalign(alignment, bytes);
   }
@@ -643,6 +652,8 @@ void* debug_memalign(size_t alignment, size_t bytes) {
 }
 
 void* debug_realloc(void* pointer, size_t bytes) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->realloc(pointer, bytes);
   }
@@ -763,6 +774,8 @@ void* debug_realloc(void* pointer, size_t bytes) {
 }
 
 void* debug_calloc(size_t nmemb, size_t bytes) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->calloc(nmemb, bytes);
   }
@@ -862,6 +875,8 @@ int debug_malloc_info(int options, FILE* fp) {
 }
 
 void* debug_aligned_alloc(size_t alignment, size_t size) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->aligned_alloc(alignment, size);
   }
@@ -873,6 +888,8 @@ void* debug_aligned_alloc(size_t alignment, size_t size) {
 }
 
 int debug_posix_memalign(void** memptr, size_t alignment, size_t size) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->posix_memalign(memptr, alignment, size);
   }
@@ -934,6 +951,8 @@ ssize_t debug_malloc_backtrace(void* pointer, uintptr_t* frames, size_t max_fram
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
 void* debug_pvalloc(size_t bytes) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->pvalloc(bytes);
   }
@@ -949,6 +968,8 @@ void* debug_pvalloc(size_t bytes) {
 }
 
 void* debug_valloc(size_t size) {
+  Unreachable::CheckIfRequested(g_debug->config());
+
   if (DebugCallsDisabled()) {
     return g_dispatch->valloc(size);
   }
