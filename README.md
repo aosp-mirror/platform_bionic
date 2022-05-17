@@ -158,29 +158,62 @@ In all other cases, you should use
 
 Adding a system call usually involves:
 
-  1. Add entries to SYSCALLS.TXT.
+  1. Add an entry (or entries, in some cases) to SYSCALLS.TXT.
      See SYSCALLS.TXT itself for documentation on the format.
-  2. Add constants (and perhaps types) to the appropriate header file.
+     See also the notes below for how to deal with tricky cases like `off_t`.
+  2. Find the right header file to work in by looking up your system call
+     on [man7.org](https://man7.org/linux/man-pages/dir_section_2.html).
+     (If there's no header file given, see the points above about whether we
+     should really be adding this or not!)
+  3. Add constants (and perhaps types) to the appropriate header file.
      Note that you should check to see whether the constants are already in
      kernel uapi header files, in which case you just need to make sure that
-     the appropriate POSIX header file in libc/include/ includes the
-     relevant file or files.
-  3. Add function declarations to the appropriate header file. Don't forget
-     to include the appropriate `__INTRODUCED_IN()`. If you need to create a new
-     header file, libc/include/sys/sysinfo.h is a good short example to copy and
-     paste from.
-  4. Add basic documentation to the header file. libc/include/sys/sysinfo.h is a
-     good short example that shows the expected style. Most of the detail
-     should actually be left to the man7.org page, with only a brief
-     one-sentence explanation in our documentation. Alway include the return
-     value/error reporting details. Explicitly say which version of Android the
-     function was added to. Explicitly call out any Android-specific
-     changes/additions/limitations because they won't be on the man7.org page.
-  5. Add the function name to the correct section in libc/libc.map.txt.
-  6. Add a basic test. Don't try to test everything; concentrate on just testing
+     the appropriate header file in libc/include/ `#include`s the relevant
+     `linux/` file or files.
+  4. Add function declarations to the appropriate header file. Don't forget
+     to include the appropriate `__INTRODUCED_IN()`, with the right API level
+     for the first release your system call wrapper will be in. See
+     libc/include/android/api_level.h for the API levels.
+     If the header file doesn't exist, copy all of libc/include/sys/sysinfo.h
+     into your new file --- it's a good short example to start from.
+
+     Note also our style for naming arguments: always use two leading
+     underscores (so developers are free to use any of the unadorned names as
+     macros without breaking things), avoid abbreviations, and ideally try to
+     use the same name as an existing system call (to reduce the amount of
+     English vocabulary required by people who just want to use the function
+     signatures). If there's a similar function already in the C library,
+     check what names it's used. Finally, prefer the `void*` orthography we
+     use over the `void *` you'll see on man7.org.)
+  5. Add basic documentation to the header file. Again, the existing
+     libc/include/sys/sysinfo.h is a good short example that shows the
+     expected style.
+
+     Most of the detail should actually be left to the man7.org page, with
+     only a brief one-sentence explanation (usually based on the description
+     in the NAME section of the man page) in our documentation. Always
+     include the return value/error reporting details (you can find out
+     what the system call returns from the RETURN VALUE of the man page),
+     but try to match the wording and style wording from _our_ existing
+     documentation; we're trying to minimize the amount of English readers
+     need to understand by using the exact same wording where possible).
+     Explicitly say which version of Android the function was added to in
+     the documentation because the documentation generation tool doesn't yet
+     understand `__INTRODUCED_IN()`.
+
+     Explicitly call out any Android-specific changes/additions/limitations
+     because they won't be on the man7.org page.
+  6. Add the function name to the correct section in libc/libc.map.txt; it'll
+     be near the end of the file. You may need to add a new section if you're
+     the first to add a system call to this version of Android.
+  7. Add a basic test. Don't try to test everything; concentrate on just testing
      the code that's actually in *bionic*, not all the functionality that's
      implemented in the kernel. For simple syscalls, that's just the
      auto-generated argument and return value marshalling.
+
+     Add a test in the right file in tests/. We have one file per header, so if
+     your system call is exposed in <unistd.h>, for example, your test would go
+     in tests/unistd_test.cpp.
 
      A trivial test that deliberately supplies an invalid argument helps check
      that we're generating the right symbol and have the right declaration in
@@ -207,6 +240,39 @@ easy cases, even if only manual testing with strace. Sadly it isn't always
 feasible to write a working test for the interesting cases -- offsets larger
 than 2GiB, say -- so you may end up just writing a "meaningless" program whose
 only purpose is to give you patterns to look for when run under strace(1).)
+
+A general example of adding a system call:
+https://android-review.googlesource.com/c/platform/bionic/+/2073827
+
+### Debugging tips
+1. Key error for a new codename in libc/libc.map.txt
+e.g. what you add in libc/libc.map.txt is:
+
+```
+LIBC_V { # introduced=Vanilla
+  global:
+    xxx; // the new system call you add
+} LIBC_U;
+```
+
+The error output is:
+
+```
+Traceback (most recent call last):
+  File "/path/tp/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 171,
+  in decode_api_level_tag
+    decoded = str(decode_api_level(value, api_map))
+  File "/path/to/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 157,
+  in decode_api_level
+    return api_map[api]
+KeyError: 'Vanilla'
+```
+
+Solution: Ask in the team and wait for the update.
+
+2. Use of undeclared identifier of the new system call in the test
+Possible Solution: Check everything ready in the files mentioned above first.
+Maybe glibc matters. Follow the example and try #if defined(__GLIBC__).
 
 ## Updating kernel header files
 

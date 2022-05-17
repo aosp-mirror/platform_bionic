@@ -64,6 +64,7 @@ cc_library {
         "malloc_debug.cpp",
         "PointerData.cpp",
         "RecordData.cpp",
+        "Unreachable.cpp",
         "UnwindBacktrace.cpp",
     ],
 
@@ -73,6 +74,7 @@ cc_library {
         "libasync_safe",
         "libbase",
         "libc_malloc_debug_backtrace",
+        "libmemunreachable",
     ],
 
     shared_libs: [

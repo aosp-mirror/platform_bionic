@@ -313,9 +313,36 @@ int tcsetpgrp(int __fd, pid_t __pid);
 int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
 int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
 
+/**
+ * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) copies
+ * a range of data from one file descriptor to another.
+ *
+ * Returns the number of bytes copied on success, and returns -1 and sets  errno
+ * on failure.
+ *
+ * Available since API level 34.
+ */
+ssize_t copy_file_range(int __fd_in, off64_t* __off_in, int __fd_out, off64_t* __off_out, size_t __length, unsigned int __flags) __INTRODUCED_IN(34);
+
 #if __ANDROID_API__ >= 28
 void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
 #endif
+
+/**
+ * [close_range(2)](https://man7.org/linux/man-pages/man2/close_range.2.html)
+ * performs an action (which depends on value of flags) on an inclusive range
+ * of file descriptors.
+ *
+ * Available since API level 34.
+ *
+ * Note: there is no emulation on too old kernels, hence this will fail with
+ * -1/ENOSYS on pre-5.9 kernels, -1/EINVAL for unsupported flags.  In particular
+ * CLOSE_RANGE_CLOEXEC requires 5.11, though support was backported to Android
+ * Common Kernel 5.10-T.
+ *
+ * Returns 0 on success, and returns -1 and sets `errno` on failure.
+ */
+int close_range(unsigned int __min_fd, unsigned int __max_fd, int __flags) __INTRODUCED_IN(34);
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #define _UNISTD_H_
