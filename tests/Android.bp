@@ -62,7 +62,10 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
-    header_libs: ["libcutils_headers"],
+    header_libs: [
+        "libcutils_headers",
+        "gwp_asan_headers"
+    ],
     // Ensure that the tests exercise shadow call stack support and
     // the hint space PAC/BTI instructions.
     arch: {
@@ -328,8 +331,8 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-      "-Xclang",
-      "-verify",
+        "-Xclang",
+        "-verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
@@ -595,6 +598,18 @@ cc_test_library {
     ],
 }
 
+cc_test_library {
+    name: "libBionicGwpAsanTests",
+    defaults: ["bionic_tests_defaults"],
+    srcs: [
+        "gwp_asan_test.cpp",
+    ],
+    include_dirs: [
+        "bionic/libc",
+    ],
+    static_libs: ["libbase"],
+}
+
 // -----------------------------------------------------------------------------
 // Fortify tests.
 // -----------------------------------------------------------------------------
@@ -626,9 +641,6 @@ cc_defaults {
     ],
     tidy: false,
     target: {
-        host: {
-            clang_cflags: ["-D__clang__"],
-        },
         musl: {
             // Musl doesn't have fortify
             enabled: false,
@@ -712,7 +724,7 @@ cc_defaults {
     tidy: false,
     target: {
         host: {
-            clang_cflags: ["-D__clang__"],
+            cflags: ["-D__clang__"],
         },
     },
 }
@@ -747,7 +759,6 @@ cc_test_library {
     },
 }
 
-
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
 // -----------------------------------------------------------------------------
@@ -759,6 +770,7 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
+        "libBionicGwpAsanTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",

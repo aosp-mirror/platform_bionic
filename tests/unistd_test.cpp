@@ -1648,3 +1648,39 @@ TEST(UNISTD_TEST, sleep) {
   auto t1 = std::chrono::steady_clock::now();
   ASSERT_GE(t1-t0, 1s);
 }
+
+TEST(UNISTD_TEST, close_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#else   // __GLIBC__
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_GE(fd, 0);
+
+  // Try to close the file descriptor (this requires a 5.9+ kernel)
+  if (close_range(fd, fd, 0) == 0) {
+    // we can't close it *again*
+    ASSERT_EQ(close(fd), -1);
+    ASSERT_EQ(errno, EBADF);
+  } else {
+    ASSERT_EQ(errno, ENOSYS);
+    // since close_range() failed, we can close it normally
+    ASSERT_EQ(close(fd), 0);
+  }
+#endif  // __GLIBC__
+}
+
+TEST(UNISTD_TEST, copy_file_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#else   // __GLIBC__
+  TemporaryFile tf;
+  ASSERT_TRUE(android::base::WriteStringToFd("hello world", tf.fd));
+  ASSERT_EQ(0, lseek(tf.fd, SEEK_SET, 0));
+  TemporaryFile tf2;
+  ASSERT_EQ(11, copy_file_range(tf.fd, NULL, tf2.fd, NULL, 11, 0));
+  ASSERT_EQ(0, lseek(tf2.fd, SEEK_SET, 0));
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFdToString(tf2.fd, &content));
+  ASSERT_EQ("hello world", content);
+#endif  // __GLIBC__
+}

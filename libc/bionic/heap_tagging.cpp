@@ -72,23 +72,21 @@ void SetDefaultHeapTaggingLevel() {
 }
 
 static bool set_tcf_on_all_threads(int tcf) {
-  static int g_tcf;
-  g_tcf = tcf;
-
   return android_run_on_all_threads(
-      [](void*) {
+      [](void* arg) {
+        int tcf = *reinterpret_cast<int*>(arg);
         int tagged_addr_ctrl = prctl(PR_GET_TAGGED_ADDR_CTRL, 0, 0, 0, 0);
         if (tagged_addr_ctrl < 0) {
           return false;
         }
 
-        tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | g_tcf;
+        tagged_addr_ctrl = (tagged_addr_ctrl & ~PR_MTE_TCF_MASK) | tcf;
         if (prctl(PR_SET_TAGGED_ADDR_CTRL, tagged_addr_ctrl, 0, 0, 0) < 0) {
           return false;
         }
         return true;
       },
-      nullptr);
+      &tcf);
 }
 
 pthread_mutex_t g_heap_tagging_lock = PTHREAD_MUTEX_INITIALIZER;

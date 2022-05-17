@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,21 +28,22 @@
 
 #pragma once
 
-#include <stddef.h>
+#include <stdint.h>
 
-#include "gwp_asan/options.h"
-#include "platform/bionic/malloc.h"
-#include "private/bionic_globals.h"
-#include "private/bionic_malloc_dispatch.h"
+#include <atomic>
 
-// Enable GWP-ASan, used by android_mallopt. Should always be called in a
-// single-threaded context.
-bool EnableGwpAsan(const android_mallopt_gwp_asan_options_t& options);
+// Forward declarations
+class ConfigData;
 
-// Hooks for libc to possibly install GWP-ASan.
-bool MaybeInitGwpAsanFromLibc(libc_globals* globals);
+class Unreachable {
+ public:
+  static bool Initialize(const Config& config);
+  static void CheckIfRequested(const Config& config);
 
-// Returns whether GWP-ASan is the provided dispatch table pointer. Used in
-// heapprofd's signal-initialization sequence to determine the intermediate
-// dispatch pointer to use when initing.
-bool DispatchIsGwpAsan(const MallocDispatch* dispatch);
+  static void EnableCheck() { do_check_ = true; }
+
+ private:
+  static std::atomic_bool do_check_;
+
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(Unreachable);
+};

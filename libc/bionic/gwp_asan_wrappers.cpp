@@ -26,21 +26,27 @@
  * SUCH DAMAGE.
  */
 
-#include <platform/bionic/android_unsafe_frame_pointer_chase.h>
-#include <platform/bionic/malloc.h>
-#include <private/bionic_arc4random.h>
-#include <private/bionic_globals.h>
-#include <private/bionic_malloc_dispatch.h>
+#include <alloca.h>
+#include <assert.h>
+#include <ctype.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 
-#include "bionic/gwp_asan_wrappers.h"
 #include "gwp_asan/guarded_pool_allocator.h"
 #include "gwp_asan/options.h"
+#include "gwp_asan_wrappers.h"
 #include "malloc_common.h"
+#include "platform/bionic/android_unsafe_frame_pointer_chase.h"
+#include "platform/bionic/malloc.h"
+#include "private/bionic_arc4random.h"
+#include "private/bionic_globals.h"
+#include "private/bionic_malloc_dispatch.h"
+#include "sys/system_properties.h"
+#include "sysprop_helpers.h"
 
 #ifndef LIBC_STATIC
 #include "bionic/malloc_common_dynamic.h"
@@ -49,59 +55,14 @@
 static gwp_asan::GuardedPoolAllocator GuardedAlloc;
 static const MallocDispatch* prev_dispatch;
 
+using Action = android_mallopt_gwp_asan_options_t::Action;
 using Options = gwp_asan::options::Options;
 
-// ============================================================================
-// Implementation of gFunctions.
-// ============================================================================
+// basename() is a mess, see the manpage. Let's be explicit what handling we
+// want (don't touch my string!).
+extern "C" const char* __gnu_basename(const char* path);
 
-// This function handles initialisation as asked for by MallocInitImpl. This
-// should always be called in a single-threaded context.
-bool gwp_asan_initialize(const MallocDispatch* dispatch, bool*, const char*) {
-  prev_dispatch = dispatch;
-
-  Options Opts;
-  Opts.Enabled = true;
-  Opts.MaxSimultaneousAllocations = 32;
-  Opts.SampleRate = 2500;
-  Opts.InstallSignalHandlers = false;
-  Opts.InstallForkHandlers = true;
-  Opts.Backtrace = android_unsafe_frame_pointer_chase;
-
-  GuardedAlloc.init(Opts);
-  // TODO(b/149790891): The log line below causes ART tests to fail as they're
-  // not expecting any output. Disable the output for now.
-  // info_log("GWP-ASan has been enabled.");
-
-  __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
-  __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
-  return true;
-}
-
-void gwp_asan_finalize() {
-}
-
-void gwp_asan_get_malloc_leak_info(uint8_t**, size_t*, size_t*, size_t*, size_t*) {
-}
-
-void gwp_asan_free_malloc_leak_info(uint8_t*) {
-}
-
-ssize_t gwp_asan_malloc_backtrace(void*, uintptr_t*, size_t) {
-  // TODO(mitchp): GWP-ASan might be able to return the backtrace for the
-  // provided address.
-  return -1;
-}
-
-bool gwp_asan_write_malloc_leak_info(FILE*) {
-  return false;
-}
-
-void* gwp_asan_gfunctions[] = {
-  (void*)gwp_asan_initialize,           (void*)gwp_asan_finalize,
-  (void*)gwp_asan_get_malloc_leak_info, (void*)gwp_asan_free_malloc_leak_info,
-  (void*)gwp_asan_malloc_backtrace,     (void*)gwp_asan_write_malloc_leak_info,
-};
+namespace {
 
 // ============================================================================
 // Implementation of GWP-ASan malloc wrappers.
@@ -186,66 +147,202 @@ void gwp_asan_malloc_enable() {
   prev_dispatch->malloc_enable();
 }
 
-static const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
-  gwp_asan_calloc,
-  gwp_asan_free,
-  Malloc(mallinfo),
-  gwp_asan_malloc,
-  gwp_asan_malloc_usable_size,
-  Malloc(memalign),
-  Malloc(posix_memalign),
+const MallocDispatch gwp_asan_dispatch __attribute__((unused)) = {
+    gwp_asan_calloc,
+    gwp_asan_free,
+    Malloc(mallinfo),
+    gwp_asan_malloc,
+    gwp_asan_malloc_usable_size,
+    Malloc(memalign),
+    Malloc(posix_memalign),
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  Malloc(pvalloc),
+    Malloc(pvalloc),
 #endif
-  gwp_asan_realloc,
+    gwp_asan_realloc,
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
-  Malloc(valloc),
+    Malloc(valloc),
 #endif
-  gwp_asan_malloc_iterate,
-  gwp_asan_malloc_disable,
-  gwp_asan_malloc_enable,
-  Malloc(mallopt),
-  Malloc(aligned_alloc),
-  Malloc(malloc_info),
+    gwp_asan_malloc_iterate,
+    gwp_asan_malloc_disable,
+    gwp_asan_malloc_enable,
+    Malloc(mallopt),
+    Malloc(aligned_alloc),
+    Malloc(malloc_info),
 };
 
-// The probability (1 / kProcessSampleRate) that a process will be ranodmly
-// selected for sampling. kProcessSampleRate should always be a power of two to
-// avoid modulo bias.
-static constexpr uint8_t kProcessSampleRate = 128;
+bool isPowerOfTwo(uint64_t x) {
+  assert(x != 0);
+  return (x & (x - 1)) == 0;
+}
 
-bool ShouldGwpAsanSampleProcess() {
+bool ShouldGwpAsanSampleProcess(unsigned sample_rate) {
+  if (!isPowerOfTwo(sample_rate)) {
+    warning_log(
+        "GWP-ASan process sampling rate of %u is not a power-of-two, and so modulo bias occurs.",
+        sample_rate);
+  }
+
   uint8_t random_number;
   __libc_safe_arc4random_buf(&random_number, sizeof(random_number));
-  return random_number % kProcessSampleRate == 0;
+  return random_number % sample_rate == 0;
 }
 
-bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
-  // Never initialize the Zygote here. A Zygote chosen for sampling would also
-  // have all of its children sampled. Instead, the Zygote child will choose
-  // whether it samples or not just after the Zygote forks. For
-  // libc_scudo-preloaded executables (like mediaswcodec), the program name
-  // might not be available yet. The zygote never uses dynamic libc_scudo.
-  const char* progname = getprogname();
-  if (progname && strncmp(progname, "app_process", 11) == 0) {
+bool GwpAsanInitialized = false;
+
+// The probability (1 / SampleRate) that an allocation gets chosen to be put
+// into the special GWP-ASan pool.
+using SampleRate_t = typeof(gwp_asan::options::Options::SampleRate);
+constexpr SampleRate_t kDefaultSampleRate = 2500;
+static const char* kSampleRateSystemSysprop = "libc.debug.gwp_asan.sample_rate.system_default";
+static const char* kSampleRateAppSysprop = "libc.debug.gwp_asan.sample_rate.app_default";
+static const char* kSampleRateTargetedSyspropPrefix = "libc.debug.gwp_asan.sample_rate.";
+static const char* kSampleRateEnvVar = "GWP_ASAN_SAMPLE_RATE";
+
+// The probability (1 / ProcessSampling) that a process will be randomly
+// selected for sampling, for system apps and system processes. The process
+// sampling rate should always be a power of two to avoid modulo bias.
+constexpr unsigned kDefaultProcessSampling = 128;
+static const char* kProcessSamplingSystemSysprop =
+    "libc.debug.gwp_asan.process_sampling.system_default";
+static const char* kProcessSamplingAppSysprop = "libc.debug.gwp_asan.process_sampling.app_default";
+static const char* kProcessSamplingTargetedSyspropPrefix = "libc.debug.gwp_asan.process_sampling.";
+static const char* kProcessSamplingEnvVar = "GWP_ASAN_PROCESS_SAMPLING";
+
+// The upper limit of simultaneous allocations supported by GWP-ASan. Any
+// allocations in excess of this limit will be passed to the backing allocator
+// and can't be sampled. This value, if unspecified, will be automatically
+// calculated to keep the same ratio as the default (2500 sampling : 32 allocs).
+// So, if you specify GWP_ASAN_SAMPLE_RATE=1250 (i.e. twice as frequent), we'll
+// automatically calculate that we need double the slots (64).
+using SimultaneousAllocations_t = typeof(gwp_asan::options::Options::MaxSimultaneousAllocations);
+constexpr SimultaneousAllocations_t kDefaultMaxAllocs = 32;
+static const char* kMaxAllocsSystemSysprop = "libc.debug.gwp_asan.max_allocs.system_default";
+static const char* kMaxAllocsAppSysprop = "libc.debug.gwp_asan.max_allocs.app_default";
+static const char* kMaxAllocsTargetedSyspropPrefix = "libc.debug.gwp_asan.max_allocs.";
+static const char* kMaxAllocsEnvVar = "GWP_ASAN_MAX_ALLOCS";
+
+void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
+                              const android_mallopt_gwp_asan_options_t& mallopt_options) {
+  options->Enabled = true;
+  options->InstallSignalHandlers = false;
+  options->InstallForkHandlers = true;
+  options->Backtrace = android_unsafe_frame_pointer_chase;
+  options->SampleRate = kDefaultSampleRate;
+  options->MaxSimultaneousAllocations = kDefaultMaxAllocs;
+
+  *process_sample_rate = 1;
+  if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING) {
+    *process_sample_rate = kDefaultProcessSampling;
+  }
+}
+
+bool GetGwpAsanOption(unsigned long long* result,
+                      const android_mallopt_gwp_asan_options_t& mallopt_options,
+                      const char* system_sysprop, const char* app_sysprop,
+                      const char* targeted_sysprop_prefix, const char* env_var,
+                      const char* descriptive_name) {
+  const char* basename = "";
+  if (mallopt_options.program_name) basename = __gnu_basename(mallopt_options.program_name);
+
+  size_t program_specific_sysprop_size = strlen(targeted_sysprop_prefix) + strlen(basename) + 1;
+  char* program_specific_sysprop_name = static_cast<char*>(alloca(program_specific_sysprop_size));
+  async_safe_format_buffer(program_specific_sysprop_name, program_specific_sysprop_size, "%s%s",
+                           targeted_sysprop_prefix, basename);
+
+  const char* sysprop_names[2] = {nullptr, nullptr};
+  // Tests use a blank program name to specify that system properties should not
+  // be used. Tests still continue to use the environment variable though.
+  if (*basename != '\0') {
+    sysprop_names[0] = program_specific_sysprop_name;
+    if (mallopt_options.desire == Action::TURN_ON_FOR_APP) {
+      sysprop_names[1] = app_sysprop;
+    } else {
+      sysprop_names[1] = system_sysprop;
+    }
+  }
+
+  char settings_buf[PROP_VALUE_MAX];
+  if (!get_config_from_env_or_sysprops(env_var, sysprop_names,
+                                       /* sys_prop_names_size */ 2, settings_buf, PROP_VALUE_MAX)) {
     return false;
   }
-  return MaybeInitGwpAsan(globals);
+
+  char* end;
+  unsigned long long value = strtoull(settings_buf, &end, 10);
+  if (value == ULLONG_MAX || *end != '\0') {
+    warning_log("Invalid GWP-ASan %s: \"%s\". Using default value instead.", descriptive_name,
+                settings_buf);
+    return false;
+  }
+
+  *result = value;
+  return true;
 }
 
-static bool GwpAsanInitialized = false;
+// Initialize the GWP-ASan options structure in *options, taking into account whether someone has
+// asked for specific GWP-ASan settings. The order of priority is:
+//  1. Environment variables.
+//  2. Process-specific system properties.
+//  3. Global system properties.
+// If any of these overrides are found, we return true. Otherwise, use the default values, and
+// return false.
+bool GetGwpAsanOptions(Options* options, unsigned* process_sample_rate,
+                       const android_mallopt_gwp_asan_options_t& mallopt_options) {
+  SetDefaultGwpAsanOptions(options, process_sample_rate, mallopt_options);
 
-// Maybe initializes GWP-ASan. Called by android_mallopt() and libc's
-// initialisation. This should always be called in a single-threaded context.
-bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
+  bool had_overrides = false;
+
+  unsigned long long buf;
+  if (GetGwpAsanOption(&buf, mallopt_options, kSampleRateSystemSysprop, kSampleRateAppSysprop,
+                       kSampleRateTargetedSyspropPrefix, kSampleRateEnvVar, "sample rate")) {
+    options->SampleRate = buf;
+    had_overrides = true;
+  }
+
+  if (GetGwpAsanOption(&buf, mallopt_options, kProcessSamplingSystemSysprop,
+                       kProcessSamplingAppSysprop, kProcessSamplingTargetedSyspropPrefix,
+                       kProcessSamplingEnvVar, "process sampling rate")) {
+    *process_sample_rate = buf;
+    had_overrides = true;
+  }
+
+  if (GetGwpAsanOption(&buf, mallopt_options, kMaxAllocsSystemSysprop, kMaxAllocsAppSysprop,
+                       kMaxAllocsTargetedSyspropPrefix, kMaxAllocsEnvVar,
+                       "maximum simultaneous allocations")) {
+    options->MaxSimultaneousAllocations = buf;
+    had_overrides = true;
+  } else if (had_overrides) {
+    // Multiply the number of slots available, such that the ratio between
+    // sampling rate and slots is kept the same as the default. For example, a
+    // sampling rate of 1000 is 2.5x more frequent than default, and so
+    // requires 80 slots (32 * 2.5).
+    float frequency_multiplier = static_cast<float>(options->SampleRate) / kDefaultSampleRate;
+    options->MaxSimultaneousAllocations =
+        /* default */ kDefaultMaxAllocs / frequency_multiplier;
+  }
+  return had_overrides;
+}
+
+bool MaybeInitGwpAsan(libc_globals* globals,
+                      const android_mallopt_gwp_asan_options_t& mallopt_options) {
   if (GwpAsanInitialized) {
     error_log("GWP-ASan was already initialized for this process.");
     return false;
   }
 
-  // If the caller hasn't forced GWP-ASan on, check whether we should sample
-  // this process.
-  if (!force_init && !ShouldGwpAsanSampleProcess()) {
+  Options options;
+  unsigned process_sample_rate = kDefaultProcessSampling;
+  if (!GetGwpAsanOptions(&options, &process_sample_rate, mallopt_options) &&
+      mallopt_options.desire == Action::DONT_TURN_ON_UNLESS_OVERRIDDEN) {
+    return false;
+  }
+
+  if (options.SampleRate == 0 || process_sample_rate == 0 ||
+      options.MaxSimultaneousAllocations == 0) {
+    return false;
+  }
+
+  if (!ShouldGwpAsanSampleProcess(process_sample_rate)) {
     return false;
   }
 
@@ -274,28 +371,48 @@ bool MaybeInitGwpAsan(libc_globals* globals, bool force_init) {
     atomic_store(&globals->current_dispatch_table, &gwp_asan_dispatch);
   }
 
-#ifndef LIBC_STATIC
-  SetGlobalFunctions(gwp_asan_gfunctions);
-#endif  // LIBC_STATIC
-
   GwpAsanInitialized = true;
 
-  gwp_asan_initialize(NativeAllocatorDispatch(), nullptr, nullptr);
+  prev_dispatch = NativeAllocatorDispatch();
+
+  GuardedAlloc.init(options);
+
+  __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
+  __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
 
   return true;
+}
+};  // anonymous namespace
+
+bool MaybeInitGwpAsanFromLibc(libc_globals* globals) {
+  // Never initialize the Zygote here. A Zygote chosen for sampling would also
+  // have all of its children sampled. Instead, the Zygote child will choose
+  // whether it samples or not just after the Zygote forks. Note that the Zygote
+  // changes its name after it's started, at this point it's still called
+  // "app_process" or "app_process64".
+  static const char kAppProcessNamePrefix[] = "app_process";
+  const char* progname = getprogname();
+  if (strncmp(progname, kAppProcessNamePrefix, sizeof(kAppProcessNamePrefix) - 1) == 0)
+    return false;
+
+  android_mallopt_gwp_asan_options_t mallopt_options;
+  mallopt_options.program_name = progname;
+  mallopt_options.desire = Action::TURN_ON_WITH_SAMPLING;
+
+  return MaybeInitGwpAsan(globals, mallopt_options);
 }
 
 bool DispatchIsGwpAsan(const MallocDispatch* dispatch) {
   return dispatch == &gwp_asan_dispatch;
 }
 
-bool EnableGwpAsan(bool force_init) {
+bool EnableGwpAsan(const android_mallopt_gwp_asan_options_t& options) {
   if (GwpAsanInitialized) {
     return true;
   }
 
   bool ret_value;
   __libc_globals.mutate(
-      [&](libc_globals* globals) { ret_value = MaybeInitGwpAsan(globals, force_init); });
+      [&](libc_globals* globals) { ret_value = MaybeInitGwpAsan(globals, options); });
   return ret_value;
 }
