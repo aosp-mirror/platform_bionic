@@ -92,11 +92,6 @@ static bool set_tcf_on_all_threads(int tcf) {
 pthread_mutex_t g_heap_tagging_lock = PTHREAD_MUTEX_INITIALIZER;
 
 // Requires `g_heap_tagging_lock` to be held.
-HeapTaggingLevel GetHeapTaggingLevel() {
-  return heap_tagging_level;
-}
-
-// Requires `g_heap_tagging_lock` to be held.
 bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   if (tag_level == heap_tagging_level) {
     return true;
