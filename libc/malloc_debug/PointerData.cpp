@@ -149,14 +149,14 @@ size_t PointerData::AddBacktrace(size_t num_frames) {
     if (num_frames == 0) {
       return kBacktraceEmptyIndex;
     }
+    frames.resize(num_frames);
   }
 
-  FrameKeyType key{.num_frames = num_frames, .frames = frames.data()};
+  FrameKeyType key{.num_frames = frames.size(), .frames = frames.data()};
   size_t hash_index;
   std::lock_guard<std::mutex> frame_guard(frame_mutex_);
   auto entry = key_to_index_.find(key);
   if (entry == key_to_index_.end()) {
-    frames.resize(num_frames);
     hash_index = cur_hash_index_++;
     key.frames = frames.data();
     key_to_index_.emplace(key, hash_index);
