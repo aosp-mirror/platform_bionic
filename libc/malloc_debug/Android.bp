@@ -181,7 +181,6 @@ cc_test {
 
     shared_libs: [
         "libbase",
-        "libbacktrace",
         "liblog",
         "libunwindstack",
     ],
