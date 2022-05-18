@@ -83,6 +83,14 @@ void debug_dump_heap(const char*);
 
 __END_DECLS
 
+// Change the slow threshold since some tests take more than 2 seconds.
+extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
+  static const char* initial_args[] = {"--slow_threshold_ms=5000"};
+  *args = initial_args;
+  *num_args = 1;
+  return true;
+}
+
 constexpr char DIVIDER[] =
     "6 malloc_debug *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n";
 
@@ -90,7 +98,7 @@ static size_t get_tag_offset() {
   return __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 }
 
-static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
+static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs";
 
 static constexpr const char BACKTRACE_DUMP_PREFIX[] = "/data/local/tmp/backtrace_heap";
 
@@ -100,8 +108,10 @@ class MallocDebugTest : public ::testing::Test {
     initialized = false;
     resetLogs();
     backtrace_fake_clear_all();
-    // Delete the record data file if it exists.
-    unlink(RECORD_ALLOCS_FILE);
+    if (!record_filename.empty()) {
+      // Delete the record data file if it exists.
+      unlink(record_filename.c_str());
+    }
   }
 
   void TearDown() override {
@@ -116,6 +126,13 @@ class MallocDebugTest : public ::testing::Test {
     initialized = true;
   }
 
+  void InitRecordAllocs(const char* options) {
+    record_filename = android::base::StringPrintf("%s.%d.txt", RECORD_ALLOCS_FILE, getpid());
+    std::string init(options);
+    init += android::base::StringPrintf(" record_allocs_file=%s", record_filename.c_str());
+    Init(init.c_str());
+  }
+
   void BacktraceDumpOnSignal(bool trigger_with_alloc);
 
   static size_t GetInfoEntrySize(size_t max_frames) {
@@ -125,6 +142,8 @@ class MallocDebugTest : public ::testing::Test {
   bool initialized;
 
   bool zygote_child;
+
+  std::string record_filename;
 
   static MallocDispatch dispatch;
 };
@@ -2148,7 +2167,7 @@ TEST_F(MallocDebugTest, debug_valloc) {
 }
 #endif
 
-void VerifyRecordAllocs() {
+void VerifyRecordAllocs(const std::string& record_filename) {
   std::string expected;
 
   void* pointer = debug_malloc(10);
@@ -2217,8 +2236,7 @@ void VerifyRecordAllocs() {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2229,19 +2247,19 @@ void VerifyRecordAllocs() {
 }
 
 TEST_F(MallocDebugTest, record_allocs_no_header) {
-  Init("record_allocs");
+  InitRecordAllocs("record_allocs");
 
-  VerifyRecordAllocs();
+  VerifyRecordAllocs(record_filename);
 }
 
 TEST_F(MallocDebugTest, record_allocs_with_header) {
-  Init("record_allocs front_guard");
+  InitRecordAllocs("record_allocs front_guard");
 
-  VerifyRecordAllocs();
+  VerifyRecordAllocs(record_filename);
 }
 
 TEST_F(MallocDebugTest, record_allocs_max) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   std::string expected;
 
@@ -2272,8 +2290,7 @@ TEST_F(MallocDebugTest, record_allocs_max) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2284,7 +2301,7 @@ TEST_F(MallocDebugTest, record_allocs_max) {
 }
 
 TEST_F(MallocDebugTest, record_allocs_thread_done) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   static pid_t tid = 0;
   static void* pointer = nullptr;
@@ -2311,8 +2328,7 @@ TEST_F(MallocDebugTest, record_allocs_thread_done) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2323,13 +2339,13 @@ TEST_F(MallocDebugTest, record_allocs_thread_done) {
 }
 
 TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   // Delete the special.txt file and create a symbolic link there to
   // make sure the create file will fail.
-  unlink(RECORD_ALLOCS_FILE);
+  unlink(record_filename.c_str());
 
-  ASSERT_EQ(0, symlink("/data/local/tmp/does_not_exist", RECORD_ALLOCS_FILE));
+  ASSERT_EQ(0, symlink("/data/local/tmp/does_not_exist", record_filename.c_str()));
 
   std::string expected;
 
@@ -2350,10 +2366,10 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_FALSE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
+  ASSERT_FALSE(android::base::ReadFileToString(record_filename, &actual));
 
   // Unlink the file so the next dump passes.
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_EQ(0, unlink(record_filename.c_str()));
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
@@ -2363,14 +2379,13 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
   debug_free(pointer);
   expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
       "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered\n",
-      RECORD_ALLOCS_FILE);
+      record_filename.c_str());
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
