@@ -19,24 +19,40 @@
 #include <mntent.h>
 
 TEST(mntent, mntent_smoke) {
+  // Read all the entries with getmntent().
   FILE* fp = setmntent("/proc/mounts", "r");
   ASSERT_TRUE(fp != nullptr);
 
-  ASSERT_TRUE(getmntent(fp) != nullptr);
+  std::vector<std::string> fsnames;
+  std::vector<std::string> dirs;
+  mntent* me;
+  while ((me = getmntent(fp)) != nullptr) {
+    fsnames.push_back(me->mnt_fsname);
+    dirs.push_back(me->mnt_dir);
+  }
 
-  bool saw_proc = false;
+  ASSERT_EQ(1, endmntent(fp));
+
+  // Then again with getmntent_r(), checking they match.
+  fp = setmntent("/proc/mounts", "r");
+  ASSERT_TRUE(fp != nullptr);
 
   struct mntent entry;
   char buf[BUFSIZ];
+  size_t i = 0;
   while (getmntent_r(fp, &entry, buf, sizeof(buf)) != nullptr) {
-    if (strcmp(entry.mnt_fsname, "proc") == 0 && strcmp(entry.mnt_dir, "/proc") == 0) {
-      saw_proc = true;
-    }
+    ASSERT_EQ(fsnames[i], entry.mnt_fsname);
+    ASSERT_EQ(dirs[i], entry.mnt_dir);
+    i++;
   }
 
-  ASSERT_TRUE(saw_proc);
-
   ASSERT_EQ(1, endmntent(fp));
+
+  // And just for good measure: we did see a /proc entry, right?
+  auto it = std::find(fsnames.begin(), fsnames.end(), "proc");
+  ASSERT_TRUE(it != fsnames.end());
+  size_t proc_index = it - fsnames.begin();
+  ASSERT_EQ("/proc", dirs[proc_index]);
 }
 
 TEST(mntent, hasmntopt) {
