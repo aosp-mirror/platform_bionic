@@ -47,6 +47,7 @@ constexpr uint64_t BACKTRACE_FULL = 0x400;
 constexpr uint64_t ABORT_ON_ERROR = 0x800;
 constexpr uint64_t VERBOSE = 0x1000;
 constexpr uint64_t CHECK_UNREACHABLE_ON_SIGNAL = 0x2000;
+constexpr uint64_t BACKTRACE_SPECIFIC_SIZES = 0x4000;
 
 // In order to guarantee posix compliance, set the minimum alignment
 // to 8 bytes for 32 bit systems and 16 bytes for 64 bit systems.
@@ -90,6 +91,9 @@ class Config {
   uint8_t fill_alloc_value() const { return fill_alloc_value_; }
   uint8_t fill_free_value() const { return fill_free_value_; }
 
+  size_t backtrace_min_size_bytes() const { return backtrace_min_size_bytes_; }
+  size_t backtrace_max_size_bytes() const { return backtrace_max_size_bytes_; }
+
   int record_allocs_signal() const { return record_allocs_signal_; }
   size_t record_allocs_num_entries() const { return record_allocs_num_entries_; }
   const std::string& record_allocs_file() const { return record_allocs_file_; }
@@ -121,6 +125,10 @@ class Config {
   bool SetBacktraceDumpOnExit(const std::string& option, const std::string& value);
   bool SetBacktraceDumpPrefix(const std::string& option, const std::string& value);
 
+  bool SetBacktraceSize(const std::string& option, const std::string& value);
+  bool SetBacktraceMinSize(const std::string& option, const std::string& value);
+  bool SetBacktraceMaxSize(const std::string& option, const std::string& value);
+
   bool SetExpandAlloc(const std::string& option, const std::string& value);
 
   bool SetFreeTrack(const std::string& option, const std::string& value);
@@ -145,6 +153,8 @@ class Config {
   size_t backtrace_frames_ = 0;
   bool backtrace_dump_on_exit_ = false;
   std::string backtrace_dump_prefix_;
+  size_t backtrace_min_size_bytes_ = 0;
+  size_t backtrace_max_size_bytes_ = 0;
 
   size_t fill_on_alloc_bytes_ = 0;
   size_t fill_on_free_bytes_ = 0;
