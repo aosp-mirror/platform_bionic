@@ -39,37 +39,20 @@ extern "C" void*  __mmap2(void*, size_t, int, int, int, size_t);
 
 #define MMAP2_SHIFT 12 // 2**12 == 4096
 
-static bool kernel_has_MADV_MERGEABLE = true;
-
 void* mmap64(void* addr, size_t size, int prot, int flags, int fd, off64_t offset) {
   if (offset < 0 || (offset & ((1UL << MMAP2_SHIFT)-1)) != 0) {
     errno = EINVAL;
     return MAP_FAILED;
   }
 
-  // prevent allocations large enough for `end - start` to overflow
+  // Prevent allocations large enough for `end - start` to overflow.
   size_t rounded = __BIONIC_ALIGN(size, PAGE_SIZE);
   if (rounded < size || rounded > PTRDIFF_MAX) {
     errno = ENOMEM;
     return MAP_FAILED;
   }
 
-  bool is_private_anonymous =
-      (flags & (MAP_PRIVATE | MAP_ANONYMOUS)) == (MAP_PRIVATE | MAP_ANONYMOUS);
-  bool is_stack_or_grows_down = (flags & (MAP_STACK | MAP_GROWSDOWN)) != 0;
-
-  void* result = __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
-
-  if (result != MAP_FAILED && kernel_has_MADV_MERGEABLE &&
-      is_private_anonymous && !is_stack_or_grows_down) {
-    ErrnoRestorer errno_restorer;
-    int rc = madvise(result, size, MADV_MERGEABLE);
-    if (rc == -1 && errno == EINVAL) {
-      kernel_has_MADV_MERGEABLE = false;
-    }
-  }
-
-  return result;
+  return __mmap2(addr, size, prot, flags, fd, offset >> MMAP2_SHIFT);
 }
 
 void* mmap(void* addr, size_t size, int prot, int flags, int fd, off_t offset) {
