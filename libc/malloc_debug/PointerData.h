@@ -137,13 +137,13 @@ class PointerData : public OptionData {
 
   static void IteratePointers(std::function<void(uintptr_t pointer)> fn);
 
-  static size_t AddBacktrace(size_t num_frames);
+  static size_t AddBacktrace(size_t num_frames, size_t size_bytes);
   static void RemoveBacktrace(size_t hash_index);
 
   static void Add(const void* pointer, size_t size);
   static void Remove(const void* pointer);
 
-  static void* AddFreed(const void* pointer);
+  static void* AddFreed(const void* pointer, size_t size_bytes);
   static void LogFreeError(const FreePointerInfoType& info, size_t usable_size);
   static void LogFreeBacktrace(const void* ptr);
   static void VerifyFreedPointer(const FreePointerInfoType& info);
