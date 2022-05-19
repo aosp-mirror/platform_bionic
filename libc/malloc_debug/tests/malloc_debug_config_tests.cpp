@@ -779,3 +779,69 @@ TEST_F(MallocDebugConfigTest, trigger_check_unreachable_on_signal_fail) {
       "which does not take a value\n");
   ASSERT_STREQ((log_msg + usage_string).c_str(), getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugConfigTest, size) {
+  ASSERT_TRUE(InitConfig("backtrace_size=37")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(37U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(37U, config->backtrace_max_size_bytes());
+
+  ASSERT_FALSE(InitConfig("backtrace_size")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_size=0")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_size=-1")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg("6 malloc_debug malloc_testing: bad value for option 'backtrace_size'\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_size', value "
+                      "must be >= 1: 0\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_size', value "
+                      "cannot be negative: -1\n" +
+                      usage_string);
+  ASSERT_STREQ(log_msg.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, min_size) {
+  ASSERT_TRUE(InitConfig("backtrace_min_size=9")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(9U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(SIZE_MAX, config->backtrace_max_size_bytes());
+
+  ASSERT_FALSE(InitConfig("backtrace_min_size")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_min_size=0")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_min_size=-1")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg("6 malloc_debug malloc_testing: bad value for option 'backtrace_min_size'\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_min_size', "
+                      "value must be >= 1: 0\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_min_size', "
+                      "value cannot be negative: -1\n" +
+                      usage_string);
+  ASSERT_STREQ(log_msg.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugConfigTest, max_size) {
+  ASSERT_TRUE(InitConfig("backtrace_max_size=13")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(0U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(13U, config->backtrace_max_size_bytes());
+
+  ASSERT_FALSE(InitConfig("backtrace_max_size")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_max_size=0")) << getFakeLogPrint();
+  ASSERT_FALSE(InitConfig("backtrace_max_size=-1")) << getFakeLogPrint();
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string log_msg("6 malloc_debug malloc_testing: bad value for option 'backtrace_max_size'\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_max_size', "
+                      "value must be >= 1: 0\n" +
+                      usage_string +
+                      "6 malloc_debug malloc_testing: bad value for option 'backtrace_max_size', "
+                      "value cannot be negative: -1\n" +
+                      usage_string);
+  ASSERT_STREQ(log_msg.c_str(), getFakeLogPrint().c_str());
+}
