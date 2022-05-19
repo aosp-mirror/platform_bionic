@@ -136,7 +136,22 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
   return true;
 }
 
-size_t PointerData::AddBacktrace(size_t num_frames) {
+static inline bool ShouldBacktraceAllocSize(size_t size_bytes) {
+  static bool only_backtrace_specific_sizes =
+      g_debug->config().options() & BACKTRACE_SPECIFIC_SIZES;
+  if (!only_backtrace_specific_sizes) {
+    return true;
+  }
+  static size_t min_size_bytes = g_debug->config().backtrace_min_size_bytes();
+  static size_t max_size_bytes = g_debug->config().backtrace_max_size_bytes();
+  return size_bytes >= min_size_bytes && size_bytes <= max_size_bytes;
+}
+
+size_t PointerData::AddBacktrace(size_t num_frames, size_t size_bytes) {
+  if (!ShouldBacktraceAllocSize(size_bytes)) {
+    return kBacktraceEmptyIndex;
+  }
+
   std::vector<uintptr_t> frames;
   std::vector<unwindstack::FrameData> frames_info;
   if (g_debug->config().options() & BACKTRACE_FULL) {
@@ -198,7 +213,7 @@ void PointerData::RemoveBacktrace(size_t hash_index) {
 void PointerData::Add(const void* ptr, size_t pointer_size) {
   size_t hash_index = 0;
   if (backtrace_enabled_) {
-    hash_index = AddBacktrace(g_debug->config().backtrace_frames());
+    hash_index = AddBacktrace(g_debug->config().backtrace_frames(), pointer_size);
   }
 
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
@@ -336,11 +351,11 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
   }
 }
 
-void* PointerData::AddFreed(const void* ptr) {
+void* PointerData::AddFreed(const void* ptr, size_t size_bytes) {
   size_t hash_index = 0;
   size_t num_frames = g_debug->config().free_track_backtrace_num_frames();
   if (num_frames) {
-    hash_index = AddBacktrace(num_frames);
+    hash_index = AddBacktrace(num_frames, size_bytes);
   }
 
   void* last = nullptr;

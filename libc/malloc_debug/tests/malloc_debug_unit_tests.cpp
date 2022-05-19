@@ -2754,3 +2754,178 @@ TEST_F(MallocDebugTest, check_unreachable_on_signal) {
       "6 malloc_debug Unreachable check failed, run setenforce 0 and try again.\n",
       getFakeLogPrint().c_str());
 }
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_size) {
+  Init("leak_track backtrace backtrace_size=120");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(119);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(120);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(121);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 121 at %p (leak 1 of 3)\n", pointer3);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 120 at %p (leak 2 of 3)\n", pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 119 at %p (leak 3 of 3)\n", pointer1);
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_min_size) {
+  Init("leak_track backtrace backtrace_min_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(500);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(1000);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(1001);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 1 of 3)\n",
+      pointer3);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xa000\n";
+  expected_log += "6 malloc_debug   #01 pc 0xb000\n";
+  expected_log += "6 malloc_debug   #02 pc 0xc000\n";
+  expected_log += "6 malloc_debug   #03 pc 0xd000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 2 of 3)\n",
+      pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 500 at %p (leak 3 of 3)\n", pointer1);
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_max_size) {
+  Init("leak_track backtrace backtrace_max_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(1000);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(1001);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(5000);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 5000 at %p (leak 1 of 3)\n",
+      pointer3);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 2 of 3)\n",
+      pointer2);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 3 of 3)\n",
+      pointer1);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_min_max_size) {
+  Init("leak_track backtrace backtrace_min_size=50 backtrace_max_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(49);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(50);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(1000);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1a000, 0x1b000, 0x1c000, 0x1d000, 0x1e000});
+
+  void* pointer4 = debug_malloc(1001);
+  ASSERT_TRUE(pointer4 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 1 of 4)\n",
+      pointer4);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 2 of 4)\n",
+      pointer3);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xa000\n";
+  expected_log += "6 malloc_debug   #01 pc 0xb000\n";
+  expected_log += "6 malloc_debug   #02 pc 0xc000\n";
+  expected_log += "6 malloc_debug   #03 pc 0xd000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 50 at %p (leak 3 of 4)\n", pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 49 at %p (leak 4 of 4)\n", pointer1);
+
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}

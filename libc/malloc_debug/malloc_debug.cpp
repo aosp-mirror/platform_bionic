@@ -522,8 +522,8 @@ static void InternalFree(void* pointer) {
 
   if (g_debug->config().options() & FILL_ON_FREE) {
     size_t fill_bytes = g_debug->config().fill_on_free_bytes();
-    bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
-    memset(pointer, g_debug->config().fill_free_value(), bytes);
+    fill_bytes = (bytes < fill_bytes) ? bytes : fill_bytes;
+    memset(pointer, g_debug->config().fill_free_value(), fill_bytes);
   }
 
   if (g_debug->TrackPointers()) {
@@ -536,7 +536,7 @@ static void InternalFree(void* pointer) {
     // frees at the same time and we wind up trying to really free this
     // pointer from another thread, while still trying to free it in
     // this function.
-    pointer = PointerData::AddFreed(pointer);
+    pointer = PointerData::AddFreed(pointer, bytes);
     if (pointer != nullptr) {
       if (g_debug->HeaderEnabled()) {
         pointer = g_debug->GetHeader(pointer)->orig_pointer;

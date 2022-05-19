@@ -160,6 +160,41 @@ When this value is changed from the default, then the filename chosen
 on the signal will be backtrace\_dump\_prefix.**PID**.txt. The filename chosen
 when the program exits will be backtrace\_dump\_prefix.**PID**.exit.txt.
 
+### backtrace\_min\_size=ALLOCATION\_SIZE\_BYTES
+As of U, setting this in combination with the backtrace option means
+that only allocations of a size greater than or equal to
+**ALLOCATION\_SIZE\_BYTES** will be backtraced. When used in combination
+with the backtrace\_max\_size option, then allocations greater than or
+equal to backtrace\_min\_size and less than or equal to
+backtrace\_max\_size will be backtraced. The backtrace\_size option
+overrides this option, and should not be used at the same time.
+
+This option can also be used in combination with other tools such
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+to only get backtraces for sizes of allocations listed as being leaked.
+
+### backtrace\_max\_size=ALLOCATION\_SIZE\_BYTES
+As of U, setting this in combination with the backtrace option means
+that only allocations of a size less than or equal to
+**ALLOCATION\_SIZE\_BYTES** will be backtraced. When used in combination
+with the backtrace\_min\_size option, then allocations greater than or
+equal to backtrace\_min\_size and less than or equal to
+backtrace\_max\_size will be backtraced. The backtrace\_size option
+overrides this option, and should not be used at the same time.
+
+This option can also be used in combination with other tools such
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+to only get backtraces for sizes of allocations listed as being leaked.
+
+### backtrace\_size=ALLOCATION\_SIZE\_BYTES
+As of U, setting this in combination with the backtrace option means
+that only allocations of size **ALLOCATION\_SIZE\_BYTES** will be backtraced.
+This option overrides the backtrace\_min\_size and the backtrace\_max\_size.
+
+This option can also be used in combination with other tools such
+as [libmemunreachable](https://android.googlesource.com/platform/system/memory/libmemunreachable/+/master/README.md)
+to only get backtraces for sizes of allocations listed as being leaked.
+
 ### backtrace\_full
 As of Q, any time that a backtrace is gathered, a different algorithm is used
 that is extra thorough and can unwind through Java frames. This will run
