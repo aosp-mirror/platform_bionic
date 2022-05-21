@@ -46,6 +46,8 @@ __BEGIN_DECLS
 #define POSIX_SPAWN_USEVFORK 64
 #define POSIX_SPAWN_SETSID 128
 #endif
+// mark all fds (except stdin/out/err) as close-on-exec prior to executing registered file actions
+#define POSIX_SPAWN_CLOEXEC_DEFAULT 256
 
 typedef struct __posix_spawnattr* posix_spawnattr_t;
 typedef struct __posix_spawn_file_actions* posix_spawn_file_actions_t;
