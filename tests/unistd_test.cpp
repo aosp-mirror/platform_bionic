@@ -1652,6 +1652,8 @@ TEST(UNISTD_TEST, sleep) {
 TEST(UNISTD_TEST, close_range) {
 #if defined(__GLIBC__)
   GTEST_SKIP() << "glibc too old";
+#elif defined(ANDROID_HOST_MUSL)
+  GTEST_SKIP() << "musl does not have close_range";
 #else   // __GLIBC__
   int fd = open("/proc/version", O_RDONLY);
   ASSERT_GE(fd, 0);
