@@ -112,6 +112,8 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_OP_FREE_CTX 2
 #define AMDGPU_CTX_OP_QUERY_STATE 3
 #define AMDGPU_CTX_OP_QUERY_STATE2 4
+#define AMDGPU_CTX_OP_GET_STABLE_PSTATE 5
+#define AMDGPU_CTX_OP_SET_STABLE_PSTATE 6
 #define AMDGPU_CTX_NO_RESET 0
 #define AMDGPU_CTX_GUILTY_RESET 1
 #define AMDGPU_CTX_INNOCENT_RESET 2
@@ -127,6 +129,12 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_PRIORITY_NORMAL 0
 #define AMDGPU_CTX_PRIORITY_HIGH 512
 #define AMDGPU_CTX_PRIORITY_VERY_HIGH 1023
+#define AMDGPU_CTX_STABLE_PSTATE_FLAGS_MASK 0xf
+#define AMDGPU_CTX_STABLE_PSTATE_NONE 0
+#define AMDGPU_CTX_STABLE_PSTATE_STANDARD 1
+#define AMDGPU_CTX_STABLE_PSTATE_MIN_SCLK 2
+#define AMDGPU_CTX_STABLE_PSTATE_MIN_MCLK 3
+#define AMDGPU_CTX_STABLE_PSTATE_PEAK 4
 struct drm_amdgpu_ctx_in {
   __u32 op;
   __u32 flags;
@@ -143,6 +151,10 @@ union drm_amdgpu_ctx_out {
     __u32 hangs;
     __u32 reset_status;
   } state;
+  struct {
+    __u32 flags;
+    __u32 _pad;
+  } pstate;
 };
 union drm_amdgpu_ctx {
   struct drm_amdgpu_ctx_in in;
@@ -438,6 +450,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_TA 0x13
 #define AMDGPU_INFO_FW_DMCUB 0x14
 #define AMDGPU_INFO_FW_TOC 0x15
+#define AMDGPU_INFO_FW_CAP 0x16
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -682,6 +695,8 @@ struct drm_amdgpu_info_video_caps {
 #define AMDGPU_FAMILY_NV 143
 #define AMDGPU_FAMILY_VGH 144
 #define AMDGPU_FAMILY_YC 146
+#define AMDGPU_FAMILY_GC_10_3_6 149
+#define AMDGPU_FAMILY_GC_10_3_7 151
 #ifdef __cplusplus
 }
 #endif
