@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 6
+#define KFD_IOCTL_MINOR_VERSION 8
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -132,6 +132,7 @@ struct kfd_ioctl_dbg_wave_control_args {
   __u32 gpu_id;
   __u32 buf_size_in_bytes;
 };
+#define KFD_INVALID_FD 0xffffffff
 #define KFD_IOC_EVENT_SIGNAL 0
 #define KFD_IOC_EVENT_NODECHANGE 1
 #define KFD_IOC_EVENT_DEVICESTATECHANGE 2
@@ -296,9 +297,44 @@ enum kfd_smi_event {
   KFD_SMI_EVENT_GPU_POST_RESET = 4,
 };
 #define KFD_SMI_EVENT_MASK_FROM_INDEX(i) (1ULL << ((i) - 1))
+#define KFD_SMI_EVENT_MSG_SIZE 96
 struct kfd_ioctl_smi_events_args {
   __u32 gpuid;
   __u32 anon_fd;
+};
+enum kfd_criu_op {
+  KFD_CRIU_OP_PROCESS_INFO,
+  KFD_CRIU_OP_CHECKPOINT,
+  KFD_CRIU_OP_UNPAUSE,
+  KFD_CRIU_OP_RESTORE,
+  KFD_CRIU_OP_RESUME,
+};
+struct kfd_ioctl_criu_args {
+  __u64 devices;
+  __u64 bos;
+  __u64 priv_data;
+  __u64 priv_data_size;
+  __u32 num_devices;
+  __u32 num_bos;
+  __u32 num_objects;
+  __u32 pid;
+  __u32 op;
+};
+struct kfd_criu_device_bucket {
+  __u32 user_gpu_id;
+  __u32 actual_gpu_id;
+  __u32 drm_fd;
+  __u32 pad;
+};
+struct kfd_criu_bo_bucket {
+  __u64 addr;
+  __u64 size;
+  __u64 offset;
+  __u64 restored_offset;
+  __u32 gpu_id;
+  __u32 alloc_flags;
+  __u32 dmabuf_fd;
+  __u32 pad;
 };
 enum kfd_mmio_remap {
   KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL = 0,
@@ -337,7 +373,7 @@ struct kfd_ioctl_svm_args {
   __u64 size;
   __u32 op;
   __u32 nattr;
-  struct kfd_ioctl_svm_attribute attrs[0];
+  struct kfd_ioctl_svm_attribute attrs[];
 };
 struct kfd_ioctl_set_xnack_mode_args {
   __s32 xnack_enabled;
@@ -359,10 +395,10 @@ struct kfd_ioctl_set_xnack_mode_args {
 #define AMDKFD_IOC_SET_EVENT AMDKFD_IOW(0x0A, struct kfd_ioctl_set_event_args)
 #define AMDKFD_IOC_RESET_EVENT AMDKFD_IOW(0x0B, struct kfd_ioctl_reset_event_args)
 #define AMDKFD_IOC_WAIT_EVENTS AMDKFD_IOWR(0x0C, struct kfd_ioctl_wait_events_args)
-#define AMDKFD_IOC_DBG_REGISTER AMDKFD_IOW(0x0D, struct kfd_ioctl_dbg_register_args)
-#define AMDKFD_IOC_DBG_UNREGISTER AMDKFD_IOW(0x0E, struct kfd_ioctl_dbg_unregister_args)
-#define AMDKFD_IOC_DBG_ADDRESS_WATCH AMDKFD_IOW(0x0F, struct kfd_ioctl_dbg_address_watch_args)
-#define AMDKFD_IOC_DBG_WAVE_CONTROL AMDKFD_IOW(0x10, struct kfd_ioctl_dbg_wave_control_args)
+#define AMDKFD_IOC_DBG_REGISTER_DEPRECATED AMDKFD_IOW(0x0D, struct kfd_ioctl_dbg_register_args)
+#define AMDKFD_IOC_DBG_UNREGISTER_DEPRECATED AMDKFD_IOW(0x0E, struct kfd_ioctl_dbg_unregister_args)
+#define AMDKFD_IOC_DBG_ADDRESS_WATCH_DEPRECATED AMDKFD_IOW(0x0F, struct kfd_ioctl_dbg_address_watch_args)
+#define AMDKFD_IOC_DBG_WAVE_CONTROL_DEPRECATED AMDKFD_IOW(0x10, struct kfd_ioctl_dbg_wave_control_args)
 #define AMDKFD_IOC_SET_SCRATCH_BACKING_VA AMDKFD_IOWR(0x11, struct kfd_ioctl_set_scratch_backing_va_args)
 #define AMDKFD_IOC_GET_TILE_CONFIG AMDKFD_IOWR(0x12, struct kfd_ioctl_get_tile_config_args)
 #define AMDKFD_IOC_SET_TRAP_HANDLER AMDKFD_IOW(0x13, struct kfd_ioctl_set_trap_handler_args)
@@ -380,6 +416,7 @@ struct kfd_ioctl_set_xnack_mode_args {
 #define AMDKFD_IOC_SMI_EVENTS AMDKFD_IOWR(0x1F, struct kfd_ioctl_smi_events_args)
 #define AMDKFD_IOC_SVM AMDKFD_IOWR(0x20, struct kfd_ioctl_svm_args)
 #define AMDKFD_IOC_SET_XNACK_MODE AMDKFD_IOWR(0x21, struct kfd_ioctl_set_xnack_mode_args)
+#define AMDKFD_IOC_CRIU_OP AMDKFD_IOWR(0x22, struct kfd_ioctl_criu_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x22
+#define AMDKFD_COMMAND_END 0x23
 #endif
