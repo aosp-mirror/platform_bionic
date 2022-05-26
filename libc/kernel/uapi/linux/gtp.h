@@ -23,6 +23,7 @@ enum gtp_genl_cmds {
   GTP_CMD_NEWPDP,
   GTP_CMD_DELPDP,
   GTP_CMD_GETPDP,
+  GTP_CMD_ECHOREQ,
   GTP_CMD_MAX,
 };
 enum gtp_version {
