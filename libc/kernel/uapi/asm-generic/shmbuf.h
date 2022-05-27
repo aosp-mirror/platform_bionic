@@ -19,9 +19,11 @@
 #ifndef __ASM_GENERIC_SHMBUF_H
 #define __ASM_GENERIC_SHMBUF_H
 #include <asm/bitsperlong.h>
+#include <asm/ipcbuf.h>
+#include <asm/posix_types.h>
 struct shmid64_ds {
   struct ipc64_perm shm_perm;
-  size_t shm_segsz;
+  __kernel_size_t shm_segsz;
 #if __BITS_PER_LONG == 64
   long shm_atime;
   long shm_dtime;
