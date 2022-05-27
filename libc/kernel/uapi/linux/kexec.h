@@ -43,8 +43,8 @@
 #define KEXEC_SEGMENT_MAX 16
 struct kexec_segment {
   const void * buf;
-  __kernel_size_t bufsz;
+  size_t bufsz;
   const void * mem;
-  __kernel_size_t memsz;
+  size_t memsz;
 };
 #endif
