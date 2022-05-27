@@ -44,30 +44,37 @@ void SetDefaultHeapTaggingLevel() {
 #if !__has_feature(hwaddress_sanitizer)
   heap_tagging_level = __libc_shared_globals()->initial_heap_tagging_level;
 #endif
-  switch (heap_tagging_level) {
-    case M_HEAP_TAGGING_LEVEL_TBI:
-      __libc_globals.mutate([](libc_globals* globals) {
+
+  __libc_globals.mutate([](libc_globals* globals) {
+    switch (heap_tagging_level) {
+      case M_HEAP_TAGGING_LEVEL_TBI:
         // Arrange for us to set pointer tags to POINTER_TAG, check tags on
         // deallocation and untag when passing pointers to the allocator.
         globals->heap_pointer_tag = (reinterpret_cast<uintptr_t>(POINTER_TAG) << TAG_SHIFT) |
                                     (0xffull << CHECK_SHIFT) | (0xffull << UNTAG_SHIFT);
-      });
-#if defined(USE_SCUDO)
-      scudo_malloc_disable_memory_tagging();
-#endif  // USE_SCUDO
-      break;
-#if defined(USE_SCUDO)
-    case M_HEAP_TAGGING_LEVEL_SYNC:
-      scudo_malloc_set_track_allocation_stacks(1);
-      break;
+        break;
+      case M_HEAP_TAGGING_LEVEL_SYNC:
+      case M_HEAP_TAGGING_LEVEL_ASYNC:
+        atomic_store(&globals->memtag_stack, __libc_shared_globals()->initial_memtag_stack);
+        break;
+      default:
+        break;
+    };
+  });
 
+#if defined(USE_SCUDO)
+  switch (heap_tagging_level) {
+    case M_HEAP_TAGGING_LEVEL_TBI:
     case M_HEAP_TAGGING_LEVEL_NONE:
       scudo_malloc_disable_memory_tagging();
       break;
-#endif  // USE_SCUDO
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      scudo_malloc_set_track_allocation_stacks(1);
+      break;
     default:
       break;
   }
+#endif  // USE_SCUDO
 #endif  // aarch64
 }
 
@@ -99,16 +106,21 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
 
   switch (tag_level) {
     case M_HEAP_TAGGING_LEVEL_NONE:
-      if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
-        __libc_globals.mutate([](libc_globals* globals) {
+      __libc_globals.mutate([](libc_globals* globals) {
+        if (heap_tagging_level == M_HEAP_TAGGING_LEVEL_TBI) {
           // Preserve the untag mask (we still want to untag pointers when passing them to the
           // allocator), but clear the fixed tag and the check mask, so that pointers are no longer
           // tagged and checks no longer happen.
           globals->heap_pointer_tag = static_cast<uintptr_t>(0xffull << UNTAG_SHIFT);
-        });
-      } else if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
-        error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
-        return false;
+        }
+        atomic_store(&globals->memtag_stack, false);
+      });
+
+      if (heap_tagging_level != M_HEAP_TAGGING_LEVEL_TBI) {
+        if (!set_tcf_on_all_threads(PR_MTE_TCF_NONE)) {
+          error_log("SetHeapTaggingLevel: set_tcf_on_all_threads failed");
+          return false;
+        }
       }
 #if defined(USE_SCUDO)
       scudo_malloc_disable_memory_tagging();
