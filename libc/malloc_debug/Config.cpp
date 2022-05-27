@@ -83,6 +83,19 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
     },
 
     {
+        "backtrace_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
+    },
+    {
+        "backtrace_min_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
+    },
+    {
+        "backtrace_max_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
+    },
+
+    {
         "backtrace",
         {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
     },
@@ -297,6 +310,23 @@ bool Config::SetBacktraceDumpPrefix(const std::string&, const std::string& value
   return true;
 }
 
+bool Config::SetBacktraceSize(const std::string& option, const std::string& value) {
+  if (!ParseValue(option, value, 1, SIZE_MAX, &backtrace_min_size_bytes_)) {
+    return false;
+  }
+  backtrace_max_size_bytes_ = backtrace_min_size_bytes_;
+
+  return true;
+}
+
+bool Config::SetBacktraceMinSize(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, 1, SIZE_MAX, &backtrace_min_size_bytes_);
+}
+
+bool Config::SetBacktraceMaxSize(const std::string& option, const std::string& value) {
+  return ParseValue(option, value, 1, SIZE_MAX, &backtrace_max_size_bytes_);
+}
+
 bool Config::SetExpandAlloc(const std::string& option, const std::string& value) {
   return ParseValue(option, value, DEFAULT_EXPAND_BYTES, 1, MAX_EXPAND_BYTES, &expand_alloc_bytes_);
 }
@@ -403,6 +433,8 @@ bool Config::Init(const char* options_str) {
   backtrace_enabled_ = false;
   backtrace_dump_on_exit_ = false;
   backtrace_dump_prefix_ = DEFAULT_BACKTRACE_DUMP_PREFIX;
+  backtrace_min_size_bytes_ = 0;
+  backtrace_max_size_bytes_ = SIZE_MAX;
   check_unreachable_signal_ = SIGRTMAX - 16;
 
   // Process each option name we can find.
