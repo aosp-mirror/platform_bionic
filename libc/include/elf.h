@@ -460,8 +460,6 @@ typedef Elf64_Xword Elf64_Relr;
 #define PF_MASKOS   0x0ff00000
 #define PF_MASKPROC 0xf0000000
 
-#define PT_GNU_RELRO 0x6474e552
-
 #define STB_LOOS 10
 #define STB_HIOS 12
 #define STB_LOPROC 13

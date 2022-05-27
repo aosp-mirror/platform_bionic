@@ -45,6 +45,7 @@ enum counter_event_type {
   COUNTER_EVENT_OVERFLOW_UNDERFLOW,
   COUNTER_EVENT_THRESHOLD,
   COUNTER_EVENT_INDEX,
+  COUNTER_EVENT_CHANGE_OF_STATE,
 };
 struct counter_watch {
   struct counter_component component;
