@@ -32,6 +32,8 @@
 
 #include <bionic/pthread_internal.h>
 #include <platform/bionic/malloc.h>
+#include <sanitizer/hwasan_interface.h>
+#include <sys/auxv.h>
 
 extern "C" void scudo_malloc_disable_memory_tagging();
 extern "C" void scudo_malloc_set_track_allocation_stacks(int);
@@ -169,4 +171,70 @@ bool SetHeapTaggingLevel(HeapTaggingLevel tag_level) {
   info_log("SetHeapTaggingLevel: tag level set to %d", tag_level);
 
   return true;
+}
+
+#ifdef __aarch64__
+static inline __attribute__((no_sanitize("memtag"))) void untag_memory(void* from, void* to) {
+  __asm__ __volatile__(
+      ".arch_extension mte\n"
+      "1:\n"
+      "stg %[Ptr], [%[Ptr]], #16\n"
+      "cmp %[Ptr], %[End]\n"
+      "b.lt 1b\n"
+      : [Ptr] "+&r"(from)
+      : [End] "r"(to)
+      : "memory");
+}
+#endif
+
+#ifdef __aarch64__
+// 128Mb of stack should be enough for anybody.
+static constexpr size_t kUntagLimit = 128 * 1024 * 1024;
+#endif  // __aarch64__
+
+extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"))) void memtag_handle_longjmp(
+    void* sp_dst __unused) {
+#ifdef __aarch64__
+  if (__libc_globals->memtag_stack) {
+    void* sp = __builtin_frame_address(0);
+    size_t distance = reinterpret_cast<uintptr_t>(sp_dst) - reinterpret_cast<uintptr_t>(sp);
+    if (distance > kUntagLimit) {
+      async_safe_fatal(
+          "memtag_handle_longjmp: stack adjustment too large! %p -> %p, distance %zx > %zx\n", sp,
+          sp_dst, distance, kUntagLimit);
+    } else {
+      untag_memory(sp, sp_dst);
+    }
+  }
+#endif  // __aarch64__
+
+#if __has_feature(hwaddress_sanitizer)
+  __hwasan_handle_longjmp(sp_dst);
+#endif  // __has_feature(hwaddress_sanitizer)
+}
+
+extern "C" __LIBC_HIDDEN__ __attribute__((no_sanitize("memtag"), no_sanitize("hwaddress"))) void
+memtag_handle_vfork(void* sp __unused) {
+#ifdef __aarch64__
+  if (__libc_globals->memtag_stack) {
+    void* child_sp = __get_thread()->vfork_child_stack_bottom;
+    __get_thread()->vfork_child_stack_bottom = nullptr;
+    if (child_sp) {
+      size_t distance = reinterpret_cast<uintptr_t>(sp) - reinterpret_cast<uintptr_t>(child_sp);
+      if (distance > kUntagLimit) {
+        async_safe_fatal(
+            "memtag_handle_vfork: stack adjustment too large! %p -> %p, distance %zx > %zx\n",
+            child_sp, sp, distance, kUntagLimit);
+      } else {
+        untag_memory(child_sp, sp);
+      }
+    } else {
+      async_safe_fatal("memtag_handle_vfork: child SP unknown\n");
+    }
+  }
+#endif  // __aarch64__
+
+#if __has_feature(hwaddress_sanitizer)
+  __hwasan_handle_vfork(sp);
+#endif  // __has_feature(hwaddress_sanitizer)
 }
