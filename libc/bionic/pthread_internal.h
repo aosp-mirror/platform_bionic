@@ -160,6 +160,13 @@ class pthread_internal_t {
   bionic_tls* bionic_tls;
 
   int errno_value;
+
+  // The last observed value of SP in a vfork child process.
+  // The part of the stack between this address and the value of SP when the vfork parent process
+  // regains control may have stale MTE tags and needs cleanup. This field is only meaningful while
+  // the parent is waiting for the vfork child to return control by calling either exec*() or
+  // exit().
+  void* vfork_child_stack_bottom;
 };
 
 struct ThreadMapping {

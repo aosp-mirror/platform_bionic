@@ -259,17 +259,18 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
 // M_HEAP_TAGGING_LEVEL_NONE, if MTE isn't enabled for this process we enable
 // M_HEAP_TAGGING_LEVEL_TBI.
 static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t phdr_ct,
-                                                 uintptr_t load_bias) {
+                                                 uintptr_t load_bias, bool* stack) {
+  unsigned note_val =
+      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
+  *stack = note_val & NT_MEMTAG_STACK;
+
   HeapTaggingLevel level;
   if (get_environment_memtag_setting(&level)) return level;
 
-  unsigned note_val =
-      __get_memtag_note(reinterpret_cast<const ElfW(Phdr)*>(phdr_start), phdr_ct, load_bias);
-
   // Note, previously (in Android 12), any value outside of bits [0..3] resulted
   // in a check-fail. In order to be permissive of further extensions, we
-  // relaxed this restriction. For now, we still only support MTE heap.
-  if (!(note_val & NT_MEMTAG_HEAP)) return M_HEAP_TAGGING_LEVEL_TBI;
+  // relaxed this restriction.
+  if (!(note_val & (NT_MEMTAG_HEAP | NT_MEMTAG_STACK))) return M_HEAP_TAGGING_LEVEL_TBI;
 
   unsigned mode = note_val & NT_MEMTAG_LEVEL_MASK;
   switch (mode) {
@@ -295,8 +296,10 @@ static HeapTaggingLevel __get_heap_tagging_level(const void* phdr_start, size_t 
 // This function is called from the linker before the main executable is relocated.
 __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const void* phdr_start,
                                                                          size_t phdr_ct,
-                                                                         uintptr_t load_bias) {
-  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias);
+                                                                         uintptr_t load_bias,
+                                                                         void* stack_top) {
+  bool memtag_stack;
+  HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
 
   if (level == M_HEAP_TAGGING_LEVEL_SYNC || level == M_HEAP_TAGGING_LEVEL_ASYNC) {
     unsigned long prctl_arg = PR_TAGGED_ADDR_ENABLE | PR_MTE_TAG_SET_NONZERO;
@@ -308,6 +311,17 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
     if (prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg | PR_MTE_TCF_SYNC, 0, 0, 0) == 0 ||
         prctl(PR_SET_TAGGED_ADDR_CTRL, prctl_arg, 0, 0, 0) == 0) {
       __libc_shared_globals()->initial_heap_tagging_level = level;
+      __libc_shared_globals()->initial_memtag_stack = memtag_stack;
+
+      if (memtag_stack) {
+        void* page_start =
+            reinterpret_cast<void*>(PAGE_START(reinterpret_cast<uintptr_t>(stack_top)));
+        if (mprotect(page_start, PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_MTE | PROT_GROWSDOWN)) {
+          async_safe_fatal("error: failed to set PROT_MTE on main thread stack: %s\n",
+                           strerror(errno));
+        }
+      }
+
       return;
     }
   }
@@ -319,7 +333,7 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   }
 }
 #else   // __aarch64__
-void __libc_init_mte(const void*, size_t, uintptr_t) {}
+void __libc_init_mte(const void*, size_t, uintptr_t, void*) {}
 #endif  // __aarch64__
 
 void __libc_init_profiling_handlers() {
@@ -331,11 +345,9 @@ void __libc_init_profiling_handlers() {
   signal(BIONIC_SIGNAL_ART_PROFILER, SIG_IGN);
 }
 
-__noreturn static void __real_libc_init(void *raw_args,
-                                        void (*onexit)(void) __unused,
-                                        int (*slingshot)(int, char**, char**),
-                                        structors_array_t const * const structors,
-                                        bionic_tcb* temp_tcb) {
+__attribute__((no_sanitize("memtag"))) __noreturn static void __real_libc_init(
+    void* raw_args, void (*onexit)(void) __unused, int (*slingshot)(int, char**, char**),
+    structors_array_t const* const structors, bionic_tcb* temp_tcb) {
   BIONIC_STOP_UNWIND;
 
   // Initialize TLS early so system calls and errno work.
@@ -349,7 +361,7 @@ __noreturn static void __real_libc_init(void *raw_args,
   __libc_init_main_thread_final();
   __libc_init_common();
   __libc_init_mte(reinterpret_cast<ElfW(Phdr)*>(getauxval(AT_PHDR)), getauxval(AT_PHNUM),
-                  /*load_bias = */ 0);
+                  /*load_bias = */ 0, /*stack_top = */ raw_args);
   __libc_init_scudo();
   __libc_init_profiling_handlers();
   __libc_init_fork_handler();
@@ -379,11 +391,9 @@ extern "C" void __hwasan_init_static();
 //
 // The 'structors' parameter contains pointers to various initializer
 // arrays that must be run before the program's 'main' routine is launched.
-__attribute__((no_sanitize("hwaddress")))
-__noreturn void __libc_init(void* raw_args,
-                            void (*onexit)(void) __unused,
-                            int (*slingshot)(int, char**, char**),
-                            structors_array_t const * const structors) {
+__attribute__((no_sanitize("hwaddress", "memtag"))) __noreturn void __libc_init(
+    void* raw_args, void (*onexit)(void) __unused, int (*slingshot)(int, char**, char**),
+    structors_array_t const* const structors) {
   bionic_tcb temp_tcb = {};
 #if __has_feature(hwaddress_sanitizer)
   // Install main thread TLS early. It will be initialized later in __libc_init_main_thread. For now

@@ -47,6 +47,7 @@ struct libc_globals {
   vdso_entry vdso[VDSO_END];
   long setjmp_cookie;
   uintptr_t heap_pointer_tag;
+  _Atomic(bool) memtag_stack;
 
   // In order to allow a complete switch between dispatch tables without
   // the need for copying each function by function in the structure,
@@ -112,6 +113,7 @@ struct libc_shared_globals {
   const char* scudo_ring_buffer = nullptr;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
+  bool initial_memtag_stack = false;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
