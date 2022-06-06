@@ -52,8 +52,7 @@
 #include <thread>
 #include <vector>
 
-#include <backtrace/Backtrace.h>
-#include <backtrace/BacktraceMap.h>
+#include <unwindstack/AndroidUnwinder.h>
 
 #include <bionic/malloc.h>
 #include <tests/utils.h>
@@ -452,10 +451,17 @@ class MallocDebugSystemTest : public ::testing::Test {
   static constexpr size_t kMaxRetries = 3;
 };
 
-TEST(MallocTests, DISABLED_smoke) {}
+TEST(MallocTests, DISABLED_smoke) {
+  void* ptr = malloc(128);
+  free(ptr);
+}
 
 TEST_F(MallocDebugSystemTest, smoke) {
   Exec("MallocTests.DISABLED_smoke", "verbose backtrace");
+}
+
+TEST_F(MallocDebugSystemTest, backtrace_full_smoke) {
+  Exec("MallocTests.DISABLED_smoke", "verbose backtrace backtrace_full");
 }
 
 static void SetAllocationLimit() {
@@ -763,13 +769,14 @@ TEST(MallocTests, DISABLED_malloc_and_backtrace_deadlock) {
   }
 
   static constexpr size_t kNumUnwinds = 1000;
+  unwindstack::AndroidLocalUnwinder unwinder;
   for (size_t i = 0; i < kNumUnwinds; i++) {
-    std::unique_ptr<Backtrace> backtrace(Backtrace::Create(getpid(), tid));
     // Only verify that there is at least one frame in the unwind.
     // This is not a test of the unwinder and clang for arm seems to
     // produces an increasing number of code that does not have unwind
     // information.
-    ASSERT_TRUE(backtrace->Unwind(0)) << "Failed on unwind " << i;
+    unwindstack::AndroidUnwinderData data;
+    ASSERT_TRUE(unwinder.Unwind(data)) << "Failed on unwind " << i;
   }
   running = false;
   thread.join();

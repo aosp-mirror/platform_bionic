@@ -26,7 +26,7 @@
 # This file is processed by a python script named gensyscalls.py, run via
 # genrules in Android.bp.
 
-int     execve(const char*, char* const*, char* const*)  all
+int     __execve:execve(const char*, char* const*, char* const*)  all
 
 uid_t   getuid:getuid32()         lp32
 uid_t   getuid:getuid()           lp64
@@ -320,7 +320,7 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void _exit|_Exit:exit_group(int)  all
+void __exit_group:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all

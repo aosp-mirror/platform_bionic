@@ -39,6 +39,6 @@ bool get_transparent_hugepages_supported() {
       return false;
     }
     return enabled.find("[never]") == std::string::npos;
-  };
+  }();
   return transparent_hugepages_supported;
 }
