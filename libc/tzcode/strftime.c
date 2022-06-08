@@ -1,4 +1,4 @@
-/* Convert a broken-down time stamp to a string.  */
+/* Convert a broken-down timestamp to a string.  */
 
 /* Copyright 1989 The Regents of the University of California.
    All rights reserved.
@@ -35,9 +35,13 @@
 
 #include "private.h"
 
-#include "tzfile.h"
-#include "fcntl.h"
-#include "locale.h"
+#include <fcntl.h>
+#include <locale.h>
+#include <stdio.h>
+
+#ifndef DEPRECATE_TWO_DIGIT_YEARS
+# define DEPRECATE_TWO_DIGIT_YEARS false
+#endif
 
 #if defined(__BIONIC__)
 
@@ -45,6 +49,7 @@
 #if defined(__LP64__)
 #define time64_t time_t
 #define mktime64 mktime
+#define localtime64_r localtime_r
 #else
 #include <time64.h>
 #endif
@@ -88,7 +93,7 @@ static const struct lc_time_T   C_time_locale = {
 
     /*
     ** x_fmt
-    ** C99 requires this format.
+    ** C99 and later require this format.
     ** Using just numbers (as here) makes Quakers happier;
     ** it's also compatible with SVR4.
     */
@@ -96,7 +101,7 @@ static const struct lc_time_T   C_time_locale = {
 
     /*
     ** c_fmt
-    ** C99 requires this format.
+    ** C99 and later require this format.
     ** Previously this code used "%D %X", but we now conform to C99.
     ** Note that
     **  "%a %b %d %H:%M:%S %Y"
@@ -114,24 +119,17 @@ static const struct lc_time_T   C_time_locale = {
     "%a %b %e %H:%M:%S %Z %Y"
 };
 
+enum warn { IN_NONE, IN_SOME, IN_THIS, IN_ALL };
+
 static char *   _add(const char *, char *, const char *, int);
 static char *   _conv(int, const char *, char *, const char *);
 static char *   _fmt(const char *, const struct tm *, char *, const char *,
-            int *);
+            enum warn *);
 static char *   _yconv(int, int, bool, bool, char *, const char *, int);
-
-#if !HAVE_POSIX_DECLS
-extern char *   tzname[];
-#endif
 
 #ifndef YEAR_2000_NAME
 #define YEAR_2000_NAME  "CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
 #endif /* !defined YEAR_2000_NAME */
-
-#define IN_NONE 0
-#define IN_SOME 1
-#define IN_THIS 2
-#define IN_ALL  3
 
 #if HAVE_STRFTIME_L
 size_t
@@ -149,18 +147,19 @@ size_t
 strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
 {
     char *  p;
-    int warn;
+    int saved_errno = errno;
+    enum warn warn = IN_NONE;
 
     tzset();
-    warn = IN_NONE;
-    p = _fmt(((format == NULL) ? "%c" : format), t, s, s + maxsize, &warn);
-#ifndef NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU
-    if (warn != IN_NONE && getenv(YEAR_2000_NAME) != NULL) {
+    p = _fmt(format, t, s, s + maxsize, &warn);
+    if (!p) {
+       errno = EOVERFLOW;
+       return 0;
+    }
+    if (DEPRECATE_TWO_DIGIT_YEARS
+          && warn != IN_NONE && getenv(YEAR_2000_NAME)) {
         fprintf(stderr, "\n");
-        if (format == NULL)
-            fprintf(stderr, "NULL strftime format ");
-        else    fprintf(stderr, "strftime format \"%s\" ",
-                format);
+        fprintf(stderr, "strftime format \"%s\" ", format);
         fprintf(stderr, "yields only two digits of years in ");
         if (warn == IN_SOME)
             fprintf(stderr, "some locales");
@@ -169,10 +168,12 @@ strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
         else    fprintf(stderr, "all locales");
         fprintf(stderr, "\n");
     }
-#endif /* !defined NO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU */
-    if (p == s + maxsize)
+    if (p == s + maxsize) {
+        errno = ERANGE;
         return 0;
+    }
     *p = '\0';
+    errno = saved_errno;
     return p - s;
 }
 
@@ -191,7 +192,7 @@ static char *getformat(int modifier, char *normal, char *underscore,
 
 static char *
 _fmt(const char *format, const struct tm *t, char *pt,
-        const char *ptlim, int *warnp)
+        const char *ptlim, enum warn *warnp)
 {
     for ( ; *format; ++format) {
         if (*format == '%') {
@@ -239,7 +240,7 @@ label:
                 continue;
             case 'c':
                 {
-                int warn2 = IN_SOME;
+                enum warn warn2 = IN_SOME;
 
                 pt = _fmt(Locale->c_fmt, t, pt, ptlim, &warn2);
                 if (warn2 == IN_ALL)
@@ -257,12 +258,12 @@ label:
             case 'E':
             case 'O':
                 /*
-                ** C99 locale modifiers.
+                ** Locale modifiers of C99 and later.
                 ** The sequences
                 **  %Ec %EC %Ex %EX %Ey %EY
                 **  %Od %oe %OH %OI %Om %OM
                 **  %OS %Ou %OU %OV %Ow %OW %Oy
-                ** are supposed to provide alternate
+                ** are supposed to provide alternative
                 ** representations.
                 */
                 goto label;
@@ -356,11 +357,17 @@ label:
 
                     tm = *t;
                     mkt = mktime64(&tm);
-                    if (TYPE_SIGNED(time64_t))
-                        snprintf(buf, sizeof(buf), "%"PRIdMAX,
-                                 (intmax_t) mkt);
-                    else    snprintf(buf, sizeof(buf), "%"PRIuMAX,
-                                     (uintmax_t) mkt);
+					/* There is no portable, definitive
+					   test for whether whether mktime
+					   succeeded, so treat (time_t) -1 as
+					   the success that it might be.  */
+                    if (TYPE_SIGNED(time64_t)) {
+                      intmax_t n = mkt;
+                      sprintf(buf, "%"PRIdMAX, n);
+                    } else {
+                      uintmax_t n = mkt;
+                      sprintf(buf, "%"PRIuMAX, n);
+                    }
                     pt = _add(buf, pt, ptlim, modifier);
                 }
                 continue;
@@ -392,7 +399,7 @@ label:
 ** (01-53)."
 ** (ado, 1993-05-24)
 **
-** From <http://www.ft.uni-erlangen.de/~mskuhn/iso-time.html> by Markus Kuhn:
+** From <https://www.cl.cam.ac.uk/~mgk25/iso-time.html> by Markus Kuhn:
 ** "Week 01 of a year is per definition the first week which has the
 ** Thursday in this year, which is equivalent to the week which contains
 ** the fourth day of January. In other words, the first week of a new year
@@ -494,7 +501,7 @@ label:
                 continue;
             case 'x':
                 {
-                int warn2 = IN_SOME;
+                enum warn warn2 = IN_SOME;
 
                 pt = _fmt(Locale->x_fmt, t, pt, ptlim, &warn2);
                 if (warn2 == IN_ALL)
@@ -533,29 +540,30 @@ label:
                     pt = _add(zone, pt, ptlim, modifier);
                 }
                 // END: Android-changed.
-#else
+#elif HAVE_TZNAME
                 if (t->tm_isdst >= 0)
                     pt = _add(tzname[t->tm_isdst != 0],
                         pt, ptlim);
 #endif
                 /*
-                ** C99 says that %Z must be replaced by the
-                ** empty string if the time zone is not
+                ** C99 and later say that %Z must be
+                ** replaced by the empty string if the
+                ** time zone abbreviation is not
                 ** determinable.
                 */
                 continue;
             case 'z':
+#if defined TM_GMTOFF || USG_COMPAT || ALTZONE
                 {
                 long     diff;
                 char const *    sign;
+                bool negative;
 
-                if (t->tm_isdst < 0)
-                    continue;
-#ifdef TM_GMTOFF
+# ifdef TM_GMTOFF
                 diff = t->TM_GMTOFF;
-#else /* !defined TM_GMTOFF */
+# else
                 /*
-                ** C99 says that the UT offset must
+                ** C99 and later say that the UT offset must
                 ** be computed by looking only at
                 ** tm_isdst. This requirement is
                 ** incorrect, since it means the code
@@ -563,30 +571,44 @@ label:
                 ** altzone and timezone), and the
                 ** magic might not have the correct
                 ** offset. Doing things correctly is
-                ** tricky and requires disobeying C99;
+                ** tricky and requires disobeying the standard;
                 ** see GNU C strftime for details.
                 ** For now, punt and conform to the
                 ** standard, even though it's incorrect.
                 **
-                ** C99 says that %z must be replaced by the
-                ** empty string if the time zone is not
+                ** C99 and later say that %z must be replaced by
+                ** the empty string if the time zone is not
                 ** determinable, so output nothing if the
                 ** appropriate variables are not available.
                 */
+                if (t->tm_isdst < 0)
+                    continue;
                 if (t->tm_isdst == 0)
-#ifdef USG_COMPAT
+#  if USG_COMPAT
                     diff = -timezone;
-#else /* !defined USG_COMPAT */
+#  else
                     continue;
-#endif /* !defined USG_COMPAT */
+#  endif
                 else
-#ifdef ALTZONE
+#  if ALTZONE
                     diff = -altzone;
-#else /* !defined ALTZONE */
+#  else
                     continue;
-#endif /* !defined ALTZONE */
-#endif /* !defined TM_GMTOFF */
-                if (diff < 0) {
+#  endif
+# endif
+                negative = diff < 0;
+                if (diff == 0) {
+#ifdef TM_ZONE
+                    negative = t->TM_ZONE[0] == '-';
+#else
+                    negative = t->tm_isdst < 0;
+# if HAVE_TZNAME
+                    if (tzname[t->tm_isdst != 0][0] == '-')
+                        negative = true;
+# endif
+#endif
+                }
+                if (negative) {
                     sign = "-";
                     diff = -diff;
                 } else  sign = "+";
@@ -596,6 +618,7 @@ label:
                     (diff % MINSPERHOUR);
                 pt = _conv(diff, getformat(modifier, "04", " 4", "  ", "04"), pt, ptlim);
                 }
+#endif
                 continue;
             case '+':
                 pt = _fmt(Locale->date_fmt, t, pt, ptlim,
