@@ -18,7 +18,6 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_TTY_H
 #define _UAPI_LINUX_TTY_H
-#define NR_LDISCS 30
 #define N_TTY 0
 #define N_SLIP 1
 #define N_MOUSE 2
@@ -48,4 +47,6 @@
 #define N_SPEAKUP 26
 #define N_NULL 27
 #define N_MCTP 28
+#define N_DEVELOPMENT 29
+#define NR_LDISCS 30
 #endif

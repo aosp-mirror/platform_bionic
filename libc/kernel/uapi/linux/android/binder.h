@@ -155,7 +155,11 @@ struct binder_transaction_data {
   binder_uintptr_t cookie;
   __u32 code;
   __u32 flags;
-  pid_t sender_pid;
+  __kernel_pid_t sender_pid;
+  /* Modified to __kernel_uid_t in the headers but this is not the same size
+   * as uid_t on 32 bit systems. This is fixed in upstream, but wait until
+   * 5.19 to get the fix. See b/234125620.
+   */
   uid_t sender_euid;
   binder_size_t data_size;
   binder_size_t offsets_size;

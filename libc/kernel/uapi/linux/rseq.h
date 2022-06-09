@@ -47,22 +47,7 @@ struct rseq_cs {
 struct rseq {
   __u32 cpu_id_start;
   __u32 cpu_id;
-  union {
-    __u64 ptr64;
-#ifdef __LP64__
-    __u64 ptr;
-#else
-    struct {
-#if defined(__BYTE_ORDER) && __BYTE_ORDER == __BIG_ENDIAN || defined(__BIG_ENDIAN)
-      __u32 padding;
-      __u32 ptr32;
-#else
-      __u32 ptr32;
-      __u32 padding;
-#endif
-    } ptr;
-#endif
-  } rseq_cs;
+  __u64 rseq_cs;
   __u32 flags;
 } __attribute__((aligned(4 * sizeof(__u64))));
 #endif
