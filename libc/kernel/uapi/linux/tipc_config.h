@@ -22,7 +22,6 @@
 #include <linux/string.h>
 #include <linux/tipc.h>
 #include <asm/byteorder.h>
-#include <arpa/inet.h>
 #define TIPC_CMD_NOOP 0x0000
 #define TIPC_CMD_GET_NODES 0x0001
 #define TIPC_CMD_GET_MEDIA_NAMES 0x0002

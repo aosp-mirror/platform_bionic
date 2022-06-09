@@ -21,8 +21,7 @@
 #include <asm/types.h>
 #ifndef __ASSEMBLY__
 #include <linux/posix_types.h>
-#define __bitwise__
-#define __bitwise __bitwise__
+#define __bitwise
 typedef __u16 __bitwise __le16;
 typedef __u16 __bitwise __be16;
 typedef __u32 __bitwise __le32;
