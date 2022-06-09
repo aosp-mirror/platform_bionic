@@ -337,7 +337,11 @@ struct kvm_run {
 #define KVM_SYSTEM_EVENT_RESET 2
 #define KVM_SYSTEM_EVENT_CRASH 3
       __u32 type;
-      __u64 flags;
+      __u32 ndata;
+      union {
+        __u64 flags;
+        __u64 data[16];
+      };
     } system_event;
     struct {
       __u64 addr;
@@ -419,7 +423,10 @@ struct kvm_s390_mem_op {
   __u32 op;
   __u64 buf;
   union {
-    __u8 ar;
+    struct {
+      __u8 ar;
+      __u8 key;
+    };
     __u32 sida_offset;
     __u8 reserved[32];
   };
@@ -428,8 +435,11 @@ struct kvm_s390_mem_op {
 #define KVM_S390_MEMOP_LOGICAL_WRITE 1
 #define KVM_S390_MEMOP_SIDA_READ 2
 #define KVM_S390_MEMOP_SIDA_WRITE 3
+#define KVM_S390_MEMOP_ABSOLUTE_READ 4
+#define KVM_S390_MEMOP_ABSOLUTE_WRITE 5
 #define KVM_S390_MEMOP_F_CHECK_ONLY (1ULL << 0)
 #define KVM_S390_MEMOP_F_INJECT_EXCEPTION (1ULL << 1)
+#define KVM_S390_MEMOP_F_SKEY_PROTECTION (1ULL << 2)
 struct kvm_interrupt {
   __u32 irq;
 };
@@ -890,6 +900,10 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_XSAVE2 208
 #define KVM_CAP_SYS_ATTRIBUTES 209
 #define KVM_CAP_PPC_AIL_MODE_3 210
+#define KVM_CAP_S390_MEM_OP_EXTENSION 211
+#define KVM_CAP_PMU_CAPABILITY 212
+#define KVM_CAP_DISABLE_QUIRKS2 213
+#define KVM_CAP_SYSTEM_EVENT_DATA 215
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1480,6 +1494,7 @@ struct kvm_dirty_gfn {
 };
 #define KVM_BUS_LOCK_DETECTION_OFF (1 << 0)
 #define KVM_BUS_LOCK_DETECTION_EXIT (1 << 1)
+#define KVM_PMU_CAP_DISABLE (1 << 0)
 struct kvm_stats_header {
   __u32 flags;
   __u32 name_size;
