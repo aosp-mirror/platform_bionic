@@ -89,10 +89,11 @@ struct omap3isp_h3a_aewb_config {
 struct omap3isp_stat_data {
   struct timeval ts;
   void __user * buf;
-  __u32 buf_size;
+  __struct_group(, frame,, __u32 buf_size;
   __u16 frame_number;
   __u16 cur_frame;
   __u16 config_counter;
+ );
 };
 #define OMAP3ISP_HIST_BINS_32 0
 #define OMAP3ISP_HIST_BINS_64 1
