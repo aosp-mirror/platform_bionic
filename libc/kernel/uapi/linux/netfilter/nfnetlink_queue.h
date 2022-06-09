@@ -70,6 +70,7 @@ enum nfqnl_attr_type {
   NFQA_SECCTX,
   NFQA_VLAN,
   NFQA_L2HDR,
+  NFQA_PRIORITY,
   __NFQA_MAX
 };
 #define NFQA_MAX (__NFQA_MAX - 1)

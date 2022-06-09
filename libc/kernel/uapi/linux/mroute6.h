@@ -93,6 +93,7 @@ struct mrt6msg {
 #define MRT6MSG_NOCACHE 1
 #define MRT6MSG_WRONGMIF 2
 #define MRT6MSG_WHOLEPKT 3
+#define MRT6MSG_WRMIFWHOLE 4
   __u8 im6_mbz;
   __u8 im6_msgtype;
   __u16 im6_mif;
