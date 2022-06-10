@@ -24,12 +24,7 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-/* ---------------------------------------------------
- * This value manually changed due to b/228783882.
- * Next kernel update should keep this value as is.
- */
 #define VIDEO_MAX_FRAME 64
-/* --------------------------------------------------- */
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
@@ -305,6 +300,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV12_32L32 v4l2_fourcc('S', 'T', '1', '2')
 #define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
+#define V4L2_PIX_FMT_NV12M_8L128 v4l2_fourcc('N', 'A', '1', '2')
+#define V4L2_PIX_FMT_NV12M_10BE_8L128 v4l2_fourcc_be('N', 'T', '1', '2')
 #define V4L2_PIX_FMT_SBGGR8 v4l2_fourcc('B', 'A', '8', '1')
 #define V4L2_PIX_FMT_SGBRG8 v4l2_fourcc('G', 'B', 'R', 'G')
 #define V4L2_PIX_FMT_SGRBG8 v4l2_fourcc('G', 'R', 'B', 'G')

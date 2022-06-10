@@ -63,7 +63,10 @@ struct nvme_passthru_cmd64 {
   __u64 metadata;
   __u64 addr;
   __u32 metadata_len;
-  __u32 data_len;
+  union {
+    __u32 data_len;
+    __u32 vec_cnt;
+  };
   __u32 cdw10;
   __u32 cdw11;
   __u32 cdw12;
@@ -84,4 +87,5 @@ struct nvme_passthru_cmd64 {
 #define NVME_IOCTL_RESCAN _IO('N', 0x46)
 #define NVME_IOCTL_ADMIN64_CMD _IOWR('N', 0x47, struct nvme_passthru_cmd64)
 #define NVME_IOCTL_IO64_CMD _IOWR('N', 0x48, struct nvme_passthru_cmd64)
+#define NVME_IOCTL_IO64_CMD_VEC _IOWR('N', 0x49, struct nvme_passthru_cmd64)
 #endif
