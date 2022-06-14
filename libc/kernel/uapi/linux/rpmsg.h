@@ -28,4 +28,6 @@ struct rpmsg_endpoint_info {
 };
 #define RPMSG_CREATE_EPT_IOCTL _IOW(0xb5, 0x1, struct rpmsg_endpoint_info)
 #define RPMSG_DESTROY_EPT_IOCTL _IO(0xb5, 0x2)
+#define RPMSG_CREATE_DEV_IOCTL _IOW(0xb5, 0x3, struct rpmsg_endpoint_info)
+#define RPMSG_RELEASE_DEV_IOCTL _IOW(0xb5, 0x4, struct rpmsg_endpoint_info)
 #endif
