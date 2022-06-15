@@ -29,6 +29,7 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
   * `gethostid`
   * `shm_open`/`shm_unlink`
   * `sockatmark`
+  * `ualarm`
 
 Missing functionality:
   * `<aio.h>`
