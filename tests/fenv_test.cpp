@@ -20,7 +20,6 @@
 
 #include <fenv.h>
 #include <stdint.h>
-#include <sys/cdefs.h>
 
 static void TestRounding(float expectation1, float expectation2) {
   // Volatile to prevent compile-time evaluation.
@@ -171,7 +170,6 @@ TEST(fenv, fegetexceptflag_fesetexceptflag) {
 }
 
 TEST(fenv, fedisableexcept_fegetexcept) {
-#if !defined(ANDROID_HOST_MUSL)
   feclearexcept(FE_ALL_EXCEPT);
   ASSERT_EQ(0, fetestexcept(FE_ALL_EXCEPT));
 
@@ -180,13 +178,9 @@ TEST(fenv, fedisableexcept_fegetexcept) {
   ASSERT_EQ(0, fegetexcept());
   ASSERT_EQ(0, feraiseexcept(FE_INVALID));
   ASSERT_EQ(FE_INVALID, fetestexcept(FE_ALL_EXCEPT));
-#else
-  GTEST_SKIP() << "musl doesn't have fegetexcept";
-#endif
 }
 
 TEST(fenv, feenableexcept_fegetexcept) {
-#if !defined(ANDROID_HOST_MUSL)
 #if defined(__aarch64__) || defined(__arm__)
   // ARM doesn't support this. They used to if you go back far enough, but it was removed in
   // the Cortex-A8 between r3p1 and r3p2.
@@ -218,8 +212,5 @@ TEST(fenv, feenableexcept_fegetexcept) {
   }
 
   AssertChildExited(pid, -SIGFPE);
-#endif
-#else
-  GTEST_SKIP() << "musl doesn't have fegetexcept";
 #endif
 }

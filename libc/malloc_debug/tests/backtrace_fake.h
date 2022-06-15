@@ -21,12 +21,12 @@
 
 #include <vector>
 
-#include <unwindstack/Unwinder.h>
+#include <unwindstack/LocalUnwinder.h>
 
 void backtrace_fake_clear_all();
 void backtrace_fake_add(const std::vector<uintptr_t>& ips);
 
 void BacktraceUnwindFakeClearAll();
-void BacktraceUnwindFake(const std::vector<unwindstack::FrameData>& frames);
+void BacktraceUnwindFake(const std::vector<unwindstack::LocalFrameData>& frames);
 
 #endif // MALLOC_DEBUG_TESTS_BACKTRACE_FAKE_H

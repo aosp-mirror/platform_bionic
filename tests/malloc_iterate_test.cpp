@@ -26,7 +26,6 @@
 
 #include <vector>
 
-#include <android-base/test_utils.h>
 #include <async_safe/log.h>
 #include <procinfo/process_map.h>
 

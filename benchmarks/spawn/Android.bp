@@ -43,9 +43,6 @@ cc_defaults {
         linux_glibc_x86: {
             enabled: false,
         },
-        linux_musl_x86: {
-            enabled: false,
-        },
     },
 }
 
@@ -102,11 +99,6 @@ cc_defaults {
     // argument has no effect when a static executable is produced.
     target: {
         linux_glibc_x86_64: {
-            ldflags: [
-                "-Wl,--rpath,${ORIGIN}/../../lib64",
-            ],
-        },
-        linux_musl_x86_64: {
             ldflags: [
                 "-Wl,--rpath,${ORIGIN}/../../lib64",
             ],

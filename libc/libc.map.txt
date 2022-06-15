@@ -631,7 +631,7 @@ LIBC {
     mbsinit;
     mbsnrtowcs; # introduced=21
     mbsrtowcs;
-    mbstowcs; # introduced=21
+    mbstowcs;
     mbtowc; # introduced=21
     memalign;
     memccpy;
@@ -1194,7 +1194,7 @@ LIBC {
     wcstold_l; # introduced=21
     wcstoll; # introduced=21
     wcstoll_l; # introduced=21
-    wcstombs; # introduced=21
+    wcstombs;
     wcstoul;
     wcstoull; # introduced=21
     wcstoull_l; # introduced=21
@@ -1556,7 +1556,6 @@ LIBC_S { # introduced=S
     __libc_register_thread_exit_callback;
     __libc_iterate_dynamic_tls;
     __libc_register_dynamic_tls_listeners;
-    android_reset_stack_guards;
     ffsl;
     ffsll;
     pidfd_getfd;
@@ -1564,17 +1563,6 @@ LIBC_S { # introduced=S
     pidfd_send_signal;
     process_madvise;
 } LIBC_R;
-
-LIBC_T { # introduced=Tiramisu
-  global:
-    backtrace;
-    backtrace_symbols;
-    backtrace_symbols_fd;
-    preadv2;
-    preadv64v2;
-    pwritev2;
-    pwritev64v2;
-} LIBC_S;
 
 LIBC_PRIVATE {
   global:
@@ -1788,4 +1776,5 @@ LIBC_PLATFORM {
     android_net_res_stats_get_info_for_net;
     android_net_res_stats_aggregate;
     android_net_res_stats_get_usable_servers;
+    android_reset_stack_guards;
 } LIBC_Q;

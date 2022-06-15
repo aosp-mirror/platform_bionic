@@ -40,7 +40,6 @@ size_t __fwrite_chk(const void*, size_t, size_t, FILE*, size_t) __INTRODUCED_IN(
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_INLINE __printflike(3, 0)
 int vsnprintf(char* const __pass_object_size dest, size_t size, const char* format, va_list ap)
-        __diagnose_as_builtin(__builtin_vsnprintf, 1, 2, 3, 4)
         __overloadable {
     return __builtin___vsnprintf_chk(dest, size, 0, __bos(dest), format, ap);
 }
@@ -71,7 +70,6 @@ int sprintf(char* const __pass_object_size dest, const char* format, ...) __over
 /* No diag -- clang diagnoses misuses of this on its own.  */
 __BIONIC_FORTIFY_VARIADIC __printflike(3, 4)
 int snprintf(char* const __pass_object_size dest, size_t size, const char* format, ...)
-        __diagnose_as_builtin(__builtin_snprintf, 1, 2, 3)
         __overloadable {
     va_list va;
     va_start(va, format);

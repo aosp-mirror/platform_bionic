@@ -97,14 +97,13 @@ ssize_t     pwrite64(int, void*, size_t, off64_t) lp32
 ssize_t     pwrite64|pwrite(int, void*, size_t, off_t) lp64
 
 # On LP32, preadv/pwritev don't use off64_t --- they use pairs of 32-bit
-# arguments to avoid problems on architectures like arm32 where 64-bit arguments
+# arguments to avoid problems on architectures like ARM where 64-bit arguments
 # must be in a register pair starting with an even-numbered register.
 # See linux/fs/read_write.c and https://lwn.net/Articles/311630/.
-# Note that there's an unused always-0 second long even on LP64!
-ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) all
-ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) all
-ssize_t     __preadv64v2:preadv2(int, const struct iovec*, int, long, long, int) all
-ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
+ssize_t     __preadv64:preadv(int, const struct iovec*, int, long, long) lp32
+ssize_t     preadv|preadv64(int, const struct iovec*, int, off_t) lp64
+ssize_t     __pwritev64:pwritev(int, const struct iovec*, int, long, long) lp32
+ssize_t     pwritev|pwritev64(int, const struct iovec*, int, off_t) lp64
 
 int         __close:close(int)  all
 pid_t       __getpid:getpid()  all
@@ -149,7 +148,7 @@ int __faccessat:faccessat(int, const char*, int)  all
 int __fchmodat:fchmodat(int, const char*, mode_t)  all
 int fchownat(int, const char*, uid_t, gid_t, int)  all
 int fstatat64|fstatat:fstatat64(int, const char*, struct stat*, int)   lp32
-int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  lp64
+int fstatat64|fstatat:newfstatat(int, const char*, struct stat*, int)  arm64,x86_64
 int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
@@ -193,8 +192,8 @@ int __fstatfs:fstatfs(int, struct statfs*)  lp64
 int __statfs64:statfs64(const char*, size_t, struct statfs*)  lp32
 int __statfs:statfs(const char*, struct statfs*)  lp64
 
-int fstat64|fstat:fstat64(int, struct stat*) lp32
-int fstat64|fstat:fstat(int, struct stat*) lp64
+int     fstat64|fstat:fstat64(int, struct stat*)    lp32
+int     fstat64|fstat:fstat(int, struct stat*)    arm64,x86_64
 
 # file system
 int     chdir(const char*)              all
@@ -306,8 +305,6 @@ int     klogctl:syslog(int, char*, int)   all
 int     sysinfo(struct sysinfo*)  all
 int     personality(unsigned long)  all
 
-int     bpf(int, union bpf_attr *, unsigned int) all
-
 ssize_t tee(int, int, size_t, unsigned int)  all
 ssize_t splice(int, off64_t*, int, off64_t*, size_t, unsigned int)  all
 ssize_t vmsplice(int, const struct iovec*, size_t, unsigned int)  all
@@ -341,7 +338,7 @@ int setfsuid(uid_t)  all
 int setdomainname(const char*, size_t)  all
 int sethostname(const char*, size_t)  all
 
-int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) x86,lp64
+int __sync_file_range:sync_file_range(int, off64_t, off64_t, unsigned int) arm64,x86,x86_64
 int __sync_file_range2:sync_file_range2(int, unsigned int, off64_t, off64_t) arm
 
 pid_t wait4(pid_t, int*, int, struct rusage*)  all

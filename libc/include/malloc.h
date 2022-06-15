@@ -97,31 +97,30 @@ void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_AL
  */
 size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
 
-#define __MALLINFO_BODY \
-  /** Total number of non-mmapped bytes currently allocated from OS. */ \
-  size_t arena; \
-  /** Number of free chunks. */ \
-  size_t ordblks; \
-  /** (Unused.) */ \
-  size_t smblks; \
-  /** (Unused.) */ \
-  size_t hblks; \
-  /** Total number of bytes in mmapped regions. */ \
-  size_t hblkhd; \
-  /** Maximum total allocated space; greater than total if trimming has occurred. */ \
-  size_t usmblks; \
-  /** (Unused.) */ \
-  size_t fsmblks; \
-  /** Total allocated space (normal or mmapped.) */ \
-  size_t uordblks; \
-  /** Total free space. */ \
-  size_t fordblks; \
-  /** Upper bound on number of bytes releasable by a trim operation. */ \
-  size_t keepcost;
-
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
-struct mallinfo { __MALLINFO_BODY };
+struct mallinfo {
+  /** Total number of non-mmapped bytes currently allocated from OS. */
+  size_t arena;
+  /** Number of free chunks. */
+  size_t ordblks;
+  /** (Unused.) */
+  size_t smblks;
+  /** (Unused.) */
+  size_t hblks;
+  /** Total number of bytes in mmapped regions. */
+  size_t hblkhd;
+  /** Maximum total allocated space; greater than total if trimming has occurred. */
+  size_t usmblks;
+  /** (Unused.) */
+  size_t fsmblks;
+  /** Total allocated space (normal or mmapped.) */
+  size_t uordblks;
+  /** Total free space. */
+  size_t fordblks;
+  /** Upper bound on number of bytes releasable by a trim operation. */
+  size_t keepcost;
+};
 #endif
 
 /**
@@ -130,18 +129,6 @@ struct mallinfo { __MALLINFO_BODY };
  * inherently unreliable and consider using malloc_info() instead.
  */
 struct mallinfo mallinfo(void);
-
-/**
- * On Android the struct mallinfo and struct mallinfo2 are the same.
- */
-struct mallinfo2 { __MALLINFO_BODY };
-
-/**
- * [mallinfo2(3)](http://man7.org/linux/man-pages/man3/mallinfo2.3.html) returns
- * information about the current state of the heap. Note that mallinfo2() is
- * inherently unreliable and consider using malloc_info() instead.
- */
-struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
 
 /**
  * [malloc_info(3)](http://man7.org/linux/man-pages/man3/malloc_info.3.html)

@@ -25,7 +25,6 @@
 #define VIRTIO_IOMMU_F_BYPASS 3
 #define VIRTIO_IOMMU_F_PROBE 4
 #define VIRTIO_IOMMU_F_MMIO 5
-#define VIRTIO_IOMMU_F_BYPASS_CONFIG 6
 struct virtio_iommu_range_64 {
   __le64 start;
   __le64 end;
@@ -39,8 +38,6 @@ struct virtio_iommu_config {
   struct virtio_iommu_range_64 input_range;
   struct virtio_iommu_range_32 domain_range;
   __le32 probe_size;
-  __u8 bypass;
-  __u8 reserved[3];
 };
 #define VIRTIO_IOMMU_T_ATTACH 0x01
 #define VIRTIO_IOMMU_T_DETACH 0x02
@@ -64,13 +61,11 @@ struct virtio_iommu_req_tail {
   __u8 status;
   __u8 reserved[3];
 };
-#define VIRTIO_IOMMU_ATTACH_F_BYPASS (1 << 0)
 struct virtio_iommu_req_attach {
   struct virtio_iommu_req_head head;
   __le32 domain;
   __le32 endpoint;
-  __le32 flags;
-  __u8 reserved[4];
+  __u8 reserved[8];
   struct virtio_iommu_req_tail tail;
 };
 struct virtio_iommu_req_detach {

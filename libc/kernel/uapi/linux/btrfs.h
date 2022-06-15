@@ -175,7 +175,6 @@ struct btrfs_ioctl_fs_info_args {
 };
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE (1ULL << 0)
 #define BTRFS_FEATURE_COMPAT_RO_FREE_SPACE_TREE_VALID (1ULL << 1)
-#define BTRFS_FEATURE_COMPAT_RO_VERITY (1ULL << 2)
 #define BTRFS_FEATURE_INCOMPAT_MIXED_BACKREF (1ULL << 0)
 #define BTRFS_FEATURE_INCOMPAT_DEFAULT_SUBVOL (1ULL << 1)
 #define BTRFS_FEATURE_INCOMPAT_MIXED_GROUPS (1ULL << 2)
@@ -420,16 +419,14 @@ struct btrfs_ioctl_received_subvol_args {
 #define BTRFS_SEND_FLAG_NO_FILE_DATA 0x1
 #define BTRFS_SEND_FLAG_OMIT_STREAM_HEADER 0x2
 #define BTRFS_SEND_FLAG_OMIT_END_CMD 0x4
-#define BTRFS_SEND_FLAG_VERSION 0x8
-#define BTRFS_SEND_FLAG_MASK (BTRFS_SEND_FLAG_NO_FILE_DATA | BTRFS_SEND_FLAG_OMIT_STREAM_HEADER | BTRFS_SEND_FLAG_OMIT_END_CMD | BTRFS_SEND_FLAG_VERSION)
+#define BTRFS_SEND_FLAG_MASK (BTRFS_SEND_FLAG_NO_FILE_DATA | BTRFS_SEND_FLAG_OMIT_STREAM_HEADER | BTRFS_SEND_FLAG_OMIT_END_CMD)
 struct btrfs_ioctl_send_args {
   __s64 send_fd;
   __u64 clone_sources_count;
   __u64 __user * clone_sources;
   __u64 parent_root;
   __u64 flags;
-  __u32 version;
-  __u8 reserved[28];
+  __u64 reserved[4];
 };
 struct btrfs_ioctl_get_subvol_info_args {
   __u64 treeid;

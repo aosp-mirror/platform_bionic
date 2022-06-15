@@ -75,7 +75,6 @@ static void BM_pthread_mutex_lock(benchmark::State& state) {
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock);
 
-#if !defined(ANDROID_HOST_MUSL)
 static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP;
 
@@ -85,9 +84,7 @@ static void BM_pthread_mutex_lock_ERRORCHECK(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_ERRORCHECK);
-#endif
 
-#if !defined(ANDROID_HOST_MUSL)
 static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
   pthread_mutex_t mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 
@@ -97,7 +94,6 @@ static void BM_pthread_mutex_lock_RECURSIVE(benchmark::State& state) {
   }
 }
 BIONIC_BENCHMARK(BM_pthread_mutex_lock_RECURSIVE);
-#endif
 
 namespace {
 struct PIMutex {

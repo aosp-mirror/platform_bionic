@@ -33,9 +33,6 @@
 
 #include <android-base/macros.h>
 
-static constexpr size_t kBlockSizeAlign = sizeof(void*);
-static constexpr size_t kBlockSizeMin = sizeof(void*) * 2;
-
 struct LinkerBlockAllocatorPage;
 
 /*

@@ -72,7 +72,7 @@
     .popsection;
 
 #define NT_MEMTAG_LEVEL_MASK 3
-#define NT_MEMTAG_LEVEL_NONE 0
+#define NT_MEMTAG_LEVEL_DEFAULT 0
 #define NT_MEMTAG_LEVEL_ASYNC 1
 #define NT_MEMTAG_LEVEL_SYNC 2
 #define NT_MEMTAG_HEAP 4

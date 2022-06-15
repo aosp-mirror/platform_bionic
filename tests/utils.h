@@ -69,6 +69,14 @@ static inline bool have_dl() {
   return (dlopen("libc.so", 0) != nullptr);
 }
 
+extern "C" void __hwasan_init() __attribute__((weak));
+
+static inline bool running_with_hwasan() {
+  return &__hwasan_init != 0;
+}
+
+#define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
+
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
   static const prop_info* pi = __system_property_find("ro.dalvik.vm.isa." ABI_STRING);
@@ -221,7 +229,7 @@ class ExecTestHelper {
   }
 
   void Run(const std::function<void()>& child_fn, int expected_exit_status,
-           const char* expected_output_regex) {
+           const char* expected_output) {
     int fds[2];
     ASSERT_NE(pipe(fds), -1);
 
@@ -250,10 +258,8 @@ class ExecTestHelper {
 
     std::string error_msg("Test output:\n" + output_);
     AssertChildExited(pid, expected_exit_status, &error_msg);
-    if (expected_output_regex != nullptr) {
-      if (!std::regex_search(output_, std::regex(expected_output_regex))) {
-        FAIL() << "regex " << expected_output_regex << " didn't match " << output_;
-      }
+    if (expected_output != nullptr) {
+      ASSERT_EQ(expected_output, output_);
     }
   }
 
@@ -262,8 +268,6 @@ class ExecTestHelper {
   std::vector<const char*> env_;
   std::string output_;
 };
-
-void RunGwpAsanTest(const char* test_name);
 #endif
 
 class FdLeakChecker {

@@ -20,7 +20,7 @@
 #define _UAPI_LINUX_SOCKET_H
 #define _K_SS_MAXSIZE 128
 typedef unsigned short __kernel_sa_family_t;
-struct __kernel_sockaddr_storage {
+struct sockaddr_storage {
   union {
     struct {
       __kernel_sa_family_t ss_family;
@@ -29,7 +29,4 @@ struct __kernel_sockaddr_storage {
     void * __align;
   };
 };
-#define SOCK_SNDBUF_LOCK 1
-#define SOCK_RCVBUF_LOCK 2
-#define SOCK_BUF_LOCK_MASK (SOCK_SNDBUF_LOCK | SOCK_RCVBUF_LOCK)
 #endif

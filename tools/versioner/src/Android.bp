@@ -21,7 +21,8 @@ cc_binary_host {
     ],
 
     shared_libs: [
-        "libclang-cpp_host",
+        "libclang_cxx_host",
+        "libLLVM_host",
         "libbase",
     ],
 

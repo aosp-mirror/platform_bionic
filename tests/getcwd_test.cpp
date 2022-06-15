@@ -20,8 +20,6 @@
 #include <limits.h>
 #include <unistd.h>
 
-#include <android-base/test_utils.h>
-
 #include "utils.h"
 
 TEST(getcwd, auto_full) {

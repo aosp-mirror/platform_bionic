@@ -23,7 +23,6 @@
 #include <linux/virtio_ids.h>
 #include <linux/virtio_config.h>
 #define VIRTIO_MEM_F_ACPI_PXM 0
-#define VIRTIO_MEM_F_UNPLUGGED_INACCESSIBLE 1
 #define VIRTIO_MEM_REQ_PLUG 0
 #define VIRTIO_MEM_REQ_UNPLUG 1
 #define VIRTIO_MEM_REQ_UNPLUG_ALL 2
