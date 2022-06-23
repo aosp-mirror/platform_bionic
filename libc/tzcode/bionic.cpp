@@ -206,14 +206,24 @@ static int __bionic_open_tzdata_path(const char* path,
 int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   int fd;
 
-  // Try the two locations for the tzdata file in a strict order:
-  // 1: The time zone data module which contains the main copy. This is the
+  // Try the three locations for the tzdata file in a strict order:
+  // 1: The O-MR1 time zone updates via APK update mechanism. This is
+  //    tried first because it allows us to test that the time zone updates
+  //    via APK mechanism still works even on devices with the time zone
+  //    module.
+  //    TODO: remove this when those devices are no longer supported.
+  // 2: The time zone data module which contains the main copy. This is the
   //    common case for current devices.
-  // 2: The ultimate fallback: the non-updatable copy in /system.
+  // 3: The ultimate fallback: the non-updatable copy in /system.
 
 #if defined(__ANDROID__)
   // On Android devices, bionic has to work even if exec takes place without
   // environment variables set. So, all paths are hardcoded here.
+
+  fd = __bionic_open_tzdata_path("/data/misc/zoneinfo/current/tzdata",
+                                 olson_id, entry_length);
+  if (fd >= -1) return fd;
+
   fd = __bionic_open_tzdata_path("/apex/com.android.tzdata/etc/tz/tzdata",
                                  olson_id, entry_length);
   if (fd >= -1) return fd;
@@ -223,10 +233,16 @@ int __bionic_open_tzdata(const char* olson_id, int32_t* entry_length) {
   if (fd >= -1) return fd;
 #else
   // On the host, we don't expect the hard-coded locations above to exist, and
-  // we're not worried about security so we trust $ANDROID_TZDATA_ROOT, and
-  // $ANDROID_ROOT to point us in the right direction instead.
+  // we're not worried about security so we trust $ANDROID_DATA,
+  // $ANDROID_TZDATA_ROOT, and $ANDROID_ROOT to point us in the right direction
+  // instead.
 
-  char* path = make_path("ANDROID_TZDATA_ROOT", "/etc/tz/tzdata");
+  char* path = make_path("ANDROID_DATA", "/misc/zoneinfo/current/tzdata");
+  fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
+  free(path);
+  if (fd >= -1) return fd;
+
+  path = make_path("ANDROID_TZDATA_ROOT", "/etc/tz/tzdata");
   fd = __bionic_open_tzdata_path(path, olson_id, entry_length);
   free(path);
   if (fd >= -1) return fd;
