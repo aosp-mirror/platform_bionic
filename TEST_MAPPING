@@ -38,6 +38,9 @@
     },
     {
       "name": "memunreachable_unit_test"
+    },
+    {
+      "name": "toybox-tests"
     }
   ],
   "hwasan-presubmit": [
@@ -76,6 +79,9 @@
     },
     {
       "name": "memunreachable_unit_test"
+    },
+    {
+      "name": "toybox-tests"
     }
   ]
 }
