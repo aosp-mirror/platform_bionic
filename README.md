@@ -211,6 +211,10 @@ Adding a system call usually involves:
      implemented in the kernel. For simple syscalls, that's just the
      auto-generated argument and return value marshalling.
 
+     Add a test in the right file in tests/. We have one file per header, so if
+     your system call is exposed in <unistd.h>, for example, your test would go
+     in tests/unistd_test.cpp.
+
      A trivial test that deliberately supplies an invalid argument helps check
      that we're generating the right symbol and have the right declaration in
      the header file, and that the change to libc.map.txt from step 5 is
@@ -236,6 +240,39 @@ easy cases, even if only manual testing with strace. Sadly it isn't always
 feasible to write a working test for the interesting cases -- offsets larger
 than 2GiB, say -- so you may end up just writing a "meaningless" program whose
 only purpose is to give you patterns to look for when run under strace(1).)
+
+A general example of adding a system call:
+https://android-review.googlesource.com/c/platform/bionic/+/2073827
+
+### Debugging tips
+1. Key error for a new codename in libc/libc.map.txt
+e.g. what you add in libc/libc.map.txt is:
+
+```
+LIBC_V { # introduced=Vanilla
+  global:
+    xxx; // the new system call you add
+} LIBC_U;
+```
+
+The error output is:
+
+```
+Traceback (most recent call last):
+  File "/path/tp/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 171,
+  in decode_api_level_tag
+    decoded = str(decode_api_level(value, api_map))
+  File "/path/to/out/soong/.temp/Soong.python_qucjwd7g/symbolfile/__init__.py", line 157,
+  in decode_api_level
+    return api_map[api]
+KeyError: 'Vanilla'
+```
+
+Solution: Ask in the team and wait for the update.
+
+2. Use of undeclared identifier of the new system call in the test
+Possible Solution: Check everything ready in the files mentioned above first.
+Maybe glibc matters. Follow the example and try #if defined(__GLIBC__).
 
 ## Updating kernel header files
 

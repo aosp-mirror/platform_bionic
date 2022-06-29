@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,19 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include <string>
+#pragma once
 
-#include <android-base/file.h>
+#include <stdint.h>
 
-#include "linker.h"
+#include <atomic>
 
-bool get_transparent_hugepages_supported() {
-  static bool transparent_hugepages_supported = []() {
-    std::string enabled;
-    if (!android::base::ReadFileToString("/sys/kernel/mm/transparent_hugepage/enabled", &enabled)) {
-      return false;
-    }
-    return enabled.find("[never]") == std::string::npos;
-  }();
-  return transparent_hugepages_supported;
-}
+// Forward declarations
+class ConfigData;
+
+class Unreachable {
+ public:
+  static bool Initialize(const Config& config);
+  static void CheckIfRequested(const Config& config);
+
+  static void EnableCheck() { do_check_ = true; }
+
+ private:
+  static std::atomic_bool do_check_;
+
+  BIONIC_DISALLOW_IMPLICIT_CONSTRUCTORS(Unreachable);
+};
