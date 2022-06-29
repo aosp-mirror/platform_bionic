@@ -19,6 +19,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <gtest/gtest.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -264,6 +265,7 @@ class ExecTestHelper {
 };
 
 void RunGwpAsanTest(const char* test_name);
+void RunSubtestNoEnv(const char* test_name);
 #endif
 
 class FdLeakChecker {
