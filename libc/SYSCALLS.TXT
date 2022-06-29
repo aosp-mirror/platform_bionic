@@ -26,7 +26,7 @@
 # This file is processed by a python script named gensyscalls.py, run via
 # genrules in Android.bp.
 
-int     execve(const char*, char* const*, char* const*)  all
+int     __execve:execve(const char*, char* const*, char* const*)  all
 
 uid_t   getuid:getuid32()         lp32
 uid_t   getuid:getuid()           lp64
@@ -108,6 +108,7 @@ ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, in
 
 int         __close:close(int)  all
 int         close_range(unsigned int, unsigned int, int) all
+ssize_t     copy_file_range(int, off64_t*, int, off64_t*, size_t, unsigned int) all
 pid_t       __getpid:getpid()  all
 int memfd_create(const char*, unsigned) all
 int         munmap(void*, size_t)  all
@@ -319,7 +320,7 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void _exit|_Exit:exit_group(int)  all
+void __exit_group:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all

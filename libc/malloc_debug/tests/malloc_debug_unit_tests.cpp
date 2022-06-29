@@ -83,6 +83,14 @@ void debug_dump_heap(const char*);
 
 __END_DECLS
 
+// Change the slow threshold since some tests take more than 2 seconds.
+extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
+  static const char* initial_args[] = {"--slow_threshold_ms=5000"};
+  *args = initial_args;
+  *num_args = 1;
+  return true;
+}
+
 constexpr char DIVIDER[] =
     "6 malloc_debug *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n";
 
@@ -90,7 +98,7 @@ static size_t get_tag_offset() {
   return __BIONIC_ALIGN(sizeof(Header), MINIMUM_ALIGNMENT_BYTES);
 }
 
-static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs.txt";
+static constexpr const char RECORD_ALLOCS_FILE[] = "/data/local/tmp/record_allocs";
 
 static constexpr const char BACKTRACE_DUMP_PREFIX[] = "/data/local/tmp/backtrace_heap";
 
@@ -100,8 +108,10 @@ class MallocDebugTest : public ::testing::Test {
     initialized = false;
     resetLogs();
     backtrace_fake_clear_all();
-    // Delete the record data file if it exists.
-    unlink(RECORD_ALLOCS_FILE);
+    if (!record_filename.empty()) {
+      // Delete the record data file if it exists.
+      unlink(record_filename.c_str());
+    }
   }
 
   void TearDown() override {
@@ -116,6 +126,13 @@ class MallocDebugTest : public ::testing::Test {
     initialized = true;
   }
 
+  void InitRecordAllocs(const char* options) {
+    record_filename = android::base::StringPrintf("%s.%d.txt", RECORD_ALLOCS_FILE, getpid());
+    std::string init(options);
+    init += android::base::StringPrintf(" record_allocs_file=%s", record_filename.c_str());
+    Init(init.c_str());
+  }
+
   void BacktraceDumpOnSignal(bool trigger_with_alloc);
 
   static size_t GetInfoEntrySize(size_t max_frames) {
@@ -125,6 +142,8 @@ class MallocDebugTest : public ::testing::Test {
   bool initialized;
 
   bool zygote_child;
+
+  std::string record_filename;
 
   static MallocDispatch dispatch;
 };
@@ -227,6 +246,9 @@ void VerifyAllocCalls(bool all_options) {
     expected_log += android::base::StringPrintf(
         "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to dump the allocation records.\n",
         SIGRTMAX - 18, getpid());
+    expected_log += android::base::StringPrintf(
+        "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to check for unreachable memory.\n",
+        SIGRTMAX - 16, getpid());
   }
   expected_log += "4 malloc_debug malloc_testing: malloc debug enabled\n";
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
@@ -296,6 +318,16 @@ TEST_F(MallocDebugTest, verbose_record_allocs) {
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
+TEST_F(MallocDebugTest, verbose_check_unreachable_on_signal) {
+  Init("verbose check_unreachable_on_signal");
+
+  std::string expected_log = android::base::StringPrintf(
+      "4 malloc_debug malloc_testing: Run: 'kill -%d %d' to check for unreachable memory.\n",
+      SIGRTMAX - 16, getpid());
+  expected_log += "4 malloc_debug malloc_testing: malloc debug enabled\n";
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
 TEST_F(MallocDebugTest, fill_on_free) {
   Init("fill_on_free free_track free_track_backtrace_num_frames=0");
 
@@ -359,7 +391,7 @@ TEST_F(MallocDebugTest, free_track_partial) {
 TEST_F(MallocDebugTest, all_options) {
   Init(
       "guard backtrace backtrace_enable_on_signal fill expand_alloc free_track leak_track "
-      "record_allocs verify_pointers abort_on_error verbose");
+      "record_allocs verify_pointers abort_on_error verbose check_unreachable_on_signal");
   VerifyAllocCalls(true);
 }
 
@@ -2135,7 +2167,7 @@ TEST_F(MallocDebugTest, debug_valloc) {
 }
 #endif
 
-void VerifyRecordAllocs() {
+void VerifyRecordAllocs(const std::string& record_filename) {
   std::string expected;
 
   void* pointer = debug_malloc(10);
@@ -2204,8 +2236,7 @@ void VerifyRecordAllocs() {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2216,19 +2247,19 @@ void VerifyRecordAllocs() {
 }
 
 TEST_F(MallocDebugTest, record_allocs_no_header) {
-  Init("record_allocs");
+  InitRecordAllocs("record_allocs");
 
-  VerifyRecordAllocs();
+  VerifyRecordAllocs(record_filename);
 }
 
 TEST_F(MallocDebugTest, record_allocs_with_header) {
-  Init("record_allocs front_guard");
+  InitRecordAllocs("record_allocs front_guard");
 
-  VerifyRecordAllocs();
+  VerifyRecordAllocs(record_filename);
 }
 
 TEST_F(MallocDebugTest, record_allocs_max) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   std::string expected;
 
@@ -2259,8 +2290,7 @@ TEST_F(MallocDebugTest, record_allocs_max) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2271,7 +2301,7 @@ TEST_F(MallocDebugTest, record_allocs_max) {
 }
 
 TEST_F(MallocDebugTest, record_allocs_thread_done) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   static pid_t tid = 0;
   static void* pointer = nullptr;
@@ -2298,8 +2328,7 @@ TEST_F(MallocDebugTest, record_allocs_thread_done) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
@@ -2310,13 +2339,13 @@ TEST_F(MallocDebugTest, record_allocs_thread_done) {
 }
 
 TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
-  Init("record_allocs=5");
+  InitRecordAllocs("record_allocs=5");
 
   // Delete the special.txt file and create a symbolic link there to
   // make sure the create file will fail.
-  unlink(RECORD_ALLOCS_FILE);
+  unlink(record_filename.c_str());
 
-  ASSERT_EQ(0, symlink("/data/local/tmp/does_not_exist", RECORD_ALLOCS_FILE));
+  ASSERT_EQ(0, symlink("/data/local/tmp/does_not_exist", record_filename.c_str()));
 
   std::string expected;
 
@@ -2337,10 +2366,10 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
 
   // Read all of the contents.
   std::string actual;
-  ASSERT_FALSE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
+  ASSERT_FALSE(android::base::ReadFileToString(record_filename, &actual));
 
   // Unlink the file so the next dump passes.
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_EQ(0, unlink(record_filename.c_str()));
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
@@ -2350,14 +2379,13 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
   debug_free(pointer);
   expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 
-  ASSERT_TRUE(android::base::ReadFileToString(RECORD_ALLOCS_FILE, &actual));
-  ASSERT_EQ(0, unlink(RECORD_ALLOCS_FILE));
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
   ASSERT_STREQ(expected.c_str(), actual.c_str());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
       "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered\n",
-      RECORD_ALLOCS_FILE);
+      record_filename.c_str());
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
 
@@ -2694,4 +2722,210 @@ TEST_F(MallocDebugTest, dump_heap) {
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = std::string("6 malloc_debug Dumping to file: ") + tf.path + "\n\n";
   ASSERT_EQ(expected_log, getFakeLogPrint());
+}
+
+extern "C" bool LogUnreachableMemory(bool, size_t) {
+  static bool return_value = false;
+  return_value = !return_value;
+  return return_value;
+}
+
+TEST_F(MallocDebugTest, check_unreachable_on_signal) {
+  Init("check_unreachable_on_signal");
+
+  ASSERT_TRUE(kill(getpid(), SIGRTMAX - 16) == 0);
+  sleep(1);
+
+  // The first unreachable check will pass.
+  void* pointer = debug_malloc(110);
+  ASSERT_TRUE(pointer != nullptr);
+
+  ASSERT_TRUE(kill(getpid(), SIGRTMAX - 16) == 0);
+  sleep(1);
+
+  // The second unreachable check will fail.
+  debug_free(pointer);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = "4 malloc_debug Starting to check for unreachable memory.\n";
+  ASSERT_STREQ(
+      "4 malloc_debug Starting to check for unreachable memory.\n"
+      "4 malloc_debug Starting to check for unreachable memory.\n"
+      "6 malloc_debug Unreachable check failed, run setenforce 0 and try again.\n",
+      getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_size) {
+  Init("leak_track backtrace backtrace_size=120");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(119);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(120);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(121);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 121 at %p (leak 1 of 3)\n", pointer3);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 120 at %p (leak 2 of 3)\n", pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 119 at %p (leak 3 of 3)\n", pointer1);
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_min_size) {
+  Init("leak_track backtrace backtrace_min_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(500);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(1000);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(1001);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 1 of 3)\n",
+      pointer3);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xa000\n";
+  expected_log += "6 malloc_debug   #01 pc 0xb000\n";
+  expected_log += "6 malloc_debug   #02 pc 0xc000\n";
+  expected_log += "6 malloc_debug   #03 pc 0xd000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 2 of 3)\n",
+      pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 500 at %p (leak 3 of 3)\n", pointer1);
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_max_size) {
+  Init("leak_track backtrace backtrace_max_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(1000);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(1001);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(5000);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 5000 at %p (leak 1 of 3)\n",
+      pointer3);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 2 of 3)\n",
+      pointer2);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 3 of 3)\n",
+      pointer1);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, backtrace_only_some_sizes_with_backtrace_min_max_size) {
+  Init("leak_track backtrace backtrace_min_size=50 backtrace_max_size=1000");
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1000, 0x2000, 0x3000});
+
+  void* pointer1 = debug_malloc(49);
+  ASSERT_TRUE(pointer1 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xa000, 0xb000, 0xc000, 0xd000});
+
+  void* pointer2 = debug_malloc(50);
+  ASSERT_TRUE(pointer2 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0xfe000, 0xde000, 0xce000, 0xbe000, 0xae000});
+
+  void* pointer3 = debug_malloc(1000);
+  ASSERT_TRUE(pointer3 != nullptr);
+
+  backtrace_fake_add(std::vector<uintptr_t>{0x1a000, 0x1b000, 0x1c000, 0x1d000, 0x1e000});
+
+  void* pointer4 = debug_malloc(1001);
+  ASSERT_TRUE(pointer4 != nullptr);
+
+  debug_finalize();
+  initialized = false;
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  std::string expected_log = android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1001 at %p (leak 1 of 4)\n",
+      pointer4);
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 1000 at %p (leak 2 of 4)\n",
+      pointer3);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0xa000\n";
+  expected_log += "6 malloc_debug   #01 pc 0xb000\n";
+  expected_log += "6 malloc_debug   #02 pc 0xc000\n";
+  expected_log += "6 malloc_debug   #03 pc 0xd000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 50 at %p (leak 3 of 4)\n", pointer2);
+  expected_log += "6 malloc_debug Backtrace at time of allocation:\n";
+  expected_log += "6 malloc_debug   #00 pc 0x1000\n";
+  expected_log += "6 malloc_debug   #01 pc 0x2000\n";
+  expected_log += "6 malloc_debug   #02 pc 0x3000\n";
+
+  expected_log += android::base::StringPrintf(
+      "6 malloc_debug +++ malloc_testing leaked block of size 49 at %p (leak 4 of 4)\n", pointer1);
+
+  ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
 }
