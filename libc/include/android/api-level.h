@@ -154,6 +154,9 @@ __BEGIN_DECLS
 /** Names the "T" API level (33), for comparison against `__ANDROID_API__`. */
 #define __ANDROID_API_T__ 33
 
+/** Names the "U" API level (34), for comparison against `__ANDROID_API__`. */
+#define __ANDROID_API_U__ 34
+
 /* This file is included in <features.h>, and might be used from .S files. */
 #if !defined(__ASSEMBLY__)
 
