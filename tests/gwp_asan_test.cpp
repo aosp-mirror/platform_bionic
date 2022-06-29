@@ -28,27 +28,20 @@
 
 #include <gtest/gtest.h>
 #include <stdio.h>
+#include <sys/file.h>
 #include <string>
 
 #if defined(__BIONIC__)
 
+#include "android-base/file.h"
 #include "gwp_asan/options.h"
 #include "platform/bionic/malloc.h"
+#include "sys/system_properties.h"
 #include "utils.h"
 
-void RunGwpAsanTest(const char* test_name) {
-  ExecTestHelper eh;
-  eh.SetEnv({"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1", "GWP_ASAN_MAX_ALLOCS=40000",
-             nullptr});
-  std::string filter_arg = "--gtest_filter=";
-  filter_arg += test_name;
-  std::string exec(testing::internal::GetArgvs()[0]);
-  eh.SetArgs({exec.c_str(), "--gtest_also_run_disabled_tests", filter_arg.c_str(), nullptr});
-  eh.Run([&]() { execve(exec.c_str(), eh.GetArgs(), eh.GetEnv()); },
-         /* expected_exit_status */ 0,
-         // |expected_output_regex|, ensure at least one test ran:
-         R"(\[  PASSED  \] [1-9]+0? test)");
-}
+// basename is a mess, use gnu basename explicitly to avoid the need for string
+// mutation.
+extern "C" const char* __gnu_basename(const char* path);
 
 // This file implements "torture testing" under GWP-ASan, where we sample every
 // single allocation. The upper limit for the number of GWP-ASan allocations in
@@ -56,6 +49,193 @@ void RunGwpAsanTest(const char* test_name) {
 // explode, as this uses ~163MiB RAM (4KiB per live allocation).
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
   RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
+}
+
+class SyspropRestorer {
+ private:
+  std::vector<std::pair<std::string, std::string>> props_to_restore_;
+  // System properties are global for a device, so the tests that mutate the
+  // GWP-ASan system properties must be run mutually exclusive. Because
+  // bionic-unit-tests is run in an isolated gtest fashion (each test is run in
+  // its own process), we have to use flocks to synchronise between tests.
+  int flock_fd_;
+
+ public:
+  SyspropRestorer() {
+    std::string path = testing::internal::GetArgvs()[0];
+    flock_fd_ = open(path.c_str(), O_RDONLY);
+    EXPECT_NE(flock_fd_, -1) << "failed to open self for a flock";
+    EXPECT_NE(flock(flock_fd_, LOCK_EX), -1) << "failed to flock myself";
+
+    const char* basename = __gnu_basename(path.c_str());
+    std::vector<std::string> props = {
+        std::string("libc.debug.gwp_asan.sample_rate.") + basename,
+        std::string("libc.debug.gwp_asan.process_sampling.") + basename,
+        std::string("libc.debug.gwp_asan.max_allocs.") + basename,
+        "libc.debug.gwp_asan.sample_rate.system_default",
+        "libc.debug.gwp_asan.sample_rate.app_default",
+        "libc.debug.gwp_asan.process_sampling.system_default",
+        "libc.debug.gwp_asan.process_sampling.app_default",
+        "libc.debug.gwp_asan.max_allocs.system_default",
+        "libc.debug.gwp_asan.max_allocs.app_default",
+    };
+
+    size_t base_props_size = props.size();
+    for (size_t i = 0; i < base_props_size; ++i) {
+      props.push_back("persist." + props[i]);
+    }
+
+    std::string reset_log;
+
+    for (const std::string& prop : props) {
+      std::string value = GetSysprop(prop);
+      props_to_restore_.emplace_back(prop, value);
+      if (!value.empty()) {
+        __system_property_set(prop.c_str(), "");
+      }
+    }
+  }
+
+  ~SyspropRestorer() {
+    for (const auto& kv : props_to_restore_) {
+      if (kv.second != GetSysprop(kv.first)) {
+        __system_property_set(kv.first.c_str(), kv.second.c_str());
+      }
+    }
+    close(flock_fd_);
+  }
+
+  static std::string GetSysprop(const std::string& name) {
+    std::string value;
+    const prop_info* pi = __system_property_find(name.c_str());
+    if (pi == nullptr) return value;
+    __system_property_read_callback(
+        pi,
+        [](void* cookie, const char* /* name */, const char* value, uint32_t /* serial */) {
+          std::string* v = static_cast<std::string*>(cookie);
+          *v = value;
+        },
+        &value);
+    return value;
+  }
+};
+
+TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_enabled) {
+  std::string maps;
+  EXPECT_TRUE(android::base::ReadFileToString("/proc/self/maps", &maps));
+  EXPECT_TRUE(maps.find("GWP-ASan") != std::string::npos) << maps;
+
+  volatile int* x = new int;
+  delete x;
+  EXPECT_DEATH({ *x = 7; }, "");
+}
+
+TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_disabled) {
+  std::string maps;
+  EXPECT_TRUE(android::base::ReadFileToString("/proc/self/maps", &maps));
+  EXPECT_TRUE(maps.find("GWP-ASan") == std::string::npos);
+}
+
+TEST(gwp_asan_integration, sysprops_program_specific) {
+  SyspropRestorer restorer;
+
+  std::string path = testing::internal::GetArgvs()[0];
+  const char* basename = __gnu_basename(path.c_str());
+  __system_property_set((std::string("libc.debug.gwp_asan.sample_rate.") + basename).c_str(), "1");
+  __system_property_set((std::string("libc.debug.gwp_asan.process_sampling.") + basename).c_str(),
+                        "1");
+  __system_property_set((std::string("libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
+                        "40000");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_persist_program_specific) {
+  SyspropRestorer restorer;
+
+  std::string path = testing::internal::GetArgvs()[0];
+  const char* basename = __gnu_basename(path.c_str());
+  __system_property_set(
+      (std::string("persist.libc.debug.gwp_asan.sample_rate.") + basename).c_str(), "1");
+  __system_property_set(
+      (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
+  __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
+                        "40000");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_system) {
+  SyspropRestorer restorer;
+
+  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
+  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "1");
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "40000");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_persist_system) {
+  SyspropRestorer restorer;
+
+  __system_property_set("persist.libc.debug.gwp_asan.sample_rate.system_default", "1");
+  __system_property_set("persist.libc.debug.gwp_asan.process_sampling.system_default", "1");
+  __system_property_set("persist.libc.debug.gwp_asan.max_allocs.system_default", "40000");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_non_persist_overrides_persist) {
+  SyspropRestorer restorer;
+
+  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
+  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "1");
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "40000");
+
+  __system_property_set("persist.libc.debug.gwp_asan.sample_rate.system_default", "0");
+  __system_property_set("persist.libc.debug.gwp_asan.process_sampling.system_default", "0");
+  __system_property_set("persist.libc.debug.gwp_asan.max_allocs.system_default", "0");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
+  SyspropRestorer restorer;
+
+  std::string path = testing::internal::GetArgvs()[0];
+  const char* basename = __gnu_basename(path.c_str());
+  __system_property_set(
+      (std::string("persist.libc.debug.gwp_asan.sample_rate.") + basename).c_str(), "1");
+  __system_property_set(
+      (std::string("persist.libc.debug.gwp_asan.process_sampling.") + basename).c_str(), "1");
+  __system_property_set((std::string("persist.libc.debug.gwp_asan.max_allocs.") + basename).c_str(),
+                        "40000");
+
+  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "0");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
+}
+
+TEST(gwp_asan_integration, sysprops_can_disable) {
+  SyspropRestorer restorer;
+
+  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "0");
+
+  RunSubtestNoEnv("gwp_asan_integration.DISABLED_assert_gwp_asan_disabled");
+}
+
+TEST(gwp_asan_integration, env_overrides_sysprop) {
+  SyspropRestorer restorer;
+
+  __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.process_sampling.system_default", "0");
+  __system_property_set("libc.debug.gwp_asan.max_allocs.system_default", "0");
+
+  RunGwpAsanTest("gwp_asan_integration.DISABLED_assert_gwp_asan_enabled");
 }
 
 #endif  // defined(__BIONIC__)
