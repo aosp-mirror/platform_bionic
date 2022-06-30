@@ -462,6 +462,9 @@ union perf_mem_data_src {
 #define PERF_MEM_BLK_ADDR 0x04
 #define PERF_MEM_BLK_SHIFT 40
 #define PERF_MEM_HOPS_0 0x01
+#define PERF_MEM_HOPS_1 0x02
+#define PERF_MEM_HOPS_2 0x03
+#define PERF_MEM_HOPS_3 0x04
 #define PERF_MEM_HOPS_SHIFT 43
 #define PERF_MEM_S(a,s) (((__u64) PERF_MEM_ ##a ##_ ##s) << PERF_MEM_ ##a ##_SHIFT)
 struct perf_branch_entry {

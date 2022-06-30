@@ -377,6 +377,6 @@ struct audit_rule_data {
   __u32 values[AUDIT_MAX_FIELDS];
   __u32 fieldflags[AUDIT_MAX_FIELDS];
   __u32 buflen;
-  char buf[0];
+  char buf[];
 };
 #endif
