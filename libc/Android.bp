@@ -1690,8 +1690,8 @@ cc_library {
     },
 
     required: [
-        "tzdata",
-        "tz_version", // Version metadata for tzdata to help debugging.
+        "tzdata_prebuilt",
+        "tz_version_prebuilt", // Version metadata for tzdata to help debugging.
     ],
 
     // Do not pack libc.so relocations; see http://b/20645321 for details.
