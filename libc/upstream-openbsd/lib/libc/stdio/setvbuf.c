@@ -131,7 +131,8 @@ nbf:
 		flags |= __SNPT;
 
 	/*
-	 * Fix up the FILE fields.
+	 * Fix up the FILE fields, and set __cleanup for output flush on
+	 * exit (since we are buffered in some way).
 	 */
 	if (mode == _IOLBF)
 		flags |= __SLBF;
