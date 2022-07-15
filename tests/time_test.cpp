@@ -266,7 +266,7 @@ TEST(time, strftime_second_before_epoch) {
   EXPECT_STREQ("-1", buf);
 }
 
-TEST(time, strftime_null_tm_zone) {
+TEST(time, strftime_Z_null_tm_zone) {
   // Netflix on Nexus Player wouldn't start (http://b/25170306).
   struct tm t;
   memset(&t, 0, sizeof(tm));
@@ -302,6 +302,86 @@ TEST(time, strftime_null_tm_zone) {
   EXPECT_EQ(2U, strftime(buf, sizeof(buf), "<%Z>", &t));
   EXPECT_STREQ("<>", buf);
 #endif
+}
+
+// According to C language specification the only tm struct field needed to
+// find out replacement for %z and %Z in strftime is tm_isdst. Which is
+// wrong, as time zones change their standard offset and even DST savings.
+// tzcode deviates from C language specification and requires tm struct either
+// to be output of localtime-like functions or to be modified by mktime call
+// before passing to strftime. See tz mailing discussion for more details
+// https://mm.icann.org/pipermail/tz/2022-July/031674.html
+// But we are testing case when tm.tm_zone is null, which means that tm struct
+// is not coming from localtime and is neither modified by mktime. That's why
+// we are comparing against +0000, even though America/Los_Angeles never
+// observes it.
+TEST(time, strftime_z_null_tm_zone) {
+  char str[64];
+  struct tm tm = {.tm_year = 109, .tm_mon = 4, .tm_mday = 2, .tm_isdst = 0};
+
+  setenv("TZ", "America/Los_Angeles", 1);
+  tzset();
+
+  tm.tm_zone = NULL;
+
+  size_t result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
+
+  tm.tm_isdst = 1;
+
+  result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
+
+  setenv("TZ", "UTC", 1);
+  tzset();
+
+  tm.tm_isdst = 0;
+
+  result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
+
+  tm.tm_isdst = 1;
+
+  result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
+}
+
+TEST(time, strftime_z_Europe_Lisbon) {
+  char str[64];
+  // During 1992-1996 Europe/Lisbon standard offset was 1 hour.
+  // tm_isdst is not set as it will be overridden by mktime call anyway.
+  struct tm tm = {.tm_year = 1996 - 1900, .tm_mon = 2, .tm_mday = 13};
+
+  setenv("TZ", "Europe/Lisbon", 1);
+  tzset();
+
+  // tzcode's strftime implementation for %z relies on prior mktime call.
+  // At the moment of writing %z value is taken from tm_gmtoff. So without
+  // mktime call %z is replaced with +0000.
+  // See https://mm.icann.org/pipermail/tz/2022-July/031674.html
+  mktime(&tm);
+
+  size_t result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0100", str);
+
+  // Now standard offset is 0.
+  tm = {.tm_year = 2022 - 1900, .tm_mon = 2, .tm_mday = 13};
+
+  mktime(&tm);
+  result = strftime(str, sizeof(str), "%z", &tm);
+
+  EXPECT_EQ(5U, result);
+  EXPECT_STREQ("+0000", str);
 }
 
 TEST(time, strftime_l) {
