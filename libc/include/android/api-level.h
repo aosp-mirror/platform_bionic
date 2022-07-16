@@ -139,19 +139,27 @@ __BEGIN_DECLS
 #define __ANDROID_API_P__ 28
 
 /**
- * Names the "Q" API level (29), for comparison against `__ANDROID_API__`.
- * This release was called Android 10 publicly, not to be (but sure to be)
- * confused with API level 10.
+ * Names the Android 10 (aka "Q" or "Quince Tart") API level (29), for
+ * comparison against `__ANDROID_API__`.
  */
 #define __ANDROID_API_Q__ 29
 
-/** Names the "R" API level (30), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 11 (aka "R" or "Red Velvet Cake") API level (30), for
+ * comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_R__ 30
 
-/** Names the "S" API level (31), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 12 (aka "S" or "Snowcone") API level (31), for
+ * comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_S__ 31
 
-/** Names the "T" API level (33), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 13 (aka "T" or "Tiramisu") API level (33), for
+ * comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_T__ 33
 
 /** Names the "U" API level (34), for comparison against `__ANDROID_API__`. */
