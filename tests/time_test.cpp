@@ -144,15 +144,11 @@ TEST(time, mktime_empty_TZ) {
 }
 
 TEST(time, mktime_10310929) {
-  struct tm t;
-  memset(&t, 0, sizeof(tm));
-  t.tm_year = 200;
-  t.tm_mon = 2;
-  t.tm_mday = 10;
+  struct tm tm = {.tm_year = 2100 - 1900, .tm_mon = 2, .tm_mday = 10};
 
 #if !defined(__LP64__)
   // 32-bit bionic has a signed 32-bit time_t.
-  ASSERT_EQ(-1, mktime(&t));
+  ASSERT_EQ(-1, mktime(&tm));
   ASSERT_EQ(EOVERFLOW, errno);
 #else
   // Everyone else should be using a signed 64-bit time_t.
@@ -161,13 +157,12 @@ TEST(time, mktime_10310929) {
   setenv("TZ", "America/Los_Angeles", 1);
   tzset();
   errno = 0;
-  ASSERT_EQ(static_cast<time_t>(4108348800U), mktime(&t));
-  ASSERT_EQ(0, errno);
 
-  setenv("TZ", "UTC", 1);
-  tzset();
-  errno = 0;
-  ASSERT_EQ(static_cast<time_t>(4108320000U), mktime(&t));
+  // On the date/time specified by tm America/Los_Angeles
+  // follows DST. But tm_isdst is set to 0, which forces
+  // mktime to interpret that time as local standard, hence offset
+  // is 8 hours, not 7.
+  ASSERT_EQ(static_cast<time_t>(4108348800U), mktime(&tm));
   ASSERT_EQ(0, errno);
 #endif
 }
@@ -210,6 +205,25 @@ TEST(time, mktime_invalid_tm_TZ_combination) {
   EXPECT_EQ(static_cast<time_t>(-1), mktime(&t));
   // mktime sets errno to EOVERFLOW if result is unrepresentable.
   EXPECT_EQ(EOVERFLOW, errno);
+}
+
+// Transitions in the tzdata file are generated up to the year 2100. Testing
+// that dates beyond that are handled properly too.
+TEST(time, mktime_after_2100) {
+  struct tm tm = {.tm_year = 2150 - 1900, .tm_mon = 2, .tm_mday = 10, .tm_isdst = -1};
+
+#if !defined(__LP64__)
+  // 32-bit bionic has a signed 32-bit time_t.
+  ASSERT_EQ(-1, mktime(&tm));
+  ASSERT_EQ(EOVERFLOW, errno);
+#else
+  setenv("TZ", "Europe/London", 1);
+  tzset();
+  errno = 0;
+
+  ASSERT_EQ(static_cast<time_t>(5686156800U), mktime(&tm));
+  ASSERT_EQ(0, errno);
+#endif
 }
 
 TEST(time, strftime) {
