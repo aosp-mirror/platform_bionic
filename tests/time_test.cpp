@@ -84,6 +84,16 @@ TEST(time, gmtime_r) {
   ASSERT_EQ(1970, broken_down->tm_year + 1900);
 }
 
+TEST(time, mktime_TZ_as_UTC_and_offset) {
+  struct tm tm = {.tm_year = 70, .tm_mon = 0, .tm_mday = 1};
+
+  // This TZ value is not a valid Olson ID and is not present in tzdata file,
+  // but is a valid TZ string according to POSIX standard.
+  setenv("TZ", "UTC+08:00:00", 1);
+  tzset();
+  ASSERT_EQ(static_cast<time_t>(8 * 60 * 60), mktime(&tm));
+}
+
 static void* gmtime_no_stack_overflow_14313703_fn(void*) {
   const char* original_tz = getenv("TZ");
   // Ensure we'll actually have to enter tzload by using a time zone that doesn't exist.
