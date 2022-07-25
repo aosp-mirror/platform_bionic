@@ -190,6 +190,29 @@ static char *getformat(int modifier, char *normal, char *underscore,
     return normal;
 }
 
+// Android-added: fall back mechanism when TM_ZONE is not initialized.
+#ifdef TM_ZONE
+static const char* _safe_tm_zone(const struct tm* tm) {
+  const char* zone = tm->TM_ZONE;
+  if (!zone || !*zone) {
+    // "The value of tm_isdst shall be positive if Daylight Savings Time is
+    // in effect, 0 if Daylight Savings Time is not in effect, and negative
+    // if the information is not available."
+    if (tm->tm_isdst == 0) {
+      zone = tzname[0];
+    } else if (tm->tm_isdst > 0) {
+      zone = tzname[1];
+    }
+
+    // "Replaced by the timezone name or abbreviation, or by no bytes if no
+    // timezone information exists."
+    if (!zone || !*zone) zone = "";
+  }
+
+  return zone;
+}
+#endif
+
 static char *
 _fmt(const char *format, const struct tm *t, char *pt,
         const char *ptlim, enum warn *warnp)
@@ -524,21 +547,7 @@ label:
             case 'Z':
 #ifdef TM_ZONE
                 // BEGIN: Android-changed.
-                {
-                    const char* zone = t->TM_ZONE;
-                    if (!zone || !*zone) {
-                        // "The value of tm_isdst shall be positive if Daylight Savings Time is
-                        // in effect, 0 if Daylight Savings Time is not in effect, and negative
-                        // if the information is not available."
-                        if (t->tm_isdst == 0) zone = tzname[0];
-                        else if (t->tm_isdst > 0) zone = tzname[1];
-
-                        // "Replaced by the timezone name or abbreviation, or by no bytes if no
-                        // timezone information exists."
-                        if (!zone || !*zone) zone = "";
-                    }
-                    pt = _add(zone, pt, ptlim, modifier);
-                }
+                pt = _add(_safe_tm_zone(t), pt, ptlim, modifier);
                 // END: Android-changed.
 #elif HAVE_TZNAME
                 if (t->tm_isdst >= 0)
@@ -599,7 +608,11 @@ label:
                 negative = diff < 0;
                 if (diff == 0) {
 #ifdef TM_ZONE
-                    negative = t->TM_ZONE[0] == '-';
+                  // Android-changed: do not use TM_ZONE as it is as it may be null.
+                  {
+                    const char* zone = _safe_tm_zone(t);
+                    negative = zone[0] == '-';
+                  }
 #else
                     negative = t->tm_isdst < 0;
 # if HAVE_TZNAME
