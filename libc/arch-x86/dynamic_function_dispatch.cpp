@@ -95,13 +95,6 @@ DEFINE_IFUNC_FOR(wmemcmp) {
     RETURN_FUNC(wmemcmp_func, wmemcmp_freebsd);
 }
 
-typedef int wmemset_func(const wchar_t* __lhs, const wchar_t* __rhs, size_t __n);
-DEFINE_IFUNC_FOR(wmemset) {
-    __builtin_cpu_init();
-    if (__builtin_cpu_supports("avx2")) RETURN_FUNC(wmemset_func, wmemset_avx2);
-    RETURN_FUNC(wmemset_func, wmemset_freebsd);
-}
-
 typedef int strcmp_func(const char* __lhs, const char* __rhs);
 DEFINE_IFUNC_FOR(strcmp) {
     __builtin_cpu_init();

@@ -40,17 +40,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # define ALIGN(n)	.p2align n
 #endif
 
+	.section .text.avx2,"ax",@progbits
 
-ENTRY(__memset_chk_generic)
-  # %rdi = dst, %rsi = byte, %rdx = n, %rcx = dst_len
-  cmp %rcx, %rdx
-  ja __memset_chk_fail
-  // Fall through to memset...
-END(__memset_chk_generic)
+ENTRY(__memset_chk_avx2)
+	# %rdi = dst, %rsi = byte, %rdx = n, %rcx = dst_len
+	cmp %rcx, %rdx
+	ja __memset_chk_fail
+	// Fall through to memset...
+END(__memset_chk_avx2)
 
-
-	.section .text.sse2,"ax",@progbits
-ENTRY(memset_generic)
+ENTRY(memset_avx2)
 	movq	%rdi, %rax
 	and	$0xff, %rsi
 	mov	$0x0101010101010101, %rcx
@@ -101,18 +100,26 @@ L(16bytesormore):
 	movdqu	%xmm0, -64(%rdi, %rdx)
 	movdqu	%xmm0, -48(%rdi, %rdx)
 	cmpq	$128, %rdx
-	ja	L(128bytesmore)
+	jbe	L(128bytesless)
+        vpbroadcastb %xmm0, %ymm0
+	vmovdqu	%ymm0, 64(%rdi)
+	vmovdqu	%ymm0, 96(%rdi)
+	vmovdqu	%ymm0, -128(%rdi, %rdx)
+	vmovdqu	%ymm0, -96(%rdi, %rdx)
+	cmpq	$256, %rdx
+        ja      L(256bytesmore)
 L(32bytesless):
 L(64bytesless):
+L(128bytesless):
 	ret
 
 	ALIGN (4)
-L(128bytesmore):
-	leaq	64(%rdi), %rcx
-	andq	$-64, %rcx
+L(256bytesmore):
+	leaq	128(%rdi), %rcx
+	andq	$-128, %rcx
 	movq	%rdx, %r8
 	addq	%rdi, %rdx
-	andq	$-64, %rdx
+	andq	$-128, %rdx
 	cmpq	%rcx, %rdx
 	je	L(return)
 
@@ -121,29 +128,33 @@ L(128bytesmore):
 #else
 	cmp	__x86_64_shared_cache_size(%rip), %r8
 #endif
-	ja	L(128bytesmore_nt)
+	ja	L(256bytesmore_nt)
 
 	ALIGN (4)
-L(128bytesmore_normal):
-	movdqa	%xmm0, (%rcx)
-	movaps	%xmm0, 0x10(%rcx)
-	movaps	%xmm0, 0x20(%rcx)
-	movaps	%xmm0, 0x30(%rcx)
-	addq	$64, %rcx
+L(256bytesmore_normal):
+	vmovdqa	%ymm0, (%rcx)
+	vmovdqa	%ymm0, 32(%rcx)
+	vmovdqa	%ymm0, 64(%rcx)
+	vmovdqa	%ymm0, 96(%rcx)
+	addq	$128, %rcx
 	cmpq	%rcx, %rdx
-	jne	L(128bytesmore_normal)
+	jne	L(256bytesmore_normal)
 	ret
 
 	ALIGN (4)
-L(128bytesmore_nt):
-	movntdq	%xmm0, (%rcx)
-	movntdq	%xmm0, 0x10(%rcx)
-	movntdq	%xmm0, 0x20(%rcx)
-	movntdq	%xmm0, 0x30(%rcx)
-	leaq	64(%rcx), %rcx
+L(256bytesmore_nt):
+	movntdq	 %xmm0, (%rcx)
+	movntdq	 %xmm0, 16(%rcx)
+	movntdq	 %xmm0, 32(%rcx)
+	movntdq	 %xmm0, 48(%rcx)
+	movntdq	 %xmm0, 64(%rcx)
+	movntdq	 %xmm0, 80(%rcx)
+	movntdq	 %xmm0, 96(%rcx)
+	movntdq	 %xmm0, 112(%rcx)
+	leaq	128(%rcx), %rcx
 	cmpq	%rcx, %rdx
-	jne	L(128bytesmore_nt)
+	jne	L(256bytesmore_nt)
 	sfence
 	ret
 
-END(memset_generic)
+END(memset_avx2)
