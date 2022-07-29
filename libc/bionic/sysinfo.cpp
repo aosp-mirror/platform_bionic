@@ -36,45 +36,29 @@
 #include "private/get_cpu_count_from_string.h"
 #include "private/ScopedReaddir.h"
 
-static bool __matches_cpuN(const char* s) {
-  // The %c trick is to ensure that we have the anchored match "^cpu[0-9]+$".
-  // We can't use %*c because the return value is how many were *assigned*.
-  unsigned cpu;
-  char unused;
-  return (sscanf(s, "cpu%u%c", &cpu, &unused) == 1);
-}
-
-int get_nprocs_conf() {
-  // On x86 kernels you can use /proc/cpuinfo for this, but on ARM kernels offline CPUs disappear
-  // from there. This method works on both.
-  ScopedReaddir reader("/sys/devices/system/cpu");
-  if (reader.IsBad()) {
-    return 1;
-  }
-
-  int result = 0;
-  dirent* entry;
-  while ((entry = reader.ReadEntry()) != nullptr) {
-    if (entry->d_type == DT_DIR && __matches_cpuN(entry->d_name)) {
-      ++result;
-    }
-  }
-  return result;
-}
-
-int get_nprocs() {
+int __get_cpu_count(const char* sys_file) {
   int cpu_count = 1;
-  FILE* fp = fopen("/sys/devices/system/cpu/online", "re");
+  FILE* fp = fopen(sys_file, "re");
   if (fp != nullptr) {
     char* line = nullptr;
-    size_t len = 0;
-    if (getline(&line, &len, fp) != -1) {
+    size_t allocated_size = 0;
+    if (getline(&line, &allocated_size, fp) != -1) {
       cpu_count = GetCpuCountFromString(line);
       free(line);
     }
     fclose(fp);
   }
   return cpu_count;
+}
+
+int get_nprocs_conf() {
+  // It's unclear to me whether this is intended to be "possible" or "present",
+  // but on mobile they're unlikely to differ.
+  return __get_cpu_count("/sys/devices/system/cpu/possible");
+}
+
+int get_nprocs() {
+  return __get_cpu_count("/sys/devices/system/cpu/online");
 }
 
 long get_phys_pages() {
