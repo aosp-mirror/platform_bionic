@@ -1103,6 +1103,10 @@ TEST(UNISTD_TEST, get_cpu_count_from_string) {
   ASSERT_EQ(4, GetCpuCountFromString("0, 1-2, 4\n"));
 }
 
+TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_make_sense) {
+  ASSERT_LE(sysconf(_SC_NPROCESSORS_ONLN), sysconf(_SC_NPROCESSORS_CONF));
+}
+
 TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_ONLN) {
   std::string line;
   ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &line));
