@@ -1129,7 +1129,9 @@ size_t fread_unlocked(void* buf, size_t size, size_t count, FILE* fp) {
 
   // Read directly into the caller's buffer.
   while (total > 0) {
-    ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, total);
+    // The _read function pointer takes an int instead of a size_t.
+    int chunk_size = MIN(total, INT_MAX);
+    ssize_t bytes_read = (*fp->_read)(fp->_cookie, dst, chunk_size);
     if (bytes_read <= 0) {
       fp->_flags |= (bytes_read == 0) ? __SEOF : __SERR;
       break;
