@@ -44,8 +44,8 @@ int __get_cpu_count(const char* sys_file) {
     size_t allocated_size = 0;
     if (getline(&line, &allocated_size, fp) != -1) {
       cpu_count = GetCpuCountFromString(line);
-      free(line);
     }
+    free(line);
     fclose(fp);
   }
   return cpu_count;
