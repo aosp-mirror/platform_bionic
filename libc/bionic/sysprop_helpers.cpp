@@ -53,9 +53,7 @@ static bool get_property_value(const char* property_name, char* dest, size_t des
         strncpy(cb_cookie->dest, value, cb_cookie->size);
       },
       &cb_cookie);
-  if (*dest != '\0') return true;
-
-  return false;
+  return *dest != '\0';
 }
 
 bool get_config_from_env_or_sysprops(const char* env_var_name, const char* const* sys_prop_names,
