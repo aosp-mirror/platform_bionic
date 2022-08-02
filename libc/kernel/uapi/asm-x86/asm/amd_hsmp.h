@@ -40,8 +40,22 @@ enum hsmp_message_ids {
   HSMP_GET_CCLK_THROTTLE_LIMIT,
   HSMP_GET_C0_PERCENT,
   HSMP_SET_NBIO_DPM_LEVEL,
-  HSMP_GET_DDR_BANDWIDTH = 0x14,
+  HSMP_GET_NBIO_DPM_LEVEL,
+  HSMP_GET_DDR_BANDWIDTH,
   HSMP_GET_TEMP_MONITOR,
+  HSMP_GET_DIMM_TEMP_RANGE,
+  HSMP_GET_DIMM_POWER,
+  HSMP_GET_DIMM_THERMAL,
+  HSMP_GET_SOCKET_FREQ_LIMIT,
+  HSMP_GET_CCLK_CORE_LIMIT,
+  HSMP_GET_RAILS_SVI,
+  HSMP_GET_SOCKET_FMAX_FMIN,
+  HSMP_GET_IOLINK_BANDWITH,
+  HSMP_GET_XGMI_BANDWITH,
+  HSMP_SET_GMI3_WIDTH,
+  HSMP_SET_PCI_RATE,
+  HSMP_SET_POWER_MODE,
+  HSMP_SET_PSTATE_MAX_MIN,
   HSMP_MSG_ID_MAX,
 };
 struct hsmp_message {
@@ -120,13 +134,52 @@ static const struct hsmp_msg_desc hsmp_msg_desc_table[] = {
     1, 0, HSMP_SET
   }
  , {
-    0, 0, HSMP_RSVD
+    1, 1, HSMP_GET
   }
  , {
     0, 1, HSMP_GET
   }
  , {
     0, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    0, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    0, 1, HSMP_GET
+  }
+ , {
+    0, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    1, 1, HSMP_GET
+  }
+ , {
+    1, 0, HSMP_SET
+  }
+ , {
+    1, 1, HSMP_SET
+  }
+ , {
+    1, 0, HSMP_SET
+  }
+ , {
+    1, 0, HSMP_SET
   }
  ,
 };
