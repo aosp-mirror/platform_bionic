@@ -365,13 +365,13 @@ TEST(STDIO_TEST, snprintf_S) { // Synonym for %ls.
 
 TEST_F(STDIO_DEATHTEST, snprintf_n) {
 #if defined(__BIONIC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wformat"
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
   // http://b/14492135 and http://b/31832608.
   char buf[32];
   int i = 1234;
   EXPECT_DEATH(snprintf(buf, sizeof(buf), "a %n b", &i), "%n not allowed on Android");
-#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "glibc does allow %n";
 #endif
@@ -2962,4 +2962,76 @@ TEST(STDIO_TEST, fwrite_int_overflow) {
   std::vector<char> buf(too_big_for_an_int);
   std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/dev/null", "we"), fclose};
   ASSERT_EQ(too_big_for_an_int, fwrite(&buf[0], 1, too_big_for_an_int, fp.get()));
+}
+
+TEST(STDIO_TEST, snprintf_b) {
+  // Our clang doesn't know about %b/%B yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%b>", 5));
+  EXPECT_STREQ("<101>", buf);
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08b>", 5));
+  EXPECT_STREQ("<00000101>", buf);
+  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%b>", 0xaaaaaaaa));
+  EXPECT_STREQ("<10101010101010101010101010101010>", buf);
+  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#b>", 0xaaaaaaaa));
+  EXPECT_STREQ("<0b10101010101010101010101010101010>", buf);
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
+  EXPECT_STREQ("<0>", buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, snprintf_B) {
+  // Our clang doesn't know about %b/%B yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%B>", 5));
+  EXPECT_STREQ("<101>", buf);
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08B>", 5));
+  EXPECT_STREQ("<00000101>", buf);
+  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%B>", 0xaaaaaaaa));
+  EXPECT_STREQ("<10101010101010101010101010101010>", buf);
+  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#B>", 0xaaaaaaaa));
+  EXPECT_STREQ("<0B10101010101010101010101010101010>", buf);
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#B>", 0));
+  EXPECT_STREQ("<0>", buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swprintf_b) {
+  // Our clang doesn't know about %b/%B yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  wchar_t buf[BUFSIZ];
+  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%b>", 5));
+  EXPECT_EQ(std::wstring(L"<101>"), buf);
+  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08b>", 5));
+  EXPECT_EQ(std::wstring(L"<00000101>"), buf);
+  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%b>", 0xaaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
+  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#b>", 0xaaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<0b10101010101010101010101010101010>"), buf);
+  EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#b>", 0));
+  EXPECT_EQ(std::wstring(L"<0>"), buf);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swprintf_B) {
+  // Our clang doesn't know about %b/%B yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  wchar_t buf[BUFSIZ];
+  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%B>", 5));
+  EXPECT_EQ(std::wstring(L"<101>"), buf);
+  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08B>", 5));
+  EXPECT_EQ(std::wstring(L"<00000101>"), buf);
+  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%B>", 0xaaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
+  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#B>", 0xaaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<0B10101010101010101010101010101010>"), buf);
+  EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#B>", 0));
+  EXPECT_EQ(std::wstring(L"<0>"), buf);
+#pragma clang diagnostic pop
 }
