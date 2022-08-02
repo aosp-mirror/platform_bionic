@@ -218,6 +218,8 @@ static unsigned __get_memtag_note(const ElfW(Phdr)* phdr_start, size_t phdr_ct,
 static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   static const char kMemtagPrognameSyspropPrefix[] = "arm64.memtag.process.";
   static const char kMemtagGlobalSysprop[] = "persist.arm64.memtag.default";
+  static const char kMemtagOverrideSyspropPrefix[] =
+      "persist.device_config.memory_safety_native.mode_override.process.";
 
   const char* progname = __libc_shared_globals()->init_progname;
   if (progname == nullptr) return false;
@@ -228,7 +230,10 @@ static bool get_environment_memtag_setting(HeapTaggingLevel* level) {
   char sysprop_name[512];
   async_safe_format_buffer(sysprop_name, sizeof(sysprop_name), "%s%s", kMemtagPrognameSyspropPrefix,
                            basename);
-  const char* sys_prop_names[] = {sysprop_name, kMemtagGlobalSysprop};
+  char remote_sysprop_name[512];
+  async_safe_format_buffer(remote_sysprop_name, sizeof(remote_sysprop_name), "%s%s",
+                           kMemtagOverrideSyspropPrefix, basename);
+  const char* sys_prop_names[] = {sysprop_name, remote_sysprop_name, kMemtagGlobalSysprop};
 
   if (!get_config_from_env_or_sysprops("MEMTAG_OPTIONS", sys_prop_names, arraysize(sys_prop_names),
                                        options_str, sizeof(options_str))) {
