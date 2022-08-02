@@ -81,8 +81,8 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
   char* dtoaresult = nullptr;
 
   uintmax_t _umax;             /* integer arguments %[diouxX] */
-  enum { OCT, DEC, HEX } base; /* base for %[diouxX] conversion */
-  int dprec;                   /* a copy of prec if %[diouxX], 0 otherwise */
+  enum { BIN, OCT, DEC, HEX } base; /* base for %[bBdiouxX] conversion */
+  int dprec;                   /* a copy of prec if %[bBdiouxX], 0 otherwise */
   int realsz;                  /* field size expanded by dprec */
   int size;                    /* size of converted field or string */
   const char* xdigs;           /* digits for %[xX] conversion */
@@ -293,6 +293,12 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
       case 'z':
         flags |= SIZEINT;
         goto rflag;
+      case 'B':
+      case 'b':
+        _umax = UARG();
+        base = BIN;
+        if (flags & ALT && _umax != 0) ox[1] = ch;
+        goto nosign;
       case 'C':
         flags |= LONGINT;
         __BIONIC_FALLTHROUGH;
@@ -539,6 +545,13 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
            * a variable; hence this switch.
            */
           switch (base) {
+            case BIN:
+              do {
+                *--cp = to_char(_umax & 1);
+                _umax >>= 1;
+              } while (_umax);
+              break;
+
             case OCT:
               do {
                 *--cp = to_char(_umax & 7);
@@ -588,7 +601,7 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
      * first be prefixed by any sign or other prefix; otherwise,
      * it should be blank padded before the prefix is emitted.
      * After any left-hand padding and prefixing, emit zeroes
-     * required by a decimal %[diouxX] precision, then print the
+     * required by a decimal %[bBdiouxX] precision, then print the
      * string proper, then emit zeroes required by any leftover
      * floating precision; finally, if LADJUST, pad with blanks.
      *
