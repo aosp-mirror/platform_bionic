@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/sysinfo.h>
+#include <private/bionic_asm.h>
 
-#include <dirent.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#define FUNCTION_DELEGATE(name, impl) \
+ENTRY(name); \
+    jmp impl; \
+END(name)
 
-#include "private/get_cpu_count_from_string.h"
-#include "private/ScopedReaddir.h"
-
-int __get_cpu_count(const char* sys_file) {
-  int cpu_count = 1;
-  FILE* fp = fopen(sys_file, "re");
-  if (fp != nullptr) {
-    char* line = nullptr;
-    size_t allocated_size = 0;
-    if (getline(&line, &allocated_size, fp) != -1) {
-      cpu_count = GetCpuCountFromString(line);
-    }
-    free(line);
-    fclose(fp);
-  }
-  return cpu_count;
-}
-
-int get_nprocs_conf() {
-  // It's unclear to me whether this is intended to be "possible" or "present",
-  // but on mobile they're unlikely to differ.
-  return __get_cpu_count("/sys/devices/system/cpu/possible");
-}
-
-int get_nprocs() {
-  return __get_cpu_count("/sys/devices/system/cpu/online");
-}
-
-long get_phys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / PAGE_SIZE;
-}
-
-long get_avphys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / PAGE_SIZE;
-}
+FUNCTION_DELEGATE(memset, memset_generic)
+FUNCTION_DELEGATE(__memset_chk, __memset_chk_generic)
