@@ -2940,28 +2940,38 @@ TEST(STDIO_TEST, freopen_null_filename_mode) {
   fclose(fp);
 }
 
+#if defined(__LP64__)
 static int64_t GetTotalRamGiB() {
   struct sysinfo si;
   sysinfo(&si);
   return (static_cast<int64_t>(si.totalram) * si.mem_unit) / 1024 / 1024 / 1024;
 }
+#endif
 
 TEST(STDIO_TEST, fread_int_overflow) {
+#if defined(__LP64__)
   if (GetTotalRamGiB() <= 4) GTEST_SKIP() << "not enough memory";
 
   const size_t too_big_for_an_int = 0x80000000ULL;
   std::vector<char> buf(too_big_for_an_int);
   std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/dev/zero", "re"), fclose};
   ASSERT_EQ(too_big_for_an_int, fread(&buf[0], 1, too_big_for_an_int, fp.get()));
+#else
+  GTEST_SKIP() << "32-bit can't allocate 2GiB";
+#endif
 }
 
 TEST(STDIO_TEST, fwrite_int_overflow) {
+#if defined(__LP64__)
   if (GetTotalRamGiB() <= 4) GTEST_SKIP() << "not enough memory";
 
   const size_t too_big_for_an_int = 0x80000000ULL;
   std::vector<char> buf(too_big_for_an_int);
   std::unique_ptr<FILE, decltype(&fclose)> fp{fopen("/dev/null", "we"), fclose};
   ASSERT_EQ(too_big_for_an_int, fwrite(&buf[0], 1, too_big_for_an_int, fp.get()));
+#else
+  GTEST_SKIP() << "32-bit can't allocate 2GiB";
+#endif
 }
 
 TEST(STDIO_TEST, snprintf_b) {
