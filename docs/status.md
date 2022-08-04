@@ -51,6 +51,12 @@ list of POSIX functions implemented by glibc but not by bionic.
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
 
+New libc functions in U (API level 34):
+  * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
+
+New libc behavior in U (API level 34):
+  * Support for `%b` and `%B` in the printf and wprintf family.
+
 New libc functions in T (API level 33):
   * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).
   * New system call wrappers: `preadv2`, `preadv64v2`, `pwritev2`,

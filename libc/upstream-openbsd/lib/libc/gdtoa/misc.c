@@ -41,7 +41,7 @@ static double private_mem[PRIVATE_mem], *pmem_next = private_mem;
 #endif
 
 #ifdef MULTIPLE_THREADS
-extern void *__dtoa_locks[];
+static void *__dtoa_locks[] = { NULL, NULL };
 #endif
 
  Bigint *
