@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,30 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/sysinfo.h>
+#include "utils.h"
 
-#include <dirent.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "private/get_cpu_count_from_string.h"
-#include "private/ScopedReaddir.h"
-
-int __get_cpu_count(const char* sys_file) {
-  int cpu_count = 1;
-  FILE* fp = fopen(sys_file, "re");
-  if (fp != nullptr) {
-    char* line = nullptr;
-    size_t allocated_size = 0;
-    if (getline(&line, &allocated_size, fp) != -1) {
-      cpu_count = GetCpuCountFromString(line);
-    }
-    free(line);
-    fclose(fp);
-  }
-  return cpu_count;
+void RunGwpAsanTest(const char* test_name) {
+  ExecTestHelper eh;
+  eh.SetEnv({"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1", "GWP_ASAN_MAX_ALLOCS=40000",
+             nullptr});
+  std::string filter_arg = "--gtest_filter=";
+  filter_arg += test_name;
+  std::string exec(testing::internal::GetArgvs()[0]);
+  eh.SetArgs({exec.c_str(), "--gtest_also_run_disabled_tests", filter_arg.c_str(), nullptr});
+  eh.Run([&]() { execve(exec.c_str(), eh.GetArgs(), eh.GetEnv()); },
+         /* expected_exit_status */ 0,
+         // |expected_output_regex|, ensure at least one test ran:
+         R"(\[  PASSED  \] [1-9][0-9]* test)");
 }
 
-int get_nprocs_conf() {
-  // It's unclear to me whether this is intended to be "possible" or "present",
-  // but on mobile they're unlikely to differ.
-  return __get_cpu_count("/sys/devices/system/cpu/possible");
-}
-
-int get_nprocs() {
-  return __get_cpu_count("/sys/devices/system/cpu/online");
-}
-
-long get_phys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / PAGE_SIZE;
-}
-
-long get_avphys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / PAGE_SIZE;
+void RunSubtestNoEnv(const char* test_name) {
+  ExecTestHelper eh;
+  std::string filter_arg = "--gtest_filter=";
+  filter_arg += test_name;
+  std::string exec(testing::internal::GetArgvs()[0]);
+  eh.SetArgs({exec.c_str(), "--gtest_also_run_disabled_tests", filter_arg.c_str(), nullptr});
+  eh.Run([&]() { execve(exec.c_str(), eh.GetArgs(), eh.GetEnv()); },
+         /* expected_exit_status */ 0,
+         // |expected_output_regex|, ensure at least one test ran:
+         R"(\[  PASSED  \] [1-9]+0? test)");
 }

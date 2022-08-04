@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,49 +26,24 @@
  * SUCH DAMAGE.
  */
 
-#include <sys/sysinfo.h>
+#include <stddef.h>
 
-#include <dirent.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include <private/bionic_ifuncs.h>
 
-#include "private/get_cpu_count_from_string.h"
-#include "private/ScopedReaddir.h"
+extern "C" {
 
-int __get_cpu_count(const char* sys_file) {
-  int cpu_count = 1;
-  FILE* fp = fopen(sys_file, "re");
-  if (fp != nullptr) {
-    char* line = nullptr;
-    size_t allocated_size = 0;
-    if (getline(&line, &allocated_size, fp) != -1) {
-      cpu_count = GetCpuCountFromString(line);
-    }
-    free(line);
-    fclose(fp);
-  }
-  return cpu_count;
+typedef int memset_func(void* __dst, int __ch, size_t __n);
+DEFINE_IFUNC_FOR(memset) {
+  __builtin_cpu_init();
+  if (__builtin_cpu_supports("avx2")) RETURN_FUNC(memset_func, memset_avx2);
+  RETURN_FUNC(memset_func, memset_generic);
 }
 
-int get_nprocs_conf() {
-  // It's unclear to me whether this is intended to be "possible" or "present",
-  // but on mobile they're unlikely to differ.
-  return __get_cpu_count("/sys/devices/system/cpu/possible");
+typedef void* __memset_chk_func(void* s, int c, size_t n, size_t n2);
+DEFINE_IFUNC_FOR(__memset_chk) {
+  __builtin_cpu_init();
+  if (__builtin_cpu_supports("avx2")) RETURN_FUNC(__memset_chk_func, __memset_chk_avx2);
+  RETURN_FUNC(__memset_chk_func, __memset_chk_generic);
 }
 
-int get_nprocs() {
-  return __get_cpu_count("/sys/devices/system/cpu/online");
-}
-
-long get_phys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return (static_cast<int64_t>(si.totalram) * si.mem_unit) / PAGE_SIZE;
-}
-
-long get_avphys_pages() {
-  struct sysinfo si;
-  sysinfo(&si);
-  return ((static_cast<int64_t>(si.freeram) + si.bufferram) * si.mem_unit) / PAGE_SIZE;
-}
+}  // extern "C"
