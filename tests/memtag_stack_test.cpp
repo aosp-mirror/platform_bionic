@@ -44,13 +44,13 @@ TEST_P(MemtagStackTest, test) {
 #endif
 }
 
-INSTANTIATE_TEST_SUITE_P(, MemtagStackTest,
-                         testing::Combine(testing::Values("vfork_execve", "vfork_execl",
-                                                          "vfork_exit", "longjmp",
-                                                          "longjmp_sigaltstack", "android_mallopt"),
-                                          testing::Bool()),
-                         [](const ::testing::TestParamInfo<MemtagStackTest::ParamType>& info) {
-                           std::string s = std::get<0>(info.param);
-                           if (std::get<1>(info.param)) s += "_static";
-                           return s;
-                         });
+INSTANTIATE_TEST_SUITE_P(
+    , MemtagStackTest,
+    testing::Combine(testing::Values("vfork_execve", "vfork_execl", "vfork_exit", "longjmp",
+                                     "longjmp_sigaltstack", "android_mallopt", "exception_cleanup"),
+                     testing::Bool()),
+    [](const ::testing::TestParamInfo<MemtagStackTest::ParamType>& info) {
+      std::string s = std::get<0>(info.param);
+      if (std::get<1>(info.param)) s += "_static";
+      return s;
+    });
