@@ -3035,3 +3035,139 @@ TEST(STDIO_TEST, swprintf_B) {
   EXPECT_EQ(std::wstring(L"<0>"), buf);
 #pragma clang diagnostic pop
 }
+
+TEST(STDIO_TEST, scanf_i_decimal) {
+  int i;
+  EXPECT_EQ(1, sscanf("<123789>", "<%i>", &i));
+  EXPECT_EQ(123789, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, sscanf("1234567890abcdefg", "%lli%c", &lli, &ch));
+  EXPECT_EQ(1234567890, lli);
+  EXPECT_EQ('a', ch);
+}
+
+TEST(STDIO_TEST, scanf_i_hex) {
+  int i;
+  EXPECT_EQ(1, sscanf("<0x123abf>", "<%i>", &i));
+  EXPECT_EQ(0x123abf, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, sscanf("0x1234567890abcdefg", "%lli%c", &lli, &ch));
+  EXPECT_EQ(0x1234567890abcdefLL, lli);
+  EXPECT_EQ('g', ch);
+}
+
+TEST(STDIO_TEST, scanf_i_octal) {
+  int i;
+  EXPECT_EQ(1, sscanf("<01234567>", "<%i>", &i));
+  EXPECT_EQ(01234567, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, sscanf("010234567890abcdefg", "%lli%c", &lli, &ch));
+  EXPECT_EQ(010234567, lli);
+  EXPECT_EQ('8', ch);
+}
+
+TEST(STDIO_TEST, scanf_i_binary) {
+  int i;
+  EXPECT_EQ(1, sscanf("<0b101>", "<%i>", &i));
+  EXPECT_EQ(0b101, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, sscanf("0b10234567890abcdefg", "%lli%c", &lli, &ch));
+  EXPECT_EQ(0b10, lli);
+  EXPECT_EQ('2', ch);
+}
+
+TEST(STDIO_TEST, wscanf_i_decimal) {
+  int i;
+  EXPECT_EQ(1, swscanf(L"<123789>", L"<%i>", &i));
+  EXPECT_EQ(123789, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, swscanf(L"1234567890abcdefg", L"%lli%c", &lli, &ch));
+  EXPECT_EQ(1234567890, lli);
+  EXPECT_EQ('a', ch);
+}
+
+TEST(STDIO_TEST, wscanf_i_hex) {
+  int i;
+  EXPECT_EQ(1, swscanf(L"<0x123abf>", L"<%i>", &i));
+  EXPECT_EQ(0x123abf, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, swscanf(L"0x1234567890abcdefg", L"%lli%c", &lli, &ch));
+  EXPECT_EQ(0x1234567890abcdefLL, lli);
+  EXPECT_EQ('g', ch);
+}
+
+TEST(STDIO_TEST, wscanf_i_octal) {
+  int i;
+  EXPECT_EQ(1, swscanf(L"<01234567>", L"<%i>", &i));
+  EXPECT_EQ(01234567, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, swscanf(L"010234567890abcdefg", L"%lli%c", &lli, &ch));
+  EXPECT_EQ(010234567, lli);
+  EXPECT_EQ('8', ch);
+}
+
+TEST(STDIO_TEST, wscanf_i_binary) {
+  int i;
+  EXPECT_EQ(1, swscanf(L"<0b101>", L"<%i>", &i));
+  EXPECT_EQ(0b101, i);
+
+  long long int lli;
+  char ch;
+  EXPECT_EQ(2, swscanf(L"0b10234567890abcdefg", L"%lli%c", &lli, &ch));
+  EXPECT_EQ(0b10, lli);
+  EXPECT_EQ('2', ch);
+}
+
+TEST(STDIO_TEST, scanf_b) {
+  // Our clang doesn't know about %b yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int i;
+  char ch;
+  EXPECT_EQ(2, sscanf("<1012>", "<%b%c>", &i, &ch));
+  EXPECT_EQ(0b101, i);
+  EXPECT_EQ('2', ch);
+  EXPECT_EQ(1, sscanf("<00000101>", "<%08b>", &i));
+  EXPECT_EQ(0b00000101, i);
+  EXPECT_EQ(1, sscanf("<0b1010>", "<%b>", &i));
+  EXPECT_EQ(0b1010, i);
+  EXPECT_EQ(2, sscanf("-0b", "%i%c", &i, &ch));
+  EXPECT_EQ(0, i);
+  EXPECT_EQ('b', ch);
+#pragma clang diagnostic pop
+}
+
+TEST(STDIO_TEST, swscanf_b) {
+  // Our clang doesn't know about %b yet.
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  int i;
+  char ch;
+  EXPECT_EQ(2, swscanf(L"<1012>", L"<%b%c>", &i, &ch));
+  EXPECT_EQ(0b101, i);
+  EXPECT_EQ('2', ch);
+  EXPECT_EQ(1, swscanf(L"<00000101>", L"<%08b>", &i));
+  EXPECT_EQ(0b00000101, i);
+  EXPECT_EQ(1, swscanf(L"<0b1010>", L"<%b>", &i));
+  EXPECT_EQ(0b1010, i);
+  EXPECT_EQ(2, swscanf(L"-0b", L"%i%c", &i, &ch));
+  EXPECT_EQ(0, i);
+  EXPECT_EQ('b', ch);
+#pragma clang diagnostic pop
+}
