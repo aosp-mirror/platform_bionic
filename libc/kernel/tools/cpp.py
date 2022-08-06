@@ -1647,7 +1647,7 @@ class BlockParserTests(unittest.TestCase):
 
     def get_blocks(self, lines):
         blocks = BlockParser().parse(CppStringTokenizer('\n'.join(lines)))
-        return map(lambda a: str(a), blocks)
+        return list(map(lambda a: str(a), blocks))
 
     def test_hash(self):
         self.assertEqual(self.get_blocks(["#error hello"]), ["#error hello"])
