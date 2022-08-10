@@ -29,19 +29,19 @@
 #ifndef _PRIVATE_BIONIC_GLOBALS_H
 #define _PRIVATE_BIONIC_GLOBALS_H
 
+#include <inttypes.h>
+#include <link.h>
+#include <platform/bionic/malloc.h>
+#include <pthread.h>
 #include <stdatomic.h>
 #include <sys/cdefs.h>
-#include <link.h>
-#include <pthread.h>
 
+#include "private/WriteProtected.h"
 #include "private/bionic_allocator.h"
 #include "private/bionic_elf_tls.h"
 #include "private/bionic_fdsan.h"
 #include "private/bionic_malloc_dispatch.h"
 #include "private/bionic_vdso.h"
-#include "private/WriteProtected.h"
-
-#include <platform/bionic/malloc.h>
 
 struct libc_globals {
   vdso_entry vdso[VDSO_END];
@@ -114,6 +114,7 @@ struct libc_shared_globals {
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;
+  int64_t heap_tagging_upgrade_timer_sec = 0;
 };
 
 __LIBC_HIDDEN__ libc_shared_globals* __libc_shared_globals();
