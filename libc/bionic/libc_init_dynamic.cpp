@@ -154,6 +154,8 @@ __noreturn void __libc_init(void* raw_args,
     __cxa_atexit(__libc_fini,structors->fini_array,nullptr);
   }
 
+  __libc_init_mte_late();
+
   exit(slingshot(args.argc - __libc_shared_globals()->initial_linker_arg_count,
                  args.argv + __libc_shared_globals()->initial_linker_arg_count,
                  args.envp));
