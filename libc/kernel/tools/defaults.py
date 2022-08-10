@@ -35,16 +35,23 @@ kernel_known_macros = {
     "__kernel_old_timeval": "1",
     }
 
-# this is the set of known kernel data structures we want to remove from
-# the final headers
-kernel_structs_to_remove = set(
-        [
-          # Remove the structures since they are still the same as
-          # timeval, itimerval.
-          "__kernel_old_timeval",
-          "__kernel_old_itimerval",
-        ]
-    )
+# This is the set of known kernel data structures we want to remove from
+# the final headers. If the map value is False, that means that in
+# addition to removing the structure, add an #include <bits/STRUCT.h>
+# to the file.
+kernel_structs_to_remove = {
+    # Remove the structures since they are still the same as
+    # timeval, itimerval.
+    "__kernel_old_timeval": True,
+    "__kernel_old_itimerval": True,
+    # Replace all of the below structures with #include <bits/STRUCT.h>
+    "epoll_event": False,
+    "flock": False,
+    "flock64": False,
+    "in_addr": False,
+    "ip_mreq_source": False,
+    "ip_msfilter": False,
+    }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
 # from the clean headers. testing shows that this is not strictly necessary
@@ -98,20 +105,6 @@ kernel_token_replacements = {
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
     }
-
-
-# This is the set of struct definitions that we want to replace with
-# a #include of <bits/struct.h> instead.
-kernel_struct_replacements = set(
-        [
-          "epoll_event",
-          "flock",
-          "flock64",
-          "in_addr",
-          "ip_mreq_source",
-          "ip_msfilter",
-        ]
-    )
 
 
 # This is the set of known static inline functions that we want to keep
