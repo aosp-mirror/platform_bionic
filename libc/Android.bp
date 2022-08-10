@@ -1110,6 +1110,7 @@ cc_library_static {
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
         "bionic/mempcpy.cpp",
+        "bionic/memset_explicit.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
