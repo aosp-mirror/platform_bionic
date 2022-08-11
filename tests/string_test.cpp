@@ -1673,3 +1673,15 @@ TEST(STRING_TEST, memccpy_smoke) {
   ASSERT_EQ(nullptr, memccpy(dst, "hello world", ' ', 4));
   ASSERT_STREQ("hell", dst);
 }
+
+TEST(STRING_TEST, memset_explicit_smoke) {
+#if defined(__BIONIC__)
+  // We can't reliably test that the compiler won't optimize out calls to
+  // memset_explicit(), but we can at least check that it behaves like memset.
+  char buf[32];
+  memset_explicit(buf, 'x', sizeof(buf));
+  ASSERT_TRUE(memcmp(buf, "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", sizeof(buf)) == 0);
+#else
+  GTEST_SKIP() << "memset_explicit not available";
+#endif
+}
