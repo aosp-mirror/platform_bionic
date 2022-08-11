@@ -41,13 +41,14 @@ enum drm_i915_gem_engine_class {
   I915_ENGINE_CLASS_COPY = 1,
   I915_ENGINE_CLASS_VIDEO = 2,
   I915_ENGINE_CLASS_VIDEO_ENHANCE = 3,
+  I915_ENGINE_CLASS_COMPUTE = 4,
   I915_ENGINE_CLASS_INVALID = - 1
 };
 struct i915_engine_class_instance {
   __u16 engine_class;
-  __u16 engine_instance;
 #define I915_ENGINE_CLASS_INVALID_NONE - 1
 #define I915_ENGINE_CLASS_INVALID_VIRTUAL - 2
+  __u16 engine_instance;
 };
 enum drm_i915_pmu_engine_sample {
   I915_SAMPLE_BUSY = 0,
@@ -894,6 +895,8 @@ struct drm_i915_query_item {
 #define DRM_I915_QUERY_ENGINE_INFO 2
 #define DRM_I915_QUERY_PERF_CONFIG 3
 #define DRM_I915_QUERY_MEMORY_REGIONS 4
+#define DRM_I915_QUERY_HWCONFIG_BLOB 5
+#define DRM_I915_QUERY_GEOMETRY_SUBSLICES 6
   __s32 length;
   __u32 flags;
 #define DRM_I915_QUERY_PERF_CONFIG_LIST 1

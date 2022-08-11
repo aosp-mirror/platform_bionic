@@ -16,36 +16,33 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPILINUX_KEXEC_H
-#define _UAPILINUX_KEXEC_H
+#ifndef _LINUX_CACHEFILES_H
+#define _LINUX_CACHEFILES_H
 #include <linux/types.h>
-#define KEXEC_ON_CRASH 0x00000001
-#define KEXEC_PRESERVE_CONTEXT 0x00000002
-#define KEXEC_ARCH_MASK 0xffff0000
-#define KEXEC_FILE_UNLOAD 0x00000001
-#define KEXEC_FILE_ON_CRASH 0x00000002
-#define KEXEC_FILE_NO_INITRAMFS 0x00000004
-#define KEXEC_ARCH_DEFAULT (0 << 16)
-#define KEXEC_ARCH_386 (3 << 16)
-#define KEXEC_ARCH_68K (4 << 16)
-#define KEXEC_ARCH_PARISC (15 << 16)
-#define KEXEC_ARCH_X86_64 (62 << 16)
-#define KEXEC_ARCH_PPC (20 << 16)
-#define KEXEC_ARCH_PPC64 (21 << 16)
-#define KEXEC_ARCH_IA_64 (50 << 16)
-#define KEXEC_ARCH_ARM (40 << 16)
-#define KEXEC_ARCH_S390 (22 << 16)
-#define KEXEC_ARCH_SH (42 << 16)
-#define KEXEC_ARCH_MIPS_LE (10 << 16)
-#define KEXEC_ARCH_MIPS (8 << 16)
-#define KEXEC_ARCH_AARCH64 (183 << 16)
-#define KEXEC_ARCH_RISCV (243 << 16)
-#define KEXEC_ARCH_LOONGARCH (258 << 16)
-#define KEXEC_SEGMENT_MAX 16
-struct kexec_segment {
-  const void * buf;
-  __kernel_size_t bufsz;
-  const void * mem;
-  __kernel_size_t memsz;
+#include <linux/ioctl.h>
+#define CACHEFILES_MSG_MAX_SIZE 1024
+enum cachefiles_opcode {
+  CACHEFILES_OP_OPEN,
+  CACHEFILES_OP_CLOSE,
+  CACHEFILES_OP_READ,
 };
+struct cachefiles_msg {
+  __u32 msg_id;
+  __u32 opcode;
+  __u32 len;
+  __u32 object_id;
+  __u8 data[];
+};
+struct cachefiles_open {
+  __u32 volume_key_size;
+  __u32 cookie_key_size;
+  __u32 fd;
+  __u32 flags;
+  __u8 data[];
+};
+struct cachefiles_read {
+  __u64 off;
+  __u64 len;
+};
+#define CACHEFILES_IOC_READ_COMPLETE _IOW(0x98, 1, int)
 #endif

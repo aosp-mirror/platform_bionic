@@ -44,11 +44,17 @@ struct drm_msm_timespec {
 #define MSM_PARAM_FAULTS 0x09
 #define MSM_PARAM_SUSPENDS 0x0a
 #define MSM_PARAM_SYSPROF 0x0b
+#define MSM_PARAM_COMM 0x0c
+#define MSM_PARAM_CMDLINE 0x0d
+#define MSM_PARAM_VA_START 0x0e
+#define MSM_PARAM_VA_SIZE 0x0f
 #define MSM_PARAM_NR_RINGS MSM_PARAM_PRIORITIES
 struct drm_msm_param {
   __u32 pipe;
   __u32 param;
   __u64 value;
+  __u32 len;
+  __u32 pad;
 };
 #define MSM_BO_SCANOUT 0x00000001
 #define MSM_BO_GPU_READONLY 0x00000002
@@ -67,6 +73,7 @@ struct drm_msm_gem_new {
 #define MSM_INFO_GET_IOVA 0x01
 #define MSM_INFO_SET_NAME 0x02
 #define MSM_INFO_GET_NAME 0x03
+#define MSM_INFO_SET_IOVA 0x04
 struct drm_msm_gem_info {
   __u32 handle;
   __u32 info;
