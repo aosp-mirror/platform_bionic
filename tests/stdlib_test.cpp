@@ -843,11 +843,19 @@ static void CheckStrToInt(T fn(const char* s, char** end, int base)) {
   ASSERT_EQ(T(-123), fn("-123", &end_p, 10));
   ASSERT_EQ(T(123), fn("+123", &end_p, 10));
 
+  // If we see "0b" *not* followed by a binary digit, we shouldn't swallow the 'b'.
+  ASSERT_EQ(T(0), fn("0b", &end_p, 2));
+  ASSERT_EQ('b', *end_p);
+
+  // Binary (the "0b" prefix) is case-insensitive.
+  ASSERT_EQ(T(0b101), fn("0b101", &end_p, 0));
+  ASSERT_EQ(T(0b101), fn("0B101", &end_p, 0));
+
   // If we see "0x" *not* followed by a hex digit, we shouldn't swallow the 'x'.
   ASSERT_EQ(T(0), fn("0xy", &end_p, 16));
   ASSERT_EQ('x', *end_p);
 
-  // Hexadecimal (both the 0x and the digits) is case-insensitive.
+  // Hexadecimal (both the "0x" prefix and the digits) is case-insensitive.
   ASSERT_EQ(T(0xab), fn("0xab", &end_p, 0));
   ASSERT_EQ(T(0xab), fn("0Xab", &end_p, 0));
   ASSERT_EQ(T(0xab), fn("0xAB", &end_p, 0));

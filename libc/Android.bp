@@ -35,7 +35,7 @@ libc_common_src_files = [
     "stdio/stdio.cpp",
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.cpp",
-    "stdio/vfwscanf.c",
+    "stdio/vfwscanf.cpp",
 ]
 
 // off64_t/time64_t support on LP32.
@@ -500,13 +500,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/locale/mbstowcs.c",
         "upstream-openbsd/lib/libc/locale/mbtowc.c",
         "upstream-openbsd/lib/libc/locale/wcscoll.c",
-        "upstream-openbsd/lib/libc/locale/wcstoimax.c",
-        "upstream-openbsd/lib/libc/locale/wcstol.c",
-        "upstream-openbsd/lib/libc/locale/wcstoll.c",
         "upstream-openbsd/lib/libc/locale/wcstombs.c",
-        "upstream-openbsd/lib/libc/locale/wcstoul.c",
-        "upstream-openbsd/lib/libc/locale/wcstoull.c",
-        "upstream-openbsd/lib/libc/locale/wcstoumax.c",
         "upstream-openbsd/lib/libc/locale/wcsxfrm.c",
         "upstream-openbsd/lib/libc/locale/wctob.c",
         "upstream-openbsd/lib/libc/locale/wctomb.c",
