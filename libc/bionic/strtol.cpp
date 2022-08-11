@@ -32,11 +32,13 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <wchar.h>
 
-template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, int base) {
+template <typename T, T Min, T Max, typename CharT>
+T StrToI(const CharT* nptr, CharT** endptr, int base) {
   // Ensure that base is between 2 and 36 inclusive, or the special value of 0.
   if (base < 0 || base == 1 || base > 36) {
-    if (endptr != nullptr) *endptr = const_cast<char*>(nptr);
+    if (endptr != nullptr) *endptr = const_cast<CharT*>(nptr);
     errno = EINVAL;
     return 0;
   }
@@ -44,7 +46,7 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   // Skip white space and pick up leading +/- sign if any.
   // If base is 0, allow 0x for hex and 0 for octal, else
   // assume decimal; if base is already 16, allow 0x.
-  const char* s = nptr;
+  const CharT* s = nptr;
   int c;
   do {
     c = *s++;
@@ -61,6 +63,11 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
     c = s[1];
     s += 2;
     base = 16;
+  }
+  if ((base == 0 || base == 2) && c == '0' && (*s == 'b' || *s == 'B') && isdigit(s[1])) {
+    c = s[1];
+    s += 2;
+    base = 2;
   }
   if (base == 0) base = (c == '0') ? 8 : 10;
 
@@ -91,7 +98,7 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
       acc -= c;
     }
   }
-  if (endptr != nullptr) *endptr = const_cast<char*>(any ? s - 1 : nptr);
+  if (endptr != nullptr) *endptr = const_cast<CharT*>(any ? s - 1 : nptr);
   if (!neg) {
     if (acc == Min) {
       errno = ERANGE;
@@ -103,14 +110,15 @@ template <typename T, T Min, T Max> T StrToI(const char* nptr, char** endptr, in
   return acc;
 }
 
-template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base) {
+template <typename T, T Max, typename CharT>
+T StrToU(const CharT* nptr, CharT** endptr, int base) {
   if (base < 0 || base == 1 || base > 36) {
-    if (endptr != nullptr) *endptr = const_cast<char*>(nptr);
+    if (endptr != nullptr) *endptr = const_cast<CharT*>(nptr);
     errno = EINVAL;
     return 0;
   }
 
-  const char* s = nptr;
+  const CharT* s = nptr;
   int c;
   do {
     c = *s++;
@@ -127,6 +135,11 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
     c = s[1];
     s += 2;
     base = 16;
+  }
+  if ((base == 0 || base == 2) && c == '0' && (*s == 'b' || *s == 'B') && isdigit(s[1])) {
+    c = s[1];
+    s += 2;
+    base = 2;
   }
   if (base == 0) base = (c == '0') ? 8 : 10;
 
@@ -155,7 +168,7 @@ template <typename T, T Max> T StrToU(const char* nptr, char** endptr, int base)
     }
   }
   if (neg && any > 0) acc = -acc;
-  if (endptr != nullptr) *endptr = const_cast<char*>(any ? s - 1 : nptr);
+  if (endptr != nullptr) *endptr = const_cast<CharT*>(any ? s - 1 : nptr);
   return acc;
 }
 
@@ -172,30 +185,54 @@ long long atoll(const char* s) {
 }
 
 intmax_t strtoimax(const char* s, char** end, int base) {
-  return StrToI<intmax_t, INTMAX_MIN, INTMAX_MAX>(s, end, base);
+  return StrToI<intmax_t, INTMAX_MIN, INTMAX_MAX, char>(s, end, base);
+}
+
+intmax_t wcstoimax(const wchar_t* s, wchar_t** end, int base) {
+  return StrToI<intmax_t, INTMAX_MIN, INTMAX_MAX, wchar_t>(s, end, base);
 }
 
 long strtol(const char* s, char** end, int base) {
-  return StrToI<long, LONG_MIN, LONG_MAX>(s, end, base);
+  return StrToI<long, LONG_MIN, LONG_MAX, char>(s, end, base);
+}
+
+long wcstol(const wchar_t* s, wchar_t** end, int base) {
+  return StrToI<long, LONG_MIN, LONG_MAX, wchar_t>(s, end, base);
 }
 
 long long strtoll(const char* s, char** end, int base) {
-  return StrToI<long long, LLONG_MIN, LLONG_MAX>(s, end, base);
+  return StrToI<long long, LLONG_MIN, LLONG_MAX, char>(s, end, base);
+}
+
+long long wcstoll(const wchar_t* s, wchar_t** end, int base) {
+  return StrToI<long long, LLONG_MIN, LLONG_MAX, wchar_t>(s, end, base);
 }
 
 // Public API since L, but not in any header.
 __strong_alias(strtoq, strtoll);
 
 unsigned long strtoul(const char* s, char** end, int base) {
-  return StrToU<unsigned long, ULONG_MAX>(s, end, base);
+  return StrToU<unsigned long, ULONG_MAX, char>(s, end, base);
+}
+
+unsigned long wcstoul(const wchar_t* s, wchar_t** end, int base) {
+  return StrToU<unsigned long, ULONG_MAX, wchar_t>(s, end, base);
 }
 
 unsigned long long strtoull(const char* s, char** end, int base) {
-  return StrToU<unsigned long long, ULLONG_MAX>(s, end, base);
+  return StrToU<unsigned long long, ULLONG_MAX, char>(s, end, base);
+}
+
+unsigned long long wcstoull(const wchar_t* s, wchar_t** end, int base) {
+  return StrToU<unsigned long long, ULLONG_MAX, wchar_t>(s, end, base);
 }
 
 uintmax_t strtoumax(const char* s, char** end, int base) {
-  return StrToU<uintmax_t, UINTMAX_MAX>(s, end, base);
+  return StrToU<uintmax_t, UINTMAX_MAX, char>(s, end, base);
+}
+
+uintmax_t wcstoumax(const wchar_t* s, wchar_t** end, int base) {
+  return StrToU<uintmax_t, UINTMAX_MAX, wchar_t>(s, end, base);
 }
 
 // Public API since L, but not in any header.
