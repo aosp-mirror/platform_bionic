@@ -25,8 +25,9 @@
 #define SETUP_EFI 4
 #define SETUP_APPLE_PROPERTIES 5
 #define SETUP_JAILHOUSE 6
+#define SETUP_CC_BLOB 7
 #define SETUP_INDIRECT (1 << 31)
-#define SETUP_TYPE_MAX (SETUP_INDIRECT | SETUP_JAILHOUSE)
+#define SETUP_TYPE_MAX (SETUP_INDIRECT | SETUP_CC_BLOB)
 #define RAMDISK_IMAGE_START_MASK 0x07FF
 #define RAMDISK_PROMPT_FLAG 0x8000
 #define RAMDISK_LOAD_FLAG 0x4000
@@ -162,7 +163,8 @@ struct boot_params {
   __u32 ext_ramdisk_image;
   __u32 ext_ramdisk_size;
   __u32 ext_cmd_line_ptr;
-  __u8 _pad4[116];
+  __u8 _pad4[112];
+  __u32 cc_blob_address;
   struct edid_info edid_info;
   struct efi_info efi_info;
   __u32 alt_mem_k;
