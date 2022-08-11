@@ -43,3 +43,19 @@ extern pthread_mutex_t g_heap_tagging_lock;
 // This function can be called in a multithreaded context, and thus should
 // only be called when holding the `g_heap_tagging_lock`.
 bool SetHeapTaggingLevel(HeapTaggingLevel level);
+
+// This is static because libc_nomalloc uses this but does not need to link the
+// cpp file.
+__attribute__((unused)) static inline const char* DescribeTaggingLevel(
+    HeapTaggingLevel level) {
+  switch (level) {
+    case M_HEAP_TAGGING_LEVEL_NONE:
+      return "none";
+    case M_HEAP_TAGGING_LEVEL_TBI:
+      return "tbi";
+    case M_HEAP_TAGGING_LEVEL_ASYNC:
+      return "async";
+    case M_HEAP_TAGGING_LEVEL_SYNC:
+      return "sync";
+  }
+}
