@@ -336,6 +336,9 @@ struct kvm_run {
 #define KVM_SYSTEM_EVENT_SHUTDOWN 1
 #define KVM_SYSTEM_EVENT_RESET 2
 #define KVM_SYSTEM_EVENT_CRASH 3
+#define KVM_SYSTEM_EVENT_WAKEUP 4
+#define KVM_SYSTEM_EVENT_SUSPEND 5
+#define KVM_SYSTEM_EVENT_SEV_TERM 6
       __u32 type;
       __u32 ndata;
       union {
@@ -482,6 +485,7 @@ struct kvm_vapic_addr {
 #define KVM_MP_STATE_OPERATING 7
 #define KVM_MP_STATE_LOAD 8
 #define KVM_MP_STATE_AP_RESET_HOLD 9
+#define KVM_MP_STATE_SUSPENDED 10
 struct kvm_mp_state {
   __u32 mp_state;
 };
@@ -903,7 +907,9 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_S390_MEM_OP_EXTENSION 211
 #define KVM_CAP_PMU_CAPABILITY 212
 #define KVM_CAP_DISABLE_QUIRKS2 213
+#define KVM_CAP_VM_TSC_CONTROL 214
 #define KVM_CAP_SYSTEM_EVENT_DATA 215
+#define KVM_CAP_ARM_SYSTEM_SUSPEND 216
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -977,6 +983,7 @@ struct kvm_x86_mce {
 #define KVM_XEN_HVM_CONFIG_SHARED_INFO (1 << 2)
 #define KVM_XEN_HVM_CONFIG_RUNSTATE (1 << 3)
 #define KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL (1 << 4)
+#define KVM_XEN_HVM_CONFIG_EVTCHN_SEND (1 << 5)
 struct kvm_xen_hvm_config {
   __u32 flags;
   __u32 msr;
@@ -1287,14 +1294,38 @@ struct kvm_xen_hvm_attr {
     struct {
       __u64 gfn;
     } shared_info;
+    struct {
+      __u32 send_port;
+      __u32 type;
+      __u32 flags;
+#define KVM_XEN_EVTCHN_DEASSIGN (1 << 0)
+#define KVM_XEN_EVTCHN_UPDATE (1 << 1)
+#define KVM_XEN_EVTCHN_RESET (1 << 2)
+      union {
+        struct {
+          __u32 port;
+          __u32 vcpu;
+          __u32 priority;
+        } port;
+        struct {
+          __u32 port;
+          __s32 fd;
+        } eventfd;
+        __u32 padding[4];
+      } deliver;
+    } evtchn;
+    __u32 xen_version;
     __u64 pad[8];
   } u;
 };
 #define KVM_XEN_ATTR_TYPE_LONG_MODE 0x0
 #define KVM_XEN_ATTR_TYPE_SHARED_INFO 0x1
 #define KVM_XEN_ATTR_TYPE_UPCALL_VECTOR 0x2
+#define KVM_XEN_ATTR_TYPE_EVTCHN 0x3
+#define KVM_XEN_ATTR_TYPE_XEN_VERSION 0x4
 #define KVM_XEN_VCPU_GET_ATTR _IOWR(KVMIO, 0xca, struct kvm_xen_vcpu_attr)
 #define KVM_XEN_VCPU_SET_ATTR _IOW(KVMIO, 0xcb, struct kvm_xen_vcpu_attr)
+#define KVM_XEN_HVM_EVTCHN_SEND _IOW(KVMIO, 0xd0, struct kvm_irq_routing_xen_evtchn)
 #define KVM_GET_SREGS2 _IOR(KVMIO, 0xcc, struct kvm_sregs2)
 #define KVM_SET_SREGS2 _IOW(KVMIO, 0xcd, struct kvm_sregs2)
 struct kvm_xen_vcpu_attr {
@@ -1311,6 +1342,13 @@ struct kvm_xen_vcpu_attr {
       __u64 time_blocked;
       __u64 time_offline;
     } runstate;
+    __u32 vcpu_id;
+    struct {
+      __u32 port;
+      __u32 priority;
+      __u64 expires_ns;
+    } timer;
+    __u8 vector;
   } u;
 };
 #define KVM_XEN_VCPU_ATTR_TYPE_VCPU_INFO 0x0
@@ -1319,6 +1357,9 @@ struct kvm_xen_vcpu_attr {
 #define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_CURRENT 0x3
 #define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_DATA 0x4
 #define KVM_XEN_VCPU_ATTR_TYPE_RUNSTATE_ADJUST 0x5
+#define KVM_XEN_VCPU_ATTR_TYPE_VCPU_ID 0x6
+#define KVM_XEN_VCPU_ATTR_TYPE_TIMER 0x7
+#define KVM_XEN_VCPU_ATTR_TYPE_UPCALL_VECTOR 0x8
 enum sev_cmd_id {
   KVM_SEV_INIT = 0,
   KVM_SEV_ES_INIT,
@@ -1517,7 +1558,8 @@ struct kvm_stats_header {
 #define KVM_STATS_UNIT_BYTES (0x1 << KVM_STATS_UNIT_SHIFT)
 #define KVM_STATS_UNIT_SECONDS (0x2 << KVM_STATS_UNIT_SHIFT)
 #define KVM_STATS_UNIT_CYCLES (0x3 << KVM_STATS_UNIT_SHIFT)
-#define KVM_STATS_UNIT_MAX KVM_STATS_UNIT_CYCLES
+#define KVM_STATS_UNIT_BOOLEAN (0x4 << KVM_STATS_UNIT_SHIFT)
+#define KVM_STATS_UNIT_MAX KVM_STATS_UNIT_BOOLEAN
 #define KVM_STATS_BASE_SHIFT 8
 #define KVM_STATS_BASE_MASK (0xF << KVM_STATS_BASE_SHIFT)
 #define KVM_STATS_BASE_POW10 (0x0 << KVM_STATS_BASE_SHIFT)
