@@ -2662,6 +2662,7 @@ cc_genrule {
         "  -D $${BIONIC_LIBC_DIR}/b64/include " +
         " && " +
         "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
+        " -x **/BUILD " +
         " include/**/*:include/ " +
         " NOTICE:NOTICE.bionic " +
         " && " +
