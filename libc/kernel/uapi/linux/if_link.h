@@ -71,6 +71,7 @@ struct rtnl_link_stats64 {
   __u64 rx_compressed;
   __u64 tx_compressed;
   __u64 rx_nohandler;
+  __u64 rx_otherhost_dropped;
 };
 struct rtnl_hw_stats64 {
   __u64 rx_packets;
@@ -162,6 +163,8 @@ enum {
   IFLA_PARENT_DEV_NAME,
   IFLA_PARENT_DEV_BUS_NAME,
   IFLA_GRO_MAX_SIZE,
+  IFLA_TSO_MAX_SIZE,
+  IFLA_TSO_MAX_SEGS,
   __IFLA_MAX
 };
 #define IFLA_MAX (__IFLA_MAX - 1)

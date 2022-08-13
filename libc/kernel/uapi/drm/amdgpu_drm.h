@@ -72,6 +72,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
 #define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 #define AMDGPU_GEM_CREATE_PREEMPTIBLE (1 << 11)
+#define AMDGPU_GEM_CREATE_DISCARDABLE (1 << 12)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -319,6 +320,7 @@ struct drm_amdgpu_gem_op {
 #define AMDGPU_VM_MTYPE_CC (3 << 5)
 #define AMDGPU_VM_MTYPE_UC (4 << 5)
 #define AMDGPU_VM_MTYPE_RW (5 << 5)
+#define AMDGPU_VM_PAGE_NOALLOC (1 << 9)
 struct drm_amdgpu_gem_va {
   __u32 handle;
   __u32 _pad;
@@ -588,6 +590,8 @@ struct drm_amdgpu_info_vbios {
 #define AMDGPU_VRAM_TYPE_DDR4 8
 #define AMDGPU_VRAM_TYPE_GDDR6 9
 #define AMDGPU_VRAM_TYPE_DDR5 10
+#define AMDGPU_VRAM_TYPE_LPDDR4 11
+#define AMDGPU_VRAM_TYPE_LPDDR5 12
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -694,7 +698,9 @@ struct drm_amdgpu_info_video_caps {
 #define AMDGPU_FAMILY_RV 142
 #define AMDGPU_FAMILY_NV 143
 #define AMDGPU_FAMILY_VGH 144
+#define AMDGPU_FAMILY_GC_11_0_0 145
 #define AMDGPU_FAMILY_YC 146
+#define AMDGPU_FAMILY_GC_11_0_1 148
 #define AMDGPU_FAMILY_GC_10_3_6 149
 #define AMDGPU_FAMILY_GC_10_3_7 151
 #ifdef __cplusplus

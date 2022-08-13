@@ -69,7 +69,8 @@
 #define HAVESIGN   0x04000 // Sign detected
 #define NDIGITS    0x08000 // No digits detected
 #define PFXOK      0x10000 // "0x" prefix is (still) legal
-#define NZDIGITS   0x20000 // No zero digits detected
+#define PFBOK      0x20000 // "0b" prefix is (still) legal
+#define NZDIGITS   0x40000 // No zero digits detected
 
 // Conversion types.
 #define CT_CHAR 0   // %c conversion
@@ -100,9 +101,6 @@ int __svfscanf(FILE* fp, const char* fmt0, va_list ap) {
   mbstate_t mbs;
   void* allocation = nullptr; // Allocated but unassigned result for %mc/%ms/%m[.
   size_t capacity = 0; // Number of char/wchar_t units allocated in `allocation`.
-
-  /* `basefix' is used to avoid `if' tests in the integer scanner */
-  static short basefix[17] = { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
   _SET_ORIENTATION(fp, -1);
 
@@ -188,6 +186,12 @@ literal:
        * Conversions.
        * Those marked `compat' are for 4.[123]BSD compatibility.
        */
+      case 'b':
+        c = CT_INT;
+        base = 2;
+        flags |= PFBOK; /* enable 0b prefixing */
+        break;
+
       case 'D': /* compat */
         flags |= LONG;
         __BIONIC_FALLTHROUGH;
@@ -558,7 +562,7 @@ literal:
              * digits (zero or nonzero) have been
              * scanned (only signs), we will have
              * base==0.  In that case, we should set
-             * it to 8 and enable 0x prefixing.
+             * it to 8 and enable 0b/0x prefixing.
              * Also, if we have not scanned zero digits
              * before this, do not turn off prefixing
              * (someone else will turn it off if we
@@ -567,15 +571,24 @@ literal:
             case '0':
               if (base == 0) {
                 base = 8;
-                flags |= PFXOK;
+                flags |= PFBOK | PFXOK;
               }
-              if (flags & NZDIGITS)
+              if (flags & NZDIGITS) {
                 flags &= ~(SIGNOK | NZDIGITS | NDIGITS);
-              else
-                flags &= ~(SIGNOK | PFXOK | NDIGITS);
+              } else {
+                flags &= ~(SIGNOK | PFBOK | PFXOK | NDIGITS);
+              }
               goto ok;
-
-            /* 1 through 7 always legal */
+            case 'B':
+            case 'b':
+              // Is this 'b' or 'B' potentially part of an "0b" prefix?
+              if ((flags & PFBOK) && p == buf + 1 + !!(flags & HAVESIGN)) {
+                base = 2;
+                flags &= ~PFBOK;
+                goto ok;
+              }
+              // No? Fall through and see if it's a hex digit instead then...
+              __BIONIC_FALLTHROUGH;
             case '1':
             case '2':
             case '3':
@@ -583,34 +596,21 @@ literal:
             case '5':
             case '6':
             case '7':
-              base = basefix[base];
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
-              goto ok;
-
-            /* digits 8 and 9 ok iff decimal or hex */
             case '8':
             case '9':
-              base = basefix[base];
-              if (base <= 8) break; /* not legal here */
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
-              goto ok;
-
-            /* letters ok iff hex */
             case 'A':
-            case 'B':
             case 'C':
             case 'D':
             case 'E':
             case 'F':
             case 'a':
-            case 'b':
             case 'c':
             case 'd':
             case 'e':
             case 'f':
-              /* no need to fix base here */
-              if (base <= 10) break; /* not legal here */
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
+              if (base == 0) base = 10;
+              if (base != 16 && (c - '0') >= base) break; /* not legal here */
+              flags &= ~(SIGNOK | PFBOK | PFXOK | NDIGITS);
               goto ok;
 
             /* sign ok only as first character */
@@ -653,17 +653,16 @@ literal:
             break; /* EOF */
         }
         /*
-         * If we had only a sign, it is no good; push
-         * back the sign.  If the number ends in `x',
-         * it was [sign] '0' 'x', so push back the x
-         * and treat it as [sign] '0'.
+         * If we had only a sign, it is no good; push back the sign.
+         * If the number was `[-+]0[BbXx]`, push back and treat it
+         * as `[-+]0`.
          */
         if (flags & NDIGITS) {
           if (p > buf) (void)ungetc(*(u_char*)--p, fp);
           goto match_failure;
         }
         c = ((u_char*)p)[-1];
-        if (c == 'x' || c == 'X') {
+        if ((base == 2 && (c == 'b' || c == 'B')) || c == 'x' || c == 'X') {
           --p;
           (void)ungetc(c, fp);
         }

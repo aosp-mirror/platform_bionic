@@ -55,7 +55,24 @@ void* memcpy(void*, const void*, size_t);
 void* mempcpy(void* __dst, const void* __src, size_t __n) __INTRODUCED_IN(23);
 #endif
 void* memmove(void* __dst, const void* __src, size_t __n);
+
+/**
+ * [memset(3)](http://man7.org/linux/man-pages/man3/memset.3.html) writes the
+ * bottom 8 bits of the given int to the next `n` bytes of `dst`.
+ *
+ * Returns `dst`.
+ */
 void* memset(void* __dst, int __ch, size_t __n);
+
+/**
+ * [memset_explicit(3)](http://man7.org/linux/man-pages/man3/memset_explicit.3.html)
+ * writes the bottom 8 bits of the given int to the next `n` bytes of `dst`,
+ * but won't be optimized out by the compiler.
+ *
+ * Returns `dst`.
+ */
+void* memset_explicit(void* __dst, int __ch, size_t __n) __INTRODUCED_IN(34);
+
 void* memmem(const void* __haystack, size_t __haystack_size, const void* __needle, size_t __needle_size) __attribute_pure__;
 
 char* strchr(const char* __s, int __ch) __attribute_pure__;

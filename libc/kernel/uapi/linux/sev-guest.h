@@ -16,27 +16,41 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef LINUX_ATM_ZATM_H
-#define LINUX_ATM_ZATM_H
-#include <linux/atmapi.h>
-#include <linux/atmioc.h>
-#define ZATM_GETPOOL _IOW('a', ATMIOC_SARPRV + 1, struct atmif_sioc)
-#define ZATM_GETPOOLZ _IOW('a', ATMIOC_SARPRV + 2, struct atmif_sioc)
-#define ZATM_SETPOOL _IOW('a', ATMIOC_SARPRV + 3, struct atmif_sioc)
-struct zatm_pool_info {
-  int ref_count;
-  int low_water, high_water;
-  int rqa_count, rqu_count;
-  int offset, next_off;
-  int next_cnt, next_thres;
+#ifndef __UAPI_LINUX_SEV_GUEST_H_
+#define __UAPI_LINUX_SEV_GUEST_H_
+#include <linux/types.h>
+struct snp_report_req {
+  __u8 user_data[64];
+  __u32 vmpl;
+  __u8 rsvd[28];
 };
-struct zatm_pool_req {
-  int pool_num;
-  struct zatm_pool_info info;
+struct snp_report_resp {
+  __u8 data[4000];
 };
-#define ZATM_OAM_POOL 0
-#define ZATM_AAL0_POOL 1
-#define ZATM_AAL5_POOL_BASE 2
-#define ZATM_LAST_POOL ZATM_AAL5_POOL_BASE + 10
-#define ZATM_TIMER_HISTORY_SIZE 16
+struct snp_derived_key_req {
+  __u32 root_key_select;
+  __u32 rsvd;
+  __u64 guest_field_select;
+  __u32 vmpl;
+  __u32 guest_svn;
+  __u64 tcb_version;
+};
+struct snp_derived_key_resp {
+  __u8 data[64];
+};
+struct snp_guest_request_ioctl {
+  __u8 msg_version;
+  __u64 req_data;
+  __u64 resp_data;
+  __u64 fw_err;
+};
+struct snp_ext_report_req {
+  struct snp_report_req data;
+  __u64 certs_address;
+  __u32 certs_len;
+};
+#define SNP_GUEST_REQ_IOC_TYPE 'S'
+#define SNP_GET_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x0, struct snp_guest_request_ioctl)
+#define SNP_GET_DERIVED_KEY _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x1, struct snp_guest_request_ioctl)
+#define SNP_GET_EXT_REPORT _IOWR(SNP_GUEST_REQ_IOC_TYPE, 0x2, struct snp_guest_request_ioctl)
 #endif
