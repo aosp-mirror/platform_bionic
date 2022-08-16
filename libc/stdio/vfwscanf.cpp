@@ -42,6 +42,8 @@
 #include <wctype.h>
 #include "local.h"
 
+#include <platform/bionic/macros.h>
+
 #define BUF 513 /* Maximum length of numeric string. */
 
 /*
@@ -65,15 +67,16 @@
  * SIGNOK, HAVESIGN, NDIGITS, DPTOK, and EXPOK are for floating point;
  * SIGNOK, HAVESIGN, NDIGITS, PFXOK, and NZDIGITS are for integral.
  */
-#define SIGNOK 0x01000   /* +/- is (still) legal */
+#define SIGNOK   0x01000  /* +/- is (still) legal */
 #define HAVESIGN 0x02000 /* sign detected */
-#define NDIGITS 0x04000  /* no digits detected */
+#define NDIGITS  0x04000 /* no digits detected */
 
-#define DPTOK 0x08000 /* (float) decimal point is still legal */
-#define EXPOK 0x10000 /* (float) exponent (e+3, etc) still legal */
+#define DPTOK    0x08000 /* (float) decimal point is still legal */
+#define EXPOK    0x10000 /* (float) exponent (e+3, etc) still legal */
 
-#define PFXOK 0x08000    /* 0x prefix is (still) legal */
-#define NZDIGITS 0x10000 /* no zero digits detected */
+#define PFBOK    0x20000 /* 0x prefix is (still) legal */
+#define PFXOK    0x40000 /* 0x prefix is (still) legal */
+#define NZDIGITS 0x80000 /* no zero digits detected */
 
 /*
  * Conversion types.
@@ -146,9 +149,6 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
   size_t nconv;           /* number of bytes in mb. conversion */
   char mbbuf[MB_LEN_MAX]; /* temporary mb. character buffer */
   mbstate_t mbs;
-
-  /* `basefix' is used to avoid `if' tests in the integer scanner */
-  static short basefix[17] = { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
   _SET_ORIENTATION(fp, 1);
 
@@ -239,9 +239,15 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
        * Conversions.
        * Those marked `compat' are for 4.[123]BSD compatibility.
        */
+      case 'b':
+        c = CT_INT;
+        base = 2;
+        flags |= PFBOK; /* enable 0b prefixing */
+        break;
+
       case 'D': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'd':
         c = CT_INT;
         base = 10;
@@ -254,7 +260,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
 
       case 'O': /* compat */
         flags |= LONG;
-        /* FALLTHROUGH */
+        __BIONIC_FALLTHROUGH;
       case 'o':
         c = CT_INT;
         flags |= UNSIGNED;
@@ -468,7 +474,7 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
              * digits (zero or nonzero) have been
              * scanned (only signs), we will have
              * base==0.  In that case, we should set
-             * it to 8 and enable 0x prefixing.
+             * it to 8 and enable 0b/0x prefixing.
              * Also, if we have not scanned zero digits
              * before this, do not turn off prefixing
              * (someone else will turn it off if we
@@ -477,15 +483,26 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
             case '0':
               if (base == 0) {
                 base = 8;
-                flags |= PFXOK;
+                flags |= PFBOK | PFXOK;
               }
-              if (flags & NZDIGITS)
+              if (flags & NZDIGITS) {
                 flags &= ~(SIGNOK | NZDIGITS | NDIGITS);
-              else
-                flags &= ~(SIGNOK | PFXOK | NDIGITS);
+              } else {
+                flags &= ~(SIGNOK | PFBOK | PFXOK | NDIGITS);
+              }
               goto ok;
 
             /* 1 through 7 always legal */
+            case 'B':
+            case 'b':
+              // Is this 'b' potentially part of an "0b" prefix?
+              if ((flags & PFBOK) && p == buf + 1 + !!(flags & HAVESIGN)) {
+                base = 2;
+                flags &= ~PFBOK;
+                goto ok;
+              }
+              // No? Fall through and see if it's a hex digit instead then...
+              __BIONIC_FALLTHROUGH;
             case '1':
             case '2':
             case '3':
@@ -493,34 +510,21 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
             case '5':
             case '6':
             case '7':
-              base = basefix[base];
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
-              goto ok;
-
-            /* digits 8 and 9 ok iff decimal or hex */
             case '8':
             case '9':
-              base = basefix[base];
-              if (base <= 8) break; /* not legal here */
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
-              goto ok;
-
-            /* letters ok iff hex */
             case 'A':
-            case 'B':
             case 'C':
             case 'D':
             case 'E':
             case 'F':
             case 'a':
-            case 'b':
             case 'c':
             case 'd':
             case 'e':
             case 'f':
-              /* no need to fix base here */
-              if (base <= 10) break; /* not legal here */
-              flags &= ~(SIGNOK | PFXOK | NDIGITS);
+              if (base == 0) base = 10;
+              if (base != 16 && (int)(c - '0') >= base) break; /* not legal here */
+              flags &= ~(SIGNOK | PFBOK | PFXOK | NDIGITS);
               goto ok;
 
             /* sign ok only as first character */
@@ -560,17 +564,16 @@ int __vfwscanf(FILE* __restrict fp, const wchar_t* __restrict fmt, __va_list ap)
           *p++ = (wchar_t)c;
         }
         /*
-         * If we had only a sign, it is no good; push
-         * back the sign.  If the number ends in `x',
-         * it was [sign] '0' 'x', so push back the x
-         * and treat it as [sign] '0'.
+         * If we had only a sign, it is no good; push back the sign.
+         * If the number was `[-+]0[BbXx]`, push back and treat it
+         * as `[-+]0`.
          */
         if (flags & NDIGITS) {
           if (p > buf) __ungetwc(*--p, fp);
           goto match_failure;
         }
         c = p[-1];
-        if (c == 'x' || c == 'X') {
+        if ((base == 2 && (c == 'b' || c == 'B')) || c == 'x' || c == 'X') {
           --p;
           __ungetwc(c, fp);
         }
