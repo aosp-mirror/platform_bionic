@@ -38,7 +38,6 @@
 #define FALSE 0
 #endif
 #include <linux/types.h>
-#include <stdlib.h>
 struct agp_version {
   __u16 major;
   __u16 minor;
@@ -48,10 +47,10 @@ typedef struct _agp_info {
   __u32 bridge_id;
   __u32 agp_mode;
   unsigned long aper_base;
-  size_t aper_size;
-  size_t pg_total;
-  size_t pg_system;
-  size_t pg_used;
+  __kernel_size_t aper_size;
+  __kernel_size_t pg_total;
+  __kernel_size_t pg_system;
+  __kernel_size_t pg_used;
 } agp_info;
 typedef struct _agp_setup {
   __u32 agp_mode;
