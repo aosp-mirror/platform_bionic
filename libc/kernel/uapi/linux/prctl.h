@@ -179,6 +179,11 @@ struct prctl_mm_map {
 #define PR_SCHED_CORE_SCOPE_THREAD 0
 #define PR_SCHED_CORE_SCOPE_THREAD_GROUP 1
 #define PR_SCHED_CORE_SCOPE_PROCESS_GROUP 2
+#define PR_SME_SET_VL 63
+#define PR_SME_SET_VL_ONEXEC (1 << 18)
+#define PR_SME_GET_VL 64
+#define PR_SME_VL_LEN_MASK 0xffff
+#define PR_SME_VL_INHERIT (1 << 17)
 #define PR_SET_VMA 0x53564d41
 #define PR_SET_VMA_ANON_NAME 0
 #endif

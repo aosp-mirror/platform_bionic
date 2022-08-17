@@ -73,6 +73,7 @@ struct nlmsghdr {
 #define NLM_F_CREATE 0x400
 #define NLM_F_APPEND 0x800
 #define NLM_F_NONREC 0x100
+#define NLM_F_BULK 0x200
 #define NLM_F_CAPPED 0x100
 #define NLM_F_ACK_TLVS 0x200
 #define NLMSG_ALIGNTO 4U

@@ -241,15 +241,41 @@ cc_defaults {
     arch: {
         arm: {
             srcs: [":linker_sources_arm"],
+
+            // Arm 32 bit does not produce complete exidx unwind information
+            // so keep the .debug_frame which is relatively small and does
+            // include needed unwind information.
+            // See b/242162222 for details.
+            strip: {
+                keep_symbols_and_debug_frame: true,
+            },
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
         x86: {
             srcs: [":linker_sources_x86"],
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
         x86_64: {
             srcs: [":linker_sources_x86_64"],
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
         },
     },
 
@@ -274,12 +300,6 @@ cc_defaults {
     nocrt: true,
 
     static_executable: true,
-
-    // Leave the symbols in the shared library so that stack unwinders can produce
-    // meaningful name resolution.
-    strip: {
-        keep_symbols: true,
-    },
 
     // Insert an extra objcopy step to add prefix to symbols. This is needed to prevent gdb
     // looking up symbols in the linker by mistake.
