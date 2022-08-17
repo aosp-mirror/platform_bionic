@@ -704,6 +704,7 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_400000baseCR4_Full_BIT = 89,
   ETHTOOL_LINK_MODE_100baseFX_Half_BIT = 90,
   ETHTOOL_LINK_MODE_100baseFX_Full_BIT = 91,
+  ETHTOOL_LINK_MODE_10baseT1L_Full_BIT = 92,
   __ETHTOOL_LINK_MODE_MASK_NBITS
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))

@@ -100,7 +100,7 @@
 #define F_SETSIG 10
 #define F_GETSIG 11
 #endif
-#ifndef __LP64__
+#if __BITS_PER_LONG == 32
 #ifndef F_GETLK64
 #define F_GETLK64 12
 #define F_SETLK64 13
@@ -144,13 +144,5 @@ struct f_owner_ex {
 #define LOCK_RW 192
 #define F_LINUX_SPECIFIC_BASE 1024
 #ifndef HAVE_ARCH_STRUCT_FLOCK
-#ifndef __ARCH_FLOCK_PAD
-#define __ARCH_FLOCK_PAD
-#endif
-#endif
-#ifndef HAVE_ARCH_STRUCT_FLOCK64
-#ifndef __ARCH_FLOCK64_PAD
-#define __ARCH_FLOCK64_PAD
-#endif
 #endif
 #endif
