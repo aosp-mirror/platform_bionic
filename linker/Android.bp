@@ -115,7 +115,7 @@ cc_defaults {
 
         "libasync_safe",
 
-        "liblog",
+        "liblog_for_runtime_apex",
     ],
 
     // We need to access Bionic private headers in the linker.
@@ -514,7 +514,7 @@ cc_test {
     static_libs: [
         "libasync_safe",
         "libbase",
-        "liblog",
+        "liblog_for_runtime_apex",
     ],
 
     arch: {
