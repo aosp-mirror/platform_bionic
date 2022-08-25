@@ -38,8 +38,8 @@ struct cxl_command_info {
   __u32 id;
   __u32 flags;
 #define CXL_MEM_COMMAND_FLAG_MASK GENMASK(0, 0)
-  __s32 size_in;
-  __s32 size_out;
+  __u32 size_in;
+  __u32 size_out;
 };
 struct cxl_mem_query_commands {
   __u32 n_commands;
@@ -58,12 +58,12 @@ struct cxl_send_command {
   };
   __u32 retval;
   struct {
-    __s32 size;
+    __u32 size;
     __u32 rsvd;
     __u64 payload;
   } in;
   struct {
-    __s32 size;
+    __u32 size;
     __u32 rsvd;
     __u64 payload;
   } out;

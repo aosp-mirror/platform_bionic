@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,36 +26,11 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <string.h>
 
-#include <bionic/pthread_internal.h>
-#include <platform/bionic/malloc.h>
-#include <stddef.h>
-
-// Expected to be called in a single-threaded context during libc init, so no
-// synchronization required.
-void SetDefaultHeapTaggingLevel();
-
-// Lock for the heap tagging level. You may find ScopedPthreadMutexLocker
-// useful for RAII on this lock.
-extern pthread_mutex_t g_heap_tagging_lock;
-
-// This function can be called in a multithreaded context, and thus should
-// only be called when holding the `g_heap_tagging_lock`.
-bool SetHeapTaggingLevel(HeapTaggingLevel level);
-
-// This is static because libc_nomalloc uses this but does not need to link the
-// cpp file.
-__attribute__((unused)) static inline const char* DescribeTaggingLevel(
-    HeapTaggingLevel level) {
-  switch (level) {
-    case M_HEAP_TAGGING_LEVEL_NONE:
-      return "none";
-    case M_HEAP_TAGGING_LEVEL_TBI:
-      return "tbi";
-    case M_HEAP_TAGGING_LEVEL_ASYNC:
-      return "async";
-    case M_HEAP_TAGGING_LEVEL_SYNC:
-      return "sync";
-  }
+void* memset_explicit(void* __dst, int __ch, size_t __n) {
+  void* result = memset(__dst, __ch, __n);
+  // https://bugs.llvm.org/show_bug.cgi?id=15495
+  __asm__ __volatile__("" : : "r"(__dst) : "memory");
+  return result;
 }

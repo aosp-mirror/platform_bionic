@@ -46,6 +46,8 @@ enum {
   NDA_NH_ID,
   NDA_FDB_EXT_ATTRS,
   NDA_FLAGS_EXT,
+  NDA_NDM_STATE_MASK,
+  NDA_NDM_FLAGS_MASK,
   __NDA_MAX
 };
 #define NDA_MAX (__NDA_MAX - 1)

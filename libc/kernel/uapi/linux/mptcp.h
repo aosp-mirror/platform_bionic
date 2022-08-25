@@ -18,12 +18,13 @@
  ****************************************************************************/
 #ifndef _UAPI_MPTCP_H
 #define _UAPI_MPTCP_H
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <linux/const.h>
 #include <linux/types.h>
 #include <linux/in.h>
 #include <linux/in6.h>
 #include <linux/socket.h>
-#include <sys/socket.h>
 #define MPTCP_SUBFLOW_FLAG_MCAP_REM _BITUL(0)
 #define MPTCP_SUBFLOW_FLAG_MCAP_LOC _BITUL(1)
 #define MPTCP_SUBFLOW_FLAG_JOIN_REM _BITUL(2)
@@ -58,6 +59,9 @@ enum {
   MPTCP_PM_ATTR_ADDR,
   MPTCP_PM_ATTR_RCV_ADD_ADDRS,
   MPTCP_PM_ATTR_SUBFLOWS,
+  MPTCP_PM_ATTR_TOKEN,
+  MPTCP_PM_ATTR_LOC_ID,
+  MPTCP_PM_ATTR_ADDR_REMOTE,
   __MPTCP_PM_ATTR_MAX
 };
 #define MPTCP_PM_ATTR_MAX (__MPTCP_PM_ATTR_MAX - 1)
@@ -87,6 +91,10 @@ enum {
   MPTCP_PM_CMD_SET_LIMITS,
   MPTCP_PM_CMD_GET_LIMITS,
   MPTCP_PM_CMD_SET_FLAGS,
+  MPTCP_PM_CMD_ANNOUNCE,
+  MPTCP_PM_CMD_REMOVE,
+  MPTCP_PM_CMD_SUBFLOW_CREATE,
+  MPTCP_PM_CMD_SUBFLOW_DESTROY,
   __MPTCP_PM_CMD_AFTER_LAST
 };
 #define MPTCP_INFO_FLAG_FALLBACK _BITUL(0)
@@ -137,6 +145,7 @@ enum mptcp_event_attr {
   MPTCP_ATTR_IF_IDX,
   MPTCP_ATTR_RESET_REASON,
   MPTCP_ATTR_RESET_FLAGS,
+  MPTCP_ATTR_SERVER_SIDE,
   __MPTCP_ATTR_AFTER_LAST
 };
 #define MPTCP_ATTR_MAX (__MPTCP_ATTR_AFTER_LAST - 1)
