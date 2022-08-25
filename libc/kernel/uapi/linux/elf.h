@@ -112,7 +112,7 @@ typedef __s64 Elf64_Sxword;
 #define STT_COMMON 5
 #define STT_TLS 6
 #define ELF_ST_BIND(x) ((x) >> 4)
-#define ELF_ST_TYPE(x) (((unsigned int) x) & 0xf)
+#define ELF_ST_TYPE(x) ((x) & 0xf)
 #define ELF32_ST_BIND(x) ELF_ST_BIND(x)
 #define ELF32_ST_TYPE(x) ELF_ST_TYPE(x)
 #define ELF64_ST_BIND(x) ELF_ST_BIND(x)
@@ -363,11 +363,18 @@ typedef struct elf64_shdr {
 #define NT_ARM_PACG_KEYS 0x408
 #define NT_ARM_TAGGED_ADDR_CTRL 0x409
 #define NT_ARM_PAC_ENABLED_KEYS 0x40a
+#define NT_ARM_SSVE 0x40b
+#define NT_ARM_ZA 0x40c
 #define NT_ARC_V2 0x600
 #define NT_VMCOREDD 0x700
 #define NT_MIPS_DSP 0x800
 #define NT_MIPS_FP_MODE 0x801
 #define NT_MIPS_MSA 0x802
+#define NT_LOONGARCH_CPUCFG 0xa00
+#define NT_LOONGARCH_CSR 0xa01
+#define NT_LOONGARCH_LSX 0xa02
+#define NT_LOONGARCH_LASX 0xa03
+#define NT_LOONGARCH_LBT 0xa04
 #define NT_GNU_PROPERTY_TYPE_0 5
 typedef struct elf32_note {
   Elf32_Word n_namesz;

@@ -48,5 +48,6 @@
 #define N_NULL 27
 #define N_MCTP 28
 #define N_DEVELOPMENT 29
-#define NR_LDISCS 30
+#define N_CAN327 30
+#define NR_LDISCS 31
 #endif

@@ -61,6 +61,7 @@
 #define EM_RISCV 243
 #define EM_BPF 247
 #define EM_CSKY 252
+#define EM_LOONGARCH 258
 #define EM_FRV 0x5441
 #define EM_ALPHA 0x9026
 #define EM_CYGNUS_M32R 0x9041
