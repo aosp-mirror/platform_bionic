@@ -37,8 +37,12 @@
  *	@(#)setjmp.h	8.2 (Berkeley) 1/21/94
  */
 
-#ifndef _SETJMP_H_
-#define _SETJMP_H_
+#pragma once
+
+/**
+ * @file setjmp.h
+ * @brief Non-local jumps.
+ */
 
 #include <sys/cdefs.h>
 
@@ -52,24 +56,54 @@
 #define _JBLEN 11
 #endif
 
+/** The type of the buffer used by sigsetjmp()/siglongjmp(). */
 typedef long sigjmp_buf[_JBLEN + 1];
+
+/** The type of the buffer used by setjmp()/longjmp(). */
 typedef long jmp_buf[_JBLEN];
 
 #undef _JBLEN
 
 __BEGIN_DECLS
 
+/**
+ * Equivalent to sigsetjmp() with the second argument 0, so that the signal
+ * mask is not saved.
+ */
 int _setjmp(jmp_buf __env) __returns_twice;
+
+/** Equivalent to siglongjmp(). */
 __noreturn void _longjmp(jmp_buf __env, int __value);
 
+/**
+ * Equivalent to sigsetjmp() with the second argument 1, so that the signal
+ * mask is saved.
+ */
 int setjmp(jmp_buf __env) __returns_twice;
-__noreturn void longjmp(jmp_buf __env, int __value);
 
+/** C11 says setjmp() must be a macro, but Android already had a function. */
 #define setjmp(__env) setjmp(__env)
 
-int sigsetjmp(sigjmp_buf __env, int __save_signal_mask);
+/** Equivalent to siglongjmp(). */
+__noreturn void longjmp(jmp_buf __env, int __value);
+
+/**
+ * [sigsetjmp(3)](http://man7.org/linux/man-pages/man3/sigsetjmp.3.html)
+ * sets the target of a future siglongjmp() call, saving or not saving the
+ * current signal mask based on the second argument.
+ *
+ * Returns 0 when first called, and returns the value passed to siglongjmp()
+ * when returning here as a result of a siglongjmp() call.
+ */
+int sigsetjmp(sigjmp_buf __env, int __save_signal_mask) __returns_twice;
+
+/**
+ * [siglongjmp(3)](http://man7.org/linux/man-pages/man3/siglongjmp.3.html)
+ * transfers control back to the site of the sigsetjmp() call that initialized
+ * the given jump buffer, returning the given value.
+ *
+ * Does not return.
+ */
 __noreturn void siglongjmp(sigjmp_buf __env, int __value);
 
 __END_DECLS
-
-#endif
