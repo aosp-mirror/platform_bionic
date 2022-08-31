@@ -1652,33 +1652,6 @@ cc_test {
    },
 }
 
-cc_test {
-   name: "stack_tagging_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["stack_tagging_helper.cpp"],
-   sanitize: {
-     memtag_heap: true,
-     memtag_stack: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
-}
-
-cc_test {
-   name: "stack_tagging_static_helper",
-   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
-   srcs: ["stack_tagging_helper.cpp"],
-   static_executable: true,
-   sanitize: {
-     memtag_heap: true,
-     memtag_stack: true,
-     diag: {
-       memtag_heap: true,
-     },
-   },
-}
-
 cc_genrule {
     name: "libdlext_test_zip_zipaligned",
      out: ["bionic-loader-test-libs/libdlext_test_zip/libdlext_test_zip_zipaligned.zip"],
