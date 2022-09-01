@@ -133,7 +133,7 @@ typedef struct {
 } android_mallopt_gwp_asan_options_t;
 
 // Manipulates bionic-specific handling of memory allocation APIs such as
-// malloc. Only for use by the Android platform itself.
+// malloc. Only for use by the Android platform and APEXes.
 //
 // On success, returns true. On failure, returns false and sets errno.
 extern "C" bool android_mallopt(int opcode, void* arg, size_t arg_size);
