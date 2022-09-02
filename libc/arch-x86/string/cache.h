@@ -28,9 +28,14 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/* Values are optimized for Atom */
-#define SHARED_CACHE_SIZE	(512*1024)			/* Atom L2 Cache */
-#define DATA_CACHE_SIZE		(24*1024)			/* Atom L1 Data Cache */
+#ifdef FOR_ATOM
+#define SHARED_CACHE_SIZE (512 * 1024) /* Atom L2 Cache */
+#endif
+#ifdef FOR_SILVERMONT
+#define SHARED_CACHE_SIZE (1024 * 1024) /* Silvermont L2 Cache */
+#endif
 
-#define SHARED_CACHE_SIZE_HALF	(SHARED_CACHE_SIZE / 2)
-#define DATA_CACHE_SIZE_HALF	(DATA_CACHE_SIZE / 2)
+#define DATA_CACHE_SIZE (24 * 1024) /* Atom and Silvermont L1 Data Cache */
+
+#define SHARED_CACHE_SIZE_HALF (SHARED_CACHE_SIZE / 2)
+#define DATA_CACHE_SIZE_HALF (DATA_CACHE_SIZE / 2)

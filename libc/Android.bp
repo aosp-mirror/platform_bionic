@@ -28,13 +28,14 @@ libc_common_src_files = [
     "bionic/isatty.c",
     "bionic/sched_cpualloc.c",
     "bionic/sched_cpucount.c",
+    "bionic/sysprop_helpers.cpp",
     "stdio/fmemopen.cpp",
     "stdio/parsefloat.c",
     "stdio/refill.c",
     "stdio/stdio.cpp",
     "stdio/stdio_ext.cpp",
     "stdio/vfscanf.cpp",
-    "stdio/vfwscanf.c",
+    "stdio/vfwscanf.cpp",
 ]
 
 // off64_t/time64_t support on LP32.
@@ -258,18 +259,22 @@ cc_library_static {
         // Include tzsetwall, timelocal, timegm, time2posix, and posix2time.
         "-DSTD_INSPIRED",
         // Obviously, we want to be thread-safe.
-        "-DTHREAD_SAFE",
+        "-DTHREAD_SAFE=1",
         // The name of the tm_gmtoff field in our struct tm.
         "-DTM_GMTOFF=tm_gmtoff",
+        // TZDEFAULT is not applicable to Android as there is no one file per time zone mapping
+        "-DTZDEFAULT=NULL",
         // Where we store our tzdata.
         "-DTZDIR=\"/system/usr/share/zoneinfo\"",
         // Include `tzname`, `timezone`, and `daylight` globals.
         "-DHAVE_POSIX_DECLS=0",
-        "-DUSG_COMPAT=1",
+        "-DUSG_COMPAT=2",
+        "-DHAVE_TZNAME=2",
+        // stdbool.h is available
+        "-DHAVE_STDBOOL_H",
         // Use the empty string (instead of "   ") as the timezone abbreviation
         // fallback.
         "-DWILDABBR=\"\"",
-        "-DNO_RUN_TIME_WARNINGS_ABOUT_YEAR_2000_PROBLEMS_THANK_YOU",
         "-Dlint",
     ],
 
@@ -371,7 +376,6 @@ cc_library_static {
                 "upstream-freebsd/lib/libc/string/wcscat.c",
                 "upstream-freebsd/lib/libc/string/wcscpy.c",
                 "upstream-freebsd/lib/libc/string/wmemcmp.c",
-                "upstream-freebsd/lib/libc/string/wmemset.c",
             ],
         },
     },
@@ -496,13 +500,7 @@ cc_library_static {
         "upstream-openbsd/lib/libc/locale/mbstowcs.c",
         "upstream-openbsd/lib/libc/locale/mbtowc.c",
         "upstream-openbsd/lib/libc/locale/wcscoll.c",
-        "upstream-openbsd/lib/libc/locale/wcstoimax.c",
-        "upstream-openbsd/lib/libc/locale/wcstol.c",
-        "upstream-openbsd/lib/libc/locale/wcstoll.c",
         "upstream-openbsd/lib/libc/locale/wcstombs.c",
-        "upstream-openbsd/lib/libc/locale/wcstoul.c",
-        "upstream-openbsd/lib/libc/locale/wcstoull.c",
-        "upstream-openbsd/lib/libc/locale/wcstoumax.c",
         "upstream-openbsd/lib/libc/locale/wcsxfrm.c",
         "upstream-openbsd/lib/libc/locale/wctob.c",
         "upstream-openbsd/lib/libc/locale/wctomb.c",
@@ -922,24 +920,42 @@ cc_library_static {
                 "arch-x86/generic/string/wcscat.c",
                 "arch-x86/generic/string/wcscpy.c",
                 "arch-x86/generic/string/wmemcmp.c",
-                "arch-x86/generic/string/wmemset.c",
 
-                "arch-x86/atom/string/sse2-memchr-atom.S",
-                "arch-x86/atom/string/sse2-memrchr-atom.S",
-                "arch-x86/atom/string/sse2-strchr-atom.S",
-                "arch-x86/atom/string/sse2-strnlen-atom.S",
-                "arch-x86/atom/string/sse2-strrchr-atom.S",
-                "arch-x86/atom/string/sse2-wcschr-atom.S",
-                "arch-x86/atom/string/sse2-wcsrchr-atom.S",
-                "arch-x86/atom/string/sse2-wcslen-atom.S",
-                "arch-x86/atom/string/sse2-wcscmp-atom.S",
-                "arch-x86/silvermont/string/sse2-memmove-slm.S",
-                "arch-x86/silvermont/string/sse2-memset-slm.S",
-                "arch-x86/silvermont/string/sse2-stpcpy-slm.S",
-                "arch-x86/silvermont/string/sse2-stpncpy-slm.S",
-                "arch-x86/silvermont/string/sse2-strcpy-slm.S",
-                "arch-x86/silvermont/string/sse2-strlen-slm.S",
-                "arch-x86/silvermont/string/sse2-strncpy-slm.S",
+                "arch-x86/string/sse2-memchr-atom.S",
+                "arch-x86/string/sse2-memmove-slm.S",
+                "arch-x86/string/sse2-memrchr-atom.S",
+                "arch-x86/string/sse2-memset-atom.S",
+                "arch-x86/string/sse2-memset-slm.S",
+                "arch-x86/string/sse2-stpcpy-slm.S",
+                "arch-x86/string/sse2-stpncpy-slm.S",
+                "arch-x86/string/sse2-strchr-atom.S",
+                "arch-x86/string/sse2-strcpy-slm.S",
+                "arch-x86/string/sse2-strlen-slm.S",
+                "arch-x86/string/sse2-strncpy-slm.S",
+                "arch-x86/string/sse2-strnlen-atom.S",
+                "arch-x86/string/sse2-strrchr-atom.S",
+                "arch-x86/string/sse2-wcschr-atom.S",
+                "arch-x86/string/sse2-wcsrchr-atom.S",
+                "arch-x86/string/sse2-wcslen-atom.S",
+                "arch-x86/string/sse2-wcscmp-atom.S",
+                "arch-x86/string/sse2-strlen-atom.S",
+
+                "arch-x86/string/ssse3-memcmp-atom.S",
+                "arch-x86/string/ssse3-memmove-atom.S",
+                "arch-x86/string/ssse3-strcat-atom.S",
+                "arch-x86/string/ssse3-strcmp-atom.S",
+                "arch-x86/string/ssse3-strcpy-atom.S",
+                "arch-x86/string/ssse3-strlcat-atom.S",
+                "arch-x86/string/ssse3-strlcpy-atom.S",
+                "arch-x86/string/ssse3-strncat-atom.S",
+                "arch-x86/string/ssse3-strncmp-atom.S",
+                "arch-x86/string/ssse3-strncpy-atom.S",
+                "arch-x86/string/ssse3-wcscat-atom.S",
+                "arch-x86/string/ssse3-wcscpy-atom.S",
+                "arch-x86/string/ssse3-wmemcmp-atom.S",
+
+                "arch-x86/string/sse4-memcmp-slm.S",
+                "arch-x86/string/sse4-wmemcmp-slm.S",
 
                 "arch-x86/bionic/__bionic_clone.S",
                 "arch-x86/bionic/_exit_with_stack_teardown.S",
@@ -949,32 +965,6 @@ cc_library_static {
                 "arch-x86/bionic/syscall.S",
                 "arch-x86/bionic/vfork.S",
                 "arch-x86/bionic/__x86.get_pc_thunk.S",
-
-                // ssse3 functions
-                "arch-x86/atom/string/ssse3-strcat-atom.S",
-                "arch-x86/atom/string/ssse3-strcmp-atom.S",
-                "arch-x86/atom/string/ssse3-strlcat-atom.S",
-                "arch-x86/atom/string/ssse3-strlcpy-atom.S",
-                "arch-x86/atom/string/ssse3-strncat-atom.S",
-                "arch-x86/atom/string/ssse3-strncmp-atom.S",
-                "arch-x86/atom/string/ssse3-wcscat-atom.S",
-                "arch-x86/atom/string/ssse3-wcscpy-atom.S",
-
-                // sse4 functions
-                "arch-x86/silvermont/string/sse4-memcmp-slm.S",
-                "arch-x86/silvermont/string/sse4-wmemcmp-slm.S",
-
-                // atom functions
-                "arch-x86/atom/string/sse2-memset-atom.S",
-                "arch-x86/atom/string/sse2-strlen-atom.S",
-                "arch-x86/atom/string/ssse3-memcmp-atom.S",
-                "arch-x86/atom/string/ssse3-memmove-atom.S",
-                "arch-x86/atom/string/ssse3-strcpy-atom.S",
-                "arch-x86/atom/string/ssse3-strncpy-atom.S",
-                "arch-x86/atom/string/ssse3-wmemcmp-atom.S",
-
-                // avx2 functions
-                "arch-x86/kabylake/string/avx2-wmemset-kbl.S",
             ],
 
             exclude_srcs: [
@@ -985,6 +975,7 @@ cc_library_static {
         },
         x86_64: {
             srcs: [
+                "arch-x86_64/string/avx2-memset-kbl.S",
                 "arch-x86_64/string/sse2-memmove-slm.S",
                 "arch-x86_64/string/sse2-memset-slm.S",
                 "arch-x86_64/string/sse2-stpcpy-slm.S",
@@ -997,7 +988,6 @@ cc_library_static {
                 "arch-x86_64/string/sse4-memcmp-slm.S",
                 "arch-x86_64/string/ssse3-strcmp-slm.S",
                 "arch-x86_64/string/ssse3-strncmp-slm.S",
-                "arch-x86_64/string/avx2-wmemset-kbl.S",
 
                 "arch-x86_64/bionic/__bionic_clone.S",
                 "arch-x86_64/bionic/_exit_with_stack_teardown.S",
@@ -1114,6 +1104,7 @@ cc_library_static {
         "bionic/mbrtoc16.cpp",
         "bionic/mbrtoc32.cpp",
         "bionic/mempcpy.cpp",
+        "bionic/memset_explicit.cpp",
         "bionic/mkdir.cpp",
         "bionic/mkfifo.cpp",
         "bionic/mknod.cpp",
@@ -1302,8 +1293,8 @@ genrule {
     name: "syscalls-arm.S",
     out: ["syscalls-arm.S"],
     srcs: ["SYSCALLS.TXT"],
-    tool_files: [":bionic-gensyscalls"],
-    cmd: "$(location :bionic-gensyscalls) arm $(in) > $(out)",
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) arm $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
     }
@@ -1313,8 +1304,8 @@ genrule {
     name: "syscalls-arm64.S",
     out: ["syscalls-arm64.S"],
     srcs: ["SYSCALLS.TXT"],
-    tool_files: [":bionic-gensyscalls"],
-    cmd: "$(location :bionic-gensyscalls) arm64 $(in) > $(out)",
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) arm64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
     },
@@ -1324,8 +1315,8 @@ genrule {
     name: "syscalls-x86.S",
     out: ["syscalls-x86.S"],
     srcs: ["SYSCALLS.TXT"],
-    tool_files: [":bionic-gensyscalls"],
-    cmd: "$(location :bionic-gensyscalls) x86 $(in) > $(out)",
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) x86 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
     },
@@ -1335,8 +1326,8 @@ genrule {
     name: "syscalls-x86_64.S",
     out: ["syscalls-x86_64.S"],
     srcs: ["SYSCALLS.TXT"],
-    tool_files: [":bionic-gensyscalls"],
-    cmd: "$(location :bionic-gensyscalls) x86_64 $(in) > $(out)",
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) x86_64 $(in) > $(out)",
     bazel_module: {
         bp2build_available: true,
     },
@@ -1510,6 +1501,9 @@ cc_library_static {
     name: "libc_static_dispatch",
 
     arch: {
+        x86_64: {
+            srcs: ["arch-x86_64/static_function_dispatch.S"],
+        },
         x86: {
             srcs: ["arch-x86/static_function_dispatch.S"],
         },
@@ -1535,6 +1529,9 @@ cc_library_static {
         "-fno-jump-tables",
     ],
     arch: {
+        x86_64: {
+            srcs: ["arch-x86_64/dynamic_function_dispatch.cpp"],
+        },
         x86: {
             srcs: ["arch-x86/dynamic_function_dispatch.cpp"],
         },
@@ -1685,8 +1682,8 @@ cc_library {
     },
 
     required: [
-        "tzdata",
-        "tz_version", // Version metadata for tzdata to help debugging.
+        "tzdata_prebuilt",
+        "tz_version_prebuilt", // Version metadata for tzdata to help debugging.
     ],
 
     // Do not pack libc.so relocations; see http://b/20645321 for details.
@@ -1806,8 +1803,8 @@ genrule {
     name: "libc.arm.map",
     out: ["libc.arm.map"],
     srcs: ["libc.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) arm $(in) $(out)",
     bazel_module: { bp2build_available: true },
 }
 
@@ -1815,8 +1812,8 @@ genrule {
     name: "libc.arm64.map",
     out: ["libc.arm64.map"],
     srcs: ["libc.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) arm64 $(in) $(out)",
     bazel_module: { bp2build_available: true },
 }
 
@@ -1824,8 +1821,8 @@ genrule {
     name: "libc.x86.map",
     out: ["libc.x86.map"],
     srcs: ["libc.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) x86 $(in) $(out)",
     bazel_module: { bp2build_available: true },
 }
 
@@ -1833,8 +1830,8 @@ genrule {
     name: "libc.x86_64.map",
     out: ["libc.x86_64.map"],
     srcs: ["libc.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
     bazel_module: { bp2build_available: true },
 }
 
@@ -2035,32 +2032,32 @@ genrule {
     name: "libstdc++.arm.map",
     out: ["libstdc++.arm.map"],
     srcs: ["libstdc++.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) arm $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) arm $(in) $(out)",
 }
 
 genrule {
     name: "libstdc++.arm64.map",
     out: ["libstdc++.arm64.map"],
     srcs: ["libstdc++.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) arm64 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) arm64 $(in) $(out)",
 }
 
 genrule {
     name: "libstdc++.x86.map",
     out: ["libstdc++.x86.map"],
     srcs: ["libstdc++.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) x86 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) x86 $(in) $(out)",
 }
 
 genrule {
     name: "libstdc++.x86_64.map",
     out: ["libstdc++.x86_64.map"],
     srcs: ["libstdc++.map.txt"],
-    tool_files: [":bionic-generate-version-script"],
-    cmd: "$(location :bionic-generate-version-script) x86_64 $(in) $(out)",
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
 }
 
 // ========================================================
@@ -2324,6 +2321,8 @@ ndk_library {
     name: "libc",
     symbol_file: "libc.map.txt",
     first_version: "9",
+    // APIs implemented in asm don't have debug info: http://b/190554910.
+    allow_untyped_symbols: true,
 }
 
 ndk_library {
@@ -2663,6 +2662,7 @@ cc_genrule {
         "  -D $${BIONIC_LIBC_DIR}/b64/include " +
         " && " +
         "$(location zip2zip) -i $(genDir)/sysroot.zip -o $(genDir)/sysroot-renamed.zip " +
+        " -x **/BUILD " +
         " include/**/*:include/ " +
         " NOTICE:NOTICE.bionic " +
         " && " +

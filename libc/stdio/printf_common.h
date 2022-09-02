@@ -524,6 +524,8 @@ static int __find_arguments(const CHAR_TYPE* fmt0, va_list ap, union arg** argta
       case 'u':
       case 'X':
       case 'x':
+      case 'B':
+      case 'b':
         ADDUARG();
         break;
       default: /* "%?" prints ?, unless ? is NUL */

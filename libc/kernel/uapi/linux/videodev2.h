@@ -24,7 +24,7 @@
 #include <linux/types.h>
 #include <linux/v4l2-common.h>
 #include <linux/v4l2-controls.h>
-#define VIDEO_MAX_FRAME 32
+#define VIDEO_MAX_FRAME 64
 #define VIDEO_MAX_PLANES 8
 #define v4l2_fourcc(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define v4l2_fourcc_be(a,b,c,d) (v4l2_fourcc(a, b, c, d) | (1U << 31))
@@ -255,6 +255,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_Y16_BE v4l2_fourcc_be('Y', '1', '6', ' ')
 #define V4L2_PIX_FMT_Y10BPACK v4l2_fourcc('Y', '1', '0', 'B')
 #define V4L2_PIX_FMT_Y10P v4l2_fourcc('Y', '1', '0', 'P')
+#define V4L2_PIX_FMT_IPU3_Y10 v4l2_fourcc('i', 'p', '3', 'y')
 #define V4L2_PIX_FMT_PAL8 v4l2_fourcc('P', 'A', 'L', '8')
 #define V4L2_PIX_FMT_UV8 v4l2_fourcc('U', 'V', '8', ' ')
 #define V4L2_PIX_FMT_YUYV v4l2_fourcc('Y', 'U', 'Y', 'V')
@@ -300,6 +301,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV12_32L32 v4l2_fourcc('S', 'T', '1', '2')
 #define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
+#define V4L2_PIX_FMT_NV12M_8L128 v4l2_fourcc('N', 'A', '1', '2')
+#define V4L2_PIX_FMT_NV12M_10BE_8L128 v4l2_fourcc_be('N', 'T', '1', '2')
 #define V4L2_PIX_FMT_SBGGR8 v4l2_fourcc('B', 'A', '8', '1')
 #define V4L2_PIX_FMT_SGBRG8 v4l2_fourcc('G', 'B', 'R', 'G')
 #define V4L2_PIX_FMT_SGRBG8 v4l2_fourcc('G', 'R', 'B', 'G')
@@ -399,6 +402,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_INZI v4l2_fourcc('I', 'N', 'Z', 'I')
 #define V4L2_PIX_FMT_CNF4 v4l2_fourcc('C', 'N', 'F', '4')
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')
+#define V4L2_PIX_FMT_QC08C v4l2_fourcc('Q', '0', '8', 'C')
+#define V4L2_PIX_FMT_QC10C v4l2_fourcc('Q', '1', '0', 'C')
 #define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
 #define V4L2_PIX_FMT_IPU3_SGBRG10 v4l2_fourcc('i', 'p', '3', 'g')
 #define V4L2_PIX_FMT_IPU3_SGRBG10 v4l2_fourcc('i', 'p', '3', 'G')

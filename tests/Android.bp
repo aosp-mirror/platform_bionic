@@ -62,7 +62,10 @@ cc_defaults {
         // For glibc.
         "-D__STDC_LIMIT_MACROS",
     ],
-    header_libs: ["libcutils_headers"],
+    header_libs: [
+        "libcutils_headers",
+        "gwp_asan_headers"
+    ],
     // Ensure that the tests exercise shadow call stack support and
     // the hint space PAC/BTI instructions.
     arch: {
@@ -295,6 +298,29 @@ cc_prebuilt_test_library_shared {
     },
 }
 
+cc_prebuilt_test_library_shared {
+    name: "libtest_invalid-local-tls",
+    strip: {
+        none: true,
+    },
+    check_elf_files: false,
+    relative_install_path: "bionic-loader-test-libs/prebuilt-elf-files",
+    arch: {
+        arm: {
+            srcs: ["prebuilt-elf-files/arm/libtest_invalid-local-tls.so"],
+        },
+        arm64: {
+            srcs: ["prebuilt-elf-files/arm64/libtest_invalid-local-tls.so"],
+        },
+        x86: {
+            srcs: ["prebuilt-elf-files/x86/libtest_invalid-local-tls.so"],
+        },
+        x86_64: {
+            srcs: ["prebuilt-elf-files/x86_64/libtest_invalid-local-tls.so"],
+        },
+    },
+}
+
 // -----------------------------------------------------------------------------
 // All standard tests.
 // -----------------------------------------------------------------------------
@@ -305,8 +331,8 @@ cc_prebuilt_test_library_shared {
 cc_test_library {
     name: "clang_diagnostic_tests",
     cflags: [
-      "-Xclang",
-      "-verify",
+        "-Xclang",
+        "-verify",
     ],
     srcs: ["sys_ioctl_diag_test.cpp"],
 }
@@ -320,6 +346,7 @@ cc_test_library {
         "__cxa_demangle_test.cpp",
         "alloca_test.cpp",
         "android_get_device_api_level.cpp",
+        "android_set_abort_message_test.cpp",
         "arpa_inet_test.cpp",
         "async_safe_test.cpp",
         "assert_test.cpp",
@@ -366,6 +393,7 @@ cc_test_library {
         "math_test.cpp",
         "math_force_long_double_test.cpp",
         "membarrier_test.cpp",
+        "memtag_stack_test.cpp",
         "mntent_test.cpp",
         "mte_test.cpp",
         "netdb_test.cpp",
@@ -452,6 +480,7 @@ cc_test_library {
         "uchar_test.cpp",
         "unistd_nofortify_test.cpp",
         "unistd_test.cpp",
+        "utils.cpp",
         "utmp_test.cpp",
         "wchar_test.cpp",
         "wctype_test.cpp",
@@ -602,9 +631,6 @@ cc_defaults {
     ],
     tidy: false,
     target: {
-        host: {
-            clang_cflags: ["-D__clang__"],
-        },
         musl: {
             // Musl doesn't have fortify
             enabled: false,
@@ -688,7 +714,7 @@ cc_defaults {
     tidy: false,
     target: {
         host: {
-            clang_cflags: ["-D__clang__"],
+            cflags: ["-D__clang__"],
         },
     },
 }
@@ -722,7 +748,6 @@ cc_test_library {
         enabled: false,
     },
 }
-
 
 // -----------------------------------------------------------------------------
 // Library of all tests (excluding the dynamic linker tests).
@@ -836,6 +861,7 @@ cc_defaults {
         "__cxa_thread_atexit_test.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+        "gwp_asan_test.cpp",
         "thread_local_test.cpp",
     ],
 
@@ -888,6 +914,8 @@ cc_defaults {
         "heap_tagging_static_disabled_helper",
         "heap_tagging_static_sync_helper",
         "heap_tagging_sync_helper",
+        "stack_tagging_helper",
+        "stack_tagging_static_helper",
         "ld_config_test_helper",
         "ld_config_test_helper_lib1",
         "ld_config_test_helper_lib2",
@@ -994,6 +1022,7 @@ cc_defaults {
         "libtest_init_fini_order_root",
         "libtest_init_fini_order_root2",
         "libtest_invalid-empty_shdr_table",
+        "libtest_invalid-local-tls",
         "libtest_invalid-rw_load_segment",
         "libtest_invalid-textrels",
         "libtest_invalid-textrels2",
@@ -1135,6 +1164,8 @@ cc_test {
         "heap_tagging_static_disabled_helper",
         "heap_tagging_static_sync_helper",
         "heap_tagging_sync_helper",
+        "stack_tagging_helper",
+        "stack_tagging_static_helper",
     ],
 }
 

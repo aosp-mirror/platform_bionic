@@ -72,6 +72,7 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_VRAM_WIPE_ON_RELEASE (1 << 9)
 #define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 #define AMDGPU_GEM_CREATE_PREEMPTIBLE (1 << 11)
+#define AMDGPU_GEM_CREATE_DISCARDABLE (1 << 12)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -112,6 +113,8 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_OP_FREE_CTX 2
 #define AMDGPU_CTX_OP_QUERY_STATE 3
 #define AMDGPU_CTX_OP_QUERY_STATE2 4
+#define AMDGPU_CTX_OP_GET_STABLE_PSTATE 5
+#define AMDGPU_CTX_OP_SET_STABLE_PSTATE 6
 #define AMDGPU_CTX_NO_RESET 0
 #define AMDGPU_CTX_GUILTY_RESET 1
 #define AMDGPU_CTX_INNOCENT_RESET 2
@@ -127,6 +130,12 @@ union drm_amdgpu_bo_list {
 #define AMDGPU_CTX_PRIORITY_NORMAL 0
 #define AMDGPU_CTX_PRIORITY_HIGH 512
 #define AMDGPU_CTX_PRIORITY_VERY_HIGH 1023
+#define AMDGPU_CTX_STABLE_PSTATE_FLAGS_MASK 0xf
+#define AMDGPU_CTX_STABLE_PSTATE_NONE 0
+#define AMDGPU_CTX_STABLE_PSTATE_STANDARD 1
+#define AMDGPU_CTX_STABLE_PSTATE_MIN_SCLK 2
+#define AMDGPU_CTX_STABLE_PSTATE_MIN_MCLK 3
+#define AMDGPU_CTX_STABLE_PSTATE_PEAK 4
 struct drm_amdgpu_ctx_in {
   __u32 op;
   __u32 flags;
@@ -143,6 +152,10 @@ union drm_amdgpu_ctx_out {
     __u32 hangs;
     __u32 reset_status;
   } state;
+  struct {
+    __u32 flags;
+    __u32 _pad;
+  } pstate;
 };
 union drm_amdgpu_ctx {
   struct drm_amdgpu_ctx_in in;
@@ -307,6 +320,7 @@ struct drm_amdgpu_gem_op {
 #define AMDGPU_VM_MTYPE_CC (3 << 5)
 #define AMDGPU_VM_MTYPE_UC (4 << 5)
 #define AMDGPU_VM_MTYPE_RW (5 << 5)
+#define AMDGPU_VM_PAGE_NOALLOC (1 << 9)
 struct drm_amdgpu_gem_va {
   __u32 handle;
   __u32 _pad;
@@ -438,6 +452,7 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_TA 0x13
 #define AMDGPU_INFO_FW_DMCUB 0x14
 #define AMDGPU_INFO_FW_TOC 0x15
+#define AMDGPU_INFO_FW_CAP 0x16
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
@@ -575,6 +590,8 @@ struct drm_amdgpu_info_vbios {
 #define AMDGPU_VRAM_TYPE_DDR4 8
 #define AMDGPU_VRAM_TYPE_GDDR6 9
 #define AMDGPU_VRAM_TYPE_DDR5 10
+#define AMDGPU_VRAM_TYPE_LPDDR4 11
+#define AMDGPU_VRAM_TYPE_LPDDR5 12
 struct drm_amdgpu_info_device {
   __u32 device_id;
   __u32 chip_rev;
@@ -681,7 +698,11 @@ struct drm_amdgpu_info_video_caps {
 #define AMDGPU_FAMILY_RV 142
 #define AMDGPU_FAMILY_NV 143
 #define AMDGPU_FAMILY_VGH 144
+#define AMDGPU_FAMILY_GC_11_0_0 145
 #define AMDGPU_FAMILY_YC 146
+#define AMDGPU_FAMILY_GC_11_0_1 148
+#define AMDGPU_FAMILY_GC_10_3_6 149
+#define AMDGPU_FAMILY_GC_10_3_7 151
 #ifdef __cplusplus
 }
 #endif

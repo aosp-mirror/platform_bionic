@@ -35,6 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#include <functional>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -135,7 +136,22 @@ bool PointerData::Initialize(const Config& config) NO_THREAD_SAFETY_ANALYSIS {
   return true;
 }
 
-size_t PointerData::AddBacktrace(size_t num_frames) {
+static inline bool ShouldBacktraceAllocSize(size_t size_bytes) {
+  static bool only_backtrace_specific_sizes =
+      g_debug->config().options() & BACKTRACE_SPECIFIC_SIZES;
+  if (!only_backtrace_specific_sizes) {
+    return true;
+  }
+  static size_t min_size_bytes = g_debug->config().backtrace_min_size_bytes();
+  static size_t max_size_bytes = g_debug->config().backtrace_max_size_bytes();
+  return size_bytes >= min_size_bytes && size_bytes <= max_size_bytes;
+}
+
+size_t PointerData::AddBacktrace(size_t num_frames, size_t size_bytes) {
+  if (!ShouldBacktraceAllocSize(size_bytes)) {
+    return kBacktraceEmptyIndex;
+  }
+
   std::vector<uintptr_t> frames;
   std::vector<unwindstack::FrameData> frames_info;
   if (g_debug->config().options() & BACKTRACE_FULL) {
@@ -148,14 +164,14 @@ size_t PointerData::AddBacktrace(size_t num_frames) {
     if (num_frames == 0) {
       return kBacktraceEmptyIndex;
     }
+    frames.resize(num_frames);
   }
 
-  FrameKeyType key{.num_frames = num_frames, .frames = frames.data()};
+  FrameKeyType key{.num_frames = frames.size(), .frames = frames.data()};
   size_t hash_index;
   std::lock_guard<std::mutex> frame_guard(frame_mutex_);
   auto entry = key_to_index_.find(key);
   if (entry == key_to_index_.end()) {
-    frames.resize(num_frames);
     hash_index = cur_hash_index_++;
     key.frames = frames.data();
     key_to_index_.emplace(key, hash_index);
@@ -195,40 +211,41 @@ void PointerData::RemoveBacktrace(size_t hash_index) {
 }
 
 void PointerData::Add(const void* ptr, size_t pointer_size) {
-  uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
   size_t hash_index = 0;
   if (backtrace_enabled_) {
-    hash_index = AddBacktrace(g_debug->config().backtrace_frames());
+    hash_index = AddBacktrace(g_debug->config().backtrace_frames(), pointer_size);
   }
 
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
-  pointers_[pointer] = PointerInfoType{PointerInfoType::GetEncodedSize(pointer_size), hash_index};
+  uintptr_t mangled_ptr = ManglePointer(reinterpret_cast<uintptr_t>(ptr));
+  pointers_[mangled_ptr] =
+      PointerInfoType{PointerInfoType::GetEncodedSize(pointer_size), hash_index};
 }
 
 void PointerData::Remove(const void* ptr) {
-  uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
   size_t hash_index;
   {
     std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
-    auto entry = pointers_.find(pointer);
+    uintptr_t mangled_ptr = ManglePointer(reinterpret_cast<uintptr_t>(ptr));
+    auto entry = pointers_.find(mangled_ptr);
     if (entry == pointers_.end()) {
       // Attempt to remove unknown pointer.
-      error_log("No tracked pointer found for 0x%" PRIxPTR, pointer);
+      error_log("No tracked pointer found for 0x%" PRIxPTR, DemanglePointer(mangled_ptr));
       return;
     }
     hash_index = entry->second.hash_index;
-    pointers_.erase(pointer);
+    pointers_.erase(mangled_ptr);
   }
 
   RemoveBacktrace(hash_index);
 }
 
 size_t PointerData::GetFrames(const void* ptr, uintptr_t* frames, size_t max_frames) {
-  uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
   size_t hash_index;
   {
     std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
-    auto entry = pointers_.find(pointer);
+    uintptr_t mangled_ptr = ManglePointer(reinterpret_cast<uintptr_t>(ptr));
+    auto entry = pointers_.find(mangled_ptr);
     if (entry == pointers_.end()) {
       return 0;
     }
@@ -274,7 +291,8 @@ void PointerData::LogBacktrace(size_t hash_index) {
 
 void PointerData::LogFreeError(const FreePointerInfoType& info, size_t max_cmp_bytes) {
   error_log(LOG_DIVIDER);
-  uint8_t* memory = reinterpret_cast<uint8_t*>(info.pointer);
+  uintptr_t pointer = DemanglePointer(info.mangled_ptr);
+  uint8_t* memory = reinterpret_cast<uint8_t*>(pointer);
   error_log("+++ ALLOCATION %p USED AFTER FREE", memory);
   uint8_t fill_free_value = g_debug->config().fill_free_value();
   for (size_t i = 0; i < max_cmp_bytes; i++) {
@@ -296,13 +314,14 @@ void PointerData::LogFreeError(const FreePointerInfoType& info, size_t max_cmp_b
 
 void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
   size_t usable_size;
+  uintptr_t pointer = DemanglePointer(info.mangled_ptr);
   if (g_debug->HeaderEnabled()) {
     // Check to see if the tag data has been damaged.
-    Header* header = g_debug->GetHeader(reinterpret_cast<const void*>(info.pointer));
+    Header* header = g_debug->GetHeader(reinterpret_cast<const void*>(pointer));
     if (header->tag != DEBUG_FREE_TAG) {
       error_log(LOG_DIVIDER);
-      error_log("+++ ALLOCATION 0x%" PRIxPTR " HAS CORRUPTED HEADER TAG 0x%x AFTER FREE",
-                info.pointer, header->tag);
+      error_log("+++ ALLOCATION 0x%" PRIxPTR " HAS CORRUPTED HEADER TAG 0x%x AFTER FREE", pointer,
+                header->tag);
       error_log(LOG_DIVIDER);
       if (g_debug->config().options() & ABORT_ON_ERROR) {
         abort();
@@ -314,14 +333,14 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
     }
     usable_size = header->usable_size;
   } else {
-    usable_size = g_dispatch->malloc_usable_size(reinterpret_cast<const void*>(info.pointer));
+    usable_size = g_dispatch->malloc_usable_size(reinterpret_cast<const void*>(pointer));
   }
 
   size_t bytes = (usable_size < g_debug->config().fill_on_free_bytes())
                      ? usable_size
                      : g_debug->config().fill_on_free_bytes();
   size_t max_cmp_bytes = bytes;
-  const uint8_t* memory = reinterpret_cast<const uint8_t*>(info.pointer);
+  const uint8_t* memory = reinterpret_cast<const uint8_t*>(pointer);
   while (bytes > 0) {
     size_t bytes_to_cmp = (bytes < g_cmp_mem.size()) ? bytes : g_cmp_mem.size();
     if (memcmp(memory, g_cmp_mem.data(), bytes_to_cmp) != 0) {
@@ -332,13 +351,11 @@ void PointerData::VerifyFreedPointer(const FreePointerInfoType& info) {
   }
 }
 
-void* PointerData::AddFreed(const void* ptr) {
-  uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
-
+void* PointerData::AddFreed(const void* ptr, size_t size_bytes) {
   size_t hash_index = 0;
   size_t num_frames = g_debug->config().free_track_backtrace_num_frames();
   if (num_frames) {
-    hash_index = AddBacktrace(num_frames);
+    hash_index = AddBacktrace(num_frames, size_bytes);
   }
 
   void* last = nullptr;
@@ -348,10 +365,11 @@ void* PointerData::AddFreed(const void* ptr) {
     free_pointers_.pop_front();
     VerifyFreedPointer(info);
     RemoveBacktrace(info.hash_index);
-    last = reinterpret_cast<void*>(info.pointer);
+    last = reinterpret_cast<void*>(DemanglePointer(info.mangled_ptr));
   }
 
-  free_pointers_.emplace_back(FreePointerInfoType{pointer, hash_index});
+  uintptr_t mangled_ptr = ManglePointer(reinterpret_cast<uintptr_t>(ptr));
+  free_pointers_.emplace_back(FreePointerInfoType{mangled_ptr, hash_index});
   return last;
 }
 
@@ -361,7 +379,7 @@ void PointerData::LogFreeBacktrace(const void* ptr) {
     uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
     std::lock_guard<std::mutex> freed_guard(free_pointer_mutex_);
     for (const auto& info : free_pointers_) {
-      if (info.pointer == pointer) {
+      if (DemanglePointer(info.mangled_ptr) == pointer) {
         hash_index = info.hash_index;
         break;
       }
@@ -388,6 +406,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
   for (const auto& entry : pointers_) {
     FrameInfoType* frame_info = nullptr;
     std::vector<unwindstack::FrameData>* backtrace_info = nullptr;
+    uintptr_t pointer = DemanglePointer(entry.first);
     size_t hash_index = entry.second.hash_index;
     if (hash_index > kBacktraceEmptyIndex) {
       auto frame_entry = frames_.find(hash_index);
@@ -397,7 +416,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
         // occurs after the hash_index and frame data have been added.
         // When removing a pointer, the pointer is deleted before the frame
         // data.
-        error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", entry.first, hash_index);
+        error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", pointer, hash_index);
       } else {
         frame_info = &frame_entry->second;
       }
@@ -405,7 +424,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
       if (g_debug->config().options() & BACKTRACE_FULL) {
         auto backtrace_entry = backtraces_info_.find(hash_index);
         if (backtrace_entry == backtraces_info_.end()) {
-          error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", entry.first, hash_index);
+          error_log("Pointer 0x%" PRIxPTR " hash_index %zu does not exist.", pointer, hash_index);
         } else {
           backtrace_info = &backtrace_entry->second;
         }
@@ -415,7 +434,7 @@ void PointerData::GetList(std::vector<ListInfoType>* list, bool only_with_backtr
       continue;
     }
 
-    list->emplace_back(ListInfoType{entry.first, 1, entry.second.RealSize(),
+    list->emplace_back(ListInfoType{pointer, 1, entry.second.RealSize(),
                                     entry.second.ZygoteChildAlloc(), frame_info, backtrace_info});
   }
 
@@ -550,9 +569,9 @@ void PointerData::GetInfo(uint8_t** info, size_t* overall_size, size_t* info_siz
 }
 
 bool PointerData::Exists(const void* ptr) {
-  uintptr_t pointer = reinterpret_cast<uintptr_t>(ptr);
   std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
-  return pointers_.count(pointer) != 0;
+  uintptr_t mangled_ptr = ManglePointer(reinterpret_cast<uintptr_t>(ptr));
+  return pointers_.count(mangled_ptr) != 0;
 }
 
 void PointerData::DumpLiveToFile(int fd) {
@@ -636,4 +655,11 @@ void PointerData::PostForkChild() __attribute__((no_thread_safety_analysis)) {
   pointer_mutex_.unlock();
   free_pointer_mutex_.try_lock();
   free_pointer_mutex_.unlock();
+}
+
+void PointerData::IteratePointers(std::function<void(uintptr_t pointer)> fn) {
+  std::lock_guard<std::mutex> pointer_guard(pointer_mutex_);
+  for (const auto entry : pointers_) {
+    fn(DemanglePointer(entry.first));
+  }
 }
