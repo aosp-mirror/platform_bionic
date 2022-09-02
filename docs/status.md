@@ -29,6 +29,7 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
   * `gethostid`
   * `shm_open`/`shm_unlink`
   * `sockatmark`
+  * `ualarm`
 
 Missing functionality:
   * `<aio.h>`
@@ -49,6 +50,15 @@ list of POSIX functions implemented by glibc but not by bionic.
 ### libc
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+
+New libc functions in U (API level 34):
+  * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
+  * `memset_explicit` in <string.h> (C23 addition).
+
+New libc behavior in U (API level 34):
+  * Support for `%b` and `%B` in the printf/wprintf family, `%b` in the
+    scanf/wscanf family, and `0b` prefixes with base 0 in the strtol/wcstol
+    family.
 
 New libc functions in T (API level 33):
   * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).

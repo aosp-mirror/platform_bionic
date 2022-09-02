@@ -41,7 +41,7 @@ int __openat_real(int, const char*, int, ...) __RENAME(openat);
 #if defined(__BIONIC_FORTIFY)
 #define __open_too_many_args_error "too many arguments"
 #define __open_too_few_args_error "called with O_CREAT or O_TMPFILE, but missing mode"
-#define __open_useless_modes_warning "has superfluous mode bits; missing O_CREAT?"
+#define __open_useless_modes_warning "has superfluous mode bits; missing O_CREAT or O_TMPFILE?"
 /* O_TMPFILE shares bits with O_DIRECTORY. */
 #define __open_modes_useful(flags) (((flags) & O_CREAT) || ((flags) & O_TMPFILE) == O_TMPFILE)
 

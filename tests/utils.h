@@ -19,6 +19,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <fcntl.h>
+#include <gtest/gtest.h>
 #include <inttypes.h>
 #include <sys/mman.h>
 #include <sys/prctl.h>
@@ -68,14 +69,6 @@
 static inline bool have_dl() {
   return (dlopen("libc.so", 0) != nullptr);
 }
-
-extern "C" void __hwasan_init() __attribute__((weak));
-
-static inline bool running_with_hwasan() {
-  return &__hwasan_init != 0;
-}
-
-#define SKIP_WITH_HWASAN if (running_with_hwasan()) GTEST_SKIP()
 
 static inline bool running_with_native_bridge() {
 #if defined(__BIONIC__)
@@ -270,6 +263,9 @@ class ExecTestHelper {
   std::vector<const char*> env_;
   std::string output_;
 };
+
+void RunGwpAsanTest(const char* test_name);
+void RunSubtestNoEnv(const char* test_name);
 #endif
 
 class FdLeakChecker {

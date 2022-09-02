@@ -24,6 +24,7 @@
 #define GAUDI_DRIVER_SRAM_RESERVED_SIZE_FROM_START 0x80
 #define GAUDI_FIRST_AVAILABLE_W_S_SYNC_OBJECT 144
 #define GAUDI_FIRST_AVAILABLE_W_S_MONITOR 72
+#define TS_MAX_ELEMENTS_NUM (1 << 20)
 enum goya_queue_id {
   GOYA_QUEUE_ID_DMA_0 = 0,
   GOYA_QUEUE_ID_DMA_1 = 1,
@@ -269,6 +270,10 @@ enum hl_server_type {
 #define HL_INFO_LAST_ERR_OPEN_DEV_TIME 23
 #define HL_INFO_CS_TIMEOUT_EVENT 24
 #define HL_INFO_RAZWI_EVENT 25
+#define HL_INFO_DEV_MEM_ALLOC_PAGE_SIZES 26
+#define HL_INFO_REGISTER_EVENTFD 28
+#define HL_INFO_UNREGISTER_EVENTFD 29
+#define HL_INFO_GET_EVENTS 30
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
 struct hl_info_hw_ip_info {
@@ -294,6 +299,11 @@ struct hl_info_hw_ip_info {
   __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
   __u64 reserved2;
   __u64 dram_page_size;
+  __u32 reserved3;
+  __u16 number_of_user_interrupts;
+  __u16 pad2;
+  __u64 reserved4;
+  __u64 device_mem_alloc_default_page_size;
 };
 struct hl_info_dram_usage {
   __u64 dram_free_mem;
@@ -353,6 +363,9 @@ struct hl_pll_frequency_info {
 struct hl_open_stats_info {
   __u64 open_counter;
   __u64 last_open_period_ms;
+  __u8 is_compute_ctx_active;
+  __u8 compute_ctx_in_release;
+  __u8 pad[6];
 };
 struct hl_power_info {
   __u64 power;
@@ -395,6 +408,9 @@ struct hl_info_razwi_event {
   __u8 error_type;
   __u8 pad[2];
 };
+struct hl_info_dev_memalloc_page_sizes {
+  __u64 page_order_bitmask;
+};
 enum gaudi_dcores {
   HL_GAUDI_WS_DCORE,
   HL_GAUDI_WN_DCORE,
@@ -410,6 +426,7 @@ struct hl_info_args {
     __u32 ctx_id;
     __u32 period_ms;
     __u32 pll_index;
+    __u32 eventfd;
   };
   __u32 pad;
 };
@@ -512,6 +529,7 @@ union hl_cs_args {
 #define HL_WAIT_CS_FLAGS_INTERRUPT_MASK 0xFFF00000
 #define HL_WAIT_CS_FLAGS_MULTI_CS 0x4
 #define HL_WAIT_CS_FLAGS_INTERRUPT_KERNEL_CQ 0x10
+#define HL_WAIT_CS_FLAGS_REGISTER_INTERRUPT 0x20
 #define HL_WAIT_MULTI_CS_LIST_MAX_LEN 32
 struct hl_wait_cs_in {
   union {
@@ -537,6 +555,8 @@ struct hl_wait_cs_in {
     __u64 interrupt_timeout_us;
   };
   __u64 cq_counters_offset;
+  __u64 timestamp_handle;
+  __u64 timestamp_offset;
 };
 #define HL_WAIT_CS_STATUS_COMPLETED 0
 #define HL_WAIT_CS_STATUS_BUSY 1
@@ -561,14 +581,17 @@ union hl_wait_cs_args {
 #define HL_MEM_OP_UNMAP 3
 #define HL_MEM_OP_MAP_BLOCK 4
 #define HL_MEM_OP_EXPORT_DMABUF_FD 5
+#define HL_MEM_OP_TS_ALLOC 6
 #define HL_MEM_CONTIGUOUS 0x1
 #define HL_MEM_SHARED 0x2
 #define HL_MEM_USERPTR 0x4
 #define HL_MEM_FORCE_HINT 0x8
+#define HL_MEM_PREFETCH 0x40
 struct hl_mem_in {
   union {
     struct {
       __u64 mem_size;
+      __u64 page_size;
     } alloc;
     struct {
       __u64 handle;
@@ -596,7 +619,7 @@ struct hl_mem_in {
   __u32 op;
   __u32 flags;
   __u32 ctx_id;
-  __u32 pad;
+  __u32 num_of_elements;
 };
 struct hl_mem_out {
   union {
@@ -666,6 +689,7 @@ struct hl_debug_args {
   __u32 enable;
   __u32 ctx_id;
 };
+#define HL_NOTIFIER_EVENT_TPC_ASSERT (1 << 0)
 #define HL_IOCTL_INFO _IOWR('H', 0x01, struct hl_info_args)
 #define HL_IOCTL_CB _IOWR('H', 0x02, union hl_cb_args)
 #define HL_IOCTL_CS _IOWR('H', 0x03, union hl_cs_args)
