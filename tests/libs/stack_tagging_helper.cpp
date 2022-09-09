@@ -26,6 +26,8 @@
 #include <unistd.h>
 #include <thread>
 
+#include <bionic/malloc.h>
+
 #include "libs_utils.h"
 
 #if defined(__aarch64__)
@@ -252,6 +254,12 @@ void test_longjmp_sigaltstack() {
   t.join();
 }
 
+void test_android_mallopt() {
+  bool memtag_stack;
+  CHECK(android_mallopt(M_MEMTAG_STACK_IS_ON, &memtag_stack, sizeof(memtag_stack)));
+  CHECK(memtag_stack);
+}
+
 int main(int argc, char** argv) {
   if (argc < 2) {
     printf("nothing to do\n");
@@ -280,6 +288,11 @@ int main(int argc, char** argv) {
 
   if (strcmp(argv[1], "longjmp_sigaltstack") == 0) {
     test_longjmp_sigaltstack();
+    return 0;
+  }
+
+  if (strcmp(argv[1], "android_mallopt") == 0) {
+    test_android_mallopt();
     return 0;
   }
 
