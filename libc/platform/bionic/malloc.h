@@ -100,6 +100,9 @@ enum {
   //   arg_size = sizeof(android_mallopt_gwp_asan_options_t)
   M_INITIALIZE_GWP_ASAN = 10,
 #define M_INITIALIZE_GWP_ASAN M_INITIALIZE_GWP_ASAN
+  // Query whether memtag stack is enabled for this process.
+  M_MEMTAG_STACK_IS_ON = 11,
+#define M_MEMTAG_STACK_IS_ON M_MEMTAG_STACK_IS_ON
 };
 
 typedef struct {

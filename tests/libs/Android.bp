@@ -1663,6 +1663,7 @@ cc_test {
        memtag_heap: true,
      },
    },
+   header_libs: ["bionic_libc_platform_headers"],
 }
 
 cc_test {
@@ -1677,6 +1678,7 @@ cc_test {
        memtag_heap: true,
      },
    },
+   header_libs: ["bionic_libc_platform_headers"],
 }
 
 cc_genrule {
