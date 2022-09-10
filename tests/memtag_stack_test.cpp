@@ -47,7 +47,7 @@ TEST_P(MemtagStackTest, test) {
 INSTANTIATE_TEST_SUITE_P(, MemtagStackTest,
                          testing::Combine(testing::Values("vfork_execve", "vfork_execl",
                                                           "vfork_exit", "longjmp",
-                                                          "longjmp_sigaltstack"),
+                                                          "longjmp_sigaltstack", "android_mallopt"),
                                           testing::Bool()),
                          [](const ::testing::TestParamInfo<MemtagStackTest::ParamType>& info) {
                            std::string s = std::get<0>(info.param);
