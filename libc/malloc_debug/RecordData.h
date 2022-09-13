@@ -29,12 +29,15 @@
 #pragma once
 
 #include <pthread.h>
+#include <signal.h>
 #include <stdint.h>
 #include <unistd.h>
 
 #include <atomic>
+#include <memory>
 #include <mutex>
 #include <string>
+#include <vector>
 
 #include <platform/bionic/macros.h>
 
@@ -43,7 +46,7 @@ class RecordEntry {
   RecordEntry();
   virtual ~RecordEntry() = default;
 
-  virtual std::string GetString() const = 0;
+  virtual bool Write(int fd) const = 0;
 
  protected:
   pid_t tid_;
@@ -57,7 +60,7 @@ class ThreadCompleteEntry : public RecordEntry {
   ThreadCompleteEntry() = default;
   virtual ~ThreadCompleteEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(ThreadCompleteEntry);
@@ -80,7 +83,7 @@ class MallocEntry : public AllocEntry {
   MallocEntry(void* pointer, size_t size);
   virtual ~MallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t size_;
@@ -94,7 +97,7 @@ class FreeEntry : public AllocEntry {
   explicit FreeEntry(void* pointer);
   virtual ~FreeEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  private:
   BIONIC_DISALLOW_COPY_AND_ASSIGN(FreeEntry);
@@ -105,7 +108,7 @@ class CallocEntry : public MallocEntry {
   CallocEntry(void* pointer, size_t size, size_t nmemb);
   virtual ~CallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t nmemb_;
@@ -119,7 +122,7 @@ class ReallocEntry : public MallocEntry {
   ReallocEntry(void* pointer, size_t size, void* old_pointer);
   virtual ~ReallocEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   void* old_pointer_;
@@ -134,7 +137,7 @@ class MemalignEntry : public MallocEntry {
   MemalignEntry(void* pointer, size_t size, size_t alignment);
   virtual ~MemalignEntry() = default;
 
-  std::string GetString() const override;
+  bool Write(int fd) const override;
 
  protected:
   size_t alignment_;
@@ -155,19 +158,18 @@ class RecordData {
   void AddEntry(const RecordEntry* entry);
   void AddEntryOnly(const RecordEntry* entry);
 
-  void SetToDump() { dump_ = true; }
-
   pthread_key_t key() { return key_; }
 
  private:
-  void Dump();
+  static void WriteData(int, siginfo_t*, void*);
+  static RecordData* record_obj_;
 
-  std::mutex dump_lock_;
+  void WriteEntries();
+
+  std::mutex entries_lock_;
   pthread_key_t key_;
-  const RecordEntry** entries_ = nullptr;
-  size_t num_entries_ = 0;
-  std::atomic_uint cur_index_;
-  std::atomic_bool dump_;
+  std::vector<std::unique_ptr<const RecordEntry>> entries_;
+  size_t cur_index_;
   std::string dump_file_;
 
   BIONIC_DISALLOW_COPY_AND_ASSIGN(RecordData);

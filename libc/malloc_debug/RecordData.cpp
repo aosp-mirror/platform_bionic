@@ -48,44 +48,44 @@
 RecordEntry::RecordEntry() : tid_(gettid()) {
 }
 
-std::string ThreadCompleteEntry::GetString() const {
-  return android::base::StringPrintf("%d: thread_done 0x0\n", tid_);
+bool ThreadCompleteEntry::Write(int fd) const {
+  return dprintf(fd, "%d: thread_done 0x0\n", tid_) > 0;
 }
 
 AllocEntry::AllocEntry(void* pointer) : pointer_(pointer) {}
 
 MallocEntry::MallocEntry(void* pointer, size_t size) : AllocEntry(pointer), size_(size) {}
 
-std::string MallocEntry::GetString() const {
-  return android::base::StringPrintf("%d: malloc %p %zu\n", tid_, pointer_, size_);
+bool MallocEntry::Write(int fd) const {
+  return dprintf(fd, "%d: malloc %p %zu\n", tid_, pointer_, size_) > 0;
 }
 
 FreeEntry::FreeEntry(void* pointer) : AllocEntry(pointer) {}
 
-std::string FreeEntry::GetString() const {
-  return android::base::StringPrintf("%d: free %p\n", tid_, pointer_);
+bool FreeEntry::Write(int fd) const {
+  return dprintf(fd, "%d: free %p\n", tid_, pointer_) > 0;
 }
 
 CallocEntry::CallocEntry(void* pointer, size_t nmemb, size_t size)
     : MallocEntry(pointer, size), nmemb_(nmemb) {}
 
-std::string CallocEntry::GetString() const {
-  return android::base::StringPrintf("%d: calloc %p %zu %zu\n", tid_, pointer_, nmemb_, size_);
+bool CallocEntry::Write(int fd) const {
+  return dprintf(fd, "%d: calloc %p %zu %zu\n", tid_, pointer_, nmemb_, size_) > 0;
 }
 
 ReallocEntry::ReallocEntry(void* pointer, size_t size, void* old_pointer)
     : MallocEntry(pointer, size), old_pointer_(old_pointer) {}
 
-std::string ReallocEntry::GetString() const {
-  return android::base::StringPrintf("%d: realloc %p %p %zu\n", tid_, pointer_, old_pointer_, size_);
+bool ReallocEntry::Write(int fd) const {
+  return dprintf(fd, "%d: realloc %p %p %zu\n", tid_, pointer_, old_pointer_, size_) > 0;
 }
 
 // aligned_alloc, posix_memalign, memalign, pvalloc, valloc all recorded with this class.
 MemalignEntry::MemalignEntry(void* pointer, size_t size, size_t alignment)
     : MallocEntry(pointer, size), alignment_(alignment) {}
 
-std::string MemalignEntry::GetString() const {
-  return android::base::StringPrintf("%d: memalign %p %zu %zu\n", tid_, pointer_, alignment_, size_);
+bool MemalignEntry::Write(int fd) const {
+  return dprintf(fd, "%d: memalign %p %zu %zu\n", tid_, pointer_, alignment_, size_) > 0;
 }
 
 struct ThreadData {
@@ -112,59 +112,37 @@ static void ThreadKeyDelete(void* data) {
   }
 }
 
-static void RecordDump(int, siginfo_t*, void*) {
-  // It's not necessarily safe to do the dump here, instead wait for the
-  // next allocation call to do the dump.
-  g_debug->record->SetToDump();
+RecordData* RecordData::record_obj_ = nullptr;
+
+void RecordData::WriteData(int, siginfo_t*, void*) {
+  // Dump from here, the function must not allocate so this is safe.
+  record_obj_->WriteEntries();
 }
 
-void RecordData::Dump() {
-  std::lock_guard<std::mutex> lock(dump_lock_);
-
-  // Make it so that no more entries can be added while dumping.
-  unsigned int last_entry_index = cur_index_.exchange(static_cast<unsigned int>(num_entries_));
-  if (dump_ == false) {
-    // Multiple Dump() calls from different threads, and we lost. Do nothing.
+void RecordData::WriteEntries() {
+  std::lock_guard<std::mutex> entries_lock(entries_lock_);
+  if (cur_index_ == 0) {
+    info_log("No alloc entries to write.");
     return;
-  }
-
-  // cur_index_ keeps getting incremented even if we hit the num_entries_.
-  // If that happens, cap the entries to dump by num_entries_.
-  if (last_entry_index > num_entries_) {
-    last_entry_index = num_entries_;
   }
 
   int dump_fd =
       open(dump_file_.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC | O_NOFOLLOW, 0755);
-  if (dump_fd != -1) {
-    for (size_t i = 0; i < last_entry_index; i++) {
-      std::string line = entries_[i]->GetString();
-      ssize_t bytes = write(dump_fd, line.c_str(), line.length());
-      if (bytes == -1 || static_cast<size_t>(bytes) != line.length()) {
-        error_log("Failed to write record alloc information: %s", strerror(errno));
-        // Free all of the rest of the errors, we don't have any way
-        // to dump a partial list of the entries.
-        for (i++; i < last_entry_index; i++) {
-          delete entries_[i];
-          entries_[i] = nullptr;
-        }
-        break;
-      }
-      delete entries_[i];
-      entries_[i] = nullptr;
-    }
-    close(dump_fd);
-
-    // Mark the entries dumped.
-    cur_index_ = 0U;
-  } else {
+  if (dump_fd == -1) {
     error_log("Cannot create record alloc file %s: %s", dump_file_.c_str(), strerror(errno));
-    // Since we couldn't create the file, reset the entries dumped back
-    // to the original value.
-    cur_index_ = last_entry_index;
+    return;
   }
 
-  dump_ = false;
+  for (size_t i = 0; i < cur_index_; i++) {
+    if (!entries_[i]->Write(dump_fd)) {
+      error_log("Failed to write record alloc information: %s", strerror(errno));
+      break;
+    }
+  }
+  close(dump_fd);
+
+  // Mark the entries dumped.
+  cur_index_ = 0U;
 }
 
 RecordData::RecordData() {
@@ -172,8 +150,9 @@ RecordData::RecordData() {
 }
 
 bool RecordData::Initialize(const Config& config) {
+  record_obj_ = this;
   struct sigaction64 dump_act = {};
-  dump_act.sa_sigaction = RecordDump;
+  dump_act.sa_sigaction = RecordData::WriteData;
   dump_act.sa_flags = SA_RESTART | SA_SIGINFO | SA_ONSTACK;
   if (sigaction64(config.record_allocs_signal(), &dump_act, nullptr) != 0) {
     error_log("Unable to set up record dump signal function: %s", strerror(errno));
@@ -186,24 +165,27 @@ bool RecordData::Initialize(const Config& config) {
              config.record_allocs_signal(), getpid());
   }
 
-  num_entries_ = config.record_allocs_num_entries();
-  entries_ = new const RecordEntry*[num_entries_];
-  cur_index_ = 0;
-  dump_ = false;
+  entries_.resize(config.record_allocs_num_entries());
+  cur_index_ = 0U;
   dump_file_ = config.record_allocs_file();
 
   return true;
 }
 
 RecordData::~RecordData() {
-  delete[] entries_;
   pthread_key_delete(key_);
 }
 
 void RecordData::AddEntryOnly(const RecordEntry* entry) {
-  unsigned int entry_index = cur_index_.fetch_add(1);
-  if (entry_index < num_entries_) {
-    entries_[entry_index] = entry;
+  std::lock_guard<std::mutex> entries_lock(entries_lock_);
+  if (cur_index_ == entries_.size()) {
+    // Maxed out, throw the entry away.
+    return;
+  }
+
+  entries_[cur_index_++].reset(entry);
+  if (cur_index_ == entries_.size()) {
+    info_log("Maximum number of records added, all new operations will be dropped.");
   }
 }
 
@@ -215,9 +197,4 @@ void RecordData::AddEntry(const RecordEntry* entry) {
   }
 
   AddEntryOnly(entry);
-
-  // Check to see if it's time to dump the entries.
-  if (dump_) {
-    Dump();
-  }
 }
