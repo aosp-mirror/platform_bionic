@@ -1847,6 +1847,7 @@ cc_library_headers {
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
+        "//system/core/init:__subpackages__",
         "//system/core/libcutils:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
         "//system/unwinding/libunwindstack:__subpackages__",
