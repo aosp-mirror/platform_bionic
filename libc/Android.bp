@@ -95,7 +95,6 @@ cc_defaults {
 
     header_libs: [
         "libc_headers",
-        "gwp_asan_headers",
         "liblog_headers",  // needed by bionic/libc/async_safe/include
     ],
     export_header_lib_headers: [
@@ -1848,6 +1847,7 @@ cc_library_headers {
         "//external/perfetto:__subpackages__",
         "//external/scudo:__subpackages__",
         "//system/core/debuggerd:__subpackages__",
+        "//system/core/init:__subpackages__",
         "//system/core/libcutils:__subpackages__",
         "//system/memory/libmemunreachable:__subpackages__",
         "//system/unwinding/libunwindstack:__subpackages__",
@@ -2323,6 +2323,16 @@ ndk_library {
     first_version: "9",
     // APIs implemented in asm don't have debug info: http://b/190554910.
     allow_untyped_symbols: true,
+    export_header_libs: [
+        "common_libc",
+        "libc_uapi",
+        "libc_kernel_android_uapi_linux",
+        "libc_kernel_android_scsi",
+        "libc_asm_arm",
+        "libc_asm_arm64",
+        "libc_asm_x86",
+        "libc_asm_x86_64",
+    ],
 }
 
 ndk_library {
