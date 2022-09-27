@@ -78,6 +78,24 @@ TEST(stdio_ext, __fpending) {
   fclose(fp);
 }
 
+TEST(stdio_ext, __freadahead) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc doesn't have __freadahead";
+#else
+  FILE* fp = tmpfile();
+  ASSERT_NE(EOF, fputs("hello", fp));
+  rewind(fp);
+
+  ASSERT_EQ('h', fgetc(fp));
+  ASSERT_EQ(4u, __freadahead(fp));
+
+  ASSERT_EQ('H', ungetc('H', fp));
+  ASSERT_EQ(5u, __freadahead(fp));
+
+  fclose(fp);
+#endif
+}
+
 TEST(stdio_ext, __fpurge) {
   FILE* fp = tmpfile();
 
