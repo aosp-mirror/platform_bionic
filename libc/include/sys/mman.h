@@ -168,8 +168,13 @@ int madvise(void* __addr, size_t __size, int __advice);
  * PID file descriptor.
  *
  * Returns the number of bytes advised on success, and returns -1 and sets `errno` on failure.
+ *
+ * Available since API level 31. Its sibling process_mrelease() does not have a
+ * libc wrapper and should be called using syscall() instead. Given the lack of
+ * widespread applicability of this system call and the absence of wrappers in
+ * other libcs, it was probably a mistake to have added this wrapper to bionic.
  */
-ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags);
+ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags) __INTRODUCED_IN(31);
 
 #if defined(__USE_GNU)
 
