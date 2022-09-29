@@ -1578,6 +1578,7 @@ LIBC_T { # introduced=Tiramisu
 
 LIBC_U { # introduced=UpsideDownCake
   global:
+    __freadahead;
     close_range;
     copy_file_range;
     memset_explicit;
