@@ -101,7 +101,7 @@ FdEntry* FdTableImpl<inline_fds>::at(size_t idx) {
   }
 
   size_t offset = idx - inline_fds;
-  if (local_overflow->len < offset) {
+  if (local_overflow->len <= offset) {
     return nullptr;
   }
   return &local_overflow->entries[offset];

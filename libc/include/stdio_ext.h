@@ -96,11 +96,19 @@ void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fpending(3)](http://man7.org/linux/man-pages/man3/__fpending.3.html) returns the number of
- * bytes in the output buffer.
+ * bytes in the output buffer. See __freadahead() for the input buffer.
  *
  * Available since API level 23.
  */
 size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
+
+/**
+ * __freadahead(3) returns the number of bytes in the input buffer.
+ * See __fpending() for the output buffer.
+ *
+ * Available since API level 34.
+ */
+size_t __freadahead(FILE* __fp) __INTRODUCED_IN(34);
 
 /**
  * [_flushlbf(3)](http://man7.org/linux/man-pages/man3/_flushlbf.3.html) flushes all
