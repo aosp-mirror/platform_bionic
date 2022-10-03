@@ -1568,18 +1568,16 @@ bool find_libraries(android_namespace_t* ns,
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
     task->set_dt_needed(is_dt_needed);
 
-    LD_LOG(kLogDlopen, "find_libraries(ns=%s): task=%s, is_dt_needed=%d", ns->get_name(),
-           task->get_name(), is_dt_needed);
-
     // Note: start from the namespace that is stored in the LoadTask. This namespace
     // is different from the current namespace when the LoadTask is for a transitive
     // dependency and the lib that created the LoadTask is not found in the
-    // current namespace but in one of the linked namespace.
-    if (!find_library_internal(const_cast<android_namespace_t*>(task->get_start_from()),
-                               task,
-                               &zip_archive_cache,
-                               &load_tasks,
-                               rtld_flags)) {
+    // current namespace but in one of the linked namespaces.
+    android_namespace_t* start_ns = const_cast<android_namespace_t*>(task->get_start_from());
+
+    LD_LOG(kLogDlopen, "find_library_internal(ns=%s@%p): task=%s, is_dt_needed=%d",
+           start_ns->get_name(), start_ns, task->get_name(), is_dt_needed);
+
+    if (!find_library_internal(start_ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
       return false;
     }
 
