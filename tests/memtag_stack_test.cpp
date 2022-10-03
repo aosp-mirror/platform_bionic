@@ -29,7 +29,7 @@ class MemtagStackTest : public testing::TestWithParam<std::tuple<const char*, bo
 TEST_P(MemtagStackTest, test) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   if (!mte_supported()) {
-    return;
+    GTEST_SKIP() << "MTE unsupported";
   }
   bool is_static = std::get<1>(GetParam());
   std::string helper =
