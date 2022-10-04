@@ -99,6 +99,7 @@ source tree if there is a kernel source tree already checked out:
 Run this command to automatically download the latest version of the headers
 and import them if there is no checked out kernel source tree:
 ```
+  # For testing only, not for use in production!
   bionic/libc/kernel/tools/generate_uapi_headers.sh --download-kernel
 ```
 
