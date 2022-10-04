@@ -41,6 +41,9 @@ cc_defaults {
             enabled: false,
         },
     },
+    strip: {
+        none: true,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -1532,12 +1535,6 @@ cc_test_library {
     host_supported: false,
     defaults: ["bionic_testlib_defaults"],
     srcs: ["relocations.cpp"],
-
-    // Hack to ensure we're using llvm-objcopy because our binutils prebuilt
-    // only supports the old numbers (http://b/141010852).
-    strip: {
-      keep_symbols: true,
-    },
 }
 
 // This is the same encoding as SHT_RELR, but using OS-specific constants.
