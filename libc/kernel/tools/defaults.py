@@ -5,9 +5,6 @@
 import time, os, sys
 from utils import *
 
-# the list of supported architectures
-kernel_archs = [ 'arm', 'arm64', 'x86' ]
-
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
 kernel_dirs = [ "linux", "asm", "asm-generic", "mtd" ]
