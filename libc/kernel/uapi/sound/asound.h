@@ -884,7 +884,7 @@ struct snd_ctl_elem_value {
 struct snd_ctl_tlv {
   unsigned int numid;
   unsigned int length;
-  unsigned int tlv[0];
+  unsigned int tlv[];
 };
 #define SNDRV_CTL_IOCTL_PVERSION _IOR('U', 0x00, int)
 #define SNDRV_CTL_IOCTL_CARD_INFO _IOR('U', 0x01, struct snd_ctl_card_info)

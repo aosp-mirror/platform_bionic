@@ -40,18 +40,18 @@ struct arc_rfc1201 {
   __u8 proto;
   __u8 split_flag;
   __be16 sequence;
-  __u8 payload[0];
+  __u8 payload[];
 };
 #define RFC1201_HDR_SIZE 4
 struct arc_rfc1051 {
   __u8 proto;
-  __u8 payload[0];
+  __u8 payload[];
 };
 #define RFC1051_HDR_SIZE 1
 struct arc_eth_encap {
   __u8 proto;
   struct ethhdr eth;
-  __u8 payload[0];
+  __u8 payload[];
 };
 #define ETH_ENCAP_HDR_SIZE 14
 struct arc_cap {

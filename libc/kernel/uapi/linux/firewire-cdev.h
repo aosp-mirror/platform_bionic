@@ -50,7 +50,7 @@ struct fw_cdev_event_response {
   __u32 type;
   __u32 rcode;
   __u32 length;
-  __u32 data[0];
+  __u32 data[];
 };
 struct fw_cdev_event_request {
   __u64 closure;
@@ -59,7 +59,7 @@ struct fw_cdev_event_request {
   __u64 offset;
   __u32 handle;
   __u32 length;
-  __u32 data[0];
+  __u32 data[];
 };
 struct fw_cdev_event_request2 {
   __u64 closure;
@@ -72,14 +72,14 @@ struct fw_cdev_event_request2 {
   __u32 generation;
   __u32 handle;
   __u32 length;
-  __u32 data[0];
+  __u32 data[];
 };
 struct fw_cdev_event_iso_interrupt {
   __u64 closure;
   __u32 type;
   __u32 cycle;
   __u32 header_length;
-  __u32 header[0];
+  __u32 header[];
 };
 struct fw_cdev_event_iso_interrupt_mc {
   __u64 closure;
@@ -98,7 +98,7 @@ struct fw_cdev_event_phy_packet {
   __u32 type;
   __u32 rcode;
   __u32 length;
-  __u32 data[0];
+  __u32 data[];
 };
 union fw_cdev_event {
   struct fw_cdev_event_common common;
@@ -207,7 +207,7 @@ struct fw_cdev_set_iso_channels {
 #define FW_CDEV_ISO_HEADER_LENGTH(v) ((v) << 24)
 struct fw_cdev_iso_packet {
   __u32 control;
-  __u32 header[0];
+  __u32 header[];
 };
 struct fw_cdev_queue_iso {
   __u64 packets;
