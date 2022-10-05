@@ -63,12 +63,6 @@ kernel_default_arch_macros = {
     "x86": {},
     }
 
-kernel_arch_token_replacements = {
-    "arm": {},
-    "arm64": {},
-    "x86": {},
-    }
-
 # Replace tokens in the output according to this mapping.
 kernel_token_replacements = {
     # The kernel usage of __unused for unused struct fields conflicts with the macro defined in <sys/cdefs.h>.
