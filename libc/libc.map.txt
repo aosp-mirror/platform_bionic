@@ -1449,7 +1449,7 @@ LIBC_Q { # introduced=Q
     ___tls_get_addr; # x86
     __aeabi_read_tp; # arm
     __res_randomid;
-    __tls_get_addr; # arm x86_64
+    __tls_get_addr; # arm riscv64 x86_64
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
