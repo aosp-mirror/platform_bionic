@@ -680,28 +680,28 @@ LIBC {
     nftw64; # introduced=21
     nice;
     nrand48;
-    ns_format_ttl; # arm64 x86_64 introduced=22
-    ns_get16; # arm64 x86_64 introduced=22
-    ns_get32; # arm64 x86_64 introduced=22
-    ns_initparse; # arm64 x86_64 introduced=22
-    ns_makecanon; # arm64 x86_64 introduced=22
-    ns_msg_getflag; # arm64 x86_64 introduced=22
-    ns_name_compress; # arm64 x86_64 introduced=22
-    ns_name_ntol; # arm64 x86_64 introduced=22
-    ns_name_ntop; # arm64 x86_64 introduced=22
-    ns_name_pack; # arm64 x86_64 introduced=22
-    ns_name_pton; # arm64 x86_64 introduced=22
-    ns_name_rollback; # arm64 x86_64 introduced=22
-    ns_name_skip; # arm64 x86_64 introduced=22
-    ns_name_uncompress; # arm64 x86_64 introduced=22
-    ns_name_unpack; # arm64 x86_64 introduced=22
-    ns_parserr; # arm64 x86_64 introduced=22
-    ns_put16; # arm64 x86_64 introduced=22
-    ns_put32; # arm64 x86_64 introduced=22
-    ns_samename; # arm64 x86_64 introduced=22
-    ns_skiprr; # arm64 x86_64 introduced=22
-    ns_sprintrr; # arm64 x86_64 introduced=22
-    ns_sprintrrf; # arm64 x86_64 introduced=22
+    ns_format_ttl; # arm64 x86_64 riscv64 introduced=22
+    ns_get16; # arm64 x86_64 riscv64 introduced=22
+    ns_get32; # arm64 x86_64 riscv64 introduced=22
+    ns_initparse; # arm64 x86_64 riscv64 introduced=22
+    ns_makecanon; # arm64 x86_64 riscv64 introduced=22
+    ns_msg_getflag; # arm64 x86_64 riscv64 introduced=22
+    ns_name_compress; # arm64 x86_64 riscv64 introduced=22
+    ns_name_ntol; # arm64 x86_64 riscv64 introduced=22
+    ns_name_ntop; # arm64 x86_64 riscv64 introduced=22
+    ns_name_pack; # arm64 x86_64 riscv64 introduced=22
+    ns_name_pton; # arm64 x86_64 riscv64 introduced=22
+    ns_name_rollback; # arm64 x86_64 riscv64 introduced=22
+    ns_name_skip; # arm64 x86_64 riscv64 introduced=22
+    ns_name_uncompress; # arm64 x86_64 riscv64 introduced=22
+    ns_name_unpack; # arm64 x86_64 riscv64 introduced=22
+    ns_parserr; # arm64 x86_64 riscv64 introduced=22
+    ns_put16; # arm64 x86_64 riscv64 introduced=22
+    ns_put32; # arm64 x86_64 riscv64 introduced=22
+    ns_samename; # arm64 x86_64 riscv64 introduced=22
+    ns_skiprr; # arm64 x86_64 riscv64 introduced=22
+    ns_sprintrr; # arm64 x86_64 riscv64 introduced=22
+    ns_sprintrrf; # arm64 x86_64 riscv64 introduced=22
     nsdispatch;
     ntohl; # introduced=21
     ntohs; # introduced=21
@@ -740,7 +740,7 @@ LIBC {
     pread;
     pread64; # introduced-arm=12 introduced-arm64=21 introduced-x86=12 introduced-x86_64=21
     printf;
-    prlimit; # arm64 x86_64
+    prlimit; # arm64 x86_64 riscv64
     prlimit64; # introduced=21
     process_vm_readv; # introduced=23
     process_vm_writev; # introduced=23
