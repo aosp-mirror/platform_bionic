@@ -1921,6 +1921,9 @@ cc_library_headers {
         arm64: {
             export_system_include_dirs: ["kernel/uapi/asm-arm64"],
         },
+        riscv64: {
+            export_system_include_dirs: ["kernel/uapi/asm-riscv"],
+        },
         x86: {
             export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
