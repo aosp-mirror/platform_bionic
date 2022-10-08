@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,18 +28,25 @@
 
 #pragma once
 
-#if defined(__aarch64__)
-# define __get_tls() ({ void** __val; __asm__("mrs %0, tpidr_el0" : "=r"(__val)); __val; })
-#elif defined(__arm__)
-# define __get_tls() ({ void** __val; __asm__("mrc p15, 0, %0, c13, c0, 3" : "=r"(__val)); __val; })
-#elif defined(__i386__)
-# define __get_tls() ({ void** __val; __asm__("movl %%gs:0, %0" : "=r"(__val)); __val; })
-#elif defined(__riscv)
-# define __get_tls() ({ void** __val; __asm__("mv %0, tp" : "=r"(__val)); __val; })
-#elif defined(__x86_64__)
-# define __get_tls() ({ void** __val; __asm__("mov %%fs:0, %0" : "=r"(__val)); __val; })
-#else
-#error unsupported architecture
-#endif
+#include <sys/types.h>
 
-#include "tls_defines.h"
+__BEGIN_DECLS
+
+typedef __uint32_t fenv_t;
+typedef __uint32_t fexcept_t;
+
+/* Exception flags. No FE_DENORMAL for riscv64. */
+#define FE_INEXACT    0x01
+#define FE_UNDERFLOW  0x02
+#define FE_OVERFLOW   0x04
+#define FE_DIVBYZERO  0x08
+#define FE_INVALID    0x10
+#define FE_ALL_EXCEPT (FE_DIVBYZERO | FE_INEXACT | FE_INVALID | FE_OVERFLOW | FE_UNDERFLOW)
+
+/* Rounding modes. */
+#define FE_TONEAREST  0x0
+#define FE_TOWARDZERO 0x1
+#define FE_DOWNWARD   0x2
+#define FE_UPWARD     0x3
+
+__END_DECLS
