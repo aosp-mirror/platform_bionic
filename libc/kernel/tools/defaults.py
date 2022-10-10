@@ -55,12 +55,11 @@ kernel_structs_to_remove = {
 # but just generates cleaner results
 kernel_remove_config_macros = True
 
-# maps an architecture to a set of default macros that would be provided by
-# toolchain preprocessor
+# Maps an architecture to a set of default macros that would be provided by
+# the toolchain's preprocessor. Currently only used to remove confusing
+# big-endian junk from the 32-bit arm headers.
 kernel_default_arch_macros = {
     "arm": {"__ARMEB__": kCppUndefinedMacro, "__ARM_EABI__": "1"},
-    "arm64": {},
-    "x86": {},
     }
 
 # Replace tokens in the output according to this mapping.
