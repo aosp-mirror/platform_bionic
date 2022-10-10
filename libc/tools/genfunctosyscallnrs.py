@@ -21,12 +21,12 @@ def load_syscall_names_from_file(file_path, architecture):
 
 
 def gen_syscall_nrs(out_file, base_syscall_file, syscall_NRs):
-    for arch in SupportedArchitectures:
+    for arch in syscall_NRs.keys():
         base_names = load_syscall_names_from_file(base_syscall_file, arch)
 
         for func, syscall in base_names.items():
             out_file.write("#define __" + arch + "_" + func + " " +
-                           str(syscall_NRs[arch][syscall]) + ";\n")
+                           str(syscall_NRs[arch][syscall]) + "\n")
 
 
 def main():
