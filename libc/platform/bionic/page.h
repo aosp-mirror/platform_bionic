@@ -16,15 +16,39 @@
 
 #pragma once
 
+#include <stddef.h>
+#include <stdint.h>
+#include <sys/auxv.h>
+
 // Get PAGE_SIZE and PAGE_MASK.
 #include <sys/user.h>
 
+inline size_t page_size() {
+  /*
+   * PAGE_SIZE defines the maximum supported page size. Since 4096 is the
+   * minimum supported page size we can just let it be constant folded if it's
+   * also the maximum.
+   */
+#if PAGE_SIZE == 4096
+  return PAGE_SIZE;
+#else
+  static size_t size = getauxval(AT_PAGESZ);
+  return size;
+#endif
+}
+
 // Returns the address of the page containing address 'x'.
-#define PAGE_START(x) ((x) & PAGE_MASK)
+inline uintptr_t page_start(uintptr_t x) {
+  return x & ~(page_size() - 1);
+}
 
 // Returns the offset of address 'x' in its page.
-#define PAGE_OFFSET(x) ((x) & ~PAGE_MASK)
+inline uintptr_t page_offset(uintptr_t x) {
+  return x & (page_size() - 1);
+}
 
 // Returns the address of the next page after address 'x', unless 'x' is
 // itself at the start of a page.
-#define PAGE_END(x) PAGE_START((x) + (PAGE_SIZE-1))
+inline uintptr_t page_end(uintptr_t x) {
+  return page_start(x + page_size() - 1);
+}

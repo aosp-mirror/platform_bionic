@@ -930,7 +930,7 @@ static int open_library_in_zipfile(ZipArchiveCache* zip_archive_cache,
   }
 
   // Check if it is properly stored
-  if (entry.method != kCompressStored || (entry.offset % PAGE_SIZE) != 0) {
+  if (entry.method != kCompressStored || (entry.offset % page_size()) != 0) {
     close(fd);
     return -1;
   }
@@ -1139,7 +1139,7 @@ static bool load_library(android_namespace_t* ns,
          "load_library(ns=%s, task=%s, flags=0x%x, realpath=%s, search_linked_namespaces=%d)",
          ns->get_name(), name, rtld_flags, realpath.c_str(), search_linked_namespaces);
 
-  if ((file_offset % PAGE_SIZE) != 0) {
+  if ((file_offset % page_size()) != 0) {
     DL_OPEN_ERR("file offset for the library \"%s\" is not page-aligned: %" PRId64, name, file_offset);
     return false;
   }
