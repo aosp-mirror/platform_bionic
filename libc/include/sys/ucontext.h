@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_UCONTEXT_H_
-#define _SYS_UCONTEXT_H_
+#pragma once
 
 #include <sys/cdefs.h>
 
@@ -313,8 +312,55 @@ typedef struct ucontext {
   struct _libc_fpstate __fpregs_mem;
 } ucontext_t;
 
+#elif defined(__riscv)
+
+#define NGREG 32
+
+#define REG_PC 0
+#define REG_RA 1
+#define REG_SP 2
+#define REG_TP 4
+
+typedef unsigned long __riscv_mc_gp_state[NGREG];
+
+typedef unsigned long greg_t;
+typedef unsigned long gregset_t[NGREG];
+typedef union __riscv_mc_fp_state fpregset_t;
+
+/* These match the kernel <asm/ptrace.h> types but with different names. */
+
+struct __riscv_mc_f_ext_state {
+  uint32_t __f[32];
+  uint32_t __fcsr;
+};
+
+struct __riscv_mc_d_ext_state {
+  uint64_t __f[32];
+  uint32_t __fcsr;
+};
+
+struct __riscv_mc_q_ext_state {
+  uint64_t __f[64] __attribute__((__aligned__(16)));
+  uint32_t __fcsr;
+  uint32_t __reserved[3];
+};
+
+union __riscv_mc_fp_state {
+  struct __riscv_mc_f_ext_state __f;
+  struct __riscv_mc_d_ext_state __d;
+  struct __riscv_mc_q_ext_state __q;
+};
+
+/* This matches the kernel <asm/sigcontext.h> but with different names. */
+
+typedef struct mcontext_t {
+  __riscv_mc_gp_state __gregs;
+  union __riscv_mc_fp_state __fpregs;
+} mcontext_t;
+
+#include <asm/ucontext.h>
+typedef struct ucontext ucontext_t;
+
 #endif
 
 __END_DECLS
-
-#endif /* _SYS_UCONTEXT_H_ */
