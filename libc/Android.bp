@@ -1294,9 +1294,6 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
     cmd: "$(location gensyscalls) arm $(in) > $(out)",
-    bazel_module: {
-        bp2build_available: true,
-    }
 }
 
 genrule {
@@ -1305,9 +1302,6 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
     cmd: "$(location gensyscalls) arm64 $(in) > $(out)",
-    bazel_module: {
-        bp2build_available: true,
-    },
 }
 
 genrule {
@@ -1316,9 +1310,6 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
     cmd: "$(location gensyscalls) x86 $(in) > $(out)",
-    bazel_module: {
-        bp2build_available: true,
-    },
 }
 
 genrule {
@@ -1327,9 +1318,6 @@ genrule {
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
     cmd: "$(location gensyscalls) x86_64 $(in) > $(out)",
-    bazel_module: {
-        bp2build_available: true,
-    },
 }
 
 cc_library_static {
@@ -1622,7 +1610,6 @@ filegroup {
         "bionic/NetdClient.cpp",
         "arch-common/bionic/crtend_so.S",
     ],
-    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1633,7 +1620,6 @@ filegroup {
         "bionic/malloc_common.cpp",
         "bionic/malloc_limit.cpp",
     ],
-    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
@@ -1642,7 +1628,6 @@ filegroup {
         "arch-arm/bionic/exidx_dynamic.c",
         "arch-arm/bionic/atexit_legacy.c",
     ],
-    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -1804,7 +1789,6 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
-    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1813,7 +1797,6 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
-    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1822,7 +1805,6 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
-    bazel_module: { bp2build_available: true },
 }
 
 genrule {
@@ -1831,7 +1813,6 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
-    bazel_module: { bp2build_available: true },
 }
 
 // Headers that only other parts of the platform can include.
@@ -1871,7 +1852,6 @@ cc_library_headers {
         "//apex_available:platform",
         "//apex_available:anyapex",
     ],
-    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1931,7 +1911,6 @@ cc_library_headers {
             export_system_include_dirs: ["kernel/uapi/asm-x86"],
         },
     },
-    bazel_module: { bp2build_available: true },
 }
 
 cc_library_headers {
@@ -1979,7 +1958,6 @@ cc_library_headers {
             export_header_lib_headers: ["libc_llndk_headers"],
         },
     },
-    bazel_module: { bp2build_available: true },
 }
 
 // ========================================================
@@ -2130,8 +2108,6 @@ cc_object {
     srcs: ["arch-common/bionic/crtbrand.S"],
 
     defaults: ["crt_so_defaults"],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2143,8 +2119,6 @@ cc_object {
     objs: [
         "crtbrand",
     ],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2156,8 +2130,6 @@ cc_object {
     srcs: ["arch-common/bionic/crtend_so.S"],
 
     defaults: ["crt_so_defaults"],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2175,8 +2147,6 @@ cc_object {
     defaults: ["crt_defaults"],
     // When using libc.a, we're using the latest library regardless of target API level.
     min_sdk_version: "current",
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2199,8 +2169,6 @@ cc_object {
         },
     },
     defaults: ["crt_defaults"],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2214,8 +2182,6 @@ cc_object {
     srcs: ["arch-common/bionic/crtend.S"],
 
     defaults: ["crt_defaults"],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_library_static {
@@ -2351,7 +2317,6 @@ filegroup {
         "kernel/uapi/linux/input.h",
         "kernel/uapi/linux/input-event-codes.h",
     ],
-    bazel_module: { bp2build_available: true },
 }
 
 // Generate a syscall name / number mapping. These objects are text files
@@ -2377,8 +2342,6 @@ cc_object {
         "kernel/uapi/asm-arm",
         "kernel/uapi",
     ],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2388,8 +2351,6 @@ cc_object {
         "kernel/uapi/asm-arm64",
         "kernel/uapi",
     ],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2401,8 +2362,6 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
-
-    bazel_module: { bp2build_available: true },
 }
 
 cc_object {
@@ -2414,14 +2373,11 @@ cc_object {
         "kernel/uapi/asm-x86",
         "kernel/uapi",
     ],
-
-    bazel_module: { bp2build_available: true },
 }
 
 filegroup {
     name: "all_kernel_uapi_headers",
     srcs: ["kernel/uapi/**/*.h"],
-    bazel_module: { bp2build_available: true },
 }
 
 
