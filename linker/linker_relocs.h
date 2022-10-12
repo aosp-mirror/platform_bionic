@@ -73,6 +73,20 @@
 #define R_GENERIC_TLS_TPREL     R_386_TLS_TPOFF
 #define R_GENERIC_TLSDESC       R_386_TLS_DESC
 
+#elif defined (__riscv)
+
+#define R_GENERIC_JUMP_SLOT     R_RISCV_JUMP_SLOT
+#define R_GENERIC_ABSOLUTE      R_RISCV_64
+#define R_GENERIC_GLOB_DAT      R_RISCV_64
+#define R_GENERIC_RELATIVE      R_RISCV_RELATIVE
+#define R_GENERIC_IRELATIVE     R_RISCV_IRELATIVE
+#define R_GENERIC_COPY          R_RISCV_COPY
+#define R_GENERIC_TLS_DTPMOD    R_RISCV_TLS_DTPMOD64
+#define R_GENERIC_TLS_DTPREL    R_RISCV_TLS_DTPREL64
+#define R_GENERIC_TLS_TPREL     R_RISCV_TLS_TPREL64
+// TODO: https://github.com/riscv-non-isa/riscv-elf-psabi-doc/issues/94
+// #define R_GENERIC_TLSDESC       R_RISCV_TLS_DESC
+
 #elif defined (__x86_64__)
 
 #define R_GENERIC_JUMP_SLOT     R_X86_64_JUMP_SLOT
