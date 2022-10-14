@@ -7,7 +7,7 @@
 # where:
 #       arch_list ::= "all" | arches
 #       arches    ::= arch |  arch "," arches
-#       arch      ::= "arm" | "arm64" | "x86" | "x86_64" | "lp32" | "lp64"
+#       arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
 #
 # Note:
 #      - syscall_name corresponds to the name of the syscall, which may differ from
@@ -351,6 +351,9 @@ int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
+
+# riscv64-specific
+int _flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86
