@@ -1305,6 +1305,14 @@ genrule {
 }
 
 genrule {
+    name: "syscalls-riscv64.S",
+    out: ["syscalls-riscv64.S"],
+    srcs: ["SYSCALLS.TXT"],
+    tools: ["gensyscalls"],
+    cmd: "$(location gensyscalls) riscv64 $(in) > $(out)",
+}
+
+genrule {
     name: "syscalls-x86.S",
     out: ["syscalls-x86.S"],
     srcs: ["SYSCALLS.TXT"],
@@ -1329,6 +1337,9 @@ cc_library_static {
         },
         arm64: {
             srcs: [":syscalls-arm64.S"],
+        },
+        riscv64: {
+            srcs: [":syscalls-riscv64.S"],
         },
         x86: {
             srcs: [":syscalls-x86.S"],
@@ -2354,6 +2365,15 @@ cc_object {
 }
 
 cc_object {
+    name: "libseccomp_gen_syscall_nrs_riscv64",
+    defaults: ["libseccomp_gen_syscall_nrs_defaults"],
+    local_include_dirs: [
+        "kernel/uapi/asm-riscv",
+        "kernel/uapi",
+    ],
+}
+
+cc_object {
     name: "libseccomp_gen_syscall_nrs_x86",
     defaults: ["libseccomp_gen_syscall_nrs_defaults"],
     srcs: ["seccomp/gen_syscall_nrs_x86.cpp"],
@@ -2390,11 +2410,37 @@ cc_genrule {
 
     srcs: [
         "SYSCALLS.TXT",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
     ],
+
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+        },
+    },
 
     out: [
         "func_to_syscall_nrs.h",
@@ -2423,18 +2469,54 @@ cc_genrule {
         "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
         ":generate_app_zygote_blocklist",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
     ],
 
-    out: [
-        "arm64_app_zygote_policy.cpp",
-        "arm_app_zygote_policy.cpp",
-        "x86_64_app_zygote_policy.cpp",
-        "x86_app_zygote_policy.cpp",
-    ],
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_zygote_policy.cpp",
+                "arm64_app_zygote_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_zygote_policy.cpp",
+                "arm64_app_zygote_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_app_zygote_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_zygote_policy.cpp",
+                "x86_64_app_zygote_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+           out: [
+                "x86_app_zygote_policy.cpp",
+                "x86_64_app_zygote_policy.cpp",
+            ],
+        },
+    },
 }
 
 cc_genrule {
@@ -2451,18 +2533,54 @@ cc_genrule {
         "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_BLOCKLIST_APP.TXT",
         "SECCOMP_PRIORITY.TXT",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
     ],
 
-    out: [
-        "arm64_app_policy.cpp",
-        "arm_app_policy.cpp",
-        "x86_64_app_policy.cpp",
-        "x86_app_policy.cpp",
-    ],
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_policy.cpp",
+                "arm64_app_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_policy.cpp",
+                "arm64_app_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_app_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_policy.cpp",
+                "x86_64_app_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_policy.cpp",
+                "x86_64_app_policy.cpp",
+            ],
+        },
+    },
 }
 
 cc_genrule {
@@ -2478,18 +2596,54 @@ cc_genrule {
         "SECCOMP_ALLOWLIST_SYSTEM.TXT",
         "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
     ],
 
-    out: [
-        "arm64_system_policy.cpp",
-        "arm_system_policy.cpp",
-        "x86_64_system_policy.cpp",
-        "x86_system_policy.cpp",
-    ],
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_system_policy.cpp",
+                "arm64_system_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_system_policy.cpp",
+                "arm64_system_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_system_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_system_policy.cpp",
+                "x86_64_system_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_system_policy.cpp",
+                "x86_64_system_policy.cpp",
+            ],
+        },
+    },
 }
 
 cc_library {
