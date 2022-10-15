@@ -117,6 +117,21 @@ TEST(fenv, fegetenv_fesetenv) {
   ASSERT_EQ(FE_OVERFLOW, fetestexcept(FE_ALL_EXCEPT));
 }
 
+TEST(fenv, fegetenv_fesetenv_rounding_mode) {
+  // Test that fegetenv()/fesetenv() includes the rounding mode.
+  fesetround(FE_DOWNWARD);
+  ASSERT_EQ(FE_DOWNWARD, fegetround());
+
+  fenv_t env;
+  fegetenv(&env);
+
+  fesetround(FE_UPWARD);
+  ASSERT_EQ(FE_UPWARD, fegetround());
+
+  fesetenv(&env);
+  ASSERT_EQ(FE_DOWNWARD, fegetround());
+}
+
 TEST(fenv, feholdexcept_feupdateenv) {
   // Set FE_OVERFLOW only.
   feclearexcept(FE_ALL_EXCEPT);
