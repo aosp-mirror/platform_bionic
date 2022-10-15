@@ -344,6 +344,13 @@ cc_library {
             version_script: ":libm.arm64.map",
         },
 
+        riscv64: {
+            srcs: [
+                "riscv64/fenv.c",
+            ],
+            version_script: ":libm.riscv64.map",
+        },
+
         x86: {
             srcs: [
                 "i387/fenv.c",
@@ -570,6 +577,14 @@ genrule {
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.riscv64.map",
+    out: ["libm.riscv64.map"],
+    srcs: ["libm.map.txt"],
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
 }
 
 genrule {

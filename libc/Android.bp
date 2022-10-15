@@ -197,6 +197,9 @@ cc_library_static {
         arm64: {
             srcs: ["arch-arm64/bionic/__set_tls.c"],
         },
+        riscv64: {
+            srcs: ["arch-riscv64/bionic/__set_tls.c"],
+        },
         x86: {
             srcs: [
                 "arch-x86/bionic/__libc_init_sysinfo.cpp",
@@ -661,6 +664,17 @@ cc_library_static {
                 "upstream-openbsd/lib/libc/string/strncmp.c",
             ],
         },
+        riscv64: {
+            srcs: [
+                "arch-riscv64/string/memset_chk.c",
+                "upstream-freebsd/lib/libc/string/memcmp.c",
+                "upstream-freebsd/lib/libc/string/memcpy.c",
+                "upstream-freebsd/lib/libc/string/memmove.c",
+                "upstream-freebsd/lib/libc/string/memset.c",
+                "upstream-openbsd/lib/libc/string/strcmp.c",
+                "upstream-openbsd/lib/libc/string/strlen.c",
+            ],
+        },
         x86: {
             exclude_srcs: [
                 "upstream-openbsd/lib/libc/string/memchr.c",
@@ -903,6 +917,15 @@ cc_library_static {
                 "bionic/strchrnul.cpp",
                 "bionic/strnlen.c",
                 "bionic/strrchr.cpp",
+            ],
+        },
+
+        riscv64: {
+            srcs: [
+                "arch-riscv64/bionic/__bionic_clone.S",
+                "arch-riscv64/bionic/_exit_with_stack_teardown.S",
+                "arch-riscv64/bionic/syscall.S",
+                "arch-riscv64/bionic/vfork.S",
             ],
         },
 
