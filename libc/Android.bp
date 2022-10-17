@@ -1759,6 +1759,15 @@ cc_library {
                 keep_symbols: true,
             },
         },
+        riscv64: {
+            version_script: ":libc.riscv64.map",
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
+        },
         x86: {
             // TODO: This is to work around b/24465209. Remove after root cause is fixed.
             pack_relocations: false,
@@ -1831,6 +1840,14 @@ genrule {
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libc.riscv64.map",
+    out: ["libc.riscv64.map"],
+    srcs: ["libc.map.txt"],
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
 }
 
 genrule {
@@ -2032,6 +2049,9 @@ cc_library {
         arm64: {
             version_script: ":libstdc++.arm64.map",
         },
+        riscv64: {
+            version_script: ":libstdc++.riscv64.map",
+        },
         x86: {
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
@@ -2057,6 +2077,14 @@ genrule {
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libstdc++.riscv64.map",
+    out: ["libstdc++.riscv64.map"],
+    srcs: ["libstdc++.map.txt"],
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
 }
 
 genrule {
