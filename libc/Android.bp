@@ -2507,8 +2507,13 @@ genrule {
     cmd: "grep -v '^int[ \t]*setresgid' $(in) > $(out)",
 }
 
-filegroup {
-    name: "seccomp_syscalls_sources_zygote",
+cc_genrule {
+    name: "libseccomp_policy_app_zygote_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
+
+    tools: [ "genseccomp" ],
+
     srcs: [
         "SYSCALLS.TXT",
         "SECCOMP_ALLOWLIST_COMMON.TXT",
@@ -2517,10 +2522,62 @@ filegroup {
         "SECCOMP_PRIORITY.TXT",
         ":generate_app_zygote_blocklist",
     ],
+
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_zygote_policy.cpp",
+                "arm64_app_zygote_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_zygote_policy.cpp",
+                "arm64_app_zygote_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_app_zygote_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_zygote_policy.cpp",
+                "x86_64_app_zygote_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+           out: [
+                "x86_app_zygote_policy.cpp",
+                "x86_64_app_zygote_policy.cpp",
+            ],
+        },
+    },
 }
 
-filegroup {
-    name: "seccomp_syscalls_sources_app",
+cc_genrule {
+    name: "libseccomp_policy_app_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
+
+    tools: [ "genseccomp" ],
+
     srcs: [
         "SYSCALLS.TXT",
         "SECCOMP_ALLOWLIST_COMMON.TXT",
@@ -2529,10 +2586,62 @@ filegroup {
         "SECCOMP_BLOCKLIST_APP.TXT",
         "SECCOMP_PRIORITY.TXT",
     ],
+
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_policy.cpp",
+                "arm64_app_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_app_policy.cpp",
+                "arm64_app_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_app_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_policy.cpp",
+                "x86_64_app_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_app_policy.cpp",
+                "x86_64_app_policy.cpp",
+            ],
+        },
+    },
 }
 
-filegroup {
-    name: "seccomp_syscalls_sources_system",
+cc_genrule {
+    name: "libseccomp_policy_system_sources",
+    recovery_available: true,
+    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
+
+    tools: [ "genseccomp" ],
+
     srcs: [
         "SYSCALLS.TXT",
         "SECCOMP_ALLOWLIST_COMMON.TXT",
@@ -2540,188 +2649,64 @@ filegroup {
         "SECCOMP_BLOCKLIST_COMMON.TXT",
         "SECCOMP_PRIORITY.TXT",
     ],
-}
 
-cc_genrule {
-    name: "libseccomp_policy_app_zygote_sources_x86",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_zygote",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
-    ],
-    out: [
-        "x86_app_zygote_policy.cpp",
-        "x86_64_app_zygote_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_app_zygote_sources_arm",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_zygote",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-    ],
-    out: [
-        "arm_app_zygote_policy.cpp",
-        "arm64_app_zygote_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_app_zygote_sources_riscv64",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app_zygote $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_zygote",
-        ":libseccomp_gen_syscall_nrs_riscv64",
-    ],
-    out: [
-        "riscv64_app_zygote_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_app_sources_x86",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_app",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
-    ],
-    out: [
-        "x86_app_policy.cpp",
-        "x86_64_app_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_app_sources_arm",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_app",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-    ],
-    out: [
-        "arm_app_policy.cpp",
-        "arm64_app_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_app_sources_riscv64",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=app $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_app",
-        ":libseccomp_gen_syscall_nrs_riscv64",
-    ],
-    out: [
-        "riscv64_app_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_system_sources_x86",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_system",
-        ":libseccomp_gen_syscall_nrs_x86",
-        ":libseccomp_gen_syscall_nrs_x86_64",
-    ],
-    out: [
-        "x86_system_policy.cpp",
-        "x86_64_system_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_system_sources_arm",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_system",
-        ":libseccomp_gen_syscall_nrs_arm",
-        ":libseccomp_gen_syscall_nrs_arm64",
-    ],
-    out: [
-        "arm_system_policy.cpp",
-        "arm64_system_policy.cpp",
-    ],
-}
-
-cc_genrule {
-    name: "libseccomp_policy_system_sources_riscv64",
-    recovery_available: true,
-    cmd: "$(location genseccomp) --out-dir=$(genDir) --name-modifier=system $(in)",
-    tools: [ "genseccomp" ],
-    srcs: [
-        ":seccomp_syscalls_sources_system",
-        ":libseccomp_gen_syscall_nrs_riscv64",
-    ],
-    out: [
-        "riscv64_system_policy.cpp",
-    ],
+    arch: {
+        arm: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_system_policy.cpp",
+                "arm64_system_policy.cpp",
+            ],
+        },
+        arm64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_arm",
+                ":libseccomp_gen_syscall_nrs_arm64",
+            ],
+            out: [
+                "arm_system_policy.cpp",
+                "arm64_system_policy.cpp",
+            ],
+        },
+        riscv64: {
+            srcs: [":libseccomp_gen_syscall_nrs_riscv64"],
+            out: ["riscv64_system_policy.cpp"],
+        },
+        x86: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_system_policy.cpp",
+                "x86_64_system_policy.cpp",
+            ],
+        },
+        x86_64: {
+            srcs: [
+                ":libseccomp_gen_syscall_nrs_x86",
+                ":libseccomp_gen_syscall_nrs_x86_64",
+            ],
+            out: [
+                "x86_system_policy.cpp",
+                "x86_64_system_policy.cpp",
+            ],
+        },
+    },
 }
 
 cc_library {
     name: "libseccomp_policy",
     recovery_available: true,
     generated_headers: ["func_to_syscall_nrs"],
-
-    arch: {
-        arm: {
-            generated_sources: [
-               "libseccomp_policy_app_sources_arm",
-               "libseccomp_policy_app_zygote_sources_arm",
-               "libseccomp_policy_system_sources_arm",
-            ],
-        },
-        arm64: {
-            generated_sources: [
-               "libseccomp_policy_app_sources_arm",
-               "libseccomp_policy_app_zygote_sources_arm",
-               "libseccomp_policy_system_sources_arm",
-            ],
-        },
-        riscv64: {
-            generated_sources: [
-               "libseccomp_policy_app_sources_riscv64",
-               "libseccomp_policy_app_zygote_sources_riscv64",
-               "libseccomp_policy_system_sources_riscv64",
-            ],
-        },
-        x86: {
-            generated_sources: [
-               "libseccomp_policy_app_sources_x86",
-               "libseccomp_policy_app_zygote_sources_x86",
-               "libseccomp_policy_system_sources_x86",
-            ],
-        },
-        x86_64: {
-            generated_sources: [
-               "libseccomp_policy_app_sources_x86",
-               "libseccomp_policy_app_zygote_sources_x86",
-               "libseccomp_policy_system_sources_x86",
-            ],
-        },
-    },
+    generated_sources: [
+        "libseccomp_policy_app_sources",
+        "libseccomp_policy_app_zygote_sources",
+        "libseccomp_policy_system_sources",
+    ],
 
     srcs: [
         "seccomp/seccomp_policy.cpp",
