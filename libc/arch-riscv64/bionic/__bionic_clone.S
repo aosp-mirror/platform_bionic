@@ -34,7 +34,7 @@ ENTRY_PRIVATE(__bionic_clone)
   # Push 'fn' and 'arg' onto the child stack.
   addi a1, a1, -16
   sd a5, 0(a1)
-  sd a6, 0(a1)
+  sd a6, 8(a1)
 
   # Make the system call.
   li a7, __NR_clone
