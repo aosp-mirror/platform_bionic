@@ -924,6 +924,7 @@ cc_library_static {
             srcs: [
                 "arch-riscv64/bionic/__bionic_clone.S",
                 "arch-riscv64/bionic/_exit_with_stack_teardown.S",
+                "arch-riscv64/bionic/setjmp.S",
                 "arch-riscv64/bionic/syscall.S",
                 "arch-riscv64/bionic/vfork.S",
             ],
