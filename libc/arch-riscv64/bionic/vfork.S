@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,57 +32,35 @@
 #include <linux/sched.h>
 
 ENTRY(vfork)
-__BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
-    // x9 = __get_tls()[TLS_SLOT_THREAD_ID]
-    mrs     x9, tpidr_el0
-    ldr     x9, [x9, #(TLS_SLOT_THREAD_ID * 8)]
+  // t0 = __get_tls()[TLS_SLOT_THREAD_ID]
+  mv      t0, tp
+  ld      t0, TLS_SLOT_THREAD_ID * 8(t0)
 
-    // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
-    mov     w0, #0x80000000
-    ldr     w10, [x9, #20]
-    str     w0, [x9, #20]
+  // Set cached_pid_ to 0, vforked_ to 1, and stash the previous value.
+  li      t1, 0x80000000
+  lw      t2, 20(t0)
+  sw      t1, 20(t0)
 
-    // Clear vfork_child_stack_bottom_.
-    str     xzr, [x9, #776]
+  li      a0, (CLONE_VM | CLONE_VFORK | SIGCHLD)
+  li      a1, 0 //uses a duplicate of the parent's stack
+  li      a2, 0
+  li      a3, 0
+  li      a4, 0
 
-    mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
-    mov     x1, xzr
-    mov     x2, xzr
-    mov     x3, xzr
-    mov     x4, xzr
+  li      a7, __NR_clone
+  ecall
 
-    mov     x8, __NR_clone
-    svc     #0
+  // if (rc == 0) we're the child, and finished...
+  beqz    a0, .L_success
 
-    cbz     x0, .L_exit
+  // else if (rc != 0): reset cached_pid_ and vforked_...
+  sw      t2, 20(t0)
+  // ...and work out whether we succeeded or failed.
+  bltz    a0, .L_failure
+.L_success:
+  ret
 
-    // rc != 0: reset cached_pid_ and vforked_.
-    str     w10, [x9, #20]
-    cmn     x0, #(MAX_ERRNO + 1)
-    cneg    x0, x0, hi
-    b.hi    __set_errno_internal
-
-    // Clean up stack shadow in the parent process.
-    // https://github.com/google/sanitizers/issues/925
-    paciasp
-    .cfi_negate_ra_state
-    stp x0, x30, [sp, #-16]!
-    .cfi_adjust_cfa_offset 16
-    .cfi_rel_offset x0, 0
-    .cfi_rel_offset x30, 8
-
-    add x0, sp, #16
-    bl memtag_handle_vfork
-
-    ldp x0, x30, [sp], #16
-    .cfi_adjust_cfa_offset -16
-    .cfi_restore x0
-    .cfi_restore x30
-    autiasp
-    .cfi_negate_ra_state
-
-.L_exit:
-    ret
+.L_failure:
+  neg     a0, a0
+  j       __set_errno_internal
 END(vfork)
-
-NOTE_GNU_PROPERTY()
