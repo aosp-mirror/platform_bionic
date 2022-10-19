@@ -59,7 +59,6 @@ int fegetenv(fenv_t* envp) {
 
 int fesetenv(const fenv_t* envp) {
   fpu_control_t fpcr;
-
   __get_fpcr(fpcr);
   if (envp->__control != fpcr) {
     __set_fpcr(envp->__control);
@@ -70,27 +69,22 @@ int fesetenv(const fenv_t* envp) {
 
 int feclearexcept(int excepts) {
   fpu_status_t fpsr;
-
-  excepts &= FE_ALL_EXCEPT;
   __get_fpsr(fpsr);
-  fpsr &= ~excepts;
+  fpsr &= ~(excepts & FE_ALL_EXCEPT);
   __set_fpsr(fpsr);
   return 0;
 }
 
 int fegetexceptflag(fexcept_t* flagp, int excepts) {
   fpu_status_t fpsr;
-
-  excepts &= FE_ALL_EXCEPT;
   __get_fpsr(fpsr);
-  *flagp = fpsr & excepts;
+  *flagp = fpsr & (excepts & FE_ALL_EXCEPT);
   return 0;
 }
 
 int fesetexceptflag(const fexcept_t* flagp, int excepts) {
-  fpu_status_t fpsr;
-
   excepts &= FE_ALL_EXCEPT;
+  fpu_status_t fpsr;
   __get_fpsr(fpsr);
   fpsr &= ~excepts;
   fpsr |= *flagp & excepts;
@@ -100,32 +94,27 @@ int fesetexceptflag(const fexcept_t* flagp, int excepts) {
 
 int feraiseexcept(int excepts) {
   fexcept_t ex = excepts;
-
   fesetexceptflag(&ex, excepts);
   return 0;
 }
 
 int fetestexcept(int excepts) {
   fpu_status_t fpsr;
-
-  excepts &= FE_ALL_EXCEPT;
   __get_fpsr(fpsr);
-  return (fpsr & excepts);
+  return (fpsr & (excepts & FE_ALL_EXCEPT));
 }
 
 int fegetround(void) {
   fpu_control_t fpcr;
-
   __get_fpcr(fpcr);
   return ((fpcr >> FPCR_RMODE_SHIFT) & FE_TOWARDZERO);
 }
 
 int fesetround(int round) {
-  fpu_control_t fpcr, new_fpcr;
-
-  round &= FE_TOWARDZERO;
+  if (round < FE_TONEAREST || round > FE_UPWARD) return -1;
+  fpu_control_t fpcr;
   __get_fpcr(fpcr);
-  new_fpcr = fpcr & ~(FE_TOWARDZERO << FPCR_RMODE_SHIFT);
+  fpu_control_t new_fpcr = fpcr & ~(FE_TOWARDZERO << FPCR_RMODE_SHIFT);
   new_fpcr |= (round << FPCR_RMODE_SHIFT);
   if (new_fpcr != fpcr) {
     __set_fpcr(new_fpcr);
@@ -134,33 +123,15 @@ int fesetround(int round) {
 }
 
 int feholdexcept(fenv_t* envp) {
-  fpu_status_t fpsr;
-  __get_fpsr(fpsr);
-  fpu_control_t fpcr;
-  __get_fpcr(fpcr);
-  fenv_t env = { .__status = fpsr, .__control = fpcr };
-  *envp = env;
-
-  // Clear all exceptions.
-  fpsr &= ~FE_ALL_EXCEPT;
-  __set_fpsr(fpsr);
+  fegetenv(envp);
+  feclearexcept(FE_ALL_EXCEPT);
   return 0;
 }
 
 int feupdateenv(const fenv_t* envp) {
-  fpu_status_t fpsr;
-  fpu_control_t fpcr;
-
-  // Set FPU Control register.
-  __get_fpcr(fpcr);
-  if (envp->__control != fpcr) {
-    __set_fpcr(envp->__control);
-  }
-
-  // Set FPU Status register to status | currently raised exceptions.
-  __get_fpsr(fpsr);
-  fpsr = envp->__status | (fpsr & FE_ALL_EXCEPT);
-  __set_fpsr(fpsr);
+  int excepts = fetestexcept(FE_ALL_EXCEPT);
+  fesetenv(envp);
+  feraiseexcept(excepts);
   return 0;
 }
 
