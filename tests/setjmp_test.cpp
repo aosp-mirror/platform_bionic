@@ -224,13 +224,15 @@ TEST(setjmp, setjmp_fp_registers) {
 }
 
 #if defined(__arm__)
-#define __JB_SIGFLAG 0
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__aarch64__)
-#define __JB_SIGFLAG 0
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__i386__)
-#define __JB_SIGFLAG 8
+#define JB_SIGFLAG_OFFSET 8
+#elif defined(__riscv)
+#define JB_SIGFLAG_OFFSET 0
 #elif defined(__x86_64)
-#define __JB_SIGFLAG 8
+#define JB_SIGFLAG_OFFSET 8
 #endif
 
 TEST_F(setjmp_DeathTest, setjmp_cookie) {
@@ -238,7 +240,7 @@ TEST_F(setjmp_DeathTest, setjmp_cookie) {
   int value = setjmp(jb);
   ASSERT_EQ(0, value);
 
-  long* sigflag = reinterpret_cast<long*>(jb) + __JB_SIGFLAG;
+  long* sigflag = reinterpret_cast<long*>(jb) + JB_SIGFLAG_OFFSET;
 
   // Make sure there's actually a cookie.
   EXPECT_NE(0, *sigflag & ~1);
