@@ -141,16 +141,14 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   addi a2, a0, _JB_SIGMASK // old_mask.
   call PIC_PLT(sigprocmask)
 
-  ld a1, 8(sp)
-
 1:
-  // Restore original a0/a1/ra.
+  // Restore original a0/ra.
   ld a0, 0(sp)
-  ld a1, 8(sp)
   ld ra, 16(sp)
   addi sp, sp, 24
 
-  // Mask off the signal flag bit.
+  // Get the cookie.
+  ld a1, _JB_SIGFLAG(a0)
   andi a1, a1, -2
 
   // Save core registers.
@@ -169,7 +167,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   sd s9,  _JB_S9(a0)
   sd s10, _JB_S10(a0)
   sd s11, _JB_S11(a0)
-  sd sp,  _JB_SP(a0)
+  sd a2,  _JB_SP(a0)
   m_unmangle_registers a1, sp_reg=a2
 
   // Save floating point registers.
