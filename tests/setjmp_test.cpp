@@ -81,8 +81,10 @@ struct SigSets {
     sigset64_t ss;
     sigemptyset64(&ss);
     sigaddset64(&ss, SIGUSR1 + offset);
+#if defined(__BIONIC__)
     // TIMER_SIGNAL.
     sigaddset64(&ss, __SIGRTMIN);
+#endif
     sigaddset64(&ss, SIGRTMIN + offset);
     return ss;
   }
