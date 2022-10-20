@@ -34,6 +34,13 @@
 
 using namespace std::chrono_literals;
 
+#if defined(ANDROID_HOST_MUSL)
+// Musl doesn't export __SIGRTMIN and __SIGRTMAX, #define
+// them here.
+#define __SIGRTMIN 32
+#define __SIGRTMAX 64
+#endif
+
 static int SIGNAL_MIN() {
   return 1; // Signals start at 1 (SIGHUP), not 0.
 }
