@@ -29,39 +29,39 @@ load("//build/bazel/rules/apis:cc_api_contribution.bzl", "cc_api_headers")
 package(default_visibility = ["//bionic/libc:__pkg__"])
 
 cc_api_headers(
-  name="libc_kernel_uapi_headers",
-  hdrs=glob(["**/*.h"]),
-  system=True,
+    name = "libc_kernel_uapi_headers",
+    hdrs = glob(["**/*.h"]),
+    system = True,
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_arm_headers",
-  include_dir="asm-arm",
-  hdrs=glob(["asm-arm/**/*.h"]),
-  system=True,
-  arch="arm",
+    name = "libc_kernel_uapi_asm_arm_headers",
+    hdrs = glob(["asm-arm/**/*.h"]),
+    arch = "arm",
+    include_dir = "asm-arm",
+    system = True,
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_arm64_headers",
-  include_dir="asm-arm64",
-  hdrs=glob(["asm-arm64/**/*.h"]),
-  system=True,
-  arch="arm64",
+    name = "libc_kernel_uapi_asm_arm64_headers",
+    hdrs = glob(["asm-arm64/**/*.h"]),
+    arch = "arm64",
+    include_dir = "asm-arm64",
+    system = True,
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_x86_headers",
-  include_dir="asm-x86",
-  hdrs=glob(["asm-x86/**/*.h"]),
-  system=True,
-  arch="x86",
+    name = "libc_kernel_uapi_asm_x86_headers",
+    hdrs = glob(["asm-x86/**/*.h"]),
+    arch = "x86",
+    include_dir = "asm-x86",
+    system = True,
 )
 
 cc_api_headers(
-  name="libc_kernal_uapi_asm_x86_64_headers",
-  include_dir="asm-x86_64",
-  hdrs=glob(["asm-x86_64/**/*.h"]),
-  system=True,
-  arch="x86_64",
+    name = "libc_kernel_uapi_asm_x86_64_headers",
+    hdrs = glob(["asm-x86_64/**/*.h"]),
+    arch = "x86_64",
+    include_dir = "asm-x86_64",
+    system = True,
 )
