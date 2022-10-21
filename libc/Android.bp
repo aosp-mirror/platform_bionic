@@ -2943,3 +2943,53 @@ cc_genrule {
     tools: ["soong_zip"],
     cmd: "includes=($(in)) && $(location soong_zip) -o $(out) -P include/asm -j -D $$(dirname $${includes[0]})",
 }
+
+cc_genrule {
+    name: "bionic_sysroot_crt_objects",
+    visibility: ["//visibility:private"],
+    out: ["bionic_sysroot_crt_objects.zip"],
+    tools: ["soong_zip"],
+    srcs: [
+        ":crtbegin_dynamic",
+        ":crtbegin_so",
+        ":crtbegin_static",
+        ":crtend_android",
+        ":crtend_so",
+    ],
+    cmd: "$(location soong_zip) -o $(out) -j " +
+        "-f $(location :crtbegin_dynamic) " +
+        "-f $(location :crtbegin_so) " +
+        "-f $(location :crtbegin_static) " +
+        "-f $(location :crtend_android) " +
+        "-f $(location :crtend_so)",
+    dist: {
+        targets: ["bionic_sysroot_crt_objects"],
+    },
+    arch: {
+        arm: {
+            dist: {
+                suffix: "_arm",
+            },
+        },
+        arm64: {
+            dist: {
+                suffix: "_arm64",
+            },
+        },
+        riscv64: {
+            dist: {
+                suffix: "_riscv64",
+            },
+        },
+        x86: {
+            dist: {
+                suffix: "_x86",
+            },
+        },
+        x86_64: {
+            dist: {
+                suffix: "_x86_64",
+            },
+        },
+    },
+}
