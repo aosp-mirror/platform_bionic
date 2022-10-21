@@ -111,7 +111,7 @@ int fegetround(void) {
 }
 
 int fesetround(int round) {
-  if (round < FE_TONEAREST || round > FE_UPWARD) return -1;
+  if (round < FE_TONEAREST || round > FE_TOWARDZERO) return -1;
   fpu_control_t fpcr;
   __get_fpcr(fpcr);
   fpu_control_t new_fpcr = fpcr & ~(FE_TOWARDZERO << FPCR_RMODE_SHIFT);
