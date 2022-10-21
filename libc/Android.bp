@@ -2334,6 +2334,14 @@ ndk_headers {
 }
 
 ndk_headers {
+    name: "libc_asm_riscv64",
+    from: "kernel/uapi/asm-riscv",
+    to: "riscv64-linux-android",
+    srcs: ["kernel/uapi/asm-riscv/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
     name: "libc_asm_x86",
     from: "kernel/uapi/asm-x86",
     to: "i686-linux-android",
@@ -2362,6 +2370,7 @@ ndk_library {
         "libc_kernel_android_scsi",
         "libc_asm_arm",
         "libc_asm_arm64",
+        "libc_asm_riscv64",
         "libc_asm_x86",
         "libc_asm_x86_64",
     ],
