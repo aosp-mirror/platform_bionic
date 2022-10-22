@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,11 +30,11 @@
 
 ENTRY(_start)
   // Force unwinds to end in this function.
-  .cfi_undefined x30
+  .cfi_undefined ra
 
-  mov x0, sp
-  bl __linker_init
+  mv a0, sp
+  jal __linker_init
 
   // __linker_init returns the address of the entry point in the main image.
-  br x0
+  jr a0
 END(_start)
