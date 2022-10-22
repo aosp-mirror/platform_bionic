@@ -2334,6 +2334,14 @@ ndk_headers {
 }
 
 ndk_headers {
+    name: "libc_asm_riscv64",
+    from: "kernel/uapi/asm-riscv",
+    to: "riscv64-linux-android",
+    srcs: ["kernel/uapi/asm-riscv/**/*.h"],
+    license: "NOTICE",
+}
+
+ndk_headers {
     name: "libc_asm_x86",
     from: "kernel/uapi/asm-x86",
     to: "i686-linux-android",
@@ -2362,6 +2370,7 @@ ndk_library {
         "libc_kernel_android_scsi",
         "libc_asm_arm",
         "libc_asm_arm64",
+        "libc_asm_riscv64",
         "libc_asm_x86",
         "libc_asm_x86_64",
     ],
@@ -2933,4 +2942,54 @@ cc_genrule {
     out: ["libc_musl_sysroot_bionic_arch_headers.zip"],
     tools: ["soong_zip"],
     cmd: "includes=($(in)) && $(location soong_zip) -o $(out) -P include/asm -j -D $$(dirname $${includes[0]})",
+}
+
+cc_genrule {
+    name: "bionic_sysroot_crt_objects",
+    visibility: ["//visibility:private"],
+    out: ["bionic_sysroot_crt_objects.zip"],
+    tools: ["soong_zip"],
+    srcs: [
+        ":crtbegin_dynamic",
+        ":crtbegin_so",
+        ":crtbegin_static",
+        ":crtend_android",
+        ":crtend_so",
+    ],
+    cmd: "$(location soong_zip) -o $(out) -j " +
+        "-f $(location :crtbegin_dynamic) " +
+        "-f $(location :crtbegin_so) " +
+        "-f $(location :crtbegin_static) " +
+        "-f $(location :crtend_android) " +
+        "-f $(location :crtend_so)",
+    dist: {
+        targets: ["bionic_sysroot_crt_objects"],
+    },
+    arch: {
+        arm: {
+            dist: {
+                suffix: "_arm",
+            },
+        },
+        arm64: {
+            dist: {
+                suffix: "_arm64",
+            },
+        },
+        riscv64: {
+            dist: {
+                suffix: "_riscv64",
+            },
+        },
+        x86: {
+            dist: {
+                suffix: "_x86",
+            },
+        },
+        x86_64: {
+            dist: {
+                suffix: "_x86_64",
+            },
+        },
+    },
 }
