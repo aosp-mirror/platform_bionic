@@ -52,6 +52,9 @@ cc_object {
         arm64: {
             srcs: ["arch/arm64/linker_wrapper_begin.S"],
         },
+        riscv64: {
+            srcs: ["arch/riscv64/linker_wrapper_begin.S"],
+        },
         x86_64: {
             srcs: ["arch/x86_64/linker_wrapper_begin.S"],
         },
@@ -208,6 +211,13 @@ filegroup {
 }
 
 filegroup {
+    name: "linker_sources_riscv64",
+    srcs: [
+        "arch/riscv64/begin.S",
+    ],
+}
+
+filegroup {
     name: "linker_sources_x86",
     srcs: [
         "arch/x86/begin.S",
@@ -224,10 +234,11 @@ filegroup {
 cc_defaults {
     name: "linker_version_script_overlay",
     arch: {
-        arm:    { version_script: "linker.arm.map"      },
-        arm64:  { version_script: "linker.generic.map"  },
-        x86:    { version_script: "linker.generic.map"  },
-        x86_64: { version_script: "linker.generic.map"  },
+        arm:     { version_script: "linker.arm.map"      },
+        arm64:   { version_script: "linker.generic.map"  },
+        riscv64: { version_script: "linker.generic.map"  },
+        x86:     { version_script: "linker.generic.map"  },
+        x86_64:  { version_script: "linker.generic.map"  },
     },
 }
 
@@ -252,6 +263,15 @@ cc_defaults {
         },
         arm64: {
             srcs: [":linker_sources_arm64"],
+
+            // Leave the symbols in the shared library so that stack unwinders can produce
+            // meaningful name resolution.
+            strip: {
+                keep_symbols: true,
+            },
+        },
+        riscv64: {
+            srcs: [":linker_sources_riscv64"],
 
             // Leave the symbols in the shared library so that stack unwinders can produce
             // meaningful name resolution.
@@ -426,6 +446,7 @@ cc_library {
         "-Wl,--exclude-libs=libgcc_stripped.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-arm-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-aarch64-android.a",
+        "-Wl,--exclude-libs=libclang_rt.builtins-riscv64-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-i686-android.a",
         "-Wl,--exclude-libs=libclang_rt.builtins-x86_64-android.a",
     ],
