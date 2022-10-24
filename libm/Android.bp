@@ -347,6 +347,12 @@ cc_library {
         riscv64: {
             srcs: [
                 "riscv64/fenv.c",
+                "riscv64/sqrt.S",
+            ],
+
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
             ],
             version_script: ":libm.riscv64.map",
         },
