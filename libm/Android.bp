@@ -282,24 +282,18 @@ cc_library {
         },
     },
 
-    // arch-specific settings
     arch: {
         arm: {
             srcs: [
                 "arm/fenv.c",
+                "arm/floor.S",
+                "arm/sqrt.S",
             ],
-            neon: {
-                srcs: [
-                    "arm/sqrt.S",
-                    "arm/floor.S",
-                ],
-
-                exclude_srcs: [
-                    "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                    "upstream-freebsd/lib/msun/src/e_sqrtf.c",
-                    "upstream-freebsd/lib/msun/src/s_floor.c",
-                ],
-            },
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/e_sqrt.c",
+                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
+                "upstream-freebsd/lib/msun/src/s_floor.c",
+            ],
             instruction_set: "arm",
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
