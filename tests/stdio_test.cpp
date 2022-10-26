@@ -490,22 +490,22 @@ static void CheckInfNan(int snprintf_fn(T*, size_t, const T*, ...),
 
   // NaN.
 
-  snprintf_fn(buf, sizeof(buf), fmt, nanf(""));
+  snprintf_fn(buf, sizeof(buf), fmt, nan(""));
   EXPECT_STREQ(nan_, buf) << fmt;
   EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
   EXPECT_TRUE(isnan(f));
 
-  snprintf_fn(buf, sizeof(buf), fmt, -nanf(""));
+  snprintf_fn(buf, sizeof(buf), fmt, -nan(""));
   EXPECT_STREQ(minus_nan, buf) << fmt;
   EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
   EXPECT_TRUE(isnan(f));
 
-  snprintf_fn(buf, sizeof(buf), fmt_plus, nanf(""));
+  snprintf_fn(buf, sizeof(buf), fmt_plus, nan(""));
   EXPECT_STREQ(plus_nan, buf) << fmt_plus;
   EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
   EXPECT_TRUE(isnan(f));
 
-  snprintf_fn(buf, sizeof(buf), fmt_plus, -nanf(""));
+  snprintf_fn(buf, sizeof(buf), fmt_plus, -nan(""));
   EXPECT_STREQ(minus_nan, buf) << fmt_plus;
   EXPECT_EQ(1, sscanf_fn(buf, fmt, &f));
   EXPECT_TRUE(isnan(f));
