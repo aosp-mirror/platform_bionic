@@ -107,13 +107,13 @@
 ENTRY(setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(setjmp)
   li a1, 1
-  tail PIC_PLT(sigsetjmp)
+  tail sigsetjmp
 END(setjmp)
 
 ENTRY(_setjmp)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(_setjmp)
   li a1, 0
-  tail PIC_PLT(sigsetjmp)
+  tail sigsetjmp
 END(_setjmp)
 
 // int sigsetjmp(sigjmp_buf env, int save_signal_mask);
@@ -126,7 +126,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
 
   // Get the cookie and store it along with the signal flag.
   mv a0, a1
-  call PIC_PLT(__bionic_setjmp_cookie_get)
+  call __bionic_setjmp_cookie_get
   mv a1, a0
   ld a0, 0(sp)
   sd a1, _JB_SIGFLAG(a0)
@@ -139,7 +139,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   // The 'how'/a0 argument is ignored if set is NULL.
   li a1, 0 // NULL
   addi a2, a0, _JB_SIGMASK // old_mask.
-  call PIC_PLT(sigprocmask)
+  call sigprocmask
 
 1:
   // Restore original a0/ra.
@@ -216,7 +216,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   li a0, 2 // SIG_SETMASK
   addi a1, a2, _JB_SIGMASK // new_mask
   li a2, 0 // NULL
-  call PIC_PLT(sigprocmask)
+  call sigprocmask
   mv a1, t0 // Restore 'value'.
 
   // Restore original a0 and ra.
@@ -250,7 +250,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   sd   a0, 8(sp)
   sd   a1, 16(sp)
   ld   a0, _JB_SIGFLAG(a0)
-  call PIC_PLT(__bionic_setjmp_cookie_check)
+  call __bionic_setjmp_cookie_check
   ld   ra, 0(sp)
   ld   a0, 8(sp)
   ld   a1, 16(sp)
@@ -278,7 +278,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   ret
 
 3:
-  call PIC_PLT(__bionic_setjmp_checksum_mismatch)
+  call __bionic_setjmp_checksum_mismatch
 END(siglongjmp)
 
 ALIAS_SYMBOL(longjmp, siglongjmp)
