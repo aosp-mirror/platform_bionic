@@ -322,6 +322,8 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                "upstream-freebsd/lib/msun/src/s_copysign.c",
+                "upstream-freebsd/lib/msun/src/s_copysignf.c",
                 "upstream-freebsd/lib/msun/src/s_floor.c",
                 "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
