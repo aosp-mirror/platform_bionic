@@ -73,8 +73,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_scalbf.c",
         "upstream-freebsd/lib/msun/src/e_sinh.c",
         "upstream-freebsd/lib/msun/src/e_sinhf.c",
-        "upstream-freebsd/lib/msun/src/e_sqrt.c",
-        "upstream-freebsd/lib/msun/src/e_sqrtf.c",
         "upstream-freebsd/lib/msun/src/k_cos.c",
         "upstream-freebsd/lib/msun/src/k_cosf.c",
         "upstream-freebsd/lib/msun/src/k_exp.c",
@@ -290,8 +288,6 @@ cc_library {
                 "arm/sqrt.S",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_floor.c",
             ],
             instruction_set: "arm",
@@ -312,8 +308,6 @@ cc_library {
                 "arm64/sqrt.S",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
                 "upstream-freebsd/lib/msun/src/s_copysign.c",
@@ -352,8 +346,6 @@ cc_library {
             ],
 
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_llrint.c",
                 "upstream-freebsd/lib/msun/src/s_llrintf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
@@ -404,8 +396,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
                 "upstream-freebsd/lib/msun/src/e_sinh.c",
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_atan.c",
                 "upstream-freebsd/lib/msun/src/s_cbrt.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
@@ -470,8 +460,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
                 "upstream-freebsd/lib/msun/src/e_sinh.c",
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_atan.c",
                 "upstream-freebsd/lib/msun/src/s_cbrt.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
