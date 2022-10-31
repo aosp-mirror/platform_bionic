@@ -371,7 +371,7 @@ static inline void* get_tls_block_for_this_thread(const soinfo_tls* si_tls, bool
     char* static_tls = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
     return static_tls + tls_mod.static_offset;
   } else if (should_alloc) {
-    const TlsIndex ti { si_tls->module_id, 0 };
+    const TlsIndex ti { si_tls->module_id, static_cast<size_t>(0 - TLS_DTV_OFFSET) };
     return TLS_GET_ADDR(&ti);
   } else {
     TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());

@@ -49,7 +49,9 @@ static bool is_tls_reloc(ElfW(Word) type) {
     case R_GENERIC_TLS_DTPMOD:
     case R_GENERIC_TLS_DTPREL:
     case R_GENERIC_TLS_TPREL:
+#if defined(R_GENERIC_TLSDESC)
     case R_GENERIC_TLSDESC:
+#endif
       return true;
     default:
       return false;
@@ -426,7 +428,7 @@ static bool process_relocation_impl(Relocator& relocator, const rel_t& reloc) {
     case R_GENERIC_TLS_DTPREL:
       count_relocation_if<IsGeneral>(kRelocRelative);
       {
-        const ElfW(Addr) result = sym_addr + get_addend_rel();
+        const ElfW(Addr) result = sym_addr + get_addend_rel() - TLS_DTV_OFFSET;
         trace_reloc("RELO TLS_DTPREL %16p <- %16p %s",
                     rel_target, reinterpret_cast<void*>(result), sym_name);
         *static_cast<ElfW(Addr)*>(rel_target) = result;
