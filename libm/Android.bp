@@ -73,8 +73,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/e_scalbf.c",
         "upstream-freebsd/lib/msun/src/e_sinh.c",
         "upstream-freebsd/lib/msun/src/e_sinhf.c",
-        "upstream-freebsd/lib/msun/src/e_sqrt.c",
-        "upstream-freebsd/lib/msun/src/e_sqrtf.c",
         "upstream-freebsd/lib/msun/src/k_cos.c",
         "upstream-freebsd/lib/msun/src/k_cosf.c",
         "upstream-freebsd/lib/msun/src/k_exp.c",
@@ -282,24 +280,16 @@ cc_library {
         },
     },
 
-    // arch-specific settings
     arch: {
         arm: {
             srcs: [
                 "arm/fenv.c",
+                "arm/floor.S",
+                "arm/sqrt.S",
             ],
-            neon: {
-                srcs: [
-                    "arm/sqrt.S",
-                    "arm/floor.S",
-                ],
-
-                exclude_srcs: [
-                    "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                    "upstream-freebsd/lib/msun/src/e_sqrtf.c",
-                    "upstream-freebsd/lib/msun/src/s_floor.c",
-                ],
-            },
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_floor.c",
+            ],
             instruction_set: "arm",
             pack_relocations: false,
             ldflags: ["-Wl,--hash-style=both"],
@@ -318,10 +308,10 @@ cc_library {
                 "arm64/sqrt.S",
             ],
             exclude_srcs: [
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
+                "upstream-freebsd/lib/msun/src/s_copysign.c",
+                "upstream-freebsd/lib/msun/src/s_copysignf.c",
                 "upstream-freebsd/lib/msun/src/s_floor.c",
                 "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -332,8 +322,12 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_fminf.c",
                 "upstream-freebsd/lib/msun/src/s_llrint.c",
                 "upstream-freebsd/lib/msun/src/s_llrintf.c",
+                "upstream-freebsd/lib/msun/src/s_llround.c",
+                "upstream-freebsd/lib/msun/src/s_llroundf.c",
                 "upstream-freebsd/lib/msun/src/s_lrint.c",
                 "upstream-freebsd/lib/msun/src/s_lrintf.c",
+                "upstream-freebsd/lib/msun/src/s_lround.c",
+                "upstream-freebsd/lib/msun/src/s_lroundf.c",
                 "upstream-freebsd/lib/msun/src/s_rint.c",
                 "upstream-freebsd/lib/msun/src/s_rintf.c",
                 "upstream-freebsd/lib/msun/src/s_round.c",
@@ -342,6 +336,22 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_truncf.c",
             ],
             version_script: ":libm.arm64.map",
+        },
+
+        riscv64: {
+            srcs: [
+                "riscv64/fenv.c",
+                "riscv64/lrint.S",
+                "riscv64/sqrt.S",
+            ],
+
+            exclude_srcs: [
+                "upstream-freebsd/lib/msun/src/s_llrint.c",
+                "upstream-freebsd/lib/msun/src/s_llrintf.c",
+                "upstream-freebsd/lib/msun/src/s_lrint.c",
+                "upstream-freebsd/lib/msun/src/s_lrintf.c",
+            ],
+            version_script: ":libm.riscv64.map",
         },
 
         x86: {
@@ -386,8 +396,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
                 "upstream-freebsd/lib/msun/src/e_sinh.c",
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_atan.c",
                 "upstream-freebsd/lib/msun/src/s_cbrt.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
@@ -452,8 +460,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/e_hypot.c",
                 "upstream-freebsd/lib/msun/src/e_log10.c",
                 "upstream-freebsd/lib/msun/src/e_sinh.c",
-                "upstream-freebsd/lib/msun/src/e_sqrt.c",
-                "upstream-freebsd/lib/msun/src/e_sqrtf.c",
                 "upstream-freebsd/lib/msun/src/s_atan.c",
                 "upstream-freebsd/lib/msun/src/s_cbrt.c",
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
@@ -570,6 +576,14 @@ genrule {
     srcs: ["libm.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
+}
+
+genrule {
+    name: "libm.riscv64.map",
+    out: ["libm.riscv64.map"],
+    srcs: ["libm.map.txt"],
+    tools: ["generate-version-script"],
+    cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
 }
 
 genrule {
