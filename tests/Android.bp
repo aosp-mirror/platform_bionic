@@ -479,6 +479,7 @@ cc_test_library {
         "uchar_test.cpp",
         "unistd_nofortify_test.cpp",
         "unistd_test.cpp",
+        "utils.cpp",
         "utmp_test.cpp",
         "wchar_test.cpp",
         "wctype_test.cpp",
@@ -596,18 +597,6 @@ cc_test_library {
     cflags: [
         "-fno-omit-frame-pointer",
     ],
-}
-
-cc_test_library {
-    name: "libBionicGwpAsanTests",
-    defaults: ["bionic_tests_defaults"],
-    srcs: [
-        "gwp_asan_test.cpp",
-    ],
-    include_dirs: [
-        "bionic/libc",
-    ],
-    static_libs: ["libbase"],
 }
 
 // -----------------------------------------------------------------------------
@@ -774,7 +763,6 @@ cc_test_library {
         "libBionicStandardTests",
         "libBionicElfTlsTests",
         "libBionicFramePointerTests",
-        "libBionicGwpAsanTests",
         "libfortify1-tests-clang",
         "libfortify1-new-tests-clang",
         "libfortify2-tests-clang",
@@ -876,6 +864,7 @@ cc_defaults {
         "__cxa_thread_atexit_test.cpp",
         "gtest_globals.cpp",
         "gtest_main.cpp",
+        "gwp_asan_test.cpp",
         "thread_local_test.cpp",
     ],
 
