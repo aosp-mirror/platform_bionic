@@ -368,10 +368,11 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_PERF_REVISION 54
 #define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 #define I915_PARAM_HAS_USERPTR_PROBE 56
-typedef struct drm_i915_getparam {
+struct drm_i915_getparam {
   __s32 param;
   int __user * value;
-} drm_i915_getparam_t;
+};
+typedef struct drm_i915_getparam drm_i915_getparam_t;
 #define I915_SETPARAM_USE_MI_BATCHBUFFER_START 1
 #define I915_SETPARAM_TEX_LRU_LOG_GRANULARITY 2
 #define I915_SETPARAM_ALLOW_BATCHBUFFER 3
@@ -526,13 +527,13 @@ struct drm_i915_gem_exec_object2 {
 };
 struct drm_i915_gem_exec_fence {
   __u32 handle;
+  __u32 flags;
 #define I915_EXEC_FENCE_WAIT (1 << 0)
 #define I915_EXEC_FENCE_SIGNAL (1 << 1)
 #define __I915_EXEC_FENCE_UNKNOWN_FLAGS (- (I915_EXEC_FENCE_SIGNAL << 1))
-  __u32 flags;
 };
-#define DRM_I915_GEM_EXECBUFFER_EXT_TIMELINE_FENCES 0
 struct drm_i915_gem_execbuffer_ext_timeline_fences {
+#define DRM_I915_GEM_EXECBUFFER_EXT_TIMELINE_FENCES 0
   struct i915_user_extension base;
   __u64 fence_count;
   __u64 handles_ptr;
@@ -547,6 +548,7 @@ struct drm_i915_gem_execbuffer2 {
   __u32 DR4;
   __u32 num_cliprects;
   __u64 cliprects_ptr;
+  __u64 flags;
 #define I915_EXEC_RING_MASK (0x3f)
 #define I915_EXEC_DEFAULT (0 << 0)
 #define I915_EXEC_RENDER (1 << 0)
@@ -557,10 +559,6 @@ struct drm_i915_gem_execbuffer2 {
 #define I915_EXEC_CONSTANTS_REL_GENERAL (0 << 6)
 #define I915_EXEC_CONSTANTS_ABSOLUTE (1 << 6)
 #define I915_EXEC_CONSTANTS_REL_SURFACE (2 << 6)
-  __u64 flags;
-  __u64 rsvd1;
-  __u64 rsvd2;
-};
 #define I915_EXEC_GEN7_SOL_RESET (1 << 8)
 #define I915_EXEC_SECURE (1 << 9)
 #define I915_EXEC_IS_PINNED (1 << 10)
@@ -579,6 +577,9 @@ struct drm_i915_gem_execbuffer2 {
 #define I915_EXEC_FENCE_SUBMIT (1 << 20)
 #define I915_EXEC_USE_EXTENSIONS (1 << 21)
 #define __I915_EXEC_UNKNOWN_FLAGS (- (I915_EXEC_USE_EXTENSIONS << 1))
+  __u64 rsvd1;
+  __u64 rsvd2;
+};
 #define I915_EXEC_CONTEXT_ID_MASK (0xffffffff)
 #define i915_execbuffer2_set_context_id(eb2,context) (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
 #define i915_execbuffer2_get_context_id(eb2) ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
@@ -722,6 +723,8 @@ struct drm_i915_gem_context_create_ext {
 #define I915_CONTEXT_CREATE_FLAGS_SINGLE_TIMELINE (1u << 1)
 #define I915_CONTEXT_CREATE_FLAGS_UNKNOWN (- (I915_CONTEXT_CREATE_FLAGS_SINGLE_TIMELINE << 1))
   __u64 extensions;
+#define I915_CONTEXT_CREATE_EXT_SETPARAM 0
+#define I915_CONTEXT_CREATE_EXT_CLONE 1
 };
 struct drm_i915_gem_context_param {
   __u32 ctx_id;
@@ -761,7 +764,7 @@ struct i915_context_engines_load_balance {
   __u16 num_siblings;
   __u32 flags;
   __u64 mbz64;
-  struct i915_engine_class_instance engines[0];
+  struct i915_engine_class_instance engines[];
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_ENGINES_LOAD_BALANCE(name__,N__) struct { struct i915_user_extension base; __u16 engine_index; __u16 num_siblings; __u32 flags; __u64 mbz64; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
@@ -772,7 +775,7 @@ struct i915_context_engines_bond {
   __u16 num_bonds;
   __u64 flags;
   __u64 mbz64[4];
-  struct i915_engine_class_instance engines[0];
+  struct i915_engine_class_instance engines[];
 } __attribute__((packed));
 #define I915_DEFINE_CONTEXT_ENGINES_BOND(name__,N__) struct { struct i915_user_extension base; struct i915_engine_class_instance master; __u16 virtual_index; __u16 num_bonds; __u64 flags; __u64 mbz64[4]; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
@@ -784,7 +787,7 @@ struct i915_context_engines_parallel_submit {
   __u16 mbz16;
   __u64 flags;
   __u64 mbz64[3];
-  struct i915_engine_class_instance engines[0];
+  struct i915_engine_class_instance engines[];
 } __packed;
 #define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__,N__) struct { struct i915_user_extension base; __u16 engine_index; __u16 width; __u16 num_siblings; __u16 mbz16; __u64 flags; __u64 mbz64[3]; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
@@ -798,11 +801,9 @@ struct i915_context_param_engines {
 #define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__,N__) struct { __u64 extensions; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
 struct drm_i915_gem_context_create_ext_setparam {
-#define I915_CONTEXT_CREATE_EXT_SETPARAM 0
   struct i915_user_extension base;
   struct drm_i915_gem_context_param param;
 };
-#define I915_CONTEXT_CREATE_EXT_CLONE 1
 struct drm_i915_gem_context_destroy {
   __u32 ctx_id;
   __u32 pad;
@@ -959,7 +960,13 @@ struct drm_i915_memory_region_info {
   __u32 rsvd0;
   __u64 probed_size;
   __u64 unallocated_size;
-  __u64 rsvd1[8];
+  union {
+    __u64 rsvd1[8];
+    struct {
+      __u64 probed_cpu_visible_size;
+      __u64 unallocated_cpu_visible_size;
+    };
+  };
 };
 struct drm_i915_query_memory_regions {
   __u32 num_regions;
@@ -969,6 +976,7 @@ struct drm_i915_query_memory_regions {
 struct drm_i915_gem_create_ext {
   __u64 size;
   __u32 handle;
+#define I915_GEM_CREATE_EXT_FLAG_NEEDS_CPU_ACCESS (1 << 0)
   __u32 flags;
 #define I915_GEM_CREATE_EXT_MEMORY_REGIONS 0
 #define I915_GEM_CREATE_EXT_PROTECTED_CONTENT 1

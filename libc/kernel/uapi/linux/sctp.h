@@ -210,7 +210,7 @@ struct sctp_assoc_change {
   __u16 sac_outbound_streams;
   __u16 sac_inbound_streams;
   sctp_assoc_t sac_assoc_id;
-  __u8 sac_info[0];
+  __u8 sac_info[];
 };
 enum sctp_sac_state {
   SCTP_COMM_UP,
@@ -244,7 +244,7 @@ struct sctp_remote_error {
   __u32 sre_length;
   __be16 sre_error;
   sctp_assoc_t sre_assoc_id;
-  __u8 sre_data[0];
+  __u8 sre_data[];
 };
 struct sctp_send_failed {
   __u16 ssf_type;
@@ -253,7 +253,7 @@ struct sctp_send_failed {
   __u32 ssf_error;
   struct sctp_sndrcvinfo ssf_info;
   sctp_assoc_t ssf_assoc_id;
-  __u8 ssf_data[0];
+  __u8 ssf_data[];
 };
 struct sctp_send_failed_event {
   __u16 ssf_type;
@@ -262,7 +262,7 @@ struct sctp_send_failed_event {
   __u32 ssf_error;
   struct sctp_sndinfo ssfe_info;
   sctp_assoc_t ssf_assoc_id;
-  __u8 ssf_data[0];
+  __u8 ssf_data[];
 };
 enum sctp_ssf_flags {
   SCTP_DATA_UNSENT,
@@ -570,7 +570,7 @@ struct sctp_getaddrs_old {
 struct sctp_getaddrs {
   sctp_assoc_t assoc_id;
   __u32 addr_num;
-  __u8 addrs[0];
+  __u8 addrs[];
 };
 struct sctp_assoc_stats {
   sctp_assoc_t sas_assoc_id;

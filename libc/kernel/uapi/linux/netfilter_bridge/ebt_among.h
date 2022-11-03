@@ -28,7 +28,7 @@ struct ebt_mac_wormhash_tuple {
 struct ebt_mac_wormhash {
   int table[257];
   int poolsize;
-  struct ebt_mac_wormhash_tuple pool[0];
+  struct ebt_mac_wormhash_tuple pool[];
 };
 #define ebt_mac_wormhash_size(x) ((x) ? sizeof(struct ebt_mac_wormhash) + (x)->poolsize * sizeof(struct ebt_mac_wormhash_tuple) : 0)
 struct ebt_among_info {
