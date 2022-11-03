@@ -69,8 +69,6 @@
 #define PORT_IMX 62
 #define PORT_MPSC 63
 #define PORT_TXX9 64
-#define PORT_VR41XX_SIU 65
-#define PORT_VR41XX_DSIU 66
 #define PORT_S3C2400 67
 #define PORT_M32R_SIO 68
 #define PORT_JSM 69

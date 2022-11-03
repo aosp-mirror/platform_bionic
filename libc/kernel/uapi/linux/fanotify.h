@@ -68,9 +68,11 @@
 #define FAN_MARK_IGNORED_SURV_MODIFY 0x00000040
 #define FAN_MARK_FLUSH 0x00000080
 #define FAN_MARK_EVICTABLE 0x00000200
+#define FAN_MARK_IGNORE 0x00000400
 #define FAN_MARK_INODE 0x00000000
 #define FAN_MARK_MOUNT 0x00000010
 #define FAN_MARK_FILESYSTEM 0x00000100
+#define FAN_MARK_IGNORE_SURV (FAN_MARK_IGNORE | FAN_MARK_IGNORED_SURV_MODIFY)
 #define FAN_ALL_MARK_FLAGS (FAN_MARK_ADD | FAN_MARK_REMOVE | FAN_MARK_DONT_FOLLOW | FAN_MARK_ONLYDIR | FAN_MARK_MOUNT | FAN_MARK_IGNORED_MASK | FAN_MARK_IGNORED_SURV_MODIFY | FAN_MARK_FLUSH)
 #define FAN_ALL_EVENTS (FAN_ACCESS | FAN_MODIFY | FAN_CLOSE | FAN_OPEN)
 #define FAN_ALL_PERM_EVENTS (FAN_OPEN_PERM | FAN_ACCESS_PERM)
@@ -100,7 +102,7 @@ struct fanotify_event_info_header {
 struct fanotify_event_info_fid {
   struct fanotify_event_info_header hdr;
   __kernel_fsid_t fsid;
-  unsigned char handle[0];
+  unsigned char handle[];
 };
 struct fanotify_event_info_pidfd {
   struct fanotify_event_info_header hdr;

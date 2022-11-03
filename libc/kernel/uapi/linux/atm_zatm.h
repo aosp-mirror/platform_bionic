@@ -16,25 +16,27 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_SEG6_IPTUNNEL_H
-#define _UAPI_LINUX_SEG6_IPTUNNEL_H
-#include <linux/seg6.h>
-enum {
-  SEG6_IPTUNNEL_UNSPEC,
-  SEG6_IPTUNNEL_SRH,
-  __SEG6_IPTUNNEL_MAX,
+#ifndef LINUX_ATM_ZATM_H
+#define LINUX_ATM_ZATM_H
+#include <linux/atmapi.h>
+#include <linux/atmioc.h>
+#define ZATM_GETPOOL _IOW('a', ATMIOC_SARPRV + 1, struct atmif_sioc)
+#define ZATM_GETPOOLZ _IOW('a', ATMIOC_SARPRV + 2, struct atmif_sioc)
+#define ZATM_SETPOOL _IOW('a', ATMIOC_SARPRV + 3, struct atmif_sioc)
+struct zatm_pool_info {
+  int ref_count;
+  int low_water, high_water;
+  int rqa_count, rqu_count;
+  int offset, next_off;
+  int next_cnt, next_thres;
 };
-#define SEG6_IPTUNNEL_MAX (__SEG6_IPTUNNEL_MAX - 1)
-struct seg6_iptunnel_encap {
-  int mode;
-  struct ipv6_sr_hdr srh[];
+struct zatm_pool_req {
+  int pool_num;
+  struct zatm_pool_info info;
 };
-#define SEG6_IPTUN_ENCAP_SIZE(x) ((sizeof(* x)) + (((x)->srh->hdrlen + 1) << 3))
-enum {
-  SEG6_IPTUN_MODE_INLINE,
-  SEG6_IPTUN_MODE_ENCAP,
-  SEG6_IPTUN_MODE_L2ENCAP,
-  SEG6_IPTUN_MODE_ENCAP_RED,
-  SEG6_IPTUN_MODE_L2ENCAP_RED,
-};
+#define ZATM_OAM_POOL 0
+#define ZATM_AAL0_POOL 1
+#define ZATM_AAL5_POOL_BASE 2
+#define ZATM_LAST_POOL ZATM_AAL5_POOL_BASE + 10
+#define ZATM_TIMER_HISTORY_SIZE 16
 #endif

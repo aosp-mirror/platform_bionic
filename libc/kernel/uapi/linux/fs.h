@@ -63,7 +63,7 @@ struct file_dedupe_range {
   __u16 dest_count;
   __u16 reserved1;
   __u32 reserved2;
-  struct file_dedupe_range_info info[0];
+  struct file_dedupe_range_info info[];
 };
 struct files_stat_struct {
   unsigned long nr_files;

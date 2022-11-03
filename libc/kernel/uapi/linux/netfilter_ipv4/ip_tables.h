@@ -79,7 +79,7 @@ struct ipt_entry {
   __u16 next_offset;
   unsigned int comefrom;
   struct xt_counters counters;
-  unsigned char elems[0];
+  unsigned char elems[];
 };
 #define IPT_BASE_CTL 64
 #define IPT_SO_SET_REPLACE (IPT_BASE_CTL)
@@ -113,12 +113,12 @@ struct ipt_replace {
   unsigned int underflow[NF_INET_NUMHOOKS];
   unsigned int num_counters;
   struct xt_counters __user * counters;
-  struct ipt_entry entries[0];
+  struct ipt_entry entries[];
 };
 struct ipt_get_entries {
   char name[XT_TABLE_MAXNAMELEN];
   unsigned int size;
-  struct ipt_entry entrytable[0];
+  struct ipt_entry entrytable[];
 };
 static __inline__ struct xt_entry_target * ipt_get_target(struct ipt_entry * e) {
   return(struct xt_entry_target *) ((char *) e + e->target_offset);
