@@ -91,7 +91,7 @@ struct usbdevfs_urb {
   int error_count;
   unsigned int signr;
   void __user * usercontext;
-  struct usbdevfs_iso_packet_desc iso_frame_desc[0];
+  struct usbdevfs_iso_packet_desc iso_frame_desc[];
 };
 struct usbdevfs_ioctl {
   int ifno;
@@ -121,7 +121,7 @@ struct usbdevfs_disconnect_claim {
 struct usbdevfs_streams {
   unsigned int num_streams;
   unsigned int num_eps;
-  unsigned char eps[0];
+  unsigned char eps[];
 };
 #define USBDEVFS_CONTROL _IOWR('U', 0, struct usbdevfs_ctrltransfer)
 #define USBDEVFS_CONTROL32 _IOWR('U', 0, struct usbdevfs_ctrltransfer32)

@@ -21,7 +21,7 @@
 #include <drm/drm.h>
 #include <linux/ioctl.h>
 #define KFD_IOCTL_MAJOR_VERSION 1
-#define KFD_IOCTL_MINOR_VERSION 8
+#define KFD_IOCTL_MINOR_VERSION 11
 struct kfd_ioctl_get_version_args {
   __u32 major_version;
   __u32 minor_version;
@@ -70,6 +70,11 @@ struct kfd_ioctl_get_queue_wave_state_args {
   __u32 ctl_stack_used_size;
   __u32 save_area_used_size;
   __u32 queue_id;
+  __u32 pad;
+};
+struct kfd_ioctl_get_available_memory_args {
+  __u64 available;
+  __u32 gpu_id;
   __u32 pad;
 };
 #define KFD_IOC_CACHE_POLICY_COHERENT 0
@@ -295,6 +300,33 @@ enum kfd_smi_event {
   KFD_SMI_EVENT_THERMAL_THROTTLE = 2,
   KFD_SMI_EVENT_GPU_PRE_RESET = 3,
   KFD_SMI_EVENT_GPU_POST_RESET = 4,
+  KFD_SMI_EVENT_MIGRATE_START = 5,
+  KFD_SMI_EVENT_MIGRATE_END = 6,
+  KFD_SMI_EVENT_PAGE_FAULT_START = 7,
+  KFD_SMI_EVENT_PAGE_FAULT_END = 8,
+  KFD_SMI_EVENT_QUEUE_EVICTION = 9,
+  KFD_SMI_EVENT_QUEUE_RESTORE = 10,
+  KFD_SMI_EVENT_UNMAP_FROM_GPU = 11,
+  KFD_SMI_EVENT_ALL_PROCESS = 64
+};
+enum KFD_MIGRATE_TRIGGERS {
+  KFD_MIGRATE_TRIGGER_PREFETCH,
+  KFD_MIGRATE_TRIGGER_PAGEFAULT_GPU,
+  KFD_MIGRATE_TRIGGER_PAGEFAULT_CPU,
+  KFD_MIGRATE_TRIGGER_TTM_EVICTION
+};
+enum KFD_QUEUE_EVICTION_TRIGGERS {
+  KFD_QUEUE_EVICTION_TRIGGER_SVM,
+  KFD_QUEUE_EVICTION_TRIGGER_USERPTR,
+  KFD_QUEUE_EVICTION_TRIGGER_TTM,
+  KFD_QUEUE_EVICTION_TRIGGER_SUSPEND,
+  KFD_QUEUE_EVICTION_CRIU_CHECKPOINT,
+  KFD_QUEUE_EVICTION_CRIU_RESTORE
+};
+enum KFD_SVM_UNMAP_TRIGGERS {
+  KFD_SVM_UNMAP_TRIGGER_MMU_NOTIFY,
+  KFD_SVM_UNMAP_TRIGGER_MMU_NOTIFY_MIGRATE,
+  KFD_SVM_UNMAP_TRIGGER_UNMAP_FROM_CPU
 };
 #define KFD_SMI_EVENT_MASK_FROM_INDEX(i) (1ULL << ((i) - 1))
 #define KFD_SMI_EVENT_MSG_SIZE 96
@@ -346,6 +378,7 @@ enum kfd_mmio_remap {
 #define KFD_IOCTL_SVM_FLAG_GPU_RO 0x00000008
 #define KFD_IOCTL_SVM_FLAG_GPU_EXEC 0x00000010
 #define KFD_IOCTL_SVM_FLAG_GPU_READ_MOSTLY 0x00000020
+#define KFD_IOCTL_SVM_FLAG_GPU_ALWAYS_MAPPED 0x00000040
 enum kfd_ioctl_svm_op {
   KFD_IOCTL_SVM_OP_SET_ATTR,
   KFD_IOCTL_SVM_OP_GET_ATTR
@@ -417,6 +450,7 @@ struct kfd_ioctl_set_xnack_mode_args {
 #define AMDKFD_IOC_SVM AMDKFD_IOWR(0x20, struct kfd_ioctl_svm_args)
 #define AMDKFD_IOC_SET_XNACK_MODE AMDKFD_IOWR(0x21, struct kfd_ioctl_set_xnack_mode_args)
 #define AMDKFD_IOC_CRIU_OP AMDKFD_IOWR(0x22, struct kfd_ioctl_criu_args)
+#define AMDKFD_IOC_AVAILABLE_MEMORY AMDKFD_IOWR(0x23, struct kfd_ioctl_get_available_memory_args)
 #define AMDKFD_COMMAND_START 0x01
-#define AMDKFD_COMMAND_END 0x23
+#define AMDKFD_COMMAND_END 0x24
 #endif

@@ -45,6 +45,7 @@
 #define VIRTIO_NET_F_GUEST_ANNOUNCE 21
 #define VIRTIO_NET_F_MQ 22
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23
+#define VIRTIO_NET_F_NOTF_COAL 53
 #define VIRTIO_NET_F_HASH_REPORT 57
 #define VIRTIO_NET_F_RSS 60
 #define VIRTIO_NET_F_RSC_EXT 61
@@ -186,4 +187,15 @@ struct virtio_net_hash_config {
 #define VIRTIO_NET_CTRL_MQ_HASH_CONFIG 2
 #define VIRTIO_NET_CTRL_GUEST_OFFLOADS 5
 #define VIRTIO_NET_CTRL_GUEST_OFFLOADS_SET 0
+#define VIRTIO_NET_CTRL_NOTF_COAL 6
+struct virtio_net_ctrl_coal_tx {
+  __le32 tx_max_packets;
+  __le32 tx_usecs;
+};
+#define VIRTIO_NET_CTRL_NOTF_COAL_TX_SET 0
+struct virtio_net_ctrl_coal_rx {
+  __le32 rx_max_packets;
+  __le32 rx_usecs;
+};
+#define VIRTIO_NET_CTRL_NOTF_COAL_RX_SET 1
 #endif
