@@ -132,7 +132,7 @@ struct iso_path_table {
   __u8 name_len[2];
   __u8 extent[4];
   __u8 parent[2];
-  char name[0];
+  char name[];
 } __attribute__((packed));
 struct iso_directory_record {
   __u8 length[ISODCL(1, 1)];
@@ -145,7 +145,7 @@ struct iso_directory_record {
   __u8 interleave[ISODCL(28, 28)];
   __u8 volume_sequence_number[ISODCL(29, 32)];
   __u8 name_len[ISODCL(33, 33)];
-  char name[0];
+  char name[];
 } __attribute__((packed));
 #define ISOFS_BLOCK_BITS 11
 #define ISOFS_BLOCK_SIZE 2048

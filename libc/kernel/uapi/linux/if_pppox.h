@@ -82,7 +82,7 @@ struct sockaddr_pppol2tpv3in6 {
 struct pppoe_tag {
   __be16 tag_type;
   __be16 tag_len;
-  char tag_data[0];
+  char tag_data[];
 } __attribute__((packed));
 #define PTT_EOL __cpu_to_be16(0x0000)
 #define PTT_SRV_NAME __cpu_to_be16(0x0101)
@@ -107,7 +107,7 @@ struct pppoe_hdr {
   __u8 code;
   __be16 sid;
   __be16 length;
-  struct pppoe_tag tag[0];
+  struct pppoe_tag tag[];
 } __packed;
 #define PPPOE_SES_HLEN 8
 #endif
