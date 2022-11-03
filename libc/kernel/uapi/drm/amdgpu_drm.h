@@ -650,7 +650,7 @@ struct drm_amdgpu_info_hw_ip {
   __u32 ib_start_alignment;
   __u32 ib_size_alignment;
   __u32 available_rings;
-  __u32 _pad;
+  __u32 ip_discovery_version;
 };
 struct drm_amdgpu_info_num_handles {
   __u32 uvd_max_handles;

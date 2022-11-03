@@ -273,6 +273,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_XYUV32 v4l2_fourcc('X', 'Y', 'U', 'V')
 #define V4L2_PIX_FMT_VUYA32 v4l2_fourcc('V', 'U', 'Y', 'A')
 #define V4L2_PIX_FMT_VUYX32 v4l2_fourcc('V', 'U', 'Y', 'X')
+#define V4L2_PIX_FMT_YUVA32 v4l2_fourcc('Y', 'U', 'V', 'A')
+#define V4L2_PIX_FMT_YUVX32 v4l2_fourcc('Y', 'U', 'V', 'X')
 #define V4L2_PIX_FMT_M420 v4l2_fourcc('M', '4', '2', '0')
 #define V4L2_PIX_FMT_NV12 v4l2_fourcc('N', 'V', '1', '2')
 #define V4L2_PIX_FMT_NV21 v4l2_fourcc('N', 'V', '2', '1')
@@ -280,6 +282,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV61 v4l2_fourcc('N', 'V', '6', '1')
 #define V4L2_PIX_FMT_NV24 v4l2_fourcc('N', 'V', '2', '4')
 #define V4L2_PIX_FMT_NV42 v4l2_fourcc('N', 'V', '4', '2')
+#define V4L2_PIX_FMT_P010 v4l2_fourcc('P', '0', '1', '0')
 #define V4L2_PIX_FMT_NV12M v4l2_fourcc('N', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV21M v4l2_fourcc('N', 'M', '2', '1')
 #define V4L2_PIX_FMT_NV16M v4l2_fourcc('N', 'M', '1', '6')
@@ -299,6 +302,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV12_4L4 v4l2_fourcc('V', 'T', '1', '2')
 #define V4L2_PIX_FMT_NV12_16L16 v4l2_fourcc('H', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12_32L32 v4l2_fourcc('S', 'T', '1', '2')
+#define V4L2_PIX_FMT_P010_4L4 v4l2_fourcc('T', '0', '1', '0')
 #define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12M_8L128 v4l2_fourcc('N', 'A', '1', '2')
@@ -368,6 +372,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_FWHT v4l2_fourcc('F', 'W', 'H', 'T')
 #define V4L2_PIX_FMT_FWHT_STATELESS v4l2_fourcc('S', 'F', 'W', 'H')
 #define V4L2_PIX_FMT_H264_SLICE v4l2_fourcc('S', '2', '6', '4')
+#define V4L2_PIX_FMT_HEVC_SLICE v4l2_fourcc('S', '2', '6', '5')
 #define V4L2_PIX_FMT_CPIA1 v4l2_fourcc('C', 'P', 'I', 'A')
 #define V4L2_PIX_FMT_WNVA v4l2_fourcc('W', 'N', 'V', 'A')
 #define V4L2_PIX_FMT_SN9C10X v4l2_fourcc('S', '9', '1', '0')
@@ -906,6 +911,11 @@ struct v4l2_ext_control {
     struct v4l2_ctrl_mpeg2_quantisation __user * p_mpeg2_quantisation;
     struct v4l2_ctrl_vp9_compressed_hdr __user * p_vp9_compressed_hdr_probs;
     struct v4l2_ctrl_vp9_frame __user * p_vp9_frame;
+    struct v4l2_ctrl_hevc_sps __user * p_hevc_sps;
+    struct v4l2_ctrl_hevc_pps __user * p_hevc_pps;
+    struct v4l2_ctrl_hevc_slice_params __user * p_hevc_slice_params;
+    struct v4l2_ctrl_hevc_scaling_matrix __user * p_hevc_scaling_matrix;
+    struct v4l2_ctrl_hevc_decode_params __user * p_hevc_decode_params;
     void __user * ptr;
   };
 } __attribute__((packed));
@@ -958,6 +968,11 @@ enum v4l2_ctrl_type {
   V4L2_CTRL_TYPE_MPEG2_PICTURE = 0x0252,
   V4L2_CTRL_TYPE_VP9_COMPRESSED_HDR = 0x0260,
   V4L2_CTRL_TYPE_VP9_FRAME = 0x0261,
+  V4L2_CTRL_TYPE_HEVC_SPS = 0x0270,
+  V4L2_CTRL_TYPE_HEVC_PPS = 0x0271,
+  V4L2_CTRL_TYPE_HEVC_SLICE_PARAMS = 0x0272,
+  V4L2_CTRL_TYPE_HEVC_SCALING_MATRIX = 0x0273,
+  V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS = 0x0274,
 };
 struct v4l2_queryctrl {
   __u32 id;
@@ -1005,6 +1020,7 @@ struct v4l2_querymenu {
 #define V4L2_CTRL_FLAG_HAS_PAYLOAD 0x0100
 #define V4L2_CTRL_FLAG_EXECUTE_ON_WRITE 0x0200
 #define V4L2_CTRL_FLAG_MODIFY_LAYOUT 0x0400
+#define V4L2_CTRL_FLAG_DYNAMIC_ARRAY 0x0800
 #define V4L2_CTRL_FLAG_NEXT_CTRL 0x80000000
 #define V4L2_CTRL_FLAG_NEXT_COMPOUND 0x40000000
 #define V4L2_CID_MAX_CTRLS 1024

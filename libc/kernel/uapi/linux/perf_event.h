@@ -193,7 +193,8 @@ enum perf_event_read_format {
   PERF_FORMAT_TOTAL_TIME_RUNNING = 1U << 1,
   PERF_FORMAT_ID = 1U << 2,
   PERF_FORMAT_GROUP = 1U << 3,
-  PERF_FORMAT_MAX = 1U << 4,
+  PERF_FORMAT_LOST = 1U << 4,
+  PERF_FORMAT_MAX = 1U << 5,
 };
 #define PERF_ATTR_SIZE_VER0 64
 #define PERF_ATTR_SIZE_VER1 72
@@ -246,7 +247,7 @@ struct perf_event_attr {
 struct perf_event_query_bpf {
   __u32 ids_len;
   __u32 prog_cnt;
-  __u32 ids[0];
+  __u32 ids[];
 };
 #define PERF_EVENT_IOC_ENABLE _IO('$', 0)
 #define PERF_EVENT_IOC_DISABLE _IO('$', 1)
