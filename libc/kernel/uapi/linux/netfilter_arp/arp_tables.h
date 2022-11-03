@@ -72,7 +72,7 @@ struct arpt_entry {
   __u16 next_offset;
   unsigned int comefrom;
   struct xt_counters counters;
-  unsigned char elems[0];
+  unsigned char elems[];
 };
 #define ARPT_BASE_CTL 96
 #define ARPT_SO_SET_REPLACE (ARPT_BASE_CTL)
@@ -99,11 +99,11 @@ struct arpt_replace {
   unsigned int underflow[NF_ARP_NUMHOOKS];
   unsigned int num_counters;
   struct xt_counters __user * counters;
-  struct arpt_entry entries[0];
+  struct arpt_entry entries[];
 };
 struct arpt_get_entries {
   char name[XT_TABLE_MAXNAMELEN];
   unsigned int size;
-  struct arpt_entry entrytable[0];
+  struct arpt_entry entrytable[];
 };
 #endif

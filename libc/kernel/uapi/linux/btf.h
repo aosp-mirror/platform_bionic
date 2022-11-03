@@ -65,6 +65,7 @@ enum {
   BTF_KIND_FLOAT = 16,
   BTF_KIND_DECL_TAG = 17,
   BTF_KIND_TYPE_TAG = 18,
+  BTF_KIND_ENUM64 = 19,
   NR_BTF_KINDS,
   BTF_KIND_MAX = NR_BTF_KINDS - 1,
 };
@@ -114,5 +115,10 @@ struct btf_var_secinfo {
 };
 struct btf_decl_tag {
   __s32 component_idx;
+};
+struct btf_enum64 {
+  __u32 name_off;
+  __u32 val_lo32;
+  __u32 val_hi32;
 };
 #endif

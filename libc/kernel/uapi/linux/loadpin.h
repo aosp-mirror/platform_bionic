@@ -16,25 +16,8 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#ifndef _UAPI_LINUX_SEG6_IPTUNNEL_H
-#define _UAPI_LINUX_SEG6_IPTUNNEL_H
-#include <linux/seg6.h>
-enum {
-  SEG6_IPTUNNEL_UNSPEC,
-  SEG6_IPTUNNEL_SRH,
-  __SEG6_IPTUNNEL_MAX,
-};
-#define SEG6_IPTUNNEL_MAX (__SEG6_IPTUNNEL_MAX - 1)
-struct seg6_iptunnel_encap {
-  int mode;
-  struct ipv6_sr_hdr srh[];
-};
-#define SEG6_IPTUN_ENCAP_SIZE(x) ((sizeof(* x)) + (((x)->srh->hdrlen + 1) << 3))
-enum {
-  SEG6_IPTUN_MODE_INLINE,
-  SEG6_IPTUN_MODE_ENCAP,
-  SEG6_IPTUN_MODE_L2ENCAP,
-  SEG6_IPTUN_MODE_ENCAP_RED,
-  SEG6_IPTUN_MODE_L2ENCAP_RED,
-};
+#ifndef _UAPI_LINUX_LOOP_LOADPIN_H
+#define _UAPI_LINUX_LOOP_LOADPIN_H
+#define LOADPIN_IOC_MAGIC 'L'
+#define LOADPIN_IOC_SET_TRUSTED_VERITY_DIGESTS _IOW(LOADPIN_IOC_MAGIC, 0x00, unsigned int)
 #endif
