@@ -323,7 +323,7 @@ struct rtnexthop {
 #define RTNH_DATA(rtnh) ((struct rtattr *) (((char *) (rtnh)) + RTNH_LENGTH(0)))
 struct rtvia {
   __kernel_sa_family_t rtvia_family;
-  __u8 rtvia_addr[0];
+  __u8 rtvia_addr[];
 };
 struct rta_cacheinfo {
   __u32 rta_clntref;

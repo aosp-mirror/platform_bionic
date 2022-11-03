@@ -89,7 +89,7 @@ struct tcmu_tmr_entry {
   __u32 cmd_cnt;
   __u64 __pad3;
   __u64 __pad4;
-  __u16 cmd_ids[0];
+  __u16 cmd_ids[];
 } __packed;
 #define TCMU_OP_ALIGN_SIZE sizeof(__u64)
 enum tcmu_genl_cmd {
