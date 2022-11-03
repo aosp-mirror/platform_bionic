@@ -48,23 +48,23 @@ struct dm_target_spec {
 struct dm_target_deps {
   __u32 count;
   __u32 padding;
-  __u64 dev[0];
+  __u64 dev[];
 };
 struct dm_name_list {
   __u64 dev;
   __u32 next;
-  char name[0];
+  char name[];
 };
 #define DM_NAME_LIST_FLAG_HAS_UUID 1
 #define DM_NAME_LIST_FLAG_DOESNT_HAVE_UUID 2
 struct dm_target_versions {
   __u32 next;
   __u32 version[3];
-  char name[0];
+  char name[];
 };
 struct dm_target_msg {
   __u64 sector;
-  char message[0];
+  char message[];
 };
 enum {
   DM_VERSION_CMD = 0,
@@ -106,9 +106,9 @@ enum {
 #define DM_TARGET_MSG _IOWR(DM_IOCTL, DM_TARGET_MSG_CMD, struct dm_ioctl)
 #define DM_DEV_SET_GEOMETRY _IOWR(DM_IOCTL, DM_DEV_SET_GEOMETRY_CMD, struct dm_ioctl)
 #define DM_VERSION_MAJOR 4
-#define DM_VERSION_MINOR 46
+#define DM_VERSION_MINOR 47
 #define DM_VERSION_PATCHLEVEL 0
-#define DM_VERSION_EXTRA "-ioctl(2022-02-22)"
+#define DM_VERSION_EXTRA "-ioctl(2022-07-28)"
 #define DM_READONLY_FLAG (1 << 0)
 #define DM_SUSPEND_FLAG (1 << 1)
 #define DM_PERSISTENT_DEV_FLAG (1 << 3)

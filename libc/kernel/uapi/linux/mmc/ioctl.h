@@ -39,7 +39,7 @@ struct mmc_ioc_cmd {
 #define mmc_ioc_cmd_set_data(ic,ptr) ic.data_ptr = (__u64) (unsigned long) ptr
 struct mmc_ioc_multi_cmd {
   __u64 num_of_cmds;
-  struct mmc_ioc_cmd cmds[0];
+  struct mmc_ioc_cmd cmds[];
 };
 #define MMC_IOC_CMD _IOWR(MMC_BLOCK_MAJOR, 0, struct mmc_ioc_cmd)
 #define MMC_IOC_MULTI_CMD _IOWR(MMC_BLOCK_MAJOR, 1, struct mmc_ioc_multi_cmd)

@@ -18,8 +18,9 @@
  ****************************************************************************/
 #ifndef __INCLUDE_UAPI_SOUND_SOF_ABI_H__
 #define __INCLUDE_UAPI_SOUND_SOF_ABI_H__
+#include <linux/types.h>
 #define SOF_ABI_MAJOR 3
-#define SOF_ABI_MINOR 21
+#define SOF_ABI_MINOR 23
 #define SOF_ABI_PATCH 0
 #define SOF_ABI_MAJOR_SHIFT 24
 #define SOF_ABI_MAJOR_MASK 0xff

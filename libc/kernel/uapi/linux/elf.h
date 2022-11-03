@@ -352,6 +352,7 @@ typedef struct elf64_shdr {
 #define NT_S390_GS_CB 0x30b
 #define NT_S390_GS_BC 0x30c
 #define NT_S390_RI_CB 0x30d
+#define NT_S390_PV_CPU_DATA 0x30e
 #define NT_ARM_VFP 0x400
 #define NT_ARM_TLS 0x401
 #define NT_ARM_HW_BREAK 0x402
