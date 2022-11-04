@@ -35,7 +35,7 @@ struct xfrm_sec_ctx {
   __u8 ctx_alg;
   __u16 ctx_len;
   __u32 ctx_sid;
-  char ctx_str[0];
+  char ctx_str[];
 };
 #define XFRM_SC_DOI_RESERVED 0
 #define XFRM_SC_DOI_LSM 1
@@ -85,24 +85,24 @@ struct xfrm_replay_state_esn {
   __u32 oseq_hi;
   __u32 seq_hi;
   __u32 replay_window;
-  __u32 bmp[0];
+  __u32 bmp[];
 };
 struct xfrm_algo {
   char alg_name[64];
   unsigned int alg_key_len;
-  char alg_key[0];
+  char alg_key[];
 };
 struct xfrm_algo_auth {
   char alg_name[64];
   unsigned int alg_key_len;
   unsigned int alg_trunc_len;
-  char alg_key[0];
+  char alg_key[];
 };
 struct xfrm_algo_aead {
   char alg_name[64];
   unsigned int alg_key_len;
   unsigned int alg_icv_len;
-  char alg_key[0];
+  char alg_key[];
 };
 struct xfrm_stats {
   __u32 replay_window;

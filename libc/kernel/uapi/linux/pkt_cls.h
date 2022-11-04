@@ -199,7 +199,7 @@ struct tc_u32_sel {
   short offoff;
   short hoff;
   __be32 hmask;
-  struct tc_u32_key keys[0];
+  struct tc_u32_key keys[];
 };
 struct tc_u32_mark {
   __u32 val;
@@ -209,7 +209,7 @@ struct tc_u32_mark {
 struct tc_u32_pcnt {
   __u64 rcnt;
   __u64 rhit;
-  __u64 kcnts[0];
+  __u64 kcnts[];
 };
 #define TC_U32_TERMINAL 1
 #define TC_U32_OFFSET 2
@@ -460,6 +460,8 @@ enum {
   TCA_FLOWER_KEY_HASH,
   TCA_FLOWER_KEY_HASH_MASK,
   TCA_FLOWER_KEY_NUM_OF_VLANS,
+  TCA_FLOWER_KEY_PPPOE_SID,
+  TCA_FLOWER_KEY_PPP_PROTO,
   __TCA_FLOWER_MAX,
 };
 #define TCA_FLOWER_MAX (__TCA_FLOWER_MAX - 1)
