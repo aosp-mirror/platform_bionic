@@ -142,7 +142,7 @@ enum fc_ls_tlv_dtag {
 struct fc_tlv_desc {
   __be32 desc_tag;
   __be32 desc_len;
-  __u8 desc_value[0];
+  __u8 desc_value[];
 };
 #define FC_TLV_DESC_HDR_SZ sizeof(struct fc_tlv_desc)
 #define FC_TLV_DESC_LENGTH_FROM_SZ(desc) (sizeof(desc) - FC_TLV_DESC_HDR_SZ)
@@ -618,7 +618,7 @@ struct fc_fn_li_desc {
   __be32 event_threshold;
   __be32 event_count;
   __be32 pname_count;
-  __be64 pname_list[0];
+  __be64 pname_list[];
 };
 struct fc_fn_deli_desc {
   __be32 desc_tag;
@@ -636,7 +636,7 @@ struct fc_fn_peer_congn_desc {
   __be16 event_modifier;
   __be32 event_period;
   __be32 pname_count;
-  __be64 pname_list[0];
+  __be64 pname_list[];
 };
 struct fc_fn_congn_desc {
   __be32 desc_tag;
@@ -651,25 +651,25 @@ struct fc_els_fpin {
   __u8 fpin_cmd;
   __u8 fpin_zero[3];
   __be32 desc_len;
-  struct fc_tlv_desc fpin_desc[0];
+  struct fc_tlv_desc fpin_desc[];
 };
 struct fc_df_desc_fpin_reg {
   __be32 desc_tag;
   __be32 desc_len;
   __be32 count;
-  __be32 desc_tags[0];
+  __be32 desc_tags[];
 };
 struct fc_els_rdf {
   __u8 fpin_cmd;
   __u8 fpin_zero[3];
   __be32 desc_len;
-  struct fc_tlv_desc desc[0];
+  struct fc_tlv_desc desc[];
 };
 struct fc_els_rdf_resp {
   struct fc_els_ls_acc acc_hdr;
   __be32 desc_list_len;
   struct fc_els_lsri_desc lsri;
-  struct fc_tlv_desc desc[0];
+  struct fc_tlv_desc desc[];
 };
 struct fc_diag_lnkflt_desc {
   __be32 desc_tag;
@@ -707,12 +707,12 @@ struct fc_els_edc {
   __u8 edc_cmd;
   __u8 edc_zero[3];
   __be32 desc_len;
-  struct fc_tlv_desc desc[0];
+  struct fc_tlv_desc desc[];
 };
 struct fc_els_edc_resp {
   struct fc_els_ls_acc acc_hdr;
   __be32 desc_list_len;
   struct fc_els_lsri_desc lsri;
-  struct fc_tlv_desc desc[0];
+  struct fc_tlv_desc desc[];
 };
 #endif

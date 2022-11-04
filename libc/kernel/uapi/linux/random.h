@@ -31,7 +31,7 @@
 struct rand_pool_info {
   int entropy_count;
   int buf_size;
-  __u32 buf[0];
+  __u32 buf[];
 };
 #define GRND_NONBLOCK 0x0001
 #define GRND_RANDOM 0x0002
