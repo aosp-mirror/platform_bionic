@@ -246,6 +246,7 @@ https://android-review.googlesource.com/c/platform/bionic/+/2073827
 
 ### Debugging tips
 1. Key error for a new codename in libc/libc.map.txt
+
 e.g. what you add in libc/libc.map.txt is:
 
 ```
@@ -271,6 +272,7 @@ KeyError: 'Vanilla'
 Solution: Ask in the team and wait for the update.
 
 2. Use of undeclared identifier of the new system call in the test
+
 Possible Solution: Check everything ready in the files mentioned above first.
 Maybe glibc matters. Follow the example and try #if defined(__GLIBC__).
 
@@ -323,7 +325,7 @@ The tests are all built from the tests/ directory.
 
 Note that we use our own custom gtest runner that offers a superset of the
 options documented at
-<https://github.com/google/googletest/blob/master/googletest/docs/AdvancedGuide.md#running-test-programs-advanced-options>,
+<https://github.com/google/googletest/blob/main/docs/advanced.md#running-test-programs-advanced-options>,
 in particular for test isolation and parallelism (both on by default).
 
 ### Device tests via CTS
