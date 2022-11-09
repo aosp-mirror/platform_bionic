@@ -333,10 +333,12 @@ def x86_64_genstub(syscall):
 class SysCallsTxtParser:
     def __init__(self):
         self.syscalls = []
-        self.lineno   = 0
+        self.lineno = 0
+        self.errors = False
 
     def E(self, msg):
         print("%d: %s" % (self.lineno, msg))
+        self.errors = True
 
     def parse_line(self, line):
         """ parse a syscall spec line.
@@ -443,6 +445,8 @@ class SysCallsTxtParser:
             if not line: continue
             if line[0] == '#': continue
             self.parse_line(line)
+        if self.errors:
+            sys.exit(1)
 
     def parse_file(self, file_path):
         with open(file_path) as fp:
