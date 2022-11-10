@@ -1037,12 +1037,10 @@ LIBC {
     strtold_l; # introduced=21
     strtoll;
     strtoll_l; # introduced=21
-    strtoq; # introduced=21
     strtoul;
     strtoull;
     strtoull_l; # introduced=21
     strtoumax;
-    strtouq; # introduced=21
     strxfrm;
     strxfrm_l; # introduced=21
     swapoff; # introduced-arm=19 introduced-arm64=21 introduced-x86=19 introduced-x86_64=21
