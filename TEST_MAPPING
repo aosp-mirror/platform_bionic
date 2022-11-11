@@ -83,5 +83,10 @@
     {
       "name": "toybox-tests"
     }
+  ],
+  "kernel-presubmit": [
+    {
+      "name": "CtsBionicTestCases"
+    }
   ]
 }
