@@ -49,8 +49,8 @@ typedef ssize_t regoff_t;
 typedef struct {
 	int re_magic;
 	size_t re_nsub;		/* number of parenthesized subexpressions */
-	const char *re_endp;	/* end pointer for REG_PEND */
-	struct re_guts *re_g;	/* none of your business :-) */
+	const char * _Null_unspecified re_endp;	/* end pointer for REG_PEND */
+	struct re_guts * _Null_unspecified re_g;	/* none of your business :-) */
 } regex_t;
 
 typedef struct {
@@ -99,10 +99,10 @@ typedef struct {
 #define	REG_BACKR	02000	/* force use of backref code */
 
 __BEGIN_DECLS
-int regcomp(regex_t* __re, const char* __regex, int __flags);
-size_t regerror(int __error_code, const regex_t* __re, char* __buf, size_t __n);
-int regexec(const regex_t* __re, const char* __s, size_t __match_count, regmatch_t __matches[], int __flags);
-void regfree(regex_t* __re);
+int regcomp(regex_t* _Nonnull __re, const char* _Nonnull __regex, int __flags);
+size_t regerror(int __error_code, const regex_t* _Nullable __re, char* _Nullable __buf, size_t __n);
+int regexec(const regex_t* _Nonnull __re, const char* _Nonnull __s, size_t __match_count, regmatch_t __matches[_Nullable], int __flags);
+void regfree(regex_t* _Nonnull __re);
 __END_DECLS
 
 #endif
