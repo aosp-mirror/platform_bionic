@@ -787,7 +787,7 @@ cc_library_static {
     arch: {
         arm: {
             cflags: [
-                "-DNO___MEMCPY_CHK",
+                "-DHAVE_ASSEMBLER___MEMCPY_CHK",
                 "-DRENAME___STRCAT_CHK",
                 "-DRENAME___STRCPY_CHK",
             ],
@@ -814,9 +814,10 @@ cc_library_static {
             ],
         },
         arm64: {
-            cflags: ["-DNO___MEMCPY_CHK"],
+            cflags: ["-DHAVE_ASSEMBLER___MEMCPY_CHK"],
             srcs: [
                 "arch-arm64/generic/bionic/__memcpy_chk.S",
+                "arch-arm64/generic/bionic/__memset_chk.S",
             ],
         },
     },
