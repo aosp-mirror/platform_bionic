@@ -85,19 +85,6 @@
 
 #define L(l) .L ## l
 
-ENTRY(__memset_chk)
-  cmp count, dst
-  bls memset
-
-  // Preserve for accurate backtrace.
-  stp x29, x30, [sp, -16]!
-  .cfi_def_cfa_offset 16
-  .cfi_rel_offset x29, 0
-  .cfi_rel_offset x30, 8
-
-  bl __memset_chk_fail
-END(__memset_chk)
-
 ENTRY(memset)
 
 	dup	v0.16B, valw
