@@ -1646,6 +1646,9 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
 }
 
 TEST(dlfcn, dlopen_invalid_local_tls) {
+#if defined(__riscv)
+  // This is a test for bad gold behavior, and gold doesn't support riscv64.
+#else
   const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-local-tls.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
@@ -1658,6 +1661,7 @@ TEST(dlfcn, dlopen_invalid_local_tls) {
   std::string expected_dlerror = std::string("dlopen failed: unexpected TLS reference to ") +
                                  referent + " in \"" + libpath + "\"";
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+#endif
 }
 
 TEST(dlfcn, dlopen_df_1_global) {
