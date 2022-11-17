@@ -896,8 +896,6 @@ cc_library_static {
         },
         arm64: {
             srcs: [
-                "arch-arm64/generic/bionic/memcpy.S",
-                "arch-arm64/generic/bionic/memmove.S",
                 "arch-arm64/generic/bionic/memset.S",
 
                 "arch-arm64/bionic/__bionic_clone.S",
