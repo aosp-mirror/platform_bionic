@@ -489,14 +489,14 @@ extern "C" char* __STRCPY_CHK(char* dst, const char* src, size_t dst_len) {
   return strcpy(dst, src);
 }
 
-#if !defined(NO___MEMCPY_CHK)
+#if !defined(HAVE_ASSEMBLER___MEMCPY_CHK)
 // Runtime implementation of __memcpy_chk (used directly by compiler, not in headers).
 extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
   __check_count("memcpy", "count", count);
   __check_buffer_access("memcpy", "write into", count, dst_len);
   return memcpy(dst, src, count);
 }
-#endif // NO___MEMCPY_CHK
+#endif
 
 // Runtime implementation of __mempcpy_chk (used directly by compiler, not in headers).
 extern "C" void* __mempcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
