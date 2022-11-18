@@ -105,6 +105,9 @@ cc_prebuilt_test_library_shared {
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-rw_load_segment.so"],
         },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-rw_load_segment.so"],
+        },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-rw_load_segment.so"],
         },
@@ -127,6 +130,9 @@ cc_prebuilt_test_library_shared {
         },
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-unaligned_shdr_offset.so"],
+        },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-unaligned_shdr_offset.so"],
         },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-unaligned_shdr_offset.so"],
@@ -151,6 +157,9 @@ cc_prebuilt_test_library_shared {
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shentsize.so"],
         },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-zero_shentsize.so"],
+        },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shentsize.so"],
         },
@@ -173,6 +182,9 @@ cc_prebuilt_test_library_shared {
         },
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shstrndx.so"],
+        },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-zero_shstrndx.so"],
         },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shstrndx.so"],
@@ -197,6 +209,9 @@ cc_prebuilt_test_library_shared {
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-empty_shdr_table.so"],
         },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-empty_shdr_table.so"],
+        },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-empty_shdr_table.so"],
         },
@@ -219,6 +234,9 @@ cc_prebuilt_test_library_shared {
         },
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shdr_table_offset.so"],
+        },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-zero_shdr_table_offset.so"],
         },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shdr_table_offset.so"],
@@ -243,6 +261,9 @@ cc_prebuilt_test_library_shared {
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-zero_shdr_table_content.so"],
         },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-zero_shdr_table_content.so"],
+        },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-zero_shdr_table_content.so"],
         },
@@ -266,6 +287,9 @@ cc_prebuilt_test_library_shared {
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-textrels.so"],
         },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-textrels.so"],
+        },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-textrels.so"],
         },
@@ -288,6 +312,9 @@ cc_prebuilt_test_library_shared {
         },
         arm64: {
             srcs: ["prebuilt-elf-files/arm64/libtest_invalid-textrels2.so"],
+        },
+        riscv64: {
+            srcs: ["prebuilt-elf-files/riscv64/libtest_invalid-textrels2.so"],
         },
         x86: {
             srcs: ["prebuilt-elf-files/x86/libtest_invalid-textrels2.so"],
