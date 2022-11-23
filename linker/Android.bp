@@ -328,6 +328,10 @@ cc_defaults {
 
     sanitize: {
         hwaddress: false,
+        // TODO(mitchp): For now, disable MTE globals in the linker. MTE globals
+        // change the relocation semantics, and GVs that are touched before the
+        // linker has the chance to relocate itself have to be annotated.
+        memtag_globals: false,
     },
 
     static_libs: [
