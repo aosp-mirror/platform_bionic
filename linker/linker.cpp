@@ -1189,8 +1189,6 @@ static bool load_library(android_namespace_t* ns,
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
     // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
 
-    // TODO(dimitry) before O release: add a namespace attribute to have this enabled
-    // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_exempt_lib(ns, name, needed_by)) {
       // print warning only if needed by non-system library
