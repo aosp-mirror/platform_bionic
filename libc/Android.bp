@@ -2280,6 +2280,7 @@ cc_library_static {
     ],
     srcs: [
         "bionic/fortify.cpp",
+        "bionic/strtol.cpp",
     ],
     arch: {
         arm64: {
