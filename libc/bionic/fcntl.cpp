@@ -30,6 +30,7 @@
 #include <fcntl.h>
 
 #include "private/bionic_fdtrack.h"
+#include "private/bionic_fortify.h"
 
 #if defined(__LP64__)
 
@@ -43,6 +44,10 @@ int fcntl(int fd, int cmd, ...) {
   // supported 64-bit ABIs pass arg in a register.
   void* arg = va_arg(args, void*);
   va_end(args);
+
+  if (cmd == F_SETFD && (reinterpret_cast<uintptr_t>(arg) & ~FD_CLOEXEC) != 0) {
+    __fortify_fatal("fcntl(F_SETFD) passed non-FD_CLOEXEC flag: %p", arg);
+  }
 
   int rc = __fcntl(fd, cmd, arg);
   if (cmd == F_DUPFD) {
