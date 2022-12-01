@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,12 +26,22 @@
  * SUCH DAMAGE.
  */
 
-// Prototype: void *memcpy (void *dst, const void *src, size_t count).
-
 #include <private/bionic_asm.h>
 
-ENTRY(__memcpy)
-  #include "memcpy_base.S"
-END(__memcpy)
+ENTRY(__memset_chk)
+  cmp x2, x3
+  // Direct b.ls memcpy may not have enough range
+  b.hi .L_memset_chk_fail
+  b memset
+
+.L_memset_chk_fail:
+  // Preserve for accurate backtrace.
+  stp x29, x30, [sp, -16]!
+  .cfi_def_cfa_offset 16
+  .cfi_rel_offset x29, 0
+  .cfi_rel_offset x30, 8
+
+  bl __memset_chk_fail
+END(__memset_chk)
 
 NOTE_GNU_PROPERTY()
