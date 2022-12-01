@@ -216,6 +216,7 @@ static const char* EM_to_string(int em) {
   if (em == EM_386) return "EM_386";
   if (em == EM_AARCH64) return "EM_AARCH64";
   if (em == EM_ARM) return "EM_ARM";
+  if (em == EM_RISCV) return "EM_RISCV";
   if (em == EM_X86_64) return "EM_X86_64";
   return "EM_???";
 }
