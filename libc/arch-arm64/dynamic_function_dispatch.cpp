@@ -41,6 +41,24 @@ DEFINE_IFUNC_FOR(memchr) {
     }
 }
 
+typedef void* memcpy_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcpy) {
+    if (arg->_hwcap & HWCAP_ASIMD) {
+        RETURN_FUNC(memcpy_func, __memcpy_aarch64_simd);
+    } else {
+        RETURN_FUNC(memcpy_func, __memcpy_aarch64);
+    }
+}
+
+typedef void* memmove_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memmove) {
+    if (arg->_hwcap & HWCAP_ASIMD) {
+        RETURN_FUNC(memmove_func, __memmove_aarch64_simd);
+    } else {
+        RETURN_FUNC(memmove_func, __memmove_aarch64);
+    }
+}
+
 typedef int stpcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(stpcpy) {
     if (arg->_hwcap2 & HWCAP2_MTE) {

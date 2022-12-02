@@ -14,7 +14,7 @@ if top is None:
     utils.panic('ANDROID_BUILD_TOP not set.\n')
 
 # Set up the env vars for libclang.
-site.addsitedir(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/python3/site-packages/'))
+site.addsitedir(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib/python3/site-packages/'))
 
 import clang.cindex
 from clang.cindex import conf
@@ -28,7 +28,7 @@ from clang.cindex import TranslationUnit
 
 # Set up LD_LIBRARY_PATH to include libclang.so, libLLVM.so, and etc.
 # Note that setting LD_LIBRARY_PATH with os.putenv() sometimes doesn't help.
-clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib64/libclang.so'))
+clang.cindex.Config.set_library_file(os.path.join(top, 'prebuilts/clang/host/linux-x86/clang-stable/lib/libclang.so'))
 
 from defaults import *
 
