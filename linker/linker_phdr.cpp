@@ -51,6 +51,8 @@ static int GetTargetElfMachine() {
   return EM_AARCH64;
 #elif defined(__i386__)
   return EM_386;
+#elif defined(__riscv)
+  return EM_RISCV;
 #elif defined(__x86_64__)
   return EM_X86_64;
 #endif
@@ -214,6 +216,7 @@ static const char* EM_to_string(int em) {
   if (em == EM_386) return "EM_386";
   if (em == EM_AARCH64) return "EM_AARCH64";
   if (em == EM_ARM) return "EM_ARM";
+  if (em == EM_RISCV) return "EM_RISCV";
   if (em == EM_X86_64) return "EM_X86_64";
   return "EM_???";
 }

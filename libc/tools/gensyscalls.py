@@ -15,7 +15,7 @@ import sys
 import tempfile
 
 
-SupportedArchitectures = [ "arm", "arm64", "x86", "x86_64" ]
+SupportedArchitectures = [ "arm", "arm64", "riscv64", "x86", "x86_64" ]
 
 syscall_stub_header = \
 """
@@ -78,6 +78,24 @@ arm64_call = syscall_stub_header + """\
 END(%(func)s)
 """
 
+
+#
+# RISC-V64 assembler templates for each syscall stub
+#
+
+riscv64_call = syscall_stub_header + """\
+    li      a7, %(__NR_name)s
+    ecall
+
+    li      a7, -MAX_ERRNO
+    bgtu    a0, a7, 1f
+
+    ret
+1:
+    neg     a0, a0
+    j       __set_errno_internal
+END(%(func)s)
+"""
 
 #
 # x86 assembler templates for each syscall stub
@@ -228,6 +246,10 @@ def arm64_genstub(syscall):
     return arm64_call % syscall
 
 
+def riscv64_genstub(syscall):
+    return riscv64_call % syscall
+
+
 def x86_genstub(syscall):
     result     = syscall_stub_header % syscall
 
@@ -311,10 +333,12 @@ def x86_64_genstub(syscall):
 class SysCallsTxtParser:
     def __init__(self):
         self.syscalls = []
-        self.lineno   = 0
+        self.lineno = 0
+        self.errors = False
 
     def E(self, msg):
         print("%d: %s" % (self.lineno, msg))
+        self.errors = True
 
     def parse_line(self, line):
         """ parse a syscall spec line.
@@ -421,6 +445,8 @@ class SysCallsTxtParser:
             if not line: continue
             if line[0] == '#': continue
             self.parse_line(line)
+        if self.errors:
+            sys.exit(1)
 
     def parse_file(self, file_path):
         with open(file_path) as fp:
@@ -439,6 +465,9 @@ def main(arch, syscall_file):
 
         if "arm64" in syscall:
             syscall["asm-arm64"] = add_footer(64, arm64_genstub(syscall), syscall)
+
+        if "riscv64" in syscall:
+            syscall["asm-riscv64"] = add_footer(64, riscv64_genstub(syscall), syscall)
 
         if "x86" in syscall:
             if syscall["socketcall_id"] >= 0:

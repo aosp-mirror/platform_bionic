@@ -27,16 +27,16 @@
 load("//build/bazel/rules/apis:cc_api_contribution.bzl", "cc_api_contribution")
 
 cc_api_contribution(
-  name="libc_contributions",
-  library_name="libc",
-  api=":libc.map.txt",
-  hdrs=[
-    "//bionic/libc/kernel/android:libc_kernel_android_uapi_headers",
-    "//bionic/libc/kernel/android:libc_kernel_android_scsi_headers",
-    "//bionic/libc/kernel/uapi:libc_kernel_uapi_headers",
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_arm_headers", #arm
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_arm64_headers", #arm64
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_x86_headers", #x86
-    "//bionic/libc/kernel/uapi:libc_kernal_uapi_asm_x86_64_headers", #x86_64
-  ],
+    name = "libc_contributions",
+    hdrs = [
+        "//bionic/libc/kernel/android:libc_kernel_android_scsi_headers",
+        "//bionic/libc/kernel/android:libc_kernel_android_uapi_headers",
+        "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm64_headers",  #arm64
+        "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_arm_headers",  #arm
+        "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_64_headers",  #x86_64
+        "//bionic/libc/kernel/uapi:libc_kernel_uapi_asm_x86_headers",  #x86
+        "//bionic/libc/kernel/uapi:libc_kernel_uapi_headers",
+    ],
+    api = ":libc.map.txt",
+    library_name = "libc",
 )

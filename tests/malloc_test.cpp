@@ -1383,6 +1383,15 @@ TEST(android_mallopt, multiple_enable_gwp_asan) {
 #endif
 }
 
+TEST(android_mallopt, memtag_stack_is_on) {
+#if defined(__BIONIC__)
+  bool memtag_stack;
+  EXPECT_TRUE(android_mallopt(M_MEMTAG_STACK_IS_ON, &memtag_stack, sizeof(memtag_stack)));
+#else
+  GTEST_SKIP() << "bionic extension";
+#endif
+}
+
 void TestHeapZeroing(int num_iterations, int (*get_alloc_size)(int iteration)) {
   std::vector<void*> allocs;
   constexpr int kMaxBytesToCheckZero = 64;
