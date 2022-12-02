@@ -36,13 +36,17 @@ Missing functionality:
   * `<monetary.h>`. See
     [discussion](https://github.com/android/ndk/issues/1182).
   * `<wordexp.h>`
+  * Locales. Although bionic contains the various `_l()` functions, the only
+    locale supported is a UTF-8 C/POSIX locale. Most of the POSIX APIs are
+    insufficient to support the wide range of languages used by Android users,
+    and apps should use icu4c (or do their i18n work in Java) instead.
+  * Robust mutexes. See
+    [discussion](https://github.com/android/ndk/issues/1181).
   * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
     because of the difficulty and cost of implementing it, and the difficulty
     of using it correctly. See
     [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
     for more about thread cancellation.
-  * Robust mutexes. See
-    [discussion](https://github.com/android/ndk/issues/1181).
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
