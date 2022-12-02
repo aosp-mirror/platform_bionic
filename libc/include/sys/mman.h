@@ -110,6 +110,8 @@ void* mremap(void* __old_addr, size_t __old_size, size_t __new_size, int __flags
  * [mlockall(2)](http://man7.org/linux/man-pages/man2/mlockall.2.html)
  * locks pages (preventing swapping).
  *
+ * Available since API level 17.
+ *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
 int mlockall(int __flags) __INTRODUCED_IN(17);
@@ -117,6 +119,8 @@ int mlockall(int __flags) __INTRODUCED_IN(17);
 /**
  * [munlockall(2)](http://man7.org/linux/man-pages/man2/munlockall.2.html)
  * unlocks pages (allowing swapping).
+ *
+ * Available since API level 17.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
@@ -133,6 +137,8 @@ int mlock(const void* __addr, size_t __size);
 /**
  * [mlock2(2)](http://man7.org/linux/man-pages/man2/mlock.2.html)
  * locks pages (preventing swapping), with optional flags.
+ *
+ * Available since API level 30.
  *
  * Returns 0 on success, and returns -1 and sets `errno` on failure.
  */
@@ -167,12 +173,12 @@ int madvise(void* __addr, size_t __size, int __advice);
  * works just like madvise(2) but applies to the process specified by the given
  * PID file descriptor.
  *
- * Returns the number of bytes advised on success, and returns -1 and sets `errno` on failure.
- *
  * Available since API level 31. Its sibling process_mrelease() does not have a
  * libc wrapper and should be called using syscall() instead. Given the lack of
  * widespread applicability of this system call and the absence of wrappers in
  * other libcs, it was probably a mistake to have added this wrapper to bionic.
+ *
+ * Returns the number of bytes advised on success, and returns -1 and sets `errno` on failure.
  */
 ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count, int __advice, unsigned __flags) __INTRODUCED_IN(31);
 
@@ -181,6 +187,8 @@ ssize_t process_madvise(int __pid_fd, const struct iovec* __iov, size_t __count,
 /**
  * [memfd_create(2)](http://man7.org/linux/man-pages/man2/memfd_create.2.html)
  * creates an anonymous file.
+ *
+ * Available since API level 30.
  *
  * Returns an fd on success, and returns -1 and sets `errno` on failure.
  */
@@ -216,9 +224,10 @@ int memfd_create(const char* __name, unsigned __flags) __INTRODUCED_IN(30);
  * [posix_madvise(3)](http://man7.org/linux/man-pages/man3/posix_madvise.3.html)
  * gives the kernel advice about future usage patterns.
  *
- * Returns 0 on success, and returns a positive error number on failure.
+ * Available since API level 23.
+ * See also madvise() which is available at all API levels.
  *
- * See also madvise() which has been available much longer.
+ * Returns 0 on success, and returns a positive error number on failure.
  */
 int posix_madvise(void* __addr, size_t __size, int __advice) __INTRODUCED_IN(23);
 
