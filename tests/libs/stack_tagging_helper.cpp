@@ -260,6 +260,81 @@ void test_android_mallopt() {
   CHECK(memtag_stack);
 }
 
+static uintptr_t GetTag(void* addr) {
+  return reinterpret_cast<uintptr_t>(addr) & (0xFULL << 56);
+}
+
+static uintptr_t GetTag(volatile void* addr) {
+  return GetTag(const_cast<void*>(addr));
+}
+
+static volatile char* throw_frame;
+static volatile char* skip_frame3_frame;
+volatile char *x;
+
+__attribute__((noinline)) void throws() {
+  // Prevent optimization.
+  if (getpid() == 0) return;
+  throw_frame = reinterpret_cast<char*>(__builtin_frame_address(0));
+  throw "error";
+}
+
+__attribute__((noinline)) void maybe_throws() {
+  // These are all unique sizes so in case of a failure, we can see which ones
+  // are not untagged from the tag dump.
+  volatile char y[5 * 16]= {};
+  x = y;
+  // Make sure y is tagged.
+  CHECK(GetTag(&y) != GetTag(__builtin_frame_address(0)));
+  throws();
+}
+
+__attribute__((noinline, no_sanitize("memtag"))) void skip_frame() {
+  volatile char y[6*16] = {};
+  x = y;
+  // Make sure y is not tagged.
+  CHECK(GetTag(&y) == GetTag(__builtin_frame_address(0)));
+  maybe_throws();
+}
+
+__attribute__((noinline)) void skip_frame2() {
+  volatile char y[7*16] = {};
+  x = y;
+  // Make sure y is tagged.
+  CHECK(GetTag(&y) != GetTag(__builtin_frame_address(0)));
+  skip_frame();
+}
+
+__attribute__((noinline, no_sanitize("memtag"))) void skip_frame3() {
+  volatile char y[8*16] = {};
+  x = y;
+  skip_frame3_frame = reinterpret_cast<char*>(__builtin_frame_address(0));
+  // Make sure y is not tagged.
+  CHECK(GetTag(&y) == GetTag(__builtin_frame_address(0)));
+  skip_frame2();
+}
+
+void test_exception_cleanup() {
+  // This is here for debugging purposes, if something goes wrong we can
+  // verify that this placeholder did not get untagged.
+  volatile char placeholder[16*16] = {};
+  x = placeholder;
+  try {
+    skip_frame3();
+  } catch (const char* e) {
+  }
+  if (throw_frame >= skip_frame3_frame) {
+    fprintf(stderr, "invalid throw frame");
+    exit(1);
+  }
+  for (char* b = const_cast<char*>(throw_frame); b < skip_frame3_frame; ++b) {
+    if (mte_get_tag(b) != b) {
+      fprintf(stderr, "invalid tag at %p", b);
+      exit(1);
+    }
+  }
+}
+
 int main(int argc, char** argv) {
   if (argc < 2) {
     printf("nothing to do\n");
@@ -293,6 +368,11 @@ int main(int argc, char** argv) {
 
   if (strcmp(argv[1], "android_mallopt") == 0) {
     test_android_mallopt();
+    return 0;
+  }
+
+  if (strcmp(argv[1], "exception_cleanup") == 0) {
+    test_exception_cleanup();
     return 0;
   }
 
