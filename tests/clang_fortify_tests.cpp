@@ -387,6 +387,8 @@ static void testFormatStrings() {
 }
 
 static void testStdlib() {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   char path_buffer[PATH_MAX - 1];
   // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{must be NULL or a pointer to a buffer with >= PATH_MAX bytes}}
@@ -401,6 +403,7 @@ static void testStdlib() {
   // expected-warning@+2{{ignoring return value of function}}
   // expected-error@+1{{flipped arguments?}}
   realpath(nullptr, nullptr);
+#pragma clang diagnostic pop
 }
 }  // namespace compilation_tests
 #endif
