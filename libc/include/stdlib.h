@@ -49,82 +49,82 @@ __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
 __noreturn void _Exit(int) __RENAME(_exit);
 #endif
 
-int atexit(void (*__fn)(void));
+int atexit(void (* _Nonnull __fn)(void));
 
-int at_quick_exit(void (*__fn)(void)) __INTRODUCED_IN(21);
+int at_quick_exit(void (* _Nonnull __fn)(void)) __INTRODUCED_IN(21);
 void quick_exit(int __status) __noreturn __INTRODUCED_IN(21);
 
-char* getenv(const char* __name);
-int putenv(char* __assignment);
-int setenv(const char* __name, const char* __value, int __overwrite);
-int unsetenv(const char* __name);
+char* _Nullable getenv(const char* _Nonnull __name);
+int putenv(char* _Nonnull __assignment);
+int setenv(const char* _Nonnull __name, const char* _Nonnull __value, int __overwrite);
+int unsetenv(const char* _Nonnull __name);
 int clearenv(void);
 
-char* mkdtemp(char* __template);
-char* mktemp(char* __template) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
+char* _Nullable mkdtemp(char* _Nonnull __template);
+char* _Nullable mktemp(char* _Nonnull __template) __attribute__((deprecated("mktemp is unsafe, use mkstemp or tmpfile instead")));
 
-int mkostemp64(char* __template, int __flags) __INTRODUCED_IN(23);
-int mkostemp(char* __template, int __flags) __INTRODUCED_IN(23);
-int mkostemps64(char* __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
-int mkostemps(char* __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
-int mkstemp64(char* __template) __INTRODUCED_IN(21);
-int mkstemp(char* __template);
-int mkstemps64(char* __template, int __flags) __INTRODUCED_IN(23);
-int mkstemps(char* __template, int __flags);
+int mkostemp64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
+int mkostemp(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
+int mkostemps64(char* _Nonnull __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
+int mkostemps(char* _Nonnull __template, int __suffix_length, int __flags) __INTRODUCED_IN(23);
+int mkstemp64(char* _Nonnull __template) __INTRODUCED_IN(21);
+int mkstemp(char* _Nonnull __template);
+int mkstemps64(char* _Nonnull __template, int __flags) __INTRODUCED_IN(23);
+int mkstemps(char* _Nonnull __template, int __flags);
 
-long strtol(const char* __s, char** __end_ptr, int __base);
-long long strtoll(const char* __s, char** __end_ptr, int __base);
-unsigned long strtoul(const char* __s, char** __end_ptr, int __base);
-unsigned long long strtoull(const char* __s, char** __end_ptr, int __base);
+long strtol(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+long long strtoll(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+unsigned long strtoul(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
+unsigned long long strtoull(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base);
 
-int posix_memalign(void** __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(17);
+int posix_memalign(void* _Nullable * _Nullable __memptr, size_t __alignment, size_t __size) __INTRODUCED_IN(17);
 
-void* aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
+void* _Nullable aligned_alloc(size_t __alignment, size_t __size) __INTRODUCED_IN(28);
 
-double strtod(const char* __s, char** __end_ptr);
-long double strtold(const char* __s, char** __end_ptr) __RENAME_LDBL(strtod, 3, 21);
+double strtod(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr);
+long double strtold(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr) __RENAME_LDBL(strtod, 3, 21);
 
-unsigned long strtoul_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(26);
+unsigned long strtoul_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(26);
 
-int atoi(const char* __s) __attribute_pure__;
-long atol(const char* __s) __attribute_pure__;
-long long atoll(const char* __s) __attribute_pure__;
+int atoi(const char* _Nonnull __s) __attribute_pure__;
+long atol(const char* _Nonnull __s) __attribute_pure__;
+long long atoll(const char* _Nonnull __s) __attribute_pure__;
 
-__wur char* realpath(const char* __path, char* __resolved);
-int system(const char* __command);
+__wur char* _Nullable realpath(const char* _Nonnull __path, char* _Nullable __resolved);
+int system(const char* _Nonnull __command);
 
-void* bsearch(const void* __key, const void* __base, size_t __nmemb, size_t __size, int (*__comparator)(const void* __lhs, const void* __rhs));
+void* _Nullable bsearch(const void* _Nonnull __key, const void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
-void qsort(void* __base, size_t __nmemb, size_t __size, int (*__comparator)(const void* __lhs, const void* __rhs));
+void qsort(void* _Nullable __base, size_t __nmemb, size_t __size, int (* _Nonnull __comparator)(const void* _Nonnull __lhs, const void* _Nonnull __rhs));
 
 uint32_t arc4random(void);
 uint32_t arc4random_uniform(uint32_t __upper_bound);
-void arc4random_buf(void* __buf, size_t __n);
+void arc4random_buf(void* _Nonnull __buf, size_t __n);
 
 #define RAND_MAX 0x7fffffff
 
-int rand_r(unsigned int* __seed_ptr) __INTRODUCED_IN(21);
+int rand_r(unsigned int* _Nonnull __seed_ptr) __INTRODUCED_IN(21);
 
 double drand48(void);
-double erand48(unsigned short __xsubi[3]);
-long jrand48(unsigned short __xsubi[3]);
-void lcong48(unsigned short __param[7]) __INTRODUCED_IN(23);
+double erand48(unsigned short __xsubi[_Nonnull 3]);
+long jrand48(unsigned short __xsubi[_Nonnull 3]);
+void lcong48(unsigned short __param[_Nonnull 7]) __INTRODUCED_IN(23);
 long lrand48(void);
 long mrand48(void);
-long nrand48(unsigned short __xsubi[3]);
-unsigned short* seed48(unsigned short __seed16v[3]);
+long nrand48(unsigned short __xsubi[_Nonnull 3]);
+unsigned short* _Nonnull seed48(unsigned short __seed16v[_Nonnull 3]);
 void srand48(long __seed);
 
-char* initstate(unsigned int __seed, char* __state, size_t __n) __INTRODUCED_IN(21);
-char* setstate(char* __state) __INTRODUCED_IN(21);
+char* _Nullable initstate(unsigned int __seed, char* _Nonnull __state, size_t __n) __INTRODUCED_IN(21);
+char* _Nullable setstate(char* _Nonnull __state) __INTRODUCED_IN(21);
 
 int getpt(void);
 int posix_openpt(int __flags) __INTRODUCED_IN(21);
-char* ptsname(int __fd);
-int ptsname_r(int __fd, char* __buf, size_t __n);
+char* _Nullable ptsname(int __fd);
+int ptsname_r(int __fd, char* _Nonnull __buf, size_t __n);
 int unlockpt(int __fd);
 
-int getsubopt(char** __option, char* const* __tokens, char** __value_ptr) __INTRODUCED_IN(26);
+int getsubopt(char* _Nonnull * _Nonnull __option, char* _Nonnull const* _Nonnull __tokens, char* _Nullable * _Nonnull __value_ptr) __INTRODUCED_IN(26);
 
 typedef struct {
   int quot;
@@ -154,18 +154,18 @@ lldiv_t lldiv(long long __numerator, long long __denominator) __attribute_const_
  *
  * Returns the number of samples written to `__averages` (at most 3), and returns -1 on failure.
  */
-int getloadavg(double __averages[], int __n) __INTRODUCED_IN(29);
+int getloadavg(double __averages[_Nonnull], int __n) __INTRODUCED_IN(29);
 
 /* BSD compatibility. */
-const char* getprogname(void) __INTRODUCED_IN(21);
-void setprogname(const char* __name) __INTRODUCED_IN(21);
+const char* _Nullable getprogname(void) __INTRODUCED_IN(21);
+void setprogname(const char* _Nonnull __name) __INTRODUCED_IN(21);
 
-int mblen(const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
-size_t mbstowcs(wchar_t* __dst, const char* __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
-int mbtowc(wchar_t* __wc_ptr, const char* __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
-int wctomb(char* __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+int mblen(const char* _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(26);
+size_t mbstowcs(wchar_t* _Nullable __dst, const char* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+int mbtowc(wchar_t* _Nullable __wc_ptr, const char*  _Nullable __s, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+int wctomb(char* _Nullable __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
-size_t wcstombs(char* __dst, const wchar_t* __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
 #if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
@@ -192,25 +192,25 @@ long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
 #endif
 
 #if __ANDROID_API__ >= 21
-float strtof(const char* __s, char** __end_ptr) __INTRODUCED_IN(21);
-double atof(const char* __s) __attribute_pure__ __INTRODUCED_IN(21);
+float strtof(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr) __INTRODUCED_IN(21);
+double atof(const char* _Nonnull __s) __attribute_pure__ __INTRODUCED_IN(21);
 int rand(void) __INTRODUCED_IN(21);
 void srand(unsigned int __seed) __INTRODUCED_IN(21);
 long random(void) __INTRODUCED_IN(21);
 void srandom(unsigned int __seed) __INTRODUCED_IN(21);
 int grantpt(int __fd) __INTRODUCED_IN(21);
 
-long long strtoll_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
-unsigned long long strtoull_l(const char* __s, char** __end_ptr, int __base, locale_t __l) __INTRODUCED_IN(21);
-long double strtold_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(21);
+long long strtoll_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(21);
+unsigned long long strtoull_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(21);
+long double strtold_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
 
 #if __ANDROID_API__ >= 26
-double strtod_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
-float strtof_l(const char* __s, char** __end_ptr, locale_t __l) __INTRODUCED_IN(26);
-long strtol_l(const char* __s, char** __end_ptr, int, locale_t __l) __INTRODUCED_IN(26);
+double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(26);
+float strtof_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(26);
+long strtol_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int, locale_t _Nonnull __l) __INTRODUCED_IN(26);
 #else
 // Implemented as static inlines before 26.
 #endif
