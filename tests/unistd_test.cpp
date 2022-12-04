@@ -294,10 +294,13 @@ TEST(UNISTD_TEST, unsetenv_EINVAL) {
 }
 
 TEST(UNISTD_TEST, setenv_EINVAL) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   EXPECT_EQ(-1, setenv(nullptr, "value", 0));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv(nullptr, "value", 1));
   EXPECT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
   EXPECT_EQ(-1, setenv("", "value", 0));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv("", "value", 1));
