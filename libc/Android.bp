@@ -251,7 +251,10 @@ cc_library_static {
     srcs: [
         "tzcode/**/*.c",
         "tzcode/bionic.cpp",
-        "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
+        // tzcode doesn't include strptime or wcsftime, so we use the OpenBSD
+        // code (with some local changes in the strptime case).
+        "upstream-openbsd/lib/libc/locale/_def_time.c",
+        "upstream-openbsd/lib/libc/time/wcsftime.c",
     ],
 
     cflags: [
@@ -1189,6 +1192,7 @@ cc_library_static {
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
+        "bionic/time_l.cpp",
         "bionic/timespec_get.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
