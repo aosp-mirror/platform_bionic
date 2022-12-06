@@ -39,7 +39,6 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 
-#include <iterator>
 #include <new>
 #include <string>
 #include <unordered_map>
@@ -2485,12 +2484,11 @@ bool link_namespaces(android_namespace_t* namespace_from,
     return false;
   }
 
-  std::vector<std::string> sonames = android::base::Split(shared_lib_sonames, ":");
-  std::unordered_set<std::string> sonames_set(std::make_move_iterator(sonames.begin()),
-                                              std::make_move_iterator(sonames.end()));
+  auto sonames = android::base::Split(shared_lib_sonames, ":");
+  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, std::move(sonames_set), false);
+  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
 
   return true;
 }
