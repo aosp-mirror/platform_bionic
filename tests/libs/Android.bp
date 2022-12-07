@@ -1661,6 +1661,7 @@ cc_test {
      },
    },
    header_libs: ["bionic_libc_platform_headers"],
+   cflags: ["-fexceptions"],
 }
 
 cc_test {
@@ -1676,6 +1677,7 @@ cc_test {
      },
    },
    header_libs: ["bionic_libc_platform_headers"],
+   cflags: ["-fexceptions"],
 }
 
 cc_genrule {
