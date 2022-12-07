@@ -32,16 +32,14 @@
 #include "private/bionic_fdtrack.h"
 #include "private/bionic_fortify.h"
 
-#if defined(__LP64__)
-
 extern "C" int __fcntl(int fd, int cmd, ...);
+extern "C" int __fcntl64(int, int, ...);
 
 int fcntl(int fd, int cmd, ...) {
   va_list args;
   va_start(args, cmd);
-
-  // This is a bit sketchy, especially because arg can be an int, but all of our
-  // supported 64-bit ABIs pass arg in a register.
+  // This is a bit sketchy for LP64, especially because arg can be an int,
+  // but all of our supported 64-bit ABIs pass the argument in a register.
   void* arg = va_arg(args, void*);
   va_end(args);
 
@@ -49,7 +47,12 @@ int fcntl(int fd, int cmd, ...) {
     __fortify_fatal("fcntl(F_SETFD) passed non-FD_CLOEXEC flag: %p", arg);
   }
 
+#if defined(__LP64__)
   int rc = __fcntl(fd, cmd, arg);
+#else
+  // For LP32 we use the fcntl64 system call to signal that we're using struct flock64.
+  int rc = __fcntl64(fd, cmd, arg);
+#endif
   if (cmd == F_DUPFD) {
     return FDTRACK_CREATE_NAME("F_DUPFD", rc);
   } else if (cmd == F_DUPFD_CLOEXEC) {
@@ -57,25 +60,3 @@ int fcntl(int fd, int cmd, ...) {
   }
   return rc;
 }
-
-#else
-
-extern "C" int __fcntl64(int, int, ...);
-
-// For fcntl we use the fcntl64 system call to signal that we're using struct flock64.
-int fcntl(int fd, int cmd, ...) {
-  va_list ap;
-
-  va_start(ap, cmd);
-  void* arg = va_arg(ap, void*);
-  va_end(ap);
-
-  if (cmd == F_DUPFD) {
-    return FDTRACK_CREATE_NAME("F_DUPFD", __fcntl64(fd, cmd, arg));
-  } else if (cmd == F_DUPFD_CLOEXEC) {
-    return FDTRACK_CREATE_NAME("F_DUPFD_CLOEXEC", __fcntl64(fd, cmd, arg));
-  }
-  return __fcntl64(fd, cmd, arg);
-}
-
-#endif
