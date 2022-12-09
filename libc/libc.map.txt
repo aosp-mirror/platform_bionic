@@ -1518,34 +1518,34 @@ LIBC_R { # introduced=R
     tss_set;
 
     # Unwinder implementation
-    __aeabi_unwind_cpp_pr0; # apex llndk arm
-    __aeabi_unwind_cpp_pr1; # apex llndk arm
-    __aeabi_unwind_cpp_pr2; # apex llndk arm
-    __deregister_frame; # apex llndk arm64 x86 x86_64
-    __gnu_unwind_frame; # apex llndk arm
-    __register_frame; # apex llndk arm64 x86 x86_64
-    _Unwind_Backtrace; # apex llndk
-    _Unwind_Complete; # apex llndk arm
-    _Unwind_DeleteException; # apex llndk
-    _Unwind_Find_FDE; # apex llndk
-    _Unwind_FindEnclosingFunction; # apex llndk
-    _Unwind_ForcedUnwind; # apex llndk arm64 x86 x86_64
-    _Unwind_GetCFA; # apex llndk
-    _Unwind_GetDataRelBase; # apex llndk
-    _Unwind_GetGR; # apex llndk
-    _Unwind_GetIP; # apex llndk
-    _Unwind_GetIPInfo; # apex llndk
-    _Unwind_GetLanguageSpecificData; # apex llndk
-    _Unwind_GetRegionStart; # apex llndk
-    _Unwind_GetTextRelBase; # apex llndk
-    _Unwind_RaiseException; # apex llndk
-    _Unwind_Resume; # apex llndk
-    _Unwind_Resume_or_Rethrow; # apex llndk
-    _Unwind_SetGR; # apex llndk
-    _Unwind_SetIP; # apex llndk
-    _Unwind_VRS_Get; # apex llndk arm
-    _Unwind_VRS_Pop; # apex llndk arm
-    _Unwind_VRS_Set; # apex llndk arm
+    __aeabi_unwind_cpp_pr0; # arm
+    __aeabi_unwind_cpp_pr1; # arm
+    __aeabi_unwind_cpp_pr2; # arm
+    __deregister_frame; # arm64 x86 x86_64
+    __gnu_unwind_frame; # arm
+    __register_frame; # arm64 x86 x86_64
+    _Unwind_Backtrace;
+    _Unwind_Complete; # arm
+    _Unwind_DeleteException;
+    _Unwind_Find_FDE;
+    _Unwind_FindEnclosingFunction;
+    _Unwind_ForcedUnwind; # arm64 x86 x86_64
+    _Unwind_GetCFA;
+    _Unwind_GetDataRelBase;
+    _Unwind_GetGR;
+    _Unwind_GetIP;
+    _Unwind_GetIPInfo;
+    _Unwind_GetLanguageSpecificData;
+    _Unwind_GetRegionStart;
+    _Unwind_GetTextRelBase;
+    _Unwind_RaiseException;
+    _Unwind_Resume;
+    _Unwind_Resume_or_Rethrow;
+    _Unwind_SetGR;
+    _Unwind_SetIP;
+    _Unwind_VRS_Get; # arm
+    _Unwind_VRS_Pop; # arm
+    _Unwind_VRS_Set; # arm
 } LIBC_Q;
 
 LIBC_S { # introduced=S
