@@ -2262,6 +2262,37 @@ cc_library_static {
 }
 
 // ========================================================
+// libc dependencies for baremetal Rust projects.
+// ========================================================
+
+cc_defaults {
+    name: "librust_baremetal_defaults",
+    header_libs: ["libc_headers"],
+    include_dirs: [
+        "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
+    ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    system_shared_libs: [],
+    nocrt: true,
+    stl: "none",
+}
+
+cc_library_static {
+    name: "librust_baremetal",
+    defaults: ["librust_baremetal_defaults"],
+    whole_static_libs: [
+        "libarm-optimized-routines-mem",
+    ],
+    visibility: [
+        "//packages/modules/Virtualization/vmbase",
+    ],
+}
+
+// ========================================================
 // NDK headers.
 // ========================================================
 
