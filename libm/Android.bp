@@ -346,6 +346,7 @@ cc_library {
             ],
 
             exclude_srcs: [
+                // TODO: do the rest when our clang has https://reviews.llvm.org/D136508.
                 // TODO: "upstream-freebsd/lib/msun/src/s_ceil.c",
                 // TODO: "upstream-freebsd/lib/msun/src/s_ceilf.c",
                 "upstream-freebsd/lib/msun/src/s_copysign.c",
