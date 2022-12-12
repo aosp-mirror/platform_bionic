@@ -30,12 +30,6 @@ int	tkill(int, int)	all
 # Needed for a CTS test of seccomp (b/34763393).
 int	seccomp(unsigned, unsigned, void*)	all
 
-# TODO: remove these now we've updated the toolchain (http://b/229989971).
-int open(const char*, int, ...)  arm,x86,x86_64
-int stat64(const char*, stat64*)  arm,x86
-ssize_t readlink(const char*, char*, size_t)  arm,x86,x86_64
-int stat(const char*, stat*)  arm,x86,x86_64
-
 #
 # (Potentially) useful new syscalls which we don't yet use in bionic.
 #
