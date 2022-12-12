@@ -111,5 +111,5 @@ struct vfs_ns_cap_data {
 #define CAP_LAST_CAP CAP_CHECKPOINT_RESTORE
 #define cap_valid(x) ((x) >= 0 && (x) <= CAP_LAST_CAP)
 #define CAP_TO_INDEX(x) ((x) >> 5)
-#define CAP_TO_MASK(x) (1 << ((x) & 31))
+#define CAP_TO_MASK(x) (1U << ((x) & 31))
 #endif
