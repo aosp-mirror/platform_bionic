@@ -489,8 +489,9 @@ extern "C" char* __STRCPY_CHK(char* dst, const char* src, size_t dst_len) {
   return strcpy(dst, src);
 }
 
-#if !defined(HAVE_ASSEMBLER___MEMCPY_CHK)
+#if !defined(__arm__) && !defined(__aarch64__)
 // Runtime implementation of __memcpy_chk (used directly by compiler, not in headers).
+// arm32 and arm64 have assembler implementations, and don't need this C fallback.
 extern "C" void* __memcpy_chk(void* dst, const void* src, size_t count, size_t dst_len) {
   __check_count("memcpy", "count", count);
   __check_buffer_access("memcpy", "write into", count, dst_len);
