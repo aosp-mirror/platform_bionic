@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <cxxabi.h>
 #include <errno.h>
 #include <inttypes.h>
 #include <signal.h>
@@ -53,8 +54,6 @@
 #include "debug_log.h"
 #include "malloc_debug.h"
 #include "UnwindBacktrace.h"
-
-extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 std::atomic_uint8_t PointerData::backtrace_enabled_;
 std::atomic_bool PointerData::backtrace_dump_;
@@ -617,8 +616,8 @@ void PointerData::DumpLiveToFile(int fd) {
         if (frame.function_name.empty()) {
           dprintf(fd, " \"\" 0}");
         } else {
-          char* demangled_name = __cxa_demangle(frame.function_name.c_str(), nullptr, nullptr,
-                                                nullptr);
+          char* demangled_name =
+              abi::__cxa_demangle(frame.function_name.c_str(), nullptr, nullptr, nullptr);
           const char* name;
           if (demangled_name != nullptr) {
             name = demangled_name;
