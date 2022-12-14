@@ -52,6 +52,21 @@ struct mtd_write_req {
   __u8 mode;
   __u8 padding[7];
 };
+struct mtd_read_req_ecc_stats {
+  __u32 uncorrectable_errors;
+  __u32 corrected_bitflips;
+  __u32 max_bitflips;
+};
+struct mtd_read_req {
+  __u64 start;
+  __u64 len;
+  __u64 ooblen;
+  __u64 usr_data;
+  __u64 usr_oob;
+  __u8 mode;
+  __u8 padding[7];
+  struct mtd_read_req_ecc_stats ecc_stats;
+};
 #define MTD_ABSENT 0
 #define MTD_RAM 1
 #define MTD_ROM 2
@@ -122,6 +137,7 @@ struct otp_info {
 #define MEMISLOCKED _IOR('M', 23, struct erase_info_user)
 #define MEMWRITE _IOWR('M', 24, struct mtd_write_req)
 #define OTPERASE _IOW('M', 25, struct otp_info)
+#define MEMREAD _IOWR('M', 26, struct mtd_read_req)
 struct nand_oobinfo {
   __u32 useecc;
   __u32 eccbytes;
