@@ -39,6 +39,7 @@ struct kvm_sregs {
 };
 struct kvm_riscv_config {
   unsigned long isa;
+  unsigned long zicbom_block_size;
 };
 struct kvm_riscv_core {
   struct user_regs_struct regs;
@@ -74,6 +75,9 @@ enum KVM_RISCV_ISA_EXT_ID {
   KVM_RISCV_ISA_EXT_M,
   KVM_RISCV_ISA_EXT_SVPBMT,
   KVM_RISCV_ISA_EXT_SSTC,
+  KVM_RISCV_ISA_EXT_SVINVAL,
+  KVM_RISCV_ISA_EXT_ZIHINTPAUSE,
+  KVM_RISCV_ISA_EXT_ZICBOM,
   KVM_RISCV_ISA_EXT_MAX,
 };
 #define KVM_RISCV_TIMER_STATE_OFF 0

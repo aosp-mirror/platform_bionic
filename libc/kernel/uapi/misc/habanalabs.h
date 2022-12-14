@@ -617,6 +617,13 @@ enum hl_server_type {
   HL_SERVER_GAUDI_TYPE2 = 4,
   HL_SERVER_GAUDI2_HLS2 = 5
 };
+#define HL_NOTIFIER_EVENT_TPC_ASSERT (1ULL << 0)
+#define HL_NOTIFIER_EVENT_UNDEFINED_OPCODE (1ULL << 1)
+#define HL_NOTIFIER_EVENT_DEVICE_RESET (1ULL << 2)
+#define HL_NOTIFIER_EVENT_CS_TIMEOUT (1ULL << 3)
+#define HL_NOTIFIER_EVENT_DEVICE_UNAVAILABLE (1ULL << 4)
+#define HL_NOTIFIER_EVENT_USER_ENGINE_ERR (1ULL << 5)
+#define HL_NOTIFIER_EVENT_GENERAL_HW_ERR (1ULL << 6)
 #define HL_INFO_HW_IP_INFO 0
 #define HL_INFO_HW_EVENTS 1
 #define HL_INFO_DRAM_USAGE 2
@@ -641,12 +648,15 @@ enum hl_server_type {
 #define HL_INFO_CS_TIMEOUT_EVENT 24
 #define HL_INFO_RAZWI_EVENT 25
 #define HL_INFO_DEV_MEM_ALLOC_PAGE_SIZES 26
+#define HL_INFO_SECURED_ATTESTATION 27
 #define HL_INFO_REGISTER_EVENTFD 28
 #define HL_INFO_UNREGISTER_EVENTFD 29
 #define HL_INFO_GET_EVENTS 30
 #define HL_INFO_UNDEFINED_OPCODE_EVENT 31
+#define HL_INFO_ENGINE_STATUS 32
 #define HL_INFO_VERSION_MAX_LEN 128
 #define HL_INFO_CARD_NAME_MAX_LEN 16
+#define HL_ENGINES_DATA_MAX_SIZE SZ_1M
 struct hl_info_hw_ip_info {
   __u64 sram_base_address;
   __u64 dram_base_address;
@@ -665,7 +675,7 @@ struct hl_info_hw_ip_info {
   __u32 psoc_pci_pll_div_factor;
   __u8 tpc_enabled_mask;
   __u8 dram_enabled;
-  __u8 reserved;
+  __u8 security_enabled;
   __u8 mme_master_slave_mode;
   __u8 cpucp_version[HL_INFO_VERSION_MAX_LEN];
   __u8 card_name[HL_INFO_CARD_NAME_MAX_LEN];
@@ -794,6 +804,26 @@ struct hl_info_undefined_opcode_event {
 struct hl_info_dev_memalloc_page_sizes {
   __u64 page_order_bitmask;
 };
+#define SEC_PCR_DATA_BUF_SZ 256
+#define SEC_PCR_QUOTE_BUF_SZ 510
+#define SEC_SIGNATURE_BUF_SZ 255
+#define SEC_PUB_DATA_BUF_SZ 510
+#define SEC_CERTIFICATE_BUF_SZ 2046
+struct hl_info_sec_attest {
+  __u32 nonce;
+  __u16 pcr_quote_len;
+  __u16 pub_data_len;
+  __u16 certificate_len;
+  __u8 pcr_num_reg;
+  __u8 pcr_reg_len;
+  __u8 quote_sig_len;
+  __u8 pcr_data[SEC_PCR_DATA_BUF_SZ];
+  __u8 pcr_quote[SEC_PCR_QUOTE_BUF_SZ];
+  __u8 quote_sig[SEC_SIGNATURE_BUF_SZ];
+  __u8 public_data[SEC_PUB_DATA_BUF_SZ];
+  __u8 certificate[SEC_CERTIFICATE_BUF_SZ];
+  __u8 pad0[2];
+};
 enum gaudi_dcores {
   HL_GAUDI_WS_DCORE,
   HL_GAUDI_WN_DCORE,
@@ -810,6 +840,8 @@ struct hl_info_args {
     __u32 period_ms;
     __u32 pll_index;
     __u32 eventfd;
+    __u32 user_buffer_actual_size;
+    __u32 sec_attest_nonce;
   };
   __u32 pad;
 };
@@ -872,11 +904,23 @@ struct hl_cs_chunk {
 #define HL_CS_FLAGS_ENCAP_SIGNALS 0x800
 #define HL_CS_FLAGS_RESERVE_SIGNALS_ONLY 0x1000
 #define HL_CS_FLAGS_UNRESERVE_SIGNALS_ONLY 0x2000
+#define HL_CS_FLAGS_ENGINE_CORE_COMMAND 0x4000
 #define HL_CS_STATUS_SUCCESS 0
 #define HL_MAX_JOBS_PER_CS 512
+#define HL_ENGINE_CORE_HALT (1 << 0)
+#define HL_ENGINE_CORE_RUN (1 << 1)
 struct hl_cs_in {
-  __u64 chunks_restore;
-  __u64 chunks_execute;
+  union {
+    struct {
+      __u64 chunks_restore;
+      __u64 chunks_execute;
+    };
+    struct {
+      __u64 engine_cores;
+      __u32 num_engine_cores;
+      __u32 core_command;
+    };
+  };
   union {
     __u64 seq;
     __u32 encaps_sig_handle_id;
@@ -1081,11 +1125,6 @@ struct hl_debug_args {
   __u32 enable;
   __u32 ctx_id;
 };
-#define HL_NOTIFIER_EVENT_TPC_ASSERT (1ULL << 0)
-#define HL_NOTIFIER_EVENT_UNDEFINED_OPCODE (1ULL << 1)
-#define HL_NOTIFIER_EVENT_DEVICE_RESET (1ULL << 2)
-#define HL_NOTIFIER_EVENT_CS_TIMEOUT (1ULL << 3)
-#define HL_NOTIFIER_EVENT_DEVICE_UNAVAILABLE (1ULL << 4)
 #define HL_IOCTL_INFO _IOWR('H', 0x01, struct hl_info_args)
 #define HL_IOCTL_CB _IOWR('H', 0x02, union hl_cb_args)
 #define HL_IOCTL_CS _IOWR('H', 0x03, union hl_cs_args)
