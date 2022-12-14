@@ -56,7 +56,8 @@ struct ubi_attach_req {
   __s32 mtd_num;
   __s32 vid_hdr_offset;
   __s16 max_beb_per1024;
-  __s8 padding[10];
+  __s8 disable_fm;
+  __s8 padding[9];
 };
 enum {
   UBI_VOL_SKIP_CRC_CHECK_FLG = 0x1,
