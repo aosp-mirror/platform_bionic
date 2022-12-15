@@ -26,7 +26,7 @@ struct sof_abi_hdr {
   __u32 abi;
   __u32 reserved[4];
   __u32 data[];
-} __packed;
+} __attribute__((__packed__));
 #define SOF_MANIFEST_DATA_TYPE_NHLT 1
 struct sof_manifest_tlv {
   __le32 type;

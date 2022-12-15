@@ -605,7 +605,7 @@ struct snd_rawmidi_framing_tstamp {
   __u32 tv_nsec;
   __u64 tv_sec;
   __u8 data[SNDRV_RAWMIDI_FRAMING_DATA_LENGTH];
-} __packed;
+} __attribute__((__packed__));
 struct snd_rawmidi_params {
   int stream;
   size_t buffer_size;
