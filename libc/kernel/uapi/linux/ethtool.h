@@ -277,6 +277,20 @@ enum ethtool_module_power_mode {
   ETHTOOL_MODULE_POWER_MODE_LOW = 1,
   ETHTOOL_MODULE_POWER_MODE_HIGH,
 };
+enum ethtool_podl_pse_admin_state {
+  ETHTOOL_PODL_PSE_ADMIN_STATE_UNKNOWN = 1,
+  ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED,
+  ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED,
+};
+enum ethtool_podl_pse_pw_d_status {
+  ETHTOOL_PODL_PSE_PW_D_STATUS_UNKNOWN = 1,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_DISABLED,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_SEARCHING,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_DELIVERING,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_SLEEP,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_IDLE,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_ERROR,
+};
 struct ethtool_gstrings {
   __u32 cmd;
   __u32 string_set;
@@ -800,6 +814,10 @@ enum ethtool_link_mode_bit_indices {
 #define MASTER_SLAVE_STATE_MASTER 2
 #define MASTER_SLAVE_STATE_SLAVE 3
 #define MASTER_SLAVE_STATE_ERR 4
+#define RATE_MATCH_NONE 0
+#define RATE_MATCH_PAUSE 1
+#define RATE_MATCH_CRS 2
+#define RATE_MATCH_OPEN_LOOP 3
 #define PORT_TP 0x00
 #define PORT_AUI 0x01
 #define PORT_MII 0x02
@@ -901,7 +919,7 @@ struct ethtool_link_settings {
   __u8 transceiver;
   __u8 master_slave_cfg;
   __u8 master_slave_state;
-  __u8 reserved1[1];
+  __u8 rate_matching;
   __u32 reserved[7];
   __u32 link_mode_masks[];
 };
