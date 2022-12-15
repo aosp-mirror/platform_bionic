@@ -52,7 +52,7 @@ struct rxe_av {
 };
 struct rxe_send_wr {
   __aligned_u64 wr_id;
-  __u32 num_sge;
+  __u32 reserved;
   __u32 opcode;
   __u32 send_flags;
   union {
@@ -128,7 +128,7 @@ struct rxe_send_wqe {
 };
 struct rxe_recv_wqe {
   __aligned_u64 wr_id;
-  __u32 num_sge;
+  __u32 reserved;
   __u32 padding;
   struct rxe_dma_info dma;
 };

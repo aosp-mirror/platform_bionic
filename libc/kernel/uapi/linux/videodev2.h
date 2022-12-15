@@ -185,7 +185,6 @@ struct v4l2_capability {
 #define V4L2_CAP_SDR_OUTPUT 0x00400000
 #define V4L2_CAP_META_CAPTURE 0x00800000
 #define V4L2_CAP_READWRITE 0x01000000
-#define V4L2_CAP_ASYNCIO 0x02000000
 #define V4L2_CAP_STREAMING 0x04000000
 #define V4L2_CAP_META_OUTPUT 0x08000000
 #define V4L2_CAP_TOUCH 0x10000000
@@ -792,7 +791,7 @@ struct v4l2_bt_timings {
 #define V4L2_DV_FL_CAN_DETECT_REDUCED_FPS (1 << 9)
 #define V4L2_DV_BT_BLANKING_WIDTH(bt) ((bt)->hfrontporch + (bt)->hsync + (bt)->hbackporch)
 #define V4L2_DV_BT_FRAME_WIDTH(bt) ((bt)->width + V4L2_DV_BT_BLANKING_WIDTH(bt))
-#define V4L2_DV_BT_BLANKING_HEIGHT(bt) ((bt)->vfrontporch + (bt)->vsync + (bt)->vbackporch + (bt)->il_vfrontporch + (bt)->il_vsync + (bt)->il_vbackporch)
+#define V4L2_DV_BT_BLANKING_HEIGHT(bt) ((bt)->vfrontporch + (bt)->vsync + (bt)->vbackporch + ((bt)->interlaced ? ((bt)->il_vfrontporch + (bt)->il_vsync + (bt)->il_vbackporch) : 0))
 #define V4L2_DV_BT_FRAME_HEIGHT(bt) ((bt)->height + V4L2_DV_BT_BLANKING_HEIGHT(bt))
 struct v4l2_dv_timings {
   __u32 type;
@@ -1324,6 +1323,7 @@ struct v4l2_event_vsync {
 #define V4L2_EVENT_CTRL_CH_VALUE (1 << 0)
 #define V4L2_EVENT_CTRL_CH_FLAGS (1 << 1)
 #define V4L2_EVENT_CTRL_CH_RANGE (1 << 2)
+#define V4L2_EVENT_CTRL_CH_DIMENSIONS (1 << 3)
 struct v4l2_event_ctrl {
   __u32 changes;
   __u32 type;
@@ -1495,4 +1495,5 @@ struct v4l2_create_buffers {
 #define BASE_VIDIOC_PRIVATE 192
 #define V4L2_PIX_FMT_HM12 V4L2_PIX_FMT_NV12_16L16
 #define V4L2_PIX_FMT_SUNXI_TILED_NV12 V4L2_PIX_FMT_NV12_32L32
+#define V4L2_CAP_ASYNCIO 0x02000000
 #endif
