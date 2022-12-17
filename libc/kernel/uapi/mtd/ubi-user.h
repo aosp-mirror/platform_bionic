@@ -72,11 +72,11 @@ struct ubi_mkvol_req {
   __s16 name_len;
   __s8 padding2[4];
   char name[UBI_MAX_VOLUME_NAME + 1];
-} __packed;
+} __attribute__((__packed__));
 struct ubi_rsvol_req {
   __s64 bytes;
   __s32 vol_id;
-} __packed;
+} __attribute__((__packed__));
 struct ubi_rnvol_req {
   __s32 count;
   __s8 padding1[12];
@@ -86,24 +86,24 @@ struct ubi_rnvol_req {
     __s8 padding2[2];
     char name[UBI_MAX_VOLUME_NAME + 1];
   } ents[UBI_MAX_RNVOL];
-} __packed;
+} __attribute__((__packed__));
 struct ubi_leb_change_req {
   __s32 lnum;
   __s32 bytes;
   __s8 dtype;
   __s8 padding[7];
-} __packed;
+} __attribute__((__packed__));
 struct ubi_map_req {
   __s32 lnum;
   __s8 dtype;
   __s8 padding[3];
-} __packed;
+} __attribute__((__packed__));
 struct ubi_set_vol_prop_req {
   __u8 property;
   __u8 padding[7];
   __u64 value;
-} __packed;
+} __attribute__((__packed__));
 struct ubi_blkcreate_req {
   __s8 padding[128];
-} __packed;
+} __attribute__((__packed__));
 #endif

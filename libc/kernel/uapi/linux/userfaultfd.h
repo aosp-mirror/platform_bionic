@@ -75,7 +75,7 @@ struct uffd_msg {
       __u64 reserved3;
     } reserved;
   } arg;
-} __packed;
+} __attribute__((__packed__));
 #define UFFD_EVENT_PAGEFAULT 0x12
 #define UFFD_EVENT_FORK 0x13
 #define UFFD_EVENT_REMAP 0x14
