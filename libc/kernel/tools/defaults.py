@@ -94,6 +94,9 @@ kernel_token_replacements = {
     "__kernel_old_timeval": "timeval",
     # Do the same for __kernel_old_itimerval as for timeval.
     "__kernel_old_itimerval": "itimerval",
+    # Replace __packed with __attribute__((__packed__)) to avoid depending
+    # on sys/cdefs.h
+    "__packed": "__attribute__((__packed__))",
     }
 
 
