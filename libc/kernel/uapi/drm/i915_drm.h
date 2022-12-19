@@ -788,7 +788,7 @@ struct i915_context_engines_parallel_submit {
   __u64 flags;
   __u64 mbz64[3];
   struct i915_engine_class_instance engines[];
-} __packed;
+} __attribute__((__packed__));
 #define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__,N__) struct { struct i915_user_extension base; __u16 engine_index; __u16 width; __u16 num_siblings; __u16 mbz16; __u64 flags; __u64 mbz64[3]; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
 struct i915_context_param_engines {
