@@ -18,43 +18,26 @@
 
 #include "fpmath.h"
 
-double fabs(double x) {
-#if __arm__
-  // Both Clang and GCC insist on moving r0/r1 into a double register
-  // and using fabs where bit-twiddling would be a better choice.
-  // They get fabsf right, but we need to be careful in fabsl too.
-  IEEEd2bits u;
-  u.d = x;
-  u.bits.sign = 0;
-  return u.d;
-#else
-  return __builtin_fabs(x);
-#endif
-}
-
-float fabsf(float x) {
-  return __builtin_fabsf(x);
-}
-
-#if defined(__LP64__)
+double fabs(double x) { return __builtin_fabs(x); }
+float fabsf(float x) { return __builtin_fabsf(x); }
 long double fabsl(long double x) { return __builtin_fabsl(x); }
-#else
-long double fabsl(long double x) {
-  // Don't use __builtin_fabs here because of ARM. (See fabs above.)
-  return fabs(x);
-}
-#endif
 
 #if defined(__aarch64__)
 float ceilf(float x) { return __builtin_ceilf(x); }
 double ceil(double x) { return __builtin_ceil(x); }
+#endif
 
+#if defined(__aarch64__) || defined(__riscv)
 double copysign(double x, double y) { return __builtin_copysign(x, y); }
 float copysignf(float x, float y) { return __builtin_copysignf(x, y); }
+#endif
 
+#if defined(__aarch64__)
 float floorf(float x) { return __builtin_floorf(x); }
 double floor(double x) { return __builtin_floor(x); }
+#endif
 
+#if defined(__aarch64__) || defined(__riscv)
 float fmaf(float x, float y, float z) { return __builtin_fmaf(x, y, z); }
 double fma(double x, double y, double z) { return __builtin_fma(x, y, z); }
 
@@ -68,7 +51,9 @@ long lround(double x) { return __builtin_lround(x); }
 long lroundf(float x) { return __builtin_lroundf(x); }
 long long llround(double x) { return __builtin_llround(x); }
 long long llroundf(float x) { return __builtin_llroundf(x); }
+#endif
 
+#if defined(__aarch64__)
 float rintf(float x) { return __builtin_rintf(x); }
 double rint(double x) { return __builtin_rint(x); }
 
