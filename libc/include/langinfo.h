@@ -92,8 +92,8 @@ __BEGIN_DECLS
 #define NOEXPR 54
 #define CRNCYSTR 55
 
-char* nl_langinfo(nl_item __item) __INTRODUCED_IN(26);
-char* nl_langinfo_l(nl_item __item, locale_t __l) __INTRODUCED_IN(26);
+char* _Nonnull nl_langinfo(nl_item __item) __INTRODUCED_IN(26);
+char* _Nonnull nl_langinfo_l(nl_item __item, locale_t _Nonnull __l) __INTRODUCED_IN(26);
 
 __END_DECLS
 
