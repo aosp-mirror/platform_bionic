@@ -29,6 +29,7 @@ cc_library {
 
     whole_static_libs: ["libarm-optimized-routines-math"],
 
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/msun/bsdsrc/b_tgamma.c",
         "upstream-freebsd/lib/msun/src/catrig.c",
