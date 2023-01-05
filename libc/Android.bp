@@ -248,6 +248,7 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "tzcode/**/*.c",
         "tzcode/bionic.cpp",
@@ -291,6 +292,7 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "dns/**/*.c*",
 
@@ -326,6 +328,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
@@ -392,6 +395,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/glob.c",
     ],
@@ -419,6 +423,7 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
         "upstream-netbsd/lib/libc/gen/nice.c",
@@ -476,6 +481,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_openbsd_ndk",
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-openbsd/lib/libc/gen/alarm.c",
         "upstream-openbsd/lib/libc/gen/ctype_.c",
@@ -594,6 +600,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
@@ -623,6 +630,7 @@ cc_library_static {
 // automatically included.
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         // These two depend on getentropy, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
@@ -722,6 +730,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-openbsd/android/gdtoa_support.cpp",
         "upstream-openbsd/lib/libc/gdtoa/dmisc.c",
@@ -2812,6 +2821,7 @@ cc_library {
 
 cc_library_host_static {
     name: "libfts",
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "bionic/fts.c",
         "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
@@ -2854,6 +2864,7 @@ cc_library_host_static {
 cc_library_host_static {
     name: "libb64",
     visibility: ["//external/musl"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
     export_include_dirs: ["b64/include"],
     local_include_dirs: [
