@@ -2196,7 +2196,7 @@ void VerifyRecordAllocs(const std::string& record_filename) {
   debug_free(pointer);
   expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
-  pointer = debug_calloc(1, 20);
+  pointer = debug_calloc(20, 1);
   ASSERT_TRUE(pointer != nullptr);
   expected.push_back(android::base::StringPrintf("%d: calloc %p 20 1", getpid(), pointer));
   debug_free(pointer);
