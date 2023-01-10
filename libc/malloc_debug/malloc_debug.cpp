@@ -943,7 +943,7 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
     g_debug->record->AddEntry(
-        new CallocEntry(pointer, bytes, nmemb, result.GetStartTimeNS(), result.GetEndTimeNS()));
+        new CallocEntry(pointer, nmemb, bytes, result.GetStartTimeNS(), result.GetEndTimeNS()));
   }
 
   if (pointer != nullptr && g_debug->TrackPointers()) {
