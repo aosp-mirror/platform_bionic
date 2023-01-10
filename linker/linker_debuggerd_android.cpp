@@ -43,6 +43,7 @@ static debugger_process_info get_process_info() {
       .scudo_stack_depot = __libc_shared_globals()->scudo_stack_depot,
       .scudo_region_info = __libc_shared_globals()->scudo_region_info,
       .scudo_ring_buffer = __libc_shared_globals()->scudo_ring_buffer,
+      .scudo_ring_buffer_size = __libc_shared_globals()->scudo_ring_buffer_size,
   };
 }
 #endif
