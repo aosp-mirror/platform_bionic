@@ -109,7 +109,7 @@ class FreeEntry : public AllocEntry {
 
 class CallocEntry : public MallocEntry {
  public:
-  CallocEntry(void* pointer, size_t size, size_t nmemb, uint64_t st, uint64_t et);
+  CallocEntry(void* pointer, size_t nmemb, size_t size, uint64_t st, uint64_t et);
   virtual ~CallocEntry() = default;
 
   bool Write(int fd) const override;
