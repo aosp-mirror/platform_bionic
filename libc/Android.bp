@@ -2272,6 +2272,10 @@ cc_library_static {
 // libc dependencies for baremetal Rust projects.
 // ========================================================
 
+// This library contains the following unresolved symbols:
+//     __errno
+//     abort
+//     async_safe_fatal_va_list
 cc_library_static {
     name: "librust_baremetal",
     header_libs: ["libc_headers"],
@@ -2283,6 +2287,17 @@ cc_library_static {
         "-Wall",
         "-Werror",
     ],
+    srcs: [
+        "bionic/fortify.cpp",
+    ],
+    arch: {
+        arm64: {
+            cflags: ["-DHAVE_ASSEMBLER___MEMCPY_CHK"],
+            srcs: [
+                "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+    },
     whole_static_libs: [
         "libarm-optimized-routines-mem",
     ],
