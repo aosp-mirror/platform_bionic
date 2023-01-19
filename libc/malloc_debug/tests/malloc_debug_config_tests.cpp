@@ -215,7 +215,21 @@ TEST_F(MallocDebugConfigTest, backtrace) {
   ASSERT_FALSE(config->backtrace_enable_on_signal());
   ASSERT_FALSE(config->backtrace_dump_on_exit());
 
+  ASSERT_TRUE(InitConfig("bt=23")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
+  ASSERT_EQ(23U, config->backtrace_frames());
+  ASSERT_TRUE(config->backtrace_enabled());
+  ASSERT_FALSE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
+
   ASSERT_TRUE(InitConfig("backtrace")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
+  ASSERT_EQ(16U, config->backtrace_frames());
+  ASSERT_TRUE(config->backtrace_enabled());
+  ASSERT_FALSE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
+
+  ASSERT_TRUE(InitConfig("bt")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_TRUE(config->backtrace_enabled());
@@ -234,7 +248,21 @@ TEST_F(MallocDebugConfigTest, backtrace_enable_on_signal) {
   ASSERT_TRUE(config->backtrace_enable_on_signal());
   ASSERT_FALSE(config->backtrace_dump_on_exit());
 
+  ASSERT_TRUE(InitConfig("bt_en_on_sig=64")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
+  ASSERT_EQ(64U, config->backtrace_frames());
+  ASSERT_FALSE(config->backtrace_enabled());
+  ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
+
   ASSERT_TRUE(InitConfig("backtrace_enable_on_signal")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
+  ASSERT_EQ(16U, config->backtrace_frames());
+  ASSERT_FALSE(config->backtrace_enabled());
+  ASSERT_TRUE(config->backtrace_enable_on_signal());
+  ASSERT_FALSE(config->backtrace_dump_on_exit());
+
+  ASSERT_TRUE(InitConfig("bt_en_on_sig")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE | TRACK_ALLOCS, config->options());
   ASSERT_EQ(16U, config->backtrace_frames());
   ASSERT_FALSE(config->backtrace_enabled());
@@ -288,6 +316,10 @@ TEST_F(MallocDebugConfigTest, backtrace_dump_on_exit) {
   ASSERT_EQ(0U, config->options());
   ASSERT_TRUE(config->backtrace_dump_on_exit());
 
+  ASSERT_TRUE(InitConfig("bt_dmp_on_ex")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_TRUE(config->backtrace_dump_on_exit());
+
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
@@ -307,7 +339,15 @@ TEST_F(MallocDebugConfigTest, backtrace_dump_prefix) {
   ASSERT_EQ(0U, config->options());
   ASSERT_EQ("/data/local/tmp/backtrace_heap", config->backtrace_dump_prefix());
 
+  ASSERT_TRUE(InitConfig("bt_dmp_pre")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_EQ("/data/local/tmp/backtrace_heap", config->backtrace_dump_prefix());
+
   ASSERT_TRUE(InitConfig("backtrace_dump_prefix=/fake/location")) << getFakeLogPrint();
+  ASSERT_EQ(0U, config->options());
+  ASSERT_EQ("/fake/location", config->backtrace_dump_prefix());
+
+  ASSERT_TRUE(InitConfig("bt_dmp_pre=/fake/location")) << getFakeLogPrint();
   ASSERT_EQ(0U, config->options());
   ASSERT_EQ("/fake/location", config->backtrace_dump_prefix());
 
@@ -317,6 +357,9 @@ TEST_F(MallocDebugConfigTest, backtrace_dump_prefix) {
 
 TEST_F(MallocDebugConfigTest, backtrace_full) {
   ASSERT_TRUE(InitConfig("backtrace_full")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_FULL, config->options());
+
+  ASSERT_TRUE(InitConfig("bt_full")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE_FULL, config->options());
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
@@ -786,6 +829,11 @@ TEST_F(MallocDebugConfigTest, size) {
   ASSERT_EQ(37U, config->backtrace_min_size_bytes());
   ASSERT_EQ(37U, config->backtrace_max_size_bytes());
 
+  ASSERT_TRUE(InitConfig("bt_sz=39")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(39U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(39U, config->backtrace_max_size_bytes());
+
   ASSERT_FALSE(InitConfig("backtrace_size")) << getFakeLogPrint();
   ASSERT_FALSE(InitConfig("backtrace_size=0")) << getFakeLogPrint();
   ASSERT_FALSE(InitConfig("backtrace_size=-1")) << getFakeLogPrint();
@@ -806,6 +854,11 @@ TEST_F(MallocDebugConfigTest, min_size) {
   ASSERT_TRUE(InitConfig("backtrace_min_size=9")) << getFakeLogPrint();
   ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
   ASSERT_EQ(9U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(SIZE_MAX, config->backtrace_max_size_bytes());
+
+  ASSERT_TRUE(InitConfig("bt_min_sz=11")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(11U, config->backtrace_min_size_bytes());
   ASSERT_EQ(SIZE_MAX, config->backtrace_max_size_bytes());
 
   ASSERT_FALSE(InitConfig("backtrace_min_size")) << getFakeLogPrint();
@@ -829,6 +882,11 @@ TEST_F(MallocDebugConfigTest, max_size) {
   ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
   ASSERT_EQ(0U, config->backtrace_min_size_bytes());
   ASSERT_EQ(13U, config->backtrace_max_size_bytes());
+
+  ASSERT_TRUE(InitConfig("bt_max_sz=15")) << getFakeLogPrint();
+  ASSERT_EQ(BACKTRACE_SPECIFIC_SIZES, config->options());
+  ASSERT_EQ(0U, config->backtrace_min_size_bytes());
+  ASSERT_EQ(15U, config->backtrace_max_size_bytes());
 
   ASSERT_FALSE(InitConfig("backtrace_max_size")) << getFakeLogPrint();
   ASSERT_FALSE(InitConfig("backtrace_max_size=0")) << getFakeLogPrint();

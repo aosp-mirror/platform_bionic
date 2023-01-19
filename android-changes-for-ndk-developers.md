@@ -475,3 +475,7 @@ format available from API level 23.
 There are no plans to remove support for ELF files using the older
 OS private use constants for RELR, nor for ELF files using packed
 relocations.
+
+You can read more about relative relocations
+and their long and complicated history at
+https://maskray.me/blog/2021-10-31-relative-relocations-and-relr.

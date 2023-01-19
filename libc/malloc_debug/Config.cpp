@@ -87,25 +87,47 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
     },
     {
+        "bt_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceSize},
+    },
+    {
         "backtrace_min_size",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
+    },
+    {
+        "bt_min_sz",
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMinSize},
     },
     {
         "backtrace_max_size",
         {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
     },
-
+    {
+        "bt_max_sz",
+        {BACKTRACE_SPECIFIC_SIZES, &Config::SetBacktraceMaxSize},
+    },
     {
         "backtrace",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
+    },
+    {
+        "bt",
         {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktrace},
     },
     {
         "backtrace_enable_on_signal",
         {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
     },
-
+    {
+        "bt_en_on_sig",
+        {BACKTRACE | TRACK_ALLOCS, &Config::SetBacktraceEnableOnSignal},
+    },
     {
         "backtrace_dump_on_exit",
+        {0, &Config::SetBacktraceDumpOnExit},
+    },
+    {
+        "bt_dmp_on_ex",
         {0, &Config::SetBacktraceDumpOnExit},
     },
     {
@@ -113,7 +135,15 @@ const std::unordered_map<std::string, Config::OptionInfo> Config::kOptions = {
         {0, &Config::SetBacktraceDumpPrefix},
     },
     {
+        "bt_dmp_pre",
+        {0, &Config::SetBacktraceDumpPrefix},
+    },
+    {
         "backtrace_full",
+        {BACKTRACE_FULL, &Config::VerifyValueEmpty},
+    },
+    {
+        "bt_full",
         {BACKTRACE_FULL, &Config::VerifyValueEmpty},
     },
 
