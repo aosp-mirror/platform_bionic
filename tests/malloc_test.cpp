@@ -661,13 +661,13 @@ TEST(malloc, verify_alignment) {
 }
 
 TEST(malloc, mallopt_smoke) {
-#if !defined(ANDROID_HOST_MUSL)
+#if defined(__BIONIC__)
   errno = 0;
   ASSERT_EQ(0, mallopt(-1000, 1));
   // mallopt doesn't set errno.
   ASSERT_EQ(0, errno);
 #else
-  GTEST_SKIP() << "musl doesn't have mallopt";
+  GTEST_SKIP() << "bionic-only test";
 #endif
 }
 
