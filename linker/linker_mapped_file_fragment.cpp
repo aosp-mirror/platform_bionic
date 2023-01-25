@@ -30,6 +30,8 @@
 #include "linker_debug.h"
 #include "linker_utils.h"
 
+#include "platform/bionic/page.h"
+
 #include <inttypes.h>
 #include <stdlib.h>
 #include <sys/mman.h>
