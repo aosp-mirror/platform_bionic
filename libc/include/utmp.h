@@ -99,7 +99,7 @@ __BEGIN_DECLS
 /**
  * Does nothing.
  */
-int utmpname(const char* __path);
+int utmpname(const char* _Nonnull __path);
 /**
  * Does nothing.
  */
@@ -107,11 +107,11 @@ void setutent(void);
 /**
  * Does nothing.
  */
-struct utmp* getutent(void);
+struct utmp* _Nullable getutent(void);
 /**
  * Does nothing.
  */
-struct utmp* pututline(const struct utmp* __entry);
+struct utmp* _Nullable pututline(const struct utmp* _Nonnull __entry);
 /**
  * Does nothing.
  */
