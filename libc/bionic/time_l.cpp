@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,25 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <time.h>
+//#include <xlocale.h>
 
-#define FUNCTION_DELEGATE(name, impl) \
-ENTRY(name); \
-    b impl; \
-END(name)
-
-FUNCTION_DELEGATE(memchr, __memchr_aarch64_mte)
-FUNCTION_DELEGATE(memcmp, __memcmp_aarch64)
-FUNCTION_DELEGATE(memcpy, __memcpy_aarch64)
-FUNCTION_DELEGATE(memmove, __memmove_aarch64)
-FUNCTION_DELEGATE(stpcpy, __stpcpy_aarch64)
-FUNCTION_DELEGATE(strchr, __strchr_aarch64_mte)
-FUNCTION_DELEGATE(strchrnul, __strchrnul_aarch64_mte)
-FUNCTION_DELEGATE(strcmp, __strcmp_aarch64)
-FUNCTION_DELEGATE(strcpy, __strcpy_aarch64)
-FUNCTION_DELEGATE(strlen, __strlen_aarch64_mte)
-FUNCTION_DELEGATE(strrchr, __strrchr_aarch64_mte)
-FUNCTION_DELEGATE(strncmp, __strncmp_aarch64)
-FUNCTION_DELEGATE(strnlen, __strnlen_aarch64)
-
-NOTE_GNU_PROPERTY()
+char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t) {
+  return strptime(buf, fmt, tm);
+}
