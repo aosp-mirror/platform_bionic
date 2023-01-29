@@ -49,6 +49,8 @@
 #include "private/ScopedFd.h"
 
 static const char property_service_socket[] = "/dev/socket/" PROP_SERVICE_NAME;
+static const char property_service_for_system_socket[] =
+    "/dev/socket/" PROP_SERVICE_FOR_SYSTEM_NAME;
 static const char* kServiceVersionPropertyName = "ro.property_service.version";
 
 class PropertyServiceConnection {
@@ -60,10 +62,13 @@ class PropertyServiceConnection {
       return;
     }
 
-    const size_t namelen = strlen(property_service_socket);
+    const char* socket = access(property_service_for_system_socket, W_OK) == 0
+                             ? property_service_for_system_socket
+                             : property_service_socket;
+    const size_t namelen = strlen(socket);
     sockaddr_un addr;
     memset(&addr, 0, sizeof(addr));
-    strlcpy(addr.sun_path, property_service_socket, sizeof(addr.sun_path));
+    strlcpy(addr.sun_path, socket, sizeof(addr.sun_path));
     addr.sun_family = AF_LOCAL;
     socklen_t alen = namelen + offsetof(sockaddr_un, sun_path) + 1;
 
