@@ -111,9 +111,9 @@ __BEGIN_DECLS
  * Returns a new file descriptor on success and returns -1 and sets `errno` on
  * failure.
  */
-int creat(const char* __path, mode_t __mode);
+int creat(const char* _Nonnull __path, mode_t __mode);
 /** See creat(). */
-int creat64(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
+int creat64(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
 
 /**
  * [openat(2)](http://man7.org/linux/man-pages/man2/openat.2.html)
@@ -122,9 +122,9 @@ int creat64(const char* __path, mode_t __mode) __INTRODUCED_IN(21);
  * Returns a new file descriptor on success and returns -1 and sets `errno` on
  * failure.
  */
-int openat(int __dir_fd, const char* __path, int __flags, ...);
+int openat(int __dir_fd, const char* _Nonnull __path, int __flags, ...);
 /** See openat(). */
-int openat64(int __dir_fd, const char* __path, int __flags, ...) __INTRODUCED_IN(21);
+int openat64(int __dir_fd, const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
 
 /**
  * [open(2)](http://man7.org/linux/man-pages/man2/open.2.html)
@@ -133,9 +133,9 @@ int openat64(int __dir_fd, const char* __path, int __flags, ...) __INTRODUCED_IN
  * Returns a new file descriptor on success and returns -1 and sets `errno` on
  * failure.
  */
-int open(const char* __path, int __flags, ...);
+int open(const char* _Nonnull __path, int __flags, ...);
 /** See open(). */
-int open64(const char* __path, int __flags, ...) __INTRODUCED_IN(21);
+int open64(const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
 
 /**
  * [splice(2)](http://man7.org/linux/man-pages/man2/splice.2.html)
@@ -149,7 +149,7 @@ int open64(const char* __path, int __flags, ...) __INTRODUCED_IN(21);
  *
  * Available since API level 21.
  */
-ssize_t splice(int __in_fd, off64_t* __in_offset, int __out_fd, off64_t* __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t splice(int __in_fd, off64_t* _Null_unspecified __in_offset, int __out_fd, off64_t* _Null_unspecified __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
 
 /**
  * [tee(2)](http://man7.org/linux/man-pages/man2/tee.2.html)
@@ -177,7 +177,7 @@ ssize_t tee(int __in_fd, int __out_fd, size_t __length, unsigned int __flags) __
  *
  * Available since API level 21.
  */
-ssize_t vmsplice(int __fd, const struct iovec* __iov, size_t __count, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t vmsplice(int __fd, const struct iovec* _Nonnull __iov, size_t __count, unsigned int __flags) __INTRODUCED_IN(21);
 
 /**
  * [fallocate(2)](http://man7.org/linux/man-pages/man2/fallocate.2.html)
