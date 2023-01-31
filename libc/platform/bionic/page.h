@@ -24,17 +24,12 @@
 #include <sys/user.h>
 
 inline size_t page_size() {
-  /*
-   * PAGE_SIZE defines the maximum supported page size. Since 4096 is the
-   * minimum supported page size we can just let it be constant folded if it's
-   * also the maximum.
-   */
-#if PAGE_SIZE == 4096
-  return PAGE_SIZE;
-#else
+#if defined(TARGET_PAGE_SIZE)
+  return TARGET_PAGE_SIZE;
+#endif
+
   static size_t size = getauxval(AT_PAGESZ);
   return size;
-#endif
 }
 
 // Returns the address of the page containing address 'x'.
