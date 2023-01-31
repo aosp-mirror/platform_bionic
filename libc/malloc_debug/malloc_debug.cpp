@@ -494,6 +494,9 @@ void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* in
 
 void debug_free_malloc_leak_info(uint8_t* info) {
   g_dispatch->free(info);
+  // Purge the memory that was freed since a significant amount of
+  // memory could have been allocated and freed.
+  g_dispatch->mallopt(M_PURGE, 0);
 }
 
 size_t debug_malloc_usable_size(void* pointer) {
@@ -1117,6 +1120,10 @@ static void write_dump(int fd) {
     dprintf(fd, "%s", content.c_str());
   }
   dprintf(fd, "END\n");
+
+  // Purge the memory that was allocated and freed during this operation
+  // since it can be large enough to expand the RSS significantly.
+  g_dispatch->mallopt(M_PURGE, 0);
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {
