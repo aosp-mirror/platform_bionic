@@ -149,7 +149,7 @@ int open64(const char* _Nonnull __path, int __flags, ...) __INTRODUCED_IN(21);
  *
  * Available since API level 21.
  */
-ssize_t splice(int __in_fd, off64_t* _Null_unspecified __in_offset, int __out_fd, off64_t* _Null_unspecified __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
+ssize_t splice(int __in_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __in_offset, int __out_fd, off64_t* __BIONIC_COMPLICATED_NULLNESS __out_offset, size_t __length, unsigned int __flags) __INTRODUCED_IN(21);
 
 /**
  * [tee(2)](http://man7.org/linux/man-pages/man2/tee.2.html)
