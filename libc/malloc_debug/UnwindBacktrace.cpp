@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <cxxabi.h>
 #include <inttypes.h>
 #include <pthread.h>
 #include <stdint.h>
@@ -47,8 +48,6 @@
 #else
 #define PAD_PTR "08" PRIx64
 #endif
-
-extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 bool Unwind(std::vector<uintptr_t>* frames, std::vector<unwindstack::FrameData>* frame_info,
             size_t max_frames) {
@@ -89,7 +88,8 @@ void UnwindLog(const std::vector<unwindstack::FrameData>& frame_info) {
 
     if (!info->function_name.empty()) {
       line += " (";
-      char* demangled_name = __cxa_demangle(info->function_name.c_str(), nullptr, nullptr, nullptr);
+      char* demangled_name =
+          abi::__cxa_demangle(info->function_name.c_str(), nullptr, nullptr, nullptr);
       if (demangled_name != nullptr) {
         line += demangled_name;
         free(demangled_name);

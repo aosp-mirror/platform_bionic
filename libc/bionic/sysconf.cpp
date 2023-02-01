@@ -88,7 +88,7 @@ long sysconf(int name) {
     case _SC_PAGESIZE:
     case _SC_PAGE_SIZE:
       // _SC_PAGESIZE and _SC_PAGE_SIZE are distinct, but return the same value.
-      return static_cast<long>(getauxval(AT_PAGESZ));
+      return getpagesize();
 
     case _SC_PHYS_PAGES:        return get_phys_pages();
 

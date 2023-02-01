@@ -35,7 +35,7 @@ struct sockaddr_alg_new {
 };
 struct af_alg_iv {
   __u32 ivlen;
-  __u8 iv[0];
+  __u8 iv[];
 };
 #define ALG_SET_KEY 1
 #define ALG_SET_IV 2

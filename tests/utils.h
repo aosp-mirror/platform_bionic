@@ -313,3 +313,5 @@ static inline bool running_with_mte() {
   return false;
 #endif
 }
+
+bool IsLowRamDevice();

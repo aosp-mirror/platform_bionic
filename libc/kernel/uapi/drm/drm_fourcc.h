@@ -25,7 +25,17 @@ extern "C" {
 #define fourcc_code(a,b,c,d) ((__u32) (a) | ((__u32) (b) << 8) | ((__u32) (c) << 16) | ((__u32) (d) << 24))
 #define DRM_FORMAT_BIG_ENDIAN (1U << 31)
 #define DRM_FORMAT_INVALID 0
+#define DRM_FORMAT_C1 fourcc_code('C', '1', ' ', ' ')
+#define DRM_FORMAT_C2 fourcc_code('C', '2', ' ', ' ')
+#define DRM_FORMAT_C4 fourcc_code('C', '4', ' ', ' ')
 #define DRM_FORMAT_C8 fourcc_code('C', '8', ' ', ' ')
+#define DRM_FORMAT_D1 fourcc_code('D', '1', ' ', ' ')
+#define DRM_FORMAT_D2 fourcc_code('D', '2', ' ', ' ')
+#define DRM_FORMAT_D4 fourcc_code('D', '4', ' ', ' ')
+#define DRM_FORMAT_D8 fourcc_code('D', '8', ' ', ' ')
+#define DRM_FORMAT_R1 fourcc_code('R', '1', ' ', ' ')
+#define DRM_FORMAT_R2 fourcc_code('R', '2', ' ', ' ')
+#define DRM_FORMAT_R4 fourcc_code('R', '4', ' ', ' ')
 #define DRM_FORMAT_R8 fourcc_code('R', '8', ' ', ' ')
 #define DRM_FORMAT_R10 fourcc_code('R', '1', '0', ' ')
 #define DRM_FORMAT_R12 fourcc_code('R', '1', '2', ' ')
@@ -86,7 +96,9 @@ extern "C" {
 #define DRM_FORMAT_UYVY fourcc_code('U', 'Y', 'V', 'Y')
 #define DRM_FORMAT_VYUY fourcc_code('V', 'Y', 'U', 'Y')
 #define DRM_FORMAT_AYUV fourcc_code('A', 'Y', 'U', 'V')
+#define DRM_FORMAT_AVUY8888 fourcc_code('A', 'V', 'U', 'Y')
 #define DRM_FORMAT_XYUV8888 fourcc_code('X', 'Y', 'U', 'V')
+#define DRM_FORMAT_XVUY8888 fourcc_code('X', 'V', 'U', 'Y')
 #define DRM_FORMAT_VUY888 fourcc_code('V', 'U', '2', '4')
 #define DRM_FORMAT_VUY101010 fourcc_code('V', 'U', '3', '0')
 #define DRM_FORMAT_Y210 fourcc_code('Y', '2', '1', '0')
@@ -241,11 +253,13 @@ extern "C" {
 #define AMD_FMT_MOD_TILE_VER_GFX9 1
 #define AMD_FMT_MOD_TILE_VER_GFX10 2
 #define AMD_FMT_MOD_TILE_VER_GFX10_RBPLUS 3
+#define AMD_FMT_MOD_TILE_VER_GFX11 4
 #define AMD_FMT_MOD_TILE_GFX9_64K_S 9
 #define AMD_FMT_MOD_TILE_GFX9_64K_D 10
 #define AMD_FMT_MOD_TILE_GFX9_64K_S_X 25
 #define AMD_FMT_MOD_TILE_GFX9_64K_D_X 26
 #define AMD_FMT_MOD_TILE_GFX9_64K_R_X 27
+#define AMD_FMT_MOD_TILE_GFX11_256K_R_X 31
 #define AMD_FMT_MOD_DCC_BLOCK_64B 0
 #define AMD_FMT_MOD_DCC_BLOCK_128B 1
 #define AMD_FMT_MOD_DCC_BLOCK_256B 2

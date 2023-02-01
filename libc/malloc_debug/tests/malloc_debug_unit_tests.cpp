@@ -81,6 +81,9 @@ void* debug_valloc(size_t);
 bool debug_write_malloc_leak_info(FILE*);
 void debug_dump_heap(const char*);
 
+void malloc_enable();
+void malloc_disable();
+
 __END_DECLS
 
 // Change the slow threshold since some tests take more than 2 seconds.
@@ -108,15 +111,15 @@ class MallocDebugTest : public ::testing::Test {
     initialized = false;
     resetLogs();
     backtrace_fake_clear_all();
-    if (!record_filename.empty()) {
-      // Delete the record data file if it exists.
-      unlink(record_filename.c_str());
-    }
   }
 
   void TearDown() override {
     if (initialized) {
       debug_finalize();
+    }
+    if (!record_filename.empty()) {
+      // Try to delete the record data file even it doesn't exist.
+      unlink(record_filename.c_str());
     }
   }
 
@@ -179,6 +182,23 @@ std::string ShowDiffs(uint8_t* a, uint8_t* b, size_t size) {
     }
   }
   return diff;
+}
+
+static void VerifyRecords(std::vector<std::string>& expected, std::string& actual) {
+  size_t offset = 0;
+  for (std::string& str : expected) {
+    ASSERT_STREQ(str.c_str(), actual.substr(offset, str.size()).c_str());
+    if (str.find("thread_done") != std::string::npos) {
+      offset = actual.find_first_of("\n", offset) + 1;
+      continue;
+    }
+    offset += str.size() + 1;
+    uint64_t st = strtoull(&actual[offset], nullptr, 10);
+    offset = actual.find_first_of(" ", offset) + 1;
+    uint64_t et = strtoull(&actual[offset], nullptr, 10);
+    ASSERT_GT(et, st);
+    offset = actual.find_first_of("\n", offset) + 1;
+  }
 }
 
 void VerifyAllocCalls(bool all_options) {
@@ -2168,82 +2188,74 @@ TEST_F(MallocDebugTest, debug_valloc) {
 #endif
 
 void VerifyRecordAllocs(const std::string& record_filename) {
-  std::string expected;
+  std::vector<std::string> expected;
 
   void* pointer = debug_malloc(10);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 10\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 10", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
-  pointer = debug_calloc(1, 20);
+  pointer = debug_calloc(20, 1);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: calloc %p 20 1\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: calloc %p 20 1", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   pointer = debug_realloc(nullptr, 30);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: realloc %p 0x0 30\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: realloc %p 0x0 30", getpid(), pointer));
   void* old_pointer = pointer;
   pointer = debug_realloc(pointer, 2048);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: realloc %p %p 2048\n", getpid(),
-                                          pointer, old_pointer);
+  expected.push_back(
+      android::base::StringPrintf("%d: realloc %p %p 2048", getpid(), pointer, old_pointer));
   debug_realloc(pointer, 0);
-  expected += android::base::StringPrintf("%d: realloc 0x0 %p 0\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: realloc 0x0 %p 0", getpid(), pointer));
 
   pointer = debug_memalign(16, 40);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 16 40\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: memalign %p 16 40", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   pointer = debug_aligned_alloc(32, 64);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 32 64\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: memalign %p 32 64", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   ASSERT_EQ(0, debug_posix_memalign(&pointer, 32, 50));
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 32 50\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: memalign %p 32 50", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
 #if defined(HAVE_DEPRECATED_MALLOC_FUNCS)
   pointer = debug_pvalloc(60);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 4096 4096\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: memalign %p 4096 4096", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   pointer = debug_valloc(70);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: memalign %p 4096 70\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: memalign %p 4096 70", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 #endif
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
-  sleep(1);
-
-  // This triggers the dumping.
-  pointer = debug_malloc(110);
-  ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 110\n", getpid(), pointer);
 
   // Read all of the contents.
   std::string actual;
   ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
-  ASSERT_STREQ(expected.c_str(), actual.c_str());
+  VerifyRecords(expected, actual);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
-
-  debug_free(pointer);
 }
 
 TEST_F(MallocDebugTest, record_allocs_no_header) {
@@ -2261,43 +2273,38 @@ TEST_F(MallocDebugTest, record_allocs_with_header) {
 TEST_F(MallocDebugTest, record_allocs_max) {
   InitRecordAllocs("record_allocs=5");
 
-  std::string expected;
+  std::vector<std::string> expected;
 
   void* pointer = debug_malloc(10);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 10\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 10", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   pointer = debug_malloc(20);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 20\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 20", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   pointer = debug_malloc(1024);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 1024\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 1024", getpid(), pointer));
   debug_free(pointer);
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
-  sleep(1);
-
-  // This triggers the dumping.
-  pointer = debug_malloc(110);
-  ASSERT_TRUE(pointer != nullptr);
 
   // Read all of the contents.
   std::string actual;
   ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
-  ASSERT_STREQ(expected.c_str(), actual.c_str());
+  VerifyRecords(expected, actual);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
-  ASSERT_STREQ("", getFakeLogPrint().c_str());
-
-  debug_free(pointer);
+  ASSERT_STREQ(
+      "4 malloc_debug Maximum number of records added, all new operations will be dropped.\n",
+      getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, record_allocs_thread_done) {
@@ -2313,56 +2320,43 @@ TEST_F(MallocDebugTest, record_allocs_thread_done) {
   });
   thread.join();
 
-  std::string expected = android::base::StringPrintf("%d: malloc %p 100\n", tid, pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", tid, pointer);
-  expected += android::base::StringPrintf("%d: thread_done 0x0\n", tid);
+  std::vector<std::string> expected;
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 100", tid, pointer));
+  expected.push_back(android::base::StringPrintf("%d: free %p", tid, pointer));
+  expected.push_back(android::base::StringPrintf("%d: thread_done 0x0", tid));
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
-  sleep(1);
-
-  // This triggers the dumping.
-  pointer = debug_malloc(23);
-  ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 23\n", getpid(), pointer);
 
   // Read all of the contents.
   std::string actual;
   ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
 
-  ASSERT_STREQ(expected.c_str(), actual.c_str());
+  VerifyRecords(expected, actual);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   ASSERT_STREQ("", getFakeLogPrint().c_str());
-
-  debug_free(pointer);
 }
 
 TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
   InitRecordAllocs("record_allocs=5");
 
-  // Delete the special.txt file and create a symbolic link there to
+  // Delete the records file and create a symbolic link there to
   // make sure the create file will fail.
   unlink(record_filename.c_str());
 
   ASSERT_EQ(0, symlink("/data/local/tmp/does_not_exist", record_filename.c_str()));
 
-  std::string expected;
+  std::vector<std::string> expected;
 
   void* pointer = debug_malloc(10);
   ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 10\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 10", getpid(), pointer));
   debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
-  sleep(1);
-
-  // This triggers the dumping.
-  pointer = debug_malloc(110);
-  ASSERT_TRUE(pointer != nullptr);
-  expected += android::base::StringPrintf("%d: malloc %p 110\n", getpid(), pointer);
 
   // Read all of the contents.
   std::string actual;
@@ -2373,20 +2367,52 @@ TEST_F(MallocDebugTest, record_allocs_file_name_fail) {
 
   // Dump all of the data accumulated so far.
   ASSERT_TRUE(kill(getpid(), SIGRTMAX - 18) == 0);
-  sleep(1);
-
-  // This triggers the dumping.
-  debug_free(pointer);
-  expected += android::base::StringPrintf("%d: free %p\n", getpid(), pointer);
 
   ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
-  ASSERT_STREQ(expected.c_str(), actual.c_str());
+
+  VerifyRecords(expected, actual);
 
   ASSERT_STREQ("", getFakeLogBuf().c_str());
   std::string expected_log = android::base::StringPrintf(
       "6 malloc_debug Cannot create record alloc file %s: Too many symbolic links encountered\n",
       record_filename.c_str());
   ASSERT_STREQ(expected_log.c_str(), getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, record_allocs_no_entries_to_write) {
+  InitRecordAllocs("record_allocs=5");
+
+  kill(getpid(), SIGRTMAX - 18);
+
+  std::string actual;
+  ASSERT_FALSE(android::base::ReadFileToString(record_filename, &actual));
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("4 malloc_debug No alloc entries to write.\n", getFakeLogPrint().c_str());
+}
+
+TEST_F(MallocDebugTest, record_allocs_write_entries_does_not_allocate) {
+  InitRecordAllocs("record_allocs=5");
+
+  std::vector<std::string> expected;
+
+  void* pointer = debug_malloc(10);
+  ASSERT_TRUE(pointer != nullptr);
+  expected.push_back(android::base::StringPrintf("%d: malloc %p 10", getpid(), pointer));
+  debug_free(pointer);
+  expected.push_back(android::base::StringPrintf("%d: free %p", getpid(), pointer));
+
+  malloc_disable();
+  kill(getpid(), SIGRTMAX - 18);
+  malloc_enable();
+
+  std::string actual;
+  ASSERT_TRUE(android::base::ReadFileToString(record_filename, &actual));
+
+  VerifyRecords(expected, actual);
+
+  ASSERT_STREQ("", getFakeLogBuf().c_str());
+  ASSERT_STREQ("", getFakeLogPrint().c_str());
 }
 
 TEST_F(MallocDebugTest, verify_pointers) {

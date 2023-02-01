@@ -69,7 +69,7 @@ static void sys_stat_h() {
   STRUCT_MEMBER(struct stat, struct timespec, st_mtim);
   STRUCT_MEMBER(struct stat, struct timespec, st_ctim);
 #if defined(__BIONIC__)
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__riscv)
   STRUCT_MEMBER(struct stat, int, st_blksize);
 #elif defined(__x86_64__)
   STRUCT_MEMBER(struct stat, long, st_blksize);

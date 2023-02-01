@@ -54,6 +54,7 @@ typedef unsigned int speed_t;
 #define B38400 0x0000000f
 #define EXTA B19200
 #define EXTB B38400
+#define ADDRB 0x20000000
 #define CMSPAR 0x40000000
 #define CRTSCTS 0x80000000
 #define IBSHIFT 16

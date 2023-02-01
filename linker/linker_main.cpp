@@ -203,35 +203,29 @@ struct ExecutableInfo {
   ElfW(Addr) entry_point;
 };
 
-static ExecutableInfo get_executable_info() {
+static ExecutableInfo get_executable_info(const char* arg_path) {
   ExecutableInfo result = {};
+  char const* exe_path = "/proc/self/exe";
 
-  if (is_first_stage_init()) {
-    // /proc fs is not mounted when first stage init starts. Therefore we can't
-    // use /proc/self/exe for init.
-    stat("/init", &result.file_stat);
-
-    // /init may be a symlink, so try to read it as such.
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/init", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      result.path = "/init";
-    } else {
-      result.path = std::string(path, path_len);
+  // Stat "/proc/self/exe" instead of executable_path because
+  // the executable could be unlinked by this point and it should
+  // not cause a crash (see http://b/31084669)
+  if (TEMP_FAILURE_RETRY(stat(exe_path, &result.file_stat) == -1)) {
+    // Fallback to argv[0] for the case where /proc isn't available
+    if (TEMP_FAILURE_RETRY(stat(arg_path, &result.file_stat) == -1)) {
+      async_safe_fatal("unable to stat either \"/proc/self/exe\" or \"%s\": %s",
+          arg_path, strerror(errno));
     }
+    exe_path = arg_path;
+  }
+
+  // Path might be a symlink
+  char sym_path[PATH_MAX];
+  ssize_t sym_path_len = readlink(exe_path, sym_path, sizeof(sym_path));
+  if (sym_path_len > 0 && sym_path_len < static_cast<ssize_t>(sizeof(sym_path))) {
+    result.path = std::string(sym_path, sym_path_len);
   } else {
-    // Stat "/proc/self/exe" instead of executable_path because
-    // the executable could be unlinked by this point and it should
-    // not cause a crash (see http://b/31084669)
-    if (TEMP_FAILURE_RETRY(stat("/proc/self/exe", &result.file_stat)) != 0) {
-      async_safe_fatal("unable to stat \"/proc/self/exe\": %s", strerror(errno));
-    }
-    char path[PATH_MAX];
-    ssize_t path_len = readlink("/proc/self/exe", path, sizeof(path));
-    if (path_len == -1 || path_len >= static_cast<ssize_t>(sizeof(path))) {
-      async_safe_fatal("readlink('/proc/self/exe') failed: %s", strerror(errno));
-    }
-    result.path = std::string(path, path_len);
+    result.path = std::string(exe_path, strlen(exe_path));
   }
 
   result.phdr = reinterpret_cast<const ElfW(Phdr)*>(getauxval(AT_PHDR));
@@ -359,7 +353,7 @@ static ElfW(Addr) linker_main(KernelArgumentBlock& args, const char* exe_to_load
   }
 
   const ExecutableInfo exe_info = exe_to_load ? load_executable(exe_to_load) :
-                                                get_executable_info();
+                                                get_executable_info(args.argv[0]);
 
   INFO("[ Linking executable \"%s\" ]", exe_info.path.c_str());
 

@@ -68,6 +68,100 @@ DebugData* g_debug;
 bool* g_zygote_child;
 
 const MallocDispatch* g_dispatch;
+
+static __always_inline uint64_t Nanotime() {
+  struct timespec t = {};
+  clock_gettime(CLOCK_MONOTONIC, &t);
+  return static_cast<uint64_t>(t.tv_sec) * 1000000000LL + t.tv_nsec;
+}
+
+namespace {
+// A TimedResult contains the result of from malloc end_ns al. functions and the
+// start/end timestamps.
+struct TimedResult {
+  uint64_t start_ns = 0;
+  uint64_t end_ns = 0;
+  union {
+    size_t s;
+    int i;
+    void* p;
+  } v;
+
+  uint64_t GetStartTimeNS() const { return start_ns; }
+  uint64_t GetEndTimeNS() const { return end_ns; }
+  void SetStartTimeNS(uint64_t t) { start_ns = t; }
+  void SetEndTimeNS(uint64_t t) { end_ns = t; }
+
+  template <typename T>
+  void setValue(T);
+  template <>
+  void setValue(size_t s) {
+    v.s = s;
+  }
+  template <>
+  void setValue(int i) {
+    v.i = i;
+  }
+  template <>
+  void setValue(void* p) {
+    v.p = p;
+  }
+
+  template <typename T>
+  T getValue() const;
+  template <>
+  size_t getValue<size_t>() const {
+    return v.s;
+  }
+  template <>
+  int getValue<int>() const {
+    return v.i;
+  }
+  template <>
+  void* getValue<void*>() const {
+    return v.p;
+  }
+};
+
+class ScopedTimer {
+ public:
+  ScopedTimer(TimedResult& res) : res_(res) { res_.start_ns = Nanotime(); }
+
+  ~ScopedTimer() { res_.end_ns = Nanotime(); }
+
+ private:
+  TimedResult& res_;
+};
+
+}  // namespace
+
+template <typename MallocFn, typename... Args>
+static TimedResult TimerCall(MallocFn fn, Args... args) {
+  TimedResult ret;
+  decltype((g_dispatch->*fn)(args...)) r;
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    ScopedTimer t(ret);
+    r = (g_dispatch->*fn)(args...);
+  } else {
+    r = (g_dispatch->*fn)(args...);
+  }
+  ret.setValue<decltype(r)>(r);
+  return ret;
+}
+
+template <typename MallocFn, typename... Args>
+static TimedResult TimerCallVoid(MallocFn fn, Args... args) {
+  TimedResult ret;
+  {
+    ScopedTimer t(ret);
+    (g_dispatch->*fn)(args...);
+  }
+  return ret;
+}
+
+#define TCALL(FUNC, ...) TimerCall(&MallocDispatch::FUNC, __VA_ARGS__);
+#define TCALLVOID(FUNC, ...) TimerCallVoid(&MallocDispatch::FUNC, __VA_ARGS__);
+
 // ------------------------------------------------------------------------
 
 // ------------------------------------------------------------------------
@@ -400,6 +494,9 @@ void debug_get_malloc_leak_info(uint8_t** info, size_t* overall_size, size_t* in
 
 void debug_free_malloc_leak_info(uint8_t* info) {
   g_dispatch->free(info);
+  // Purge the memory that was freed since a significant amount of
+  // memory could have been allocated and freed.
+  g_dispatch->mallopt(M_PURGE, 0);
 }
 
 size_t debug_malloc_usable_size(void* pointer) {
@@ -419,7 +516,7 @@ size_t debug_malloc_usable_size(void* pointer) {
   return InternalMallocUsableSize(pointer);
 }
 
-static void* InternalMalloc(size_t size) {
+static TimedResult InternalMalloc(size_t size) {
   if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
@@ -430,29 +527,34 @@ static void* InternalMalloc(size_t size) {
     size = 1;
   }
 
+  TimedResult result;
+
   size_t real_size = size + g_debug->extra_bytes();
   if (real_size < size) {
     // Overflow.
     errno = ENOMEM;
-    return nullptr;
+    result.setValue<void*>(nullptr);
+    return result;
   }
 
   if (size > PointerInfoType::MaxSize()) {
     errno = ENOMEM;
-    return nullptr;
+    result.setValue<void*>(nullptr);
+    return result;
   }
 
-  void* pointer;
   if (g_debug->HeaderEnabled()) {
-    Header* header =
-        reinterpret_cast<Header*>(g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
+    result = TCALL(memalign, MINIMUM_ALIGNMENT_BYTES, real_size);
+    Header* header = reinterpret_cast<Header*>(result.getValue<void*>());
     if (header == nullptr) {
-      return nullptr;
+      return result;
     }
-    pointer = InitHeader(header, header, size);
+    result.setValue<void*>(InitHeader(header, header, size));
   } else {
-    pointer = g_dispatch->malloc(real_size);
+    result = TCALL(malloc, real_size);
   }
+
+  void* pointer = result.getValue<void*>();
 
   if (pointer != nullptr) {
     if (g_debug->TrackPointers()) {
@@ -466,7 +568,8 @@ static void* InternalMalloc(size_t size) {
       memset(pointer, g_debug->config().fill_alloc_value(), bytes);
     }
   }
-  return pointer;
+
+  return result;
 }
 
 void* debug_malloc(size_t size) {
@@ -479,16 +582,17 @@ void* debug_malloc(size_t size) {
   ScopedDisableDebugCalls disable;
   ScopedBacktraceSignalBlocker blocked;
 
-  void* pointer = InternalMalloc(size);
+  TimedResult result = InternalMalloc(size);
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new MallocEntry(pointer, size));
+    g_debug->record->AddEntry(new MallocEntry(result.getValue<void*>(), size,
+                                              result.GetStartTimeNS(), result.GetEndTimeNS()));
   }
 
-  return pointer;
+  return result.getValue<void*>();
 }
 
-static void InternalFree(void* pointer) {
+static TimedResult InternalFree(void* pointer) {
   if ((g_debug->config().options() & BACKTRACE) && g_debug->pointer->ShouldDumpAndReset()) {
     debug_dump_heap(android::base::StringPrintf(
                         "%s.%d.txt", g_debug->config().backtrace_dump_prefix().c_str(), getpid())
@@ -530,6 +634,7 @@ static void InternalFree(void* pointer) {
     PointerData::Remove(pointer);
   }
 
+  TimedResult result;
   if (g_debug->config().options() & FREE_TRACK) {
     // Do not add the allocation until we are done modifying the pointer
     // itself. This avoids a race if a lot of threads are all doing
@@ -537,15 +642,15 @@ static void InternalFree(void* pointer) {
     // pointer from another thread, while still trying to free it in
     // this function.
     pointer = PointerData::AddFreed(pointer, bytes);
-    if (pointer != nullptr) {
-      if (g_debug->HeaderEnabled()) {
-        pointer = g_debug->GetHeader(pointer)->orig_pointer;
-      }
-      g_dispatch->free(pointer);
+    if (pointer != nullptr && g_debug->HeaderEnabled()) {
+      pointer = g_debug->GetHeader(pointer)->orig_pointer;
     }
+    result = TCALLVOID(free, pointer);
   } else {
-    g_dispatch->free(free_pointer);
+    result = TCALLVOID(free, free_pointer);
   }
+
+  return result;
 }
 
 void debug_free(void* pointer) {
@@ -558,15 +663,16 @@ void debug_free(void* pointer) {
   ScopedDisableDebugCalls disable;
   ScopedBacktraceSignalBlocker blocked;
 
-  if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new FreeEntry(pointer));
-  }
-
   if (!VerifyPointer(pointer, "free")) {
     return;
   }
 
-  InternalFree(pointer);
+  TimedResult result = InternalFree(pointer);
+
+  if (g_debug->config().options() & RECORD_ALLOCS) {
+    g_debug->record->AddEntry(
+        new FreeEntry(pointer, result.GetStartTimeNS(), result.GetEndTimeNS()));
+  }
 }
 
 void* debug_memalign(size_t alignment, size_t bytes) {
@@ -588,6 +694,7 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     return nullptr;
   }
 
+  TimedResult result;
   void* pointer;
   if (g_debug->HeaderEnabled()) {
     // Make the alignment a power of two.
@@ -610,7 +717,8 @@ void* debug_memalign(size_t alignment, size_t bytes) {
       return nullptr;
     }
 
-    pointer = g_dispatch->malloc(real_size);
+    result = TCALL(malloc, real_size);
+    pointer = result.getValue<void*>();
     if (pointer == nullptr) {
       return nullptr;
     }
@@ -620,6 +728,7 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     value += (-value % alignment);
 
     Header* header = g_debug->GetHeader(reinterpret_cast<void*>(value));
+    // Don't need to update `result` here because we only need the timestamps.
     pointer = InitHeader(header, pointer, bytes);
   } else {
     size_t real_size = bytes + g_debug->extra_bytes();
@@ -628,7 +737,8 @@ void* debug_memalign(size_t alignment, size_t bytes) {
       errno = ENOMEM;
       return nullptr;
     }
-    pointer = g_dispatch->memalign(alignment, real_size);
+    result = TCALL(memalign, alignment, real_size);
+    pointer = result.getValue<void*>();
   }
 
   if (pointer != nullptr) {
@@ -644,7 +754,8 @@ void* debug_memalign(size_t alignment, size_t bytes) {
     }
 
     if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment));
+      g_debug->record->AddEntry(new MemalignEntry(pointer, bytes, alignment,
+                                                  result.GetStartTimeNS(), result.GetEndTimeNS()));
     }
   }
 
@@ -662,10 +773,12 @@ void* debug_realloc(void* pointer, size_t bytes) {
   ScopedBacktraceSignalBlocker blocked;
 
   if (pointer == nullptr) {
-    pointer = InternalMalloc(bytes);
+    TimedResult result = InternalMalloc(bytes);
     if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new ReallocEntry(pointer, bytes, nullptr));
+      g_debug->record->AddEntry(new ReallocEntry(result.getValue<void*>(), bytes, nullptr,
+                                                 result.GetStartTimeNS(), result.GetEndTimeNS()));
     }
+    pointer = result.getValue<void*>();
     return pointer;
   }
 
@@ -674,11 +787,13 @@ void* debug_realloc(void* pointer, size_t bytes) {
   }
 
   if (bytes == 0) {
+    TimedResult result = InternalFree(pointer);
+
     if (g_debug->config().options() & RECORD_ALLOCS) {
-      g_debug->record->AddEntry(new ReallocEntry(nullptr, bytes, pointer));
+      g_debug->record->AddEntry(new ReallocEntry(nullptr, bytes, pointer, result.GetStartTimeNS(),
+                                                 result.GetEndTimeNS()));
     }
 
-    InternalFree(pointer);
     return nullptr;
   }
 
@@ -697,6 +812,7 @@ void* debug_realloc(void* pointer, size_t bytes) {
     return nullptr;
   }
 
+  TimedResult result;
   void* new_pointer;
   size_t prev_size;
   if (g_debug->HeaderEnabled()) {
@@ -730,7 +846,8 @@ void* debug_realloc(void* pointer, size_t bytes) {
     }
 
     // Allocate the new size.
-    new_pointer = InternalMalloc(bytes);
+    result = InternalMalloc(bytes);
+    new_pointer = result.getValue<void*>();
     if (new_pointer == nullptr) {
       errno = ENOMEM;
       return nullptr;
@@ -738,14 +855,18 @@ void* debug_realloc(void* pointer, size_t bytes) {
 
     prev_size = header->usable_size;
     memcpy(new_pointer, pointer, prev_size);
-    InternalFree(pointer);
+    TimedResult free_time = InternalFree(pointer);
+    // `realloc` is split into two steps, update the end time to the finish time
+    // of the second operation.
+    result.SetEndTimeNS(free_time.GetEndTimeNS());
   } else {
     if (g_debug->TrackPointers()) {
       PointerData::Remove(pointer);
     }
 
     prev_size = g_dispatch->malloc_usable_size(pointer);
-    new_pointer = g_dispatch->realloc(pointer, real_size);
+    result = TCALL(realloc, pointer, real_size);
+    new_pointer = result.getValue<void*>();
     if (new_pointer == nullptr) {
       return nullptr;
     }
@@ -767,7 +888,8 @@ void* debug_realloc(void* pointer, size_t bytes) {
   }
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new ReallocEntry(new_pointer, bytes, pointer));
+    g_debug->record->AddEntry(new ReallocEntry(new_pointer, bytes, pointer, result.GetStartTimeNS(),
+                                               result.GetEndTimeNS()));
   }
 
   return new_pointer;
@@ -807,21 +929,24 @@ void* debug_calloc(size_t nmemb, size_t bytes) {
   }
 
   void* pointer;
+  TimedResult result;
   if (g_debug->HeaderEnabled()) {
     // Need to guarantee the alignment of the header.
-    Header* header =
-        reinterpret_cast<Header*>(g_dispatch->memalign(MINIMUM_ALIGNMENT_BYTES, real_size));
+    result = TCALL(memalign, MINIMUM_ALIGNMENT_BYTES, real_size);
+    Header* header = reinterpret_cast<Header*>(result.getValue<void*>());
     if (header == nullptr) {
       return nullptr;
     }
     memset(header, 0, g_dispatch->malloc_usable_size(header));
     pointer = InitHeader(header, header, size);
   } else {
-    pointer = g_dispatch->calloc(1, real_size);
+    result = TCALL(calloc, 1, real_size);
+    pointer = result.getValue<void*>();
   }
 
   if (g_debug->config().options() & RECORD_ALLOCS) {
-    g_debug->record->AddEntry(new CallocEntry(pointer, bytes, nmemb));
+    g_debug->record->AddEntry(
+        new CallocEntry(pointer, nmemb, bytes, result.GetStartTimeNS(), result.GetEndTimeNS()));
   }
 
   if (pointer != nullptr && g_debug->TrackPointers()) {
@@ -995,6 +1120,10 @@ static void write_dump(int fd) {
     dprintf(fd, "%s", content.c_str());
   }
   dprintf(fd, "END\n");
+
+  // Purge the memory that was allocated and freed during this operation
+  // since it can be large enough to expand the RSS significantly.
+  g_dispatch->mallopt(M_PURGE, 0);
 }
 
 bool debug_write_malloc_leak_info(FILE* fp) {
