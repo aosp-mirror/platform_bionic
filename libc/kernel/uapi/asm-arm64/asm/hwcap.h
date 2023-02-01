@@ -82,4 +82,6 @@
 #define HWCAP2_SME_F32F32 (1 << 29)
 #define HWCAP2_SME_FA64 (1 << 30)
 #define HWCAP2_WFXT (1UL << 31)
+#define HWCAP2_EBF16 (1UL << 32)
+#define HWCAP2_SVE_EBF16 (1UL << 33)
 #endif

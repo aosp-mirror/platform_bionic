@@ -31,6 +31,7 @@
 #define VIRTIO_BLK_F_MQ 12
 #define VIRTIO_BLK_F_DISCARD 13
 #define VIRTIO_BLK_F_WRITE_ZEROES 14
+#define VIRTIO_BLK_F_SECURE_ERASE 16
 #ifndef VIRTIO_BLK_NO_LEGACY
 #define VIRTIO_BLK_F_BARRIER 0
 #define VIRTIO_BLK_F_SCSI 7
@@ -63,6 +64,9 @@ struct virtio_blk_config {
   __virtio32 max_write_zeroes_seg;
   __u8 write_zeroes_may_unmap;
   __u8 unused1[3];
+  __virtio32 max_secure_erase_sectors;
+  __virtio32 max_secure_erase_seg;
+  __virtio32 secure_erase_sector_alignment;
 } __attribute__((packed));
 #define VIRTIO_BLK_T_IN 0
 #define VIRTIO_BLK_T_OUT 1
@@ -73,6 +77,7 @@ struct virtio_blk_config {
 #define VIRTIO_BLK_T_GET_ID 8
 #define VIRTIO_BLK_T_DISCARD 11
 #define VIRTIO_BLK_T_WRITE_ZEROES 13
+#define VIRTIO_BLK_T_SECURE_ERASE 14
 #ifndef VIRTIO_BLK_NO_LEGACY
 #define VIRTIO_BLK_T_BARRIER 0x80000000
 #endif

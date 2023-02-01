@@ -304,6 +304,32 @@ enum vfio_device_mig_state {
   VFIO_DEVICE_STATE_RESUMING = 4,
   VFIO_DEVICE_STATE_RUNNING_P2P = 5,
 };
+#define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
+struct vfio_device_low_power_entry_with_wakeup {
+  __s32 wakeup_eventfd;
+  __u32 reserved;
+};
+#define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY_WITH_WAKEUP 4
+#define VFIO_DEVICE_FEATURE_LOW_POWER_EXIT 5
+struct vfio_device_feature_dma_logging_control {
+  __aligned_u64 page_size;
+  __u32 num_ranges;
+  __u32 __reserved;
+  __aligned_u64 ranges;
+};
+struct vfio_device_feature_dma_logging_range {
+  __aligned_u64 iova;
+  __aligned_u64 length;
+};
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_START 6
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_STOP 7
+struct vfio_device_feature_dma_logging_report {
+  __aligned_u64 iova;
+  __aligned_u64 length;
+  __aligned_u64 page_size;
+  __aligned_u64 bitmap;
+};
+#define VFIO_DEVICE_FEATURE_DMA_LOGGING_REPORT 8
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;

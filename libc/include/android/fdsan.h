@@ -123,6 +123,9 @@ enum android_fdsan_owner_type {
 
   /* libziparchive's ZipArchive */
   ANDROID_FDSAN_OWNER_TYPE_ZIPARCHIVE = 12,
+
+  /* native_handle_t */
+  ANDROID_FDSAN_OWNER_TYPE_NATIVE_HANDLE = 13,
 };
 
 /*

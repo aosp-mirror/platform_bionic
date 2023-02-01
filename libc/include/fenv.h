@@ -35,6 +35,8 @@
 #include <bits/fenv_arm.h>
 #elif defined(__i386__)
 #include <bits/fenv_x86.h>
+#elif defined(__riscv)
+#include <bits/fenv_riscv64.h>
 #elif defined(__x86_64__)
 #include <bits/fenv_x86_64.h>
 #endif

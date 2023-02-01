@@ -152,6 +152,7 @@ enum transaction_flags {
   TF_STATUS_CODE = 0x08,
   TF_ACCEPT_FDS = 0x10,
   TF_CLEAR_BUF = 0x20,
+  TF_UPDATE_TXN = 0x40,
 };
 struct binder_transaction_data {
   union {
@@ -188,7 +189,7 @@ struct binder_ptr_cookie {
 struct binder_handle_cookie {
   __u32 handle;
   binder_uintptr_t cookie;
-} __packed;
+} __attribute__((__packed__));
 struct binder_pri_desc {
   __s32 priority;
   __u32 desc;

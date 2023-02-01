@@ -40,7 +40,7 @@ __BEGIN_DECLS
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure.
  */
-void* malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
+void* _Nullable malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
 
 /**
  * [calloc(3)](http://man7.org/linux/man-pages/man3/calloc.3.html) allocates
@@ -49,7 +49,7 @@ void* malloc(size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(1) __wur;
  * Returns a pointer to the allocated memory on success and returns a null
  * pointer and sets `errno` on failure.
  */
-void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
+void* _Nullable calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLOC_SIZE(1,2) __wur;
 
 /**
  * [realloc(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -58,7 +58,7 @@ void* calloc(size_t __item_count, size_t __item_size) __mallocfunc __BIONIC_ALLO
  * Returns a pointer (which may be different from `__ptr`) to the resized
  * memory on success and returns a null pointer and sets `errno` on failure.
  */
-void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
+void* _Nullable realloc(void* _Nullable __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
 
 /**
  * [reallocarray(3)](http://man7.org/linux/man-pages/man3/realloc.3.html) resizes
@@ -70,13 +70,13 @@ void* realloc(void* __ptr, size_t __byte_count) __BIONIC_ALLOC_SIZE(2) __wur;
  * Returns a pointer (which may be different from `__ptr`) to the resized
  * memory on success and returns a null pointer and sets `errno` on failure.
  */
-void* reallocarray(void* __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
+void* _Nullable reallocarray(void* _Nullable __ptr, size_t __item_count, size_t __item_size) __BIONIC_ALLOC_SIZE(2, 3) __wur __INTRODUCED_IN(29);
 
 /**
  * [free(3)](http://man7.org/linux/man-pages/man3/free.3.html) deallocates
  * memory on the heap.
  */
-void free(void* __ptr);
+void free(void* _Nullable __ptr);
 
 /**
  * [memalign(3)](http://man7.org/linux/man-pages/man3/memalign.3.html) allocates
@@ -87,7 +87,7 @@ void free(void* __ptr);
  *
  * See also posix_memalign().
  */
-void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
+void* _Nullable memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_ALLOC_SIZE(2) __wur;
 
 /**
  * [malloc_usable_size(3)](http://man7.org/linux/man-pages/man3/malloc_usable_size.3.html)
@@ -95,7 +95,7 @@ void* memalign(size_t __alignment, size_t __byte_count) __mallocfunc __BIONIC_AL
  *
  * Available since API level 17.
  */
-size_t malloc_usable_size(const void* __ptr) __INTRODUCED_IN(17);
+size_t malloc_usable_size(const void* _Nullable __ptr) __INTRODUCED_IN(17);
 
 #define __MALLINFO_BODY \
   /** Total number of non-mmapped bytes currently allocated from OS. */ \
@@ -168,7 +168,7 @@ struct mallinfo2 mallinfo2(void) __RENAME(mallinfo);
  *
  * Available since API level 23.
  */
-int malloc_info(int __must_be_zero, FILE* __fp) __INTRODUCED_IN(23);
+int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * mallopt() option to set the decay time. Valid values are 0 and 1.
@@ -329,7 +329,7 @@ int mallopt(int __option, int __value) __INTRODUCED_IN(26);
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
  */
-extern void* (*volatile __malloc_hook)(size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
+extern void* _Nonnull (*volatile _Nonnull __malloc_hook)(size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
  * [__realloc_hook(3)](http://man7.org/linux/man-pages/man3/__realloc_hook.3.html)
@@ -340,7 +340,7 @@ extern void* (*volatile __malloc_hook)(size_t __byte_count, const void* __caller
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
  */
-extern void* (*volatile __realloc_hook)(void* __ptr, size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
+extern void* _Nonnull (*volatile _Nonnull __realloc_hook)(void* _Nullable __ptr, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
  * [__free_hook(3)](http://man7.org/linux/man-pages/man3/__free_hook.3.html)
@@ -351,7 +351,7 @@ extern void* (*volatile __realloc_hook)(void* __ptr, size_t __byte_count, const 
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
  */
-extern void (*volatile __free_hook)(void* __ptr, const void* __caller) __INTRODUCED_IN(28);
+extern void (*volatile _Nonnull __free_hook)(void* _Nullable __ptr, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 /**
  * [__memalign_hook(3)](http://man7.org/linux/man-pages/man3/__memalign_hook.3.html)
@@ -362,6 +362,6 @@ extern void (*volatile __free_hook)(void* __ptr, const void* __caller) __INTRODU
  *
  * See also: [extra documentation](https://android.googlesource.com/platform/bionic/+/master/libc/malloc_hooks/README.md)
  */
-extern void* (*volatile __memalign_hook)(size_t __alignment, size_t __byte_count, const void* __caller) __INTRODUCED_IN(28);
+extern void* _Nonnull (*volatile _Nonnull __memalign_hook)(size_t __alignment, size_t __byte_count, const void* _Nonnull __caller) __INTRODUCED_IN(28);
 
 __END_DECLS

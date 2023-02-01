@@ -86,7 +86,7 @@ struct jffs2_raw_dirent {
   __u8 unused[2];
   jint32_t node_crc;
   jint32_t name_crc;
-  __u8 name[0];
+  __u8 name[];
 };
 struct jffs2_raw_inode {
   jint16_t magic;
@@ -110,7 +110,7 @@ struct jffs2_raw_inode {
   jint16_t flags;
   jint32_t data_crc;
   jint32_t node_crc;
-  __u8 data[0];
+  __u8 data[];
 };
 struct jffs2_raw_xattr {
   jint16_t magic;
@@ -124,7 +124,7 @@ struct jffs2_raw_xattr {
   jint16_t value_len;
   jint32_t data_crc;
   jint32_t node_crc;
-  __u8 data[0];
+  __u8 data[];
 } __attribute__((packed));
 struct jffs2_raw_xref {
   jint16_t magic;
@@ -146,7 +146,7 @@ struct jffs2_raw_summary {
   jint32_t padded;
   jint32_t sum_crc;
   jint32_t node_crc;
-  jint32_t sum[0];
+  jint32_t sum[];
 };
 union jffs2_node_union {
   struct jffs2_raw_inode i;

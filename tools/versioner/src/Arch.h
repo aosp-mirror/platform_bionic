@@ -28,6 +28,7 @@
 enum class Arch : size_t {
   arm = 0,
   arm64,
+  riscv64,
   x86,
   x86_64,
 };
@@ -121,6 +122,7 @@ class ArchMapIterator {
 static const std::set<Arch> supported_archs = {
   Arch::arm,
   Arch::arm64,
+  Arch::riscv64,
   Arch::x86,
   Arch::x86_64,
 };
@@ -128,17 +130,19 @@ static const std::set<Arch> supported_archs = {
 static ArchMap<std::string> arch_targets = {
   { Arch::arm, "arm-linux-androideabi" },
   { Arch::arm64, "aarch64-linux-android" },
+  { Arch::riscv64, "riscv64-linux-android" },
   { Arch::x86, "i686-linux-android" },
   { Arch::x86_64, "x86_64-linux-android" },
 };
 
 static const std::set<int> default_levels = {
-  14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 30,
+  14, 15, 16, 17, 18, 19, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 33, 34,
 };
 
 static const ArchMap<int> arch_min_api = {
   { Arch::arm, 9 },
   { Arch::arm64, 21 },
+  { Arch::riscv64, 10000 },
   { Arch::x86, 9 },
   { Arch::x86_64, 21 },
 };
@@ -160,4 +164,7 @@ static const std::unordered_map<std::string, int> api_codename_map{
   {"P", 28},
   {"Q", 29},
   {"R", 30},
+  {"S", 31},
+  {"T", 33},
+  {"U", 34},
 };

@@ -176,6 +176,11 @@ cc_test {
         "bionic_libc_platform_headers",
     ],
 
+    // The clang-analyzer-unix.Malloc and other warnings in these
+    // unit tests are either false positive or in
+    // negative tests that can be ignored.
+    tidy: false,
+
     srcs: [
         "tests/malloc_debug_system_tests.cpp",
     ],

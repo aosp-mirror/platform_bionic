@@ -680,28 +680,28 @@ LIBC {
     nftw64; # introduced=21
     nice;
     nrand48;
-    ns_format_ttl; # arm64 x86_64 introduced=22
-    ns_get16; # arm64 x86_64 introduced=22
-    ns_get32; # arm64 x86_64 introduced=22
-    ns_initparse; # arm64 x86_64 introduced=22
-    ns_makecanon; # arm64 x86_64 introduced=22
-    ns_msg_getflag; # arm64 x86_64 introduced=22
-    ns_name_compress; # arm64 x86_64 introduced=22
-    ns_name_ntol; # arm64 x86_64 introduced=22
-    ns_name_ntop; # arm64 x86_64 introduced=22
-    ns_name_pack; # arm64 x86_64 introduced=22
-    ns_name_pton; # arm64 x86_64 introduced=22
-    ns_name_rollback; # arm64 x86_64 introduced=22
-    ns_name_skip; # arm64 x86_64 introduced=22
-    ns_name_uncompress; # arm64 x86_64 introduced=22
-    ns_name_unpack; # arm64 x86_64 introduced=22
-    ns_parserr; # arm64 x86_64 introduced=22
-    ns_put16; # arm64 x86_64 introduced=22
-    ns_put32; # arm64 x86_64 introduced=22
-    ns_samename; # arm64 x86_64 introduced=22
-    ns_skiprr; # arm64 x86_64 introduced=22
-    ns_sprintrr; # arm64 x86_64 introduced=22
-    ns_sprintrrf; # arm64 x86_64 introduced=22
+    ns_format_ttl; # arm64 x86_64 riscv64 introduced=22
+    ns_get16; # arm64 x86_64 riscv64 introduced=22
+    ns_get32; # arm64 x86_64 riscv64 introduced=22
+    ns_initparse; # arm64 x86_64 riscv64 introduced=22
+    ns_makecanon; # arm64 x86_64 riscv64 introduced=22
+    ns_msg_getflag; # arm64 x86_64 riscv64 introduced=22
+    ns_name_compress; # arm64 x86_64 riscv64 introduced=22
+    ns_name_ntol; # arm64 x86_64 riscv64 introduced=22
+    ns_name_ntop; # arm64 x86_64 riscv64 introduced=22
+    ns_name_pack; # arm64 x86_64 riscv64 introduced=22
+    ns_name_pton; # arm64 x86_64 riscv64 introduced=22
+    ns_name_rollback; # arm64 x86_64 riscv64 introduced=22
+    ns_name_skip; # arm64 x86_64 riscv64 introduced=22
+    ns_name_uncompress; # arm64 x86_64 riscv64 introduced=22
+    ns_name_unpack; # arm64 x86_64 riscv64 introduced=22
+    ns_parserr; # arm64 x86_64 riscv64 introduced=22
+    ns_put16; # arm64 x86_64 riscv64 introduced=22
+    ns_put32; # arm64 x86_64 riscv64 introduced=22
+    ns_samename; # arm64 x86_64 riscv64 introduced=22
+    ns_skiprr; # arm64 x86_64 riscv64 introduced=22
+    ns_sprintrr; # arm64 x86_64 riscv64 introduced=22
+    ns_sprintrrf; # arm64 x86_64 riscv64 introduced=22
     nsdispatch;
     ntohl; # introduced=21
     ntohs; # introduced=21
@@ -740,7 +740,7 @@ LIBC {
     pread;
     pread64; # introduced-arm=12 introduced-arm64=21 introduced-x86=12 introduced-x86_64=21
     printf;
-    prlimit; # arm64 x86_64
+    prlimit; # arm64 x86_64 riscv64
     prlimit64; # introduced=21
     process_vm_readv; # introduced=23
     process_vm_writev; # introduced=23
@@ -1037,12 +1037,10 @@ LIBC {
     strtold_l; # introduced=21
     strtoll;
     strtoll_l; # introduced=21
-    strtoq; # introduced=21
     strtoul;
     strtoull;
     strtoull_l; # introduced=21
     strtoumax;
-    strtouq; # introduced=21
     strxfrm;
     strxfrm_l; # introduced=21
     swapoff; # introduced-arm=19 introduced-arm64=21 introduced-x86=19 introduced-x86_64=21
@@ -1449,7 +1447,7 @@ LIBC_Q { # introduced=Q
     ___tls_get_addr; # x86
     __aeabi_read_tp; # arm
     __res_randomid;
-    __tls_get_addr; # arm x86_64
+    __tls_get_addr; # arm riscv64 x86_64
     android_fdsan_close_with_tag;
     android_fdsan_create_owner_tag;
     android_fdsan_exchange_owner_tag;
@@ -1520,34 +1518,34 @@ LIBC_R { # introduced=R
     tss_set;
 
     # Unwinder implementation
-    __aeabi_unwind_cpp_pr0; # apex llndk arm
-    __aeabi_unwind_cpp_pr1; # apex llndk arm
-    __aeabi_unwind_cpp_pr2; # apex llndk arm
-    __deregister_frame; # apex llndk arm64 x86 x86_64
-    __gnu_unwind_frame; # apex llndk arm
-    __register_frame; # apex llndk arm64 x86 x86_64
-    _Unwind_Backtrace; # apex llndk
-    _Unwind_Complete; # apex llndk arm
-    _Unwind_DeleteException; # apex llndk
-    _Unwind_Find_FDE; # apex llndk
-    _Unwind_FindEnclosingFunction; # apex llndk
-    _Unwind_ForcedUnwind; # apex llndk arm64 x86 x86_64
-    _Unwind_GetCFA; # apex llndk
-    _Unwind_GetDataRelBase; # apex llndk
-    _Unwind_GetGR; # apex llndk
-    _Unwind_GetIP; # apex llndk
-    _Unwind_GetIPInfo; # apex llndk
-    _Unwind_GetLanguageSpecificData; # apex llndk
-    _Unwind_GetRegionStart; # apex llndk
-    _Unwind_GetTextRelBase; # apex llndk
-    _Unwind_RaiseException; # apex llndk
-    _Unwind_Resume; # apex llndk
-    _Unwind_Resume_or_Rethrow; # apex llndk
-    _Unwind_SetGR; # apex llndk
-    _Unwind_SetIP; # apex llndk
-    _Unwind_VRS_Get; # apex llndk arm
-    _Unwind_VRS_Pop; # apex llndk arm
-    _Unwind_VRS_Set; # apex llndk arm
+    __aeabi_unwind_cpp_pr0; # arm
+    __aeabi_unwind_cpp_pr1; # arm
+    __aeabi_unwind_cpp_pr2; # arm
+    __deregister_frame; # arm64 x86 x86_64
+    __gnu_unwind_frame; # arm
+    __register_frame; # arm64 x86 x86_64
+    _Unwind_Backtrace;
+    _Unwind_Complete; # arm
+    _Unwind_DeleteException;
+    _Unwind_Find_FDE;
+    _Unwind_FindEnclosingFunction;
+    _Unwind_ForcedUnwind; # arm64 x86 x86_64
+    _Unwind_GetCFA;
+    _Unwind_GetDataRelBase;
+    _Unwind_GetGR;
+    _Unwind_GetIP;
+    _Unwind_GetIPInfo;
+    _Unwind_GetLanguageSpecificData;
+    _Unwind_GetRegionStart;
+    _Unwind_GetTextRelBase;
+    _Unwind_RaiseException;
+    _Unwind_Resume;
+    _Unwind_Resume_or_Rethrow;
+    _Unwind_SetGR;
+    _Unwind_SetIP;
+    _Unwind_VRS_Get; # arm
+    _Unwind_VRS_Pop; # arm
+    _Unwind_VRS_Set; # arm
 } LIBC_Q;
 
 LIBC_S { # introduced=S
@@ -1578,6 +1576,7 @@ LIBC_T { # introduced=Tiramisu
 
 LIBC_U { # introduced=UpsideDownCake
   global:
+    __freadahead;
     close_range;
     copy_file_range;
     memset_explicit;

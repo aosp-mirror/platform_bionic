@@ -221,7 +221,7 @@ struct btrfs_inode_extref {
   __le64 parent_objectid;
   __le64 index;
   __le16 name_len;
-  __u8 name[0];
+  __u8 name[];
 } __attribute__((__packed__));
 struct btrfs_timespec {
   __le64 sec;
@@ -394,6 +394,7 @@ struct btrfs_free_space_info {
 #define BTRFS_QGROUP_STATUS_FLAG_ON (1ULL << 0)
 #define BTRFS_QGROUP_STATUS_FLAG_RESCAN (1ULL << 1)
 #define BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT (1ULL << 2)
+#define BTRFS_QGROUP_STATUS_FLAGS_MASK (BTRFS_QGROUP_STATUS_FLAG_ON | BTRFS_QGROUP_STATUS_FLAG_RESCAN | BTRFS_QGROUP_STATUS_FLAG_INCONSISTENT)
 #define BTRFS_QGROUP_STATUS_VERSION 1
 struct btrfs_qgroup_status_item {
   __le64 version;

@@ -76,33 +76,12 @@ static void call_array(init_func_t** list, int argc, char* argv[], char* envp[])
   }
 }
 
-#if defined(__aarch64__) || defined(__x86_64__)
-extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
-
-static void call_ifunc_resolvers() {
-  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
-    // These symbols are not emitted by gold. Gold has code to do so, but for
-    // whatever reason it is not being run. In these cases ifuncs cannot be
-    // resolved, so we do not support using ifuncs in static executables linked
-    // with gold.
-    //
-    // Since they are weak, they will be non-null when linked with bfd/lld and
-    // null when linked with gold.
-    return;
-  }
-
-  for (ElfW(Rela) *r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
-    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
-    ElfW(Addr) resolver = r->r_addend;
-    *offset = __bionic_call_ifunc_resolver(resolver);
-  }
-}
-#else
+#if defined(__arm__) || defined(__i386__)  // Legacy architectures used REL...
 extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rel) __rel_iplt_start[], __rel_iplt_end[];
 
 static void call_ifunc_resolvers() {
   if (__rel_iplt_start == nullptr || __rel_iplt_end == nullptr) {
-    // These symbols are not emitted by gold. Gold has code to do so, but for
+    // These symbols were not emitted by gold. Gold has code to do so, but for
     // whatever reason it is not being run. In these cases ifuncs cannot be
     // resolved, so we do not support using ifuncs in static executables linked
     // with gold.
@@ -112,9 +91,30 @@ static void call_ifunc_resolvers() {
     return;
   }
 
-  for (ElfW(Rel) *r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
+  for (ElfW(Rel)* r = __rel_iplt_start; r != __rel_iplt_end; ++r) {
     ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
     ElfW(Addr) resolver = *offset;
+    *offset = __bionic_call_ifunc_resolver(resolver);
+  }
+}
+#else  // ...but modern architectures use RELA instead.
+extern __LIBC_HIDDEN__ __attribute__((weak)) ElfW(Rela) __rela_iplt_start[], __rela_iplt_end[];
+
+static void call_ifunc_resolvers() {
+  if (__rela_iplt_start == nullptr || __rela_iplt_end == nullptr) {
+    // These symbols were not emitted by gold. Gold has code to do so, but for
+    // whatever reason it is not being run. In these cases ifuncs cannot be
+    // resolved, so we do not support using ifuncs in static executables linked
+    // with gold.
+    //
+    // Since they are weak, they will be non-null when linked with bfd/lld and
+    // null when linked with gold.
+    return;
+  }
+
+  for (ElfW(Rela)* r = __rela_iplt_start; r != __rela_iplt_end; ++r) {
+    ElfW(Addr)* offset = reinterpret_cast<ElfW(Addr)*>(r->r_offset);
+    ElfW(Addr) resolver = r->r_addend;
     *offset = __bionic_call_ifunc_resolver(resolver);
   }
 }
@@ -305,6 +305,15 @@ __attribute__((no_sanitize("hwaddress", "memtag"))) void __libc_init_mte(const v
   bool memtag_stack;
   HeapTaggingLevel level = __get_heap_tagging_level(phdr_start, phdr_ct, load_bias, &memtag_stack);
   char* env = getenv("BIONIC_MEMTAG_UPGRADE_SECS");
+  static const char kAppProcessName[] = "app_process64";
+  const char* progname = __libc_shared_globals()->init_progname;
+  progname = progname ? __gnu_basename(progname) : nullptr;
+  if (progname &&
+      strncmp(progname, kAppProcessName, sizeof(kAppProcessName)) == 0) {
+    // disable timed upgrade for zygote, as the thread spawned will violate the requirement
+    // that it be single-threaded.
+    env = nullptr;
+  }
   int64_t timed_upgrade = 0;
   if (env) {
     char* endptr;
