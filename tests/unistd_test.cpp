@@ -294,10 +294,13 @@ TEST(UNISTD_TEST, unsetenv_EINVAL) {
 }
 
 TEST(UNISTD_TEST, setenv_EINVAL) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   EXPECT_EQ(-1, setenv(nullptr, "value", 0));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv(nullptr, "value", 1));
   EXPECT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
   EXPECT_EQ(-1, setenv("", "value", 0));
   EXPECT_EQ(EINVAL, errno);
   EXPECT_EQ(-1, setenv("", "value", 1));
@@ -1103,6 +1106,10 @@ TEST(UNISTD_TEST, get_cpu_count_from_string) {
   ASSERT_EQ(4, GetCpuCountFromString("0, 1-2, 4\n"));
 }
 
+TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_make_sense) {
+  ASSERT_LE(sysconf(_SC_NPROCESSORS_ONLN), sysconf(_SC_NPROCESSORS_CONF));
+}
+
 TEST(UNISTD_TEST, sysconf_SC_NPROCESSORS_ONLN) {
   std::string line;
   ASSERT_TRUE(android::base::ReadFileToString("/sys/devices/system/cpu/online", &line));
@@ -1647,4 +1654,42 @@ TEST(UNISTD_TEST, sleep) {
   ASSERT_EQ(0U, sleep(1));
   auto t1 = std::chrono::steady_clock::now();
   ASSERT_GE(t1-t0, 1s);
+}
+
+TEST(UNISTD_TEST, close_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#elif defined(ANDROID_HOST_MUSL)
+  GTEST_SKIP() << "musl does not have close_range";
+#else   // __GLIBC__
+  int fd = open("/proc/version", O_RDONLY);
+  ASSERT_GE(fd, 0);
+
+  // Try to close the file descriptor (this requires a 5.9+ kernel)
+  if (close_range(fd, fd, 0) == 0) {
+    // we can't close it *again*
+    ASSERT_EQ(close(fd), -1);
+    ASSERT_EQ(errno, EBADF);
+  } else {
+    ASSERT_EQ(errno, ENOSYS);
+    // since close_range() failed, we can close it normally
+    ASSERT_EQ(close(fd), 0);
+  }
+#endif  // __GLIBC__
+}
+
+TEST(UNISTD_TEST, copy_file_range) {
+#if defined(__GLIBC__)
+  GTEST_SKIP() << "glibc too old";
+#else   // __GLIBC__
+  TemporaryFile tf;
+  ASSERT_TRUE(android::base::WriteStringToFd("hello world", tf.fd));
+  ASSERT_EQ(0, lseek(tf.fd, SEEK_SET, 0));
+  TemporaryFile tf2;
+  ASSERT_EQ(11, copy_file_range(tf.fd, NULL, tf2.fd, NULL, 11, 0));
+  ASSERT_EQ(0, lseek(tf2.fd, SEEK_SET, 0));
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFdToString(tf2.fd, &content));
+  ASSERT_EQ("hello world", content);
+#endif  // __GLIBC__
 }

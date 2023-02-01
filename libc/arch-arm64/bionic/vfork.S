@@ -29,10 +29,7 @@
 #include <platform/bionic/tls_defines.h>
 #include <private/bionic_asm.h>
 #include <asm/signal.h>
-
-// Must match the defines in linux/sched.h
-#define CLONE_VM 0x00000100
-#define CLONE_VFORK 0x00004000
+#include <linux/sched.h>
 
 ENTRY(vfork)
 __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
@@ -44,6 +41,9 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     mov     w0, #0x80000000
     ldr     w10, [x9, #20]
     str     w0, [x9, #20]
+
+    // Clear vfork_child_stack_bottom_.
+    str     xzr, [x9, #776]
 
     mov     x0, #(CLONE_VM | CLONE_VFORK | SIGCHLD)
     mov     x1, xzr
@@ -62,9 +62,6 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     cneg    x0, x0, hi
     b.hi    __set_errno_internal
 
-#if __has_feature(hwaddress_sanitizer)
-    cbz x0, .L_exit
-
     // Clean up stack shadow in the parent process.
     // https://github.com/google/sanitizers/issues/925
     paciasp
@@ -75,7 +72,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     .cfi_rel_offset x30, 8
 
     add x0, sp, #16
-    bl __hwasan_handle_vfork
+    bl memtag_handle_vfork
 
     ldp x0, x30, [sp], #16
     .cfi_adjust_cfa_offset -16
@@ -83,8 +80,6 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(vfork)
     .cfi_restore x30
     autiasp
     .cfi_negate_ra_state
-
-#endif
 
 .L_exit:
     ret

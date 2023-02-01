@@ -7,7 +7,7 @@
 # where:
 #       arch_list ::= "all" | arches
 #       arches    ::= arch |  arch "," arches
-#       arch      ::= "arm" | "arm64" | "x86" | "x86_64" | "lp32" | "lp64"
+#       arch      ::= "arm" | "arm64" | "riscv64" | "x86" | "x86_64" | "lp32" | "lp64"
 #
 # Note:
 #      - syscall_name corresponds to the name of the syscall, which may differ from
@@ -26,7 +26,7 @@
 # This file is processed by a python script named gensyscalls.py, run via
 # genrules in Android.bp.
 
-int     execve(const char*, char* const*, char* const*)  all
+int     __execve:execve(const char*, char* const*, char* const*)  all
 
 uid_t   getuid:getuid32()         lp32
 uid_t   getuid:getuid()           lp64
@@ -107,6 +107,8 @@ ssize_t     __preadv64v2:preadv2(int, const struct iovec*, int, long, long, int)
 ssize_t     __pwritev64v2:pwritev2(int, const struct iovec*, int, long, long, int) all
 
 int         __close:close(int)  all
+int         close_range(unsigned int, unsigned int, int) all
+ssize_t     copy_file_range(int, off64_t*, int, off64_t*, size_t, unsigned int) all
 pid_t       __getpid:getpid()  all
 int memfd_create(const char*, unsigned) all
 int         munmap(void*, size_t)  all
@@ -154,7 +156,6 @@ int linkat(int, const char*, int, const char*, int)  all
 int mkdirat(int, const char*, mode_t)  all
 int mknodat(int, const char*, mode_t, dev_t)  all
 int readlinkat(int, const char*, char*, size_t)  all
-int renameat(int, const char*, int, const char*)  all
 int renameat2(int, const char*, int, const char*, unsigned)  all
 int symlinkat(const char*, int, const char*)  all
 int unlinkat(int, const char*, int)   all
@@ -318,7 +319,7 @@ int __epoll_pwait:epoll_pwait(int, struct epoll_event*, int, int, const sigset64
 
 int __eventfd:eventfd2(unsigned int, int)  all
 
-void _exit|_Exit:exit_group(int)  all
+void __exit_group:exit_group(int)  all
 void __exit:exit(int)  all
 
 int inotify_init1(int)  all
@@ -350,6 +351,9 @@ int __waitid:waitid(int, pid_t, siginfo_t*, int, void*)  all
 # ARM-specific
 int     __set_tls:__ARM_NR_set_tls(void*)                                 arm
 int     cacheflush:__ARM_NR_cacheflush(long start, long end, long flags)  arm
+
+# riscv64-specific
+int _flush_icache:riscv_flush_icache(void*, void*, unsigned long) riscv64
 
 # x86-specific
 int     __set_thread_area:set_thread_area(void*) x86

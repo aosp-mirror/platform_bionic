@@ -33,6 +33,7 @@
 #include <thread>
 
 #include <android-base/file.h>
+#include <android-base/macros.h>
 #include <android-base/scopeguard.h>
 
 #include "gtest_globals.h"
@@ -966,17 +967,7 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 #endif
 }
 
-#if defined (__aarch64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/arm64/"
-#elif defined (__arm__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/arm/"
-#elif defined (__i386__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib/x86/"
-#elif defined (__x86_64__)
-#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/x86_64/"
-#else
-#error "Unknown architecture"
-#endif
+#define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/" ABI_STRING "/"
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
 #define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
@@ -1655,6 +1646,9 @@ TEST(dlfcn, dlopen_invalid_textrels2) {
 }
 
 TEST(dlfcn, dlopen_invalid_local_tls) {
+#if defined(__riscv)
+  // This is a test for bad gold behavior, and gold doesn't support riscv64.
+#else
   const std::string libpath = GetPrebuiltElfDir() + "/libtest_invalid-local-tls.so";
 
   void* handle = dlopen(libpath.c_str(), RTLD_NOW);
@@ -1667,6 +1661,7 @@ TEST(dlfcn, dlopen_invalid_local_tls) {
   std::string expected_dlerror = std::string("dlopen failed: unexpected TLS reference to ") +
                                  referent + " in \"" + libpath + "\"";
   ASSERT_SUBSTR(expected_dlerror.c_str(), dlerror());
+#endif
 }
 
 TEST(dlfcn, dlopen_df_1_global) {

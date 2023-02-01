@@ -39,6 +39,7 @@
 #include <sys/vfs.h>
 #include <unistd.h>
 
+#include <iterator>
 #include <new>
 #include <string>
 #include <unordered_map>
@@ -371,7 +372,7 @@ static inline void* get_tls_block_for_this_thread(const soinfo_tls* si_tls, bool
     char* static_tls = reinterpret_cast<char*>(__get_bionic_tcb()) - layout.offset_bionic_tcb();
     return static_tls + tls_mod.static_offset;
   } else if (should_alloc) {
-    const TlsIndex ti { si_tls->module_id, 0 };
+    const TlsIndex ti { si_tls->module_id, static_cast<size_t>(0 - TLS_DTV_OFFSET) };
     return TLS_GET_ADDR(&ti);
   } else {
     TlsDtv* dtv = __get_tcb_dtv(__get_bionic_tcb());
@@ -1189,8 +1190,6 @@ static bool load_library(android_namespace_t* ns,
   if ((fs_stat.f_type != TMPFS_MAGIC) && (!ns->is_accessible(realpath))) {
     // TODO(dimitry): workaround for http://b/26394120 - the exempt-list
 
-    // TODO(dimitry) before O release: add a namespace attribute to have this enabled
-    // only for classloader-namespaces
     const soinfo* needed_by = task->is_dt_needed() ? task->get_needed_by() : nullptr;
     if (is_exempt_lib(ns, name, needed_by)) {
       // print warning only if needed by non-system library
@@ -1568,18 +1567,16 @@ bool find_libraries(android_namespace_t* ns,
     task->set_extinfo(is_dt_needed ? nullptr : extinfo);
     task->set_dt_needed(is_dt_needed);
 
-    LD_LOG(kLogDlopen, "find_libraries(ns=%s): task=%s, is_dt_needed=%d", ns->get_name(),
-           task->get_name(), is_dt_needed);
-
     // Note: start from the namespace that is stored in the LoadTask. This namespace
     // is different from the current namespace when the LoadTask is for a transitive
     // dependency and the lib that created the LoadTask is not found in the
-    // current namespace but in one of the linked namespace.
-    if (!find_library_internal(const_cast<android_namespace_t*>(task->get_start_from()),
-                               task,
-                               &zip_archive_cache,
-                               &load_tasks,
-                               rtld_flags)) {
+    // current namespace but in one of the linked namespaces.
+    android_namespace_t* start_ns = const_cast<android_namespace_t*>(task->get_start_from());
+
+    LD_LOG(kLogDlopen, "find_library_internal(ns=%s@%p): task=%s, is_dt_needed=%d",
+           start_ns->get_name(), start_ns, task->get_name(), is_dt_needed);
+
+    if (!find_library_internal(start_ns, task, &zip_archive_cache, &load_tasks, rtld_flags)) {
       return false;
     }
 
@@ -2488,11 +2485,12 @@ bool link_namespaces(android_namespace_t* namespace_from,
     return false;
   }
 
-  auto sonames = android::base::Split(shared_lib_sonames, ":");
-  std::unordered_set<std::string> sonames_set(sonames.begin(), sonames.end());
+  std::vector<std::string> sonames = android::base::Split(shared_lib_sonames, ":");
+  std::unordered_set<std::string> sonames_set(std::make_move_iterator(sonames.begin()),
+                                              std::make_move_iterator(sonames.end()));
 
   ProtectedDataGuard guard;
-  namespace_from->add_linked_namespace(namespace_to, sonames_set, false);
+  namespace_from->add_linked_namespace(namespace_to, std::move(sonames_set), false);
 
   return true;
 }

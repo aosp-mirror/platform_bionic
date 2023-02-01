@@ -133,12 +133,12 @@ struct ip6t_replace {
   unsigned int underflow[NF_INET_NUMHOOKS];
   unsigned int num_counters;
   struct xt_counters __user * counters;
-  struct ip6t_entry entries[0];
+  struct ip6t_entry entries[];
 };
 struct ip6t_get_entries {
   char name[XT_TABLE_MAXNAMELEN];
   unsigned int size;
-  struct ip6t_entry entrytable[0];
+  struct ip6t_entry entrytable[];
 };
 static __inline__ struct xt_entry_target * ip6t_get_target(struct ip6t_entry * e) {
   return(struct xt_entry_target *) ((char *) e + e->target_offset);

@@ -98,7 +98,7 @@ struct ethtool_tunable {
   __u32 id;
   __u32 type_id;
   __u32 len;
-  void * data[0];
+  void * data[];
 };
 #define DOWNSHIFT_DEV_DEFAULT_COUNT 0xff
 #define DOWNSHIFT_DEV_DISABLE 0
@@ -118,14 +118,14 @@ struct ethtool_regs {
   __u32 cmd;
   __u32 version;
   __u32 len;
-  __u8 data[0];
+  __u8 data[];
 };
 struct ethtool_eeprom {
   __u32 cmd;
   __u32 magic;
   __u32 offset;
   __u32 len;
-  __u8 data[0];
+  __u8 data[];
 };
 struct ethtool_eee {
   __u32 cmd;
@@ -277,17 +277,31 @@ enum ethtool_module_power_mode {
   ETHTOOL_MODULE_POWER_MODE_LOW = 1,
   ETHTOOL_MODULE_POWER_MODE_HIGH,
 };
+enum ethtool_podl_pse_admin_state {
+  ETHTOOL_PODL_PSE_ADMIN_STATE_UNKNOWN = 1,
+  ETHTOOL_PODL_PSE_ADMIN_STATE_DISABLED,
+  ETHTOOL_PODL_PSE_ADMIN_STATE_ENABLED,
+};
+enum ethtool_podl_pse_pw_d_status {
+  ETHTOOL_PODL_PSE_PW_D_STATUS_UNKNOWN = 1,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_DISABLED,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_SEARCHING,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_DELIVERING,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_SLEEP,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_IDLE,
+  ETHTOOL_PODL_PSE_PW_D_STATUS_ERROR,
+};
 struct ethtool_gstrings {
   __u32 cmd;
   __u32 string_set;
   __u32 len;
-  __u8 data[0];
+  __u8 data[];
 };
 struct ethtool_sset_info {
   __u32 cmd;
   __u32 reserved;
   __u64 sset_mask;
-  __u32 data[0];
+  __u32 data[];
 };
 enum ethtool_test_flags {
   ETH_TEST_FL_OFFLINE = (1 << 0),
@@ -300,17 +314,17 @@ struct ethtool_test {
   __u32 flags;
   __u32 reserved;
   __u32 len;
-  __u64 data[0];
+  __u64 data[];
 };
 struct ethtool_stats {
   __u32 cmd;
   __u32 n_stats;
-  __u64 data[0];
+  __u64 data[];
 };
 struct ethtool_perm_addr {
   __u32 cmd;
   __u32 size;
-  __u8 data[0];
+  __u8 data[];
 };
 enum ethtool_flags {
   ETH_FLAG_TXVLAN = (1 << 7),
@@ -410,7 +424,7 @@ struct ethtool_rxnfc {
 struct ethtool_rxfh_indir {
   __u32 cmd;
   __u32 size;
-  __u32 ring_index[0];
+  __u32 ring_index[];
 };
 struct ethtool_rxfh {
   __u32 cmd;
@@ -420,7 +434,7 @@ struct ethtool_rxfh {
   __u8 hfunc;
   __u8 rsvd8[3];
   __u32 rsvd32;
-  __u32 rss_config[0];
+  __u32 rss_config[];
 };
 #define ETH_RXFH_CONTEXT_ALLOC 0xffffffff
 #define ETH_RXFH_INDIR_NO_CHANGE 0xffffffff
@@ -462,7 +476,7 @@ struct ethtool_dump {
   __u32 version;
   __u32 flag;
   __u32 len;
-  __u8 data[0];
+  __u8 data[];
 };
 #define ETH_FW_DUMP_DISABLE 0
 struct ethtool_get_features_block {
@@ -474,7 +488,7 @@ struct ethtool_get_features_block {
 struct ethtool_gfeatures {
   __u32 cmd;
   __u32 size;
-  struct ethtool_get_features_block features[0];
+  struct ethtool_get_features_block features[];
 };
 struct ethtool_set_features_block {
   __u32 valid;
@@ -483,7 +497,7 @@ struct ethtool_set_features_block {
 struct ethtool_sfeatures {
   __u32 cmd;
   __u32 size;
-  struct ethtool_set_features_block features[0];
+  struct ethtool_set_features_block features[];
 };
 struct ethtool_ts_info {
   __u32 cmd;
@@ -704,6 +718,7 @@ enum ethtool_link_mode_bit_indices {
   ETHTOOL_LINK_MODE_400000baseCR4_Full_BIT = 89,
   ETHTOOL_LINK_MODE_100baseFX_Half_BIT = 90,
   ETHTOOL_LINK_MODE_100baseFX_Full_BIT = 91,
+  ETHTOOL_LINK_MODE_10baseT1L_Full_BIT = 92,
   __ETHTOOL_LINK_MODE_MASK_NBITS
 };
 #define __ETHTOOL_LINK_MODE_LEGACY_MASK(base_name) (1UL << (ETHTOOL_LINK_MODE_ ##base_name ##_BIT))
@@ -799,6 +814,10 @@ enum ethtool_link_mode_bit_indices {
 #define MASTER_SLAVE_STATE_MASTER 2
 #define MASTER_SLAVE_STATE_SLAVE 3
 #define MASTER_SLAVE_STATE_ERR 4
+#define RATE_MATCH_NONE 0
+#define RATE_MATCH_PAUSE 1
+#define RATE_MATCH_CRS 2
+#define RATE_MATCH_OPEN_LOOP 3
 #define PORT_TP 0x00
 #define PORT_AUI 0x01
 #define PORT_MII 0x02
@@ -900,8 +919,8 @@ struct ethtool_link_settings {
   __u8 transceiver;
   __u8 master_slave_cfg;
   __u8 master_slave_state;
-  __u8 reserved1[1];
+  __u8 rate_matching;
   __u32 reserved[7];
-  __u32 link_mode_masks[0];
+  __u32 link_mode_masks[];
 };
 #endif

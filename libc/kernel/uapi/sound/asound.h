@@ -605,7 +605,7 @@ struct snd_rawmidi_framing_tstamp {
   __u32 tv_nsec;
   __u64 tv_sec;
   __u8 data[SNDRV_RAWMIDI_FRAMING_DATA_LENGTH];
-} __packed;
+} __attribute__((__packed__));
 struct snd_rawmidi_params {
   int stream;
   size_t buffer_size;
@@ -884,7 +884,7 @@ struct snd_ctl_elem_value {
 struct snd_ctl_tlv {
   unsigned int numid;
   unsigned int length;
-  unsigned int tlv[0];
+  unsigned int tlv[];
 };
 #define SNDRV_CTL_IOCTL_PVERSION _IOR('U', 0x00, int)
 #define SNDRV_CTL_IOCTL_CARD_INFO _IOR('U', 0x01, struct snd_ctl_card_info)

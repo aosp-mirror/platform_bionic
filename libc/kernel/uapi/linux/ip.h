@@ -86,8 +86,9 @@ struct iphdr {
   __u8 ttl;
   __u8 protocol;
   __sum16 check;
-  __be32 saddr;
+  __struct_group(, addrs,, __be32 saddr;
   __be32 daddr;
+ );
 };
 struct ip_auth_hdr {
   __u8 nexthdr;
@@ -95,12 +96,12 @@ struct ip_auth_hdr {
   __be16 reserved;
   __be32 spi;
   __be32 seq_no;
-  __u8 auth_data[0];
+  __u8 auth_data[];
 };
 struct ip_esp_hdr {
   __be32 spi;
   __be32 seq_no;
-  __u8 enc_data[0];
+  __u8 enc_data[];
 };
 struct ip_comp_hdr {
   __u8 nexthdr;

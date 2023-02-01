@@ -29,6 +29,9 @@ enum sgx_page_flags {
 #define SGX_IOC_ENCLAVE_INIT _IOW(SGX_MAGIC, 0x02, struct sgx_enclave_init)
 #define SGX_IOC_ENCLAVE_PROVISION _IOW(SGX_MAGIC, 0x03, struct sgx_enclave_provision)
 #define SGX_IOC_VEPC_REMOVE_ALL _IO(SGX_MAGIC, 0x04)
+#define SGX_IOC_ENCLAVE_RESTRICT_PERMISSIONS _IOWR(SGX_MAGIC, 0x05, struct sgx_enclave_restrict_permissions)
+#define SGX_IOC_ENCLAVE_MODIFY_TYPES _IOWR(SGX_MAGIC, 0x06, struct sgx_enclave_modify_types)
+#define SGX_IOC_ENCLAVE_REMOVE_PAGES _IOWR(SGX_MAGIC, 0x07, struct sgx_enclave_remove_pages)
 struct sgx_enclave_create {
   __u64 src;
 };
@@ -45,6 +48,25 @@ struct sgx_enclave_init {
 };
 struct sgx_enclave_provision {
   __u64 fd;
+};
+struct sgx_enclave_restrict_permissions {
+  __u64 offset;
+  __u64 length;
+  __u64 permissions;
+  __u64 result;
+  __u64 count;
+};
+struct sgx_enclave_modify_types {
+  __u64 offset;
+  __u64 length;
+  __u64 page_type;
+  __u64 result;
+  __u64 count;
+};
+struct sgx_enclave_remove_pages {
+  __u64 offset;
+  __u64 length;
+  __u64 count;
 };
 struct sgx_enclave_run;
 typedef int(* sgx_enclave_user_handler_t) (long rdi, long rsi, long rdx, long rsp, long r8, long r9, struct sgx_enclave_run * run);

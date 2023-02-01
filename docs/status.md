@@ -29,19 +29,24 @@ Missing functions are either obsolete or explicitly disallowed by SELinux:
   * `gethostid`
   * `shm_open`/`shm_unlink`
   * `sockatmark`
+  * `ualarm`
 
 Missing functionality:
   * `<aio.h>`
   * `<monetary.h>`. See
     [discussion](https://github.com/android/ndk/issues/1182).
   * `<wordexp.h>`
+  * Locales. Although bionic contains the various `_l()` functions, the only
+    locale supported is a UTF-8 C/POSIX locale. Most of the POSIX APIs are
+    insufficient to support the wide range of languages used by Android users,
+    and apps should use icu4c (or do their i18n work in Java) instead.
+  * Robust mutexes. See
+    [discussion](https://github.com/android/ndk/issues/1181).
   * Thread cancellation (`pthread_cancel`). Unlikely to ever be implemented
     because of the difficulty and cost of implementing it, and the difficulty
     of using it correctly. See
     [This is why we can't have safe cancellation points](https://lwn.net/Articles/683118/)
     for more about thread cancellation.
-  * Robust mutexes. See
-    [discussion](https://github.com/android/ndk/issues/1181).
 
 Run `./libc/tools/check-symbols-glibc.py` in bionic/ for the current
 list of POSIX functions implemented by glibc but not by bionic.
@@ -49,6 +54,16 @@ list of POSIX functions implemented by glibc but not by bionic.
 ### libc
 
 Current libc symbols: https://android.googlesource.com/platform/bionic/+/master/libc/libc.map.txt
+
+New libc functions in U (API level 34):
+  * `close_range` and `copy_file_range` (Linux-specific GNU extensions).
+  * `memset_explicit` in <string.h> (C23 addition).
+  * `__freadahead` in <stdio_ext.h> (in musl but not glibc).
+
+New libc behavior in U (API level 34):
+  * Support for `%b` and `%B` in the printf/wprintf family, `%b` in the
+    scanf/wscanf family, and `0b` prefixes with base 0 in the strtol/wcstol
+    family.
 
 New libc functions in T (API level 33):
   * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).

@@ -41,6 +41,9 @@ cc_defaults {
             enabled: false,
         },
     },
+    strip: {
+        none: true,
+    },
 }
 
 // -----------------------------------------------------------------------------
@@ -1532,12 +1535,6 @@ cc_test_library {
     host_supported: false,
     defaults: ["bionic_testlib_defaults"],
     srcs: ["relocations.cpp"],
-
-    // Hack to ensure we're using llvm-objcopy because our binutils prebuilt
-    // only supports the old numbers (http://b/141010852).
-    strip: {
-      keep_symbols: true,
-    },
 }
 
 // This is the same encoding as SHT_RELR, but using OS-specific constants.
@@ -1650,6 +1647,37 @@ cc_test {
    sanitize: {
      memtag_heap: false,
    },
+}
+
+cc_test {
+   name: "stack_tagging_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["stack_tagging_helper.cpp"],
+   sanitize: {
+     memtag_heap: true,
+     memtag_stack: true,
+     diag: {
+       memtag_heap: true,
+     },
+   },
+   header_libs: ["bionic_libc_platform_headers"],
+   cflags: ["-fexceptions"],
+}
+
+cc_test {
+   name: "stack_tagging_static_helper",
+   defaults: ["bionic_testlib_defaults", "bionic_targets_only"],
+   srcs: ["stack_tagging_helper.cpp"],
+   static_executable: true,
+   sanitize: {
+     memtag_heap: true,
+     memtag_stack: true,
+     diag: {
+       memtag_heap: true,
+     },
+   },
+   header_libs: ["bionic_libc_platform_headers"],
+   cflags: ["-fexceptions"],
 }
 
 cc_genrule {

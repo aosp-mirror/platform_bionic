@@ -87,8 +87,9 @@ struct ipv6hdr {
   __be16 payload_len;
   __u8 nexthdr;
   __u8 hop_limit;
-  struct in6_addr saddr;
+  __struct_group(, addrs,, struct in6_addr saddr;
   struct in6_addr daddr;
+ );
 };
 enum {
   DEVCONF_FORWARDING = 0,
@@ -148,6 +149,7 @@ enum {
   DEVCONF_IOAM6_ID,
   DEVCONF_IOAM6_ID_WIDE,
   DEVCONF_NDISC_EVICT_NOCARRIER,
+  DEVCONF_ACCEPT_UNTRACKED_NA,
   DEVCONF_MAX
 };
 #endif
