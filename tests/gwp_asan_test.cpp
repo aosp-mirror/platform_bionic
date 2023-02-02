@@ -43,6 +43,15 @@
 // mutation.
 extern "C" const char* __gnu_basename(const char* path);
 
+// GWP-ASan tests can run much slower, especially when combined with HWASan.
+// Triple the deadline to avoid flakes (b/238585984).
+extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
+  static const char* initial_args[] = {"--deadline_threshold_ms=270000"};
+  *args = initial_args;
+  *num_args = 1;
+  return true;
+}
+
 // This file implements "torture testing" under GWP-ASan, where we sample every
 // single allocation. The upper limit for the number of GWP-ASan allocations in
 // the torture mode is is generally 40,000, so that svelte devices don't
