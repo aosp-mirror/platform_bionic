@@ -49,8 +49,8 @@ typedef ssize_t regoff_t;
 typedef struct {
 	int re_magic;
 	size_t re_nsub;		/* number of parenthesized subexpressions */
-	const char * _Null_unspecified re_endp;	/* end pointer for REG_PEND */
-	struct re_guts * _Null_unspecified re_g;	/* none of your business :-) */
+	const char * __BIONIC_COMPLICATED_NULLNESS re_endp;	/* end pointer for REG_PEND */
+	struct re_guts * __BIONIC_COMPLICATED_NULLNESS re_g;	/* none of your business :-) */
 } regex_t;
 
 typedef struct {
