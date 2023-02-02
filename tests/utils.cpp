@@ -28,6 +28,10 @@
 
 #include "utils.h"
 
+#include <string>
+
+#include <android-base/properties.h>
+
 void RunGwpAsanTest(const char* test_name) {
   ExecTestHelper eh;
   eh.SetEnv({"GWP_ASAN_SAMPLE_RATE=1", "GWP_ASAN_PROCESS_SAMPLING=1", "GWP_ASAN_MAX_ALLOCS=40000",
@@ -52,4 +56,10 @@ void RunSubtestNoEnv(const char* test_name) {
          /* expected_exit_status */ 0,
          // |expected_output_regex|, ensure at least one test ran:
          R"(\[  PASSED  \] [1-9]+0? test)");
+}
+
+bool IsLowRamDevice() {
+  return android::base::GetBoolProperty("ro.config.low_ram", false) ||
+         (android::base::GetBoolProperty("ro.debuggable", false) &&
+          android::base::GetBoolProperty("debug.force_low_ram", false));
 }
