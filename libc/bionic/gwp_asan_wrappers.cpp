@@ -236,6 +236,10 @@ void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   *process_sample_rate = 1;
   if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING) {
     *process_sample_rate = kDefaultProcessSampling;
+  } else if (mallopt_options.desire == Action::TURN_ON_FOR_APP_SAMPLED_NON_CRASHING) {
+    *process_sample_rate = kDefaultProcessSampling;
+    options->Recoverable = true;
+    GwpAsanRecoverable = true;
   }
 }
 
