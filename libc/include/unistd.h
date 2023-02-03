@@ -73,7 +73,7 @@ __BEGIN_DECLS
 #define _PC_PRIO_IO 18
 #define _PC_SYNC_IO 19
 
-extern char** environ;
+extern char* _Nullable * _Nullable environ;
 
 __noreturn void _exit(int __status);
 
@@ -89,15 +89,15 @@ int    setpgrp(void);
 pid_t  getsid(pid_t __pid) __INTRODUCED_IN(17);
 pid_t  setsid(void);
 
-int execv(const char* __path, char* const* __argv);
-int execvp(const char* __file, char* const* __argv);
-int execvpe(const char* __file, char* const* __argv, char* const* __envp) __INTRODUCED_IN(21);
-int execve(const char* __file, char* const* __argv, char* const* __envp);
-int execl(const char* __path, const char* __arg0, ...) __attribute__((__sentinel__));
-int execlp(const char* __file, const char* __arg0, ...) __attribute__((__sentinel__));
-int execle(const char* __path, const char* __arg0, ... /*,  char* const* __envp */)
+int execv(const char* _Nonnull __path, char* _Nullable const* _Nullable __argv);
+int execvp(const char* _Nonnull __file, char* _Nullable const* _Nullable __argv);
+int execvpe(const char* _Nonnull __file, char* _Nullable const* _Nullable __argv, char* _Nullable const* _Nullable __envp) __INTRODUCED_IN(21);
+int execve(const char* _Nonnull __file, char* _Nullable const* _Nullable __argv, char* _Nullable const* _Nullable __envp);
+int execl(const char* _Nonnull __path, const char* _Nullable __arg0, ...) __attribute__((__sentinel__));
+int execlp(const char* _Nonnull __file, const char* _Nullable __arg0, ...) __attribute__((__sentinel__));
+int execle(const char* _Nonnull __path, const char* _Nullable __arg0, ... /*,  char* const* __envp */)
     __attribute__((__sentinel__(1)));
-int fexecve(int __fd, char* const* __argv, char* const* __envp) __INTRODUCED_IN(28);
+int fexecve(int __fd, char* _Nullable const* _Nullable __argv, char* _Nullable const* _Nullable __envp) __INTRODUCED_IN(28);
 
 int nice(int __incr);
 
@@ -193,40 +193,40 @@ uid_t getuid(void);
 uid_t geteuid(void);
 gid_t getgid(void);
 gid_t getegid(void);
-int getgroups(int __size, gid_t* __list);
-int setgroups(size_t __size, const gid_t* __list);
-int getresuid(uid_t* __ruid, uid_t* __euid, uid_t* __suid);
-int getresgid(gid_t* __rgid, gid_t* __egid, gid_t* __sgid);
-char* getlogin(void);
-int getlogin_r(char* __buffer, size_t __buffer_size) __INTRODUCED_IN(28);
+int getgroups(int __size, gid_t* _Nullable __list);
+int setgroups(size_t __size, const gid_t* _Nullable __list);
+int getresuid(uid_t* _Nonnull __ruid, uid_t* _Nonnull __euid, uid_t* _Nonnull __suid);
+int getresgid(gid_t* _Nonnull __rgid, gid_t* _Nonnull __egid, gid_t* _Nonnull __sgid);
+char* _Nullable getlogin(void);
+int getlogin_r(char* _Nonnull __buffer, size_t __buffer_size) __INTRODUCED_IN(28);
 
 long fpathconf(int __fd, int __name);
-long pathconf(const char* __path, int __name);
+long pathconf(const char* _Nonnull __path, int __name);
 
-int access(const char* __path, int __mode);
-int faccessat(int __dirfd, const char* __path, int __mode, int __flags);
-int link(const char* __old_path, const char* __new_path);
-int linkat(int __old_dir_fd, const char* __old_path, int __new_dir_fd, const char* __new_path, int __flags) __INTRODUCED_IN(21);
-int unlink(const char* __path);
-int unlinkat(int __dirfd, const char* __path, int __flags);
-int chdir(const char* __path);
+int access(const char* _Nonnull __path, int __mode);
+int faccessat(int __dirfd, const char* _Nonnull __path, int __mode, int __flags);
+int link(const char* _Nonnull __old_path, const char* _Nonnull __new_path);
+int linkat(int __old_dir_fd, const char* _Nonnull __old_path, int __new_dir_fd, const char* _Nonnull __new_path, int __flags) __INTRODUCED_IN(21);
+int unlink(const char* _Nonnull __path);
+int unlinkat(int __dirfd, const char* _Nonnull __path, int __flags);
+int chdir(const char* _Nonnull __path);
 int fchdir(int __fd);
-int rmdir(const char* __path);
-int pipe(int __fds[2]);
+int rmdir(const char* _Nonnull __path);
+int pipe(int __fds[_Nonnull 2]);
 #if defined(__USE_GNU)
-int pipe2(int __fds[2], int __flags);
+int pipe2(int __fds[_Nonnull 2], int __flags);
 #endif
-int chroot(const char* __path);
-int symlink(const char* __old_path, const char* __new_path);
-int symlinkat(const char* __old_path, int __new_dir_fd, const char* __new_path) __INTRODUCED_IN(21);
-ssize_t readlink(const char* __path, char* __buf, size_t __buf_size);
-ssize_t readlinkat(int __dir_fd, const char* __path, char* __buf, size_t __buf_size)
+int chroot(const char* _Nonnull __path);
+int symlink(const char* _Nonnull __old_path, const char* _Nonnull __new_path);
+int symlinkat(const char* _Nonnull __old_path, int __new_dir_fd, const char* _Nonnull __new_path) __INTRODUCED_IN(21);
+ssize_t readlink(const char* _Nonnull __path, char* _Nonnull __buf, size_t __buf_size);
+ssize_t readlinkat(int __dir_fd, const char* _Nonnull __path, char* _Nonnull __buf, size_t __buf_size)
     __INTRODUCED_IN(21);
-int chown(const char* __path, uid_t __owner, gid_t __group);
+int chown(const char* _Nonnull __path, uid_t __owner, gid_t __group);
 int fchown(int __fd, uid_t __owner, gid_t __group);
-int fchownat(int __dir_fd, const char* __path, uid_t __owner, gid_t __group, int __flags);
-int lchown(const char* __path, uid_t __owner, gid_t __group);
-char* getcwd(char* __buf, size_t __size);
+int fchownat(int __dir_fd, const char* _Nonnull __path, uid_t __owner, gid_t __group, int __flags);
+int lchown(const char* _Nonnull __path, uid_t __owner, gid_t __group);
+char* _Nullable getcwd(char* _Nullable __buf, size_t __size);
 
 void sync(void);
 #if defined(__USE_GNU)
@@ -235,8 +235,29 @@ int syncfs(int __fd) __INTRODUCED_IN(28);
 
 int close(int __fd);
 
-ssize_t read(int __fd, void* __buf, size_t __count);
-ssize_t write(int __fd, const void* __buf, size_t __count);
+/**
+ * [read(2)](https://man7.org/linux/man-pages/man2/read.2.html) reads
+ * up to `__count` bytes from file descriptor `__fd` into `__buf`.
+ *
+ * Note: `__buf` is not normally nullable, but may be null in the
+ * special case of a zero-length read(), which while not generally
+ * useful may be meaningful to some device drivers.
+ *
+ * Returns the number of bytes read on success, and returns -1 and sets `errno` on failure.
+ */
+ssize_t read(int __fd, void* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __count);
+
+/**
+ * [write(2)](https://man7.org/linux/man-pages/man2/write.2.html) writes
+ * up to `__count` bytes to file descriptor `__fd` from `__buf`.
+ *
+ * Note: `__buf` is not normally nullable, but may be null in the
+ * special case of a zero-length write(), which while not generally
+ * useful may be meaningful to some device drivers.
+ *
+ * Returns the number of bytes written on success, and returns -1 and sets `errno` on failure.
+ */
+ssize_t write(int __fd, const void* __BIONIC_COMPLICATED_NULLNESS __buf, size_t __count);
 
 int dup(int __old_fd);
 int dup2(int __old_fd, int __new_fd);
@@ -246,23 +267,23 @@ int fdatasync(int __fd);
 
 /* See https://android.googlesource.com/platform/bionic/+/master/docs/32-bit-abi.md */
 #if defined(__USE_FILE_OFFSET64)
-int truncate(const char* __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
+int truncate(const char* _Nonnull __path, off_t __length) __RENAME(truncate64) __INTRODUCED_IN(21);
 off_t lseek(int __fd, off_t __offset, int __whence) __RENAME(lseek64);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset) __RENAME(pread64);
-ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset) __RENAME(pwrite64);
+ssize_t pread(int __fd, void* _Nonnull __buf, size_t __count, off_t __offset) __RENAME(pread64);
+ssize_t pwrite(int __fd, const void* _Nonnull __buf, size_t __count, off_t __offset) __RENAME(pwrite64);
 int ftruncate(int __fd, off_t __length) __RENAME(ftruncate64);
 #else
-int truncate(const char* __path, off_t __length);
+int truncate(const char* _Nonnull __path, off_t __length);
 off_t lseek(int __fd, off_t __offset, int __whence);
-ssize_t pread(int __fd, void* __buf, size_t __count, off_t __offset);
-ssize_t pwrite(int __fd, const void* __buf, size_t __count, off_t __offset);
+ssize_t pread(int __fd, void* _Nonnull __buf, size_t __count, off_t __offset);
+ssize_t pwrite(int __fd, const void* _Nonnull __buf, size_t __count, off_t __offset);
 int ftruncate(int __fd, off_t __length);
 #endif
 
-int truncate64(const char* __path, off64_t __length) __INTRODUCED_IN(21);
+int truncate64(const char* _Nonnull __path, off64_t __length) __INTRODUCED_IN(21);
 off64_t lseek64(int __fd, off64_t __offset, int __whence);
-ssize_t pread64(int __fd, void* __buf, size_t __count, off64_t __offset);
-ssize_t pwrite64(int __fd, const void* __buf, size_t __count, off64_t __offset);
+ssize_t pread64(int __fd, void* _Nonnull __buf, size_t __count, off64_t __offset);
+ssize_t pwrite64(int __fd, const void* _Nonnull __buf, size_t __count, off64_t __offset);
 int ftruncate64(int __fd, off64_t __length);
 
 int pause(void);
@@ -270,17 +291,17 @@ unsigned int alarm(unsigned int __seconds);
 unsigned int sleep(unsigned int __seconds);
 int usleep(useconds_t __microseconds);
 
-int gethostname(char* __buf, size_t __buf_size);
-int sethostname(const char* __name, size_t __n) __INTRODUCED_IN(23);
+int gethostname(char* _Nonnull _buf, size_t __buf_size);
+int sethostname(const char* _Nonnull __name, size_t __n) __INTRODUCED_IN(23);
 
-int brk(void* __addr);
-void* sbrk(ptrdiff_t __increment);
+int brk(void* _Nonnull __addr);
+void* _Nullable sbrk(ptrdiff_t __increment);
 
 int isatty(int __fd);
-char* ttyname(int __fd);
-int ttyname_r(int __fd, char* __buf, size_t __buf_size);
+char* _Nullable ttyname(int __fd);
+int ttyname_r(int __fd, char* _Nonnull __buf, size_t __buf_size);
 
-int acct(const char* __path);
+int acct(const char* _Nullable __path);
 
 #if __ANDROID_API__ >= 21
 int getpagesize(void) __INTRODUCED_IN(21);
@@ -310,8 +331,8 @@ int tcsetpgrp(int __fd, pid_t __pid);
     } while (_rc == -1 && errno == EINTR); \
     _rc; })
 
-int getdomainname(char* __buf, size_t __buf_size) __INTRODUCED_IN(26);
-int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
+int getdomainname(char* _Nonnull __buf, size_t __buf_size) __INTRODUCED_IN(26);
+int setdomainname(const char* _Nonnull __name, size_t __n) __INTRODUCED_IN(26);
 
 /**
  * [copy_file_range(2)](https://man7.org/linux/man-pages/man2/copy_file_range.2.html) copies
@@ -322,10 +343,10 @@ int setdomainname(const char* __name, size_t __n) __INTRODUCED_IN(26);
  * Returns the number of bytes copied on success, and returns -1 and sets
  * `errno` on failure.
  */
-ssize_t copy_file_range(int __fd_in, off64_t* __off_in, int __fd_out, off64_t* __off_out, size_t __length, unsigned int __flags) __INTRODUCED_IN(34);
+ssize_t copy_file_range(int __fd_in, off64_t* _Nullable __off_in, int __fd_out, off64_t* _Nullable __off_out, size_t __length, unsigned int __flags) __INTRODUCED_IN(34);
 
 #if __ANDROID_API__ >= 28
-void swab(const void* __src, void* __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
+void swab(const void* _Nonnull __src, void* _Nonnull __dst, ssize_t __byte_count) __INTRODUCED_IN(28);
 #endif
 
 /**
