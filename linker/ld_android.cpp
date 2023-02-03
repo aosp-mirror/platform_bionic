@@ -44,6 +44,7 @@ __strong_alias(__loader_android_link_namespaces_all_libs, __internal_linker_erro
 __strong_alias(__loader_android_set_application_target_sdk_version, __internal_linker_error);
 __strong_alias(__loader_android_update_LD_LIBRARY_PATH, __internal_linker_error);
 __strong_alias(__loader_cfi_fail, __internal_linker_error);
+__strong_alias(__loader_android_handle_signal, __internal_linker_error);
 __strong_alias(__loader_dl_iterate_phdr, __internal_linker_error);
 __strong_alias(__loader_dladdr, __internal_linker_error);
 __strong_alias(__loader_dlclose, __internal_linker_error);
