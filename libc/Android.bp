@@ -1444,6 +1444,7 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "gwp_asan_crash_handler",
         "libarm-optimized-routines-string",
         "libasync_safe",
         "libc_bionic_ndk",
@@ -1686,6 +1687,7 @@ cc_library {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1695,6 +1697,7 @@ cc_library {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
