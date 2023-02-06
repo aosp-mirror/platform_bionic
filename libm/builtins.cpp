@@ -32,9 +32,12 @@ double copysign(double x, double y) { return __builtin_copysign(x, y); }
 float copysignf(float x, float y) { return __builtin_copysignf(x, y); }
 #endif
 
-#if defined(__aarch64__)
+#if defined(__arm__) || defined(__aarch64__)
 float floorf(float x) { return __builtin_floorf(x); }
 double floor(double x) { return __builtin_floor(x); }
+#if defined(__ILP32__)
+__weak_reference(floor, floorl);
+#endif
 #endif
 
 #if defined(__aarch64__) || defined(__riscv)
@@ -66,9 +69,12 @@ float roundf(float x) { return __builtin_roundf(x); }
 double round(double x) { return __builtin_round(x); }
 #endif
 
-#if defined(__aarch64__) || defined(__riscv)
+#if defined(__arm__) || defined(__aarch64__) || defined(__riscv)
 float sqrtf(float x) { return __builtin_sqrtf(x); }
 double sqrt(double x) { return __builtin_sqrt(x); }
+#if defined(__ILP32__)
+__weak_reference(sqrt, sqrtl);
+#endif
 #endif
 
 #if defined(__aarch64__)
