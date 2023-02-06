@@ -285,11 +285,10 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
-                "arm/floor.S",
-                "arm/sqrt.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_floor.c",
+                "upstream-freebsd/lib/msun/src/s_floorf.c",
             ],
             instruction_set: "arm",
             pack_relocations: false,
