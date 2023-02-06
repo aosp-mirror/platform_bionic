@@ -48,14 +48,16 @@ static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flag
                              off64_t __offset) __RENAME(mmap64);
 static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
                              off64_t __offset) {
+  /* TODO: Check offset value for 16K pages, see b/267497559 */
   const int __mmap2_shift = 12; // 2**12 == 4096
   if (__offset < 0 || (__offset & ((1UL << __mmap2_shift) - 1)) != 0) {
     errno = EINVAL;
     return MAP_FAILED;
   }
 
+  const long page_size = sysconf(_SC_PAGE_SIZE);
   // prevent allocations large enough for `end - start` to overflow
-  size_t __rounded = __BIONIC_ALIGN(__size, PAGE_SIZE);
+  size_t __rounded = __BIONIC_ALIGN(__size, page_size);
   if (__rounded < __size || __rounded > PTRDIFF_MAX) {
     errno = ENOMEM;
     return MAP_FAILED;
