@@ -376,18 +376,8 @@ cc_library {
         x86: {
             srcs: [
                 "i387/fenv.c",
-                "x86/ceil.S",
-                "x86/ceilf.S",
-                "x86/floor.S",
-                "x86/floorf.S",
                 "x86/lrint.S",
                 "x86/lrintf.S",
-                "x86/rint.S",
-                "x86/rintf.S",
-                "x86/sqrt.S",
-                "x86/sqrtf.S",
-                "x86/trunc.S",
-                "x86/truncf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
@@ -410,18 +400,8 @@ cc_library {
         x86_64: {
             srcs: [
                 "amd64/fenv.c",
-                "x86_64/ceil.S",
-                "x86_64/ceilf.S",
-                "x86_64/floor.S",
-                "x86_64/floorf.S",
                 "x86_64/lrint.S",
                 "x86_64/lrintf.S",
-                "x86_64/rint.S",
-                "x86_64/rintf.S",
-                "x86_64/sqrt.S",
-                "x86_64/sqrtf.S",
-                "x86_64/trunc.S",
-                "x86_64/truncf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
