@@ -30,10 +30,9 @@ __weak_reference(ceil, ceill);
 #endif
 #endif
 
-#if defined(__aarch64__) || defined(__riscv)
 double copysign(double x, double y) { return __builtin_copysign(x, y); }
 float copysignf(float x, float y) { return __builtin_copysignf(x, y); }
-#endif
+long double copysignl(long double x, long double y) { return __builtin_copysignl(x, y); }
 
 #if defined(__arm__) || defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
 float floorf(float x) { return __builtin_floorf(x); }
