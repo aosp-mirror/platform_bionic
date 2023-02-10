@@ -34,7 +34,19 @@ double copysign(double x, double y) { return __builtin_copysign(x, y); }
 float copysignf(float x, float y) { return __builtin_copysignf(x, y); }
 long double copysignl(long double x, long double y) { return __builtin_copysignl(x, y); }
 
-#if defined(__arm__) || defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__arm__) && (__ARM_ARCH < 8)
+// armv8 arm32 has a single-instruction implementation for these, but
+// armv7 arm32 doesn't, so __builtin_ doesn't work for arm32.
+#include "math_private.h"
+namespace s_floor {
+#include "upstream-freebsd/lib/msun/src/s_floor.c"
+}
+namespace s_floorf {
+#include "upstream-freebsd/lib/msun/src/s_floorf.c"
+}
+float floorf(float x) { return s_floorf::floorf(x); }
+double floor(double x) { return s_floor::floor(x); }
+#elif defined(__arm__) || defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
 float floorf(float x) { return __builtin_floorf(x); }
 double floor(double x) { return __builtin_floor(x); }
 #if defined(__ILP32__)
