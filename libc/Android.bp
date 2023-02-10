@@ -775,7 +775,7 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_fortify.a - container for our FORITFY
+// libc_fortify.a - container for our FORTIFY
 // implementation details
 // ========================================================
 cc_library_static {
