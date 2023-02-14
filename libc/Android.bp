@@ -2300,7 +2300,6 @@ cc_library_static {
     ],
     arch: {
         arm64: {
-            cflags: ["-DHAVE_ASSEMBLER___MEMCPY_CHK"],
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
             ],
