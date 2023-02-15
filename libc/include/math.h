@@ -137,9 +137,9 @@ double expm1(double __x);
 float expm1f(float __x);
 long double expm1l(long double __x) __RENAME_LDBL(expm1, 3, 21);
 
-double frexp(double __x, int* __exponent);
-float frexpf(float __x, int* __exponent);
-long double frexpl(long double __x, int* __exponent) __RENAME_LDBL(frexp, 3, 21);
+double frexp(double __x, int* _Nonnull __exponent);
+float frexpf(float __x, int* _Nonnull __exponent);
+long double frexpl(long double __x, int* _Nonnull __exponent) __RENAME_LDBL(frexp, 3, 21);
 
 int ilogb(double __x) __attribute_const__;
 int ilogbf(float __x) __attribute_const__;
@@ -169,9 +169,9 @@ double logb(double __x);
 float logbf(float __x);
 long double logbl(long double __x) __RENAME_LDBL(logb, 3, 18);
 
-double modf(double __x, double* __integral_part);
-float modff(float __x, float* __integral_part);
-long double modfl(long double __x, long double* __integral_part) __RENAME_LDBL(modf, 3, 21);
+double modf(double __x, double* _Nonnull __integral_part);
+float modff(float __x, float* _Nonnull __integral_part);
+long double modfl(long double __x, long double* _Nonnull __integral_part) __RENAME_LDBL(modf, 3, 21);
 
 double scalbn(double __x, int __exponent);
 float scalbnf(float __x, int __exponent);
@@ -266,17 +266,17 @@ double remainder(double __x, double __y);
 float remainderf(float __x, float __y);
 long double remainderl(long double __x, long double __y) __RENAME_LDBL(remainder, 3, 21);
 
-double remquo(double __x, double __y, int* __quotient_bits);
-float remquof(float __x, float __y, int* __quotient_bits);
-long double remquol(long double __x, long double __y, int* __quotient_bits) __RENAME_LDBL(remquo, 3, 21);
+double remquo(double __x, double __y, int* _Nonnull __quotient_bits);
+float remquof(float __x, float __y, int* _Nonnull __quotient_bits);
+long double remquol(long double __x, long double __y, int* _Nonnull __quotient_bits) __RENAME_LDBL(remquo, 3, 21);
 
 double copysign(double __value, double __sign) __attribute_const__;
 float copysignf(float __value, float __sign) __attribute_const__;
 long double copysignl(long double __value, long double __sign) __RENAME_LDBL(copysign, 3, 3) __attribute_const__;
 
-double nan(const char* __kind) __attribute_const__;
-float nanf(const char* __kind) __attribute_const__;
-long double nanl(const char* __kind) __RENAME_LDBL(nan, 13, 13) __attribute_const__;
+double nan(const char* _Nonnull __kind) __attribute_const__;
+float nanf(const char* _Nonnull __kind) __attribute_const__;
+long double nanl(const char* _Nonnull __kind) __RENAME_LDBL(nan, 13, 13) __attribute_const__;
 
 double nextafter(double __x, double __y);
 float nextafterf(float __x, float __y);
@@ -364,10 +364,10 @@ double scalb(double __x, double __exponent);
 double drem(double __x, double __y);
 int finite(double __x) __attribute_const__;
 int isnanf(float __x) __attribute_const__;
-double gamma_r(double __x, int* __sign);
-double lgamma_r(double __x, int* __sign);
+double gamma_r(double __x, int* _Nonnull __sign);
+double lgamma_r(double __x, int* _Nonnull __sign);
 double significand(double __x);
-long double lgammal_r(long double __x, int* __sign) __INTRODUCED_IN(23);
+long double lgammal_r(long double __x, int* _Nonnull __sign) __INTRODUCED_IN(23);
 long double significandl(long double __x) __INTRODUCED_IN(21);
 float dremf(float __x, float __y);
 int finitef(float __x) __attribute_const__;
@@ -379,12 +379,12 @@ float scalbf(float __x, float __exponent);
 float y0f(float __x);
 float y1f(float __x);
 float ynf(int __n, float __x);
-float gammaf_r(float __x, int* __sign);
-float lgammaf_r(float __x, int* __sign);
+float gammaf_r(float __x, int* _Nonnull __sign);
+float lgammaf_r(float __x, int* _Nonnull __sign);
 float significandf(float __x);
-void sincos(double __x, double* __sin, double* __cos);
-void sincosf(float __x, float* __sin, float* __cos);
-void sincosl(long double __x, long double* __sin, long double* __cos);
+void sincos(double __x, double* _Nonnull __sin, double* _Nonnull __cos);
+void sincosf(float __x, float* _Nonnull __sin, float* _Nonnull __cos);
+void sincosl(long double __x, long double* _Nonnull __sin, long double* _Nonnull __cos);
 #endif
 
 /* GNU extensions. */
