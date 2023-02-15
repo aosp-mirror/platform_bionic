@@ -41,20 +41,20 @@ __BEGIN_DECLS
 #include <strings.h>
 #endif
 
-void* memccpy(void* __dst, const void* __src, int __stop_char, size_t __n);
-void* memchr(const void* __s, int __ch, size_t __n) __attribute_pure__;
+void* _Nullable memccpy(void* _Nonnull __dst, const void* _Nonnull __src, int __stop_char, size_t __n);
+void* _Nullable memchr(const void* _Nonnull __s, int __ch, size_t __n) __attribute_pure__;
 #if defined(__cplusplus)
-extern "C++" void* memrchr(void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
-extern "C++" const void* memrchr(const void* __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
+extern "C++" void* _Nullable memrchr(void* _Nonnull __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
+extern "C++" const void* _Nullable memrchr(const void* _Nonnull __s, int __ch, size_t __n) __RENAME(memrchr) __attribute_pure__;
 #else
-void* memrchr(const void* __s, int __ch, size_t __n) __attribute_pure__;
+void* _Nullable memrchr(const void* _Nonnull __s, int __ch, size_t __n) __attribute_pure__;
 #endif
-int memcmp(const void* __lhs, const void* __rhs, size_t __n) __attribute_pure__;
-void* memcpy(void*, const void*, size_t);
+int memcmp(const void* _Nonnull __lhs, const void* _Nonnull __rhs, size_t __n) __attribute_pure__;
+void* _Nonnull memcpy(void* _Nonnull, const void* _Nonnull, size_t);
 #if defined(__USE_GNU)
-void* mempcpy(void* __dst, const void* __src, size_t __n) __INTRODUCED_IN(23);
+void* _Nonnull mempcpy(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n) __INTRODUCED_IN(23);
 #endif
-void* memmove(void* __dst, const void* __src, size_t __n);
+void* _Nonnull memmove(void* _Nonnull __dst, const void* _Nonnull __src, size_t __n);
 
 /**
  * [memset(3)](http://man7.org/linux/man-pages/man3/memset.3.html) writes the
@@ -62,7 +62,7 @@ void* memmove(void* __dst, const void* __src, size_t __n);
  *
  * Returns `dst`.
  */
-void* memset(void* __dst, int __ch, size_t __n);
+void* _Nonnull memset(void* _Nonnull __dst, int __ch, size_t __n);
 
 /**
  * [memset_explicit(3)](http://man7.org/linux/man-pages/man3/memset_explicit.3.html)
@@ -71,74 +71,74 @@ void* memset(void* __dst, int __ch, size_t __n);
  *
  * Returns `dst`.
  */
-void* memset_explicit(void* __dst, int __ch, size_t __n) __INTRODUCED_IN(34);
+void* _Nonnull memset_explicit(void* _Nonnull __dst, int __ch, size_t __n) __INTRODUCED_IN(34);
 
-void* memmem(const void* __haystack, size_t __haystack_size, const void* __needle, size_t __needle_size) __attribute_pure__;
+void* _Nullable memmem(const void* _Nonnull __haystack, size_t __haystack_size, const void* _Nonnull __needle, size_t __needle_size) __attribute_pure__;
 
-char* strchr(const char* __s, int __ch) __attribute_pure__;
-char* __strchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
+char* _Nullable strchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
+char* _Nullable __strchr_chk(const char* _Nonnull __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 #if defined(__USE_GNU)
 #if defined(__cplusplus)
-extern "C++" char* strchrnul(char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
-extern "C++" const char* strchrnul(const char* __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" char* _Nonnull strchrnul(char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
+extern "C++" const char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __RENAME(strchrnul) __attribute_pure__ __INTRODUCED_IN(24);
 #else
-char* strchrnul(const char* __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24);
+char* _Nonnull strchrnul(const char* _Nonnull __s, int __ch) __attribute_pure__ __INTRODUCED_IN(24);
 #endif
 #endif
 
-char* strrchr(const char* __s, int __ch) __attribute_pure__;
-char* __strrchr_chk(const char* __s, int __ch, size_t __n) __INTRODUCED_IN(18);
+char* _Nullable strrchr(const char* _Nonnull __s, int __ch) __attribute_pure__;
+char* _Nullable __strrchr_chk(const char* _Nonnull __s, int __ch, size_t __n) __INTRODUCED_IN(18);
 
-size_t strlen(const char* __s) __attribute_pure__;
-size_t __strlen_chk(const char* __s, size_t __n) __INTRODUCED_IN(17);
+size_t strlen(const char* _Nonnull __s) __attribute_pure__;
+size_t __strlen_chk(const char* _Nonnull __s, size_t __n) __INTRODUCED_IN(17);
 
-int strcmp(const char* __lhs, const char* __rhs) __attribute_pure__;
-char* stpcpy(char* __dst, const char* __src) __INTRODUCED_IN(21);
-char* strcpy(char* __dst, const char* __src);
-char* strcat(char* __dst, const char* __src);
-char* strdup(const char* __s);
+int strcmp(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __attribute_pure__;
+char* _Nonnull stpcpy(char* _Nonnull __dst, const char* _Nonnull __src) __INTRODUCED_IN(21);
+char* _Nonnull strcpy(char* _Nonnull __dst, const char* _Nonnull __src);
+char* _Nonnull strcat(char* _Nonnull __dst, const char* _Nonnull __src);
+char* _Nullable strdup(const char* _Nonnull __s);
 
-char* strstr(const char* __haystack, const char* __needle) __attribute_pure__;
+char* _Nullable strstr(const char* _Nonnull __haystack, const char* _Nonnull __needle) __attribute_pure__;
 #if defined(__cplusplus)
-extern "C++" char* strcasestr(char*, const char*) __RENAME(strcasestr) __attribute_pure__;
-extern "C++" const char* strcasestr(const char*, const char*) __RENAME(strcasestr) __attribute_pure__;
+extern "C++" char* _Nullable strcasestr(char* _Nonnull, const char* _Nonnull) __RENAME(strcasestr) __attribute_pure__;
+extern "C++" const char* _Nullable strcasestr(const char* _Nonnull, const char* _Nonnull) __RENAME(strcasestr) __attribute_pure__;
 #else
-char* strcasestr(const char* __haystack, const char* __needle) __attribute_pure__;
+char* _Nullable strcasestr(const char* _Nonnull __haystack, const char* _Nonnull __needle) __attribute_pure__;
 #endif
-char* strtok(char* __s, const char* __delimiter);
-char* strtok_r(char* __s, const char* __delimiter, char** __pos_ptr);
+char* _Nullable strtok(char* _Nullable __s, const char* _Nonnull __delimiter);
+char* _Nullable strtok_r(char* _Nullable __s, const char* _Nonnull __delimiter, char* _Nonnull * _Nonnull __pos_ptr);
 
-char* strerror(int __errno_value);
-char* strerror_l(int __errno_value, locale_t __l) __INTRODUCED_IN(23);
+char* _Nonnull strerror(int __errno_value);
+char* _Nonnull strerror_l(int __errno_value, locale_t _Nonnull __l) __INTRODUCED_IN(23);
 #if defined(__USE_GNU) && __ANDROID_API__ >= 23
-char* strerror_r(int __errno_value, char* __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
+char* _Nonnull strerror_r(int __errno_value, char* _Nullable __buf, size_t __n) __RENAME(__gnu_strerror_r) __INTRODUCED_IN(23);
 #else /* POSIX */
-int strerror_r(int __errno_value, char* __buf, size_t __n);
+int strerror_r(int __errno_value, char* _Nonnull __buf, size_t __n);
 #endif
 
-size_t strnlen(const char* __s, size_t __n) __attribute_pure__;
-char* strncat(char* __dst, const char* __src, size_t __n);
-char* strndup(const char* __s, size_t __n);
-int strncmp(const char* __lhs, const char* __rhs, size_t __n) __attribute_pure__;
-char* stpncpy(char* __dst, const char* __src, size_t __n) __INTRODUCED_IN(21);
-char* strncpy(char* __dst, const char* __src, size_t __n);
+size_t strnlen(const char* _Nonnull __s, size_t __n) __attribute_pure__;
+char* _Nonnull strncat(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
+char* _Nullable strndup(const char* _Nonnull __s, size_t __n);
+int strncmp(const char* _Nonnull __lhs, const char* _Nonnull __rhs, size_t __n) __attribute_pure__;
+char* _Nonnull stpncpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n) __INTRODUCED_IN(21);
+char* _Nonnull strncpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
 
-size_t strlcat(char* __dst, const char* __src, size_t __n);
-size_t strlcpy(char* __dst, const char* __src, size_t __n);
+size_t strlcat(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
+size_t strlcpy(char* _Nonnull __dst, const char* _Nonnull __src, size_t __n);
 
-size_t strcspn(const char* __s, const char* __reject) __attribute_pure__;
-char* strpbrk(const char* __s, const char* __accept) __attribute_pure__;
-char* strsep(char** __s_ptr, const char* __delimiter);
-size_t strspn(const char* __s, const char* __accept);
+size_t strcspn(const char* _Nonnull __s, const char* _Nonnull __reject) __attribute_pure__;
+char* _Nullable strpbrk(const char* _Nonnull __s, const char* _Nonnull __accept) __attribute_pure__;
+char* _Nullable strsep(char* _Nullable * _Nonnull __s_ptr, const char* _Nonnull __delimiter);
+size_t strspn(const char* _Nonnull __s, const char* _Nonnull __accept);
 
-char* strsignal(int __signal);
+char* _Nonnull strsignal(int __signal);
 
-int strcoll(const char* __lhs, const char* __rhs) __attribute_pure__;
-size_t strxfrm(char* __dst, const char* __src, size_t __n);
+int strcoll(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __attribute_pure__;
+size_t strxfrm(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n);
 
 #if __ANDROID_API__ >= 21
-int strcoll_l(const char* __lhs, const char* __rhs, locale_t __l) __attribute_pure__ __INTRODUCED_IN(21);
-size_t strxfrm_l(char* __dst, const char* __src, size_t __n, locale_t __l) __INTRODUCED_IN(21);
+int strcoll_l(const char* _Nonnull __lhs, const char* _Nonnull __rhs, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(21);
+size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines before 21.
 #endif
@@ -149,10 +149,10 @@ size_t strxfrm_l(char* __dst, const char* __src, size_t __n, locale_t __l) __INT
  * It doesn't modify its argument, and in C++ it's const-correct.
  */
 #if defined(__cplusplus)
-extern "C++" char* basename(char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
-extern "C++" const char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" char* _Nonnull basename(char* _Nullable __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+extern "C++" const char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #else
-char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
+char* _Nonnull basename(const char* _Nonnull __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #endif
 #endif
 
@@ -169,77 +169,77 @@ char* basename(const char* __path) __RENAME(__gnu_basename) __INTRODUCED_IN(23);
 #define __prefer_this_overload __enable_if(true, "preferred overload") __enable_if(true, "")
 extern "C++" {
 inline __always_inline
-void* __bionic_memchr(const void* const s __pass_object_size, int c, size_t n) {
+void* _Nullable __bionic_memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n) {
     return memchr(s, c, n);
 }
 
 inline __always_inline
-const void* memchr(const void* const s __pass_object_size, int c, size_t n)
+const void* _Nullable memchr(const void* _Nonnull const s __pass_object_size, int c, size_t n)
         __prefer_this_overload {
     return __bionic_memchr(s, c, n);
 }
 
 inline __always_inline
-void* memchr(void* const s __pass_object_size, int c, size_t n) __prefer_this_overload {
+void* _Nullable memchr(void* _Nonnull const s __pass_object_size, int c, size_t n) __prefer_this_overload {
     return __bionic_memchr(s, c, n);
 }
 
 inline __always_inline
-char* __bionic_strchr(const char* const s __pass_object_size, int c) {
+char* _Nullable __bionic_strchr(const char* _Nonnull const s __pass_object_size, int c) {
     return strchr(s, c);
 }
 
 inline __always_inline
-const char* strchr(const char* const s __pass_object_size, int c)
+const char* _Nullable strchr(const char* _Nonnull const s __pass_object_size, int c)
         __prefer_this_overload {
     return __bionic_strchr(s, c);
 }
 
 inline __always_inline
-char* strchr(char* const s __pass_object_size, int c)
+char* _Nullable strchr(char* _Nonnull const s __pass_object_size, int c)
         __prefer_this_overload {
     return __bionic_strchr(s, c);
 }
 
 inline __always_inline
-char* __bionic_strrchr(const char* const s __pass_object_size, int c) {
+char* _Nullable __bionic_strrchr(const char* _Nonnull const s __pass_object_size, int c) {
     return strrchr(s, c);
 }
 
 inline __always_inline
-const char* strrchr(const char* const s __pass_object_size, int c) __prefer_this_overload {
+const char* _Nullable strrchr(const char* _Nonnull const s __pass_object_size, int c) __prefer_this_overload {
     return __bionic_strrchr(s, c);
 }
 
 inline __always_inline
-char* strrchr(char* const s __pass_object_size, int c) __prefer_this_overload {
+char* _Nullable strrchr(char* _Nonnull const s __pass_object_size, int c) __prefer_this_overload {
     return __bionic_strrchr(s, c);
 }
 
 /* Functions with no FORTIFY counterpart. */
 inline __always_inline
-char* __bionic_strstr(const char* h, const char* n) { return strstr(h, n); }
+char* _Nullable __bionic_strstr(const char* _Nonnull h, const char* _Nonnull n) { return strstr(h, n); }
 
 inline __always_inline
-const char* strstr(const char* h, const char* n) __prefer_this_overload {
+const char* _Nullable strstr(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
     return __bionic_strstr(h, n);
 }
 
 inline __always_inline
-char* strstr(char* h, const char* n) __prefer_this_overload {
+char* _Nullable strstr(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
     return __bionic_strstr(h, n);
 }
 
 inline __always_inline
-char* __bionic_strpbrk(const char* h, const char* n) { return strpbrk(h, n); }
+char* _Nullable __bionic_strpbrk(const char* _Nonnull h, const char* _Nonnull n) { return strpbrk(h, n); }
 
 inline __always_inline
-char* strpbrk(char* h, const char* n) __prefer_this_overload {
+char* _Nullable strpbrk(char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
     return __bionic_strpbrk(h, n);
 }
 
 inline __always_inline
-const char* strpbrk(const char* h, const char* n) __prefer_this_overload {
+const char* _Nullable strpbrk(const char* _Nonnull h, const char* _Nonnull n) __prefer_this_overload {
     return __bionic_strpbrk(h, n);
 }
 }
