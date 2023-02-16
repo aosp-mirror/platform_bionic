@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PTHREAD_H_
-#define _PTHREAD_H_
+#pragma once
+
+/**
+ * @file pthread.h
+ * @brief POSIX threads.
+ */
 
 #include <limits.h>
 #include <bits/pthread_types.h>
@@ -165,8 +169,6 @@ int pthread_getattr_np(pthread_t __pthread, pthread_attr_t* __attr);
 
 int pthread_getcpuclockid(pthread_t __pthread, clockid_t* __clock);
 
-int pthread_getschedparam(pthread_t __pthread, int* __policy, struct sched_param* __param);
-
 void* pthread_getspecific(pthread_key_t __key);
 
 pid_t pthread_gettid_np(pthread_t __pthread) __INTRODUCED_IN(21);
@@ -283,7 +285,40 @@ int pthread_getname_np(pthread_t __pthread, char* __buf, size_t __n) __INTRODUCE
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t __pthread, const char* __name);
 
+/**
+ * [pthread_setschedparam(3)](https://man7.org/linux/man-pages/man3/pthread_setschedparam.3.html)
+ * sets the scheduler policy and parameters of the given thread.
+ *
+ * This call is not useful to applications on Android, because they don't
+ * have permission to set their scheduling policy, and the only priority
+ * for their policy is 0 anyway. If you only need to set your scheduling
+ * priority, see setpriority() instead.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
+
+/**
+ * [pthread_getschedparam(3)](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html)
+ * gets the scheduler policy and parameters of the given thread.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
+int pthread_getschedparam(pthread_t __pthread, int* __policy, struct sched_param* __param);
+
+/**
+ * [pthread_setschedprio(3)](https://man7.org/linux/man-pages/man3/pthread_setschedprio.3.html)
+ * sets the scheduler priority of the given thread.
+ *
+ * This call is not useful to applications on Android, because they don't
+ * have permission to set their scheduling policy, and the only priority
+ * for their policy is 0 anyway. If you only need to set your scheduling
+ * priority, see setpriority() instead.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ *
+ * Available since API level 28.
+ */
 int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
 
 int pthread_setspecific(pthread_key_t __key, const void* __value);
@@ -315,5 +350,3 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
     } while (0);                                       \
 
 __END_DECLS
-
-#endif
