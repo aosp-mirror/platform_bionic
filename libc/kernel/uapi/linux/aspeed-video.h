@@ -16,8 +16,9 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#define LINUX_VERSION_CODE 393728
-#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + ((c) > 255 ? 255 : (c)))
-#define LINUX_VERSION_MAJOR 6
-#define LINUX_VERSION_PATCHLEVEL 2
-#define LINUX_VERSION_SUBLEVEL 0
+#ifndef _UAPI_LINUX_ASPEED_VIDEO_H
+#define _UAPI_LINUX_ASPEED_VIDEO_H
+#include <linux/v4l2-controls.h>
+#define V4L2_CID_ASPEED_HQ_MODE (V4L2_CID_USER_ASPEED_BASE + 1)
+#define V4L2_CID_ASPEED_HQ_JPEG_QUALITY (V4L2_CID_USER_ASPEED_BASE + 2)
+#endif

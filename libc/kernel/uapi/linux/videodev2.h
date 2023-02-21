@@ -302,6 +302,8 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_NV12_16L16 v4l2_fourcc('H', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12_32L32 v4l2_fourcc('S', 'T', '1', '2')
 #define V4L2_PIX_FMT_P010_4L4 v4l2_fourcc('T', '0', '1', '0')
+#define V4L2_PIX_FMT_NV12_8L128 v4l2_fourcc('A', 'T', '1', '2')
+#define V4L2_PIX_FMT_NV12_10BE_8L128 v4l2_fourcc_be('A', 'X', '1', '2')
 #define V4L2_PIX_FMT_NV12MT v4l2_fourcc('T', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12MT_16X16 v4l2_fourcc('V', 'M', '1', '2')
 #define V4L2_PIX_FMT_NV12M_8L128 v4l2_fourcc('N', 'A', '1', '2')
@@ -408,6 +410,7 @@ struct v4l2_pix_format {
 #define V4L2_PIX_FMT_HI240 v4l2_fourcc('H', 'I', '2', '4')
 #define V4L2_PIX_FMT_QC08C v4l2_fourcc('Q', '0', '8', 'C')
 #define V4L2_PIX_FMT_QC10C v4l2_fourcc('Q', '1', '0', 'C')
+#define V4L2_PIX_FMT_AJPG v4l2_fourcc('A', 'J', 'P', 'G')
 #define V4L2_PIX_FMT_IPU3_SBGGR10 v4l2_fourcc('i', 'p', '3', 'b')
 #define V4L2_PIX_FMT_IPU3_SGBRG10 v4l2_fourcc('i', 'p', '3', 'g')
 #define V4L2_PIX_FMT_IPU3_SGRBG10 v4l2_fourcc('i', 'p', '3', 'G')
@@ -896,6 +899,8 @@ struct v4l2_ext_control {
     __u8 __user * p_u8;
     __u16 __user * p_u16;
     __u32 __user * p_u32;
+    __u32 __user * p_s32;
+    __u32 __user * p_s64;
     struct v4l2_area __user * p_area;
     struct v4l2_ctrl_h264_sps __user * p_h264_sps;
     struct v4l2_ctrl_h264_pps * p_h264_pps;
