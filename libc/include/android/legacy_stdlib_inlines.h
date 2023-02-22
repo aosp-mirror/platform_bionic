@@ -30,22 +30,6 @@
 
 #include <sys/cdefs.h>
 
-#if __ANDROID_API__ < 19
-
-__BEGIN_DECLS
-
-static __inline int abs(int __n) { return (__n < 0) ? -__n : __n; }
-
-static __inline long labs(long __n) { return (__n < 0L) ? -__n : __n; }
-
-static __inline long long llabs(long long __n) {
-  return (__n < 0LL) ? -__n : __n;
-}
-
-__END_DECLS
-
-#endif
-
 
 
 #if __ANDROID_API__ < 21
