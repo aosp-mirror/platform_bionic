@@ -43,11 +43,7 @@ __BEGIN_DECLS
 
 __noreturn void abort(void) __attribute__((__nomerge__));
 __noreturn void exit(int __status);
-#if __ANDROID_API__ >= 21
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
-#else
-__noreturn void _Exit(int) __RENAME(_exit);
-#endif
 
 int atexit(void (* _Nonnull __fn)(void));
 
