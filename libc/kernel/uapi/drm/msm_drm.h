@@ -74,6 +74,7 @@ struct drm_msm_gem_new {
 #define MSM_INFO_SET_NAME 0x02
 #define MSM_INFO_GET_NAME 0x03
 #define MSM_INFO_SET_IOVA 0x04
+#define MSM_INFO_GET_FLAGS 0x05
 struct drm_msm_gem_info {
   __u32 handle;
   __u32 info;

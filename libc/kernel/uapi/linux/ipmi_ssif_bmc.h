@@ -16,8 +16,12 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#define LINUX_VERSION_CODE 393728
-#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + ((c) > 255 ? 255 : (c)))
-#define LINUX_VERSION_MAJOR 6
-#define LINUX_VERSION_PATCHLEVEL 2
-#define LINUX_VERSION_SUBLEVEL 0
+#ifndef _UAPI_LINUX_IPMI_SSIF_BMC_H
+#define _UAPI_LINUX_IPMI_SSIF_BMC_H
+#include <linux/types.h>
+#define IPMI_SSIF_PAYLOAD_MAX 254
+struct ipmi_ssif_msg {
+  unsigned int len;
+  __u8 payload[IPMI_SSIF_PAYLOAD_MAX];
+};
+#endif

@@ -20,6 +20,7 @@
 #define _UAPI_IPV6_H
 #include <linux/libc-compat.h>
 #include <linux/types.h>
+#include <linux/stddef.h>
 #include <linux/in6.h>
 #include <asm/byteorder.h>
 #define IPV6_MIN_MTU 1280
