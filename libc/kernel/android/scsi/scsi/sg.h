@@ -79,7 +79,7 @@ typedef struct sg_io_hdr {
 #define QUEUE_FULL 0x14
 #define ACA_ACTIVE 0x18
 #define TASK_ABORTED 0x20
-#define status_byte(result) (((result) >> 1) & 0x7f)
+#define sg_status_byte(result) (((result) >> 1) & 0x7f)
 typedef struct sg_scsi_id {
   int host_no;
   int channel;

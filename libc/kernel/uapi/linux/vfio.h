@@ -289,6 +289,7 @@ struct vfio_device_feature_migration {
   __aligned_u64 flags;
 #define VFIO_MIGRATION_STOP_COPY (1 << 0)
 #define VFIO_MIGRATION_P2P (1 << 1)
+#define VFIO_MIGRATION_PRE_COPY (1 << 2)
 };
 #define VFIO_DEVICE_FEATURE_MIGRATION 1
 struct vfio_device_feature_mig_state {
@@ -303,7 +304,16 @@ enum vfio_device_mig_state {
   VFIO_DEVICE_STATE_STOP_COPY = 3,
   VFIO_DEVICE_STATE_RESUMING = 4,
   VFIO_DEVICE_STATE_RUNNING_P2P = 5,
+  VFIO_DEVICE_STATE_PRE_COPY = 6,
+  VFIO_DEVICE_STATE_PRE_COPY_P2P = 7,
 };
+struct vfio_precopy_info {
+  __u32 argsz;
+  __u32 flags;
+  __aligned_u64 initial_bytes;
+  __aligned_u64 dirty_bytes;
+};
+#define VFIO_MIG_GET_PRECOPY_INFO _IO(VFIO_TYPE, VFIO_BASE + 21)
 #define VFIO_DEVICE_FEATURE_LOW_POWER_ENTRY 3
 struct vfio_device_low_power_entry_with_wakeup {
   __s32 wakeup_eventfd;
@@ -330,6 +340,10 @@ struct vfio_device_feature_dma_logging_report {
   __aligned_u64 bitmap;
 };
 #define VFIO_DEVICE_FEATURE_DMA_LOGGING_REPORT 8
+struct vfio_device_feature_mig_data_size {
+  __aligned_u64 stop_copy_length;
+};
+#define VFIO_DEVICE_FEATURE_MIG_DATA_SIZE 9
 struct vfio_iommu_type1_info {
   __u32 argsz;
   __u32 flags;
