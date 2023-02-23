@@ -18,8 +18,12 @@
  ****************************************************************************/
 #ifndef _UAPI_LINUX_BTRFS_H
 #define _UAPI_LINUX_BTRFS_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <linux/types.h>
 #include <linux/ioctl.h>
+#include <linux/fs.h>
 #define BTRFS_IOCTL_MAGIC 0x94
 #define BTRFS_VOL_NAME_MAX 255
 #define BTRFS_LABEL_SIZE 256
@@ -296,7 +300,7 @@ struct btrfs_ioctl_search_header {
   __u64 offset;
   __u32 type;
   __u32 len;
-};
+} __attribute__((__may_alias__));
 #define BTRFS_SEARCH_ARGS_BUFSIZE (4096 - sizeof(struct btrfs_ioctl_search_key))
 struct btrfs_ioctl_search_args {
   struct btrfs_ioctl_search_key key;
@@ -562,4 +566,7 @@ enum btrfs_err_code {
 #define BTRFS_IOC_SNAP_DESTROY_V2 _IOW(BTRFS_IOCTL_MAGIC, 63, struct btrfs_ioctl_vol_args_v2)
 #define BTRFS_IOC_ENCODED_READ _IOR(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
 #define BTRFS_IOC_ENCODED_WRITE _IOW(BTRFS_IOCTL_MAGIC, 64, struct btrfs_ioctl_encoded_io_args)
+#ifdef __cplusplus
+}
+#endif
 #endif
