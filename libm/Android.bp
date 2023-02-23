@@ -386,6 +386,9 @@ cc_library {
             ],
             local_include_dirs: ["i387"],
             pack_relocations: false,
+            // The x86 ABI doesn't include this, which is needed for the
+            // roundss/roundsd instructions that we've used since Android M.
+            cflags: ["-msse4.1"],
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.x86.map",
         },

@@ -20,7 +20,9 @@
 #define LINUX_IO_URING_H
 #include <linux/fs.h>
 #include <linux/types.h>
+#ifndef UAPI_LINUX_IO_URING_H_SKIP_LINUX_TIME_TYPES_H
 #include <linux/time_types.h>
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -190,6 +192,8 @@ enum io_uring_op {
 #define IORING_RECVSEND_POLL_FIRST (1U << 0)
 #define IORING_RECV_MULTISHOT (1U << 1)
 #define IORING_RECVSEND_FIXED_BUF (1U << 2)
+#define IORING_SEND_ZC_REPORT_USAGE (1U << 3)
+#define IORING_NOTIF_USAGE_ZC_COPIED (1U << 31)
 #define IORING_ACCEPT_MULTISHOT (1U << 0)
 enum {
   IORING_MSG_DATA,
