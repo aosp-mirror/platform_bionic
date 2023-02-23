@@ -77,12 +77,6 @@ struct kvm_debug_guest {
   __u32 singlestep;
 };
 #define __KVM_DEPRECATED_VCPU_W_0x87 _IOW(KVMIO, 0x87, struct kvm_debug_guest)
-struct kvm_memory_region {
-  __u32 slot;
-  __u32 flags;
-  __u64 guest_phys_addr;
-  __u64 memory_size;
-};
 struct kvm_userspace_memory_region {
   __u32 slot;
   __u32 flags;
@@ -370,6 +364,7 @@ struct kvm_run {
 #define KVM_MSR_EXIT_REASON_INVAL (1 << 0)
 #define KVM_MSR_EXIT_REASON_UNKNOWN (1 << 1)
 #define KVM_MSR_EXIT_REASON_FILTER (1 << 2)
+#define KVM_MSR_EXIT_REASON_VALID_MASK (KVM_MSR_EXIT_REASON_INVAL | KVM_MSR_EXIT_REASON_UNKNOWN | KVM_MSR_EXIT_REASON_FILTER)
       __u32 reason;
       __u32 index;
       __u64 data;
@@ -929,6 +924,8 @@ struct kvm_ppc_resize_hpt {
 #define KVM_CAP_S390_ZPCI_OP 221
 #define KVM_CAP_S390_CPU_TOPOLOGY 222
 #define KVM_CAP_DIRTY_LOG_RING_ACQ_REL 223
+#define KVM_CAP_S390_PROTECTED_ASYNC_DISABLE 224
+#define KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP 225
 #ifdef KVM_CAP_IRQ_ROUTING
 struct kvm_irq_routing_irqchip {
   __u32 irqchip;
@@ -1003,6 +1000,7 @@ struct kvm_x86_mce {
 #define KVM_XEN_HVM_CONFIG_RUNSTATE (1 << 3)
 #define KVM_XEN_HVM_CONFIG_EVTCHN_2LEVEL (1 << 4)
 #define KVM_XEN_HVM_CONFIG_EVTCHN_SEND (1 << 5)
+#define KVM_XEN_HVM_CONFIG_RUNSTATE_UPDATE_FLAG (1 << 6)
 struct kvm_xen_hvm_config {
   __u32 flags;
   __u32 msr;
@@ -1130,10 +1128,8 @@ struct kvm_vfio_spapr_tce {
   __s32 groupfd;
   __s32 tablefd;
 };
-#define KVM_SET_MEMORY_REGION _IOW(KVMIO, 0x40, struct kvm_memory_region)
 #define KVM_CREATE_VCPU _IO(KVMIO, 0x41)
 #define KVM_GET_DIRTY_LOG _IOW(KVMIO, 0x42, struct kvm_dirty_log)
-#define KVM_SET_MEMORY_ALIAS _IOW(KVMIO, 0x43, struct kvm_memory_alias)
 #define KVM_SET_NR_MMU_PAGES _IO(KVMIO, 0x44)
 #define KVM_GET_NR_MMU_PAGES _IO(KVMIO, 0x45)
 #define KVM_SET_USER_MEMORY_REGION _IOW(KVMIO, 0x46, struct kvm_userspace_memory_region)
@@ -1334,6 +1330,8 @@ enum pv_cmd_id {
   KVM_PV_UNSHARE_ALL,
   KVM_PV_INFO,
   KVM_PV_DUMP,
+  KVM_PV_ASYNC_CLEANUP_PREPARE,
+  KVM_PV_ASYNC_CLEANUP_PERFORM,
 };
 struct kvm_pv_cmd {
   __u32 cmd;
@@ -1354,8 +1352,10 @@ struct kvm_xen_hvm_attr {
   union {
     __u8 long_mode;
     __u8 vector;
+    __u8 runstate_update_flag;
     struct {
       __u64 gfn;
+#define KVM_XEN_INVALID_GFN ((__u64) - 1)
     } shared_info;
     struct {
       __u32 send_port;
@@ -1386,6 +1386,7 @@ struct kvm_xen_hvm_attr {
 #define KVM_XEN_ATTR_TYPE_UPCALL_VECTOR 0x2
 #define KVM_XEN_ATTR_TYPE_EVTCHN 0x3
 #define KVM_XEN_ATTR_TYPE_XEN_VERSION 0x4
+#define KVM_XEN_ATTR_TYPE_RUNSTATE_UPDATE_FLAG 0x5
 #define KVM_XEN_VCPU_GET_ATTR _IOWR(KVMIO, 0xca, struct kvm_xen_vcpu_attr)
 #define KVM_XEN_VCPU_SET_ATTR _IOW(KVMIO, 0xcb, struct kvm_xen_vcpu_attr)
 #define KVM_XEN_HVM_EVTCHN_SEND _IOW(KVMIO, 0xd0, struct kvm_irq_routing_xen_evtchn)
@@ -1396,6 +1397,7 @@ struct kvm_xen_vcpu_attr {
   __u16 pad[3];
   union {
     __u64 gpa;
+#define KVM_XEN_INVALID_GPA ((__u64) - 1)
     __u64 pad[8];
     struct {
       __u64 state;

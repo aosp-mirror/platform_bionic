@@ -99,11 +99,13 @@ struct cee_pfc {
 #define IEEE_8021QAZ_APP_SEL_DGRAM 3
 #define IEEE_8021QAZ_APP_SEL_ANY 4
 #define IEEE_8021QAZ_APP_SEL_DSCP 5
+#define DCB_APP_SEL_PCP 255
 struct dcb_app {
   __u8 selector;
   __u8 priority;
   __u16 protocol;
 };
+#define IEEE_8021QAZ_APP_SEL_MAX 255
 struct dcb_peer_app_info {
   __u8 willing;
   __u8 error;
@@ -178,12 +180,14 @@ enum ieee_attrs {
   DCB_ATTR_IEEE_QCN,
   DCB_ATTR_IEEE_QCN_STATS,
   DCB_ATTR_DCB_BUFFER,
+  DCB_ATTR_DCB_APP_TRUST_TABLE,
   __DCB_ATTR_IEEE_MAX
 };
 #define DCB_ATTR_IEEE_MAX (__DCB_ATTR_IEEE_MAX - 1)
 enum ieee_attrs_app {
   DCB_ATTR_IEEE_APP_UNSPEC,
   DCB_ATTR_IEEE_APP,
+  DCB_ATTR_DCB_APP,
   __DCB_ATTR_IEEE_APP_MAX
 };
 #define DCB_ATTR_IEEE_APP_MAX (__DCB_ATTR_IEEE_APP_MAX - 1)

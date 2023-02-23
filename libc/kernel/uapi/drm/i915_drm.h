@@ -368,6 +368,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_PERF_REVISION 54
 #define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 #define I915_PARAM_HAS_USERPTR_PROBE 56
+#define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
 struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -846,6 +847,8 @@ enum drm_i915_oa_format {
   I915_OA_FORMAT_A12,
   I915_OA_FORMAT_A12_B8_C8,
   I915_OA_FORMAT_A32u40_A4u32_B8_C8,
+  I915_OAR_FORMAT_A32u40_A4u32_B8_C8,
+  I915_OA_FORMAT_A24u40_A14u32_B8_C8,
   I915_OA_FORMAT_MAX
 };
 enum drm_i915_perf_property_id {
