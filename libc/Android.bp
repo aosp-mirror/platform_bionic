@@ -2307,6 +2307,7 @@ cc_library_static {
     },
     whole_static_libs: [
         "libarm-optimized-routines-mem",
+        "libc_netbsd",
     ],
     system_shared_libs: [],
     nocrt: true,
