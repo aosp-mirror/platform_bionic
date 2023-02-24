@@ -46,6 +46,9 @@
 #define VIRTIO_NET_F_MQ 22
 #define VIRTIO_NET_F_CTRL_MAC_ADDR 23
 #define VIRTIO_NET_F_NOTF_COAL 53
+#define VIRTIO_NET_F_GUEST_USO4 54
+#define VIRTIO_NET_F_GUEST_USO6 55
+#define VIRTIO_NET_F_HOST_USO 56
 #define VIRTIO_NET_F_HASH_REPORT 57
 #define VIRTIO_NET_F_RSS 60
 #define VIRTIO_NET_F_RSC_EXT 61
@@ -85,6 +88,7 @@ struct virtio_net_hdr_v1 {
 #define VIRTIO_NET_HDR_GSO_TCPV4 1
 #define VIRTIO_NET_HDR_GSO_UDP 3
 #define VIRTIO_NET_HDR_GSO_TCPV6 4
+#define VIRTIO_NET_HDR_GSO_UDP_L4 5
 #define VIRTIO_NET_HDR_GSO_ECN 0x80
   __u8 gso_type;
   __virtio16 hdr_len;
