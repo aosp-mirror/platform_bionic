@@ -79,25 +79,12 @@ int __FD_ISSET_chk(int, const fd_set*, size_t) __INTRODUCED_IN(21);
 #define __FD_SET(fd, set) (__FDS_BITS(fd_set*,set)[__FDELT(fd)] |= __FDMASK(fd))
 #define __FD_ISSET(fd, set) ((__FDS_BITS(const fd_set*,set)[__FDELT(fd)] & __FDMASK(fd)) != 0)
 
-#if __ANDROID_API__ >= 21
-
 /** Removes `fd` from the given set. Use <poll.h> instead. */
 #define FD_CLR(fd, set) __FD_CLR_chk(fd, set, __bos(set))
 /** Adds `fd` to the given set. Use <poll.h> instead. */
 #define FD_SET(fd, set) __FD_SET_chk(fd, set, __bos(set))
 /** Tests whether `fd` is in the given set. Use <poll.h> instead. */
 #define FD_ISSET(fd, set) __FD_ISSET_chk(fd, set, __bos(set))
-
-#else
-
-/** Removes `fd` from the given set. Use <poll.h> instead. */
-#define FD_CLR(fd, set) __FD_CLR(fd, set)
-/** Adds `fd` to the given set. Use <poll.h> instead. */
-#define FD_SET(fd, set) __FD_SET(fd, set)
-/** Tests whether `fd` is in the given set. Use <poll.h> instead. */
-#define FD_ISSET(fd, set) __FD_ISSET(fd, set)
-
-#endif /* __ANDROID_API >= 21 */
 
 /**
  * [select(2)](http://man7.org/linux/man-pages/man2/select.2.html) waits on a
