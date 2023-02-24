@@ -136,6 +136,38 @@ struct drm_panfrost_madvise {
   __u32 madv;
   __u32 retained;
 };
+#define PANFROSTDUMP_MAJOR 1
+#define PANFROSTDUMP_MINOR 0
+#define PANFROSTDUMP_MAGIC 0x464E4150
+#define PANFROSTDUMP_BUF_REG 0
+#define PANFROSTDUMP_BUF_BOMAP (PANFROSTDUMP_BUF_REG + 1)
+#define PANFROSTDUMP_BUF_BO (PANFROSTDUMP_BUF_BOMAP + 1)
+#define PANFROSTDUMP_BUF_TRAILER (PANFROSTDUMP_BUF_BO + 1)
+struct panfrost_dump_object_header {
+  __u32 magic;
+  __u32 type;
+  __u32 file_size;
+  __u32 file_offset;
+  union {
+    struct {
+      __u64 jc;
+      __u32 gpu_id;
+      __u32 major;
+      __u32 minor;
+      __u64 nbos;
+    } reghdr;
+    struct {
+      __u32 valid;
+      __u64 iova;
+      __u32 data[2];
+    } bomap;
+    __u32 sizer[496];
+  };
+};
+struct panfrost_dump_registers {
+  __u32 reg;
+  __u32 value;
+};
 #ifdef __cplusplus
 }
 #endif

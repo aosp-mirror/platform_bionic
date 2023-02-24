@@ -26,6 +26,7 @@
  * SUCH DAMAGE.
  */
 
+#include <cxxabi.h>
 #include <dlfcn.h>
 #include <errno.h>
 #include <inttypes.h>
@@ -47,8 +48,6 @@
 #endif
 
 typedef struct _Unwind_Context __unwind_context;
-
-extern "C" char* __cxa_demangle(const char*, char*, size_t*, int*);
 
 static MapData g_map_data;
 static const MapEntry* g_current_code_map = nullptr;
@@ -145,7 +144,7 @@ std::string backtrace_string(const uintptr_t* frames, size_t frame_count) {
 
     char buf[1024];
     if (symbol != nullptr) {
-      char* demangled_name = __cxa_demangle(symbol, nullptr, nullptr, nullptr);
+      char* demangled_name = abi::__cxa_demangle(symbol, nullptr, nullptr, nullptr);
       const char* name;
       if (demangled_name != nullptr) {
         name = demangled_name;

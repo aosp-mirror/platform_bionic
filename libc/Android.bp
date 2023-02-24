@@ -248,10 +248,14 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "tzcode/**/*.c",
         "tzcode/bionic.cpp",
-        "upstream-openbsd/lib/libc/time/wcsftime.c", // tzcode doesn't include wcsftime, so we use the OpenBSD one.
+        // tzcode doesn't include strptime or wcsftime, so we use the OpenBSD
+        // code (with some local changes in the strptime case).
+        "upstream-openbsd/lib/libc/locale/_def_time.c",
+        "upstream-openbsd/lib/libc/time/wcsftime.c",
     ],
 
     cflags: [
@@ -291,6 +295,7 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "dns/**/*.c*",
 
@@ -326,6 +331,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/ldexp.c",
         "upstream-freebsd/lib/libc/stdlib/getopt_long.c",
@@ -392,6 +398,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-freebsd/lib/libc/gen/glob.c",
     ],
@@ -419,6 +426,7 @@ cc_library_static {
 cc_library_static {
 
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-netbsd/common/lib/libc/stdlib/random.c",
         "upstream-netbsd/lib/libc/gen/nice.c",
@@ -476,6 +484,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_openbsd_ndk",
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-openbsd/lib/libc/gen/alarm.c",
         "upstream-openbsd/lib/libc/gen/ctype_.c",
@@ -594,6 +603,7 @@ cc_library_static {
 cc_library_static {
     name: "libc_openbsd_large_stack",
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "stdio/vfprintf.cpp",
         "stdio/vfwprintf.cpp",
@@ -623,6 +633,7 @@ cc_library_static {
 // automatically included.
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         // These two depend on getentropy, which isn't in libc_ndk.a.
         "upstream-openbsd/lib/libc/crypt/arc4random.c",
@@ -722,6 +733,7 @@ cc_library_static {
 
 cc_library_static {
     defaults: ["libc_defaults"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "upstream-openbsd/android/gdtoa_support.cpp",
         "upstream-openbsd/lib/libc/gdtoa/dmisc.c",
@@ -763,7 +775,7 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_fortify.a - container for our FORITFY
+// libc_fortify.a - container for our FORTIFY
 // implementation details
 // ========================================================
 cc_library_static {
@@ -782,7 +794,6 @@ cc_library_static {
     arch: {
         arm: {
             cflags: [
-                "-DHAVE_ASSEMBLER___MEMCPY_CHK",
                 "-DRENAME___STRCAT_CHK",
                 "-DRENAME___STRCPY_CHK",
             ],
@@ -809,7 +820,6 @@ cc_library_static {
             ],
         },
         arm64: {
-            cflags: ["-DHAVE_ASSEMBLER___MEMCPY_CHK"],
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
                 "arch-arm64/string/__memset_chk.S",
@@ -1191,6 +1201,7 @@ cc_library_static {
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
+        "bionic/time_l.cpp",
         "bionic/timespec_get.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
@@ -1433,6 +1444,7 @@ cc_library_static {
 
     whole_static_libs: [
         "gwp_asan",
+        "gwp_asan_crash_handler",
         "libarm-optimized-routines-string",
         "libasync_safe",
         "libc_bionic_ndk",
@@ -1675,6 +1687,7 @@ cc_library {
         cflags: ["-DLIBC_STATIC"],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_static",
             "libc_common_static",
             "libc_unwind_static",
@@ -1684,6 +1697,7 @@ cc_library {
         srcs: [ ":libc_sources_shared" ],
         whole_static_libs: [
             "gwp_asan",
+            "gwp_asan_crash_handler",
             "libc_init_dynamic",
             "libc_common_shared",
             "libunwind-exported",
@@ -2262,6 +2276,47 @@ cc_library_static {
 }
 
 // ========================================================
+// libc dependencies for baremetal Rust projects.
+// ========================================================
+
+// This library contains the following unresolved symbols:
+//     __errno
+//     abort
+//     async_safe_fatal_va_list
+cc_library_static {
+    name: "librust_baremetal",
+    header_libs: ["libc_headers"],
+    include_dirs: [
+        "bionic/libc/async_safe/include",
+        "bionic/libc/platform",
+    ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+    srcs: [
+        "bionic/fortify.cpp",
+        "bionic/strtol.cpp",
+    ],
+    arch: {
+        arm64: {
+            srcs: [
+                "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+    },
+    whole_static_libs: [
+        "libarm-optimized-routines-mem",
+    ],
+    system_shared_libs: [],
+    nocrt: true,
+    stl: "none",
+    visibility: [
+        "//packages/modules/Virtualization/vmbase",
+    ],
+}
+
+// ========================================================
 // NDK headers.
 // ========================================================
 
@@ -2783,6 +2838,7 @@ cc_library {
 
 cc_library_host_static {
     name: "libfts",
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: [
         "bionic/fts.c",
         "upstream-openbsd/lib/libc/stdlib/recallocarray.c",
@@ -2825,6 +2881,7 @@ cc_library_host_static {
 cc_library_host_static {
     name: "libb64",
     visibility: ["//external/musl"],
+    tidy_disabled_srcs: ["upstream-*/**/*.c"],
     srcs: ["upstream-openbsd/lib/libc/net/base64.c"],
     export_include_dirs: ["b64/include"],
     local_include_dirs: [

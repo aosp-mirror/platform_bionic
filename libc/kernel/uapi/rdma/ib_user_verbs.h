@@ -78,6 +78,14 @@ enum {
   IB_USER_VERBS_EX_CMD_DESTROY_RWQ_IND_TBL,
   IB_USER_VERBS_EX_CMD_MODIFY_CQ
 };
+enum ib_placement_type {
+  IB_FLUSH_GLOBAL = 1U << 0,
+  IB_FLUSH_PERSISTENT = 1U << 1,
+};
+enum ib_selectivity_level {
+  IB_FLUSH_RANGE = 0,
+  IB_FLUSH_MR,
+};
 struct ib_uverbs_async_event_desc {
   __aligned_u64 element;
   __u32 event_type;
@@ -370,6 +378,8 @@ enum ib_uverbs_wc_opcode {
   IB_UVERBS_WC_BIND_MW = 5,
   IB_UVERBS_WC_LOCAL_INV = 6,
   IB_UVERBS_WC_TSO = 7,
+  IB_UVERBS_WC_FLUSH = 8,
+  IB_UVERBS_WC_ATOMIC_WRITE = 9,
 };
 struct ib_uverbs_wc {
   __aligned_u64 wr_id;
@@ -648,6 +658,8 @@ enum ib_uverbs_wr_opcode {
   IB_UVERBS_WR_RDMA_READ_WITH_INV = 11,
   IB_UVERBS_WR_MASKED_ATOMIC_CMP_AND_SWP = 12,
   IB_UVERBS_WR_MASKED_ATOMIC_FETCH_AND_ADD = 13,
+  IB_UVERBS_WR_FLUSH = 14,
+  IB_UVERBS_WR_ATOMIC_WRITE = 15,
 };
 struct ib_uverbs_send_wr {
   __aligned_u64 wr_id;
@@ -1105,6 +1117,9 @@ enum ib_uverbs_device_cap_flags {
   IB_UVERBS_DEVICE_MANAGED_FLOW_STEERING = 1 << 29,
   IB_UVERBS_DEVICE_RAW_SCATTER_FCS = 1ULL << 34,
   IB_UVERBS_DEVICE_PCI_WRITE_END_PADDING = 1ULL << 36,
+  IB_UVERBS_DEVICE_FLUSH_GLOBAL = 1ULL << 38,
+  IB_UVERBS_DEVICE_FLUSH_PERSISTENT = 1ULL << 39,
+  IB_UVERBS_DEVICE_ATOMIC_WRITE = 1ULL << 40,
 };
 enum ib_uverbs_raw_packet_caps {
   IB_UVERBS_RAW_PACKET_CAP_CVLAN_STRIPPING = 1 << 0,

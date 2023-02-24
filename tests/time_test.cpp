@@ -998,6 +998,10 @@ TEST(time, clock_getres_unknown) {
   ASSERT_EQ(-1, ts.tv_sec);
 }
 
+TEST(time, clock_getres_null_resolution) {
+  ASSERT_EQ(0, clock_getres(CLOCK_REALTIME, nullptr));
+}
+
 TEST(time, clock) {
   // clock(3) is hard to test, but a 1s sleep should cost less than 10ms on average.
   static const clock_t N = 5;
