@@ -183,13 +183,9 @@ size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #include <bits/fortify/stdlib.h>
 #endif
 
-#if __ANDROID_API__ >= 19
 int abs(int __x) __attribute_const__ __INTRODUCED_IN(19);
 long labs(long __x) __attribute_const__ __INTRODUCED_IN(19);
 long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
-#else
-// Implemented as static inlines before 19.
-#endif
 
 #if __ANDROID_API__ >= 21
 float strtof(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr) __INTRODUCED_IN(21);
