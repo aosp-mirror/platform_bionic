@@ -58,5 +58,3 @@ int* __errno(void) __attribute_const__;
 #define errno (*__errno())
 
 __END_DECLS
-
-#include <android/legacy_errno_inlines.h>
