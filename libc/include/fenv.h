@@ -43,8 +43,6 @@
 
 __BEGIN_DECLS
 
-// fenv was always available on x86.
-#if __ANDROID_API__ >= 21 || defined(__i386__)
 int feclearexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
 int fegetexceptflag(fexcept_t* _Nonnull __flag_ptr, int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
 int feraiseexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
@@ -62,9 +60,6 @@ int feupdateenv(const fenv_t* _Nonnull __env) __INTRODUCED_IN_ARM(21) __INTRODUC
 int feenableexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
 int fedisableexcept(int __exceptions) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
 int fegetexcept(void) __INTRODUCED_IN_ARM(21) __INTRODUCED_IN_X86(9);
-#else
-/* Defined as inlines for pre-21 ARM. */
-#endif
 
 /*
  * The following constant represents the default floating-point environment
@@ -78,7 +73,3 @@ extern const fenv_t __fe_dfl_env;
 #define FE_DFL_ENV (&__fe_dfl_env)
 
 __END_DECLS
-
-#if defined(__arm__)
-#include <android/legacy_fenv_inlines_arm.h>
-#endif
