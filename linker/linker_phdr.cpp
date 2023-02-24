@@ -175,7 +175,8 @@ bool ElfReader::Load(address_space_params* address_space) {
   if (did_load_) {
     return true;
   }
-  if (ReserveAddressSpace(address_space) && LoadSegments() && FindPhdr() &&
+  bool reserveSuccess = ReserveAddressSpace(address_space);
+  if (reserveSuccess && LoadSegments() && FindPhdr() &&
       FindGnuPropertySection()) {
     did_load_ = true;
 #if defined(__aarch64__)
@@ -185,6 +186,13 @@ bool ElfReader::Load(address_space_params* address_space) {
                                                &note_gnu_property_) == 0);
     }
 #endif
+  }
+  if (reserveSuccess && !did_load_) {
+    if (load_start_ != nullptr && load_size_ != 0) {
+      if (!mapped_by_caller_) {
+        munmap(load_start_, load_size_);
+      }
+    }
   }
 
   return did_load_;

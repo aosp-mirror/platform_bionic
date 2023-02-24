@@ -20,6 +20,7 @@
 #define _UAPI_IPV6_H
 #include <linux/libc-compat.h>
 #include <linux/types.h>
+#include <linux/stddef.h>
 #include <linux/in6.h>
 #include <asm/byteorder.h>
 #define IPV6_MIN_MTU 1280
@@ -87,8 +88,9 @@ struct ipv6hdr {
   __be16 payload_len;
   __u8 nexthdr;
   __u8 hop_limit;
-  struct in6_addr saddr;
+  __struct_group(, addrs,, struct in6_addr saddr;
   struct in6_addr daddr;
+ );
 };
 enum {
   DEVCONF_FORWARDING = 0,

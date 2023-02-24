@@ -46,6 +46,7 @@ enum counter_event_type {
   COUNTER_EVENT_THRESHOLD,
   COUNTER_EVENT_INDEX,
   COUNTER_EVENT_CHANGE_OF_STATE,
+  COUNTER_EVENT_CAPTURE,
 };
 struct counter_watch {
   struct counter_component component;
@@ -90,5 +91,9 @@ enum counter_synapse_action {
   COUNTER_SYNAPSE_ACTION_RISING_EDGE,
   COUNTER_SYNAPSE_ACTION_FALLING_EDGE,
   COUNTER_SYNAPSE_ACTION_BOTH_EDGES,
+};
+enum counter_signal_polarity {
+  COUNTER_SIGNAL_POLARITY_POSITIVE,
+  COUNTER_SIGNAL_POLARITY_NEGATIVE,
 };
 #endif

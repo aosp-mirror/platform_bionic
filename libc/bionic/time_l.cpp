@@ -26,14 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#include <private/bionic_asm.h>
+#include <time.h>
+//#include <xlocale.h>
 
-ENTRY(sqrt)
-  fsqrt.d fa0, fa0
-  ret
-END(sqrt)
-
-ENTRY(sqrtf)
-  fsqrt.s fa0, fa0
-  ret
-END(sqrtf)
+char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t) {
+  return strptime(buf, fmt, tm);
+}

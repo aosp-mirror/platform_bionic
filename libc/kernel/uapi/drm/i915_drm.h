@@ -368,6 +368,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_PERF_REVISION 54
 #define I915_PARAM_HAS_EXEC_TIMELINE_FENCES 55
 #define I915_PARAM_HAS_USERPTR_PROBE 56
+#define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
 struct drm_i915_getparam {
   __s32 param;
   int __user * value;
@@ -788,7 +789,7 @@ struct i915_context_engines_parallel_submit {
   __u64 flags;
   __u64 mbz64[3];
   struct i915_engine_class_instance engines[];
-} __packed;
+} __attribute__((__packed__));
 #define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__,N__) struct { struct i915_user_extension base; __u16 engine_index; __u16 width; __u16 num_siblings; __u16 mbz16; __u64 flags; __u64 mbz64[3]; struct i915_engine_class_instance engines[N__]; \
 } __attribute__((packed)) name__
 struct i915_context_param_engines {
@@ -846,6 +847,8 @@ enum drm_i915_oa_format {
   I915_OA_FORMAT_A12,
   I915_OA_FORMAT_A12_B8_C8,
   I915_OA_FORMAT_A32u40_A4u32_B8_C8,
+  I915_OAR_FORMAT_A32u40_A4u32_B8_C8,
+  I915_OA_FORMAT_A24u40_A14u32_B8_C8,
   I915_OA_FORMAT_MAX
 };
 enum drm_i915_perf_property_id {

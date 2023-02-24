@@ -108,7 +108,6 @@ enum perf_event_sample_format {
   PERF_SAMPLE_CODE_PAGE_SIZE = 1U << 23,
   PERF_SAMPLE_WEIGHT_STRUCT = 1U << 24,
   PERF_SAMPLE_MAX = 1U << 25,
-  __PERF_SAMPLE_CALLCHAIN_EARLY = 1ULL << 63,
 };
 #define PERF_SAMPLE_WEIGHT_TYPE (PERF_SAMPLE_WEIGHT | PERF_SAMPLE_WEIGHT_STRUCT)
 enum perf_branch_sample_type_shift {
@@ -130,6 +129,7 @@ enum perf_branch_sample_type_shift {
   PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT = 15,
   PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT = 16,
   PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT = 17,
+  PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT = 18,
   PERF_SAMPLE_BRANCH_MAX_SHIFT
 };
 enum perf_branch_sample_type {
@@ -151,6 +151,7 @@ enum perf_branch_sample_type {
   PERF_SAMPLE_BRANCH_NO_CYCLES = 1U << PERF_SAMPLE_BRANCH_NO_CYCLES_SHIFT,
   PERF_SAMPLE_BRANCH_TYPE_SAVE = 1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
   PERF_SAMPLE_BRANCH_HW_INDEX = 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+  PERF_SAMPLE_BRANCH_PRIV_SAVE = 1U << PERF_SAMPLE_BRANCH_PRIV_SAVE_SHIFT,
   PERF_SAMPLE_BRANCH_MAX = 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
 };
 enum {
@@ -167,8 +168,40 @@ enum {
   PERF_BR_COND_RET = 10,
   PERF_BR_ERET = 11,
   PERF_BR_IRQ = 12,
+  PERF_BR_SERROR = 13,
+  PERF_BR_NO_TX = 14,
+  PERF_BR_EXTEND_ABI = 15,
   PERF_BR_MAX,
 };
+enum {
+  PERF_BR_SPEC_NA = 0,
+  PERF_BR_SPEC_WRONG_PATH = 1,
+  PERF_BR_NON_SPEC_CORRECT_PATH = 2,
+  PERF_BR_SPEC_CORRECT_PATH = 3,
+  PERF_BR_SPEC_MAX,
+};
+enum {
+  PERF_BR_NEW_FAULT_ALGN = 0,
+  PERF_BR_NEW_FAULT_DATA = 1,
+  PERF_BR_NEW_FAULT_INST = 2,
+  PERF_BR_NEW_ARCH_1 = 3,
+  PERF_BR_NEW_ARCH_2 = 4,
+  PERF_BR_NEW_ARCH_3 = 5,
+  PERF_BR_NEW_ARCH_4 = 6,
+  PERF_BR_NEW_ARCH_5 = 7,
+  PERF_BR_NEW_MAX,
+};
+enum {
+  PERF_BR_PRIV_UNKNOWN = 0,
+  PERF_BR_PRIV_USER = 1,
+  PERF_BR_PRIV_KERNEL = 2,
+  PERF_BR_PRIV_HV = 3,
+};
+#define PERF_BR_ARM64_FIQ PERF_BR_NEW_ARCH_1
+#define PERF_BR_ARM64_DEBUG_HALT PERF_BR_NEW_ARCH_2
+#define PERF_BR_ARM64_DEBUG_EXIT PERF_BR_NEW_ARCH_3
+#define PERF_BR_ARM64_DEBUG_INST PERF_BR_NEW_ARCH_4
+#define PERF_BR_ARM64_DEBUG_DATA PERF_BR_NEW_ARCH_5
 #define PERF_SAMPLE_BRANCH_PLM_ALL (PERF_SAMPLE_BRANCH_USER | PERF_SAMPLE_BRANCH_KERNEL | PERF_SAMPLE_BRANCH_HV)
 enum perf_sample_regs_abi {
   PERF_SAMPLE_REGS_ABI_NONE = 0,
@@ -435,6 +468,8 @@ union perf_mem_data_src {
 #define PERF_MEM_LVLNUM_L2 0x02
 #define PERF_MEM_LVLNUM_L3 0x03
 #define PERF_MEM_LVLNUM_L4 0x04
+#define PERF_MEM_LVLNUM_CXL 0x09
+#define PERF_MEM_LVLNUM_IO 0x0a
 #define PERF_MEM_LVLNUM_ANY_CACHE 0x0b
 #define PERF_MEM_LVLNUM_LFB 0x0c
 #define PERF_MEM_LVLNUM_RAM 0x0d
@@ -448,6 +483,7 @@ union perf_mem_data_src {
 #define PERF_MEM_SNOOP_HITM 0x10
 #define PERF_MEM_SNOOP_SHIFT 19
 #define PERF_MEM_SNOOPX_FWD 0x01
+#define PERF_MEM_SNOOPX_PEER 0x02
 #define PERF_MEM_SNOOPX_SHIFT 38
 #define PERF_MEM_LOCK_NA 0x01
 #define PERF_MEM_LOCK_LOCKED 0x02
@@ -473,7 +509,7 @@ union perf_mem_data_src {
 struct perf_branch_entry {
   __u64 from;
   __u64 to;
-  __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, reserved : 40;
+  __u64 mispred : 1, predicted : 1, in_tx : 1, abort : 1, cycles : 16, type : 4, spec : 2, new_type : 4, priv : 3, reserved : 31;
 };
 union perf_sample_weight {
   __u64 full;

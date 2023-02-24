@@ -36,6 +36,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include "gwp_asan/crash_handler.h"
 #include "gwp_asan/guarded_pool_allocator.h"
 #include "gwp_asan/options.h"
 #include "gwp_asan_wrappers.h"
@@ -189,6 +190,7 @@ bool ShouldGwpAsanSampleProcess(unsigned sample_rate) {
 }
 
 bool GwpAsanInitialized = false;
+bool GwpAsanRecoverable = false;
 
 // The probability (1 / SampleRate) that an allocation gets chosen to be put
 // into the special GWP-ASan pool.
@@ -222,7 +224,31 @@ static const char* kMaxAllocsAppSysprop = "libc.debug.gwp_asan.max_allocs.app_de
 static const char* kMaxAllocsTargetedSyspropPrefix = "libc.debug.gwp_asan.max_allocs.";
 static const char* kMaxAllocsEnvVar = "GWP_ASAN_MAX_ALLOCS";
 
+static const char* kRecoverableSystemSysprop = "libc.debug.gwp_asan.recoverable.system_default";
+static const char* kRecoverableAppSysprop = "libc.debug.gwp_asan.recoverable.app_default";
+static const char* kRecoverableTargetedSyspropPrefix = "libc.debug.gwp_asan.recoverable.";
+static const char* kRecoverableEnvVar = "GWP_ASAN_RECOVERABLE";
+
 static const char kPersistPrefix[] = "persist.";
+
+bool NeedsGwpAsanRecovery(void* fault_ptr) {
+  fault_ptr = untag_address(fault_ptr);
+  return GwpAsanInitialized && GwpAsanRecoverable &&
+         __gwp_asan_error_is_mine(GuardedAlloc.getAllocatorState(),
+                                  reinterpret_cast<uintptr_t>(fault_ptr));
+}
+
+void GwpAsanPreCrashHandler(void* fault_ptr) {
+  fault_ptr = untag_address(fault_ptr);
+  if (!NeedsGwpAsanRecovery(fault_ptr)) return;
+  GuardedAlloc.preCrashReport(fault_ptr);
+}
+
+void GwpAsanPostCrashHandler(void* fault_ptr) {
+  fault_ptr = untag_address(fault_ptr);
+  if (!NeedsGwpAsanRecovery(fault_ptr)) return;
+  GuardedAlloc.postCrashReportRecoverableOnly(fault_ptr);
+}
 
 void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
                               const android_mallopt_gwp_asan_options_t& mallopt_options) {
@@ -236,14 +262,17 @@ void SetDefaultGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   *process_sample_rate = 1;
   if (mallopt_options.desire == Action::TURN_ON_WITH_SAMPLING) {
     *process_sample_rate = kDefaultProcessSampling;
+  } else if (mallopt_options.desire == Action::TURN_ON_FOR_APP_SAMPLED_NON_CRASHING) {
+    *process_sample_rate = kDefaultProcessSampling;
+    options->Recoverable = true;
+    GwpAsanRecoverable = true;
   }
 }
 
-bool GetGwpAsanOption(unsigned long long* result,
-                      const android_mallopt_gwp_asan_options_t& mallopt_options,
-                      const char* system_sysprop, const char* app_sysprop,
-                      const char* targeted_sysprop_prefix, const char* env_var,
-                      const char* descriptive_name) {
+bool GetGwpAsanOptionImpl(char* value_out,
+                          const android_mallopt_gwp_asan_options_t& mallopt_options,
+                          const char* system_sysprop, const char* app_sysprop,
+                          const char* targeted_sysprop_prefix, const char* env_var) {
   const char* basename = "";
   if (mallopt_options.program_name) basename = __gnu_basename(mallopt_options.program_name);
 
@@ -278,22 +307,57 @@ bool GetGwpAsanOption(unsigned long long* result,
     sysprop_names[3] = persist_default_sysprop;
   }
 
-  char settings_buf[PROP_VALUE_MAX];
-  if (!get_config_from_env_or_sysprops(env_var, sysprop_names, arraysize(sysprop_names),
-                                       settings_buf, PROP_VALUE_MAX)) {
+  return get_config_from_env_or_sysprops(env_var, sysprop_names, arraysize(sysprop_names),
+                                         value_out, PROP_VALUE_MAX);
+}
+
+bool GetGwpAsanIntegerOption(unsigned long long* result,
+                             const android_mallopt_gwp_asan_options_t& mallopt_options,
+                             const char* system_sysprop, const char* app_sysprop,
+                             const char* targeted_sysprop_prefix, const char* env_var,
+                             const char* descriptive_name) {
+  char buffer[PROP_VALUE_MAX];
+  if (!GetGwpAsanOptionImpl(buffer, mallopt_options, system_sysprop, app_sysprop,
+                            targeted_sysprop_prefix, env_var)) {
     return false;
   }
-
   char* end;
-  unsigned long long value = strtoull(settings_buf, &end, 10);
+  unsigned long long value = strtoull(buffer, &end, 10);
   if (value == ULLONG_MAX || *end != '\0') {
     warning_log("Invalid GWP-ASan %s: \"%s\". Using default value instead.", descriptive_name,
-                settings_buf);
+                buffer);
     return false;
   }
 
   *result = value;
   return true;
+}
+
+bool GetGwpAsanBoolOption(bool* result, const android_mallopt_gwp_asan_options_t& mallopt_options,
+                          const char* system_sysprop, const char* app_sysprop,
+                          const char* targeted_sysprop_prefix, const char* env_var,
+                          const char* descriptive_name) {
+  char buffer[PROP_VALUE_MAX] = {};
+  if (!GetGwpAsanOptionImpl(buffer, mallopt_options, system_sysprop, app_sysprop,
+                            targeted_sysprop_prefix, env_var)) {
+    return false;
+  }
+
+  if (strncasecmp(buffer, "1", PROP_VALUE_MAX) == 0 ||
+      strncasecmp(buffer, "true", PROP_VALUE_MAX) == 0) {
+    *result = true;
+    return true;
+  } else if (strncasecmp(buffer, "0", PROP_VALUE_MAX) == 0 ||
+             strncasecmp(buffer, "false", PROP_VALUE_MAX) == 0) {
+    *result = false;
+    return true;
+  }
+
+  warning_log(
+      "Invalid GWP-ASan %s: \"%s\". Using default value \"%s\" instead. Valid values are \"true\", "
+      "\"1\", \"false\", or \"0\".",
+      descriptive_name, buffer, *result ? "true" : "false");
+  return false;
 }
 
 // Initialize the GWP-ASan options structure in *options, taking into account whether someone has
@@ -310,22 +374,23 @@ bool GetGwpAsanOptions(Options* options, unsigned* process_sample_rate,
   bool had_overrides = false;
 
   unsigned long long buf;
-  if (GetGwpAsanOption(&buf, mallopt_options, kSampleRateSystemSysprop, kSampleRateAppSysprop,
-                       kSampleRateTargetedSyspropPrefix, kSampleRateEnvVar, "sample rate")) {
+  if (GetGwpAsanIntegerOption(&buf, mallopt_options, kSampleRateSystemSysprop,
+                              kSampleRateAppSysprop, kSampleRateTargetedSyspropPrefix,
+                              kSampleRateEnvVar, "sample rate")) {
     options->SampleRate = buf;
     had_overrides = true;
   }
 
-  if (GetGwpAsanOption(&buf, mallopt_options, kProcessSamplingSystemSysprop,
-                       kProcessSamplingAppSysprop, kProcessSamplingTargetedSyspropPrefix,
-                       kProcessSamplingEnvVar, "process sampling rate")) {
+  if (GetGwpAsanIntegerOption(&buf, mallopt_options, kProcessSamplingSystemSysprop,
+                              kProcessSamplingAppSysprop, kProcessSamplingTargetedSyspropPrefix,
+                              kProcessSamplingEnvVar, "process sampling rate")) {
     *process_sample_rate = buf;
     had_overrides = true;
   }
 
-  if (GetGwpAsanOption(&buf, mallopt_options, kMaxAllocsSystemSysprop, kMaxAllocsAppSysprop,
-                       kMaxAllocsTargetedSyspropPrefix, kMaxAllocsEnvVar,
-                       "maximum simultaneous allocations")) {
+  if (GetGwpAsanIntegerOption(&buf, mallopt_options, kMaxAllocsSystemSysprop, kMaxAllocsAppSysprop,
+                              kMaxAllocsTargetedSyspropPrefix, kMaxAllocsEnvVar,
+                              "maximum simultaneous allocations")) {
     options->MaxSimultaneousAllocations = buf;
     had_overrides = true;
   } else if (had_overrides) {
@@ -337,6 +402,16 @@ bool GetGwpAsanOptions(Options* options, unsigned* process_sample_rate,
     options->MaxSimultaneousAllocations =
         /* default */ kDefaultMaxAllocs / frequency_multiplier;
   }
+
+  bool recoverable = false;
+  if (GetGwpAsanBoolOption(&recoverable, mallopt_options, kRecoverableSystemSysprop,
+                           kRecoverableAppSysprop, kRecoverableTargetedSyspropPrefix,
+                           kRecoverableEnvVar, "recoverable")) {
+    options->Recoverable = recoverable;
+    GwpAsanRecoverable = recoverable;
+    had_overrides = true;
+  }
+
   return had_overrides;
 }
 
@@ -396,6 +471,9 @@ bool MaybeInitGwpAsan(libc_globals* globals,
 
   __libc_shared_globals()->gwp_asan_state = GuardedAlloc.getAllocatorState();
   __libc_shared_globals()->gwp_asan_metadata = GuardedAlloc.getMetadataRegion();
+  __libc_shared_globals()->debuggerd_needs_gwp_asan_recovery = NeedsGwpAsanRecovery;
+  __libc_shared_globals()->debuggerd_gwp_asan_pre_crash_report = GwpAsanPreCrashHandler;
+  __libc_shared_globals()->debuggerd_gwp_asan_post_crash_report = GwpAsanPostCrashHandler;
 
   return true;
 }

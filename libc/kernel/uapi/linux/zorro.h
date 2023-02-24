@@ -42,7 +42,7 @@ struct Node {
   __u8 ln_Type;
   __s8 ln_Pri;
   __be32 ln_Name;
-} __packed;
+} __attribute__((__packed__));
 struct ExpansionRom {
   __u8 er_Type;
   __u8 er_Product;
@@ -55,7 +55,7 @@ struct ExpansionRom {
   __u8 er_Reserved0d;
   __u8 er_Reserved0e;
   __u8 er_Reserved0f;
-} __packed;
+} __attribute__((__packed__));
 #define ERT_TYPEMASK 0xc0
 #define ERT_ZORROII 0xc0
 #define ERT_ZORROIII 0x80
@@ -73,6 +73,6 @@ struct ConfigDev {
   __be32 cd_Driver;
   __be32 cd_NextCD;
   __be32 cd_Unused[4];
-} __packed;
+} __attribute__((__packed__));
 #define ZORRO_NUM_AUTO 16
 #endif

@@ -107,10 +107,14 @@ struct libc_shared_globals {
 
   const gwp_asan::AllocatorState* gwp_asan_state = nullptr;
   const gwp_asan::AllocationMetadata* gwp_asan_metadata = nullptr;
+  bool (*debuggerd_needs_gwp_asan_recovery)(void* fault_addr) = nullptr;
+  void (*debuggerd_gwp_asan_pre_crash_report)(void* fault_addr) = nullptr;
+  void (*debuggerd_gwp_asan_post_crash_report)(void* fault_addr) = nullptr;
 
   const char* scudo_stack_depot = nullptr;
   const char* scudo_region_info = nullptr;
   const char* scudo_ring_buffer = nullptr;
+  size_t scudo_ring_buffer_size = 0;
 
   HeapTaggingLevel initial_heap_tagging_level = M_HEAP_TAGGING_LEVEL_NONE;
   bool initial_memtag_stack = false;

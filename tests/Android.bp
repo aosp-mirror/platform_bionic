@@ -367,6 +367,9 @@ cc_test_library {
 cc_test_library {
     name: "libBionicStandardTests",
     defaults: ["bionic_tests_defaults"],
+    tidy_disabled_srcs: [
+        "malloc_test.cpp", // timed out with clang-tidy, and too many warnings
+    ],
     srcs: [
         "__aeabi_read_tp_test.cpp",
         "__cxa_atexit_test.cpp",

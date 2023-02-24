@@ -73,6 +73,8 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 #define AMDGPU_GEM_CREATE_PREEMPTIBLE (1 << 11)
 #define AMDGPU_GEM_CREATE_DISCARDABLE (1 << 12)
+#define AMDGPU_GEM_CREATE_COHERENT (1 << 13)
+#define AMDGPU_GEM_CREATE_UNCACHED (1 << 14)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;
@@ -453,6 +455,11 @@ struct drm_amdgpu_cs_chunk_data {
 #define AMDGPU_INFO_FW_DMCUB 0x14
 #define AMDGPU_INFO_FW_TOC 0x15
 #define AMDGPU_INFO_FW_CAP 0x16
+#define AMDGPU_INFO_FW_GFX_RLCP 0x17
+#define AMDGPU_INFO_FW_GFX_RLCV 0x18
+#define AMDGPU_INFO_FW_MES_KIQ 0x19
+#define AMDGPU_INFO_FW_MES 0x1a
+#define AMDGPU_INFO_FW_IMU 0x1b
 #define AMDGPU_INFO_NUM_BYTES_MOVED 0x0f
 #define AMDGPU_INFO_VRAM_USAGE 0x10
 #define AMDGPU_INFO_GTT_USAGE 0x11
