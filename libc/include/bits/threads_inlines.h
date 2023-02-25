@@ -103,12 +103,10 @@ __BIONIC_THREADS_INLINE int mtx_lock(mtx_t* __mtx) {
   return __bionic_thrd_error(pthread_mutex_lock(__mtx));
 }
 
-#if __ANDROID_API__ >= 21
 __BIONIC_THREADS_INLINE int mtx_timedlock(mtx_t* __mtx,
                                           const struct timespec* __timeout) {
   return __bionic_thrd_error(pthread_mutex_timedlock(__mtx, __timeout));
 }
-#endif
 
 __BIONIC_THREADS_INLINE int mtx_trylock(mtx_t* __mtx) {
   return __bionic_thrd_error(pthread_mutex_trylock(__mtx));
