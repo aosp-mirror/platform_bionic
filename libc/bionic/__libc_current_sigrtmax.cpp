@@ -28,8 +28,6 @@
 
 #include <signal.h>
 
-int __libc_current_sigrtmax(void) {
-  // If you change this, also change __ndk_legacy___libc_current_sigrtmax
-  // in <android/legacy_signal_inlines.h> to match.
+int __libc_current_sigrtmax() {
   return __SIGRTMAX;
 }

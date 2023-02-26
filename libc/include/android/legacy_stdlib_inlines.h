@@ -31,45 +31,6 @@
 #include <sys/cdefs.h>
 
 
-
-#if __ANDROID_API__ < 21
-
-#include <errno.h>
-#include <float.h>
-#include <stdlib.h>
-
-__BEGIN_DECLS
-
-static __inline float strtof(const char* nptr, char** endptr) {
-  // N.B. Double-rounding makes this function incorrect for some inputs.
-  double d = strtod(nptr, endptr);
-  if (__builtin_isfinite(d) && __builtin_fabs(d) > FLT_MAX) {
-    errno = ERANGE;
-    return __builtin_copysign(__builtin_huge_valf(), d);
-  }
-  return __BIONIC_CAST(static_cast, float, d);
-}
-
-static __inline double atof(const char *nptr) { return (strtod(nptr, NULL)); }
-
-static __inline int rand(void) { return (int)lrand48(); }
-
-static __inline void srand(unsigned int __s) { srand48(__s); }
-
-static __inline long random(void) { return lrand48(); }
-
-static __inline void srandom(unsigned int __s) { srand48(__s); }
-
-static __inline int grantpt(int __fd __attribute((unused))) {
-  return 0; /* devpts does this all for us! */
-}
-
-__END_DECLS
-
-#endif
-
-
-
 #if __ANDROID_API__ < 26
 
 #include <stdlib.h>
