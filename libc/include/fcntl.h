@@ -84,7 +84,6 @@ __BEGIN_DECLS
 /** Flag for open(). */
 #define O_RSYNC O_SYNC
 
-#if __ANDROID_API__ >= 21
 /** Flag for splice(). */
 #define SPLICE_F_MOVE 1
 /** Flag for splice(). */
@@ -93,7 +92,6 @@ __BEGIN_DECLS
 #define SPLICE_F_MORE 4
 /** Flag for splice(). */
 #define SPLICE_F_GIFT 8
-#endif
 
 #if __ANDROID_API__ >= 26
 /** Flag for sync_file_range(). */
