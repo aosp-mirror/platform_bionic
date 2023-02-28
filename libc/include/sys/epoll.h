@@ -40,21 +40,6 @@ __BEGIN_DECLS
 int epoll_create(int __size);
 int epoll_create1(int __flags) __INTRODUCED_IN(21);
 
-/*
- * Some third-party code uses the existence of EPOLL_CLOEXEC to detect the
- * availability of epoll_create1. This is not correct, since having up-to-date
- * UAPI headers says nothing about the C library, but for the time being we
- * don't want to harm adoption to the unified headers. We'll undef EPOLL_CLOEXEC
- * if we don't have epoll_create1 for the time being, and maybe revisit this
- * later.
- *
- * https://github.com/android-ndk/ndk/issues/302
- * https://github.com/android-ndk/ndk/issues/394
- */
-#if __ANDROID_API__ < 21 && defined(EPOLL_CLOEXEC)
-#undef EPOLL_CLOEXEC
-#endif
-
 int epoll_ctl(int __epoll_fd, int __op, int __fd, struct epoll_event* __BIONIC_COMPLICATED_NULLNESS __event);
 int epoll_wait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms);
 int epoll_pwait(int __epoll_fd, struct epoll_event* _Nonnull __events, int __event_count, int __timeout_ms, const sigset_t* _Nullable __mask) __INTRODUCED_IN(21);
