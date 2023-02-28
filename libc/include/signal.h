@@ -64,7 +64,6 @@ int sigaction64(int __signal, const struct sigaction64* _Nullable __new_action, 
 
 int siginterrupt(int __signal, int __flag);
 
-#if __ANDROID_API__ >= 21
 sighandler_t _Nonnull signal(int __signal, sighandler_t _Nullable __handler) __INTRODUCED_IN(21);
 int sigaddset(sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
 int sigaddset64(sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
@@ -76,9 +75,6 @@ int sigfillset(sigset_t* _Nonnull __set) __INTRODUCED_IN(21);
 int sigfillset64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
 int sigismember(const sigset_t* _Nonnull __set, int __signal) __INTRODUCED_IN(21);
 int sigismember64(const sigset64_t* _Nonnull __set, int __signal) __INTRODUCED_IN(28);
-#else
-// Implemented as static inlines before 21.
-#endif
 
 int sigpending(sigset_t* _Nonnull __set);
 int sigpending64(sigset64_t* _Nonnull __set) __INTRODUCED_IN(28);
@@ -127,7 +123,5 @@ int sigwaitinfo(const sigset_t* _Nonnull __set, siginfo_t* _Nullable __info) __I
 int sigwaitinfo64(const sigset64_t* _Nonnull __set, siginfo_t* _Nullable __info) __INTRODUCED_IN(28);
 
 __END_DECLS
-
-#include <android/legacy_signal_inlines.h>
 
 #endif

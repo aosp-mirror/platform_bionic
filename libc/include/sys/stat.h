@@ -156,12 +156,7 @@ mode_t umask(mode_t __mask);
 #include <bits/fortify/stat.h>
 #endif
 
-#if __ANDROID_API__ >= 21
 int mkfifo(const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(21);
-#else
-// Implemented as a static inline before 21.
-#endif
-
 int mkfifoat(int __dir_fd, const char* _Nonnull __path, mode_t __mode) __INTRODUCED_IN(23);
 
 int fchmodat(int __dir_fd, const char* _Nonnull __path, mode_t __mode, int __flags);
@@ -223,5 +218,3 @@ int statx(int __dir_fd, const char* _Nonnull __path, int __flags, unsigned __mas
 #endif
 
 __END_DECLS
-
-#include <android/legacy_sys_stat_inlines.h>
