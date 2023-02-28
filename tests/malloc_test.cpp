@@ -36,7 +36,10 @@
 #include <algorithm>
 #include <atomic>
 #include <functional>
+#include <string>
 #include <thread>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <tinyxml2.h>
@@ -690,6 +693,44 @@ TEST(malloc, mallopt_purge) {
   SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
   errno = 0;
   ASSERT_EQ(1, mallopt(M_PURGE, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+TEST(malloc, mallopt_purge_all) {
+#if defined(__BIONIC__)
+  SKIP_WITH_HWASAN << "hwasan does not implement mallopt";
+  errno = 0;
+  ASSERT_EQ(1, mallopt(M_PURGE_ALL, 0));
+#else
+  GTEST_SKIP() << "bionic-only test";
+#endif
+}
+
+// Verify that all of the mallopt values are unique.
+TEST(malloc, mallopt_unique_params) {
+#if defined(__BIONIC__)
+  std::vector<std::pair<int, std::string>> params{
+      std::make_pair(M_DECAY_TIME, "M_DECAY_TIME"),
+      std::make_pair(M_PURGE, "M_PURGE"),
+      std::make_pair(M_PURGE_ALL, "M_PURGE_ALL"),
+      std::make_pair(M_MEMTAG_TUNING, "M_MEMTAG_TUNING"),
+      std::make_pair(M_THREAD_DISABLE_MEM_INIT, "M_THREAD_DISABLE_MEM_INIT"),
+      std::make_pair(M_CACHE_COUNT_MAX, "M_CACHE_COUNT_MAX"),
+      std::make_pair(M_CACHE_SIZE_MAX, "M_CACHE_SIZE_MAX"),
+      std::make_pair(M_TSDS_COUNT_MAX, "M_TSDS_COUNT_MAX"),
+      std::make_pair(M_BIONIC_ZERO_INIT, "M_BIONIC_ZERO_INIT"),
+      std::make_pair(M_BIONIC_SET_HEAP_TAGGING_LEVEL, "M_BIONIC_SET_HEAP_TAGGING_LEVEL"),
+  };
+
+  std::unordered_map<int, std::string> all_params;
+  for (const auto& param : params) {
+    EXPECT_TRUE(all_params.count(param.first) == 0)
+        << "mallopt params " << all_params[param.first] << " and " << param.second
+        << " have the same value " << param.first;
+    all_params.insert(param);
+  }
 #else
   GTEST_SKIP() << "bionic-only test";
 #endif
