@@ -30,6 +30,7 @@
 #include <link.h>
 
 #include <android-base/file.h>
+#include <android-base/test_utils.h>
 #include <gtest/gtest.h>
 
 #include <thread>
@@ -153,6 +154,7 @@ TEST(elftls_dl, tlsdesc_missing_weak) {
 }
 
 TEST(elftls_dl, dtv_resize) {
+  SKIP_WITH_HWASAN; // TODO(b/271243811): Fix for new toolchain
 #if defined(__BIONIC__)
 #define LOAD_LIB(soname) ({                           \
     auto lib = dlopen(soname, RTLD_LOCAL | RTLD_NOW); \
