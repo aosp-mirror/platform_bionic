@@ -66,6 +66,6 @@ __BEGIN_DECLS
  * This system call is not available to applications.
  * Use syslog() or `<android/log.h>` instead.
  */
-int klogctl(int __type, char* __buf, int __buf_size);
+int klogctl(int __type, char* __BIONIC_COMPLICATED_NULLNESS __buf, int __buf_size);
 
 __END_DECLS

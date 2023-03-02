@@ -775,7 +775,7 @@ cc_library_static {
 }
 
 // ========================================================
-// libc_fortify.a - container for our FORITFY
+// libc_fortify.a - container for our FORTIFY
 // implementation details
 // ========================================================
 cc_library_static {
@@ -2300,7 +2300,6 @@ cc_library_static {
     ],
     arch: {
         arm64: {
-            cflags: ["-DHAVE_ASSEMBLER___MEMCPY_CHK"],
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
             ],
@@ -2308,6 +2307,7 @@ cc_library_static {
     },
     whole_static_libs: [
         "libarm-optimized-routines-mem",
+        "libc_netbsd",
     ],
     system_shared_libs: [],
     nocrt: true,
