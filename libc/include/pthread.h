@@ -26,8 +26,12 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _PTHREAD_H_
-#define _PTHREAD_H_
+#pragma once
+
+/**
+ * @file pthread.h
+ * @brief POSIX threads.
+ */
 
 #include <limits.h>
 #include <bits/pthread_types.h>
@@ -54,9 +58,7 @@ enum {
 #define PTHREAD_ERRORCHECK_MUTEX_INITIALIZER_NP { { ((PTHREAD_MUTEX_ERRORCHECK & 3) << 14) } }
 
 #define PTHREAD_COND_INITIALIZER  { { 0 } }
-#if __ANDROID_API__ >= 21
 #define PTHREAD_COND_INITIALIZER_MONOTONIC_NP  { { 1 << 1 } }
-#endif
 
 #define PTHREAD_RWLOCK_INITIALIZER  { { 0 } }
 
@@ -165,8 +167,6 @@ int pthread_getattr_np(pthread_t __pthread, pthread_attr_t* __attr);
 
 int pthread_getcpuclockid(pthread_t __pthread, clockid_t* __clock);
 
-int pthread_getschedparam(pthread_t __pthread, int* __policy, struct sched_param* __param);
-
 void* pthread_getspecific(pthread_key_t __key);
 
 pid_t pthread_gettid_np(pthread_t __pthread) __INTRODUCED_IN(21);
@@ -206,23 +206,6 @@ int pthread_mutex_timedlock_monotonic_np(pthread_mutex_t* __mutex, const struct 
     __INTRODUCED_IN(28);
 int pthread_mutex_trylock(pthread_mutex_t* __mutex);
 int pthread_mutex_unlock(pthread_mutex_t* __mutex);
-
-#if __ANDROID_API__ < 21
-/*
- * Cruft for supporting old API levels. Pre-L we didn't have the proper POSIX
- * APIs for things, but instead had some locally grown, artisan equivalents.
- * Keep exposing the old prototypes on old API levels so we don't regress
- * functionality.
- *
- * See the following bugs:
- *  * https://github.com/android-ndk/ndk/issues/420
- *  * https://github.com/android-ndk/ndk/issues/423
- *  * https://stackoverflow.com/q/44580542/632035
- */
-int pthread_mutex_lock_timeout_np(pthread_mutex_t* __mutex, unsigned __timeout_ms);
-int pthread_cond_timeout_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, unsigned __timeout_ms);
-int pthread_cond_timedwait_relative_np(pthread_cond_t* __cond, pthread_mutex_t* __mutex, const struct timespec* __relative_timeout);
-#endif
 
 int pthread_once(pthread_once_t* __once, void (*__init_routine)(void));
 
@@ -283,7 +266,40 @@ int pthread_getname_np(pthread_t __pthread, char* __buf, size_t __n) __INTRODUCE
 /* TODO: this should be __USE_GNU too. */
 int pthread_setname_np(pthread_t __pthread, const char* __name);
 
+/**
+ * [pthread_setschedparam(3)](https://man7.org/linux/man-pages/man3/pthread_setschedparam.3.html)
+ * sets the scheduler policy and parameters of the given thread.
+ *
+ * This call is not useful to applications on Android, because they don't
+ * have permission to set their scheduling policy, and the only priority
+ * for their policy is 0 anyway. If you only need to set your scheduling
+ * priority, see setpriority() instead.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
 int pthread_setschedparam(pthread_t __pthread, int __policy, const struct sched_param* __param);
+
+/**
+ * [pthread_getschedparam(3)](https://man7.org/linux/man-pages/man3/pthread_getschedparam.3.html)
+ * gets the scheduler policy and parameters of the given thread.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ */
+int pthread_getschedparam(pthread_t __pthread, int* __policy, struct sched_param* __param);
+
+/**
+ * [pthread_setschedprio(3)](https://man7.org/linux/man-pages/man3/pthread_setschedprio.3.html)
+ * sets the scheduler priority of the given thread.
+ *
+ * This call is not useful to applications on Android, because they don't
+ * have permission to set their scheduling policy, and the only priority
+ * for their policy is 0 anyway. If you only need to set your scheduling
+ * priority, see setpriority() instead.
+ *
+ * Returns 0 on success and returns an error number on failure.
+ *
+ * Available since API level 28.
+ */
 int pthread_setschedprio(pthread_t __pthread, int __priority) __INTRODUCED_IN(28);
 
 int pthread_setspecific(pthread_key_t __key, const void* __value);
@@ -315,5 +331,3 @@ void __pthread_cleanup_pop(__pthread_cleanup_t*, int);
     } while (0);                                       \
 
 __END_DECLS
-
-#endif

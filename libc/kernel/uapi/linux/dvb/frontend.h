@@ -122,6 +122,22 @@ enum fe_code_rate {
   FEC_3_5,
   FEC_9_10,
   FEC_2_5,
+  FEC_1_3,
+  FEC_1_4,
+  FEC_5_9,
+  FEC_7_9,
+  FEC_8_15,
+  FEC_11_15,
+  FEC_13_18,
+  FEC_9_20,
+  FEC_11_20,
+  FEC_23_36,
+  FEC_25_36,
+  FEC_13_45,
+  FEC_26_45,
+  FEC_28_45,
+  FEC_32_45,
+  FEC_77_90,
 };
 enum fe_modulation {
   QPSK,
@@ -138,6 +154,13 @@ enum fe_modulation {
   APSK_32,
   DQPSK,
   QAM_4_NR,
+  QAM_1024,
+  QAM_4096,
+  APSK_8_L,
+  APSK_16_L,
+  APSK_32_L,
+  APSK_64,
+  APSK_64_L,
 };
 enum fe_transmit_mode {
   TRANSMISSION_MODE_2K,
@@ -162,6 +185,7 @@ enum fe_guard_interval {
   GUARD_INTERVAL_PN420,
   GUARD_INTERVAL_PN595,
   GUARD_INTERVAL_PN945,
+  GUARD_INTERVAL_1_64,
 };
 enum fe_hierarchy {
   HIERARCHY_NONE,
@@ -259,6 +283,9 @@ enum fe_rolloff {
   ROLLOFF_20,
   ROLLOFF_25,
   ROLLOFF_AUTO,
+  ROLLOFF_15,
+  ROLLOFF_10,
+  ROLLOFF_5,
 };
 enum fe_delivery_system {
   SYS_UNDEFINED,
@@ -280,6 +307,7 @@ enum fe_delivery_system {
   SYS_DVBT2,
   SYS_TURBO,
   SYS_DVBC_ANNEX_C,
+  SYS_DVBC2,
 };
 #define SYS_DVBC_ANNEX_AC SYS_DVBC_ANNEX_A
 #define SYS_DMBTH SYS_DTMB
