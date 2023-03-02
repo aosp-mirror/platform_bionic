@@ -889,11 +889,14 @@ TEST(dlfcn, dlsym_failures) {
   void* sym;
 
 #if defined(__BIONIC__) && !defined(__LP64__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   // RTLD_DEFAULT in lp32 bionic is not (void*)0
   // so it can be distinguished from the NULL handle.
   sym = dlsym(nullptr, "test");
   ASSERT_TRUE(sym == nullptr);
   ASSERT_STREQ("dlsym failed: library handle is null", dlerror());
+#pragma clang diagnostic pop
 #endif
 
   // Symbol that doesn't exist.
@@ -1008,9 +1011,12 @@ TEST(dlfcn, dladdr_invalid) {
 
   dlerror(); // Clear any pending errors.
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   // No symbol corresponding to NULL.
   ASSERT_EQ(dladdr(nullptr, &info), 0); // Zero on error, non-zero on success.
   ASSERT_TRUE(dlerror() == nullptr); // dladdr(3) doesn't set dlerror(3).
+#pragma clang diagnostic pop
 
   // No symbol corresponding to a stack address.
   ASSERT_EQ(dladdr(&info, &info), 0); // Zero on error, non-zero on success.
