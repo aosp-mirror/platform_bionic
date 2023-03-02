@@ -36,21 +36,23 @@ __BEGIN_DECLS
 
 typedef struct {
   /* Pathname of shared object that contains address. */
-  const char* dli_fname;
+  const char* _Nullable dli_fname;
   /* Address at which shared object is loaded. */
-  void* dli_fbase;
+  void* _Nullable dli_fbase;
   /* Name of nearest symbol with address lower than addr. */
-  const char* dli_sname;
+  const char* _Nullable dli_sname;
   /* Exact address of symbol named in dli_sname. */
-  void* dli_saddr;
+  void* _Nullable dli_saddr;
 } Dl_info;
 
-void* dlopen(const char* __filename, int __flag);
-int dlclose(void* __handle);
-char* dlerror(void);
-void* dlsym(void* __handle, const char* __symbol);
-void* dlvsym(void* __handle, const char* __symbol, const char* __version) __INTRODUCED_IN(24);
-int dladdr(const void* __addr, Dl_info* __info);
+void* _Nullable dlopen(const char* _Nullable __filename, int __flag);
+int dlclose(void* _Nonnull __handle);
+char* _Nullable dlerror(void);
+/* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
+void* _Nullable dlsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol);
+/* (RTLD_DEFAULT is null for LP64, but -1 for LP32) */
+void* _Nullable dlvsym(void* __BIONIC_COMPLICATED_NULLNESS __handle, const char* _Nullable __symbol, const char* _Nullable __version) __INTRODUCED_IN(24);
+int dladdr(const void* _Nonnull __addr, Dl_info* _Nonnull __info);
 
 #define RTLD_LOCAL    0
 #define RTLD_LAZY     0x00001
