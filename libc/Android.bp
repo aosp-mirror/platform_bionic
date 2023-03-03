@@ -1088,7 +1088,6 @@ cc_library_static {
         "bionic/ffs.cpp",
         "bionic/fgetxattr.cpp",
         "bionic/flistxattr.cpp",
-        "bionic/flockfile.cpp",
         "bionic/fpclassify.cpp",
         "bionic/fsetxattr.cpp",
         "bionic/ftruncate.cpp",
