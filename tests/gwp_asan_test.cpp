@@ -58,13 +58,10 @@ extern "C" bool GetInitialArgs(const char*** args, size_t* num_args) {
 // the torture mode is is generally 40,000, so that svelte devices don't
 // explode, as this uses ~163MiB RAM (4KiB per live allocation).
 TEST(gwp_asan_integration, malloc_tests_under_torture) {
-  if (running_with_hwasan()) {
-    // Skip the malloc.zeroed tests since they fail in this particular config.
-    // TODO(b/267386540): Need to fix this problem.
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*:malloc.zeroed*");
-  } else {
-    RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
-  }
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
+  RunGwpAsanTest("malloc.*:-malloc.mallinfo*");
 }
 
 class SyspropRestorer {
@@ -153,6 +150,9 @@ TEST(gwp_asan_integration, DISABLED_assert_gwp_asan_disabled) {
 }
 
 TEST(gwp_asan_integration, sysprops_program_specific) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -167,6 +167,9 @@ TEST(gwp_asan_integration, sysprops_program_specific) {
 }
 
 TEST(gwp_asan_integration, sysprops_persist_program_specific) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -182,6 +185,9 @@ TEST(gwp_asan_integration, sysprops_persist_program_specific) {
 }
 
 TEST(gwp_asan_integration, sysprops_system) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
@@ -192,6 +198,9 @@ TEST(gwp_asan_integration, sysprops_system) {
 }
 
 TEST(gwp_asan_integration, sysprops_persist_system) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("persist.libc.debug.gwp_asan.sample_rate.system_default", "1");
@@ -202,6 +211,9 @@ TEST(gwp_asan_integration, sysprops_persist_system) {
 }
 
 TEST(gwp_asan_integration, sysprops_non_persist_overrides_persist) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "1");
@@ -216,6 +228,9 @@ TEST(gwp_asan_integration, sysprops_non_persist_overrides_persist) {
 }
 
 TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   std::string path = testing::internal::GetArgvs()[0];
@@ -235,6 +250,9 @@ TEST(gwp_asan_integration, sysprops_program_specific_overrides_default) {
 }
 
 TEST(gwp_asan_integration, sysprops_can_disable) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
@@ -245,6 +263,9 @@ TEST(gwp_asan_integration, sysprops_can_disable) {
 }
 
 TEST(gwp_asan_integration, env_overrides_sysprop) {
+  // Do not override HWASan with GWP ASan.
+  SKIP_WITH_HWASAN;
+
   SyspropRestorer restorer;
 
   __system_property_set("libc.debug.gwp_asan.sample_rate.system_default", "0");
