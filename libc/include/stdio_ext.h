@@ -44,7 +44,7 @@ __BEGIN_DECLS
  *
  * Available since API level 23.
  */
-size_t __fbufsize(FILE* __fp) __INTRODUCED_IN(23);
+size_t __fbufsize(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__freadable(3)](http://man7.org/linux/man-pages/man3/__freadable.3.html) returns non-zero if
@@ -52,7 +52,7 @@ size_t __fbufsize(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-int __freadable(FILE* __fp) __INTRODUCED_IN(23);
+int __freadable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__freading(3)](http://man7.org/linux/man-pages/man3/__freading.3.html) returns non-zero if
@@ -60,7 +60,7 @@ int __freadable(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
-int __freading(FILE* __fp) __INTRODUCED_IN(28);
+int __freading(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 
 /**
  * [__fwritable(3)](http://man7.org/linux/man-pages/man3/__fwritable.3.html) returns non-zero if
@@ -68,7 +68,7 @@ int __freading(FILE* __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
-int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
+int __fwritable(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fwriting(3)](http://man7.org/linux/man-pages/man3/__fwriting.3.html) returns non-zero if
@@ -76,7 +76,7 @@ int __fwritable(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
-int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
+int __fwriting(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 
 /**
  * [__flbf(3)](http://man7.org/linux/man-pages/man3/__flbf.3.html) returns non-zero if
@@ -84,7 +84,7 @@ int __fwriting(FILE* __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
-int __flbf(FILE* __fp) __INTRODUCED_IN(23);
+int __flbf(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fpurge(3)](http://man7.org/linux/man-pages/man3/__fpurge.3.html) discards the contents of
@@ -92,7 +92,7 @@ int __flbf(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
+void __fpurge(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * [__fpending(3)](http://man7.org/linux/man-pages/man3/__fpending.3.html) returns the number of
@@ -100,7 +100,7 @@ void __fpurge(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 23.
  */
-size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
+size_t __fpending(FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 
 /**
  * __freadahead(3) returns the number of bytes in the input buffer.
@@ -108,7 +108,7 @@ size_t __fpending(FILE* __fp) __INTRODUCED_IN(23);
  *
  * Available since API level 34.
  */
-size_t __freadahead(FILE* __fp) __INTRODUCED_IN(34);
+size_t __freadahead(FILE* _Nonnull __fp) __INTRODUCED_IN(34);
 
 /**
  * [_flushlbf(3)](http://man7.org/linux/man-pages/man3/_flushlbf.3.html) flushes all
@@ -124,7 +124,7 @@ void _flushlbf(void) __INTRODUCED_IN(23);
  *
  * Available since API level 28.
  */
-void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
+void __fseterr(FILE* _Nonnull __fp) __INTRODUCED_IN(28);
 
 /** __fsetlocking() constant to query locking type. */
 #define FSETLOCKING_QUERY 0
@@ -141,6 +141,6 @@ void __fseterr(FILE* __fp) __INTRODUCED_IN(28);
  *
  * Available since API level 23.
  */
-int __fsetlocking(FILE* __fp, int __type) __INTRODUCED_IN(23);
+int __fsetlocking(FILE* _Nonnull __fp, int __type) __INTRODUCED_IN(23);
 
 __END_DECLS

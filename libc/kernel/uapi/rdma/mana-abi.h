@@ -16,8 +16,47 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#define LINUX_VERSION_CODE 393728
-#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + ((c) > 255 ? 255 : (c)))
-#define LINUX_VERSION_MAJOR 6
-#define LINUX_VERSION_PATCHLEVEL 2
-#define LINUX_VERSION_SUBLEVEL 0
+#ifndef MANA_ABI_USER_H
+#define MANA_ABI_USER_H
+#include <linux/types.h>
+#include <rdma/ib_user_ioctl_verbs.h>
+#define MANA_IB_UVERBS_ABI_VERSION 1
+struct mana_ib_create_cq {
+  __aligned_u64 buf_addr;
+};
+struct mana_ib_create_qp {
+  __aligned_u64 sq_buf_addr;
+  __u32 sq_buf_size;
+  __u32 port;
+};
+struct mana_ib_create_qp_resp {
+  __u32 sqid;
+  __u32 cqid;
+  __u32 tx_vp_offset;
+  __u32 reserved;
+};
+struct mana_ib_create_wq {
+  __aligned_u64 wq_buf_addr;
+  __u32 wq_buf_size;
+  __u32 reserved;
+};
+enum mana_ib_rx_hash_function_flags {
+  MANA_IB_RX_HASH_FUNC_TOEPLITZ = 1 << 0,
+};
+struct mana_ib_create_qp_rss {
+  __aligned_u64 rx_hash_fields_mask;
+  __u8 rx_hash_function;
+  __u8 reserved[7];
+  __u32 rx_hash_key_len;
+  __u8 rx_hash_key[40];
+  __u32 port;
+};
+struct rss_resp_entry {
+  __u32 cqid;
+  __u32 wqid;
+};
+struct mana_ib_create_qp_rss_resp {
+  __aligned_u64 num_entries;
+  struct rss_resp_entry entries[64];
+};
+#endif
