@@ -43,11 +43,7 @@ __BEGIN_DECLS
 
 __noreturn void abort(void) __attribute__((__nomerge__));
 __noreturn void exit(int __status);
-#if __ANDROID_API__ >= 21
 __noreturn void _Exit(int __status) __INTRODUCED_IN(21);
-#else
-__noreturn void _Exit(int) __RENAME(_exit);
-#endif
 
 int atexit(void (* _Nonnull __fn)(void));
 
@@ -167,31 +163,17 @@ int wctomb(char* _Nullable __dst, wchar_t __wc) __INTRODUCED_IN_NO_GUARD_FOR_NDK
 
 size_t wcstombs(char* _Nullable __dst, const wchar_t* _Nullable __src, size_t __n) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
-#if __ANDROID_API__ >= 21
 size_t __ctype_get_mb_cur_max(void) __INTRODUCED_IN(21);
 #define MB_CUR_MAX __ctype_get_mb_cur_max()
-#else
-/*
- * Pre-L we didn't have any locale support and so we were always the POSIX
- * locale. POSIX specifies that MB_CUR_MAX for the POSIX locale is 1:
- * http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/stdlib.h.html
- */
-#define MB_CUR_MAX 1
-#endif
 
 #if defined(__BIONIC_INCLUDE_FORTIFY_HEADERS)
 #include <bits/fortify/stdlib.h>
 #endif
 
-#if __ANDROID_API__ >= 19
 int abs(int __x) __attribute_const__ __INTRODUCED_IN(19);
 long labs(long __x) __attribute_const__ __INTRODUCED_IN(19);
 long long llabs(long long __x) __attribute_const__ __INTRODUCED_IN(19);
-#else
-// Implemented as static inlines before 19.
-#endif
 
-#if __ANDROID_API__ >= 21
 float strtof(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr) __INTRODUCED_IN(21);
 double atof(const char* _Nonnull __s) __attribute_pure__ __INTRODUCED_IN(21);
 int rand(void) __INTRODUCED_IN(21);
@@ -203,9 +185,6 @@ int grantpt(int __fd) __INTRODUCED_IN(21);
 long long strtoll_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 unsigned long long strtoull_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, int __base, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 long double strtold_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(21);
-#else
-// Implemented as static inlines before 21.
-#endif
 
 #if __ANDROID_API__ >= 26
 double strtod_l(const char* _Nonnull __s, char* _Nullable * _Nullable __end_ptr, locale_t _Nonnull __l) __INTRODUCED_IN(26);

@@ -130,6 +130,8 @@
 #define SVM_VMGEXIT_AP_CREATE 1
 #define SVM_VMGEXIT_AP_DESTROY 2
 #define SVM_VMGEXIT_HV_FEATURES 0x8000fffd
+#define SVM_VMGEXIT_TERM_REQUEST 0x8000fffe
+#define SVM_VMGEXIT_TERM_REASON(reason_set,reason_code) (((((u64) reason_set) & 0xf)) | ((((u64) reason_code) & 0xff) << 4))
 #define SVM_VMGEXIT_UNSUPPORTED_EVENT 0x8000ffff
 #define SVM_EXIT_SW 0xf0000000
 #define SVM_EXIT_ERR - 1

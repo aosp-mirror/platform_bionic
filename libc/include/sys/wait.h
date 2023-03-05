@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _SYS_WAIT_H_
-#define _SYS_WAIT_H_
+#pragma once
 
 #include <bits/wait.h>
 #include <sys/cdefs.h>
@@ -40,11 +39,7 @@ __BEGIN_DECLS
 
 pid_t wait(int* __status);
 pid_t waitpid(pid_t __pid, int* __status, int __options);
-#if __ANDROID_API__ >= 18
 pid_t wait4(pid_t __pid, int* __status, int __options, struct rusage* __rusage) __INTRODUCED_IN(18);
-#else
-// Implemented as a static inline before 18.
-#endif
 
 /* Posix states that idtype_t should be an enumeration type, but
  * the kernel headers define P_ALL, P_PID and P_PGID as constant macros
@@ -55,7 +50,3 @@ typedef int idtype_t;
 int waitid(idtype_t __type, id_t __id, siginfo_t* __info, int __options);
 
 __END_DECLS
-
-#include <android/legacy_sys_wait_inlines.h>
-
-#endif

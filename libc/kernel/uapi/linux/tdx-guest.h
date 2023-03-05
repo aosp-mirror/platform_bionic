@@ -16,8 +16,15 @@
  ***
  ****************************************************************************
  ****************************************************************************/
-#define LINUX_VERSION_CODE 393728
-#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) + ((c) > 255 ? 255 : (c)))
-#define LINUX_VERSION_MAJOR 6
-#define LINUX_VERSION_PATCHLEVEL 2
-#define LINUX_VERSION_SUBLEVEL 0
+#ifndef _UAPI_LINUX_TDX_GUEST_H_
+#define _UAPI_LINUX_TDX_GUEST_H_
+#include <linux/ioctl.h>
+#include <linux/types.h>
+#define TDX_REPORTDATA_LEN 64
+#define TDX_REPORT_LEN 1024
+struct tdx_report_req {
+  __u8 reportdata[TDX_REPORTDATA_LEN];
+  __u8 tdreport[TDX_REPORT_LEN];
+};
+#define TDX_CMD_GET_REPORT0 _IOWR('T', 1, struct tdx_report_req)
+#endif
