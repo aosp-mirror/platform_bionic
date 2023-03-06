@@ -884,7 +884,7 @@ wint_t getwchar() {
 
 void perror(const char* msg) {
   if (msg == nullptr) msg = "";
-  fprintf(stderr, "%s%s%s\n", msg, (*msg == '\0') ? "" : ": ", strerror(errno));
+  fprintf(stderr, "%s%s%m\n", msg, (*msg == '\0') ? "" : ": ");
 }
 
 int printf(const char* fmt, ...) {
