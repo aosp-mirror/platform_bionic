@@ -672,7 +672,6 @@ cc_library_static {
         },
         riscv64: {
             srcs: [
-                "arch-riscv64/string/memset_chk.c",
                 "upstream-freebsd/lib/libc/string/memcmp.c",
                 "upstream-freebsd/lib/libc/string/memcpy.c",
                 "upstream-freebsd/lib/libc/string/memmove.c",
@@ -823,6 +822,11 @@ cc_library_static {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
                 "arch-arm64/string/__memset_chk.S",
+            ],
+        },
+        riscv64: {
+            srcs: [
+               "arch-riscv64/string/__memset_chk.S",
             ],
         },
     },
