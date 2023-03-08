@@ -51,7 +51,7 @@ ENTRY_PRIVATE(__bionic_clone)
 .L_bc_failure:
   # Set errno if something went wrong.
   neg a0, a0
-  j __set_errno_internal
+  tail __set_errno_internal
 
 .L_bc_child:
   # We're in the child now. Set the end of the frame record chain.
@@ -62,5 +62,5 @@ ENTRY_PRIVATE(__bionic_clone)
   ld a0, 0(sp)
   ld a1, 8(sp)
   addi sp, sp, 16
-  j __start_thread
+  tail __start_thread
 END(__bionic_clone)
