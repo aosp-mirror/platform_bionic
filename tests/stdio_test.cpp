@@ -190,6 +190,8 @@ TEST(STDIO_TEST, getdelim) {
 }
 
 TEST(STDIO_TEST, getdelim_invalid) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != nullptr);
 
@@ -206,6 +208,7 @@ TEST(STDIO_TEST, getdelim_invalid) {
   ASSERT_EQ(getdelim(&buffer, nullptr, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
+#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, getdelim_directory) {
@@ -260,6 +263,8 @@ TEST(STDIO_TEST, getline) {
 }
 
 TEST(STDIO_TEST, getline_invalid) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != nullptr);
 
@@ -276,6 +281,7 @@ TEST(STDIO_TEST, getline_invalid) {
   ASSERT_EQ(getline(&buffer, nullptr, fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
+#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, printf_ssize_t) {
@@ -1944,6 +1950,8 @@ TEST(STDIO_TEST, open_memstream) {
 
 TEST(STDIO_TEST, open_memstream_EINVAL) {
 #if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   char* p;
   size_t size;
 
@@ -1956,6 +1964,7 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   errno = 0;
   ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "glibc is broken";
 #endif
