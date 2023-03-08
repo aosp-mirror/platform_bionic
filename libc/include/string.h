@@ -136,12 +136,8 @@ char* _Nonnull strsignal(int __signal);
 int strcoll(const char* _Nonnull __lhs, const char* _Nonnull __rhs) __attribute_pure__;
 size_t strxfrm(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n);
 
-#if __ANDROID_API__ >= 21
 int strcoll_l(const char* _Nonnull __lhs, const char* _Nonnull __rhs, locale_t _Nonnull __l) __attribute_pure__ __INTRODUCED_IN(21);
 size_t strxfrm_l(char* __BIONIC_COMPLICATED_NULLNESS __dst, const char* _Nonnull __src, size_t __n, locale_t _Nonnull __l) __INTRODUCED_IN(21);
-#else
-// Implemented as static inlines before 21.
-#endif
 
 #if defined(__USE_GNU) && !defined(basename)
 /*
