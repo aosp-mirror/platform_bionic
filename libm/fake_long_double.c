@@ -24,7 +24,6 @@
 // Android works around those cases by replacing the broken functions with our own trivial stubs
 // that call the regular "double" function.
 
-long double copysignl(long double a1, long double a2) { return copysign(a1, a2); }
 long double fmaxl(long double a1, long double a2) { return fmax(a1, a2); }
 long double fmodl(long double a1, long double a2) { return fmod(a1, a2); }
 long double fminl(long double a1, long double a2) { return fmin(a1, a2); }

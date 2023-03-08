@@ -106,8 +106,6 @@ cc_library {
         "upstream-freebsd/lib/msun/src/s_conj.c",
         "upstream-freebsd/lib/msun/src/s_conjf.c",
         "upstream-freebsd/lib/msun/src/s_conjl.c",
-        "upstream-freebsd/lib/msun/src/s_copysign.c",
-        "upstream-freebsd/lib/msun/src/s_copysignf.c",
         "upstream-freebsd/lib/msun/src/s_cos.c",
         "upstream-freebsd/lib/msun/src/s_cospi.c",
         "upstream-freebsd/lib/msun/src/s_cpow.c",
@@ -235,7 +233,6 @@ cc_library {
                 "upstream-freebsd/lib/msun/src/s_cbrtl.c",
                 "upstream-freebsd/lib/msun/src/s_ceill.c",
                 "upstream-freebsd/lib/msun/src/s_clogl.c",
-                "upstream-freebsd/lib/msun/src/s_copysignl.c",
                 "upstream-freebsd/lib/msun/src/e_coshl.c",
                 "upstream-freebsd/lib/msun/src/s_cosl.c",
                 "upstream-freebsd/lib/msun/src/s_csqrtl.c",
@@ -285,11 +282,10 @@ cc_library {
         arm: {
             srcs: [
                 "arm/fenv.c",
-                "arm/floor.S",
-                "arm/sqrt.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_floor.c",
+                "upstream-freebsd/lib/msun/src/s_floorf.c",
             ],
             instruction_set: "arm",
             pack_relocations: false,
@@ -305,14 +301,10 @@ cc_library {
         arm64: {
             srcs: [
                 "arm64/fenv.c",
-                "arm64/lrint.S",
-                "arm64/sqrt.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
                 "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                "upstream-freebsd/lib/msun/src/s_copysign.c",
-                "upstream-freebsd/lib/msun/src/s_copysignf.c",
                 "upstream-freebsd/lib/msun/src/s_floor.c",
                 "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -342,16 +334,12 @@ cc_library {
         riscv64: {
             srcs: [
                 "riscv64/fenv.c",
-                "riscv64/lrint.S",
-                "riscv64/sqrt.S",
             ],
 
             exclude_srcs: [
                 // TODO: do the rest when our clang has https://reviews.llvm.org/D136508.
                 // TODO: "upstream-freebsd/lib/msun/src/s_ceil.c",
                 // TODO: "upstream-freebsd/lib/msun/src/s_ceilf.c",
-                "upstream-freebsd/lib/msun/src/s_copysign.c",
-                "upstream-freebsd/lib/msun/src/s_copysignf.c",
                 // TODO: "upstream-freebsd/lib/msun/src/s_floor.c",
                 // TODO: "upstream-freebsd/lib/msun/src/s_floorf.c",
                 "upstream-freebsd/lib/msun/src/s_fma.c",
@@ -381,18 +369,8 @@ cc_library {
         x86: {
             srcs: [
                 "i387/fenv.c",
-                "x86/ceil.S",
-                "x86/ceilf.S",
-                "x86/floor.S",
-                "x86/floorf.S",
                 "x86/lrint.S",
                 "x86/lrintf.S",
-                "x86/rint.S",
-                "x86/rintf.S",
-                "x86/sqrt.S",
-                "x86/sqrtf.S",
-                "x86/trunc.S",
-                "x86/truncf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",
@@ -408,6 +386,9 @@ cc_library {
             ],
             local_include_dirs: ["i387"],
             pack_relocations: false,
+            // The x86 ABI doesn't include this, which is needed for the
+            // roundss/roundsd instructions that we've used since Android M.
+            cflags: ["-msse4.1"],
             ldflags: ["-Wl,--hash-style=both"],
             version_script: ":libm.x86.map",
         },
@@ -415,18 +396,8 @@ cc_library {
         x86_64: {
             srcs: [
                 "amd64/fenv.c",
-                "x86_64/ceil.S",
-                "x86_64/ceilf.S",
-                "x86_64/floor.S",
-                "x86_64/floorf.S",
                 "x86_64/lrint.S",
                 "x86_64/lrintf.S",
-                "x86_64/rint.S",
-                "x86_64/rintf.S",
-                "x86_64/sqrt.S",
-                "x86_64/sqrtf.S",
-                "x86_64/trunc.S",
-                "x86_64/truncf.S",
             ],
             exclude_srcs: [
                 "upstream-freebsd/lib/msun/src/s_ceil.c",

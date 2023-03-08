@@ -60,6 +60,7 @@ enum {
 #define NTF_STICKY (1 << 6)
 #define NTF_ROUTER (1 << 7)
 #define NTF_EXT_MANAGED (1 << 0)
+#define NTF_EXT_LOCKED (1 << 1)
 #define NUD_INCOMPLETE 0x01
 #define NUD_REACHABLE 0x02
 #define NUD_STALE 0x04

@@ -44,4 +44,5 @@ struct landlock_path_beneath_attr {
 #define LANDLOCK_ACCESS_FS_MAKE_BLOCK (1ULL << 11)
 #define LANDLOCK_ACCESS_FS_MAKE_SYM (1ULL << 12)
 #define LANDLOCK_ACCESS_FS_REFER (1ULL << 13)
+#define LANDLOCK_ACCESS_FS_TRUNCATE (1ULL << 14)
 #endif

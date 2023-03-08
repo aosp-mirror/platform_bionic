@@ -58,7 +58,7 @@ __BEGIN_DECLS
  *
  * Available since API level 19.
  */
-int swapon(const char* __path,  int __flags) __INTRODUCED_IN(19);
+int swapon(const char* _Nonnull __path,  int __flags) __INTRODUCED_IN(19);
 
 /**
  * [swapoff(2)](http://man7.org/linux/man-pages/man2/swapoff.2.html) disables swapping.
@@ -67,6 +67,6 @@ int swapon(const char* __path,  int __flags) __INTRODUCED_IN(19);
  *
  * Available since API level 19.
  */
-int swapoff(const char* __path) __INTRODUCED_IN(19);
+int swapoff(const char* _Nonnull __path) __INTRODUCED_IN(19);
 
 __END_DECLS

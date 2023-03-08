@@ -21,6 +21,10 @@
 #include <linux/btrfs.h>
 #include <linux/types.h>
 #include <stddef.h>
+#define BTRFS_MAGIC 0x4D5F53665248425FULL
+#define BTRFS_MAX_LEVEL 8
+#define BTRFS_NAME_LEN 255
+#define BTRFS_LINK_MAX 65535U
 #define BTRFS_ROOT_TREE_OBJECTID 1ULL
 #define BTRFS_EXTENT_TREE_OBJECTID 2ULL
 #define BTRFS_CHUNK_TREE_OBJECTID 3ULL
@@ -113,6 +117,23 @@ enum btrfs_csum_type {
 #define BTRFS_FT_SYMLINK 7
 #define BTRFS_FT_XATTR 8
 #define BTRFS_FT_MAX 9
+#define BTRFS_FT_ENCRYPTED 0x80
+#define BTRFS_INODE_NODATASUM (1U << 0)
+#define BTRFS_INODE_NODATACOW (1U << 1)
+#define BTRFS_INODE_READONLY (1U << 2)
+#define BTRFS_INODE_NOCOMPRESS (1U << 3)
+#define BTRFS_INODE_PREALLOC (1U << 4)
+#define BTRFS_INODE_SYNC (1U << 5)
+#define BTRFS_INODE_IMMUTABLE (1U << 6)
+#define BTRFS_INODE_APPEND (1U << 7)
+#define BTRFS_INODE_NODUMP (1U << 8)
+#define BTRFS_INODE_NOATIME (1U << 9)
+#define BTRFS_INODE_DIRSYNC (1U << 10)
+#define BTRFS_INODE_COMPRESS (1U << 11)
+#define BTRFS_INODE_ROOT_ITEM_INIT (1U << 31)
+#define BTRFS_INODE_FLAG_MASK (BTRFS_INODE_NODATASUM | BTRFS_INODE_NODATACOW | BTRFS_INODE_READONLY | BTRFS_INODE_NOCOMPRESS | BTRFS_INODE_PREALLOC | BTRFS_INODE_SYNC | BTRFS_INODE_IMMUTABLE | BTRFS_INODE_APPEND | BTRFS_INODE_NODUMP | BTRFS_INODE_NOATIME | BTRFS_INODE_DIRSYNC | BTRFS_INODE_COMPRESS | BTRFS_INODE_ROOT_ITEM_INIT)
+#define BTRFS_INODE_RO_VERITY (1U << 0)
+#define BTRFS_INODE_RO_FLAG_MASK (BTRFS_INODE_RO_VERITY)
 struct btrfs_disk_key {
   __le64 objectid;
   __u8 type;
@@ -122,6 +143,62 @@ struct btrfs_key {
   __u64 objectid;
   __u8 type;
   __u64 offset;
+} __attribute__((__packed__));
+struct btrfs_header {
+  __u8 csum[BTRFS_CSUM_SIZE];
+  __u8 fsid[BTRFS_FSID_SIZE];
+  __le64 bytenr;
+  __le64 flags;
+  __u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
+  __le64 generation;
+  __le64 owner;
+  __le32 nritems;
+  __u8 level;
+} __attribute__((__packed__));
+#define BTRFS_SYSTEM_CHUNK_ARRAY_SIZE 2048
+#define BTRFS_NUM_BACKUP_ROOTS 4
+struct btrfs_root_backup {
+  __le64 tree_root;
+  __le64 tree_root_gen;
+  __le64 chunk_root;
+  __le64 chunk_root_gen;
+  __le64 extent_root;
+  __le64 extent_root_gen;
+  __le64 fs_root;
+  __le64 fs_root_gen;
+  __le64 dev_root;
+  __le64 dev_root_gen;
+  __le64 csum_root;
+  __le64 csum_root_gen;
+  __le64 total_bytes;
+  __le64 bytes_used;
+  __le64 num_devices;
+  __le64 unused_64[4];
+  __u8 tree_root_level;
+  __u8 chunk_root_level;
+  __u8 extent_root_level;
+  __u8 fs_root_level;
+  __u8 dev_root_level;
+  __u8 csum_root_level;
+  __u8 unused_8[10];
+} __attribute__((__packed__));
+struct btrfs_item {
+  struct btrfs_disk_key key;
+  __le32 offset;
+  __le32 size;
+} __attribute__((__packed__));
+struct btrfs_leaf {
+  struct btrfs_header header;
+  struct btrfs_item items[];
+} __attribute__((__packed__));
+struct btrfs_key_ptr {
+  struct btrfs_disk_key key;
+  __le64 blockptr;
+  __le64 generation;
+} __attribute__((__packed__));
+struct btrfs_node {
+  struct btrfs_header header;
+  struct btrfs_key_ptr ptrs[];
 } __attribute__((__packed__));
 struct btrfs_dev_item {
   __le64 devid;
@@ -156,6 +233,45 @@ struct btrfs_chunk {
   __le16 sub_stripes;
   struct btrfs_stripe stripe;
 } __attribute__((__packed__));
+struct btrfs_super_block {
+  __u8 csum[BTRFS_CSUM_SIZE];
+  __u8 fsid[BTRFS_FSID_SIZE];
+  __le64 bytenr;
+  __le64 flags;
+  __le64 magic;
+  __le64 generation;
+  __le64 root;
+  __le64 chunk_root;
+  __le64 log_root;
+  __le64 __unused_log_root_transid;
+  __le64 total_bytes;
+  __le64 bytes_used;
+  __le64 root_dir_objectid;
+  __le64 num_devices;
+  __le32 sectorsize;
+  __le32 nodesize;
+  __le32 __unused_leafsize;
+  __le32 stripesize;
+  __le32 sys_chunk_array_size;
+  __le64 chunk_root_generation;
+  __le64 compat_flags;
+  __le64 compat_ro_flags;
+  __le64 incompat_flags;
+  __le16 csum_type;
+  __u8 root_level;
+  __u8 chunk_root_level;
+  __u8 log_root_level;
+  struct btrfs_dev_item dev_item;
+  char label[BTRFS_LABEL_SIZE];
+  __le64 cache_generation;
+  __le64 uuid_tree_generation;
+  __u8 metadata_uuid[BTRFS_FSID_SIZE];
+  __u64 nr_global_roots;
+  __le64 reserved[27];
+  __u8 sys_chunk_array[BTRFS_SYSTEM_CHUNK_ARRAY_SIZE];
+  struct btrfs_root_backup super_roots[BTRFS_NUM_BACKUP_ROOTS];
+  __u8 padding[565];
+} __attribute__((__packed__));
 #define BTRFS_FREE_SPACE_EXTENT 1
 #define BTRFS_FREE_SPACE_BITMAP 2
 struct btrfs_free_space_entry {
@@ -188,6 +304,11 @@ struct btrfs_extent_item_v0 {
 #define BTRFS_EXTENT_FLAG_DATA (1ULL << 0)
 #define BTRFS_EXTENT_FLAG_TREE_BLOCK (1ULL << 1)
 #define BTRFS_BLOCK_FLAG_FULL_BACKREF (1ULL << 8)
+#define BTRFS_BACKREF_REV_MAX 256
+#define BTRFS_BACKREF_REV_SHIFT 56
+#define BTRFS_BACKREF_REV_MASK (((u64) BTRFS_BACKREF_REV_MAX - 1) << BTRFS_BACKREF_REV_SHIFT)
+#define BTRFS_OLD_BACKREF_REV 0
+#define BTRFS_MIXED_BACKREF_REV 1
 #define BTRFS_EXTENT_FLAG_SUPER (1ULL << 48)
 struct btrfs_tree_block_info {
   struct btrfs_disk_key key;
