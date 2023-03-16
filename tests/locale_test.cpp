@@ -79,9 +79,12 @@ TEST(locale, newlocale_invalid_category_mask) {
 }
 
 TEST(locale, newlocale_NULL_locale_name) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   errno = 0;
   EXPECT_EQ(nullptr, newlocale(LC_ALL, nullptr, nullptr));
   EXPECT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
 }
 
 TEST(locale, newlocale_bad_locale_name) {
