@@ -345,6 +345,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
 
     /* conversion specifier */
     const char* str = buffer;
+    char strerror_buf[256];
     if (c == 's') {
       /* string */
       str = va_arg(args, const char*);
@@ -359,8 +360,7 @@ static void out_vformat(Out& o, const char* format, va_list args) {
       buffer[1] = 'x';
       format_integer(buffer + 2, sizeof(buffer) - 2, value, 'x');
     } else if (c == 'm') {
-      char buf[256];
-      str = strerror_r(errno, buf, sizeof(buf));
+      str = strerror_r(errno, strerror_buf, sizeof(strerror_buf));
     } else if (c == 'd' || c == 'i' || c == 'o' || c == 'u' || c == 'x' || c == 'X') {
       /* integers - first read value from stack */
       uint64_t value;
