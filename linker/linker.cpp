@@ -3142,6 +3142,14 @@ bool soinfo::prelink_image() {
       case DT_AARCH64_VARIANT_PCS:
         // Ignored: AArch64 processor-specific dynamic array tags.
         break;
+      // TODO(mitchp): Add support to libc_init_mte to use these dynamic array entries instead of
+      // the Android-specific ELF note.
+      case DT_AARCH64_MEMTAG_MODE:
+      case DT_AARCH64_MEMTAG_HEAP:
+      case DT_AARCH64_MEMTAG_STACK:
+      case DT_AARCH64_MEMTAG_GLOBALS:
+      case DT_AARCH64_MEMTAG_GLOBALSSZ:
+        break;
 #endif
 
       default:
