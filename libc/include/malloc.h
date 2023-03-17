@@ -183,7 +183,15 @@ int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
  * Available since API level 28.
  */
 #define M_PURGE (-101)
-
+/**
+ * mallopt() option to immediately purge all possible memory back to
+ * the kernel. This call can take longer than a normal purge since it
+ * examines everything. In some cases, it can take more than twice the
+ * time of a M_PURGE call. The value is ignored.
+ *
+ * Available since API level 34.
+ */
+#define M_PURGE_ALL (-104)
 
 /**
  * mallopt() option to tune the allocator's choice of memory tags to
