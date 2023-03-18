@@ -70,16 +70,16 @@ __BEGIN_DECLS
                      LC_IDENTIFICATION_MASK)
 
 struct lconv {
-  char* decimal_point;
-  char* thousands_sep;
-  char* grouping;
-  char* int_curr_symbol;
-  char* currency_symbol;
-  char* mon_decimal_point;
-  char* mon_thousands_sep;
-  char* mon_grouping;
-  char* positive_sign;
-  char* negative_sign;
+  char* _Nonnull decimal_point;
+  char* _Nonnull thousands_sep;
+  char* _Nonnull grouping;
+  char* _Nonnull int_curr_symbol;
+  char* _Nonnull currency_symbol;
+  char* _Nonnull mon_decimal_point;
+  char* _Nonnull mon_thousands_sep;
+  char* _Nonnull mon_grouping;
+  char* _Nonnull positive_sign;
+  char* _Nonnull negative_sign;
   char int_frac_digits;
   char frac_digits;
   char p_cs_precedes;
@@ -96,13 +96,13 @@ struct lconv {
   char int_n_sign_posn;
 };
 
-struct lconv* localeconv(void) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
+struct lconv* _Nonnull localeconv(void) __INTRODUCED_IN_NO_GUARD_FOR_NDK(21);
 
-locale_t duplocale(locale_t __l) __INTRODUCED_IN(21);
-void freelocale(locale_t __l) __INTRODUCED_IN(21);
-locale_t newlocale(int __category_mask, const char* __locale_name, locale_t __base) __INTRODUCED_IN(21);
-char* setlocale(int __category, const char* __locale_name);
-locale_t uselocale(locale_t __l) __INTRODUCED_IN(21);
+locale_t _Nullable duplocale(locale_t _Nonnull __l) __INTRODUCED_IN(21);
+void freelocale(locale_t _Nonnull __l) __INTRODUCED_IN(21);
+locale_t _Nullable newlocale(int __category_mask, const char* _Nonnull __locale_name, locale_t _Nullable __base) __INTRODUCED_IN(21);
+char* _Nullable setlocale(int __category, const char* _Nullable __locale_name);
+locale_t _Nullable uselocale(locale_t _Nullable __l) __INTRODUCED_IN(21);
 
 #define LC_GLOBAL_LOCALE __BIONIC_CAST(reinterpret_cast, locale_t, -1L)
 
