@@ -48,6 +48,7 @@ kernel_structs_to_remove = {
     "in_addr": False,
     "ip_mreq_source": False,
     "ip_msfilter": False,
+    "timespec": False,
     }
 
 # define to true if you want to remove all defined(CONFIG_FOO) tests
