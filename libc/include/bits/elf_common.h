@@ -418,12 +418,12 @@
 #define	SHT_HIOS		0x6fffffff	/* Last of OS specific semantics */
 #define	SHT_LOPROC		0x70000000	/* reserved range for processor */
 #define	SHT_X86_64_UNWIND	0x70000001	/* unwind information */
-#define	SHT_AMD64_UNWIND	SHT_X86_64_UNWIND 
+#define	SHT_AMD64_UNWIND	SHT_X86_64_UNWIND
 
 #define	SHT_ARM_EXIDX		0x70000001	/* Exception index table. */
-#define	SHT_ARM_PREEMPTMAP	0x70000002	/* BPABI DLL dynamic linking 
+#define	SHT_ARM_PREEMPTMAP	0x70000002	/* BPABI DLL dynamic linking
 						   pre-emption map. */
-#define	SHT_ARM_ATTRIBUTES	0x70000003	/* Object file compatibility 
+#define	SHT_ARM_ATTRIBUTES	0x70000003	/* Object file compatibility
 						   attributes. */
 #define	SHT_ARM_DEBUGOVERLAY	0x70000004	/* See DBGOVL for details. */
 #define	SHT_ARM_OVERLAYSECTION	0x70000005	/* See DBGOVL for details. */
@@ -648,6 +648,11 @@
 #define	DT_AARCH64_BTI_PLT		0x70000001
 #define	DT_AARCH64_PAC_PLT		0x70000003
 #define	DT_AARCH64_VARIANT_PCS		0x70000005
+#define DT_AARCH64_MEMTAG_MODE		0x70000009
+#define DT_AARCH64_MEMTAG_HEAP		0x7000000b
+#define DT_AARCH64_MEMTAG_STACK		0x7000000c
+#define DT_AARCH64_MEMTAG_GLOBALS	0x7000000d
+#define DT_AARCH64_MEMTAG_GLOBALSSZ	0x7000000f
 
 #define	DT_ARM_SYMTABSZ			0x70000001
 #define	DT_ARM_PREEMPTMAP		0x70000002
