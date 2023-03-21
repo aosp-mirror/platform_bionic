@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#if __has_feature(shadow_call_stack)
-
 #include <gtest/gtest.h>
 
 #include "private/bionic_constants.h"
@@ -33,7 +31,9 @@ __attribute__((weak, noinline)) int recurse2(int count) {
 }
 
 TEST(scs_test, stack_overflow) {
+#if defined(__aarch64__) || defined(__riscv)
   ASSERT_EXIT(recurse1(SCS_SIZE), testing::KilledBySignal(SIGSEGV), "");
-}
-
+#else
+  GTEST_SKIP() << "no SCS on this architecture";
 #endif
+}
