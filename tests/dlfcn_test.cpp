@@ -971,9 +971,15 @@ TEST(dlfcn, dlopen_executable_by_absolute_path) {
 }
 
 #define ALTERNATE_PATH_TO_SYSTEM_LIB "/system/lib64/" ABI_STRING "/"
+#if __has_feature(hwaddress_sanitizer)
+#define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "hwasan/libc.so"
+#define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/hwasan/libc.so"
+#define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "hwasan/libc.so"
+#else
 #define PATH_TO_LIBC PATH_TO_SYSTEM_LIB "libc.so"
 #define PATH_TO_BOOTSTRAP_LIBC PATH_TO_SYSTEM_LIB "bootstrap/libc.so"
 #define ALTERNATE_PATH_TO_LIBC ALTERNATE_PATH_TO_SYSTEM_LIB "libc.so"
+#endif
 
 TEST(dlfcn, dladdr_libc) {
 #if defined(__GLIBC__)
