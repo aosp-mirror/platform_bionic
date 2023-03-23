@@ -22,7 +22,7 @@ double fabs(double x) { return __builtin_fabs(x); }
 float fabsf(float x) { return __builtin_fabsf(x); }
 long double fabsl(long double x) { return __builtin_fabsl(x); }
 
-#if defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__riscv) || defined(__i386__) || defined(__x86_64__)
 float ceilf(float x) { return __builtin_ceilf(x); }
 double ceil(double x) { return __builtin_ceil(x); }
 #if defined(__ILP32__)
@@ -46,7 +46,7 @@ namespace s_floorf {
 }
 float floorf(float x) { return s_floorf::floorf(x); }
 double floor(double x) { return s_floor::floor(x); }
-#elif defined(__arm__) || defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#else
 float floorf(float x) { return __builtin_floorf(x); }
 double floor(double x) { return __builtin_floor(x); }
 #if defined(__ILP32__)
@@ -79,7 +79,7 @@ long long llround(double x) { return __builtin_llround(x); }
 long long llroundf(float x) { return __builtin_llroundf(x); }
 #endif
 
-#if defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__riscv) || defined(__i386__) || defined(__x86_64__)
 float rintf(float x) { return __builtin_rintf(x); }
 double rint(double x) { return __builtin_rint(x); }
 #if defined(__ILP32__)
@@ -87,7 +87,7 @@ __weak_reference(rint, rintl);
 #endif
 #endif
 
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(__riscv)
 float roundf(float x) { return __builtin_roundf(x); }
 double round(double x) { return __builtin_round(x); }
 #endif
@@ -98,7 +98,7 @@ double sqrt(double x) { return __builtin_sqrt(x); }
 __weak_reference(sqrt, sqrtl);
 #endif
 
-#if defined(__aarch64__) || defined(__i386__) || defined(__x86_64__)
+#if defined(__aarch64__) || defined(__riscv) || defined(__i386__) || defined(__x86_64__)
 float truncf(float x) { return __builtin_truncf(x); }
 double trunc(double x) { return __builtin_trunc(x); }
 #if defined(__ILP32__)
