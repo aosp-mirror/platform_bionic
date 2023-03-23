@@ -116,14 +116,14 @@ static void __init_alternate_signal_stack(pthread_internal_t* thread) {
 }
 
 static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__riscv)
   // Allocate the stack and the guard region.
   char* scs_guard_region = reinterpret_cast<char*>(
       mmap(nullptr, SCS_GUARD_REGION_SIZE, 0, MAP_PRIVATE | MAP_ANON, -1, 0));
   thread->shadow_call_stack_guard_region = scs_guard_region;
 
   // The address is aligned to SCS_SIZE so that we only need to store the lower log2(SCS_SIZE) bits
-  // in jmp_buf.
+  // in jmp_buf. See the SCS commentary in pthread_internal.h for more detail.
   char* scs_aligned_guard_region =
       reinterpret_cast<char*>(align_up(reinterpret_cast<uintptr_t>(scs_guard_region), SCS_SIZE));
 
@@ -133,11 +133,15 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   size_t scs_offset =
       (getpid() == 1) ? 0 : (arc4random_uniform(SCS_GUARD_REGION_SIZE / SCS_SIZE - 1) * SCS_SIZE);
 
-  // Make the stack readable and writable and store its address in register x18. This is
-  // deliberately the only place where the address is stored.
-  char *scs = scs_aligned_guard_region + scs_offset;
+  // Make the stack readable and writable and store its address in x18.
+  // This is deliberately the only place where the address is stored.
+  char* scs = scs_aligned_guard_region + scs_offset;
   mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
+#if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
+#elif defined(__riscv)
+  __asm__ __volatile__("mv x18, %0" ::"r"(scs));
+#endif
 #endif
 }
 
