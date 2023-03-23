@@ -827,6 +827,7 @@ cc_library_static {
         riscv64: {
             srcs: [
                "arch-riscv64/string/__memset_chk.S",
+               "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
@@ -2305,6 +2306,11 @@ cc_library_static {
         arm64: {
             srcs: [
                 "arch-arm64/string/__memcpy_chk.S",
+            ],
+        },
+        riscv64: {
+            srcs: [
+               "arch-riscv64/string/__memcpy_chk.S",
             ],
         },
     },
