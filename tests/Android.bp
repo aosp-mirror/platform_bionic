@@ -66,18 +66,20 @@ cc_defaults {
         "libcutils_headers",
         "gwp_asan_headers"
     ],
-    // Ensure that the tests exercise shadow call stack support and
-    // the hint space PAC/BTI instructions.
+    stl: "libc++",
+
+    // Ensure that the tests exercise shadow call stack support.
+    // We don't use `scs: true` here because that would give us a second
+    // variant of this library where we actually just want to say "this
+    // library should always be built this way".
     arch: {
         arm64: {
-            cflags: [
-                "-fsanitize=shadow-call-stack",
-                // Disable this option for now: see b/151372823
-                //"-mbranch-protection=standard",
-            ],
+            cflags: ["-fsanitize=shadow-call-stack"],
+        },
+        riscv64: {
+            cflags: ["-fsanitize=shadow-call-stack"],
         },
     },
-    stl: "libc++",
     sanitize: {
         address: false,
     },

@@ -79,7 +79,7 @@
 .macro m_mangle_registers reg, sp_reg
   xor s0, s0, \reg
   xor s1, s1, \reg
-  xor s2, s2, \reg
+  xor a4, a4, \reg  // a4 is the masked s2 (x18) for SCS.
   xor s3, s3, \reg
   xor s4, s4, \reg
   xor s5, s5, \reg
@@ -151,13 +151,20 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   ld a1, _JB_SIGFLAG(a0)
   andi a1, a1, -2
 
+  // Mask off the high bits of the shadow call stack pointer.
+  // We only store the low bits of x18 to avoid leaking the
+  // shadow call stack address into memory.
+  // See the SCS commentary in pthread_internal.h for more detail.
+  li a4, SCS_MASK
+  and a4, a4, x18
+
   // Save core registers.
   mv a2, sp
   m_mangle_registers a1, sp_reg=a2
   sd ra,  _JB_RA(a0)
   sd s0,  _JB_S0(a0)
   sd s1,  _JB_S1(a0)
-  sd s2,  _JB_S2(a0)
+  sd a4,  _JB_S2(a0)  // a4 is the masked s2 (x18) for SCS.
   sd s3,  _JB_S3(a0)
   sd s4,  _JB_S4(a0)
   sd s5,  _JB_S5(a0)
@@ -231,7 +238,7 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   ld ra,  _JB_RA(a0)
   ld s0,  _JB_S0(a0)
   ld s1,  _JB_S1(a0)
-  ld s2,  _JB_S2(a0)
+  ld a4,  _JB_S2(a0)  // Don't clobber s2 (x18) used for SCS yet.
   ld s3,  _JB_S3(a0)
   ld s4,  _JB_S4(a0)
   ld s5,  _JB_S5(a0)
@@ -244,6 +251,11 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   ld a3,  _JB_SP(a0)
   m_unmangle_registers a2, sp_reg=a3
   mv sp, a3
+
+  // Restore the low bits of the shadow call stack pointer.
+  li a5, ~SCS_MASK
+  and x18, x18, a5
+  or x18, a4, x18
 
   addi sp, sp, -24
   sd   ra, 0(sp)
