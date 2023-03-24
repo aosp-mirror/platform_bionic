@@ -589,9 +589,10 @@ TEST(UNISTD_TEST, gettid_caching_and_clone_process_settid) {
   TestGetTidCachingWithFork(CloneAndSetTid, exit);
 }
 
+__attribute__((no_sanitize("hwaddress", "memtag")))
 static int CloneStartRoutine(int (*start_routine)(void*)) {
   void* child_stack[1024];
-  return clone(start_routine, untag_address(&child_stack[1024]), SIGCHLD, nullptr);
+  return clone(start_routine, &child_stack[1024], SIGCHLD, nullptr);
 }
 
 static int GetPidCachingCloneStartRoutine(void*) {
