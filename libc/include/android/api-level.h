@@ -162,7 +162,10 @@ __BEGIN_DECLS
  */
 #define __ANDROID_API_T__ 33
 
-/** Names the "U" API level (34), for comparison against `__ANDROID_API__`. */
+/**
+ * Names the Android 14 (aka "U" or "UpsideDownCake") API level (34),
+ * for comparison against `__ANDROID_API__`.
+ */
 #define __ANDROID_API_U__ 34
 
 /** Names the "V" API level (35), for comparison against `__ANDROID_API__`. */
