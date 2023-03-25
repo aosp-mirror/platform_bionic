@@ -26,6 +26,7 @@
 
 #include "SignalUtils.h"
 
+#include <android-base/properties.h>
 #include <android-base/test_utils.h>
 #include <bionic/malloc_tagged_pointers.h>
 
@@ -223,6 +224,9 @@ class MemtagNoteTest : public testing::TestWithParam<std::tuple<MemtagNote, bool
 TEST_P(MemtagNoteTest, SEGV) {
 #if defined(__BIONIC__) && defined(__aarch64__)
   SKIP_WITH_NATIVE_BRIDGE;  // http://b/242170715
+  if (android::base::GetProperty("persist.arm64.memtag.default", "") != "") {
+    GTEST_SKIP() << "not supported when overriding memtag mode with property";
+  }
   // Note that we do not check running_with_hwasan() - what matters here is whether the test binary
   // itself is built with HWASan.
   bool withHWASAN = __has_feature(hwaddress_sanitizer);
