@@ -1,9 +1,4 @@
-# this module contains all the defaults used by the generation of cleaned-up headers
-# for the Bionic C library
-#
-
-import time, os, sys
-from utils import *
+# All the defaults used to generate the cleaned-up uapi headers for bionic.
 
 # the list of include directories that belong to the kernel
 # tree. used when looking for sources...
@@ -98,6 +93,9 @@ kernel_token_replacements = {
     # Replace __packed with __attribute__((__packed__)) to avoid depending
     # on sys/cdefs.h
     "__packed": "__attribute__((__packed__))",
+    # Remove unused macros (http://b/262917450).
+    "__force": "",
+    "__user": "",
     }
 
 

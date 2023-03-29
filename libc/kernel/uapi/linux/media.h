@@ -125,8 +125,8 @@ struct media_link_desc {
 };
 struct media_links_enum {
   __u32 entity;
-  struct media_pad_desc __user * pads;
-  struct media_link_desc __user * links;
+  struct media_pad_desc  * pads;
+  struct media_link_desc  * links;
   __u32 reserved[4];
 };
 #define MEDIA_INTF_T_DVB_BASE 0x00000100

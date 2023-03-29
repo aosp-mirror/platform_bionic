@@ -51,7 +51,7 @@ typedef struct capi_profile {
 #define CAPI_GET_PROFILE _IOWR('C', 0x09, struct capi_profile)
 typedef struct capi_manufacturer_cmd {
   unsigned long cmd;
-  void __user * data;
+  void  * data;
 } capi_manufacturer_cmd;
 #define CAPI_MANUFACTURER_CMD _IOWR('C', 0x20, struct capi_manufacturer_cmd)
 #define CAPI_GET_ERRCODE _IOR('C', 0x21, __u16)
