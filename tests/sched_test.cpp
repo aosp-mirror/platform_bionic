@@ -303,5 +303,8 @@ TEST(sched, sched_getscheduler_sched_setscheduler) {
 }
 
 TEST(sched, sched_getaffinity_failure) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EQ(-1, sched_getaffinity(getpid(), 0, nullptr));
+#pragma clang diagnostic pop
 }
