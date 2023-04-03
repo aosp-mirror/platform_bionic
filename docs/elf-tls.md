@@ -101,9 +101,9 @@ char* get_tls_var() {
 `R_TLS_DTPOFF` is a dynamic relocation to the offset of `tls_var` within its module's `PT_TLS`
 segment.
 
-`__tls_get_addr` looks up `TlsIndex::module`'s entry in the DTV and adds `TlsIndex::offset` to the
-module's TLS block. Before it can do this, it ensures that the module's TLS block is allocated. A
-simple approach is to allocate memory lazily:
+`__tls_get_addr` looks up `TlsIndex::module_id`'s entry in the DTV and adds `TlsIndex::offset` to
+the module's TLS block. Before it can do this, it ensures that the module's TLS block is allocated.
+A simple approach is to allocate memory lazily:
 
 1. If the current thread's DTV generation count is less than the current global TLS generation, then
    `__tls_get_addr` may reallocate the DTV or free blocks for unloaded modules.
