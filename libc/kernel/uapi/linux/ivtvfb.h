@@ -21,7 +21,7 @@
 #include <linux/compiler.h>
 #include <linux/types.h>
 struct ivtvfb_dma_frame {
-  void __user * source;
+  void  * source;
   unsigned long dest_offset;
   int count;
 };

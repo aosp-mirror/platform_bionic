@@ -180,7 +180,7 @@ struct sigcontext {
   __u32 eflags;
   __u32 esp_at_signal;
   __u16 ss, __ssh;
-  struct _fpstate __user * fpstate;
+  struct _fpstate  * fpstate;
   __u32 oldmask;
   __u32 cr2;
 };
@@ -215,7 +215,7 @@ struct sigcontext {
   __u64 trapno;
   __u64 oldmask;
   __u64 cr2;
-  struct _fpstate __user * fpstate;
+  struct _fpstate  * fpstate;
 #ifdef __ILP32__
   __u32 __fpstate_pad;
 #endif
