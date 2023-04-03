@@ -88,7 +88,7 @@ struct omap3isp_h3a_aewb_config {
 };
 struct omap3isp_stat_data {
   struct timeval ts;
-  void __user * buf;
+  void  * buf;
   __struct_group(, frame,, __u32 buf_size;
   __u16 frame_number;
   __u16 cur_frame;
@@ -224,12 +224,12 @@ struct omap3isp_ccdc_update_config {
   __u16 update;
   __u16 flag;
   enum omap3isp_alaw_ipwidth alawip;
-  struct omap3isp_ccdc_bclamp __user * bclamp;
-  struct omap3isp_ccdc_blcomp __user * blcomp;
-  struct omap3isp_ccdc_fpc __user * fpc;
-  struct omap3isp_ccdc_lsc_config __user * lsc_cfg;
-  struct omap3isp_ccdc_culling __user * cull;
-  __u8 __user * lsc;
+  struct omap3isp_ccdc_bclamp  * bclamp;
+  struct omap3isp_ccdc_blcomp  * blcomp;
+  struct omap3isp_ccdc_fpc  * fpc;
+  struct omap3isp_ccdc_lsc_config  * lsc_cfg;
+  struct omap3isp_ccdc_culling  * cull;
+  __u8  * lsc;
 };
 #define OMAP3ISP_PREV_LUMAENH (1 << 0)
 #define OMAP3ISP_PREV_INVALAW (1 << 1)
@@ -323,17 +323,17 @@ struct omap3isp_prev_update_config {
   __u32 update;
   __u32 flag;
   __u32 shading_shift;
-  struct omap3isp_prev_luma __user * luma;
-  struct omap3isp_prev_hmed __user * hmed;
-  struct omap3isp_prev_cfa __user * cfa;
-  struct omap3isp_prev_csup __user * csup;
-  struct omap3isp_prev_wbal __user * wbal;
-  struct omap3isp_prev_blkadj __user * blkadj;
-  struct omap3isp_prev_rgbtorgb __user * rgb2rgb;
-  struct omap3isp_prev_csc __user * csc;
-  struct omap3isp_prev_yclimit __user * yclimit;
-  struct omap3isp_prev_dcor __user * dcor;
-  struct omap3isp_prev_nf __user * nf;
-  struct omap3isp_prev_gtables __user * gamma;
+  struct omap3isp_prev_luma  * luma;
+  struct omap3isp_prev_hmed  * hmed;
+  struct omap3isp_prev_cfa  * cfa;
+  struct omap3isp_prev_csup  * csup;
+  struct omap3isp_prev_wbal  * wbal;
+  struct omap3isp_prev_blkadj  * blkadj;
+  struct omap3isp_prev_rgbtorgb  * rgb2rgb;
+  struct omap3isp_prev_csc  * csc;
+  struct omap3isp_prev_yclimit  * yclimit;
+  struct omap3isp_prev_dcor  * dcor;
+  struct omap3isp_prev_nf  * nf;
+  struct omap3isp_prev_gtables  * gamma;
 };
 #endif
