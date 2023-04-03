@@ -55,7 +55,7 @@ struct ioctl_gntdev_unmap_notify {
 };
 struct gntdev_grant_copy_segment {
   union {
-    void __user * virt;
+    void  * virt;
     struct {
       grant_ref_t ref;
       __u16 offset;
@@ -69,7 +69,7 @@ struct gntdev_grant_copy_segment {
 #define IOCTL_GNTDEV_GRANT_COPY _IOC(_IOC_NONE, 'G', 8, sizeof(struct ioctl_gntdev_grant_copy))
 struct ioctl_gntdev_grant_copy {
   unsigned int count;
-  struct gntdev_grant_copy_segment __user * segments;
+  struct gntdev_grant_copy_segment  * segments;
 };
 #define UNMAP_NOTIFY_CLEAR_BYTE 0x1
 #define UNMAP_NOTIFY_SEND_EVENT 0x2
