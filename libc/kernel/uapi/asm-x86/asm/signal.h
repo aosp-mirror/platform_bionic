@@ -88,7 +88,7 @@ struct sigaction {
 };
 #endif
 typedef struct sigaltstack {
-  void __user * ss_sp;
+  void  * ss_sp;
   int ss_flags;
   __kernel_size_t ss_size;
 } stack_t;
