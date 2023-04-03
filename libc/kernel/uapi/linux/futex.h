@@ -59,12 +59,12 @@ struct futex_waitv {
   __u32 __reserved;
 };
 struct robust_list {
-  struct robust_list __user * next;
+  struct robust_list  * next;
 };
 struct robust_list_head {
   struct robust_list list;
   long futex_offset;
-  struct robust_list __user * list_op_pending;
+  struct robust_list  * list_op_pending;
 };
 #define FUTEX_WAITERS 0x80000000
 #define FUTEX_OWNER_DIED 0x40000000

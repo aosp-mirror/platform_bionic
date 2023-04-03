@@ -86,7 +86,7 @@ struct atm_dev_stats {
 #define ATM_LM_RMT_ANALOG __ATM_LM_MKRMT(__ATM_LM_ANALOG)
 struct atm_iobuf {
   int length;
-  void __user * buffer;
+  void  * buffer;
 };
 #define ATM_CI_MAX - 1
 struct atm_cirange {

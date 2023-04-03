@@ -44,7 +44,7 @@ struct cxl_command_info {
 struct cxl_mem_query_commands {
   __u32 n_commands;
   __u32 rsvd;
-  struct cxl_command_info __user commands[];
+  struct cxl_command_info  commands[];
 };
 struct cxl_send_command {
   __u32 id;
