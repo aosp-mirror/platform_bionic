@@ -49,7 +49,7 @@ struct uvc_xu_control_mapping {
   __u8 offset;
   __u32 v4l2_type;
   __u32 data_type;
-  struct uvc_menu_info __user * menu_info;
+  struct uvc_menu_info  * menu_info;
   __u32 menu_count;
   __u32 reserved[4];
 };
@@ -58,7 +58,7 @@ struct uvc_xu_control_query {
   __u8 selector;
   __u8 query;
   __u16 size;
-  __u8 __user * data;
+  __u8  * data;
 };
 #define UVCIOC_CTRL_MAP _IOWR('u', 0x20, struct uvc_xu_control_mapping)
 #define UVCIOC_CTRL_QUERY _IOWR('u', 0x21, struct uvc_xu_control_query)

@@ -68,14 +68,14 @@ typedef struct drm_savage_init {
 } drm_savage_init_t;
 typedef union drm_savage_cmd_header drm_savage_cmd_header_t;
 typedef struct drm_savage_cmdbuf {
-  drm_savage_cmd_header_t __user * cmd_addr;
+  drm_savage_cmd_header_t  * cmd_addr;
   unsigned int size;
   unsigned int dma_idx;
   int discard;
-  unsigned int __user * vb_addr;
+  unsigned int  * vb_addr;
   unsigned int vb_size;
   unsigned int vb_stride;
-  struct drm_clip_rect __user * box_addr;
+  struct drm_clip_rect  * box_addr;
   unsigned int nbox;
 } drm_savage_cmdbuf_t;
 #define SAVAGE_WAIT_2D 0x1

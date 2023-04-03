@@ -287,18 +287,18 @@ typedef struct drm_i915_batchbuffer {
   int DR1;
   int DR4;
   int num_cliprects;
-  struct drm_clip_rect __user * cliprects;
+  struct drm_clip_rect  * cliprects;
 } drm_i915_batchbuffer_t;
 typedef struct _drm_i915_cmdbuffer {
-  char __user * buf;
+  char  * buf;
   int sz;
   int DR1;
   int DR4;
   int num_cliprects;
-  struct drm_clip_rect __user * cliprects;
+  struct drm_clip_rect  * cliprects;
 } drm_i915_cmdbuffer_t;
 typedef struct drm_i915_irq_emit {
-  int __user * irq_seq;
+  int  * irq_seq;
 } drm_i915_irq_emit_t;
 typedef struct drm_i915_irq_wait {
   int irq_seq;
@@ -371,7 +371,7 @@ typedef struct drm_i915_irq_wait {
 #define I915_PARAM_OA_TIMESTAMP_FREQUENCY 57
 struct drm_i915_getparam {
   __s32 param;
-  int __user * value;
+  int  * value;
 };
 typedef struct drm_i915_getparam drm_i915_getparam_t;
 #define I915_SETPARAM_USE_MI_BATCHBUFFER_START 1
@@ -387,7 +387,7 @@ typedef struct drm_i915_mem_alloc {
   int region;
   int alignment;
   int size;
-  int __user * region_offset;
+  int  * region_offset;
 } drm_i915_mem_alloc_t;
 typedef struct drm_i915_mem_free {
   int region;
