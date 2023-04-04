@@ -21,7 +21,7 @@
 #define NFS4_MOUNT_VERSION 1
 struct nfs_string {
   unsigned int len;
-  const char __user * data;
+  const char  * data;
 };
 struct nfs4_mount_data {
   int version;
@@ -38,10 +38,10 @@ struct nfs4_mount_data {
   struct nfs_string mnt_path;
   struct nfs_string hostname;
   unsigned int host_addrlen;
-  struct sockaddr __user * host_addr;
+  struct sockaddr  * host_addr;
   int proto;
   int auth_flavourlen;
-  int __user * auth_flavours;
+  int  * auth_flavours;
 };
 #define NFS4_MOUNT_SOFT 0x0001
 #define NFS4_MOUNT_INTR 0x0002

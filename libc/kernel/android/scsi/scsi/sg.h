@@ -20,7 +20,7 @@
 #define _SCSI_GENERIC_H
 #include <linux/compiler.h>
 typedef struct sg_iovec {
-  void __user * iov_base;
+  void  * iov_base;
   size_t iov_len;
 } sg_iovec_t;
 typedef struct sg_io_hdr {
@@ -30,13 +30,13 @@ typedef struct sg_io_hdr {
   unsigned char mx_sb_len;
   unsigned short iovec_count;
   unsigned int dxfer_len;
-  void __user * dxferp;
-  unsigned char __user * cmdp;
-  void __user * sbp;
+  void  * dxferp;
+  unsigned char  * cmdp;
+  void  * sbp;
   unsigned int timeout;
   unsigned int flags;
   int pack_id;
-  void __user * usr_ptr;
+  void  * usr_ptr;
   unsigned char status;
   unsigned char masked_status;
   unsigned char msg_status;
@@ -96,7 +96,7 @@ typedef struct sg_req_info {
   char sg_io_owned;
   char problem;
   int pack_id;
-  void __user * usr_ptr;
+  void  * usr_ptr;
   unsigned int duration;
   int unused;
 } sg_req_info_t;

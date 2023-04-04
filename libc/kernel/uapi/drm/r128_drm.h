@@ -204,13 +204,13 @@ typedef struct drm_r128_depth {
     R128_READ_PIXELS = 0x04
   } func;
   int n;
-  int __user * x;
-  int __user * y;
-  unsigned int __user * buffer;
-  unsigned char __user * mask;
+  int  * x;
+  int  * y;
+  unsigned int  * buffer;
+  unsigned char  * mask;
 } drm_r128_depth_t;
 typedef struct drm_r128_stipple {
-  unsigned int __user * mask;
+  unsigned int  * mask;
 } drm_r128_stipple_t;
 typedef struct drm_r128_indirect {
   int idx;
@@ -227,7 +227,7 @@ typedef struct drm_r128_fullscreen {
 #define R128_PARAM_IRQ_NR 1
 typedef struct drm_r128_getparam {
   int param;
-  void __user * value;
+  void  * value;
 } drm_r128_getparam_t;
 #ifdef __cplusplus
 }

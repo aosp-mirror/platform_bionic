@@ -50,7 +50,7 @@ typedef struct osd_cmd_s {
   int x1;
   int y1;
   int color;
-  void __user * data;
+  void  * data;
 } osd_cmd_t;
 typedef enum {
   OSD_BITMAP1,

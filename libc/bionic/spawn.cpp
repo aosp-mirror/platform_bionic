@@ -340,7 +340,7 @@ static int posix_spawn_add_file_action(posix_spawn_file_actions_t* actions,
   if (action == nullptr) return errno;
 
   action->next = nullptr;
-  if (path != nullptr) {
+  if (what == kOpen) {
     action->path = strdup(path);
     if (action->path == nullptr) {
       free(action);
