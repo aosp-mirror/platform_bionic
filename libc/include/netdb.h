@@ -79,31 +79,31 @@
  * use in system calls).
  */
 struct hostent {
-	char	*h_name;	/* official name of host */
-	char	**h_aliases;	/* alias list */
+	char	* _Nullable h_name;	/* official name of host */
+	char	* _Nullable * _Nullable h_aliases;	/* alias list */
 	int	h_addrtype;	/* host address type */
 	int	h_length;	/* length of address */
-	char	**h_addr_list;	/* list of addresses from name server */
+	char	* _Nullable * _Nullable h_addr_list;	/* list of addresses from name server */
 #define	h_addr	h_addr_list[0]	/* address, for backward compatibility */
 };
 
 struct netent {
-	char		*n_name;	/* official name of net */
-	char		**n_aliases;	/* alias list */
+	char		* _Nullable n_name;	/* official name of net */
+	char		* _Nullable * _Nullable n_aliases;	/* alias list */
 	int		n_addrtype;	/* net address type */
 	uint32_t	n_net;		/* network # */
 };
 
 struct servent {
-	char	*s_name;	/* official service name */
-	char	**s_aliases;	/* alias list */
+	char	* _Nullable s_name;	/* official service name */
+	char	* _Nullable * _Nullable s_aliases;	/* alias list */
 	int	s_port;		/* port # */
-	char	*s_proto;	/* protocol to use */
+	char	* _Nullable s_proto;	/* protocol to use */
 };
 
 struct protoent {
-	char	*p_name;	/* official protocol name */
-	char	**p_aliases;	/* alias list */
+	char	* _Nullable p_name;	/* official protocol name */
+	char	* _Nullable * _Nullable p_aliases;	/* alias list */
 	int	p_proto;	/* protocol # */
 };
 
@@ -113,9 +113,9 @@ struct addrinfo {
 	int	ai_socktype;	/* SOCK_xxx */
 	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
 	socklen_t ai_addrlen;	/* length of ai_addr */
-	char	*ai_canonname;	/* canonical name for hostname */
-	struct	sockaddr *ai_addr;	/* binary address */
-	struct	addrinfo *ai_next;	/* next structure in linked list */
+	char	* _Nullable ai_canonname;	/* canonical name for hostname */
+	struct	sockaddr * _Nullable ai_addr;	/* binary address */
+	struct	addrinfo * _Nullable ai_next;	/* next structure in linked list */
 };
 
 /*
@@ -196,47 +196,47 @@ struct addrinfo {
 
 __BEGIN_DECLS
 
-int getaddrinfo(const char* __node, const char* __service, const struct addrinfo* __hints, struct addrinfo** __result);
-void freeaddrinfo(struct addrinfo* __ptr);
+int getaddrinfo(const char* _Nullable __node, const char* _Nullable __service, const struct addrinfo* _Nullable __hints, struct addrinfo* _Nullable * _Nonnull __result);
+void freeaddrinfo(struct addrinfo* _Nullable __ptr);
 
 /* Android ABI error: POSIX getnameinfo(3) uses socklen_t rather than size_t. */
-int getnameinfo(const struct sockaddr* __sa, socklen_t __sa_length, char* __host, size_t __host_length, char* __service, size_t __service_length, int __flags);
-const char* gai_strerror(int __error);
+int getnameinfo(const struct sockaddr* _Nonnull __sa, socklen_t __sa_length, char* _Nullable __host, size_t __host_length, char* _Nullable __service, size_t __service_length, int __flags);
+const char* _Nonnull gai_strerror(int __error);
 
 /* These functions are obsolete. Use getaddrinfo/getnameinfo instead. */
 #define h_errno (*__get_h_errno())
-int* __get_h_errno(void);
-void herror(const char* __s);
-const char* hstrerror(int __error);
-struct hostent* gethostbyaddr(const void* __addr, socklen_t __length, int __type);
-int gethostbyaddr_r(const void* __addr, socklen_t __length, int __type, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr) __INTRODUCED_IN(23);
-struct hostent* gethostbyname(const char* __name);
-int gethostbyname_r(const char* __name, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr);
-struct hostent* gethostbyname2(const char* __name, int __af);
-int gethostbyname2_r(const char* __name, int __af, struct hostent* __ret, char* __buf, size_t __buf_size, struct hostent** __result, int* __h_errno_ptr) __INTRODUCED_IN(23);
+int* _Nonnull __get_h_errno(void);
+void herror(const char* _Nonnull __s);
+const char* _Nonnull hstrerror(int __error);
+struct hostent* _Nullable gethostbyaddr(const void* _Nonnull __addr, socklen_t __length, int __type);
+int gethostbyaddr_r(const void* _Nonnull __addr, socklen_t __length, int __type, struct hostent* _Nonnull __ret, char* _Nonnull __buf, size_t __buf_size, struct hostent* _Nullable * _Nonnull __result, int* _Nonnull __h_errno_ptr) __INTRODUCED_IN(23);
+struct hostent* _Nullable gethostbyname(const char* _Nonnull __name);
+int gethostbyname_r(const char* _Nonnull __name, struct hostent* _Nonnull __ret, char* _Nonnull __buf, size_t __buf_size, struct hostent* _Nullable * _Nonnull __result, int* _Nonnull __h_errno_ptr);
+struct hostent* _Nullable gethostbyname2(const char* _Nonnull __name, int __af);
+int gethostbyname2_r(const char* _Nonnull __name, int __af, struct hostent* _Nonnull __ret, char* _Nonnull __buf, size_t __buf_size, struct hostent* _Nullable * _Nonnull __result, int* _Nonnull __h_errno_ptr) __INTRODUCED_IN(23);
 void endhostent(void) __INTRODUCED_IN(28);
-struct hostent* gethostent(void);
+struct hostent* _Nullable gethostent(void);
 void sethostent(int __stay_open) __INTRODUCED_IN(28);
 
 /* These functions are obsolete. None of these functions return anything but nullptr. */
 void endnetent(void) __INTRODUCED_IN(28);
-struct netent* getnetbyaddr(uint32_t __net, int __type);
-struct netent* getnetbyname(const char* __name);
-struct netent* getnetent(void) __INTRODUCED_IN(28);
+struct netent* _Nullable getnetbyaddr(uint32_t __net, int __type);
+struct netent* _Nullable getnetbyname(const char* _Nonnull __name);
+struct netent* _Nullable getnetent(void) __INTRODUCED_IN(28);
 void setnetent(int __stay_open) __INTRODUCED_IN(28);
 
 /* None of these functions return anything but nullptr. */
 void endprotoent(void) __INTRODUCED_IN(28);
-struct protoent* getprotobyname(const char* __name);
-struct protoent* getprotobynumber(int __proto);
-struct protoent* getprotoent(void) __INTRODUCED_IN(28);
+struct protoent* _Nullable getprotobyname(const char* _Nonnull __name);
+struct protoent* _Nullable getprotobynumber(int __proto);
+struct protoent* _Nullable getprotoent(void) __INTRODUCED_IN(28);
 void setprotoent(int __stay_open) __INTRODUCED_IN(28);
 
 /* These functions return entries from a built-in database. */
 void endservent(void);
-struct servent* getservbyname(const char* __name, const char* __proto);
-struct servent* getservbyport(int __port_in_network_order, const char* __proto);
-struct servent* getservent(void);
+struct servent* _Nullable getservbyname(const char* _Nonnull __name, const char* _Nullable __proto);
+struct servent* _Nullable getservbyport(int __port_in_network_order, const char* _Nullable __proto);
+struct servent* _Nullable getservent(void);
 void setservent(int __stay_open);
 
 __END_DECLS
