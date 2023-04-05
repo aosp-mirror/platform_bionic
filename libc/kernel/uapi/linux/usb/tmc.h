@@ -46,7 +46,7 @@ struct usbtmc_request {
 } __attribute__((packed));
 struct usbtmc_ctrlrequest {
   struct usbtmc_request req;
-  void __user * data;
+  void  * data;
 } __attribute__((packed));
 struct usbtmc_termchar {
   __u8 term_char;
@@ -59,7 +59,7 @@ struct usbtmc_message {
   __u32 transfer_size;
   __u32 transferred;
   __u32 flags;
-  void __user * message;
+  void  * message;
 } __attribute__((packed));
 #define USBTMC_IOC_NR 91
 #define USBTMC_IOCTL_INDICATOR_PULSE _IO(USBTMC_IOC_NR, 1)

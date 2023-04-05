@@ -22,7 +22,7 @@
 #include <linux/types.h>
 typedef union sigval {
   int sival_int;
-  void __user * sival_ptr;
+  void  * sival_ptr;
 } sigval_t;
 #define SI_MAX_SIZE 128
 #ifndef __ARCH_SI_BAND_T
@@ -58,7 +58,7 @@ union __sifields {
     __ARCH_SI_CLOCK_T _stime;
   } _sigchld;
   struct {
-    void __user * _addr;
+    void  * _addr;
 #ifdef __ia64__
     int _imm;
     unsigned int _flags;
@@ -70,8 +70,8 @@ union __sifields {
       short _addr_lsb;
       struct {
         char _dummy_bnd[__ADDR_BND_PKEY_PAD];
-        void __user * _lower;
-        void __user * _upper;
+        void  * _lower;
+        void  * _upper;
       } _addr_bnd;
       struct {
         char _dummy_pkey[__ADDR_BND_PKEY_PAD];
@@ -89,7 +89,7 @@ union __sifields {
     int _fd;
   } _sigpoll;
   struct {
-    void __user * _call_addr;
+    void  * _call_addr;
     int _syscall;
     unsigned int _arch;
   } _sigsys;

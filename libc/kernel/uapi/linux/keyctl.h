@@ -80,8 +80,8 @@ struct keyctl_dh_params {
   __s32 base;
 };
 struct keyctl_kdf_params {
-  char __user * hashname;
-  char __user * otherinfo;
+  char  * hashname;
+  char  * otherinfo;
   __u32 otherinfolen;
   __u32 __spare[8];
 };
