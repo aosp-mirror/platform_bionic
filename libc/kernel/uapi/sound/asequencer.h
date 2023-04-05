@@ -209,9 +209,9 @@ struct snd_seq_running_info {
 #define SNDRV_SEQ_CLIENT_DUMMY 14
 #define SNDRV_SEQ_CLIENT_OSS 15
 typedef int __bitwise snd_seq_client_type_t;
-#define NO_CLIENT ((__force snd_seq_client_type_t) 0)
-#define USER_CLIENT ((__force snd_seq_client_type_t) 1)
-#define KERNEL_CLIENT ((__force snd_seq_client_type_t) 2)
+#define NO_CLIENT (( snd_seq_client_type_t) 0)
+#define USER_CLIENT (( snd_seq_client_type_t) 1)
+#define KERNEL_CLIENT (( snd_seq_client_type_t) 2)
 #define SNDRV_SEQ_FILTER_BROADCAST (1U << 0)
 #define SNDRV_SEQ_FILTER_MULTICAST (1U << 1)
 #define SNDRV_SEQ_FILTER_BOUNCE (1U << 2)

@@ -71,7 +71,7 @@ struct changer_position {
 #define CP_INVERT 1
 struct changer_element_status {
   int ces_type;
-  unsigned char __user * ces_data;
+  unsigned char  * ces_data;
 };
 #define CESTATUS_FULL 0x01
 #define CESTATUS_IMPEXP 0x02
