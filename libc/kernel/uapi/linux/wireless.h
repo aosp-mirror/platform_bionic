@@ -264,7 +264,7 @@ struct iw_param {
   __u16 flags;
 };
 struct iw_point {
-  void __user * pointer;
+  void  * pointer;
   __u16 length;
   __u16 flags;
 };
