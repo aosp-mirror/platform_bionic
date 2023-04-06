@@ -68,7 +68,9 @@ static int cloexec_except_stdioe() {
 enum Action {
   kOpen,
   kClose,
-  kDup2
+  kDup2,
+  kChdir,
+  kFchdir,
 };
 
 struct __posix_spawn_file_action {
@@ -93,6 +95,10 @@ struct __posix_spawn_file_action {
     } else if (what == kClose) {
       // Failure to close is ignored.
       close(fd);
+    } else if (what == kChdir) {
+      if (chdir(path) == -1) _exit(127);
+    } else if (what == kFchdir) {
+      if (fchdir(fd) == -1) _exit(127);
     } else {
       // It's a dup2.
       if (fd == new_fd) {
@@ -340,7 +346,7 @@ static int posix_spawn_add_file_action(posix_spawn_file_actions_t* actions,
   if (action == nullptr) return errno;
 
   action->next = nullptr;
-  if (what == kOpen) {
+  if (what == kOpen || what == kChdir) {
     action->path = strdup(path);
     if (action->path == nullptr) {
       free(action);
@@ -379,4 +385,13 @@ int posix_spawn_file_actions_addclose(posix_spawn_file_actions_t* actions, int f
 int posix_spawn_file_actions_adddup2(posix_spawn_file_actions_t* actions, int fd, int new_fd) {
   if (fd < 0 || new_fd < 0) return EBADF;
   return posix_spawn_add_file_action(actions, kDup2, fd, new_fd, nullptr, 0, 0);
+}
+
+int posix_spawn_file_actions_addchdir_np(posix_spawn_file_actions_t* actions, const char* path) {
+  return posix_spawn_add_file_action(actions, kChdir, -1, -1, path, 0, 0);
+}
+
+int posix_spawn_file_actions_addfchdir_np(posix_spawn_file_actions_t* actions, int fd) {
+  if (fd < 0) return EBADF;
+  return posix_spawn_add_file_action(actions, kFchdir, fd, -1, nullptr, 0, 0);
 }
