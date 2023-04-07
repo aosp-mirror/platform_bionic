@@ -514,6 +514,7 @@ cc_test_library {
         "unistd_test.cpp",
         "utils.cpp",
         "utmp_test.cpp",
+        "utmpx_test.cpp",
         "wchar_test.cpp",
         "wctype_test.cpp",
     ],
