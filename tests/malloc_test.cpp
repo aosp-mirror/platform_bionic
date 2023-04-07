@@ -1613,6 +1613,7 @@ void VerifyAllocationsAreZero(std::function<void*(size_t)> alloc_func, std::stri
 }
 
 // Verify that small and medium allocations are always zero.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_small_medium_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
@@ -1642,6 +1643,7 @@ TEST(malloc, zeroed_allocations_small_medium_sizes) {
 }
 
 // Verify that large allocations are always zero.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_large_sizes) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
@@ -1670,6 +1672,8 @@ TEST(malloc, zeroed_allocations_large_sizes) {
       "posix_memalign", test_sizes, kMaxAllocations);
 }
 
+// Verify that reallocs are zeroed when expanded.
+// @CddTest = 9.7/C-4-1
 TEST(malloc, zeroed_allocations_realloc) {
 #if !defined(__BIONIC__)
   GTEST_SKIP() << "Only valid on bionic";
