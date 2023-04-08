@@ -53,7 +53,7 @@
 #elif defined(__i386__)
 #define _JBLEN 10
 #elif defined(__riscv)
-#define _JBLEN 29
+#define _JBLEN 32
 #elif defined(__x86_64__)
 #define _JBLEN 11
 #endif
