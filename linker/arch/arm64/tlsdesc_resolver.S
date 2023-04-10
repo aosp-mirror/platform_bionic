@@ -58,9 +58,9 @@ ENTRY_PRIVATE(tlsdesc_resolver_dynamic)
   cmp x21, x22
   b.lo .fallback
 
-  ldr x21, [x0, #8]             // TlsIndex::module
+  ldr x21, [x0, #8]             // TlsIndex::module_id
   ldr x22, [x0, #16]            // TlsIndex::offset
-  ldr x21, [x20, x21, lsl #3]   // TlsDtv::modules[module]
+  ldr x21, [x20, x21, lsl #3]   // TlsDtv::modules[module_id]
   cbz x21, .fallback
   add x0, x21, x22
   sub x0, x0, x19

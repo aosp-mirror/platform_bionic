@@ -41,6 +41,12 @@ DEFINE_IFUNC_FOR(memchr) {
     }
 }
 
+typedef void* memcmp_func(void*, const void*, size_t);
+DEFINE_IFUNC_FOR(memcmp) {
+    // TODO: enable the SVE version.
+    RETURN_FUNC(memcmp_func, __memcmp_aarch64);
+}
+
 typedef void* memcpy_func(void*, const void*, size_t);
 DEFINE_IFUNC_FOR(memcpy) {
     if (arg->_hwcap & HWCAP_ASIMD) {
@@ -61,11 +67,8 @@ DEFINE_IFUNC_FOR(memmove) {
 
 typedef int stpcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(stpcpy) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
-        RETURN_FUNC(stpcpy_func, __stpcpy_aarch64_mte);
-    } else {
-        RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
-    }
+    // TODO: enable the SVE version.
+    RETURN_FUNC(stpcpy_func, __stpcpy_aarch64);
 }
 
 typedef char* strchr_func(const char*, int);
@@ -88,20 +91,14 @@ DEFINE_IFUNC_FOR(strchrnul) {
 
 typedef int strcmp_func(const char*, const char*);
 DEFINE_IFUNC_FOR(strcmp) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
-        RETURN_FUNC(strcmp_func, __strcmp_aarch64_mte);
-    } else {
-        RETURN_FUNC(strcmp_func, __strcmp_aarch64);
-    }
+    // TODO: enable the SVE version.
+    RETURN_FUNC(strcmp_func, __strcmp_aarch64);
 }
 
 typedef int strcpy_func(char*, const char*);
 DEFINE_IFUNC_FOR(strcpy) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
-        RETURN_FUNC(strcpy_func, __strcpy_aarch64_mte);
-    } else {
-        RETURN_FUNC(strcpy_func, __strcpy_aarch64);
-    }
+    // TODO: enable the SVE version.
+    RETURN_FUNC(strcpy_func, __strcpy_aarch64);
 }
 
 typedef size_t strlen_func(const char*);
@@ -115,11 +112,14 @@ DEFINE_IFUNC_FOR(strlen) {
 
 typedef int strncmp_func(const char*, const char*, int);
 DEFINE_IFUNC_FOR(strncmp) {
-    if (arg->_hwcap2 & HWCAP2_MTE) {
-        RETURN_FUNC(strncmp_func, __strncmp_aarch64_mte);
-    } else {
-        RETURN_FUNC(strncmp_func, __strncmp_aarch64);
-    }
+    // TODO: enable the SVE version.
+    RETURN_FUNC(strncmp_func, __strncmp_aarch64);
+}
+
+typedef size_t strnlen_func(const char*);
+DEFINE_IFUNC_FOR(strnlen) {
+    // TODO: enable the SVE version.
+    RETURN_FUNC(strnlen_func, __strnlen_aarch64);
 }
 
 typedef char* strrchr_func(const char*, int);

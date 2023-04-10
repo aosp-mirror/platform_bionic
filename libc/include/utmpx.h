@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,44 +28,76 @@
 
 #pragma once
 
+/**
+ * @file utmpx.h
+ * @brief No-op implementation of POSIX login records.
+ */
+
 #include <sys/cdefs.h>
+#include <sys/types.h>
+#include <time.h>
 
-#if __ANDROID_API__ < 21
+#define EMPTY         0
+#define RUN_LVL       1
+#define BOOT_TIME     2
+#define NEW_TIME      3
+#define OLD_TIME      4
+#define INIT_PROCESS  5
+#define LOGIN_PROCESS 6
+#define USER_PROCESS  7
+#define DEAD_PROCESS  8
+#define ACCOUNTING    9
 
-#include <errno.h>
-#include <sys/mman.h>
-#include <unistd.h>
+struct utmpx {
+  short ut_type;
+  pid_t ut_pid;
+  char ut_line[32];
+  char ut_id[4];
+  char ut_user[32];
+  char ut_host[256];
+
+  struct {
+    short e_termination;
+    short e_exit;
+  } ut_exit;
+
+  long ut_session;
+  struct timeval ut_tv;
+
+  int32_t ut_addr_v6[4];
+  char unused[20];
+};
 
 __BEGIN_DECLS
 
-/*
- * While this was never an inline, this function alone has caused most of the
- * bug reports related to _FILE_OFFSET_BITS=64. Providing an inline for it
- * should allow a lot more code to build with _FILE_OFFSET_BITS=64 when
- * targeting pre-L.
+/**
+ * Does nothing.
  */
-static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
-                             off64_t __offset) __RENAME(mmap64);
-static __inline void* mmap64(void* __addr, size_t __size, int __prot, int __flags, int __fd,
-                             off64_t __offset) {
-  const int __mmap2_shift = 12; // 2**12 == 4096
-  if (__offset < 0 || (__offset & ((1UL << __mmap2_shift) - 1)) != 0) {
-    errno = EINVAL;
-    return MAP_FAILED;
-  }
+void setutxent(void) __RENAME(setutent);
 
-  // prevent allocations large enough for `end - start` to overflow
-  size_t __rounded = __BIONIC_ALIGN(__size, PAGE_SIZE);
-  if (__rounded < __size || __rounded > PTRDIFF_MAX) {
-    errno = ENOMEM;
-    return MAP_FAILED;
-  }
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable getutxent(void) __RENAME(getutent);
 
-  extern void* __mmap2(void* __addr, size_t __size, int __prot, int __flags, int __fd,
-                       size_t __offset);
-  return __mmap2(__addr, __size, __prot, __flags, __fd, __offset >> __mmap2_shift);
-}
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable getutxid(const struct utmpx* _Nonnull __entry) __RENAME(getutent);
+
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable getutxline(const struct utmpx* _Nonnull __entry) __RENAME(getutent);
+
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable pututxline(const struct utmpx* _Nonnull __entry) __RENAME(pututline);
+
+/**
+ * Does nothing.
+ */
+void endutxent(void) __RENAME(endutent);
 
 __END_DECLS
-
-#endif

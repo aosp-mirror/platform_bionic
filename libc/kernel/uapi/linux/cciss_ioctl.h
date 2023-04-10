@@ -47,7 +47,7 @@ typedef struct _IOCTL_Command_struct {
   RequestBlock_struct Request;
   ErrorInfo_struct error_info;
   WORD buf_size;
-  BYTE __user * buf;
+  BYTE  * buf;
 } IOCTL_Command_struct;
 typedef struct _BIG_IOCTL_Command_struct {
   LUNAddr_struct LUN_info;
@@ -55,7 +55,7 @@ typedef struct _BIG_IOCTL_Command_struct {
   ErrorInfo_struct error_info;
   DWORD malloc_size;
   DWORD buf_size;
-  BYTE __user * buf;
+  BYTE  * buf;
 } BIG_IOCTL_Command_struct;
 typedef struct _LogvolInfo_struct {
   __u32 LunID;

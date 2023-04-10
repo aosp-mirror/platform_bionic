@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,23 +26,17 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <gtest/gtest.h>
 
-/**
- * @file legacy_sys_statvfs_inlines.h
- * @brief Inline definitions of statvfs/fstatvfs for old API levels.
- */
+#include <utmpx.h>
 
-#include <sys/cdefs.h>
-
-#if __ANDROID_API__ < 21
-
-#define __BIONIC_NEED_STATVFS64_INLINES
-#if __ANDROID_API__ < 19
-#define __BIONIC_NEED_STATVFS_INLINES
-#endif
-
-#define __BIONIC_SYS_STATVFS_INLINE static __inline
-#include <bits/sys_statvfs_inlines.h>
-
-#endif
+TEST(utmpx, smoke) {
+  // Our utmpx "implementation" just calls the utmp no-op functions.
+  setutxent();
+  utmpx empty = {.ut_type = EMPTY};
+  ASSERT_EQ(NULL, getutxent());
+  ASSERT_EQ(NULL, getutxid(&empty));
+  ASSERT_EQ(NULL, getutxline(&empty));
+  endutxent();
+  ASSERT_EQ(NULL, pututxline(&empty));
+}

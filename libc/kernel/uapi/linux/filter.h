@@ -31,7 +31,7 @@ struct sock_filter {
 };
 struct sock_fprog {
   unsigned short len;
-  struct sock_filter __user * filter;
+  struct sock_filter  * filter;
 };
 #define BPF_RVAL(code) ((code) & 0x18)
 #define BPF_A 0x10

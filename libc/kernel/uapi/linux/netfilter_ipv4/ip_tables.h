@@ -112,7 +112,7 @@ struct ipt_replace {
   unsigned int hook_entry[NF_INET_NUMHOOKS];
   unsigned int underflow[NF_INET_NUMHOOKS];
   unsigned int num_counters;
-  struct xt_counters __user * counters;
+  struct xt_counters  * counters;
   struct ipt_entry entries[];
 };
 struct ipt_get_entries {

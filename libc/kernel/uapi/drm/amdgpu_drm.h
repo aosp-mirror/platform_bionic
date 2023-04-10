@@ -73,6 +73,8 @@ extern "C" {
 #define AMDGPU_GEM_CREATE_ENCRYPTED (1 << 10)
 #define AMDGPU_GEM_CREATE_PREEMPTIBLE (1 << 11)
 #define AMDGPU_GEM_CREATE_DISCARDABLE (1 << 12)
+#define AMDGPU_GEM_CREATE_COHERENT (1 << 13)
+#define AMDGPU_GEM_CREATE_UNCACHED (1 << 14)
 struct drm_amdgpu_gem_create_in {
   __u64 bo_size;
   __u64 alignment;

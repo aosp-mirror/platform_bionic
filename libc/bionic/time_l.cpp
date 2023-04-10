@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,18 +26,9 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <time.h>
+//#include <xlocale.h>
 
-/**
- * @file legacy_fenv_inlines_arm.h
- * @brief Inline ARM-specific definitions of fenv for old API levels.
- */
-
-#include <sys/cdefs.h>
-
-#if __ANDROID_API__ < 21 && defined(__arm__)
-
-#define __BIONIC_FENV_INLINE static __inline
-#include <bits/fenv_inlines_arm.h>
-
-#endif
+char* strptime_l(const char* buf, const char* fmt, struct tm* tm, locale_t) {
+  return strptime(buf, fmt, tm);
+}
