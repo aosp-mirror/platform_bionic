@@ -2146,10 +2146,6 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["crt_and_memtag_defaults"],
     system_shared_libs: [],
-
-    conlyflags: [
-        "-mllvm -disable-check-noreturn-call",
-    ]
 }
 
 cc_defaults {
