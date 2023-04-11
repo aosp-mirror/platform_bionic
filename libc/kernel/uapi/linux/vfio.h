@@ -390,7 +390,7 @@ struct vfio_iommu_type1_dma_map {
 struct vfio_bitmap {
   __u64 pgsize;
   __u64 size;
-  __u64 __user * data;
+  __u64  * data;
 };
 struct vfio_iommu_type1_dma_unmap {
   __u32 argsz;

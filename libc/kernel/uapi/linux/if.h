@@ -130,14 +130,14 @@ struct if_settings {
   unsigned int type;
   unsigned int size;
   union {
-    raw_hdlc_proto __user * raw_hdlc;
-    cisco_proto __user * cisco;
-    fr_proto __user * fr;
-    fr_proto_pvc __user * fr_pvc;
-    fr_proto_pvc_info __user * fr_pvc_info;
-    x25_hdlc_proto __user * x25;
-    sync_serial_settings __user * sync;
-    te1_settings __user * te1;
+    raw_hdlc_proto  * raw_hdlc;
+    cisco_proto  * cisco;
+    fr_proto  * fr;
+    fr_proto_pvc  * fr_pvc;
+    fr_proto_pvc_info  * fr_pvc_info;
+    x25_hdlc_proto  * x25;
+    sync_serial_settings  * sync;
+    te1_settings  * te1;
   } ifs_ifsu;
 };
 #if __UAPI_DEF_IF_IFREQ
@@ -158,7 +158,7 @@ struct ifreq {
     struct ifmap ifru_map;
     char ifru_slave[IFNAMSIZ];
     char ifru_newname[IFNAMSIZ];
-    void __user * ifru_data;
+    void  * ifru_data;
     struct if_settings ifru_settings;
   } ifr_ifru;
 };
@@ -184,8 +184,8 @@ struct ifreq {
 struct ifconf {
   int ifc_len;
   union {
-    char __user * ifcu_buf;
-    struct ifreq __user * ifcu_req;
+    char  * ifcu_buf;
+    struct ifreq  * ifcu_req;
   } ifc_ifcu;
 };
 #endif
