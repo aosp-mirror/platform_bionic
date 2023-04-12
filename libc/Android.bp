@@ -2147,10 +2147,6 @@ cc_defaults {
     name: "crt_defaults",
     defaults: ["crt_and_memtag_defaults"],
     system_shared_libs: [],
-
-    conlyflags: [
-        "-mllvm -disable-check-noreturn-call",
-    ]
 }
 
 cc_defaults {
@@ -2183,6 +2179,8 @@ cc_object {
     srcs: ["arch-common/bionic/crtbrand.S"],
 
     defaults: ["crt_so_defaults"],
+    // crtbrand is an intermediate artifact, not a final CRT object.
+    exclude_from_ndk_sysroot: true,
 }
 
 cc_object {
