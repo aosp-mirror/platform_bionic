@@ -165,8 +165,10 @@ TEST(semaphore, sem_clockwait) {
 TEST_F(semaphore_DeathTest, sem_timedwait_null_timeout) {
   sem_t s;
   ASSERT_EQ(0, sem_init(&s, 0, 0));
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EXIT(sem_timedwait(&s, nullptr), testing::KilledBySignal(SIGSEGV), "");
+#pragma clang diagnostic pop
 }
 
 TEST(semaphore, sem_getvalue) {
