@@ -244,7 +244,7 @@ ndk_library {
 
 genrule {
     name: "libdl.arm.map",
-    out: ["libdl.arm.map"],
+    out: ["libdl.arm.map.txt"],
     srcs: ["libdl.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -252,7 +252,7 @@ genrule {
 
 genrule {
     name: "libdl.arm64.map",
-    out: ["libdl.arm64.map"],
+    out: ["libdl.arm64.map.txt"],
     srcs: ["libdl.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -260,7 +260,7 @@ genrule {
 
 genrule {
     name: "libdl.riscv64.map",
-    out: ["libdl.riscv64.map"],
+    out: ["libdl.riscv64.map.txt"],
     srcs: ["libdl.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -268,7 +268,7 @@ genrule {
 
 genrule {
     name: "libdl.x86.map",
-    out: ["libdl.x86.map"],
+    out: ["libdl.x86.map.txt"],
     srcs: ["libdl.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -276,7 +276,7 @@ genrule {
 
 genrule {
     name: "libdl.x86_64.map",
-    out: ["libdl.x86_64.map"],
+    out: ["libdl.x86_64.map.txt"],
     srcs: ["libdl.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
