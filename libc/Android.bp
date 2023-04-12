@@ -1318,7 +1318,7 @@ cc_library_static {
 // ========================================================
 
 genrule {
-    name: "syscalls-arm.S",
+    name: "syscalls-arm",
     out: ["syscalls-arm.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1326,7 +1326,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-arm64.S",
+    name: "syscalls-arm64",
     out: ["syscalls-arm64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1334,7 +1334,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-riscv64.S",
+    name: "syscalls-riscv64",
     out: ["syscalls-riscv64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1342,7 +1342,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86.S",
+    name: "syscalls-x86",
     out: ["syscalls-x86.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1350,7 +1350,7 @@ genrule {
 }
 
 genrule {
-    name: "syscalls-x86_64.S",
+    name: "syscalls-x86_64",
     out: ["syscalls-x86_64.S"],
     srcs: ["SYSCALLS.TXT"],
     tools: ["gensyscalls"],
@@ -1362,19 +1362,19 @@ cc_library_static {
     srcs: ["bionic/__set_errno.cpp"],
     arch: {
         arm: {
-            srcs: [":syscalls-arm.S"],
+            srcs: [":syscalls-arm"],
         },
         arm64: {
-            srcs: [":syscalls-arm64.S"],
+            srcs: [":syscalls-arm64"],
         },
         riscv64: {
-            srcs: [":syscalls-riscv64.S"],
+            srcs: [":syscalls-riscv64"],
         },
         x86: {
-            srcs: [":syscalls-x86.S"],
+            srcs: [":syscalls-x86"],
         },
         x86_64: {
-            srcs: [":syscalls-x86_64.S"],
+            srcs: [":syscalls-x86_64"],
         },
     },
     name: "libc_syscalls",
@@ -1837,7 +1837,7 @@ cc_library {
 
 genrule {
     name: "libc.arm.map",
-    out: ["libc.arm.map"],
+    out: ["libc.arm.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -1845,7 +1845,7 @@ genrule {
 
 genrule {
     name: "libc.arm64.map",
-    out: ["libc.arm64.map"],
+    out: ["libc.arm64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -1853,7 +1853,7 @@ genrule {
 
 genrule {
     name: "libc.riscv64.map",
-    out: ["libc.riscv64.map"],
+    out: ["libc.riscv64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -1861,7 +1861,7 @@ genrule {
 
 genrule {
     name: "libc.x86.map",
-    out: ["libc.x86.map"],
+    out: ["libc.x86.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -1869,7 +1869,7 @@ genrule {
 
 genrule {
     name: "libc.x86_64.map",
-    out: ["libc.x86_64.map"],
+    out: ["libc.x86_64.map.txt"],
     srcs: ["libc.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
@@ -2074,7 +2074,7 @@ cc_library {
 
 genrule {
     name: "libstdc++.arm.map",
-    out: ["libstdc++.arm.map"],
+    out: ["libstdc++.arm.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm $(in) $(out)",
@@ -2082,7 +2082,7 @@ genrule {
 
 genrule {
     name: "libstdc++.arm64.map",
-    out: ["libstdc++.arm64.map"],
+    out: ["libstdc++.arm64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) arm64 $(in) $(out)",
@@ -2090,7 +2090,7 @@ genrule {
 
 genrule {
     name: "libstdc++.riscv64.map",
-    out: ["libstdc++.riscv64.map"],
+    out: ["libstdc++.riscv64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) riscv64 $(in) $(out)",
@@ -2098,7 +2098,7 @@ genrule {
 
 genrule {
     name: "libstdc++.x86.map",
-    out: ["libstdc++.x86.map"],
+    out: ["libstdc++.x86.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86 $(in) $(out)",
@@ -2106,7 +2106,7 @@ genrule {
 
 genrule {
     name: "libstdc++.x86_64.map",
-    out: ["libstdc++.x86_64.map"],
+    out: ["libstdc++.x86_64.map.txt"],
     srcs: ["libstdc++.map.txt"],
     tools: ["generate-version-script"],
     cmd: "$(location generate-version-script) x86_64 $(in) $(out)",
