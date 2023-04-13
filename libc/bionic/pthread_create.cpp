@@ -133,14 +133,14 @@ static void __init_shadow_call_stack(pthread_internal_t* thread __unused) {
   size_t scs_offset =
       (getpid() == 1) ? 0 : (arc4random_uniform(SCS_GUARD_REGION_SIZE / SCS_SIZE - 1) * SCS_SIZE);
 
-  // Make the stack readable and writable and store its address in x18.
-  // This is deliberately the only place where the address is stored.
+  // Make the stack read-write, and store its address in the register we're using as the shadow
+  // stack pointer. This is deliberately the only place where the address is stored.
   char* scs = scs_aligned_guard_region + scs_offset;
   mprotect(scs, SCS_SIZE, PROT_READ | PROT_WRITE);
 #if defined(__aarch64__)
   __asm__ __volatile__("mov x18, %0" ::"r"(scs));
 #elif defined(__riscv)
-  __asm__ __volatile__("mv x18, %0" ::"r"(scs));
+  __asm__ __volatile__("mv gp, %0" ::"r"(scs));
 #endif
 #endif
 }
