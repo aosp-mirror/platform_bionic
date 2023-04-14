@@ -541,6 +541,10 @@ cc_test_library {
 
                 // unsupported relocation type 37
                 "ifunc_test.cpp",
+
+                // musl #defines utmp to utmpx, causing a collision with
+                // utmpx_test.cpp
+                "utmp_test.cpp",
             ],
         },
     },
