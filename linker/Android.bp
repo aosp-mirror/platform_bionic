@@ -374,6 +374,11 @@ cc_binary {
     ],
 
     symlinks: ["linker_asan"],
+    arch: {
+        arm64: {
+            symlinks: ["linker_hwasan"],
+        },
+    },
     multilib: {
         lib64: {
             suffix: "64",

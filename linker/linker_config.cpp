@@ -463,6 +463,7 @@ class Properties {
 bool Config::read_binary_config(const char* ld_config_file_path,
                                       const char* binary_realpath,
                                       bool is_asan,
+                                      bool is_hwasan,
                                       const Config** config,
                                       std::string* error_msg) {
   g_config.clear();
@@ -579,6 +580,8 @@ bool Config::read_binary_config(const char* ld_config_file_path,
     // these are affected by is_asan flag
     if (is_asan) {
       property_name_prefix += ".asan";
+    } else if (is_hwasan) {
+      property_name_prefix += ".hwasan";
     }
 
     // search paths are resolved (canonicalized). This is required mainly for
