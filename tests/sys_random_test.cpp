@@ -48,6 +48,8 @@ TEST(sys_random, getentropy) {
 }
 
 TEST(sys_random, getentropy_EFAULT) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
 #if defined(HAVE_SYS_RANDOM)
   errno = 0;
   ASSERT_EQ(-1, getentropy(nullptr, 1));
@@ -55,6 +57,7 @@ TEST(sys_random, getentropy_EFAULT) {
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif
+#pragma clang diagnostic pop
 }
 
 TEST(sys_random, getentropy_EIO) {
@@ -84,6 +87,8 @@ TEST(sys_random, getrandom) {
 }
 
 TEST(sys_random, getrandom_EFAULT) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
 #if defined(HAVE_SYS_RANDOM)
   errno = 0;
   ASSERT_EQ(-1, getrandom(nullptr, 256, 0));
@@ -91,6 +96,7 @@ TEST(sys_random, getrandom_EFAULT) {
 #else
   GTEST_SKIP() << "<sys/random.h> not available";
 #endif
+#pragma clang diagnostic pop
 }
 
 TEST(sys_random, getrandom_EINVAL) {
