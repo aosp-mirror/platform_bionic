@@ -107,7 +107,7 @@ feature >= Android M but still works on older releases.)
 ## Correct soname/path handling (Available in API level >= 23)
 
 The dynamic linker now understands the difference
-between a library’s soname and its path  (public bug
+between a library’s soname and its path (public bug
 https://code.google.com/p/android/issues/detail?id=6670). API level 23
 is the first release where search by soname is implemented. Earlier
 releases would assume that the basename of the library was the soname,
@@ -326,12 +326,12 @@ libraries as the location may change from device to device.
 
 ## Missing SONAME (Enforced for API level >= 23)
 
-Each ELF shared object (“native library”) must have a SONAME (Shared
-Object Name) attribute. The NDK toolchain adds this attribute by default,
-so its absence indicates either a misconfigured alternative toolchain
-or a misconfiguration in your build system. A missing SONAME may lead
-to runtime issues such as the wrong library being loaded: the filename
-is used instead when this attribute is missing.
+Each ELF shared object (“native library”) must have a SONAME
+(Shared Object Name) attribute. The NDK build systems add this
+attribute by default, so its absence (or an incorrect soname) indicates
+a misconfiguration in your build system. A missing SONAME may lead to
+runtime issues such as the wrong library being loaded: the filename is
+used instead when this attribute is missing.
 
 ```
 $ readelf --dynamic libWithSoName.so | grep SONAME
@@ -346,7 +346,7 @@ the library you were expecting.
 *Resolution*: the current NDK generates the correct SONAME by
 default. Ensure you're using the current NDK and that you haven't
 configured your build system to generate incorrect SONAME entries (using
-the -soname linker option).
+the `-soname` linker option).
 
 ## `__register_atfork` (Available in API level >= 23)
 
