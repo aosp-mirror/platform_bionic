@@ -1852,8 +1852,8 @@ cc_library {
         hwaddress: true,
     },
     enabled: false,
-    arch: {
-        arm64: {
+    target: {
+        android_arm64: {
             enabled: true,
         },
     },
