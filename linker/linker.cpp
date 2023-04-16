@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/auxv.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/vfs.h>
@@ -132,6 +133,36 @@ static const char* const kAsanDefaultLdPaths[] = {
   kVendorLibDir,
   nullptr
 };
+
+#if defined(__aarch64__)
+static const char* const kHwasanSystemLibDir  = "/system/lib64/hwasan";
+static const char* const kHwasanOdmLibDir     = "/odm/lib64/hwasan";
+static const char* const kHwasanVendorLibDir  = "/vendor/lib64/hwasan";
+
+// HWASan is only supported on aarch64.
+static const char* const kHwsanDefaultLdPaths[] = {
+  kHwasanSystemLibDir,
+  kSystemLibDir,
+  kHwasanOdmLibDir,
+  kOdmLibDir,
+  kHwasanVendorLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Is HWASAN enabled?
+static bool g_is_hwasan = false;
+#else
+static const char* const kHwsanDefaultLdPaths[] = {
+  kSystemLibDir,
+  kOdmLibDir,
+  kVendorLibDir,
+  nullptr
+};
+
+// Never any HWASan. Help the compiler remove the code we don't need.
+constexpr bool g_is_hwasan = false;
+#endif
 
 // Is ASAN enabled?
 static bool g_is_asan = false;
@@ -2134,26 +2165,46 @@ void* do_dlopen(const char* name, int flags,
   }
   // End Workaround for dlopen(/system/lib/<soname>) when .so is in /apex.
 
-  std::string asan_name_holder;
+  std::string translated_name_holder;
 
+  assert(!g_is_hwasan || !g_is_asan);
   const char* translated_name = name;
   if (g_is_asan && translated_name != nullptr && translated_name[0] == '/') {
     char original_path[PATH_MAX];
     if (realpath(name, original_path) != nullptr) {
-      asan_name_holder = std::string(kAsanLibDirPrefix) + original_path;
-      if (file_exists(asan_name_holder.c_str())) {
+      translated_name_holder = std::string(kAsanLibDirPrefix) + original_path;
+      if (file_exists(translated_name_holder.c_str())) {
         soinfo* si = nullptr;
         if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
           PRINT("linker_asan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
-                asan_name_holder.c_str());
+                translated_name_holder.c_str());
         } else {
           PRINT("linker_asan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
-          translated_name = asan_name_holder.c_str();
+          translated_name = translated_name_holder.c_str();
+        }
+      }
+    }
+  } else if (g_is_hwasan && translated_name != nullptr && translated_name[0] == '/') {
+    char original_path[PATH_MAX];
+    if (realpath(name, original_path) != nullptr) {
+      // Keep this the same as CreateHwasanPath in system/linkerconfig/modules/namespace.cc.
+      std::string path(original_path);
+      auto slash = path.rfind('/');
+      if (slash != std::string::npos || slash != path.size() - 1) {
+        translated_name_holder = path.substr(0, slash) + "/hwasan" + path.substr(slash);
+      }
+      if (!translated_name_holder.empty() && file_exists(translated_name_holder.c_str())) {
+        soinfo* si = nullptr;
+        if (find_loaded_library_by_realpath(ns, original_path, true, &si)) {
+          PRINT("linker_hwasan dlopen NOT translating \"%s\" -> \"%s\": library already loaded", name,
+                translated_name_holder.c_str());
+        } else {
+          PRINT("linker_hwasan dlopen translating \"%s\" -> \"%s\"", name, translated_name);
+          translated_name = translated_name_holder.c_str();
         }
       }
     }
   }
-
   ProtectedDataGuard guard;
   soinfo* si = find_library(ns, translated_name, flags, extinfo, caller);
   loading_trace.End();
@@ -3335,9 +3386,10 @@ bool soinfo::protect_relro() {
   return true;
 }
 
-static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan) {
+static std::vector<android_namespace_t*> init_default_namespace_no_config(bool is_asan, bool is_hwasan) {
   g_default_namespace.set_isolated(false);
-  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : kDefaultLdPaths;
+  auto default_ld_paths = is_asan ? kAsanDefaultLdPaths : (
+    is_hwasan ? kHwsanDefaultLdPaths : kDefaultLdPaths);
 
   char real_path[PATH_MAX];
   std::vector<std::string> ld_default_paths;
@@ -3441,6 +3493,7 @@ static std::string get_ld_config_file_path(const char* executable_path) {
   return kLdConfigFilePath;
 }
 
+
 std::vector<android_namespace_t*> init_default_namespaces(const char* executable_path) {
   g_default_namespace.set_name("(default)");
 
@@ -3454,6 +3507,16 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
               (strcmp(bname, "linker_asan") == 0 ||
                strcmp(bname, "linker_asan64") == 0);
 
+#if defined(__aarch64__)
+  // HWASan is only supported on AArch64.
+  // The AT_SECURE restriction is because this is a debug feature that does
+  // not need to work on secure binaries, it doesn't hurt to disallow the
+  // environment variable for them, as it impacts the program execution.
+  char* hwasan_env = getenv("LD_HWASAN");
+  g_is_hwasan = (bname != nullptr &&
+              strcmp(bname, "linker_hwasan64") == 0) ||
+              (hwasan_env != nullptr && !getauxval(AT_SECURE) && strcmp(hwasan_env, "1") == 0);
+#endif
   const Config* config = nullptr;
 
   {
@@ -3461,7 +3524,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
     INFO("[ Reading linker config \"%s\" ]", ld_config_file_path.c_str());
     ScopedTrace trace(("linker config " + ld_config_file_path).c_str());
     std::string error_msg;
-    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan,
+    if (!Config::read_binary_config(ld_config_file_path.c_str(), executable_path, g_is_asan, g_is_hwasan,
                                     &config, &error_msg)) {
       if (!error_msg.empty()) {
         DL_WARN("Warning: couldn't read '%s' for '%s' (using default configuration instead): %s",
@@ -3472,7 +3535,7 @@ std::vector<android_namespace_t*> init_default_namespaces(const char* executable
   }
 
   if (config == nullptr) {
-    return init_default_namespace_no_config(g_is_asan);
+    return init_default_namespace_no_config(g_is_asan, g_is_hwasan);
   }
 
   const auto& namespace_configs = config->namespace_configs();

@@ -1674,13 +1674,12 @@ filegroup {
 // ========================================================
 // libc.a + libc.so
 // ========================================================
-cc_library {
+cc_defaults {
     defaults: [
         "libc_defaults",
         "libc_native_allocator_defaults",
     ],
-    name: "libc",
-    static_ndk_lib: true,
+    name: "libc_library_defaults",
     product_variables: {
         platform_sdk_version: {
             asflags: ["-DPLATFORM_SDK_VERSION=%d"],
@@ -1807,20 +1806,7 @@ cc_library {
         },
     },
 
-    stubs: {
-        symbol_file: "libc.map.txt",
-        versions: [
-            "29",
-            "R",
-            "current",
-        ],
-    },
-    llndk: {
-        symbol_file: "libc.map.txt",
-        export_headers_as_system: true,
-        export_preprocessed_headers: ["include"],
-        export_llndk_headers: ["libc_llndk_headers"],
-    },
+
     apex_available: [
         "//apex_available:platform",
         "com.android.runtime",
@@ -1833,6 +1819,55 @@ cc_library {
             },
         },
     },
+}
+
+cc_library {
+    name: "libc",
+      defaults: [
+        "libc_library_defaults",
+    ],
+    stubs: {
+        symbol_file: "libc.map.txt",
+        versions: [
+            "29",
+            "R",
+            "current",
+        ],
+    },
+    static_ndk_lib: true,
+    llndk: {
+        symbol_file: "libc.map.txt",
+        export_headers_as_system: true,
+        export_preprocessed_headers: ["include"],
+        export_llndk_headers: ["libc_llndk_headers"],
+    },
+}
+
+cc_library {
+    name: "libc_hwasan",
+      defaults: [
+        "libc_library_defaults",
+    ],
+    sanitize: {
+        hwaddress: true,
+    },
+    enabled: false,
+    target: {
+        android_arm64: {
+            enabled: true,
+        },
+    },
+    stem: "libc",
+    relative_install_path: "hwasan",
+    // We don't really need the stubs, but this needs to stay to trigger the
+    // symlink logic in soong.
+    stubs: {
+        symbol_file: "libc.map.txt",
+    },
+    native_bridge_supported: false,
+    // It is never correct to depend on this directly. This is only
+    // needed for the runtime apex, and in base_system.mk.
+    visibility: ["//bionic/apex"],
 }
 
 genrule {
