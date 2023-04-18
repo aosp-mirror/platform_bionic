@@ -110,7 +110,8 @@ class pthread_internal_t {
   // are actually used.
   //
   // This address is only used to deallocate the shadow call stack on thread
-  // exit; the address of the stack itself is stored only in the x18 register.
+  // exit; the address of the stack itself is stored only in the register used
+  // as the shadow stack pointer (x18 on arm64, gp on riscv64).
   //
   // Because the protection offered by SCS relies on the secrecy of the stack
   // address, storing the address here weakens the protection, but only
@@ -119,22 +120,24 @@ class pthread_internal_t {
   // to other allocations), but not the stack itself, which is <0.1% of the size
   // of the guard region.
   //
-  // longjmp()/setjmp() don't store all the bits of x18, only the bottom bits
-  // covered by SCS_MASK. Since longjmp()/setjmp() between different threads is
-  // undefined behavior (and unsupported on Android), we can retrieve the high
-  // bits of x18 from the current value in x18 --- all the jmp_buf needs to store
-  // is where exactly the shadow stack pointer is in the thread's shadow stack:
-  // the bottom bits of x18.
+  // longjmp()/setjmp() don't store all the bits of the shadow stack pointer,
+  // only the bottom bits covered by SCS_MASK. Since longjmp()/setjmp() between
+  // different threads is undefined behavior (and unsupported on Android), we
+  // can retrieve the high bits of the shadow stack pointer from the current
+  // value in the register --- all the jmp_buf needs to store is where exactly
+  // the shadow stack pointer is *within* the thread's shadow stack: the bottom
+  // bits of the register.
   //
   // There are at least two other options for discovering the start address of
   // the guard region on thread exit, but they are not as simple as storing in
   // TLS.
   //
-  // 1) Derive it from the value of the x18 register. This is only possible in
-  //    processes that do not contain legacy code that might clobber x18,
-  //    therefore each process must declare early during process startup whether
-  //    it might load legacy code.
-  //    TODO: riscv64 has no legacy code, so we can actually go this route there!
+  // 1) Derive it from the current value of the shadow stack pointer. This is
+  //    only possible in processes that do not contain legacy code that might
+  //    clobber x18 on arm64, therefore each process must declare early during
+  //    process startup whether it might load legacy code.
+  //    TODO: riscv64 has no legacy code, so we can actually go this route
+  //    there, but hopefully we'll actually get the Zsslpcfi extension instead.
   // 2) Mark the guard region as such using prctl(PR_SET_VMA_ANON_NAME) and
   //    discover its address by reading /proc/self/maps. One issue with this is
   //    that reading /proc/self/maps can race with allocations, so we may need

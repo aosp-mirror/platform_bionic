@@ -47,14 +47,33 @@
 #include <sys/cdefs.h>
 
 #if defined(__aarch64__)
+/**
+ * The size in words of an arm64 jmp_buf. Room for callee-saved registers,
+ * including floating point, stack pointer and program counter, various
+ * internal implementation details, and leaving some free space.
+ *
+ * Coincidentally matches OpenBSD, though they also save/restore the
+ * floating point status register too.
+ */
 #define _JBLEN 32
 #elif defined(__arm__)
+/** The size in words of an arm32 jmp_buf. Inherited from OpenBSD. */
 #define _JBLEN 64
 #elif defined(__i386__)
+/** The size in words of an x86 jmp_buf. Inherited from OpenBSD. */
 #define _JBLEN 10
 #elif defined(__riscv)
+/**
+ * The size in words of a riscv64 jmp_buf. Room for callee-saved registers,
+ * including floating point, stack pointer and program counter, various
+ * internal implementation details, and leaving some free space.
+ *
+ * Coincidentally matches OpenBSD, though they also save/restore the
+ * floating point status register too.
+ */
 #define _JBLEN 32
 #elif defined(__x86_64__)
+/** The size in words of an x86-64 jmp_buf. Inherited from OpenBSD. */
 #define _JBLEN 11
 #endif
 
