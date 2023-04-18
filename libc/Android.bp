@@ -1863,6 +1863,7 @@ cc_library {
     // symlink logic in soong.
     stubs: {
         symbol_file: "libc.map.txt",
+        versions: ["current"],
     },
     native_bridge_supported: false,
     // It is never correct to depend on this directly. This is only
