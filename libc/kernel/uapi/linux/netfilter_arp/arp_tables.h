@@ -98,7 +98,7 @@ struct arpt_replace {
   unsigned int hook_entry[NF_ARP_NUMHOOKS];
   unsigned int underflow[NF_ARP_NUMHOOKS];
   unsigned int num_counters;
-  struct xt_counters __user * counters;
+  struct xt_counters  * counters;
   struct arpt_entry entries[];
 };
 struct arpt_get_entries {

@@ -239,7 +239,7 @@ typedef struct _drm_mga_blit {
 #define MGA_PARAM_CARD_TYPE 2
 typedef struct drm_mga_getparam {
   int param;
-  void __user * value;
+  void  * value;
 } drm_mga_getparam_t;
 #ifdef __cplusplus
 }

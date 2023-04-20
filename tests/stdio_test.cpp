@@ -36,6 +36,7 @@
 
 #include <android-base/file.h>
 #include <android-base/silent_death_test.h>
+#include <android-base/strings.h>
 #include <android-base/test_utils.h>
 #include <android-base/unique_fd.h>
 
@@ -140,6 +141,22 @@ TEST(STDIO_TEST, tmpfile64) {
   fclose(fp);
 }
 
+TEST(STDIO_TEST, tmpfile_TMPDIR) {
+  TemporaryDir td;
+  setenv("TMPDIR", td.path, 1);
+
+  FILE* fp = tmpfile();
+  ASSERT_TRUE(fp != nullptr);
+
+  std::string fd_path = android::base::StringPrintf("/proc/self/fd/%d", fileno(fp));
+  char path[PATH_MAX];
+  ASSERT_GT(readlink(fd_path.c_str(), path, sizeof(path)), 0);
+  // $TMPDIR influenced where our temporary file ended up?
+  ASSERT_TRUE(android::base::StartsWith(path, td.path)) << path;
+  // And we used O_TMPFILE, right?
+  ASSERT_TRUE(android::base::EndsWith(path, " (deleted)")) << path;
+}
+
 TEST(STDIO_TEST, dprintf) {
   TemporaryFile tf;
 
@@ -190,6 +207,8 @@ TEST(STDIO_TEST, getdelim) {
 }
 
 TEST(STDIO_TEST, getdelim_invalid) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != nullptr);
 
@@ -206,6 +225,7 @@ TEST(STDIO_TEST, getdelim_invalid) {
   ASSERT_EQ(getdelim(&buffer, nullptr, ' ', fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
+#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, getdelim_directory) {
@@ -260,6 +280,8 @@ TEST(STDIO_TEST, getline) {
 }
 
 TEST(STDIO_TEST, getline_invalid) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   FILE* fp = tmpfile();
   ASSERT_TRUE(fp != nullptr);
 
@@ -276,6 +298,7 @@ TEST(STDIO_TEST, getline_invalid) {
   ASSERT_EQ(getline(&buffer, nullptr, fp), -1);
   ASSERT_EQ(EINVAL, errno);
   fclose(fp);
+#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, printf_ssize_t) {
@@ -1944,6 +1967,8 @@ TEST(STDIO_TEST, open_memstream) {
 
 TEST(STDIO_TEST, open_memstream_EINVAL) {
 #if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   char* p;
   size_t size;
 
@@ -1956,6 +1981,7 @@ TEST(STDIO_TEST, open_memstream_EINVAL) {
   errno = 0;
   ASSERT_EQ(nullptr, open_memstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "glibc is broken";
 #endif
@@ -2975,9 +3001,6 @@ TEST(STDIO_TEST, fwrite_int_overflow) {
 }
 
 TEST(STDIO_TEST, snprintf_b) {
-  // Our clang doesn't know about %b/%B yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   char buf[BUFSIZ];
   EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%b>", 5));
   EXPECT_STREQ("<101>", buf);
@@ -2989,13 +3012,9 @@ TEST(STDIO_TEST, snprintf_b) {
   EXPECT_STREQ("<0b10101010101010101010101010101010>", buf);
   EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
   EXPECT_STREQ("<0>", buf);
-#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, snprintf_B) {
-  // Our clang doesn't know about %b/%B yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   char buf[BUFSIZ];
   EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%B>", 5));
   EXPECT_STREQ("<101>", buf);
@@ -3007,13 +3026,9 @@ TEST(STDIO_TEST, snprintf_B) {
   EXPECT_STREQ("<0B10101010101010101010101010101010>", buf);
   EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#B>", 0));
   EXPECT_STREQ("<0>", buf);
-#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, swprintf_b) {
-  // Our clang doesn't know about %b/%B yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   wchar_t buf[BUFSIZ];
   EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%b>", 5));
   EXPECT_EQ(std::wstring(L"<101>"), buf);
@@ -3025,13 +3040,9 @@ TEST(STDIO_TEST, swprintf_b) {
   EXPECT_EQ(std::wstring(L"<0b10101010101010101010101010101010>"), buf);
   EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#b>", 0));
   EXPECT_EQ(std::wstring(L"<0>"), buf);
-#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, swprintf_B) {
-  // Our clang doesn't know about %b/%B yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   wchar_t buf[BUFSIZ];
   EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%B>", 5));
   EXPECT_EQ(std::wstring(L"<101>"), buf);
@@ -3043,7 +3054,6 @@ TEST(STDIO_TEST, swprintf_B) {
   EXPECT_EQ(std::wstring(L"<0B10101010101010101010101010101010>"), buf);
   EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#B>", 0));
   EXPECT_EQ(std::wstring(L"<0>"), buf);
-#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, scanf_i_decimal) {
@@ -3143,10 +3153,6 @@ TEST(STDIO_TEST, wscanf_i_binary) {
 }
 
 TEST(STDIO_TEST, scanf_b) {
-  // Our clang doesn't know about %b yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat"
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   int i;
   char ch;
   EXPECT_EQ(2, sscanf("<1012>", "<%b%c>", &i, &ch));
@@ -3159,14 +3165,9 @@ TEST(STDIO_TEST, scanf_b) {
   EXPECT_EQ(2, sscanf("-0b", "%i%c", &i, &ch));
   EXPECT_EQ(0, i);
   EXPECT_EQ('b', ch);
-#pragma clang diagnostic pop
 }
 
 TEST(STDIO_TEST, swscanf_b) {
-  // Our clang doesn't know about %b yet.
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wformat"
-#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
   int i;
   char ch;
   EXPECT_EQ(2, swscanf(L"<1012>", L"<%b%c>", &i, &ch));
@@ -3179,5 +3180,4 @@ TEST(STDIO_TEST, swscanf_b) {
   EXPECT_EQ(2, swscanf(L"-0b", L"%i%c", &i, &ch));
   EXPECT_EQ(0, i);
   EXPECT_EQ('b', ch);
-#pragma clang diagnostic pop
 }
