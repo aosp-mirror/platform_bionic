@@ -36,6 +36,7 @@
 
 #include <android-base/file.h>
 #include <android-base/silent_death_test.h>
+#include <android-base/strings.h>
 #include <android-base/test_utils.h>
 #include <android-base/unique_fd.h>
 
@@ -138,6 +139,22 @@ TEST(STDIO_TEST, tmpfile64) {
   FILE* fp = tmpfile64();
   ASSERT_TRUE(fp != nullptr);
   fclose(fp);
+}
+
+TEST(STDIO_TEST, tmpfile_TMPDIR) {
+  TemporaryDir td;
+  setenv("TMPDIR", td.path, 1);
+
+  FILE* fp = tmpfile();
+  ASSERT_TRUE(fp != nullptr);
+
+  std::string fd_path = android::base::StringPrintf("/proc/self/fd/%d", fileno(fp));
+  char path[PATH_MAX];
+  ASSERT_GT(readlink(fd_path.c_str(), path, sizeof(path)), 0);
+  // $TMPDIR influenced where our temporary file ended up?
+  ASSERT_TRUE(android::base::StartsWith(path, td.path)) << path;
+  // And we used O_TMPFILE, right?
+  ASSERT_TRUE(android::base::EndsWith(path, " (deleted)")) << path;
 }
 
 TEST(STDIO_TEST, dprintf) {
