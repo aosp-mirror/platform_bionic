@@ -3001,59 +3001,153 @@ TEST(STDIO_TEST, fwrite_int_overflow) {
 }
 
 TEST(STDIO_TEST, snprintf_b) {
+#if defined(__BIONIC__)
   char buf[BUFSIZ];
-  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%b>", 5));
+
+  uint8_t b = 5;
+  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%" PRIb8 ">", b));
   EXPECT_STREQ("<101>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08b>", 5));
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08" PRIb8 ">", b));
   EXPECT_STREQ("<00000101>", buf);
-  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%b>", 0xaaaaaaaa));
+
+  uint16_t s = 0xaaaa;
+  EXPECT_EQ(18, snprintf(buf, sizeof(buf), "<%" PRIb16 ">", s));
+  EXPECT_STREQ("<1010101010101010>", buf);
+  EXPECT_EQ(20, snprintf(buf, sizeof(buf), "<%#" PRIb16 ">", s));
+  EXPECT_STREQ("<0b1010101010101010>", buf);
+
+  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%" PRIb32 ">", 0xaaaaaaaa));
   EXPECT_STREQ("<10101010101010101010101010101010>", buf);
-  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#b>", 0xaaaaaaaa));
+  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#" PRIb32 ">", 0xaaaaaaaa));
   EXPECT_STREQ("<0b10101010101010101010101010101010>", buf);
+
+  // clang doesn't like "%lb" (https://github.com/llvm/llvm-project/issues/62247)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+  EXPECT_EQ(66, snprintf(buf, sizeof(buf), "<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_STREQ("<1010101010101010101010101010101010101010101010101010101010101010>", buf);
+  EXPECT_EQ(68, snprintf(buf, sizeof(buf), "<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_STREQ("<0b1010101010101010101010101010101010101010101010101010101010101010>", buf);
+#pragma clang diagnostic pop
+
   EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
   EXPECT_STREQ("<0>", buf);
+#else
+  GTEST_SKIP() << "no %b in glibc";
+#endif
 }
 
 TEST(STDIO_TEST, snprintf_B) {
+#if defined(__BIONIC__)
   char buf[BUFSIZ];
-  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%B>", 5));
+
+  uint8_t b = 5;
+  EXPECT_EQ(5, snprintf(buf, sizeof(buf), "<%" PRIB8 ">", b));
   EXPECT_STREQ("<101>", buf);
-  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08B>", 5));
+  EXPECT_EQ(10, snprintf(buf, sizeof(buf), "<%08" PRIB8 ">", b));
   EXPECT_STREQ("<00000101>", buf);
-  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%B>", 0xaaaaaaaa));
+
+  uint16_t s = 0xaaaa;
+  EXPECT_EQ(18, snprintf(buf, sizeof(buf), "<%" PRIB16 ">", s));
+  EXPECT_STREQ("<1010101010101010>", buf);
+  EXPECT_EQ(20, snprintf(buf, sizeof(buf), "<%#" PRIB16 ">", s));
+  EXPECT_STREQ("<0B1010101010101010>", buf);
+
+  EXPECT_EQ(34, snprintf(buf, sizeof(buf), "<%" PRIB32 ">", 0xaaaaaaaa));
   EXPECT_STREQ("<10101010101010101010101010101010>", buf);
-  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#B>", 0xaaaaaaaa));
+  EXPECT_EQ(36, snprintf(buf, sizeof(buf), "<%#" PRIB32 ">", 0xaaaaaaaa));
   EXPECT_STREQ("<0B10101010101010101010101010101010>", buf);
-  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#B>", 0));
+
+  // clang doesn't like "%lB" (https://github.com/llvm/llvm-project/issues/62247)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+  EXPECT_EQ(66, snprintf(buf, sizeof(buf), "<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_STREQ("<1010101010101010101010101010101010101010101010101010101010101010>", buf);
+  EXPECT_EQ(68, snprintf(buf, sizeof(buf), "<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_STREQ("<0B1010101010101010101010101010101010101010101010101010101010101010>", buf);
+#pragma clang diagnostic pop
+
+  EXPECT_EQ(3, snprintf(buf, sizeof(buf), "<%#b>", 0));
   EXPECT_STREQ("<0>", buf);
+#else
+  GTEST_SKIP() << "no %B in glibc";
+#endif
 }
 
 TEST(STDIO_TEST, swprintf_b) {
+#if defined(__BIONIC__)
   wchar_t buf[BUFSIZ];
-  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%b>", 5));
+
+  uint8_t b = 5;
+  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%" PRIb8 ">", b));
   EXPECT_EQ(std::wstring(L"<101>"), buf);
-  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08b>", 5));
+  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08" PRIb8 ">", b));
   EXPECT_EQ(std::wstring(L"<00000101>"), buf);
-  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%b>", 0xaaaaaaaa));
+
+  uint16_t s = 0xaaaa;
+  EXPECT_EQ(18, swprintf(buf, sizeof(buf), L"<%" PRIb16 ">", s));
+  EXPECT_EQ(std::wstring(L"<1010101010101010>"), buf);
+  EXPECT_EQ(20, swprintf(buf, sizeof(buf), L"<%#" PRIb16 ">", s));
+  EXPECT_EQ(std::wstring(L"<0b1010101010101010>"), buf);
+
+  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%" PRIb32 ">", 0xaaaaaaaa));
   EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
-  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#b>", 0xaaaaaaaa));
+  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#" PRIb32 ">", 0xaaaaaaaa));
   EXPECT_EQ(std::wstring(L"<0b10101010101010101010101010101010>"), buf);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"  // clang doesn't like "%lb"
+  EXPECT_EQ(66, swprintf(buf, sizeof(buf), L"<%" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010>"),
+            buf);
+  EXPECT_EQ(68, swprintf(buf, sizeof(buf), L"<%#" PRIb64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<0b1010101010101010101010101010101010101010101010101010101010101010>"),
+            buf);
+#pragma clang diagnostic pop
+
   EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#b>", 0));
   EXPECT_EQ(std::wstring(L"<0>"), buf);
+#else
+  GTEST_SKIP() << "no %b in glibc";
+#endif
 }
 
 TEST(STDIO_TEST, swprintf_B) {
+#if defined(__BIONIC__)
   wchar_t buf[BUFSIZ];
-  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%B>", 5));
+
+  uint8_t b = 5;
+  EXPECT_EQ(5, swprintf(buf, sizeof(buf), L"<%" PRIB8 ">", b));
   EXPECT_EQ(std::wstring(L"<101>"), buf);
-  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08B>", 5));
+  EXPECT_EQ(10, swprintf(buf, sizeof(buf), L"<%08" PRIB8 ">", b));
   EXPECT_EQ(std::wstring(L"<00000101>"), buf);
-  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%B>", 0xaaaaaaaa));
+
+  uint16_t s = 0xaaaa;
+  EXPECT_EQ(18, swprintf(buf, sizeof(buf), L"<%" PRIB16 ">", s));
+  EXPECT_EQ(std::wstring(L"<1010101010101010>"), buf);
+  EXPECT_EQ(20, swprintf(buf, sizeof(buf), L"<%#" PRIB16 ">", s));
+  EXPECT_EQ(std::wstring(L"<0B1010101010101010>"), buf);
+
+  EXPECT_EQ(34, swprintf(buf, sizeof(buf), L"<%" PRIB32 ">", 0xaaaaaaaa));
   EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010>"), buf);
-  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#B>", 0xaaaaaaaa));
+  EXPECT_EQ(36, swprintf(buf, sizeof(buf), L"<%#" PRIB32 ">", 0xaaaaaaaa));
   EXPECT_EQ(std::wstring(L"<0B10101010101010101010101010101010>"), buf);
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"  // clang doesn't like "%lb"
+  EXPECT_EQ(66, swprintf(buf, sizeof(buf), L"<%" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010>"),
+            buf);
+  EXPECT_EQ(68, swprintf(buf, sizeof(buf), L"<%#" PRIB64 ">", 0xaaaaaaaa'aaaaaaaa));
+  EXPECT_EQ(std::wstring(L"<0B1010101010101010101010101010101010101010101010101010101010101010>"),
+            buf);
+#pragma clang diagnostic pop
+
   EXPECT_EQ(3, swprintf(buf, sizeof(buf), L"<%#B>", 0));
   EXPECT_EQ(std::wstring(L"<0>"), buf);
+#else
+  GTEST_SKIP() << "no %B in glibc";
+#endif
 }
 
 TEST(STDIO_TEST, scanf_i_decimal) {
