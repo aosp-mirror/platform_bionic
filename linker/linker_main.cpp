@@ -43,7 +43,6 @@
 #include "linker_tls.h"
 #include "linker_utils.h"
 
-#include "private/bionic_auxv.h"
 #include "private/bionic_call_ifunc_resolver.h"
 #include "private/bionic_globals.h"
 #include "private/bionic_tls.h"

@@ -714,7 +714,8 @@ TEST(stdio, open_wmemstream_EINVAL) {
 #if defined(__BIONIC__)
   wchar_t* p;
   size_t size;
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   // Invalid buffer.
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(nullptr, &size));
@@ -724,6 +725,7 @@ TEST(stdio, open_wmemstream_EINVAL) {
   errno = 0;
   ASSERT_EQ(nullptr, open_wmemstream(&p, nullptr));
   ASSERT_EQ(EINVAL, errno);
+#pragma clang diagnostic pop
 #else
   GTEST_SKIP() << "This test is bionic-specific";
 #endif

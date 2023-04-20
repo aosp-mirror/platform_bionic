@@ -36,50 +36,52 @@
 // 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
 // 1      sigmask         64-bit signal mask
 // 2      ra
-// 3      s0
+// 3      sp
+// 4      gp
+// 5      s0
 // ......
-// 14     s11
-// 15     sp
-// 16     fs0
+// 16     s11
+// 17     fs0
 // ......
-// 27     fs11
-// 28     checksum
+// 28     fs11
+// 29     checksum
 // _JBLEN: defined in bionic/libc/include/setjmp.h
 
 #define _JB_SIGFLAG   0
 #define _JB_SIGMASK   1 * 8
 #define _JB_RA        2 * 8
-#define _JB_S0        3 * 8
-#define _JB_S1        4 * 8
-#define _JB_S2        5 * 8
-#define _JB_S3        6 * 8
-#define _JB_S4        7 * 8
-#define _JB_S5        8 * 8
-#define _JB_S6        9 * 8
-#define _JB_S7       10 * 8
-#define _JB_S8       11 * 8
-#define _JB_S9       12 * 8
-#define _JB_S10      13 * 8
-#define _JB_S11      14 * 8
-#define _JB_SP       15 * 8
-#define _JB_FS0      16 * 8
-#define _JB_FS1      17 * 8
-#define _JB_FS2      18 * 8
-#define _JB_FS3      19 * 8
-#define _JB_FS4      20 * 8
-#define _JB_FS5      21 * 8
-#define _JB_FS6      22 * 8
-#define _JB_FS7      23 * 8
-#define _JB_FS8      24 * 8
-#define _JB_FS9      25 * 8
-#define _JB_FS10     26 * 8
-#define _JB_FS11     27 * 8
-#define _JB_CHECKSUM 28 * 8
+#define _JB_SP        3 * 8
+#define _JB_GP        4 * 8
+#define _JB_S0        5 * 8
+#define _JB_S1        6 * 8
+#define _JB_S2        7 * 8
+#define _JB_S3        8 * 8
+#define _JB_S4        9 * 8
+#define _JB_S5       10 * 8
+#define _JB_S6       11 * 8
+#define _JB_S7       12 * 8
+#define _JB_S8       13 * 8
+#define _JB_S9       14 * 8
+#define _JB_S10      15 * 8
+#define _JB_S11      16 * 8
+#define _JB_FS0      17 * 8
+#define _JB_FS1      18 * 8
+#define _JB_FS2      19 * 8
+#define _JB_FS3      20 * 8
+#define _JB_FS4      21 * 8
+#define _JB_FS5      22 * 8
+#define _JB_FS6      23 * 8
+#define _JB_FS7      24 * 8
+#define _JB_FS8      25 * 8
+#define _JB_FS9      26 * 8
+#define _JB_FS10     27 * 8
+#define _JB_FS11     28 * 8
+#define _JB_CHECKSUM 29 * 8
 
 .macro m_mangle_registers reg, sp_reg
   xor s0, s0, \reg
   xor s1, s1, \reg
-  xor a4, a4, \reg  // a4 is the masked s2 (x18) for SCS.
+  xor s2, s2, \reg
   xor s3, s3, \reg
   xor s4, s4, \reg
   xor s5, s5, \reg
@@ -89,12 +91,13 @@
   xor s9, s9, \reg
   xor s10, s10, \reg
   xor s11, s11, \reg
+  xor a4, a4, \reg  // a4 is the masked gp (x3) for SCS.
   xor \sp_reg, \sp_reg, \reg
 .endm
 
 .macro m_calculate_checksum dst, src, scratch
   li \dst, 0
-  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27
+  .irp i,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28
     ld \scratch, (\i * 8)(\src)
     xor \dst, \dst, \scratch
   .endr
@@ -152,19 +155,21 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   andi a1, a1, -2
 
   // Mask off the high bits of the shadow call stack pointer.
-  // We only store the low bits of x18 to avoid leaking the
+  // We only store the low bits of gp to avoid leaking the
   // shadow call stack address into memory.
   // See the SCS commentary in pthread_internal.h for more detail.
   li a4, SCS_MASK
-  and a4, a4, x18
+  and a4, a4, gp
 
   // Save core registers.
   mv a2, sp
   m_mangle_registers a1, sp_reg=a2
   sd ra,  _JB_RA(a0)
+  sd a4,  _JB_GP(a0)  // a4 is the masked gp (x3) for SCS.
+  sd a2,  _JB_SP(a0)
   sd s0,  _JB_S0(a0)
   sd s1,  _JB_S1(a0)
-  sd a4,  _JB_S2(a0)  // a4 is the masked s2 (x18) for SCS.
+  sd s2,  _JB_S2(a0)
   sd s3,  _JB_S3(a0)
   sd s4,  _JB_S4(a0)
   sd s5,  _JB_S5(a0)
@@ -174,7 +179,6 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   sd s9,  _JB_S9(a0)
   sd s10, _JB_S10(a0)
   sd s11, _JB_S11(a0)
-  sd a2,  _JB_SP(a0)
   m_unmangle_registers a1, sp_reg=a2
 
   // Save floating point registers.
@@ -236,9 +240,10 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
   // Restore core registers.
   andi a2, a2, -2
   ld ra,  _JB_RA(a0)
+  ld a4,  _JB_GP(a0)  // Don't clobber the upper bits of gp (x3) used for SCS yet.
   ld s0,  _JB_S0(a0)
   ld s1,  _JB_S1(a0)
-  ld a4,  _JB_S2(a0)  // Don't clobber s2 (x18) used for SCS yet.
+  ld s2,  _JB_S2(a0)
   ld s3,  _JB_S3(a0)
   ld s4,  _JB_S4(a0)
   ld s5,  _JB_S5(a0)
@@ -254,8 +259,8 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(siglongjmp)
 
   // Restore the low bits of the shadow call stack pointer.
   li a5, ~SCS_MASK
-  and x18, x18, a5
-  or x18, a4, x18
+  and gp, gp, a5
+  or gp, gp, a4
 
   addi sp, sp, -24
   sd   ra, 0(sp)

@@ -23,11 +23,11 @@
 #include <linux/compiler.h>
 #define CTL_MAXNAME 10
 struct __sysctl_args {
-  int __user * name;
+  int  * name;
   int nlen;
-  void __user * oldval;
-  size_t __user * oldlenp;
-  void __user * newval;
+  void  * oldval;
+  size_t  * oldlenp;
+  void  * newval;
   size_t newlen;
   unsigned long __linux_unused[4];
 };
