@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,42 +26,38 @@
  * SUCH DAMAGE.
  */
 
-#pragma once
+#include <utmpx.h>
 
-/**
- * @file sys/random.h
- * @brief The getentropy() and getrandom() functions.
- */
+#include "header_checks.h"
 
-#include <sys/cdefs.h>
-#include <sys/types.h>
+static void utmpx_h() {
+  TYPE(struct utmpx);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_user);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_id);
+  STRUCT_MEMBER_ARRAY(struct utmpx, char/*[]*/, ut_line);
+  STRUCT_MEMBER(struct utmpx, pid_t, ut_pid);
+  STRUCT_MEMBER(struct utmpx, short, ut_type);
+#if !defined(__GLIBC__)
+  // POSIX says struct timeval, but glibc has an anonymous struct.
+  STRUCT_MEMBER(struct utmpx, struct timeval, ut_tv);
+#endif
 
-#include <linux/random.h>
+  TYPE(pid_t);
+  TYPE(struct timeval);
 
-__BEGIN_DECLS
+  MACRO(EMPTY);
+  MACRO(BOOT_TIME);
+  MACRO(OLD_TIME);
+  MACRO(NEW_TIME);
+  MACRO(USER_PROCESS);
+  MACRO(INIT_PROCESS);
+  MACRO(LOGIN_PROCESS);
+  MACRO(DEAD_PROCESS);
 
-/**
- * [getentropy(3)](http://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
- * with random bytes.
- *
- * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 28.
- *
- * See also arc4random_buf() which is available in all API levels.
- */
-int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
-
-/**
- * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
- * with random bytes.
- *
- * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 28.
- *
- * See also arc4random_buf() which is available in all API levels.
- */
-ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
-
-__END_DECLS
+  FUNCTION(endutxent, void (*f)(void));
+  FUNCTION(getutxent, struct utmpx* (*f)(void));
+  FUNCTION(getutxid, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(getutxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(pututxline, struct utmpx* (*f)(const struct utmpx*));
+  FUNCTION(setutxent, void (*f)(void));
+}

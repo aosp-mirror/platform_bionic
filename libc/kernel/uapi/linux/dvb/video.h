@@ -94,7 +94,7 @@ struct video_status {
   video_displayformat_t display_format;
 };
 struct video_still_picture {
-  char __user * iFrame;
+  char  * iFrame;
   __s32 size;
 };
 typedef __u16 video_attributes_t;

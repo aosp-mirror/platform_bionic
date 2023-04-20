@@ -125,7 +125,7 @@ typedef struct _drm_via_dma_init {
   unsigned long reg_pause_addr;
 } drm_via_dma_init_t;
 typedef struct _drm_via_cmdbuffer {
-  char __user * buf;
+  char  * buf;
   unsigned long size;
 } drm_via_cmdbuffer_t;
 typedef struct _drm_via_tex_region {

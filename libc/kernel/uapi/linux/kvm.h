@@ -457,7 +457,7 @@ struct kvm_dirty_log {
   __u32 slot;
   __u32 padding1;
   union {
-    void __user * dirty_bitmap;
+    void  * dirty_bitmap;
     __u64 padding2;
   };
 };
@@ -466,7 +466,7 @@ struct kvm_clear_dirty_log {
   __u32 num_pages;
   __u64 first_page;
   union {
-    void __user * dirty_bitmap;
+    void  * dirty_bitmap;
     __u64 padding2;
   };
 };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,39 +29,75 @@
 #pragma once
 
 /**
- * @file sys/random.h
- * @brief The getentropy() and getrandom() functions.
+ * @file utmpx.h
+ * @brief No-op implementation of POSIX login records.
  */
 
 #include <sys/cdefs.h>
 #include <sys/types.h>
+#include <time.h>
 
-#include <linux/random.h>
+#define EMPTY         0
+#define RUN_LVL       1
+#define BOOT_TIME     2
+#define NEW_TIME      3
+#define OLD_TIME      4
+#define INIT_PROCESS  5
+#define LOGIN_PROCESS 6
+#define USER_PROCESS  7
+#define DEAD_PROCESS  8
+#define ACCOUNTING    9
+
+struct utmpx {
+  short ut_type;
+  pid_t ut_pid;
+  char ut_line[32];
+  char ut_id[4];
+  char ut_user[32];
+  char ut_host[256];
+
+  struct {
+    short e_termination;
+    short e_exit;
+  } ut_exit;
+
+  long ut_session;
+  struct timeval ut_tv;
+
+  int32_t ut_addr_v6[4];
+  char unused[20];
+};
 
 __BEGIN_DECLS
 
 /**
- * [getentropy(3)](http://man7.org/linux/man-pages/man3/getentropy.3.html) fills the given buffer
- * with random bytes.
- *
- * Returns 0 on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 28.
- *
- * See also arc4random_buf() which is available in all API levels.
+ * Does nothing.
  */
-int getentropy(void* _Nonnull __buffer, size_t __buffer_size) __wur __INTRODUCED_IN(28);
+void setutxent(void) __RENAME(setutent);
 
 /**
- * [getrandom(2)](http://man7.org/linux/man-pages/man2/getrandom.2.html) fills the given buffer
- * with random bytes.
- *
- * Returns the number of bytes copied on success, and returns -1 and sets `errno` on failure.
- *
- * Available since API level 28.
- *
- * See also arc4random_buf() which is available in all API levels.
+ * Does nothing and returns null.
  */
-ssize_t getrandom(void* _Nonnull __buffer, size_t __buffer_size, unsigned int __flags) __wur __INTRODUCED_IN(28);
+struct utmpx* _Nullable getutxent(void) __RENAME(getutent);
+
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable getutxid(const struct utmpx* _Nonnull __entry) __RENAME(getutent);
+
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable getutxline(const struct utmpx* _Nonnull __entry) __RENAME(getutent);
+
+/**
+ * Does nothing and returns null.
+ */
+struct utmpx* _Nullable pututxline(const struct utmpx* _Nonnull __entry) __RENAME(pututline);
+
+/**
+ * Does nothing.
+ */
+void endutxent(void) __RENAME(endutent);
 
 __END_DECLS
