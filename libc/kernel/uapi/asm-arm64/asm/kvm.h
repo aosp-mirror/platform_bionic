@@ -121,7 +121,7 @@ struct kvm_vcpu_events {
 struct kvm_arm_copy_mte_tags {
   __u64 guest_ipa;
   __u64 length;
-  void __user * addr;
+  void  * addr;
   __u64 flags;
   __u64 reserved[2];
 };

@@ -21,7 +21,7 @@
 #include <linux/compiler.h>
 #include <linux/types.h>
 struct iovec {
-  void __user * iov_base;
+  void  * iov_base;
   __kernel_size_t iov_len;
 };
 #define UIO_FASTIOV 8

@@ -30,7 +30,7 @@
 
 /**
  * @file utmp.h
- * @brief POSIX login records.
+ * @brief No-op implementation of non-POSIX login records. See <utmpx.h> for the POSIX equivalents.
  */
 
 #include <sys/cdefs.h>
@@ -69,12 +69,12 @@ struct lastlog {
 };
 
 struct exit_status {
-  short int e_termination;
-  short int e_exit;
+  short e_termination;
+  short e_exit;
 };
 
 struct utmp {
-  short int ut_type;
+  short ut_type;
   pid_t ut_pid;
   char ut_line[UT_LINESIZE];
   char ut_id[4];
@@ -83,7 +83,7 @@ struct utmp {
 
   struct exit_status ut_exit;
 
-  long int ut_session;
+  long ut_session;
   struct timeval ut_tv;
 
   int32_t ut_addr_v6[4];
@@ -97,21 +97,25 @@ struct utmp {
 __BEGIN_DECLS
 
 /**
- * Does nothing.
+ * Returns -1 and sets errno to ENOTSUP.
  */
 int utmpname(const char* _Nonnull __path);
+
 /**
  * Does nothing.
  */
 void setutent(void);
+
 /**
- * Does nothing.
+ * Does nothing and returns null.
  */
 struct utmp* _Nullable getutent(void);
+
 /**
- * Does nothing.
+ * Does nothing and returns null.
  */
 struct utmp* _Nullable pututline(const struct utmp* _Nonnull __entry);
+
 /**
  * Does nothing.
  */

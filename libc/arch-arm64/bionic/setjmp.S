@@ -46,8 +46,6 @@
 // 0      sigflag/cookie  setjmp cookie in top 31 bits, signal mask flag in low bit
 // 1      sigmask         signal mask (not used with _setjmp / _longjmp)
 // 2      core_base       base of core registers (x18-x30, sp)
-//                        (We only store the low bits of x18 to avoid leaking the
-//                        shadow call stack address into memory.)
 // 16     float_base      base of float registers (d8-d15)
 // 24     checksum        checksum of core registers
 // 25     reserved        reserved entries (room to grow)
@@ -67,8 +65,6 @@
 #define _JB_D10_D11     (_JB_D12_D13 + 2)
 #define _JB_D8_D9       (_JB_D10_D11 + 2)
 #define _JB_CHECKSUM    (_JB_D8_D9 + 2)
-
-#define SCS_MASK (SCS_SIZE - 1)
 
 .macro m_mangle_registers reg, sp_reg
   eor x3, x3, \reg
@@ -155,6 +151,9 @@ __BIONIC_WEAK_ASM_FOR_NATIVE_BRIDGE(sigsetjmp)
   bic x1, x1, #1
 
   // Mask off the high bits of the shadow call stack pointer.
+  // We only store the low bits of x18 to avoid leaking the
+  // shadow call stack address into memory.
+  // See the SCS commentary in pthread_internal.h for more detail.
   and x3, x18, #SCS_MASK
 
   // Save core registers.

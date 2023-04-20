@@ -1580,6 +1580,8 @@ LIBC_U { # introduced=UpsideDownCake
     close_range;
     copy_file_range;
     memset_explicit;
+    posix_spawn_file_actions_addchdir_np;
+    posix_spawn_file_actions_addfchdir_np;
 } LIBC_T;
 
 LIBC_PRIVATE {

@@ -197,7 +197,7 @@ found:
 	fp->_lb._size = 0;
 
 	memset(_EXT(fp), 0, sizeof(struct __sfileext));
-	_FLOCK(fp) = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
+	_EXT(fp)->_lock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
 	_EXT(fp)->_caller_handles_locking = false;
 
 	// Caller sets cookie, _read/_write etc.
@@ -884,7 +884,7 @@ wint_t getwchar() {
 
 void perror(const char* msg) {
   if (msg == nullptr) msg = "";
-  fprintf(stderr, "%s%s%s\n", msg, (*msg == '\0') ? "" : ": ", strerror(errno));
+  fprintf(stderr, "%s%s%m\n", msg, (*msg == '\0') ? "" : ": ");
 }
 
 int printf(const char* fmt, ...) {
@@ -1237,6 +1237,23 @@ FILE* popen(const char* cmd, const char* mode) {
 int pclose(FILE* fp) {
   CHECK_FP(fp);
   return __FILE_close(fp);
+}
+
+void flockfile(FILE* fp) {
+  CHECK_FP(fp);
+  pthread_mutex_lock(&_EXT(fp)->_lock);
+}
+
+int ftrylockfile(FILE* fp) {
+  CHECK_FP(fp);
+  // The specification for ftrylockfile() says it returns 0 on success,
+  // or non-zero on error. We don't bother canonicalizing to 0/-1...
+  return pthread_mutex_trylock(&_EXT(fp)->_lock);
+}
+
+void funlockfile(FILE* fp) {
+  CHECK_FP(fp);
+  pthread_mutex_unlock(&_EXT(fp)->_lock);
 }
 
 namespace {
