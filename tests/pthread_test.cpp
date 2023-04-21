@@ -195,12 +195,12 @@ TEST(pthread, pthread_heap_allocated_stack) {
   SKIP_WITH_HWASAN; // TODO(b/148982147): Re-enable when fixed.
 
   size_t stack_size = 640 * 1024;
-  std::vector<char> stack_vec(stack_size, '\xff');
-  void* stack = stack_vec.data();
+  std::unique_ptr<char[]> stack(new (std::align_val_t(getpagesize())) char[stack_size]);
+  memset(stack.get(), '\xff', stack_size);
 
   pthread_attr_t attr;
   ASSERT_EQ(0, pthread_attr_init(&attr));
-  ASSERT_EQ(0, pthread_attr_setstack(&attr, stack, stack_size));
+  ASSERT_EQ(0, pthread_attr_setstack(&attr, stack.get(), stack_size));
 
   pthread_t t;
   ASSERT_EQ(0, pthread_create(&t, &attr, FnWithStackFrame, nullptr));
