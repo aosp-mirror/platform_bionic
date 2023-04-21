@@ -62,5 +62,5 @@ ENTRY(vfork)
 
 .L_failure:
   neg     a0, a0
-  j       __set_errno_internal
+  tail    __set_errno_internal
 END(vfork)

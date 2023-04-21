@@ -56,7 +56,7 @@ struct npioctl {
   enum NPmode mode;
 };
 struct ppp_option_data {
-  __u8 __user * ptr;
+  __u8  * ptr;
   __u32 length;
   int transmit;
 };

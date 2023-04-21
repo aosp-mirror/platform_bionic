@@ -316,12 +316,16 @@ typedef struct ucontext {
 
 #define NGREG 32
 
+#if defined(__USE_GNU)
+
 #define REG_PC 0
 #define REG_RA 1
 #define REG_SP 2
 #define REG_TP 4
 #define REG_S0 8
 #define REG_A0 10
+
+#endif // defined(__USE_GNU)
 
 typedef unsigned long __riscv_mc_gp_state[NGREG];
 
@@ -362,9 +366,9 @@ typedef struct mcontext_t {
 
 /* This matches the kernel <asm/ucontext.h> but using mcontext_t. */
 
-typedef struct ucontext_t {
+typedef struct ucontext {
   unsigned long uc_flags;
-  struct ucontext_t* uc_link;
+  struct ucontext* uc_link;
   stack_t uc_stack;
   union {
     sigset_t uc_sigmask;

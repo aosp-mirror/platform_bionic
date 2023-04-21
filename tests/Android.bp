@@ -66,18 +66,20 @@ cc_defaults {
         "libcutils_headers",
         "gwp_asan_headers"
     ],
-    // Ensure that the tests exercise shadow call stack support and
-    // the hint space PAC/BTI instructions.
+    stl: "libc++",
+
+    // Ensure that the tests exercise shadow call stack support.
+    // We don't use `scs: true` here because that would give us a second
+    // variant of this library where we actually just want to say "this
+    // library should always be built this way".
     arch: {
         arm64: {
-            cflags: [
-                "-fsanitize=shadow-call-stack",
-                // Disable this option for now: see b/151372823
-                //"-mbranch-protection=standard",
-            ],
+            cflags: ["-fsanitize=shadow-call-stack"],
+        },
+        riscv64: {
+            cflags: ["-fsanitize=shadow-call-stack"],
         },
     },
-    stl: "libc++",
     sanitize: {
         address: false,
     },
@@ -512,6 +514,7 @@ cc_test_library {
         "unistd_test.cpp",
         "utils.cpp",
         "utmp_test.cpp",
+        "utmpx_test.cpp",
         "wchar_test.cpp",
         "wctype_test.cpp",
     ],
@@ -538,6 +541,10 @@ cc_test_library {
 
                 // unsupported relocation type 37
                 "ifunc_test.cpp",
+
+                // musl #defines utmp to utmpx, causing a collision with
+                // utmpx_test.cpp
+                "utmp_test.cpp",
             ],
         },
     },
@@ -1106,6 +1113,30 @@ cc_test {
         ":libdlext_test_runpath_zip_zipaligned",
         ":libdlext_test_zip_zipaligned",
     ],
+}
+
+cc_test {
+    name: "hwasan_test",
+    enabled: false,
+    // This does not use bionic_tests_defaults because it is not supported on
+    // host.
+    arch: {
+        arm64: {
+            enabled: true,
+        },
+    },
+    sanitize: {
+        hwaddress: true,
+    },
+    srcs: [
+        "hwasan_test.cpp",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+    data_libs: ["libtest_simple_hwasan", "libtest_simple_hwasan_nohwasan"],
+    header_libs: ["bionic_libc_platform_headers"],
+    test_suites: ["device-tests"],
 }
 
 cc_test {
