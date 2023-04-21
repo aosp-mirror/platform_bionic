@@ -987,24 +987,25 @@ TEST(dlfcn, dladdr_libc) {
 #endif
 
   Dl_info info;
-  void* addr = reinterpret_cast<void*>(puts); // well-known libc function
+  void* addr = reinterpret_cast<void*>(puts);  // An arbitrary libc function.
   ASSERT_TRUE(dladdr(addr, &info) != 0);
 
-  char libc_realpath[PATH_MAX];
-
   // Check if libc is in canonical path or in alternate path.
+  const char* expected_path;
   if (strncmp(ALTERNATE_PATH_TO_SYSTEM_LIB,
               info.dli_fname,
               sizeof(ALTERNATE_PATH_TO_SYSTEM_LIB) - 1) == 0) {
     // Platform with emulated architecture.  Symlink on ARC++.
-    ASSERT_TRUE(realpath(ALTERNATE_PATH_TO_LIBC, libc_realpath) == libc_realpath);
+    expected_path = ALTERNATE_PATH_TO_LIBC;
   } else if (strncmp(PATH_TO_BOOTSTRAP_LIBC, info.dli_fname,
                      sizeof(PATH_TO_BOOTSTRAP_LIBC) - 1) == 0) {
-    ASSERT_TRUE(realpath(PATH_TO_BOOTSTRAP_LIBC, libc_realpath) == libc_realpath);
+    expected_path = PATH_TO_BOOTSTRAP_LIBC;
   } else {
     // /system/lib is symlink when this test is executed on host.
-    ASSERT_TRUE(realpath(PATH_TO_LIBC, libc_realpath) == libc_realpath);
+    expected_path = PATH_TO_LIBC;
   }
+  char libc_realpath[PATH_MAX];
+  ASSERT_TRUE(realpath(expected_path, libc_realpath) != nullptr) << strerror(errno);
 
   ASSERT_STREQ(libc_realpath, info.dli_fname);
   // TODO: add check for dfi_fbase
