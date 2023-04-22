@@ -521,6 +521,34 @@ int FUNCTION_NAME(FILE* fp, const CHAR_TYPE* fmt0, va_list ap) {
         _umax = UARG();
         base = DEC;
         goto nosign;
+      case 'w':
+        n = 0;
+        ch = *fmt++;
+        while (is_digit(ch)) {
+          APPEND_DIGIT(n, ch);
+          ch = *fmt++;
+        }
+        switch (n) {
+          case 8: {
+            flags |= CHARINT;
+            goto reswitch;
+          }
+          case 16: {
+            flags |= SHORTINT;
+            goto reswitch;
+          }
+          case 32: {
+            goto reswitch;
+          }
+          case 64: {
+            flags |= LLONGINT;
+            goto reswitch;
+          }
+          default: {
+            __fortify_fatal("%%w%d is unsupported", n);
+            break;
+          }
+        }
       case 'X':
         xdigs = xdigs_upper;
         goto hex;
