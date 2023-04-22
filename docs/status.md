@@ -67,6 +67,8 @@ New libc behavior in U (API level 34):
   * Support for `%b` and `%B` in the printf/wprintf family, `%b` in the
     scanf/wscanf family, and `0b` prefixes with base 0 in the strtol/wcstol
     family.
+  * Support for `wN` length modifiers in the printf/wprintf family.
+  * tmpfile() now respects $TMPDIR.
 
 New libc functions in T (API level 33):
   * `backtrace`, `backtrace_symbols`, `backtrace_symbols_fd` (`<execinfo.h>`).
