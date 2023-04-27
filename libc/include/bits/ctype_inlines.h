@@ -61,7 +61,7 @@
 __BEGIN_DECLS
 
 /** Internal implementation detail. Do not use. */
-extern const char* _ctype_;
+extern const char* _Nonnull _ctype_;
 
 /** Returns true if `ch` is in `[A-Za-z0-9]`. */
 __BIONIC_CTYPE_INLINE int isalnum(int __ch) {
@@ -175,33 +175,33 @@ __BIONIC_CTYPE_INLINE int toascii(int __ch) {
 
 #if __ANDROID_API__ >= 21
 /** Like isalnum but with an ignored `locale_t`. */
-int isalnum_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isalnum_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isalpha but with an ignored `locale_t`. */
-int isalpha_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isalpha_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isblank but with an ignored `locale_t`. */
-int isblank_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isblank_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like iscntrl but with an ignored `locale_t`. */
-int iscntrl_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int iscntrl_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isdigit but with an ignored `locale_t`. */
-int isdigit_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isdigit_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isgraph but with an ignored `locale_t`. */
-int isgraph_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isgraph_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like islower but with an ignored `locale_t`. */
-int islower_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int islower_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isprint but with an ignored `locale_t`. */
-int isprint_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isprint_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like ispunct but with an ignored `locale_t`. */
-int ispunct_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int ispunct_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isspace but with an ignored `locale_t`. */
-int isspace_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isspace_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isupper but with an ignored `locale_t`. */
-int isupper_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isupper_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like isxdigit but with an ignored `locale_t`. */
-int isxdigit_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int isxdigit_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like tolower but with an ignored `locale_t`. */
-int tolower_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int tolower_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 /** Like toupper but with an ignored `locale_t`. */
-int toupper_l(int __ch, locale_t __l) __INTRODUCED_IN(21);
+int toupper_l(int __ch, locale_t _Nonnull __l) __INTRODUCED_IN(21);
 #else
 // Implemented as static inlines in libc++ before 21.
 #endif
