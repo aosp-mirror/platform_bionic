@@ -670,6 +670,10 @@ TEST_F(DEATHTEST, readlinkat_fortified) {
   ASSERT_FORTIFY(readlinkat(AT_FDCWD, "/dev/null", buf, ct));
 }
 
+TEST(TEST_NAME, snprintf_nullptr_valid) {
+  ASSERT_EQ(10, snprintf(nullptr, 0, "0123456789"));
+}
+
 extern "C" char* __strncat_chk(char*, const char*, size_t, size_t);
 extern "C" char* __strcat_chk(char*, const char*, size_t);
 
