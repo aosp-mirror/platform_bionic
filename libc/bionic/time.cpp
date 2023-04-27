@@ -28,6 +28,27 @@
 
 #include <time.h>
 
+static clockid_t __base_to_clock(int base) {
+  switch (base) {
+    case TIME_UTC:
+      return CLOCK_REALTIME;
+    case TIME_MONOTONIC:
+      return CLOCK_MONOTONIC;
+    case TIME_ACTIVE:
+      return CLOCK_PROCESS_CPUTIME_ID;
+    case TIME_THREAD_ACTIVE:
+      return CLOCK_THREAD_CPUTIME_ID;
+    default:
+      return -1;
+  }
+}
+
 int timespec_get(timespec* ts, int base) {
-  return (base == TIME_UTC && clock_gettime(CLOCK_REALTIME, ts) != -1) ? base : 0;
+  clockid_t clock = __base_to_clock(base);
+  return (clock != -1 && clock_gettime(clock, ts) != -1) ? base : 0;
+}
+
+int timespec_getres(timespec* ts, int base) {
+  clockid_t clock = __base_to_clock(base);
+  return (clock != -1 && clock_getres(clock, ts) != -1) ? base : 0;
 }
