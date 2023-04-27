@@ -26,8 +26,7 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _TIME_H_
-#define _TIME_H_
+#pragma once
 
 #include <sys/cdefs.h>
 #include <sys/time.h>
@@ -105,9 +104,52 @@ int timer_getoverrun(timer_t _Nonnull __timer);
 time_t timelocal(struct tm* _Nonnull __tm);
 time_t timegm(struct tm* _Nonnull __tm);
 
+/**
+ * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_REALTIME.
+ *
+ * Available since API level 29.
+ */
 #define TIME_UTC 1
+
+/**
+ * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_MONOTONIC.
+ *
+ * Available since API level 35.
+ */
+#define TIME_MONOTONIC 2
+
+/**
+ * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_PROCESS_CPUTIME_ID.
+ *
+ * Available since API level 35.
+ */
+#define TIME_ACTIVE 3
+
+/**
+ * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_THREAD_CPUTIME_ID.
+ *
+ * Available since API level 35.
+ */
+#define TIME_THREAD_ACTIVE 4
+
+/**
+ * timespec_get(3) is equivalent to clock_gettime() for the clock corresponding to the given base.
+ *
+ * Returns the base on success and returns 0 on failure.
+ *
+ * Available since API level 29 for TIME_UTC; other bases arrived later.
+ * Code for Android should prefer clock_gettime().
+ */
 int timespec_get(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(29);
 
-__END_DECLS
+/**
+ * timespec_getres(3) is equivalent to clock_getres() for the clock corresponding to the given base.
+ *
+ * Returns the base on success and returns 0 on failure.
+ *
+ * Available since API level 35.
+ * Code for Android should prefer clock_gettime().
+ */
+int timespec_getres(struct timespec* _Nonnull __ts, int __base) __INTRODUCED_IN(35);
 
-#endif
+__END_DECLS
