@@ -51,6 +51,9 @@ static FILE* __fd_to_fp(int fd) {
   return nullptr;
 }
 
+// O_TMPFILE isn't available until Linux 3.11, so we fall back to this on
+// older kernels. AOSP was on a new enough kernel in the Lollipop timeframe,
+// so this code should be obsolete by 2025.
 static FILE* __tmpfile_dir_legacy(const char* tmp_dir) {
   char* path = nullptr;
   if (asprintf(&path, "%s/tmp.XXXXXXXXXX", tmp_dir) == -1) {
@@ -79,25 +82,18 @@ static FILE* __tmpfile_dir_legacy(const char* tmp_dir) {
   return __fd_to_fp(fd);
 }
 
-static FILE* __tmpfile_dir(const char* tmp_dir) {
-  int fd = open(tmp_dir, O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
-  if (fd == -1) return __tmpfile_dir_legacy(tmp_dir);
-  return __fd_to_fp(fd);
+const char* __get_TMPDIR() {
+  // Use $TMPDIR if set, or fall back to /data/local/tmp otherwise.
+  // Useless for apps, but good enough for the shell.
+  const char* tmpdir = getenv("TMPDIR");
+  return (tmpdir == nullptr) ? "/data/local/tmp" : tmpdir;
 }
 
 FILE* tmpfile() {
-  // TODO: get this app's temporary directory from the framework ("/data/data/app/cache").
-
-  // $EXTERNAL_STORAGE turns out not to be very useful because it doesn't support hard links.
-  // This means we can't do the usual trick of calling unlink before handing the file back.
-
-  FILE* fp = __tmpfile_dir("/data/local/tmp");
-  if (fp == nullptr) {
-    // P_tmpdir is "/tmp/", but POSIX explicitly says that tmpdir(3) should try P_tmpdir before
-    // giving up. This is potentially useful for bionic on the host anyway.
-    fp = __tmpfile_dir(P_tmpdir);
-  }
-  return fp;
+  const char* tmpdir = __get_TMPDIR();
+  int fd = open(tmpdir, O_TMPFILE | O_RDWR, S_IRUSR | S_IWUSR);
+  if (fd == -1) return __tmpfile_dir_legacy(tmpdir);
+  return __fd_to_fp(fd);
 }
 __strong_alias(tmpfile64, tmpfile);
 
@@ -107,7 +103,7 @@ char* tempnam(const char* dir, const char* prefix) {
   // since we can't easily remove it...
 
   // $TMPDIR overrides any directory passed in.
-  char* tmpdir = getenv("TMPDIR");
+  const char* tmpdir = getenv("TMPDIR");
   if (tmpdir != nullptr) dir = tmpdir;
 
   // If we still have no directory, we'll give you a default.
@@ -136,12 +132,7 @@ char* tmpnam(char* s) {
   static char buf[L_tmpnam];
   if (s == nullptr) s = buf;
 
-  // Use $TMPDIR if set, or fall back to /data/local/tmp otherwise.
-  // Useless for apps, but good enough for the shell.
-  const char* dir = getenv("TMPDIR");
-  if (dir == nullptr) dir = "/data/local/tmp";
-
   // Make up a mktemp(3) template and defer to it for the real work.
-  snprintf(s, L_tmpnam, "%s/tmpnam.XXXXXXXXXX", dir);
+  snprintf(s, L_tmpnam, "%s/tmpnam.XXXXXXXXXX", __get_TMPDIR());
   return mktemp(s);
 }
