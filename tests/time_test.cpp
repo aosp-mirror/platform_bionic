@@ -181,8 +181,23 @@ TEST(time, mktime_EOVERFLOW) {
   ASSERT_NE(static_cast<time_t>(-1), mktime(&t));
   ASSERT_EQ(0, errno);
 
-  // This will overflow for LP32 or LP64.
+  // This will overflow for LP32.
   t.tm_year = INT_MAX;
+
+  errno = 0;
+#if !defined(__LP64__)
+  ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
+  ASSERT_EQ(EOVERFLOW, errno);
+#else
+  ASSERT_EQ(static_cast<time_t>(67768036166016000U), mktime(&t));
+  ASSERT_EQ(0, errno);
+#endif
+
+  // This will overflow for LP32 or LP64.
+  // tm_year is int, this t struct points to INT_MAX + 1 no matter what TZ is.
+  t.tm_year = INT_MAX;
+  t.tm_mon = 11;
+  t.tm_mday = 45;
 
   errno = 0;
   ASSERT_EQ(static_cast<time_t>(-1), mktime(&t));
