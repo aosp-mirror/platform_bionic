@@ -71,8 +71,6 @@ struct lc_time_T {
     const char *    date_fmt;
 };
 
-#define Locale  (&C_time_locale)
-
 static const struct lc_time_T   C_time_locale = {
     {
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -128,13 +126,14 @@ static char *   _fmt(const char *, const struct tm *, char *, const char *,
 static char *   _yconv(int, int, bool, bool, char *, const char *, int);
 
 #ifndef YEAR_2000_NAME
-#define YEAR_2000_NAME  "CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
+# define YEAR_2000_NAME  "CHECK_STRFTIME_FORMATS_FOR_TWO_DIGIT_YEARS"
 #endif /* !defined YEAR_2000_NAME */
 
 #if HAVE_STRFTIME_L
 size_t
-strftime_l(char *s, size_t maxsize, char const *format, struct tm const *t,
-	   locale_t locale)
+strftime_l(char *restrict s, size_t maxsize, char const *restrict format,
+	   struct tm const *restrict t,
+	   ATTRIBUTE_MAYBE_UNUSED locale_t locale)
 {
   /* Just call strftime, as only the C locale is supported.  */
   return strftime(s, maxsize, format, t);
@@ -144,7 +143,8 @@ strftime_l(char *s, size_t maxsize, char const *format, struct tm const *t,
 #define FORCE_LOWER_CASE 0x100 /* Android extension. */
 
 size_t
-strftime(char *s, size_t maxsize, const char *format, const struct tm *t)
+strftime(char *restrict s, size_t maxsize, char const *restrict format,
+	 struct tm const *restrict t)
 {
     char *  p;
     int saved_errno = errno;
@@ -217,6 +217,8 @@ static char *
 _fmt(const char *format, const struct tm *t, char *pt,
         const char *ptlim, enum warn *warnp)
 {
+	struct lc_time_T const *Locale = &C_time_locale;
+
     for ( ; *format; ++format) {
         if (*format == '%') {
             int modifier = 0;
@@ -378,12 +380,21 @@ label:
                     char buf[INT_STRLEN_MAXIMUM(time64_t) + 1] __attribute__((__uninitialized__));
                     time64_t    mkt;
 
-                    tm = *t;
+          					tm.tm_sec = t->tm_sec;
+					          tm.tm_min = t->tm_min;
+          					tm.tm_hour = t->tm_hour;
+					          tm.tm_mday = t->tm_mday;
+          					tm.tm_mon = t->tm_mon;
+					          tm.tm_year = t->tm_year;
+          					tm.tm_isdst = t->tm_isdst;
+#if defined TM_GMTOFF && ! UNINIT_TRAP
+					          tm.TM_GMTOFF = t->TM_GMTOFF;
+#endif
                     mkt = mktime64(&tm);
-					/* There is no portable, definitive
-					   test for whether whether mktime
-					   succeeded, so treat (time_t) -1 as
-					   the success that it might be.  */
+					/* If mktime fails, %s expands to the
+              value of (time_t) -1 as a failure
+              marker; this is better in practice
+              than strftime failing.  */
                     if (TYPE_SIGNED(time64_t)) {
                       intmax_t n = mkt;
                       sprintf(buf, "%"PRIdMAX, n);
@@ -607,19 +618,19 @@ label:
 # endif
                 negative = diff < 0;
                 if (diff == 0) {
-#ifdef TM_ZONE
+# ifdef TM_ZONE
                   // Android-changed: do not use TM_ZONE as it is as it may be null.
                   {
                     const char* zone = _safe_tm_zone(t);
                     negative = zone[0] == '-';
                   }
-#else
+# else
                     negative = t->tm_isdst < 0;
-# if HAVE_TZNAME
+#  if HAVE_TZNAME
                     if (tzname[t->tm_isdst != 0][0] == '-')
                         negative = true;
+#  endif
 # endif
-#endif
                 }
                 if (negative) {
                     sign = "-";
@@ -748,7 +759,7 @@ _yconv(int a, int b, bool convert_top, bool convert_yy,
     register int    lead;
     register int    trail;
 
-#define DIVISOR 100
+    int DIVISOR = 100;
     trail = a % DIVISOR + b % DIVISOR;
     lead = a / DIVISOR + b / DIVISOR + trail / DIVISOR;
     trail %= DIVISOR;
