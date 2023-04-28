@@ -232,8 +232,9 @@ int malloc_info(int __must_be_zero, FILE* _Nonnull __fp) __INTRODUCED_IN(23);
 /**
  * mallopt() option for per-thread memory initialization tuning.
  * The value argument should be one of:
- * 1: Disable automatic heap initialization and, where possible, memory tagging,
- *    on this thread.
+ * 1: Disable automatic heap initialization on this thread only.
+ *    If memory tagging is enabled, disable as much as possible of the
+ *    memory tagging initialization for this thread.
  * 0: Normal behavior.
  *
  * Available since API level 31.
