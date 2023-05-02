@@ -42,3 +42,22 @@ TEST(sys_wait, waitid) {
   ASSERT_EQ(66, si.si_status);
   ASSERT_EQ(CLD_EXITED, si.si_code);
 }
+
+// https://github.com/android/ndk/issues/1878
+TEST(sys_wait, macros) {
+#if defined(__GLIBC__)
+  // glibc before 2016 requires an lvalue.
+#else
+  ASSERT_FALSE(WIFEXITED(0x7f));
+  ASSERT_TRUE(WIFSTOPPED(0x7f));
+  ASSERT_FALSE(WIFCONTINUED(0x7f));
+
+  ASSERT_TRUE(WIFEXITED(0x80));
+  ASSERT_FALSE(WIFSTOPPED(0x80));
+  ASSERT_FALSE(WIFCONTINUED(0x80));
+
+  ASSERT_FALSE(WIFEXITED(0xffff));
+  ASSERT_FALSE(WIFSTOPPED(0xffff));
+  ASSERT_TRUE(WIFCONTINUED(0xffff));
+#endif
+}
