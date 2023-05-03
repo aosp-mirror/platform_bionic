@@ -1281,7 +1281,7 @@ TEST(time, timespec_get) {
 TEST(time, timespec_get_invalid) {
 #if __BIONIC__
   timespec ts = {};
-  ASSERT_EQ(0, timespec_get(&ts, -1));
+  ASSERT_EQ(0, timespec_get(&ts, 123));
 #else
   GTEST_SKIP() << "glibc doesn't have timespec_get until 2.21";
 #endif
