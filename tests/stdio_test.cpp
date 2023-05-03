@@ -3416,3 +3416,171 @@ TEST(STDIO_TEST, swprintf_invalid_w_width) {
   GTEST_SKIP() << "no %w in glibc";
 #endif
 }
+
+TEST(STDIO_TEST, snprintf_wf_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  int_fast8_t a = 0b101;
+  snprintf(buf, sizeof(buf), "<%wf8b>", a);
+  EXPECT_STREQ("<101>", buf);
+  int_fast8_t b = 0x12341234'12341234;
+  snprintf(buf, sizeof(buf), "<%wf8x>", b);
+  EXPECT_STREQ("<34>", buf);
+  uint_fast16_t c = 0x11111111'22222222;
+#if defined(__LP64__)
+  snprintf(buf, sizeof(buf), "<%wf16x>", c);
+  EXPECT_STREQ("<1111111122222222>", buf);
+#else
+  snprintf(buf, sizeof(buf), "<%wf16x>", c);
+  EXPECT_STREQ("<22222222>", buf);
+#endif
+  int_fast32_t d = 0x33333333'44444444;
+#if defined(__LP64__)
+  snprintf(buf, sizeof(buf), "<%wf32x>", d);
+  EXPECT_STREQ("<3333333344444444>", buf);
+#else
+  snprintf(buf, sizeof(buf), "<%wf32x>", d);
+  EXPECT_STREQ("<44444444>", buf);
+#endif
+  int_fast64_t e = 0xaaaaaaaa'aaaaaaaa;
+  snprintf(buf, sizeof(buf), "<%wf64x>", e);
+  EXPECT_STREQ("<aaaaaaaaaaaaaaaa>", buf);
+  snprintf(buf, sizeof(buf), "<%wf64X>", e);
+  EXPECT_STREQ("<AAAAAAAAAAAAAAAA>", buf);
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %wf in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, snprintf_wf_arguments_reordering) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  int_fast16_t a = 0x11111111'22222222;
+  int_fast32_t b = 0x33333333'44444444;
+  int_fast32_t c = 0xaaaaaaaa'aaaaaaaa;
+#if defined(__LP64__)
+  snprintf(buf, sizeof(buf), "<%2$wf32x --- %1$wf32b>", c, b);
+  EXPECT_STREQ(
+      "<3333333344444444 --- 1010101010101010101010101010101010101010101010101010101010101010>",
+      buf);
+  snprintf(buf, sizeof(buf), "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+  EXPECT_STREQ(
+      "<1010101010101010101010101010101010101010101010101010101010101010 --- 1111111122222222 --- "
+      "3333333344444444>",
+      buf);
+#else
+  snprintf(buf, sizeof(buf), "<%2$wf32x --- %1$wf32b>", c, b);
+  EXPECT_STREQ("<44444444 --- 10101010101010101010101010101010>", buf);
+  snprintf(buf, sizeof(buf), "<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+  EXPECT_STREQ("<10101010101010101010101010101010 --- 22222222 --- 44444444>", buf);
+#endif
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, snprintf_invalid_wf_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  char buf[BUFSIZ];
+  int_fast32_t a = 100;
+  EXPECT_DEATH(snprintf(buf, sizeof(buf), "%wf20d", &a), "%wf20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_wf_base) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wconstant-conversion"
+  wchar_t buf[BUFSIZ];
+  int_fast8_t a = 0b101;
+  swprintf(buf, sizeof(buf), L"<%wf8b>", a);
+  EXPECT_EQ(std::wstring(L"<101>"), buf);
+  int_fast8_t b = 0x12341234'12341234;
+  swprintf(buf, sizeof(buf), L"<%wf8x>", b);
+  EXPECT_EQ(std::wstring(L"<34>"), buf);
+  uint_fast16_t c = 0x11111111'22222222;
+#if defined(__LP64__)
+  swprintf(buf, sizeof(buf), L"<%wf16x>", c);
+  EXPECT_EQ(std::wstring(L"<1111111122222222>"), buf);
+#else
+  swprintf(buf, sizeof(buf), L"<%wf16x>", c);
+  EXPECT_EQ(std::wstring(L"<22222222>"), buf);
+#endif
+  int_fast32_t d = 0x33333333'44444444;
+#if defined(__LP64__)
+  swprintf(buf, sizeof(buf), L"<%wf32x>", d);
+  EXPECT_EQ(std::wstring(L"<3333333344444444>"), buf);
+#else
+  swprintf(buf, sizeof(buf), L"<%wf32x>", d);
+  EXPECT_EQ(std::wstring(L"<44444444>"), buf);
+#endif
+  int_fast64_t e = 0xaaaaaaaa'aaaaaaaa;
+  swprintf(buf, sizeof(buf), L"<%wf64x>", e);
+  EXPECT_EQ(std::wstring(L"<aaaaaaaaaaaaaaaa>"), buf);
+  swprintf(buf, sizeof(buf), L"<%wf64X>", e);
+  EXPECT_EQ(std::wstring(L"<AAAAAAAAAAAAAAAA>"), buf);
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_wf_arguments_reordering) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+#pragma clang diagnostic ignored "-Wformat-extra-args"
+  wchar_t buf[BUFSIZ];
+  int_fast16_t a = 0x11111111'22222222;
+  int_fast32_t b = 0x33333333'44444444;
+  int_fast32_t c = 0xaaaaaaaa'aaaaaaaa;
+#if defined(__LP64__)
+  swprintf(buf, sizeof(buf), L"<%2$wf32x --- %1$wf32b>", c, b);
+  EXPECT_EQ(std::wstring(L"<3333333344444444 --- "
+                         L"1010101010101010101010101010101010101010101010101010101010101010>"),
+            buf);
+  swprintf(buf, sizeof(buf), L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+  EXPECT_EQ(std::wstring(L"<1010101010101010101010101010101010101010101010101010101010101010 --- "
+                         L"1111111122222222 --- 3333333344444444>"),
+            buf);
+#else
+  swprintf(buf, sizeof(buf), L"<%2$wf32x --- %1$wf32b>", c, b);
+  EXPECT_EQ(std::wstring(L"<44444444 --- 10101010101010101010101010101010>"), buf);
+  swprintf(buf, sizeof(buf), L"<%3$wf32b --- %1$wf16x --- %2$wf32x>", a, b, c);
+  EXPECT_EQ(std::wstring(L"<10101010101010101010101010101010 --- 22222222 --- 44444444>"), buf);
+#endif
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
+
+TEST(STDIO_TEST, swprintf_invalid_wf_width) {
+#if defined(__BIONIC__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-invalid-specifier"
+  wchar_t buf[BUFSIZ];
+  int_fast32_t a = 100;
+  EXPECT_DEATH(swprintf(buf, sizeof(buf), L"%wf20d", &a), "%wf20 is unsupported");
+#pragma clang diagnostic pop
+#else
+  GTEST_SKIP() << "no %w in glibc";
+#endif
+}
