@@ -112,17 +112,21 @@ __BEGIN_DECLS
  */
 #define LOG_UPTO(pri) ((1 << ((pri)+1)) - 1)
 
-/** openlog() options are currently ignored on Android. */
+/** openlog() option ignored on Android. */
 #define LOG_PID    0x01
-/** openlog() options are currently ignored on Android. */
+/** openlog() option ignored on Android. */
 #define LOG_CONS   0x02
-/** openlog() options are currently ignored on Android. */
+/** openlog() option ignored on Android. */
 #define LOG_ODELAY 0x04
-/** openlog() options are currently ignored on Android. */
+/** openlog() option ignored on Android. */
 #define LOG_NDELAY 0x08
-/** openlog() options are currently ignored on Android. */
+/** openlog() option ignored on Android. */
 #define LOG_NOWAIT 0x10
-/** openlog() options are currently ignored on Android. */
+/**
+ * openlog() option to log to stderr as well as the system log.
+ *
+ * Available since API level 34 (ignored before then).
+ */
 #define LOG_PERROR 0x20
 
 /**
