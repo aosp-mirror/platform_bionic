@@ -18,18 +18,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <syslog.h>
+#include <unistd.h>
 
 #include <async_safe/log.h>
 
 static const char* syslog_log_tag = nullptr;
 static int syslog_priority_mask = 0xff;
+static int syslog_options = 0;
 
 void closelog() {
   syslog_log_tag = nullptr;
+  syslog_options = 0;
 }
 
-void openlog(const char* log_tag, int /*options*/, int /*facility*/) {
+void openlog(const char* log_tag, int options, int /*facility*/) {
   syslog_log_tag = log_tag;
+  syslog_options = options;
 }
 
 int setlogmask(int new_mask) {
@@ -73,10 +77,16 @@ void vsyslog(int priority, const char* fmt, va_list args) {
     android_log_priority = ANDROID_LOG_DEBUG;
   }
 
-  // We can't let async_safe_format_log do the formatting because it doesn't support
-  // all the printf functionality.
+  // We can't let async_safe_format_log do the formatting because it doesn't
+  // support all the printf functionality.
   char log_line[1024];
-  vsnprintf(log_line, sizeof(log_line), fmt, args);
+  int n = vsnprintf(log_line, sizeof(log_line), fmt, args);
+  if (n < 0) return;
 
   async_safe_format_log(android_log_priority, log_tag, "%s", log_line);
+  if ((syslog_options & LOG_PERROR) != 0) {
+    bool have_newline =
+        (n > 0 && n < static_cast<int>(sizeof(log_line)) && log_line[n - 1] == '\n');
+    dprintf(STDERR_FILENO, "%s: %s%s", log_tag, log_line, have_newline ? "" : "\n");
+  }
 }
