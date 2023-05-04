@@ -218,7 +218,10 @@ TEST(sys_mman, posix_madvise_POSIX_MADV_DONTNEED) {
 }
 
 TEST(sys_mman, mremap) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
   ASSERT_EQ(MAP_FAILED, mremap(nullptr, 0, 0, 0));
+#pragma clang diagnostic pop
 }
 
 constexpr size_t kHuge = size_t(PTRDIFF_MAX) + 1;
