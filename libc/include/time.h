@@ -109,28 +109,28 @@ time_t timegm(struct tm* _Nonnull __tm);
  *
  * Available since API level 29.
  */
-#define TIME_UTC 1
+#define TIME_UTC (CLOCK_REALTIME+1)
 
 /**
  * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_MONOTONIC.
  *
  * Available since API level 35.
  */
-#define TIME_MONOTONIC 2
+#define TIME_MONOTONIC (CLOCK_MONOTONIC+1)
 
 /**
  * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_PROCESS_CPUTIME_ID.
  *
  * Available since API level 35.
  */
-#define TIME_ACTIVE 3
+#define TIME_ACTIVE (CLOCK_PROCESS_CPUTIME_ID+1)
 
 /**
  * The timebase for timespec_get() and timespec_getres() corresponding to CLOCK_THREAD_CPUTIME_ID.
  *
  * Available since API level 35.
  */
-#define TIME_THREAD_ACTIVE 4
+#define TIME_THREAD_ACTIVE (CLOCK_THREAD_CPUTIME_ID+1)
 
 /**
  * timespec_get(3) is equivalent to clock_gettime() for the clock corresponding to the given base.
