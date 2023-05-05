@@ -46,6 +46,6 @@ __BEGIN_DECLS
  * Returns a (possibly overflowed) absolute time on success,
  * and returns -1 and sets `errno` on failure.
  */
-clock_t times(struct tms* __buf);
+clock_t times(struct tms* _Nullable __buf);
 
 __END_DECLS
