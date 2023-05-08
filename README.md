@@ -48,7 +48,9 @@ jump to `fopen(3)`, say, it lands in the right place).
 #### tests/ --- unit tests
 
 The `tests/` directory contains unit tests. Roughly arranged as one file per
-publicly-exported header file.
+publicly-exported header file. `tests/headers/` contains compile-only tests
+that just check that things are _in_ the headers, whereas the "real" tests
+check actual _behavior_.
 
 #### benchmarks/ --- benchmarks
 
