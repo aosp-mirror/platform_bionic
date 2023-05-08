@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 The Android Open Source Project
+ * Copyright (C) 2023 The Android Open Source Project
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,8 +26,49 @@
  * SUCH DAMAGE.
  */
 
-#include <time.h>
+#include <syslog.h>
 
-int timespec_get(timespec* ts, int base) {
-  return (base == TIME_UTC && clock_gettime(CLOCK_REALTIME, ts) != -1) ? base : 0;
+#include <errno.h>
+#include <gtest/gtest.h>
+
+#include "utils.h"
+
+TEST(syslog, syslog_percent_m) {
+  ExecTestHelper eth;
+  eth.Run(
+      [&]() {
+        openlog("foo", LOG_PERROR, LOG_AUTH);
+        errno = EINVAL;
+        syslog(LOG_ERR, "a b c: %m");
+        closelog();
+        exit(0);
+      },
+      0, "foo: a b c: Invalid argument\n");
+}
+
+TEST(syslog, syslog_empty) {
+  ExecTestHelper eth;
+  eth.Run(
+      [&]() {
+        openlog("foo", LOG_PERROR, LOG_AUTH);
+        errno = EINVAL;
+        syslog(LOG_ERR, "");
+        closelog();
+        exit(0);
+      },
+      0, "foo: \n");
+}
+
+TEST(syslog, syslog_truncation) {
+  ExecTestHelper eth;
+  eth.Run(
+      [&]() {
+        openlog("bar", LOG_PERROR, LOG_AUTH);
+        char too_long[2048] = {};
+        memset(too_long, 'x', sizeof(too_long) - 1);
+        syslog(LOG_ERR, "%s", too_long);
+        closelog();
+        exit(0);
+      },
+      0, "bar: x{1023}\n");
 }

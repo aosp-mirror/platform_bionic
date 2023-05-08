@@ -1205,8 +1205,8 @@ cc_library_static {
         "bionic/termios.cpp",
         "bionic/thread_private.cpp",
         "bionic/threads.cpp",
+        "bionic/time.cpp",
         "bionic/time_l.cpp",
-        "bionic/timespec_get.cpp",
         "bionic/tmpfile.cpp",
         "bionic/umount.cpp",
         "bionic/unlink.cpp",
@@ -1863,7 +1863,6 @@ cc_library {
     // symlink logic in soong.
     stubs: {
         symbol_file: "libc.map.txt",
-        versions: ["current"],
     },
     native_bridge_supported: false,
     // It is never correct to depend on this directly. This is only
