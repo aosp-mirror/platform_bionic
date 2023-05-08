@@ -54,7 +54,7 @@ If your code can be built with a variety of different NDK versions, and needs to
 work around issues with some of them, use these macros to detect the versinon of
 the NDK you're being built with. Usually only `__NDK_MAJOR__` will be necessary.
 
-## `__arm__`, `__aarch64__`, `__i386__`, `__x86_64__`
+## `__arm__`, `__aarch64__`, `__i386__`, `__x86_64__`, `__riscv`
 
 If your code is specific to a particular processor architecture, use these
 macros to conditionally compile. Note that the ABI usually called `arm64` uses
